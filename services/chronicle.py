@@ -212,3 +212,42 @@ def default_chapter_title(region: str) -> str:
     """Título do capítulo 1 (determinístico, sem LLM)."""
     region = (region or "").strip()
     return f"O início da jornada — {region}" if region else _DEFAULT_TITLE
+
+
+def perceived_milestones(state: dict) -> list[dict] | None:
+    """SPEC-308 R6: marcos de eventos do motor que o heroi so percebeu DEPOIS de processados.
+
+    PURO e idempotente por `event_id`. Devolve a nova cronica, ou None se nada mudou."""
+    from services.world_perception import _is_engine_derived, event_perceived
+
+    chronicle = list(state.get("chronicle") or [])
+    have = {
+        str(e.get("event_id"))
+        for ch in chronicle
+        for e in (ch.get("entries") or [])
+        if isinstance(e, dict) and e.get("event_id")
+    }
+    projection = state.get("world_projection") or {}
+    changed = False
+    for ev in (state.get("event_log") or [])[-100:]:
+        if (
+            not isinstance(ev, dict)
+            or ev.get("type") not in CHRONICLE_EVENT_TYPES
+            or not _is_engine_derived(ev)
+            or str(ev.get("event_id")) in have
+            or (ev.get("payload") or {}).get("offscreen")
+            or not event_perceived(state, ev)
+        ):
+            continue
+        text = render_milestone(ev, projection)
+        if text:
+            chronicle = append_entry(
+                chronicle,
+                text=text,
+                turn=int(ev.get("turn", 0) or 0),
+                kind="milestone",
+                event_id=str(ev["event_id"]),
+            )
+            have.add(str(ev["event_id"]))
+            changed = True
+    return chronicle if changed else None

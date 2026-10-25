@@ -514,6 +514,7 @@ def _festival_step(ctx: Any, cal: dict) -> tuple[list[dict], list[dict], dict]:
                             "rotulo": fest.get("label", ""),
                         },
                         subject_id=ev["event_id"],
+                        event_ids=[ev["event_id"]],
                     )
                 )
             rec["location_ids"] = started

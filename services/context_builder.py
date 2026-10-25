@@ -272,10 +272,13 @@ def collect_dynamic_facts(
         }
 
     from services import npc_world as _npc_world
+    from services import world_perception
 
     for ev in (state.get("event_log", []) or [])[-100:]:
         if knowledge_filter is not None:
             break
+        if not world_perception.event_perceived(state, ev):
+            continue  # SPEC-308 R4: evento do motor que o heroi nao viu nem ouviu
         if _npc_world.event_hidden_from_player(state, ev):
             continue  # SPEC-304 R23: fato off-screen que o jogador ainda nao percebeu
         text = render_event(ev, projection)

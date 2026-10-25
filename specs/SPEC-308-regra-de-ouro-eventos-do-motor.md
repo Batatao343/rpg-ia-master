@@ -39,7 +39,7 @@ não o `event_id` do evento que originou o item. Por isso não dá para filtrar 
   (`agents/storyteller.py:705-707`), os `event_ids` do item entram em `world_sim.perceived_ids`, além do
   `subject_id`/`item_id` de hoje. O teto vai de 200 para 400, com descarte FIFO.
 - **R3 — O filtro único.** Função pura `services/world_perception.event_perceived(state, ev) -> bool`:
-  - **True** para todo evento sem `source="engine"`, porque esses vêm do turno do jogador ou da
+  - **True** para todo evento sem `source="engine"` (e, entre os `engine`, para tipos que nao sao do motor de mundo: quest, membership, item unico etc.; `world_perception.WORLD_EVENT_TYPES` lista os filtrados, incluindo `companion_fate`), porque esses vêm do turno do jogador ou da
     narrativa e continuam como hoje.
   - **True** para evento do motor cujo `event_id` está em `world_sim.perceived_ids`, ou que é
     conhecido por `npc_world._known_sources` (crença da SPEC-304).

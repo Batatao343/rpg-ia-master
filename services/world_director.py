@@ -58,6 +58,7 @@ def digest_item(
     template_id: str,
     params: dict | None = None,
     subject_id: str = "",
+    event_ids: list[str] | None = None,
 ) -> dict:
     item = {
         "item_id": _h(game_id, day, kind, region_id, location_id, template_id, n=12),
@@ -70,6 +71,8 @@ def digest_item(
     }
     if subject_id:
         item["subject_id"] = subject_id
+    if event_ids:  # SPEC-308 R1: liga o item aos GameEvents do motor que o originaram
+        item["event_ids"] = [str(e) for e in event_ids if e]
     return item
 
 
@@ -430,6 +433,7 @@ def step_crises(
                                 f"{kind}.crise.escala",
                                 {"local": rec["location_id"], "faccao": rec.get("faction_id", "")},
                                 subject_id=events[-1]["event_id"],
+                                event_ids=[events[-1]["event_id"]],
                             )
                         )
             rec["escalation_day"] = day + int(c["ESCALATION_DAYS"])
@@ -490,6 +494,7 @@ def step_crises(
                 _SIGNAL_TPL[kind],
                 {"local": loc},
                 subject_id=ev["event_id"],
+                event_ids=[ev["event_id"]],
             )
         )
 
@@ -518,6 +523,7 @@ def step_crises(
             continue
         rec["location_id"] = target
         proj_rows[target] = {"state": rec["loc_state"]}
+        open_ids: list[str] = []
         if rec["kind"] == "guerra":
             rec["faction_id"] = _attacker(rec["region_id"], factions, rng, faction_region)
             att = next((f for f in factions if f.get("id") == rec["faction_id"]), None)
@@ -525,15 +531,15 @@ def step_crises(
             route = _siege_route(target, att_region)
             if route and frozenset(route) not in blocked:
                 rec["route"] = list(route)
-                events.append(
-                    _ev(
-                        game_id,
-                        day,
-                        "route_blocked",
-                        route[0],
-                        {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
-                    )
+                route_ev = _ev(
+                    game_id,
+                    day,
+                    "route_blocked",
+                    route[0],
+                    {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
                 )
+                events.append(route_ev)
+                open_ids.append(route_ev["event_id"])
             else:
                 rec.pop("route", None)
         sev_ev = _state_event(game_id, day, rec, rec["loc_state"], "", 1, "open")
@@ -548,6 +554,7 @@ def step_crises(
                 f"{rec['kind']}.crise.inicio",
                 {"local": target, "faccao": rec.get("faction_id", "")},
                 subject_id=sev_ev["event_id"],
+                event_ids=[sev_ev["event_id"], *open_ids],
             )
         )
 
@@ -582,19 +589,21 @@ def _close_state(
                 f"{rec['kind']}.crise.fim",
                 {"local": rec["location_id"], "faccao": rec.get("faction_id", "")},
                 subject_id=ev["event_id"],
+                event_ids=[ev["event_id"]],
             )
         )
     route = rec.get("route")
     if route and route_cleared:
-        events.append(
-            _ev(
-                game_id,
-                day,
-                "route_cleared",
-                route[0],
-                {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
-            )
+        clr = _ev(
+            game_id,
+            day,
+            "route_cleared",
+            route[0],
+            {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
         )
+        events.append(clr)
+        if rec.get("location_id") and prev and digest:
+            digest[-1]["event_ids"] = [*digest[-1].get("event_ids", []), clr["event_id"]]
     end_crisis(sim, rec, day, resolution, cfg)
 
 
@@ -619,27 +628,28 @@ def _occupy(
     ev["payload"]["prev_state"] = rec.get("loc_state", "")
     ev["payload"]["prev_controller"] = controller_of(projection, rec["location_id"])
     events.append(ev)
+    linked: list[str] = [ev["event_id"]]
     if att:
-        events.append(
-            _ev(
-                game_id,
-                day,
-                "location_control_changed",
-                rec["location_id"],
-                {"new_controller_id": fid, "crisis_id": rec["crisis_id"]},
-            )
+        ctl = _ev(
+            game_id,
+            day,
+            "location_control_changed",
+            rec["location_id"],
+            {"new_controller_id": fid, "crisis_id": rec["crisis_id"]},
         )
+        events.append(ctl)
+        linked.append(ctl["event_id"])
     route = rec.get("route")
     if route:
-        events.append(
-            _ev(
-                game_id,
-                day,
-                "route_cleared",
-                route[0],
-                {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
-            )
+        clr = _ev(
+            game_id,
+            day,
+            "route_cleared",
+            route[0],
+            {"other_location_id": route[1], "crisis_id": rec["crisis_id"]},
         )
+        events.append(clr)
+        linked.append(clr["event_id"])
     digest.append(
         digest_item(
             game_id,
@@ -650,6 +660,7 @@ def _occupy(
             f"{new_state}.crise.escala",
             {"local": rec["location_id"], "faccao": fid if att else ""},
             subject_id=ev["event_id"],
+            event_ids=linked,
         )
     )
     rec["loc_state"] = ""  # o estado novo ja nao pertence a crise
@@ -729,19 +740,21 @@ def recovery_step(
                 and roll < p_retake
             )
             if defeated or calmed:
-                events.append(state_ev(loc, "", "ocupado", 0, "occ_end"))
+                end_ev = state_ev(loc, "", "ocupado", 0, "occ_end")
+                events.append(end_ev)
+                linked = [end_ev["event_id"]]
                 prev = str(row.get("prev_controller") or "")
                 if prev and prev in alive:
-                    events.append(
-                        _ev(
-                            game_id,
-                            day,
-                            "location_control_changed",
-                            loc,
-                            {"new_controller_id": prev, "crisis_id": ""},
-                            "reoccupy",
-                        )
+                    reocc = _ev(
+                        game_id,
+                        day,
+                        "location_control_changed",
+                        loc,
+                        {"new_controller_id": prev, "crisis_id": ""},
+                        "reoccupy",
                     )
+                    events.append(reocc)
+                    linked.append(reocc["event_id"])
                 digest.append(
                     digest_item(
                         game_id,
@@ -751,7 +764,8 @@ def recovery_step(
                         loc,
                         "guerra.crise.fim",
                         {"local": loc},
-                        subject_id=events[-1]["event_id"],
+                        subject_id=end_ev["event_id"],
+                        event_ids=linked,
                     )
                 )
     return events, digest

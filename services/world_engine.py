@@ -386,6 +386,7 @@ def _tick_day(
                 tpl,
                 {"faccao": a},
                 subject_id=rel_events[-1]["event_id"],
+                event_ids=[rel_events[-1]["event_id"]],
             )
         )
         if new == "guerra" and reg:
@@ -563,6 +564,7 @@ def _ascension_step(
                         "ascensao.aviso",
                         {"faccao": str(fid), "local": loc},
                         subject_id=ev["event_id"],
+                        event_ids=[ev["event_id"]],
                     )
                 )
         if prog >= 100:

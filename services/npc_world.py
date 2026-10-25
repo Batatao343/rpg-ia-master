@@ -430,7 +430,17 @@ def _work_state(ctx: Any) -> dict:
 def _item(
     game_id: str, day: int, kind: str, region: str, loc: str, tpl: str, params: dict, sid: str
 ) -> dict:
-    item = wd.digest_item(game_id, day, kind, region, loc, tpl, params, subject_id=sid)
+    item = wd.digest_item(
+        game_id,
+        day,
+        kind,
+        region,
+        loc,
+        tpl,
+        params,
+        subject_id=sid,
+        event_ids=[sid] if sid else None,  # SPEC-308 R1
+    )
     item["item_id"] = wd._h(game_id, day, kind, params.get("npc_id", ""), tpl, sid, n=12)
     return item
 

@@ -704,7 +704,9 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
         # SPEC-305 R6: livro-razao do que o jogador percebeu (prova de `heard_via`).
         ledger = list(sim.get("perceived_ids") or [])
         ledger += [str(i.get("subject_id") or i["item_id"]) for i in seen]
-        sim["perceived_ids"] = ledger[-200:]
+        for i in seen:  # SPEC-308 R2: tambem os GameEvents que originaram o item
+            ledger += [str(e) for e in i.get("event_ids") or [] if e]
+        sim["perceived_ids"] = ledger[-400:]
         day = int((world.get("world_clock") or {}).get("day", 1) or 1)
         # so rumores (com subject_id) esperam propagacao; o resto e testemunho do dia
         sim["pending_digest"] = [
@@ -1009,6 +1011,17 @@ def storyteller_node(state: GameState):
             world, perceived_items = _perceive_world(state, world, factions, intel, world_tick)
         extra_engine_events_tick = list(world_tick.pending_events)
         extra_engine_events_tick += _npc_beliefs_update(state, world, sim_updates, perceived_items)
+        if perceived_items:  # SPEC-308 R6: marco de evento do motor percebido so agora
+            try:
+                from services.chronicle import perceived_milestones
+
+                _chron = perceived_milestones({**state, **sim_updates, "world": world})
+                if _chron is not None:
+                    sim_updates["chronicle"] = _chron
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+
+                log_fallback("storyteller", "perceived_milestones_failed", exc)
     else:
         extra_engine_events_tick = []
     # --- SPEC-301: o tempo passou -> a fação do jogador pode ter ascendido/sido destruída,

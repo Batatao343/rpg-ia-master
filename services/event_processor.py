@@ -24,6 +24,7 @@ from observability.telemetry import log_event as _log_event
 from services import graph_resolver as gr
 from services import quest_log, rule_engine
 from services.chronicle import append_entry, render_milestone
+from services.world_perception import event_perceived
 from services.world_validators import (
     ValidationResult,
     canonical_secret_detail,
@@ -458,6 +459,8 @@ def process_pending_events(state: dict) -> dict:
         nonlocal chronicle, chronicle_changed
         if is_offscreen_event(ev):
             return  # SPEC-304 R23: a morte off-screen so entra na cronica quando PERCEBIDA
+        if not event_perceived(state, ev):
+            return  # SPEC-308 R6: marco do motor so apos percebido (ver perceived_milestones)
         milestone = render_milestone(ev, proj)
         if milestone:
             chronicle = append_entry(
@@ -601,6 +604,8 @@ def process_pending_events(state: dict) -> dict:
                     "offscreen": True,
                     "cause_event_id": event["event_id"],
                 }
+            elif event.get("source") == "engine":  # SPEC-308 R5: herda a causa do motor
+                d["payload"] = {**(d.get("payload") or {}), "cause_event_id": event["event_id"]}
             event_log.append(d)
             accepted_events.append(d)
             if d.get("type") == "npc_killed":

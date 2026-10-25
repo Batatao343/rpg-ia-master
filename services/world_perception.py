@@ -208,3 +208,70 @@ def record_news(world: dict, state: dict, items: list[dict]) -> dict:
             out, text=text, location_id=loc_id, location_name=name, turn=turn, source=SOURCE
         )
     return out
+
+
+# --- SPEC-308: regra de ouro para os EVENTOS do motor ---------------------------------
+
+
+# Tipos do MOTOR DE MUNDO (SPEC-302) que o heroi so conhece se viu/ouviu. Os demais eventos
+# `source="engine"` (quest, companheiro, membership, item unico, destino de NPC) sao feitos do
+# proprio heroi ou ja tem filtro proprio (SPEC-304).
+WORLD_EVENT_TYPES = frozenset(
+    {
+        "location_state_changed",
+        "world_crisis_warning",
+        "route_blocked",
+        "route_cleared",
+        "faction_relation_changed",
+        "location_control_changed",
+        "companion_fate",  # destino fora de cena: so por crenca (SPEC-304)
+    }
+)
+
+
+def _is_engine_derived(ev: dict) -> bool:
+    payload = ev.get("payload") or {}
+    src = str(ev.get("source") or "")
+    if payload.get("offscreen"):
+        return False  # SPEC-304 (R23) ja cobre
+    if src == "engine":
+        return ev.get("type") in WORLD_EVENT_TYPES
+    return src == "rule_engine" and bool(payload.get("cause_event_id"))
+
+
+def event_perceived(state: dict, ev: dict) -> bool:
+    """SPEC-308 R3: o heroi pode saber deste evento? Pura, sem I/O.
+
+    Evento que nao e do motor (turno do jogador/narrativa) segue como hoje. Evento do motor
+    (ou derivado dele, via `cause_event_id`) so vale se: esta no livro-razao
+    `world_sim.perceived_ids`, e crenca conhecida (SPEC-304) ou e testemunho direto (mesmo
+    local/familia, no mesmo dia)."""
+    if not isinstance(ev, dict) or not _is_engine_derived(ev):
+        return True
+    payload = ev.get("payload") or {}
+    key = str(payload.get("cause_event_id") or ev.get("event_id") or "")
+    ledger = set(((state or {}).get("world_sim") or {}).get("perceived_ids") or [])
+    if key and key in ledger:
+        return True
+    from services import npc_world
+
+    if key and key in npc_world._known_sources(state or {}):
+        return True
+    cur, _region = _cur(state)
+    if not cur:
+        return False
+    world = (state or {}).get("world") or {}
+    today = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    day = payload.get("day")
+    if day is None:  # sem dia no payload: so conta se foi emitido neste turno
+        same_day = int(ev.get("turn", -1) or 0) == int(world.get("turn_count", -2) or 0)
+    else:
+        same_day = int(day) == today
+    if not same_day:
+        return False
+    places = {
+        str(x)
+        for x in (ev.get("target_id"), payload.get("location_id"), payload.get("other_location_id"))
+        if x
+    }
+    return any(cur in _family(p) for p in places)

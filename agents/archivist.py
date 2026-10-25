@@ -34,6 +34,7 @@ from services.memory_provenance import (
 from services.memory_retry import normalize_pending_npc_memory
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.prose_guard import sanitize_meta_preamble
+from services.world_perception import event_perceived
 from state import GameState
 
 
@@ -193,6 +194,8 @@ def _event_memory_records(events: list[dict], state: dict) -> list[dict]:
     for event in events:
         if not isinstance(event, dict) or not event.get("event_id"):
             continue
+        if not event_perceived(state, event):
+            continue  # SPEC-308 R6: o motor so vira memoria depois de percebido
         text = render_event(event, projection)
         if event.get("type") == "secret_revealed":
             detail = str((event.get("payload") or {}).get("detail") or "").strip()
