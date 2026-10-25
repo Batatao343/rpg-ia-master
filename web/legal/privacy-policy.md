@@ -3,7 +3,7 @@ status: final
 ---
 # Política de Privacidade - Valoria (RPG IA)
 
-> Última atualização: 17/10/2026. Recomenda-se revisão por assessoria jurídica.
+> Última atualização: 24/10/2026. Recomenda-se revisão por assessoria jurídica.
 
 **Controlador:** Guilherme dos Santos Medeiros, pessoa física, CPF 491.209.558-39. **Contato para privacidade e suporte (encarregado):** guilherme.smedeiros1@gmail.com.
 
@@ -42,7 +42,7 @@ Não vendemos dados pessoais. Não usamos o conteúdo das suas campanhas para tr
 
 ## 5. Retenção e exclusão
 - Dados de jogo e conta: mantidos enquanto a conta existir. Apagar uma campanha apaga também as imagens geradas para ela (até o próximo ciclo de limpeza automática).
-- **Exclusão de conta** (no app, exige senha recente): encerra sessões e apaga usuário, jogos, memória, crônica, jobs, arquivos, arte e o histórico técnico de uso. Permanecem, por obrigação contábil/fiscal, antifraude e defesa em disputas, **por 5 anos**, apenas registros financeiros vinculados a um identificador opaco (UUID), sem e-mail: extrato de créditos, reservas e débitos, pedidos de pagamento, estado de reconciliação e compras Google Play (sem o token de compra, que é anulado após o consumo; apenas número do pedido, produto e estado financeiro). Um registro mínimo de que a exclusão ocorreu (UUID e data) é mantido por 5 anos.
+- **Exclusão de conta** (no app, exige senha recente): encerra sessões e apaga usuário, jogos, memória, crônica, jobs, arquivos, arte e o histórico técnico de uso. Permanecem, por obrigação contábil/fiscal, antifraude e defesa em disputas, **por 5 anos**, apenas registros financeiros vinculados a um identificador opaco (UUID), sem e-mail: extrato de créditos, reservas e débitos, pedidos de pagamento, estado de reconciliação e compras Google Play (sem o token de compra, que é anulado após o consumo; apenas número do pedido, produto e estado financeiro). Um registro mínimo de que a exclusão ocorreu (UUID e data) é mantido por 5 anos. Elementos do **mundo compartilhado** (personagens, criaturas, itens e locais gerados pelo sistema e aprovados em revisão automática; ver Termos, item 8) não contêm dados pessoais e permanecem no mundo depois da exclusão, já desvinculados da sua conta; os que ainda estavam em revisão são apagados.
 - **Exportação:** o app exporta seus dados (exige senha recente), incluindo o extrato financeiro e links temporários (5 minutos) para baixar suas imagens.
 - **Metadados técnicos:** recibos de operações 90 dias; tarefas internas concluídas 30 dias; registro de consumo de IA 13 meses; avaliações financeiras agregadas 180 dias; contador técnico da cota diária 7 dias; limites de taxa até 24 h; logs da plataforma conforme o prazo padrão do provedor de hospedagem (sem conteúdo de jogo, sem e-mail/token).
 

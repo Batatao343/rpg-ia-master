@@ -26,7 +26,7 @@ test('builds the four static pages: published (no RASCUNHO), no placeholder, own
     const html = readFileSync(join(dist, p.slug, 'index.html'), 'utf8');
     assert.doesNotMatch(html, /RASCUNHO/);
     assert.doesNotMatch(html, /&lt;[^&\n]{1,80}?&gt;/);
-    assert.match(html, /Última atualização: 17\/10\/2026/);
+    assert.match(html, /Última atualização: \d{2}\/\d{2}\/2026/);
     assert.match(html, /\/assets\/index-abc\.css/);
     assert.doesNotMatch(html, /<script|onclick=|javascript:/i);
     for (const q of PAGES) assert.ok(html.includes(`href="/${q.slug}/"`));
