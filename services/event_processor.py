@@ -463,7 +463,7 @@ def process_pending_events(state: dict) -> dict:
             return  # SPEC-304 R23: a morte off-screen so entra na cronica quando PERCEBIDA
         if not event_perceived(state, ev):
             return  # SPEC-308 R6: marco do motor so apos percebido (ver perceived_milestones)
-        milestone = render_milestone(ev, proj)
+        milestone = render_milestone(ev, proj, state)
         if milestone:
             chronicle = append_entry(
                 chronicle,

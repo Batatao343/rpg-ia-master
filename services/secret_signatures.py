@@ -124,6 +124,10 @@ def sanitize_beat(text: str, state: dict) -> str:
     texto INTEIRO por uma versão neutra (rumor público). Determinístico."""
     hit = find_unrevealed(text, state)
     if not hit:
+        from services import faction_gate
+
+        if faction_gate.beat_leaks(state, text):  # SPEC-314 P2-4: nome/plano de fação secreta
+            return "Investigue os rumores locais."
         return text
     secret_id, _ph = hit
     rumor = PUBLIC_RUMOR.get(secret_id, "os rumores locais")

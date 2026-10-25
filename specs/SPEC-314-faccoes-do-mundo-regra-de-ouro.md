@@ -327,3 +327,12 @@ lore real. **≤ 5 requests**, teto US$ 0,05. Cada passo: save preparado + 1 fal
   (c) R19 agora afirma que o nome (inteiro e sem artigo) não aparece em NENHUM ponto do prompt
   com intel ausente. O snapshot `tests/fixtures/spec215_npc_pack_off.txt` (fixture de produto,
   fora de `evals/protected-paths.txt`) foi atualizado com o nome mascarado.
+- Revisão sol (CHANGES_REQUIRED, corrigida): P1-1 `npc_knowledge._subject_text` passa `state` ao
+  `render_event`; P1-2 a linha "Quem controla X agora" usa `display_if_faction`; P2-1
+  `faction_gate.mask_secret_names` cobre nome, nome sem artigo, apelidos curados e slugs
+  (acento/hífen/`_` indiferentes), e o menu da 313 usa chaves opacas `m1..` traduzidas por
+  `lore_quests.resolve_menu_key`; P2-2 o texto do lore recuperado é mascarado em todos os
+  propósitos (exceção: membro ativo da própria fação, D3); P2-3 arquivista e crônica mascaram na
+  gravação (a crônica diz "homens sem insígnia"; ocupar não torna a fação conhecida);
+  P2-4 `sanitize_beat` neutraliza beat com nome de fação secreta ignota ou ≥ 2 termos do plano.
+  P2-5 (hosted/pgvector) segue para o smoke §6.

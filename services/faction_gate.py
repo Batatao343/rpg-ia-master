@@ -15,7 +15,7 @@ API pública estável (usada também pela SPEC-315):
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from dataclasses import dataclass, field
 
 ALIAS_OWN = "sua_irmandade"
@@ -71,38 +71,128 @@ def _is_faction_id(fid: str) -> bool:
     return str(fid or "") in fm.load_catalog()
 
 
-def display_if_faction(state: Mapping | None, entity_id: str, fallback: str) -> str:
-    """`fallback` (nome já resolvido) salvo se `entity_id` for fação secreta ignota (R14)."""
+def display_if_faction(
+    state: Mapping | None, entity_id: str, fallback: str, unknown: str = UNKNOWN_FACTION
+) -> str:
+    """`fallback` (nome já resolvido) salvo se `entity_id` for fação secreta ignota (R14).
+
+    `unknown` troca o texto da máscara (a crônica do jogador usa "homens sem insígnia")."""
     try:
         if (
             entity_id
             and _is_faction_id(entity_id)
-            and display_faction(state, entity_id) == (UNKNOWN_FACTION)
+            and display_faction(state, entity_id) == UNKNOWN_FACTION
         ):
-            return UNKNOWN_FACTION
+            return unknown
     except Exception as exc:  # falha fechada: nunca derruba o pack
         from observability.telemetry import log_fallback
 
         log_fallback("faction_gate", "display_failed", exc)
-        return UNKNOWN_FACTION
+        return unknown
     return fallback
 
 
-def mask_secret_names(state: Mapping | None, text: str) -> str:
-    """Troca o NOME de fação secreta ignota por "[facção desconhecida]" num texto livre."""
+# Apelidos além do nome oficial (e do nome sem artigo): nomes de criaturas, slugs, termos-núcleo.
+_EXTRA_ALIASES: dict[str, tuple[str, ...]] = {
+    "mao_sombria": ("Mão Sombria",),
+    "filhos_chama_azul": ("Chama Azul", "Filhos da Chama"),
+    "druidas_renegados": (
+        "Druida-Renegado",
+        "Druida Renegado",
+        "Druidas Renegados",
+        "Druidas-renegados",
+    ),
+    "cultistas_destilacao": ("Cultista da Destilação", "Destilação"),
+}
+_ARTICLES = ("A ", "O ", "Os ", "As ")
+_ACCENTS = {"a": "aáàâãä", "e": "eéèêë", "i": "iíìîï", "o": "oóòôõö", "u": "uúùûü", "c": "cç"}
+MASK_TEXT = "[facção desconhecida]"
+
+
+def aliases(fid: str) -> tuple[str, ...]:
+    """Nome, nome sem artigo e apelidos curados da fação (maiores primeiro)."""
     from services import faction_membership as fm
 
+    name = fm.faction_name({}, fid)
+    out = {name}
+    for art in _ARTICLES:
+        if name.startswith(art):
+            out.add(name[len(art) :])
+    out.update(_EXTRA_ALIASES.get(fid, ()))
+    return tuple(sorted((a for a in out if a and a != fid), key=len, reverse=True))
+
+
+def _alias_regex(alias: str):
+    import re
+
+    words = [w for w in re.split(r"[\s_\-]+", _fold_word(alias)) if w]
+    parts = [
+        "".join(f"[{_ACCENTS[c]}]" if c in _ACCENTS else re.escape(c) for c in w) for w in words
+    ]
+    # separador flexível cobre espaço, hífen e "_" (slugs); bordas só por letra/dígito
+    return re.compile(r"(?<![^\W_])" + r"[\s_\-]+".join(parts) + r"(?![^\W_])", re.IGNORECASE)
+
+
+_PATTERNS: dict[str, tuple] = {}
+
+
+def _patterns(fid: str) -> tuple:
+    if fid not in _PATTERNS:
+        _PATTERNS[fid] = tuple(_alias_regex(a) for a in aliases(fid))
+    return _PATTERNS[fid]
+
+
+def _unknown_secret_ids(state: Mapping | None, keep: Collection[str] = ()) -> list[str]:
+    from services import faction_membership as fm
+
+    return [
+        fid
+        for fid in fm.load_catalog()
+        if fid not in keep and is_secret(fid) and not known_to_player(state, fid)
+    ]
+
+
+def mask_secret_names(
+    state: Mapping | None, text: str, keep: Collection[str] = (), repl: str = MASK_TEXT
+) -> str:
+    """Troca nome/apelidos de fação secreta ignota por `repl` em texto livre ou slug."""
     out = str(text or "")
-    for fid in fm.load_catalog():
-        if is_secret(fid) and not known_to_player(state, fid):
-            name = fm.faction_name({}, fid)
-            if name and name in out:
-                out = out.replace(name, "[facção desconhecida]")
-            # nome sem artigo ("Mão Sombria" em "da Mão Sombria")
-            bare = name.split(" ", 1)[1] if name.split(" ", 1)[0] in ("A", "O", "Os", "As") else ""
-            if bare and bare in out:
-                out = out.replace(bare, "[facção desconhecida]")
+    if not out:
+        return out
+    for fid in _unknown_secret_ids(state, keep):
+        for pat in _patterns(fid):
+            out = pat.sub(repl, out)
     return out
+
+
+def _fold_word(w: str) -> str:
+    import unicodedata
+
+    base = unicodedata.normalize("NFKD", w.casefold())
+    return "".join(c for c in base if not unicodedata.combining(c))
+
+
+def beat_leaks(state: Mapping | None, text: str) -> bool:
+    """P2-4: o beat cita fação secreta ignota ou ≥2 termos do plano de fação sem `knows_goal`."""
+    import re
+
+    import gamedata
+    from services import faction_membership as fm
+
+    raw = str(text or "")
+    if not raw:
+        return False
+    if mask_secret_names(state, raw) != raw:
+        return True
+    words = {_fold_word(w) for w in re.findall(r"\w{7,}", raw)}
+    goals = {f.get("id"): f.get("goal", "") for f in gamedata.seed_factions()}
+    for fid in fm.load_catalog():
+        if not is_secret(fid) or goal_known_to_player(state, fid):
+            continue
+        toks = {_fold_word(w) for w in re.findall(r"\w{7,}", str(goals.get(fid, "")))}
+        if len(toks & words) >= 2:
+            return True
+    return False
 
 
 def redacted_lore_ids(state: Mapping | None, own: str = "") -> frozenset[str]:

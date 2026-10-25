@@ -367,7 +367,7 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
         == "origin_cooldown"
     ):
         return _empty_notice(m), []
-    items = _interleave(items)
+    items = _opaque_keys(state, _interleave(items))
     while items:
         block = _render_menu(items, state)
         if estimate_tokens(block) <= MENU_TOKEN_BUDGET:
@@ -409,6 +409,28 @@ def estimate_tokens(text: str) -> int:
     return _est(text)
 
 
+def _opaque_keys(state: dict, items: list[dict]) -> list[dict]:
+    """SPEC-314: item cujo id/rótulo cita fação secreta ignota vai ao prompt com chave opaca
+    (`m1`, `m2`…); `resolve_menu_key` traduz de volta em Python. Os demais ficam como estão."""
+    from services import faction_gate
+
+    out: list[dict] = []
+    for n, item in enumerate(items, start=1):
+        text = f"{item.get('anchor_id')} {item.get('label')}"
+        if faction_gate.mask_secret_names(state, text) != text:
+            item = {**item, "key": f"m{n}"}
+        out.append(item)
+    return out
+
+
+def resolve_menu_key(menu: list[dict] | None, anchor_id: str) -> str:
+    """Chave opaca do prompt -> `anchor_id` real; qualquer outro valor passa intacto."""
+    for item in menu or []:
+        if item.get("key") and item["key"] == anchor_id:
+            return str(item.get("anchor_id") or "")
+    return anchor_id
+
+
 def _render_menu(items: list[dict], state: dict | None = None) -> str:
     lines = [
         "<GANCHOS_POSSIVEIS>",
@@ -418,7 +440,7 @@ def _render_menu(items: list[dict], state: dict | None = None) -> str:
     from services import faction_gate
 
     lines += [  # SPEC-314: nome de fação secreta ignota não vai ao prompt
-        f"- kind={i['kind']} anchor_id={i['anchor_id']} "
+        f"- kind={i['kind']} anchor_id={i.get('key') or i['anchor_id']} "
         f"({faction_gate.mask_secret_names(state, str(i['label']))})"
         for i in items
     ]
@@ -463,6 +485,7 @@ def validate_anchor(
     location_id: str = "",
 ) -> tuple[bool, str]:
     """A ancora so vale se estava no menu E passa nas regras do tipo. Nunca levanta."""
+    anchor_id = resolve_menu_key(menu, anchor_id)
     if kind not in NPC_PROPOSABLE:
         return False, "bad_kind"
     if not any(i.get("kind") == kind and i.get("anchor_id") == anchor_id for i in menu or []):
@@ -552,7 +575,7 @@ def seed_for_proposal(
     from services.world_quests import QuestSeed
 
     kind = str(_get(proposal, "kind", "comum") or "comum")
-    aid = str(_get(proposal, "anchor_id", ""))
+    aid = resolve_menu_key(menu, str(_get(proposal, "anchor_id", "")))
     ok, why = validate_anchor(state, kind, aid, npc_key, menu)
     if not ok:
         return None, why

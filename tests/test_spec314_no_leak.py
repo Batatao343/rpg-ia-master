@@ -113,3 +113,38 @@ def test_storyteller_sem_goal(monkeypatch):
     for f in gamedata.seed_factions():
         assert f["goal"] not in prompt
     assert not re.search(r"Libertar Malagor", prompt)
+
+
+def test_r19_conhecimento_on_nome_nao_vaza_por_testemunho(monkeypatch):
+    """P1-1: com RPG_NPC_KNOWLEDGE=on o gate injeta linhas [VIU]; o nome secreto sai mascarado."""
+    monkeypatch.setenv("RPG_NPC_KNOWLEDGE", "on")
+    st = _state(sergeant())
+    st["faction_intel"] = {}
+    st["event_log"] = [
+        {
+            "event_id": "ev-rel",
+            "type": "faction_relation_changed",
+            "turn": 3,
+            "target_id": "filhos_chama_azul",
+            "payload": {"other_faction_id": "legiao_ferro", "relation": "guerra"},
+            "source": "engine",
+        }
+    ]
+    st["knowledge_links"] = [
+        {
+            "link_id": "w-ev-rel",
+            "holder_id": "npc:npc_sargento_ruiva",
+            "subject_kind": "event",
+            "subject_id": "ev-rel",
+            "relation": "observed_by",
+            "source": "world",
+            "channel": "witness",
+            "hops": 0,
+            "acquired_clock": 5,
+            "acquired_turn": 4,
+            "location_id": HERE,
+        }
+    ]
+    p = _prompt(monkeypatch, st)
+    assert "Chama Azul" not in p
+    assert "uma facção desconhecida" in p  # a linha de testemunho existe, mascarada

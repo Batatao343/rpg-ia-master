@@ -207,7 +207,7 @@ def _event_memory_records(events: list[dict], state: dict) -> list[dict]:
             continue  # SPEC-309 P1-1: fato off-screen (ex.: quest_failed pessoal) ainda oculto
         if not event_perceived(state, event):
             continue  # SPEC-308 R6: o motor so vira memoria depois de percebido
-        text = render_event(event, projection)
+        text = render_event(event, projection, state)
         if event.get("type") == "secret_revealed":
             detail = str((event.get("payload") or {}).get("detail") or "").strip()
             if detail:

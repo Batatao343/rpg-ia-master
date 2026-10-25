@@ -426,8 +426,13 @@ def collect_dynamic_facts(
         else None
     )
     if controller:
+        shown = _name(controller)
+        if not include_hidden:  # SPEC-314 R14: o mesmo fato do evento de controle
+            from services import faction_gate
+
+            shown = faction_gate.display_if_faction(state, str(controller), shown)
         add(
-            f"Quem controla {_name(loc_id)} agora: {_name(controller)}.",
+            f"Quem controla {_name(loc_id)} agora: {shown}.",
             "current_state",
             impact=1.0,
             turns_ago=0,
@@ -902,6 +907,14 @@ def _build_context_pack(
     )
     source_text = {result.source: result.text for result in acquired}
     lore_text = source_text.get("lore", "")
+    if lore_text:  # SPEC-314 P2-2: página pública que cita fação secreta ignota não desfaz o alias
+        from services import faction_gate
+        from services import faction_membership as _fm
+
+        member_of_own = bool(own_faction) and _fm.is_member(state, own_faction)
+        lore_text = faction_gate.mask_secret_names(
+            state, lore_text, keep=(own_faction,) if member_of_own else ()
+        )  # D3: o membro ativo conhece o nome da própria fação
 
     # Memória de sessão nunca entra no bloco de lore canônico.
     memory_parts = []

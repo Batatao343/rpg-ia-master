@@ -72,7 +72,7 @@ _FATE_TEXT = {
 _DEFAULT_TITLE = "Crônica da jornada"
 
 
-def render_milestone(event: dict, projection: dict) -> str:
+def render_milestone(event: dict, projection: dict, state: dict | None = None) -> str:
     """1 frase de milestone para o jogador. Tipo fora de CHRONICLE_EVENT_TYPES → ""."""
     etype = event.get("type")
     if etype not in CHRONICLE_EVENT_TYPES:
@@ -143,8 +143,20 @@ def render_milestone(event: dict, projection: dict) -> str:
     # grafo) — payload.quest_title (embutido pelo event_processor) tem prioridade.
     return tmpl.format(
         target=payload.get("quest_title") or _name(event.get("target_id")),
-        controller=_name(payload.get("new_controller_id")),
+        controller=_controller_text(payload.get("new_controller_id"), state),
         by_player=by_player,
+    )
+
+
+def _controller_text(controller_id: object, state: dict | None) -> str:
+    """SPEC-314: o herói vê "homens sem insígnia" se a fação secreta ainda é ignota a ele."""
+    shown = _name(controller_id)
+    if state is None:
+        return shown
+    from services import faction_gate
+
+    return faction_gate.display_if_faction(
+        state, str(controller_id or ""), shown, unknown="homens sem insígnia"
     )
 
 
@@ -239,7 +251,7 @@ def perceived_milestones(state: dict) -> list[dict] | None:
             or not event_perceived(state, ev)
         ):
             continue
-        text = render_milestone(ev, projection)
+        text = render_milestone(ev, projection, state)
         if text:
             chronicle = append_entry(
                 chronicle,

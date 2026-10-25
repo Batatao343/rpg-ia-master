@@ -277,7 +277,7 @@ def _subject_text(state: dict, kind: str, subject_id: str) -> str:
         return str(rf.get("fact") or "").strip()
     from services.context_builder import render_event
 
-    return render_event(ev, projection)
+    return render_event(ev, projection, state)
 
 
 def _is_secret(state: dict, text: str) -> bool:
