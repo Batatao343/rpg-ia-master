@@ -1,6 +1,6 @@
 # SPEC-317 — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (independente da SPEC-316); insumos `done`: SPEC-032 (ROUTES), SPEC-143 (NO-GO do fan-out), SPEC-214 (NO-GO do cache de cena), SPEC-217/229 (pré-classificação determinística)
 > **Desbloqueia:** reavaliação de `RPG_TURN_EXECUTION=concurrent` (SPEC-143) sem contenção de provider

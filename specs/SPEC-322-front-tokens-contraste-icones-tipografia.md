@@ -1,6 +1,6 @@
 # SPEC-322 — Front: tokens de cor, contraste, raio, ícones e tipografia
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-321 (não rodar em paralelo: mesmos arquivos CSS)
 > **Desbloqueia:** SPEC-323 (que usa os ícones e tokens novos)

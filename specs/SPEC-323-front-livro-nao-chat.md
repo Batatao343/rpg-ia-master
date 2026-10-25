@@ -1,6 +1,6 @@
 # SPEC-323 — Front: livro, não chat (marginália, HUD, copy, criação, mapa, sigilo)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-322 (ícones e tokens), SPEC-321 (casca mobile e rótulos "Crônica")
 > **Desbloqueia:** release do beta (SPEC-197) e a loja (SPEC-198), pelo item do medalhão

@@ -1,6 +1,6 @@
 # SPEC-324 — Front: a11y estrutural (headings) e atalhos de teclado
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma em código. Pode correr em paralelo com a 322 ou a 323 (arquivos TSX diferentes, quase nada de CSS). Não corre em paralelo com a 321, que também mexe em `Workspace.tsx`.
 > **Desbloqueia:** —

@@ -1,6 +1,6 @@
 # SPEC-321 — Front: casca mobile, alvos de toque e safe-area
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-320 (a linha de status do compositor já existe; o banner já sai do topo)
 > **Desbloqueia:** SPEC-198 (wrapper Android: o app precisa caber e ser tocável no celular), SPEC-322

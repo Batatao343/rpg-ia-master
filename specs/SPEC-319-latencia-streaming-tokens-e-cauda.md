@@ -1,6 +1,6 @@
 # SPEC-319 — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-316 (`done` — canal de narração antecipada no SSE e UX de "ainda salvando"); recomendado SPEC-318 (`done`) para o ganho pleno; insumos `done`: SPEC-032 (RoutedLLM), SPEC-236 (`stream_interrupted`), SPEC-250 (fallbacks silenciosos)
 > **Desbloqueia:** —

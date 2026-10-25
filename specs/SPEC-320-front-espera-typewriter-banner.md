@@ -1,6 +1,6 @@
 # SPEC-320 — Front: espera do turno, typewriter e banner de erro
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (funciona com o pseudo-streaming atual). Melhora sozinha quando SPEC-316 e SPEC-319 pousarem.
 > **Desbloqueia:** SPEC-321, SPEC-323 (que reaproveitam a linha de status do compositor)

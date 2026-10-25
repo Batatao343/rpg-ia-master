@@ -1,6 +1,6 @@
 # SPEC-316 — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-036 (`done`, SSE), SPEC-200 (`done`, marcas ttfmc/ttlt), SPEC-213 (`done`, projeções), SPEC-247 (`done`, worker SSE sobrevive à desconexão)
 > **Desbloqueia:** SPEC-318 (trabalho fora do caminho crítico), SPEC-319 (streaming de tokens e cauda)
