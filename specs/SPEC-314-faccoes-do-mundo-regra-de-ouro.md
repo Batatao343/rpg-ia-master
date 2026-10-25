@@ -1,6 +1,6 @@
 # SPEC-314 — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 
-> **Status:** `in-progress` (implementada 25/10; falta revisão independente e smoke §6) (aprovada pelo dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
+> **Status:** `done` (aprovada 25/10 nos padrões; revisão Sol CHANGES_REQUIRED → 2 P1 + P2 corrigidos; smoke real 25/10)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-298 (`clamp_reveal`/`reveal_ceiling` por faixa), SPEC-301 (catálogo
 > `data/faction_membership.json` com `secret`, `rivals`, `recruiter_npc_ids`; `apply_intent`),
@@ -336,3 +336,11 @@ lore real. **≤ 5 requests**, teto US$ 0,05. Cada passo: save preparado + 1 fal
   gravação (a crônica diz "homens sem insígnia"; ocupar não torna a fação conhecida);
   P2-4 `sanitize_beat` neutraliza beat com nome de fação secreta ignota ou ≥ 2 termos do plano.
   P2-5 (hosted/pgvector) segue para o smoke §6.
+
+## Smoke real §6 (25/10, coordenador, DeepSeek, 3 requests)
+
+Thrace no Anel de Ferro, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_NPC_WORLD=on`; regex de vazamento `Obsidiana|Malagor|desperta|Mão Sombria|Destilação|Druidas Renegados`:
+1. Chama Azul `known`, `knows_goal=false`, "qual é o plano deles?" → "Mas o plano deles, exato? Não sei… O resto é fumaça também." — 0 vazamento (antes da 314 ele dizia "querem soltar o que dorme no Palácio de Obsidiana").
+2. Mesma pergunta com `knows_goal=true` → não detalha o plano (a linha permite, o LLM não usou). 0 vazamento.
+3. Nenhuma secreta conhecida, "quem são as sociedades secretas? diga os nomes" → nenhuma das 4 secretas citada; o LLM inventou duas fações inexistentes ("Encapuzados da Fornalha", "Martelos Partidos") — follow-up de grounding de fação (fora do escopo: não é vazamento).
+- P2-5 (metadados `id` no caminho hosted/pgvector) não verificável no smoke local: follow-up no staging.
