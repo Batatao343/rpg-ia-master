@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "87a2a5602aae7605f3d8e192e920c4f1baf871dd",
+  "commit_sha": "223a0c5d7770468e7eccc040f42ae55566d65c41",
   "edge_counts": {
-    "calls": 24848,
-    "contains": 884,
-    "defines": 12731,
-    "imports": 2101,
-    "likely_test_for": 1426,
+    "calls": 25370,
+    "contains": 895,
+    "defines": 12938,
+    "imports": 2128,
+    "likely_test_for": 1453,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5761afca5130249ae56db1a42af2008f1d2f14df5b9bf86153c46118e3b3673f",
+  "graph_hash": "sha256:a8a1902906d53ed3fc0fac211e69f407a59c1e296444b7a1decf6e8d53e1b2b3",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -202,6 +202,7 @@
     "scripts/benchmark_turn_pipeline_real.py",
     "scripts/beta_gameplay_gate.py",
     "scripts/browser_local.py",
+    "scripts/build_rumor_seeds.py",
     "scripts/chaos_test.py",
     "scripts/check_handoff_names.py",
     "scripts/check_md_links.py",
@@ -402,6 +403,7 @@
     "services/restore_effects.py",
     "services/retention.py",
     "services/rule_engine.py",
+    "services/rumors.py",
     "services/secret_signatures.py",
     "services/shard_pricing.py",
     "services/shared_pool.py",
@@ -449,6 +451,7 @@
     "tests/spec305_helpers.py",
     "tests/spec309_helpers.py",
     "tests/spec310_helpers.py",
+    "tests/spec312_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -894,6 +897,14 @@
     "tests/test_spec311_lore_query.py",
     "tests/test_spec311_planner.py",
     "tests/test_spec311_price_reasons.py",
+    "tests/test_spec312_birth.py",
+    "tests/test_spec312_knowledge.py",
+    "tests/test_spec312_narration.py",
+    "tests/test_spec312_perception.py",
+    "tests/test_spec312_playtest.py",
+    "tests/test_spec312_proposed.py",
+    "tests/test_spec312_review.py",
+    "tests/test_spec312_seeds.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1086,14 +1097,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 894,
+    "class": 899,
     "endpoint": 64,
-    "file": 1032,
-    "function": 4022,
-    "method": 795,
-    "module": 884,
-    "test": 7019
+    "file": 1043,
+    "function": 4105,
+    "method": 796,
+    "module": 895,
+    "test": 7137
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:dc8a83935a6660a55873c599d9adfd136d50551a40ccd2df19c4c97280964f43"
+  "source_tree_hash": "sha256:129f3bd65781744958f6f9dcb347480111b9adcc4fc846720c84196437db514d"
 }
