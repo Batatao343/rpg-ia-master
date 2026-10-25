@@ -1,6 +1,6 @@
 # SPEC-309 — Mundo percebido no narrador: templates do motor, memória do dia e `<MUNDO_PERCEBIDO>`
 
-> **Status:** `in-progress` (implementada 24/10; aguarda revisão independente Opus; dono aprovou D1–D3 nos defaults em 24/10)
+> **Status:** `done` (implementada 24/10; revisão Sol aprovada após 1 rodada; smoke real 25/10; dono aprovou D1–D3 nos defaults em 24/10)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` proposta **R2** (§4.1), achados **A7** e **A10** (§1.1), mapa de munição (§2.1); regras em `docs/mundo-vivo/VISAO.md:68-69` (rótulos sem números) e `:79-82` (regra de ouro)
 > **Depende de:** **SPEC-308** (filtro de eventos do motor: helper `event_perceived(state, ev)`; precisa estar `done` antes da Etapa 2), SPEC-302 (`done`, motor/estados de local/digest), SPEC-303 e SPEC-307 (`done`, festas/calendário), SPEC-299/300/301/304 (`done`, tipos de evento de lei, companheiro, fação e destino de NPC)
@@ -506,7 +506,7 @@ Registrar custo, run_ids e trechos na §8. Se estourar o teto, parar e registrar
 - **F2 (follow-up da 308):** o servidor hoje **não recusa** viagem por rota bloqueada (o bloqueio é de comércio; só o mapa a mostra como indisponível). Implementado o equivalente: ao viajar por rota cujo bloqueio vem de evento não percebido, o `travel_note` manda narrar a descoberta e o `event_id` entra em `world_sim.perceived_ids` (`world_perception.hidden_blocked_route_events`). Teste `test_f2_*`.
 - Testes: `tests/test_spec309_{templates,golden_rule,day_memory,perceived_block,prompts}.py`.
 - Revisão Sol: P1-1 corrigido (memória também respeita `event_hidden_from_player`; o fato oculto não é regravado depois, a crônica e `npc_fate_learned` o cobrem); P2-1..P2-5 corrigidos.
-- Smoke real §6: pendente (coordenador).
+- Smoke real §6 (25/10, DeepSeek, US$ 0,009): `--scenario mundo --seed 31` run `20261024-234840-212915` — mock=não, 0 violação, 10 requests; save com 8 `canonical_event` `engine_policy:*` iguais a `world.news` e `memory_canonical_facts == []`; `<MUNDO_PERCEBIDO>` não vazio; prosa cita o cerco só como ambiente ("o ranger do cerco se acomodando"), sem número, festa de Brekmar não citada fora do lugar. `--profile explorador --seed 32` run `20261024-235612-611170` — 20 turnos, 0 violação; data "17º dia de Morrakh" coerente; nenhum local em crise não percebido nem fação desconhecida; combate (t16–20) no Cemitério de Leviatãs sem estado de local (passo 4 coberto só parcialmente). Primeira tentativa rodou no mock (worktree sem `.env`) e foi descartada; a segunda do explorador abortou no teto default `max_requests` 15.
 
 ## 9. Decisões do dono
 
