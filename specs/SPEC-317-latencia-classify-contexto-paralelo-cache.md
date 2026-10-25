@@ -1,6 +1,6 @@
 # SPEC-317 — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 
-> **Status:** `in-progress` (implementada em 25/10; falta a medição de staging do §6) (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main 25/10 com flags seguras: rota NPC determinística `shadow`, janela do router e prompt estático-primeiro `off`; falta medição §6 no staging)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (independente da SPEC-316); insumos `done`: SPEC-032 (ROUTES), SPEC-143 (NO-GO do fan-out), SPEC-214 (NO-GO do cache de cena), SPEC-217/229 (pré-classificação determinística)
 > **Desbloqueia:** reavaliação de `RPG_TURN_EXECUTION=concurrent` (SPEC-143) sem contenção de provider
@@ -202,3 +202,10 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
 - **D3 — Ordem do prompt:** **`off` até medir `cache_hit_ratio` e rodar `evals compare`**; promover se ≥ 0,3.
 - **D4 — Caches de índice/catálogo:** **`on` por default** (baixo risco, invalidação por mtime + save).
 - **D5 — `excludeFiles` de `data/codex`:** **só se confirmado que o runtime não lê o codex fora do índice**.
+
+## Histórico de mudanças
+
+- 25/10 — aprovada pelo dono ("boa, aprovo"), padrões recomendados.
+- 25/10 — implementada (`2477a998`); revisão Sol CHANGES_REQUIRED (P1-1 métrica do shadow ignorava abordagem social e léxico sem dobra de acento; P2-1..9) → corrigida em `a52b0058`; `evals compare` routing_actions sem regressão.
+- 25/10 — A/B offline do CLASSIFY: Groq-first não promovido (p50 −22 %, concordância 0,9375; p95 DeepSeek 11,4 s vs Groq 2,1 s → insumo da SPEC-319).
+- 25/10 — pousada na main com flags seguras; suíte completa verde. `done` após a medição §6 no staging (200 decisões em shadow, `cache_hit_ratio`, cold start).
