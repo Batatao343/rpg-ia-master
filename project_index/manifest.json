@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "df9748d3ae55c276e12e65cbb2cf89d0b279633f",
+  "commit_sha": "a12a31ad95b93a5aa067f24af3f09baecb8ac2fd",
   "edge_counts": {
-    "calls": 25963,
-    "contains": 906,
-    "defines": 13144,
-    "imports": 2180,
-    "likely_test_for": 1504,
+    "calls": 26173,
+    "contains": 912,
+    "defines": 13230,
+    "imports": 2205,
+    "likely_test_for": 1529,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b4c67c9df7710e58318825ebcd47a698c0904bfb0c508555a113c3b491e7fa7b",
+  "graph_hash": "sha256:d9a11072d12ddfd57bb87af18538b926ff39a460d734e4c1f020c943fb726f30",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -345,6 +345,7 @@
     "services/event_processor.py",
     "services/exploration.py",
     "services/faction_display.py",
+    "services/faction_gate.py",
     "services/faction_membership.py",
     "services/faction_membership_lint.py",
     "services/faction_missions.py",
@@ -916,6 +917,11 @@
     "tests/test_spec313_proposals.py",
     "tests/test_spec313_review_fixes.py",
     "tests/test_spec313_rumor.py",
+    "tests/test_spec314_faction_gate.py",
+    "tests/test_spec314_lore_events.py",
+    "tests/test_spec314_no_leak.py",
+    "tests/test_spec314_npc_proposals.py",
+    "tests/test_spec314_review_fixes.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1108,14 +1114,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 901,
+    "class": 904,
     "endpoint": 64,
-    "file": 1054,
-    "function": 4182,
+    "file": 1060,
+    "function": 4211,
     "method": 796,
-    "module": 906,
-    "test": 7264
+    "module": 912,
+    "test": 7318
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:45f6c5534d4c61049730a1b4bd2544220bce602aff93c516284d5974047f05b5"
+  "source_tree_hash": "sha256:02ace1c32173e7e72ddcf7f3edce496365a2e327a7eb0ded183b8d8a346ba0f2"
 }
