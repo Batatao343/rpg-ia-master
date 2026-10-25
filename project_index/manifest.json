@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b4733bbd77f3c821e61c240d80b1f13148c1402d",
+  "commit_sha": "5cd3688d15489585c04bfeebca2dc2b7575d1a5c",
   "edge_counts": {
-    "calls": 26769,
-    "contains": 920,
-    "defines": 13409,
-    "imports": 2233,
-    "likely_test_for": 1556,
+    "calls": 26852,
+    "contains": 922,
+    "defines": 13458,
+    "imports": 2234,
+    "likely_test_for": 1557,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:58f8b7e9c1242a5baf9abdb150270dec2f3bf9d49ea4cab4d162a2e38b4e2944",
+  "graph_hash": "sha256:623c7170d7048c6cfb6b4dac798d67f6dac1d4bf6083e8e772d89c4e323e257e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -419,6 +419,7 @@
     "services/stripe_checkout.py",
     "services/structured_outputs.py",
     "services/tactical_profile.py",
+    "services/turn_delivery.py",
     "services/turn_effects.py",
     "services/turn_execution.py",
     "services/turn_outcome.py",
@@ -948,6 +949,7 @@
     "tests/test_telemetry_redaction.py",
     "tests/test_tiers_5_plus_content.py",
     "tests/test_transicoes_criticas_b1.py",
+    "tests/test_turn_delivery.py",
     "tests/test_turn_effects_atomicity.py",
     "tests/test_turn_latency_contract.py",
     "tests/test_turn_logs_no_game_content.py",
@@ -1122,14 +1124,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 909,
+    "class": 912,
     "endpoint": 64,
-    "file": 1068,
-    "function": 4276,
+    "file": 1070,
+    "function": 4283,
     "method": 798,
-    "module": 920,
-    "test": 7425
+    "module": 922,
+    "test": 7464
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6a58fa7dbca67f372c6eedf6b3798bcff8593acc62e6733e25b0e26cd7753fa6"
+  "source_tree_hash": "sha256:287d50e1fcdeaa02d75d0782d9b2365960420b91f06e7fd21c8c33c2dfa53f21"
 }
