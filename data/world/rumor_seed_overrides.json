@@ -1,9 +1,11 @@
 {
-  "_doc": "Curadoria manual (SPEC-312 R4): vence o gerado em truth/gist/fonte_label/public_names/labels/regions/location_id/quest_eligible/disabled/review/subject/creature_label. Editar a mao; o dono revisa truth/public_names/quest_eligible (D1).",
+  "_doc": "Curadoria manual (SPEC-312 R4): vence o gerado em truth/gist/fonte_label/public_names/labels/regions/location_id/quest_eligible/disabled/review/subject/creature_label/entities/secret_id (segredo que a semente revelaria: bloqueia o nascimento ate a revelacao). Editar a mao; o dono revisa truth/public_names/quest_eligible (D1).",
   "overrides": {
     "rumor_valerius_nao_come_nem_dorme": {
       "fonte_label": "servos do Anel Dourado",
-      "gist": "o Lorde Protetor nunca é visto comendo, e sua cama fica intocada por semanas"
+      "gist": "o Lorde Protetor nunca é visto comendo, e sua cama fica intocada por semanas",
+      "quest_eligible": false,
+      "secret_id": "pacto_valerius"
     },
     "rumor_as_paredes_do_palacio_sangram_de_verdade": {
       "fonte_label": "um sargento aposentado da Legião",
@@ -35,7 +37,11 @@
     },
     "rumor_a_vibora_e_uma_crianca": {
       "fonte_label": "mercadores que pagam proteção",
-      "gist": "quem manda na quadrilha das sombras é uma criança"
+      "gist": "quem manda na quadrilha das sombras é uma criança",
+      "truth": false,
+      "quest_eligible": false,
+      "entities": [],
+      "secret_id": "vibora_identidade"
     },
     "rumor_a_floresta_sussurra_nomes": {
       "fonte_label": "caçadores vindos do sul",
@@ -47,7 +53,9 @@
     },
     "rumor_a_praga_de_ferro_nao_veio_das_minas": {
       "fonte_label": "uma velha curandeira do Anel de Lama",
-      "gist": "a praga de ferro não veio das minas"
+      "gist": "a praga de ferro não veio das minas",
+      "quest_eligible": false,
+      "secret_id": "praga_ferro_laboratorio"
     },
     "rumor_os_afogados_de_aethelgard_ainda_seguem_ordens": {
       "fonte_label": "mergulhadores contratados",
@@ -109,11 +117,16 @@
     },
     "rumor_a_guilda_dos_corvos_nunca_queima_certos_corpos": {
       "fonte_label": "coveiros",
-      "gist": "os coveiros da guilda nunca queimam certos corpos"
+      "gist": "os coveiros da guilda nunca queimam certos corpos",
+      "quest_eligible": false,
+      "secret_id": "corpos_marcados",
+      "entities": []
     },
     "rumor_grum_guarda_algo_no_barril_de_cerveja_azeda": {
       "fonte_label": "um frequentador antigo",
-      "gist": "o taverneiro guarda algo no barril de cerveja azeda"
+      "gist": "o taverneiro guarda algo no barril de cerveja azeda",
+      "quest_eligible": false,
+      "secret_id": "barril_cerveja_azeda"
     },
     "rumor_ophidia_esta_criando_um_veneno_que_mata_apenas_humanos": {
       "fonte_label": "mercadores da borda do arquipélago",
@@ -122,7 +135,9 @@
     "rumor_valerius_e_o_arauto_da_nevoa_sao_o_mesmo_ser": {
       "fonte_label": "monges de um culto louco",
       "gist": "o Lorde Protetor e o arauto das brumas são um só ser",
-      "quest_eligible": false
+      "quest_eligible": false,
+      "entities": [],
+      "secret_id": "arauto_identidade"
     },
     "rumor_algumas_dividas_sao_fabricadas": {
       "fonte_label": "trabalhadores veteranos",
@@ -130,7 +145,9 @@
     },
     "rumor_o_guardiao_do_farol_era_um_de_nos": {
       "fonte_label": "um batedor bêbado",
-      "gist": "o guardião do farol era um de nós"
+      "gist": "o guardião do farol era um de nós",
+      "quest_eligible": false,
+      "secret_id": "farol_chama_negra"
     },
     "rumor_os_numeros_nao_batem": {
       "fonte_label": "uma técnica desertora",
@@ -138,7 +155,9 @@
     },
     "rumor_o_rei_tem_medo_de_algo": {
       "fonte_label": "um goblin capturado",
-      "gist": "o rei do subterrâneo tem medo de algo"
+      "gist": "o rei do subterrâneo tem medo de algo",
+      "quest_eligible": false,
+      "secret_id": "rei_subterraneo"
     },
     "rumor_a_senhora_de_vaelorn_esta_morrendo_de_pe": {
       "fonte_label": "um mercador que negocia com os elfos",

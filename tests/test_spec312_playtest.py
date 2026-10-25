@@ -65,7 +65,7 @@ def test_mark_resolved_single_writer():
     inst = rumors.instance({"world_sim": out}, rid)
     assert inst["resolution"] == "desmentido" and inst["resolved_day"] == 7
     assert rumors.investigable(_with(out), 7) == []  # resolvido sai de investigable
-    assert out["rumor_seed_last_born"]["rumor_a"] == rumors.NEVER_AGAIN
+    assert out["rumor_seed_last_born"][rumors._k("rumor_a")] == rumors.NEVER_AGAIN
     # segundo desfecho nao reescreve; desfecho invalido nao muda nada
     again = rumors.mark_resolved(out, rid, "confirmado", 8)
     assert rumors.instance({"world_sim": again}, rid)["resolution"] == "desmentido"

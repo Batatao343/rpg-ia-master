@@ -20,8 +20,9 @@
       "labels": {},
       "confiabilidade": "media",
       "truth": true,
-      "quest_eligible": true,
-      "review": "dono"
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "pacto_valerius"
     },
     "rumor_as_paredes_do_palacio_sangram_de_verdade": {
       "family": "lore",
@@ -207,19 +208,17 @@
       ],
       "location_id": "nova_arcadia",
       "subject": "faccao",
-      "entities": [
-        "mao_sombria",
-        "nova_arcadia"
-      ],
+      "entities": [],
       "public_names": [],
       "labels": {},
       "confiabilidade": "media",
-      "truth": true,
-      "quest_eligible": true,
+      "truth": false,
+      "quest_eligible": false,
       "review": "dono",
       "tags_unmapped": [
         "Mão Sombria"
-      ]
+      ],
+      "secret_id": "vibora_identidade"
     },
     "rumor_a_floresta_sussurra_nomes": {
       "family": "lore",
@@ -288,8 +287,9 @@
       "labels": {},
       "confiabilidade": "alta",
       "truth": true,
-      "quest_eligible": true,
-      "review": "dono"
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "praga_ferro_laboratorio"
     },
     "rumor_os_afogados_de_aethelgard_ainda_seguem_ordens": {
       "family": "lore",
@@ -615,16 +615,14 @@
       ],
       "location_id": "nova_arcadia",
       "subject": "faccao",
-      "entities": [
-        "guilda_corvos",
-        "nova_arcadia"
-      ],
+      "entities": [],
       "public_names": [],
       "labels": {},
       "confiabilidade": "alta",
       "truth": true,
-      "quest_eligible": true,
-      "review": "dono"
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "corpos_marcados"
     },
     "rumor_grum_guarda_algo_no_barril_de_cerveja_azeda": {
       "family": "lore",
@@ -646,11 +644,12 @@
       "labels": {},
       "confiabilidade": "media",
       "truth": true,
-      "quest_eligible": true,
+      "quest_eligible": false,
       "review": "dono",
       "tags_unmapped": [
         "Grum"
-      ]
+      ],
+      "secret_id": "barril_cerveja_azeda"
     },
     "rumor_ophidia_esta_criando_um_veneno_que_mata_apenas_humanos": {
       "family": "lore",
@@ -686,19 +685,14 @@
       ],
       "location_id": "nova_arcadia",
       "subject": "pessoa",
-      "entities": [
-        "npc_valerius",
-        "npc_nevoa",
-        "npc_o_arauto_da_nevoa",
-        "filhos_chama_azul",
-        "nova_arcadia"
-      ],
+      "entities": [],
       "public_names": [],
       "labels": {},
       "confiabilidade": "baixa",
       "truth": false,
       "quest_eligible": false,
-      "review": "dono"
+      "review": "dono",
+      "secret_id": "arauto_identidade"
     },
     "rumor_algumas_dividas_sao_fabricadas": {
       "family": "lore",
@@ -744,8 +738,9 @@
       "labels": {},
       "confiabilidade": "baixa",
       "truth": false,
-      "quest_eligible": true,
-      "review": "dono"
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "farol_chama_negra"
     },
     "rumor_os_numeros_nao_batem": {
       "family": "lore",
@@ -791,8 +786,9 @@
       "labels": {},
       "confiabilidade": "media",
       "truth": true,
-      "quest_eligible": true,
-      "review": "dono"
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "rei_subterraneo"
     },
     "rumor_a_senhora_de_vaelorn_esta_morrendo_de_pe": {
       "family": "lore",

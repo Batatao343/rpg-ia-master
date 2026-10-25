@@ -132,7 +132,7 @@ def test_news_entry_has_kind_and_expiry_and_template_text():
     # mark_perceived gravou
     inst = rumors.instance({"world_sim": sim}, r["subject_id"])
     assert inst["perceived_day"] == 5 and sim["rumor_last_perceived_day"] == 5
-    assert r["subject_id"] in sim["perceived_ids"]
+    assert r["subject_id"] not in sim.get("perceived_ids", [])  # S6: so em perceived_day
 
 
 def test_prune_news_removes_expired_rumors_only():

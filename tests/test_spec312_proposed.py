@@ -37,7 +37,7 @@ def _accept(st, props, *, quarantined=False):
 
 
 def test_invalid_items_dropped_not_whole_response():
-    upd = stt.StoryUpdate(
+    upd = stt.StoryUpdateWithRumors(
         narrative="x",
         proposed_rumors=[
             {"text": TEXT, "entity_ids": ["brekmar"]},
@@ -47,7 +47,9 @@ def test_invalid_items_dropped_not_whole_response():
         ],
     )
     assert len(upd.proposed_rumors) == 1 and upd.proposed_rumors[0].text == TEXT
-    assert stt.StoryUpdate(narrative="x").proposed_rumors == []
+    assert stt.StoryUpdateWithRumors(narrative="x").proposed_rumors == []
+    assert "proposed_rumors" not in stt.StoryUpdate.model_fields  # P2-1: fora do schema com off
+    assert "proposed_rumors" in stt.StoryUpdateWithRumors.model_fields
 
 
 def test_accepted_is_false_not_quest_eligible_and_perceived():
@@ -57,7 +59,9 @@ def test_accepted_is_false_not_quest_eligible_and_perceived():
     assert inst["family"] == "narrador" and inst["truth"] is False
     assert inst["quest_eligible"] is False and inst["perceived_day"] == 5
     assert inst["born_turn"] == 5 and inst["expires_day"] == 15
-    assert sim["rumor_last_perceived_day"] == 5 and inst["rumor_id"] in sim["perceived_ids"]
+    assert sim["rumor_last_perceived_day"] == 5 and inst["rumor_id"] not in sim.get(
+        "perceived_ids", []
+    )
     entry = world["news"][-1]
     assert entry["kind"] == "rumor" and entry["text"] == TEXT[: len(entry["text"])]
     assert entry["rumor_id"] == inst["rumor_id"] and entry["expires_day"] == 15
@@ -144,7 +148,11 @@ def test_proposed_mode_off_ignores_field(monkeypatch):
     assert _accept(_state(), [_prop()]) == (None, None, ["mode"])
     updates: dict = {}
     stt._apply_proposed_rumors(
-        _state(), updates, stt.StoryUpdate(narrative="x", proposed_rumors=[_prop()]), 5, False
+        _state(),
+        updates,
+        stt.StoryUpdateWithRumors(narrative="x", proposed_rumors=[_prop()]),
+        5,
+        False,
     )
     assert updates == {}
 
@@ -153,7 +161,7 @@ def test_apply_helper_merges_into_updates():
     st = _state()
     updates = {"world": st["world"]}
     stt._apply_proposed_rumors(
-        st, updates, stt.StoryUpdate(narrative="x", proposed_rumors=[_prop()]), 5, False
+        st, updates, stt.StoryUpdateWithRumors(narrative="x", proposed_rumors=[_prop()]), 5, False
     )
     assert updates["world_sim"]["rumors"][-1]["family"] == "narrador"
     assert updates["world"]["news"][-1]["kind"] == "rumor"

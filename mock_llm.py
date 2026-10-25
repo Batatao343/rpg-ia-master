@@ -692,6 +692,7 @@ def _start_scenario(model, messages):
 _DISPATCH = {
     "RouterDecision": _route_decision,
     "StoryUpdate": _story_update,
+    "StoryUpdateWithRumors": _story_update,  # SPEC-312 P2-1
     "WorldPulse": _world_pulse,
     "WorldDayNarration": _world_day_narration,
     "CampaignPlanModel": _campaign_plan,

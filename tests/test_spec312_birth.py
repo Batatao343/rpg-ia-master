@@ -60,10 +60,10 @@ def test_candidates_exclude_active_perceived_cooldown_dead():
     assert lore in _ids(rumors.candidates(base_state(), {}, "brekmar", 10))
     sim = {"rumors": [{"rumor_id": "x", "seed_id": lore, "expires_day": 15}]}
     assert lore not in _ids(rumors.candidates(base_state(), sim, "brekmar", 10))
-    sim = {"rumor_seed_last_born": {lore: 0}}
+    sim = {"rumor_seed_last_born": {rumors._k(lore): 0}}
     assert lore not in _ids(rumors.candidates(base_state(), sim, "brekmar", 20))
     assert lore in _ids(rumors.candidates(base_state(), sim, "brekmar", 40))
-    sim = {"rumor_seed_last_born": {lore: rumors.NEVER_AGAIN}}
+    sim = {"rumor_seed_last_born": {rumors._k(lore): rumors.NEVER_AGAIN}}
     assert lore not in _ids(rumors.candidates(base_state(), sim, "brekmar", 999))
     st = base_state(world_projection={"entities": {"npc_durrak": {"alive": False}}})
     assert lore not in _ids(rumors.candidates(st, {}, "brekmar", 10))
@@ -115,6 +115,7 @@ def _row(n, expires, perceived=0):
         "born_day": n,
         "expires_day": expires,
         "perceived_day": perceived,
+        "quest_eligible": False,
     }
 
 
@@ -133,10 +134,11 @@ def test_ledger_cap_never_drops_active_perceived():
     assert len(sim2["rumors"]) == 45
     # velho demais sai e a semente percebida da lore nunca mais nasce
     old = _row(50, 3, 2)
+    old["family"] = "lore"
     sim3 = {"rumors": [_row(1, 999, 1), old]}
     rumors._cap_ledger(sim3, 100)
     assert [r["rumor_id"] for r in sim3["rumors"]] == ["r1"]
-    assert sim3["rumor_seed_last_born"]["s50"] == rumors.NEVER_AGAIN
+    assert sim3["rumor_seed_last_born"][rumors._k("s50")] == rumors.NEVER_AGAIN
 
 
 def test_stale_unperceived_instance_and_old_cooldown_are_forgotten():
@@ -200,7 +202,8 @@ def test_shadow_writes_nothing(monkeypatch):
     sim: dict = {}
     for d in range(1, 40):
         assert run_hook(sim, d).digest == []
-    assert not sim.get("rumors") and not sim.get("rumor_seed_last_born")
+    assert not sim.get("rumors")  # nenhuma instancia, digest nem noticia
+    assert sim.get("rumor_seed_last_born")  # mas o cooldown e registrado (mesma taxa do `on`)
 
 
 def test_requires_world_engine_on(monkeypatch):
@@ -233,7 +236,7 @@ def test_birth_location_is_noninterior_in_region():
     assert sim["rumors"]
     for r in sim["rumors"]:
         loc = locs[r["location_id"]]
-        assert loc["region_id"] == r["region_id"] and not loc.get("parent_id")
+        assert loc["region_id"] == rumors.region_of_row(r) and not loc.get("parent_id")
 
 
 def test_engine_registers_hook_and_ticks_rumors():

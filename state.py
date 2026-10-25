@@ -710,7 +710,8 @@ class WorldSimState(TypedDict, total=False):
     rumors: list[RumorInstance]
     region_presence: dict[str, int]
     rumor_last_perceived_day: int
-    rumor_seed_last_born: dict[str, int]
+    rumor_seed_last_born: dict[str, int]  # chave curta (sha8 do seed_id) -> dia | NEVER_AGAIN
+    rumor_born_total: int  # contador cumulativo (telemetria R31)
 
 
 class CrimeRecord(TypedDict, total=False):

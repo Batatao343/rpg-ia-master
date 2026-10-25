@@ -36,6 +36,8 @@ OVERRIDE_FIELDS = (
     "review",
     "subject",
     "creature_label",
+    "entities",
+    "secret_id",
 )
 # Tags da lore sem nome igual ao do mapa -> local (R2).
 TAG_ALIASES = {

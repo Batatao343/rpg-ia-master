@@ -139,20 +139,6 @@ class StoryUpdate(BaseModel):
     def _drop_invalid_crimes(cls, v: object) -> list:
         return coerce_crime_claims(v)
 
-    proposed_rumors: list[ProposedRumor] = Field(
-        default_factory=list,
-        description=(
-            "APENAS se um personagem PRESENTE NA CENA contou um BOATO neste turno (algo que "
-            "ouviu dizer, não um fato). Use ids EXATOS de <ENTIDADES_CANONICAS>. Sem números. "
-            "Vazio na dúvida — o motor decide se vale como boato."
-        ),
-    )
-
-    @field_validator("proposed_rumors", mode="before")
-    @classmethod
-    def _drop_invalid_rumors(cls, v: object) -> list:
-        return coerce_proposed_rumors(v)
-
     beat_completed: bool = Field(
         default=False,
         description=(
@@ -187,6 +173,24 @@ class StoryUpdate(BaseModel):
             "novos (criação de item é papel do baú/loja). Vazio na dúvida."
         ),
     )
+
+
+class StoryUpdateWithRumors(StoryUpdate):
+    """SPEC-312 P2-1: so com `RPG_RUMORS_PROPOSED=on` o provider ve o campo `proposed_rumors`."""
+
+    proposed_rumors: list[ProposedRumor] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se um personagem PRESENTE NA CENA contou um BOATO neste turno (algo que "
+            "ouviu dizer, não um fato). Use ids EXATOS de <ENTIDADES_CANONICAS>. Sem números. "
+            "Vazio na dúvida — o motor decide se vale como boato."
+        ),
+    )
+
+    @field_validator("proposed_rumors", mode="before")
+    @classmethod
+    def _drop_invalid_rumors(cls, v: object) -> list:
+        return coerce_proposed_rumors(v)
 
 
 _MONEY_CLAIM_RE = re.compile(r"\b(?:ouro|moedas?)\b", re.IGNORECASE)
@@ -732,7 +736,10 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
         sim["perceived_stats"] = stats
         # SPEC-305 R6: livro-razao do que o jogador percebeu (prova de `heard_via`).
         ledger = list(sim.get("perceived_ids") or [])
-        ledger += [str(i.get("subject_id") or i["item_id"]) for i in seen]
+        # SPEC-312 (S6): o rumor percebido fica em `rumors[].perceived_day`, nao no livro-razao
+        ledger += [
+            str(i.get("subject_id") or i["item_id"]) for i in seen if not _rumors.is_rumor_item(i)
+        ]
         for i in seen:  # SPEC-308 R2: tambem os GameEvents que originaram o item
             ledger += [str(e) for e in i.get("event_ids") or [] if e]
         sim["perceived_ids"] = ledger[-400:]
@@ -1641,7 +1648,11 @@ def storyteller_node(state: GameState):
     turn_bl_pre_llm = turn_bl
     companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
-        story_engine = llm.with_structured_output(StoryUpdate)
+        from services import rumors as _rumors_mod
+
+        story_engine = llm.with_structured_output(
+            StoryUpdateWithRumors if _rumors_mod.proposed_mode() == "on" else StoryUpdate
+        )
         # SPEC-223 R5: entrada do jogador delimitada como dado.
         update = story_engine.invoke([sys] + guard_messages(messages[-3:]))
 

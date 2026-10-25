@@ -910,7 +910,7 @@ def _rumor_summary(sim: dict) -> dict:
     false_seen = [r for r in seen if r.get("family") != "narrador" and not r.get("truth")]
     lore_seen = [r for r in seen if r.get("family") != "narrador"]
     return {
-        "born": len(rows),
+        "born": max(int((sim or {}).get("rumor_born_total", 0) or 0), len(rows)),
         "perceived": len(seen),
         "false_pct": round(100 * len(false_seen) / len(lore_seen), 1) if lore_seen else 0.0,
         "proposed_accepted": len(proposed),

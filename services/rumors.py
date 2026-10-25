@@ -78,6 +78,11 @@ def _fold(text: str) -> str:
     )
 
 
+def _k(seed_id: str) -> str:
+    """Chave curta de `rumor_seed_last_born` (S6: o save nao carrega o id inteiro da semente)."""
+    return hashlib.sha256(str(seed_id).encode("utf-8")).hexdigest()[:8]
+
+
 def _sha(*parts: Any) -> str:
     return hashlib.sha256("|".join(str(p) for p in parts).encode("utf-8")).hexdigest()
 
@@ -95,6 +100,13 @@ def _day_of(world: dict | None) -> int:
 
 def _sim(state: dict) -> dict:
     return (state or {}).get("world_sim") or {}
+
+
+def region_of_row(r: dict) -> str:
+    """Regiao da instancia (compacta: derivada do local de nascimento)."""
+    from services import world_pressures as wp
+
+    return str(r.get("region_id") or wp.region_of(str(r.get("location_id") or "")))
 
 
 def seed_of(r: dict) -> dict:
@@ -159,6 +171,17 @@ def _secret(state: dict, text: str) -> bool:
     return bool(text) and bool(find_strict_unrevealed(text, state or {}))
 
 
+def _secret_locked(state: dict, seed: dict) -> bool:
+    """P2-2: semente curada com `secret_id` (a verdade dela revelaria um segredo) fica bloqueada
+    enquanto esse segredo nao for revelado por evento aceito."""
+    sec = str(seed.get("secret_id") or "")
+    if not sec:
+        return False
+    from services.memory_provenance import accepted_secret_ids
+
+    return sec.casefold() not in {i.casefold() for i in accepted_secret_ids(state or {})}
+
+
 def _birth_location(seed: dict, region: str) -> str:
     from services import world_pressures as wp
 
@@ -187,7 +210,7 @@ def candidates(state: dict, sim: dict, region_id: str, day: int) -> list[tuple[d
     adj: list[tuple[dict, float]] = []
     for sid in sorted(load_seeds()):
         seed = load_seeds()[sid]
-        if sid in active or int(day) - int(last_born.get(sid, -(1 << 20))) < cooldown:
+        if sid in active or int(day) - int(last_born.get(_k(sid), -(1 << 20))) < cooldown:
             continue
         family = seed.get("family")
         regions = set(seed.get("regions") or [])
@@ -198,7 +221,7 @@ def candidates(state: dict, sim: dict, region_id: str, day: int) -> list[tuple[d
             continue
         if any(_entity_dead(state, e) for e in seed.get("entities") or [] if e.startswith("npc_")):
             continue
-        if _secret(state, _seed_text(seed)):
+        if _secret(state, _seed_text(seed)) or _secret_locked(state, seed):
             continue
         row = {**seed, "seed_id": sid}
         if family == "lore":
@@ -235,7 +258,6 @@ def _make_instance(game_id: str, seed: dict, region: str, day: int, turn: int) -
         "rumor_id": _sha(game_id, seed["seed_id"], day)[:16],
         "seed_id": seed["seed_id"],
         "family": seed["family"],
-        "region_id": region,
         "location_id": _birth_location(seed, region),
         "truth": bool(seed["_truth"]),
         "born_day": int(day),
@@ -245,28 +267,40 @@ def _make_instance(game_id: str, seed: dict, region: str, day: int, turn: int) -
     }  # compacto (S6): entities/subject/quest_eligible vem da semente; `resolution` so se houver
 
 
-STALE_UNPERCEIVED_DAYS = 0  # instancia nao percebida some 5 dias depois de expirar
-STALE_PERCEIVED_DAYS = 3  # a percebida fica mais (a 313 consulta `truth_of` na resolucao)
+STALE_UNPERCEIVED_DAYS = 0  # nao percebida some ao expirar
+STALE_PERCEIVED_DAYS = 3  # percebida sem quest possivel
+# P2-3: percebida + quest_eligible + sem desfecho fica resolvivel (a 313 usa truth_of) por
+# este horizonte depois de expirar
+INVESTIGABLE_HORIZON_DAYS = 20
+
+
+def _investigable_row(r: dict) -> bool:
+    return bool(r.get("perceived_day")) and not r.get("resolution") and is_quest_eligible(r)
 
 
 def _forget(last: dict, r: dict) -> None:
-    """Instancia que sai do ledger: lore/narrador percebidos ou resolvidos nunca mais nascem."""
-    seed = str(r.get("seed_id"))
-    if (r.get("perceived_day") or r.get("resolution")) and r.get("family") != "avistamento":
-        last[seed] = NEVER_AGAIN
+    """Instancia que sai do ledger: so semente da LORE percebida/resolvida nunca mais nasce
+    (chave curta; `narrador:*` nao entra, o dedupe de texto cobre)."""
+    key = _k(str(r.get("seed_id")))
+    if r.get("family") == "lore" and (r.get("perceived_day") or r.get("resolution")):
+        last[key] = NEVER_AGAIN
     else:
-        last[seed] = max(int(last.get(seed, 0)), int(r.get("born_day", 0)))
+        last[key] = max(int(last.get(key, 0)), int(r.get("born_day", 0)))
 
 
 def _cap_ledger(sim: dict, day: int) -> None:
     """Mantem o ledger pequeno: expirados velhos saem; teto `RUMOR_LEDGER_MAX` despeja primeiro
-    os expirados nao percebidos, depois os expirados percebidos; nunca um rumor ativo."""
+    os expirados nao percebidos, depois os percebidos; nunca um rumor ativo nem um percebido
+    ainda investigavel dentro do horizonte (P2-3)."""
     day = int(day)
     last = dict(sim.get("rumor_seed_last_born") or {})
     keep: list[dict] = []
     for r in (x for x in sim.get("rumors") or [] if isinstance(x, dict)):
         age = day - int(r.get("expires_day", 0))
-        limit = STALE_PERCEIVED_DAYS if r.get("perceived_day") else STALE_UNPERCEIVED_DAYS
+        if r.get("perceived_day"):
+            limit = INVESTIGABLE_HORIZON_DAYS if _investigable_row(r) else STALE_PERCEIVED_DAYS
+        else:
+            limit = STALE_UNPERCEIVED_DAYS
         if age > limit:
             _forget(last, r)
         else:
@@ -274,7 +308,7 @@ def _cap_ledger(sim: dict, day: int) -> None:
     cap = int(const("RUMOR_LEDGER_MAX"))
     if len(keep) > cap:
         order = sorted(
-            (r for r in keep if int(r.get("expires_day", 0)) < day),
+            (r for r in keep if int(r.get("expires_day", 0)) < day and not _investigable_row(r)),
             key=lambda r: (1 if r.get("perceived_day") else 0, int(r.get("born_day", 0))),
         )
         drop = order[: len(keep) - cap]
@@ -322,15 +356,16 @@ def day_hook(ctx: Any):
             continue
         seed = _pick(cands, pick)
         inst = _make_instance(ctx.game_id, seed, region, day, turn)
+        last = dict(sim.get("rumor_seed_last_born") or {})
+        last[_k(inst["seed_id"])] = day  # shadow tambem registra o cooldown (mesma taxa do `on`)
+        sim["rumor_seed_last_born"] = last
         if m == "shadow":
             log_event(
                 "rumor", "shadow_born", level="info", family=inst["family"], truth=inst["truth"]
             )
             continue
         sim["rumors"] = [*(sim.get("rumors") or []), inst]
-        last = dict(sim.get("rumor_seed_last_born") or {})
-        last[inst["seed_id"]] = day
-        sim["rumor_seed_last_born"] = last
+        sim["rumor_born_total"] = int(sim.get("rumor_born_total", 0)) + 1  # R31 cumulativo
         result.digest.append(
             wd.digest_item(
                 ctx.game_id,
@@ -348,8 +383,7 @@ def day_hook(ctx: Any):
             )
         )
         log_event("rumor", "born", level="info", family=inst["family"], region=region)
-    if m == "on":
-        _cap_ledger(sim, day)
+    _cap_ledger(sim, day)
     return result
 
 
@@ -399,7 +433,7 @@ def render_news(state: dict, rumor: dict) -> str:
         "gist": str(seed.get("gist") or ""),
         "fonte_label": str(seed.get("fonte_label") or "alguns"),
         "criatura": str(seed.get("creature_label") or "uma criatura"),
-        "local": local or wp.region_label(str(rumor.get("region_id") or "")) or "a região",
+        "local": local or wp.region_label(region_of_row(rumor)) or "a região",
     }
     if family in ("lore", "avistamento") and not (
         values["gist"] or values["criatura"] != "uma criatura"
@@ -497,8 +531,8 @@ def mark_perceived(sim: dict, rumor_ids: list[str], day: int) -> dict:
     for r in sim.get("rumors") or []:
         if isinstance(r, dict) and r.get("rumor_id") in ids and not r.get("perceived_day"):
             r = {**r, "perceived_day": int(day)}
-            if r.get("family") != "avistamento":  # S4: rumor da lore percebido nunca se repete
-                last[str(r.get("seed_id"))] = NEVER_AGAIN
+            if r.get("family") == "lore":  # S4: rumor da lore percebido nunca se repete
+                last[_k(str(r.get("seed_id")))] = NEVER_AGAIN
         rows.append(r)
     sim["rumors"] = rows
     sim["rumor_seed_last_born"] = last
@@ -686,7 +720,6 @@ def _apply_proposal(state: dict, p: Any, *, turn: int, day: int) -> tuple[dict, 
         "rumor_id": _sha(game_id, seed_id, day)[:16],
         "seed_id": seed_id,
         "family": "narrador",
-        "region_id": wp.region_of(loc),
         "location_id": loc,
         "entities": ents,
         "subject": _subject_of(ents),
@@ -701,7 +734,7 @@ def _apply_proposal(state: dict, p: Any, *, turn: int, day: int) -> tuple[dict, 
     }
     sim["rumors"] = [*(sim.get("rumors") or []), inst]
     sim["rumor_last_perceived_day"] = int(day)
-    sim["perceived_ids"] = [*(sim.get("perceived_ids") or []), inst["rumor_id"]][-400:]
+    sim["rumor_born_total"] = int(sim.get("rumor_born_total", 0)) + 1
     _cap_ledger(sim, day)
     name = str((wp._map_index()[0].get(loc) or {}).get("name") or "")
     world = append_news(
@@ -730,7 +763,7 @@ def investigable(state: dict, day: int) -> list[dict]:
             continue
         if not is_quest_eligible(r):
             continue
-        if _secret(state, render_news(state, r)):
+        if _secret(state, render_news(state, r)) or _secret_locked(state, seed_of(r)):
             continue
         out.append(
             {
@@ -738,13 +771,12 @@ def investigable(state: dict, day: int) -> list[dict]:
                 for k in (
                     "rumor_id",
                     "family",
-                    "region_id",
                     "location_id",
                     "born_day",
                     "expires_day",
                 )
             }
-            | {"subject": subject_of(r), "entities": entities_of(r)}
+            | {"region_id": region_of_row(r), "subject": subject_of(r), "entities": entities_of(r)}
         )
     return out
 
@@ -765,6 +797,7 @@ def mark_resolved(sim: dict, rumor_id: str, outcome: str, day: int) -> dict:
     for r in sim.get("rumors") or []:
         if isinstance(r, dict) and r.get("rumor_id") == rumor_id and not r.get("resolution"):
             r = {**r, "resolution": outcome, "resolved_day": int(day)}
-            last[str(r.get("seed_id"))] = NEVER_AGAIN
+            if r.get("family") == "lore":
+                last[_k(str(r.get("seed_id")))] = NEVER_AGAIN
         rows.append(r)
     return {**sim, "rumors": rows, "rumor_seed_last_born": last}

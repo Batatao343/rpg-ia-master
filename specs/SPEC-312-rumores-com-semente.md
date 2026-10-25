@@ -700,18 +700,19 @@ Custo esperado: ≤ US$ 0,80. Estourou o teto → parar e registrar.
 
 ## 8. Evidência
 
-Simulador `bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 120 --seeds 30`
-(percepcao REAL via `storyteller._perceive_world`; baseline do S6 medido por perfil com
-`RPG_RUMORS=off`). Valores finais, ambos os perfis dentro das metas:
+Simulador `bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 365 --seeds 20`
+(percepcao REAL via `storyteller._perceive_world`; S6 = maior diferenca de `repr(world_sim)` entre
+a mesma seed com `RPG_RUMORS=on` e `off`, por perfil). Valores finais, ambos os perfis dentro
+das metas (a 120 dias x 30 seeds: S2 0,441/0,438 · S3 0,264/0,237 · S6 6,1/7,2 KB):
 
 | meta | parado em `nova_arcadia` | viajante (3 em 3 dias) |
 |---|---|---|
-| S1 nascimentos por regiao frequentada por dia ∈ [0,45; 0,55] | **0,494** | **0,489** |
-| S2 dias com rumor novo percebido ∈ [0,35; 0,65] | **0,441** | **0,438** |
-| S3 falsos entre percebidos ∈ [0,20; 0,30] | **0,248** | **0,238** |
+| S1 nascimentos por regiao frequentada por dia ∈ [0,45; 0,55] | **0,491** | **0,492** |
+| S2 dias com rumor novo percebido ∈ [0,35; 0,65] | **0,436** | **0,436** |
+| S3 falsos entre percebidos ∈ [0,20; 0,30] | **0,263** | **0,218** |
 | S4 semente `lore` percebida 2x no mesmo mundo | **0** | **0** |
 | S5 violacoes em `world.news` (> 4 rumores ou expirado) | **0** | **0** |
-| S6 crescimento de `world_sim` (repr) ≤ 8 KB (8192 B) | **7,4 KB** | **8,05 KB** |
+| S6 crescimento de `world_sim` (repr) ≤ 7,6 KB | **6,2 KB** | **6,7 KB** |
 | teto (> 1 percebido no mesmo dia) | **0** | **0** |
 
 S7 (informativo): a familia `lore` esgota as 22 sementes de Nova Arcadia; depois disso so o
@@ -743,14 +744,32 @@ RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 ru
   depois do cooldown).
 - **D-6 item do digest autossuficiente.** `params` do item de rumor leva `seed_id`, `family` e
   `expires_day`; `world_perception.render` renderiza so do item (a narracao nao tem o `world_sim` novo).
-- **D-7 `ProposedRumor` sem texto novo no prompt.** A instrucao fica na `description` do campo do
-  schema (so entra na chamada se o modo estiver `on`); o corpo do prompt do narrador nao mudou.
+- **D-7 `ProposedRumor` fora do schema com o modo `off`.** O campo vive em
+  `StoryUpdateWithRumors(StoryUpdate)`; o narrador so usa essa classe com
+  `RPG_RUMORS_PROPOSED=on` (com `off` o provider nunca ve o campo). A instrucao fica na
+  `description` do campo; o corpo do prompt nao mudou. MockLLM despacha as duas classes.
 - **D-8 curadoria completa.** Os 40 `gist`/`fonte_label` foram escritos a mao em
   `rumor_seed_overrides.json` (o gerado sozinho produziria o titulo cru); `public_names` so
   `Valerius` nas duas sementes que o citam. `entities` do gerador vem de tags + corpo do texto.
 - **D-9 default `RPG_RUMORS=on`** (D3 local/suite). O staging deve fixar `RPG_RUMORS=shadow`.
 - **D-10 nao feito aqui:** passo 2 da Etapa 0 (`project_index`, gerado no pouso), relock do eval
   `npc_knowledge`, smoke real §6, revisao independente e a leitura do dono (D1).
+
+- **D-11 revisao Sol (P2).** (a) Sementes que revelariam segredo ganham `secret_id` curado
+  (bloqueio de nascimento ate a revelacao; `find_strict_unrevealed` nao casava nenhuma das 40) e
+  `quest_eligible=false`: Valerius come/dorme, Grum/barril, Vibora, Valerius=Arauto, Rei tem medo,
+  Praga de Ferro, Guardiao do farol, Guilda dos Corvos; `rumor_a_vibora_e_uma_crianca` agora
+  `truth=false` (a Vibora e a Velha Magda, `lore_nova/secrets.txt:44`) e nenhuma semente com
+  `secret_id` cita faccao por id. (b) Percebido + `quest_eligible` + sem desfecho fica no ledger
+  ate `expires_day + 20` (`INVESTIGABLE_HORIZON_DAYS`) e o teto nao o despeja. (c) `rumor_seed_last_born`
+  usa chave curta (sha8) e `NEVER_AGAIN` so para sementes `lore` (sem `narrador:*`); instancia sem
+  `region_id` (derivada do local); o rumor percebido nao entra em `world_sim.perceived_ids`
+  (R14 desviado: a prova e `rumors[].perceived_day`) para o S6 ter margem. (d) `shadow` grava
+  `region_presence` e o cooldown (`rumor_seed_last_born`), mesma taxa do `on`; nao grava instancia,
+  digest, noticia nem ledger. (e) `rumor_born_total` cumulativo alimenta `born` da telemetria.
+  (f) Teste de save/load versionado do `world_sim.rumors`. (g) `FREQUENT_WINDOW_DAYS=1` e decisao do
+  coordenador (frequencia delegada), em troca do canal (b) quase nunca ocorrer; D2 do dono segue
+  recomendando 14 se ele preferir mais rumores de outras regioes.
 
 ## 9. Decisões do dono
 

@@ -298,12 +298,14 @@ def run_s312(seed: int, days: int, route) -> dict:
 def evaluate_s312(seeds: int = 60, days: int = 120) -> dict:
     """SPEC-312 S1-S6 (S7 informativo) para os dois perfis de heroi."""
     out: dict = {}
-    base_bytes: dict[str, int] = {}
-    os.environ["RPG_RUMORS"] = "off"  # baseline POR PERFIL (o viajante ja pesa mais sem rumores)
+    base_bytes: dict[str, dict[int, int]] = {}
+    os.environ["RPG_RUMORS"] = (
+        "off"  # baseline POR PERFIL e POR SEED (mesma trajetoria sem rumores)
+    )
     for name, route in PROFILES_S312.items():
-        base_bytes[name] = max(
-            run_s312(seed, days, route)["max_sim_bytes"] for seed in range(1, min(seeds, 10) + 1)
-        )
+        base_bytes[name] = {
+            seed: run_s312(seed, days, route)["max_sim_bytes"] for seed in range(1, seeds + 1)
+        }
     os.environ["RPG_RUMORS"] = "on"
     for name, route in PROFILES_S312.items():
         runs = [run_s312(seed, days, route) for seed in range(1, seeds + 1)]
@@ -323,7 +325,9 @@ def evaluate_s312(seeds: int = 60, days: int = 120) -> dict:
             "S3_false_fraction_perceived": round(false / max(1, len(seen)), 3),
             "S4_lore_seed_perceived_twice": lore_dupes,
             "S5_news_violations": sum(r["news_over_cap"] + r["news_expired"] for r in runs),
-            "S6_sim_bytes_growth": max(r["max_sim_bytes"] for r in runs) - base_bytes[name],
+            "S6_sim_bytes_growth": max(
+                r["max_sim_bytes"] - base_bytes[name][i] for i, r in enumerate(runs, 1)
+            ),
             "perceived_total": len(seen),
             "over_daily_cap": sum(1 for r in runs for v in r["perceived_by_day"].values() if v > 1),
         }
