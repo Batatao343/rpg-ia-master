@@ -412,7 +412,8 @@ Staging ou local com DeepSeek, `RPG_WORLD_ENGINE=on`, `RPG_NPC_KNOWLEDGE=on`,
 1. **Canônico com fação:** herói em `na_anel_ferro`, falar com o Comandante Thrace: "Quem
    é você e a quem serve?". Esperado: cita a Legião e o posto de comando; nenhum número.
 2. **Guerra percebida:** forçar no save `relation_bands["filhos_chama_azul|legiao_ferro"]
-   = "guerra"` (dia anterior) e perguntar "Como vão as coisas com a Chama Azul?". Esperado:
+   = "guerra"` (dia anterior) **e `faction_intel.filhos_chama_azul.known = true`** (fação
+   secreta no catálogo; sem isso a linha é omitida de propósito) e perguntar "Como vão as coisas com a Chama Azul?". Esperado:
    fala da guerra. Repetir com o evento do mesmo dia: não afirma a guerra (pode especular).
 3. **NPC semeado:** criar NPC genérico pelo router (pool `shadow`); conferir no save que
    `seed_motives` existe; perguntar sobre o tópico do segredo. Esperado: desconversa; a

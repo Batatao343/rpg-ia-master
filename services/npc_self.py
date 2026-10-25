@@ -27,6 +27,7 @@ SELF_MAX_CHARS = 700
 MOTIVES_MAX_CHARS = 450
 KNOWS_MAX_CHARS = 800
 MAX_RELATION_LINES = 2
+TOTAL_MAX_CHARS = 1950  # soma dos 3 blocos + separadores
 
 _TAG_SELF = "SOBRE_VOCE"
 _TAG_MOTIVES = "MOTIVACOES_INTERNAS"
@@ -139,7 +140,7 @@ def self_rank(state: dict, ref: str, row: dict, faction_id: str) -> str:
     """Patente derivada (nada é gravado): líder > nome de patente do catálogo no `role` > membro."""
     from services import faction_membership as fm
 
-    if npc_world.is_leader(ref):
+    if npc_world.leaders().get(ref) == faction_id:
         return "líder"
     role = npc_world._fold((row or {}).get("role"))
     if role:
@@ -206,10 +207,14 @@ def agenda_lines(state: dict, npc_key: str, row: dict) -> list[str]:
         if pos.get("refugee_from"):
             lost = _loc_name(str(pos["refugee_from"])) or home_name
             if lost:
-                from services import location_states
+                from services import location_states, world_engine
 
-                cause = location_states.public_label(
-                    location_states.location_state(state, str(pos["refugee_from"]))
+                cause = (
+                    location_states.public_label(
+                        location_states.location_state(state, str(pos["refugee_from"]))
+                    )
+                    if world_engine.mode() == "on"
+                    else ""
                 )
                 out.append(f"Você fugiu de {lost}" + (f" por causa de: {cause}." if cause else "."))
         elif here and here == home:
@@ -241,12 +246,12 @@ def agenda_lines(state: dict, npc_key: str, row: dict) -> list[str]:
 
 def place_lines(state: dict) -> list[str]:
     """Só o local ATUAL da cena (percebido por ambos): rótulo público + data de hoje."""
-    from services import location_states, world_calendar
+    from services import location_states, world_calendar, world_engine
 
     world = (state or {}).get("world") or {}
     cur = str(world.get("current_location_id") or "")
     label = ""
-    if cur:
+    if cur and world_engine.mode() == "on":
         label = location_states.public_label(location_states.location_state(state, cur))
     date = world_calendar.clock_date_label(
         world, ((state or {}).get("world_sim") or {}).get("calendar")
@@ -262,7 +267,9 @@ def place_lines(state: dict) -> list[str]:
 # --------------------------------------------------------------------------- #
 # Relações da fação (R11)
 # --------------------------------------------------------------------------- #
-def relation_lines(state: dict, ref: str, faction_id: str) -> list[str]:
+def relation_lines(
+    state: dict, ref: str, faction_id: str, ledger_id: str | None = None
+) -> list[str]:
     if not faction_id or _defeated(state, faction_id):
         return []
     if _faction_is_secret(faction_id) and not _faction_known(state, faction_id):
@@ -272,7 +279,7 @@ def relation_lines(state: dict, ref: str, faction_id: str) -> list[str]:
 
     sim = (state or {}).get("world_sim") or {}
     bands = sim.get("relation_bands") or {}
-    leader = npc_world.is_leader(ref)
+    leader = npc_world.leaders().get(ref) == faction_id
     today = _day(state)
     game_id = str((state or {}).get("game_id") or "")
     event_ids = {
@@ -297,7 +304,9 @@ def relation_lines(state: dict, ref: str, faction_id: str) -> list[str]:
             eid = world_director.event_id(game_id, "faction_relation_changed", today, a, b)
             if eid in event_ids:
                 if heard is None:
-                    heard = set().union(*npc_knowledge.known_subject_ids(state, ref).values())
+                    heard = set().union(
+                        *npc_knowledge.known_subject_ids(state, ledger_id or ref).values()
+                    )
                 if eid not in heard:
                     continue  # mudou hoje: o membro comum ainda não sabe
         ranked.append((0 if band == "guerra" else 1, other, band))
@@ -412,20 +421,23 @@ def npc_self_blocks(
             *_identity_lines(state, npc_key, row),
             *agenda_lines(state, npc_key, row),
             *place_lines(state),
-            *relation_lines(state, ref, fid),
+            *relation_lines(state, ref, fid, knowledge_id or str(row.get("id") or ref)),
         ]
         motives = motive_lines(row)
         knows = _knows_lines(
             state, knowledge_id or str(row.get("id") or npc_key), pack_evidence_ids
         )
         sobre, t1 = _fit(_TAG_SELF, self_lines, SELF_MAX_CHARS)
+        mot_cap = min(MOTIVES_MAX_CHARS, TOTAL_MAX_CHARS - len(sobre) - (1 if sobre else 0))
         mot, t2 = _fit(
             _TAG_MOTIVES,
             [*motives, _MOTIVES_FOOTER] if motives else [],
-            MOTIVES_MAX_CHARS,
+            mot_cap,
             keep_last=1,
         )
-        sabe, t3 = _fit(_TAG_KNOWS, knows, KNOWS_MAX_CHARS)
+        used = len(sobre) + len(mot) + (1 if sobre and mot else 0)
+        sabe_cap = min(KNOWS_MAX_CHARS, TOTAL_MAX_CHARS - used - (1 if used else 0))
+        sabe, t3 = _fit(_TAG_KNOWS, knows, sabe_cap)
         blocks = NpcSelfBlocks(sobre_voce=sobre, motivacoes=mot, o_que_sabe=sabe)
     except Exception as exc:
         from observability.telemetry import log_fallback

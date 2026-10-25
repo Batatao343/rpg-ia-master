@@ -334,12 +334,72 @@ def test_materialize_copia_seed_motives():
     )
 
 
-def test_roundtrip_persistence_preserva_seed_motives():
-    from services.entity_identity import coalesce_runtime_npcs
+def test_roundtrip_persistence_preserva_seed_motives(tmp_path, monkeypatch):
+    import persistence
 
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
     row = _seeded_row()
-    out = coalesce_runtime_npcs({"Ruiva": row})
-    assert next(iter(out.values()))["seed_motives"] == row["seed_motives"]
+    st = make_state(npcs={"Ruiva": row})
+    st.update(
+        game_id="spec310_rt",
+        narrative_summary="",
+        archivist_last_run=0,
+        chronicle=[],
+        enemies=[],
+        campaign_plan={},
+    )
+    assert persistence.save_game_state(st)
+    loaded = persistence.load_game_state(str(tmp_path / "spec310_rt.json"))
+    assert next(iter(loaded["npcs"].values()))["seed_motives"] == row["seed_motives"]
+    # R24: save sem os campos novos ainda conversa
+    loaded["npcs"]["Ruiva"].pop("seed_motives", None)
+    loaded["npcs"]["Ruiva"].pop("faction_id", None)
+    assert isinstance(ns.npc_self_blocks(loaded, "Ruiva", loaded["npcs"]["Ruiva"]).text(), str)
+
+
+def test_lider_so_de_outra_faccao_nao_e_lider():
+    row = {"id": "npc_comandante_thrace", "role": "Comandante"}
+    assert ns.self_rank(make_state(), "npc_comandante_thrace", row, "poder_kahen") != "líder"
+    st = war_state()
+    st["world_sim"]["relation_bands"] = {"filhos_chama_azul|poder_kahen": "guerra"}
+    st["event_log"] = [changed_today_event()]
+    assert ns.relation_lines(st, "npc_comandante_thrace", "poder_kahen") != []
+
+
+def test_relacao_ledger_usa_id_do_ledger():
+    ev = changed_today_event()
+    st = war_state(event_log=[ev])
+    st["knowledge_links"] = [
+        {
+            "link_id": "k1",
+            "holder_id": "npc:ledger_id",
+            "subject_kind": "event",
+            "subject_id": ev["event_id"],
+            "relation": "believed_by",
+            "source": "world",
+            "channel": "messenger",
+            "hops": 1,
+            "acquired_clock": 1,
+            "acquired_turn": 1,
+        }
+    ]
+    assert ns.relation_lines(st, REF, "legiao_ferro") == []
+    assert len(ns.relation_lines(st, REF, "legiao_ferro", "ledger_id")) == 1
+
+
+def test_motor_off_sem_linhas_de_estado_local(monkeypatch):
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "off")
+    st = make_state(world_projection={"location_states": {HERE: {"state": "cerco", "severity": 3}}})
+    assert ns.place_lines(st) == []
+
+
+def test_total_nunca_passa_de_1950(monkeypatch):
+    monkeypatch.setattr(ns, "SELF_MAX_CHARS", 700)
+    monkeypatch.setattr(ns, "_identity_lines", lambda *a: ["x" * 60] * 11)
+    monkeypatch.setattr(ns, "_knows_lines", lambda *a: ["y" * 70] * 14)
+    monkeypatch.setattr(ns, "motive_lines", lambda *a: ["z" * 60] * 7)
+    text = ns.npc_self_blocks(make_state(), "Ruiva", sergeant()).text()
+    assert 0 < len(text) <= ns.TOTAL_MAX_CHARS == 1950
 
 
 # --- Etapa 5: o que ele sabe -----------------------------------------------------------
