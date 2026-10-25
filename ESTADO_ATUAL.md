@@ -12,13 +12,13 @@
 - `done`: 296 onda 0, 298 reputação, 299 lei/crime, 300 companheiros, 301 patentes, 302 motor de mundo, 303 estações/festas, 304 NPCs off-screen, 305 quests de mundo, 306 sementes +150, 307 calendário de Valoria (7 meses × 20 dias, Cinco Sinos, Ano 112 da Era 7). **297** pool entre mundos `in-progress` (falta leitura do dono das sementes → `on`).
 - Suíte offline: **~5.509 passed, 249 skipped** (24/10, SPEC-304, `-n 3`). `test_session_hardening_local` trava em `supabase status` com o stack local meio de pé (follow-up).
 - Smokes reais DeepSeek feitos para 296/298–307 (~US$ 0,10 no total). Bug achado e corrigido: NPC do narrador herdava relação do LLM fora de 0..10.
-- Staging `b6592b3`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow`, `RPG_LAW=shadow`, `RPG_NPC_WORLD=shadow`; companheiros e quests de mundo no default (`on`). `vercel_env.py --flag NOME=modo` para as flags do mundo vivo.
+- Staging `3d2a6ed`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow`, `RPG_LAW=on` (dono 24/10), `RPG_NPC_WORLD=shadow`; companheiros e quests de mundo no default (`on`). `vercel_env.py --flag NOME=modo` para as flags do mundo vivo.
 - Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (ver `CLAUDE.md`).
 
 ## Próximos 3 passos
 
 1. Dono: revisar a página de lore (https://claude.ai/artifact/KgrPsuP1n2gSA5Y4fYbEF3) e dizer "aprovo as sementes" → `npc_seed_review.py approve`, `RPG_SHARED_POOL=on` no staging, fechar 297.
-2. Staging `shadow` → `on` para `RPG_LAW` e `RPG_NPC_WORLD` (antes do NPC_WORLD: medir C1 da 302 com `npc_perigo`, SPEC-304 P2-2, e o dono confirmar LEADER_DEATH_GAP 60 dias).
+2. Staging `shadow` → `on` para `RPG_NPC_WORLD` (antes do NPC_WORLD: medir C1 da 302 com `npc_perigo`, SPEC-304 P2-2, e o dono confirmar LEADER_DEATH_GAP 60 dias).
 3. Follow-ups: relock eval `npc_knowledge` (298 R23); grant por coluna p/ `rpg_api` antes de 297 `on` em produção; D7 (criaturas do pool em encontros); 301 F-1; 299 derrota→prisão; 305 P2-5/P2-7; 304 P2-5/P2-8; bot `faccionario` ir ao posto de recrutamento.
 
 ## Bloqueios no dono
