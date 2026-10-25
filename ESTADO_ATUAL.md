@@ -12,14 +12,14 @@
 - `done`: 296 onda 0, 298 reputação, 299 lei/crime, 300 companheiros, 301 patentes, 302 motor de mundo, 303 estações/festas, 304 NPCs off-screen, 305 quests de mundo, 306 sementes +150, 307 calendário de Valoria (7 meses × 20 dias, Cinco Sinos, Ano 112 da Era 7). **297** pool entre mundos `in-progress` (falta leitura do dono das sementes → `on`).
 - Suíte offline: **~5.509 passed, 249 skipped** (24/10, SPEC-304, `-n 3`). `test_session_hardening_local` trava em `supabase status` com o stack local meio de pé (follow-up).
 - Smokes reais DeepSeek feitos para 296/298–307 (~US$ 0,10 no total). Bug achado e corrigido: NPC do narrador herdava relação do LLM fora de 0..10.
-- Staging `3d2a6ed`: DeepSeek, Jev `primary`, teto R$ 5, `RPG_NPC_KNOWLEDGE=on`, `RPG_WORLD_ENGINE=on`, `RPG_SHARED_POOL=shadow`, `RPG_LAW=on` (dono 24/10), `RPG_NPC_WORLD=shadow`; companheiros e quests de mundo no default (`on`). `vercel_env.py --flag NOME=modo` para as flags do mundo vivo.
+- Staging `839f23f` (24/10): DeepSeek, Jev `primary`, teto R$ 5; **tudo do mundo vivo `on`** (dono aprovou 24/10): `RPG_NPC_KNOWLEDGE`, `RPG_WORLD_ENGINE`, `RPG_SHARED_POOL`, `RPG_LAW`, `RPG_NPC_WORLD`; companheiros e quests de mundo no default (`on`). SPEC-308 (regra de ouro dos eventos do motor) na main e no staging.
 - Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2`; checar RAM (ver `CLAUDE.md`).
 
 ## Próximos 3 passos
 
-1. Dono: revisar a página de lore (https://claude.ai/artifact/KgrPsuP1n2gSA5Y4fYbEF3) e dizer "aprovo as sementes" → `npc_seed_review.py approve`, `RPG_SHARED_POOL=on` no staging, fechar 297.
-2. Staging `shadow` → `on` para `RPG_NPC_WORLD` (antes do NPC_WORLD: medir C1 da 302 com `npc_perigo`, SPEC-304 P2-2, e o dono confirmar LEADER_DEATH_GAP 60 dias).
-3. Follow-ups: relock eval `npc_knowledge` (298 R23); grant por coluna p/ `rpg_api` antes de 297 `on` em produção; D7 (criaturas do pool em encontros); 301 F-1; 299 derrota→prisão; 305 P2-5/P2-7; 304 P2-5/P2-8; bot `faccionario` ir ao posto de recrutamento.
+1. Onda 2 do mundo vivo (specs 308–313, todas aprovadas; 308 `done`): implementar 309 (mundo percebido no narrador) → 310/311 (NPC sabe de si; planner/preço/RAG) → 312 (rumores com semente) → 313 (quests ancoradas em lore). Revisão: [docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md](docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md).
+2. SPEC-297: pool `on` no staging; fechar `done` quando a 1ª promoção (hold 24 h + avaliação) for observada. Cláusula de termos (D3) aprovada pelo dono em 24/10 → escrever no texto legal (SPEC-222).
+3. Follow-ups: relock eval `npc_knowledge` (298 R23); grant por coluna p/ `rpg_api` antes de 297 `on` em produção; D7 (criaturas do pool em encontros); 301 F-1; 299 derrota→prisão; 304 P2-2/P2-5/P2-8; bot `faccionario` ir ao posto.
 
 ## Bloqueios no dono
 
@@ -37,8 +37,6 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| Sementes de NPC (297 D8 / 306) | revisar a página de lore e dizer "aprovo as sementes" | `npc_seed_review.py approve` → `RPG_SHARED_POOL=on` no staging → fechar 297 |
-| Termos (SPEC-297 D3) | cláusula: NPC promovido ao pool fica no mundo desvinculado do autor | "aprovo a cláusula" → texto legal + SPEC-222 |
 
 ## Decisões recentes (≤ 7 dias)
 
@@ -46,6 +44,12 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-24 · SPEC-313 `draft` — quests-ancoradas-em-lore
+- 2026-10-24 · SPEC-312 `draft` — rumores-com-semente
+- 2026-10-24 · SPEC-311 `draft` — planner-preco-rag-contextual
+- 2026-10-24 · SPEC-310 `draft` — npc-sabe-de-si
+- 2026-10-24 · SPEC-309 `draft` — mundo-percebido-no-narrador
+- 2026-10-24 · SPEC-308 `done` — Regra de ouro para eventos do motor de mundo
 - 2026-10-24 · SPEC-307 `done` — Calendário de Valoria: 7 meses, semana de 5 dias, data exibida
 - 2026-10-24 · SPEC-306 `done` — Expansão das tabelas de semente de NPC (+25 por tabela)
 - 2026-10-24 · SPEC-305 `done` — Quests de mundo com prazo (nascem do estado, falham com consequência)
