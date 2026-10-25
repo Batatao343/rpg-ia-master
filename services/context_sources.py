@@ -72,11 +72,14 @@ def _default_readers(
     game_id: str | None,
     npc_id: str | None,
     prefer_region: str | None = None,
+    exclude_ids: frozenset[str] = frozenset(),
 ) -> dict[str, Callable[[], str]]:
     import rag
 
     # SPEC-311 R23: a região só viaja quando existe (leitores/dublês antigos não a conhecem)
-    region_kw: dict[str, str] = {"prefer_region": prefer_region} if prefer_region else {}
+    region_kw: dict = {"prefer_region": prefer_region} if prefer_region else {}
+    if exclude_ids:  # SPEC-314 R13
+        region_kw["exclude_ids"] = exclude_ids
 
     vector = list(query.vector) if query.vector is not None else None
     # A compatible profile was selected but its one shared embedding failed:
@@ -129,10 +132,17 @@ def acquire_context_sources(
     max_workers: int = 3,
     readers: dict[str, Callable[[], str]] | None = None,
     prefer_region: str | None = None,
+    exclude_ids: frozenset[str] = frozenset(),
 ) -> tuple[ContextSourceResult, ...]:
     readers = dict(
         readers
-        or _default_readers(query, game_id=game_id, npc_id=npc_id, prefer_region=prefer_region)
+        or _default_readers(
+            query,
+            game_id=game_id,
+            npc_id=npc_id,
+            prefer_region=prefer_region,
+            exclude_ids=exclude_ids,
+        )
     )
     order = [source for source in ("lore", "session", "npc") if source in readers]
 

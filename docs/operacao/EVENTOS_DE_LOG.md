@@ -95,6 +95,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `economy.unique_claim_conflict` | `item_id`, `source` |
 | `event.applied` | `event_id`, `type` |
 | `event.proposal_rejected` | `reason_code`, `source`, `target_ref`, `type` |
+| `faction_gate.fallback` | — |
 | `gamedata.artifact_save_failed` | `error` |
 | `gamedata.artifact_saved` | — |
 | `gamedata.file_missing` | `file` |
@@ -146,6 +147,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `npc.creating` | — |
 | `npc.db_persist_failed` | `error` |
 | `npc.db_read_failed` | `error` |
+| `npc.faction_block` | — |
+| `npc.faction_id_not_visible` | — |
 | `npc.fallback` | — |
 | `npc.generation_failed` | `error` |
 | `npc.knowledge_failed` | `error` |

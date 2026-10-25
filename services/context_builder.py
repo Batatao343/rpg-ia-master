@@ -47,6 +47,9 @@ except Exception:  # pragma: no cover - defensivo
 
 
 PURPOSES = ("story", "npc", "combat_narration", "planning")
+# SPEC-314 R13: onde o lore de fação secreta (plano ignoto) é redigido; o planner fica de fora (D4)
+LORE_REDACT_PURPOSES = frozenset({"npc", "story", "combat_narration"})
+_FACTION_NAME_EVENTS = frozenset({"faction_relation_changed", "location_control_changed"})
 
 # Seções do world_state_block (na ordem em que aparecem no prompt).
 _WS_SECTIONS = ("current_state", "active_location", "relations", "entities")
@@ -316,7 +319,17 @@ _ENGINE_VOICE_TYPES = frozenset(
 )
 
 
-def render_event(event: dict, projection: dict | None = None) -> str:
+def _accepts_exclude_ids(fn: Any) -> bool:
+    import inspect
+
+    try:
+        params = inspect.signature(fn).parameters
+    except (TypeError, ValueError):
+        return False
+    return "exclude_ids" in params or any(p.kind is p.VAR_KEYWORD for p in params.values())
+
+
+def render_event(event: dict, projection: dict | None = None, state: dict | None = None) -> str:
     """1 frase determinística por GameEvent. `secret_revealed` NÃO passa por aqui
     (é renderizado de world_projection.revealed_facts). Tipo desconhecido → ""."""
     etype = event.get("type")
@@ -337,13 +350,22 @@ def render_event(event: dict, projection: dict | None = None) -> str:
     tmpl = EVENT_TEMPLATES.get(etype)
     if not tmpl:
         return ""
+
+    def fname(entity_id: Any) -> str:  # SPEC-314 R14: fação secreta ignota não vaza o nome
+        shown = _name(entity_id)
+        if state is None or etype not in _FACTION_NAME_EVENTS:
+            return shown
+        from services import faction_gate
+
+        return faction_gate.display_if_faction(state, str(entity_id or ""), shown)
+
     return tmpl.format(
         turn=event.get("turn", 0),
-        target=_name(event.get("target_id")),
+        target=fname(event.get("target_id")),
         actor=_name(event.get("actor_id", "player")),
-        controller=_name(payload.get("new_controller_id")),
+        controller=fname(payload.get("new_controller_id")),
         relation=payload.get("relation") or event.get("detail", "") or payload.get("detail", ""),
-        other=_name(payload.get("other_faction_id") or event.get("actor_id")),
+        other=fname(payload.get("other_faction_id") or event.get("actor_id")),
         other_loc=_name(payload.get("other_location_id")),
         deed="ajudou" if payload.get("direction") == "ajudou" else "prejudicou",
     )
@@ -432,7 +454,7 @@ def collect_dynamic_facts(
             continue  # SPEC-308 R4: evento do motor que o heroi nao viu nem ouviu
         if _npc_world.event_hidden_from_player(state, ev):
             continue  # SPEC-304 R23: fato off-screen que o jogador ainda nao percebeu
-        text = render_event(ev, projection)
+        text = render_event(ev, projection, state)
         impact = _IMPACT_BY_TYPE.get(ev.get("type"), _DEFAULT_IMPACT)
         turns_ago = max(0, current_turn - int(ev.get("turn", 0) or 0))
         add(text, "current_state", impact=impact, turns_ago=turns_ago, sid=ev.get("event_id", ""))
@@ -730,13 +752,16 @@ def build_context_pack(
     token_budget: int = 3500,
     game_id: str | None = None,
     npc_id: str | None = None,
+    own_faction: str = "",
 ) -> ContextPack:
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
     from observability.latency import TurnPhase
     from observability.latency import phase as _phase
 
     with _phase(TurnPhase.CONTEXT):
-        pack = _build_context_pack(state, query, purpose, token_budget, game_id, npc_id)
+        pack = _build_context_pack(
+            state, query, purpose, token_budget, game_id, npc_id, own_faction
+        )
     # SPEC-207 R7: refs do contexto visto vão ao coletor do turno (no-op fora do turno).
     from services.audit_trace import note_context
 
@@ -751,6 +776,7 @@ def _build_context_pack(
     token_budget: int = 3500,
     game_id: str | None = None,
     npc_id: str | None = None,
+    own_faction: str = "",
 ) -> ContextPack:
     """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
     rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
@@ -811,6 +837,17 @@ def _build_context_pack(
         embed_context_query,
     )
 
+    # SPEC-314 R13: página do Codex de fação secreta (plano ignoto) não volta ao narrador/NPC
+    exclude_kw: dict = {}
+    if purpose in LORE_REDACT_PURPOSES:
+        from services import faction_gate
+
+        redacted = faction_gate.redacted_lore_ids(state, own_faction)
+        if redacted and _accepts_exclude_ids(
+            query_rag
+        ):  # dublês de assinatura antiga ficam como estão
+            exclude_kw = {"exclude_ids": redacted}
+
     custom_readers = None
     if RAG_AVAILABLE and (
         query_rag is not getattr(_rag, "query_rag", None)
@@ -822,6 +859,7 @@ def _build_context_pack(
                 query,
                 index_name="lore",
                 max_visibility="public",
+                **exclude_kw,
             )
         }
         if game_id:
@@ -854,6 +892,7 @@ def _build_context_pack(
         max_workers=workers,
         readers=custom_readers,
         **({"prefer_region": prefer_region} if prefer_region else {}),
+        **exclude_kw,
     )
     source_text = {result.source: result.text for result in acquired}
     lore_text = source_text.get("lore", "")

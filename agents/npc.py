@@ -159,7 +159,12 @@ def _valid_race_id(value: object) -> str:
 
 
 class FactionReveal(BaseModel):
-    faction_id: str = Field(description="id EXATO de uma facção listada em <FACÇÕES_DO_MUNDO>.")
+    faction_id: str = Field(
+        description=(
+            "id EXATO que aparece em <FACÇÕES_DO_MUNDO> (inclui 'sua_irmandade'); "
+            "facção fora da lista = vazio."
+        )
+    )
     reveal_level: str = Field(
         description="O QUANTO este NPC revelou: 'existencia' (citou a facção), "
         "'objetivo' (contou o plano) ou 'progresso' (sabe quão perto está)."
@@ -173,7 +178,13 @@ class MembershipAction(BaseModel):
         default="",
         description="'join' | 'leave' | 'ask_mission'; vazio se o jogador não pediu isso.",
     )
-    faction_id: str = Field(default="", description="id EXATO de <FACÇÕES_DO_MUNDO>.")
+    faction_id: str = Field(
+        default="",
+        description=(
+            "id EXATO que aparece em <FACÇÕES_DO_MUNDO> (inclui 'sua_irmandade'); "
+            "facção fora da lista = vazio."
+        ),
+    )
 
 
 RELATIONSHIP_STEP_CAP = 1  # SPEC-230 R7 (D-A default ±1 por turno); SPEC-223 R4 reusa
@@ -210,8 +221,9 @@ class NPCResponse(BaseModel):
         default=None,
         description=(
             "SOMENTE se o jogador pediu EXPLICITAMENTE a você, neste turno, para entrar "
-            "numa fação, sair dela ou pedir uma missão a ela. faction_id EXATO de "
-            "<FACÇÕES_DO_MUNDO>. Na dúvida, vazio: o motor decide se é possível."
+            "numa fação, sair dela ou pedir uma missão a ela. faction_id EXATO que aparece em "
+            "<FACÇÕES_DO_MUNDO> (inclui 'sua_irmandade'); fora da lista = vazio. "
+            "Na dúvida, vazio: o motor decide se é possível."
         ),
     )
     proposed_quests: list[ProposedQuest] = Field(
@@ -633,6 +645,19 @@ def _npc_self_prompt(state, npc_key, npc_data, npc_id, evidence_ids) -> str:
         from observability.telemetry import log_fallback
 
         log_fallback("npc", "self_block_failed", exc)
+        return ""
+
+
+def _own_faction(state, npc_key, npc_data) -> str:
+    """SPEC-314 R13: fação do próprio NPC (exceção do lore redigido). Falha = ''."""
+    try:
+        from services import npc_self
+
+        return npc_self.self_faction(state, str(npc_key), npc_data)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("npc", "own_faction_failed", exc)
         return ""
 
 
@@ -1073,6 +1098,7 @@ def npc_actor_node(state: GameState):
         except Exception as exc:  # o turno segue; o gate falha fechado
             _log_event("npc", "knowledge_failed", level="warning", error=type(exc).__name__)
             knowledge_new = []
+    own_faction = _own_faction(pack_state, npc_state_key or npc_name, npc_data)  # SPEC-314 R13
     pack = build_context_pack(
         pack_state,
         query=compose_lore_query(
@@ -1081,6 +1107,7 @@ def npc_actor_node(state: GameState):
         purpose="npc",
         game_id=game_id,
         npc_id=npc_id,
+        **({"own_faction": own_faction} if own_faction else {}),
     )
     relevant_memory = pack.memory_block
     public_lore = pack.lore_block
@@ -1088,14 +1115,7 @@ def npc_actor_node(state: GameState):
     # Fações do mundo: o NPC PODE saber delas (e revelar ao jogador). O conhecimento do
     # jogador (faction_intel) só avança por aqui — fora daqui ele não é onisciente.
     factions = ensure_factions(state.get("factions"))
-    faccoes_mundo = (
-        "\n".join(
-            f"- id={f.get('id')} · {f.get('name')} ({f.get('region', '')}) · plano: {f.get('goal', '')}"
-            for f in factions
-            if not f.get("defeated")
-        )
-        or "Nenhuma facção conhecida no mundo."
-    )
+    # SPEC-314: o bloco é montado em Python (faction_gate), depois de `tier_now`.
 
     llm = get_llm(temperature=0.8, tier=ModelTier.FAST)
 
@@ -1149,6 +1169,11 @@ def npc_actor_node(state: GameState):
         lei_block = chr(10).join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
     atitude_block = _rep.attitude_block(state, npc_data, social)
     tier_now = _rep.npc_tier(npc_data.get("relationship"))
+    from services import faction_gate
+
+    faction_view = faction_gate.npc_faction_view(
+        pack_state, npc_state_key or npc_name, npc_data, tier_now
+    )  # SPEC-314 R1-R8
     # SPEC-300 R11: interlocutor companheiro recebe o bloco da alma (sem chamada extra).
     try:
         from services.companion_prompt import companion_prompt_block
@@ -1217,11 +1242,7 @@ def npc_actor_node(state: GameState):
     {_WORLD_TRUTH_NOTE_ON if knowledge_mode == "on" else _WORLD_TRUTH_NOTE_OFF}
 
     <FACÇÕES_DO_MUNDO>
-    {faccoes_mundo}
-    Se — e SOMENTE se — seu personagem plausivelmente saber de uma destas facções (pela ocupação/local)
-    E a conversa levar a isso, você pode contar ao jogador. Registre em 'faction_reveals' o faction_id
-    EXATO e o nível: 'existencia' (só citou), 'objetivo' (contou o plano), 'progresso' (sabe quão perto está).
-    Um camponês comum NÃO conhece os planos de cultos distantes. Na dúvida, deixe vazio ou solte só um rumor.
+    {faction_view.block}
     </FACÇÕES_DO_MUNDO>
 
     {faction_member_block}
@@ -1387,15 +1408,21 @@ def npc_actor_node(state: GameState):
         intel = ensure_faction_intel(state.get("faction_intel"))
         for rev in getattr(res, "faction_reveals", []) or []:
             # SPEC-298 R23: a faixa de relação limita o que o NPC revela (Python decide).
+            real_fid = faction_gate.resolve_proposed_id(
+                faction_view, getattr(rev, "faction_id", "")
+            )  # SPEC-314 R9
+            if not real_fid:
+                continue
             allowed = _rep.clamp_reveal(
                 getattr(rev, "reveal_level", ""), tier_now, (social or {}).get("reveal_mode")
             )
+            allowed = faction_gate.cap_reveal(faction_view, real_fid, allowed, tier_now)  # R10
             if not allowed:
                 continue
             intel = apply_faction_reveal(
                 intel,
                 factions,
-                getattr(rev, "faction_id", ""),
+                real_fid,
                 allowed,
                 turn,
             )
@@ -1472,9 +1499,10 @@ def npc_actor_node(state: GameState):
                 "factions": factions,
                 "faction_intel": intel,
             }
-            fm_upd, fm_events, fm_note = _fm.apply_intent(
-                fm_view, member_action.action, member_action.faction_id
-            )
+            fm_fid = faction_gate.resolve_proposed_id(faction_view, member_action.faction_id)
+            fm_upd, fm_events, fm_note = (
+                _fm.apply_intent(fm_view, member_action.action, fm_fid) if fm_fid else ({}, [], "")
+            )  # SPEC-314 R9/R11
             if "quests" in fm_upd:
                 quests_now = fm_upd["quests"]
             for key in ("faction_membership", "faction_intel"):

@@ -93,13 +93,9 @@ def _faction_known(state: dict, fid: str) -> bool:
 
 
 def _faction_is_secret(fid: str) -> bool:
-    from services import faction_membership as fm
-    from services import graph_resolver as gr
+    from services import faction_gate
 
-    if fm.load_catalog().get(fid, {}).get("secret"):
-        return True
-    ent = gr.get_entity(fid) or {}
-    return str(ent.get("visibility") or "public") != "public"
+    return faction_gate.is_secret(fid)  # SPEC-314: regra única
 
 
 def _faction_name(state: dict, fid: str) -> str:
@@ -160,6 +156,10 @@ def _identity_lines(state: dict, npc_key: str, row: dict) -> list[str]:
     if _defeated(state, fid):
         return [f"Você servia a {name}, que caiu."]
     if _faction_is_secret(fid):
+        from services import reputation
+
+        if reputation.npc_tier((row or {}).get("relationship")) == "leal":  # SPEC-314 R15
+            return [f"Você serve em segredo a {name}; só admita a quem confia de verdade."]
         if not known:
             return [
                 "Você serve em segredo a uma irmandade que não pode ser nomeada; nunca admita isso."

@@ -121,7 +121,8 @@ def rerank_by_region(docs: list, region_id: str | None, k: int) -> list:
             return 2
         return 1
 
-    # Página de fação secreta nunca ganha prioridade (mitigação até a SPEC-314): fica no rank original.
+    # Página de fação secreta que SOBROU do filtro R13 da SPEC-314 (ex.: o jogador já sabe o plano)
+    # nunca ganha prioridade: fica no rank original. O descarte é `rag._drop_excluded`, antes daqui.
     pinned = {i for i, d in enumerate(docs) if _is_secret_faction(d)}
     movable = sorted(
         (d for i, d in enumerate(docs) if i not in pinned), key=band

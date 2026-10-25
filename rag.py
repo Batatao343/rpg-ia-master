@@ -972,11 +972,24 @@ def prepare_shared_query_vector(
     return vector, provider, _PROVIDER_MODELS.get(provider)
 
 
+def _doc_entity_id(doc: Any) -> str:
+    meta = getattr(doc, "metadata", None) or {}
+    return str(meta.get("id") or meta.get("entity_id") or "")
+
+
+def _drop_excluded(docs: list, exclude_ids: frozenset[str]) -> list:
+    """SPEC-314 R13: descarta chunks do Codex cujo id está vedado (antes do corte em K)."""
+    if not exclude_ids:
+        return list(docs)
+    return [d for d in docs if _doc_entity_id(d) not in exclude_ids]
+
+
 def query_global_by_vector(
     vector: list[float],
     index_name: str = "lore",
     max_visibility: str = "public",
     prefer_region: str | None = None,
+    exclude_ids: frozenset[str] = frozenset(),
 ) -> str:
     from services.lore_query import LORE_K, RERANK_CANDIDATES, rerank_by_region
 
@@ -989,13 +1002,16 @@ def query_global_by_vector(
                 text="",
                 scope="rules" if index_name == "rules" else "lore",
                 max_visibility=max_visibility,
-                k=RERANK_CANDIDATES if prefer_region else LORE_K,  # SPEC-311 R21
+                k=RERANK_CANDIDATES if (prefer_region or exclude_ids) else LORE_K,  # SPEC-311 R21
                 vector=tuple(vector),
                 embedding_profile_id=embedding_profile_id(),
             )
         )
+        documents = _drop_excluded(documents, exclude_ids)
         if prefer_region:
             documents = rerank_by_region(documents, prefer_region, LORE_K)
+        elif exclude_ids:
+            documents = documents[:LORE_K]
         return "\n---\n".join(document.text for document in documents if document.text)
     path = get_global_db_path(index_name)
     if not vector or not _has_faiss_index(path):
@@ -1008,13 +1024,16 @@ def query_global_by_vector(
         evidence = query_faiss_evidence(
             db,
             vector,
-            k=RERANK_CANDIDATES if prefer_region else LORE_K,
+            k=RERANK_CANDIDATES if (prefer_region or exclude_ids) else LORE_K,
             fetch_k=RERANK_CANDIDATES,
             max_visibility=max_visibility,
             source=index_name,
         )
+        evidence = _drop_excluded(evidence, exclude_ids)
         if prefer_region:  # SPEC-311 R20: só reordena candidatos JÁ filtrados por visibilidade
             evidence = rerank_by_region(evidence, prefer_region, LORE_K)
+        elif exclude_ids:
+            evidence = evidence[:LORE_K]
         return _format_documents(evidence)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
@@ -1108,6 +1127,7 @@ def _query_rag_impl(
     game_id: str | None = None,
     max_visibility: str = "public",
     prefer_region: str | None = None,
+    exclude_ids: frozenset[str] = frozenset(),
 ) -> str:
     """
     Busca contexto de forma híbrida:
@@ -1131,11 +1151,14 @@ def _query_rag_impl(
                 text=query,
                 scope="rules" if index_name == "rules" else "lore",
                 max_visibility=max_visibility,
-                k=RERANK_CANDIDATES if prefer_region else LORE_K,  # SPEC-311 R21
+                k=RERANK_CANDIDATES if (prefer_region or exclude_ids) else LORE_K,  # SPEC-311 R21
             )
         )
+        global_docs = _drop_excluded(global_docs, exclude_ids)
         if prefer_region:
             global_docs = rerank_by_region(global_docs, prefer_region, LORE_K)
+        elif exclude_ids:
+            global_docs = global_docs[:LORE_K]
         session_docs = []
         if game_id:
             principal = current_principal()
@@ -1169,9 +1192,10 @@ def _query_rag_impl(
                     global_path, embeddings, allow_dangerous_deserialization=True
                 )
                 candidatos = global_db.similarity_search(query, k=6)
-                visiveis = [
-                    d for d in candidatos if vis_rank(d.metadata.get("visibility")) <= max_rank
-                ]
+                visiveis = _drop_excluded(  # SPEC-314 R13: antes do corte em K
+                    [d for d in candidatos if vis_rank(d.metadata.get("visibility")) <= max_rank],
+                    exclude_ids,
+                )
                 if prefer_region:  # SPEC-311 R20 (após o filtro de visibilidade)
                     global_results.extend(rerank_by_region(visiveis, prefer_region, LORE_K))
                 else:
@@ -1207,6 +1231,7 @@ def query_rag(
     game_id: str | None = None,
     max_visibility: str = "public",
     prefer_region: str | None = None,
+    exclude_ids: frozenset[str] = frozenset(),
 ) -> str:
     """Boundary observável da busca híbrida, sem expor consulta nem IDs."""
     started = time.perf_counter()
@@ -1216,7 +1241,9 @@ def query_rag(
         from observability.telemetry import span
 
         with span("rag.query", scope=scope):
-            return _query_rag_impl(query, index_name, game_id, max_visibility, prefer_region)
+            return _query_rag_impl(
+                query, index_name, game_id, max_visibility, prefer_region, exclude_ids
+            )
     except Exception:
         outcome = "error"
         raise

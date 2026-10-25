@@ -1,6 +1,6 @@
 # SPEC-314 — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 
-> **Status:** `approved` (dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
+> **Status:** `in-progress` (implementada 25/10; falta revisão independente e smoke §6) (aprovada pelo dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-298 (`clamp_reveal`/`reveal_ceiling` por faixa), SPEC-301 (catálogo
 > `data/faction_membership.json` com `secret`, `rivals`, `recruiter_npc_ids`; `apply_intent`),
@@ -248,11 +248,11 @@ entidade com `visibility != public` (mesma regra de `services/npc_self.py:95-102
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R20 cobertos por testes nomeados no §4, verdes.
-- [ ] `tests/test_spec310_no_leak.py` e testes de 298/301 seguem verdes sem mudar asserts.
-- [ ] Nenhuma chamada LLM nova; nenhum `with_structured_output` novo (o guard existente em
+- [x] R1–R20 cobertos por testes nomeados no §4, verdes.
+- [x] `tests/test_spec310_no_leak.py` e testes de 298/301 seguem verdes sem mudar asserts.
+- [x] Nenhuma chamada LLM nova; nenhum `with_structured_output` novo (o guard existente em
       `agents/npc.py:1153` cobre).
-- [ ] Saves antigos (sem `faction_intel`) carregam e conversam com NPC (R16).
+- [x] Saves antigos (sem `faction_intel`) carregam e conversam com NPC (R16).
 - [ ] `uv run pytest` verde (suíte completa offline, no pouso).
 - [ ] Smoke §6 executado e registrado na spec.
 
@@ -309,3 +309,18 @@ lore real. **≤ 5 requests**, teto US$ 0,05. Cada passo: save preparado + 1 fal
   Alternativa: checar `goal`/termos-chave no `dialogue` e trocar por fala neutra.
 - **D6 — Kill switch.** **Sem flag:** é correção de vazamento, vale direto. Alternativa:
   `RPG_FACTION_GATE=on|off`.
+
+## 9. Notas de implementação (desvios)
+
+- API pública para a SPEC-315 em `services/faction_gate.py`: `is_secret(fid)`,
+  `known_to_player(state, fid)`, `goal_known_to_player(state, fid)`,
+  `display_faction(state, fid)`, `redacted_lore_ids(state, own="")`. `is_secret` agora exige
+  que a entidade do grafo seja fação (um local oculto não é "fação secreta").
+- `build_context_pack(..., own_faction="")` ganhou o parâmetro (o `npc_actor` o passa). Leitor
+  de lore substituto com assinatura antiga (sem `exclude_ids`/`**kw`) não recebe o filtro.
+- `rerank_by_region` mantém o pin de página de fação secreta (mitigação da 311) só para o que
+  sobrar do filtro R13 (ex.: o jogador já sabe o plano).
+- Fora do escopo, achados em R19: (a) arestas do grafo no pack (`A Mão Sombria —operates_in→
+  Nova Arcádia`) e (b) o menu de ganchos da 313 (criaturas "da Mão Sombria") ainda citam o
+  NOME de fação secreta; o plano não vaza. Mascarar (a) quebra o snapshot de ouro de
+  `tests/test_context_npc_gate.py` — follow-up.
