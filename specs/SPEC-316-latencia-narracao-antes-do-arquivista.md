@@ -1,6 +1,6 @@
 # SPEC-316 — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (servidor + testes implementados 25/10; pendem medição §6, revisão independente e UI do cliente na SPEC-320) (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-036 (`done`, SSE), SPEC-200 (`done`, marcas ttfmc/ttlt), SPEC-213 (`done`, projeções), SPEC-247 (`done`, worker SSE sobrevive à desconexão)
 > **Desbloqueia:** SPEC-318 (trabalho fora do caminho crítico), SPEC-319 (streaming de tokens e cauda)
@@ -98,6 +98,46 @@ Alvo: TTFMC p50 ≤ 7 s (−35 %) sem mudar estado final, save ou `GameResponse`
 - **Alterado** `web/src/api.ts` (`handleEvent`, ≈L170): `narrative.replace`, `visual` após narração;
   `web/src/App.tsx`: selo "ainda salvando", erro com `narrative_shown`, retry com mesmo `action_id`.
 - **Sem schema novo de estado.** Nenhum campo em `GameState`; saves inalterados.
+
+### 3.1 Contrato SSE para o cliente (SPEC-320 implementa contra isto)
+
+Sequência com `RPG_EARLY_NARRATIVE=on` (`off`/`shadow` = ordem legada da SPEC-036, sem `replace`):
+
+```text
+accepted {game_id}
+phase {node, status:"done"}  ×N   (campaign_manager, dm_router, ...)
+route {route}
+phase {node:"storyteller"|"combat_agent"|"npc_actor"|"loot_agent"}
+narrative {chunk, done:false}  ×K      <- texto final já guardado (≤ 80 chars/chunk)
+narrative {chunk:"", done:true}        <- "estágio": narração entregue, turno ainda NÃO salvo
+phase {node:"archivist"}               <- o escriba registra… (até o evento state)
+[narrative {chunk:<texto final>, done:true, replace:true}]   <- só se o texto final difere
+visual {…}                              <- agora DEPOIS da narração (antes vinha antes)
+state {GameResponse}                    <- turno commitado; libera o input
+```
+
+- Narração é emitida **uma vez** por turno (o 1º nó narrador terminal); updates posteriores não emitem.
+- Selo "o escriba registra…": visível entre `narrative done:true` (sem `replace`) e `state`.
+- `replace:true` traz o texto **inteiro** que substitui o exibido; nunca deve ser anexado ao anterior.
+  Cliente antigo que ignora `done` em `narrative` e troca o texto no `state` continua correto.
+- `error` após narração leva `narrative_shown:true` (além de `detail/code/error_code/request_id`):
+  manter o texto com selo "não salvo" e oferecer retry com o **mesmo** `action_id`.
+- `error` sem `narrative_shown` = nada foi mostrado; fluxo atual (fallback POST).
+- `web/src/api.ts` já roteia `replace` para `handlers.onReplace` (e **não** para `onChunk`).
+
+### Desvios da implementação (25/10)
+
+- `early_narrative(state_before, update, node="")` ganhou `node` (um nó narrador não se auto-suprime
+  pelo próprio `next`); `next="loot"` (router) é tratado como `loot_agent`.
+- O texto antecipado descarta `last_turn_outcome` do estado (é o recibo do turno **anterior**) e aplica
+  o mesmo véu de exibição do `format_response` (SPEC-293, `conceal_text`).
+- `early_narrative`/`early_gain_ms` saem na linha `turn_delivery` (montada em `api._log_turn_delivery`,
+  não em `observability/latency.py`). `early_gain_ms` em `shadow` é hipotético (`state` − texto pronto).
+- Evento novo de log: `sse.early_narrative_shadow {gain_ms, identical}`; falha do cálculo =
+  `sse.fallback early_narrative_failed` (o turno segue pelo caminho legado).
+- Cliente: só `api.ts` (`onReplace`). Selo, `narrative_shown` e retry na UI ficam na SPEC-320 (o fluxo
+  atual já cai no POST com o mesmo `action_id` em erro ≥ 500). Etapa 4 (playtest) não rodada: o runner
+  usa `app.invoke`, que este código não toca.
 
 ## 4. Plano passo a passo
 

@@ -142,6 +142,8 @@ export interface StreamHandlers {
   onRoute?: (route: string) => void;
   onChunk?: (chunk: string, done: boolean) => void;
   onVisual?: (visual: VisualResponse) => void;
+  /** SPEC-316: texto final que substitui o já exibido (guard/recibo mudou a prosa). */
+  onReplace?: (text: string) => void;
   /** SPEC-200: primeiro byte do corpo SSE lido (ack percebido). */
   onAck?: () => void;
   /** SPEC-200: TODOS os eventos decodificados, inclusive `accepted`. */
@@ -187,7 +189,11 @@ export async function sendActionStream(
     }
     if (name === "phase") handlers.onPhase?.(payload.node);
     else if (name === "route") handlers.onRoute?.(payload.route);
-    else if (name === "narrative") handlers.onChunk?.(payload.chunk, payload.done);
+    else if (name === "narrative") {
+      // SPEC-316: `replace` = texto final difere do antecipado; nunca é anexado como chunk.
+      if (payload.replace) handlers.onReplace?.(payload.chunk);
+      else handlers.onChunk?.(payload.chunk, payload.done);
+    }
     else if (name === "visual") handlers.onVisual?.(payload as VisualResponse);
     else if (name === "state") finalState = payload as GameResponse;
   };

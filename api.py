@@ -5689,6 +5689,20 @@ def _run_turn(
         )
 
 
+def _early_event(early_state: dict, node: str, update: Any) -> dict | None:
+    """SPEC-316: texto antecipado do no narrador `node` (ou None). Nunca derruba o turno."""
+    try:
+        from services.turn_delivery import early_narrative
+
+        text = early_narrative(early_state["acc"], update, node)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("sse", "early_narrative_failed", exc)
+        return None
+    return {"text": text, "node": node} if text else None
+
+
 def _run_turn_collected(
     state: dict,
     input_text: str,
@@ -5725,19 +5739,32 @@ def _run_turn_collected(
     eventos_antes = len(state.get("event_log", []))
     rejections_antes = len(state.get("event_rejections", []) or [])
 
+    from services import turn_delivery as _delivery
+
+    # SPEC-316: so o stream (progress != None) antecipa a narracao; POST nao muda.
+    early_on = progress is not None and _delivery.early_mode() != "off"
+    early_state = {"acc": state}
+
     def _timeline_progress(chunk):
         # SPEC-200 R3: atribuicao por intervalo entre updates (criterio da SPEC-116).
+        early_event = None
         try:
             mode, data = chunk
+            if mode == "values":
+                early_state["acc"] = data  # estado ANTES da proxima update
             if mode == "updates":
                 for node, update in (data or {}).items():
                     timeline.node_done(str(node))
                     if node == "dm_router" and isinstance(update, dict) and update.get("next"):
                         timeline.extra["route_next"] = str(update["next"])
+                    if early_on and node in _delivery.NARRATING_NODES:
+                        early_event = _early_event(early_state, str(node), update)
         except Exception:
             pass
         if progress is not None:
             progress(chunk)
+            if early_event is not None:
+                progress(("early_narrative", early_event))
 
     try:
         previous_state = deepcopy(state)
@@ -6231,7 +6258,7 @@ def _stream_turn(
             )
             if worker_done is not None:
                 _sse_log("worker_finished_after_disconnect", outcome=worker_done)
-        _log_turn_delivery(timeline, outcome["value"], outcome.get("error_type"))
+        _log_turn_delivery(timeline, outcome["value"], outcome.get("error_type"), outcome)
         _publish_timeline(timeline, outcome["value"])
 
 
@@ -6252,7 +6279,29 @@ def _worker_done(outcome: dict, result: str) -> None:
         _sse_log("worker_finished_after_disconnect", outcome=result)
 
 
-def _log_turn_delivery(timeline, outcome: str, error_type: str | None = None) -> None:
+def _record_early_delivery(
+    outcome: dict, timeline, *, early_on: bool, shadow_text: str | None, final_text: str
+) -> None:
+    """SPEC-316 R7/R8: ganho da entrega antecipada (`state_ms - ttlt_ms`); no `shadow`
+    o ganho e hipotetico (texto calculado, nao emitido) e vai ao log `sse.early_narrative_shadow`."""
+    state_ms = timeline.mark_ms("state")
+    if state_ms is None:
+        return
+    if early_on:
+        ttlt_ms = timeline.mark_ms("ttlt")
+        outcome["early_narrative"] = True
+        outcome["early_gain_ms"] = None if ttlt_ms is None else max(0, state_ms - ttlt_ms)
+    elif shadow_text is not None:
+        shadow_ms = timeline.mark_ms("early_shadow")
+        gain = None if shadow_ms is None else max(0, state_ms - shadow_ms)
+        outcome["early_narrative"] = False
+        outcome["early_gain_ms"] = gain
+        _sse_log("early_narrative_shadow", gain_ms=gain, identical=shadow_text == final_text)
+
+
+def _log_turn_delivery(
+    timeline, outcome: str, error_type: str | None = None, early: dict | None = None
+) -> None:
     """Linha `evt:"turn_delivery"`: marcas de entrega que so existem apos o worker
     ter logado `rpg.turn` (ttfmc/ttlt). Sem texto, sem game_id cru."""
     try:
@@ -6270,6 +6319,8 @@ def _log_turn_delivery(timeline, outcome: str, error_type: str | None = None) ->
                     "ttfmc_server_ms": timeline.mark_ms("ttfmc"),
                     "ttlt_server_ms": timeline.mark_ms("ttlt"),
                     "state_server_ms": timeline.mark_ms("state"),
+                    "early_narrative": bool((early or {}).get("early_narrative", False)),
+                    "early_gain_ms": (early or {}).get("early_gain_ms"),
                     "outcome": outcome,
                     **({"error_type": error_type} if outcome == "error" and error_type else {}),
                 }
@@ -6381,6 +6432,23 @@ def _stream_turn_events(
         except Exception:
             pass
 
+    from services.turn_delivery import early_mode, narrative_chunks
+
+    # SPEC-316: `off` ignora; `shadow` so mede; `on` emite a narracao antes do arquivista.
+    delivery_mode = early_mode()
+    emitted_text: str | None = None  # narracao ja entregue ao cliente (modo `on`)
+    shadow_text: str | None = None
+
+    def _emit_early(text: str) -> Iterator[str]:
+        for piece in narrative_chunks(text, _NARRATIVE_CHUNK):
+            if piece.strip() and timeline.mark_ms("ttfmc") is None:
+                timeline.mark("ttfmc")
+                _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
+            yield _sse("narrative", {"chunk": piece, "done": False})
+        timeline.mark("ttlt")
+        _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
+        yield _sse("narrative", {"chunk": "", "done": True})
+
     while True:
         try:
             kind, payload = q.get(timeout=_SSE_PING_S)
@@ -6389,22 +6457,34 @@ def _stream_turn_events(
             continue
         if kind == "http_error":
             outcome["value"] = "error"
+            if emitted_text is not None:
+                payload = {**payload, "narrative_shown": True}  # SPEC-316 R5
             yield _sse("error", payload)
             return
         if kind == "exc":
             outcome["value"] = "error"
-            yield _sse(
-                "error",
-                {
-                    "detail": "Erro interno ao processar o turno.",
-                    "code": 500,
-                    "error_code": "internal_turn_error",
-                    "request_id": _current_request_id(),
-                },
-            )
+            body = {
+                "detail": "Erro interno ao processar o turno.",
+                "code": 500,
+                "error_code": "internal_turn_error",
+                "request_id": _current_request_id(),
+            }
+            if emitted_text is not None:
+                body["narrative_shown"] = True  # SPEC-316 R5
+            yield _sse("error", body)
             return
         if kind == "chunk":
             mode, data = payload
+            if mode == "early_narrative":
+                text = str((data or {}).get("text") or "")
+                if delivery_mode == "on" and emitted_text is None and text.strip():
+                    emitted_text = text
+                    outcome["phase"] = "narrative_early"
+                    yield from _emit_early(text)
+                elif delivery_mode == "shadow" and shadow_text is None and text.strip():
+                    shadow_text = text
+                    timeline.mark("early_shadow")
+                continue
             if mode == "updates":
                 for node, upd in (data or {}).items():
                     if node not in {"action_guard", "turn_prepare", "dispatch", "turn_finalizer"}:
@@ -6416,18 +6496,30 @@ def _stream_turn_events(
         if kind == "response":
             resp = payload
             outcome["phase"] = "narrative"
-            yield _sse("visual", resp.visual.model_dump(mode="json"))
             narrative = resp.message or ""
-            for i in range(0, len(narrative), _NARRATIVE_CHUNK):
-                piece = narrative[i : i + _NARRATIVE_CHUNK]
-                if piece.strip() and timeline.mark_ms("ttfmc") is None:
-                    timeline.mark("ttfmc")  # primeiro conteudo significativo (SPEC-200)
-                    _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
-                yield _sse("narrative", {"chunk": piece, "done": False})
-            timeline.mark("ttlt")
-            _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
-            yield _sse("narrative", {"chunk": "", "done": True})
+            if emitted_text is None:
+                yield _sse("visual", resp.visual.model_dump(mode="json"))
+                for i in range(0, len(narrative), _NARRATIVE_CHUNK):
+                    piece = narrative[i : i + _NARRATIVE_CHUNK]
+                    if piece.strip() and timeline.mark_ms("ttfmc") is None:
+                        timeline.mark("ttfmc")  # primeiro conteudo significativo (SPEC-200)
+                        _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
+                    yield _sse("narrative", {"chunk": piece, "done": False})
+                timeline.mark("ttlt")
+                _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
+                yield _sse("narrative", {"chunk": "", "done": True})
+            else:
+                if narrative != emitted_text:  # R2: o guard/recibo mudou a prosa
+                    yield _sse("narrative", {"chunk": narrative, "done": True, "replace": True})
+                yield _sse("visual", resp.visual.model_dump(mode="json"))
             timeline.mark("state")
+            _record_early_delivery(
+                outcome,
+                timeline,
+                early_on=emitted_text is not None,
+                shadow_text=shadow_text,
+                final_text=narrative,
+            )
             outcome["value"] = "ok"
             yield _sse("state", json.loads(resp.model_dump_json()))
             return

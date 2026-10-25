@@ -361,7 +361,9 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "runtime.embedding_profile_ensure_failed": ("error",),
     "runtime.request_rls_disabled": ("profile",),
     "sse.client_disconnected": ("elapsed_ms", "phase"),
+    "sse.early_narrative_shadow": ("gain_ms", "identical"),
     "sse.error": ("code", "error_type", "stack", "status"),
+    "sse.fallback": (),
     "sse.started": ("transport",),
     "sse.worker_finished_after_disconnect": ("outcome",),
     "store.listing_row_skipped": ("error",),
@@ -388,6 +390,8 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "turn_delivery": (
         "ack_server_ms",
         "action_ref",
+        "early_gain_ms",
+        "early_narrative",
         "outcome",
         "pseudo_streaming",
         "state_server_ms",

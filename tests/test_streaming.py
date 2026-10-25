@@ -244,3 +244,209 @@ def test_hook_nao_vaza_entre_turnos():
     assert api._llm_turn_events.get() is None
     api._telemetry_hook("groq", "m", "fast", 1, True)  # não pode crashar
     assert api._llm_turn_events.get() is None
+
+
+# ---------------------------------------------------------------------------
+# SPEC-316 — narracao entregue antes do arquivista (RPG_EARLY_NARRATIVE)
+# ---------------------------------------------------------------------------
+
+
+def _stream(client, gid: str, text: str = "olho ao redor", action_id: str | None = None) -> list:
+    body = {"input_text": text, "game_id": gid}
+    if action_id:
+        body["action_id"] = action_id
+    with client.stream("POST", "/game/action/stream", json=body) as r:
+        assert r.status_code == 200
+        return _read_sse(r)
+
+
+def _names(events: list) -> list[str]:
+    return [e for e, _ in events]
+
+
+def _phase_index(events: list, node: str) -> int:
+    return next(i for i, (e, d) in enumerate(events) if e == "phase" and d["node"] == node)
+
+
+def test_early_narrative_before_archivist_phase(client, monkeypatch):
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    names = _names(events)
+    first_narr = names.index("narrative")
+    assert first_narr < _phase_index(events, "archivist")
+    assert _phase_index(events, "storyteller") < first_narr
+    # contrato para o cliente: narrativa -> (fase arquivista) -> visual -> state
+    assert names.index("visual") > max(i for i, n in enumerate(names) if n == "narrative")
+    assert names[-1] == "state" and names.index("visual") == len(names) - 2
+    narr = "".join(d["chunk"] for e, d in events if e == "narrative" and not d.get("replace"))
+    final = events[-1][1]["message"]
+    replaced = [d for e, d in events if e == "narrative" and d.get("replace")]
+    assert (replaced[-1]["chunk"] if replaced else narr) == final
+    assert [d["done"] for e, d in events if e == "narrative"][-1] is True
+
+
+def test_shadow_mode_keeps_order_and_logs(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "shadow")
+    logs = []
+    real = api._sse_log
+
+    def _spy(event, **kw):
+        logs.append((event, kw))
+        real(event, **kw)
+
+    monkeypatch.setattr(api, "_sse_log", _spy)
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    names = _names(events)
+    assert names.index("visual") < names.index("narrative") < names.index("state")
+    assert _phase_index(events, "archivist") < names.index("narrative")
+    shadow = [kw for ev, kw in logs if ev == "early_narrative_shadow"]
+    assert len(shadow) == 1 and shadow[0]["gain_ms"] >= 0
+    assert isinstance(shadow[0]["identical"], bool)
+    assert not any(d.get("replace") for e, d in events if e == "narrative")
+
+
+def test_off_mode_byte_identical_to_head(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    logs = []
+    monkeypatch.setattr(api, "_sse_log", lambda event, **kw: logs.append(event))
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    names = _names(events)
+    # ordem legada da SPEC-036: visual -> narrative... -> state, tudo depois do arquivista
+    assert names[-1] == "state" and names[-2] == "narrative"
+    assert names.index("visual") < names.index("narrative")
+    assert _phase_index(events, "archivist") < names.index("visual")
+    assert "early_narrative_shadow" not in logs
+    assert not any(d.get("replace") for e, d in events if e == "narrative")
+
+
+def _run_with_mode(client, gid, mode, snapshot, monkeypatch):
+    """Restaura o save inicial e roda 1 turno com seed fixo no `mode`."""
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", mode)
+    path = persistence.save_path(gid)
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        fh.write(snapshot)
+    random.seed(99)
+    events = _stream(client, gid, action_id="11111111-1111-4111-8111-111111111111")
+    with open(path, encoding="utf-8", newline="") as fh:
+        return events, fh.read()
+
+
+def _scrub_timings(value):
+    if isinstance(value, dict):
+        return {k: _scrub_timings(v) for k, v in value.items() if not str(k).endswith("_ms")}
+    if isinstance(value, list):
+        return [_scrub_timings(v) for v in value]
+    return value
+
+
+def test_final_state_identical_on_vs_off(client, monkeypatch):
+    gid = _new_game(client)
+    path = persistence.save_path(gid)
+    with open(path, encoding="utf-8", newline="") as fh:
+        snapshot = fh.read()
+    ev_off, save_off = _run_with_mode(client, gid, "off", snapshot, monkeypatch)
+    ev_on, save_on = _run_with_mode(client, gid, "on", snapshot, monkeypatch)
+    state_off = next(d for e, d in ev_off if e == "state")
+    state_on = next(d for e, d in ev_on if e == "state")
+    assert state_on == state_off  # GameResponse
+    # save identico; so os relogios medidos (`*_ms`, ex.: ttfmc) podem variar entre rodadas
+    assert _scrub_timings(json.loads(save_on)) == _scrub_timings(json.loads(save_off))
+    assert _names(ev_on) != _names(ev_off)  # so a ordem dos eventos muda
+
+
+def test_replace_event_when_guard_changes_text(client, monkeypatch):
+    import services.turn_delivery as td
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    monkeypatch.setattr(td, "early_narrative", lambda *a, **k: "Texto antecipado provisório.")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    narr = [d for e, d in events if e == "narrative"]
+    assert "".join(d["chunk"] for d in narr if not d.get("replace")) == (
+        "Texto antecipado provisório."
+    )
+    replace = [d for d in narr if d.get("replace")]
+    assert len(replace) == 1 and replace[0]["done"] is True
+    assert replace[0]["chunk"] == events[-1][1]["message"]
+    assert _names(events).index("state") > _names(events).index("narrative")
+
+
+class _EncounterGraph:
+    """Proxy do grafo real: o `storyteller` aponta para `combat_agent` e um no de combate
+    sintetico narra depois. A execucao real (estado final) segue intacta."""
+
+    def __init__(self, real):
+        self._real = real
+
+    def __getattr__(self, name):
+        return getattr(self._real, name)
+
+    def stream(self, state, **kw):
+        from langchain_core.messages import AIMessage, SystemMessage
+
+        for mode, data in self._real.stream(state, **kw):
+            if mode == "updates" and "storyteller" in data:
+                story = dict(data["storyteller"])
+                story["next"] = "combat_agent"
+                story["messages"] = [SystemMessage(content="COMBAT START")]
+                yield mode, {"storyteller": story}
+                yield (
+                    mode,
+                    {"combat_agent": {"messages": [AIMessage(content="O combate rebenta.")]}},
+                )
+                continue
+            yield mode, data
+
+
+def test_encounter_turn_emits_narrative_once(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    monkeypatch.setattr(api, "game_graph", _EncounterGraph(api.game_graph))
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    dones = [d for e, d in events if e == "narrative" and d["done"] and not d.get("replace")]
+    assert len(dones) == 1
+    first = "".join(
+        d["chunk"] for e, d in events if e == "narrative" and not d["done"] and not d.get("replace")
+    )
+    assert first == "O combate rebenta."  # a update do storyteller (SystemMessage) nao emitiu
+
+
+def test_error_after_narrative_marks_shown(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+
+    def _boom(*a, **k):
+        raise RuntimeError("commit falhou")
+
+    monkeypatch.setattr(api, "_commit_turn", _boom)
+    events = _stream(client, gid)
+    names = _names(events)
+    assert "narrative" in names and names[-1] == "error"
+    assert events[-1][1]["narrative_shown"] is True
+    assert "commit falhou" not in json.dumps(events[-1][1])
+
+
+def test_error_before_narrative_has_no_shown_flag(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+
+    class _Boom:
+        def stream(self, *a, **k):
+            raise RuntimeError("x")
+
+    monkeypatch.setattr(api, "game_graph", _Boom())
+    events = _stream(client, gid)
+    assert events[-1][0] == "error" and "narrative_shown" not in events[-1][1]

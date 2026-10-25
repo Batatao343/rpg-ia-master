@@ -258,7 +258,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `runtime.embedding_profile_ensure_failed` | `error` |
 | `runtime.request_rls_disabled` | `profile` |
 | `sse.client_disconnected` | `elapsed_ms`, `phase` |
+| `sse.early_narrative_shadow` | `gain_ms`, `identical` |
 | `sse.error` | `code`, `error_type`, `stack`, `status` |
+| `sse.fallback` | — |
 | `sse.started` | `transport` |
 | `sse.worker_finished_after_disconnect` | `outcome` |
 | `store.listing_row_skipped` | `error` |
@@ -270,7 +272,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `stt.internal_error` | `code`, `error_type`, `stack` |
 | `stt.switch_check_failed` | `error_type`, `model`, `provider` |
 | `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `narrative_rejected`, `route`, `route_fallback_reason`, `route_source`, `turn` |
-| `turn_delivery` | `ack_server_ms`, `action_ref`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
+| `turn_delivery` | `ack_server_ms`, `action_ref`, `early_gain_ms`, `early_narrative`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
 | `turn_finalizer.fallback` | — |
 | `vector.profile_fallback` | `error_type`, `profile` |
 | `vector.semantic_degraded` | `error_type` |
