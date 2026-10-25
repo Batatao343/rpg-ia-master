@@ -1,6 +1,6 @@
 # SPEC-315 — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Origem:** pedido do dono (25/10): "o motor decide e a LLM narra, mas o mundo tem que ser vivo".
 > O motor tem um conjunto fechado de **tipos** de desfecho; a LLM pode inventar o **conteúdo**, que o

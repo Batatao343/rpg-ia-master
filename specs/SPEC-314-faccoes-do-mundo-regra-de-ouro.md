@@ -1,6 +1,6 @@
 # SPEC-314 — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-298 (`clamp_reveal`/`reveal_ceiling` por faixa), SPEC-301 (catálogo
 > `data/faction_membership.json` com `secret`, `rivals`, `recruiter_npc_ids`; `apply_intent`),
