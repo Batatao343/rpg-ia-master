@@ -1,6 +1,6 @@
 # SPEC-308 — Regra de ouro para eventos do motor de mundo
 
-> **Status:** `approved` (dono, 2026-10-24 — "escreva specs para isso"; proposta R1 da revisão orquestrada)
+> **Status:** `done` (2026-10-24) — na main (`889e975`); revisão Sol APPROVED_WITH_FOLLOWUPS após 1 rodada CHANGES_REQUIRED (relações da projection e API também filtradas). Smoke real §6 DeepSeek (cenário `mundo`, 15 turnos, seed 12): 0 erros (30 `rag.persistence_error` = FAISS local com acento). Follow-ups F1 (log compactado) e F2 (narrar recusa de rota bloqueada não percebida, SPEC-309).
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Depende de:** SPEC-302 (`done`), SPEC-304 (`done`), SPEC-305 (`done`)
 > **Desbloqueia:** SPEC-309 (mundo percebido no narrador), SPEC-312 (rumores)
@@ -139,11 +139,11 @@ não o `event_id` do evento que originou o item. Por isso não dá para filtrar 
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R8 cobertos por teste; o oráculo de vazamento passa com `RPG_NPC_WORLD` em `off` e em `on`.
-- [ ] O pack `planning` também filtra.
-- [ ] Saves antigos carregam.
-- [ ] Testes do escopo verdes com `-n 2`; a suíte completa roda 1× no pouso.
-- [ ] Revisão independente aprovada.
+- [x] R1–R8 cobertos por teste; o oráculo de vazamento passa com `RPG_NPC_WORLD` em `off` e em `on`.
+- [x] O pack `planning` também filtra.
+- [x] Saves antigos carregam.
+- [x] Testes do escopo verdes com `-n 2`; a suíte completa roda 1× no pouso.
+- [x] Revisão independente aprovada.
 
 ## 6. Smoke test com LLM real
 
