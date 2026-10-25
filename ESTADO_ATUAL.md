@@ -12,7 +12,7 @@
 - Onda 1 (296–307) `done`; **297** pool entre mundos `in-progress` (fecha na 1ª promoção observada no staging).
 - **Novas `draft` aguardando o dono:** 314 (fações secretas vazam plano no prompt do NPC e no lore público; D1–D6) e 315 (rumor adotado pelo motor: LLM propõe alegação, motor decide verdade e materializa; D1–D8).
 - Suíte offline verde no pouso da 313 (`-n 2`, sem `test_session_hardening_local`, que trava em `supabase status`).
-- Staging `839f23f` (24/10) com tudo do mundo vivo `on`; deploy da onda 2 em andamento com `RPG_RUMORS=shadow` e `RPG_LORE_QUESTS=shadow` até observar conclusão real.
+- Staging `db11b93` (25/10, 3 smokes verdes): mundo vivo `on` (engine, NPC knowledge/world, pool, lei; companheiros, quests de mundo, NPC self no default `on`); `RPG_RUMORS=shadow` e `RPG_LORE_QUESTS=shadow` até observar no real; Jev `primary`.
 - Regra (24/10): não disparar agentes em rajada; subagente só testes do escopo com `-n 2` e nunca `uv run` direto no worktree (cria `.venv` parcial); checar RAM (ver `CLAUDE.md`).
 
 ## Próximos 3 passos
