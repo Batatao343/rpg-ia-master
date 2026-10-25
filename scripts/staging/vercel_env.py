@@ -76,6 +76,10 @@ OPTIONAL_FLAGS = (
     "RPG_COMPANION_SOUL",
     "RPG_WORLD_QUESTS",
     "RPG_NPC_WORLD",
+    "RPG_NPC_SELF",
+    "RPG_RUMORS",
+    "RPG_RUMORS_PROPOSED",
+    "RPG_LORE_QUESTS",
 )
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
 # envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
@@ -96,8 +100,17 @@ NPC_KNOWLEDGE_MODES = ("off", "shadow", "on")
 WORLD_ENGINE_MODES = ("off", "shadow", "on")
 # SPEC-297: pool compartilhado entre mundos. ``off`` (default) = variavel ausente.
 SHARED_POOL_MODES = ("off", "shadow", "on")
-# Mundo vivo (SPEC-299/300/304/305): flags off|shadow|on enviadas com `--flag NOME=modo`.
-WORLD_FLAGS = ("RPG_LAW", "RPG_COMPANION_SOUL", "RPG_WORLD_QUESTS", "RPG_NPC_WORLD")
+# Mundo vivo (SPEC-299/300/304/305/310/312/313): flags off|shadow|on enviadas com `--flag NOME=modo`.
+WORLD_FLAGS = (
+    "RPG_LAW",
+    "RPG_COMPANION_SOUL",
+    "RPG_WORLD_QUESTS",
+    "RPG_NPC_WORLD",
+    "RPG_NPC_SELF",
+    "RPG_RUMORS",
+    "RPG_RUMORS_PROPOSED",
+    "RPG_LORE_QUESTS",
+)
 # SPEC-236 §6.2: teto diario temporariamente baixo (ex.: 0.01) para provocar um trip REAL pelo cron finops.
 # Reverter com um push sem a flag (volta ao default 5).
 DEFAULT_DAILY_CAP_BRL = NON_SECRET_LITERALS["RPG_DAILY_SPEND_CAP_BRL"]

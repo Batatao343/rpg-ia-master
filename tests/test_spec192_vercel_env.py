@@ -238,6 +238,8 @@ def test_shared_pool_flag_sets_mode_and_off_deletes_it():
 
 def test_world_flags_are_allowlisted():
     env, _ = ve.build_env(FILES, world_flags={"RPG_LAW": "shadow", "RPG_NPC_WORLD": "shadow"})
+    env2, _ = ve.build_env(FILES, world_flags={"RPG_RUMORS": "shadow", "RPG_LORE_QUESTS": "shadow"})
+    assert env2["RPG_RUMORS"] == "shadow" and env2["RPG_LORE_QUESTS"] == "shadow"
     assert env["RPG_LAW"] == "shadow" and env["RPG_NPC_WORLD"] == "shadow"
     plain, _ = ve.build_env(FILES)
     assert "RPG_LAW" not in plain and "RPG_LAW" in ve.stale_names(plain)
