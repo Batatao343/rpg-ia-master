@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "31e9996b94c288476217dfa47d72f10376a9ef07",
+  "commit_sha": "41778c8bcac11052092fdda8f7fb76e1abd41886",
   "edge_counts": {
-    "calls": 25385,
-    "contains": 895,
-    "defines": 12945,
-    "imports": 2128,
-    "likely_test_for": 1453,
+    "calls": 25935,
+    "contains": 906,
+    "defines": 13132,
+    "imports": 2180,
+    "likely_test_for": 1504,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:123a03e6bfbbbdb1d422897b3ccdd677a4e9381c2d870ef7fb4cbade6d2f5d27",
+  "graph_hash": "sha256:31116b1b635e20428108e3aa8af6e010efa0bfd110c5fa2872239400af1a9d73",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -373,6 +373,7 @@
     "services/local_backup.py",
     "services/location_states.py",
     "services/lore_query.py",
+    "services/lore_quests.py",
     "services/map_view.py",
     "services/mechanics_trace.py",
     "services/memory_intents.py",
@@ -452,6 +453,7 @@
     "tests/spec309_helpers.py",
     "tests/spec310_helpers.py",
     "tests/spec312_helpers.py",
+    "tests/spec313_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -905,6 +907,15 @@
     "tests/test_spec312_proposed.py",
     "tests/test_spec312_review.py",
     "tests/test_spec312_seeds.py",
+    "tests/test_spec313_catalog.py",
+    "tests/test_spec313_dead_surfaces.py",
+    "tests/test_spec313_delivery_escort.py",
+    "tests/test_spec313_hunt.py",
+    "tests/test_spec313_offer.py",
+    "tests/test_spec313_playtest.py",
+    "tests/test_spec313_proposals.py",
+    "tests/test_spec313_review_fixes.py",
+    "tests/test_spec313_rumor.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1097,14 +1108,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 899,
+    "class": 901,
     "endpoint": 64,
-    "file": 1043,
-    "function": 4107,
+    "file": 1054,
+    "function": 4176,
     "method": 796,
-    "module": 895,
-    "test": 7142
+    "module": 906,
+    "test": 7258
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:48065a84fcdf1c71cd60e4597b9fcb130e6681bcefc23ac332d77a13e666da8a"
+  "source_tree_hash": "sha256:3791bd4965237a1d150ddadaef3723e5762ffb99376aad807adf02d4fd12c7cd"
 }
