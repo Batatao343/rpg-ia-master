@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4c54f2df1c3df9ead318e68a51abc4c73e40d834",
+  "commit_sha": "1dc8ad8fcf07979f82b145bd3043fd54395f4b80",
   "edge_counts": {
-    "calls": 24335,
-    "contains": 872,
-    "defines": 12484,
-    "imports": 2055,
-    "likely_test_for": 1383,
+    "calls": 24611,
+    "contains": 878,
+    "defines": 12598,
+    "imports": 2077,
+    "likely_test_for": 1404,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5c846cf2933dad44671dcd12ef5b3cc6dadc7c1031411873329bf50dc5aa8aea",
+  "graph_hash": "sha256:447122024dc86aff363f83c530cd0696d105ca83b699fa86efdf7228295258e6",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -382,6 +382,7 @@
     "services/npc_layers.py",
     "services/npc_perils.py",
     "services/npc_seed.py",
+    "services/npc_self.py",
     "services/npc_world.py",
     "services/objectives.py",
     "services/operation_recovery.py",
@@ -445,6 +446,7 @@
     "tests/spec304_helpers.py",
     "tests/spec305_helpers.py",
     "tests/spec309_helpers.py",
+    "tests/spec310_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -882,6 +884,10 @@
     "tests/test_spec309_perceived_block.py",
     "tests/test_spec309_prompts.py",
     "tests/test_spec309_templates.py",
+    "tests/test_spec310_no_leak.py",
+    "tests/test_spec310_npc_prompt.py",
+    "tests/test_spec310_npc_self.py",
+    "tests/test_spec310_secret_topics.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1074,14 +1080,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 887,
+    "class": 888,
     "endpoint": 64,
-    "file": 1020,
-    "function": 3967,
-    "method": 794,
-    "module": 872,
-    "test": 6835
+    "file": 1026,
+    "function": 3997,
+    "method": 795,
+    "module": 878,
+    "test": 6917
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:3068257cf2cf1fc7302b1a63738fc45e960f0cd337cb9c8e0c3d9cec57a18ed5"
+  "source_tree_hash": "sha256:236547704058564b33a720e261de9024f0f5d6279995da539a70783adebe1395"
 }
