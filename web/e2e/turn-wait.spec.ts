@@ -20,7 +20,7 @@ async function openGame(page: Page, name = "Ayla") {
 
 const composer = (page: Page) => page.getByRole("textbox", { name: "Sua ação" });
 const status = (page: Page) => page.locator(".ws-composer .turn-status");
-const live = (page: Page) => page.locator(".ws-composer > .sr-only[role=status]");
+const live = (page: Page) => page.locator(".ws-composer > .sr-only[aria-live]");
 const pendingBtn = (page: Page) => page.locator('[data-effect="chat.pending"]');
 const streams = (b: DeterministicBackend) => b.requests.filter((r) => r.path === "/game/action/stream");
 const posts = (b: DeterministicBackend) => b.requests.filter((r) => r.path === "/game/action");
@@ -135,7 +135,7 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await composer(page).press("Enter");
       const banner = page.locator(".banner[role=alert]");
       await expect(banner).toBeVisible();
-      await expect(status(page)).toContainText("Ação não confirmada");
+      await expect(status(page)).toContainText("O último envio falhou");
       await page.clock.install();
       await page.clock.fastForward(30_000);
       await expect(banner).toBeVisible();
@@ -154,6 +154,7 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       const state = backend.states.get("game-a")!;
       state.combat.active = true; state.combat.round = 1;
       await openGame(page);
+      if (page.viewportSize()!.width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
       await expect(page.getByRole("button", { name: "Lutar", exact: true })).toBeVisible();
       await expect(page.getByRole("button", { name: "Agir", exact: true })).toHaveCount(0);
     });

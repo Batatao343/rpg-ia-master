@@ -59,7 +59,7 @@ export function App() {
   const [thinking, setThinking] = useState(false);
   const [turn, setTurn] = useState<TurnWait>(IDLE_TURN);
   const turnToken = useRef(0);
-  const actionRef = useRef<(text: string) => void>(() => {});
+  const retryBypass = useRef(false);
   const openingMemo = useRef<OpeningMemo>({ gid: "", seen: false, loc: "" });
   const resetTurn = useCallback(() => setTurn(t => ({ ...IDLE_TURN, seq: t.seq })), []);
   const [banner, setBanner] = useState<BannerState | null>(null);
@@ -447,19 +447,24 @@ export function App() {
   const streamEntryId = useRef<number | null>(null);
   const pendingVisual = useRef<GameResponse["visual"] | null>(null);
 
+  /** O id da entrada de stream é alocado de forma SÍNCRONA (o updater do setLog roda depois): evita perder
+   *  `replace`/erro que chegam no mesmo tick do primeiro chunk. */
+  function ensureStreamId(): number {
+    if (streamEntryId.current === null) streamEntryId.current = logSeq.current++;
+    return streamEntryId.current;
+  }
+
   function attachStreamVisual(visual: GameResponse["visual"]) {
     pendingVisual.current = visual;
     if (!visual.cue) return;
+    const id = ensureStreamId();
     setLog((prev) => {
-      const id = streamEntryId.current;
-      const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
+      const idx = prev.findIndex((e) => e.id === id);
       if (idx >= 0) {
         const entry = prev[idx];
         return [...prev.slice(0, idx), { ...entry, visual: visual.cue }, ...prev.slice(idx + 1)];
       }
-      const nid = logSeq.current++;
-      streamEntryId.current = nid;
-      return [...prev, { id: nid, text: "", role: "narrator" as const,
+      return [...prev, { id, text: "", role: "narrator" as const,
         type: "STORY" as const, streaming: true, visual: visual.cue }];
     });
   }
@@ -474,13 +479,11 @@ export function App() {
   function appendChunk(chunk: string, done: boolean) {
     if (done) return;
     setTurn(t => (t.gotChunk ? t : { ...t, gotChunk: true }));
+    const id = ensureStreamId();
     setLog((prev) => {
-      const id = streamEntryId.current;
-      const idx = id === null ? -1 : prev.findIndex((e) => e.id === id);
+      const idx = prev.findIndex((e) => e.id === id);
       if (idx < 0) {
-        const nid = logSeq.current++;
-        streamEntryId.current = nid;
-        return [...prev, { id: nid, text: chunk, role: "narrator" as const,
+        return [...prev, { id, text: chunk, role: "narrator" as const,
           type: "STORY" as const, streaming: true, visual: pendingVisual.current?.cue }];
       }
       const entry = prev[idx];
@@ -521,7 +524,8 @@ export function App() {
   }
 
   async function handleAction(text: string, options: ActionOptions = {}) {
-    if (busy || !text.trim() || !gameId.current) return;
+    const bypass = retryBypass.current; retryBypass.current = false; // retry de stream pendurado: `busy` do closure é velho
+    if ((busy && !bypass) || !text.trim() || !gameId.current) return;
     const gid = gameId.current, generation = session.current, user = owner.current;
     const token = ++turnToken.current; // "Tentar de novo" que recupera o turno invalida este fluxo (sem duplicar)
     const active = () => session.current === generation && gameId.current === gid && turnToken.current === token;
@@ -649,7 +653,6 @@ export function App() {
     }
   }
 
-  useEffect(() => { actionRef.current = (text: string) => { void handleAction(text); }; });
 
   /** "Tentar de novo" (SPEC-320 R3/R13): reaproveita o pending por operation_id — nunca cria envio novo. */
   async function retryTurn() {
@@ -680,7 +683,8 @@ export function App() {
         setLog(prev => prev.filter(e => e.role !== "narrator" || !e.streaming));
         setThinking(false); setBusy(false); resetTurn();
         setBanner({ msg: "O turno não respondeu; reenviando a mesma ação.", kind: "warn" });
-        setTimeout(() => actionRef.current(pending.payload.input_text), 0);
+        retryBypass.current = true;
+        void handleAction(pending.payload.input_text);
       }
     } catch (error) {
       setBanner({ msg: "Não consegui consultar o turno: " + errMsg(error), kind: "warn", requestId: errRequestId(error) });
@@ -882,7 +886,7 @@ export function App() {
           onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
           Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
         </button>}
-      {screen === "play" && pending && <div className="pending-operation" role="group" aria-label="Ação pendente">
+      {screen === "play" && pending && <div className={"pending-operation" + (busy ? " is-busy" : "") + (turn.stage === "failed-after-narration" ? " is-raised" : "")} role="group" aria-label="Ação pendente">
         <button className="btn btn--primary" type="button" disabled={busy}
           onClick={() => void handleAction(pending.payload.input_text)}>
           Consultar / retomar ação pendente

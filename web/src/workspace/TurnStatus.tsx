@@ -39,7 +39,7 @@ export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKee
 
   return (
     <>
-      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{live}</span>
+      <span className="sr-only" aria-live="polite" aria-atomic="true">{live}</span>
       {visible && (
         <div className="turn-status" data-stage={stage}>
           {showLedger && (
@@ -67,7 +67,7 @@ export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKee
               </div>
             </>
           )}
-          {showError && <p className="turn-status__error" aria-hidden>{lastError!.msg}</p>}
+          {showError && <p className="turn-status__error" aria-hidden>O último envio falhou; veja o aviso acima.</p>}
         </div>
       )}
     </>

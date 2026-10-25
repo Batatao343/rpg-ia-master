@@ -24,7 +24,7 @@ for (const width of [390, 1440]) {
     await openGame(page);
     if (width < 900) await phoneSurface(page, "Chat");
     await page.locator("form.actionbar input").first().fill("Golpeio o saqueador");
-    await page.getByRole("button", { name: "Agir" }).click();
+    await page.getByRole("button", { name: "Lutar" }).click();
 
     const panel = page.getByRole("region", { name: "Desfecho do combate" });
     if (width < 900) await phoneSurface(page, "Combate");
