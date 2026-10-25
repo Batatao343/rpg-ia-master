@@ -1,6 +1,6 @@
 # SPEC-315 — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
 
-> **Status:** `in-progress` (implementada em `spec-315`; falta revisão independente e smoke real §6; aprovada pelo dono em 25/10, `/goal` "execute e suba todas as specs em draft a partir do número 300": decisões nos padrões recomendados)
+> **Status:** `done` (aprovada 25/10 nos padrões; D6-rev1 do dono; revisão Sol 2 rodadas; smoke real 25/10)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Origem:** pedido do dono (25/10): "o motor decide e a LLM narra, mas o mundo tem que ser vivo".
 > O motor tem um conjunto fechado de **tipos** de desfecho; a LLM pode inventar o **conteúdo**, que o
@@ -502,3 +502,9 @@ criado: `python -m playtest run --scenario rumor_adotado --turns 10` (MockLLM) p
   achado real e narrador inventando achados no alvo falso (turnos 4–12). Corrigidas em D-11; testes:
   integração pelo nó real + save/load (`find_log == [5]`, 2º achado < 20 d recusado) e prompt capturado
   com `<RESULTADO_DA_BUSCA>` + prosa neutralizada.
+
+## Smoke real §6 (25/10, coordenador, DeepSeek, ~US$ 0,05)
+
+- Passo 1 (`--profile diplomatico --seed 41`, `20261025-163904-599140`): 15 turnos, 0 violação; 4 `rumor.proposed_seen`, nenhuma alegação (perfil roteia quase tudo para NPC).
+- Passo 2 (`--scenario rumor_adotado --seed 42`): 1ª rodada `20261025-164246-215872` achou 2 falhas (find_log vazio; narrador inventando achados no alvo falso) → corrigidas em `a1719a46` (D-11). Repetido `20261025-164857-590593`: 12 turnos, 0 violação; alegação verdadeira em `na_anel_ferro` materializou 1× (tier `comum`, `pocao_cura`, ouro 0), `find_log=[1]`; alegação falsa em `na_anel_lama` não materializou e a narração diz "O esconderijo que o boato prometia não está aqui" / "Não há alçapão. Não há baú."; 5 propostas extras recusadas `daily_cap`.
+- Suíte completa no pouso: verde exceto 1 teste de prazo sob carga (`test_jev_router_port::test_shadow_late_jev_within_deadline_is_still_observed`), que passou 3/3 isolado; a 315 não toca o roteador.
