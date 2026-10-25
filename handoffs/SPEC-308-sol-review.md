@@ -1,7 +1,7 @@
 # SPEC-308 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol (revisão técnica independente, foco regra de ouro) · **Data:** 2026-10-24 · **Commit revisado:** `5a53d004`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão; a 1ª rodada, em `5a53d004`, foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus / Sol (revisão técnica independente, foco regra de ouro) · **Data:** 2026-10-24 · **Commit revisado:** `5a53d004` → re-revisão em `99ce47f8`
 
 ## Escopo
 
@@ -63,17 +63,39 @@ Conferido e OK:
 
 ## Correções aplicadas
 
-(nenhuma ainda — revisão inicial)
+Re-revisão do delta `5a53d004..99ce47f8` (`f2f8226e` fix + `99ce47f8` style). Rodei o mesmo
+oráculo de novo, agora sem a ressalva da projection vazia: eventos reais via `process_pending_events`,
+`RPG_NPC_WORLD` off e on, com resultado idêntico.
+
+| ID | Status | Como foi fechado / verificado |
+|---|---|---|
+| P0-1 | fechado | `world_perception.perceived_projection` tira `dynamic_edges`/`disabled_edges`/`blocked_routes` cujo evento de origem do motor não foi percebido. A seção `relations` usa isso. Oráculo **antes** da percepção: nenhum dos 4 packs (story/npc/combat_narration/planning) contém `enemy_of` Clãs×Tribos, `controls→ Fortaleza de Vorr` nem "BLOQUEADA". **Depois** (ids no ledger): os três aparecem nos 4 packs. Teste: `tests/test_spec308_oraculo.py::test_remote_world_event_does_not_leak_through_projection` (4 propósitos × off/on, projection real). |
+| P1-1 | fechado | `recent_control_changes(..., state=)` filtra por `event_perceived`; é usado no overlay (`api._world_block`) e no `contested` (`map_view`). Oráculo: `[]` → aparece após a percepção. |
+| P1-2 | fechado | `dossiers._events_about` filtra por `event_perceived`. Oráculo: `[]` → "controle mudou" após a percepção. |
+| P1-3 | fechado | `_world_block` e `build_map_view` trocam a projection pela percebida: `controlled` e `blocked_routes` = canônico + mudanças percebidas. A decisão ficou registrada na spec (§ "Decisões da revisão Sol"). Por design, a viagem continua validada no servidor contra a projection real. Teste: `test_api_blocks_hide_unperceived_engine_facts`. |
+| P2-1 | fechado | Só herda `cause_event_id` de `WORLD_EVENT_TYPES`. Teste: `test_cascade_inherits_cause_only_from_world_types`. |
+| P2-2 | fechado | `actor_id="player"` conta como testemunho. Os derivados do `rule_engine` herdam o `actor_id` da causa (`"engine"` nos eventos do motor), então isso não abre brecha. Teste: `test_route_cleared_by_hero_is_witnessed_anywhere`. |
+| P2-3, P2-4 | registrados na spec | `companion_fate` fica voz do `npc_fate_learned`; `ruin_rec`/`ruin_end` vão para a SPEC-309. Os dois estão do lado seguro (oculto). |
+| P2-5 | fechado | O marco tardio usa o `turn_count` da percepção e roda também quando `npc_beliefs` muda. Idempotência conferida no oráculo (2ª chamada → `None`). |
+| P2-6 | fechado | Teste: `test_recovery_reoccupy_digest_links_state_event`. |
 
 ## Pendências
 
-- Corrija P0-1, P1-1, P1-2 e P1-3 (ou registre a decisão de design do P1-3 na spec) e re-revise.
-- P2-1..P2-6: podem ficar como follow-up da SPEC-309, mas P2-1 é uma linha só e vale fazer já.
+- **F1 (P2, SPEC-309):** `perceived_projection` é fail-open quando o evento de origem não está no
+  `event_log`. Hoje o log nunca é truncado, então isso é seguro. Se um dia houver compactação do
+  log, passar a fail-closed para `dyn_*` de eventos do motor.
+- **F2 (P2):** o mapa pode mostrar como alcançável uma rota que um evento não percebido bloqueou.
+  O servidor recusa a viagem, e é aí que o herói "descobre" o bloqueio. Aceito por design, mas vale
+  dar a essa recusa uma narrativa clara na SPEC-309.
+- §6 da spec (smoke DeepSeek, 15 turnos) segue com o coordenador.
 
 ## Comandos rodados
 
 ```text
-git diff main...HEAD --stat → 12 arquivos, +537/-85; evals/ intocado
-py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec308_*.py tests/test_spec302_*.py tests/test_spec304_*.py tests/test_spec305_*.py tests/test_context*.py → 310 coletados, exit 0
-py.sh <scratchpad>/r308/oracle308.py off|on → evento filtrado; vazamento via relations (4 packs) + API controlled/control_changes/dossiê/blocked_routes
+git diff main...HEAD --stat → 12 arquivos, +537/-85; evals/ intocado (1ª rodada)
+py.sh -m pytest -n 2 tests/test_spec308_* test_spec302_* test_spec304_* test_spec305_* test_context* → 310 coletados, exit 0 (1ª rodada)
+py.sh <scratchpad>/r308/oracle308.py off|on (1ª rodada) → vazamento via relations (4 packs) + API
+git diff 5a53d004..99ce47f8 --stat → 12 arquivos, +370/-11 (sem evals/)
+py.sh <scratchpad>/r308/oracle308.py off|on (re-revisão) → 0 vazamentos antes da percepção (packs, controlled, control_changes, blocked_routes, dossiê, contested); tudo aparece depois; crônica 1×, idempotente
+py.sh -m pytest -n 2 test_spec308_* test_spec302_* test_spec304_* test_spec305_* test_context* test_map_view* test_dossier* test_fase34* → 429 coletados, exit 0
 ```
