@@ -62,7 +62,11 @@ def turn_prepare_node(state: dict) -> dict:
     from observability.telemetry import span
 
     with span("turn.prepare"):
-        update, _prepared = prepare_turn(state)
+        update, prepared = prepare_turn(state)
+        # SPEC-317 R5: embedding da consulta de STORY em paralelo ao router/planner.
+        from services import context_prefetch
+
+        context_prefetch.start_prefetch(state, prepared.turn)
         return update
 
 

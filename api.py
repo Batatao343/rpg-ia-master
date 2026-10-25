@@ -23,7 +23,6 @@ from copy import deepcopy
 from typing import Annotated, Any, Dict, List, Literal, Optional
 from collections.abc import Iterator
 
-import uvicorn
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -6962,6 +6961,8 @@ if os.path.isdir(_WEB_DIST):
     app.mount("/", StaticFiles(directory=_WEB_DIST, html=True), name="frontend")
 
 if __name__ == "__main__":
+    import uvicorn  # SPEC-317 R11: so o servidor local precisa; a Vercel nao importa
+
     # Auditoria A5: default local-only (API não tem auth até a Fase 10b).
     # Exponha na LAN conscientemente via RPG_HOST=0.0.0.0 no .env.
     uvicorn.run(app, host=os.getenv("RPG_HOST", "127.0.0.1"), port=8000)

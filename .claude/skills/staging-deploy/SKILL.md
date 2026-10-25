@@ -23,12 +23,16 @@ nome e mostram só nomes. Rode do checkout principal (é onde está o `.env.stag
    (`-e` = runtime/`/health`; `-b` = build do bundle web — sem ele o `X-RPG-Build` sai `dev+…` e o
    `build_skew` nunca dispara; o upload não leva `.git`) (~90–110 s; Bash com
    `timeout: 300000`).
-5. Verificação (uma chamada cada):
+5. Warm-up (SPEC-317 R12): logo após o deploy, `curl -s https://rpg-ia-master-staging.vercel.app/health`
+   uma vez (aquece a função e confere o `git_sha`) antes de medir/fumar; o 1º turno do
+   `e2e_session.py` abaixo é o turno sintético que aquece o grafo. Medição de latência
+   (`measure.py`) sempre em função morna; cold start medido à parte, de propósito.
+6. Verificação (uma chamada cada):
    - `uv run --frozen python scripts/post_deploy_smoke.py --base-url https://rpg-ia-master-staging.vercel.app --expected-git-sha $(git rev-parse HEAD) --output readiness_artifacts/post_deploy.json`
      → `git_sha` = HEAD, `hardened=true`;
    - `uv run --frozen python scripts/staging/vercel_smoke.py`;
    - `uv run --frozen python scripts/staging/e2e_session.py` (5 turnos SSE, retry idempotente).
-6. Rollback: promover o deploy anterior na Vercel (`vercel promote <url>`) ou o
+7. Rollback: promover o deploy anterior na Vercel (`vercel promote <url>`) ou o
    kill switch citado no ESTADO.
 
 Saída: sha publicado, URL do deploy, resultado dos 3 smokes (1 linha cada).

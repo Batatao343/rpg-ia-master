@@ -1224,13 +1224,17 @@ def _any_key_available() -> bool:
 
 
 def _load_routes() -> dict:
-    """ROUTES default ou override por arquivo (RPG_ROUTES, JSON)."""
+    """ROUTES default ou override (RPG_ROUTES: caminho de arquivo JSON ou o próprio JSON inline)."""
     path = os.getenv("RPG_ROUTES")
     if not path:
         return ROUTES
     try:
-        with open(path, encoding="utf-8") as f:
-            raw = json.load(f)
+        if path.lstrip().startswith("{"):
+            # SPEC-317 R1: JSON inline (Vercel nao tem arquivo extra no bundle)
+            raw = json.loads(path)
+        else:
+            with open(path, encoding="utf-8") as f:
+                raw = json.load(f)
         parsed = {ModelTier(name): [tuple(c) for c in cands] for name, cands in raw.items()}
         return {**ROUTES, **parsed}
     except Exception as e:

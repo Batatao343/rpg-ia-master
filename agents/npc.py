@@ -36,6 +36,7 @@ from services.memory_retry import (
 )
 from services.perceived_world import perceived_world_block
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
+from services.prompt_layout import compose as compose_prompt
 from services.prose_guard import (
     log_if_repeats,
     openings_clause,
@@ -348,8 +349,9 @@ def _load_legacy_npc_file() -> dict:
     if not os.path.exists(NPC_DB_FILE):
         return {}
     try:
-        with open(NPC_DB_FILE, encoding="utf-8") as f:
-            return json.load(f)
+        from services.file_cache import read_json_cached
+
+        return read_json_cached(NPC_DB_FILE)
     except Exception as e:
         _log_event("npc", "db_read_failed", level="warning", error=type(e).__name__)
         return {}
@@ -1201,20 +1203,20 @@ def npc_actor_node(state: GameState):
     if ganchos_block:
         ganchos_block = chr(10) + ganchos_block
 
-    system_msg = SystemMessage(
-        content=f"""
+    # SPEC-317 R9: prompt em pedaços (texto, estático?) — ver services/prompt_layout.
+    _npc_head = f"""
     <ROLE>
     Você é {npc_data.get("name")}.
     Ocupação: {npc_data.get("role")}.
     Persona: {npc_data.get("persona")}.
     Local: {npc_data.get("location")}.
     Traços que o jogador JÁ percebeu em você (aja de acordo): {
-            ", ".join(
-                t["name"] + " — " + t["description"]
-                for t in npc_layers.trait_names(npc_data.get("revealed_traits") or [])
-            )
-            or "—"
-        }
+        ", ".join(
+            t["name"] + " — " + t["description"]
+            for t in npc_layers.trait_names(npc_data.get("revealed_traits") or [])
+        )
+        or "—"
+    }
     </ROLE>{self_knowledge_block}
     {atitude_block}{comercio_block}
     {companion_block}
@@ -1246,11 +1248,13 @@ def npc_actor_node(state: GameState):
     </FACÇÕES_DO_MUNDO>
 
     {faction_member_block}
-    <MISSÃO>
+    """
+    _npc_mission = """<MISSÃO>
     Se seu personagem tem um pedido/tarefa CONCRETA para o jogador (recuperar algo,
     entregar algo, investigar algo, resgatar alguém), registre em 'proposed_quests'.
     Vazio se a conversa não chegou a um pedido concreto.
-    </MISSÃO>{ganchos_block}
+    </MISSÃO>"""
+    _npc_rules_a = """
 
     <REGRAS DE ATUAÇÃO - CRÍTICO>
     1. NÃO SEJA UMA WIKIPÉDIA. Você é uma pessoa limitada pela sua ocupação e local.
@@ -1263,9 +1267,21 @@ def npc_actor_node(state: GameState):
     5. NÃO REPITA: veja <SUA_ULTIMA_FALA>. Se o jogador insistir no mesmo assunto,
        NUNCA repita sua fala anterior literalmente — traga um detalhe NOVO, mude o
        ângulo, demonstre impaciência ("já te disse..."), ou avance a conversa.
-    {openings_clause(aberturas_recentes)}
+    """
+    _npc_rules_b = f"""
     6. {PLAYER_INPUT_RULE}
     """
+    system_msg = SystemMessage(
+        content=compose_prompt(
+            [
+                (_npc_head, False),
+                (_npc_mission, True),
+                (ganchos_block, False),
+                (_npc_rules_a, True),
+                (openings_clause(aberturas_recentes), False),
+                (_npc_rules_b, True),
+            ]
+        )
     )
 
     try:

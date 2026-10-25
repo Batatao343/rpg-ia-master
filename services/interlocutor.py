@@ -507,6 +507,11 @@ def pre_classify(state: Mapping[str, Any], text: str) -> InterlocutorResolution 
     return None
 
 
+def deterministic_npc_resolution(key: str) -> InterlocutorResolution:
+    """SPEC-317 R2: rota NPC para um NPC endereçado de forma inequívoca (sem CLASSIFY)."""
+    return _resolution(NPC, "npc", "direct_address", key=key)
+
+
 def _text_role_target(norm: str) -> str | None:
     match = re.search(rf"\b{_TALK_VERBS}\s+{_PREP}\s+{_ARTICLES}(\w+)", norm)
     if match and match.group(1) in GENERIC_ROLES:

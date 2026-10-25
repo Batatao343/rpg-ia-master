@@ -73,6 +73,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `companion.personal_quest_completed` | — |
 | `companion.personal_quest_revealed` | — |
 | `companion_soul.fallback` | — |
+| `context.prefetch_failed` | `error` |
+| `context.prefetch_hit` | — |
+| `context.prefetch_miss` | `error` |
 | `context_builder.fallback` | — |
 | `cron.auth_rejected` | `reason` |
 | `cron.failed` | `duration_s`, `error_type`, `stack`, `task` |
@@ -139,6 +142,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `loot.fallback` | — |
 | `loot.narrate_failed` | `error` |
 | `loot.price_reasons_failed` | `error` |
+| `loot.resolve_item_ref_failed` | `error` |
+| `loot.trade_intent_skipped_classify` | `mode` |
 | `loot.trade_parse_failed` | `error` |
 | `lore_query.fallback` | — |
 | `lore_quests.fallback` | — |
@@ -232,6 +237,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `rag.session_memory_saved` | `facts` |
 | `reputation.process_failed` | `error` |
 | `router.decision` | `fallback_reason`, `jev_mode`, `route`, `source`, `target_kind` |
+| `router.deterministic_npc` | `route` |
+| `router.deterministic_npc_failed` | `error` |
+| `router.deterministic_shadow` | `agree` |
 | `router.failed` | `error` |
 | `router.orphan_combat_expired` | — |
 | `router.travel_in_combat_flee` | — |

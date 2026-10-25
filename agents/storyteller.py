@@ -21,6 +21,7 @@ from services import quest_log
 from services.context_builder import build_context_pack
 from services.lore_query import compose_lore_query
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
+from services.prompt_layout import compose as compose_prompt
 from services.structured_outputs import (
     CrimeClaim,
     ProposedQuest,
@@ -1794,8 +1795,8 @@ def storyteller_node(state: GameState):
     if _law_mod.crime_hint_enabled(law_scene):
         lei_block = "\n".join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
 
-    sys = SystemMessage(
-        content=f"""
+    # SPEC-317 R9: o prompt é montado em pedaços (texto, estático?) — ver prompt_layout.
+    _head = f"""
     <PERSONA>
     Você é o Narrador (Mestre) de um RPG.
     Local Atual: {loc}.
@@ -1861,7 +1862,8 @@ def storyteller_node(state: GameState):
     {lore_context}
     </LORE_PUBLICO_CANONICO>
 
-    <INSTRUÇÕES>
+    """
+    _rules_a = f"""<INSTRUÇÕES>
     - Responda em 2 a 3 parágrafos.
     - JULGUE a ação: se for implausível para a classe/ficha do personagem ({state.get("player", {}).get("class_name", "")})
       ou impossível no contexto, faça-a FALHAR de forma crível na narração (não conceda o impossível).
@@ -1870,9 +1872,19 @@ def storyteller_node(state: GameState):
       ou admita que o personagem não sabe; não preencha a lacuna com fato novo.
     - Termine com opções ou pergunta para ação.
     - Se um personagem ENTRAR na cena (novo ou conhecido que reapareceu), adicione o nome em 'introduced_npcs'.
-    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'.{npc_fallback_clause}{varie_clause}{opcoes_clause}
+    - Se um personagem conhecido SAIR da cena (foi embora, sumiu), adicione o nome em 'npcs_left_scene'."""
+    _rules_b = f"""
     - {PLAYER_INPUT_RULE}
     """
+    sys = SystemMessage(
+        content=compose_prompt(
+            [
+                (_head, False),
+                (_rules_a, True),
+                (f"{npc_fallback_clause}{varie_clause}{opcoes_clause}", False),
+                (_rules_b, True),
+            ]
+        )
     )
 
     # SPEC-233 R8: ganhos registrados ANTES da LLM (o except não herda XP de beat

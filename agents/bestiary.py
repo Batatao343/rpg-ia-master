@@ -182,8 +182,9 @@ def _read_json(path: str) -> dict:
     if not os.path.exists(path):
         return {}
     try:
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
+        from services.file_cache import read_json_cached
+
+        return read_json_cached(path)
     except Exception as e:
         _log_event("bestiary", "read_failed", level="warning", error=type(e).__name__)
         return {}

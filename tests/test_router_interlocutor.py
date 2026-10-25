@@ -168,3 +168,62 @@ def test_router_decision_schema_intacto():
         "social_approach",
         "favor_kind",
     }
+
+
+# --- SPEC-317 R2/R4: rota NPC determinística e janela enxuta do router ---------
+
+
+def test_vocative_to_present_npc_routes_npc_without_llm(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "on")
+    llm = _install(monkeypatch, RouteType.STORY)
+    out = dm_router_node(_state("Brunna, você viu o barco?"))
+    assert out["next"] == RouteType.NPC.value
+    assert out["active_npc_name"] == "Brunna Ponte-Alta"
+    assert llm.calls == 0
+    assert router_mod.last_decision()["route_source"] == "deterministic_npc"
+
+
+def test_vocative_with_attack_verb_goes_to_classify(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "on")
+    llm = _install(monkeypatch, RouteType.COMBAT, "Brunna")
+    dm_router_node(_state("Brunna, eu ataco você!"))
+    assert llm.calls == 1
+
+
+def test_absent_npc_name_goes_to_classify(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "on")
+    llm = _install(monkeypatch, RouteType.NPC, "Gorim")
+    dm_router_node(_state("Gorim, você está aí?"))
+    assert llm.calls == 1
+
+
+def test_shadow_mode_calls_classify_and_logs_agreement(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "shadow")
+    events = []
+    monkeypatch.setattr(router_mod, "_log_event", lambda *a, **k: events.append((a, k)) or None)
+    llm = _install(monkeypatch, RouteType.NPC, "Brunna")
+    out = dm_router_node(_state("Brunna, você viu o barco?"))
+    assert llm.calls == 1 and out["next"] == RouteType.NPC.value
+    shadow = [k for a, k in events if a[:2] == ("router", "deterministic_shadow")]
+    assert shadow == [{"agree": True}]
+
+
+def test_off_mode_does_not_shortcut(monkeypatch):
+    monkeypatch.setenv("RPG_ROUTER_DETERMINISTIC_NPC", "off")
+    llm = _install(monkeypatch, RouteType.NPC, "Brunna")
+    dm_router_node(_state("Brunna, você viu o barco?"))
+    assert llm.calls == 1
+
+
+def test_router_window_trims_previous_narration():
+    from langchain_core.messages import AIMessage
+
+    msgs = [
+        HumanMessage(content="primeira"),
+        AIMessage(content="x" * 1000),
+        HumanMessage(content="segunda"),
+    ]
+    win = router_mod._router_window(msgs)
+    assert [m.content[:1] for m in win] == ["p", "x", "s"]
+    assert len(win[1].content) == 400
+    assert router_mod._router_window([HumanMessage(content="só")])[-1].content == "só"

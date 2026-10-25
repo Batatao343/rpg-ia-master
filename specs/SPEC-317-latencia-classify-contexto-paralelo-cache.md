@@ -1,6 +1,6 @@
 # SPEC-317 — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (implementada em 25/10; falta a medição de staging do §6) (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (independente da SPEC-316); insumos `done`: SPEC-032 (ROUTES), SPEC-143 (NO-GO do fan-out), SPEC-214 (NO-GO do cache de cena), SPEC-217/229 (pré-classificação determinística)
 > **Desbloqueia:** reavaliação de `RPG_TURN_EXECUTION=concurrent` (SPEC-143) sem contenção de provider
@@ -175,6 +175,16 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
 - **Prompt reordenado:** mesmo conteúdo, ordem diferente — modelos podem reagir; por isso `off` até R10.
 - **MockLLM/FallbackLLM:** rotas determinísticas reduzem chamadas; guards existentes mantidos.
 - **Regra de ouro / mecânica:** inalteradas (nenhum filtro de contexto muda; só ordem e cache).
+
+## 7.1 Desvios da implementação (25/10)
+
+- **R6:** `rag._load_index` substitui os 6 sites SOMENTE-LEITURA de `load_local`; os 2 sites que fazem `add_texts` + `_save_index` (sessão e NPC) seguem lendo do disco para nunca mutar o objeto residente. A chave do cache inclui (mtime_ns, tamanho) de `index.faiss`/`index.pkl`, a assinatura dos embeddings e o loader (dublê de teste não recebe índice real).
+- **R7:** `npc_database.json` vive no catálogo de runtime (Postgres/overlay), então o cache por mtime (`services/file_cache.py`, guarda o TEXTO, nunca o objeto parseado) só cobre os arquivos de disco: `data/bestiary.json` e o legado `npc_database.json`.
+- **R5:** `take_vector` é um wrapper de `take`, que devolve o `EmbeddedContextQuery` inteiro (provider/modelo vão junto). O consumidor espera até 2 s (`RPG_CONTEXT_PREFETCH_WAIT_S`) por um prefetch em voo em vez de embedar duas vezes. Flag `RPG_CONTEXT_PREFETCH` (default `on`, `off` na suíte via `RPG_FORCE_MOCK`).
+- **R2:** só `direct_address` (vocativo / "falo com X") qualifica; léxico de combate/saque/comércio/coerção/favor/dívida manda o turno ao CLASSIFY (`_NON_PLAIN_TALK_RE`).
+- **R11:** SDKs de provider, PIL e faiss já eram lazy; o ganho veio de tirar `uvicorn` do topo de `api.py` e `TextLoader`/splitter do topo de `rag.py` (mediana de `-X importtime` de `vercel_app`: 3,34 s → 2,19 s, −34 %).
+- **R12:** `evals/**` NÃO pode ser excluído inteiro (`jev_rollout` importa `evals.core/evaluators/experiments` em runtime; guardado por `test_spec192_vercel_packaging`) e `data/codex/**` fica (`discovery.codex_body` lê o codex em runtime, D5). Entram em `excludeFiles`: `lore_nova/**`, `handoffs/**`, `project_index/**`.
+- **R1:** `RPG_ROUTES` passou a aceitar JSON inline (a Vercel não tem arquivo extra no bundle); `vercel_env.py --classify-routes groq_first|default`; harness `scripts/staging/classify_ab.py` (replay do dataset do router, somente leitura).
 
 ## 8. Decisões do dono
 

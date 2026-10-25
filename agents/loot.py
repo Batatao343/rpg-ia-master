@@ -58,6 +58,44 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
     return checked
 
 
+_QTY_HINT_RE = re.compile(
+    r"\d|\b(?:dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez|varios|varias|alguns|algumas|"
+    r"todos|todas|uma\s+duzia|duzia)\b"
+)
+
+
+def _resolve_item_ref(state: GameState, mode: str | None, folded: str) -> str | None:
+    """SPEC-317 R3 (puro): id canonico quando EXATAMENTE um item do catalogo (estoque do
+    mercador local p/ ``buy``; receitas p/ ``craft``) aparece por nome normalizado no texto.
+    None = ambiguo, ausente, ou quantidade explicita -> segue o CLASSIFY como antes."""
+    if mode not in ("buy", "craft") or not folded or _QTY_HINT_RE.search(folded):
+        return None
+    try:
+        names: dict[str, set[str]] = {}  # id -> nomes normalizados
+        if mode == "buy":
+            world = state.get("world") or {}
+            _mid, stock = economy.merchant_stock(
+                {**state, "world": dict(world)}, world.get("current_location_id", "")
+            )
+            for iid in (stock or {}).keys():
+                name = (economy.ARTIFACTS_DB.get(iid) or {}).get("name", iid)
+                names[iid] = {economy._fold_key(iid), economy._fold_key(name)}
+        else:
+            for rid, recipe in economy.RECIPES.items():
+                result = recipe.get("result_id", "")
+                name = (economy.ARTIFACTS_DB.get(result) or {}).get("name", "")
+                names[rid] = {economy._fold_key(n) for n in (rid, result, name) if n}
+        hits = [
+            iid
+            for iid, ns in names.items()
+            if any(n and re.search(rf"\b{re.escape(n)}\b", folded) for n in ns)
+        ]
+    except Exception as e:  # silent-ok: o atalho nunca derruba o turno; cai no CLASSIFY
+        _log_event("loot", "resolve_item_ref_failed", level="warning", error=type(e).__name__)
+        return None
+    return hits[0] if len(hits) == 1 else None
+
+
 def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeIntent:
     """FAST + guard de FallbackLLM (isinstance). Fallback: heurística por fonte."""
     folded = "".join(
@@ -91,6 +129,11 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
 
     default_mode = explicit_mode or ("craft" if loot_source == "CRAFT" else "buy")
     fallback = TradeIntent(mode=default_mode, item_ref=text[:60] or "item", qty=1)
+    # SPEC-317 R3: regex decidiu o modo e o item resolve sozinho no catalogo -> sem CLASSIFY.
+    resolved = _resolve_item_ref(state, explicit_mode, folded)
+    if resolved:
+        _log_event("loot", "trade_intent_skipped_classify", mode=explicit_mode)
+        return TradeIntent(mode=explicit_mode, item_ref=resolved, qty=1)
     try:
         llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
         sys = SystemMessage(

@@ -19,6 +19,7 @@ import json
 import logging
 import os
 import re
+import threading
 import time
 import unicodedata
 import uuid
@@ -31,10 +32,8 @@ from collections.abc import Callable, Iterator
 
 import httpx
 from dotenv import load_dotenv
-from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import FAISS
 from langchain_core.embeddings import Embeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from observability.telemetry import log_event as _log_event
 from services.memory_provenance import format_memory_fact, make_memory_fact
@@ -703,6 +702,62 @@ def _embeddings_for_index(dir_path: str) -> object | None:
     return get_embeddings_for(provider)
 
 
+# SPEC-317 R6: cache de indice FAISS em processo, invalidado por mtime e por _save_index.
+# So os caminhos SOMENTE-LEITURA usam o cache; quem faz add_texts le direto do disco
+# (nunca muta o objeto residente). Um cache por processo; entre instancias serverless
+# o mtime do arquivo no disco decide.
+_INDEX_CACHE: dict[str, tuple[tuple, str, Any]] = {}
+_INDEX_CACHE_MAX = 64
+_INDEX_CACHE_LOCK = threading.Lock()
+
+
+def _index_cache_enabled() -> bool:
+    return os.environ.get("RPG_INDEX_CACHE", "on").strip().lower() != "off"
+
+
+def _index_stamp(path: str) -> tuple:
+    stamp = []
+    for name in ("index.faiss", "index.pkl"):
+        st = os.stat(os.path.join(path, name))
+        stamp.append((st.st_mtime_ns, st.st_size))
+    return tuple(stamp)
+
+
+def _embeddings_sig(embeddings: Any) -> str:
+    model = getattr(embeddings, "model", None) or getattr(embeddings, "model_name", "")
+    return f"{type(embeddings).__module__}.{type(embeddings).__qualname__}:{model}"
+
+
+def _invalidate_index(path: str) -> None:
+    with _INDEX_CACHE_LOCK:
+        _INDEX_CACHE.pop(os.path.abspath(path), None)
+
+
+def _load_index(path: str, embeddings: Any) -> Any:
+    """FAISS.load_local com cache por (mtime, tamanho) e assinatura dos embeddings."""
+    if not _index_cache_enabled():
+        return FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+    key = os.path.abspath(path)
+    # A assinatura inclui o loader: quem troca FAISS.load_local (dublê de teste) nunca recebe
+    # um índice carregado pelo loader real.
+    loader = getattr(FAISS.load_local, "__func__", FAISS.load_local)
+    sig = f"{_embeddings_sig(embeddings)}|{id(loader)}"
+    try:
+        stamp = _index_stamp(path)
+    except OSError:
+        return FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+    with _INDEX_CACHE_LOCK:
+        hit = _INDEX_CACHE.get(key)
+    if hit is not None and hit[0] == stamp and hit[1] == sig:
+        return hit[2]
+    db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+    with _INDEX_CACHE_LOCK:
+        if len(_INDEX_CACHE) >= _INDEX_CACHE_MAX:
+            _INDEX_CACHE.pop(next(iter(_INDEX_CACHE)), None)
+        _INDEX_CACHE[key] = (stamp, sig, db)
+    return db
+
+
 def _save_index(db, path: str, provider: str) -> None:
     """save_local + grava a meta do provider (pin)."""
     # SPEC-234 R10: grava em diretorio temporario e troca arquivo a arquivo,
@@ -720,6 +775,7 @@ def _save_index(db, path: str, provider: str) -> None:
             os.replace(os.path.join(tmp, name), os.path.join(path, name))
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+    _invalidate_index(path)
     if not _write_meta(path, provider):
         raise OSError(f"falha ao gravar metadata do índice em {path}")
 
@@ -833,11 +889,7 @@ def _query_session_documents(query: str, game_id: str, *, k: int = 2) -> list:
     if not embeddings:
         return []
     try:
-        session_db = FAISS.load_local(
-            session_path,
-            embeddings,
-            allow_dangerous_deserialization=True,
-        )
+        session_db = _load_index(session_path, embeddings)
         return list(session_db.similarity_search(query, k=k))
     except Exception as exc:
         _LOG.warning(
@@ -1020,7 +1072,7 @@ def query_global_by_vector(
     if embeddings is None:
         return ""
     try:
-        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        db = _load_index(path, embeddings)
         evidence = query_faiss_evidence(
             db,
             vector,
@@ -1066,7 +1118,7 @@ def query_session_by_vector(vector: list[float], game_id: str, *, k: int = 6) ->
     if embeddings is None:
         return ""
     try:
-        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        db = _load_index(path, embeddings)
         evidence = query_faiss_evidence(db, vector, k=k, source="session")
         return _format_memory_documents(evidence)
     except Exception:
@@ -1101,7 +1153,7 @@ def query_npc_by_vector(vector: list[float], game_id: str, npc_id: str, *, k: in
     if embeddings is None:
         return ""
     try:
-        db = FAISS.load_local(path, embeddings, allow_dangerous_deserialization=True)
+        db = _load_index(path, embeddings)
         evidence = query_faiss_evidence(db, vector, k=k, source="npc")
         return _format_memory_documents(evidence)
     except Exception:
@@ -1188,9 +1240,7 @@ def _query_rag_impl(
         embeddings = _embeddings_for_index(global_path)
         if embeddings:
             try:
-                global_db = FAISS.load_local(
-                    global_path, embeddings, allow_dangerous_deserialization=True
-                )
+                global_db = _load_index(global_path, embeddings)
                 candidatos = global_db.similarity_search(query, k=6)
                 visiveis = _drop_excluded(  # SPEC-314 R13: antes do corte em K
                     [d for d in candidatos if vis_rank(d.metadata.get("visibility")) <= max_rank],
@@ -1602,7 +1652,7 @@ def query_npc_memory(game_id: str, npc_id: str, query: str, k: int = 3) -> str:
         return ""
 
     try:
-        db = FAISS.load_local(npc_path, embeddings, allow_dangerous_deserialization=True)
+        db = _load_index(npc_path, embeddings)
         docs = db.similarity_search(query, k=k)
     except Exception:
         _LOG.warning("RAG: consulta degradada (rpg.rag.degraded)", exc_info=True)
@@ -1630,6 +1680,10 @@ def ingest_file(file_path: str, index_name: str):
     provider = _resolve_provider()
 
     _log_event("rag", "ingest_started", level="info", index=index_name, provider=provider)
+
+    # SPEC-317 R11: loader/splitter so existem no caminho de ingestao (import frio menor).
+    from langchain_community.document_loaders import TextLoader
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
 
     loader = TextLoader(file_path, encoding="utf-8")
     docs = loader.load()

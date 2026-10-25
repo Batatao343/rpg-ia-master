@@ -43,6 +43,15 @@ _EXPLICIT_HOSTILITY_RE = re.compile(
     re.IGNORECASE,
 )
 
+# SPEC-317 R2: verbos que tiram um turno do "vocativo puro" (saque/comercio/coacao/favor/divida).
+# Casados contra o texto cru: qualquer um manda o turno ao CLASSIFY.
+_NON_PLAIN_TALK_RE = re.compile(
+    r"\b(?:saque\w*|pego|pegar|vasculh\w*|roub\w*|abro|abrir|compr\w*|vend\w*|troc\w*|cri[ao]r?|"
+    r"forj\w*|ameac\w*|intimid\w*|mato|matar|mat[ae]rei|entregu\w*|esconda\w*|esconder|"
+    r"emprest\w*|interced\w*|d[ií]vida|pago|pagar|suborn\w*|minto|mentir)\b",
+    re.IGNORECASE,
+)
+
 
 def _last_human_text(messages) -> str:
     """Texto da última fala do jogador (para detectar viagem no gate de combate)."""
@@ -338,6 +347,15 @@ def dm_router_node(state: GameState):
     if pre is not None:
         return _tag(_resumed(_interlocutor_payload(pre, world)), "interlocutor")
 
+    # SPEC-317 R2: vocativo inequivoco a NPC presente -> rota NPC sem CLASSIFY.
+    det_mode = _deterministic_npc_mode()
+    det_pre = None
+    if det_mode != "off":
+        det_pre = _deterministic_npc(state, last_human)
+        if det_pre is not None and det_mode == "on":
+            _log_event("router", "deterministic_npc", route="npc_actor")
+            return _tag(_resumed(_interlocutor_payload(det_pre, world)), "deterministic_npc")
+
     # SPEC-217 R14 (rollout SPEC-180): the Jev runs only AFTER every Python gate.
     # ``off`` (default) returns None with no side effect. Primary decides when the
     # frozen J2 policy covers the turn; shadow only observes the CLASSIFY result.
@@ -360,6 +378,15 @@ def dm_router_node(state: GameState):
             )
 
     payload = _classify(state, messages, last_human, world, loc, _resumed, resume_explore)
+    if det_pre is not None and det_mode == "shadow":
+        _log_event(
+            "router",
+            "deterministic_shadow",
+            agree=bool(
+                payload.get("next") == RouteType.NPC.value
+                and payload.get("active_npc_name") == det_pre.npc_state_key
+            ),
+        )
     if pending is not None and pending.mode == "shadow":
         pending.observe(
             payload,
@@ -369,6 +396,55 @@ def dm_router_node(state: GameState):
             state,
         )
     return payload
+
+
+def _deterministic_npc_mode() -> str:
+    """``RPG_ROUTER_DETERMINISTIC_NPC``: off | shadow (default) | on (SPEC-317 R2)."""
+    import os
+
+    value = os.environ.get("RPG_ROUTER_DETERMINISTIC_NPC", "shadow").strip().lower()
+    return value if value in ("off", "shadow", "on") else "shadow"
+
+
+def _deterministic_npc(state: GameState, last_human: str):
+    """NPC resolution when the player plainly addresses a NPC present in the scene.
+
+    Only a direct vocative qualifies (``direct_address``), with no hostility, loot,
+    coercion or favour lexicon; anything else returns None and goes to CLASSIFY."""
+    from services import interlocutor
+
+    if _EXPLICIT_HOSTILITY_RE.search(last_human) or _NON_PLAIN_TALK_RE.search(last_human):
+        return None
+    try:
+        addressed = interlocutor.addressed_in_scene(state, last_human)
+    except Exception as exc:  # silent-ok: o atalho nunca derruba o turno; segue ao CLASSIFY
+        _log_event("router", "deterministic_npc_failed", level="warning", error=type(exc).__name__)
+        return None
+    if addressed is None or addressed[1] != "direct_address":
+        return None
+    return interlocutor.deterministic_npc_resolution(addressed[0])
+
+
+def _router_window(messages) -> list:
+    """SPEC-317 R4: ultima fala do jogador + cauda (400 chars) da narracao anterior
+    + fala anterior do jogador, em ordem cronologica."""
+    msgs = list(messages or [])
+    humans = [i for i, m in enumerate(msgs) if getattr(m, "type", "") == "human"]
+    if not humans:
+        return msgs[-3:]
+    last_i = humans[-1]
+    out: list = []
+    prev_human_i = humans[-2] if len(humans) > 1 else None
+    if prev_human_i is not None:
+        out.append(msgs[prev_human_i])
+    for i in range(last_i - 1, -1, -1):
+        m = msgs[i]
+        if getattr(m, "type", "") == "ai" and str(getattr(m, "content", "") or "").strip():
+            text = str(m.content)
+            out.append(AIMessage(content=text[-400:]) if len(text) > 400 else m)
+            break
+    out.append(msgs[last_i])
+    return out
 
 
 def _jev_decision(state: GameState, routing) -> RouterDecision:
@@ -397,13 +473,18 @@ def _classify(
         or "ninguém"
     )
 
-    system_instruction = f"""
+    from services.prompt_layout import compose as compose_prompt
+
+    # SPEC-317 R9: regras estaticas primeiro quando RPG_PROMPT_STATIC_FIRST=on.
+    _router_intro = """
     Roteador de RPG. Classifique a intenção da ÚLTIMA mensagem do jogador.
     
-    Local Atual: {loc}
+    """
+    _router_state = f"""Local Atual: {loc}
     NPCs presentes na cena: {scene_names}
 
-    REGRAS:
+    """
+    _router_rules = f"""REGRAS:
     - COMBAT: Jogador ataca, saca armas ou reage a uma ameaça narrada. IMPORTANTE: Identifique o 'target' (inimigo).
     - NPC: Conversa social, diplomacia DIRIGIDA a um personagem presente. 'target' = nome EXATO de um NPC presente (ou vazio).
     - Se a rota for NPC, preencha 'social_approach': conversar (padrão) | intimidar (ameaça/coação) | sondar (ler intenções, "ele mente?") | pedir_favor (esconder/emprestar/interceder -> 'favor_kind') | pagar_divida.
@@ -412,6 +493,9 @@ def _classify(
     - STORY: Movimentação, exploração, observar cenário.
     - {PLAYER_INPUT_RULE}
     """
+    system_instruction = compose_prompt(
+        [(_router_intro, True), (_router_state, False), (_router_rules, True)]
+    )
 
     llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
 
@@ -420,7 +504,7 @@ def _classify(
 
         router_llm = llm.with_structured_output(RouterDecision)
         decision = router_llm.invoke(
-            [SystemMessage(content=system_instruction)] + guard_messages(messages[-3:])
+            [SystemMessage(content=system_instruction)] + guard_messages(_router_window(messages))
         )
     except Exception as e:
         _log_event("router", "failed", level="error", error=type(e).__name__)

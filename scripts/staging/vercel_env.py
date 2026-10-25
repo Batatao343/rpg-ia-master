@@ -81,6 +81,9 @@ OPTIONAL_FLAGS = (
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
     "RPG_DYNAMIC_ART_ENABLED",
+    "RPG_ROUTES",
+    "RPG_ROUTER_DETERMINISTIC_NPC",
+    "RPG_PROMPT_STATIC_FIRST",
 )
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
@@ -114,6 +117,21 @@ WORLD_FLAGS = (
     "RPG_RUMORS",
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
+    "RPG_ROUTER_DETERMINISTIC_NPC",  # SPEC-317 R2: off|shadow|on (ausente = shadow)
+    "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
+)
+# SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
+# em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo).
+CLASSIFY_ROUTES_MODES = ("default", "groq_first")
+CLASSIFY_GROQ_FIRST_ROUTES = json.dumps(
+    {
+        "classify": [
+            ["groq", "openai/gpt-oss-20b"],
+            ["deepseek", "deepseek-v4-flash"],
+            ["gemini", "gemini-flash-lite-latest"],
+        ]
+    },
+    separators=(",", ":"),
 )
 # SPEC-236 §6.2: teto diario temporariamente baixo (ex.: 0.01) para provocar um trip REAL pelo cron finops.
 # Reverter com um push sem a flag (volta ao default 5).
@@ -180,6 +198,7 @@ def build_env(
     shared_pool: str = "off",
     world_flags: Mapping[str, str] | None = None,
     dynamic_art: bool = False,
+    classify_routes: str = "default",
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
@@ -187,6 +206,8 @@ def build_env(
     for name, value in (world_flags or {}).items():
         if name not in WORLD_FLAGS or value not in ("off", "shadow", "on"):
             raise ValueError(f"flag de mundo invalida: {name}={value}")
+    if classify_routes not in CLASSIFY_ROUTES_MODES:
+        raise ValueError(f"classify_routes invalido: {classify_routes}")
     if shared_pool not in SHARED_POOL_MODES:
         raise ValueError(f"shared_pool invalido: {shared_pool}")
     if world_engine not in WORLD_ENGINE_MODES:
@@ -209,6 +230,8 @@ def build_env(
     if shared_pool != "off":
         production["RPG_SHARED_POOL"] = shared_pool
     production.update(dict(world_flags or {}))
+    if classify_routes == "groq_first":
+        production["RPG_ROUTES"] = CLASSIFY_GROQ_FIRST_ROUTES
     if dynamic_art:
         production["RPG_DYNAMIC_ART_ENABLED"] = "1"
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
@@ -386,6 +409,12 @@ def main(argv: list[str] | None = None) -> int:
         help=f"flags do mundo vivo ({', '.join(WORLD_FLAGS)}) com off|shadow|on; ausente = default do codigo",
     )
     ap.add_argument(
+        "--classify-routes",
+        choices=CLASSIFY_ROUTES_MODES,
+        default=None,
+        help="SPEC-317 R1: A/B do CLASSIFY; groq_first poe o Groq gpt-oss-20b na frente, default apaga RPG_ROUTES",
+    )
+    ap.add_argument(
         "--dynamic-art",
         choices=("off", "on"),
         default=None,
@@ -432,6 +461,7 @@ def main(argv: list[str] | None = None) -> int:
                 **dict(f.split("=", 1) for f in args.flag if "=" in f),
             },
             dynamic_art=(args.dynamic_art or preset.get("dynamic_art", "off")) == "on",
+            classify_routes=args.classify_routes or preset.get("classify_routes", "default"),
         )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)

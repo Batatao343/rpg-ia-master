@@ -764,6 +764,7 @@ def build_context_pack(
     game_id: str | None = None,
     npc_id: str | None = None,
     own_faction: str = "",
+    include_lore: bool = True,
 ) -> ContextPack:
     """SPEC-200: mede a fase `context` (no-op sem timeline). Sem mudar comportamento."""
     from observability.latency import TurnPhase
@@ -771,7 +772,7 @@ def build_context_pack(
 
     with _phase(TurnPhase.CONTEXT):
         pack = _build_context_pack(
-            state, query, purpose, token_budget, game_id, npc_id, own_faction
+            state, query, purpose, token_budget, game_id, npc_id, own_faction, include_lore
         )
     # SPEC-207 R7: refs do contexto visto vão ao coletor do turno (no-op fora do turno).
     from services.audit_trace import note_context
@@ -788,6 +789,7 @@ def _build_context_pack(
     game_id: str | None = None,
     npc_id: str | None = None,
     own_faction: str = "",
+    include_lore: bool = True,
 ) -> ContextPack:
     """Monta o ContextPack. Lore canônico e memória de sessão são buscados e
     rotulados separadamente; `npc_id` inclui ainda a memória privada do NPC."""
@@ -850,7 +852,7 @@ def _build_context_pack(
 
     # SPEC-314 R13: página do Codex de fação secreta (plano ignoto) não volta ao narrador/NPC
     exclude_kw: dict = {}
-    if purpose in LORE_REDACT_PURPOSES:
+    if include_lore and purpose in LORE_REDACT_PURPOSES:
         from services import faction_gate
 
         redacted = faction_gate.redacted_lore_ids(state, own_faction)
@@ -860,10 +862,14 @@ def _build_context_pack(
             exclude_kw = {"exclude_ids": redacted}
 
     custom_readers = None
-    if RAG_AVAILABLE and (
-        query_rag is not getattr(_rag, "query_rag", None)
-        or query_session_memory is not getattr(_rag, "query_session_memory", None)
-        or query_npc_memory is not getattr(_rag, "query_npc_memory", None)
+    if (
+        include_lore
+        and RAG_AVAILABLE
+        and (
+            query_rag is not getattr(_rag, "query_rag", None)
+            or query_session_memory is not getattr(_rag, "query_session_memory", None)
+            or query_npc_memory is not getattr(_rag, "query_npc_memory", None)
+        )
     ):
         custom_readers = {
             "lore": lambda: query_rag(
@@ -881,8 +887,13 @@ def _build_context_pack(
     # Do not perform a real embedding before invoking those custom readers.
     embedded = (
         EmbeddedContextQuery(query, None, None, None)
-        if custom_readers is not None
-        else embed_context_query(query, game_id=game_id, npc_id=npc_id)
+        if custom_readers is not None or not include_lore
+        else embed_context_query(
+            query,
+            game_id=game_id,
+            npc_id=npc_id,
+            turn=int(world.get("turn_count", 0) or 0) if purpose == "story" else None,
+        )
     )
     try:
         workers = max(1, min(3, int(os.getenv("RPG_CONTEXT_MAX_CONCURRENCY", "3"))))
@@ -896,14 +907,19 @@ def _build_context_pack(
         prefer_region = (
             world_pressures.region_of(str(world.get("current_location_id") or "")) or None
         )
-    acquired = acquire_context_sources(
-        embedded,
-        game_id=game_id,
-        npc_id=npc_id,
-        max_workers=workers,
-        readers=custom_readers,
-        **({"prefer_region": prefer_region} if prefer_region else {}),
-        **exclude_kw,
+    # SPEC-317 R8: include_lore=False nao le indice nenhum (nem sessao, nem NPC).
+    acquired = (
+        ()
+        if not include_lore
+        else acquire_context_sources(
+            embedded,
+            game_id=game_id,
+            npc_id=npc_id,
+            max_workers=workers,
+            readers=custom_readers,
+            **({"prefer_region": prefer_region} if prefer_region else {}),
+            **exclude_kw,
+        )
     )
     source_text = {result.source: result.text for result in acquired}
     lore_text = source_text.get("lore", "")

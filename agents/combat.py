@@ -476,9 +476,7 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
         "enemies": enemies,
         "npcs": [],
         "encounter_level": encounter_level,
-        "narrative": build_context_pack(
-            state, query=str(loc), purpose="combat_narration", token_budget=600
-        ).world_state_block,
+        "narrative": "",
     }
     # SPEC-232 R10 (D-A, default do dono): a preparação por LLM (objetos, eventos
     # do Abismo, reforços, condições de fim) só roda quando importa — Carga do
@@ -486,6 +484,14 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
     # FAST nesses encontros; nos demais, geometria mínima em Python (sem invoke).
     if _wants_prepared_scene(player, enemies):
         try:
+            # SPEC-317 R8: o contexto so serve ao prompt de preparacao (e so o estado do mundo).
+            ctx["narrative"] = build_context_pack(
+                state,
+                query=str(loc),
+                purpose="combat_narration",
+                token_budget=600,
+                include_lore=False,
+            ).world_state_block
             llm = get_llm(temperature=0.4, tier=ModelTier.FAST)
             scene = prep.prepare_encounter(ctx, llm)  # guard + fallback internos
         except Exception as e:
@@ -1490,7 +1496,11 @@ def _combat_node(state: GameState):
         narrative = "⚔️ " + "\n".join(f"• {line}" for line in logs if line) + suffix
     else:
         world_pack = build_context_pack(
-            state, query=f"{loc} {intent}", purpose="combat_narration", token_budget=1200
+            state,
+            query=f"{loc} {intent}",
+            purpose="combat_narration",
+            token_budget=1200,
+            include_lore=False,  # SPEC-317 R8: so world_state_block e usado
         )
         narrative = _narrate(
             player,

@@ -47,6 +47,24 @@ class ContextSourceResult:
 
 
 def embed_context_query(
+    text: str,
+    *,
+    game_id: str | None = None,
+    npc_id: str | None = None,
+    turn: int | None = None,
+) -> EmbeddedContextQuery:
+    """Embeda a consulta (1x por turno). Com ``turn`` e sem NPC, reaproveita o vetor que o
+    ``turn_prepare`` já pediu em paralelo (SPEC-317 R5); sem prefetch, embeda inline."""
+    if turn is not None and npc_id is None:
+        from services import context_prefetch
+
+        prefetched = context_prefetch.take(game_id, turn, text)
+        if prefetched is not None:
+            return prefetched
+    return embed_context_query_uncached(text, game_id=game_id, npc_id=npc_id)
+
+
+def embed_context_query_uncached(
     text: str, *, game_id: str | None = None, npc_id: str | None = None
 ) -> EmbeddedContextQuery:
     import rag
