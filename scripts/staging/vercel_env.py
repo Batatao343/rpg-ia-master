@@ -83,6 +83,7 @@ OPTIONAL_FLAGS = (
     "RPG_DYNAMIC_ART_ENABLED",
     "RPG_ROUTER_DETERMINISTIC_NPC",
     "RPG_PROMPT_STATIC_FIRST",
+    "RPG_EARLY_NARRATIVE",
 )
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
@@ -117,6 +118,7 @@ WORLD_FLAGS = (
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
     "RPG_ROUTER_DETERMINISTIC_NPC",  # SPEC-317 R2: off|shadow|on (ausente = shadow)
+    "RPG_EARLY_NARRATIVE",  # SPEC-316: off|shadow|on (ausente = shadow)
     "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
 )
 # SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
