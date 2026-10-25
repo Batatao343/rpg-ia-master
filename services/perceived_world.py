@@ -176,9 +176,14 @@ def perceived_world_block(state: dict, *, audience: Audience) -> str:
 def day_memory_facts(state: dict, items: list[dict]) -> list[str]:
     """R7: textos de TEMPLATE dos itens percebidos (ordem do digest), sem vazio/duplicata."""
     try:
-        from services import world_perception
+        from services import rumors, world_perception
 
-        texts = [world_perception.render(state, it).strip() for it in items or []]
+        # SPEC-312 R24: boato nunca vira memoria canonica
+        texts = [
+            world_perception.render(state, it).strip()
+            for it in items or []
+            if not rumors.is_rumor_item(it)
+        ]
         return list(dict.fromkeys(t for t in texts if t))[:DAY_FACTS_MAX]
     except Exception as exc:
         from observability.telemetry import log_fallback

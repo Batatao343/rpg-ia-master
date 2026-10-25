@@ -236,7 +236,10 @@ export function HeardNews({ news }: { news: NewsItem[] | undefined }) {
         <ul className="heard-news__list">
           {items.map((n, i) => (
             <li key={`${n.turn}-${i}`} className="heard-news__item">
-              <small className="muted">{newsLabel(n)}</small>
+              <small className="muted">
+                {newsLabel(n)}
+                {n.kind === "boato" ? <span className="heard-news__seal"> · boato</span> : null}
+              </small>
               <p>{n.text}</p>
             </li>
           ))}

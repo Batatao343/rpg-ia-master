@@ -1,6 +1,6 @@
 # SPEC-312 — Rumores com semente (lore → motor sorteia → LLM costura; boato falso nunca vira fato)
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Origem:** proposta **N1** de `docs/mundo-vivo/REVISAO-ORQUESTRADA-2026-10-24.md` (§4.2, linha 234)
 > + §3 "Rumores com metadado" (linha 191) + §2.3 (linha 175: rumor = "só motor; sem boato falso").
@@ -333,27 +333,27 @@ RumorFamily = Literal["lore", "avistamento", "narrador"]
 
 
 class RumorInstance(TypedDict, total=False):
-    rumor_id: str            # sha256(game_id|seed_id|born_day)[:16]
-    seed_id: str             # id da semente ("narrador:<hash>" para proposto)
+    rumor_id: str  # sha256(game_id|seed_id|born_day)[:16]
+    seed_id: str  # id da semente ("narrador:<hash>" para proposto)
     family: RumorFamily
     region_id: str
-    location_id: str         # local de nascimento
-    entities: list[str]      # ids do grafo (para avistamento: [enemy_id])
+    location_id: str  # local de nascimento
+    entities: list[str]  # ids do grafo (para avistamento: [enemy_id])
     subject: str
-    truth: bool              # INTERNO: nunca em prompt, API ou news
-    quest_eligible: bool     # INTERNO (313)
+    truth: bool  # INTERNO: nunca em prompt, API ou news
+    quest_eligible: bool  # INTERNO (313)
     born_day: int
     born_turn: int
-    expires_day: int         # born_day + RUMOR_TTL_DAYS
-    perceived_day: int       # 0 = ainda não percebido pelo jogador
-    text: str                # só para family="narrador" (texto validado)
-    resolution: str          # "" | "confirmado" | "desmentido" | "inconclusivo" (escrito via 313)
+    expires_day: int  # born_day + RUMOR_TTL_DAYS
+    perceived_day: int  # 0 = ainda não percebido pelo jogador
+    text: str  # só para family="narrador" (texto validado)
+    resolution: str  # "" | "confirmado" | "desmentido" | "inconclusivo" (escrito via 313)
 
 
 class WorldSimState(TypedDict, total=False):
-    ...  # campos atuais
-    rumors: list[RumorInstance]           # teto RUMOR_LEDGER_MAX (40)
-    region_presence: dict[str, int]       # região -> último dia com o herói lá
+    version: int  # (campos atuais da 302-305 omitidos)
+    rumors: list[RumorInstance]  # teto RUMOR_LEDGER_MAX (40)
+    region_presence: dict[str, int]  # região -> último dia com o herói lá
     rumor_last_perceived_day: int
     rumor_seed_last_born: dict[str, int]  # seed_id -> último born_day (cooldown)
 ```
@@ -700,7 +700,52 @@ Custo esperado: ≤ US$ 0,80. Estourou o teto → parar e registrar.
 
 ## 8. Evidência
 
-(preencher na implementação: simulador S1–S7, playtest 50 turnos, smoke §6)
+Simulador `bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 120 --seeds 8`
+(percepcao REAL via `storyteller._perceive_world`; metas na Etapa 7):
+
+| meta | parado em `nova_arcadia` | viajante (3 em 3 dias) |
+|---|---|---|
+| S1 nascimentos por regiao frequentada por dia ∈ [0,45; 0,55] | **0,498** | **0,504** |
+| S2 dias com rumor novo percebido ∈ [0,35; 0,65] | **0,498** | 0,933 (fora: ver §10, D-3) |
+| S3 falsos entre percebidos ∈ [0,20; 0,30] | **0,209** | **0,295** |
+| S4 semente `lore` percebida 2x no mesmo mundo | **0** | **0** |
+| S5 violacoes em `world.news` (> 4 rumores ou expirado) | **0** | **0** |
+| S6 crescimento de `world_sim` (repr) ≤ 8 KB | **7,7 KB** | 18,9 KB (fora: ver §10, D-3) |
+| teto diario (>1 percebido no mesmo dia) | **0** | **0** |
+
+S7 (informativo): a familia `lore` esgota as 22 sementes de Nova Arcadia; depois disso so o
+`avistamento` (e a re-oferta por cooldown) sustenta o ritmo.
+
+Playtest MockLLM `--all --turns 30` (16 perfis, `RPG_WORLD_ENGINE=on RPG_RUMORS=on
+RPG_NPC_KNOWLEDGE=on`): 0 erros, 0 violacoes. Cenario `mundo` (40 turnos): 10 rumores percebidos,
+0 violacao `rumor.*`. Smoke real (§6): **nao executado** (instrucao do coordenador).
+
+## 10. Desvios da implementacao
+
+- **D-1 `settlement_tags`** = `cidade, vila, porto, favela, docas` (a spec dizia `cidade, vila`;
+  Brekmar e o Anel de Lama ficariam mudos). Confirmado no `world_map.json`.
+- **D-2 `AVISTAMENTO_FALSE_P` 0,25 → 0,15** (calibracao S3: parado 0,31 / viajante 0,34 com 0,25).
+- **D-3 viajante fora de S2/S6.** Com 3 regioes frequentadas nascem ~1,5 rumores/dia e o teto de 1
+  percebido/dia fica saturado (0,93); o ledger maior pesa 18,9 KB. O perfil parado cumpre ambas.
+  Nao mexi no `RUMOR_BIRTH_P` (decisao do dono); o coordenador decide se quer reduzir para
+  regioes onde o heroi nao esta.
+- **D-4 instancia compacta.** `entities`/`subject`/`quest_eligible` das familias `lore`/`avistamento`
+  vem da semente (`rumors.entities_of/subject_of/is_quest_eligible`); so `narrador` os grava.
+  `resolution` so existe depois de `mark_resolved` (que tambem grava `resolved_day`).
+- **D-5 envelhecimento do ledger.** Instancia nao percebida some 5 dias depois de expirar, a
+  percebida 20 dias depois (`_cap_ledger`); `rumor_seed_last_born` guarda o cooldown e o marcador
+  `NEVER_AGAIN` (lore/narrador percebidos ou resolvidos nunca renascem; `avistamento` renasce
+  depois do cooldown).
+- **D-6 item do digest autossuficiente.** `params` do item de rumor leva `seed_id`, `family` e
+  `expires_day`; `world_perception.render` renderiza so do item (a narracao nao tem o `world_sim` novo).
+- **D-7 `ProposedRumor` sem texto novo no prompt.** A instrucao fica na `description` do campo do
+  schema (so entra na chamada se o modo estiver `on`); o corpo do prompt do narrador nao mudou.
+- **D-8 curadoria completa.** Os 40 `gist`/`fonte_label` foram escritos a mao em
+  `rumor_seed_overrides.json` (o gerado sozinho produziria o titulo cru); `public_names` so
+  `Valerius` nas duas sementes que o citam. `entities` do gerador vem de tags + corpo do texto.
+- **D-9 default `RPG_RUMORS=on`** (D3 local/suite). O staging deve fixar `RPG_RUMORS=shadow`.
+- **D-10 nao feito aqui:** passo 2 da Etapa 0 (`project_index`, gerado no pouso), relock do eval
+  `npc_knowledge`, smoke real §6, revisao independente e a leitura do dono (D1).
 
 ## 9. Decisões do dono
 

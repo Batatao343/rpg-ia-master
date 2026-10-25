@@ -2424,7 +2424,92 @@ def check_npc_world(state: dict, prev: dict | None, turn: int) -> list[Violation
     return out
 
 
+def _rumor_signatures(sim: dict) -> list[str]:
+    """Trechos de texto que identificam um rumor (gist da semente ou texto do narrador)."""
+    from services import rumors
+
+    out: list[str] = []
+    for r in (sim or {}).get("rumors") or []:
+        if not isinstance(r, dict):
+            continue
+        seed = rumors._all_seeds().get(str(r.get("seed_id") or "")) or {}
+        sig = str(seed.get("gist") or r.get("text") or "").strip().lower()
+        if len(sig) >= 12:
+            out.append(sig)
+    return out
+
+
+def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-312 R32: boato nunca vira fato, no maximo 1 rumor novo por dia, nada expirado em
+    `world.news` e a verdade nunca sai pela API."""
+    sim = (state or {}).get("world_sim") or {}
+    rows = [r for r in sim.get("rumors") or [] if isinstance(r, dict)]
+    if not rows:
+        return []
+    out: list[Violation] = []
+    ids = {str(r.get("rumor_id")) for r in rows} | {str(r.get("seed_id")) for r in rows}
+    sigs = _rumor_signatures(sim)
+
+    def leaks(blob: str) -> bool:
+        low = blob.lower()
+        return any(i and i in blob for i in ids if len(i) >= 12) or any(s in low for s in sigs)
+
+    canonical = {
+        "event_log": [e for e in (state.get("event_log") or []) if isinstance(e, dict)],
+        "world_projection": state.get("world_projection") or {},
+        "memory_facts": [m for m in (state.get("memory_facts") or []) if isinstance(m, dict)],
+        # quests do proprio `investigar_rumor` (SPEC-313) sao a unica ponte legitima
+        "quests": [
+            q
+            for q in (state.get("quests") or [])
+            if isinstance(q, dict) and q.get("world_kind") != "investigar_rumor"
+        ],
+    }
+    for name, value in canonical.items():
+        if leaks(repr(value)):
+            out.append(
+                _V("rumor.became_fact", "error", turn, f"boato apareceu em {name} (fato canonico)")
+            )
+    by_day: dict[int, int] = {}
+    for r in rows:
+        d = int(r.get("perceived_day", 0) or 0)
+        if d:
+            by_day[d] = by_day.get(d, 0) + 1
+    for d, n in by_day.items():
+        if n > 1:
+            out.append(
+                _V("rumor.over_daily_cap", "error", turn, f"{n} rumores percebidos no dia {d}")
+            )
+    world = (state or {}).get("world") or {}
+    today = int(((world.get("world_clock")) or {}).get("day", 1) or 1)
+    for n in world.get("news") or []:
+        if (
+            isinstance(n, dict)
+            and n.get("kind") == "rumor"
+            and int(n.get("expires_day", 0) or 0) < today
+        ):
+            out.append(_V("rumor.expired_in_news", "error", turn, "rumor expirado em world.news"))
+            break
+    try:
+        import json
+
+        import api
+
+        blob = json.dumps(api._world_block(world, {}, [], {}, sim), ensure_ascii=False)
+        bad = [k for k in ("truth", "rumor_id", "seed_id", "expires_day") if k in blob]
+        if bad or any(i in blob for i in ids if len(i) >= 12):
+            out.append(_V("rumor.truth_leak", "error", turn, f"API expoe {bad or 'id de rumor'}"))
+    except Exception as exc:  # silent-ok: sem api importavel o check de payload e pulado
+        import logging
+
+        logging.getLogger("rpg.playtest").debug(
+            "rumor payload check skipped: %s", type(exc).__name__
+        )
+    return out
+
+
 CHECKS: list[Check] = [
+    check_rumors,
     check_companions,
     check_law,
     check_reputation,

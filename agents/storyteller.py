@@ -24,8 +24,10 @@ from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages
 from services.structured_outputs import (
     CrimeClaim,
     ProposedQuest,
+    ProposedRumor,
     ProposedWorldEvent,
     coerce_crime_claims,
+    coerce_proposed_rumors,
 )
 from state import GameState
 from world_utils import (
@@ -136,6 +138,20 @@ class StoryUpdate(BaseModel):
     @classmethod
     def _drop_invalid_crimes(cls, v: object) -> list:
         return coerce_crime_claims(v)
+
+    proposed_rumors: list[ProposedRumor] = Field(
+        default_factory=list,
+        description=(
+            "APENAS se um personagem PRESENTE NA CENA contou um BOATO neste turno (algo que "
+            "ouviu dizer, não um fato). Use ids EXATOS de <ENTIDADES_CANONICAS>. Sem números. "
+            "Vazio na dúvida — o motor decide se vale como boato."
+        ),
+    )
+
+    @field_validator("proposed_rumors", mode="before")
+    @classmethod
+    def _drop_invalid_rumors(cls, v: object) -> list:
+        return coerce_proposed_rumors(v)
 
     beat_completed: bool = Field(
         default=False,
@@ -692,7 +708,19 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
         pst = _perception_state(state, world, factions, intel)
         items = list(sim.get("pending_digest") or [])
         seen = wperc.perceivable(pst, items)
+        from services import rumors as _rumors
+
+        day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+        seen = _rumors.limit_perceived(pst, sim, seen, day)  # SPEC-312 R13
         world = wperc.record_news(world, pst, seen)
+        _rids = [str(i.get("subject_id") or "") for i in seen if _rumors.is_rumor_item(i)]
+        if _rids:  # SPEC-312 R14: so o que o jogador percebeu marca a instancia
+            _rumors.mark_perceived(sim, _rids, day)
+            from observability.telemetry import log_event
+
+            for _ in _rids:
+                log_event("rumor", "perceived", level="info", channel="digest")
+        world = _rumors.prune_news(world, day)
         done = {i["item_id"] for i in seen}
         stats = dict(sim.get("perceived_stats") or {})
         stats["items"] = int(stats.get("items", 0)) + len(seen)
@@ -708,7 +736,6 @@ def _perceive_world(state, world: dict, factions: list, intel: dict, tick):
         for i in seen:  # SPEC-308 R2: tambem os GameEvents que originaram o item
             ledger += [str(e) for e in i.get("event_ids") or [] if e]
         sim["perceived_ids"] = ledger[-400:]
-        day = int((world.get("world_clock") or {}).get("day", 1) or 1)
         # so rumores (com subject_id) esperam propagacao; o resto e testemunho do dia
         sim["pending_digest"] = [
             i
@@ -744,6 +771,32 @@ def _npc_beliefs_update(state, world: dict, sim_updates: dict, perceived: list) 
 
         log_fallback("storyteller", "npc_beliefs_failed", exc)
         return []
+
+
+def _apply_proposed_rumors(state, updates: dict, update, turn: int, quarantined: bool) -> None:
+    """SPEC-312 R25-R27: boato que alguem em cena contou. Validado em Python; aceito vira
+    rumor `narrador` (falso, sem quest). Guard de FallbackLLM: `update` sem o campo e no-op.
+    Nunca levanta."""
+    try:
+        from services import rumors
+
+        proposals = getattr(update, "proposed_rumors", None) or []
+        if not proposals or rumors.proposed_mode() != "on":
+            return
+        sim_key = "world_sim"
+        world = updates.get("world") or state.get("world") or {}
+        day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+        pst = {**state, **updates, "world": world}
+        new_sim, new_world, _why = rumors.accept_proposed(
+            pst, proposals, turn=turn, day=day, quarantined=quarantined
+        )
+        if new_sim is not None and new_world is not None:
+            updates[sim_key] = new_sim
+            updates["world"] = new_world
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("storyteller", "proposed_rumor_failed", exc)
 
 
 def _narrate_world(state, world: dict, factions: list, intel: dict, perceived: list) -> str:
@@ -2052,6 +2105,7 @@ def storyteller_node(state: GameState):
                 *list(updates.get("narrative_rejections") or []),
                 *mediation_rejections,
             ]
+        _apply_proposed_rumors(state, updates, update, turn, bool(quarantine_llm_payload))
         return updates
 
     except Exception as e:

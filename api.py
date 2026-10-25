@@ -2932,11 +2932,24 @@ def _world_block(
             {
                 **{k: n.get(k, "") for k in ("day", "period", "location_name", "text", "turn")},
                 "date_label": _news_date_label(n, world_sim),
+                # SPEC-312 R17: unico campo derivado de rumor (nunca truth/rumor_id/expires_day)
+                "kind": _rumors_public_kind(n),
             }
             for n in (w.get("news") or [])[-12:]
-            if isinstance(n, dict)
+            if isinstance(n, dict) and not _rumor_news_expired(n, w)
         ],
     }
+
+
+def _rumors_public_kind(entry: dict) -> str:
+    from services import rumors
+
+    return rumors.public_kind(entry)
+
+
+def _rumor_news_expired(entry: dict, world: dict) -> bool:
+    day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    return entry.get("kind") == "rumor" and int(entry.get("expires_day", 0) or 0) < day
 
 
 def _date_block(w: dict, world_sim: dict | None) -> dict[str, Any] | None:

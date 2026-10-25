@@ -112,6 +112,33 @@ class CrimeClaim(BaseModel):
     covert: bool = Field(default=False, description="True só se a ação foi às escondidas.")
 
 
+class ProposedRumor(BaseModel):
+    """SPEC-312 R25: boato que alguem EM CENA contou neste turno. O motor valida (grafo,
+    duplicata, teto) e o grava como boato FALSO: a LLM nunca cria fato nem gancho verdadeiro."""
+
+    text: str = Field(description="O boato em 1 frase, como alguém em cena contou. Sem números.")
+    entity_ids: list[str] = Field(
+        default_factory=list, description="Ids EXATOS de <ENTIDADES_CANONICAS> citados no boato."
+    )
+    location_id: str = Field(default="", description="Id de local EXATO ou vazio (= aqui).")
+
+
+def coerce_proposed_rumors(raw: object) -> list:
+    """SPEC-312 R25: item invalido e DESCARTADO, nunca derruba a resposta inteira."""
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for item in raw:
+        if isinstance(item, ProposedRumor):
+            out.append(item)
+        elif isinstance(item, dict) and isinstance(item.get("text"), str) and item["text"].strip():
+            try:
+                out.append(ProposedRumor(**item))
+            except Exception:  # silent-ok: item invalido e descartado por contrato (R25)
+                continue
+    return out
+
+
 CRIME_CLAIM_TYPES = ("furto", "agressao", "homicidio", "dano_propriedade", "magia_ilegal")
 
 

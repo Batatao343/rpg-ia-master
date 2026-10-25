@@ -1344,6 +1344,7 @@ article.card[data-selected="true"]::before {
 
 /* SPEC-296: "Ouvi dizer" */
 .heard-news__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.heard-news__seal { font-style: italic; color: var(--accent, #c8aa6e); }
 .heard-news__item { border-left: 2px solid var(--line, rgba(200, 170, 110, 0.35)); padding-left: 0.6rem; }
 .person__change { margin: 0.15rem 0 0; font-size: 0.74rem; color: var(--faint); font-style: italic; }
 .faction__disp--amistoso { color: var(--accent); }

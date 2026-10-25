@@ -220,7 +220,7 @@ def _catalog_names() -> set[str]:
     return {n for n in names if len(n) >= 5}
 
 
-def _allowed_names(state: dict) -> set[str]:
+def _allowed_names(state: dict, items: list | None = None) -> set[str]:
     intel = (state or {}).get("faction_intel") or {}
     allowed = {
         str(f.get("name") or "")
@@ -236,6 +236,12 @@ def _allowed_names(state: dict) -> set[str]:
         # SPEC-304 R24: com o modo on so o NPC CONHECIDO pode ser nomeado pela narracao
         if not on or not isinstance(row, dict) or row.get("known_by_player", True)
     }
+    if items:  # SPEC-312 R23: nomes que o povo conhece (public_names) dos rumores da acao
+        from services import rumors
+
+        for it in items:
+            if rumors.is_rumor_item(it):
+                allowed |= rumors.public_names(rumors.from_item(it))
     return allowed
 
 
@@ -251,13 +257,29 @@ def narrate_day(state: dict, items: list) -> str:
     fallback = _template_text(state, items)
     if not items:
         return ""
-    facts = "\n".join(f"FATO: {t}" for t in (_template_text(state, [it]) for it in items) if t)
+    from services import rumors
+
+    has_rumor = any(rumors.is_rumor_item(it) for it in items)
+    if has_rumor and all(rumors.is_rumor_item(it) for it in items):
+        return fallback  # SPEC-312 R22: so boato no dia -> zero chamada de LLM
+    lines = []
+    for it in items:
+        t = _template_text(state, [it])
+        if t:  # SPEC-312 R22: boato entra como BOATO, nunca como FATO
+            lines.append(f"{'BOATO' if rumors.is_rumor_item(it) else 'FATO'}: {t}")
+    facts = "\n".join(lines)
+    boato_rule = (
+        " Linhas BOATO são coisas que o herói ouviu: costure em no máximo 1 frase, "
+        "como boato (dizem, contam, juram), sem confirmar."
+        if has_rumor
+        else ""
+    )
     sys = SystemMessage(
         content=(
             "Você narra, em 2-4 frases de dark fantasy em pt-BR, o que o herói viu ou ouviu "
             "enquanto o tempo passava. Use SOMENTE os fatos abaixo, sem inventar nomes, "
             "números, causas nem consequências novas. Use o CONTEXTO (se houver) só para "
-            "ambientar; os fatos continuam sendo só as linhas FATO."
+            "ambientar; os fatos continuam sendo só as linhas FATO." + boato_rule
         )
     )
     from services.perceived_world import perceived_world_lines
@@ -283,7 +305,7 @@ def narrate_day(state: dict, items: list) -> str:
     if not text or len(text) > NARRATION_MAX_CHARS:
         return fallback if not text else text[:NARRATION_MAX_CHARS].rstrip()
     lowered = text.lower()
-    allowed = {n.lower() for n in _allowed_names(state)}
+    allowed = {n.lower() for n in _allowed_names(state, items)}
     for name in _catalog_names():
         low = name.lower()
         if low in lowered and low not in allowed:

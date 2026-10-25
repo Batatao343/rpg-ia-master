@@ -710,7 +710,10 @@ def advance_days(
             from world_utils import _effective_danger
 
             world["danger_level"] = _effective_danger(world, cur)
-        sim["pending_digest"] = (sim.get("pending_digest", []) + all_digest)[-20:]
+        from services import rumors as _rumors
+
+        # SPEC-312: no teto do digest, rumor sai antes de qualquer aviso de crise
+        sim["pending_digest"] = _rumors.trim_digest(sim.get("pending_digest", []) + all_digest, 20)
     return WorldTickResult(
         world if m == "on" else world_after,
         factions if m == "on" else list(factions),
@@ -726,10 +729,11 @@ def advance_days(
 def _register_default_hooks() -> None:
     """SPEC-303: calendario = hook `pre` order 10 (estacao, festas, offsets de baseline).
     SPEC-304: NPCs off-screen = hook `post` order 10 (agenda, deserção, perigo e destino)."""
-    from services import npc_world, world_calendar
+    from services import npc_world, rumors, world_calendar
 
     register_day_hook("calendar", world_calendar.calendar_day_hook, stage="pre", order=10)
     register_day_hook("npc_world", npc_world.day_hook, stage="post", order=10)
+    register_day_hook("rumors", rumors.day_hook, stage="post", order=20)  # SPEC-312
 
 
 _register_default_hooks()

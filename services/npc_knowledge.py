@@ -75,7 +75,7 @@ RUMOR_PROVENANCE = {"npc_claim", "inference"}
 
 RELATIONS = ("observed_by", "told_to", "believed_by")
 CHANNELS = ("witness", "messenger", "local_rumor", "player")
-SUBJECT_KINDS = ("event", "memory_fact")
+SUBJECT_KINDS = ("event", "memory_fact", "rumor")  # SPEC-312: "rumor" = boato de semente
 _RELATION_RANK = {"observed_by": 0, "believed_by": 1, "told_to": 2}
 _TITLE_WORDS = {
     "lorde",
@@ -253,7 +253,7 @@ def _memory_by_id(state: dict, memory_id: str) -> dict | None:
 
 
 def _subject_type(state: dict, kind: str, subject_id: str) -> str:
-    if kind == "memory_fact":
+    if kind in ("memory_fact", "rumor"):
         return RUMOR
     ev = _event_by_id(state, subject_id) or {}
     etype = str(ev.get("type") or "")
@@ -261,6 +261,10 @@ def _subject_type(state: dict, kind: str, subject_id: str) -> str:
 
 
 def _subject_text(state: dict, kind: str, subject_id: str) -> str:
+    if kind == "rumor":  # SPEC-312 R18: texto do template; vazio se a instancia sumiu/expirou
+        from services import rumors
+
+        return rumors.text_for(state, subject_id)
     if kind == "memory_fact":
         row = _memory_by_id(state, subject_id) or {}
         return str(row.get("text") or "").strip()
@@ -505,7 +509,12 @@ def inherit_local(state: dict, npc_id: str, location_id: str, clock: int) -> lis
     for sid in heard:
         if sid in already:
             continue
-        kind = "memory_fact" if _memory_by_id(state, sid) else "event"
+        from services import rumors
+
+        if rumors.instance(state, sid):
+            kind = "rumor"
+        else:
+            kind = "memory_fact" if _memory_by_id(state, sid) else "event"
         if _subject_type(state, kind, sid) in WITNESS_ONLY_TYPES:
             continue  # R7
         if _is_secret(state, _subject_text(state, kind, sid)):
@@ -626,7 +635,7 @@ def deliver_due(state: dict, clock: int) -> dict:
             "location_heard": heard,
         }
         _add_heard(heard, to, sid)
-        rumor = kind == "memory_fact"
+        rumor = kind in ("memory_fact", "rumor")  # SPEC-312 R20: boato so `told_to`
         for hid in _residents(working, to):
             if sid in _holder_subjects(links, hid):
                 continue
@@ -749,6 +758,37 @@ def turn_updates(state: dict) -> dict:
         _add_heard(heard, here, sid)
         queue.extend(schedule_propagation(working(), "memory_fact", sid, here, clock, 1))
 
+    # SPEC-312 R19: rumor de semente nascido NESTE turno -> boato local + propagacao
+    for rum in (state.get("world_sim") or {}).get("rumors") or []:
+        if (
+            not isinstance(rum, dict)
+            or _int(rum.get("born_turn")) != turn
+            or not rum.get("rumor_id")
+        ):
+            continue
+        sid, origin = str(rum["rumor_id"]), str(rum.get("location_id") or "")
+        if not origin or _is_secret(state, _subject_text(state, "rumor", sid)):
+            continue  # R7/R20: assinatura secreta nao revelada nao propaga
+        if sid in (heard.get(origin) or []):
+            continue  # idempotente
+        _add_heard(heard, origin, sid)
+        for hid in _residents(working(), origin):
+            links.append(
+                _link(
+                    hid,
+                    "rumor",
+                    sid,
+                    "told_to",
+                    source=f"loc:{origin}",
+                    channel="local_rumor",
+                    hops=0,
+                    clock=clock,
+                    turn=turn,
+                    location_id=origin,
+                )
+            )
+        queue.extend(schedule_propagation(working(), "rumor", sid, origin, clock, 1))
+
     for key, row in (state.get("npcs") or {}).items():
         if (
             isinstance(row, dict)
@@ -835,7 +875,7 @@ def knowledge_lines(
         text = _subject_text(state, row["kind"], sid)
         if not text or _is_secret(state, text):
             continue
-        if row["kind"] == "memory_fact":
+        if row["kind"] in ("memory_fact", "rumor"):
             label = "[BOATO, não confirmado]"
         elif "observed_by" in row["rels"]:
             label = "[VIU]"

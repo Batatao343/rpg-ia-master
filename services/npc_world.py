@@ -1155,6 +1155,9 @@ def on_perceived(state: dict, perceived: list[dict]) -> tuple[dict, list[dict]]:
     events: list[dict] = []
     if mode() != "on":
         return beliefs, events
+    from services import rumors
+
+    perceived = [i for i in perceived or [] if not rumors.is_rumor_item(i)]  # SPEC-312 R11
     day = _day_of((state or {}).get("world"))
     game_id = str((state or {}).get("game_id", ""))
     sim = (state or {}).get("npc_sim") or {}

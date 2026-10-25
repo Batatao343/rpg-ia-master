@@ -64,7 +64,13 @@ def perceivable(state: dict, items: list[dict]) -> list[dict]:
     tpls = _templates()["templates"]
     today = int((((state or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
     out: list[dict] = []
+    from services import rumors as _rumors
+
     for it in items or []:
+        if _rumors.is_rumor_item(it):  # SPEC-312 R12: canais proprios do rumor
+            if _rumors.perceivable(state, it):
+                out.append(it)
+            continue
         tpl = tpls.get(it.get("template_id", ""))
         if not tpl:
             continue
@@ -107,6 +113,10 @@ def render(state: dict, item: dict) -> str:
     cfg = _templates()
     tid = item.get("template_id", "")
     params = item.get("params") or {}
+    if str(tid).startswith("rumor."):  # SPEC-312: texto do rumor = template + gist da semente
+        from services import rumors
+
+        return rumors.render_news(state, rumors.from_item(item))
     if tid == "ascensao.crise.inicio":
         fid = str(params.get("faccao") or "")
         intel = (state or {}).get("faction_intel") or {}
@@ -170,7 +180,9 @@ def _append(world: dict, **kw) -> dict:
     return append_news(world, **kw)
 
 
-def _append_news_fallback(world, *, text, location_id, location_name, turn, source="world_engine"):
+def _append_news_fallback(
+    world, *, text, location_id, location_name, turn, source="world_engine", extra=None
+):
     """Mesmo contrato de `services.ambient.append_news` (SPEC-296) enquanto ela nao pousa."""
     new_world = dict(world or {})
     news = [dict(n) for n in (new_world.get("news") or []) if isinstance(n, dict)]
@@ -188,6 +200,7 @@ def _append_news_fallback(world, *, text, location_id, location_name, turn, sour
                 "text": clean,
                 "source": source,
                 "turn": int(turn),
+                **(extra or {}),
             }
         )
     new_world["news"] = news[-NEWS_CAP:]
@@ -204,8 +217,19 @@ def record_news(world: dict, state: dict, items: list[dict]) -> dict:
             continue
         loc_id = str(it.get("location_id") or "")
         name = str((wp._map_index()[0].get(loc_id) or {}).get("name") or "")
+        extra = None
+        if str(it.get("template_id", "")).startswith("rumor."):
+            from services import rumors
+
+            extra = rumors.news_extra(it)
         out = _append(
-            out, text=text, location_id=loc_id, location_name=name, turn=turn, source=SOURCE
+            out,
+            text=text,
+            location_id=loc_id,
+            location_name=name,
+            turn=turn,
+            source=SOURCE,
+            **({"extra": extra} if extra else {}),
         )
     return out
 

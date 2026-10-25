@@ -98,6 +98,7 @@ def append_news(
     location_name: str,
     turn: int,
     source: str = "pulse",
+    extra: dict | None = None,
 ) -> dict:
     """Anexa uma notícia percebida a `world["news"]` (FIFO 12, sem vazio/duplicata).
     Devolve um world NOVO; não muta o original."""
@@ -111,17 +112,18 @@ def append_news(
         new_world["news"] = news
         return new_world
     clock = new_world.get("world_clock") or {}
-    news.append(
-        {
-            "day": int(clock.get("day", 1) or 1),
-            "period": str(clock.get("period", "") or ""),
-            "location_id": location_id,
-            "location_name": location_name,
-            "text": clean,
-            "source": source,
-            "turn": int(turn),
-        }
-    )
+    entry = {
+        "day": int(clock.get("day", 1) or 1),
+        "period": str(clock.get("period", "") or ""),
+        "location_id": location_id,
+        "location_name": location_name,
+        "text": clean,
+        "source": source,
+        "turn": int(turn),
+    }
+    if extra:  # SPEC-312: campos adicionais (kind/rumor_id/expires_day) sem mexer no resto
+        entry.update(extra)
+    news.append(entry)
     new_world["news"] = news[-NEWS_CAP:]
     return new_world
 
@@ -129,16 +131,29 @@ def append_news(
 def heard_block(world: dict, limit: int = 3) -> str:
     """R7: `<OUVIU_DIZER>` com as últimas notícias (vazio se não houver)."""
     news = [n for n in ((world or {}).get("news") or []) if isinstance(n, dict)]
+    today = int(((world or {}).get("world_clock") or {}).get("day", 1) or 1)
+    # SPEC-312 R15/R16: boato expirado some; boato vai marcado e nunca como fato confirmado
+    news = [
+        n for n in news if not (n.get("kind") == "rumor" and int(n.get("expires_day", 0)) < today)
+    ]
     if not news:
         return ""
+    shown = news[-limit:]
     rows = [
-        f"- (Dia {n.get('day', '?')}, {n.get('location_name', '?')}) {n.get('text', '')}"
-        for n in news[-limit:]
+        f"- (Dia {n.get('day', '?')}, {n.get('location_name', '?')}) "
+        f"{'(boato) ' if n.get('kind') == 'rumor' else ''}{n.get('text', '')}"
+        for n in shown
     ]
-    return (
-        "<OUVIU_DIZER>\n    O herói ouviu estes rumores. Pode referenciar se fizer sentido; "
-        "não invente detalhes além do texto.\n    " + "\n    ".join(rows) + "\n    </OUVIU_DIZER>"
+    head = (
+        "O herói ouviu estes rumores. Pode referenciar se fizer sentido; "
+        "não invente detalhes além do texto."
     )
+    if any(n.get("kind") == "rumor" for n in shown):
+        head += (
+            " Itens marcados (boato) podem ser falsos: narre como boato, "
+            "nunca como fato confirmado."
+        )
+    return "<OUVIU_DIZER>\n    " + head + "\n    " + "\n    ".join(rows) + "\n    </OUVIU_DIZER>"
 
 
 def ambient_block(

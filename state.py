@@ -652,6 +652,30 @@ class CrisisRecord(TypedDict, total=False):
     relieved_day: int | None  # SPEC-305 R13: alívio (contra-jogo) — a crise não escala mais
 
 
+RumorFamily = Literal["lore", "avistamento", "narrador"]
+
+
+class RumorInstance(TypedDict, total=False):
+    """SPEC-312: rumor nascido (dono: services.rumors). Estado PRIVADO: `truth` nunca sai."""
+
+    rumor_id: str  # sha256(game_id|seed_id|born_day)[:16]
+    seed_id: str  # "narrador:<hash>" para o proposto
+    family: RumorFamily
+    region_id: str
+    location_id: str  # local de nascimento
+    entities: list[str]
+    subject: str
+    truth: bool  # INTERNO: nunca em prompt, API ou news
+    quest_eligible: bool  # INTERNO (SPEC-313)
+    born_day: int
+    born_turn: int
+    expires_day: int
+    perceived_day: int  # 0 = ainda nao percebido pelo jogador
+    text: str  # so family="narrador"
+    resolution: str  # "" | "confirmado" | "desmentido" | "inconclusivo"
+    resolved_day: int
+
+
 class WorldSimState(TypedDict, total=False):
     """SPEC-302: estado PRIVADO do motor de mundo (dono: services.world_engine).
     Nunca sai pela API. Chave aditiva, sem bump de SCHEMA_VERSION."""
@@ -682,6 +706,11 @@ class WorldSimState(TypedDict, total=False):
     perceived_ids: list[str]  # SPEC-305 R6: ids de itens/eventos que o jogador percebeu (200)
     shadow_location_states: dict[str, dict]
     shadow_blocked_routes: list[dict]
+    # SPEC-312 (dono: services.rumors): aditivo, sem bump de versao
+    rumors: list[RumorInstance]
+    region_presence: dict[str, int]
+    rumor_last_perceived_day: int
+    rumor_seed_last_born: dict[str, int]
 
 
 class CrimeRecord(TypedDict, total=False):

@@ -413,6 +413,10 @@ def _active_npc_name(state: dict) -> str:
 
 
 def _item_matches(seed: QuestSeed, item: dict) -> bool:
+    from services import rumors
+
+    if rumors.is_rumor_item(item):  # SPEC-312 R11: boato nunca e causa de quest de mundo
+        return False
     tid = str(item.get("template_id") or "")
     prefix = tid.split(".")[0]
     kind = str(item.get("kind") or "")

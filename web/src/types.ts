@@ -141,6 +141,7 @@ export interface NewsItem {
   text: string;
   source: string;
   turn: number;
+  kind?: "noticia" | "boato"; // SPEC-312: boato pode ser falso; a verdade nunca chega ao cliente
   date_label?: string; // SPEC-307: "3º dia de Vorrnak, Sino de Cobre — Ano 112 da Era 7" (vazio sem calendário)
 }
 

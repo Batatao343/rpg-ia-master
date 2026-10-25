@@ -898,7 +898,23 @@ def _world_summary(state: dict) -> dict:
     }
     out.update(_calendar_summary(sim))
     out["npcs"] = _npc_summary(state)
+    out["rumors"] = _rumor_summary(sim)
     return out
+
+
+def _rumor_summary(sim: dict) -> dict:
+    """SPEC-312 R31: nascidos, percebidos, % falsos percebidos e propostos (nunca o gist)."""
+    rows = [r for r in (sim or {}).get("rumors") or [] if isinstance(r, dict)]
+    seen = [r for r in rows if r.get("perceived_day")]
+    proposed = [r for r in rows if r.get("family") == "narrador"]
+    false_seen = [r for r in seen if r.get("family") != "narrador" and not r.get("truth")]
+    lore_seen = [r for r in seen if r.get("family") != "narrador"]
+    return {
+        "born": len(rows),
+        "perceived": len(seen),
+        "false_pct": round(100 * len(false_seen) / len(lore_seen), 1) if lore_seen else 0.0,
+        "proposed_accepted": len(proposed),
+    }
 
 
 def _npc_summary(state: dict) -> dict:

@@ -324,6 +324,12 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "rule.derived": ("event_id", "type"),
     "rule.read_failed": ("error",),
     "rule.rule_ignored": ("error", "rule_id"),
+    "rumor.born": ("family", "region"),
+    "rumor.exhausted": ("region",),
+    "rumor.perceived": ("channel",),
+    "rumor.proposed_accepted": ("family",),
+    "rumor.proposed_rejected": ("reason",),
+    "rumor.shadow_born": ("family", "truth"),
     "runtime.boot": (
         "cold_start_ms",
         "embedding_provider",

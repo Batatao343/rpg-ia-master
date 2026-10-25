@@ -1,0 +1,30 @@
+{
+  "_doc": "SPEC-312: constantes [BALANCEAR] e templates de frase dos rumores. Sem numeros nem nomes de NPC/faccao nos templates.",
+  "constants": {
+    "RUMOR_BIRTH_P": 0.5,
+    "FREQUENT_WINDOW_DAYS": 14,
+    "RUMOR_TTL_DAYS": 10,
+    "RUMOR_PERCEIVED_PER_DAY": 1,
+    "RUMORS_PER_ACTION_MAX": 1,
+    "RUMOR_NEWS_MAX": 4,
+    "SEED_COOLDOWN_DAYS": 30,
+    "RUMOR_LEDGER_MAX": 40,
+    "LORE_WEIGHT": 3,
+    "AVISTAMENTO_FALSE_P": 0.15,
+    "PROPOSED_PER_TURN": 1,
+    "TITLE_SIMILARITY": 0.75
+  },
+  "settlement_tags": ["cidade", "vila", "porto", "favela", "docas"],
+  "templates": {
+    "rumor.lore": [
+      "{fonte_label} juram que {gist}.",
+      "Corre à boca pequena que {gist}.",
+      "Dizem por aí, segundo {fonte_label}, que {gist}."
+    ],
+    "rumor.avistamento": [
+      "Caçadores contam de um avistamento rondando {local}: {criatura}.",
+      "Na taverna, alguém jura ter visto algo perto de {local}: {criatura}."
+    ],
+    "rumor.narrador": ["{text}"]
+  }
+}

@@ -1,0 +1,2678 @@
+{
+  "_doc": "GERADO por scripts/build_rumor_seeds.py a partir de lore_nova/rumors.txt e data/bestiary.json + rumor_seed_overrides.json. Nao editar a mao.",
+  "seeds": {
+    "rumor_valerius_nao_come_nem_dorme": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:5",
+      "title": "Valerius não Come Nem Dorme",
+      "fonte": "Servos do Anel Dourado que bebem no Dragão Bêbado às sextas",
+      "fonte_label": "servos do Anel Dourado",
+      "gist": "o Lorde Protetor nunca é visto comendo, e sua cama fica intocada por semanas",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_dourado",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_dourado"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_as_paredes_do_palacio_sangram_de_verdade": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:14",
+      "title": "As Paredes do Palácio Sangram de Verdade",
+      "fonte": "Sargento aposentado da Legião de Ferro, anônimo",
+      "fonte_label": "um sargento aposentado da Legião",
+      "gist": "as paredes do palácio suam um líquido vermelho-escuro nos andares de baixo",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_dourado",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_dourado"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_legiao_esta_fabricando_soldados_a_partir_de_mortos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:23",
+      "title": "A Legião Está Fabricando Soldados a Partir de Mortos",
+      "fonte": "Bêbado do Fosso dos Cães, profissão desconhecida",
+      "fonte_label": "um bêbado do fosso",
+      "gist": "as fundições da Legião andam fabricando soldados com mortos",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "faccao",
+      "entities": [
+        "legiao_ferro",
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Legião de Ferro"
+      ]
+    },
+    "rumor_a_catedral_afundada_nao_esta_vazia_a_noite": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:32",
+      "title": "A Catedral Afundada Não Está Vazia à Noite",
+      "fonte": "Mendigo cego do Anel de Lama, frequentador da área",
+      "fonte_label": "um mendigo de olhos brancos do Anel de Lama",
+      "gist": "a catedral afundada não está vazia à noite",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "pessoa",
+      "entities": [
+        "npc_o_cego",
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Catedral Afundada"
+      ]
+    },
+    "rumor_o_aco_de_sangue_tem_memoria": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:41",
+      "title": "O Aço de Sangue Tem Memória",
+      "fonte": "Trabalhadores veteranos das Fundições, repassado por mercadores de carne",
+      "fonte_label": "trabalhadores veteranos das fundições",
+      "gist": "o aço das fundições guarda a memória do sangue que o forjou",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_ferro",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_ferro"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Fundições Valerianas"
+      ]
+    },
+    "rumor_o_preco_da_casa_dos_espelhos_e_literalmente_a_alma": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:50",
+      "title": "O Preço da Casa dos Espelhos É Literalmente a Alma",
+      "fonte": "Nobre arruinado que frequentou o estabelecimento, hoje no Anel de Ferro",
+      "fonte_label": "um nobre arruinado",
+      "gist": "o preço da Casa dos Espelhos é, de verdade, a alma de quem entra",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_dourado",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_dourado"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Casa dos Espelhos"
+      ]
+    },
+    "rumor_o_po_de_sonho_mostra_o_futuro": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:59",
+      "title": "O Pó de Sonho Mostra o Futuro",
+      "fonte": "Traficante do Pó de Sonho, interesse óbvio em vender",
+      "fonte_label": "quem vende o pó nas vielas",
+      "gist": "o pó de sonho mostra o futuro a quem o aspira",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Beco dos Desdentados"
+      ]
+    },
+    "rumor_o_pantano_esta_crescendo": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:68",
+      "title": "O Pântano Está Crescendo",
+      "fonte": "Droidas do Ciclo Cinzento que fazem rondas na área",
+      "fonte_label": "sentinelas de ronda",
+      "gist": "o pântano está crescendo, um pouco a cada estação",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "location_id": "pantano_melancolia",
+      "subject": "faccao",
+      "entities": [
+        "guilda_corvos",
+        "pantano_melancolia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_vibora_e_uma_crianca": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:77",
+      "title": "A Víbora É uma Criança",
+      "fonte": "Mercadores que pagam proteção à Mão Sombria",
+      "fonte_label": "mercadores que pagam proteção",
+      "gist": "quem manda na quadrilha das sombras é uma criança",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "faccao",
+      "entities": [
+        "mao_sombria",
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Mão Sombria"
+      ]
+    },
+    "rumor_a_floresta_sussurra_nomes": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:86",
+      "title": "A Floresta Sussurra Nomes",
+      "fonte": "Caçadores que voltaram do sul, claramente perturbados",
+      "fonte_label": "caçadores vindos do sul",
+      "gist": "a floresta sussurra o nome de quem se perde nela",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "location_id": "floresta_sussurros",
+      "subject": "lugar",
+      "entities": [
+        "floresta_sussurros"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_o_cego_nao_e_humano": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:95",
+      "title": "O Cego Não É Humano",
+      "fonte": "Ex-prisioneiro do Nível 3, solto por insuficiência de provas",
+      "fonte_label": "um ex-prisioneiro",
+      "gist": "o preso da cela mais funda não é humano",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "pessoa",
+      "entities": [
+        "npc_o_cego",
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Oubliette"
+      ]
+    },
+    "rumor_a_praga_de_ferro_nao_veio_das_minas": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:104",
+      "title": "A Praga de Ferro Não Veio das Minas",
+      "fonte": "Velha Magda, a Ratoeira — fonte geralmente confiável apesar da loucura",
+      "fonte_label": "uma velha curandeira do Anel de Lama",
+      "gist": "a praga de ferro não veio das minas",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_os_afogados_de_aethelgard_ainda_seguem_ordens": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:113",
+      "title": "Os Afogados de Aethelgard Ainda Seguem Ordens",
+      "fonte": "Mergulhadores contratados pela Mão Sombria, falam em tavernas",
+      "fonte_label": "mergulhadores contratados",
+      "gist": "os afogados da cidade submersa ainda seguem ordens",
+      "regions": [
+        "aethelgard"
+      ],
+      "location_id": "ae_ruinas_submersas",
+      "subject": "lugar",
+      "entities": [
+        "ae_ruinas_submersas"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_os_magos_escravizados_dos_jardins_enlouquecem_sistematicamente": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:122",
+      "title": "Os Magos Escravizados dos Jardins Enlouquecem Sistematicamente",
+      "fonte": "Nobreza que circula no Anel Dourado, suspeita de inventar histórias para parecer interessante",
+      "fonte_label": "gente da nobreza",
+      "gist": "os magos escravizados dos jardins enlouquecem, um a um",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_dourado",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_dourado"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Jardins Suspensos"
+      ]
+    },
+    "rumor_as_miragens_de_zhur_aprendem": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:131",
+      "title": "As Miragens de Zhur Aprendem",
+      "fonte": "Mercadores que cruzaram o deserto e sobreviveram, raros mas existentes",
+      "fonte_label": "mercadores que cruzaram o deserto",
+      "gist": "as miragens do deserto aprendem com quem as segue",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "location_id": "deserto_zhur",
+      "subject": "lugar",
+      "entities": [
+        "deserto_zhur"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_existem_contratos_que_nunca_vencem": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:140",
+      "title": "Existem Contratos que Nunca Vencem",
+      "fonte": "Compradores e vendedores do Mercado de Carne, amplamente relatado",
+      "fonte_label": "gente do mercado de carne",
+      "gist": "existem contratos que nunca vencem, por mais que se pague",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_ferro",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_ferro"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Mercado de Carne"
+      ]
+    },
+    "rumor_um_prisioneiro_ganhou_o_fosso_vinte_vezes": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:149",
+      "title": "Um Prisioneiro Ganhou o Fosso Vinte Vezes",
+      "fonte": "Apostadores habituais do Fosso dos Cães, fonte suspeita",
+      "fonte_label": "apostadores do fosso",
+      "gist": "um prisioneiro já venceu o fosso vinte vezes",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Fosso dos Cães"
+      ]
+    },
+    "rumor_o_doutor_esta_costurando_partes_de_monstros_em_humanos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:158",
+      "title": "O Doutor Está Costurando Partes de Monstros em Humanos",
+      "fonte": "Pacientes curados pelo Doutor, gratos mas assustados",
+      "fonte_label": "pacientes curados e assustados",
+      "gist": "um doutor do Anel de Ferro costura partes de monstros em gente",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_ferro",
+      "subject": "pessoa",
+      "entities": [
+        "npc_doutor_silas_vane",
+        "na_anel_ferro"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Doutor Silas Vane"
+      ]
+    },
+    "rumor_o_beco_do_sussurro_cobra_entrada_sem_voce_saber": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:167",
+      "title": "O Beco do Sussurro Cobra Entrada Sem Você Saber",
+      "fonte": "Criminosos que frequentam o mercado, relatado com variações",
+      "fonte_label": "criminosos do mercado",
+      "gist": "o beco cobra entrada sem que ninguém perceba",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "lugar",
+      "entities": [
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Beco do Sussurro"
+      ]
+    },
+    "rumor_as_estatuas_de_vorr_mudam_de_posicao": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:176",
+      "title": "As Estátuas de Vorr Mudam de Posição",
+      "fonte": "Nascidos do Gelo que vivem próximos à fortaleza, transmitido por gerações",
+      "fonte_label": "gente nascida no gelo",
+      "gist": "as estátuas da fortaleza gelada mudam de posição",
+      "regions": [
+        "skallgard"
+      ],
+      "location_id": "sk_fortaleza_vorr",
+      "subject": "lugar",
+      "entities": [
+        "sk_fortaleza_vorr"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Norte"
+      ]
+    },
+    "rumor_o_fungo_dos_hospedeiros_esta_se_espalhando_para_fora_de_xylos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:185",
+      "title": "O Fungo dos Hospedeiros Está se Espalhando para Fora de Xylos",
+      "fonte": "Mercadores que comerciam com os Hospedeiros, exagero provável",
+      "fonte_label": "mercadores que negociam com os hospedeiros",
+      "gist": "o fungo dos hospedeiros está se espalhando para fora da selva",
+      "regions": [
+        "selva_xylos"
+      ],
+      "location_id": "sx_cidades_hospedeiros",
+      "subject": "lugar",
+      "entities": [
+        "sx_cidades_hospedeiros"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_as_leis_de_valerius_foram_escritas_em_uma_noite": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:194",
+      "title": "As Leis de Valerius Foram Escritas em Uma Noite",
+      "fonte": "Clérigos menores e copistas da corte, fonte razoavelmente confiável",
+      "fonte_label": "copistas da corte",
+      "gist": "as leis de Valerius foram escritas numa só noite",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "pessoa",
+      "entities": [
+        "npc_valerius",
+        "nova_arcadia"
+      ],
+      "public_names": [
+        "Valerius"
+      ],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_uma_das_carcacas_ainda_respira": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:203",
+      "title": "Uma das Carcaças Ainda Respira",
+      "fonte": "Caranguejeiros que vivem nas carcaças, fontes primárias",
+      "fonte_label": "caranguejeiros",
+      "gist": "uma das carcaças da costa ainda respira",
+      "regions": [
+        "costa_negra"
+      ],
+      "location_id": "costa_negra",
+      "subject": "lugar",
+      "entities": [
+        "costa_negra"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_o_homem_de_cinza_e_real_e_tem_endereco": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:212",
+      "title": "O Homem de Cinza É Real e Tem Endereço",
+      "fonte": "Crianças do Anel de Lama, que inventam histórias mas às vezes veem o que adultos ignoram",
+      "fonte_label": "crianças da lama",
+      "gist": "o Homem de Cinza é real e tem endereço",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "pessoa",
+      "entities": [
+        "npc_nevoa",
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_valerius_conhece_nomes_que_nunca_foram_ditos_a_ele": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:221",
+      "title": "Valerius Conhece Nomes que Nunca Foram Ditos a Ele",
+      "fonte": "Nobre que assistiu a uma audiência pública de Valerius",
+      "fonte_label": "um nobre que viu uma audiência",
+      "gist": "Valerius conhece nomes que nunca lhe foram ditos",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "pessoa",
+      "entities": [
+        "npc_valerius",
+        "nova_arcadia"
+      ],
+      "public_names": [
+        "Valerius"
+      ],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_guilda_dos_corvos_nunca_queima_certos_corpos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:230",
+      "title": "A Guilda dos Corvos Nunca Queima Certos Corpos",
+      "fonte": "Coveiros da Guilda, que falam mais depois do segundo copo de Raiz-Forte",
+      "fonte_label": "coveiros",
+      "gist": "os coveiros da guilda nunca queimam certos corpos",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "faccao",
+      "entities": [
+        "guilda_corvos",
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_grum_guarda_algo_no_barril_de_cerveja_azeda": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:239",
+      "title": "Grum Guarda Algo no Barril de Cerveja Azeda",
+      "fonte": "Frequentador antigo da taverna, disse isso bêbado e depois negou",
+      "fonte_label": "um frequentador antigo",
+      "gist": "o taverneiro guarda algo no barril de cerveja azeda",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_dourado",
+      "subject": "pessoa",
+      "entities": [
+        "npc_grum",
+        "na_anel_dourado"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Grum"
+      ]
+    },
+    "rumor_ophidia_esta_criando_um_veneno_que_mata_apenas_humanos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:248",
+      "title": "Ophidia Está Criando um Veneno Que Mata Apenas Humanos",
+      "fonte": "Mercadores que comerciam na borda do arquipélago, nunca entram",
+      "fonte_label": "mercadores da borda do arquipélago",
+      "gist": "o arquipélago do sul prepara um veneno que só mata humanos",
+      "regions": [
+        "ophidia"
+      ],
+      "location_id": "ophidia",
+      "subject": "lugar",
+      "entities": [
+        "ophidia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_valerius_e_o_arauto_da_nevoa_sao_o_mesmo_ser": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:257",
+      "title": "Valerius e o Arauto da Névoa São o Mesmo Ser",
+      "fonte": "Monges loucos do culto dos Filhos da Chama Azul",
+      "fonte_label": "monges de um culto louco",
+      "gist": "o Lorde Protetor e o arauto das brumas são um só ser",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "pessoa",
+      "entities": [
+        "npc_valerius",
+        "npc_nevoa",
+        "npc_o_arauto_da_nevoa",
+        "filhos_chama_azul",
+        "nova_arcadia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": false,
+      "review": "dono"
+    },
+    "rumor_algumas_dividas_sao_fabricadas": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:266",
+      "title": "Algumas Dívidas São Fabricadas",
+      "fonte": "Trabalhadores experientes que viram o ciclo se repetir",
+      "fonte_label": "trabalhadores veteranos",
+      "gist": "algumas dívidas são fabricadas para prender trabalhadores",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_ferro",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_ferro"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Mercado de Carne"
+      ]
+    },
+    "rumor_o_guardiao_do_farol_era_um_de_nos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:277",
+      "title": "O Guardião do Farol Era um de Nós",
+      "fonte": "Batedor bêbado na Toca Quente de Gamli",
+      "fonte_label": "um batedor bêbado",
+      "gist": "o guardião do farol era um de nós",
+      "regions": [
+        "skallgard"
+      ],
+      "location_id": "sk_farol_chama_negra",
+      "subject": "lugar",
+      "entities": [
+        "sk_farol_chama_negra"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_os_numeros_nao_batem": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:286",
+      "title": "Os Números Não Batem",
+      "fonte": "Tecnológica que desertou de um turno, sussurrando",
+      "fonte_label": "uma técnica desertora",
+      "gist": "os números do posto de sinal não batem",
+      "regions": [
+        "skallgard"
+      ],
+      "location_id": "skallgard",
+      "subject": "lugar",
+      "entities": [
+        "skallgard"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Câmara do Sinal"
+      ]
+    },
+    "rumor_o_rei_tem_medo_de_algo": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:295",
+      "title": "O Rei Tem Medo de Algo",
+      "fonte": "Goblin capturado, traduzido por um mercador",
+      "fonte_label": "um goblin capturado",
+      "gist": "o rei do subterrâneo tem medo de algo",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "location_id": "ma_boca",
+      "subject": "lugar",
+      "entities": [
+        "ma_boca"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_senhora_de_vaelorn_esta_morrendo_de_pe": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:304",
+      "title": "A Senhora de Vaelorn Está Morrendo de Pé",
+      "fonte": "Mercador que comercia com a cidade élfica",
+      "fonte_label": "um mercador que negocia com os elfos",
+      "gist": "a senhora da cidade élfica está morrendo de pé",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "location_id": "pr_vaelorn",
+      "subject": "pessoa",
+      "entities": [
+        "npc_lady_aerwen",
+        "pr_vaelorn"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_os_navios_de_durrak_atraem_o_fundo": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:313",
+      "title": "Os Navios de Durrak Atraem o Fundo",
+      "fonte": "Marinheiro que se recusou a embarcar",
+      "fonte_label": "um marinheiro que largou o contrato",
+      "gist": "os navios do estaleiro são feitos de osso de leviatã, e o fundo do mar vem buscar o que é seu",
+      "regions": [
+        "brekmar"
+      ],
+      "location_id": "brekmar",
+      "subject": "pessoa",
+      "entities": [
+        "npc_durrak",
+        "brekmar"
+      ],
+      "public_names": [],
+      "labels": {
+        "npc_durrak": "o dono do estaleiro"
+      },
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Estaleiro das Almas"
+      ]
+    },
+    "rumor_a_dona_da_casa_nao_tem_rosto_de_verdade": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:322",
+      "title": "A Dona da Casa Não Tem Rosto de Verdade",
+      "fonte": "Ex-frequentadora, agora em recuperação no Poço",
+      "fonte_label": "uma ex-frequentadora",
+      "gist": "a dona da casa das marés não tem rosto de verdade",
+      "regions": [
+        "brekmar"
+      ],
+      "location_id": "brekmar",
+      "subject": "lugar",
+      "entities": [
+        "brekmar"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono",
+      "tags_unmapped": [
+        "Casa das Marés"
+      ]
+    },
+    "rumor_a_selva_esta_recuando_de_algo": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:331",
+      "title": "A Selva Está Recuando de Algo",
+      "fonte": "Garimpeiro que voltou da selva tremendo",
+      "fonte_label": "um garimpeiro",
+      "gist": "a selva está recuando de alguma coisa",
+      "regions": [
+        "selva_xylos"
+      ],
+      "location_id": "sx_profundezas",
+      "subject": "pessoa",
+      "entities": [
+        "npc_morrakh",
+        "sx_profundezas"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_o_som_no_fim_do_mundo_tem_gosto": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:340",
+      "title": "O Som no Fim do Mundo Tem Gosto",
+      "fonte": "Sobrevivente de uma caravana perdida",
+      "fonte_label": "um sobrevivente de caravana",
+      "gist": "o som no fim do mundo tem gosto",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "location_id": "dz_borda_do_vazio",
+      "subject": "lugar",
+      "entities": [
+        "dz_borda_do_vazio"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_cidade_sonha_que_ainda_esta_viva": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:349",
+      "title": "A Cidade Sonha que Ainda Está Viva",
+      "fonte": "Mergulhadora veterana, sóbria e assustada",
+      "fonte_label": "uma mergulhadora veterana",
+      "gist": "a cidade submersa sonha que ainda está viva",
+      "regions": [
+        "aethelgard"
+      ],
+      "location_id": "ae_ruinas_submersas",
+      "subject": "pessoa",
+      "entities": [
+        "npc_thessrak",
+        "ae_ruinas_submersas"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_maior_carcaca_ainda_respira": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:358",
+      "title": "A Maior Carcaça Ainda Respira",
+      "fonte": "Vários coletores, independentemente",
+      "fonte_label": "coletores de ossos",
+      "gist": "a maior carcaça da costa ainda respira",
+      "regions": [
+        "costa_negra"
+      ],
+      "location_id": "cn_o_trono",
+      "subject": "lugar",
+      "entities": [
+        "cn_o_trono"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_rato_peste_anel_lama": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:2",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_rato_peste_anel_lama"
+      ],
+      "creature_label": "rato da Peste",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_degolador_mao_sombria": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:97",
+      "regions": [
+        "nova_arcadia",
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_degolador_mao_sombria"
+      ],
+      "creature_label": "degolador de rua",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_soldado_legiao_ferro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:202",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_soldado_legiao_ferro"
+      ],
+      "creature_label": "soldado de armadura de ferro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_iniciado_chama_azul": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:321",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_iniciado_chama_azul"
+      ],
+      "creature_label": "iniciado da Chama Azul",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_devorador_sol_zhur": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:418",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_devorador_sol_zhur"
+      ],
+      "creature_label": "devorador de Sol",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_escorpiao_cristal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:514",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_escorpiao_cristal"
+      ],
+      "creature_label": "escorpião de Cristal",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_mumia_de_po": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:629",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_mumia_de_po"
+      ],
+      "creature_label": "múmia de Pó",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_hospedeiro_fungico": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:726",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_hospedeiro_fungico"
+      ],
+      "creature_label": "hospedeiro Fúngico",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_vinha_estranguladora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:812",
+      "regions": [
+        "selva_xylos",
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_vinha_estranguladora"
+      ],
+      "creature_label": "vinha Estranguladora",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_guerreiro_bjorn": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:915",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_guerreiro_bjorn"
+      ],
+      "creature_label": "guerreiro Bjorn",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_lobo_invernal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1012",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_lobo_invernal"
+      ],
+      "creature_label": "lobo das Geleiras",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_sentinela_ferro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1111",
+      "regions": [
+        "nova_arcadia",
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_sentinela_ferro"
+      ],
+      "creature_label": "sentinela de Ferro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_horror_esgoto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1221",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_horror_esgoto"
+      ],
+      "creature_label": "horror do Esgoto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_necromante_renegado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1325",
+      "regions": [
+        "pradaria_ruinas",
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_necromante_renegado"
+      ],
+      "creature_label": "necromante Renegado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_esqueleto_legiao_antiga": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1451",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_esqueleto_legiao_antiga"
+      ],
+      "creature_label": "esqueleto da Legião Antiga",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_espectro_lamento": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1524",
+      "regions": [
+        "pradaria_ruinas",
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_espectro_lamento"
+      ],
+      "creature_label": "espectro do Lamento",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_gargula_ferro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1621",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_gargula_ferro"
+      ],
+      "creature_label": "gárgula de Ferro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_assassino_cinzeu": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1701",
+      "regions": [
+        "pradaria_ruinas",
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_assassino_cinzeu"
+      ],
+      "creature_label": "assassino Cinzéu",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_urso_coruja_mutante": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1811",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_urso_coruja_mutante"
+      ],
+      "creature_label": "urso-Coruja Mutante",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_elemental_fogo_poluido": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:1925",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_elemental_fogo_poluido"
+      ],
+      "creature_label": "elemental de Fogo Poluído",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_mimico_bau": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:2853",
+      "regions": [
+        "montanhas_afiadas",
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_mimico_bau"
+      ],
+      "creature_label": "mímico",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_basilisco_caverna": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:2957",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_basilisco_caverna"
+      ],
+      "creature_label": "basilisco da Caverna",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_troll_ponte": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3043",
+      "regions": [
+        "montanhas_afiadas",
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_troll_ponte"
+      ],
+      "creature_label": "troll de Ponte",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_golem_lixo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3131",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_golem_lixo"
+      ],
+      "creature_label": "golem de Lixo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_sombra_espreitadora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3212",
+      "regions": [
+        "floresta_sussurros",
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_sombra_espreitadora"
+      ],
+      "creature_label": "sombra Espreitadora",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_verme_areia_jovem": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3307",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_verme_areia_jovem"
+      ],
+      "creature_label": "verme da Areia",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_djinn_menor": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3392",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_djinn_menor"
+      ],
+      "creature_label": "djinn Menor",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_esqueleto_mago": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3480",
+      "regions": [
+        "aethelgard",
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_esqueleto_mago"
+      ],
+      "creature_label": "esqueleto Arcanista",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_nomade_canibal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3560",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_nomade_canibal"
+      ],
+      "creature_label": "nômade Canibal",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_yeti": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3651",
+      "regions": [
+        "skallgard",
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_yeti"
+      ],
+      "creature_label": "yeti das Cavernas",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_wyvern_jovem": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3740",
+      "regions": [
+        "montanhas_afiadas",
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_wyvern_jovem"
+      ],
+      "creature_label": "wyvern Jovem",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_bandido_capitao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3827",
+      "regions": [
+        "pradaria_ruinas",
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_bandido_capitao"
+      ],
+      "creature_label": "capitão dos Bandidos",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_morcego_vampiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:3924",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_morcego_vampiro"
+      ],
+      "creature_label": "morcego Vampiro Gigante",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_aranha_lobo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4019",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_aranha_lobo"
+      ],
+      "creature_label": "aranha Lobo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_zumbi_blindado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4114",
+      "regions": [
+        "pantano_melancolia",
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_zumbi_blindado"
+      ],
+      "creature_label": "zumbi Blindado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_polvo_esgoto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4189",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_polvo_esgoto"
+      ],
+      "creature_label": "polvo do Esgoto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_fantasma": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4277",
+      "regions": [
+        "aethelgard",
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_fantasma"
+      ],
+      "creature_label": "fantasma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_observador_menor": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4352",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_observador_menor"
+      ],
+      "creature_label": "observador Menor",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_minotauro_esqueleto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4446",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_minotauro_esqueleto"
+      ],
+      "creature_label": "minotauro Esqueleto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_golem_carne": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:4519",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_golem_carne"
+      ],
+      "creature_label": "golem de Carne",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lobo_de_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5393",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lobo_de_vidro"
+      ],
+      "creature_label": "lobo de Vidro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_verme_do_gelo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5490",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_verme_do_gelo"
+      ],
+      "creature_label": "verme do Gelo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_renegado_ermo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5585",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_renegado_ermo"
+      ],
+      "creature_label": "renegado do Ermo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sanguessuga_braco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5680",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sanguessuga_braco"
+      ],
+      "creature_label": "sanguessuga-Braço",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sapo_boi_acido": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5767",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sapo_boi_acido"
+      ],
+      "creature_label": "sapo-Boi Ácido",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_afogado_da_batalha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5862",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_afogado_da_batalha"
+      ],
+      "creature_label": "afogado da Batalha",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_druida_renegado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:5942",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_druida_renegado"
+      ],
+      "creature_label": "druida-Renegado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_urso_de_espinha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6044",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_urso_de_espinha"
+      ],
+      "creature_label": "urso-de-Espinha",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_serpente_raiz": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6136",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_serpente_raiz"
+      ],
+      "creature_label": "serpente-Raiz",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vipera_flora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6232",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vipera_flora"
+      ],
+      "creature_label": "vipera-Flora",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_predador_crescido": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6318",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_predador_crescido"
+      ],
+      "creature_label": "predador Crescido",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sentinela_hospedeiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6410",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sentinela_hospedeiro"
+      ],
+      "creature_label": "sentinela Hospedeiro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_afogado_de_aethelgard": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6498",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_afogado_de_aethelgard"
+      ],
+      "creature_label": "afogado de Aethelgard",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mergulhadores_saqueadores": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6578",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mergulhadores_saqueadores"
+      ],
+      "creature_label": "mergulhador Saqueador",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_cultista_destilacao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6673",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_cultista_destilacao"
+      ],
+      "creature_label": "cultista da Destilação",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sereia_de_ophidia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6768",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sereia_de_ophidia"
+      ],
+      "creature_label": "sereia de Ophidia",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fumaca_de_cor_errada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6848",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fumaca_de_cor_errada"
+      ],
+      "creature_label": "fumaça de Cor Errada",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_os_que_voltaram_e_nao_eram_eles": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:6928",
+      "regions": [
+        "ophidia",
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_os_que_voltaram_e_nao_eram_eles"
+      ],
+      "creature_label": "os Que Voltaram",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tubarao_de_casco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7009",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tubarao_de_casco"
+      ],
+      "creature_label": "tubarão de Casco",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_caranguejo_mare": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7097",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_caranguejo_mare"
+      ],
+      "creature_label": "caranguejeiro da Maré",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_gaivota_ladra": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7183",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_gaivota_ladra"
+      ],
+      "creature_label": "gaivota-Ladra",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_pirata_brekmar": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7441",
+      "regions": [
+        "brekmar",
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_pirata_brekmar"
+      ],
+      "creature_label": "pirata de Brekmar",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_capangas_do_poco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7537",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_capangas_do_poco"
+      ],
+      "creature_label": "capanga do Poço",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_arpoador_osshari": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7632",
+      "regions": [
+        "brekmar",
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_arpoador_osshari"
+      ],
+      "creature_label": "arpoador Osshari",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_orc_saidas_baixas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7728",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_orc_saidas_baixas"
+      ],
+      "creature_label": "orc das Saídas Baixas",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cabra_navalha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7823",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cabra_navalha"
+      ],
+      "creature_label": "cabra-Navalha",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_anao_eco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7918",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_anao_eco"
+      ],
+      "creature_label": "anão-Eco",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_espectro_elfico": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:7992",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_espectro_elfico"
+      ],
+      "creature_label": "espectro Élfico",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lobo_da_pradaria": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8073",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lobo_da_pradaria"
+      ],
+      "creature_label": "lobo da Pradaria",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_enemy_capturador_groth": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8168",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "enemy_capturador_groth"
+      ],
+      "creature_label": "capturador de Groth",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rato_caldeira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8256",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rato_caldeira"
+      ],
+      "creature_label": "rato de Caldeira",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cao_rebite": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8346",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cao_rebite"
+      ],
+      "creature_label": "cão de Rebite",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_automato_fundicao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8435",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_automato_fundicao"
+      ],
+      "creature_label": "autômato de Fundição",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mosquito_eter": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8517",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mosquito_eter"
+      ],
+      "creature_label": "mosquito de Éter",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_viuva_lodo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8613",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_viuva_lodo"
+      ],
+      "creature_label": "viúva do Lodo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cervo_afogado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8704",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cervo_afogado"
+      ],
+      "creature_label": "cervo Afogado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_escaravelho_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8781",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_escaravelho_vidro"
+      ],
+      "creature_label": "escaravelho de Vidro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_hiena_sol": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8865",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_hiena_sol"
+      ],
+      "creature_label": "hiena do Sol Partido",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_colosso_duna": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:8954",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_colosso_duna"
+      ],
+      "creature_label": "colosso de Duna Oca",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mariposa_sussurro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9036",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mariposa_sussurro"
+      ],
+      "creature_label": "mariposa do Sussurro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cacador_casca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9132",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cacador_casca"
+      ],
+      "creature_label": "caçador de Casca",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ent_dormindo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9221",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ent_dormindo"
+      ],
+      "creature_label": "ent que Sonha Acordado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_larva_hospedeira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9303",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_larva_hospedeira"
+      ],
+      "creature_label": "larva Hospedeira",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_macaco_esporo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9392",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_macaco_esporo"
+      ],
+      "creature_label": "macaco de Esporo",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rainha_cipo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9488",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rainha_cipo"
+      ],
+      "creature_label": "rainha-Cipó",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_corvo_gelo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9577",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_corvo_gelo"
+      ],
+      "creature_label": "corvo de Gelo Negro",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lobo_aurora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9676",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lobo_aurora"
+      ],
+      "creature_label": "lobo da Aurora Morta",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_jotun_cinza": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9765",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_jotun_cinza"
+      ],
+      "creature_label": "jötunn de Cinza",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_faisca_destilacao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9847",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_faisca_destilacao"
+      ],
+      "creature_label": "faísca da Destilação",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vigia_caco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:9936",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vigia_caco"
+      ],
+      "creature_label": "vigia de Caco",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_quimera_cristal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10018",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_quimera_cristal"
+      ],
+      "creature_label": "quimera de Cristal Destilado",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_caranguejo_cinza": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10109",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_caranguejo_cinza"
+      ],
+      "creature_label": "caranguejo de Cinza",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_moreia_vulcanica": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10191",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_moreia_vulcanica"
+      ],
+      "creature_label": "moreia Vulcânica",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_oraculo_coral": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10280",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_oraculo_coral"
+      ],
+      "creature_label": "oráculo de Coral",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_carrapato_osso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10369",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_carrapato_osso"
+      ],
+      "creature_label": "carrapato de Osso",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_saqueador_marfim": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10458",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_saqueador_marfim"
+      ],
+      "creature_label": "saqueador de Marfim",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_baleia_ossario": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10554",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_baleia_ossario"
+      ],
+      "creature_label": "filhote de Baleia-Ossário",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_goblin_eco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10636",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_goblin_eco"
+      ],
+      "creature_label": "goblin de Eco",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cabra_labirinto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10734",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cabra_labirinto"
+      ],
+      "creature_label": "cabra do Labirinto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_guardiao_basalto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10823",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_guardiao_basalto"
+      ],
+      "creature_label": "guardião de Basalto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_gafanhoto_runa": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:10905",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_gafanhoto_runa"
+      ],
+      "creature_label": "gafanhoto de Runa",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cavaleiro_sem_rosto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:11001",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cavaleiro_sem_rosto"
+      ],
+      "creature_label": "cavaleiro sem Rosto",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_auroque_ruinas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:11076",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_auroque_ruinas"
+      ],
+      "creature_label": "auroque das Ruínas",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rato_cais_brekmar": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:11165",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rato_cais_brekmar"
+      ],
+      "creature_label": "rato de Cais de Brekmar",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cobrador_gancho": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:11262",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cobrador_gancho"
+      ],
+      "creature_label": "cobrador do Gancho",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_capita_corda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:11358",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_capita_corda"
+      ],
+      "creature_label": "capitã da Corda Molhada",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    }
+  }
+}

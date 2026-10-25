@@ -34,3 +34,10 @@ reduzir sem mexer em C1, baixar `surge_p` ou subir `crisis_relief_per_day`.
   mais ativas (`nova_arcadia` 1,6 · `brekmar` 2,5 · `pradaria_ruinas` 1,5 ·
   `pantano_melancolia` 1,4 · `ophidia`/`costa_negra` 1,0) e as remotas bem menos;
 - `signal_delta` 6 → **4**.
+
+## SPEC-312 (rumores): `--s312`
+
+`bash scripts/dev/py.sh docs/spec302/world_engine_sim.py --s312 --days 120 --seeds 60` mede S1-S6
+(percepcao real) para o heroi parado e o viajante; resultados e desvios em
+`specs/SPEC-312-rumores-com-semente.md` §8/§10. Constantes `[BALANCEAR]`:
+`data/world/rumor_config.json`.

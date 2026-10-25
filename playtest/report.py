@@ -324,6 +324,20 @@ def render_markdown(report: RunReport) -> str:
                 f"| {wq.get('failed', 0)} | {wq.get('expired', 0)} | {chans or '—'} |"
             )
         L.append("")
+        # SPEC-312 R31: rumores (nascidos / percebidos / % falsos percebidos / propostos aceitos).
+        with_rumors = [s for s in with_world if (s["world"].get("rumors") or {}).get("born")]
+        if with_rumors:
+            L.append("### Rumores")
+            L.append("")
+            L.append("| perfil | nascidos | percebidos | % falsos percebidos | propostos aceitos |")
+            L.append("|---|---|---|---|---|")
+            for s in with_rumors:
+                ru = s["world"]["rumors"]
+                L.append(
+                    f"| {s.get('profile', '?')} | {ru.get('born', 0)} | {ru.get('perceived', 0)} "
+                    f"| {ru.get('false_pct', 0)} | {ru.get('proposed_accepted', 0)} |"
+                )
+            L.append("")
         # SPEC-304 R30: NPCs (perigos abertos/percebidos/resolvidos por destino, intervencoes).
         with_npcs = [s for s in with_world if (s["world"].get("npcs") or {}).get("enabled")]
         if with_npcs:

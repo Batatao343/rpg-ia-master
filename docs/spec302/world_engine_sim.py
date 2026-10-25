@@ -230,14 +230,122 @@ def evaluate_s303(seeds: int = 20, days: int = 120) -> dict:
     }
 
 
+PROFILES_S312 = {
+    "parado": lambda day: "nova_arcadia",
+    "viajante": lambda day: ("brekmar", "pradaria_ruinas", "nova_arcadia")[(day // 3) % 3],
+}
+
+
+def run_s312(seed: int, days: int, route) -> dict:
+    """SPEC-312 Etapa 7: campanha com percepcao REAL (`storyteller._perceive_world`)."""
+    from types import SimpleNamespace
+
+    import gamedata
+    from agents import storyteller as stt
+    from services import rumors
+    from services import world_engine as we
+
+    state = {
+        "game_id": f"sim312-{seed}",
+        "event_log": [],
+        "world_projection": {},
+        "factions": gamedata.seed_factions(),
+        "quests": [],
+    }
+    world = {"world_clock": {"day": 1, "period": "Manhã"}, "turn_count": 0}
+    factions = state["factions"]
+    perceived_by_day: dict[int, int] = {}
+    seen_seeds: list[str] = []
+    news_over_cap = news_expired = presence_days = born_total = 0
+    max_bytes = 0
+    for day in range(2, days + 2):
+        before = copy.deepcopy(world)
+        world = copy.deepcopy(world)
+        loc = route(day)
+        world.update(current_location_id=loc, current_location=loc, turn_count=day)
+        world["world_clock"] = {"day": day, "period": "Manhã"}
+        state["world"] = world
+        res = we.advance_days(state, before, world, factions, {})
+        world, factions = res.world, res.factions
+        state["factions"], state["world"] = factions, world
+        sim = res.world_sim or {}
+        state[res.sim_key] = sim
+        tick = SimpleNamespace(sim_key=res.sim_key, days_ticked=res.days_ticked, world_sim=sim)
+        world, seen = stt._perceive_world(state, world, factions, {}, tick)
+        state["world"] = world
+        for it in seen:
+            if rumors.is_rumor_item(it):
+                perceived_by_day[day] = perceived_by_day.get(day, 0) + 1
+                inst = rumors.instance(state, it["subject_id"]) or {}
+                seen_seeds.append(f"{inst.get('seed_id')}|{inst.get('truth')}")
+        presence_days += len(rumors.frequented_regions(sim, day))
+        born_total += sum(1 for r in sim.get("rumors") or [] if r.get("born_day") == day)
+        news = [n for n in world.get("news", []) if n.get("kind") == "rumor"]
+        news_over_cap += len(news) > rumors.const("RUMOR_NEWS_MAX")
+        news_expired += sum(1 for n in news if n["expires_day"] < day)
+        max_bytes = max(max_bytes, len(repr(sim)))
+    return {
+        "perceived_by_day": perceived_by_day,
+        "seen": seen_seeds,
+        "news_over_cap": news_over_cap,
+        "news_expired": news_expired,
+        "max_sim_bytes": max_bytes,
+        "born": born_total,
+        "presence_days": presence_days,
+    }
+
+
+def evaluate_s312(seeds: int = 60, days: int = 120) -> dict:
+    """SPEC-312 S1-S6 (S7 informativo) para os dois perfis de heroi."""
+    out: dict = {}
+    base_bytes = 0
+    os.environ["RPG_RUMORS"] = "off"
+    for seed in range(1, min(seeds, 10) + 1):
+        base_bytes = max(base_bytes, run_s312(seed, days, PROFILES_S312["parado"])["max_sim_bytes"])
+    os.environ["RPG_RUMORS"] = "on"
+    for name, route in PROFILES_S312.items():
+        runs = [run_s312(seed, days, route) for seed in range(1, seeds + 1)]
+        born = sum(r["born"] for r in runs)
+        presence = sum(r["presence_days"] for r in runs)
+        total_days = seeds * days
+        new_days = sum(len(r["perceived_by_day"]) for r in runs)
+        seen = [x for r in runs for x in r["seen"]]
+        false = sum(1 for x in seen if x.endswith("|False"))
+        lore_dupes = 0
+        for r in runs:
+            lore = [x.split("|")[0] for x in r["seen"] if "avist" not in x and "narrador" not in x]
+            lore_dupes += len(lore) - len(set(lore))
+        out[name] = {
+            "S1_births_per_frequented_region_day": round(born / max(1, presence), 3),
+            "S2_days_with_new_rumor_perceived": round(new_days / total_days, 3),
+            "S3_false_fraction_perceived": round(false / max(1, len(seen)), 3),
+            "S4_lore_seed_perceived_twice": lore_dupes,
+            "S5_news_violations": sum(r["news_over_cap"] + r["news_expired"] for r in runs),
+            "S6_sim_bytes_growth": max(r["max_sim_bytes"] for r in runs) - base_bytes,
+            "perceived_total": len(seen),
+            "over_daily_cap": sum(1 for r in runs for v in r["perceived_by_day"].values() if v > 1),
+        }
+    out["S7_note"] = "esgotamento da familia lore: ver S4/S2 (avistamento cobre as regioes pobres)"
+    return out
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=120)
     ap.add_argument("--seeds", type=int, default=20)
     ap.add_argument("--calendar", choices=("on", "off"), default="on")
     ap.add_argument("--s303", action="store_true", help="imprime S2-S4 da SPEC-303")
+    ap.add_argument("--s312", action="store_true", help="imprime S1-S7 da SPEC-312 (rumores)")
     args = ap.parse_args()
     import json
+
+    if args.s312:
+        print(
+            json.dumps(
+                evaluate_s312(args.seeds, args.days), indent=2, ensure_ascii=False, default=str
+            )
+        )
+        raise SystemExit(0)
 
     os.environ["RPG_CALENDAR"] = args.calendar
     result = evaluate(args.seeds, args.days)
