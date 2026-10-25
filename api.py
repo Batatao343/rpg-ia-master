@@ -5758,7 +5758,12 @@ def _run_turn_collected(
                     if node == "dm_router" and isinstance(update, dict) and update.get("next"):
                         timeline.extra["route_next"] = str(update["next"])
                     if early_on and node in _delivery.NARRATING_NODES:
+                        calc_t0 = time.monotonic()
                         early_event = _early_event(early_state, str(node), update)
+                        # P2-3: custo do calculo antecipado no caminho critico (medido na §6)
+                        timeline.extra["early_calc_ms"] = int(
+                            timeline.extra.get("early_calc_ms", 0)
+                        ) + int((time.monotonic() - calc_t0) * 1000)
         except Exception:
             pass
         if progress is not None:

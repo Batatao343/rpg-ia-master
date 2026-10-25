@@ -338,12 +338,14 @@ def _run_with_mode(client, gid, mode, snapshot, monkeypatch):
         return events, fh.read()
 
 
-def _scrub_timings(value):
-    if isinstance(value, dict):
-        return {k: _scrub_timings(v) for k, v in value.items() if not str(k).endswith("_ms")}
-    if isinstance(value, list):
-        return [_scrub_timings(v) for v in value]
-    return value
+def _scrub_timings(save: dict) -> dict:
+    """Remove SO `audit_trace[*].timing` (relogios medidos); o resto tem de ser identico."""
+    out = dict(save)
+    out["audit_trace"] = [
+        {k: v for k, v in entry.items() if k != "timing"} if isinstance(entry, dict) else entry
+        for entry in save.get("audit_trace") or []
+    ]
+    return out
 
 
 def test_final_state_identical_on_vs_off(client, monkeypatch):
@@ -352,13 +354,18 @@ def test_final_state_identical_on_vs_off(client, monkeypatch):
     with open(path, encoding="utf-8", newline="") as fh:
         snapshot = fh.read()
     ev_off, save_off = _run_with_mode(client, gid, "off", snapshot, monkeypatch)
+    ev_shadow, save_shadow = _run_with_mode(client, gid, "shadow", snapshot, monkeypatch)
     ev_on, save_on = _run_with_mode(client, gid, "on", snapshot, monkeypatch)
     state_off = next(d for e, d in ev_off if e == "state")
-    state_on = next(d for e, d in ev_on if e == "state")
-    assert state_on == state_off  # GameResponse
-    # save identico; so os relogios medidos (`*_ms`, ex.: ttfmc) podem variar entre rodadas
-    assert _scrub_timings(json.loads(save_on)) == _scrub_timings(json.loads(save_off))
+    for events in (ev_shadow, ev_on):
+        assert next(d for e, d in events if e == "state") == state_off  # GameResponse
+    # save identico; so `audit_trace[*].timing` (relogios) muda. Em `on` o timing ganha
+    # `ttfmc/ttlt_server_ms` (as marcas agora existem antes de gravar a trilha).
+    base = _scrub_timings(json.loads(save_off))
+    assert _scrub_timings(json.loads(save_shadow)) == base
+    assert _scrub_timings(json.loads(save_on)) == base
     assert _names(ev_on) != _names(ev_off)  # so a ordem dos eventos muda
+    assert _names(ev_shadow) == _names(ev_off)
 
 
 def test_replace_event_when_guard_changes_text(client, monkeypatch):
@@ -450,3 +457,107 @@ def test_error_before_narrative_has_no_shown_flag(client, monkeypatch):
     monkeypatch.setattr(api, "game_graph", _Boom())
     events = _stream(client, gid)
     assert events[-1][0] == "error" and "narrative_shown" not in events[-1][1]
+
+
+class _DelegationGraph:
+    """Antes da update real do `storyteller`, injeta a delegacao `npc_actor -> storyteller`
+    (sem interlocutor): so a ultima update narradora pode emitir."""
+
+    def __init__(self, real):
+        self._real = real
+
+    def __getattr__(self, name):
+        return getattr(self._real, name)
+
+    def stream(self, state, **kw):
+        from langchain_core.messages import AIMessage
+
+        for mode, data in self._real.stream(state, **kw):
+            if mode == "updates" and "storyteller" in data:
+                yield (
+                    mode,
+                    {
+                        "npc_actor": {
+                            "messages": [AIMessage(content="Ninguém responde.")],
+                            "next": "storyteller",
+                        }
+                    },
+                )
+            yield mode, data
+
+
+def test_npc_delegation_to_storyteller_emits_once(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    monkeypatch.setattr(api, "game_graph", _DelegationGraph(api.game_graph))
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    dones = [d for e, d in events if e == "narrative" and d["done"] and not d.get("replace")]
+    assert len(dones) == 1
+    text = "".join(d["chunk"] for e, d in events if e == "narrative" and not d["done"])
+    assert "Ninguém responde." not in text
+    assert text == events[-1][1]["message"]
+
+
+def test_http_error_after_narrative_marks_shown(client, monkeypatch):
+    from fastapi import HTTPException
+
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+
+    def _boom(*a, **k):
+        raise HTTPException(status_code=503, detail="indisponivel")
+
+    monkeypatch.setattr(api, "_commit_turn", _boom)
+    events = _stream(client, gid)
+    assert "narrative" in _names(events) and events[-1][0] == "error"
+    assert events[-1][1]["narrative_shown"] is True
+
+
+def test_retry_same_action_id_recovers_turn(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+    action_id = "22222222-2222-4222-8222-222222222222"
+    real_commit = api._commit_turn
+
+    def _boom(*a, **k):
+        raise RuntimeError("commit falhou")
+
+    monkeypatch.setattr(api, "_commit_turn", _boom)
+    failed = _stream(client, gid, action_id=action_id)
+    assert failed[-1][0] == "error" and failed[-1][1]["narrative_shown"] is True
+    monkeypatch.setattr(api, "_commit_turn", real_commit)
+    retried = _stream(client, gid, action_id=action_id)
+    assert retried[-1][0] == "state"
+    saved = client.get("/game/state", params={"game_id": gid}).json()
+    assert saved["message"] == retried[-1][1]["message"]
+
+
+def test_client_disconnect_after_narrative_done_still_saves(client, monkeypatch):
+    import time
+
+    import api
+    from observability import latency
+
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+    before = client.get("/game/state", params={"game_id": gid}).json()
+    req = api.ActionRequest(input_text="olho ao redor", game_id=gid)
+    gen = api._stream_turn(req, gid, None, latency.TurnTimeline(transport="stream"))
+    for raw in gen:
+        if raw.startswith("event: narrative") and '"done": true' in raw:
+            break
+    gen.close()  # o cliente cai logo apos a narracao (SPEC-247: o worker conclui)
+    deadline = time.monotonic() + 20
+    after = before
+    while time.monotonic() < deadline:
+        after = client.get("/game/state", params={"game_id": gid}).json()
+        if after != before:
+            break
+        time.sleep(0.1)
+    assert after != before

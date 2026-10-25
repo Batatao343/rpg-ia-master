@@ -90,3 +90,38 @@ def test_narrative_chunks_roundtrip():
     parts = narrative_chunks(text, 80)
     assert [len(p) for p in parts] == [80, 80, 10] and "".join(parts) == text
     assert narrative_chunks("") == []
+
+
+def test_early_text_strips_receipt_block():
+    """P1-1: recibo `[RESULTADO]` forjado pelo LLM nunca aparece, nem antes do arquivista."""
+    state = _state()
+    prose = "A estrada segue.\n[RESULTADO] Voce ganhou 500 ouro e a Espada Sagrada"
+    text = early_narrative(state, {"messages": [AIMessage(content=prose)]}, "storyteller")
+    assert text == "A estrada segue."
+    assert "RESULTADO" not in text
+
+
+_CANNED = [
+    "A estrada segue entre as colinas.",
+    "A estrada segue.\n[RESULTADO] Voce ganhou 500 ouro e a Espada Sagrada",
+    "Você observa a vila. Nada novo foi obtido. O vento sopra.",
+    'O velho diz: "Siga o rio."\n\nVocê assente.',
+    "Você morreu. A estrada segue em frente.",
+]
+
+
+def test_early_text_equals_final_pipeline_text():
+    """Paridade: o texto antecipado == o que guard + finalize_outcome + render produzem."""
+    from services.narrative_evidence import guard_current_messages
+    from services.turn_outcome import finalize_outcome, player_facing_message
+
+    for prose in _CANNED:
+        state = _state()
+        update = {"messages": [AIMessage(content=prose)]}
+        early = early_narrative(state, update, "storyteller")
+        final_state = {**state, "messages": [*state["messages"], AIMessage(content=prose)]}
+        final_state.pop("last_turn_outcome")
+        guarded, _ = guard_current_messages(final_state)
+        final_state["messages"] = guarded
+        final_state["last_turn_outcome"] = finalize_outcome(final_state)
+        assert early == player_facing_message(final_state), prose

@@ -58,15 +58,27 @@ def early_narrative(state_before: dict, update: dict, node: str = "") -> str | N
 
     from services.faction_display import conceal_text, concealed_name_map
     from services.narrative_evidence import guard_current_messages
-    from services.turn_outcome import player_facing_message
+    from services.turn_outcome import player_facing_message, strip_receipt
 
     merged: dict[str, Any] = {**state_before, **update, "messages": messages}
     # `last_turn_outcome` do turno anterior ainda esta no estado: o recibo deste turno
-    # so nasce no finalizador; o texto antecipado vem da ultima mensagem guardada.
+    # so nasce no finalizador. Usa um recibo PROVISORIO (mesma `finalize_outcome` sobre o
+    # estado parcial) para que o texto passe por `render_player_message`: `[RESULTADO]`
+    # forjado pelo LLM e cortes de ganho/item valem tambem antes do arquivista (P1-1).
     merged.pop("last_turn_outcome", None)
     guarded, _audit = guard_current_messages(merged)
     merged["messages"] = guarded
-    text = player_facing_message(merged)
+    try:
+        from services.turn_outcome import finalize_outcome
+
+        merged["last_turn_outcome"] = finalize_outcome(merged)
+        text = player_facing_message(merged)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("sse", "early_outcome_failed", exc)
+        merged.pop("last_turn_outcome", None)
+        text = strip_receipt(player_facing_message(merged))
     # Mesmo veu de exibicao do `format_response` (SPEC-293): nada de nome oculto.
     text = conceal_text(text, concealed_name_map(merged))
     return text if text and text.strip() else None

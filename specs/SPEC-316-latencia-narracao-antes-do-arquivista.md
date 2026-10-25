@@ -37,8 +37,8 @@ Alvo: TTFMC p50 ≤ 7 s (−35 %) sem mudar estado final, save ou `GameResponse`
 - **R1 — Entrega antecipada no SSE.** Em `/game/action/stream`, os eventos `narrative` saem quando o
   chunk `updates` do nó narrador (`storyteller`, `npc_actor`, `combat_agent`, `loot_agent`) chega ao
   gerador, antes dos eventos `phase` de `archivist`/`turn_finalizer`. Ordem garantida:
-  `accepted → phase/route… → narrative(chunks) → narrative(done) → phase archivist → phase turn_finalizer →
-  visual → state`. `POST /game/action` não muda.
+  `accepted → phase/route… → narrative(chunks) → narrative(done) → phase archivist → [narrative replace] →
+  visual → state` (o `phase turn_finalizer` é filtrado do SSE). `POST /game/action` não muda.
 - **R2 — Texto idêntico.** O texto emitido antecipadamente é `player_facing_message({**state, **update})`
   (`services/turn_outcome.py:204`) aplicado ao estado acumulado após a update do nó. Ao final, se
   `resp.message` diferir do texto já emitido (guard alterou a prosa), o servidor emite
@@ -129,12 +129,19 @@ state {GameResponse}                    <- turno commitado; libera o input
 
 - `early_narrative(state_before, update, node="")` ganhou `node` (um nó narrador não se auto-suprime
   pelo próprio `next`); `next="loot"` (router) é tratado como `loot_agent`.
-- O texto antecipado descarta `last_turn_outcome` do estado (é o recibo do turno **anterior**) e aplica
+- O texto antecipado descarta `last_turn_outcome` do estado (é o recibo do turno **anterior**), usa um
+  recibo provisório (`finalize_outcome` sobre o estado parcial → `render_player_message`: `[RESULTADO]` forjado
+  e cortes de ganho/item valem antes do arquivista; revisão P1-1) e aplica
   o mesmo véu de exibição do `format_response` (SPEC-293, `conceal_text`).
 - `early_narrative`/`early_gain_ms` saem na linha `turn_delivery` (montada em `api._log_turn_delivery`,
   não em `observability/latency.py`). `early_gain_ms` em `shadow` é hipotético (`state` − texto pronto).
 - Evento novo de log: `sse.early_narrative_shadow {gain_ms, identical}`; falha do cálculo =
   `sse.fallback early_narrative_failed` (o turno segue pelo caminho legado).
+- R6: em `on` o `audit_trace[*].timing` ganha `ttfmc_server_ms`/`ttlt_server_ms` (as marcas existem antes de
+  gravar a trilha); é a única diferença de save (o teste compara `off`/`shadow`/`on` removendo só `timing`).
+- Custo do cálculo antecipado no caminho crítico (inclui `deepcopy` de `build_evidence`): medido em
+  `timeline.extra["early_calc_ms"]` (campo do log `rpg.turn`); conferir na §6 e, se relevante, limitar à
+  última update narradora. Só roda no stream (POST não calcula).
 - Cliente: só `api.ts` (`onReplace`). Selo, `narrative_shown` e retry na UI ficam na SPEC-320 (o fluxo
   atual já cai no POST com o mesmo `action_id` em erro ≥ 500). Etapa 4 (playtest) não rodada: o runner
   usa `app.invoke`, que este código não toca.
@@ -184,7 +191,9 @@ state {GameResponse}                    <- turno commitado; libera o input
 
 Staging Vercel, DeepSeek, mesmo protocolo da SPEC-213: `scripts/staging/projection_measure.py --label
 early_{off,on} --turns 15 --think 8` (2 sessões por modo, 30 turnos/modo; o script já coleta `accepted`,
-1º chunk, `done`, `state` e `lock_wait_ms`). Teto **US$ 0,15** (≈60 turnos × ~US$ 0,002). Registrar em
+1º chunk, `done`, `state` e `lock_wait_ms`). **Gate de rollout (revisão P2-2):** não ligar `RPG_EARLY_NARRATIVE=on` no staging antes da SPEC-320 (o
+cliente atual apaga a entrada e refaz via POST em erro ≥ 500 após a narração) ou registrar o risco aceito
+na medição. Teto **US$ 0,15** (≈60 turnos × ~US$ 0,002). Registrar em
 `docs/spec316/staging-measure-<data>.md` com a tabela p50/p95 de `ttfmc`, `ttlt`, `state`, `lock_wait`,
 `early_gain_ms`. Conferir no browser (Chromium 1440): texto aparece com o selo "o escriba registra…", selo
 some no `state`, input libera só no `state`.
