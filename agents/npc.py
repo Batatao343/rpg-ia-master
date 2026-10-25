@@ -1071,7 +1071,7 @@ def npc_actor_node(state: GameState):
 
     faction_member_block = _fm.prompt_block(state)  # SPEC-301 R21 (vazio sem vínculo)
     self_knowledge_block = _npc_self_prompt(
-        pack_state, npc_state_key or npc_name, npc_data, npc_id, pack.evidence_ids
+        pack_state, npc_state_key or npc_name, npc_data, npc_id, getattr(pack, "evidence_ids", ())
     )  # SPEC-310
     if self_knowledge_block:  # bloco vazio não deixa linha em branco
         self_knowledge_block = chr(10) + self_knowledge_block

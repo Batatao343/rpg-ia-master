@@ -1,6 +1,6 @@
 # SPEC-310 — O NPC sabe de si (fação, patente, agenda, o que ouviu, motivações)
 
-> **Status:** `in-progress` (implementada 25/10; falta revisão independente + smoke real §6)
+> **Status:** `done` (implementada 25/10; revisão Sol APPROVED_WITH_FOLLOWUPS, 7 P2 corrigidos; smoke real 25/10)
 > **Criada:** 2026-10-24 · **Atualizada:** 2026-10-24
 > **Depende de:** SPEC-215 (ledger de conhecimento por NPC), SPEC-297/306 (semente de NPC),
 > SPEC-298 (`<ATITUDE>`, teto de linhas por faixa), SPEC-301 (catálogo de patentes),
@@ -471,3 +471,10 @@ Staging ou local com DeepSeek, `RPG_WORLD_ENGINE=on`, `RPG_NPC_KNOWLEDGE=on`,
   `faction_intel.known` (R12 aplicado às relações, como pede R11).
 - "Aqui, agora: <rótulo>" repete a linha local do `<MUNDO_PERCEBIDO>` (SPEC-309, audience npc);
   mantido por R10 (a data de hoje só vem daqui). Unificar fica como follow-up barato.
+
+## 10. Registro de execução (25/10)
+
+- Revisão Sol: `APPROVED_WITH_FOLLOWUPS`, 7 P2 corrigidos em `1dc8ad8f` (teto total 1.950, líder da fação certa, id do ledger, motor off sem estado de local, tópicos em 2ª pessoa, round-trip real, nota do §6).
+- Suíte completa (`-n 2`): 11 falhas com stub de `build_context_pack` sem `evidence_ids` → `getattr(pack, "evidence_ids", ())` em `agents/npc.py`; refeitas, verdes.
+- Smoke real §6 (DeepSeek, 2 requests): passo 1, Thrace: "Comandante da Legião de Ferro nestes anéis… Sirvo ao Código de Ferro", sem número. Passo 2 (banda `guerra` do dia anterior + `faction_intel.filhos_chama_azul.known`): fala da guerra ("A Chama Azul não recua… Estamos segurando"). Passos 3–5 cobertos pelos testes R21 (44 segredos × prompt), R24 e telemetria; não refeitos no real.
+- **Achado fora do escopo (follow-up em spec própria):** no passo 2 Thrace revelou o objetivo secreto da Chama Azul ("querem soltar o que dorme no Palácio de Obsidiana") com `knows_goal = false`. Origem: `<FACÇÕES_DO_MUNDO>` (`agents/npc.py`) lista a todo NPC o plano das fações secretas — pré-existente, apontado pela revisão.
