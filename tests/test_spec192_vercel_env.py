@@ -247,3 +247,21 @@ def test_world_flags_are_allowlisted():
         ve.build_env(FILES, world_flags={"RPG_FORCE_MOCK": "on"})
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_flags={"RPG_LAW": "maybe"})
+
+
+def test_preset_aprovado_e_o_default_do_staging():
+    """25/10: rodar sem flags reproduz o estado aprovado (não apaga mundo vivo nem Jev primary)."""
+    preset = ve.load_preset(ve.STAGING_PRESET_PATH)
+    assert preset["jev_router_mode"] == "primary" and preset["owner_approved_primary"] is True
+    assert preset["world_engine"] == "on" and preset["npc_knowledge"] == "on"
+    assert set(preset["flags"]) <= set(ve.WORLD_FLAGS)
+    assert all(not k.startswith("_") for k in preset)
+    assert ve.load_preset(None) == {}
+
+
+def test_dynamic_art_liga_a_variavel():
+    env, _ = ve.build_env(FILES, dynamic_art=True)
+    assert env["RPG_DYNAMIC_ART_ENABLED"] == "1"
+    off, _ = ve.build_env(FILES)
+    assert "RPG_DYNAMIC_ART_ENABLED" not in off
+    assert "RPG_DYNAMIC_ART_ENABLED" in ve.stale_names(off)

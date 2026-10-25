@@ -80,7 +80,11 @@ OPTIONAL_FLAGS = (
     "RPG_RUMORS",
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
+    "RPG_DYNAMIC_ART_ENABLED",
 )
+# Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
+# reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
+STAGING_PRESET_PATH = ROOT / "scripts" / "staging" / "staging_flags.json"
 # SPEC-217 R15: Jev no router. ``off`` (default) = variaveis ausentes; ``shadow`` observa sem mudar a rota e
 # envia a chave TypeSafe (secreta). ``primary`` exige ``owner_approved_primary`` (flag explicita
 # ``--owner-approved-primary``) e so vale para ESTE projeto de staging. Aprovacao do dono, 2026-10-18 (literal):
@@ -175,6 +179,7 @@ def build_env(
     world_engine: str = "shadow",
     shared_pool: str = "off",
     world_flags: Mapping[str, str] | None = None,
+    dynamic_art: bool = False,
 ) -> tuple[dict[str, str], dict[str, str]]:
     """Retorna (production, preview). Levanta KeyError com NOME do segredo ausente."""
     if projection_mode not in PROJECTION_MODES:
@@ -204,6 +209,8 @@ def build_env(
     if shared_pool != "off":
         production["RPG_SHARED_POOL"] = shared_pool
     production.update(dict(world_flags or {}))
+    if dynamic_art:
+        production["RPG_DYNAMIC_ART_ENABLED"] = "1"
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     site_key = next((files[k] for k in SITE_KEY_FROM_FILE if files.get(k)), None)
     if site_key:
@@ -309,6 +316,14 @@ def remove(token: str, project_id: str, team_id: str, names: tuple[str, ...]) ->
     return removed
 
 
+def load_preset(path: Path | None) -> dict:
+    """Estado aprovado do staging (``staging_flags.json``); None/ausente = sem preset."""
+    if path is None or not path.exists():
+        return {}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return {k: v for k, v in data.items() if not k.startswith("_")}
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--project-name", default=PROJECT_NAME)
@@ -337,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
         "--jev-router-mode",
         "--jev-router",
         choices=JEV_ROUTER_MODES,
-        default="off",
+        default=None,
         help="SPEC-217: shadow observa; primary decide (exige --owner-approved-primary); off apaga tudo",
     )
     ap.add_argument(
@@ -348,19 +363,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--npc-knowledge",
         choices=NPC_KNOWLEDGE_MODES,
-        default="off",
+        default=None,
         help="SPEC-296 R1: propagacao de noticias entre NPCs (SPEC-215); off apaga a variavel",
     )
     ap.add_argument(
         "--world-engine",
         choices=WORLD_ENGINE_MODES,
-        default="shadow",
+        default=None,
         help="SPEC-302 D5: motor de mundo; staging fica em shadow ate o smoke real",
     )
     ap.add_argument(
         "--shared-pool",
         choices=SHARED_POOL_MODES,
-        default="off",
+        default=None,
         help="SPEC-297: pool entre mundos; off apaga a variavel",
     )
     ap.add_argument(
@@ -369,6 +384,17 @@ def main(argv: list[str] | None = None) -> int:
         default=[],
         metavar="NOME=modo",
         help=f"flags do mundo vivo ({', '.join(WORLD_FLAGS)}) com off|shadow|on; ausente = default do codigo",
+    )
+    ap.add_argument(
+        "--dynamic-art",
+        choices=("off", "on"),
+        default=None,
+        help="arte dinamica (RPG_DYNAMIC_ART_ENABLED=1); ausente = preset",
+    )
+    ap.add_argument(
+        "--no-preset",
+        action="store_true",
+        help=f"ignora {STAGING_PRESET_PATH.name} (volta aos defaults antigos: tudo off/shadow)",
     )
     ap.add_argument(
         "--daily-cap-brl",
@@ -384,6 +410,8 @@ def main(argv: list[str] | None = None) -> int:
         print("recusado: .vercel/project.json aponta para outro projeto", file=sys.stderr)
         return 2
     files = _load_files()
+    preset = load_preset(None if args.no_preset else STAGING_PRESET_PATH)
+    print("preset:", "nenhum (--no-preset)" if args.no_preset else STAGING_PRESET_PATH.name)
     try:
         production, preview = build_env(
             files,
@@ -392,13 +420,18 @@ def main(argv: list[str] | None = None) -> int:
             args.invalid_deepseek_key,
             text_cap=not args.no_text_cap,
             projection_mode=args.projection_mode,
-            jev_router_mode=args.jev_router_mode,
-            owner_approved_primary=args.owner_approved_primary,
+            jev_router_mode=args.jev_router_mode or preset.get("jev_router_mode", "off"),
+            owner_approved_primary=args.owner_approved_primary
+            or bool(preset.get("owner_approved_primary")),
             daily_cap_brl=args.daily_cap_brl,
-            npc_knowledge=args.npc_knowledge,
-            world_engine=args.world_engine,
-            shared_pool=args.shared_pool,
-            world_flags=dict(f.split("=", 1) for f in args.flag if "=" in f),
+            npc_knowledge=args.npc_knowledge or preset.get("npc_knowledge", "off"),
+            world_engine=args.world_engine or preset.get("world_engine", "shadow"),
+            shared_pool=args.shared_pool or preset.get("shared_pool", "off"),
+            world_flags={
+                **dict(preset.get("flags") or {}),
+                **dict(f.split("=", 1) for f in args.flag if "=" in f),
+            },
+            dynamic_art=(args.dynamic_art or preset.get("dynamic_art", "off")) == "on",
         )
     except (KeyError, ValueError) as exc:
         print(exc.args[0], file=sys.stderr)

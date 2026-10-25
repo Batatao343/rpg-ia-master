@@ -13,8 +13,10 @@ nome e mostram só nomes. Rode do checkout principal (é onde está o `.env.stag
 2. Env vars (mostra só nomes/targets):
    `uv run --frozen python scripts/staging/vercel_env.py --dry-run` → revise →
    sem `--dry-run`. Flags de modo (`--jev-router-mode`, `--projection-mode`,
-   `--owner-approved-primary`…) só com decisão explícita do dono; o default é o
-   estado atual descrito em `ESTADO_ATUAL.md`.
+   `--owner-approved-primary`…) só com decisão explícita do dono. **Sem flags, o script carrega
+   `scripts/staging/staging_flags.json`** (estado aprovado pelo dono; flags da CLI sobrescrevem;
+   `--no-preset` volta aos defaults antigos, que DESLIGAM o mundo vivo). Decisão nova do dono →
+   editar o JSON com data e commitar antes do deploy.
 3. Migrations pendentes primeiro (expand/contract): `scripts/staging/migrations.py status`
    → se houver pendente, `push` (plano) → `push --apply`.
 4. Deploy: `vercel deploy --prod -e GIT_SHA=$(git rev-parse HEAD) -b GIT_SHA=$(git rev-parse HEAD)`
