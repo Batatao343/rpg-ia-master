@@ -531,7 +531,9 @@ class CompanionSoul(TypedDict, total=False):
     lore_origin_key: str  # npc_key de origem ou "engine"
     lore_ref: str  # primeiro lore_refs do tipo (auditoria)
     reward_gold_planned: int  # ouro materializado na criação
-    outcome: str  # "" | "confirmado" | "boato" (investigar_rumor, após concluir)
+    outcome: (
+        str  # "" | "confirmado" | "desmentido" | "inconclusivo" (investigar_rumor, após concluir)
+    )
 
 
 class ContinuityState(TypedDict, total=False):

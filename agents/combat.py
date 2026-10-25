@@ -1623,11 +1623,12 @@ def _combat_node(state: GameState):
     ):
         from services import quest_log as _quest_log
         from services import world_pressures as _wp
+        from services.discovery import normalize_bestiary_id as _normalize_bestiary_id
 
         _w = state.get("world") or {}
         _hunted = _quest_log.sync_hunt_progress(
             result.get("quests", state.get("quests") or []),
-            [str(e.get("bestiary_id") or "") for e in dead],
+            [_normalize_bestiary_id(e) for e in dead],
             _wp.region_of(str(_w.get("current_location_id") or "")),
             turn=int(_w.get("turn_count", 0) or 0),
         )

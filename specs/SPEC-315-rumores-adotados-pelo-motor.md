@@ -244,31 +244,23 @@ writers acima. Nenhum writer novo de `event_log`/projection.
 
 ```python
 # services/structured_outputs.py
-ClaimKind = Literal[
-    "esconderijo", "item_perdido", "perigo_na_estrada", "criatura_avistada", "npc_em_local"
-]
-
+ClaimKind = Literal["esconderijo", "item_perdido", "perigo_na_estrada",
+                    "criatura_avistada", "npc_em_local"]
 
 class RumorClaim(BaseModel):
     kind: ClaimKind
     location_id: str = Field(description="Id EXATO de local do mapa, diferente do local atual.")
-    entity_id: str = Field(
-        default="",
-        description="criatura_avistada: id do bestiário; npc_em_local: id do NPC; demais: vazio.",
-    )
-
+    entity_id: str = Field(default="", description="criatura_avistada: id do bestiário; "
+                           "npc_em_local: id do NPC; demais: vazio.")
 
 class ProposedRumor(BaseModel):  # campos da 312 + :
     claim: RumorClaim | None = None
 
-
 # state.py (aditivo em RumorInstance)
-claim: dict  # {kind, location_id, entity_id} — INTERNO
-adopted: bool  # False em shadow/rejeição
+claim: dict            # {kind, location_id, entity_id} — INTERNO
+adopted: bool          # False em shadow/rejeição
 materialized_day: int  # 0 = não materializado
-materialization: (
-    dict  # {"kind": "cache"|"encounter"|"npc", "item_id"?, "gold"?, "enemy_id"?, "npc_ref"?}
-)
+materialization: dict  # {"kind": "cache"|"encounter"|"npc", "item_id"?, "gold"?, "enemy_id"?, "npc_ref"?}
 ```
 
 Exemplo (dia 31, herói em `brekmar`): o taverneiro conta que "viram ratos da peste perto da muralha

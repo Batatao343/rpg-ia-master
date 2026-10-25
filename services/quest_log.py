@@ -399,6 +399,10 @@ def has_completion_proof(quest: dict, state: dict) -> tuple[bool, str]:
     if quest.get("location_id"):
         if not any(row.get("kind") == "location_reached" for row in rows):
             return False, "sem chegada ao local da missão"
+        if quest.get("world_kind") in ("investigar_rumor", "recolher_mortos") and not any(
+            row.get("kind") == "completion_ready" for row in evidence
+        ):  # SPEC-313 R19: 2 evidências distintas do vocabulário do tipo
+            return False, "sem 2 evidências distintas"
         if not evidence:
             return False, "sem evidência de investigação/entrega"
         return True, ""

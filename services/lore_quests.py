@@ -213,6 +213,15 @@ def _hunt_ok(enemy_id: str, region: str) -> dict | None:
     return e if region in (e.get("regions") or []) else None
 
 
+def _rollable(entry: dict, danger: int) -> bool:
+    """A criatura pode sair no sorteio local? Mesmo porte de `pick_encounter_enemy`
+    (perigo <= 2: Minion; 3: qualquer; >= 4: Elite)."""
+    elite = "elite" in str(entry.get("type", "")).lower()
+    if danger <= 2:
+        return not elite
+    return True if danger == 3 else elite
+
+
 def _route(route_id: str) -> dict | None:
     return next((r for r in cfg()["delivery_routes"] if r.get("id") == route_id), None)
 
@@ -255,7 +264,7 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
     """`(bloco, itens)`. Bloco vazio se nada elegivel ou modo != on. Nunca inclui verdade de
     rumor, numero, perigo ou fraqueza (R11)."""
     m = mode()
-    if m == "off" or not _npc_here(state, npc_key):
+    if m == "off" or not _npc_here(state, npc_key) or cap_reached(state):
         return "", []
     from services import ecology
 
@@ -271,9 +280,15 @@ def anchor_menu(state: dict, npc_key: str) -> tuple[str, list[dict]]:
     import gamedata
 
     hunts = []
+    danger = int((gamedata.get_location(cur) or {}).get("danger", 1) or 1)
     for e in (gamedata.BESTIARY or {}).values():
         eid = str(e.get("id") or "")
-        if eid and _hunt_ok(eid, region) and free("cacar_criatura", _hunt_anchor(eid, region)):
+        if (
+            eid
+            and _hunt_ok(eid, region)
+            and _rollable(e, danger)
+            and free("cacar_criatura", _hunt_anchor(eid, region))
+        ):
             hunts.append(e)
     bk = state.get("bestiary_knowledge")
     turn = int((state.get("world") or {}).get("turn_count", 0) or 0)

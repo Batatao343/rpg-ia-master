@@ -95,9 +95,10 @@ def test_origin_cooldown_and_anchor_cooldown_in_days():
 def test_lore_cap_two_and_global_cap():
     st = npc_state()
     base = {"status": "active", "world_kind": "cacar_criatura"}
+    _b, menu = lq.anchor_menu(st, NPC_KEY)
     st["quests"] = [{**base, "id": "a"}, {**base, "id": "b"}]
     assert lq.cap_reached(st)
-    _b, menu = lq.anchor_menu(st, NPC_KEY)
+    assert lq.anchor_menu(st, NPC_KEY) == ("", [])  # sem vaga: nem promete a tarefa
     _q, created, reason = wq.offer_from_proposal(
         st, proposal("cacar_criatura", first_anchor(menu, "cacar_criatura")), NPC_KEY, menu, 17
     )

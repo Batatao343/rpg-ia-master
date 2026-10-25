@@ -239,8 +239,8 @@
       "relief": {"pressure": "praga", "delta": -10},
       "title": "Os mortos de {local}",
       "description": {
-        "testemunho": "Há corpos sem recolher em {local}. Quem conhece a Guilda dos Corvos sabe o que acontece com corpos largados.",
-        "cartaz": "Há corpos sem recolher em {local}. Quem conhece a Guilda dos Corvos sabe o que acontece com corpos largados.",
+        "testemunho": "Há corpos sem recolher em {local}. Quem conhece os ofícios funerários sabe o que acontece com corpos largados.",
+        "cartaz": "Há corpos sem recolher em {local}. Quem conhece os ofícios funerários sabe o que acontece com corpos largados.",
         "npc": "{origem} conta que há corpos sem recolher em {local}.",
         "rumor": "Dizem que os corpos de {local} ficaram onde caíram."
       },

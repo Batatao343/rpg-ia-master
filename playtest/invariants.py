@@ -2199,7 +2199,7 @@ def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violat
             heard = ref in heard_any
             if not heard and q.get("world_kind") in lore:
                 # SPEC-313: NPC-origem grava `npc:<ref>:<turno>`; rumor percebido vive no ledger
-                heard = ref.startswith("npc:") or any(
+                heard = _npc_offer_known(q, ref, state) or any(
                     isinstance(r, dict) and r.get("rumor_id") == ref and r.get("perceived_day")
                     for r in sim.get("rumors") or []
                 )
@@ -2519,6 +2519,18 @@ def check_rumors(state: dict, prev: dict | None, turn: int) -> list[Violation]:
             "rumor payload check skipped: %s", type(exc).__name__
         )
     return out
+
+
+def _npc_offer_known(q: dict, ref: str, state: dict) -> bool:
+    """SPEC-313 R12: `npc:<ref>:<turno>` — o NPC existe (npcs/npc_sim) e e a origem da quest."""
+    parts = ref.split(":")
+    if len(parts) != 3 or parts[0] != "npc":
+        return False
+    npc_ref = parts[1]
+    for key, row in ((state or {}).get("npcs") or {}).items():
+        if isinstance(row, dict) and npc_ref in (key, row.get("id")):
+            return str(q.get("origin_name") or "") == str(row.get("name") or key)
+    return npc_ref in (((state or {}).get("npc_sim") or {}).get("npcs") or {})
 
 
 def check_lore_quests(state: dict, prev: dict | None, turn: int) -> list[Violation]:

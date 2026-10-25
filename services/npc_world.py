@@ -349,7 +349,8 @@ def presence(state: dict, npc_key: str) -> tuple[str, bool]:
         return legacy, False
     esc = entry.get("escort")
     if esc:  # SPEC-313 R22: escoltado viaja com o jogador (ou fica onde a escolta pausou)
-        return str(esc.get("paused_at") or _player_loc(state) or esc.get("at") or ""), False
+        new = escort_eval(state, esc)  # decide pausa/seguir ANTES do fim de turno
+        return str(new.get("paused_at") or new.get("at") or ""), False
     pos = entry["pos"]
     loc = str(pos.get("location_id") or "")
     return loc, (not loc and pos.get("arrive_day") is not None)
@@ -1494,7 +1495,7 @@ def escort_sync(state: dict) -> dict:
         esc = entry.get("escort")
         if not esc:
             continue
-        if esc.get("quest_id") not in active:
+        if entry.get("dead") or esc.get("quest_id") not in active:
             at = str(esc.get("paused_at") or esc.get("at") or "")
             entry.pop("escort")
             entry["pos"] = {"location_id": at, "since_day": day, "arrive_day": None}

@@ -783,7 +783,8 @@ def _offer(state: dict, day: int, perceived: list[dict] | None) -> tuple[list[di
             continue
         quests.append(quest)
         created.append(quest)
-        active_world += 1
+        if seed.kind not in lq.LORE_KINDS:
+            active_world += 1
         active_all += 1
         _log("offered", kind=seed.kind, channel=channel, days_left_bucket=_bucket(left))
     return quests, created
@@ -1029,6 +1030,9 @@ def sync_deadlines(
             elif src == "active":
                 out.append(q)  # ainda so anunciada: o prazo real vem quando abrir
                 continue
+        if q["world_kind"] == "escoltar" and src == "ok_end" and m != "shadow":
+            out.append(_expire(q, turn, tick_day, quest_log))  # escoltado morreu: sem espera
+            continue
         if m == "shadow":
             if src == "ok_end" and _perceived_end(q, perceived):
                 _log("shadow_fail", kind=q["world_kind"], reason="superada")
