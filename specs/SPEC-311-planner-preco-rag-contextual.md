@@ -598,9 +598,11 @@ alguém gravar `tags` (follow-up, não bloqueia; R28).
   a faixa 0 usa o conjunto completo de `region_lore_tags` (inclui ids/nomes dos locais). Evita rebaixar
   chunk por nome genérico de local.
 - R17: storyteller e planner passam como `base` só o input do jogador (o local já é a 1ª parte da query);
-  o NPC mantém `"{nome} {local} {fala}"`. `RERANK_CANDIDATES = 6` e `LORE_SEP` são constantes novas.
+  o NPC passa `"{nome} {fala}"` (o local já é a 1ª parte; revisão P2-6). `RERANK_CANDIDATES = 6` e `LORE_SEP` são constantes novas.
 - R3: a audiência `"planning"` só entrou no `Literal`; as linhas 1-4 da 309 já saem para qualquer audiência
   diferente de `npc`/`story`.
+- Revisão (25/10): R20 não promove página de fação secreta (`secret: true` no catálogo) — fica no rank
+  original até a SPEC-314; o `<SEU_COMERCIO>` omite `relacao` (o `<ATITUDE>` da 298 já cobre).
 - R7: o fallback do storyteller só levava `needs_replan` em viagem; agora também leva quando o gatilho do
   mundo disparou.
 

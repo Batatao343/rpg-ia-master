@@ -282,3 +282,24 @@ def test_storyteller_planner_npc_use_composed_query(monkeypatch):
     assert by_purpose["story"].count("Skallgard") == 1
     assert "region_of" not in by_purpose["story"]
     assert hasattr(npc_mod, "compose_lore_query")
+
+
+def test_rerank_does_not_boost_secret_faction_pages():
+    """P2-1: página de fação secreta fica no rank original, mesmo na própria região."""
+    secret_a = SimpleNamespace(
+        metadata={"id": "cultistas_destilacao", "type": "faction", "tags": ["Aethelgard"]},
+        page_content="segredo-a",
+    )
+    secret_b = SimpleNamespace(
+        metadata={"id": "druidas_renegados", "type": "faction", "tags": ["Pântano"]},
+        page_content="segredo-b",
+    )
+    other = SimpleNamespace(metadata={"tags": []}, page_content="neutro")
+    mine = SimpleNamespace(metadata={"tags": ["aethelgard"]}, page_content="minha")
+    out = lq.rerank_by_region([other, secret_a, mine], "aethelgard", 3)
+    assert [d.page_content for d in out] == ["minha", "segredo-a", "neutro"]
+    out = lq.rerank_by_region([other, secret_b, mine], "pantano_melancolia", 3)
+    assert out[1].page_content == "segredo-b"  # nunca promovida
+    assert [
+        d.page_content for d in lq.rerank_by_region([secret_b, other], "pantano_melancolia", 1)
+    ] == ["segredo-b"]

@@ -267,3 +267,16 @@ def test_perceived_world_planning_budget():
     from services.context_builder import estimate_tokens
 
     assert estimate_tokens(pw.perceived_world_block(st, audience="planning")) <= pw.MAX_TOKENS + 40
+
+
+def test_storyteller_trigger_survives_ambush_early_return(monkeypatch):
+    """R7 (P2-3): o retorno antecipado de emboscada leva o gatilho do mundo."""
+    enc = {"reason": "controlled", "flavor": "Eles surgem.", "hint": "lobo", "enemy_id": ""}
+    monkeypatch.setattr(stt, "check_encounter", lambda *a, **k: dict(enc))
+    monkeypatch.setattr(pc, "world_replan_cause", lambda *a, **k: "crise_regiao")
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: _Spy())
+    st = _story_state(text="Viajo para as Montanhas Afiadas")
+    st["world"]["visited"] = ["skallgard", "montanhas_afiadas"]
+    out = stt.storyteller_node(st)
+    assert out.get("next") == "combat_agent", out.keys()
+    assert out["needs_replan"] is True

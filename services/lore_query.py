@@ -92,6 +92,16 @@ def _chunk_tags(doc) -> frozenset[str]:
         return frozenset()
 
 
+def _is_secret_faction(doc) -> bool:
+    meta = getattr(doc, "metadata", None) or {}
+    fid = str(meta.get("id") or meta.get("entity_id") or "")
+    if not fid:
+        return False
+    from services import faction_membership as fm
+
+    return bool(fm._cat(fid).get("secret"))
+
+
 def rerank_by_region(docs: list, region_id: str | None, k: int) -> list:
     """R20/R21: ordenação estável em 3 faixas (da região · sem região · só de outra região).
 
@@ -111,7 +121,14 @@ def rerank_by_region(docs: list, region_id: str | None, k: int) -> list:
             return 2
         return 1
 
-    return sorted(docs, key=band)[:k]  # sorted é estável: a ordem do FAISS vale dentro da faixa
+    # Página de fação secreta nunca ganha prioridade (mitigação até a SPEC-314): fica no rank original.
+    pinned = {i for i, d in enumerate(docs) if _is_secret_faction(d)}
+    movable = sorted(
+        (d for i, d in enumerate(docs) if i not in pinned), key=band
+    )  # sorted é estável: a ordem do FAISS vale dentro da faixa
+    it = iter(movable)
+    out = [docs[i] if i in pinned else next(it) for i in range(len(docs))]
+    return out[:k]
 
 
 # --- query composta -------------------------------------------------------------------------

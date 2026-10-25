@@ -650,7 +650,9 @@ def _commerce_block(state, npc_data) -> str:
         here = str(((state or {}).get("world") or {}).get("current_location_id") or "")
         if not merchant or merchant.get("location_id") != here:
             return ""
-        reasons = economy.price_reasons(state, mode="buy", item_id=None, merchant=merchant)
+        reasons = economy.price_reasons(
+            state, mode="buy", item_id=None, merchant=merchant, exclude=("relacao",)
+        )  # a relação já vem no <ATITUDE> (SPEC-298)
         if not reasons:
             return ""
         direction = economy.market_direction(state, merchant)
@@ -985,9 +987,6 @@ def npc_actor_node(state: GameState):
     npc_id = _npc_id(npc_data, npc_name)
     # Fase 2.8: pack centraliza memória do NPC + estado atual do mundo (NPC ciente de
     # mudanças: líder morto, controle trocado). purpose="npc".
-    npc_location = str(
-        npc_data.get("location") or state.get("world", {}).get("current_location", "") or ""
-    )
     # SPEC-215: com o flag != off, a fala do jogador (R9) e a herança local de
     # NPC recém-gerado (R10) entram no ledger ANTES do invoke. `off` = no-op.
     from services import npc_knowledge
@@ -1021,7 +1020,7 @@ def npc_actor_node(state: GameState):
     pack = build_context_pack(
         pack_state,
         query=compose_lore_query(
-            pack_state, f"{npc_data.get('name', npc_name)} {npc_location} {last_msg}".strip()
+            pack_state, f"{npc_data.get('name', npc_name)} {last_msg}".strip()
         ),  # SPEC-311 R18
         purpose="npc",
         game_id=game_id,

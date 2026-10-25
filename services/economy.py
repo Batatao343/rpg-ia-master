@@ -390,7 +390,12 @@ def _reasons_from(
 
 
 def price_reasons(
-    state: dict, *, mode: str, item_id: str | None = None, merchant: dict | None = None
+    state: dict,
+    *,
+    mode: str,
+    item_id: str | None = None,
+    merchant: dict | None = None,
+    exclude: tuple[str, ...] = (),
 ) -> list[PriceReason]:
     """Motivos qualitativos (<= 3) do preço atual. Nunca levanta; sem número, id ou causa de rota."""
     try:
@@ -403,6 +408,7 @@ def price_reasons(
                 if fac["mult"] > 1.0:
                     factors.append(fac)
                     break
+        factors = [f for f in factors if f["code"] not in exclude]
         return _reasons_from(factors, state, merchant)
     except Exception as exc:
         from observability.telemetry import log_fallback
