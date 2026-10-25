@@ -39,12 +39,15 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
   const { maxMs = TYPEWRITER_MAX_MS, effects = true } = opts;
   const [displayedText, setDisplayedText] = useState(() => typewriterInitial(text, enabled, effects));
   const [revealing, setRevealing] = useState(false);
+  // Texto já exibido, em ref: o React não garante rodar updaters de forma síncrona (P2-1).
+  const shownRef = useRef(typewriterInitial(text, enabled, effects));
   const doneRef = useRef(onDone);
   const revealRef = useRef<(() => void) | null>(null);
   useEffect(() => { doneRef.current = onDone; });
 
   useEffect(() => {
     if (!enabled || !text || !effects) {
+      shownRef.current = text;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
       setDisplayedText(text);
       setRevealing(false);
@@ -55,11 +58,17 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
 
     // spec streaming-turno-sse: texto pode CRESCER (chunks SSE) — continua de
     // onde parou em vez de recomeçar do zero a cada chunk.
-    let idx = 0;
-    setDisplayedText((prev) => {
-      idx = text.startsWith(prev) ? prev.length : 0;
-      return prev;
-    });
+    const prev = shownRef.current;
+    if (prev && !text.startsWith(prev)) {
+      // P2-9: `replace` (texto final diferente) não é prefixo do já exibido: revela direto, sem redigitar.
+      shownRef.current = text;
+      setDisplayedText(text);
+      setRevealing(false);
+      revealRef.current = null;
+      doneRef.current?.();
+      return;
+    }
+    let idx = prev.length;
     // Teto de duração: no 1º trecho usa maxMs; ao continuar texto crescente, o atraso máximo é ~1 s.
     const perTick = typewriterCharsPerTick(text.length - idx, idx > 0 ? Math.min(maxMs, TYPEWRITER_LAG_MS) : maxMs);
     let finished = false;
@@ -67,6 +76,7 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
       if (finished) return;
       finished = true;
       clearInterval(interval);
+      shownRef.current = text;
       setDisplayedText(text);
       setRevealing(false);
       revealRef.current = null;
@@ -76,7 +86,7 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
       const step = typewriterStep(text, idx, perTick);
       idx = step.idx;
       if (step.done) finish();
-      else setDisplayedText(text.slice(0, idx));
+      else { shownRef.current = text.slice(0, idx); setDisplayedText(shownRef.current); }
     }, TYPEWRITER_TICK_MS);
     revealRef.current = finish;
     setRevealing(true);

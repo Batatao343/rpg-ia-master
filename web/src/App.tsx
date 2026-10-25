@@ -59,6 +59,7 @@ export function App() {
   const [thinking, setThinking] = useState(false);
   const [turn, setTurn] = useState<TurnWait>(IDLE_TURN);
   const turnToken = useRef(0);
+  const actionRef = useRef<(text: string) => void>(() => {});
   const openingMemo = useRef<OpeningMemo>({ gid: "", seen: false, loc: "" });
   const resetTurn = useCallback(() => setTurn(t => ({ ...IDLE_TURN, seq: t.seq })), []);
   const [banner, setBanner] = useState<BannerState | null>(null);
@@ -557,6 +558,10 @@ export function App() {
         const echo = at > 0 && prev[at - 1].role === "player" ? at - 1 : at;
         return [...prev.slice(0, echo), ...prev.slice(at + 1)];
       });
+      // P1-1: um fluxo antigo (já invalidado) nunca apaga o pending de um turno mais novo.
+      const clearOwnPending = () => {
+        if (loadPending(user, gid)?.operation_id === operation.operation_id) clearPending(user, gid);
+      };
       pushLog(operation.payload.input_text, "player", "STORY");
       setTurn(t => ({ ...t, ledger: addPhase(t.ledger, PHASE_TEXTS.campaign_manager) }));
       let hadChunks = false;
@@ -582,7 +587,7 @@ export function App() {
           },
           onReplace: text => { if (active()) replaceStreamText(text); },
         }, requestOptions);
-        clearPending(user, gid);
+        clearOwnPending();
         reportLatency();
         if (!active()) return;
         setPending(null);
@@ -594,16 +599,19 @@ export function App() {
         if (error instanceof api.HttpError && error.narrativeShown) {
           // SPEC-316 R5/SPEC-320 R13: a narração JÁ foi mostrada e o turno falhou depois — mantém o texto
           // ("não salvo"), preserva o pending e deixa "Tentar de novo" reenviar com o mesmo action_id.
+          // Recusa definitiva (4xx) nunca passa: descarta o pending e esconde o retry.
+          const definitive = error.status < 500 && shouldClearPending(error.status, error.code);
           const shown = streamEntryId.current;
           streamEntryId.current = null; pendingVisual.current = null;
           if (shown !== null) setLog(prev => prev.map(e => (e.id === shown ? { ...e, streaming: false, unsaved: true } : e)));
-          setTurn(t => ({ ...t, stage: nextStage(t.stage, "error-after-narration") }));
+          if (definitive) { clearOwnPending(); setPending(null); }
+          else setTurn(t => ({ ...t, stage: nextStage(t.stage, "error-after-narration") }));
           throw error;
         }
         if (error instanceof api.HttpError && error.status < 500) {
           // A definitive refusal can never be retried as-is: release the input (SPEC-235 R2).
           if (shouldClearPending(error.status, error.code)) {
-            clearPending(user, gid); setPending(null);
+            clearOwnPending(); setPending(null);
             // Preserva status/code (SPEC-205 R9: `invalid_target` refaz a mira com o estado novo).
             throw new api.HttpError(error.status, error.code,
               error.message + " A ação pendente foi descartada; você pode enviar uma nova.");
@@ -618,7 +626,7 @@ export function App() {
         const r = await api.sendAction(operation.payload.input_text, gid, requestOptions);
         post.completePost();
         void reportClientLatency(post.summary(), api.sendClientLatency);
-        clearPending(user, gid);
+        clearOwnPending();
         if (active()) { setPending(null); const entryId = onTurn(r);
           void refreshTurnCost(gid, operation.operation_id, entryId, generation, user); }
       }
@@ -641,6 +649,8 @@ export function App() {
     }
   }
 
+  useEffect(() => { actionRef.current = (text: string) => { void handleAction(text); }; });
+
   /** "Tentar de novo" (SPEC-320 R3/R13): reaproveita o pending por operation_id — nunca cria envio novo. */
   async function retryTurn() {
     const gid = gameId.current;
@@ -658,10 +668,19 @@ export function App() {
         clearPending(owner.current, gid); setPending(null);
         const restored = await api.getState(gid);
         if (session.current !== generation || gameId.current !== gid) return;
-        setData(restored); resetTurn(); setThinking(false); setBusy(false);
-        await loadHistory(gid, generation);
-      } else {
+        setData(restored);
+        await loadHistory(gid, generation); // só destrava depois do histórico (o setLog dele não pisa em ação nova)
+        if (session.current === generation) { resetTurn(); setThinking(false); setBusy(false); }
+      } else if (status.status === "running") {
         setBanner({ msg: "O turno ainda está em andamento no servidor; continue esperando.", kind: "info" });
+      } else {
+        // `unknown`/`failed`: o fluxo está pendurado. Abandona o SSE e repete o MESMO action_id (idempotente).
+        turnToken.current++;
+        streamEntryId.current = null; pendingVisual.current = null;
+        setLog(prev => prev.filter(e => e.role !== "narrator" || !e.streaming));
+        setThinking(false); setBusy(false); resetTurn();
+        setBanner({ msg: "O turno não respondeu; reenviando a mesma ação.", kind: "warn" });
+        setTimeout(() => actionRef.current(pending.payload.input_text), 0);
       }
     } catch (error) {
       setBanner({ msg: "Não consegui consultar o turno: " + errMsg(error), kind: "warn", requestId: errRequestId(error) });
@@ -673,6 +692,7 @@ export function App() {
     if (!gid) return;
     clearPending(owner.current, gid);
     setPending(null);
+    resetTurn();
     setBanner({ msg: "Ação pendente descartada. Você pode enviar uma nova ação.", kind: "warn" });
   }
 
@@ -700,7 +720,7 @@ export function App() {
   async function handleContinueSave(gid: string) {
     if (busy) return;
     const generation = ++session.current;
-    resetImageQuote();
+    resetImageQuote(); resetTurn();
     setBusy(true);
     try {
       const r = await api.getState(gid);
@@ -745,7 +765,7 @@ export function App() {
   function handleNew() {
     if (busy) return;
     session.current++;
-    resetImageQuote();
+    resetImageQuote(); resetTurn();
     setPending(null);
     setScreen(data?.combat_simulation?.enabled ? "simulator" : "create");
     setData(null);

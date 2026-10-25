@@ -127,7 +127,8 @@ export const Composer = forwardRef<HTMLInputElement, {
     <form className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
       <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
-        onRetry={() => onRetry?.()} />
+        onRetry={() => onRetry?.()}
+        onFocusInput={() => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
       <div className="actionbar__composer">
       <input
         ref={inputRef}
