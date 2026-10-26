@@ -653,3 +653,4 @@ Notas honestas sobre a medida:
   - **B-P2-6** (decisão do coordenador): sacrifício aceito grava `companion_sacrificed` no `event_log` e um marco de
     crônica percebido ("X ficou para trás para que o herói escapasse"), sem o destino e sem efeito extra de
     reputação; nenhuma tag nova (o catálogo da SPEC-300 pode etiquetar depois).
+- 26/10 — **gate R17 da Fase B (coordenador)**, Fase A `on` nas duas pontas, Fase B off vs on (`RPG_CHASE_APPROACH/ATTACK/ABANDON`), `RPG_COMPANION_SOUL=on`, MockLLM: (a) arena 10 seeds: máx |Δ death_rate| = **0,0 pp** nas 32 células; (b) matriz 5 classes × seeds 42/43 × 50 turnos nos perfis `combate` e `fujao`: 20/20 com 0 erro, 0 violação, 0 `no_progress`; (c) long-run `combate` 12 × 200 (seeds 21–32): 0 erro; as 2 violações `summary.lifecycle` (seeds 25/32) são as pré-existentes. Bots não declaram "deixo"/"aceito" → gate mede neutralidade da fiação.
