@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e2fd651b6f808a8e7925a1aa391c4e35b2567210",
+  "commit_sha": "73c32e1da6e136e7e3d3f83e220ae2c006f953c6",
   "edge_counts": {
     "calls": 27892,
     "contains": 958,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7bd3495cce89a6d215198024407d49ffe0df6df4ecf8f01f156df908d86d7b34",
+  "graph_hash": "sha256:b111b66e167256f8573120bc6ec4c002c1fec17a5ab73f5b7057a8eda3828e9e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1024,6 +1024,7 @@
     "web/e2e/image-quote.spec.ts",
     "web/e2e/interlocutor-speaker.spec.ts",
     "web/e2e/latency.spec.ts",
+    "web/e2e/livro.spec.ts",
     "web/e2e/map-tab.spec.ts",
     "web/e2e/mobile-budget.spec.ts",
     "web/e2e/mobile-single-pane.spec.ts",
@@ -1060,6 +1061,7 @@
     "web/src/components/CodexTab.tsx",
     "web/src/components/CombatOutcomePanel.tsx",
     "web/src/components/CombatSimulatorScreen.tsx",
+    "web/src/components/ContextSuggestions.tsx",
     "web/src/components/CreateScreen.tsx",
     "web/src/components/DeathModal.tsx",
     "web/src/components/EmberField.tsx",
@@ -1080,6 +1082,7 @@
     "web/src/components/SaveScreen.tsx",
     "web/src/components/SceneArtwork.tsx",
     "web/src/components/SceneZones.tsx",
+    "web/src/components/Sigil.tsx",
     "web/src/components/StoryLog.tsx",
     "web/src/components/SupportCode.tsx",
     "web/src/components/tabs/BestiaryTab.tsx",
@@ -1095,6 +1098,8 @@
     "web/src/components/VisualArtwork.tsx",
     "web/src/components/WorldMap.tsx",
     "web/src/components/WoundTrack.tsx",
+    "web/src/contextSuggestions.ts",
+    "web/src/debugFlag.ts",
     "web/src/design/effects.registry.ts",
     "web/src/design/icons.tsx",
     "web/src/design/killswitch.ts",
@@ -1121,6 +1126,7 @@
     "web/src/native/platform.ts",
     "web/src/outcomeToast.ts",
     "web/src/pendingOperation.ts",
+    "web/src/product.ts",
     "web/src/purchases/androidPlay.ts",
     "web/src/purchases/index.ts",
     "web/src/purchases/types.ts",
@@ -1174,12 +1180,12 @@
     "artifact": 9,
     "class": 936,
     "endpoint": 64,
-    "file": 1118,
+    "file": 1124,
     "function": 4402,
     "method": 832,
     "module": 958,
     "test": 7822
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:45ca16e92a1e1ab7b0c1c55baf0c78e2a4d776b77b3d6c6ea629f383fb024eca"
+  "source_tree_hash": "sha256:00ebf6ac7500b0cd40991d0af56c5c538e2029c5a8142aa65f7c581f66239273"
 }

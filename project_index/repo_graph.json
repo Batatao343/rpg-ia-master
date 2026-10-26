@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e2fd651b6f808a8e7925a1aa391c4e35b2567210",
+  "commit_sha": "73c32e1da6e136e7e3d3f83e220ae2c006f953c6",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -522293,6 +522293,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/livro.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/livro.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/map-tab.spec.ts",
       "kind": "file",
       "line": 1,
@@ -522538,6 +522545,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/components/ContextSuggestions.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/components/ContextSuggestions.tsx",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/components/CreateScreen.tsx",
       "kind": "file",
       "line": 1,
@@ -522671,6 +522685,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/components/Sigil.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/components/Sigil.tsx",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/components/StoryLog.tsx",
       "kind": "file",
       "line": 1,
@@ -522780,6 +522801,20 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/components/tabs/useDossiers.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/contextSuggestions.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/contextSuggestions.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/debugFlag.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/debugFlag.ts",
       "qualified_name": null
     },
     {
@@ -522962,6 +522997,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/pendingOperation.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/product.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/product.ts",
       "qualified_name": null
     },
     {
@@ -627924,5 +627966,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:45ca16e92a1e1ab7b0c1c55baf0c78e2a4d776b77b3d6c6ea629f383fb024eca"
+  "source_tree_hash": "sha256:00ebf6ac7500b0cd40991d0af56c5c538e2029c5a8142aa65f7c581f66239273"
 }
