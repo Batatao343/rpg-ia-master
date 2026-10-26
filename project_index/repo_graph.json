@@ -1,5 +1,5 @@
 {
-  "commit_sha": "15c7772adac4827bc9ec5d2fe31c76185f5c33d0",
+  "commit_sha": "8c45e649798a2289c09708b42f8afdb734eb4d0f",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -6760,7 +6760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 11
+        "line": 12
       },
       "source": "file:tests/test_audit_browser_local.py",
       "target": "file:scripts/browser_local.py",
@@ -6771,7 +6771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 12
+        "line": 13
       },
       "source": "file:tests/test_audit_browser_local.py",
       "target": "file:tests/fakes/local_auth.py",
@@ -6782,7 +6782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 13
+        "line": 14
       },
       "source": "file:tests/test_audit_browser_local.py",
       "target": "file:tests/fakes/local_image_finance.py",
@@ -92901,7 +92901,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 11
+        "line": 12
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "module:scripts.browser_local",
@@ -92912,7 +92912,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 12
+        "line": 13
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "module:tests.fakes.local_auth",
@@ -92923,7 +92923,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 13
+        "line": 14
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "module:tests.fakes.local_image_finance",
@@ -92934,7 +92934,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 19
+        "line": 20
       },
       "source": "module:tests.test_audit_browser_local",
       "target": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
@@ -314067,7 +314067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 27
+        "line": 28
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:scripts.browser_local.find_chrome",
@@ -314078,7 +314078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 30
+        "line": 31
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
@@ -314089,7 +314089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 267
+        "line": 275
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
@@ -314100,7 +314100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 31
+        "line": 32
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_image_finance.fund_audit_portrait",
@@ -577425,7 +577425,7 @@
     {
       "id": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "kind": "test",
-      "line": 19,
+      "line": 20,
       "path": "tests/test_audit_browser_local.py",
       "qualified_name": "tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog"
     },
@@ -633067,5 +633067,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:a56c307b8b82fa404b7b9f0005718dd7d42f595eaa2842a4661149a746946fde"
+  "source_tree_hash": "sha256:8bc5fb9cf495ae0b9055acd3c7ecd66dee6bde9eb040ff9bebf855cbf61456af"
 }
