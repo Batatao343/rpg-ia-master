@@ -1,6 +1,6 @@
 # SPEC-319 — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 
-> **Status:** `in-progress` (implementada na branch `spec-319`; falta revisão independente e a medição de staging §6) — dono 25/10: "boa, aprovo", decisões nos padrões recomendados em negrito
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS, F-1/F-2 feitos); pousada na main 26/10 com `RPG_TOKEN_STREAM=shadow` e hedge 0; falta medição §6 no staging)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-316 (`done` — canal de narração antecipada no SSE e UX de "ainda salvando"); recomendado SPEC-318 (`done`) para o ganho pleno; insumos `done`: SPEC-032 (RoutedLLM), SPEC-236 (`stream_interrupted`), SPEC-250 (fallbacks silenciosos)
 > **Desbloqueia:** —
