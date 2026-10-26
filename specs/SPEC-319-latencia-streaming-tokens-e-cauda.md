@@ -213,3 +213,4 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   sempre chama `on_reset` (o sink ignora se nada saiu). F-2: `StreamGuard(normalize=...)`: NPC e
   combate/loot usam só `sanitize_meta_preamble`; storyteller mantém `sanitize_player_facing`.
 
+- 26/10 — shadow no staging: `would_replace` 2/15 (13 %) no round 1 e 5/11 (45 %) no round 2, ttft_shadow p50 ~2,6 s. **Acima da meta D1 (< 5 %) → `RPG_TOKEN_STREAM` segue `shadow`**; follow-up: investigar a causa das trocas pelo `reason` de `sse.token_replace`/would_replace (prefixo anti-repetição, guard de prosa) antes de ligar.

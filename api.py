@@ -2059,7 +2059,23 @@ class GameResponse(BaseModel):
 
 
 # --- HELPER: FORMATA RESPOSTA ---
-def _public_art_offer(row: dict) -> dict:
+def _npc_display_label(label: str, subject_id: str, state: dict | None) -> str:
+    """Display name for an NPC art offer — never a raw `runtime_npc:<slug>` token."""
+    from services.visual_catalog import _runtime_token
+
+    for raw in (label, subject_id):
+        if raw and not raw.startswith("runtime_npc:"):
+            return raw
+    token = subject_id or label
+    for npc in ((state or {}).get("npcs") or {}).values():
+        name = str((npc or {}).get("name") or "") if isinstance(npc, dict) else ""
+        if name and _runtime_token(name) == token:
+            return name
+    slug = token.split(":", 1)[-1].replace("_", " ").strip()
+    return slug[:1].upper() + slug[1:] if slug else ""
+
+
+def _public_art_offer(row: dict, state: dict | None = None) -> dict:
     """Offer reference for the UI: id/type plus the (already sanitized) subject label so the
     client can name and dedupe per NPC."""
     out = {"offer_id": row["offer_id"], "type": row["type"]}
@@ -2067,7 +2083,7 @@ def _public_art_offer(row: dict) -> dict:
         trigger = row.get("trigger") if isinstance(row.get("trigger"), dict) else {}
         brief = row.get("brief") if isinstance(row.get("brief"), dict) else {}
         subject_id = str(trigger.get("subject_id") or "")
-        label = str(brief.get("subject") or "")
+        label = _npc_display_label(str(brief.get("subject") or ""), subject_id, state)
         if subject_id:
             out["subject_id"] = subject_id
         if label:
@@ -2092,7 +2108,7 @@ def _public_art_refs(state: dict) -> dict:
             )
     return {
         "art_generations": generations,
-        "art_offers": [_public_art_offer(row) for row in state.get("art_offers") or []],
+        "art_offers": [_public_art_offer(row, state) for row in state.get("art_offers") or []],
     }
 
 
