@@ -12,7 +12,7 @@ import re
 from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from uuid import uuid4
 
 _correlation: contextvars.ContextVar[dict[str, str]] = contextvars.ContextVar(
@@ -114,6 +114,16 @@ _LEVELS = {
 }
 
 
+_event_sink: Callable[[str], None] | None = None
+
+
+def set_event_sink(fn: Callable[[str], None] | None) -> None:
+    """Contador opcional por nome (`area.evento`), usado pelo playtest (SPEC-325 R4).
+    Recebe só o nome; `None` desliga."""
+    global _event_sink
+    _event_sink = fn
+
+
 def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> None:
     """SPEC-222 R1: log técnico estruturado de produção (substitui ``print``).
 
@@ -121,6 +131,8 @@ def log_event(area: str, event: str, *, level: str = "info", **fields: Any) -> N
     pseudônimos — nunca texto do jogador, narração ou nome de personagem. Ainda
     assim passam por ``safe_json``/``redact``.
     """
+    if _event_sink is not None:
+        _event_sink(f"{area}.{event}")
     logging.getLogger(f"rpg.{area}").log(
         _LEVELS.get(level, logging.INFO),
         # SPEC-240 R1: correlacao automatica; campos explicitos do chamador vencem.

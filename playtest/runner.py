@@ -238,6 +238,7 @@ class CampaignResult:
     invariants_enabled: bool = True
     scenario: str | None = None
     start_level: int = 1
+    capability_counts: dict = field(default_factory=dict)  # SPEC-325 R4
 
 
 def _resolve_profile_progression(
@@ -1144,7 +1145,10 @@ def run_campaign(
     def _rag_hook(event):
         rag_sink.append(_normalize_rag_event(event))
 
+    from playtest import capabilities as _capabilities
+
     with (
+        _capabilities.counting() as cap_counter,
         _force_mock(active=not use_real_llm),
         _offline_embeddings(active=not use_real_llm),
         _isolated_saves(),
@@ -1565,6 +1569,7 @@ def run_campaign(
         invariants_enabled=invariants,
         scenario=scenario,
         start_level=int(start_level),
+        capability_counts=cap_counter.snapshot(),
     )
     campaign_violations = _campaign_experience_violations(
         profile,

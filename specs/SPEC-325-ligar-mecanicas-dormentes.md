@@ -658,7 +658,7 @@ Notas sobre a medida (smoke do executor após as correções da revisão, 10 see
    `tests/test_spec325_intents_scene.py`. Falta o gate R17 da Fase C (§8.3) e a revisão Sol.
 5. ~~**Etapa 7 (Fase D, R16)**~~ feita em `shadow` (26/10); `tests/test_spec325_reinforcements.py`, célula
    `lider_matilha` na arena. Falta o gate R17 da Fase D (§8.4) e a revisão Sol.
-6. **Etapa 8 (R4, R18, R19):** `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
+6. ~~**Etapa 8 (R4, R18, R19)**~~ feita (26/10, `tests/test_spec325_playtest.py`; ver Histórico). Escopo original: `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
    cenários de §6 em `playtest/scenarios.py` e os invariantes restantes. A Fase A já tem
    `check_conflict_capabilities` (incapacitado nunca morto; formato de `revealed_resistances`).
 7. **UI (D8):** chips de objeto e ordem a aliado (Fase C, 26/10), "Sem matar" (Fase A) e "Deixar X"/"Aceitar
@@ -808,3 +808,20 @@ Notas sobre a medida (smoke do executor após as correções da revisão, 10 see
     `web/src/combat/conflictChips.ts` com teste (`web/tests/conflict-chips.test.mjs`).
 - 26/10 — **gate R17 da Fase C (coordenador)**, A+B `on`, reforço `shadow`, C off vs on (`RPG_COMBAT_OBJECTS`, `RPG_COMPANION_ORDERS`), MockLLM: arena 10 seeds máx |Δ| = **0,0 pp** (32 células); matriz 5 classes × 42/43 × 50 turnos nos perfis `combate` e `recrutador`: 20/20 limpas (0 erro, 0 violação, 0 `no_progress`); long-run 12 × 200: 0 erro, só as 2 `summary.lifecycle` pré-existentes (seeds 25/32). Fase C pronta para `on`.
 - 26/10 — **Fase D: gate NÃO passa** (célula `lider_matilha` +26 a +37 pp com o reforço = Lacaio real; atraso de chegada não resolve). `RPG_COMBAT_REINFORCEMENTS` fica `shadow` — **decisão do dono pendente**: (1) reforço só em encontros com folga de orçamento [recomendado], (2) aceitar a letalidade maior, (3) desistir do D4.
+- **2026-10-26 — Etapa 8 implementada (R4, R18, R19, §6).** `playtest/capabilities.py` (contador por `log_event` via
+  `observability.telemetry.set_event_sink`; `capability_counts` com as 16 chaves `<cap>`/`<cap>_shadow` no summary e
+  seção "Capacidades de conflito" no `report.md`); `playtest/capability_bots.py` (7 estratégias: combate pré-armado +
+  ação roteirizada) e 7 cenários em `playtest/scenarios.py` (`combate_resistencia`, `combate_nao_letal`,
+  `fuga_escolhas`, `fuga_abandono`, `combate_objeto`, `combate_ordem`, `combate_reforco`; perfil `combate`; fora de
+  `PROFILES`/`--all`); bot `nao_letal` opcional na arena; invariantes `check_conflict_capabilities_state` e
+  `check_conflict_golden_rule` (API pública do combate sem efeito de objeto, resistência não revelada, `pending_fate` nem
+  aviso de reforço indevido).
+  - **Desvio 21:** três eventos novos só com a flag `on` (para contar o efeito real): `combat.nonlethal`,
+    `combat.chase_approach`, `combat.object_used` (catálogo atualizado). Nenhum muda estado.
+  - **Desvio 22:** o herói não tem Carta `igneo` nos dados; `combate_resistencia` usa o Iniciado da Chama Azul com
+    imunidade a todos os tipos físicos (a 1ª pancada revela `<tipo>:imune`) e arquétipo único por execução (o bestiário
+    legado persiste revelações entre campanhas). O combate é armado em `decision_for` (turno 1 e a cada fim de combate,
+    para o cenário não derivar a encontros sorteados), não em `prepare`.
+  - **Desvio 23:** o oráculo de cada cenário só exige a capacidade primária com a flag `on`; `off`/`shadow` apenas rodam.
+    As variantes `foge_com_abordagem`/`usa_objeto` do R18 não cabem na arena (ela chama `run_round`, sem fuga nem texto
+    livre): vivem nos cenários; na arena entrou só `nao_letal`.

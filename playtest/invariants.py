@@ -2747,6 +2747,126 @@ def check_conflict_capabilities(state: dict, prev: dict | None, turn: int) -> li
     return out
 
 
+def _base_enemy_id(enemy: dict) -> str:
+    return str(enemy.get("archetype_id") or re.sub(r"_\d+$", "", str(enemy.get("id") or "")))
+
+
+def check_conflict_capabilities_state(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-325 R19 (estado): incapacitado nunca vira `npc_killed`; companheiro com
+    `pending_fate` nunca `active`; objeto de cena com `uses_remaining < 0` nunca; id de
+    inimigo (reforco incluso) nunca repetido."""
+    out: list[Violation] = []
+    enemies = [e for e in state.get("enemies", []) or [] if isinstance(e, dict)]
+    ids = [str(e.get("id") or "") for e in enemies if e.get("id")]
+    for dup in sorted({i for i in ids if ids.count(i) > 1}):
+        out.append(
+            _V("conflict.enemy_id_repeated", "error", turn, f"id de inimigo repetido: {dup}")
+        )
+    prev_events = len((prev or {}).get("event_log") or [])
+    fresh = (state.get("event_log") or [])[prev_events:]
+    killed = {str(ev.get("target_id") or "") for ev in fresh if ev.get("type") == "npc_killed"}
+    for e in enemies:
+        if e.get("status") == "incapacitado" and _base_enemy_id(e) in killed:
+            out.append(
+                _V(
+                    "conflict.incapacitated_in_deaths",
+                    "error",
+                    turn,
+                    f"{e.get('name') or e.get('id')}: incapacitado registrado como morto",
+                )
+            )
+    for p in state.get("party", []) or []:
+        if isinstance(p, dict) and p.get("pending_fate") and p.get("active"):
+            out.append(
+                _V(
+                    "conflict.sealed_fate_active",
+                    "error",
+                    turn,
+                    f"{p.get('name') or p.get('id')}: destino selado mas ainda ativo na party",
+                )
+            )
+    scene = (state.get("combat") or {}).get("scene") or {}
+    for obj in scene.get("objects") or []:
+        if isinstance(obj, dict) and int(obj.get("uses_remaining", 0) or 0) < 0:
+            out.append(
+                _V(
+                    "conflict.object_uses_negative",
+                    "error",
+                    turn,
+                    f"objeto {obj.get('id')}: uses_remaining < 0",
+                )
+            )
+    return out
+
+
+def check_conflict_golden_rule(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-325 R5/R19 (regra de ouro): a view publica do combate (`/game/state`, a mesma
+    base do que o narrador recebe) nunca traz efeito de objeto, resistencia nao revelada,
+    destino selado nem reforco ainda nao avisado."""
+    combat = state.get("combat") or {}
+    if not combat.get("scene") and not state.get("enemies"):
+        return []
+    import api
+
+    out: list[Violation] = []
+    view = api._combat_block(state)
+    scene_objects = (view.get("scene") or {}).get("objects") or []
+    for obj in scene_objects:
+        for it in obj.get("interactions") or []:
+            if "effect" in it:
+                out.append(
+                    _V("conflict.golden_object_effect", "error", turn, "efeito de objeto na API")
+                )
+    secret_names = [
+        str(o.get("name") or "")
+        for o in (combat.get("scene") or {}).get("objects") or []
+        if isinstance(o, dict) and o.get("secret") and not o.get("discovered")
+    ]
+    blob = json.dumps(view, ensure_ascii=False)
+    for name in secret_names:
+        if name and name in blob:
+            out.append(
+                _V("conflict.golden_secret_object", "error", turn, f"objeto secreto na API: {name}")
+            )
+    enemy_blob = json.dumps(view.get("enemies") or [], ensure_ascii=False).lower()
+    from services import combat_flags
+
+    for enemy in state.get("enemies", []) or []:
+        if not isinstance(enemy, dict):
+            continue
+        revealed = {str(r).partition(":")[0] for r in enemy.get("revealed_resistances") or []}
+        secret = set(enemy.get("immunities") or []) | set(enemy.get("vulnerabilities") or [])
+        secret |= set(enemy.get("resistances") or {})
+        for dtype in sorted(str(s) for s in secret if str(s) and str(s) not in revealed):
+            # so o formato de resistencia (`Tipo (efeito)` / `tipo:efeito`) conta como vazamento:
+            # o nome do tipo sozinho aparece legitimamente em nomes de Cartas e condicoes.
+            leaks = [f"{dtype}:".lower()] + [
+                combat_flags.resistance_label(f"{dtype}:{eff}").lower()
+                for eff in combat_flags.RESIST_EFFECTS
+            ]
+            if any(token in enemy_blob for token in leaks):
+                out.append(
+                    _V(
+                        "conflict.golden_resistance",
+                        "error",
+                        turn,
+                        f"resistencia nao revelada ({dtype}) na API",
+                    )
+                )
+    for p in state.get("party", []) or []:
+        fate = p.get("pending_fate") if isinstance(p, dict) else None
+        if fate and (str(fate.get("seed") or "") in blob and fate.get("seed")):
+            out.append(_V("conflict.golden_sealed_fate", "error", turn, "destino selado na API"))
+    if "pending_fate" in blob:
+        out.append(_V("conflict.golden_sealed_fate", "error", turn, "pending_fate na API"))
+    reinf = combat.get("reinforcement") or {}
+    if view.get("reinforcement_warning") and (
+        reinf.get("warned_round") is None or reinf.get("fired")
+    ):
+        out.append(_V("conflict.golden_reinforcement", "error", turn, "aviso de reforco indevido"))
+    return out
+
+
 CHECKS: list[Check] = [
     check_rumors,
     check_rumor_adopt,
@@ -2792,6 +2912,8 @@ CHECKS: list[Check] = [
     check_npc_world,
     check_sheet_stub_streak,
     check_conflict_capabilities,
+    check_conflict_capabilities_state,
+    check_conflict_golden_rule,
 ]
 
 

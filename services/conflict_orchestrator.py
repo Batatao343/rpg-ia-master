@@ -1156,6 +1156,7 @@ def _mark_down(target: dict, target_id: str, out: dict, nonlethal: str, by: str)
         if target_id not in out.setdefault("incapacitated", []):
             out["incapacitated"].append(target_id)
         out["logs"].append(f"{_name(target)} cai desacordado.")
+        _log_event("combat", "nonlethal", target=target_id)
         return
     if nonlethal == "shadow":
         _log_event("combat", "nonlethal_shadow", target=target_id)

@@ -291,6 +291,23 @@ def render_markdown(report: RunReport) -> str:
         )
     L.append("")
 
+    # SPEC-325 R4: disparos por capacidade de conflito (`on` / `shadow`).
+    with_caps = [s for s in report.campaigns if any((s.get("capability_counts") or {}).values())]
+    if with_caps:
+        from playtest.capabilities import KEYS
+
+        L.append("## Capacidades de conflito")
+        L.append("")
+        L.append("Disparos por capacidade: `cap` = efeito real, `cap_shadow` = só registrado.")
+        L.append("")
+        L.append("| perfil | " + " | ".join(KEYS) + " |")
+        L.append("|---|" + "---:|" * len(KEYS))
+        for summary in with_caps:
+            counts = summary.get("capability_counts") or {}
+            name = summary.get("scenario") or summary.get("profile", "?")
+            L.append(f"| {name} | " + " | ".join(str(counts.get(k, 0)) for k in KEYS) + " |")
+        L.append("")
+
     # SPEC-302 R32: seção "Mundo" (dias decorridos por perfil, crises e sinais percebidos).
     with_world = [s for s in report.campaigns if (s.get("world") or {}).get("enabled")]
     if with_world:

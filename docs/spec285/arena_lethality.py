@@ -25,6 +25,11 @@ UM Elite de arquétipo `lider_matilha` sozinho; com `RPG_COMBAT_REINFORCEMENTS=o
 reforço roda pelo MESMO `services.reinforcements.advance` do nó de combate. Comparar `on` vs `off`
 (critério: no máximo +3 pp de morte). Fora do default: as células atuais seguem intactas.
 
+Bot opcional `nao_letal` (SPEC-325 R18, `--bots nao_letal`): ataque básico declarado "sem matar";
+com `RPG_COMBAT_NONLETHAL=on` mede o desfecho `incapacitado` em vez de morte. Fora do default.
+Os bots que fogem/usam objeto/ordenam aliado vivem em `playtest/capability_bots.py` (a arena chama
+`run_round` direto, sem o nó de combate: não há fuga nem texto livre aqui).
+
 Métrica: taxa de morte do herói por combate (e `early_deaths`: mortes em ≤ 2 rodadas, SPEC-056 R2b) (morte = Estado Terminal/Vitalidade
 0 sem aliado, como na arena da SPEC-283). Saída: JSON em stdout.
 """
@@ -172,6 +177,13 @@ def hero_decl(bot: str, player: dict, target_id: str) -> ct.TurnDeclaration:
             return ct.TurnDeclaration(
                 actor_id="player", acao=ct.TurnStep(kind="card", card_id=cid, target_id=target_id)
             )
+    if (
+        bot == "nao_letal"
+    ):  # SPEC-325 R18: ataque básico declarado "sem matar" (RPG_COMBAT_NONLETHAL)
+        return ct.TurnDeclaration(
+            actor_id="player",
+            acao=ct.TurnStep(kind="attack", target_id=target_id, params={"nao_letal": True}),
+        )
     return ct.TurnDeclaration(
         actor_id="player", acao=ct.TurnStep(kind="attack", target_id=target_id)
     )

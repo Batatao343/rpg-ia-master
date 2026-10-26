@@ -33,6 +33,18 @@ _SCENARIOS = {
     # SPEC-315 §6 passo 2: 1 achado de boato VERDADEIRO e 1 FALSO; viajar e buscar nas duas
     "rumor_adotado": "explorador",
 }
+# SPEC-325 R18/§6: um cenário por capacidade de conflito (combate pré-armado + bot roteirizado)
+_COMBAT_CAP_SCENARIOS = (
+    "combate_resistencia",
+    "combate_nao_letal",
+    "fuga_escolhas",
+    "fuga_abandono",
+    "combate_objeto",
+    "combate_ordem",
+    "combate_reforco",
+)
+_SCENARIOS.update(dict.fromkeys(_COMBAT_CAP_SCENARIOS, "combate"))
+_COMPANION_COMBAT = ("fuga_abandono", "combate_ordem")
 ADOPT_TRUE_LOC = "na_anel_ferro"
 ADOPT_FALSE_LOC = "na_anel_lama"
 _LORE_VARIANTS = ("lore_quests_entrega", "lore_quests_rumor", "lore_quests_escolta")
@@ -396,6 +408,13 @@ def prepare(name: str, state: dict) -> dict:
     """Devolve cópia do estado com pré-condições mecânicas do cenário."""
     profile_for(name)  # valida catálogo
     prepared = copy.deepcopy(dict(state or {}))
+    if name in _COMPANION_COMBAT:
+        return prepare("companheiro", prepared)  # Brunna recrutada, alma derivada
+    if name == "combate_reforco":  # perigo 3: o orçamento do encontro comporta um reforço
+        prepared["world"] = _move_world(prepared.get("world") or {}, "montanhas_afiadas")
+        return prepared
+    if name in _COMBAT_CAP_SCENARIOS:
+        return prepared  # o combate é armado em `decision_for` (turno 1), após o startup
     if name in _LORE_VARIANTS:
         return _prepare_lore_variant(prepared, name)
     if name == "lore_quests":
@@ -467,6 +486,10 @@ def prepare(name: str, state: dict) -> dict:
 def decision_for(name: str, turn: int, state: dict) -> ProfileDecision | None:
     """A primeira ação é inequívoca; turnos extras voltam ao perfil normal."""
     profile_for(name)
+    if name in _COMBAT_CAP_SCENARIOS:
+        from playtest import capability_bots
+
+        return capability_bots.decision_for(name, int(turn), state)
     if name == "mundo" or name in _NPC_SCENARIOS:
         return ProfileDecision(text="Vou descansar e acampar aqui.", mode="free_text")
     if name in _LORE_VARIANTS:
@@ -506,6 +529,27 @@ def _violation(check_id: str, message: str, turn: int) -> dict:
     }
 
 
+def _capability_violations(name: str, result, turn: int) -> list[dict]:
+    """SPEC-325 §6: com a flag da capacidade `on`, ela PRECISA ter disparado ao menos 1 vez.
+    Com `off`/`shadow` o cenário só roda (nada a exigir)."""
+    from playtest import capability_bots
+    from services import combat_flags
+
+    cap = capability_bots.required_capabilities(name)[0]
+    if combat_flags.mode(cap) != "on":
+        return []
+    counts = getattr(result, "capability_counts", None) or {}
+    if int(counts.get(cap, 0) or 0) >= 1:
+        return []
+    return [
+        _violation(
+            f"smoke.{name}_not_observed",
+            f"A capacidade `{cap}` (flag on) não disparou no cenário.",
+            turn,
+        )
+    ]
+
+
 def oracle_violations(name: str, result) -> list[dict]:
     """Pós-condição observável que transforma smoke inconclusivo em falha."""
     profile_for(name)
@@ -525,6 +569,9 @@ def oracle_violations(name: str, result) -> list[dict]:
                 turn,
             )
         ]
+
+    if name in _COMBAT_CAP_SCENARIOS:
+        return _capability_violations(name, result, turn)
 
     if name in _NPC_SCENARIOS:
         target = RECRUIT_NPC_ID if name == "companheiro_exposto" else SKEK_ID

@@ -990,6 +990,20 @@ def _calendar_summary(sim: dict) -> dict:
     }
 
 
+def _capability_counts(result: object) -> dict[str, int]:
+    from playtest.capabilities import empty_counts
+
+    out = empty_counts()
+    out.update(
+        {
+            k: int(v)
+            for k, v in (getattr(result, "capability_counts", None) or {}).items()
+            if k in out
+        }
+    )
+    return out
+
+
 def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
     """Métricas agregadas da campanha (spec 5.3 R2)."""
     routes: dict = {}
@@ -1410,6 +1424,8 @@ def build_summary(result: CampaignResult, turn_records: list[dict]) -> dict:
         "seed": result.seed,
         "class_name": player.get("class_name") or None,
         "start_level": int(getattr(result, "start_level", 1) or 1),
+        # SPEC-325 R4: disparos por capacidade (`<cap>` = on, `<cap>_shadow` = so registrado)
+        "capability_counts": _capability_counts(result),
         "entropy": {
             "spent_total": spent_total,
             "spent_per_combat_turn": spent_per_combat_turn,

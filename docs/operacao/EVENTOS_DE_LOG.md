@@ -63,6 +63,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.budget_failed` | `error` |
 | `combat.chase_abandon` | — |
 | `combat.chase_abandon_shadow` | — |
+| `combat.chase_approach` | `approach` |
 | `combat.chase_approach_shadow` | `approach` |
 | `combat.chase_attack_reengage` | — |
 | `combat.chase_attack_refused` | — |
@@ -77,9 +78,11 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.enemy_knowledge_failed` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
+| `combat.nonlethal` | `target` |
 | `combat.nonlethal_shadow` | `target` |
 | `combat.object_invalid_fallback` | — |
 | `combat.object_refused` | — |
+| `combat.object_used` | — |
 | `combat.objects_shadow` | `action` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |

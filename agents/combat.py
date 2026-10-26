@@ -296,6 +296,7 @@ def _guard_object_step(decl: TurnDeclaration, scene: dict, active: list[dict], s
     if _effect_is_offensive(effect) and target in friendly:
         _log_event("combat", "object_refused", level="info")
         return f"Não dá para usar '{step.interaction}' assim agora; escolha outra ação."
+    _log_event("combat", "object_used", level="info")
     return ""
 
 
@@ -2381,6 +2382,7 @@ def _attempt_flee(
         if approach_mode == "on":
             virtude_key = chase.approach_virtude(approach)
             chase_state["approach"] = approach
+            _log_event("combat", "chase_approach", approach=approach)
         else:
             _log_event("combat", "chase_approach_shadow", approach=approach)
     ally_rolls = [(aid, chase.luck_roll(rng)) for aid in (sides or {}).get("ally") or []]
