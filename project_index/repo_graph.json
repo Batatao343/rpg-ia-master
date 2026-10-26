@@ -1,5 +1,5 @@
 {
-  "commit_sha": "04f9e1547eed575ce5e007756688c597b3334d5d",
+  "commit_sha": "84aa35596d0271ac46843523f06eef734b1e6b65",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -77094,7 +77094,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 167
+        "line": 213
       },
       "source": "module:services.narrative_evidence",
       "target": "symbol:services.narrative_evidence.guard_current_messages",
@@ -77105,7 +77105,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 141
+        "line": 151
+      },
+      "source": "module:services.narrative_evidence",
+      "target": "symbol:services.narrative_evidence.stream_risk_checker",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 187
       },
       "source": "module:services.narrative_evidence",
       "target": "symbol:services.narrative_evidence.validate_narrative",
@@ -77116,7 +77127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 99
+        "line": 101
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -77138,10 +77149,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 197
+        "line": 264
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink._conceal_map",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 284
+      },
+      "source": "module:services.narrative_sink",
+      "target": "symbol:services.narrative_sink._risk_checker",
       "type": "defines"
     },
     {
@@ -77182,7 +77204,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 217
+        "line": 317
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.narrate_structured",
@@ -77193,7 +77215,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 267
+        "line": 370
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.narrate_text",
@@ -176556,7 +176578,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 167
+        "line": 337
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._feed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 177
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._final_with_guards",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 251
       },
       "source": "module:tests.test_spec319_shadow_replay",
       "target": "symbol:tests.test_spec319_shadow_replay._npc_state",
@@ -176567,7 +176611,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 209
+        "line": 293
       },
       "source": "module:tests.test_spec319_shadow_replay",
       "target": "symbol:tests.test_spec319_shadow_replay._run_npc",
@@ -176589,6 +176633,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
+        "line": 184
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
         "line": 48
       },
       "source": "module:tests.test_spec319_shadow_replay",
@@ -176600,7 +176655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 230
+        "line": 314
       },
       "source": "module:tests.test_spec319_shadow_replay",
       "target": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
@@ -176611,10 +176666,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 249
+        "line": 333
       },
       "source": "module:tests.test_spec319_shadow_replay",
       "target": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 347
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 360
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
       "type": "defines"
     },
     {
@@ -176626,6 +176703,72 @@
       },
       "source": "module:tests.test_spec319_shadow_replay",
       "target": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 219
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_story_tail_divergence_classes_stream_is_prefix",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 226
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_story_without_risky_sentence_streams_everything",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 232
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_freezes_before_risky_sentence",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 244
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_none_is_unchanged",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 375
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_stream_risk_hold_event_logged_once_without_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 388
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_veil_that_changes_sentence_segmentation_fails_closed",
       "type": "defines"
     },
     {
@@ -193793,7 +193936,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2056
+        "line": 2064
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.StoryUpdate",
@@ -193804,7 +193947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2521
+        "line": 2529
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._apply_proposed_rumors",
@@ -193870,7 +194013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2057
+        "line": 2065
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193881,7 +194024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2118
+        "line": 2126
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193892,7 +194035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2134
+        "line": 2142
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193903,7 +194046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2542
+        "line": 2550
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193958,7 +194101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2153
+        "line": 2161
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -193969,7 +194112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2334
+        "line": 2342
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -193980,7 +194123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2374
+        "line": 2382
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -193991,7 +194134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2411
+        "line": 2419
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -194002,7 +194145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2516
+        "line": 2524
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -194035,7 +194178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2124
+        "line": 2132
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._neutralize_false_find",
@@ -194101,7 +194244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2396
+        "line": 2404
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -194145,7 +194288,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2531
+        "line": 2539
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._same_region_travel",
@@ -194189,7 +194332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2266
+        "line": 2274
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -194310,7 +194453,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2203
+        "line": 2211
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194321,7 +194464,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2340
+        "line": 2348
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194332,7 +194475,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2353
+        "line": 2361
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194343,7 +194486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2358
+        "line": 2366
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194354,7 +194497,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2537
+        "line": 2545
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194387,7 +194530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2524
+        "line": 2532
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.latency_flags.archive_low_wanted",
@@ -194398,7 +194541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2278
+        "line": 2286
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.latency_flags.two_phase_on",
@@ -194409,7 +194552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2196
+        "line": 2204
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.apply_claims",
@@ -194519,7 +194662,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2474
+        "line": 2482
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -194530,7 +194673,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2482
+        "line": 2490
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_action_progress",
@@ -194541,7 +194684,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2477
+        "line": 2485
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_location_progress",
@@ -288745,7 +288888,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 168
+        "line": 214
       },
       "source": "symbol:services.narrative_evidence.guard_current_messages",
       "target": "symbol:services.narrative_evidence.build_evidence",
@@ -288756,7 +288899,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 178
+        "line": 224
       },
       "source": "symbol:services.narrative_evidence.guard_current_messages",
       "target": "symbol:services.narrative_evidence.validate_narrative",
@@ -288767,7 +288910,73 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 164
+        "line": 178
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker",
+      "target": "symbol:services.memory_provenance._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 173
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker",
+      "target": "symbol:services.narrative_evidence._reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 162
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker",
+      "target": "symbol:services.narrative_evidence.build_evidence",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 170
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker",
+      "target": "symbol:services.narrative_evidence.stream_risk_checker.risky",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 178
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker.risky",
+      "target": "symbol:services.memory_provenance._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 173
+      },
+      "source": "symbol:services.narrative_evidence.stream_risk_checker.risky",
+      "target": "symbol:services.narrative_evidence._reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_evidence.py",
+        "line": 210
       },
       "source": "symbol:services.narrative_evidence.validate_narrative",
       "target": "symbol:services.narrative_evidence.NarrativeCheck",
@@ -288778,7 +288987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_evidence.py",
-        "line": 151
+        "line": 197
       },
       "source": "symbol:services.narrative_evidence.validate_narrative",
       "target": "symbol:services.narrative_evidence._reason",
@@ -288789,7 +288998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 112
+        "line": 114
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.__init__",
@@ -288800,7 +289009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 161
+        "line": 226
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard._advance",
@@ -288811,7 +289020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 140
+        "line": 149
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard._cleaned",
@@ -288822,7 +289031,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 189
+        "line": 180
+      },
+      "source": "symbol:services.narrative_sink.StreamGuard",
+      "target": "symbol:services.narrative_sink.StreamGuard._log_hold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 198
+      },
+      "source": "symbol:services.narrative_sink.StreamGuard",
+      "target": "symbol:services.narrative_sink.StreamGuard._risk_cap",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 173
+      },
+      "source": "symbol:services.narrative_sink.StreamGuard",
+      "target": "symbol:services.narrative_sink.StreamGuard._risky",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 256
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.feed",
@@ -288833,7 +289075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 193
+        "line": 260
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.finish",
@@ -288844,7 +289086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 135
+        "line": 144
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.reset",
@@ -288859,6 +289101,17 @@
       },
       "source": "symbol:services.narrative_sink._Binding",
       "target": "symbol:services.narrative_sink._Binding.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 298
+      },
+      "source": "symbol:services.narrative_sink._risk_checker",
+      "target": "symbol:services.narrative_sink._risk_checker.lazy",
       "type": "defines"
     },
     {
@@ -288877,7 +289130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 238
+        "line": 340
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -288888,7 +289141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 239
+        "line": 341
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink._conceal_map",
@@ -288899,7 +289152,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 236
+        "line": 347
+      },
+      "source": "symbol:services.narrative_sink.narrate_structured",
+      "target": "symbol:services.narrative_sink._risk_checker",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 338
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.active",
@@ -288910,7 +289174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 251
+        "line": 354
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.emit",
@@ -288921,7 +289185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 261
+        "line": 364
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.emit",
@@ -288932,7 +289196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 248
+        "line": 351
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.narrate_structured.on_delta",
@@ -288943,7 +289207,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 253
+        "line": 356
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.narrate_structured.on_reset",
@@ -288954,7 +289218,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 246
+        "line": 349
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.reset",
@@ -288965,7 +289229,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 255
+        "line": 358
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.reset",
@@ -288976,7 +289240,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 251
+        "line": 354
       },
       "source": "symbol:services.narrative_sink.narrate_structured.on_delta",
       "target": "symbol:services.narrative_sink.emit",
@@ -288987,7 +289251,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 255
+        "line": 358
       },
       "source": "symbol:services.narrative_sink.narrate_structured.on_reset",
       "target": "symbol:services.narrative_sink.reset",
@@ -288998,7 +289262,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 275
+        "line": 378
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -289009,7 +289273,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 275
+        "line": 378
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink._conceal_map",
@@ -289020,7 +289284,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 273
+        "line": 378
+      },
+      "source": "symbol:services.narrative_sink.narrate_text",
+      "target": "symbol:services.narrative_sink._risk_checker",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 376
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.active",
@@ -289031,7 +289306,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 281
+        "line": 384
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.emit",
@@ -289042,7 +289317,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 291
+        "line": 394
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.emit",
@@ -289053,7 +289328,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 278
+        "line": 381
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.narrate_text.on_delta",
@@ -289064,7 +289339,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 283
+        "line": 386
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.narrate_text.on_reset",
@@ -289075,7 +289350,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 276
+        "line": 379
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.reset",
@@ -289086,7 +289361,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 285
+        "line": 388
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.reset",
@@ -289097,7 +289372,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 281
+        "line": 384
       },
       "source": "symbol:services.narrative_sink.narrate_text.on_delta",
       "target": "symbol:services.narrative_sink.emit",
@@ -289108,7 +289383,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 285
+        "line": 388
       },
       "source": "symbol:services.narrative_sink.narrate_text.on_reset",
       "target": "symbol:services.narrative_sink.reset",
@@ -505269,7 +505544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 172
+        "line": 256
       },
       "source": "symbol:tests.test_spec319_shadow_replay._npc_state",
       "target": "symbol:tests.test_spec319_shadow_replay._story_state",
@@ -505280,7 +505555,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 210
+        "line": 294
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:agents.npc.NPCResponse",
@@ -505291,7 +505566,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 224
+        "line": 308
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:agents.npc.npc_actor_node",
@@ -505302,7 +505577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 220
+        "line": 304
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:services.narrative_sink.bind",
@@ -505313,7 +505588,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 226
+        "line": 310
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:services.narrative_sink.unbind",
@@ -505324,7 +505599,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 217
+        "line": 301
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
@@ -505335,7 +505610,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 224
+        "line": 308
       },
       "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "target": "symbol:tests.test_spec319_shadow_replay._npc_state",
@@ -505434,7 +505709,73 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 236
+        "line": 193
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:agents.storyteller.storyteller_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 188
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:services.narrative_sink.bind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:services.narrative_sink.unbind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 185
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 196
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:tests.test_spec319_shadow_replay._final_with_guards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 191
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "target": "symbol:tests.test_spec319_shadow_replay._story_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 320
       },
       "source": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
       "target": "symbol:services.narrative_sink.replace_reason",
@@ -505445,7 +505786,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 233
+        "line": 317
       },
       "source": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
       "target": "symbol:tests.test_spec319_shadow_replay._run_npc",
@@ -505456,10 +505797,98 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec319_shadow_replay.py",
-        "line": 250
+        "line": 334
       },
       "source": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
       "target": "symbol:services.narrative_sink.replace_reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 355
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 354
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "target": "symbol:services.narrative_sink._risk_checker",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 356
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "target": "symbol:tests.test_spec319_shadow_replay._feed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 350
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks.boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 368
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 366
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
+      "target": "symbol:services.narrative_sink._risk_checker",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 371
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
+      "target": "symbol:tests.test_spec319_shadow_replay._feed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 366
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
+      "target": "symbol:tests.test_spec319_shadow_replay._story_state",
       "type": "calls"
     },
     {
@@ -505482,6 +505911,116 @@
       },
       "source": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
       "target": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 223
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_tail_divergence_classes_stream_is_prefix",
+      "target": "symbol:services.narrative_sink.replace_reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 220
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_tail_divergence_classes_stream_is_prefix",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 227
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_without_risky_sentence_streams_everything",
+      "target": "symbol:agents.storyteller.StoryUpdate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 228
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_without_risky_sentence_streams_everything",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 233
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_freezes_before_risky_sentence",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 245
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_none_is_unchanged",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 380
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_stream_risk_hold_event_logged_once_without_text",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 381
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_stream_risk_hold_event_logged_once_without_text",
+      "target": "symbol:tests.test_spec319_shadow_replay._feed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 390
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_veil_that_changes_sentence_segmentation_fails_closed",
+      "target": "symbol:services.narrative_sink.StreamGuard",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 392
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_veil_that_changes_sentence_segmentation_fails_closed",
+      "target": "symbol:tests.test_spec319_shadow_replay._feed",
       "type": "calls"
     },
     {
@@ -574663,63 +575202,98 @@
     {
       "id": "symbol:services.narrative_evidence.guard_current_messages",
       "kind": "function",
-      "line": 167,
+      "line": 213,
       "path": "services/narrative_evidence.py",
       "qualified_name": "services.narrative_evidence.guard_current_messages"
     },
     {
+      "id": "symbol:services.narrative_evidence.stream_risk_checker",
+      "kind": "function",
+      "line": 151,
+      "path": "services/narrative_evidence.py",
+      "qualified_name": "services.narrative_evidence.stream_risk_checker"
+    },
+    {
+      "id": "symbol:services.narrative_evidence.stream_risk_checker.risky",
+      "kind": "function",
+      "line": 170,
+      "path": "services/narrative_evidence.py",
+      "qualified_name": "services.narrative_evidence.stream_risk_checker.risky"
+    },
+    {
       "id": "symbol:services.narrative_evidence.validate_narrative",
       "kind": "function",
-      "line": 141,
+      "line": 187,
       "path": "services/narrative_evidence.py",
       "qualified_name": "services.narrative_evidence.validate_narrative"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard",
       "kind": "class",
-      "line": 99,
+      "line": 101,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.__init__",
       "kind": "method",
-      "line": 112,
+      "line": 114,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.__init__"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard._advance",
       "kind": "method",
-      "line": 161,
+      "line": 226,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard._advance"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard._cleaned",
       "kind": "method",
-      "line": 140,
+      "line": 149,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard._cleaned"
     },
     {
+      "id": "symbol:services.narrative_sink.StreamGuard._log_hold",
+      "kind": "method",
+      "line": 180,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink.StreamGuard._log_hold"
+    },
+    {
+      "id": "symbol:services.narrative_sink.StreamGuard._risk_cap",
+      "kind": "method",
+      "line": 198,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink.StreamGuard._risk_cap"
+    },
+    {
+      "id": "symbol:services.narrative_sink.StreamGuard._risky",
+      "kind": "method",
+      "line": 173,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink.StreamGuard._risky"
+    },
+    {
       "id": "symbol:services.narrative_sink.StreamGuard.feed",
       "kind": "method",
-      "line": 189,
+      "line": 256,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.feed"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.finish",
       "kind": "method",
-      "line": 193,
+      "line": 260,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.finish"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.reset",
       "kind": "method",
-      "line": 135,
+      "line": 144,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.reset"
     },
@@ -574740,9 +575314,23 @@
     {
       "id": "symbol:services.narrative_sink._conceal_map",
       "kind": "function",
-      "line": 197,
+      "line": 264,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink._conceal_map"
+    },
+    {
+      "id": "symbol:services.narrative_sink._risk_checker",
+      "kind": "function",
+      "line": 284,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink._risk_checker"
+    },
+    {
+      "id": "symbol:services.narrative_sink._risk_checker.lazy",
+      "kind": "function",
+      "line": 298,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink._risk_checker.lazy"
     },
     {
       "id": "symbol:services.narrative_sink.active",
@@ -574768,42 +575356,42 @@
     {
       "id": "symbol:services.narrative_sink.narrate_structured",
       "kind": "function",
-      "line": 217,
+      "line": 317,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_structured.on_delta",
       "kind": "function",
-      "line": 248,
+      "line": 351,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured.on_delta"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_structured.on_reset",
       "kind": "function",
-      "line": 253,
+      "line": 356,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured.on_reset"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text",
       "kind": "function",
-      "line": 267,
+      "line": 370,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text.on_delta",
       "kind": "function",
-      "line": 278,
+      "line": 381,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text.on_delta"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text.on_reset",
       "kind": "function",
-      "line": 283,
+      "line": 386,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text.on_reset"
     },
@@ -635946,16 +636534,30 @@
       "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S.invoke"
     },
     {
+      "id": "symbol:tests.test_spec319_shadow_replay._feed",
+      "kind": "test",
+      "line": 337,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._feed"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._final_with_guards",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._final_with_guards"
+    },
+    {
       "id": "symbol:tests.test_spec319_shadow_replay._npc_state",
       "kind": "test",
-      "line": 167,
+      "line": 251,
       "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": "tests.test_spec319_shadow_replay._npc_state"
     },
     {
       "id": "symbol:tests.test_spec319_shadow_replay._run_npc",
       "kind": "test",
-      "line": 209,
+      "line": 293,
       "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": "tests.test_spec319_shadow_replay._run_npc"
     },
@@ -635974,6 +636576,13 @@
       "qualified_name": "tests.test_spec319_shadow_replay._run_story._sink"
     },
     {
+      "id": "symbol:tests.test_spec319_shadow_replay._run_story_update",
+      "kind": "test",
+      "line": 184,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._run_story_update"
+    },
+    {
       "id": "symbol:tests.test_spec319_shadow_replay._story_state",
       "kind": "test",
       "line": 48,
@@ -635983,16 +636592,37 @@
     {
       "id": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
       "kind": "test",
-      "line": 230,
+      "line": 314,
       "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": "tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final"
     },
     {
       "id": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
       "kind": "test",
-      "line": 249,
+      "line": 333,
       "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": "tests.test_spec319_shadow_replay.test_replace_reason"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks",
+      "kind": "test",
+      "line": 347,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks.boom",
+      "kind": "test",
+      "line": 350,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_risk_checker_fails_closed_when_evidence_build_breaks.boom"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence",
+      "kind": "test",
+      "line": 360,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_risk_checker_is_lazy_until_first_complete_sentence"
     },
     {
       "id": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
@@ -636000,6 +636630,48 @@
       "line": 155,
       "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": "tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_story_tail_divergence_classes_stream_is_prefix",
+      "kind": "test",
+      "line": 219,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_story_tail_divergence_classes_stream_is_prefix"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_story_without_risky_sentence_streams_everything",
+      "kind": "test",
+      "line": 226,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_story_without_risky_sentence_streams_everything"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_freezes_before_risky_sentence",
+      "kind": "test",
+      "line": 232,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_stream_guard_risk_freezes_before_risky_sentence"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_stream_guard_risk_none_is_unchanged",
+      "kind": "test",
+      "line": 244,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_stream_guard_risk_none_is_unchanged"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_stream_risk_hold_event_logged_once_without_text",
+      "kind": "test",
+      "line": 375,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_stream_risk_hold_event_logged_once_without_text"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_veil_that_changes_sentence_segmentation_fails_closed",
+      "kind": "test",
+      "line": 388,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_veil_that_changes_sentence_segmentation_fails_closed"
     },
     {
       "id": "symbol:tests.test_spec325_abandon._abandon",
@@ -642394,5 +643066,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:75cd538e93a34c0ee82f8fe891b0878e4c7009039537510d6dbaaa8b0f306f75"
+  "source_tree_hash": "sha256:00024575d3f078fd078f9086329a80a481b9f594347c863f4f444efc65b4a3f5"
 }
