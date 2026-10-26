@@ -1,6 +1,6 @@
 # SPEC-322 — Front: tokens de cor, contraste, raio, ícones e tipografia
 
-> **Status:** `in-progress` (implementada; falta e2e/visual — aprovada pelo dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (2 P1 + 6 P2 corrigidos em `150cc87e`, e2e verdes); pousada na main 26/10; falta axe nas abas, botões 3×3, tokens dos 57 oklch literais e conferência visual no staging)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-321 (não rodar em paralelo: mesmos arquivos CSS)
 > **Desbloqueia:** SPEC-323 (que usa os ícones e tokens novos)
