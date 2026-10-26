@@ -208,3 +208,4 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
     registra a promoção como `npc_claim_direct_write`; teste R7 ganhou cenários de viagem/descanso.
   - Documentado (D2): num turno de reparo bloqueado pelo `action_guard` com `needs_replan`, o replan agora
     acontece depois da narração do turno seguinte, não antes.
+- 26/10 — remedição no staging `e9b5f000` (316 on + 317 shadow + 318 + 319 shadow), 2 sessões × 15 turnos: primeira narração p50 **7,5 s / 6,7 s**, p95 26,8 / 21,5 s (antes 35–44 s); `state` p50 13,3 / 9,5 s; checks all_ok. Meta ≤ 7 s p50 batida em 1 de 2 sessões; cauda caiu ~40 %.
