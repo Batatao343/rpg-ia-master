@@ -36,6 +36,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| SPEC-319 hedge (D2) | decidir: hedge 6000 ms teve 0 disparos (a cauda vem depois do 1º token) | "desliga" → `RPG_LLM_HEDGE_MS` fora do preset, registrar e fechar 319 `done`; "mantém" → fechar com critério não atingido registrado |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
 ## Decisões recentes (≤ 7 dias)
