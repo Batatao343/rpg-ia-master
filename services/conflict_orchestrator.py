@@ -27,7 +27,8 @@ from typing import Dict, List, Optional
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (condições, Entropia/Carga)
 import gamedata
-from services import abyss_events, death_flow
+from observability.telemetry import log_event as _log_event
+from services import abyss_events, combat_flags, death_flow
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 from services import reactions as rx
@@ -1028,6 +1029,8 @@ def _basic_attack(
         )
         atk["regiao"] = dres["regiao"]
         atk["dano_final"] = int(dres.get("dano_final", 0) or 0)
+        if dres.get("resistance_hit") and combat_flags.mode("reveal_resist") != "off":
+            atk["resistance_hit"] = dres["resistance_hit"]  # SPEC-325 R8
         out["logs"] += dres["log"]
         _post_hit(target, target_id, out, amount=atk["dano_final"])
 
@@ -1143,13 +1146,37 @@ def _mark_dead(target: dict, target_id: str, out: dict) -> None:
     out["logs"].append(f"{_name(target)} é derrotado.")
 
 
+def _mark_down(target: dict, target_id: str, out: dict, nonlethal: str, by: str) -> None:
+    """Desfecho de queda do alvo. `nonlethal` = "" (letal), "shadow" (só registra o que
+    aconteceria e mata como hoje) ou "on" (SPEC-325 R9: incapacitado, não morto)."""
+    if nonlethal == "on":
+        death_flow.apply_nonlethal_finish(target)
+        target["status"] = "incapacitado"
+        target["nonlethal_by"] = by
+        if target_id not in out.setdefault("incapacitated", []):
+            out["incapacitated"].append(target_id)
+        out["logs"].append(f"{_name(target)} cai desacordado.")
+        return
+    if nonlethal == "shadow":
+        _log_event("combat", "nonlethal_shadow", target=target_id)
+    _mark_dead(target, target_id, out)
+
+
 def _check_terminal(
-    target: dict, target_id: str, out: dict, *, damage_applied: bool = False
+    target: dict,
+    target_id: str,
+    out: dict,
+    *,
+    damage_applied: bool = False,
+    nonlethal: str = "",
+    by: str = "",
 ) -> None:
     """Traduz o estado de Ferimentos do alvo no desfecho da categoria (07 R7):
     Lacaio cai com qualquer Ferimento; Padrão ao encher o último Crítico; full-flow
-    (jogador/Elite/Chefe/Nomeado/companheiro) dispara Última Ação → Estado Terminal."""
-    if target.get("dead") or target.get("estado_terminal"):
+    (jogador/Elite/Chefe/Nomeado/companheiro) dispara Última Ação → Estado Terminal.
+    `nonlethal` (SPEC-325): a queda vira incapacitação quando o golpe foi declarado
+    não-letal e a forma do ataque permite."""
+    if target.get("dead") or target.get("estado_terminal") or target.get("incapacitated"):
         return
     if (
         damage_applied
@@ -1160,10 +1187,10 @@ def _check_terminal(
         # Sobreviver ao fluxo terminal não concede imortalidade. O próximo dano
         # real com todos os espaços críticos ocupados encerra a vida; mera
         # passagem de rodada, sem dano, nunca dispara esta cláusula.
-        _mark_dead(target, target_id, out)
+        _mark_down(target, target_id, out, nonlethal, by)
         return
     if death_flow.minion_defeated_by_wound(target) and _has_any_wound(target):
-        _mark_dead(target, target_id, out)
+        _mark_down(target, target_id, out, nonlethal, by)
         return
     if death_flow.should_trigger_last_stand(target):
         death_flow.trigger_last_stand(target)
@@ -1171,7 +1198,7 @@ def _check_terminal(
             out["terminal"].append(target_id)
         out["logs"].append(f"{_name(target)} prepara sua Última Ação!")
     elif not death_flow.uses_full_death_flow(target) and death_flow.critical_spaces_full(target):
-        _mark_dead(target, target_id, out)
+        _mark_down(target, target_id, out, nonlethal, by)
 
 
 def _record_tactic(
@@ -1457,7 +1484,14 @@ def _resolve_actor_turn(
                 _record_class_event(out, "special:blood_leak", entropy_delta=after[0] - before[0])
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
-        _check_terminal(tgt, tid, out, damage_applied=True)
+        _check_terminal(
+            tgt,
+            tid,
+            out,
+            damage_applied=True,
+            nonlethal=_nonlethal_mode(decl, acao, actor_id, tid, sides),
+            by=actor_id,
+        )
         if tgt.get("is_player") and _can_act(tgt) and _alive(actor):
             # SPEC-232 R2: passiva `contra_ataque` (tier 8) — revida 1×frequência.
             for pe in cm.triggered_passives(tgt, "on_hit_taken"):
@@ -1477,6 +1511,32 @@ def _resolve_actor_turn(
                         label="Contra-ataque",
                         damage_override=pe.get("value"),
                     )
+
+
+def _nonlethal_mode(decl, acao, actor_id: str, target_id: str, sides: dict) -> str:
+    """SPEC-325 R9: "" / "shadow" / "on" para o golpe do JOGADOR declarado não-letal.
+    Só ataque/Carta do herói contra o lado inimigo; forma letal da Carta recusa."""
+    if (
+        acao is None
+        or acao.kind not in ("attack", "card")
+        or not (acao.params or {}).get("nao_letal")
+        or actor_id != _player_id(sides)
+        or target_id not in set(sides.get("enemy", []))
+    ):
+        return ""
+    mode = combat_flags.mode("nonlethal")
+    if mode == "off":
+        return ""
+    form: dict = {}
+    if acao.kind == "card":
+        from services import cards
+
+        card = cards.get_card(acao.card_id or "") or {}
+        form = {
+            "tipo": str((card.get("efeito") or {}).get("kind") or ""),
+            "letal_forcado": bool(card.get("letal")),
+        }
+    return mode if death_flow.can_be_nonlethal(form) else ""
 
 
 def _hit_events(sub: dict, decl: "ct.TurnDeclaration") -> list[tuple[str, int]]:

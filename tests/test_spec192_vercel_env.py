@@ -304,3 +304,18 @@ def test_spec319_token_stream_and_hedge_flags_are_allowlisted():
         ve.build_env(FILES, world_flags={"RPG_LLM_HEDGE_MS": "123"})
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_flags={"RPG_TOKEN_STREAM": "maybe"})
+
+
+def test_spec325_combat_flags_are_allowlisted():
+    from services import combat_flags
+
+    names = tuple(combat_flags.ENV_VARS.values())
+    assert len(names) == 8
+    env, _ = ve.build_env(FILES, world_flags={n: "on" for n in names})
+    for name in names:
+        assert env[name] == "on"
+        assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    plain, _ = ve.build_env(FILES)
+    assert set(names) <= set(ve.stale_names(plain))  # ausente => o script apaga a antiga
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={"RPG_COMBAT_NONLETHAL": "maybe"})

@@ -1,7 +1,8 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
 > **Status:** `approved` — dono, 25/10: "pode ligar"; decisões da §8 aprovadas nos defaults recomendados (em negrito). O dono pode reverter qualquer decisão antes da etapa que ela afeta.
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
+> **Progresso:** Fase A (R8, R9) implementada em `shadow` na branch `spec-325` (26/10); Fases B–D pendentes (ver §9). Gate R17 da Fase A: comandos prontos em §8.1, **ainda não rodados** (coordenador).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")
 > **Depende de:** SPEC-064, SPEC-068, SPEC-069, SPEC-070, SPEC-226, SPEC-272, SPEC-285, SPEC-300, SPEC-304 (todas `done`)
 > **Desbloqueia:** prisioneiros (consumidor de `law.deliver_prisoner`, SPEC-299 R23); follow-up 299 "derrota → prisão"; follow-up SPEC-226:165 (id único de reforço)
@@ -394,7 +395,7 @@ Uma etapa = uma capacidade = um commit. Testes primeiro. Subagente roda só os a
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R19 cobertos por teste. Cada capacidade tem teste via `combat_node` (R7).
+- [ ] R1–R19 cobertos por teste. (Fase A: R1–R3, R5, R7, R8, R9 feitos; R4 `capability_counts`, R6 de B–D, R10–R19 pendentes.) Cada capacidade tem teste via `combat_node` (R7).
 - [ ] Teste `off` = baseline e `shadow` = sem mudança de estado, por capacidade (R2/R3).
 - [ ] Oráculo da regra de ouro verde (R5).
 - [ ] Gate R17 registrado no cabeçalho por fase: arena, matriz 50 turnos e, com o OK do dono, 12 × 200.
@@ -472,3 +473,77 @@ Para todos: 0 erro, 0 violação `error`, `mock=False`. Registrar os run_ids e o
   desta spec.** Alternativa: só texto livre, que é pouco descobrível.
 - **D9 — Restrições de ordem.** **Tabela Python fixa sobre os valores da alma (SPEC-300).** Alternativa:
   gerar por LLM (`get_or_generate_profile`), que custa invoke e quebra o determinismo.
+
+## 8.1 Gate de letalidade da Fase A: comandos exatos (coordenador roda; subagente não)
+
+Antes de medir, confirme a branch limpa e rode um de cada vez (máquina de 16 GB; sem `-n`). Em todos, as
+flags da Fase A ficam em `on` na linha de comando; a linha de base é a mesma árvore com as duas em `off`.
+
+```bash
+# flags da Fase A
+ON="RPG_COMBAT_REVEAL_RESIST=on RPG_COMBAT_NONLETHAL=on"
+OFF="RPG_COMBAT_REVEAL_RESIST=off RPG_COMBAT_NONLETHAL=off"
+
+# (a) Arena SPEC-285: 10 seeds, 2.250 lutas por célula. Critério: M4, nenhuma célula pior que +1,5 pp vs OFF.
+env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_off.json
+env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_on.json
+
+# (b) Matriz SPEC-056: 5 classes x combate x seeds 42/43 x 50 turnos. Critério: M2 >= 20, 0 combat.no_progress.
+for cls in "Devoto do Abismo" "Sangromante" "Corruptor" "Arcanista Cinzento" "Médico de Campo"; do
+  for seed in 42 43; do
+    env $ON bash scripts/dev/py.sh -m playtest run --profile combate --class "$cls" --turns 50 --seed $seed
+  done
+done
+
+# (c) D5 (autorizado pelo dono em 25/10): combate, 200 turnos, seeds 21-32, MockLLM, uma campanha por vez.
+# Critério: M1 <= 0,564, M2 mediana da 1a queda >= 20, M5 = 0 combat.no_progress.
+for seed in $(seq 21 32); do
+  env $ON bash scripts/dev/py.sh -m playtest run --profile combate --turns 200 --seed $seed
+done
+# agregar cada run_id: bash scripts/dev/py.sh -m playtest report <run_id>
+```
+
+Observações honestas sobre a medida:
+
+- Os bots atuais da arena e do perfil `combate` **não declaram** "sem matar", então `on` mede só que a
+  fiação (campo `resistance_hit`, `_check_terminal` com `nonlethal`, status `incapacitado`) é neutra para a
+  letalidade. O efeito do não-letal fica coberto pelos testes pelo `combat_node`. As variantes de bot
+  `nao_letal`/`usa_objeto` do R18 entram na Etapa 8.
+- Resultado esperado: Δ = 0 pp em todas as células (a Fase A não muda dano, iniciativa nem alvo). Qualquer
+  diferença vira bug, não "ruído".
+- Registrar no cabeçalho: SHA medido, `run_id`s e as tabelas (a) a (c). Só depois, `staging_flags.json` com
+  as duas flags em `on` (D6).
+
+## 9. Próximos passos (Fases B–D, não implementadas nesta rodada)
+
+1. **Etapa 3 (Fase B, R10/R11):** abordagem e ataque na fuga. `combat_intents.chase_approach`,
+   `_attempt_flee` (`agents/combat.py`) e `chase.chase_attack`; testes em `tests/test_spec325_chase_choices.py`.
+2. **Etapa 4 (Fase B, R12/R13):** abandono e sacrifício, com `pending_fate` selado e consumo pelo
+   `companion_soul.apply_turn`; `tests/test_spec325_abandon.py`; gate R17 da Fase B.
+3. **Etapa 5 (Fase C, R14):** objetos de cena (`scene.objects` na API, `TurnStep(kind="object")`, `procurar`).
+4. **Etapa 6 (Fase C, R15):** ordens a companheiro e `companion_orders.py`; gate R17 da Fase C.
+5. **Etapa 7 (Fase D, R16):** reforços de `lider_matilha` e `reinforcements.py`; gate R17 com a célula nova da
+   arena e D5.
+6. **Etapa 8 (R4, R18, R19):** `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
+   cenários de §6 em `playtest/scenarios.py` e os invariantes restantes. A Fase A já tem
+   `check_conflict_capabilities` (incapacitado nunca morto; formato de `revealed_resistances`).
+7. **UI restante (D8):** chips de objeto, "Deixar X", "Aceitar sacrifício" e ordem a aliado; o chip
+   "Sem matar" da Fase A já existe (`web/src/workspace/tabs/CombateTab.tsx`, só com `nonlethal_available`).
+8. Adendos datados em SPEC-064/068/069/070 ("ligado pela SPEC-325") quando cada flag for a `on`.
+
+## Histórico de mudanças
+
+- **2026-10-25 — Aprovação.** Dono: "pode ligar", defaults da §8; D5 long-run autorizado ("ok").
+- **2026-10-26 — Fase A implementada (shadow).** `services/combat_flags.py`, `services/combat_intents.py`,
+  `death_flow.NONLETHAL_RE`/`nonlethal_declared`, `resistance_hit` em `conflict_damage`, `_nonlethal_mode`/
+  `_mark_down` no orquestrador, status `incapacitado` (`_mirror_vitals`, `_encounter_outcome`, vitória/XP/loot
+  do nó, manifesto `incapacitated`, `_targetable`, listas da API), tag `poupou_inimigo`, rótulo pt-BR da
+  resistência na API, chip "Sem matar", 8 flags em `WORLD_FLAGS`/`OPTIONAL_FLAGS` de `vercel_env.py`.
+  - **Desvio 1:** o shadow registra só por `_log_event` (`combat.reveal_resist_shadow`,
+    `combat.nonlethal_shadow`); `mechanics_trace.KINDS` é um conjunto fechado e descartaria o passo
+    `<cap>_shadow` do R2. Estender `KINDS` fica para quando o trace for consumido.
+  - **Desvio 2:** o `PlayerMove` (CLASSIFY) **não** ganhou o campo `nao_letal`; a declaração é regex fechada
+    no texto (e o chip manda a frase "Sem matar."), o que evita 1 campo a mais no schema do LLM.
+  - **Desvio 3:** `staging_flags.json` não foi alterado (as flags ficam no código em `shadow` até o gate).
+  - **Desvio 4:** `record_kills` do bestiário continua só para morte; o não-letal rende XP/loot (D2) mas não
+    conta como "abate" no conhecimento do bestiário.

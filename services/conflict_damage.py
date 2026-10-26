@@ -239,9 +239,13 @@ def _resolve_damage_and_wounds(
             "log": log + ["Imunidade: dano 0"],
             "vitalidade": int(target.get("vitalidade", 0)),
             "regiao": region,
+            "resistance_hit": {"type": dtype, "effect": "imune"},
         }
     mod = _resist_modifier(target, dtype, ignore_resistance)
+    resistance_hit = None
     if mod:
+        # SPEC-325 R8: qual defesa agiu (consumido so quando RPG_COMBAT_REVEAL_RESIST != off).
+        resistance_hit = {"type": dtype, "effect": "resiste" if mod < 0 else "vulneravel"}
         dano = max(0, dano + mod)
         log.append(f"resist/vuln {mod:+d} -> {dano}")
 
@@ -351,6 +355,7 @@ def _resolve_damage_and_wounds(
         "vitalidade": target["vitalidade"],
         "regiao": region,
         "log": log,
+        "resistance_hit": resistance_hit,
     }
 
 

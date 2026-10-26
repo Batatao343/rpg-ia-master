@@ -124,6 +124,60 @@ def _kill_events(dead: list[dict]) -> list[dict]:
     return kills
 
 
+def _mark_nonlethal(decl: TurnDeclaration, intent: str) -> None:
+    """SPEC-325 R9: golpe do jogador declarado não-letal (texto ou chip) vira
+    `params["nao_letal"]`. O orquestrador decide o efeito conforme a flag
+    (`shadow` só registra, `on` incapacita). Inimigo nunca declara não-letal."""
+    from services import combat_flags
+    from services.combat_intents import nonlethal_declared
+
+    step = decl.acao
+    if step is None or step.kind not in ("attack", "card"):
+        return
+    if combat_flags.mode("nonlethal") == "off":
+        return
+    if step.params.get("nao_letal") or nonlethal_declared(intent):
+        step.params["nao_letal"] = True
+
+
+def _reveal_resistances(attacks: list[dict], enemies: list[dict], sides: dict) -> None:
+    """SPEC-325 R8: imunidade/resistência/vulnerabilidade só é revelada depois de
+    agir num golpe do herói/aliado contra inimigo (regra de ouro). `shadow` só
+    registra. No perfil `legacy` persiste no bestiário (fail-closed como
+    `_sync_enemy_knowledge`)."""
+    import os
+
+    from services import bestiary_knowledge as bk
+    from services import combat_flags
+
+    mode = combat_flags.mode("reveal_resist")
+    if mode == "off":
+        return
+    friendly = set(sides.get("hero", [])) | set(sides.get("ally", []))
+    by_id = {str(e.get("id") or e.get("name")): e for e in enemies if isinstance(e, dict)}
+    shared = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() == "legacy"
+    for atk in attacks:
+        hit = atk.get("resistance_hit")
+        enemy = by_id.get(str(atk.get("target_id") or ""))
+        if not hit or enemy is None or atk.get("actor_id") not in friendly:
+            continue
+        entry = f"{hit['type']}:{hit['effect']}"
+        if entry in (enemy.get("revealed_resistances") or []):
+            continue
+        if mode == "shadow":
+            _log_event("combat", "reveal_resist_shadow", effect=str(hit["effect"]))
+            continue
+        try:
+            if shared:
+                bk.reveal_resistance(enemy, entry)
+            else:
+                enemy.setdefault("revealed_resistances", []).append(entry)
+        except Exception:  # revelação é cosmética: nunca derruba o turno
+            _log_event("combat", "enemy_knowledge_failed", level="warning")
+        else:
+            _log_event("combat", "reveal_resist", effect=str(hit["effect"]))
+
+
 def _last_human_text(messages: list) -> str:
     for m in reversed(messages or []):
         if isinstance(m, HumanMessage):
@@ -699,6 +753,8 @@ def _mirror_vitals(actor: dict) -> None:
         actor["status"] = "fugiu"
     elif actor.get("surrendered"):
         actor["status"] = "rendido"
+    elif actor.get("incapacitated") and actor.get("nonlethal_by"):
+        actor["status"] = "incapacitado"  # SPEC-325 R9: golpe não-letal, não é derrota
     else:
         actor.setdefault("status", "ativo")
 
@@ -1015,7 +1071,11 @@ def _encounter_outcome(
         return "death"
     if hero_fled:
         return "fled"
-    remaining = [e for e in enemies if e.get("status") == "ativo" and not e.get("dead")]
+    remaining = [
+        e
+        for e in enemies
+        if e.get("status") == "ativo" and not e.get("dead") and not e.get("incapacitated")
+    ]
     if remaining or not player.get("conscious", True):
         return "defeat"
     dead = [e for e in enemies if e.get("dead") or e.get("status") == "morto"]
@@ -1354,6 +1414,7 @@ def _combat_node(state: GameState):
                 if declaration is not None and declaration.acao is not None
                 else _parse_turn_declaration(player, active, intent, scene)
             )
+        _mark_nonlethal(decl, intent)
         resolved_decl = decl
         # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
         if (
@@ -1395,6 +1456,7 @@ def _combat_node(state: GameState):
             rng=rng,
         )
         _sync_enemy_knowledge(enemies)
+        _reveal_resistances(out.get("attacks") or [], enemies, sides)
         logs += weather_logs + out["logs"]
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
@@ -1447,9 +1509,16 @@ def _combat_node(state: GameState):
         for e in dead
         if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in dead_before
     ]
-    for e in newly_dead:
+    # SPEC-325 R9/D2: inimigo derrubado sem matar rende o mesmo XP/loot do abate.
+    downed = [e for e in enemies if e.get("incapacitated") and e.get("nonlethal_by")]
+    newly_downed = [
+        e
+        for e in downed
+        if not e.get("xp_awarded") and str(e.get("id") or e.get("name")) not in dead_before
+    ]
+    for e in newly_dead + newly_downed:
         e["xp_awarded"] = True
-    for e in dead:
+    for e in dead + downed:
         e["xp_awarded"] = True
     if newly_dead:
         bestiary_knowledge = disc.record_kills(bestiary_knowledge, newly_dead, turn)
@@ -1471,15 +1540,15 @@ def _combat_node(state: GameState):
                 participant["conscious"] = False
             elif recovery_state == "acordado":
                 participant["conscious"] = True
-    victory = combat_over and not player_dead and not hero_fled and bool(dead)
+    victory = combat_over and not player_dead and not hero_fled and bool(dead or downed)
 
     # ---- XP determinístico (fugitivo/queda letal não contam) ----
     level_up_events: list[dict] = []
     kill_xp = 0  # SPEC-226 R10: ganho individual p/ o guard narrativo
-    if newly_dead and not player_dead and not is_simulation:
+    if (newly_dead or newly_downed) and not player_dead and not is_simulation:
         import progression as pg
 
-        xp = pg.xp_for_kills(newly_dead)
+        xp = pg.xp_for_kills(newly_dead + newly_downed)
         if xp:
             player, level_up_events = pg.grant_xp(player, xp)
             kill_xp = xp

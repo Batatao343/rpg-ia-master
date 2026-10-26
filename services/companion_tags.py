@@ -123,6 +123,15 @@ def _combat_outcome(state: dict) -> str:
     return str(combat.get("outcome") or result.get("outcome") or "")
 
 
+def _spared_enemy(state: dict) -> bool:
+    """SPEC-325: o desfecho do encontro deixou algum inimigo incapacitado (nao-letal)."""
+    result = (state.get("combat") or {}).get("result") or {}
+    return any(
+        isinstance(p, dict) and p.get("final_status") == "incapacitado"
+        for p in result.get("participants") or []
+    )
+
+
 def _in_combat_this_turn(state: dict) -> bool:
     combat = state.get("combat") or {}
     return bool(combat) and combat.get("phase") in {"entering", "active", "resolving", "ended"}
@@ -185,6 +194,8 @@ def detect_choice_tags(state: dict, *, seen_combat_id: str = "") -> list[ChoiceT
             add("aceitou_rendicao", ref=f"combat:{cid}")
         elif outcome == "fled":
             add("fugiu_do_combate", ref=f"combat:{cid}")
+        elif outcome == "victory" and _spared_enemy(state):
+            add("poupou_inimigo", ref=f"combat:{cid}")  # SPEC-325 R9
 
     player = state.get("player") or {}
     if _int(player.get("abyss_charge")) > _int(baseline.get("abyss_charge")):

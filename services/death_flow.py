@@ -12,6 +12,8 @@ ADITIVO (como 04/05/06): entrega o motor puro + testes. A reconciliação final 
 dano ao vivo acontecem no cutover (conflito-13) — os pontos estão marcados.
 """
 
+import re
+import unicodedata
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
@@ -377,6 +379,35 @@ def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dic
 # Etapa 6 — Golpe não-letal + rendição + encerramento (R8/R9/R10)
 # ==========================================================================
 _LETHAL_FORMS = frozenset({"destruicao_total", "queda_fatal"})
+
+
+# SPEC-325 R9: declaracao textual de golpe nao-letal (regex fechada, sem LLM).
+NONLETHAL_RE = re.compile(
+    r"\bsem\s+(?:o\s+)?(?:matar|mata-?lo|mata-?la|ferir\s+mortalmente)\b"
+    r"|\bnao[\s-]+letal\b|\bnao\s+letais\b"
+    r"|\bnocaute\w*|\bnocautear\b|\bdesacord\w+"
+    r"|\bpoup(?:ar|o|arei|ando)\b"
+    r"|\bdeix(?:o|ar)\s+(?:ele|ela|o|a|-o|-a)?\s*vivo\b"
+)
+_NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|jamais)\s+(?:\w+\s+){0,2}$")
+_SELF_NEGATED = ("nao letal", "nao-letal", "nao letais")
+
+
+def _fold(text: str) -> str:
+    nfkd = unicodedata.normalize("NFKD", str(text or ""))
+    return "".join(c for c in nfkd if not unicodedata.combining(c)).casefold()
+
+
+def nonlethal_declared(text: str) -> bool:
+    """O jogador declarou um golpe nao-letal? Trata negacao ("nao vou poupar")."""
+    folded = _fold(text)
+    for m in NONLETHAL_RE.finditer(folded):
+        if m.group(0).startswith(_SELF_NEGATED) or m.group(0).startswith("nao"):
+            return True  # "nao letal" e a propria declaracao
+        if _NEGATION_BEFORE_RE.search(folded[: m.start()]):
+            continue
+        return True
+    return False
 
 
 def can_be_nonlethal(attack_form: dict | None) -> bool:

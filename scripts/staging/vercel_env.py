@@ -91,6 +91,14 @@ OPTIONAL_FLAGS = (
     "RPG_DAY_DIGEST",
     "RPG_ARCHIVE_POLICY",
     "RPG_ARCHIVE_POLICY_SHADOW",
+    "RPG_COMBAT_REVEAL_RESIST",
+    "RPG_COMBAT_NONLETHAL",
+    "RPG_CHASE_APPROACH",
+    "RPG_CHASE_ATTACK",
+    "RPG_CHASE_ABANDON",
+    "RPG_COMBAT_OBJECTS",
+    "RPG_COMPANION_ORDERS",
+    "RPG_COMBAT_REINFORCEMENTS",
 )
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
@@ -134,6 +142,15 @@ WORLD_FLAGS = (
     "RPG_DAY_DIGEST",  # SPEC-318 R3: llm|inline (ausente = inline)
     "RPG_ARCHIVE_POLICY",  # SPEC-318 R5: legacy|lean (ausente = legacy)
     "RPG_ARCHIVE_POLICY_SHADOW",  # SPEC-318 R5: 0|1 (ausente = 0)
+    # SPEC-325: capacidades de conflito dormentes, off|shadow|on (ausente = shadow no codigo).
+    "RPG_COMBAT_REVEAL_RESIST",
+    "RPG_COMBAT_NONLETHAL",
+    "RPG_CHASE_APPROACH",
+    "RPG_CHASE_ATTACK",
+    "RPG_CHASE_ABANDON",
+    "RPG_COMBAT_OBJECTS",
+    "RPG_COMPANION_ORDERS",
+    "RPG_COMBAT_REINFORCEMENTS",
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {

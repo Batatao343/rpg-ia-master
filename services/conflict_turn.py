@@ -17,9 +17,9 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (dados, condições, Entropia)
+from services import combat_flags, death_flow
 from services import conflict_damage as cd
 from services import conflict_scene as cs
-from services import death_flow
 from services.conflict_resolution import resolve_attack, virtude_para_tipo, virtude_value
 
 _MANEUVERS = {"engajar", "desengajar", "guardar", "esconder", "procurar", "mover"}
@@ -248,7 +248,12 @@ def _targetable(target: dict | None) -> bool:
         return False
     if target.get("dead") or target.get("fled") or target.get("surrendered"):
         return False
-    return str(target.get("status", "ativo")) not in ("morto", "fugiu", "rendido")
+    return str(target.get("status", "ativo")) not in (
+        "morto",
+        "fugiu",
+        "rendido",
+        "incapacitado",  # SPEC-325 R9
+    )
 
 
 def _invalid_target_reason(
@@ -493,6 +498,8 @@ def _resolve_attack_step(
             )
             atk["regiao"] = dres["regiao"]
             atk["dano_final"] = int(dres.get("dano_final", 0) or 0)
+            if dres.get("resistance_hit") and combat_flags.mode("reveal_resist") != "off":
+                atk["resistance_hit"] = dres["resistance_hit"]  # SPEC-325 R8
             out["logs"].append("; ".join(dres["log"]))
             _check_death(target, step.target_id, out)
         else:

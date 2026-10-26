@@ -1,6 +1,7 @@
 {
   "tags": [
     {"id": "aceitou_rendicao", "source": "combat", "axes": {"compaixao": 1, "honra": 1}, "magnitude": 2, "prose": "poupou um inimigo rendido"},
+    {"id": "poupou_inimigo", "source": "combat", "axes": {"compaixao": 1}, "magnitude": 1, "prose": "poupou um inimigo em vez de matá-lo"},
     {"id": "fugiu_do_combate", "source": "combat", "axes": {"coragem": -2}, "magnitude": 1, "prose": "fugiu do combate"},
     {"id": "matou_nomeado", "source": "event", "axes": {"coragem": 1, "compaixao": -1}, "magnitude": 1, "prose": "matou um oponente nomeado"},
     {"id": "matou_inocente", "source": "event", "axes": {"compaixao": -2, "honra": -2, "ordem": -2}, "magnitude": 3, "prose": "matou quem não representava ameaça"},

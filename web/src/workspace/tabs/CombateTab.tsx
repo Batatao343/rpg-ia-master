@@ -31,6 +31,9 @@ const isTyping = (el: EventTarget | null) => {
 
 /** SPEC-204 R10 + SPEC-205: único lugar dos controles táticos. Uma ação por gesto:
  *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
+/** SPEC-325 R9: o servidor reconhece esta frase (regex fechada em death_flow.NONLETHAL_RE). */
+const SPARE_TEXT = "Sem matar.";
+
 export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
   busy: boolean;
@@ -64,6 +67,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const [ruptureId, setRuptureId] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
   const [announce, setAnnounce] = useState("");
+  const [spare, setSpare] = useState(false); // SPEC-325: golpe não-letal ("Sem matar")
   const rootRef = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const prevPhase = useRef(targeting.state.phase);
@@ -121,13 +125,13 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     const [text, options] = cardPayload(card, targetId, targetId ? nameOf(targetId) : undefined,
       ruptureId === card.id, reactionCardId);
     setRuptureId(null);
-    onAction(text, options);
+    onAction(spare ? `${text} ${SPARE_TEXT}` : text, options);
   }
 
   function sendBasic(action: BasicActionView, targetId: string | undefined) {
     if (!targeting.begin()) return;
     const [text, options] = basicPayload(action, targetId, targetId ? nameOf(targetId) : undefined, reactionCardId);
-    onAction(text, options);
+    onAction(spare && action.kind === "attack" ? `${text} ${SPARE_TEXT}` : text, options);
   }
 
   function gestureCard(card: CardView, el?: HTMLElement) {
@@ -222,6 +226,13 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
                 </button>
               );
             })}
+            {combat?.nonlethal_available && (
+              <button className="actionchip" type="button" data-spare aria-pressed={spare}
+                title="O próximo golpe derruba o alvo sem matá-lo (se a forma do ataque permitir)."
+                onClick={() => setSpare((v) => !v)}>
+                Sem matar
+              </button>
+            )}
           </div>
         </>
       )}

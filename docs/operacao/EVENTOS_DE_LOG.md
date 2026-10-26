@@ -64,10 +64,13 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.enemy_knowledge_failed` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
+| `combat.nonlethal_shadow` | `target` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |
 | `combat.prep_timeout` | `timeout_s` |
 | `combat.preparing_encounter` | — |
+| `combat.reveal_resist` | `effect` |
+| `combat.reveal_resist_shadow` | `effect` |
 | `combat.spawn_failed` | `error` |
 | `combat.spawn_fallback` | — |
 | `combat.spawn_identity_mismatch` | — |

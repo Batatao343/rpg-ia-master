@@ -2713,6 +2713,40 @@ def _public_quest(q: dict, state: dict) -> dict:
     return quest_log.public_quest_view(q, day)
 
 
+def check_conflict_capabilities(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-325 (Fase A): inimigo `incapacitado` nunca esta morto; `revealed_resistances`
+    so tem o formato `<dtype>:<imune|resiste|vulneravel>` (ou o legado do overlay sem ':')."""
+    from services import combat_flags
+
+    out: list[Violation] = []
+    for e in state.get("enemies", []) or []:
+        if not isinstance(e, dict):
+            continue
+        name = str(e.get("name") or e.get("id") or "inimigo")
+        if e.get("status") == "incapacitado" and e.get("dead"):
+            out.append(
+                _V(
+                    "conflict.incapacitated_dead",
+                    "error",
+                    turn,
+                    f"{name}: incapacitado e morto ao mesmo tempo",
+                    entity=name,
+                )
+            )
+        for entry in e.get("revealed_resistances") or []:
+            if ":" in str(entry) and not combat_flags.is_resistance_entry(entry):
+                out.append(
+                    _V(
+                        "conflict.resistance_format",
+                        "error",
+                        turn,
+                        f"{name}: revealed_resistances com formato invalido",
+                        entity=name,
+                    )
+                )
+    return out
+
+
 CHECKS: list[Check] = [
     check_rumors,
     check_rumor_adopt,
@@ -2757,6 +2791,7 @@ CHECKS: list[Check] = [
     check_calendar,
     check_npc_world,
     check_sheet_stub_streak,
+    check_conflict_capabilities,
 ]
 
 

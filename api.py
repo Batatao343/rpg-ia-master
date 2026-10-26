@@ -72,6 +72,7 @@ from persistence import (
     save_game_state,
     save_path,
 )
+from services import combat_flags
 from services import npc_world as _npc_world
 from services import quest_log
 from services import state_views as sv
@@ -2691,7 +2692,8 @@ def _combat_block(state: dict) -> dict[str, Any]:
     alive = [
         e
         for e in enemies
-        if not e.get("dead") and e.get("status", "ativo") not in ("morto", "fugiu", "rendido")
+        if not e.get("dead")
+        and e.get("status", "ativo") not in ("morto", "fugiu", "rendido", "incapacitado")
     ]
 
     def _conds(entity):
@@ -2769,7 +2771,10 @@ def _combat_block(state: dict) -> dict[str, Any]:
                 "recursos_visiveis": public.get("recursos_visiveis") or {},
                 "conditions": _conds(enemy),
                 "revealed_cards": revealed_cards,
-                "revealed_resistances": list(enemy.get("revealed_resistances") or []),
+                "revealed_resistances": [
+                    combat_flags.resistance_label(r)
+                    for r in enemy.get("revealed_resistances") or []
+                ],
             }
         )
 
@@ -2790,7 +2795,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
     from services import encounter_manifest as em
 
     manifest = meta.get("encounter") if em.is_valid_manifest(meta.get("encounter")) else None
-    return {
+    view: dict[str, Any] = {
         "active": bool(meta.get("active")) and bool(alive),
         "round": meta.get("round", 0),
         # SPEC-203: fase/elenco congelado (somente leitura no cliente).
@@ -2829,6 +2834,9 @@ def _combat_block(state: dict) -> dict[str, Any]:
         "last_player_action": meta.get("last_player_action"),
         "reactions": meta.get("last_reactions", []),
     }
+    if combat_flags.active("nonlethal"):
+        view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
+    return view
 
 
 def _quest_block(plan: dict, quests: list, world: dict | None = None) -> dict[str, Any]:
@@ -5425,7 +5433,7 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
         enemy
         for enemy in (state.get("enemies") or [])
         if not enemy.get("dead")
-        and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido")
+        and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido", "incapacitado")
     ]
     explicit_target = req.target_id
     if req.card_id and explicit_target:

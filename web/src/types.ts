@@ -328,6 +328,8 @@ export interface CombatBlock {
   enemies: EnemyView[];
   cards: CardView[];
   basic_actions?: BasicActionView[];
+  /** SPEC-325: presente (true) só com RPG_COMBAT_NONLETHAL=on — mostra o chip "Sem matar". */
+  nonlethal_available?: boolean;
   scene: ConflictSceneView;
   wounds: WoundTrackView;
   chase: ChaseView;

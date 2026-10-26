@@ -25,8 +25,10 @@ log = logging.getLogger("rpg.encounter")
 
 Role = Literal["hostile", "ally", "neutral", "hazard"]
 Presence = Literal["present", "arrived", "departed"]
-Status = Literal["ativo", "morto", "fugiu", "rendido", "capturado", "ausente"]
-EventKind = Literal["joined", "cut", "dead", "fled", "surrendered", "captured", "departed"]
+Status = Literal["ativo", "morto", "fugiu", "rendido", "capturado", "ausente", "incapacitado"]
+EventKind = Literal[
+    "joined", "cut", "dead", "fled", "surrendered", "captured", "departed", "incapacitated"
+]
 Source = Literal[
     "systemic", "npc_in_scene", "threat", "scanner", "fallback", "legacy_migrated", "simulation"
 ]
@@ -47,6 +49,7 @@ _STATUS_EVENT = {
     "rendido": "surrendered",
     "capturado": "captured",
     "ausente": "departed",
+    "incapacitado": "incapacitated",  # SPEC-325 R9
 }
 
 
@@ -435,6 +438,7 @@ def apply_composition(
         "surrendered": "rendido",
         "captured": "capturado",
         "departed": "ausente",
+        "incapacitated": "incapacitado",
     }.get(kind)
     for p in out.get("participants") or []:
         if p.get("participant_id") == participant_id:
@@ -504,6 +508,8 @@ def sync_statuses(manifest: dict, enemies: Iterable[dict[str, Any]], round_: int
             status = "rendido"
         elif enemy.get("captured"):
             status = "capturado"
+        elif enemy.get("incapacitated"):
+            status = "incapacitado"
         kind = _STATUS_EVENT.get(status)
         if not kind or kind == "departed":
             continue
