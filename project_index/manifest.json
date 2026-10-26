@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b4d76ae8789daae7fd67a7449cbf5cd35475623f",
+  "commit_sha": "be2b7aa00a5f7bde55dbe6f25f5a347015494d39",
   "edge_counts": {
     "calls": 27561,
     "contains": 949,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7e8cc3307f1a526bdde0d7319ea9a08755b1692351d22e9f4656071086671ac6",
+  "graph_hash": "sha256:0b1c7ad936bb8b05fcd14c2b7f72e4c45d71d18ba84e1c80f8ef0f785b0db623",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1087,6 +1087,7 @@
     "web/src/components/WorldMap.tsx",
     "web/src/components/WoundTrack.tsx",
     "web/src/design/effects.registry.ts",
+    "web/src/design/icons.tsx",
     "web/src/design/killswitch.ts",
     "web/src/design/motion.ts",
     "web/src/design/primitives.tsx",
@@ -1164,12 +1165,12 @@
     "artifact": 9,
     "class": 934,
     "endpoint": 64,
-    "file": 1108,
+    "file": 1109,
     "function": 4369,
     "method": 831,
     "module": 949,
     "test": 7701
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:cfcebe05b2ab68408c6c6ef4c0797adaafdabb66e68ae681cf2702e35faea03c"
+  "source_tree_hash": "sha256:afee7836985bdcace665f8247822f74c5748008029ac4727ef8dffbea606f276"
 }

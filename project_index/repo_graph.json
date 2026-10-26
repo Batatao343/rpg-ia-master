@@ -1,5 +1,5 @@
 {
-  "commit_sha": "b4d76ae8789daae7fd67a7449cbf5cd35475623f",
+  "commit_sha": "be2b7aa00a5f7bde55dbe6f25f5a347015494d39",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -516875,6 +516875,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/design/icons.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/design/icons.tsx",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/design/killswitch.ts",
       "kind": "file",
       "line": 1,
@@ -620840,5 +620847,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:cfcebe05b2ab68408c6c6ef4c0797adaafdabb66e68ae681cf2702e35faea03c"
+  "source_tree_hash": "sha256:afee7836985bdcace665f8247822f74c5748008029ac4727ef8dffbea606f276"
 }
