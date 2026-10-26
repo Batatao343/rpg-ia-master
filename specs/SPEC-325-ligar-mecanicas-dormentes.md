@@ -1,6 +1,6 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
-> **Status:** `approved` — dono, 25/10: "pode ligar"; decisões da §8 aprovadas nos defaults recomendados (em negrito). O dono pode reverter qualquer decisão antes da etapa que ela afeta.
+> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fases B–D pendentes)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Progresso:** Fase A (R8, R9) implementada em `shadow` na branch `spec-325` (26/10); Fases B–D pendentes (ver §9). Gate R17 da Fase A: comandos prontos em §8.1, **ainda não rodados** (coordenador).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")
