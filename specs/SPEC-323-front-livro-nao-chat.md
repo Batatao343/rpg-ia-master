@@ -1,6 +1,6 @@
 # SPEC-323 — Front: livro, não chat (marginália, HUD, copy, criação, mapa, sigilo)
 
-> **Status:** `in-progress` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (3 P1 + P2 corrigidos em `187d2555`, e2e verdes); pousada na main 26/10; falta conferência visual no staging; e2e de mapa/inventário/split pendentes (desvio))
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Depende de:** SPEC-322 (ícones e tokens), SPEC-321 (casca mobile e rótulos "Crônica")
 > **Desbloqueia:** release do beta (SPEC-197) e a loja (SPEC-198), pelo item do medalhão
