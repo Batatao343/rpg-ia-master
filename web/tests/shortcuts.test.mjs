@@ -52,6 +52,12 @@ test('Alt+←/→ e Alt+\\ ', () => {
   assert.equal(matchShortcut(ev({ key: '\\', code: 'Backslash', ctrlKey: true }), 'other'), null);
 });
 
+test('ABNT2: IntlBackslash e key barra também alternam; ariaShortcut(help) = ?', () => {
+  assert.equal(matchShortcut(ev({ key: ']', code: 'IntlBackslash', altKey: true }), 'other'), 'split');
+  assert.equal(matchShortcut(ev({ key: '\\', code: '', altKey: true }), 'other'), 'split');
+  assert.equal(ariaShortcut('help', 'other'), '?');
+});
+
 test('rótulos e aria-keyshortcuts por plataforma', () => {
   assert.equal(shortcutKeys('tab:codex', 'other'), 'Alt+2');
   assert.equal(shortcutKeys('tab:codex', 'mac'), 'Ctrl+Option+2');

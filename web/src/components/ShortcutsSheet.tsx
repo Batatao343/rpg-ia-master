@@ -20,6 +20,9 @@ export function ShortcutsSheet({ platform, onClose }: { platform: Platform; onCl
             </li>
           ))}
         </ul>
+        <p className="muted shortcuts__note">
+          No Linux, Alt+1…8 pode trocar de aba no Chrome/Firefox; no macOS, Ctrl+Option é o modificador do VoiceOver.
+        </p>
         <button type="button" className="btn btn--ghost playmenu__item" onClick={onClose}>Fechar</button>
       </div>
     </div>

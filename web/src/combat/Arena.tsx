@@ -77,7 +77,7 @@ export function Arena({ combat, party, aim, onPick }: {
       <div className="arena__zones" role="toolbar" aria-label="Alvos do combate" tabIndex={-1} onKeyDown={onKeyDown}>
         {groups.map((g) => (
           <article key={g.id} className="arena__zone" aria-label={`Zona: ${g.name}`}>
-            <h4>{g.name}</h4>
+            <h3>{g.name}</h3>
             <div className="arena__members">
               {g.members.map((p) => (
                 <TargetChip key={p.id} p={p} aim={aim ? (aim[p.id] ?? { valid: false }) : undefined}

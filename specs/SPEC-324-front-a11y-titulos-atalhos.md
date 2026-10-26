@@ -81,7 +81,8 @@
 
 ## 5. Critérios de aceite
 
-- [x] Um `h1` (local), `h2` por painel e `h3` por seção; axe `heading-order` limpo; sem mudança visual (diff ≤ 1 %).
+- [x] Um `h1` (local), `h2` por painel e `h3` por seção; axe `heading-order` limpo (inclusive em combate ativo).
+- [ ] Sem mudança visual (diff ≤ 1 %): comparação visual antes/depois fica para o smoke do staging (§6), não automatizada.
 - [x] Atalhos fora de Ctrl/⌘+dígito; funcionam no Chromium e no Firefox (e2e); não disparam em campo de texto (exceto o foco no compositor).
 - [x] `aria-keyshortcuts` e a tecla no `title` de cada aba e botão com atalho; folha "?" lista todos.
 - [x] Skip link "Pular para a ação".
@@ -99,6 +100,8 @@ Staging, conta logada, 1–2 turnos.
 
 ## 7. Riscos & compatibilidade
 
+- **Trade-off conhecido de D1 (decisão do dono):** no Linux, Chrome/Firefox usam Alt+1…8 para trocar de aba do navegador; no macOS, Ctrl+Option é o modificador do VoiceOver. Anotado também na folha "?". Se o smoke acusar conflito, follow-up: sequências estilo Gmail (alternativa prevista em D1).
+
 - **Alt no Windows:** Alt sozinho foca a barra de menu em alguns navegadores. Usar `preventDefault` só quando houver match e testar no Edge.
 - **macOS:** Option+dígito produz caractere (ex.: "¡"), daí D1.
 - **Testes que dependem de Ctrl+dígito:** procurar em `web/e2e` (incluindo `contracts`, que é protegido: `/eval-publish`) e adaptar.
@@ -112,3 +115,4 @@ Staging, conta logada, 1–2 turnos.
 ## Histórico de mudanças
 
 - 2026-10-26 · implementação (spec-executor). Desvios: (1) `run(ctx)` não está na tabela `SHORTCUTS`; a execução fica no `Workspace` (switch por id), a tabela guarda id/tecla/rótulo. (2) Atalhos de seta ficam em Alt+←/→ em todos os SO; só dígitos e `\` usam Ctrl+Option no macOS. (3) Ctrl+\ virou Alt+\ (Ctrl+Option+\ no mac). (4) h2 de painel no desktop é `sr-only` (sem mudança visual); no celular vale o h2 visível da cabeça. (5) Diff de screenshot não automatizado: sem baseline versionada, o e2e confere computed style do h3 (peso 400, margem 0, 0,8rem). (6) e2e `workspace-shell` e `critical-journeys` adaptados de Ctrl+dígito para Alt+dígito (fora de `e2e/contracts`). Testes: `web/tests/shortcuts.test.mjs` (7), `web/e2e/a11y-headings.spec.ts` (6).
+- 2026-10-26 · correções da revisão (sol): zonas da Arena h4→h3 (heading-order em combate; e2e novo); foco no compositor adiado ao commit da troca de superfície (skip link/Alt+1 no celular); `split` aceita IntlBackslash/`\` (ABNT2); IME ignorado; `ariaShortcut(help)`=`?`; Alt+←/→ com foco no body também com preventDefault; critério de diff visual desmarcado; trade-off Linux/VoiceOver documentado.

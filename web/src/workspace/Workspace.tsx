@@ -112,10 +112,16 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const [visited, setVisited] = useState<ReadonlySet<ContextTab>>(() => new Set());
   if (contextVisible && !visited.has(state.tab)) setVisited(new Set(visited).add(state.tab));
 
+  // O compositor fica display:none fora da superfície do chat (celular): o foco só vale depois do commit.
+  const wantComposer = useRef(false);
   const focusComposer = () => {
     dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
     composerRef.current?.focus();
+    wantComposer.current = true;
+    setTimeout(() => { wantComposer.current = false; }, 400);
   };
+  const focusComposerRef = useRef(focusComposer);
+  useEffect(() => { focusComposerRef.current = focusComposer; });
   useImperativeHandle(ref, () => ({
     openTab(tab, options) {
       if (options?.codexSection) setCodexSection(options.codexSection);
@@ -191,15 +197,13 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const [helpOpen, setHelpOpen] = useState(false);
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if (event.defaultPrevented || modalOpen()) return;
+      if (event.defaultPrevented || modalOpen() || event.isComposing || event.keyCode === 229) return;
       const id = matchShortcut(event, platform, isTypingTarget(event.target));
       if (!id) return;
-      if ((id === "back" || id === "forward") && !(event.target instanceof Element && event.target.closest(".play"))) return;
+      if ((id === "back" || id === "forward") && !(event.target === document.body || (event.target instanceof Element && event.target.closest(".play")))) return;
       event.preventDefault();
-      if (id === "composer") {
-        dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
-        composerRef.current?.focus();
-      } else if (id === "back" || id === "forward") dispatch({ type: id });
+      if (id === "composer") focusComposerRef.current();
+      else if (id === "back" || id === "forward") dispatch({ type: id });
       else if (id === "split") dispatch({ type: "toggle_split" });
       else if (id === "help") setHelpOpen(true);
       else dispatch({ type: "open_tab", tab: id.slice(4) as ContextTab, single });
@@ -268,6 +272,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const firstSurface = useRef(true);
   useEffect(() => {
     if (firstSurface.current) { firstSurface.current = false; return; }
+    if (wantComposer.current) { wantComposer.current = false; composerRef.current?.focus(); return; }
     if (mobile) titleRef.current?.focus({ preventScroll: true });
   }, [surface, mobile]);
   const surfaceRef = useRef(surface);

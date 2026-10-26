@@ -1,6 +1,6 @@
 // SPEC-324: estrutura de headings (h1 local · h2 painel · h3 seção), skip link, atalhos Alt+dígito e folha "?".
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect } from "./fixtures";
+import { test, expect, type DeterministicBackend } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 async function openGame(page: Page, name = "Ayla") {
@@ -117,4 +117,54 @@ test("? abre a folha de atalhos com foco preso e Esc devolve o foco", async ({ p
   await page.keyboard.type("?");
   await expect(sheet).toBeHidden();
   await expect(box).toHaveValue("?");
+});
+
+const foe = (id: string, name: string) => ({ id, name, hp: 6, max_hp: 6, vitalidade: 6, max_vitalidade: 6, esquiva: 9, protecao: 0,
+  integridade_atual: null, integridade_max: null, recursos_visiveis: {}, conditions: [], revealed_cards: [], revealed_resistances: [] });
+
+function startCombat(backend: DeterministicBackend) {
+  const state = backend.states.get("game-a")!;
+  state.combat.active = true; state.combat.round = 1;
+  state.combat.enemies = [foe("e1", "Saqueador")];
+  state.combat.scene = { zones: [{ id: "z", name: "Ponte", connections: [] }], positions: [
+    { participant_id: "player", participant_name: "Ayla", zone_id: "z", distance: "proximo", posture: "neutro", concealment: "visivel", engaged_with: [], engaged_names: [] },
+    { participant_id: "e1", participant_name: "Saqueador", zone_id: "z", distance: "proximo", posture: "neutro", concealment: "visivel", engaged_with: [], engaged_names: [] },
+  ] };
+}
+
+test("combate ativo: zonas da arena são h3 e heading-order fica limpo", async ({ page, backend }) => {
+  startCombat(backend);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openGame(page);
+  const tab = page.getByRole("tab", { name: "Combate" });
+  if (await tab.count()) await tab.click();
+  await expect(page.locator(".arena__zone h3")).toHaveCount(1);
+  assertNoSkips(await headingLevels(page));
+  const axe = await new AxeBuilder({ page }).withRules(["heading-order"]).analyze();
+  expect(axe.violations.map((v) => v.id)).toEqual([]);
+});
+
+test("celular com outra superfície aberta: skip link foca o compositor (e não o título)", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openGame(page);
+  await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: /Personagem/ }).click();
+  await expect(page.getByTestId("surface-title")).toHaveText("Personagem");
+  const skip = page.getByRole("link", { name: "Pular para a ação" });
+  await skip.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("textbox", { name: "Sua ação" })).toBeFocused();
+  await page.waitForTimeout(500);
+  await expect(page.getByRole("textbox", { name: "Sua ação" })).toBeFocused();
+});
+
+test("Alt+← com o foco no body não sai do jogo (preventDefault)", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openGame(page);
+  const prevented = await page.evaluate(() => {
+    (document.activeElement as HTMLElement | null)?.blur();
+    const event = new KeyboardEvent("keydown", { key: "ArrowLeft", code: "ArrowLeft", altKey: true, bubbles: true, cancelable: true });
+    document.body.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  expect(prevented).toBe(true);
 });

@@ -63,7 +63,10 @@ function modifiersOk(def: ShortcutDef, e: KeyLike, platform: Platform): boolean 
 /** Devolve o atalho acionado pelo evento, ou null. `typing` = foco em input/textarea/select. */
 export function matchShortcut(e: KeyLike, platform: Platform, typing = false): ShortcutId | null {
   for (const def of SHORTCUTS) {
-    const hit = def.id === "help" ? e.key === "?" : e.code === def.code;
+    // ABNT2: a tecla com a legenda `` é IntlBackslash (Backslash é `] }`); aceita pelo `key` também.
+    const hit = def.id === "help" ? e.key === "?"
+      : def.id === "split" ? e.code === "Backslash" || e.code === "IntlBackslash" || e.key === "\\"
+      : e.code === def.code;
     if (!hit || !modifiersOk(def, e, platform)) continue;
     if (typing && !def.inText) return null;
     return def.id;
@@ -84,7 +87,7 @@ export function shortcutKeys(id: ShortcutId, platform: Platform): string {
 export function ariaShortcut(id: ShortcutId, platform: Platform): string {
   const def = SHORTCUTS.find((s) => s.id === id);
   if (!def) return "";
-  if (def.id === "help") return "Shift+/";
+  if (def.id === "help") return "?";
   const key = def.code === "Backslash" ? "\\" : def.glyph === "←" ? "ArrowLeft" : def.glyph === "→" ? "ArrowRight" : def.glyph;
   return `${def.platformMod && platform === "mac" ? "Control+Alt" : "Alt"}+${key}`;
 }
