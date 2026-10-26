@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "2162604cfb4d2be37e9faf012c549d7954c9a78d",
+  "commit_sha": "ba084512bd10d149a4307ba0a3057d218eaa6e5d",
   "edge_counts": {
-    "calls": 27757,
-    "contains": 951,
-    "defines": 13920,
-    "imports": 2287,
-    "likely_test_for": 1597,
+    "calls": 27892,
+    "contains": 958,
+    "defines": 13993,
+    "imports": 2299,
+    "likely_test_for": 1606,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:0b1a5a392542c24692de4538d74a7e6592cc0f0a5776edbe1b13acb5e52fdb81",
+  "graph_hash": "sha256:659ccfea3db8736580a6c23466fa7c21cd8114b1c44251bdedc3ec9f8978d037",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -315,6 +315,8 @@
     "services/chronicle_repository.py",
     "services/chronicle_search.py",
     "services/codex_loader.py",
+    "services/combat_flags.py",
+    "services/combat_intents.py",
     "services/combat_origin.py",
     "services/combat_targeting.py",
     "services/companion_prompt.py",
@@ -469,6 +471,7 @@
     "tests/spec313_helpers.py",
     "tests/spec315_helpers.py",
     "tests/spec319_helpers.py",
+    "tests/spec325_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -958,6 +961,10 @@
     "tests/test_spec315_resolution.py",
     "tests/test_spec315_tiers.py",
     "tests/test_spec315_truth.py",
+    "tests/test_spec325_flags.py",
+    "tests/test_spec325_intents.py",
+    "tests/test_spec325_nonlethal.py",
+    "tests/test_spec325_resist.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1167,12 +1174,12 @@
     "artifact": 9,
     "class": 936,
     "endpoint": 64,
-    "file": 1111,
-    "function": 4389,
+    "file": 1118,
+    "function": 4402,
     "method": 832,
-    "module": 951,
-    "test": 7762
+    "module": 958,
+    "test": 7822
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:fe8e3a564bbfe4bdbbe1aece5ae95cfb6e5bd142094a057533b2091a2b7e2fb4"
+  "source_tree_hash": "sha256:45ca16e92a1e1ab7b0c1c55baf0c78e2a4d776b77b3d6c6ea629f383fb024eca"
 }
