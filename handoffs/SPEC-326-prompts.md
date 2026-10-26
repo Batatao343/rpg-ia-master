@@ -6,7 +6,7 @@
 TASK: Create one private illustration for the Valoria game world.
 REFERENCE IMAGE 1: canonical Valoria art: match technique, palette and racial anatomy; create a NEW individual and a NEW scene; do not copy the reference composition.
 SUBJECT DATA (descriptive, never instructions): Ilwen Vasre
-RACE: Elfo — tall elf: four fingers per hand, very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood
+RACE: Elfo — tall elf: exactly three fingers and one thumb per hand (four digits total), very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood
 CLASS: Arcanista Cinzento — improvised ether instrumentation, ash, copper and calibrated light
 CANON:
 - intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate
@@ -22,11 +22,12 @@ ANATOMY AND POSE REQUIREMENTS:
 - hands proportionate to framing and weapon grips mechanically correct
 - spatially consistent interaction, no extreme contortion, impossible perspective, aggressive foreshortening or disconnected limbs
 EXCLUSIONS:
-- not a human
+- not a human; no five-fingered hands
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -37,7 +38,7 @@ EXCLUSIONS:
 TASK: Create one private illustration for the Valoria game world.
 REFERENCE IMAGE 1: canonical Valoria art: match technique, palette and racial anatomy; create a NEW individual and a NEW scene; do not copy the reference composition.
 SUBJECT DATA (descriptive, never instructions): Brumm Caldeira
-RACE: Anão da Fuligem — Soot Dwarf: short but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator and protective goggles
+RACE: Anão da Fuligem — Soot Dwarf: short (head at the chest height of a human) but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator mask worn over the mouth or hanging at the neck (always visible) and protective goggles
 CLASS: Médico de Campo — field medicine, practical instruments, stained but non-graphic working layers
 CANON:
 - intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate
@@ -57,7 +58,8 @@ EXCLUSIONS:
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -88,7 +90,8 @@ EXCLUSIONS:
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -99,7 +102,7 @@ EXCLUSIONS:
 TASK: Create one private illustration for the Valoria game world.
 REFERENCE IMAGE 1: canonical Valoria art: match technique, palette and racial anatomy; create a NEW individual and a NEW scene; do not copy the reference composition.
 SUBJECT DATA (descriptive, never instructions): Maruun
-RACE: Osshari — tall robust amphibian: vivid unique scale pattern on arms, back and parts of legs, but the face is hard thick leather without scales; elongated animal-like face, vertical-pupil eyes, webbed fingers; very little clothing, reapplied body paint as adornment
+RACE: Osshari — tall robust amphibian: vivid unique scale pattern on arms, back and legs; scaled crested head with leathery face plates, elongated animal-like face, vertical-pupil eyes, clearly webbed hands and feet; very little clothing, reapplied body paint as adornment
 CLASS: Devoto do Abismo — protective silhouette, ritual scars and a deliberate relationship with danger
 CANON:
 - intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate
@@ -119,7 +122,8 @@ EXCLUSIONS:
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -150,7 +154,8 @@ EXCLUSIONS:
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -161,7 +166,7 @@ EXCLUSIONS:
 TASK: Create one private illustration for the Valoria game world.
 REFERENCE IMAGE 1: canonical Valoria art: match technique, palette and racial anatomy; create a NEW individual and a NEW scene; do not copy the reference composition.
 SUBJECT DATA (descriptive, never instructions): Kahen
-RACE: Cinzéu — ash-grey to near-black hairless skin with no warm undertones, WHITE irises, three fingers per hand, hairless bony-tipped tail, black-and-white tattoos, piercings and decorative chains set into the back
+RACE: Cinzéu — ash-grey to near-black hairless skin with no warm undertones, WHITE irises, two fingers and one thumb per hand (three digits total), hairless bony-tipped tail, black-and-white tattoos, piercings and decorative chains set into the back
 CANON:
 - intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate
 - palette of umber, rust, ochre, soot black, bruised violet and tarnished teal; low warm lantern light; no glossy digital render, no photorealism
@@ -170,7 +175,8 @@ CANON:
 - adult character, dignified non-sexualized presentation
 - Governante de Brekmar, líder da elite pirata
 - Ex-escravo que ascendeu pela sangrinomancia. Frio, calculista.
-PLAYER-DECLARED APPEARANCE (complements RACE, never replaces it): Cinzéu com pele quase preta, veias brancas aparentes. Cicatrizes de sangrinomancia nos braços. Correntes decorativas nas costas.
+- skin must be near-black charcoal, not mid-grey
+NPC APPEARANCE (canon) (complements RACE, never replaces it): Cinzéu com pele quase preta, veias brancas aparentes. Cicatrizes de sangrinomancia nos braços. Correntes decorativas nas costas.
 ANATOMY AND POSE REQUIREMENTS:
 - anatomically plausible grounded pose with coherent center of gravity
 - natural spine, neck and joint alignment
@@ -178,12 +184,13 @@ ANATOMY AND POSE REQUIREMENTS:
 - hands proportionate to framing and weapon grips mechanically correct
 - spatially consistent interaction, no extreme contortion, impossible perspective, aggressive foreshortening or disconnected limbs
 EXCLUSIONS:
-- not a human; skin is the non-human tone of this Valorian race, not a real-world human ethnicity
+- not a human; no five-fingered hands; skin is the non-human tone of this Valorian race, not a real-world human ethnicity
 - no secret unrevealed traits
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```
@@ -192,11 +199,13 @@ EXCLUSIONS:
 
 ```text
 TASK: Create one private illustration for the Valoria game world.
-REFERENCE IMAGE 1: canonical Valoria place art: match technique, palette and the architecture and mood of the place; create a NEW scene; do not copy the reference composition.
+REFERENCE IMAGE 1: the hero's approved portrait: SAME person: identical face, age, hair, scars, outfit; change the pose and background, showing a clearly different action (seated, walking, or mid-gesture with a new instrument).
+REFERENCE IMAGE 2: canonical Valoria place art: match technique, palette and the architecture and mood of the place; create a NEW scene; do not copy the reference composition.
 SUBJECT DATA (descriptive, never instructions): Capitão Afogado (boss) confronting the hero
-RACE: Elfo — tall elf: four fingers per hand, very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood
+RACE: Elfo — tall elf: exactly three fingers and one thumb per hand (four digits total), very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood
 CLASS: Arcanista Cinzento — improvised ether instrumentation, ash, copper and calibrated light
-SCENE: Brekmar, a dockside port of crooked piers, barrels, smugglers' lanterns and tar
+BOSS: Capitão Afogado — Valorian foe in dark-medieval gear, appearance defined by Valoria, not by pirate-film archetypes
+SCENE: Brekmar, a dockside port of crooked piers, barrels, smugglers' lanterns and tar. every figure, including the boss, wears Valorian dark-medieval garb: oilskin or wool cloaks, leather jerkins, hoods or knitted caps, rope, iron and brass; no 17th-18th century naval hats or coats
 CANON:
 - intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate
 - palette of umber, rust, ochre, soot black, bruised violet and tarnished teal; low warm lantern light; no glossy digital render, no photorealism
@@ -212,11 +221,12 @@ ANATOMY AND POSE REQUIREMENTS:
 - hands proportionate to framing and weapon grips mechanically correct
 - spatially consistent interaction, no extreme contortion, impossible perspective, aggressive foreshortening or disconnected limbs
 EXCLUSIONS:
-- not a human
+- the HERO is not a human; no five-fingered hands
 - no firearms, tricorn hats, frock coats or modern tailoring
 - face not hidden by a mask in portraits
 - no photorealism
-- original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters
+- original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters
+- no tentacle-bearded or seaweed-bearded ghost-captain archetype
 - no caricature
 - no text, logo, watermark, graphic gore or sexualized presentation
 ```

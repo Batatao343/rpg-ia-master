@@ -33,6 +33,8 @@ class ArtBrief(TypedDict):
     race_line: NotRequired[str]
     class_line: NotRequired[str]
     scene: NotRequired[str]
+    boss_line: NotRequired[str]
+    is_npc: NotRequired[bool]
     quality: NotRequired[str]
 
 
@@ -198,13 +200,15 @@ def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief:
     appearance = sanitize_visual_text(npc.get("appearance"), limit=500)
     if not appearance and npc.get("entity_id"):
         appearance = public_codex_appearance(str(npc["entity_id"]))
+    canon_npc = [
+        sanitize_visual_text(npc.get("role"), limit=120),
+        sanitize_visual_text(npc.get("persona"), limit=500),
+    ]
+    if re.search(r"(?i)quase pret|near-black|preta?", appearance):
+        canon_npc.append("skin must be near-black charcoal, not mid-grey")
     return {
         "subject": sanitize_visual_text(npc.get("name") or npc_id, limit=80),
-        "canon": list(profile["global_style"])
-        + [
-            sanitize_visual_text(npc.get("role"), limit=120),
-            sanitize_visual_text(npc.get("persona"), limit=500),
-        ],
+        "canon": list(profile["global_style"]) + canon_npc,
         "player_description": appearance,
         "composition": list(profile["pose_constraints"]),
         "exclusions": _exclusions(profile, race_negative, "no secret unrevealed traits"),
@@ -215,6 +219,7 @@ def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief:
         "class_line": "",
         "scene": "",
         "quality": _quality(profile, "portrait"),
+        "is_npc": True,
     }
 
 
@@ -244,8 +249,11 @@ def build_epic_art_brief(
     if boss and boss.get("name"):
         kind = str(boss.get("type") or boss.get("categoria") or "boss")
         subject = f"{boss['name']} ({kind}) confronting the hero"
+        looks = sanitize_visual_text(boss.get("appearance") or boss.get("description"), limit=300)
+        brief["boss_line"] = f"{boss['name']} — {looks or profile['boss_fallback']}"
     else:
         subject = (event or {}).get("detail") or "decisive confrontation"
+        brief["boss_line"] = profile["boss_fallback"]
     world = state.get("world") or {}
     location_id = str(world.get("current_location_id") or "")
     scene_parts = [sanitize_visual_text(world.get("current_location"), limit=80)]
@@ -256,7 +264,13 @@ def build_epic_art_brief(
         if descriptor:
             scene_parts.append(descriptor)
     brief["subject"] = sanitize_visual_text(subject, limit=200)
-    brief["scene"] = ", ".join(part for part in scene_parts if part)
+    brief["scene"] = ". ".join(
+        [", ".join(part for part in scene_parts if part), profile["epic_scene_garb"]]
+    )
+    # "not a human" vale só para o herói numa cena com outros figurantes (chefe pode ser humano).
+    brief["exclusions"] = [
+        item.replace("not a human", "the HERO is not a human", 1) for item in brief["exclusions"]
+    ]
     brief["composition"] = [profile["epic_poses"][pose_id], *profile["pose_constraints"]]
     brief["reference_asset_ids"] = ["player:approved_portrait"] + (
         [f"location:{location_id}"] if location_id else []
@@ -290,12 +304,15 @@ def render_image_prompt(brief: ArtBrief, references: Sequence[str] | None = None
     )
     if brief.get("class_line"):
         lines.append(f"CLASS: {brief['class_line']}")
+    if brief.get("boss_line"):
+        lines.append(f"BOSS: {brief['boss_line']}")
     if brief.get("scene"):
         lines.append(f"SCENE: {brief['scene']}")
     lines.extend(
         [
             "CANON:\n- " + "\n- ".join(brief["canon"]),
-            f"PLAYER-DECLARED APPEARANCE (complements RACE, never replaces it): "
+            f"{'NPC APPEARANCE (canon)' if brief.get('is_npc') else 'PLAYER-DECLARED APPEARANCE'}"
+            f" (complements RACE, never replaces it): "
             f"{brief['player_description'] or 'not specified'}",
             "ANATOMY AND POSE REQUIREMENTS:\n- " + "\n- ".join(brief["composition"]),
             "EXCLUSIONS:\n- " + "\n- ".join(item for item in brief["exclusions"] if item),

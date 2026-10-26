@@ -20,7 +20,7 @@ from services.art_brief import (
     reference_kind,
     render_image_prompt,
 )
-from services.art_similarity import dhash64, hamming
+from services.art_similarity import dhash64, dhash64_mirrored, hamming
 from services.asset_pipeline import object_key, process_image
 from services.usage_metering import safe_provider_usage
 
@@ -131,10 +131,12 @@ def canon_similarity(
     output: bytes, used: tuple[str, ...], payloads: tuple[bytes, ...], *, threshold: int
 ) -> dict:
     """R12: dHash da saída vs. cada referência canônica (o retrato do herói não entra)."""
+    out_hash, out_mirror = dhash64(output), dhash64_mirrored(output)
     distances = [
-        hamming(dhash64(output), dhash64(payload))
+        min(hamming(out_hash, ref_hash), hamming(out_mirror, ref_hash))
         for asset_id, payload in zip(used, payloads, strict=True)
         if reference_kind(asset_id) != "identity"
+        for ref_hash in (dhash64(payload),)
     ]
     if not distances:
         return {"similar_to_canon": False, "canon_min_hamming": None}

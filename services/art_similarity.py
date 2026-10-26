@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from io import BytesIO
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 def dhash64(png: bytes) -> int:
@@ -17,6 +17,14 @@ def dhash64(png: bytes) -> int:
         for col in range(8):
             bits = (bits << 1) | (pixels[row * 9 + col] > pixels[row * 9 + col + 1])
     return bits
+
+
+def dhash64_mirrored(png: bytes) -> int:
+    """dHash da imagem espelhada na horizontal (cópia espelhada não escapa do guard)."""
+    with Image.open(BytesIO(png)) as image:
+        out = BytesIO()
+        ImageOps.mirror(image.convert("RGB")).save(out, "PNG")
+    return dhash64(out.getvalue())
 
 
 def hamming(a: int, b: int) -> int:

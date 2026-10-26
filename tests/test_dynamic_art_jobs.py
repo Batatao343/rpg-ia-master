@@ -290,3 +290,14 @@ def test_retrato_proprio_fora_do_guard(tmp_path):
     brief = build_epic_art_brief({"player": {"race": "Elfo"}}, {})  # só o retrato (sem local)
     _, result = _run(brief, tmp_path, copy, portrait_key=lambda: key, subject="scene")
     assert result["similar_to_canon"] is False and result["canon_min_hamming"] is None
+
+
+def test_guard_pega_copia_espelhada(tmp_path):
+    def mirrored(request):
+        with Image.open(BytesIO(request.reference_payloads[0])) as source:
+            out = BytesIO()
+            ImageOps.mirror(source.convert("RGB")).save(out, "PNG")
+            return out.getvalue()
+
+    _, result = _run(_player_brief(), tmp_path, RecordingGenerator(reply=mirrored))
+    assert result["similar_to_canon"] is True and result["canon_min_hamming"] < 14

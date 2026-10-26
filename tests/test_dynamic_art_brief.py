@@ -217,3 +217,48 @@ def test_epico_sem_detail_nao_vira_generico():
         assert "momento épico" not in brief["subject"]
     no_boss = build_epic_art_brief({**_epic_state(), "enemies": []}, {})
     assert no_boss["subject"] == "decisive confrontation"
+
+
+# --- Correções do smoke §6 (coordenador, 26/10) ----------------------------- #
+def test_epico_tem_linha_boss_com_aparencia_do_inimigo():
+    state = _epic_state()
+    state["enemies"][0]["description"] = "Capitão afogado de oleado rasgado e capuz de lã."
+    prompt = render_image_prompt(build_epic_art_brief(state, {}))
+    assert "BOSS: Capitão Vorr — Capitão afogado de oleado rasgado" in prompt
+
+
+def test_epico_boss_sem_dados_usa_fallback_neutro():
+    prompt = render_image_prompt(build_epic_art_brief(_epic_state(), {}))
+    assert "not by pirate-film archetypes" in prompt.split("BOSS:")[1].splitlines()[0]
+
+
+def test_cena_veste_todos_em_medieval_valoriano_e_veta_arquetipo_pirata():
+    prompt = render_image_prompt(build_epic_art_brief(_epic_state(), {}))
+    scene = prompt.split("SCENE:")[1].splitlines()[0]
+    assert "every figure, including the boss" in scene and "no 17th-18th century" in scene
+    for needle in ("Pirates of the Caribbean", "Davy Jones", "Bloodborne", "seaweed-bearded"):
+        assert needle in prompt
+
+
+def test_not_a_human_so_para_o_heroi_nas_cenas():
+    state = {**_epic_state(), "player": _player("Elfo")}
+    exclusions = build_epic_art_brief(state, {})["exclusions"]
+    assert any(item.startswith("the HERO is not a human") for item in exclusions)
+    assert not any(item.startswith("not a human") for item in exclusions)
+    assert "- not a human" in _prompt("Elfo")  # retrato: inalterado
+
+
+def test_npc_usa_rotulo_canon_e_reforca_pele_quase_preta():
+    state = _npc_state(appearance="Cinzéu com pele quase preta.", race_id="race_cinzeus")
+    prompt = render_image_prompt(art_brief.build_npc_art_brief(state, "kahen"))
+    assert "NPC APPEARANCE (canon)" in prompt and "near-black charcoal" in prompt
+    assert "PLAYER-DECLARED" not in prompt
+
+
+def test_dedos_do_codex_e_anao_osshari_ajustados():
+    descriptors = art_brief.load_art_profile()["race_descriptors"]
+    assert "three fingers and one thumb" in descriptors["race_elfos"]["positive"]
+    assert "no five-fingered hands" in descriptors["race_cinzeus"]["negative"]
+    assert "always visible" in descriptors["race_anoes_fuligem"]["positive"]
+    assert "scaled crested head" in descriptors["race_osshari"]["positive"]
+    assert art_brief.load_art_profile()["canon_similarity_min_hamming"] == 14

@@ -6,7 +6,7 @@
     "portrait": {"size": "1024x1536", "quality": "medium"},
     "epic_scene": {"size": "1536x1024", "quality": "medium"}
   },
-  "canon_similarity_min_hamming": 10,
+  "canon_similarity_min_hamming": 14,
   "global_style": [
     "intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate",
     "palette of umber, rust, ochre, soot black, bruised violet and tarnished teal; low warm lantern light; no glossy digital render, no photorealism",
@@ -18,14 +18,15 @@
     "no firearms, tricorn hats, frock coats or modern tailoring",
     "face not hidden by a mask in portraits",
     "no photorealism",
-    "original character, no likeness to The Witcher, Warhammer, Lord of the Rings or Elden Ring characters",
+    "original character, no likeness to The Witcher, Warhammer, Lord of the Rings, Elden Ring, Bloodborne or Pirates of the Caribbean (Davy Jones, Flying Dutchman crew) characters",
+    "no tentacle-bearded or seaweed-bearded ghost-captain archetype",
     "no caricature",
     "no text, logo, watermark, graphic gore or sexualized presentation"
   ],
   "reference_preambles": {
     "canon": "canonical Valoria art: match technique, palette and racial anatomy; create a NEW individual and a NEW scene; do not copy the reference composition.",
     "canon_location": "canonical Valoria place art: match technique, palette and the architecture and mood of the place; create a NEW scene; do not copy the reference composition.",
-    "identity": "the hero's approved portrait: SAME person: identical face, age, hair, scars, outfit; change only pose and background."
+    "identity": "the hero's approved portrait: SAME person: identical face, age, hair, scars, outfit; change the pose and background, showing a clearly different action (seated, walking, or mid-gesture with a new instrument)."
   },
   "neutral_race_descriptor": {
     "name": "unspecified",
@@ -39,6 +40,8 @@
     "hands proportionate to framing and weapon grips mechanically correct",
     "spatially consistent interaction, no extreme contortion, impossible perspective, aggressive foreshortening or disconnected limbs"
   ],
+  "epic_scene_garb": "every figure, including the boss, wears Valorian dark-medieval garb: oilskin or wool cloaks, leather jerkins, hoods or knitted caps, rope, iron and brass; no 17th-18th century naval hats or coats",
+  "boss_fallback": "Valorian foe in dark-medieval gear, appearance defined by Valoria, not by pirate-film archetypes",
   "epic_poses": {
     "defensive_stance": "grounded defensive stance, balanced feet and guarded torso",
     "grounded_advance": "measured forward advance with weight over the leading foot",
@@ -53,12 +56,12 @@
     },
     "race_elfos": {
       "name": "Elfo",
-      "positive": "tall elf: four fingers per hand, very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood",
-      "negative": "not a human"
+      "positive": "tall elf: exactly three fingers and one thumb per hand (four digits total), very long pronounced pointed ears, angular features; skin spans deep purple to near-translucent white with always-visible veins (pale luminous on purple skin, purple on white skin); dry skin cracked like old porcelain, without blood",
+      "negative": "not a human; no five-fingered hands"
     },
     "race_anoes_fuligem": {
       "name": "Anão da Fuligem",
-      "positive": "Soot Dwarf: short but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator and protective goggles",
+      "positive": "Soot Dwarf: short (head at the chest height of a human) but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator mask worn over the mouth or hanging at the neck (always visible) and protective goggles",
       "negative": "not a human; not a slim or human-proportioned figure"
     },
     "race_vrel": {
@@ -68,12 +71,12 @@
     },
     "race_cinzeus": {
       "name": "Cinzéu",
-      "positive": "ash-grey to near-black hairless skin with no warm undertones, WHITE irises, three fingers per hand, hairless bony-tipped tail, black-and-white tattoos, piercings and decorative chains set into the back",
-      "negative": "not a human; skin is the non-human tone of this Valorian race, not a real-world human ethnicity"
+      "positive": "ash-grey to near-black hairless skin with no warm undertones, WHITE irises, two fingers and one thumb per hand (three digits total), hairless bony-tipped tail, black-and-white tattoos, piercings and decorative chains set into the back",
+      "negative": "not a human; no five-fingered hands; skin is the non-human tone of this Valorian race, not a real-world human ethnicity"
     },
     "race_osshari": {
       "name": "Osshari",
-      "positive": "tall robust amphibian: vivid unique scale pattern on arms, back and parts of legs, but the face is hard thick leather without scales; elongated animal-like face, vertical-pupil eyes, webbed fingers; very little clothing, reapplied body paint as adornment",
+      "positive": "tall robust amphibian: vivid unique scale pattern on arms, back and legs; scaled crested head with leathery face plates, elongated animal-like face, vertical-pupil eyes, clearly webbed hands and feet; very little clothing, reapplied body paint as adornment",
       "negative": "not a human; skin is the non-human tone of this Valorian race, not a real-world human ethnicity"
     }
   },

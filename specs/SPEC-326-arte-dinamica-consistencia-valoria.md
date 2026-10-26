@@ -1,6 +1,6 @@
 # SPEC-326 — Arte dinâmica consistente com Valoria (estética, lore e raça)
 
-> **Status:** `in-progress` (aprovada 26/10, D1–D7 nos padrões recomendados; código + testes offline prontos; falta revisão independente e o §6 real)
+> **Status:** `in-progress` (aprovada 26/10, D1–D7 nos padrões recomendados; código + testes offline prontos; §6 real rodado em 26/10: 7/8 passam, épico reprovou e foi corrigido; falta re-rodar o épico, revisão independente)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** pipeline de arte dinâmica já na `main` (`services/art_brief.py`, `workers/dynamic_art_jobs.py`, `infrastructure/openai_images.py`, cotação de imagem)
 > **Desbloqueia:** `RPG_DYNAMIC_ART_ENABLED=1` no staging (só depois do §6 aprovado)
@@ -290,3 +290,15 @@ Ficha de contato e notas no handoff `handoffs/SPEC-326-smoke.md`; o dono vê a f
   - `_offer_brief_for_quote` em `api.py` isola a reconstrução da oferta v1 (R2) para teste offline.
   - Chave de idempotência do adapter agora inclui `quality` e o hash das referências.
   - Logs novos: `art.race_unresolved`, `art.reference_missing`, `art.canon_similarity`, `art.canon_similarity_failed`.
+- **26/10 — correções pós-§6 (decisões do coordenador, seguindo a recomendação do revisor).** O épico reprovou
+  (chefe "Capitão Afogado" saiu como Davy Jones, lore 2). Mudanças:
+  - Linha `BOSS:` (aparência do inimigo, `appearance`/`description`, com fallback neutro "not by pirate-film archetypes").
+  - `SCENE` afirma em positivo que todos, chefe incluso, vestem traje medieval sombrio valoriano.
+  - Negativos globais ampliados (Bloodborne, Piratas do Caribe/Davy Jones, "ghost-captain" de barba de alga/tentáculo).
+  - Em cenas, "not a human" vira "the HERO is not a human".
+  - Contagem de dedos escrita por extenso (elfo: três dedos e um polegar; cinzéu: dois e um polegar) e "no five-fingered hands"
+    nas exclusões. Decisão: manter o descritor do codex sem reprovar o §6 por isso.
+  - Osshari segue a arte canônica (cabeça escamada com crista, mãos e pés palmados). Anão: respirador sempre visível e escala de altura.
+  - NPC: rótulo `NPC APPEARANCE (canon)` e reforço "near-black charcoal" quando a aparência diz quase preta.
+  - Reformulação/identidade pede ação claramente diferente.
+  - Guard R12: limiar 10 → 14 e comparação também com a saída espelhada (`dhash64_mirrored`).
