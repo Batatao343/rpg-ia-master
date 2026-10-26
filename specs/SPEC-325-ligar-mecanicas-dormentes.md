@@ -806,3 +806,5 @@ Notas sobre a medida (smoke do executor após as correções da revisão, 10 see
     reportado em `last_player_action` com a flag diferente de `off` (desvio 14 corrigido). **C-P2-5** a linha D9
     `coragem >= 2` -> `abandonar_posto` (resistente) é registrada como regra extra da tabela. **C-P2-6** chips em
     `web/src/combat/conflictChips.ts` com teste (`web/tests/conflict-chips.test.mjs`).
+- 26/10 — **gate R17 da Fase C (coordenador)**, A+B `on`, reforço `shadow`, C off vs on (`RPG_COMBAT_OBJECTS`, `RPG_COMPANION_ORDERS`), MockLLM: arena 10 seeds máx |Δ| = **0,0 pp** (32 células); matriz 5 classes × 42/43 × 50 turnos nos perfis `combate` e `recrutador`: 20/20 limpas (0 erro, 0 violação, 0 `no_progress`); long-run 12 × 200: 0 erro, só as 2 `summary.lifecycle` pré-existentes (seeds 25/32). Fase C pronta para `on`.
+- 26/10 — **Fase D: gate NÃO passa** (célula `lider_matilha` +26 a +37 pp com o reforço = Lacaio real; atraso de chegada não resolve). `RPG_COMBAT_REINFORCEMENTS` fica `shadow` — **decisão do dono pendente**: (1) reforço só em encontros com folga de orçamento [recomendado], (2) aceitar a letalidade maior, (3) desistir do D4.
