@@ -129,6 +129,14 @@
 .ws-mhead .iconbtn { flex: none; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .playmenu__trigger { font-size: 1.3rem; line-height: 1; letter-spacing: 0; }
 .ws-root > .banner { position: static; flex: none; box-shadow: none; }
+/* SPEC-321 R4 (regressão): no celular, aviso transitório (warn/info, some em 9 s) flutua sobre o topo da história,
+   logo abaixo do cabeçalho, em vez de tomar ~100 px do orçamento vertical. Erro persistente segue no fluxo. */
+@media (max-width: 600px) {
+  .ws-root > .banner.is-warn, .ws-root > .banner.is-info {
+    position: fixed; z-index: var(--z-toast); left: 0.5rem; right: 0.5rem; width: auto;
+    top: calc(52px + env(safe-area-inset-top) + 0.25rem); box-shadow: 0 8px 24px -12px oklch(0 0 0 / 0.8);
+  }
+}
 
 .mtabbar {
   flex: none; display: flex; align-items: stretch; min-width: 0;

@@ -187,6 +187,9 @@ test.describe("desktop 1440", () => {
     await expect(sep).toHaveAttribute("aria-valuenow", "50");
 
     // Ponteiro: arrastar para ~70%.
+    // O layout só assenta depois do Enter (50%): espera o divisor parar de se mover antes de medir e arrastar.
+    let lastX = -1;
+    await expect.poll(async () => { const x = (await sep.boundingBox())!.x; const stable = Math.abs(x - lastX) < 0.5; lastX = x; return stable; }).toBe(true);
     const box = (await sep.boundingBox())!;
     const grid = (await page.locator(".ws").boundingBox())!;
     await page.mouse.move(box.x + box.width / 2, box.y + 200);
