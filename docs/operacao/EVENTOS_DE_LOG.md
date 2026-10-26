@@ -309,7 +309,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `sse.fallback` | — |
 | `sse.started` | `transport` |
 | `sse.token_replace` | `common_prefix_len`, `final_len`, `reason`, `shown_len` |
-| `sse.token_stream_shadow` | `identical_to_final`, `ttft_shadow_ms`, `would_replace` |
+| `sse.token_stream_shadow` | `identical_to_final`, `reason`, `ttft_shadow_ms`, `would_replace` |
 | `sse.worker_finished_after_disconnect` | `outcome` |
 | `store.listing_row_skipped` | `error` |
 | `storyteller.failed` | `error` |
