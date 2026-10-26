@@ -76,7 +76,7 @@ export function ConfirmNewDialog({ simulation, onCancel, onConfirm }: {
         <p id="confirm-new-title" className="playmenu__title">{simulation ? "Reiniciar a simulação?" : "Sair desta jornada?"}</p>
         <p id="confirm-new-desc" className="muted">
           Há uma ação em andamento ou ainda não confirmada. O que já foi salvo continua na lista de jornadas;
-          a ação pendente será abandonada.
+          a ação pendente fica guardada e você poderá retomá-la ao reabrir esta jornada.
         </p>
         <button type="button" className="btn btn--primary playmenu__item" onClick={onCancel}>Continuar aqui</button>
         <button type="button" className="btn btn--ghost playmenu__item" onClick={onConfirm}>

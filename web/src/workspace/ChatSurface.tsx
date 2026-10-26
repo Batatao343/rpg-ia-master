@@ -43,8 +43,8 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
   const sceneKey = data?.visual?.scene?.location_id ?? data?.current_location ?? "";
   const turnCount = data?.world?.turn_count ?? 0;
   const [entry, setEntry] = useState({ key: sceneKey, turn: turnCount });
-  if (entry.key !== sceneKey) setEntry({ key: sceneKey, turn: turnCount });
   const [scrolled, setScrolled] = useState(false);
+  if (entry.key !== sceneKey) { setEntry({ key: sceneKey, turn: turnCount }); setScrolled(false); }
   const [override, setOverride] = useState<{ key: string; closed: boolean } | null>(null);
   const autoCollapsed = scrolled || turnCount > entry.turn;
   const artCollapsed = mobile && (override?.key === sceneKey ? override.closed : autoCollapsed);
@@ -100,7 +100,7 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
         <StoryLog entries={log} thinking={thinking} active={active}
           initialScroll={initialScroll}
           onScrollPosition={onStoryScroll}
-          offers={data?.art_offers} onOffer={stableOffer} offersDisabled={offersDisabled} />
+          offers={simulation || data?.game_over ? undefined : data?.art_offers} onOffer={stableOffer} offersDisabled={offersDisabled} />
       </div>
       {mobile && fighting && !blocked && onOpenCombat && (
         <button type="button" className="btn btn--primary ws-chat__combat" onClick={onOpenCombat}>
@@ -128,6 +128,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   const gameId = data?.game_id;
   const formRef = useRef<HTMLFormElement>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
+  const composing = useRef(false); // IME: entre compositionstart e compositionend
   useComposerHeight(formRef);
   const elapsed = useTurnClock(busy);
   const [input, setInputState] = useState(() => getChatSession(gameId).draft);
@@ -191,9 +192,11 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
         autoComplete="off"
         enterKeyHint="send"
         disabled={blocked}
+        onCompositionStart={() => { composing.current = true; }}
+        onCompositionEnd={() => { composing.current = false; }}
         onKeyDown={(e) => {
           if (!shouldSubmitOnKey({ key: e.key, shiftKey: e.shiftKey, altKey: e.altKey, ctrlKey: e.ctrlKey, metaKey: e.metaKey,
-            isComposing: e.nativeEvent.isComposing, keyCode: e.keyCode })) return;
+            isComposing: e.nativeEvent.isComposing, keyCode: e.keyCode, compositionActive: composing.current })) return;
           e.preventDefault();
           submit();
         }}

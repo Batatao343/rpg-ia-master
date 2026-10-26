@@ -124,7 +124,7 @@
 }
 .ws-mhead__title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .ws-mhead .ws-bar__status { flex: none; flex-direction: column; flex-wrap: nowrap; align-items: flex-end; gap: 0; font-size: 0.72rem; line-height: 1.25; }
-.ws-mhead .ws-stat--fight { display: none; }
+.ws-mhead .ws-stat--fight { font-size: 0.6rem; padding: 0 0.3rem; }
 .ws-mhead .iconbtn { flex: none; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .playmenu__trigger { font-size: 1.3rem; line-height: 1; letter-spacing: 0; }
 .ws-root > .banner { position: static; flex: none; box-shadow: none; }

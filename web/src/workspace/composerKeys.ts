@@ -8,12 +8,15 @@ export interface ComposerKeyEvent {
   altKey?: boolean;
   ctrlKey?: boolean;
   metaKey?: boolean;
+  /** `false` = o IME já terminou (compositionend). Android/Gboard manda Enter com keyCode 229 mesmo assim. */
+  compositionActive?: boolean;
 }
 
 export function shouldSubmitOnKey(e: ComposerKeyEvent): boolean {
   if (e.key !== "Enter") return false;
   if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return false;
-  if (e.isComposing || e.keyCode === 229) return false;
+  if (e.isComposing) return false;
+  if (e.keyCode === 229) return e.compositionActive === false; // 229 sem composição ativa = envio no Android
   return true;
 }
 

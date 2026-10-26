@@ -52,6 +52,11 @@ for (const width of [390, 1440]) {
     await page.getByRole("button", { name: "Agir" }).click();
     await expect(page.getByRole("button", { name: /Estimativa de custo técnico: US\$ 0,000041550/ })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    // SPEC-321 R2: na partida, Conta (com saldo) e Sair ficam no menu ⋯ (celular) ou na topbar (desktop).
+    if (width < 900) await page.getByRole("button", { name: "Menu", exact: true }).click();
+    await expect(page.getByRole("button", { name: "Encerrar sessão" })).toBeVisible();
+    await page.getByRole("button", { name: /Conta · 3,25 Estilhas/ }).click();
+    await expect(page.getByRole("heading", { name: "Minha conta" })).toBeVisible();
   });
 }
 

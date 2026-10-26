@@ -134,7 +134,7 @@ test("SPEC-188 changing campaign clears pending quote busy state and ignores lat
   await openGame(page);
   await page.getByRole("button", { name: "Cotar retrato" }).click();
   await expect(page.getByRole("button", { name: "Cotar retrato" })).toBeDisabled();
-  await page.getByRole("button", { name: "Nova" }).click();
+  await page.getByRole("button", { name: "Nova jornada" }).click();
   await page.getByRole("button", { name: /Origem/ }).click();
   await page.getByRole("button", { name: "Humano" }).click();
   await page.getByRole("button", { name: /Vocação/ }).click();

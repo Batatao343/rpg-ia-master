@@ -157,6 +157,7 @@ Staging, conta logada, ~3 turnos.
 4. Cotar retrato pelo painel Personagem, até a cotação e sem confirmar a compra.
 5. No iPhone/Android real, se houver: conferir que a `mtabbar` não fica sob a barra de gestos.
 6. Anexar os screenshots antes/depois ao handoff.
+7. Android real: digitar uma palavra com autocorreção (Gboard) e tocar Enter/Enviar uma só vez; deve enviar sem inserir quebra de linha (IME, R10).
 
 ## 7. Riscos & compatibilidade
 
@@ -185,3 +186,4 @@ Staging, conta logada, ~3 turnos.
   - **R7:** o e2e novo mede a caixa real dos controles (≥ 43,5 px) nas superfícies Crônica, Personagem, Codex, Combate e Mapa a 390×844 com `isMobile`/`hasTouch`.
   - **R8:** além do `capacitor.config.ts` (`StatusBar` DARK), `AppTheme.NoActionBar` do Android ganhou `statusBarColor`/`windowLightStatusBar`, porque o plugin `@capacitor/status-bar` não está instalado (SPEC-198).
   - Testes e2e antigos adaptados aos novos nomes (`Crônica`, `Lado a lado`, `Crônica da aventura`), ao `textarea` do compositor e ao novo lugar de "Cotar retrato" (painel Personagem).
+- **2026-10-25 · correções da revisão (sol).** `voice-input`/`image-quote` usam "Nova jornada"; chips de oferta só fora de laboratório/memorial e com `aria-live="off"`; texto da confirmação diz que a ação pendente fica guardada; `scrolled` reinicia ao mudar de local; Enter com `keyCode 229` sem composição ativa envia (Android); cabeça mobile mostra "⚔ Combate · rodada N"; e2e de Conta/Sair no menu ⋯ (`account.spec`).

@@ -24,6 +24,12 @@ test('composição de IME (isComposing ou keyCode 229) não envia', () => {
   assert.equal(shouldSubmitOnKey({ key: 'Enter', shiftKey: false, keyCode: 229 }), false);
 });
 
+test('Android: Enter 229 sem composição ativa envia; com composição ativa não', () => {
+  assert.equal(shouldSubmitOnKey({ key: 'Enter', shiftKey: false, keyCode: 229, compositionActive: false }), true);
+  assert.equal(shouldSubmitOnKey({ key: 'Enter', shiftKey: false, keyCode: 229, compositionActive: true }), false);
+  assert.equal(shouldSubmitOnKey({ key: 'Enter', shiftKey: false, keyCode: 229, isComposing: true, compositionActive: false }), false);
+});
+
 test('outras teclas e Enter com modificador não enviam', () => {
   assert.equal(shouldSubmitOnKey({ key: 'a', shiftKey: false }), false);
   assert.equal(shouldSubmitOnKey({ key: 'Enter', shiftKey: false, ctrlKey: true }), false);

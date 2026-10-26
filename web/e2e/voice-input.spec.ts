@@ -142,7 +142,7 @@ test("SPEC-187 background, pagehide, cancellation and unmount release tracks wit
     await page.getByRole("button", { name: "Gravar ação por voz" }).click();
     await expect(page.getByRole("button", { name: "Parar gravação" })).toBeVisible();
     if (event === "cancel") await page.getByRole("button", { name: "Cancelar voz" }).click();
-    else if (event === "unmount") await page.getByRole("button", { name: "Nova", exact: true }).click();
+    else if (event === "unmount") await page.getByRole("button", { name: "Nova jornada" }).click();
     else await page.evaluate(event => {
       if (event === "visibilitychange") {
         Object.defineProperty(document, "visibilityState", { configurable: true, value: "hidden" });

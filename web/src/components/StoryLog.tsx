@@ -65,7 +65,7 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
   const streaming = entries.some((entry) => entry.streaming);
   const lastNarrator = entries.reduce((idx, e, i) => (e.role === "narrator" ? i : idx), -1);
   const offerRow = (offers?.length ?? 0) > 0 && onOffer ? (
-    <div className="msg__offers">
+    <div className="msg__offers" aria-live="off">
       {offers!.map((offer) => (
         <button key={offer.offer_id} type="button" className="msg__offer" disabled={offersDisabled}
           onClick={() => onOffer(offer)}>
