@@ -317,7 +317,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
         {gameId && (
           <a className="iconbtn" href={"/game/chronicle/export?game_id=" + encodeURIComponent(gameId)}
              download title="Baixar a crônica como .txt">
-            ⤓ .txt
+            <Icon name="download" /> .txt
           </a>
         )}
       </div>

@@ -34,6 +34,11 @@ export function oklchToLinear(L, C, Hdeg) {
 export function parseOklch(value) {
   const m = value.match(/^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/);
   if (!m) throw new Error(`nao e oklch(): ${value}`);
+  const alpha = value.match(/\/\s*([\d.]+%?)\s*\)/);
+  if (alpha) {
+    const a = alpha[1].endsWith("%") ? parseFloat(alpha[1]) / 100 : Number(alpha[1]);
+    if (a < 1) throw new Error(`token translucido nao serve de cor de texto/fundo opaco: ${value}`);
+  }
   return oklchToLinear(Number(m[1]), Number(m[2]), Number(m[3]));
 }
 
@@ -55,10 +60,14 @@ export function tokenRatio(tokens, fg, bg) {
 }
 
 const SURFACES = ["--surface", "--surface-2", "--bg-deep", "--bg"];
+const FIELD_BGS = ["--bg-deep", "--surface", "--surface-2", "--bg"];
 /** Pares exigidos: [fg, bg[], minimo]. Texto >= 4,5 (1.4.3); bordas de campo >= 3 (1.4.11). */
 export const REQUIRED = [
   ...["--ink", "--muted", "--faint", "--danger-text", "--abyss-text", "--accent"].map((fg) => [fg, SURFACES, 4.5]),
-  ["--field-border", ["--bg-deep", "--surface", "--bg"], 3.0],
+  ["--field-border", FIELD_BGS, 3.0],
+  // botões preenchidos
+  ["--on-danger", ["--danger"], 4.5],
+  ["--on-accent", ["--accent", "--accent-strong"], 4.5],
 ];
 
 export function check(tokens = readTokens()) {

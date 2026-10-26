@@ -8,7 +8,7 @@
 .deck__note { margin: 0; color: var(--muted); font-size: 0.78rem; }
 .deck__levelup { justify-self: start; min-height: 44px; padding: 0.4rem 0.8rem; border: 1px solid var(--accent); border-radius: var(--r-sharp); background: var(--state-selected); color: var(--ink); cursor: pointer; }
 .deck__filters { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
-.deck__filter, .deck__sub select { min-height: 44px; padding: 0.3rem 0.8rem; border: 1px solid var(--line); border-radius: var(--r-sharp); background: var(--surface); color: var(--muted); cursor: pointer; font: inherit; }
+.deck__filter, .deck__sub select { min-height: 44px; padding: 0.3rem 0.8rem; border: 1px solid var(--field-border); border-radius: var(--r-sharp); background: var(--surface); color: var(--muted); cursor: pointer; font: inherit; }
 .deck__filter[aria-pressed="true"] { border-color: var(--accent); background: var(--state-selected); color: var(--ink); }
 .deck__list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 0.55rem; margin: 0; padding: 0; list-style: none; }
 .deck__list > .combat-empty { grid-column: 1 / -1; }

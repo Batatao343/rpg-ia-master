@@ -54,7 +54,7 @@ export const EFFECTS: EffectContract[] = [
   { id: "turn.status.ink", matrix_ref: "M08", reason: "Traço de tinta na linha de status do turno: o narrador trabalha (SPEC-320).",
     trigger: "turno em espera (stage=waiting)", states: { start: "sem traço", end: "traço desenhado (scaleX 0 → 1)", pending: "repete enquanto espera" },
     duration_token: "slow", easing_token: "ease-out", interruptible: true,
-    reduced_motion_fallback: "Traço estático e cheio; as fases ✓ seguem em texto.", cost: xform(), test: `${T}::turn.status.ink`, data_dependency: "none", sound: null },
+    reduced_motion_fallback: "Traço estático e cheio; as fases cumpridas seguem em texto.", cost: xform(), test: `${T}::turn.status.ink`, data_dependency: "none", sound: null },
   { id: "tab.indicator", matrix_ref: "M19", reason: "Aba ativa inequívoca; indicador desliza entre abas (layoutId).",
     trigger: "seleção de aba (clique/setas)", states: { start: "indicador na aba anterior", end: "indicador na aba ativa" },
     duration_token: "base", easing_token: "ease-out", interruptible: true,

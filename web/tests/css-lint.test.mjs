@@ -15,16 +15,17 @@ const walk = (d, ext, out = []) => {
   }
   return out;
 };
-const cssFiles = walk(SRC, [".css"]).filter((f) => !f.endsWith("fonts.css"));
+const allCss = walk(SRC, [".css"]);
+const cssFiles = allCss.filter((f) => !f.endsWith("fonts.css"));
 const strip = (s) => s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, " "));
 const lines = (f) => strip(readFileSync(f, "utf8")).split("\n");
 const rel = (f) => f.slice(SRC.length + 1);
 
 test("R5: zero hex/rgb()/hsl() literal em CSS (cor só por token oklch)", () => {
   const bad = [];
-  for (const f of cssFiles) {
-    lines(f).forEach((l, i) => {
-      if (/data:image\/svg/.test(l)) return; // grão SVG embutido
+  for (const f of allCss) {
+    lines(f).forEach((l0, i) => {
+      const l = l0.replace(/url\((["']?)data:[^)]*\)/g, "url()"); // remove só o payload data: embutido
       if (/#[0-9a-fA-F]{3,8}\b/.test(l) || /\b(rgba?|hsla?)\(/.test(l)) bad.push(`${rel(f)}:${i + 1}`);
     });
   }
@@ -56,7 +57,7 @@ test("R7: border-radius só por token (ou 0 / 50% / inherit)", () => {
   const bad = [];
   for (const f of cssFiles) {
     lines(f).forEach((l, i) => {
-      for (const m of l.matchAll(/border-(?:(?:top|bottom)-(?:left|right)-)?radius:\s*([^;}]+)/g)) {
+      for (const m of l.matchAll(/(?:border-(?:(?:top|bottom)-(?:left|right)-)?|border-(?:start|end)-(?:start|end)-)radius:\s*([^;}]+)/g)) {
         if (!ok.test(m[1].trim().replace(/\s*!important$/, ""))) bad.push(`${rel(f)}:${i + 1} ${m[1].trim()}`);
       }
     });
@@ -105,4 +106,19 @@ test("R12: z-index > 2 só por token --z-*", () => {
     });
   }
   assert.deepEqual(bad, []);
+});
+
+test("R5: cor literal oklch() fora de :root não cresce (catraca; migrar para tokens)", () => {
+  const MAX = 57; // medido em 2026-10-26; só pode DIMINUIR
+  let n = 0;
+  for (const f of cssFiles) {
+    let inRoot = false;
+    lines(f).forEach((l) => {
+      if (/^:root\b/.test(l)) inRoot = true;
+      if (inRoot) { if (/^}/.test(l)) inRoot = false; return; }
+      if (/^\s*--/.test(l)) return;
+      n += (l.match(/oklch\(/g) || []).length;
+    });
+  }
+  assert.ok(n <= MAX, `oklch() literais fora de :root: ${n} > ${MAX}`);
 });
