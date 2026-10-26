@@ -3,6 +3,7 @@ import type { SaveSummary } from "../types";
 import * as api from "../api";
 import { AUDIT_EXPORT_NOTICE, exportWithReauth } from "../lib/auditExport";
 import { Frame, Divider, Medallion } from "./ornaments";
+import { Icon } from "../design/icons";
 
 // spec polish-sessao (R3): tela "Continuar jornada" — lista campanhas salvas
 // com Continuar / Excluir (confirmação com o nome do herói) / Nova jornada.
@@ -76,8 +77,8 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulat
               >
                 <span className="savecard__name">
                   {s.name}
-                  {s.game_over && <span className="savecard__badge">⚰ memorial</span>}
-                  {s.combat_simulation && <span className="savecard__badge savecard__badge--lab">⚔ laboratório</span>}
+                  {s.game_over && <span className="savecard__badge"><Icon name="memorial" /> memorial</span>}
+                  {s.combat_simulation && <span className="savecard__badge savecard__badge--lab"><Icon name="combat" /> laboratório</span>}
                 </span>
                 <span className="savecard__meta">
                   {s.class_name} · nível {s.level}
@@ -95,7 +96,7 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulat
                   title="Exportar sessão para auditoria"
                   onClick={() => { setAuditing(s); setAuditPhase("confirm"); setAuditMessage(""); }}
                 >
-                  ⇩
+                  <Icon name="download" />
                 </button>
               )}
               <button
@@ -105,7 +106,7 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulat
                 aria-label={"Excluir a jornada de " + s.name}
                 onClick={() => setConfirming(s)}
               >
-                ✕
+                <Icon name="close" />
               </button>
             </li>
           ))}

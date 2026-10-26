@@ -11,6 +11,7 @@ import type {
 } from "../types";
 import { Frame, Divider, Medallion } from "./ornaments";
 import { VisualArtwork } from "./VisualArtwork";
+import { Icon } from "../design/icons";
 
 const LEVELS = [
   { v: 1, label: "Iniciante · 1" },
@@ -176,7 +177,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
           disabled={busy}
           onClick={onSimulate}
         >
-          <span aria-hidden>⚔</span>
+          <span aria-hidden><Icon name="combat" /></span>
           <span><strong>Simular combate</strong><small>Entrar direto na arena · zero LLM</small></span>
         </button>
 

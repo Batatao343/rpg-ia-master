@@ -7,6 +7,7 @@ import { openingAllowed } from "../turnWait";
 import type { GameResponse, LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
 import { shards } from "./AccountScreen";
+import { Icon } from "../design/icons";
 
 /** Distância (px) do fim considerada "no fim" para o auto-scroll (SPEC-204 R7). */
 const BOTTOM_SLACK = 48;
@@ -163,7 +164,7 @@ function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReve
           <button type="button" className="msg__cost-button" aria-expanded={costOpen}
             aria-controls={`cost-${entry.id}`}
             aria-label={`Custo deste turno. ${costText}`}
-            onClick={() => setCostOpen(value => !value)}>✧</button>
+            onClick={() => setCostOpen(value => !value)}><Icon name="cost" /></button>
           <span id={`cost-${entry.id}`} className={`msg__cost-detail${costOpen ? " is-open" : ""}`}>
             {costText}{!settled ? " · Sem débito em Estilhas" : ""}
           </span>

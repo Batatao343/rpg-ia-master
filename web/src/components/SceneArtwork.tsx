@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { SceneVisual } from "../types";
 import { useState } from 'react';
 import { ArtworkDialog } from './ArtworkDialog';
+import { Icon } from "../design/icons";
 
 /** SPEC-321 R4: `collapsed` (mobile) reduz a faixa a ≤ 72 px por troca de classe — sem animar altura. */
 export function SceneArtwork({ scene, collapsed = false, onToggle }: {
@@ -37,7 +38,7 @@ export function SceneArtwork({ scene, collapsed = false, onToggle }: {
       {onToggle && (
         <button type="button" className="scene-art__toggle" onClick={onToggle} aria-expanded={!collapsed}
           aria-label={collapsed ? `Mostrar a arte de ${scene.location_name}` : "Recolher a arte da cena"}>
-          <span aria-hidden>{collapsed ? "▾" : "▴"}</span>
+          <Icon name={collapsed ? "caret-down" : "caret-up"} />
         </button>
       )}
       {expandedKey === key && <ArtworkDialog url={image.url} alt={scene.asset.alt} onClose={() => setExpandedKey(null)} />}

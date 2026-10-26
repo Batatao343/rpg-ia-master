@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { SupportCode } from "./SupportCode";
+import { Icon } from "../design/icons";
 
 export interface BannerState {
   msg: string;
@@ -30,7 +31,7 @@ export function Banner({ state, onDone }: { state: BannerState | null; onDone: (
         {state.msg}
         {state.requestId ? <> <SupportCode requestId={state.requestId} /></> : null}
       </span>
-      <button type="button" className="banner__close" aria-label="Fechar aviso" onClick={onDone}>✕</button>
+      <button type="button" className="banner__close" aria-label="Fechar aviso" onClick={onDone}><Icon name="close" /></button>
     </div>
   );
 }

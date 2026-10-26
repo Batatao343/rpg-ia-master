@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion } from "motion/react";
 import { useModalFocus } from "../workspace/useModalFocus";
 import type { DeathView } from "../types";
+import { Icon } from "../design/icons";
 
 interface Props {
   busy: boolean;
@@ -32,7 +33,7 @@ export function DeathModal({ busy, onContinue, onAccept, death }: Props) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="death-card__sigil" aria-hidden>☠</div>
+        <div className="death-card__sigil" aria-hidden><Icon name="death" size="1em" /></div>
         <h2 id="death-title" className="death-card__title">Você tombou</h2>
         <p className="death-card__body">
           A escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao

@@ -20,7 +20,7 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
           <p className="quest__title">{main.objective || main.climax || "Sem objetivo definido no momento."}</p>
           {main.total > 0 && (
             <div className="quest__track" title={`${main.current_step}/${main.total}`}>
-              <div className="quest__fill" style={{ width: (main.total ? (main.current_step / main.total) * 100 : 0) + "%" }} />
+              <div className="quest__fill" style={{ transform: `scaleX(${main.total ? main.current_step / main.total : 0})` }} />
             </div>
           )}
         </div>

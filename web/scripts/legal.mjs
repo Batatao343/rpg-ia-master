@@ -9,6 +9,7 @@ export const PAGES = [
   { slug: 'termos', file: 'terms.md', label: 'Termos' },
   { slug: 'reembolso', file: 'refund-policy.md', label: 'Reembolso' },
   { slug: 'suporte', file: 'support.md', label: 'Suporte' },
+  { slug: 'creditos', file: 'credits.md', label: 'Créditos' },
 ];
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

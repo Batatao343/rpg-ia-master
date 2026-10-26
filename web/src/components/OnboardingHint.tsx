@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { safeStorage } from "../safeStorage";
+import { Icon } from "../design/icons";
 
 // spec polish-sessao (R6): painel dismissible do 1º turno — ensina os comandos
 // que o motor entende. 100% frontend; "dispensado" fica em localStorage por jogo.
@@ -33,7 +34,7 @@ export function OnboardingHint({ gameId }: { gameId: string }) {
             setHidden(true);
           }}
         >
-          ✕
+          <Icon name="close" />
         </button>
       </div>
       <ul className="onboard__list">

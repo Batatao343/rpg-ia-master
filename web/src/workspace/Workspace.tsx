@@ -14,6 +14,7 @@ import {
   CONTEXT_TABS, DEFAULT_WORKSPACE, MIN_CHAT_PX, MIN_CONTEXT_PX, SPLIT_MIN_VIEWPORT, TAB_LABELS,
   clampRatio, effectiveMode, workspaceReducer, type ContextTab, type WorkspaceState,
 } from "./workspaceModel";
+import { Icon } from "../design/icons";
 
 const SEPARATOR_PX = 12;
 
@@ -282,7 +283,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     <div className="ws-bar__status">
       <span className="ws-stat ws-stat--hp">Vitalidade <b>{p?.vitalidade ?? 0}/{p?.max_vitalidade ?? 0}</b></span>
       {(p?.max_entropy ?? 0) > 0 && <span className="ws-stat ws-stat--entropy">Entropia <b>{p?.entropy ?? 0}/{p?.max_entropy ?? 0}</b></span>}
-      {fighting && <span className="ws-stat ws-stat--fight">{mobile ? `⚔ Combate · rodada ${data?.combat?.round ?? 1}` : "em combate"}</span>}
+      {fighting && <span className="ws-stat ws-stat--fight">{mobile ? <><Icon name="combat" /> {`Combate · rodada ${data?.combat?.round ?? 1}`}</> : "em combate"}</span>}
     </div>
   );
 

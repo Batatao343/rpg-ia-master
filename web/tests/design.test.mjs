@@ -22,7 +22,7 @@ const cssVar = (name) => {
 };
 
 test('R2: tokens de duracao, easing, elevacao, estado e foco existem em tokens.css', () => {
-  for (const n of ['dur-instant', 'dur-fast', 'dur-base', 'dur-slow', 'ease-out', 'ease-in-out', 'ease-spring-soft',
+  for (const n of ['dur-instant', 'dur-fast', 'dur-base', 'dur-slow', 'ease-out', 'ease-in-out',
     'elev-0', 'elev-1', 'elev-2', 'elev-3', 'state-hover', 'state-pressed', 'state-selected', 'state-armed',
     'state-disabled', 'focus-ring', 'danger-dim', 'ink-soft']) cssVar(n);
 });
@@ -43,7 +43,7 @@ test('R3: paridade tokens.css <-> tokens.ts', async () => {
   assert.equal(cssVar('ease-out'), 'var(--ease)');
   const legacy = readFileSync(here('../src/styles.css'), 'utf8').match(/--ease:\s*cubic-bezier\(([^)]+)\)/)[1];
   assert.deepEqual(legacy.split(',').map(Number), [...t.EASING['ease-out']]);
-  for (const name of ['ease-in-out', 'ease-spring-soft']) {
+  for (const name of ['ease-in-out']) {
     const raw = cssVar(name).match(/cubic-bezier\(([^)]+)\)/)[1];
     assert.deepEqual(raw.split(',').map(Number), [...t.EASING[name]], name);
   }
@@ -53,7 +53,7 @@ test('R3: paridade tokens.css <-> tokens.ts', async () => {
 
 test('R2: tokens legados nao foram renomeados nem removidos', () => {
   const root = readFileSync(here('../src/styles.css'), 'utf8');
-  for (const n of ['bg', 'surface', 'line', 'ink', 'accent', 'accent-glow', 'danger', 'danger-bright', 'mana', 'stamina',
+  for (const n of ['bg', 'surface', 'line', 'ink', 'accent', 'accent-glow', 'danger', 'danger-bright',
     'r-sm', 'r-md', 'r-pill', 'shadow-deep', 'ease', 'z-hud', 'z-banner', 'z-overlay']) {
     assert.match(root, new RegExp(`--${n}:`), `--${n}`);
   }

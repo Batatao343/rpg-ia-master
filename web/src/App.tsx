@@ -1057,6 +1057,7 @@ function LegalLinks() {
       <a href="/termos/">Termos</a>
       <a href="/reembolso/">Reembolso</a>
       <a href="/suporte/">Suporte</a>
+      <a href="/creditos/">Créditos</a>
     </footer>
   );
 }

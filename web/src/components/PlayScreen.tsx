@@ -9,6 +9,7 @@ import { levelUpHeldByOutcome, resultFrom } from "../combatOutcome";
 import { clockLabel } from "../clockLabel";
 import { useIsCompact } from "../hooks/useIsCompact";
 import { ConfirmNewDialog, PlayMenu } from "./PlayMenu";
+import { Icon } from "../design/icons";
 
 interface Props {
   data: GameResponse | null;
@@ -50,9 +51,9 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
   const w = data?.world;
   // spec itens-vivos-e-luz: chip de luz no relógio (escuro sem fonte / iluminado).
   const lightChip = w?.light?.dark
-    ? " · 🌑 Escuridão"
+    ? " · Escuridão"
     : w?.light?.label === "iluminado pela sua luz"
-    ? " · 🔦 Iluminado"
+    ? " · Iluminado"
     : "";
   const clock = clockLabel(w)
     + (w?.weather ? ` · ${w.weather}` : "")
@@ -79,7 +80,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
   const requestNew = () => { if (confirmLeave) setConfirmingNew(true); else onNew(); };
   const levelUpChip = pending.length > 0 && !blocked && (
     <button className="iconbtn iconbtn--levelup" type="button" onClick={openLevelUp}>
-      ⬆ Nível!
+      <Icon name="levelup" /> Nível!
     </button>
   );
   const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting && !outcomeFirst;
@@ -99,12 +100,12 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
               Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
             </button>}
             {simulation && <span className="laboratory-flag">Laboratório</span>}
-            {fighting && <span className="combat-flag">⚔ Combate</span>}
+            {fighting && <span className="combat-flag"><Icon name="combat" /> Combate</span>}
             {/* Fica montado com o modal aberto: o foco volta a ele ao fechar (R16). */}
             {levelUpChip}
             {/* Atalho para Personagem (SPEC-204): não fecha nem desloca o chat. */}
             <button className="iconbtn" type="button" onClick={() => workspace.current?.openTab("personagem")}>
-              ☰ Ficha
+              <Icon name="menu" /> Ficha
             </button>
             <button className="iconbtn topbar__new" type="button" disabled={busy} onClick={requestNew}>
               {simulation ? "Reiniciar" : "Nova jornada"}

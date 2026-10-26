@@ -1,6 +1,6 @@
 # SPEC-322 — Front: tokens de cor, contraste, raio, ícones e tipografia
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (implementada; falta e2e/visual — aprovada pelo dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-321 (não rodar em paralelo: mesmos arquivos CSS)
 > **Desbloqueia:** SPEC-323 (que usa os ícones e tokens novos)
@@ -175,3 +175,8 @@ Staging, conta logada, 2–3 turnos (um em combate).
 - **D1 — família de ícones.** **Recomendado: híbrido, com Phosphor (MIT) na casca/UI e game-icons.net (CC BY 3.0, com atribuição) em itens, cartas e estados do mundo, mantendo um peso de traço por contexto.** Alternativas: só game-icons (mais temático, com atribuição) ou só Phosphor (mais neutro).
 - **D2 — regra de forma.** **Recomendado: cantos vivos (2 px) em controles e painéis, 4 px em cards, pílula só em tags de status.** Alternativa: manter 4–8 px em tudo, só tokenizado.
 - **D3 — tipografia de controles.** **Recomendado: EB Garamond small caps com piso de 0,8rem; Cinzel só em títulos ≥ 1rem.** Alternativa: sans do sistema (`--sans`) para HUD e números.
+
+## Histórico de mudanças
+
+- 2026-10-26 · implementação: tokens (`--faint`, `--danger-text`, `--field-border`, `--abyss*`, `--r-sharp`, `--label`), `scripts/contrast.mjs` + testes, lint de CSS em Node (`tests/css-lint.test.mjs`), ícones vendored (`design/icons.tsx`), créditos/NOTICE.
+- **Desvios:** (1) em vez de stylelint (instalar mexeria no node_modules compartilhado) o R6 é um teste Node equivalente; (2) o subset do EB Garamond não tem `smcp`/`c2sc` (medido nos woff2): rótulos usam Garamond em CAIXA-ALTA verdadeira via `--label`, não versaletes sintetizados nem `--sans`; (3) `--mana`/`--stamina`/`--sans` e `--ease-spring-soft` removidos; (4) preload dos woff2 e axe em todas as abas ainda pendentes; (5) sistema de botões 3x3 não consolidado (só duplicatas `.combat-card`/`.tab`/pulso).

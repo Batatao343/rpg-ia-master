@@ -316,11 +316,11 @@ test.describe("desktop 1440", () => {
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole("tab", { name: "Personagem" })).toHaveAttribute("aria-selected", "true");
     await expect(separator(page)).toHaveAttribute("aria-valuenow", "50");
-    await page.getByRole("button", { name: "⬆ Nível!" }).focus();
-    await page.getByRole("button", { name: "⬆ Nível!" }).click();
+    await page.getByRole("button", { name: "Nível!" }).focus();
+    await page.getByRole("button", { name: "Nível!" }).click();
     await expect(dialog).toBeVisible();
     await page.keyboard.press("Escape");
-    await expect(page.getByRole("button", { name: "⬆ Nível!" })).toBeFocused();
+    await expect(page.getByRole("button", { name: "Nível!" })).toBeFocused();
   });
 
   test("laboratório abre em Combate e não consulta campanha", async ({ page, backend }) => {

@@ -5,6 +5,7 @@ import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, Fact
 import { newsLabel, orderNews } from "../heardNews";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
+import { Icon } from "../design/icons";
 
 export type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
 
@@ -58,7 +59,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
       </div>
 
       {(p?.pending_choices?.length ?? 0) > 0 && (
-        <p className="lvlup-hint">⬆ Escolha de nível pendente — botão “Nível!” no topo.</p>
+        <p className="lvlup-hint"><Icon name="levelup" /> Escolha de nível pendente — botão “Nível!” no topo.</p>
       )}
 
       <div>
@@ -70,7 +71,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
             cards.map((card) => (
               <li key={card.id}>
                 {card.name}
-                {card.prepared ? <span className="ability__branch"> ◆ preparada</span> : null}
+                {card.prepared ? <span className="ability__branch"> <Icon name="prepared" /> preparada</span> : null}
                 <span className="ability__kind"> · {card.type}</span>
               </li>
             ))
@@ -87,7 +88,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
             data!.inventory.map((it, i) => (
               <li key={`${it.id}-${i}`} className={"inv__item" + (it.equipped ? " is-equipped" : "")}>
                 <span className={it.unique ? "inv__unique" : undefined}>
-                  {it.unique ? "◆ " : ""}
+                  {it.unique ? <><Icon name="unique" label="Único" />{" "}</> : null}
                   {it.name}
                   {it.qty > 1 ? ` ×${it.qty}` : ""}
                   {it.equipped ? <em className="inv__tag"> equipado</em> : null}
@@ -189,7 +190,7 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
               )}
               {hasProg ? (
                 <div className="faction__track" title={`${prog}% rumo ao objetivo (intel${f.intel_stale ? " antiga" : ""})`}>
-                  <div className="faction__fill" style={{ width: prog + "%" }} />
+                  <div className="faction__fill" style={{ transform: `scaleX(${prog / 100})` }} />
                 </div>
               ) : null}
               <p className="faction__meta">
@@ -363,7 +364,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
               <ol className="chronicle">
                 {cap.entries.slice().reverse().map((e, i) => (
                   <li key={e.entry_id ?? e.event_id ?? i} className={e.kind === "milestone" ? "chron chron--milestone" : "chron"}>
-                    <span className="chron__mark" aria-hidden>{e.kind === "milestone" ? "⚔" : "❧"}</span>
+                    <span className="chron__mark" aria-hidden><Icon name={e.kind === "milestone" ? "combat" : "chronicle"} /></span>
                     <p className="chron__text" dangerouslySetInnerHTML={{ __html: mdLite(e.text) }} />
                   </li>
                 ))}
@@ -396,7 +397,7 @@ export function PartyBars({ party }: { party: import("../types").PartyMember[] }
             )}
             <div className="party__track">
               <div className="party__fill"
-                   style={{ width: pct(m.vitalidade, m.max_vitalidade) + "%" }} />
+                   style={{ transform: `scaleX(${pct(m.vitalidade, m.max_vitalidade) / 100})` }} />
             </div>
           </li>
         ))}
@@ -457,7 +458,7 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
             </div>
             <div className="enemy__track">
               <div className="enemy__fill"
-                   style={{ width: pct(e.vitalidade, e.max_vitalidade) + "%" }} />
+                   style={{ transform: `scaleX(${pct(e.vitalidade, e.max_vitalidade) / 100})` }} />
             </div>
             <p className="enemy__public">
               {e.esquiva != null ? `Esquiva ${e.esquiva}` : "Esquiva desconhecida"}
@@ -529,7 +530,7 @@ function Bar({
     <div className={"bar" + (low ? " is-low" : "")} data-kind={kind} ref={ref}>
       <div className="bar__top"><span>{label}</span><span>{`${cur}/${max}`}</span></div>
       <div className="bar__track">
-        <div className="bar__fill" style={{ width: pct(cur, max) + "%" }} />
+        <div className="bar__fill" style={{ transform: `scaleX(${pct(cur, max) / 100})` }} />
       </div>
     </div>
   );

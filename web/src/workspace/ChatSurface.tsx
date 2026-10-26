@@ -12,6 +12,7 @@ import { useTurnClock } from "../hooks/useTurnClock";
 import { IDLE_TURN, type TurnWait } from "../turnWait";
 import { useComposerHeight } from "../hooks/useComposerHeight";
 import { composerHeight, shouldSubmitOnKey } from "./composerKeys";
+import { Icon } from "../design/icons";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
 export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat, onQuoteOffer, offersDisabled }: {
@@ -65,7 +66,7 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
           {mobile && (
             <button type="button" className="placechip placechip--toggle" aria-expanded={placesOpen}
               aria-controls="placesbar-list" onClick={() => setPlacesOpen(open => !open)}>
-              Locais daqui <span aria-hidden>{placesOpen ? "▴" : "▾"}</span>
+              Locais daqui <Icon name={placesOpen ? "caret-up" : "caret-down"} />
             </button>
           )}
           {(!mobile || placesOpen) && (
@@ -73,13 +74,13 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
               {exitTo && (
                 <button className="placechip placechip--exit" type="button" disabled={busy}
                         onClick={() => { setPlacesOpen(false); onAction(`Saio para ${exitTo.name}`); }}>
-                  ↩ Sair para {exitTo.name}
+                  <Icon name="exit" /> Sair para {exitTo.name}
                 </button>
               )}
               {interiorsHere.map((i) => (
                 <button key={i.id} className="placechip" type="button" disabled={busy}
                         onClick={() => { setPlacesOpen(false); onAction(`Entro em ${i.name}`); }}>
-                  ⌂ {i.name}
+                  <Icon name="place" /> {i.name}
                 </button>
               ))}
             </div>

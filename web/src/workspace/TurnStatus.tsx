@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { BannerState } from "../components/Banner";
 import { waitTier, type TurnStage } from "../turnWait";
+import { Icon } from "../design/icons";
 
 export interface TurnStatusProps {
   /** Fases já cumpridas (✓, `--muted`). */
@@ -44,7 +45,7 @@ export function TurnStatus({ phases, current, elapsedMs, stage, lastError, onKee
         <div className="turn-status" data-stage={stage}>
           {showLedger && (
             <ul className="turn-status__ledger">
-              {phases.map(p => <li key={p} className="turn-status__done"><span aria-hidden>✓ </span>{p}</li>)}
+              {phases.map(p => <li key={p} className="turn-status__done"><Icon name="check" />{" "}{p}</li>)}
               {stage === "narrated"
                 ? <li className="turn-status__current">registrando…</li>
                 : current && <li className="turn-status__current">{current}</li>}

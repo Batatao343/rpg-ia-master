@@ -1,0 +1,18 @@
+rpg-ia-master / Crônicas de Valoria - avisos de terceiros
+
+Este arquivo lista componentes de terceiros incorporados ao frontend (web/) que exigem atribuição.
+A mesma atribuição aparece para o jogador na página /creditos/ (web/legal/credits.md).
+
+1. game-icons.net - https://game-icons.net
+   Ícones por Lorc, Delapouite e Skoll, licença Creative Commons Attribution 3.0 (CC BY 3.0):
+   https://creativecommons.org/licenses/by/3.0/
+   Incorporados (vendored) em web/src/design/icons.tsx como SVG inline (somente os usados):
+   crossed-swords, skull-crossed-bones, tombstone, crown, ink-swirl, portal, broadsword,
+   shield-reflect, star-swirl, laurel-crown, bookmarklet (Lorc); scroll-quill (Delapouite); diamonds (Skoll).
+   Pacote de origem: @iconify-json/game-icons 1.2.4. As cores foram deixadas a cargo do CSS (currentColor).
+
+2. Phosphor Icons - https://phosphoricons.com
+   MIT License, Copyright (c) 2023 Phosphor Icons. Versão 2.1.1 (@phosphor-icons/core), peso "regular".
+   Incorporados em web/src/design/icons.tsx. Texto da licença: https://github.com/phosphor-icons/core/blob/main/LICENSE
+
+3. EB Garamond, Cinzel, Cinzel Decorative - SIL Open Font License 1.1 (web/public/fonts/LICENSE.md).

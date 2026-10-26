@@ -4,6 +4,7 @@ import { playAdapter, type StoreProduct } from "../purchases";
 import { useEffect, useRef, useState } from "react";
 import * as api from "../api";
 import { TurnstileChallenge } from "./TurnstileChallenge";
+import { Icon } from "../design/icons";
 
 const categories = ["game", "image", "voice"] as const;
 const labels = { game: "Jogo", image: "Imagem", voice: "Voz" };
@@ -354,7 +355,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
   return <main className="account-screen" aria-labelledby="account-title">
     <header className="account-screen__header">
       <button className="btn btn--ghost" disabled={accountAction !== null || checkoutBusy !== null}
-        onClick={leaveAccount}>← Voltar</button>
+        onClick={leaveAccount}><Icon name="back" /> Voltar</button>
       <h1 id="account-title">Minha conta</h1>
     </header>
     {loading && <p role="status">Carregando conta…</p>}

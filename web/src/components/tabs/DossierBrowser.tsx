@@ -6,6 +6,7 @@ import { ArrivalLi, useArrivals } from "../../design/primitives";
 import { CertaintyBadge } from "./CertaintyBadge";
 import { DossierDetail } from "./DossierDetail";
 import "./tabs.css";
+import { Icon } from "../../design/icons";
 
 /** SPEC-211 R12: lista + detalhe numa ÚNICA região rolável. Setas movem o foco na lista,
  *  Enter abre (botão nativo), Esc volta. O dossiê aberto e o "visto" sobrevivem a reload
@@ -90,7 +91,7 @@ function DossierBrowserInner<T extends DossierBase>({ gameId, tabId, items, empt
     return (
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
       <article className="dossier" aria-label={`Dossiê: ${current.title}`} onKeyDown={onDetailKey}>
-        <button type="button" className="dossier__back" ref={backRef} onClick={() => open(null)}>← Voltar à lista</button>
+        <button type="button" className="dossier__back" ref={backRef} onClick={() => open(null)}><Icon name="back" /> Voltar à lista</button>
         <DossierDetail item={current} />
       </article>
     );

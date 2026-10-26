@@ -16,12 +16,12 @@ test('markdown subset: headings, lists, tables, escaping', () => {
   assert.match(html, /<ul><li>x<\/li><\/ul>/);
 });
 
-test('builds the four static pages: published (no RASCUNHO), no placeholder, owner data, no inline script, cross links', () => {
+test('builds the static pages: published (no RASCUNHO), no placeholder, owner data, no inline script, cross links', () => {
   const dist = mkdtempSync(join(tmpdir(), 'legal-'));
   mkdirSync(join(dist, 'assets'));
   writeFileSync(join(dist, 'assets', 'index-abc.css'), 'body{}');
   const legalDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'legal');
-  assert.deepEqual(buildLegal({ dist, legalDir }), ['privacidade', 'termos', 'reembolso', 'suporte']);
+  assert.deepEqual(buildLegal({ dist, legalDir }), ['privacidade', 'termos', 'reembolso', 'suporte', 'creditos']);
   for (const p of PAGES) {
     const html = readFileSync(join(dist, p.slug, 'index.html'), 'utf8');
     assert.doesNotMatch(html, /RASCUNHO/);

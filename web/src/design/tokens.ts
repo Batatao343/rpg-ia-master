@@ -7,7 +7,6 @@ export type DurationToken = keyof typeof DURATION_MS;
 export const EASING = {
   "ease-out": [0.16, 1, 0.3, 1],
   "ease-in-out": [0.65, 0, 0.35, 1],
-  "ease-spring-soft": [0.34, 1.3, 0.64, 1],
 } as const;
 export type EasingToken = keyof typeof EASING;
 

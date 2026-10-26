@@ -1,4 +1,5 @@
 import type { CardView } from "../../types";
+import { Icon, type IconName } from "../../design/icons";
 
 const FREQ_LABEL: Record<string, string> = {
   livre: "livre", turno: "1× turno", cena: "1× cena",
@@ -7,7 +8,7 @@ const FREQ_LABEL: Record<string, string> = {
 const TYPE_LABEL: Record<string, string> = {
   ativa: "Ação", reacao: "Reação", passiva: "Passiva", virtude: "Virtude",
 };
-const TYPE_ICON: Record<string, string> = { ativa: "⚔", reacao: "↺", passiva: "✦", virtude: "✧" };
+const TYPE_ICON: Record<string, IconName> = { ativa: "card-active", reacao: "card-reaction", passiva: "card-passive", virtude: "card-virtue" };
 
 export interface DeckCardProps {
   card: CardView;
@@ -30,7 +31,7 @@ export function DeckCard({ card, preparable, blockedReason, evolvable, onToggle,
   const head = (
     <>
       <span className="deck-card__top">
-        <span className="deck-card__type" aria-hidden>{TYPE_ICON[card.type] ?? "◆"}</span>
+        <span className="deck-card__type" aria-hidden><Icon name={TYPE_ICON[card.type] ?? "unique"} /></span>
         <span className="deck-card__kind">{typeLabel}</span>
         <span className="deck-card__cost" title="Custo de Entropia">
           {card.cost}E{costDiffers ? <small> (base {card.base_cost})</small> : null}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import * as api from "../api";
 import type { MapLocation, MapOverlays, QuestMarker, WorldMapData } from "../types";
+import { Icon } from "../design/icons";
 
 // Mapa do mundo com fog of war: nós conhecidos (visited) aparecem nomeados;
 // os demais ficam como "???" (posição insinuada, identidade oculta). Só exibição.
@@ -63,7 +64,7 @@ export function WorldMap({
   return (
     <div>
       {overlays?.looming_threat && (
-        <p className="worldmap__banner">⚠ {overlays.looming_threat}</p>
+        <p className="worldmap__banner"><Icon name="warning" /> {overlays.looming_threat}</p>
       )}
       <div className="worldmap">
       <svg className="worldmap__edges" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -124,9 +125,9 @@ export function WorldMap({
           >
             <span className="worldmap__dot" />
             <span className="worldmap__label">
-              {ruler ? "☗ " : ""}
-              {hasQuest ? "◆ " : ""}
-              {threatHint ? "⚠ " : ""}
+              {ruler ? <><Icon name="ruler" />{" "}</> : null}
+              {hasQuest ? <><Icon name="quest" />{" "}</> : null}
+              {threatHint ? <><Icon name="warning" />{" "}</> : null}
               {known ? loc.name : "???"}
             </span>
           </button>

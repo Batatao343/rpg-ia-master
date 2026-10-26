@@ -14,11 +14,11 @@
 .ws-bar__status { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.9rem; min-width: 0; font-size: 0.8rem; color: var(--muted); }
 .ws-stat { white-space: nowrap; }
 .ws-stat b { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 600; }
-.ws-stat--hp b { color: var(--danger-bright); }
-.ws-stat--entropy b { color: oklch(0.78 0.11 305); }
+.ws-stat--hp b { color: var(--danger-text); }
+.ws-stat--entropy b { color: var(--abyss-text); }
 .ws-stat--fight {
-  font-family: var(--display); font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--danger-bright); padding: 0.12rem 0.45rem; border: 1px solid var(--danger); border-radius: var(--r-sm);
+  font-family: var(--label); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--danger-text); padding: 0.12rem 0.45rem; border: 1px solid var(--danger); border-radius: var(--r-sm);
 }
 .ws-bar__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; min-width: 0; }
 .ws-modes { display: flex; gap: 0.25rem; margin-left: 0.35rem; }
@@ -57,7 +57,7 @@
 }
 .ws-sep::after {
   content: ""; position: absolute; top: 50%; left: 50%; width: 4px; height: 42px;
-  transform: translate(-50%, -50%); border-radius: var(--r-pill);
+  transform: translate(-50%, -50%); border-radius: var(--r-sharp);
   background: var(--line); opacity: 0.7;
 }
 .ws-sep:hover::before, .ws-sep:focus-visible::before, .ws.is-dragging .ws-sep::before { width: 2px; background: var(--accent); }
@@ -91,7 +91,7 @@
 
 @media (max-width: 480px) {
   .ws-bar { padding: 0.3rem 0.55rem; }
-  .ws-bar__status { font-size: 0.74rem; }
+  .ws-bar__status { font-size: 0.75rem; }
   .ws-ctx__head { padding: 0.4rem 0.45rem 0; }
   .ws-panel { margin-inline: 0.45rem; padding: 0.85rem; }
   .ws-ctx__close { min-width: 44px; min-height: 44px; }
@@ -115,16 +115,16 @@
 }
 .ws-mhead__id { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
 .ws-mhead__place {
-  font-family: var(--display); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.04em; line-height: 1.15;
+  font-family: var(--label); font-size: 1.06rem; font-weight: 600; letter-spacing: 0.04em; line-height: 1.15;
   text-transform: uppercase; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .ws-mhead__title {
-  margin: 0; font-family: var(--display); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; line-height: 1.2;
+  margin: 0; font-family: var(--label); font-size: 0.81rem; font-weight: 500; letter-spacing: 0.08em; line-height: 1.2;
   text-transform: uppercase; color: var(--muted);
 }
 .ws-mhead__title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.ws-mhead .ws-bar__status { flex: none; flex-direction: column; flex-wrap: nowrap; align-items: flex-end; gap: 0; font-size: 0.72rem; line-height: 1.25; }
-.ws-mhead .ws-stat--fight { font-size: 0.6rem; padding: 0 0.3rem; }
+.ws-mhead .ws-bar__status { flex: none; flex-direction: column; flex-wrap: nowrap; align-items: flex-end; gap: 0; font-size: 0.75rem; line-height: 1.25; }
+.ws-mhead .ws-stat--fight { font-size: 0.75rem; padding: 0 0.3rem; }
 .ws-mhead .iconbtn { flex: none; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .playmenu__trigger { font-size: 1.3rem; line-height: 1; letter-spacing: 0; }
 .ws-root > .banner { position: static; flex: none; box-shadow: none; }
@@ -138,11 +138,11 @@
   position: relative; flex: 1 1 auto; min-width: 44px; min-height: 48px; padding: 0 0.15rem;
   display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem;
   border: 0; border-top: 2px solid transparent; background: transparent; color: var(--muted);
-  font: inherit; font-size: 0.66rem; letter-spacing: 0.01em; white-space: nowrap; cursor: pointer;
+  font: inherit; font-size: 0.8rem; letter-spacing: 0.01em; white-space: nowrap; cursor: pointer;
 }
 .mtabbar__btn[aria-current="page"] { color: var(--accent); border-top-color: var(--accent); background: var(--accent-glow); }
 .mtabbar__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
-.mtabbar__btn.has-fight:not([aria-current="page"]) { color: var(--danger-bright); }
+.mtabbar__btn.has-fight:not([aria-current="page"]) { color: var(--danger-text); }
 .mtabbar__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger-bright); }
 
 .ws-composer.is-offsurface { display: none; }
@@ -153,7 +153,7 @@
 .ws-root--mobile .aimbar { min-height: 44px; }
 .ws-root--mobile .aimbar__cancel { min-width: 44px; min-height: 44px; padding-inline: 0.9rem; }
 .combat-card__details {
-  min-height: 44px; padding: 0.3rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-sm);
+  min-height: 44px; padding: 0.3rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-sharp);
   background: transparent; color: var(--muted); font: inherit; font-size: 0.78rem; cursor: pointer;
 }
 .combat-card__details[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
@@ -202,7 +202,7 @@
 .scene-art__toggle {
   position: absolute; left: 0.5rem; bottom: 0.25rem; z-index: 2; min-width: 44px; min-height: 44px;
   display: inline-flex; align-items: center; justify-content: center;
-  border: 0; background: transparent; color: var(--ink); font-size: 1rem; cursor: pointer; text-shadow: 0 1px 4px #000;
+  border: 0; background: transparent; color: var(--ink); font-size: 1rem; cursor: pointer; text-shadow: 0 1px 4px oklch(0 0 0);
 }
 .scene-art__toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 @media (max-width: 899.98px) {
@@ -234,7 +234,7 @@
 .msg__offers { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: -0.4rem 0 1rem; }
 .msg__offer {
   font: inherit; font-size: 0.85rem; padding: 0.35rem 0.8rem; color: var(--muted); background: transparent;
-  border: 1px dashed var(--line); border-radius: var(--r-pill); cursor: pointer;
+  border: 1px dashed var(--line); border-radius: var(--r-sharp); cursor: pointer;
 }
 .msg__offer:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
 .msg__offer:disabled { opacity: 0.5; cursor: default; }

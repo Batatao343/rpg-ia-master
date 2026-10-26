@@ -5,6 +5,7 @@ import { WorldMap } from "../../components/WorldMap";
 import type { GameResponse, MapNodeView, MapTravelOption, MapView } from "../../types";
 import { nextNodeIndex, periodsLabel } from "./mapModel";
 import "./map.css";
+import { Icon, type IconName } from "../../design/icons";
 
 const STATE_TEXT: Record<MapNodeView["state"], string> = {
   atual: "local atual",
@@ -12,7 +13,7 @@ const STATE_TEXT: Record<MapNodeView["state"], string> = {
   adjacente: "ainda não visitado",
   bloqueado: "rota bloqueada",
 };
-const STATE_ICON: Record<MapNodeView["state"], string> = { atual: "◉", visitado: "●", adjacente: "○", bloqueado: "✕" };
+const STATE_ICON: Record<MapNodeView["state"], IconName> = { atual: "pin", visitado: "visited", adjacente: "adjacent", bloqueado: "blocked" };
 
 /** SPEC-210: aba Mapa. Dados SÓ da view do servidor (visitados + adjacentes); viajar é
  *  uma ação de chat comum (`Viajo para <nome>`), nunca mutação local. */
@@ -94,7 +95,7 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
       <p className="maptab__status" aria-live="polite">
         {stale ? "Mapa desatualizado: mostrando o último estado conhecido." : loading ? "Atualizando…" : ""}
       </p>
-      {view.looming_threat && <p className="worldmap__banner">⚠ {view.looming_threat}</p>}
+      {view.looming_threat && <p className="worldmap__banner"><Icon name="warning" /> {view.looming_threat}</p>}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos */}
       <div className="worldmap maptab__canvas" role="group" aria-label="Mapa da jornada" onKeyDown={onKeyDown}>
         <svg className="worldmap__edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -123,8 +124,8 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
               onClick={() => onSelect(n.id)}>
               <span className="worldmap__dot" />
               <span className="worldmap__label">
-                <span aria-hidden="true">{STATE_ICON[n.state]} </span>
-                {n.ruler ? "☗ " : ""}{n.quest_target ? "◆ " : ""}{n.threatened ? "⚠ " : ""}{n.name}
+                <Icon name={STATE_ICON[n.state]} />{" "}
+                {n.ruler ? <><Icon name="ruler" />{" "}</> : null}{n.quest_target ? <><Icon name="quest" />{" "}</> : null}{n.threatened ? <><Icon name="warning" />{" "}</> : null}{n.name}
               </span>
             </button>
           );
@@ -157,13 +158,13 @@ function MapDetail({ node, option, view, busy, blocked, onAction }: {
       )}
       <h3 className="maptab__name">{node.name}</h3>
       <p className="maptab__meta">
-        <span aria-hidden="true">{STATE_ICON[node.state]} </span>{STATE_TEXT[node.state]}
+        <Icon name={STATE_ICON[node.state]} />{" "}{STATE_TEXT[node.state]}
         {known && node.danger !== undefined && <> · perigo {node.danger}</>}
         {option && <> · {periodsLabel(option.periods)}</>}
       </p>
-      {node.ruler && <p className="maptab__meta">☗ Sob domínio de {node.ruler}</p>}
-      {node.quest_target && <p className="maptab__meta">◆ Objetivo de missão</p>}
-      {node.threatened && <p className="maptab__meta">⚠ Ameaça: {node.threat_hint}</p>}
+      {node.ruler && <p className="maptab__meta"><Icon name="ruler" /> Sob domínio de {node.ruler}</p>}
+      {node.quest_target && <p className="maptab__meta"><Icon name="quest" /> Objetivo de missão</p>}
+      {node.threatened && <p className="maptab__meta"><Icon name="warning" /> Ameaça: {node.threat_hint}</p>}
       {node.contested && <p className="maptab__meta">Controle mudou recentemente</p>}
       {known ? <p className="maptab__lore">{node.lore_seed}</p>
         : <p className="maptab__lore">Região inexplorada. Só se sabe o nome na estrada.</p>}
