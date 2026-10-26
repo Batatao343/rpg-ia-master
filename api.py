@@ -2684,6 +2684,15 @@ def _targeting_cards(state: dict, cards_view: list[dict[str, Any]]) -> list[dict
     return cards_view
 
 
+def _chase_live_for_api(chase: object) -> bool:
+    return (
+        isinstance(chase, dict)
+        and chase.get("eligible") is not False
+        and not chase.get("alcancado")
+        and not chase.get("escapou")
+    )
+
+
 def _combat_block(state: dict) -> dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
@@ -2791,6 +2800,27 @@ def _combat_block(state: dict) -> dict[str, Any]:
         if chase
         else {}
     )
+    if chase_view and _chase_live_for_api(chase):
+        # SPEC-325 D8: só com a flag `on`; nunca o `pending_fate` (regra de ouro).
+        if combat_flags.active("chase_approach") and chase.get("approach"):
+            chase_view["approach"] = str(chase["approach"])
+        if combat_flags.active("chase_abandon"):
+            from services import chase as _chase_mod
+
+            party_rows = [p for p in (state.get("party") or []) if isinstance(p, dict)]
+            chase_view["abandon_candidates"] = [
+                {"id": cid, "name": name}
+                for cid, name in _chase_mod.abandon_candidates(chase, party_rows).items()
+            ]
+            offer = str(chase.get("sacrifice_offer") or "")
+            offered = next(
+                (p for p in party_rows if _chase_mod._ally_key(p) == offer and offer), None
+            )
+            if offered is not None:
+                chase_view["sacrifice_offer"] = {
+                    "id": offer,
+                    "name": str(offered.get("name") or ""),
+                }
     wounds = player.get("ferimentos") or {}
     from services import encounter_manifest as em
 

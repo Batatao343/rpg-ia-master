@@ -178,6 +178,202 @@ def _reveal_resistances(attacks: list[dict], enemies: list[dict], sides: dict) -
             _log_event("combat", "reveal_resist", effect=str(hit["effect"]))
 
 
+def _chase_is_live(chase: object) -> bool:
+    """Perseguição em andamento (não terminal, elegível) — base das escolhas da Fase B."""
+    from services import chase as chase_mod
+
+    return (
+        isinstance(chase, dict)
+        and chase.get("eligible") is not False
+        and not chase.get("blocked_reason")
+        and not chase.get("alcancado")
+        and not chase.get("escapou")
+        and chase.get("trilha") in chase_mod.TRACK[:-1]
+    )
+
+
+def _chase_attack_gate(combat_meta: dict, decl: TurnDeclaration) -> str:
+    """SPEC-325 R11: ataque do jogador com perseguição ativa. À distância segue; corpo a
+    corpo em `pressionado` fecha a trilha (combate normal); em `afastado`/`quase_livre` é
+    RECUSADO (devolve o motivo, sem gastar a rodada). `shadow` só registra."""
+    from services import cards, combat_flags
+    from services import chase as chase_mod
+    from services import conflict_turn as ct
+
+    mode = combat_flags.mode("chase_attack")
+    step = decl.acao
+    chase = combat_meta.get("chase")
+    if mode == "off" or step is None or step.kind not in ("attack", "card"):
+        return ""
+    if not _chase_is_live(chase):
+        return ""
+    card = cards.get_card(step.card_id or "") if step.card_id else None
+    melee = ct._is_melee(card, step)
+    verdict = chase_mod.chase_attack(dict(chase), melee=melee)
+    if mode == "shadow":
+        _log_event(
+            "combat",
+            "chase_attack_shadow",
+            mode=str(verdict["mode"]),
+            allowed=bool(verdict["allowed"]),
+        )
+        return ""
+    if not verdict["allowed"]:
+        _log_event("combat", "chase_attack_refused", level="info")
+        return (
+            "Corpo a corpo é impossível enquanto os inimigos estão a distância: "
+            "reduza a distância antes ou ataque de longe."
+        )
+    if verdict["ends_chase"]:
+        combat_meta.pop("chase", None)
+        _log_event("combat", "chase_attack_reengage", level="info")
+    return ""
+
+
+def _soul_traits(state: dict, member: dict) -> list[str]:
+    from services import companion_soul as cs_
+
+    _key, row = cs_.npc_row(state, member)
+    return [
+        str(t) for t in [*(row.get("hidden_traits") or []), *(row.get("revealed_traits") or [])]
+    ]
+
+
+def _chase_party_choices(
+    state: dict,
+    combat_meta: dict,
+    party: list[dict],
+    allies: list[dict],
+    ally_ids: list,
+    actors_by_id: dict,
+    sides: dict,
+    player: dict,
+    intent: str,
+    active: list[dict],
+) -> dict:
+    """SPEC-325 R12/R13: "deixo <nome>" (companheiro formal que tirou Complicação na rodada
+    anterior) e aceite do sacrifício oferecido. O destino é sorteado por seed e SELADO em
+    `party[i]["pending_fate"]` (nada aplicado agora; `companion_soul.apply_turn` consome
+    depois de >= 1 dia). O narrador só recebe "ficou para trás". `shadow` só registra."""
+    from services import chase as chase_mod
+    from services import combat_flags, combat_intents
+
+    res: dict = {"flee": False, "logs": [], "events": [], "sacrificed": None, "abandoned": []}
+    mode = combat_flags.mode("chase_abandon")
+    prev = combat_meta.get("chase")
+    if mode == "off" or not _chase_is_live(prev):
+        return res
+    if not _can_attempt_flee(player) or cm.has_control(player, "root"):
+        return res
+    formal = {
+        chase_mod._ally_key(m): str(m.get("name") or "")
+        for m in party
+        if m.get("active") and not m.get("transient") and not m.get("pending_fate")
+    }
+    if mode == "shadow":
+        if combat_intents.abandon_target(intent, formal):
+            _log_event("combat", "chase_abandon_shadow")
+        return res
+
+    target = combat_intents.abandon_target(intent, chase_mod.abandon_candidates(prev, party))
+    offer = str(prev.get("sacrifice_offer") or "")
+    sacrificed = None
+    if not target and offer and combat_intents.accepts_sacrifice(intent):
+        entry = next((m for m in party if chase_mod._ally_key(m) == offer), None)
+        if entry is not None and entry.get("active") and not entry.get("pending_fate"):
+            from services import companion_soul as cs_
+
+            probe = dict(entry)
+            if "se_sacrifica_pelo_grupo" in _soul_traits(state, entry):
+                probe["se_sacrifica_pelo_grupo"] = True
+            soul = (state.get("companion_souls") or {}).get(cs_.comp_id(entry))
+            if chase_mod.offer_sacrifice(probe, True, soul)["sacrificed"]:
+                sacrificed = offer
+    key = target or sacrificed
+    if not key:
+        return res
+    entry = next(m for m in party if chase_mod._ally_key(m) == key)
+    world = state.get("world") or {}
+    day = int(((world.get("world_clock") or {}).get("day", 1)) or 1)
+    location_id = str(world.get("current_location_id") or "")
+    chase_mod.seal_fate(
+        entry,
+        instance_id=str(combat_meta.get("instance_id") or "game"),
+        round_=int(combat_meta.get("round", 0) or 0) + 1,
+        pursuers=len(active),
+        day=day,
+        location_id=location_id,
+        outcomes=chase_mod.SACRIFICE_OUTCOMES if sacrificed else None,
+    )
+    # sai da cena: fora do pool de Sorte desta rodada e da própria rodada de combate
+    allies[:] = [a for a in allies if chase_mod._ally_key(a) != key]
+    ally_ids[:] = [i for i in ally_ids if str(i) != key]
+    actors_by_id.pop(key, None)
+    sides["ally"] = [i for i in sides.get("ally", []) if str(i) != key]
+    player["_party_active"] = bool(allies)
+    name = str(entry.get("name") or key)
+    res["flee"] = True
+    res["abandoned"].append(key)
+    if sacrificed:
+        res["sacrificed"] = sacrificed
+        res["logs"].append(f"{name} fica para trás para segurar os perseguidores.")
+        _log_event("combat", "chase_sacrifice", level="info")
+    else:
+        res["logs"].append(f"{name} ficou para trás.")
+        combat_meta["chase"] = {**prev, "abandoned": [*(prev.get("abandoned") or []), key]}
+        import hashlib
+
+        res["events"].append(
+            {
+                # id estável por (instância, aliado, rodada), sem expor a seed do destino
+                "event_id": "abandon-"
+                + hashlib.sha1(entry["pending_fate"]["seed"].encode()).hexdigest()[:16],
+                "turn": int(world.get("turn_count", 0) or 0),
+                "type": "companion_abandoned",
+                "actor_id": "player",
+                "target_id": key,
+                "payload": {"name": name, "location_id": location_id, "day": day},
+                "source": "combat",
+            }
+        )
+        _log_event("combat", "chase_abandon", level="info")
+    return res
+
+
+def _publish_sacrifice_offer(
+    state: dict, party: list[dict], chase_state: dict, *, hero_fled: bool, logs: list[str]
+) -> None:
+    """SPEC-325 R13: com a trilha em `pressionado` e um companheiro elegível (D3), publica a
+    oferta UMA vez por perseguição. Recusar/ignorar não tem penalidade (a oferta só expira)."""
+    from services import chase as chase_mod
+    from services import combat_flags
+
+    mode = combat_flags.mode("chase_abandon")
+    if mode == "off":
+        return
+    if mode == "on" and "sacrifice_offer" in chase_state:
+        chase_state["sacrifice_offer"] = None  # consumida: aceita, recusada ou ignorada
+    if hero_fled or chase_state.get("trilha") != "pressionado":
+        return
+    if mode == "on" and chase_state.get("sacrifice_offered"):
+        return
+    key = chase_mod.eligible_for_sacrifice(
+        party,
+        state.get("companion_souls") or {},
+        traits_of=lambda m: _soul_traits(state, m),
+    )
+    if not key:
+        return
+    if mode == "shadow":
+        _log_event("combat", "chase_sacrifice_shadow")
+        return
+    chase_state["sacrifice_offer"] = key
+    chase_state["sacrifice_offered"] = True
+    name = next((str(m.get("name") or key) for m in party if chase_mod._ally_key(m) == key), key)
+    logs.append(f"{name} se oferece para ficar e segurar os perseguidores.")
+    _log_event("combat", "chase_sacrifice_offered", level="info")
+
+
 def _last_human_text(messages: list) -> str:
     for m in reversed(messages or []):
         if isinstance(m, HumanMessage):
@@ -818,7 +1014,7 @@ def _canonical_player_action(
         (attack for attack in (out.get("attacks") or []) if attack.get("actor_id") == _PLAYER_ID),
         {},
     )
-    return {
+    action = {
         "kind": kind,
         "card_id": step.card_id if step is not None else None,
         "item_id": step.item_id if step is not None else None,
@@ -831,6 +1027,9 @@ def _canonical_player_action(
         "flee_destination_id": flee_destination_id,
         "chase_track": (chase_state or {}).get("trilha") if flee_requested else None,
     }
+    if flee_requested and (chase_state or {}).get("approach"):
+        action["chase_approach"] = chase_state["approach"]  # SPEC-325 R10 (só com a flag `on`)
+    return action
 
 
 MAX_CONSECUTIVE_FLEE_ATTEMPTS = 6
@@ -1336,6 +1535,16 @@ def _combat_node(state: GameState):
         flee_requested = True
         flee_dest_id = state.get("combat_flee_destination")
 
+    # SPEC-325 R12/R13: abandono/sacrifício durante a perseguição (`off`/sem fuga = nada muda).
+    choices = _chase_party_choices(
+        state, combat_meta, party, allies, ally_ids, actors_by_id, sides, player, intent, active
+    )
+    if choices["flee"]:
+        flee_requested = True
+        logs_pre_flee = list(choices["logs"])
+    else:
+        logs_pre_flee = []
+
     if flee_requested:
         combat_meta["flee_attempts"] = int(combat_meta.get("flee_attempts", 0) or 0) + 1
     else:
@@ -1379,7 +1588,14 @@ def _combat_node(state: GameState):
     flee_allowed = _can_attempt_flee(player)
     if flee_requested and flee_allowed:
         hero_fled, flee_logs, chase_state = _attempt_flee(
-            scene, player, active, sides, rng, existing_chase=combat_meta.get("chase")
+            scene,
+            player,
+            active,
+            sides,
+            rng,
+            existing_chase=combat_meta.get("chase"),
+            intent=intent,
+            force_escape=bool(choices["sacrificed"]),
         )
         if not hero_fled and _is_valid_flee_destination(state, flee_dest_id):
             hero_fled, chase_state = _enforce_flee_attempt_limit(
@@ -1388,8 +1604,9 @@ def _combat_node(state: GameState):
             )
             if hero_fled:
                 flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
+        _publish_sacrifice_offer(state, party, chase_state, hero_fled=hero_fled, logs=flee_logs)
         combat_meta["chase"] = chase_state
-        logs += weather_logs + flee_logs
+        logs += weather_logs + logs_pre_flee + flee_logs
     elif flee_requested:
         chase_state = {
             **dict(combat_meta.get("chase") or {}),
@@ -1416,6 +1633,7 @@ def _combat_node(state: GameState):
             )
         _mark_nonlethal(decl, intent)
         resolved_decl = decl
+        chase_refusal = _chase_attack_gate(combat_meta, decl)  # SPEC-325 R11
         # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
         if (
             decl.acao
@@ -1454,7 +1672,10 @@ def _combat_node(state: GameState):
             prepared_abyss=scene.get("abyss_events"),
             initiator=initiator,
             rng=rng,
+            **({"refusal": chase_refusal} if chase_refusal else {}),
         )
+        if chase_refusal:
+            combat_meta["round"] = max(0, int(combat_meta.get("round", 1) or 1) - 1)
         _sync_enemy_knowledge(enemies)
         _reveal_resistances(out.get("attacks") or [], enemies, sides)
         logs += weather_logs + out["logs"]
@@ -1667,6 +1888,9 @@ def _combat_node(state: GameState):
     }
     if conflict_sum is not None:
         result["conflict_summary"] = conflict_sum
+    if choices["events"]:
+        # SPEC-325 R12: `companion_abandoned` (sem o destino: ele fica selado na party).
+        result["event_log"] = list(state.get("event_log") or []) + choices["events"]
     if world_out is not None:
         result["world"] = world_out
     if bk_changed:
@@ -1813,11 +2037,16 @@ def _attempt_flee(
     rng,
     *,
     existing_chase: dict | None = None,
+    intent: str = "",
+    force_escape: bool = False,
 ) -> FleeDecision:
     """Tenta escapar via motor de perseguição (09). Enredado (root) não foge.
-    Sucesso na trilha (Escapou) encerra o combate; senão o herói segue preso."""
+    Sucesso na trilha (Escapou) encerra o combate; senão o herói segue preso.
+
+    SPEC-325: `intent` escolhe a abordagem (R10, `RPG_CHASE_APPROACH`); `force_escape`
+    é o sacrifício aceito (R13: o herói escapa nesta rodada, sem teste)."""
     import combat_mechanics as cm
-    from services import chase
+    from services import chase, combat_flags, combat_intents
     from services.conflict_resolution import virtude_value
 
     if not _can_attempt_flee(player):
@@ -1841,14 +2070,36 @@ def _attempt_flee(
         else chase.start_chase(scene, _PLAYER_ID, active)
     )
     previous_track = chase_state.get("trilha")
+    if force_escape:
+        chase_state.update(trilha="escapou", escapou=True, alcancado=False, eligible=True)
+        return FleeDecision(
+            True,
+            [f"{player.get('name', 'O herói')} aproveita a brecha e FOGE do combate."],
+            chase_state,
+        )
     difficulty = chase.chase_difficulty(active[0]) if active else 12
+    virtude_key = "agilidade"
+    approach_mode = combat_flags.mode("chase_approach")
+    approach = combat_intents.chase_approach(intent) if approach_mode != "off" else None
+    if approach_mode == "on":
+        chase_state.pop("approach", None)  # a abordagem vale por rodada; sem palavra = Agilidade
+    if approach:
+        if approach_mode == "on":
+            virtude_key = chase.approach_virtude(approach)
+            chase_state["approach"] = approach
+        else:
+            _log_event("combat", "chase_approach_shadow", approach=approach)
+    ally_rolls = [(aid, chase.luck_roll(rng)) for aid in (sides or {}).get("ally") or []]
     chase.resolve_chase_round(
         chase_state,
-        condutor_virtude=virtude_value(player, "agilidade"),
+        condutor_virtude=virtude_value(player, virtude_key),
         difficulty=difficulty,
-        companion_luck=[chase.luck_roll(rng) for _ in (sides or {}).get("ally") or []],
+        companion_luck=[roll for _aid, roll in ally_rolls],
         rng=rng,
     )
+    if combat_flags.mode("chase_abandon") == "on":
+        # R12: Sorte por aliado da rodada, base do "deixar <nome>" da rodada seguinte.
+        chase_state["last_luck"] = {str(aid): roll for aid, roll in ally_rolls}
     chase_state["eligible"] = True
     if chase_state.get("escapou"):
         return FleeDecision(

@@ -186,6 +186,8 @@ def detect_choice_tags(state: dict, *, seen_combat_id: str = "") -> list[ChoiceT
             add("crime_testemunhado", ref=eid)
         elif etype == "fine_paid":  # SPEC-299 (se existir)
             add("pagou_multa", ref=eid)
+        elif etype == "companion_abandoned":  # SPEC-325 R12: os OUTROS companheiros reagem
+            add("abandonou_companheiro", ref=eid)
 
     cid = combat_result_id(state)
     if cid and cid != seen_combat_id:

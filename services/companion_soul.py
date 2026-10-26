@@ -867,6 +867,84 @@ def apply_turn(state: dict) -> dict:
             changed_quests = True
             log_event("companion", "betrayed" if betray else "left", level="info")
 
+    # 7b. destino SELADO de quem foi deixado na fuga (SPEC-325 R12) ------------- #
+    if live:
+        for cid in sorted({comp_id(c) for c in party if isinstance(c.get("pending_fate"), dict)}):
+            comp = next((c for c in party if comp_id(c) == cid), None)
+            soul = souls.get(cid)
+            if comp is None or soul is None or not cid:
+                continue
+            pf = comp["pending_fate"]
+            pday = _int(pf.get("day"), day)
+            location = str(pf.get("location_id") or comp.get("waiting_at") or "")
+            tele = [
+                t
+                for t in (soul.get("telegraphs") or [])
+                if isinstance(t, dict) and t.get("source") == "abandono"
+            ]
+            if not any(_int(t.get("day")) == pday and not t.get("cancelled") for t in tele):
+                # o próprio abandono é o telegrama (D1); o combate não escreve na alma
+                soul["telegraphs"] = [
+                    *(soul.get("telegraphs") or []),
+                    {
+                        "kind": "pedido_de_ajuda",
+                        "day": pday,
+                        "turn": turn,
+                        "cancelled": False,
+                        "source": "abandono",
+                    },
+                ][-5:]
+            if comp.get("active") or (here == location and not combat_active):
+                comp.pop("pending_fate", None)  # resgate: o herói voltou antes de 1 dia
+                for t in soul.get("telegraphs") or []:
+                    if isinstance(t, dict) and t.get("source") == "abandono":
+                        t["cancelled"] = True
+                changed_party = True
+                log_event("companion", "abandon_rescued", level="info")
+                continue
+            if combat_active or day - pday < TELEGRAPH_MIN_DAYS:
+                continue
+            fate = str(pf.get("fate") or "")
+            if not fate:  # fuga/esconderijo/reencontro: volta a esperar sem dano
+                comp.pop("pending_fate", None)
+                changed_party = True
+                log_event("companion", "abandon_fate_none", level="info")
+                continue
+            interim = {
+                **state,
+                "party": party,
+                "npcs": npcs,
+                "companion_souls": souls,
+                "quests": quests,
+                "event_log": list(state.get("event_log") or []) + events,
+                "chronicle": chronicle,
+            }
+            try:
+                patch = apply_companion_fate(interim, cid, fate, day)
+            except FateNotTelegraphed:
+                continue
+            events.extend(patch["event_log"][len(interim["event_log"]) :])
+            party, npcs, souls, quests = (
+                patch["party"],
+                patch["npcs"],
+                patch["companion_souls"],
+                patch["quests"],
+            )
+            for member in party:
+                if comp_id(member) == cid:
+                    member.pop("pending_fate", None)
+            changed_party = changed_npcs = changed_quests = True
+            name = str(comp.get("name") or cid)
+            feedback.append(
+                f"Chegam notícias de {name}: "
+                + {
+                    "ferido": "ficou ferido ao ser deixado para trás.",
+                    "capturado": "foi capturado.",
+                    "morto": "não sobreviveu à separação.",
+                }[fate]
+            )
+            log_event("companion", "abandon_fate_applied", level="info", fate=fate)
+
     # 8. escrita ---------------------------------------------------------------- #
     updates: dict[str, Any] = {"companion_souls": souls, "companion_voice_ack": None}
     if changed_party:
@@ -904,7 +982,7 @@ def companions_exposed(state: dict) -> list[dict]:
     for comp in state.get("party") or []:
         if not isinstance(comp, dict) or comp.get("active") or not comp.get("waiting_at"):
             continue
-        if _is_dead(comp):
+        if _is_dead(comp) or comp.get("pending_fate"):  # SPEC-325: destino já selado no abandono
             continue
         cid = comp_id(comp)
         soul = souls.get(cid) or {}

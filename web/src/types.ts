@@ -315,6 +315,10 @@ export interface ChaseView {
   caught?: boolean;
   pursuers?: string[];
   last_roll?: { total?: number; difficulty?: number; sucesso?: boolean };
+  /** SPEC-325: só com as flags `on` (RPG_CHASE_APPROACH / RPG_CHASE_ABANDON). */
+  approach?: string;
+  abandon_candidates?: { id: string; name: string }[];
+  sacrifice_offer?: { id: string; name: string };
 }
 
 export interface InitiativeSlot {

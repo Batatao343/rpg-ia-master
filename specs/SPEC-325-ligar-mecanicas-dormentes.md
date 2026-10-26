@@ -1,8 +1,8 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
-> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fases B–D pendentes)
+> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B implementada em `shadow` na branch `spec-325` 26/10, sem revisão nem gate; Fases C–D pendentes)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
-> **Progresso:** Fase A (R8, R9) implementada em `shadow` na branch `spec-325` (26/10); Fases B–D pendentes (ver §9). Gate R17 da Fase A: comandos prontos em §8.1, **ainda não rodados** (coordenador).
+> **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fases C–D pendentes (ver §9).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")
 > **Depende de:** SPEC-064, SPEC-068, SPEC-069, SPEC-070, SPEC-226, SPEC-272, SPEC-285, SPEC-300, SPEC-304 (todas `done`)
 > **Desbloqueia:** prisioneiros (consumidor de `law.deliver_prisoner`, SPEC-299 R23); follow-up 299 "derrota → prisão"; follow-up SPEC-226:165 (id único de reforço)
@@ -395,7 +395,7 @@ Uma etapa = uma capacidade = um commit. Testes primeiro. Subagente roda só os a
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R19 cobertos por teste. (Fase A: R1–R3, R5, R7, R8, R9 feitos; R4 `capability_counts`, R6 de B–D, R10–R19 pendentes.) Cada capacidade tem teste via `combat_node` (R7).
+- [ ] R1–R19 cobertos por teste. (Fases A e B: R1–R3, R5, R6, R7, R8–R13 feitos; R4 `capability_counts`, R6 de C–D, R14–R19 pendentes.) Cada capacidade tem teste via `combat_node` (R7).
 - [ ] Teste `off` = baseline e `shadow` = sem mudança de estado, por capacidade (R2/R3).
 - [ ] Oráculo da regra de ouro verde (R5).
 - [ ] Gate R17 registrado no cabeçalho por fase: arena, matriz 50 turnos e, com o OK do dono, 12 × 200.
@@ -514,12 +514,56 @@ Observações honestas sobre a medida:
 - Registrar no cabeçalho: SHA medido, `run_id`s e as tabelas (a) a (c). Só depois, `staging_flags.json` com
   as duas flags em `on` (D6).
 
-## 9. Próximos passos (Fases B–D, não implementadas nesta rodada)
+## 8.2 Gate de letalidade da Fase B: comandos exatos (coordenador roda; subagente não)
 
-1. **Etapa 3 (Fase B, R10/R11):** abordagem e ataque na fuga. `combat_intents.chase_approach`,
-   `_attempt_flee` (`agents/combat.py`) e `chase.chase_attack`; testes em `tests/test_spec325_chase_choices.py`.
-2. **Etapa 4 (Fase B, R12/R13):** abandono e sacrifício, com `pending_fate` selado e consumo pelo
-   `companion_soul.apply_turn`; `tests/test_spec325_abandon.py`; gate R17 da Fase B.
+Um de cada vez, sem `-n`. Fase A já está `on` no staging, então as duas linhas mantêm as flags da Fase A em
+`on`; a linha de base é a mesma árvore com **só as flags da Fase B** em `off`.
+
+```bash
+A="RPG_COMBAT_REVEAL_RESIST=on RPG_COMBAT_NONLETHAL=on"
+ON="$A RPG_CHASE_APPROACH=on RPG_CHASE_ATTACK=on RPG_CHASE_ABANDON=on"
+OFF="$A RPG_CHASE_APPROACH=off RPG_CHASE_ATTACK=off RPG_CHASE_ABANDON=off"
+
+# (a) Arena SPEC-285: sanidade. A arena chama run_round direto (sem combat_node, sem fuga), então a
+#     Fase B é neutra por construção: esperado Δ = 0,0 pp nas 32 células. Qualquer diferença é bug.
+env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_b_off.json
+env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_b_on.json
+
+# (b) Matriz SPEC-056 (5 classes x seeds 42/43 x 50 turnos), perfil `combate` E perfil `fujao`
+#     (o único bot que foge de verdade; é ele que exercita R10-R13). Critério: M2 >= 20, 0 no_progress,
+#     0 violação (inclui companion.fate_without_telegraph) e morte do herói do `fujao` <= linha de base.
+for prof in combate fujao; do
+  for cls in "Devoto do Abismo" "Sangromante" "Corruptor" "Arcanista Cinzento" "Médico de Campo"; do
+    for seed in 42 43; do
+      env $ON bash scripts/dev/py.sh -m playtest run --profile $prof --class "$cls" --turns 50 --seed $seed
+      env $OFF bash scripts/dev/py.sh -m playtest run --profile $prof --class "$cls" --turns 50 --seed $seed
+    done
+  done
+done
+
+# (c) D5 (autorizado em 25/10, 1 campanha por fase): combate, 200 turnos, seeds 21-32, MockLLM, uma por vez.
+#     Critério: M1 <= 0,564, M2 mediana da 1a queda >= 20, M5 = 0 combat.no_progress; as 2 violações
+#     `summary.lifecycle` das seeds 25 e 32 são pré-existentes (Fase A) e não contam.
+for seed in $(seq 21 32); do
+  env $ON bash scripts/dev/py.sh -m playtest run --profile combate --turns 200 --seed $seed
+done
+# agregar: bash scripts/dev/py.sh -m playtest report <run_id>
+```
+
+Notas honestas sobre a medida:
+- Os bots `combate` e `fujao` **não** dizem "deixo <nome>", "aceito" nem palavras de abordagem, e o harness
+  não usa o chip: `on` mede que a fiação (rastro `last_luck`, oferta de sacrifício, gate de ataque durante a
+  fuga) é neutra/benigna. O efeito de cada escolha fica coberto pelos testes pelo `combat_node`. As variantes
+  de bot `foge_com_abordagem`/`deixa_companheiro` do R18 entram na Etapa 8.
+- Esperado: Δ = 0 pp de morte no `combate`; no `fujao` o gate de ataque corpo a corpo durante a fuga (R11)
+  só atua quando o bot ataca com perseguição ativa, e pode **baixar** a taxa de morte (recusa em vez de
+  trocar golpes), nunca subir.
+
+## 9. Próximos passos (Fases C–D, não implementadas)
+
+1. ~~**Etapa 3 (Fase B, R10/R11)**~~ feita em `shadow` (26/10); `tests/test_spec325_chase_choices.py`.
+2. ~~**Etapa 4 (Fase B, R12/R13)**~~ feita em `shadow` (26/10); `tests/test_spec325_abandon.py`. Falta o
+   gate R17 da Fase B (§8.2) e a revisão Sol.
 3. **Etapa 5 (Fase C, R14):** objetos de cena (`scene.objects` na API, `TurnStep(kind="object")`, `procurar`).
 4. **Etapa 6 (Fase C, R15):** ordens a companheiro e `companion_orders.py`; gate R17 da Fase C.
 5. **Etapa 7 (Fase D, R16):** reforços de `lider_matilha` e `reinforcements.py`; gate R17 com a célula nova da
@@ -527,8 +571,9 @@ Observações honestas sobre a medida:
 6. **Etapa 8 (R4, R18, R19):** `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
    cenários de §6 em `playtest/scenarios.py` e os invariantes restantes. A Fase A já tem
    `check_conflict_capabilities` (incapacitado nunca morto; formato de `revealed_resistances`).
-7. **UI restante (D8):** chips de objeto, "Deixar X", "Aceitar sacrifício" e ordem a aliado; o chip
-   "Sem matar" da Fase A já existe (`web/src/workspace/tabs/CombateTab.tsx`, só com `nonlethal_available`).
+7. **UI restante (D8):** chips de objeto e ordem a aliado; "Sem matar" (Fase A) e "Deixar X"/"Aceitar
+   sacrifício" (Fase B) já existem (`web/src/workspace/tabs/CombateTab.tsx`, só com a flag `on`: a API manda
+   `chase.abandon_candidates`/`chase.sacrifice_offer` apenas nesse caso).
 8. Adendos datados em SPEC-064/068/069/070 ("ligado pela SPEC-325") quando cada flag for a `on`.
 
 ## Histórico de mudanças
@@ -566,3 +611,32 @@ Observações honestas sobre a medida:
   (b) matriz SPEC-056, 5 classes × seeds 42/43 × 50 turnos: 10/10 com 0 erro, 0 violação, 0 `no_progress`;
   (c) long-run `combate` 12 × 200 (seeds 21–32, autorizado pelo dono em D5): 0 erro em todas; 2 violações `summary.lifecycle` ("conflito encerrou sem ConflictSummary") nas seeds 25 e 32 que **se repetem com as flags off** → pré-existentes, fora da Fase A (follow-up próprio). Os bots não declaram "sem matar", então o gate prova neutralidade da fiação, como previsto.
 - 26/10 — Fase A pronta para `on` no staging; Fases B–D seguem pendentes (§9).
+- **2026-10-26 — Fase B implementada (shadow).** `combat_intents.chase_approach/abandon_target/accepts_sacrifice`;
+  `chase.seal_fate/abandon_candidates/eligible_for_sacrifice/fate_to_companion_fate` (+ `outcomes` na simulação e
+  `soul` em `can_volunteer_sacrifice`/`offer_sacrifice`); `_attempt_flee` (abordagem, `last_luck`, `force_escape`),
+  `_chase_attack_gate`, `_chase_party_choices`, `_publish_sacrifice_offer` em `agents/combat.py`; `run_round(refusal=)`;
+  destino selado em `party[i].pending_fate` e consumido em `companion_soul.apply_turn` (passo 7b, único escritor);
+  tag `abandonou_companheiro` (catálogo 17); API `chase.{approach, abandon_candidates, sacrifice_offer}` e chips
+  "Deixar X"/"Aceitar sacrifício" só com a flag `on`; eventos novos em `EVENTOS_DE_LOG.md`.
+  - **Desvio 6:** `chase.abandon_companion` (que faz `party.pop`) **não** é usado: o companheiro precisa seguir na
+    `party` (inativo, `waiting_at` = id do local) para o `apply_companion_fate` da SPEC-304. O aliado sai do pool de
+    Sorte/da rodada por remoção de `sides["ally"]`; o selo é `chase.seal_fate`.
+  - **Desvio 7:** o aviso (telegrama D1) é registrado por `apply_turn` no 1º turno após o selo
+    (`telegraphs[].source == "abandono"`, `day` = dia do abandono), porque o combate nunca escreve na alma. O
+    destino sai depois de >= 1 dia, com o jogador fora do local e sem combate ativo; jogador no local (combate
+    encerrado) ou companheiro rechamado = resgate (cancela o selo). `fuga`/`esconderijo`/`reencontro_futuro`
+    apenas limpam o selo. Companheiro com selo é excluído de `companions_exposed` e da abertura de perigo do
+    `npc_world` (um destino só).
+  - **Desvio 8:** `companion_abandoned` vai direto ao `event_log` do resultado do nó (o validador de
+    `pending_world_events` não conhece o tipo); o payload não carrega o destino e o `event_id` é um hash da seed.
+  - **Desvio 9:** em `shadow`, `last_luck` não é persistido (o estado não muda), então o shadow de abandono loga
+    quando o texto declara "deixo <companheiro formal ativo>" durante uma fuga, e o de sacrifício loga a cada
+    rodada elegível (`sacrifice_offered` não persiste).
+  - **Desvio 10:** declarar abandono ou aceitar a oferta conta como rodada de fuga (liga `flee_requested`); a
+    abordagem vale só na rodada em que a palavra aparece (sem palavra = Agilidade, `approach` some do estado). O
+    ataque corpo a corpo recusado devolve o contador `combat.round` ao valor anterior e reutiliza o caminho do
+    item recusado (`run_round(refusal=...)`); o clima da rodada ainda é aplicado, como no item recusado.
+  - **Desvio 11:** a arena SPEC-285 chama `run_round` direto, sem fuga: ela é neutra à Fase B por construção. O
+    gate (§8.2) usa também o perfil `fujao`, único bot que foge. `capability_counts` (R4) e as variantes de bot
+    (R18) seguem na Etapa 8. As 8 flags já estavam em `WORLD_FLAGS`/`OPTIONAL_FLAGS` desde a Fase A (teste novo
+    garante).

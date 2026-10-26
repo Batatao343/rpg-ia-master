@@ -218,15 +218,26 @@ def _weighted_choice(rng: random.Random, weights: dict[str, float]) -> str:
     return next(iter(weights))
 
 
-def simulate_abandoned_companion(companion: dict, scene_state: dict | None, seed) -> dict:
+def simulate_abandoned_companion(
+    companion: dict, scene_state: dict | None, seed, *, outcomes: tuple[str, ...] | None = None
+) -> dict:
     """R6: destino do companheiro abandonado por SIMULAÇÃO automática completa —
     estado, perfil, terreno, perseguidores — DETERMINÍSTICA por seed (nunca
-    `random.random()` sem seed). Retorna {resultado, fatos_relacionais}."""
+    `random.random()` sem seed). Retorna {resultado, fatos_relacionais}.
+
+    `outcomes` (SPEC-325 R13) restringe o sorteio (sacrifício: combate/captura/morte);
+    sem ele o comportamento é o original."""
     rng = random.Random(seed)
     scene = scene_state or {}
     name = companion.get("name") or companion.get("id") or "O companheiro"
 
-    weights = {o: 1.0 for o in ABANDON_OUTCOMES}
+    weights = {o: 1.0 for o in (outcomes or ABANDON_OUTCOMES)}
+    allowed = frozenset(weights)
+
+    def bump(key: str, amount: float) -> None:
+        if key in allowed:
+            weights[key] += amount
+
     maxv = int(companion.get("max_vitalidade", 0) or 0)
     vit = int(companion.get("vitalidade", maxv) or 0)
     vit_ratio = (vit / maxv) if maxv > 0 else 1.0
@@ -236,21 +247,21 @@ def simulate_abandoned_companion(companion: dict, scene_state: dict | None, seed
 
     # estado ferido pesa pra desfechos ruins; agilidade/terreno pesam pra escapar
     if vit_ratio <= 0.25:
-        weights["morte"] += 2.5
-        weights["captura"] += 1.5
+        bump("morte", 2.5)
+        bump("captura", 1.5)
     elif vit_ratio <= 0.5:
-        weights["captura"] += 1.0
-        weights["combate"] += 1.0
-    weights["fuga"] += 0.4 * agi
-    weights["esconderijo"] += 0.3 * agi + (1.0 if terreno_favoravel else 0.0)
-    weights["captura"] += 0.6 * perseguidores
-    weights["combate"] += 0.4 * perseguidores
+        bump("captura", 1.0)
+        bump("combate", 1.0)
+    bump("fuga", 0.4 * agi)
+    bump("esconderijo", 0.3 * agi + (1.0 if terreno_favoravel else 0.0))
+    bump("captura", 0.6 * perseguidores)
+    bump("combate", 0.4 * perseguidores)
     if companion.get("tactical_profile") and any(
         p.get("action_hint", "").find("rende") >= 0
         for p in companion["tactical_profile"].get("priorities", [])
     ):
-        weights["rendicao"] += 1.5
-    weights["reencontro_futuro"] += 0.5
+        bump("rendicao", 1.5)
+    bump("reencontro_futuro", 0.5)
 
     resultado = _weighted_choice(rng, weights)
     fatos = [f"{name} foi deixado para trás durante a fuga."]
@@ -271,11 +282,24 @@ def simulate_abandoned_companion(companion: dict, scene_state: dict | None, seed
 # ==========================================================================
 # Etapa 5 — sacrifício voluntário + ataques em perseguição (R7/R8)
 # ==========================================================================
-def can_volunteer_sacrifice(companion: dict) -> bool:
+def can_volunteer_sacrifice(companion: dict, soul: dict | None = None) -> bool:
     """R7: só um companheiro com traço apropriado em prioridade VÁLIDA pode se
-    oferecer para ficar. Sem o traço, ninguém é obrigado a se sacrificar."""
+    oferecer para ficar. Sem o traço, ninguém é obrigado a se sacrificar.
+
+    SPEC-325 D3: com a alma (`soul`), também se oferece quem é leal (aprovação >=
+    `LOYAL_AT`) e corajoso (valor `coragem` >= 1)."""
     if companion.get("se_sacrifica_pelo_grupo"):
         return True
+    if soul:
+        from services.companion_soul import LOYAL_AT
+
+        try:
+            approval = int(soul.get("approval") or 0)
+            courage = int((soul.get("values") or {}).get("coragem") or 0)
+        except (TypeError, ValueError):
+            approval, courage = 0, 0
+        if approval >= LOYAL_AT and courage >= 1:
+            return True
     profile = companion.get("tactical_profile") or {}
     for pr in profile.get("priorities", []) or []:
         hint = str(pr.get("action_hint", "")).lower()
@@ -284,16 +308,104 @@ def can_volunteer_sacrifice(companion: dict) -> bool:
     return False
 
 
-def offer_sacrifice(companion: dict, accept: bool) -> dict:
+def offer_sacrifice(companion: dict, accept: bool, soul: dict | None = None) -> dict:
     """R7: o jogador aceita ou recusa a oferta. Recusar não força nada (sem
     penalidade automática universal — a percepção dos NPCs é contextual)."""
-    if not can_volunteer_sacrifice(companion):
+    if not can_volunteer_sacrifice(companion, soul):
         return {"sacrificed": False, "reason": "sem traço de sacrifício"}
     if not accept:
         return {"sacrificed": False, "reason": "recusado pelo jogador"}
     companion["sacrificed"] = True
     companion["in_party"] = False
     return {"sacrificed": True, "reason": "aceito"}
+
+
+# ==========================================================================
+# SPEC-325 Fase B — abandono e sacrifício ligados ao nó de combate
+# ==========================================================================
+_FATE_OF_OUTCOME = {
+    "captura": "capturado",
+    "rendicao": "capturado",
+    "combate": "ferido",
+    "morte": "morto",
+}
+SACRIFICE_OUTCOMES = ("combate", "captura", "morte")
+
+
+def fate_to_companion_fate(resultado: str) -> str:
+    """SPEC-325 R12: desfecho da simulação -> destino da SPEC-304. Vazio = volta a
+    esperar sem dano (fuga/esconderijo/reencontro_futuro)."""
+    return _FATE_OF_OUTCOME.get(str(resultado or ""), "")
+
+
+def _ally_key(member: dict) -> str:
+    return str(member.get("id") or member.get("name") or "")
+
+
+def abandon_candidates(chase: dict | None, party: list[dict]) -> dict[str, str]:
+    """R12: companheiros FORMAIS (party, não aliados de cena) que tiraram Complicação
+    (-1) na rodada anterior da fuga. `id -> nome`."""
+    last_luck = (chase or {}).get("last_luck") or {}
+    out: dict[str, str] = {}
+    for member in party or []:
+        key = _ally_key(member)
+        if (
+            key
+            and last_luck.get(key) == -1
+            and member.get("active")
+            and not member.get("transient")
+            and not member.get("pending_fate")
+        ):
+            out[key] = str(member.get("name") or key)
+    return out
+
+
+def seal_fate(
+    companion: dict,
+    *,
+    instance_id: str,
+    round_: int,
+    pursuers: int,
+    day: int,
+    location_id: str,
+    outcomes: tuple[str, ...] | None = None,
+) -> dict:
+    """R12/R13: sorteia (seed `instance:ally:round`) e SELA o destino em
+    `companion["pending_fate"]`; o companheiro sai ativo e fica esperando no local.
+    Nada é aplicado agora: `companion_soul.apply_turn` consome depois de >= 1 dia."""
+    key = _ally_key(companion)
+    seed = f"{instance_id}:{key}:{int(round_)}"
+    sim = simulate_abandoned_companion(
+        companion, {"pursuers": int(pursuers)}, seed, outcomes=outcomes
+    )
+    resultado = sim["resultado"]
+    pending = {
+        "resultado": resultado,
+        "fate": fate_to_companion_fate(resultado),
+        "day": int(day),
+        "location_id": str(location_id),
+        "seed": seed,
+    }
+    companion["active"] = False
+    companion["waiting_at"] = str(location_id)
+    companion["pending_fate"] = pending
+    return pending
+
+
+def eligible_for_sacrifice(party: list[dict], souls: dict, traits_of=None) -> str | None:
+    """R13: primeiro companheiro ativo/formal elegível (ordem estável por id). `traits_of`
+    (opcional) devolve os traços do NPC para o traço explícito `se_sacrifica_pelo_grupo`."""
+    from services.companion_soul import comp_id
+
+    for member in sorted(party or [], key=_ally_key):
+        if not member.get("active") or member.get("transient") or member.get("pending_fate"):
+            continue
+        probe = dict(member)
+        if traits_of is not None and "se_sacrifica_pelo_grupo" in (traits_of(member) or []):
+            probe["se_sacrifica_pelo_grupo"] = True
+        if can_volunteer_sacrifice(probe, (souls or {}).get(comp_id(member))):
+            return _ally_key(member)
+    return None
 
 
 def chase_attack(chase: dict, *, melee: bool) -> dict:

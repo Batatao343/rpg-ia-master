@@ -61,6 +61,15 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `codex.no_documents` | — |
 | `codex.no_embeddings` | — |
 | `combat.budget_failed` | `error` |
+| `combat.chase_abandon` | — |
+| `combat.chase_abandon_shadow` | — |
+| `combat.chase_approach_shadow` | `approach` |
+| `combat.chase_attack_reengage` | — |
+| `combat.chase_attack_refused` | — |
+| `combat.chase_attack_shadow` | `allowed`, `mode` |
+| `combat.chase_sacrifice` | — |
+| `combat.chase_sacrifice_offered` | — |
+| `combat.chase_sacrifice_shadow` | — |
 | `combat.enemy_knowledge_failed` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
@@ -78,6 +87,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
 | `combat_agent.fallback` | — |
+| `companion.abandon_fate_applied` | `fate` |
+| `companion.abandon_fate_none` | — |
+| `companion.abandon_rescued` | — |
 | `companion.personal_quest_completed` | — |
 | `companion.personal_quest_revealed` | — |
 | `companion_soul.fallback` | — |

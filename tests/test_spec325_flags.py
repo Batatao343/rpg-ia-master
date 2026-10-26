@@ -36,3 +36,12 @@ def test_resistance_label_pt_br():
     assert cf.is_resistance_entry("igneo:imune")
     assert not cf.is_resistance_entry("igneo:talvez")
     assert not cf.is_resistance_entry("igneo")
+
+
+def test_all_capability_flags_in_staging_allowlists():
+    """Sem estar em `WORLD_FLAGS`/`OPTIONAL_FLAGS` o `vercel_env.py` apagaria a flag no staging."""
+    from scripts.staging import vercel_env as ve
+
+    for var in cf.ENV_VARS.values():
+        assert var in ve.WORLD_FLAGS, var
+        assert var in ve.OPTIONAL_FLAGS, var

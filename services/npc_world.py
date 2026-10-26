@@ -881,6 +881,8 @@ def day_hook(ctx: Any) -> Any:
             or entry.get("status") == "capturado"
             or entry.get("escort")  # SPEC-313 R22: sem perigo off-screen enquanto escoltado
             or (ref in _party_by_id(st) and _party_by_id(st)[ref].get("active"))
+            # SPEC-325 R12: companheiro deixado na fuga tem o destino SELADO no combate
+            or (ref in _party_by_id(st) and _party_by_id(st)[ref].get("pending_fate"))
         ):
             continue
         _k, row = _row_for(st, ref)

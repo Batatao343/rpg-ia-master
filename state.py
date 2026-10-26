@@ -221,6 +221,9 @@ class CompanionState(TypedDict, total=False):
     ferimentos: dict[str, list]
     active: bool
     stats: dict
+    # SPEC-325 R12: destino SELADO de quem foi deixado na fuga (nunca vai à API/narrador);
+    # `companion_soul.apply_turn` consome depois de >= 1 dia. Opcional (saves antigos).
+    pending_fate: dict
 
 
 class WorldClock(TypedDict):

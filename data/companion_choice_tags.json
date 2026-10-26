@@ -15,6 +15,7 @@
     {"id": "ameacou", "source": "action_regex", "axes": {"compaixao": -1, "honra": -1}, "magnitude": 1, "prose": "ameaçou alguém"},
     {"id": "crime_testemunhado", "source": "event", "axes": {"ordem": -2, "honra": -1}, "magnitude": 2, "prose": "cometeu um crime à vista de todos"},
     {"id": "pagou_multa", "source": "event", "axes": {"ordem": 1}, "magnitude": 1, "prose": "pagou a multa devida"},
+    {"id": "abandonou_companheiro", "source": "event", "axes": {"compaixao": -2, "honra": -1}, "magnitude": 3, "prose": "deixou um companheiro para trás na fuga"},
     {"id": "missao_pessoal_concluida", "source": "engine", "axes": {}, "magnitude": 1, "prose": "resolveu a missão pessoal dele"}
   ]
 }

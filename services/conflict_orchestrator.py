@@ -1939,6 +1939,7 @@ def run_round(
     scene_state: dict | None = None,
     initiator: str | None = None,
     rng=None,
+    refusal: str = "",
 ) -> dict:
     """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
     `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
@@ -1970,7 +1971,9 @@ def run_round(
     out["terminal"].extend(
         actor_id for actor_id, actor in actors_by_id.items() if actor.get("last_stand_pending")
     )
-    refusal = _refused_player_item(actors_by_id, sides, declarations)
+    # SPEC-325 R11: `refusal` vem do nó (ataque corpo a corpo durante a fuga) e segue o
+    # mesmo caminho do item recusado: nada na cena é tocado, os inimigos não agem.
+    refusal = refusal or _refused_player_item(actors_by_id, sides, declarations)
     if refusal:
         # SPEC-227 R8: item recusado (ex.: Vitalidade cheia) NÃO gasta a Ação nem
         # dá turno aos inimigos — nada na cena é tocado, o jogador redeclara.

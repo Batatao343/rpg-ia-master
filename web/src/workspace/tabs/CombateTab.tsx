@@ -33,6 +33,9 @@ const isTyping = (el: EventTarget | null) => {
  *  carta/ação básica → (alvo) → envio. Todos os números vêm de `data.combat`. */
 /** SPEC-325 R9: o servidor reconhece esta frase (regex fechada em death_flow.NONLETHAL_RE). */
 const SPARE_TEXT = "Sem matar.";
+/** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
+const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
+const SACRIFICE_TEXT = "Aceito o sacrifício.";
 
 export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
@@ -234,6 +237,21 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
                 title="O próximo golpe derruba o alvo sem matá-lo (se a forma do ataque permitir)."
                 onClick={() => setSpare((v) => !v)}>
                 Sem matar
+              </button>
+            )}
+            {combat?.chase?.abandon_candidates?.map((c) => (
+              <button key={`abandon-${c.id}`} className="actionchip" type="button" data-abandon={c.id}
+                disabled={locked}
+                title="Foge deixando o companheiro para trás. O destino dele só se revela depois."
+                onClick={() => { if (targeting.beginDirect()) onAction(ABANDON_TEXT(c.name)); }}>
+                Deixar {c.name}
+              </button>
+            ))}
+            {combat?.chase?.sacrifice_offer && (
+              <button className="actionchip" type="button" data-sacrifice disabled={locked}
+                title="Aceita que o companheiro fique para segurar os perseguidores. Recusar não tem custo: é só fugir."
+                onClick={() => { if (targeting.beginDirect()) onAction(SACRIFICE_TEXT); }}>
+                Aceitar sacrifício de {combat.chase.sacrifice_offer.name}
               </button>
             )}
           </div>
