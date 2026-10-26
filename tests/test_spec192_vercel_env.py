@@ -319,3 +319,12 @@ def test_spec325_combat_flags_are_allowlisted():
     assert set(names) <= set(ve.stale_names(plain))  # ausente => o script apaga a antiga
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_flags={"RPG_COMBAT_NONLETHAL": "maybe"})
+
+
+def test_dynamic_art_envia_price_profiles_da_326():
+    env, _ = ve.build_env(FILES, dynamic_art=True)
+    assert env["RPG_IMAGE_PRICE_PROFILE_PORTRAIT"] == "staging-326-portrait"
+    assert env["RPG_IMAGE_PRICE_PROFILE_SCENE"] == "staging-326-scene"
+    off, _ = ve.build_env(FILES)
+    assert "RPG_IMAGE_PRICE_PROFILE_SCENE" not in off
+    assert "RPG_IMAGE_PRICE_PROFILE_SCENE" in ve.stale_names(off)

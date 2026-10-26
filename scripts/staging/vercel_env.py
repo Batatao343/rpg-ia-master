@@ -81,6 +81,8 @@ OPTIONAL_FLAGS = (
     "RPG_RUMORS_PROPOSED",
     "RPG_LORE_QUESTS",
     "RPG_DYNAMIC_ART_ENABLED",
+    "RPG_IMAGE_PRICE_PROFILE_PORTRAIT",
+    "RPG_IMAGE_PRICE_PROFILE_SCENE",
     "RPG_ROUTER_DETERMINISTIC_NPC",
     "RPG_PROMPT_STATIC_FIRST",
     "RPG_EARLY_NARRATIVE",
@@ -100,6 +102,11 @@ OPTIONAL_FLAGS = (
     "RPG_COMPANION_ORDERS",
     "RPG_COMBAT_REINFORCEMENTS",
 )
+# SPEC-326 R17: price profiles de imagem (linhas imutáveis em app.image_price_profiles).
+DYNAMIC_ART_PRICE_PROFILES = {
+    "RPG_IMAGE_PRICE_PROFILE_PORTRAIT": "staging-326-portrait",
+    "RPG_IMAGE_PRICE_PROFILE_SCENE": "staging-326-scene",
+}
 # Estado aprovado do staging (25/10): carregado por padrao para que rodar o script sem flags
 # reproduza o que o dono aprovou, em vez de apagar o mundo vivo e o Jev primary.
 STAGING_PRESET_PATH = ROOT / "scripts" / "staging" / "staging_flags.json"
@@ -278,6 +285,8 @@ def build_env(
         production["RPG_ROUTES"] = CLASSIFY_GROQ_FIRST_ROUTES
     if dynamic_art:
         production["RPG_DYNAMIC_ART_ENABLED"] = "1"
+        # SPEC-326 R17: profiles publicados no staging em 26/10 (teto US$ 0,08; medido ~0,05).
+        production.update(DYNAMIC_ART_PRICE_PROFILES)
     production["RPG_CORS_ORIGINS"] = f"https://{public_host}"
     site_key = next((files[k] for k in SITE_KEY_FROM_FILE if files.get(k)), None)
     if site_key:
