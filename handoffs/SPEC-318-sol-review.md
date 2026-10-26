@@ -72,3 +72,37 @@ sonda _infer_role("Marta", …) → Guarda/Guarda/Capitão/Ladrão nas 4 frases 
 sonda _complete_sheet com cache-hit de NPC existente → 3 falhas, stub duplicado permanente (legado: só o canônico, em cena)
 sonda _deterministic_story_fallback com nota [ECOS DO MUNDO] inline → instrução "teça…" e "FATO:/BOATO:" visíveis
 ```
+
+## Re-review (delta `4f88cc3e..c8546a9d`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus (papel Sol) · **Data:** 2026-10-25 · **Commit revisado:** `c8546a9d`
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | resolvido | `_infer_role` (`agents/storyteller.py:789-806`) só casa palavra inteira em aposto ao nome. Sonda: "aguarda", "o guarda acena; Marta…", "capital", "ladra/ladrilhos" e "Marta é a capitã" → `Desconhecido`; "A estalajadeira Marta", "Marta, a ferreira" e "Marta, uma viajante" → papel certo. `_merge_full` não trava mais o papel (`agents/enrich.py:77-89`). |
+| P1-2 | resolvido | `outcome_out` (`merged_into`/`blocked`/`failed`) em `_with_new_npc`; `_complete_sheet` (`agents/enrich.py:157-187`). Sonda Skriit → Skriit Mil-olhos: sobra só o canônico, com `in_scene=True`, interação/memória do stub somadas, `active_npc_name` e `pending_npc_memory.npc_id` remapeados. Sonda NPC morto: o stub é removido e não entra em retry. |
+| P1-3 | resolvido | `_digest_player_text` + `_player_facing_note` (`agents/storyteller.py:529-552`). **Sonda pelo grafo** (`app.invoke`, virada de dia em descanso, motor de mundo `on`, digest inline padrão), com o narrador em `FallbackLLM` e com o narrador levantando exceção (`storyteller.failed`). Nos dois casos a mensagem final traz só o fato de template ("Os preços do pão subiram…"), sem "teça", `FATO:`, `BOATO:` nem `[ECOS DO MUNDO]`. Controle com a mesma sonda em `4f88cc3e`: vazava `teça`, `FATO:` e `sem listá`. |
+| P2-1/P2-2 | resolvido | `_KEEP_FROM_STUB` = `_NPC_DYNAMIC_FIELDS` ∪ extras (vitalidade/ferimentos preservados); o `id` passa a ser o da ficha completa, com a fila remapeada. |
+| P2-3 | parcial (ok) | O teste R7 ganhou cenários. A paridade externa foi refeita (abaixo). |
+| P2-4 | resolvido | Tier FAST só com `RPG_REPLAN_AFTER=on` (planner) e com `lean` (fallback do arquivista). |
+| P2-5 | resolvido | `WORLD_FLAG_VALUES` restringe as duas flags a `off|on`; há teste. |
+| P2-6 | resolvido | `digest_prompt_lines` corta em `DAY_FACTS_MAX`; há teste. |
+| P2-7 | resolvido | Documentado em §9. |
+| P2-8 | parcial | A promoção registra `npc_claim_direct_write` na 1ª escrita. O texto de `rag_persistence_error` continua diferente com retry pendente (cosmético). |
+
+**Paridade externa refeita** (`git archive main` × worktree `c8546a9d`, 4 cenários × 3 turnos, MockLLM, seeds fixos, `_state_to_save_data` inteiro):
+flags legadas → **0 diferenças**. Flags padrão → 4 diferenças, todas esperadas: `attempts` na fila e o texto de `rag_persistence_error`.
+
+Follow-ups (não bloqueiam):
+- F-1: "Ele guarda Marta na memória" ainda dá `Guarda` (verbo "guardar" + nome). Como o papel não fica mais travado, a ficha completa corrige; só afeta a janela do stub.
+- F-2: no caminho `blocked` (NPC morto), um `active_npc_name` que apontava para o stub removido não é limpo; o `npc_actor` delega ao storyteller, como no legado sem alvo.
+- F-3: ficha completada num turno **posterior**: memórias já gravadas no FAISS sob o id do stub ficam órfãs, porque só a fila é remapeada.
+- F-4: §6 (staging) e `evals compare` de `memory_context.jsonl` continuam pendentes antes do `done`.
+
+```text
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 <12 arquivos do escopo> → exit 0 (178 testes, 0 falhas)
+paridade git-archive main × c8546a9d (legado) → 0 diffs; (padrão) → 4 diffs esperados
+sonda grafo FallbackLLM/exceção no narrador em virada de dia → sem vazamento (controle 4f88cc3e: vaza)
+sonda _infer_role (9 frases) e _enrich_npcs (dedupe/morto) → conforme a tabela acima
+```

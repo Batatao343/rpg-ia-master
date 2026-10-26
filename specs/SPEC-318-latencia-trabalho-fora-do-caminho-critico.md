@@ -1,6 +1,6 @@
 # SPEC-318 — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 
-> **Status:** `in-progress` (implementada 25/10; falta revisão independente Sol + medição no staging; aprovada pelo dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS); pousada na main 25/10; falta medição §6 no staging e `evals compare` de memory_context antes de promover `lean`)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-316 (`done` — a narração só é entregue cedo se o NÓ narrador terminar cedo); insumos `done`: SPEC-028 (traits seeded), SPEC-213 (projeções), SPEC-302/304/309 (motor de mundo e percepção)
 > **Desbloqueia:** SPEC-319 (ganho de TTFMC só é pleno com o nó narrador enxuto)
