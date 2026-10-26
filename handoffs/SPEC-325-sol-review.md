@@ -134,3 +134,157 @@ sondagem temporária (scratchpad, fora do repo): sacrifício aceito → apply_tu
 sondagem temporária: save_game_state/load_game_state com selo → pending_fate/last_luck/abandoned idênticos
 cd web && npm test → 194 pass, 0 fail
 ```
+
+---
+
+## Fase C
+
+> **Veredito (Fase C):** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus / Sol · **Data:** 2026-10-26 · **Commit revisado:** `d84c5d8d` (`git diff main...spec-325`)
+
+### Escopo
+
+R14 (objetos de cena) e R15 (ordem a companheiro), desvios 12–16 e §8.3. Arquivos: `agents/combat.py`
+(`_object_declaration`, `_guard_object_step`, `_companion_orders`, `PlayerMoveObject`), `services/combat_intents.py`
+(`object_step`, `companion_order`), `services/companion_orders.py`, `services/conflict_turn.py`
+(`_search_discovers_object`), `api.py` (`scene.objects`, `companion_orders`), `observability/events.py`,
+`web/src/{types.ts,workspace/tabs/CombateTab.tsx}` e testes `tests/test_spec325_{objects,orders,intents_scene}.py`.
+O gate §8.3 ficou fora (é do coordenador).
+
+Conferido e correto:
+- **Regra de ouro.** `visible_objects` devolve só `label`/`cost`/usos, e o secreto só aparece depois de descoberto.
+  O prompt do CLASSIFY lista `id=nome [rótulos]`, sem `effect`. A recusa ("Não dá para usar '<rótulo>' assim
+  agora…") não descreve o efeito. O log de uso sai só depois do uso. Há teste para "efeito não usado não chega
+  ao narrador nem à API".
+- **Casamento nome + interação.** Exige o nome canônico inteiro (com checagem de negação no nome) e o rótulo,
+  inteiro ou pelo radical. Só aceita objetos visíveis, então o secreto não descoberto não pode ser declarado. O
+  `object_id`/`interaction` vindos do LLM são validados contra `visible_objects` (`_valid_object_use`); se forem
+  inválidos, viram ataque básico. O guard `isinstance(res, PlayerMove)` cobre a subclasse.
+- **Ofensivo contra os seus.** `_effect_is_offensive` cobre `damage` e condição nociva. O alvo vem de
+  `params.target` (fixo no objeto). A recusa passa pelo `run_round(refusal=)` e não gasta a rodada.
+- **`procurar`.** O estado "alguém escondido de mim" é lido **antes** de `cs.search`, que o limpa (desvio 16). Revela
+  o 1º secreto da zona do ator (ou sem zona). Em `shadow` só loga e em `off` não faz nada. O log de `procurar` em
+  `off` continua igual.
+- **Ordens (D9).** Tabela fixa sobre `values` da alma (`honra`/`compaixao`/`coragem` >= 2). Somada ao perfil,
+  passa pelo `tp.validate_companion_order` existente, com `leverage = approval >= LOYAL_AT` (70). Recusa,
+  `loses_command` ou falta de alvo válido viram só uma linha de log, sem declaração, e o aliado age pelo perfil. A
+  declaração do jogador não muda (`test_player_action_unchanged_on_refusal`).
+- **Shadow/off.** Em `shadow`, os quatro pontos só emitem `_log_event`. Em `off`, o prompt e o schema do CLASSIFY
+  continuam byte a byte iguais (`move_model = PlayerMove`, `object_rule = ""`). As regressões de combate passam
+  com C/D em `off`.
+- **Chips web.** Aparecem só quando a API traz `scene.objects`/`companion_orders`, e os dois saem só com
+  `combat_flags.active(...)` (= `on`). O texto do chip ("<rótulo> <nome>." / "<nome>, <verbo>.") é reconhecido
+  pelo parser local.
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| C-P2-1 | P2 | `agents/combat.py:1873` + desvio 15 | O texto da ordem também vai ao CLASSIFY do jogador. Com o LLM real, "Bran, recue." ou "Bran, cure." pode virar `move afastar` ou cura **do herói**, e não o ataque básico que o desvio 15 supõe. O MockLLM esconde isso. | Com a ordem aceita em `on`, retirar a oração da ordem do texto antes do parser. Se sobrar só ela, usar ataque básico ou `pass` sem CLASSIFY. Smoke real (§6) com "X, recue.". |
+| C-P2-2 | P2 | `web/src/workspace/tabs/CombateTab.tsx:42` | Falta o chip `curar`: o R15 lista atacar/proteger/recuar/curar. | Adicionar `["curar","Curar"]`, se possível só para quem tem perfil de suporte, ou registrar como desvio. |
+| C-P2-3 | P2 | `services/combat_intents.py:125` | Com rótulo de 5 letras ("puxar", "subir"), o radical fica em 4 letras ("puxa") e não casa "puxo"/"subo". | `stem = fl[:max(3, len(fl)-2)]` para rótulos de 5 letras, com teste. |
+| C-P2-4 | P2 | `agents/combat.py:1225` | `"object"` entrou no conjunto do `_canonical_player_action` sem depender da flag. Em `off`, uma declaração `object` do harness passa a ser relatada como `object`, e não `pass`. É mais correto, mas não é "off byte a byte" (desvio 14). | Registrar no desvio 14, ou condicionar à flag. |
+| C-P2-5 | P2 | `services/companion_orders.py:17` | A linha `coragem >= 2 → abandonar_posto` vai além do exemplo da spec e transforma "recuar" em recusa para companheiros corajosos. É razoável, mas não está registrado. | Registrar na spec (D9). |
+| C-P2-6 | P2 | `web/` | Não há teste web (unitário) para os chips de objeto e de ordem nem para a nota de reforço. | Um teste de render com e sem os campos. |
+
+Sem P0/P1. Nada de `evals/` alterado. Nenhum segredo vai a log (os payloads levam só `verb`/`action`).
+
+---
+
+## Fase D
+
+> **Veredito (Fase D):** `CHANGES_REQUIRED` (não bloqueia o pouso em `shadow`, mas bloqueia `RPG_COMBAT_REINFORCEMENTS=on`;
+> o gate R17 (a) **não** detecta o defeito, então ele precisa ser corrigido antes da medição)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-26 · **Commit revisado:** `56ee5985`
+
+### Escopo
+
+R16 (reforço de `lider_matilha`), desvios 17–20 e §8.4. Arquivos: `services/reinforcements.py`, `agents/combat.py`
+(`_plan_reinforcements`, `_advance_reinforcements`), `services/encounter_manifest.py` (`add_joined`, `_base_id`),
+`api.py` (`reinforcement_warning`), `docs/spec285/arena_lethality.py` (célula `lider_matilha`) e
+`tests/test_spec325_reinforcements.py`.
+
+### Por que o reforço BAIXA a morte do herói (prioridade)
+
+Mecanismo confirmado por sondagem (arena real, `basico`, 4 líderes × 5 classes × 10 seeds, MockLLM):
+
+1. **A cópia rebaixada continua líder.** `services/reinforcements.py:89-93`: sem Lacaio da mesma facção (é o caso
+   dos 4 líderes do pool), a cópia muda só `categoria`/`type` e mantém `arquetipo="lider_matilha"` e o
+   `tactical_profile` do líder (sondagem: prioridades `['flee','support','support']`). O reforço é um **segundo
+   líder de matilha**.
+2. **Líder com par troca ataque por apoio.** `services/tactical_profile.py:231-235`: `lider_matilha = {matilha_quebrada:
+   flee, alvo_vulneravel: support, sempre: support}`. Sozinho, o `support` não tem alvo
+   (`_ally_available_target=None`) e cai para ataque (`services/conflict_orchestrator.py:529-538`), então o líder
+   solo ataca 100 % das vezes. Com o reforço em cena, os dois passam a conceder `attack_advantage` um ao outro
+   (`conflict_orchestrator.py:1315-1327`) em vez de atacar. Contagem de declarações no L5: líder solo, 998/998
+   ataque ou Carta; líder com par, 388/620 (63 %) `tactic:support`; reforço com par, 445/620 (72 %) `support`.
+3. **Morto o líder, o reforço foge e a luta vira vitória.** `conflict_orchestrator.py:436`: `pack_broken`
+   (o único par morto) faz a cópia fugir. Em 57 de 120 lutas ON no L5, o fim foi "líder morto + reforço `fugiu`",
+   com `win`.
+4. **Timeout não conta como morte.** Os +2 a +11 timeouts/200 (cópia do `mon_auroque_ruinas`, que herda
+   `bst_mimetismo_morto`/esconder e a fuga) entram como não-morte na arena (`arena_lethality.py:229`). Isso explica
+   só uma parte pequena do Δ.
+
+Não é erro de contagem, de troca de alvo pelo líder a 50 % nem de reset de inimigo: o id, o orçamento e o fim de
+luta estão coerentes. **É defeito de design (desvio 20) que inverte o propósito do R16**, e dois defeitos se anulam:
+
+| Nível | OFF | ON (como está) | ON com a cópia em perfil `equilibrado` (sondagem) |
+|---|---|---|---|
+| L3 | 0,570 | 0,485 (−8,5 pp) | **0,880 (+31 pp)** |
+| L5 | 0,565 | 0,440 (−12,5 pp) | **0,860 (+29,5 pp)** |
+| L8 | 0,450 | 0,340 (−11 pp) | **0,810 (+36 pp)** |
+
+Com a IA do reforço consertada, a letalidade explode, porque a cópia leva a **ficha inteira do Elite** (desvio 20)
+e o orçamento a cobra como **Lacaio** (`reinforcements.py:105-108`: `eb.tier_cost(template)` depois de rebaixar a
+`categoria`). Na prática entra um segundo Elite pelo preço de um Lacaio. O resultado negativo atual esconde esse
+estouro, e o gate "≤ +3 pp" passa só porque o reforço não luta.
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| D-P1-1 | P1 | `services/reinforcements.py:89-93` | A cópia rebaixada herda `arquetipo`/`tactical_profile` de `lider_matilha`: cria um laço de apoio mútuo e foge quando o líder morre (mecanismo acima). O reforço deixa o herói **mais seguro**. | Na cópia: `arquetipo` de combate (p.ex. `equilibrado`, ou o arquétipo de Lacaio da espécie) e `tactical_profile = _profile_for_archetype(...)`. Tirar das `cartas` as de comando/esconder do líder (`bst_uivo_comando`, `bst_mimetismo_morto`). Teste: a cópia não é `is_leader` e declara `attack` quando está com o líder. |
+| D-P1-2 | P1 | `services/reinforcements.py:89-93`, `:105-108`; spec desvio 20 | A ficha do Elite é cobrada como Lacaio no orçamento. Com o D-P1-1 corrigido, o Δ medido fica entre +29 e +36 pp, contra o teto de +3 pp. | Uma de duas: (a) rebaixar a **ficha** de verdade (gerar Lacaio categórico da mesma espécie/facção via o gerador do bestiário, com Vitalidade/virtudes de Lacaio); (b) cobrar o custo da ficha real (Elite), o que quase nunca cabe. A (a) segue o espírito do R16 ("1 Lacaio"). É mudança do desvio 20: **decisão do autor da spec/dono**. Remedir a célula `lider_matilha` depois. |
+| D-P2-1 | P2 | `services/discovery.py:50-58` | `normalize_bestiary_id` não reconhece `<base>_r<N>`: `_\d+$` não remove `_r1` e o slug do nome "(reforço)" não casa. Sondagem: `normalize_bestiary_id(reforço) == ''`, então `record_kills` não conta a morte (bestiário `defeated`) e `sync_hunt_progress` (SPEC-313, `agents/combat.py:2195`) nunca vê o reforço. O `_base_id` do manifesto foi atualizado, mas este não. | Em `normalize_bestiary_id`: tentar `enemy["archetype_id"]` antes, e/ou `re.sub(r"_r?\d+$", ...)`. Teste: o reforço morto conta `defeated+1` na espécie. Se a caça deve ou não aceitar a cópia como âncora é decisão; pelo menos documentar. |
+| D-P2-2 | P2 | `services/reinforcements.py:113-116` | Líder com nome único (`mon_capita_corda` "Capitã da Corda Molhada", `enemy_bandido_capitao`) gera uma segunda "Capitã… (reforço)". Para o narrador, é uma duplicata de uma personagem nomeada. | Junto com o D-P1-2(a): nome genérico do Lacaio da espécie/facção, nunca o nome do líder. |
+| D-P2-3 | P2 | `tests/test_spec325_reinforcements.py` | Falta round-trip `save_game_state` → `load_game_state` no meio do reforço (entre aviso e chegada: `combat.reinforcement`, `next_by_template`, `scene.reinforcement_triggers[*].participants`), como exige a regra de writer persistente. Só há o caso de save antigo. | Teste: avisa, salva, carrega, roda a rodada seguinte → chega `_r1` uma vez. |
+| D-P2-4 | P2 | `services/reinforcements.py:29-34` | `acts()` não olha `estado_terminal`/`last_stand_pending`. Um líder em Estado Terminal com `status="ativo"` ainda "age" e o reforço chega. O R16 manda cancelar se o líder "cair". | Incluir `estado_terminal` (e `incapacitado`) na condição de cancelamento, com teste. |
+| D-P2-5 | P2 | `tests/test_spec325_reinforcements.py:118-143` | `test_unique_instance_id_and_xp` confere `xp >= xp_before`, que passa mesmo sem XP. | Conferir `xp > xp_before`, ou o valor exato de `xp_awarded`. |
+| D-P2-6 | P2 | `docs/spec285/arena_lethality.py:229` | Na célula `lider_matilha`, `timeout` conta como não-morte, e é justo onde a Fase D o aumenta. | No gate §8.4, relatar `death+timeout` ou exigir Δtimeout ≈ 0 na célula. |
+
+**Fidelidade da célula da arena (item 6):** é fiel ao nó. Usa o mesmo `rf.plan_triggers` antes do `cs.freeze`, o
+mesmo `rf.advance(..., mode="on")` no fim da rodada só se a luta não acabou nem o herói morreu (o nó também
+exclui `is_simulation`/`hero_fled`), e o mesmo orçamento `encounter_budget(nível, danger, 0)` que define o grupo. As
+diferenças são que a arena não chama `_mirror_vitals`/`_sync_enemy_knowledge`/`add_joined` (inertes para a
+letalidade), e que o `spawn → template_by_id` consome o `random` global só no ON (é ruído, não viés). As células
+atuais seguem intactas (`reinforce and cat == LEADER_CELL`, e a categoria fica fora do default).
+
+**Ids/manifesto (item 3):** `_r<N>` vem de `combat_meta["next_by_template"]` e é distinto de `<base>_<n>`. O
+`encounter_manifest._base_id` (`_r?\d+$`) não colide com nenhum id do bestiário (grep: 0 ids `_r<N>`). O
+`_canonical_enemy_id` (`agents/combat.py:101`) não remove `_r1`, então a cópia nunca gera `npc_killed` do NPC
+nomeado (correto). O que falta está no D-P2-1.
+
+**Shadow/off (item 4):** em `shadow`, `_plan_reinforcements` retorna antes de `add_reinforcement_trigger`, e
+`rf.advance` só loga `would_warn`, sem `combat_meta.reinforcement` (desvio 19). Em `off` nada roda. A API publica
+`reinforcement_warning` só com `on` e entre o aviso e a chegada ou o cancelamento. Sem P0. Nada em `evals/`. Nenhum
+valor do LLM. Nenhum segredo vai a log.
+
+### Pendências
+
+- D-P1-1 e D-P1-2: obrigatórios antes de `RPG_COMBAT_REINFORCEMENTS=on` e antes de rodar o gate §8.4. O D-P1-2
+  pede decisão sobre o desvio 20 (ficha de Lacaio de verdade ou custo de Elite). Depois disso, remedir a célula
+  `lider_matilha`. Com a correção mínima, o esperado é que o Δ fique positivo e maior que 3 pp.
+- D-P2-1 a D-P2-4: antes do `on`. D-P2-5 e D-P2-6: na Etapa 8.
+- Fase C: C-P2-1 antes de `RPG_COMPANION_ORDERS=on` (smoke real). O resto pode ir na Etapa 8.
+
+### Comandos rodados (Fases C+D)
+
+```text
+RAM livre 2,4–2,7 GB → testes em série (sem -n)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_spec325_{objects,orders,intents_scene,reinforcements}.py tests/test_encounter_manifest.py tests/test_log_event_registry.py → 97 passed (exit 0)
+RPG_COMBAT_OBJECTS=off RPG_COMPANION_ORDERS=off RPG_COMBAT_REINFORCEMENTS=off pytest -q tests/test_spec272_conflito_ligado.py tests/test_spec313_hunt.py tests/test_conflito_fuga.py tests/test_spec325_flags.py → exit 0
+sondagem (scratchpad, fora do repo): arena fight() lider_matilha L3/L5/L8 basico, 10 seeds, contagem de declarações por ator solo×par e desfecho final (líder/reforço)
+sondagem: mesma arena com a cópia em perfil `equilibrado` → +31/+29,5/+36 pp (tabela acima)
+sondagem: normalize_bestiary_id/record_kills no reforço `enemy_soldado_legiao_ferro_r1` → '' / {}
+web: não rodado (sem mudança de teste web; RAM baixa)
+```

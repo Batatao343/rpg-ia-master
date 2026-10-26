@@ -19,6 +19,7 @@ __all__ = [
     "chase_approach",
     "companion_order",
     "nonlethal_declared",
+    "split_order",
     "object_step",
 ]
 
@@ -122,7 +123,7 @@ def _label_matches(folded: str, label: str) -> bool:
         return False
     if re.search(rf"\b{re.escape(fl)}\b", folded):
         return True
-    stem = fl[: max(4, len(fl) - 2)]
+    stem = fl[: max(3, len(fl) - 2)]
     return len(fl) > 4 and _word_start(folded, stem) >= 0
 
 
@@ -173,9 +174,17 @@ def companion_order(text: str, allies: dict[str, str], enemies: list[dict]) -> d
     """`{ally_id, verb, target_id, tags}` para "<aliado>, <verbo> ..." (`allies` = id -> nome;
     `enemies` = fichas com id/name/status). None se nao ha ordem fechada valida. As tags saem
     do alvo e do verbo (`atacar_rendido`, `atacar_incapacitado`, `abandonar_posto`)."""
+    return split_order(text, allies, enemies)[0]
+
+
+def split_order(text: str, allies: dict[str, str], enemies: list[dict]) -> tuple[dict | None, str]:
+    """`(ordem, resto)`: a ordem (ver `companion_order`) e o texto SEM a oracao da ordem, que e o
+    que sobra para a acao do proprio jogador (SPEC-325 C-P2-1)."""
     if not allies:
-        return None
-    for clause in re.split(r"[.!?;]", _fold(text)):
+        return None, text
+    pieces = [p for p in re.split(r"(?<=[.!?;])\s*", str(text or "")) if p.strip()]
+    for index, piece in enumerate(pieces):
+        clause = _fold(piece).rstrip(".!?; ")
         m = _ORDER_RE.match(clause)
         if not m or m.group("neg"):
             continue
@@ -205,5 +214,6 @@ def companion_order(text: str, allies: dict[str, str], enemies: list[dict]) -> d
                     break
         elif verb == "recuar":
             tags.append("abandonar_posto")
-        return {"ally_id": ally_id, "verb": verb, "target_id": target_id, "tags": tags}
-    return None
+        order = {"ally_id": ally_id, "verb": verb, "target_id": target_id, "tags": tags}
+        return order, " ".join(pieces[:index] + pieces[index + 1 :]).strip()
+    return None, text

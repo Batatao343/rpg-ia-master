@@ -180,3 +180,55 @@ def test_api_order_chips_only_with_flag_on(monkeypatch):
     for mode in ("off", "shadow"):
         monkeypatch.setenv("RPG_COMPANION_ORDERS", mode)
         assert "companion_orders" not in api._combat_block(merged)
+
+
+class _SpyLLM:
+    def __init__(self, seen):
+        self.seen = seen
+
+    def with_structured_output(self, model):
+        seen = self.seen
+
+        class _Bound:
+            def invoke(self, msgs):
+                seen.append(str(msgs[-1].content))
+                return model(kind="attack")
+
+        return _Bound()
+
+
+def test_order_clause_not_sent_to_player_classify(monkeypatch):
+    """C-P2-1: "Brunna, recuar." não pode virar `move` do herói no CLASSIFY real."""
+    from agents import combat as cbt
+
+    seen: list[str] = []
+    state = _state()
+    out = run_node(state, monkeypatch)
+    monkeypatch.setattr(cbt, "get_llm", lambda *a, **k: _SpyLLM(seen))
+    _m, out2 = step(state, out, monkeypatch, "Brunna, recuar. Ataco o Goblin.")
+    assert seen == ["Ataco o Goblin."]
+    assert out2["combat"]["last_player_action"]["kind"] == "attack"
+
+
+def test_order_only_skips_classify(monkeypatch):
+    from agents import combat as cbt
+
+    seen: list[str] = []
+    state = _state()
+    out = run_node(state, monkeypatch)
+    monkeypatch.setattr(cbt, "get_llm", lambda *a, **k: _SpyLLM(seen))
+    _m, out2 = step(state, out, monkeypatch, "Brunna, recuar.")
+    assert seen == []
+    assert out2["combat"]["last_player_action"]["kind"] == "attack"
+
+
+def test_order_text_still_classified_when_flag_off(monkeypatch):
+    from agents import combat as cbt
+
+    monkeypatch.setenv("RPG_COMPANION_ORDERS", "off")
+    seen: list[str] = []
+    state = _state()
+    out = run_node(state, monkeypatch)
+    monkeypatch.setattr(cbt, "get_llm", lambda *a, **k: _SpyLLM(seen))
+    step(state, out, monkeypatch, "Brunna, proteger.")
+    assert seen == ["Brunna, proteger."]

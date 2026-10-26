@@ -277,3 +277,18 @@ def test_off_harness_object_decl_untouched(monkeypatch):
     state, out = _scene_round(monkeypatch)
     _m, out2 = step(state, out, monkeypatch, "x", declaration=decl)
     assert out2["combat"]["scene"]["objects"][0]["uses_remaining"] == 0
+
+
+def test_canonical_action_object_kind_only_with_flag(monkeypatch):
+    """C-P2-4: com a flag `off` a declaração `object` do harness segue reportada como `pass`."""
+    decl = {
+        "actor_id": "player",
+        "acao": {"kind": "object", "object_id": "pilar", "interaction": "derrubar"},
+    }
+    kinds = {}
+    for mode in ("off", "on"):
+        monkeypatch.setenv("RPG_COMBAT_OBJECTS", mode)
+        state, out = _scene_round(monkeypatch)
+        _m, out2 = step(state, out, monkeypatch, "x", declaration=decl)
+        kinds[mode] = out2["combat"]["last_player_action"]["kind"]
+    assert kinds == {"off": "pass", "on": "object"}

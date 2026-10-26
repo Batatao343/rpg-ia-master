@@ -90,3 +90,21 @@ def test_companion_order_negative(text):
 
 def test_companion_order_needs_allies():
     assert companion_order("Brunna, proteger", {}, ENEMIES) is None
+
+
+def test_five_letter_label_stem_matches_conjugation():
+    visible = [{"id": "corda", "name": "Corda Solta", "interactions": [{"label": "puxar"}]}]
+    assert object_step("puxo a corda solta", visible) == ("corda", "puxar")
+    assert object_step("subo a corda solta", visible) is None
+
+
+def test_split_order_removes_only_the_order_clause():
+    from services.combat_intents import split_order
+
+    order, rest = split_order("Brunna, recuar. Ataco o Goblin.", ALLIES, ENEMIES)
+    assert order["verb"] == "recuar" and rest == "Ataco o Goblin."
+    order, rest = split_order("Ataco o Goblin! Kael, proteja", ALLIES, ENEMIES)
+    assert order["ally_id"] == "npc_kael" and rest == "Ataco o Goblin!"
+    order, rest = split_order("Brunna, proteger.", ALLIES, ENEMIES)
+    assert order is not None and rest == ""
+    assert split_order("Ataco o ogro.", ALLIES, ENEMIES) == (None, "Ataco o ogro.")

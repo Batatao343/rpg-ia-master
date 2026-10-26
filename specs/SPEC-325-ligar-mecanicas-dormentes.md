@@ -637,15 +637,16 @@ done
 # agregar: bash scripts/dev/py.sh -m playtest report <run_id>
 ```
 
-Notas honestas sobre a medida (smoke do executor, 10 seeds, MockLLM, só `lider_matilha`; **não** é o gate):
-- Δ morte ON−OFF: basico L1/L3/L5/L8 = 0,0 / −8,5 / −12,5 / −11,0 pp; cartas = 0,0 / −10,5 / −5,0 / −3,5 pp. L1 é 0
-  porque o orçamento (3) não comporta Elite (5) + Lacaio (2): o reforço nunca chega (cancelado por orçamento).
-- O reforço **baixa** a morte no arena (a IA do líder/da matilha troca ataque por apoio/fuga quando há par; o
-  reforço de cópia rebaixada tende a fugir quando o líder cai). Os `timeout` sobem (≈ +8/200 por célula, só com
-  `mon_auroque_ruinas`): conferir `combat.no_progress` na matriz (b) e no long-run (c) antes de ligar. Se o gate
-  passar com folga negativa, o ajuste de balanço (reforço mais agressivo) é decisão do dono, não desta spec.
-- Os bots atuais da arena e do perfil `combate` quase não enfrentam `lider_matilha` no nível/orçamento onde o reforço
-  cabe; a célula nova existe justamente para medir o efeito.
+Notas sobre a medida (smoke do executor após as correções da revisão, 10 seeds, MockLLM, só `lider_matilha`;
+**não** é o gate). Relatar `death` **e** `timeout` por célula (D-P2-6): `timeout` conta como não-morte.
+- Reforço = Lacaio real (ficha de Lacaio, arquétipo `bruto`, nome genérico "Capanga do bando", cobrado como Lacaio).
+  Δ morte ON−OFF (atraso de chegada 1 rodada, valor da spec): basico L1/L3/L5/L8 = 0,0 / +31,0 / +30,0 / +36,0 pp;
+  cartas = 0,0 / +26,5 / +28,0 / +37,0 pp. **O gate de +3 pp NÃO passa.** L1 é 0 (orçamento 3 < Elite 5 + Lacaio 2).
+- Atraso de chegada 2 e 3 rodadas (`reinforcements.ARRIVAL_DELAY`) quase não muda (basico L3: 84,5 % e 83 % vs 88 %;
+  cartas L3: 66,5 % e 62,5 % vs 71,5 %). O efeito é estrutural (corpos extras são superlineares, SPEC-295:29-33; na
+  arena, 2 Lacaios sozinhos já matam 45 % no L3). Ajustar por tempo/quantidade dentro do D4 não fecha a conta:
+  decisão do dono/coordenador antes de ligar `RPG_COMBAT_REINFORCEMENTS=on` (ver Histórico).
+- Os bots do perfil `combate` quase não enfrentam `lider_matilha` onde o reforço cabe; a célula nova existe para medir.
 
 ## 9. Próximos passos (Etapa 8 e revisões)
 
@@ -787,3 +788,21 @@ Notas honestas sobre a medida (smoke do executor, 10 seeds, MockLLM, só `lider_
   - **Desvio 20:** o template é um Lacaio da mesma `faction` (nenhum bestiário atual tem líder com Lacaio da própria
     facção: `enemy_soldado_legiao_ferro` e a maioria cai na cópia rebaixada); na cópia só `categoria`/`type` mudam, a
     ficha (Vitalidade etc.) é a do template do líder, como na letra do R16.
+- **2026-10-26 — Revisão Sol C/D** (`handoffs/SPEC-325-sol-review.md`): Fase C `APPROVED_WITH_FOLLOWUPS`, Fase D
+  `CHANGES_REQUIRED`. Correções (decisões do coordenador, **substituem o desvio 20**):
+  - **D-P1-1/D-P1-2** o reforço é criatura de combate e Lacaio de verdade: Lacaio da mesma facção que não seja
+    `lider_matilha` (nenhum do bestiário atual), senão Lacaio genérico `bruto` ("Capanga do bando", id-base
+    `capanga_do_bando`, via `materialize_enemy_concept`, escala de Lacaio, perfil de combate, só a Carta
+    `bst_defesa_instintiva`), cobrado como Lacaio no orçamento. Nunca a ficha do Elite nem o nome do líder (D-P2-2).
+    Com isso o reforço deixou de **baixar** a morte (loop de apoio mútuo e fuga por `matilha_quebrada` sumiram).
+  - **D-P2-1** `discovery.normalize_bestiary_id` usa `archetype_id` e `_r<N>`. **D-P2-3** teste de save/load entre aviso
+    e chegada. **D-P2-4** `acts()` respeita `estado_terminal`/`last_stand_pending`. **D-P2-5** o teste de XP exige ganho
+    real. **D-P2-6** o gate reporta `timeout` junto de `death` (§8.4).
+  - **Medida:** o gate de +3 pp da célula `lider_matilha` NÃO passa (+26 a +37 pp, ver §8.4). `ARRIVAL_DELAY` virou
+    constante (1 = spec). Reforço fica `shadow`; decisão pendente do dono/coordenador.
+  - **C-P2-1** a oração da ordem sai do texto do jogador antes do CLASSIFY e do `FLEE_RE` ("Brunna, recuar." não
+    faz o herói fugir); só a ordem = ataque básico no 1º inimigo, sem CLASSIFY (`combat_intents.split_order`).
+    **C-P2-2** chip `Curar`. **C-P2-3** radical de rótulo de 5 letras ("puxar" ~ "puxo"). **C-P2-4** `object` só é
+    reportado em `last_player_action` com a flag diferente de `off` (desvio 14 corrigido). **C-P2-5** a linha D9
+    `coragem >= 2` -> `abandonar_posto` (resistente) é registrada como regra extra da tabela. **C-P2-6** chips em
+    `web/src/combat/conflictChips.ts` com teste (`web/tests/conflict-chips.test.mjs`).

@@ -299,6 +299,28 @@ def _guard_object_step(decl: TurnDeclaration, scene: dict, active: list[dict], s
     return ""
 
 
+def _player_text_without_order(
+    intent: str, enemies: list[dict], actors_by_id: dict, sides: dict
+) -> tuple[str, bool]:
+    """SPEC-325 C-P2-1 (só com `RPG_COMPANION_ORDERS=on`): a oração da ordem a aliado sai do
+    texto antes do parser do jogador, para o CLASSIFY não a ler como ação do herói. Devolve
+    `(texto restante, True se só havia a ordem)`."""
+    from services import combat_flags
+    from services.combat_intents import split_order
+
+    if combat_flags.mode("companion_orders") != "on" or not intent:
+        return intent, False
+    names = {
+        str(i): str((actors_by_id.get(i) or {}).get("name") or "")
+        for i in sides.get("ally", [])
+        if actors_by_id.get(i)
+    }
+    order, rest = split_order(intent, names, enemies)
+    if order is None:
+        return intent, False
+    return rest, not rest.strip()
+
+
 def _companion_orders(
     state: dict,
     intent: str,
@@ -1211,6 +1233,11 @@ def _canonical_player_action(
             result = "flee_failed"
     else:
         raw_kind = str((step.kind if step else "pass") or "pass").lower()
+        if raw_kind == "object":  # SPEC-325 C-P2-4: com a flag `off` segue o contrato anterior
+            from services import combat_flags
+
+            if combat_flags.mode("objects") == "off":
+                raw_kind = "pass"
         kind = (
             raw_kind
             if raw_kind
@@ -1756,7 +1783,9 @@ def _combat_node(state: GameState):
     flee_dest_id = None
     from services.chase import FLEE_RE
 
-    flee_requested = bool(FLEE_RE.search(intent.lower()))
+    # SPEC-325 C-P2-1: "Brunna, recuar." é ordem ao aliado, nunca a fuga do herói.
+    flee_text, _order_only = _player_text_without_order(intent, enemies, actors_by_id, sides)
+    flee_requested = bool(FLEE_RE.search(flee_text.lower()))
     if flee_requested:
         from services.intent_guard import log_intent_guard
 
@@ -1860,11 +1889,18 @@ def _combat_node(state: GameState):
                 acao=TurnStep(kind="pass"),
             )
         else:
-            decl = (
-                declaration
-                if declaration is not None and declaration.acao is not None
-                else _parse_turn_declaration(player, active, intent, scene)
-            )
+            if declaration is not None and declaration.acao is not None:
+                decl = declaration
+            else:
+                parse_text, order_only = _player_text_without_order(
+                    intent, enemies, actors_by_id, sides
+                )
+                if order_only:  # só a ordem: o herói ataca o 1º inimigo, sem gastar CLASSIFY
+                    decl = TurnDeclaration(
+                        actor_id=_PLAYER_ID, acao=TurnStep(kind="attack", target_id=active[0]["id"])
+                    )
+                else:
+                    decl = _parse_turn_declaration(player, active, parse_text, scene)
         _mark_nonlethal(decl, intent)
         resolved_decl = decl
         chase_refusal = _chase_attack_gate(combat_meta, decl)  # SPEC-325 R11

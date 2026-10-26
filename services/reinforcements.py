@@ -18,7 +18,16 @@ from services import conflict_scene as cs
 
 ARCHETYPE = "lider_matilha"
 WARN_RATIO = 0.5
-_NEUTRAL_FLAGS = ("dead", "fled", "surrendered", "captured", "incapacitated")
+ARRIVAL_DELAY = 1  # rodadas entre o aviso e a chegada (D4: "1 rodada antes")
+_NEUTRAL_FLAGS = (
+    "dead",
+    "fled",
+    "surrendered",
+    "captured",
+    "incapacitated",
+    "estado_terminal",
+    "last_stand_pending",
+)
 
 
 def is_leader(enemy: dict | None) -> bool:
@@ -70,9 +79,15 @@ def plan_triggers(enemies: list[dict], budget: int, *, encounter_level: int = 1)
     return out
 
 
+GENERIC_ID = "capanga_do_bando"
+GENERIC_NAME = "Capanga do bando"
+
+
 def _template_for(trigger: dict) -> dict | None:
-    """Lacaio da MESMA faccao do lider; sem ele, copia do template do lider rebaixada a lacaio."""
-    from agents.bestiary import load_bestiary, template_by_id
+    """Lacaio REAL (ficha de Lacaio) de combate: o da MESMA faccao do lider (nunca outro lider de
+    matilha); sem ele, um Lacaio generico `bruto` da escala de Lacaio. Nunca a ficha do Elite nem o
+    nome do lider (coordenador, D-P1-1/D-P1-2/D-P2-2)."""
+    from agents.bestiary import load_bestiary, materialize_enemy_concept, template_by_id
 
     level = int(trigger.get("encounter_level", 1) or 1)
     faction = str(trigger.get("faction") or "")
@@ -80,17 +95,17 @@ def _template_for(trigger: dict) -> dict | None:
         for bid, entry in sorted(load_bestiary().items()):
             if (
                 str(entry.get("categoria") or "").lower() == "lacaio"
+                and str(entry.get("arquetipo") or "") != ARCHETYPE
                 and str(entry.get("faction") or entry.get("faction_id") or "") == faction
                 and bid != trigger.get("base_id")
             ):
                 template = template_by_id(bid, encounter_level=level)
                 if template:
                     return template
-    template = template_by_id(str(trigger.get("base_id") or ""), encounter_level=level)
-    if template:
-        template["categoria"] = "lacaio"
-        template["type"] = "lacaio"
-    return template
+    return materialize_enemy_concept(
+        {"id": GENERIC_ID, "name": GENERIC_NAME, "categoria": "lacaio", "arquetipo": "bruto"},
+        encounter_level=level,
+    )
 
 
 def spawn(trigger: dict, combat_meta: dict, enemies: list[dict] | None = None) -> list[dict]:
@@ -113,7 +128,6 @@ def spawn(trigger: dict, combat_meta: dict, enemies: list[dict] | None = None) -
     inst = dict(template)
     inst["id"] = f"{base}_r{number}"
     inst["archetype_id"] = base
-    inst["name"] = f"{template.get('name', 'Inimigo')} (reforço)"
     inst["status"] = "ativo"
     return [orch.ensure_combat_sheet(inst)]
 
@@ -129,7 +143,7 @@ def check(scene: dict, actors_by_id: dict, combat_meta: dict, round_: int) -> di
         trig = next((t for t in triggers if t.get("id") == state.get("trigger_id")), None)
         if trig is None or not acts(actors_by_id.get(str(trig.get("leader_id")))):
             res["cancel"].append(trig or {"id": state.get("trigger_id")})
-        elif int(round_) > int(state["warned_round"]):
+        elif int(round_) >= int(state["warned_round"]) + ARRIVAL_DELAY:
             res["fire"].append(trig)
         return res
     for trig in triggers:

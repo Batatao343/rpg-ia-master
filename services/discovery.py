@@ -47,7 +47,10 @@ def normalize_bestiary_id(enemy: dict) -> str:
     raw = str(enemy.get("id") or "").strip()
     if raw and raw in db:
         return raw
-    base = re.sub(r"_\d+$", "", raw)
+    archetype = str(enemy.get("archetype_id") or "").strip()
+    if archetype and archetype in db:  # reforço (SPEC-325 R16): `<base>_r<N>`
+        return archetype
+    base = re.sub(r"_r?\d+$", "", raw)
     if base and base in db:
         return base
     name = str(enemy.get("name") or "").strip()
