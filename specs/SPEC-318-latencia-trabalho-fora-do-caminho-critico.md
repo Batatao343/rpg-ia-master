@@ -225,3 +225,6 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
   SMART/turno 0,86 (318) × 0,53 (legado) — `enrich` da ficha e replan contam SMART; `lean` não foi ligado (exige
   `evals compare` de `memory_context`). Custo/turno US$ 0,0043 × 0,0035. Pendente: amostra maior de NPC novo e o
   `compare` antes de `lean`.
+- 26/10 (noite) — **`evals compare` de `memory_context.jsonl`** (MockLLM, dataset intocado): `spec318-lean` × `spec318-legacy`
+  com métricas idênticas (recall@5 1,0, mrr 0,833, write_precision 1,0, leak 0), `passed: true`, `regressions: []`.
+  Pela D4, `RPG_ARCHIVE_POLICY=lean` entra no preset do staging; medir SMART/turno (meta ≤ 0,45) com `lean` ativo.
