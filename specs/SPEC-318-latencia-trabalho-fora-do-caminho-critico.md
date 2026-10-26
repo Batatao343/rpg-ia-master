@@ -209,3 +209,19 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
   - Documentado (D2): num turno de reparo bloqueado pelo `action_guard` com `needs_replan`, o replan agora
     acontece depois da narração do turno seguinte, não antes.
 - 26/10 — remedição no staging `e9b5f000` (316 on + 317 shadow + 318 + 319 shadow), 2 sessões × 15 turnos: primeira narração p50 **7,5 s / 6,7 s**, p95 26,8 / 21,5 s (antes 35–44 s); `state` p50 13,3 / 9,5 s; checks all_ok. Meta ≤ 7 s p50 batida em 1 de 2 sessões; cauda caiu ~40 %.
+- 26/10 (noite) — **§6 A/B no staging `9775ea1`** (roteiro de 15 turnos: 3 NPCs novos, 2 viagens com troca de região,
+  2 descansos com virada de dia; `RPG_ARCHIVE_POLICY_SHADOW=1`; braço 318 = defaults × braço legado =
+  `RPG_NPC_TWO_PHASE=off`, `RPG_REPLAN_AFTER=off`, `RPG_DAY_DIGEST=llm`; tempos descontando o `ack`, porque 5/15 turnos
+  em cada braço tiveram cold start do Vercel). Checks ok nos dois; preset restaurado no fim.
+  | tipo (n) | `done` 318 | `done` legado | `state` 318 | `state` legado |
+  |---|---|---|---|---|
+  | descanso/dia (2) | 5,4 s | 11,5 s | 10,6 s | 16,5 s |
+  | viagem/região (2) | 5,5 s | 8,9 s | 14,6 s | 14,3 s |
+  | NPC novo (3) | 5,4 s | 4,6 s | 9,1 s | 5,7 s |
+  | todos (15) | — | — | p50 9,4 s | p50 9,7 s |
+  Leitura: dia virado −6 s e viagem −3,5 s ✔; `state` p50 só −0,3 s (meta −0,8 ✗); NPC novo NÃO melhorou (n=3, o
+  legado criou 4 NPCs e o 318 3 — amostra pequena, mas o `state` do turno com ficha ficou +3,4 s: a ficha em
+  `enrich` atrasa o `state`, sem atrasar a narração). `archive_skipped` em shadow: 4/10 = 40 % (meta ≥ 30 % ✔).
+  SMART/turno 0,86 (318) × 0,53 (legado) — `enrich` da ficha e replan contam SMART; `lean` não foi ligado (exige
+  `evals compare` de `memory_context`). Custo/turno US$ 0,0043 × 0,0035. Pendente: amostra maior de NPC novo e o
+  `compare` antes de `lean`.
