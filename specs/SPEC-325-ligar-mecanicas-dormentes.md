@@ -825,3 +825,4 @@ Notas sobre a medida (smoke do executor após as correções da revisão, 10 see
   - **Desvio 23:** o oráculo de cada cenário só exige a capacidade primária com a flag `on`; `off`/`shadow` apenas rodam.
     As variantes `foge_com_abordagem`/`usa_objeto` do R18 não cabem na arena (ela chama `run_round`, sem fuga nem texto
     livre): vivem nos cenários; na arena entrou só `nao_letal`.
+- 26/10 — **smoke real §6 (coordenador, DeepSeek, ~US$ 0,01)**, 8 flags `on` (reforço só no teste), cenários da Etapa 8, 10 turnos cada: `combate_resistencia` reveal=1, `combate_nao_letal` nonlethal=5, `fuga_escolhas` approach=5 + attack=2, `fuga_abandono` abandon=1, `combate_objeto` objects=2, `combate_ordem` orders=6, `combate_reforco` reinforcements=2; todos `mock=não`, 0 erro, 0 violação `error` (1 warn em `combate_ordem`). Etapa 8 é harness/telemetria (sem mudança de jogo): pousada sem revisão Sol dedicada, por decisão do coordenador.
