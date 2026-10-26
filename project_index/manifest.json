@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "cf6a8561e5668af053548592d8f79fd59995c371",
+  "commit_sha": "434e64440c5779f2b426e7f3bb0a10f31c942524",
   "edge_counts": {
-    "calls": 27060,
-    "contains": 935,
-    "defines": 13568,
-    "imports": 2250,
-    "likely_test_for": 1570,
+    "calls": 27291,
+    "contains": 942,
+    "defines": 13703,
+    "imports": 2264,
+    "likely_test_for": 1576,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:caaa6ea4b5655f8378b7f5cb567a82e0706243797761450598e7d4294377b27d",
+  "graph_hash": "sha256:4dd0b094b83521228b6a88a954036c26d7d14d00b923a34d8ae20ec88ca23fdd",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -48,6 +48,7 @@
     "agents/bestiary.py",
     "agents/campaign_manager.py",
     "agents/combat.py",
+    "agents/enrich.py",
     "agents/librarian.py",
     "agents/loot.py",
     "agents/npc.py",
@@ -371,6 +372,7 @@
     "services/jev_rollout.py",
     "services/job_fence.py",
     "services/kill_switches.py",
+    "services/latency_flags.py",
     "services/law.py",
     "services/law_codes.py",
     "services/lease_heartbeat.py",
@@ -486,6 +488,7 @@
     "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
     "tests/test_archivist_facts.py",
+    "tests/test_archivist_policy.py",
     "tests/test_art_state_persistence.py",
     "tests/test_art_worker_reconciliation.py",
     "tests/test_artwork_recovery_browser.py",
@@ -569,6 +572,7 @@
     "tests/test_cron_logging.py",
     "tests/test_cutover_audit.py",
     "tests/test_daily_quota_postgres.py",
+    "tests/test_day_digest_inline.py",
     "tests/test_db_logging.py",
     "tests/test_death_flow.py",
     "tests/test_dev_stack.py",
@@ -587,6 +591,7 @@
     "tests/test_encounter_identity_repro.py",
     "tests/test_encounter_lifecycle_reload.py",
     "tests/test_encounter_manifest.py",
+    "tests/test_enrich_node.py",
     "tests/test_error_envelope.py",
     "tests/test_eval_dossier_leak.py",
     "tests/test_eval_encounter_manifest.py",
@@ -700,6 +705,7 @@
     "tests/test_npc_knowledge.py",
     "tests/test_npc_knowledge_migration.py",
     "tests/test_npc_memory.py",
+    "tests/test_npc_two_phase.py",
     "tests/test_observability_stack.py",
     "tests/test_oidc_identity.py",
     "tests/test_onboarding.py",
@@ -748,6 +754,7 @@
     "tests/test_readiness_report.py",
     "tests/test_remediacao_comerciante_real.py",
     "tests/test_remediacao_matriz_a.py",
+    "tests/test_replan_after_delivery.py",
     "tests/test_replan_grounding_regional.py",
     "tests/test_restore_pgvector_local.py",
     "tests/test_resumo_budget_rigido.py",
@@ -1142,14 +1149,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 916,
+    "class": 923,
     "endpoint": 64,
-    "file": 1088,
-    "function": 4319,
+    "file": 1095,
+    "function": 4353,
     "method": 798,
-    "module": 935,
-    "test": 7534
+    "module": 942,
+    "test": 7628
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:2f4b6d6b5a5f2538cb5c4a0204300420fdc5ccded429949a47b597e817b32e57"
+  "source_tree_hash": "sha256:b705c140ef9ea2f0f978a2c994ed30c20cfd9453ab823a83d67494de94fbfd0a"
 }
