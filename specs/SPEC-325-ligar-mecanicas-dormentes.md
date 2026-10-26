@@ -561,3 +561,8 @@ Observações honestas sobre a medida:
     reseta após o envio e é ignorado se a flag sair de `on`.
   - **Desvio 5:** a tag `poupou_inimigo` sai de `final_status == "incapacitado"` com desfecho `victory`
     (em vez do desfecho `incapacitated_enemy` descrito no R9). O catálogo de tags passou de 15 para 16.
+- 26/10 — **gate R17 da Fase A (coordenador)**, flags `RPG_COMBAT_REVEAL_RESIST=on RPG_COMBAT_NONLETHAL=on`, MockLLM:
+  (a) arena SPEC-285, 10 seeds, off vs on: Δ death_rate = **0,0 pp nas 32 células** (basico/cartas × L1/L3/L5/L8 × lacaio/padrão/elite/chefe);
+  (b) matriz SPEC-056, 5 classes × seeds 42/43 × 50 turnos: 10/10 com 0 erro, 0 violação, 0 `no_progress`;
+  (c) long-run `combate` 12 × 200 (seeds 21–32, autorizado pelo dono em D5): 0 erro em todas; 2 violações `summary.lifecycle` ("conflito encerrou sem ConflictSummary") nas seeds 25 e 32 que **se repetem com as flags off** → pré-existentes, fora da Fase A (follow-up próprio). Os bots não declaram "sem matar", então o gate prova neutralidade da fiação, como previsto.
+- 26/10 — Fase A pronta para `on` no staging; Fases B–D seguem pendentes (§9).
