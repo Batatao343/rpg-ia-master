@@ -244,3 +244,26 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
     });
   });
 }
+
+// Follow-up SPEC-321 (smoke de staging): turno normal em andamento não mostra a barra de ação pendente,
+// o textarea mantém largura e o rótulo ocupado não vaza do compositor (360/390).
+for (const width of [360, 390]) {
+  test(`321 follow-up: turno em voo sem .pending-operation, textarea com largura e sem overflow @${width}`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await installControlledSse(page);
+    await openGame(page);
+    await composer(page).fill("olho ao redor");
+    await composer(page).press("Enter");
+    await waitSseReqs(page, 1);
+    await push(page, ": ack\n\n");
+    await expect(pendingBtn(page)).toHaveText("Aguardando o narrador");
+    await expect(page.locator(".pending-operation")).toHaveCount(0);
+    const form = await page.locator("form.ws-composer").boundingBox();
+    const box = await composer(page).boundingBox();
+    expect(box!.width).toBeGreaterThanOrEqual(110);
+    const btn = (await pendingBtn(page).boundingBox())!;
+    expect(btn.x + btn.width).toBeLessThanOrEqual(form!.x + form!.width + 0.5);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
+    await closeSse(page);
+  });
+}

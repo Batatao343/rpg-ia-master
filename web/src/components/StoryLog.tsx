@@ -5,6 +5,7 @@ import { useTypewriter } from "../hooks/useTypewriter";
 import { useEffectsEnabled } from "../design/motion";
 import { htmlToPlain, revealHtml } from "../revealHtml";
 import { openingAllowed } from "../turnWait";
+import { dedupeOffers } from "../artOffers";
 import type { GameResponse, LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
 import { shards } from "./AccountScreen";
@@ -68,10 +69,10 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
   const lastNarrator = entries.reduce((idx, e, i) => (e.role === "narrator" ? i : idx), -1);
   const offerRow = (offers?.length ?? 0) > 0 && onOffer ? (
     <div className="msg__offers" aria-live="off">
-      {offers!.map((offer) => (
+      {dedupeOffers(offers!).map((offer) => (
         <button key={offer.offer_id} type="button" className="msg__offer" disabled={offersDisabled}
           onClick={() => onOffer(offer)}>
-          {offer.type === "npc" ? "Cotar retrato de NPC" : "Cotar cena épica"}
+          {offer.type === "npc" ? (offer.label ? `Cotar retrato de ${offer.label}` : "Cotar retrato de NPC") : "Cotar cena épica"}
         </button>
       ))}
     </div>

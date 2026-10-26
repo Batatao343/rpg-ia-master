@@ -92,3 +92,6 @@
 
 /* SPEC-211: rótulo secundário do Codex (--faint dava 4.08:1 sobre o painel; AA exige 4.5:1). */
 .ws-panel .hud__label--sub { color: var(--muted); }
+/* Follow-up staging: nome/classe já estão no cabeçalho da ficha; o retrato não duplica a legenda e não toma a tela. */
+.char-portrait:not(.visual-art--fallback) figcaption { display: none; }
+.visual-art.char-portrait img { max-height: min(46dvh, 360px); width: auto; max-width: 100%; margin-inline: auto; }

@@ -384,7 +384,8 @@ select {
 .generated-portrait img { width: 100%; max-height: 280px; object-fit: contain; }
 .pending-operation.is-busy { pointer-events: none; } /* SPEC-320: durante o turno os botões estão desabilitados; não cobrir "Tentar de novo" */
 /* SPEC-321 R9: ancorada ACIMA do compositor (e da barra de superfícies no celular), nunca sobre ele. */
-.pending-operation { position: fixed; z-index: var(--z-toast); bottom: calc(var(--composer-h, 5rem) + var(--tabbar-h) + 0.5rem); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 1rem); padding: 0.4rem; background: var(--bg); display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+.pending-operation { position: fixed; z-index: var(--z-toast); bottom: calc(var(--composer-h, 5rem) + var(--tabbar-h) + 0.5rem); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 1rem); padding: 0.25rem 0.4rem; background: var(--bg); display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+.pending-operation .btn { min-height: 36px; padding: 0.3rem 0.7rem; font-size: 0.8rem; }
 .card__select { background: transparent; color: inherit; border: 0; font: inherit; cursor: pointer; width: 100%; }
 .visual-art img, .visual-art__monogram {
   display: block; width: 100%; object-fit: contain; object-position: center;
@@ -655,6 +656,10 @@ select {
 .actionbar textarea { resize: none; min-height: 2.6rem; line-height: 1.4; overflow-y: auto; align-self: flex-end; }
 .composer-hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .actionbar .btn { flex: none; }
+/* Follow-up staging: rótulo ocupado ("Aguardando o narrador") não pode espremer o textarea nem vazar à direita. */
+.actionbar textarea { min-width: 7rem; }
+.actionbar__composer button[type="submit"] { max-width: 8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 480px) { .actionbar__composer button[type="submit"] { max-width: 6.5rem; padding-inline: 0.6rem; } }
 .voice-button { min-width: 44px; min-height: 44px; padding-inline: 0.65rem; background: var(--bg-deep); color: var(--ink); }
 .voice-button[aria-pressed="true"] { border-color: var(--danger-bright); color: var(--danger-text); }
 .voice-status { display: flex; align-items: center; flex-wrap: wrap; gap: 0.35rem 0.7rem; color: var(--muted); font-size: 0.85rem; }
@@ -1086,6 +1091,11 @@ select {
   display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; max-width: calc(100vw - 1.5rem);
 }
 .session-logout, .account-shell-link { width: auto; }
+/* Follow-up staging: no celular a barra Conta/Sair entra no fluxo (acima do cartão) em vez de flutuar sobre o título. */
+@media (max-width: 600px) {
+  .shell-actions { position: static; max-width: none; padding: 0.5rem 0.75rem 0; }
+  .shell-actions .btn { min-height: 40px; font-size: 0.75rem; padding-inline: 0.6rem; }
+}
 .account-screen {
   width: min(100% - 2rem, 960px); margin: 0 auto; padding: 5rem 0 3rem;
   color: var(--ink);
@@ -1257,7 +1267,9 @@ button.tchip { cursor: pointer; }
 
 /* M09: sem `filter`/`transform` nas entradas do chat, o scroll anchoring do Chromium passa a
    mexer no scrollTop ao reflow do split. O StoryLog gerencia a posição sozinho (SPEC-204 R7). */
-.story { overflow-anchor: none; }
+.story { overflow-anchor: none; scroll-padding-top: 1.5rem; }
+/* Follow-up staging: a faixa da cena não "decapita" a linha que rola por baixo — a borda superior da história esmaece. */
+.scene-art ~ .story { -webkit-mask-image: linear-gradient(to bottom, transparent 0, oklch(0 0 0) 1.4rem); mask-image: linear-gradient(to bottom, transparent 0, oklch(0 0 0) 1.4rem); }
 
 /* choice.select (M01): o cartão inteiro é a área clicável; seleção tem marcador textual */
 .card { position: relative; }

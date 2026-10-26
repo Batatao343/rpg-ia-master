@@ -600,11 +600,13 @@ export interface Speaker {
   reason?: string;
 }
 
+export interface ArtOffer { offer_id: string; type: "npc" | "scene"; subject_id?: string; label?: string }
+
 export interface GameResponse {
   reputation_notices?: ReputationNotice[]; // SPEC-298 R26: avisos do turno (texto fixo, sem números)
   companion_feedback?: string[]; // SPEC-300 R29: "Brunna não gostou disso." (sem números)
   timeline_epoch?: number;
-  art_offers?: { offer_id: string; type: "npc" | "scene" }[];
+  art_offers?: ArtOffer[];
   art_generations?: { generation_id: string; type: "player" | "npc" | "scene"; subject_id: string }[];
   portrait_generation_id?: string | null;
   game_id: string;

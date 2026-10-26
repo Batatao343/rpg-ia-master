@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import * as api from "../../api";
 import { VisualArtwork } from "../../components/VisualArtwork";
 import { WorldMap } from "../../components/WorldMap";
 import type { GameResponse, MapNodeView, MapTravelOption, MapView } from "../../types";
-import { nextNodeIndex, periodsLabel } from "./mapModel";
+import { nextNodeIndex, periodsLabel, placeLabels } from "./mapModel";
 import "./map.css";
 import { Icon, type IconName } from "../../design/icons";
 
@@ -81,6 +81,24 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
   const sel = byId.get(selected ?? "") ?? byId.get(view.anchor_id) ?? view.nodes[0];
   const opt = view.travel_options.find((o) => o.location_id === sel?.id);
   const refs = useRef(new Map<string, HTMLButtonElement>());
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 640, h: 380 });
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const measure = () => { const r = el.getBoundingClientRect(); if (r.width > 0) setSize((s) => (Math.abs(s.w - r.width) < 1 && Math.abs(s.h - r.height) < 1 ? s : { w: r.width, h: r.height })); };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  // Anti-colisão de rótulos: atual/selecionado/missão primeiro; o que não cabe esconde o rótulo (o nome fica no aria-label/title).
+  const sides = useMemo(() => placeLabels(view.nodes.map((n) => ({
+    id: n.id, x: n.coords.x, y: n.coords.y, chars: n.name.length,
+    priority: (n.id === sel?.id ? 100 : 0) + (n.state === "atual" ? 50 : 0) + (n.quest_target ? 20 : 0) + (n.threatened ? 10 : 0)
+      + (n.state === "visitado" ? 5 : 0),
+  })), size), [view.nodes, sel?.id, size]);
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     const id = (event.target as HTMLElement).dataset.nodeId;
@@ -97,7 +115,7 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
       </p>
       {view.looming_threat && <p className="worldmap__banner"><Icon name="warning" /> {view.looming_threat}</p>}
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos */}
-      <div className="worldmap maptab__canvas" role="group" aria-label="Mapa da jornada" onKeyDown={onKeyDown}>
+      <div className="worldmap maptab__canvas" ref={canvasRef} role="group" aria-label="Mapa da jornada" onKeyDown={onKeyDown}>
         <svg className="worldmap__edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {view.edges.map((e) => {
             const a = byId.get(e.a); const b = byId.get(e.b);
@@ -112,13 +130,13 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
             + (n.id === sel?.id ? " is-selected" : "")
             + (n.ruler ? " is-controlled" : "") + (n.quest_target ? " is-quest-target" : "")
             + (n.contested ? " is-contested" : "") + (n.threatened ? " is-threatened" : "")
-            + (n.state === "atual" ? " is-current" : "");
+            + (n.state === "atual" ? " is-current" : "") + " label-" + (sides[n.id] ?? "below");
           return (
             <button type="button" key={n.id} className={cls} data-node-id={n.id} data-danger={n.danger}
               data-effect="map.marker" data-effect-state={n.state === "atual" ? "current" : "travelable"}
               style={{ left: n.coords.x + "%", top: n.coords.y + "%" }}
               ref={(el) => { if (el) refs.current.set(n.id, el); else refs.current.delete(n.id); }}
-              aria-pressed={n.id === sel?.id}
+              aria-pressed={n.id === sel?.id} title={n.name}
               aria-label={`${n.name}, ${STATE_TEXT[n.state]}${cost ? `, ${periodsLabel(cost.periods)}` : ""}`
                 + (n.quest_target ? ", objetivo de missão" : "") + (n.ruler ? `, sob domínio de ${n.ruler}` : "")
                 + (n.danger !== undefined ? `, perigo ${n.danger}` : "")}

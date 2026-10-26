@@ -14,6 +14,7 @@ import type {
   WorldMapData,
   MapView,
   VisualResponse,
+  ArtOffer,
 } from "./types";
 
 import { formatDetail, http, HttpError, rateLimitNotice, uploadAudio } from "./http";
@@ -387,7 +388,7 @@ export const requestImageQuote = (gameId: string, imageType: ImageQuote["type"] 
 export const confirmPlayerArt = (gameId: string, actionId: string, quoteId: string) =>
   req<{ status: string; generation_id?: string; type: ImageQuote["type"]; placeholder: boolean;
     art_generations?: { generation_id: string; type: ImageQuote["type"]; subject_id: string }[];
-    art_offers?: { offer_id: string; type: "npc" | "scene" }[] }>(
+    art_offers?: ArtOffer[] }>(
     `/game/${encodeURIComponent(gameId)}/art/confirm`, {
       method: "POST",
       body: JSON.stringify({ action_id: actionId, quote_id: quoteId, confirmed: true }),

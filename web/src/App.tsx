@@ -903,7 +903,7 @@ export function App() {
       {imageQuote && imageQuote.session === session.current && screen === "play" &&
         <ImageQuoteDialog quote={imageQuote.quote} busy={imageBusy} error={imageError}
           onConfirm={() => void confirmImageQuote()} onCancel={() => setImageQuote(null)} />}
-      {screen === "play" && pending && <div className={"pending-operation" + (busy ? " is-busy" : "")} role="group" aria-label="Ação pendente">
+      {screen === "play" && pending && turn.stage !== "waiting" && turn.stage !== "narrated" && <div className={"pending-operation" + (busy ? " is-busy" : "")} role="group" aria-label="Ação pendente">
         {/* SPEC-321: quando o turno falhou depois da narração, a linha de status do compositor já oferece
             "Tentar de novo" — não repete o mesmo botão aqui; fica só o descarte. */}
         {turn.stage !== "failed-after-narration" && (

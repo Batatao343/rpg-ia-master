@@ -90,3 +90,22 @@ test("mapa: falha da view cai no legado filtrado por jogo (R12)", async ({ page 
   await openMap(page, { detail: "nope" }, 404);
   await expect(page.locator("#ws-panel-mapa .worldmap")).toBeVisible();
 });
+
+// Follow-up SPEC-321: rótulos de nós próximos não se sobrepõem (anti-colisão).
+test("mapa: rótulos visíveis de nós vizinhos não se intersectam", async ({ page }) => {
+  const payload = view();
+  const names = ["Anel de Ferro", "Nova Arcádia", "Pântano da Melancolia", "Anel de Lama", "Pradaria das Ruínas"];
+  names.forEach((name, i) => (payload.nodes as unknown[]).push({ id: `n${i}`, state: i % 2 ? "visitado" : "adjacente", name,
+    coords: { x: 50 + i * 3, y: 50 + (i % 2) * 2 }, reachable: true, region_id: "x", danger: 1, lore_seed: "x",
+    art: { location_id: `n${i}`, scope: "placeholder", asset: null } }));
+  await openMap(page, payload);
+  const labels = page.locator("#ws-panel-mapa .maptab__node:not(.label-hidden) .worldmap__label");
+  await expect(labels.first()).toBeVisible();
+  const boxes = [];
+  for (const l of await labels.all()) boxes.push((await l.boundingBox())!);
+  expect(boxes.length).toBeGreaterThan(1);
+  for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+    const a = boxes[i], b = boxes[j];
+    expect(a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height, `rótulos ${i} e ${j} se sobrepõem`).toBe(false);
+  }
+});

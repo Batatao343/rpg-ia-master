@@ -17,3 +17,10 @@
 .maptab__list { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; color: var(--muted); }
 .maptab__travel { align-self: flex-start; min-height: 44px; }
 .maptab__reason { margin: 0; font-size: 0.78rem; color: var(--muted); }
+
+/* Anti-colisão de rótulos (placeLabels): "below" é o padrão do .worldmap; os demais saem do fluxo do botão. */
+.maptab__node.label-right .worldmap__label, .maptab__node.label-left .worldmap__label, .maptab__node.label-above .worldmap__label { position: absolute; }
+.maptab__node.label-right .worldmap__label { left: calc(50% + 9px); top: 50%; transform: translateY(-50%); }
+.maptab__node.label-left .worldmap__label { right: calc(50% + 9px); top: 50%; transform: translateY(-50%); }
+.maptab__node.label-above .worldmap__label { bottom: calc(50% + 9px); left: 50%; transform: translateX(-50%); }
+.maptab__node.label-hidden .worldmap__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

@@ -177,6 +177,13 @@ Staging, conta logada, ~3 turnos.
 
 ## 9. Histórico de mudanças
 
+- **2026-10-26 · correções do smoke visual de staging (`e9b5f00`; toca 320/323/324 só em UI).**
+  - **R9/SPEC-320:** `.pending-operation` não renderiza com o turno em voo (`stage` waiting/narrated); só aparece para ação pendente real (falha pós-narração, recarga com pendência), ancorada em `--composer-h` e compacta. e2e novo em `turn-wait.spec.ts` (sem `.pending-operation` em voo).
+  - **Compositor ocupado:** textarea com `min-width: 7rem`; botão "Aguardando o narrador" com elipse (`max-width`), sem vazar em 360/390 (e2e: largura do textarea e sem overflow horizontal).
+  - **Tela "Continuar jornada" (celular):** Conta/Encerrar entram no fluxo (`position: static`) em vez de flutuar sobre o título. O skip link NÃO vira 1º Tab ali: a SPEC-324 R5 o restringe à tela de jogo.
+  - **Ficha (celular):** retrato com altura máx. `min(46dvh, 360px)` e sem a legenda sobreposta (nome/classe já estão no cabeçalho).
+  - **SPEC-323 (mapa):** `placeLabels` (abaixo/direita/esquerda/acima; esconde o rótulo de menor prioridade que não cabe, nome fica em `aria-label`/`title`); e2e verifica rótulos visíveis sem interseção.
+  - **Desktop:** a borda superior da história esmaece sob a faixa da cena (sem cortar linha); ofertas "Cotar retrato" deduplicadas por NPC e com o nome (`/game/state` `art_offers` ganha `subject_id`/`label` só para NPC, já saneados).
 - **2026-10-25 · implementação (branch `spec-321`).** Desvios em relação ao texto acima, todos decididos na implementação:
   - **R2/desktop:** em ≥ 900 px a topbar mantém Conta, Ficha, Sair inline (os e2e de conta/checkout dependem deles); só "Nova" virou "Nova jornada" (com confirmação). O menu ⋯ (`PlayMenu`) existe só no celular (< 900 px), onde substitui a topbar.
   - **R1:** a cabeça única mora no `Workspace` (`.ws-mhead`: local + rótulo da superfície + Vitalidade/Entropia + ações); no celular o `header.topbar` não é renderizado. O banner (SPEC-320) entra logo abaixo dela.

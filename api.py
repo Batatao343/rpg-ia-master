@@ -2059,6 +2059,22 @@ class GameResponse(BaseModel):
 
 
 # --- HELPER: FORMATA RESPOSTA ---
+def _public_art_offer(row: dict) -> dict:
+    """Offer reference for the UI: id/type plus the (already sanitized) subject label so the
+    client can name and dedupe per NPC."""
+    out = {"offer_id": row["offer_id"], "type": row["type"]}
+    if row.get("type") == "npc":
+        trigger = row.get("trigger") if isinstance(row.get("trigger"), dict) else {}
+        brief = row.get("brief") if isinstance(row.get("brief"), dict) else {}
+        subject_id = str(trigger.get("subject_id") or "")
+        label = str(brief.get("subject") or "")
+        if subject_id:
+            out["subject_id"] = subject_id
+        if label:
+            out["label"] = label
+    return out
+
+
 def _public_art_refs(state: dict) -> dict:
     """Public references from the owner-scoped save; private quotes never enter UI."""
     generations = []
@@ -2077,7 +2093,7 @@ def _public_art_refs(state: dict) -> dict:
     return {
         "art_generations": generations,
         "art_offers": [
-            {"offer_id": row["offer_id"], "type": row["type"]}
+            _public_art_offer(row)
             for row in state.get("art_offers") or []
         ],
     }

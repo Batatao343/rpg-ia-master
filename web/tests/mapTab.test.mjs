@@ -46,3 +46,17 @@ test('mapa: nenhuma animacao infinita nova e fallback legado so com game_id', ()
   assert.doesNotMatch(css, /infinite|animation/);
   assert.match(src('../src/components/WorldMap.tsx'), /api\.getMap\(gameId\)/);
 });
+
+test('placeLabels: rótulos de nós próximos não se sobrepõem; o de menor prioridade esconde quando não cabe', async () => {
+  const m = await load();
+  const items = [
+    { id: 'a', x: 50, y: 50, chars: 13, priority: 50 }, { id: 'b', x: 52, y: 52, chars: 12, priority: 5 },
+    { id: 'c', x: 54, y: 51, chars: 21, priority: 0 }, { id: 'far', x: 10, y: 10, chars: 5, priority: 0 },
+  ];
+  const sides = m.placeLabels(items, { w: 640, h: 380 });
+  assert.equal(sides.far, 'below'); // isolado: posição padrão
+  assert.notEqual(sides.a, 'hidden'); // prioridade mais alta sempre aparece
+  assert.ok(Object.values(sides).filter((s) => s !== 'hidden' && s !== 'below').length >= 1); // o aglomerado se espalhou
+  // determinístico
+  assert.deepEqual(m.placeLabels(items, { w: 640, h: 380 }), sides);
+});
