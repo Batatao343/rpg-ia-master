@@ -4332,10 +4332,7 @@ def _enqueue_turn_art(state_before: dict, state_after: dict, action_key: str) ->
         brief = (
             build_npc_art_brief(state_after, trigger.subject_id)
             if trigger.subject_type == "npc"
-            else build_epic_art_brief(
-                state_after,
-                state_after.get("conflict_summary") or {"detail": "Confronto decisivo"},
-            )
+            else build_epic_art_brief(state_after, {})  # SPEC-326 R8: chefe/local vêm do estado
         )
         _enqueue_art_generation(state_after, trigger, brief)
 
@@ -4387,6 +4384,17 @@ def _validate_image_request(state: dict, reformulation: bool, image_type: str) -
             raise HTTPException(409, "Retrato ou reformulação indisponível.")
 
 
+def _offer_brief_for_quote(state: dict, image_type: str, trigger, brief: dict, profile: dict):
+    """SPEC-326 R2/D7: oferta de profile antigo é reconstruída do estado, nunca cotada como está."""
+    if brief.get("profile_version") == profile.get("profile_version"):
+        return brief
+    from services.art_brief import build_epic_art_brief, build_npc_art_brief
+
+    if image_type == "npc":
+        return build_npc_art_brief(state, trigger.subject_id)
+    return build_epic_art_brief(state, {})
+
+
 @app.post("/game/{game_id}/art/quote")
 def create_image_quote(game_id: str, req: ArtQuoteRequest):
     from infrastructure.contracts import Conflict
@@ -4434,6 +4442,8 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
         trigger = ArtGenerationRequest(**offer["trigger"])
         brief = offer["brief"]
     profile = load_json_data("dynamic_art_profiles.json") or {}
+    if req.image_type != "player":
+        brief = _offer_brief_for_quote(state, req.image_type, trigger, brief, profile)
     try:
         quote = repository.issue(
             principal,

@@ -12,6 +12,7 @@ class ImageGenerationInput:
     model: str
     size: str
     reference_payloads: tuple[bytes, ...] = ()
+    quality: str | None = None
 
 
 @dataclass(frozen=True)

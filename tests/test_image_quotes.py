@@ -80,6 +80,30 @@ def test_confirm_requires_quote_and_explicit_confirmation_and_forbids_client_pri
         assert client.post(f"/game/{uuid4()}/art/confirm", json=payload).status_code == 422
 
 
+def test_oferta_v1_e_reconstruida_no_quote():
+    """SPEC-326 R2/D7: nunca cotar brief v1 com o profile v2."""
+    import api
+    from services.art_brief import build_epic_art_brief, load_art_profile
+
+    profile = load_art_profile()
+    trigger = ArtGenerationRequest("arc_epic_moment", "i", "scene", "i", "arc", "action")
+    state = {
+        "player": {"name": "Iria", "race": "Elfo", "class_name": "Sangromante"},
+        "world": {"current_location": "Brekmar", "current_location_id": "brekmar"},
+        "enemies": [{"name": "Vorr", "type": "boss"}],
+    }
+    stale = {**build_epic_art_brief(state, {}), "profile_version": "valoria-gpt-image2-v1"}
+    rebuilt = api._offer_brief_for_quote(state, "scene", trigger, stale, profile)
+    assert rebuilt["profile_version"] == profile["profile_version"] and "Vorr" in rebuilt["subject"]
+    current = build_epic_art_brief(state, {})
+    assert api._offer_brief_for_quote(state, "scene", trigger, current, profile) is current
+    npc_trigger = ArtGenerationRequest("npc_first_appearance", "n", "npc", "n", "arc", "action")
+    npc_state = {"npcs": {"n": {"name": "Kahen", "race_id": "race_cinzeus"}}}
+    old_npc = {"profile_version": "valoria-gpt-image2-v1", "subject": "x"}
+    npc = api._offer_brief_for_quote(npc_state, "npc", npc_trigger, old_npc, profile)
+    assert npc["subject"] == "Kahen" and npc["profile_version"] == profile["profile_version"]
+
+
 def test_legacy_enabled_images_fail_closed_without_wallet(monkeypatch):
     import api
 

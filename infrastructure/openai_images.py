@@ -29,9 +29,17 @@ class ImageGenerationRefused(ImageProviderError):
         super().__init__(message, http_status=http_status, outcome="refused")
 
 
+#: SPEC-326 R16: /images/edits com referências passou de 300 s numa chamada real.
+IMAGE_PROVIDER_TIMEOUT_S = 300.0
+
+
 class OpenAIImageGenerator:
     def __init__(
-        self, api_key: str, *, base_url: str = "https://api.openai.com/v1", timeout: float = 120.0
+        self,
+        api_key: str,
+        *,
+        base_url: str = "https://api.openai.com/v1",
+        timeout: float = IMAGE_PROVIDER_TIMEOUT_S,
     ) -> None:
         if not api_key:
             raise ValueError("OPENAI_API_KEY ausente")
@@ -70,13 +78,17 @@ class OpenAIImageGenerator:
             )
 
     def _generate(self, request: ImageGenerationInput) -> tuple[GeneratedImage, int]:
-        request_key = hashlib.sha256(
-            f"{request.model}\n{request.size}\n{request.prompt}".encode()
-        ).hexdigest()
+        key_material = f"{request.model}\n{request.size}\n{request.quality or ''}\n{request.prompt}"
+        digest = hashlib.sha256(key_material.encode())
+        for payload in request.reference_payloads:
+            digest.update(hashlib.sha256(payload).digest())
         headers = {
             "Authorization": f"Bearer {self._api_key}",
-            "Idempotency-Key": request_key,
+            "Idempotency-Key": digest.hexdigest(),
         }
+        fields = {"model": request.model, "prompt": request.prompt, "size": request.size}
+        if request.quality:  # SPEC-326 R15: fixa o detalhe/custo nas duas rotas
+            fields["quality"] = request.quality
         if request.reference_payloads:
             files = [
                 ("image[]", (f"reference-{index}.png", payload, "image/png"))
@@ -85,7 +97,7 @@ class OpenAIImageGenerator:
             response = httpx.post(
                 f"{self.base_url}/images/edits",
                 headers=headers,
-                data={"model": request.model, "prompt": request.prompt, "size": request.size},
+                data=fields,
                 files=files,
                 timeout=self.timeout,
             )
@@ -93,7 +105,7 @@ class OpenAIImageGenerator:
             response = httpx.post(
                 f"{self.base_url}/images/generations",
                 headers={**headers, "Content-Type": "application/json"},
-                json={"model": request.model, "prompt": request.prompt, "size": request.size},
+                json=fields,
                 timeout=self.timeout,
             )
         if response.status_code in (400, 403) and "safety" in response.text.lower():

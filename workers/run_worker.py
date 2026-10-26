@@ -11,7 +11,7 @@ from uuid import UUID
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from infrastructure.openai_images import OpenAIImageGenerator
+from infrastructure.openai_images import IMAGE_PROVIDER_TIMEOUT_S, OpenAIImageGenerator
 from infrastructure.pgvector_memory import PgVectorMemoryStore
 from infrastructure.runtime import get_runtime
 from services.chronicle_repository import ChronicleRepository
@@ -84,7 +84,9 @@ def build_handlers():
             if generation["status"] == "ready":
                 return {"status": "already_ready", "generation_id": str(generation_id)}
             # Configuration errors happen before the durable dispatch ticket.
-            generator = OpenAIImageGenerator(os.environ["OPENAI_API_KEY"])
+            generator = OpenAIImageGenerator(
+                os.environ["OPENAI_API_KEY"], timeout=IMAGE_PROVIDER_TIMEOUT_S
+            )
             result = generate_dynamic_art_job(
                 generator=generator,
                 blob_store=runtime.blob_store,
@@ -93,6 +95,7 @@ def build_handlers():
                 game_id=game_id,
                 asset_id=UUID(str(payload["asset_id"])),
                 admission=lambda: finance.dispatch(generation_id, owner_id, game_id),
+                approved_portrait_key=lambda: repository.approved_portrait_key(owner_id, game_id),
                 usage_sink=lambda model, usage: repository.record_usage(
                     generation_id, model=model, usage=usage
                 ),

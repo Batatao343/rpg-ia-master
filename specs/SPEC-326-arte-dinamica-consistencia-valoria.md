@@ -1,6 +1,6 @@
 # SPEC-326 — Arte dinâmica consistente com Valoria (estética, lore e raça)
 
-> **Status:** `approved` (dono 26/10: "aprovo a 326" — D1–D7 nos padrões recomendados)
+> **Status:** `in-progress` (aprovada 26/10, D1–D7 nos padrões recomendados; código + testes offline prontos; falta revisão independente e o §6 real)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** pipeline de arte dinâmica já na `main` (`services/art_brief.py`, `workers/dynamic_art_jobs.py`, `infrastructure/openai_images.py`, cotação de imagem)
 > **Desbloqueia:** `RPG_DYNAMIC_ART_ENABLED=1` no staging (só depois do §6 aprovado)
@@ -207,12 +207,12 @@ Os testes são todos offline: `FakeImageGenerator` registra o `ImageGenerationIn
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R17 cobertos pelos testes acima.
-- [ ] Prompt renderizado de cada uma das 6 raças anexado ao handoff para revisão (sem chamada paga).
+- [x] R1–R16 cobertos pelos testes acima (R17 = conferência do coordenador no staging antes do §6).
+- [x] Prompt renderizado das raças anexado em `handoffs/SPEC-326-prompts.md` (sem chamada paga).
 - [ ] §6 executado, com todas as notas acima da barra e a ficha de contato revisada pelo dono (D2).
 - [ ] `uv run pytest` verde (suíte completa offline).
-- [ ] Saves antigos carregam, e ofertas v1 são reconstruídas sem erro (R2).
-- [ ] Nenhum `with_structured_output` novo (a spec não usa LLM de texto).
+- [x] Ofertas v1 são reconstruídas sem erro (R2, `test_oferta_v1_e_reconstruida_no_quote`); briefs v1 já gravados renderizam com descritor neutro.
+- [x] Nenhum `with_structured_output` novo (a spec não usa LLM de texto).
 
 ## 6. Smoke test real (obrigatório antes de `RPG_DYNAMIC_ART_ENABLED=1` no staging)
 
@@ -272,3 +272,21 @@ Ficha de contato e notas no handoff `handoffs/SPEC-326-smoke.md`; o dono vê a f
 - **D6 — Raças só de NPC (Hospedeiros, Povo-recife, Lycans, Vampiros):** **fora desta spec, com descritor neutro.**
   Alternativa: incluir já, curando mais 4 descritores.
 - **D7 — Ofertas antigas (v1) após o bump:** **reconstruir o brief no `/art/quote`.** Alternativa: expirar as ofertas.
+
+## Histórico de mudanças
+
+- **26/10 — implementação.** Desvios da spec, todos de forma:
+  - **Assets em runtime (R10/R13):** `web/public/**` é excluído do bundle da Vercel, então o worker lê um conjunto
+    curado em `data/art_refs/{race,location}/<id>.webp` (6 raças + 12 locais de região, ~5 MB), sem fallback para
+    `web/public`. Local interior sem arte própria cai no fallback regional do catálogo e, por fim, na região
+    (`region_id_of`). `test_ref_de_raca_vive_no_pacote_do_worker` trava o layout contra o `vercel.json`.
+  - `resolve_reference_payloads` devolve `(ids carregados, bytes PNG)` e recebe `approved_portrait_key`
+    (callback do repositório: `DynamicArtRepository.approved_portrait_key`, último retrato `status='ready'`).
+  - O preâmbulo só aparece para referências efetivamente anexadas: `render_image_prompt(brief, used)`.
+  - Preâmbulo extra `canon_location` (R11) para arte de local, porque "NEW individual" contradiria o
+    retrato do herói no épico.
+  - `build_epic_art_brief(state, event=None, ...)`: o chefe é relido de `state["enemies"]` (mesmo critério do gatilho).
+  - Resultado do worker ganha `similar_to_canon` e `canon_min_hamming` (D4: só sinaliza e loga).
+  - `_offer_brief_for_quote` em `api.py` isola a reconstrução da oferta v1 (R2) para teste offline.
+  - Chave de idempotência do adapter agora inclui `quality` e o hash das referências.
+  - Logs novos: `art.race_unresolved`, `art.reference_missing`, `art.canon_similarity`, `art.canon_similarity_failed`.

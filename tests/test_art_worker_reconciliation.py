@@ -53,7 +53,12 @@ def test_uncertain_art_result_cannot_be_generated_again(monkeypatch):
         ),
     )
     monkeypatch.setattr(module, "DynamicArtRepository", Repository)
-    monkeypatch.setattr(module, "OpenAIImageGenerator", lambda key: object())
+    generator_kwargs: dict = {}
+    monkeypatch.setattr(
+        module,
+        "OpenAIImageGenerator",
+        lambda key, **kwargs: generator_kwargs.update(kwargs) or object(),
+    )
     monkeypatch.setattr(module, "generate_dynamic_art_job", generate)
     handler = module.build_handlers()["generate_dynamic_art"]
     payload = dict(
@@ -71,3 +76,4 @@ def test_uncertain_art_result_cannot_be_generated_again(monkeypatch):
     with pytest.raises(Conflict):
         handler(payload)
     assert calls == ["provider"]
+    assert generator_kwargs["timeout"] >= 300.0  # SPEC-326 R16

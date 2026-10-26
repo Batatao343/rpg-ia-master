@@ -314,6 +314,20 @@ class DynamicArtRepository:
                 ("failed_retryable" if retryable else "failed", error_code[:100], generation_id),
             )
 
+    def approved_portrait_key(self, owner_id: UUID, game_id: UUID) -> str | None:
+        """SPEC-326 R10: blob key da variante ``full`` do último retrato ``ready`` (aprovado)."""
+        with admin_connection(self.pool) as connection:
+            row = connection.execute(
+                """select a.object_key from app.art_generations g join app.assets a
+                  on a.game_id=g.game_id and a.entity_id=g.subject_id
+                 and a.prompt_sha256=g.prompt_hash and a.source_model=g.model
+                where g.owner_id=%s and g.game_id=%s and g.subject_type='player'
+                  and g.status='ready' and a.variant='full' and a.status='ready'
+                order by g.updated_at desc limit 1""",
+                (owner_id, game_id),
+            ).fetchone()
+        return str(row["object_key"]) if row else None
+
     def assets(self, principal: Principal, generation_id: UUID) -> list[dict[str, Any]]:
         with admin_connection(self.pool) as connection:
             rows = connection.execute(

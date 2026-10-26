@@ -26,6 +26,10 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `archivist.structured_output_unexpected` | `result_type` |
 | `archivist.summary_saved_text_fallback` | — |
 | `archivist.vector_index_unavailable` | — |
+| `art.canon_similarity` | `min_hamming`, `threshold` |
+| `art.canon_similarity_failed` | `error_type` |
+| `art.race_unresolved` | `subject_kind` |
+| `art.reference_missing` | `reason`, `ref_kind` |
 | `auth.captcha_rejected` | `op`, `reason` |
 | `auth.csrf_rejected` | `method`, `origin_host`, `reason`, `route` |
 | `auth.email_delivery_failed` | `flow`, `reason`, `request_id`, `status_class` |
