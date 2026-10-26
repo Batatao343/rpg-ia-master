@@ -119,13 +119,14 @@ class StreamGuard:
         finalize: Callable[[str], str] | None = None,
         hold_extra: int = 0,
         min_words: int = 0,
-        risk: Callable[[str], bool] | None = None,
+        risk: Callable[[str], Any] | None = None,
     ) -> None:
         # Follow-up tail: `risk(frase)` marca a frase que o texto final pode cortar (guard de
         # evidencia, recibo, item rejeitado). O stream so mostra as frases COMPLETAS e seguras
         # antes dela; o resto chega como sufixo do final (nunca como `replace`).
         self.risk = risk
-        self._risk_cache: dict[str, bool] = {}
+        self._risk_cache: dict[str, str] = {}
+        self._hold_logged = False
         # F-2: cada no normaliza como o seu texto final (`meta` = so `sanitize_meta_preamble`).
         self.normalize = normalize
         self.mapping = dict(mapping or {})
@@ -169,12 +170,30 @@ class StreamGuard:
             text = conceal_text(text, self.mapping)
         return text, pre
 
-    def _risky(self, sentence: str) -> bool:
+    def _risky(self, sentence: str) -> str:
         hit = self._risk_cache.get(sentence)
         if hit is None:
-            hit = bool(self.risk(sentence)) if self.risk else False
+            hit = str(self.risk(sentence) or "") if self.risk else ""
             self._risk_cache[sentence] = hit
         return hit
+
+    def _log_hold(self, rule: str, sentence_index: int) -> None:
+        """`sse.stream_risk_hold`: 1x por narracao; so regra e tamanhos, nunca o texto."""
+        if self._hold_logged:
+            return
+        self._hold_logged = True
+        try:
+            from observability.telemetry import log_event
+
+            log_event(
+                "sse",
+                "stream_risk_hold",
+                rule=rule,
+                sentence_index=sentence_index,
+                chars_shown=len(self.sent),
+            )
+        except Exception:  # silent-ok: telemetria nunca derruba o turno
+            pass
 
     def _risk_cap(self, shown: str, pre: str, *, final: bool) -> int:
         """Ate onde (len de `shown`) o stream pode mostrar sem passar de frase de risco ou da
@@ -187,15 +206,21 @@ class StreamGuard:
             sentence = pre_parts[i]
             if not sentence.strip():
                 continue
-            if (not final and i == len(pre_parts) - 1) or self._risky(sentence):
+            if not final and i == len(pre_parts) - 1:
+                stop = i  # frase ainda aberta: nunca avaliada nem mostrada
+                break
+            rule = self._risky(sentence)
+            if rule:
                 stop = i
+                self._log_hold(rule, i // 2)
                 break
         if stop is None:
             return len(shown)
         if stop == 0:
             return 0
         post_parts = _SENTENCE_SPLIT.split(shown)
-        stop = min(stop, len(post_parts) - 1)
+        if len(post_parts) != len(pre_parts):
+            return 0  # o veu mudou a segmentacao: sem alinhamento seguro, o final entrega
         return sum(len(p) for p in post_parts[: max(stop - 1, 0)])
 
     def _advance(self, *, final: bool) -> str:
@@ -257,7 +282,9 @@ def _conceal_map(state: Any) -> dict[str, str]:
 
 
 def _risk_checker(state: Any, acquisition: bool = False):
-    """`risky(frase)` do guard de evidencia para o estado do turno (None sem estado/erro)."""
+    """`risky(frase) -> regra|''` do guard de evidencia, construido na 1a frase completa (o
+    deepcopy do estado fica fora do caminho do 1o token). `None` so sem estado; qualquer
+    falha vira checker que segura tudo (fail-closed: o texto final entrega)."""
     binding = _SINK.get()
     if not state and binding is not None and binding.state_getter is not None:
         try:
@@ -266,15 +293,25 @@ def _risk_checker(state: Any, acquisition: bool = False):
             state = None
     if not state:
         return None
-    try:
-        from services.narrative_evidence import stream_risk_checker
+    holder: dict[str, Any] = {}
 
-        return stream_risk_checker(state, acquisition=acquisition)
-    except Exception as exc:
-        from observability.telemetry import log_fallback
+    def lazy(sentence: str) -> str:
+        checker = holder.get("fn")
+        if checker is None:
+            try:
+                from services.narrative_evidence import stream_risk_checker
 
-        log_fallback("sse", "stream_risk_failed", exc)
-        return None
+                checker = stream_risk_checker(state, acquisition=acquisition)
+            except Exception as exc:
+                from observability.telemetry import log_fallback
+
+                log_fallback("sse", "stream_risk_failed", exc)
+                checker = None
+            holder["fn"] = checker or (lambda _s: "evidence_unavailable")
+            checker = holder["fn"]
+        return checker(sentence)
+
+    return lazy
 
 
 def narrate_structured(

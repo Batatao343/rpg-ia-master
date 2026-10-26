@@ -259,3 +259,16 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   Testes: `tests/test_spec319_shadow_replay.py` (`unknown_item`, `false_death_claim`, `acquire_without_item` + unitarios
   do `risk`; os dois primeiros falham sem o fix). Residuais nao cobertos (decididos so no fim): `proposed_events`
   invalido (narrativa inteira vira fallback) e `species_drift` no combate — `reason=start`; seguem `replace` silencioso (D3).
+- **2026-10-26 · follow-ups da revisão do `tail` (`handoffs/SPEC-319-sol-independent-review.md`).**
+  P1-1 (granularidade): com `risk` presente (todo narrador com estado) o stream sai **frase a frase**, não palavra a
+  palavra — a frase aberta é sempre segurada, então o 1º delta espera a 1ª frase completa (após `HOLD_CHARS`); e um
+  `_ACQUIRE` casando cedo ("Você encontra…") segura o resto do turno até o final (que chega como sufixo). Isso afeta
+  §6.4 e o critério TTFMC p50 ≤ 3 s: **remedir no §6.2** (`ttfmc` com `on`) antes de fechar o critério; se cair, avaliar
+  checker de prefixo monotônico para a frase aberta. P2-1: falha ao montar/rodar o checker agora é **fail-closed**
+  (segura tudo; o final entrega); `None` só sem estado. P2-2: o checker é montado de forma preguiçosa na 1ª frase
+  completa (o deepcopy do estado fica fora do caminho do 1º token). P2-3: resíduos que ainda terminam em `replace`
+  silencioso (D3): `remove_rejected_claims` corta qualquer frase com o NOME do item rejeitado (mesmo sem verbo de
+  aquisição) e, com ouro/moeda, o parágrafo inteiro (inclusive frases já mostradas); `_ACQUIRE` é amplo
+  (`encontra/acha/descobre`) e também segura frases sem item (custo de P1-1). P2-4: log `sse.stream_risk_hold`
+  (`rule`, `sentence_index`, `chars_shown`; nunca o texto), 1× por narração. P2-5: se o véu mudar a segmentação em
+  frases, o corte cai em 0 (fail-closed) — teste com rótulo contendo ". ".

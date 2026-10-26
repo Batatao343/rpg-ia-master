@@ -332,3 +332,66 @@ def test_npc_stream_is_prefix_of_final(monkeypatch):
 )
 def test_replace_reason(shown, final, reason):
     assert sink.replace_reason(shown, final) == reason
+
+
+def _feed(g, text, step=5):
+    return "".join(g.feed(text[i : i + step]) for i in range(0, len(text), step)) + g.finish()
+
+
+_CALM = (
+    "Primeira frase calma e longa o bastante para passar da janela de espera inicial. "
+    "Segunda frase também tranquila e descritiva do ambiente ao redor do herói. "
+)
+
+
+def test_risk_checker_fails_closed_when_evidence_build_breaks(monkeypatch):
+    from services import narrative_evidence as ne
+
+    def boom(_state):
+        raise RuntimeError("estado estranho")
+
+    monkeypatch.setattr(ne, "build_evidence", boom)
+    risk = sink._risk_checker({"player": {"name": "T"}})
+    g = sink.StreamGuard(risk=risk)
+    out = _feed(g, _CALM + "Terceira frase qualquer que fecha o trecho aqui. Quarta.")
+    assert out == ""  # tudo segurado: o texto final entrega
+
+
+def test_risk_checker_is_lazy_until_first_complete_sentence(monkeypatch):
+    from services import narrative_evidence as ne
+
+    calls = []
+    real = ne.build_evidence
+    monkeypatch.setattr(ne, "build_evidence", lambda s: calls.append(1) or real(s))
+    risk = sink._risk_checker(_story_state(None, 5))
+    assert calls == []  # criar o checker nao copia o estado
+    g = sink.StreamGuard(risk=risk)
+    g.feed("Frase ainda aberta sem ponto final ")
+    assert calls == []
+    _feed(g, _CALM)
+    assert calls == [1]
+
+
+def test_stream_risk_hold_event_logged_once_without_text(monkeypatch):
+    import observability.telemetry as tel
+
+    seen = []
+    monkeypatch.setattr(tel, "log_event", lambda *a, **k: seen.append((a, k)))
+    g = sink.StreamGuard(risk=lambda s: "regra_x" if "perigo" in s else "")
+    _feed(g, _CALM + "Aqui há perigo declarado. Outra frase com perigo. Fim.")
+    assert len(seen) == 1
+    (area, event), fields = seen[0][0][:2], seen[0][1]
+    assert (area, event) == ("sse", "stream_risk_hold") and fields["rule"] == "regra_x"
+    assert fields["chars_shown"] > 0 and "perigo" not in str(seen)
+
+
+def test_veil_that_changes_sentence_segmentation_fails_closed():
+    # o rotulo oculto vira texto com ". " -> contagem de partes diverge entre pre e shown
+    g = sink.StreamGuard({"Zorn": "Sr. Alguem"}, risk=lambda s: "r" if "perigo" in s else "")
+    text = _CALM + "Zorn observa de longe. Aqui há perigo declarado. Depois disso, silêncio."
+    out = _feed(g, text)
+    assert "perigo" not in out
+    final = "".join(
+        [text.replace("Zorn", "Sr. Alguem")]
+    )  # o final (veu aplicado) estende ou iguala o mostrado
+    assert final.startswith(out)

@@ -149,7 +149,7 @@ _ACQUIRE = re.compile(
 
 
 def stream_risk_checker(state: dict | None, *, acquisition: bool = False):
-    """Devolve `risky(sentence) -> bool` para o `StreamGuard` (ou `None` sem estado).
+    """Devolve `risky(sentence) -> str` para o `StreamGuard` (ou `None` sem estado).
 
     Marca a frase que o texto final PODE remover ou reescrever (guard de evidencia, cortes de
     recibo de `render_player_message`, item narrado que o motor talvez rejeite). O stream
@@ -164,19 +164,22 @@ def stream_risk_checker(state: dict | None, *, acquisition: bool = False):
         from observability.telemetry import log_fallback
 
         log_fallback("sse", "stream_evidence_failed", exc)
-        return None
+        return lambda _sentence: "evidence_unavailable"  # fail-closed: o final entrega
     from services.turn_outcome import _NEGATIVE_ITEM, _NEGATIVE_REWARD
 
-    def risky(sentence: str) -> bool:
+    def risky(sentence: str) -> str:
+        """Nome da regra que segura a frase ('' = segura para mostrar)."""
         try:
-            return bool(
-                _reason(sentence, evidence)
-                or _NEGATIVE_REWARD.search(sentence)
-                or _NEGATIVE_ITEM.search(sentence)
-                or (acquisition and _ACQUIRE.search(_fold(sentence)))
-            )
+            reason = _reason(sentence, evidence)
+            if reason:
+                return f"evidence:{reason}"
+            if _NEGATIVE_REWARD.search(sentence) or _NEGATIVE_ITEM.search(sentence):
+                return "receipt"
+            if acquisition and _ACQUIRE.search(_fold(sentence)):
+                return "acquisition"
+            return ""
         except Exception:  # silent-ok: na duvida, segura o stream (o final entrega)
-            return True
+            return "check_error"
 
     return risky
 
