@@ -238,3 +238,10 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   `sse.token_replace` em produção: 3 em ~35 turnos (~9 %; 2 `tail`, 1 `start`), acima do alvo de 5 % do shadow
   → follow-up: o `tail` mostra texto streamado MAIOR que o final (1505 vs 1391 chars), sinal de corte no final
   que o hold de 72 chars não cobre. Ligado `RPG_LLM_HEDGE_MS=6000` (D2, só FAST) para o §6.3.
+- **2026-10-26 (§6.3, `55a81bf`, hedge 6000 FAST):** 15 turnos, checks ok, 0 erros. **0 hedges disparados**: o 1º
+  delta chega em ~2 s (< 6000 ms) e a cauda do FAST (9–10 s em 4/21 chamadas) vem DEPOIS do 1º token, então o
+  gatilho "sem delta em N ms" não pega; custo/turno inalterado (~US$ 0,0033). `first_chunk` p50 4,2 s; `done` p50 6,3 s.
+  `sse.token_replace` 4 (2 `start`, 2 `tail`). 3/15 turnos com `ack` de 19–59 s: `sse.started` chega no servidor só
+  depois (servidor responde em ~60 ms) → fila/cold start do Vercel antes da função, fora do escopo desta spec e
+  hoje o maior fator da p95. Pendente: §6.4 (browser palavra a palavra + `reset` em fallback induzido) e o
+  follow-up do `tail`.
