@@ -55,7 +55,9 @@
   --shadow-deep: 0 40px 100px -55px oklch(0 0 0 / 0.92);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --z-hud: 40; --z-banner: 50; --z-overlay: 60;
+  --z-hud: 40; --z-toast: 45; --z-banner: 50; --z-overlay: 60;
+  /* SPEC-321 R9: bases dos elementos fixos acima do compositor (altura medida em --composer-h). */
+  --tabbar-h: 0px;
 }
 
 * { box-sizing: border-box; }
@@ -369,9 +371,9 @@ select {
 .art-dialog img { display: block; max-width: 90vw; max-height: 80dvh; object-fit: contain; }
 .art-dialog__close { display: block; margin: 0 0 0.6rem auto; }
 .generated-portrait img { width: 100%; max-height: 280px; object-fit: contain; }
-.pending-operation.is-raised { bottom: 12rem; } /* acima da linha de status com "Tentar de novo" */
 .pending-operation.is-busy { pointer-events: none; } /* SPEC-320: durante o turno os botões estão desabilitados; não cobrir "Tentar de novo" */
-.pending-operation { position: fixed; z-index: 100; bottom: 5rem; left: 50%; transform: translateX(-50%); max-width: 95vw; background: var(--bg);  display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
+/* SPEC-321 R9: ancorada ACIMA do compositor (e da barra de superfícies no celular), nunca sobre ele. */
+.pending-operation { position: fixed; z-index: var(--z-toast); bottom: calc(var(--composer-h, 5rem) + var(--tabbar-h) + 0.5rem); left: 50%; transform: translateX(-50%); max-width: calc(100vw - 1rem); padding: 0.4rem; background: var(--bg); display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; }
 .card__select { background: transparent; color: inherit; border: 0; font: inherit; cursor: pointer; width: 100%; }
 .visual-art img, .visual-art__monogram {
   display: block; width: 100%; object-fit: contain; object-position: center;
@@ -631,7 +633,10 @@ select {
 /* --- barra de ação --- */
 .actionbar { flex: none; display: flex; flex-direction: column; gap: 0.4rem; padding: 0.9rem clamp(0.9rem, 3vw, 2.9rem); border-top: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.92); backdrop-filter: blur(10px); }
 .actionbar__composer { display: flex; gap: 0.5rem; min-width: 0; }
-.actionbar input { flex: 1 1 auto; min-width: 0; }
+.actionbar input, .actionbar textarea { flex: 1 1 auto; min-width: 0; }
+/* SPEC-321 R10: compositor multilinha — cresce até 4 linhas (altura calculada no Composer), depois rola. */
+.actionbar textarea { resize: none; min-height: 2.6rem; line-height: 1.4; overflow-y: auto; align-self: flex-end; }
+.composer-hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .actionbar .btn { flex: none; }
 .voice-button { min-width: 44px; min-height: 44px; padding-inline: 0.65rem; background: var(--bg-deep); color: var(--ink); }
 .voice-button[aria-pressed="true"] { border-color: var(--danger-bright); color: var(--danger-bright); }
@@ -832,7 +837,7 @@ select {
 .play.is-combat .topbar::after { background: linear-gradient(90deg, transparent, var(--danger-glow), transparent); }
 .play.is-combat .topbar__place { color: var(--danger-bright); }
 .play.is-combat .actionbar { background: oklch(0.16 0.03 26 / 0.94); border-top-color: var(--danger-dim); }
-.play.is-combat .actionbar input:focus { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-glow); }
+.play.is-combat .actionbar input:focus, .play.is-combat .actionbar textarea:focus { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-glow); }
 .play.is-combat .actionbar .btn--primary { background: linear-gradient(180deg, var(--danger-bright), var(--danger)); border-color: oklch(0.66 0.2 26 / 0.6); color: oklch(0.98 0.02 30); }
 .play.is-combat .story { background: radial-gradient(120% 80% at 50% 0%, oklch(0.54 0.20 25 / 0.05), transparent 60%); }
 
@@ -1030,8 +1035,8 @@ select {
   .topbar__meta { display: none; }
   .topbar__right { gap: 0.28rem; }
   .topbar__right .iconbtn { padding-inline: 0.48rem; font-size: 0.66rem; }
-  /* SPEC-193: 360px — acoes ganham linha propria e rotulos longos truncam em vez de sobrepor */
-  .topbar__right { flex: 1 1 100%; justify-content: flex-end; min-width: 0; }
+  /* SPEC-321 R1: sem `flex: 1 1 100%` — no celular a topbar nem é renderizada (cabeça única no Workspace). */
+  .topbar__right { justify-content: flex-end; min-width: 0; }
   .topbar__right .iconbtn { min-width: 0; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .laboratory-flag { padding-inline: 0.42rem; font-size: 0.58rem; }
   .laboratory-flag + .combat-flag { display: none; }
@@ -1041,7 +1046,7 @@ select {
   .card__art { width: calc(100% + 2rem); }
   .msg--player { max-width: 100%; }
   .actionbar { padding: 0.6rem 0.7rem calc(0.6rem + env(safe-area-inset-bottom)); position: sticky; bottom: 0; }
-  .actionbar input { min-width: 0; font-size: 16px; } /* 16px evita zoom do iOS */
+  .actionbar input, .actionbar textarea { min-width: 0; font-size: 16px; } /* 16px evita zoom do iOS */
   .actionchips { padding: 0.4rem 0.7rem 0; }
   .actionchip { font-size: 0.95rem; padding: 0.5rem 0.9rem; } /* alvo de toque */
   .card-hand__rail { grid-auto-columns: 82vw; }
@@ -1060,16 +1065,12 @@ select {
   .create { place-items: start center; padding: 1.4rem 0.8rem; }
   .savelist { max-height: 52vh; }
 }
-.session-logout {
-  position: fixed;
-  z-index: 50;
-  top: 0.75rem;
-  right: 0.75rem;
-  width: auto;
+/* SPEC-321 R9: Conta + Sair numa linha flex fixa (antes: `right: 15rem` mágico sobrepondo/descolando). */
+.shell-actions {
+  position: fixed; z-index: var(--z-banner); top: 0.75rem; right: 0.75rem;
+  display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; max-width: calc(100vw - 1.5rem);
 }
-.account-shell-link {
-  position: fixed; z-index: 50; top: 0.75rem; right: 15rem; width: auto;
-}
+.session-logout, .account-shell-link { width: auto; }
 .account-screen {
   width: min(100% - 2rem, 960px); margin: 0 auto; padding: 5rem 0 3rem;
   color: var(--ink);
@@ -1126,7 +1127,6 @@ select {
 .msg__cost-detail.is-open { display: inline; }
 @media (max-width: 600px) {
   /* Home estreita: os dois botões fixos não cabem lado a lado — empilha (logout em cima). */
-  .account-shell-link { top: 3.6rem; right: 0.75rem; max-width: calc(100vw - 1.5rem); }
   .account-card li { flex-direction: column; gap: 0.2rem; }
   .checkout-packages li { align-items: stretch; }
   .account-chart { gap: 1px; }
@@ -1178,7 +1178,7 @@ select {
 .legal-links a:hover { color: var(--accent); }
 
 /* ---------- SPEC-199: chip de ganhos do turno ---------- */
-.outcome-toast { position: fixed; left: 50%; bottom: 5.5rem; transform: translateX(-50%); z-index: 40;
+.outcome-toast { position: fixed; left: 50%; bottom: calc(var(--composer-h, 5rem) + var(--tabbar-h) + 0.5rem); transform: translateX(-50%); z-index: var(--z-toast);
   display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; max-width: calc(100vw - 2rem); pointer-events: none; }
 .outcome-chip { padding: 0.3rem 0.7rem; border: 1px solid var(--line); border-radius: var(--r-pill);
   background: var(--surface-2); color: var(--accent); font-size: 0.85rem; animation: outcome-in 0.25s ease-out; }

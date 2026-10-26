@@ -642,7 +642,7 @@ for (const mode of ["normal", "reduced", "effects-off"] as const) {
       await expect(submit(page)).toBeEnabled();
       await page.waitForTimeout(500);
       // abas + split
-      await page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name: "Dividido" }).click();
+      await page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name: "Lado a lado" }).click();
       await page.waitForTimeout(400);
       for (const name of ["Mapa", "Codex", "Bestiário"]) { await tabs(page).getByRole("tab", { name }).click(); await page.waitForTimeout(400); }
       // combate: armar, mirar, executar, Esc

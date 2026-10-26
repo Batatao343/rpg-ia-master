@@ -139,7 +139,7 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       await page.clock.install();
       await page.clock.fastForward(30_000);
       await expect(banner).toBeVisible();
-      const topbar = await page.locator(".topbar").boundingBox();
+      const topbar = await page.locator(".topbar, .ws-mhead").first().boundingBox();
       const box = await banner.boundingBox();
       expect(box!.y).toBeGreaterThanOrEqual(topbar!.y + topbar!.height - 1); // no fluxo, abaixo da topbar
       const close = banner.getByRole("button", { name: "Fechar aviso" });
@@ -154,7 +154,7 @@ for (const [width, height] of [[1440, 900], [390, 844]] as const) {
       const state = backend.states.get("game-a")!;
       state.combat.active = true; state.combat.round = 1;
       await openGame(page);
-      if (page.viewportSize()!.width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
+      if (page.viewportSize()!.width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true }).click();
       await expect(page.getByRole("button", { name: "Lutar", exact: true })).toBeVisible();
       await expect(page.getByRole("button", { name: "Agir", exact: true })).toHaveCount(0);
     });

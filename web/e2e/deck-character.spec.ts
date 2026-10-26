@@ -1,7 +1,7 @@
 // SPEC-209: aba Combate fora de encontro (deck) e aba Personagem (ficha/Jornada). Testes do executor —
 // a autoria das jornadas F de eval é separada (handoffs/SPEC-209-eval-authoring.md).
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect } from "./fixtures";
+import { test, expect, openFicha } from "./fixtures";
 import type { DeterministicBackend } from "./fixtures";
 import type { Page } from "@playwright/test";
 import type { CardView } from "../src/types";
@@ -127,7 +127,7 @@ test.describe("personagem", () => {
       await page.goto("/");
       await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
       await page.getByRole("button", { name: /^Ayla/ }).click();
-      if (w < 700) await page.getByRole("button", { name: /Ficha/ }).click();
+      if (w < 700) await openFicha(page);
       await goSurface(page, "Personagem");
       await expect(page.getByText("Cicatrizes")).toBeVisible();
       await expect(page.getByText("Tremor na mão")).toBeVisible();
@@ -159,7 +159,7 @@ async function openTab(page: Page, w: number, tab: "Combate" | "Personagem") {
   await page.goto("/");
   await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
   await page.getByRole("button", { name: /^Ayla/ }).click();
-  if (w >= 900 && w < 1000) await page.getByRole("button", { name: /Ficha/ }).click(); // < split: painel único
+  if (w >= 900 && w < 1000) await openFicha(page); // < split: painel único
   await goSurface(page, tab);
 }
 

@@ -29,6 +29,11 @@ const config: CapacitorConfig = {
     // Top-level navigations stay on the trusted host; everything else opens externally.
     allowNavigation: [host],
   },
+  // SPEC-321 R8: barra de status escura (mesmo valor do `theme-color` do index.html / `--bg`).
+  // Exige @capacitor/status-bar no plugin nativo (SPEC-198); sem ele a chave é ignorada.
+  plugins: {
+    StatusBar: { style: 'DARK', backgroundColor: '#080c10', overlaysWebView: false },
+  },
 };
 
 export default config;

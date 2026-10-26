@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import * as api from "../../api";
 import type { GameResponse, VisualAsset, WoundTrackView } from "../../types";
 import { FichaTab, type EquipFn } from "../Hud";
@@ -45,8 +45,10 @@ function woundsFrom(data: GameResponse): WoundTrackView {
 }
 
 /** SPEC-209 R8–R13: ficha completa + Jornada. Tudo vem de `GameResponse`; nada é recalculado aqui. */
-export function CharacterTab({ data, hitKey, onEquip, busy }: {
+export function CharacterTab({ data, hitKey, onEquip, busy, artPanel }: {
   data: GameResponse | null; hitKey: number; onEquip?: EquipFn; busy?: boolean;
+  /** SPEC-321 R6: cotação de retrato e imagens encomendadas (saíram do topo da tela). */
+  artPanel?: ReactNode;
 }) {
   const [section, setSection] = useState<Section>("ficha");
   const p = data?.player_stats;
@@ -78,6 +80,7 @@ export function CharacterTab({ data, hitKey, onEquip, busy }: {
             <PortraitFallback key={data.game_id} className={p?.class_name ?? ""} name={p?.name ?? ""} />
           )
         )}
+        {section === "ficha" && artPanel}
         {section === "ficha" && data && hasWounds(data) && <WoundTrack wounds={woundsFrom(data)} />}
         {section === "ficha" && <FichaTab data={data} hpHitKey={hitKey} onEquip={onEquip} busy={busy} />}
         {section === "ficha" && scars.length > 0 && (

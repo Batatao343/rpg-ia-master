@@ -13,7 +13,7 @@ async function load(entry) {
 const model = await load('../src/workspace/workspaceModel.ts');
 const surf = await load('../src/workspace/mobileSurface.ts');
 const { DEFAULT_WORKSPACE: D, workspaceReducer: r, effectiveMode, CONTEXT_TABS } = model;
-const { mobileSurface, isMobileViewport, shouldAutoOpenCombat, SURFACES, registerBackBridge, offChatSurface, returnToChat } = surf;
+const { mobileSurface, isMobileViewport, shouldAutoOpenCombat, SURFACES, SURFACE_LABELS, registerBackBridge, offChatSurface, returnToChat } = surf;
 
 test('mobile_surface_single_below_breakpoint: nunca dois valores visiveis', () => {
   const states = [D, r(D, { type: 'open_tab', tab: 'mapa', single: true }), r(D, { type: 'set_mode', mode: 'chat' }),
@@ -73,4 +73,9 @@ test('back_policy_returns_to_chat_first', async () => {
   assert.equal(returnToChat(), false);
   off();
   assert.equal(offChatSurface(), false);
+});
+
+test('SPEC-321 R11: o rótulo da superfície chat é "Crônica" (id inalterado)', () => {
+  assert.equal(SURFACE_LABELS.chat, 'Crônica');
+  assert.ok(SURFACES.includes('chat'));
 });

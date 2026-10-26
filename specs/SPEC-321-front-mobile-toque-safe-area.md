@@ -1,6 +1,6 @@
 # SPEC-321 — Front: casca mobile, alvos de toque e safe-area
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito; implementada na branch `spec-321`, aguardando revisão independente)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-320 (a linha de status do compositor já existe; o banner já sai do topo)
 > **Desbloqueia:** SPEC-198 (wrapper Android: o app precisa caber e ser tocável no celular), SPEC-322
@@ -136,15 +136,15 @@ Outros problemas da casca:
 
 ## 5. Critérios de aceite
 
-- [ ] História ≥ 55 % da altura a 360×740 e a 390×844 (e2e mede).
-- [ ] Cabeça única ≤ 52 px no celular; Conta, "Nova jornada" e Sair no menu ⋯; "Nova jornada" confirma com turno em andamento.
-- [ ] `.scene-art` recolhe para ≤ 72 px; um toque expande.
-- [ ] `pointer: coarse`: todo controle da tela de jogo com ≥ 44×44 px (e2e).
-- [ ] Ofertas de imagem fora do topo; a 1440×900 sem scroll de documento e com o compositor visível.
-- [ ] `viewport-fit=cover` + `theme-color`; status bar escura no Capacitor.
-- [ ] Toast e barra pendente sem sobrepor o compositor; sem `right: 15rem`; z-index pela escala.
-- [ ] Compositor em `textarea` (1–4 linhas, Enter/Shift+Enter, IME seguro), placeholder curto.
-- [ ] "Crônica"/"Lado a lado" na UI; ids e test-ids inalterados.
+- [x] História ≥ 55 % da altura a 360×740 e a 390×844 (e2e mede).
+- [x] Cabeça única ≤ 52 px no celular; Conta, "Nova jornada" e Sair no menu ⋯; "Nova jornada" confirma com turno em andamento.
+- [x] `.scene-art` recolhe para ≤ 72 px; um toque expande.
+- [x] `pointer: coarse`: todo controle da tela de jogo com ≥ 44×44 px (e2e).
+- [x] Ofertas de imagem fora do topo; a 1440×900 sem scroll de documento e com o compositor visível.
+- [x] `viewport-fit=cover` + `theme-color`; status bar escura no Capacitor.
+- [x] Toast e barra pendente sem sobrepor o compositor; sem `right: 15rem`; z-index pela escala.
+- [x] Compositor em `textarea` (1–4 linhas, Enter/Shift+Enter, IME seguro), placeholder curto.
+- [x] "Crônica"/"Lado a lado" na UI; ids e test-ids inalterados.
 - [ ] `npm test` e o e2e do escopo verdes; `uv run pytest` verde.
 
 ## 6. Smoke test real
@@ -171,3 +171,17 @@ Staging, conta logada, ~3 turnos.
 
 - **D1 — ofertas de imagem paga fora do topo.** **Recomendado: sim. Retrato no painel Personagem e cena/NPC como chip inline na narração que a originou.** Alternativa: manter uma barra, mas dentro da coluna de jogo e recolhida.
 - **D2 — rótulos da casca.** **Recomendado: "Crônica" no lugar de "Chat" e "Lado a lado" no lugar de "Dividido"; manter "Ficha" e "Painel".**
+
+---
+
+## 9. Histórico de mudanças
+
+- **2026-10-25 · implementação (branch `spec-321`).** Desvios em relação ao texto acima, todos decididos na implementação:
+  - **R2/desktop:** em ≥ 900 px a topbar mantém Conta, Ficha, Sair inline (os e2e de conta/checkout dependem deles); só "Nova" virou "Nova jornada" (com confirmação). O menu ⋯ (`PlayMenu`) existe só no celular (< 900 px), onde substitui a topbar.
+  - **R1:** a cabeça única mora no `Workspace` (`.ws-mhead`: local + rótulo da superfície + Vitalidade/Entropia + ações); no celular o `header.topbar` não é renderizado. O banner (SPEC-320) entra logo abaixo dela.
+  - **R3:** o botão "Nova jornada" continua desabilitado durante `busy` (o `handleNew` tem guarda de sessão e destravar no meio do turno deixaria `busy` preso). A confirmação cobre os estados reais de risco: ação pendente não resolvida e turno `narrated`/`failed-after-narration`.
+  - **R4:** "rolar" conta só gesto do jogador (roda/toque/teclado), nunca o auto-scroll para o fim; o toque na faixa alterna e vale até mudar de local.
+  - **R9 + SPEC-320:** a barra `.pending-operation` deixou de duplicar "Tentar de novo": com `failed-after-narration` ela só oferece "Descartar ação pendente" (o `is-raised` saiu); em todos os casos fica ancorada por `--composer-h` + `--tabbar-h`. `Conta`/`Sair` das telas sem partida ficam numa linha flex (`.shell-actions`).
+  - **R7:** o e2e novo mede a caixa real dos controles (≥ 43,5 px) nas superfícies Crônica, Personagem, Codex, Combate e Mapa a 390×844 com `isMobile`/`hasTouch`.
+  - **R8:** além do `capacitor.config.ts` (`StatusBar` DARK), `AppTheme.NoActionBar` do Android ganhou `statusBarColor`/`windowLightStatusBar`, porque o plugin `@capacitor/status-bar` não está instalado (SPEC-198).
+  - Testes e2e antigos adaptados aos novos nomes (`Crônica`, `Lado a lado`, `Crônica da aventura`), ao `textarea` do compositor e ao novo lugar de "Cotar retrato" (painel Personagem).

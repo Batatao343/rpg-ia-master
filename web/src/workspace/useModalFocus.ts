@@ -34,7 +34,7 @@ export function useModalFocus(ref: RefObject<HTMLElement | null>, onEscape?: () 
     return () => {
       document.removeEventListener("keydown", onKey, true);
       const target = previous && previous.isConnected && previous !== document.body ? previous
-        : document.querySelector<HTMLElement>('input[aria-label="Sua ação"]');
+        : document.querySelector<HTMLElement>('[aria-label="Sua ação"]');
       target?.focus();
     };
   }, [ref]);

@@ -7,6 +7,8 @@ import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
 import { useModalFocus } from "../workspace/useModalFocus";
 import { levelUpHeldByOutcome, resultFrom } from "../combatOutcome";
 import { clockLabel } from "../clockLabel";
+import { useIsCompact } from "../hooks/useIsCompact";
+import { ConfirmNewDialog, PlayMenu } from "./PlayMenu";
 
 interface Props {
   data: GameResponse | null;
@@ -25,13 +27,21 @@ interface Props {
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
+  /** SPEC-321 R3: há ação pendente / turno não registrado — "Nova jornada" pede confirmação. */
+  confirmLeave?: boolean;
+  /** SPEC-321 R6: ofertas de arte (retrato no painel Personagem; cena/NPC como chip na narração). */
+  artPanel?: ReactNode;
+  onQuoteOffer?: (offer: NonNullable<GameResponse["art_offers"]>[number]) => void;
+  offersDisabled?: boolean;
   /** Dono da sessão: escopo da preferência de layout (SPEC-204 R9). */
   owner?: string;
 }
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
+  const compact = useIsCompact();
+  const [confirmingNew, setConfirmingNew] = useState(false);
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
   const [dismissedResult, setDismissedResult] = useState<string | null>(null);
   const [reading, setReading] = useState(false); // memorial: ler a crônica
@@ -66,47 +76,59 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
     if (res) setDismissedResult(res.result_event_id);
     setLuDismissedKey(null);
   };
+  const requestNew = () => { if (confirmLeave) setConfirmingNew(true); else onNew(); };
+  const levelUpChip = pending.length > 0 && !blocked && (
+    <button className="iconbtn iconbtn--levelup" type="button" onClick={openLevelUp}>
+      ⬆ Nível!
+    </button>
+  );
   const showLevelUp = pending.length > 0 && !luDismissed && !blocked && !fighting && !outcomeFirst;
 
   return (
     <div className={"play" + (fighting ? " is-combat" : "")}>
       {fighting && <div className="combat-veil" aria-hidden />}
 
-      <header className="topbar">
-        <div className="topbar__loc">
-          <span className="topbar__place">{data?.current_location || "—"}</span>
-          <span className="topbar__meta">{clock}</span>
-        </div>
-        <div className="topbar__right">
-          {onAccount && <button className="iconbtn" type="button" disabled={busy} onClick={onAccount}>
-            Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
-          </button>}
-          {simulation && <span className="laboratory-flag">Laboratório</span>}
-          {fighting && <span className="combat-flag">⚔ Combate</span>}
-          {/* Fica montado com o modal aberto: o foco volta a ele ao fechar (R16). */}
-          {pending.length > 0 && !blocked && (
-            <button className="iconbtn iconbtn--levelup" type="button"
-                    onClick={openLevelUp}>
-              ⬆ Nível!
+      {!compact && (
+        <header className="topbar">
+          <div className="topbar__loc">
+            <span className="topbar__place">{data?.current_location || "—"}</span>
+            <span className="topbar__meta">{clock}</span>
+          </div>
+          <div className="topbar__right">
+            {onAccount && <button className="iconbtn" type="button" disabled={busy} onClick={onAccount}>
+              Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+            </button>}
+            {simulation && <span className="laboratory-flag">Laboratório</span>}
+            {fighting && <span className="combat-flag">⚔ Combate</span>}
+            {/* Fica montado com o modal aberto: o foco volta a ele ao fechar (R16). */}
+            {levelUpChip}
+            {/* Atalho para Personagem (SPEC-204): não fecha nem desloca o chat. */}
+            <button className="iconbtn" type="button" onClick={() => workspace.current?.openTab("personagem")}>
+              ☰ Ficha
             </button>
-          )}
-          {/* Atalho para Personagem (SPEC-204): não fecha nem desloca o chat. */}
-          <button className="iconbtn" type="button" onClick={() => workspace.current?.openTab("personagem")}>
-            ☰ Ficha
-          </button>
-          <button className="iconbtn" type="button" disabled={busy} onClick={onNew}>
-            {simulation ? "Reiniciar" : "Nova"}
-          </button>
-          {onLogout && <button className="iconbtn" type="button" disabled={busy}
-            onClick={onLogout} aria-label="Encerrar sessão">Sair</button>}
-        </div>
-      </header>
-      {banner}
+            <button className="iconbtn topbar__new" type="button" disabled={busy} onClick={requestNew}>
+              {simulation ? "Reiniciar" : "Nova jornada"}
+            </button>
+            {onLogout && <button className="iconbtn" type="button" disabled={busy}
+              onClick={onLogout} aria-label="Encerrar sessão">Sair</button>}
+          </div>
+        </header>
+      )}
+      {!compact && banner}
 
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
         onPrepareCards={onPrepareCards} onOpenLevelUp={openLevelUp}
+        artPanel={artPanel} onQuoteOffer={onQuoteOffer} offersDisabled={offersDisabled}
+        place={data?.current_location || "—"} banner={compact ? banner : undefined}
+        headActions={compact ? (
+          <>
+            {levelUpChip}
+            <PlayMenu busy={busy} simulation={simulation} accountBalance={accountBalance}
+              onAccount={onAccount} onNew={requestNew} onLogout={onLogout} />
+          </>
+        ) : undefined}
         dismissedResult={dismissedResult} onDismissResult={setDismissedResult} />
 
       {showLevelUp && data && (
@@ -117,6 +139,11 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
           onChoose={onLevelUp}
           onLater={() => setLuDismissedKey(pendingKey)}
         />
+      )}
+
+      {confirmingNew && (
+        <ConfirmNewDialog simulation={simulation} onCancel={() => setConfirmingNew(false)}
+          onConfirm={() => { setConfirmingNew(false); onNew(); }} />
       )}
 
       {simulationFinished && (

@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { ActionOptions, GameResponse, LogEntry, TurnOutcome } from "../types";
 import { StoryLog } from "../components/StoryLog";
 import { SceneArtwork } from "../components/SceneArtwork";
@@ -10,9 +10,11 @@ import { Pressable } from "../design/primitives";
 import { TurnStatus } from "./TurnStatus";
 import { useTurnClock } from "../hooks/useTurnClock";
 import { IDLE_TURN, type TurnWait } from "../turnWait";
+import { useComposerHeight } from "../hooks/useComposerHeight";
+import { composerHeight, shouldSubmitOnKey } from "./composerKeys";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
-export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat }: {
+export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat, onQuoteOffer, offersDisabled }: {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
@@ -23,6 +25,9 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
   /** SPEC-216: mobile mostra "Ir para o combate" no chat enquanto o encontro esta ativo. */
   mobile?: boolean;
   onOpenCombat?: () => void;
+  /** SPEC-321 R6: cotação de cena/NPC como chip na narração mais recente. */
+  onQuoteOffer?: (offer: NonNullable<GameResponse["art_offers"]>[number]) => void;
+  offersDisabled?: boolean;
 }) {
   const gameId = data?.game_id;
   const fighting = !!data?.combat?.active;
@@ -32,29 +37,58 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
   const showOnboard = !simulation && !blocked && (data?.world?.turn_count ?? 99) <= 1
     && !onboardingDismissed(gameId ?? null);
   const [initialScroll] = useState(() => getChatSession(gameId));
-  const onScrollPosition = useCallback((scrollTop: number, atBottom: boolean) =>
-    setChatSession(gameId, { scrollTop, atBottom }), [gameId]);
+
+  // R4: a arte de cena recolhe (mobile) ao rolar a história ou depois do 1º beat no mesmo local; um toque
+  // alterna e vale até mudar de local. Sem animação de altura (troca de classe), logo seguro com reduced-motion.
+  const sceneKey = data?.visual?.scene?.location_id ?? data?.current_location ?? "";
+  const turnCount = data?.world?.turn_count ?? 0;
+  const [entry, setEntry] = useState({ key: sceneKey, turn: turnCount });
+  if (entry.key !== sceneKey) setEntry({ key: sceneKey, turn: turnCount });
+  const [scrolled, setScrolled] = useState(false);
+  const [override, setOverride] = useState<{ key: string; closed: boolean } | null>(null);
+  const autoCollapsed = scrolled || turnCount > entry.turn;
+  const artCollapsed = mobile && (override?.key === sceneKey ? override.closed : autoCollapsed);
+  const onStoryScroll = useCallback((scrollTop: number, atBottom: boolean, byUser?: boolean) => {
+    setChatSession(gameId, { scrollTop, atBottom });
+    if (byUser) setScrolled(scrollTop > 24); // o auto-scroll para o fim não conta como "rolar"
+  }, [gameId]);
+  const offerRef = useRef(onQuoteOffer);
+  useEffect(() => { offerRef.current = onQuoteOffer; });
+  const stableOffer = useCallback((offer: NonNullable<GameResponse["art_offers"]>[number]) => offerRef.current?.(offer), []);
+  const [placesOpen, setPlacesOpen] = useState(false);
+  const placeCount = interiorsHere.length + (exitTo ? 1 : 0);
 
   return (
-    <section className="ws-chat" aria-label="Chat da aventura" hidden={!active}>
-      {(interiorsHere.length > 0 || exitTo) && !fighting && !blocked && (
+    <section className="ws-chat" aria-label="Crônica da aventura" hidden={!active}>
+      {placeCount > 0 && !fighting && !blocked && (
         <div className="placesbar">
-          {exitTo && (
-            <button className="placechip placechip--exit" type="button" disabled={busy}
-                    onClick={() => onAction(`Saio para ${exitTo.name}`)}>
-              ↩ Sair para {exitTo.name}
+          {mobile && (
+            <button type="button" className="placechip placechip--toggle" aria-expanded={placesOpen}
+              aria-controls="placesbar-list" onClick={() => setPlacesOpen(open => !open)}>
+              Locais daqui <span aria-hidden>{placesOpen ? "▴" : "▾"}</span>
             </button>
           )}
-          {interiorsHere.map((i) => (
-            <button key={i.id} className="placechip" type="button" disabled={busy}
-                    onClick={() => onAction(`Entro em ${i.name}`)}>
-              ⌂ {i.name}
-            </button>
-          ))}
+          {(!mobile || placesOpen) && (
+            <div className="placesbar__list" id="placesbar-list">
+              {exitTo && (
+                <button className="placechip placechip--exit" type="button" disabled={busy}
+                        onClick={() => { setPlacesOpen(false); onAction(`Saio para ${exitTo.name}`); }}>
+                  ↩ Sair para {exitTo.name}
+                </button>
+              )}
+              {interiorsHere.map((i) => (
+                <button key={i.id} className="placechip" type="button" disabled={busy}
+                        onClick={() => { setPlacesOpen(false); onAction(`Entro em ${i.name}`); }}>
+                  ⌂ {i.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
       <div className="narrative-stage">
-        <SceneArtwork scene={data?.visual?.scene} />
+        <SceneArtwork scene={data?.visual?.scene} collapsed={artCollapsed}
+          onToggle={mobile ? () => setOverride({ key: sceneKey, closed: !artCollapsed }) : undefined} />
         {/* SPEC-199: chip mecânico do turno (aria-live, sem role="status"). */}
         <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
         {(data?.companion_feedback?.length ?? 0) > 0 && (
@@ -65,7 +99,8 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
         {showOnboard && gameId && <OnboardingHint gameId={gameId} />}
         <StoryLog entries={log} thinking={thinking} active={active}
           initialScroll={initialScroll}
-          onScrollPosition={onScrollPosition} />
+          onScrollPosition={onStoryScroll}
+          offers={data?.art_offers} onOffer={stableOffer} offersDisabled={offersDisabled} />
       </div>
       {mobile && fighting && !blocked && onOpenCombat && (
         <button type="button" className="btn btn--primary ws-chat__combat" onClick={onOpenCombat}>
@@ -78,7 +113,7 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
 
 /** Composer: sempre visível em todos os modos (R6: Esc no contexto devolve o foco aqui).
  *  O rascunho vive em memória por game_id (R7/R8, §8 P3 — nunca em disco). */
-export const Composer = forwardRef<HTMLInputElement, {
+export const Composer = forwardRef<HTMLTextAreaElement, {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -91,6 +126,9 @@ export const Composer = forwardRef<HTMLInputElement, {
   onRetry?: () => void;
 }>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry }, inputRef) {
   const gameId = data?.game_id;
+  const formRef = useRef<HTMLFormElement>(null);
+  const areaRef = useRef<HTMLTextAreaElement | null>(null);
+  useComposerHeight(formRef);
   const elapsed = useTurnClock(busy);
   const [input, setInputState] = useState(() => getChatSession(gameId).draft);
   const setInput = (update: string | ((current: string) => string)) => {
@@ -112,8 +150,24 @@ export const Composer = forwardRef<HTMLInputElement, {
   const simulationFinished = simulation && !!data?.combat_simulation?.finished;
   const fighting = !!data?.combat?.active;
 
-  function submit(e: React.FormEvent) {
-    e.preventDefault();
+  // R10: o textarea cresce até 4 linhas (depois rola) e volta a 1 linha quando esvazia.
+  useLayoutEffect(() => {
+    const el = areaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    const cs = getComputedStyle(el);
+    const lh = parseFloat(cs.lineHeight) || 24;
+    const pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    el.style.height = `${composerHeight(el.scrollHeight, lh, pad)}px`;
+  }, [input]);
+  const setAreaRef = (node: HTMLTextAreaElement | null) => {
+    areaRef.current = node;
+    if (typeof inputRef === "function") inputRef(node);
+    else if (inputRef) inputRef.current = node;
+  };
+
+  function submit(e?: React.FormEvent) {
+    e?.preventDefault();
     if (busy || blocked) return;
     const text = input.trim();
     if (!text) return;
@@ -124,18 +178,25 @@ export const Composer = forwardRef<HTMLInputElement, {
   }
 
   return (
-    <form className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
+    <form ref={formRef} className={"actionbar ws-composer" + (offSurface ? " is-offsurface" : "")} onSubmit={submit}>
       <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
         onRetry={() => onRetry?.()}
         onFocusInput={() => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
       <div className="actionbar__composer">
-      <input
-        ref={inputRef}
-        type="text"
+      <textarea
+        ref={setAreaRef}
+        rows={1}
         aria-label="Sua ação"
         autoComplete="off"
+        enterKeyHint="send"
         disabled={blocked}
+        onKeyDown={(e) => {
+          if (!shouldSubmitOnKey({ key: e.key, shiftKey: e.shiftKey, altKey: e.altKey, ctrlKey: e.ctrlKey, metaKey: e.metaKey,
+            isComposing: e.nativeEvent.isComposing, keyCode: e.keyCode })) return;
+          e.preventDefault();
+          submit();
+        }}
         placeholder={
           gameOver
             ? "Memorial — a crônica permanece."
@@ -144,10 +205,8 @@ export const Composer = forwardRef<HTMLInputElement, {
             : deathPending
               ? "A Roda do Abismo aguarda sua escolha."
             : fighting
-              ? simulation
-                ? "Texto livre executa um ataque básico; use os controles para ações precisas."
-                : "O inimigo avança — o que você faz?"
-              : "O que você faz?  (ex.: examino a porta, ataco o vulto, pergunto sobre o rei)"
+              ? "O inimigo avança. O que você faz?"
+              : "O que você faz?"
         }
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -165,6 +224,9 @@ export const Composer = forwardRef<HTMLInputElement, {
         {fighting ? "Lutar" : "Agir"}
       </Pressable>
       </div>
+      {simulation && fighting && !blocked && (
+        <p className="composer-hint">Texto livre executa um ataque básico; use os controles para ações precisas.</p>
+      )}
       <div className="voice-status" data-voice-state={voice.phase}>
         <span role={voice.phase === "error" ? "alert" : "status"} aria-live="polite" aria-atomic="true">
           {voice.message}

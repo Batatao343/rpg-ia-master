@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useState,
-  type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
+  type CSSProperties, type ReactNode, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
 import { useVitalityHit, type EquipFn } from "../components/Hud";
@@ -38,6 +38,14 @@ interface Props {
   /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
+  /** SPEC-321 R6: retrato/imagens encomendadas dentro de Personagem; cena/NPC como chip na narração. */
+  artPanel?: ReactNode;
+  onQuoteOffer?: (offer: NonNullable<GameResponse["art_offers"]>[number]) => void;
+  offersDisabled?: boolean;
+  /** SPEC-321 R1: no celular a cabeça única (local + stats + ações) mora aqui; o banner entra logo abaixo. */
+  place?: string;
+  headActions?: ReactNode;
+  banner?: ReactNode;
 }
 
 function useViewportWidth(): number {
@@ -91,7 +99,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
 
   const rootRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const composerRef = useRef<HTMLInputElement>(null);
+  const composerRef = useRef<HTMLTextAreaElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [gridWidth, setGridWidth] = useState(0);
 
@@ -281,10 +289,17 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   return (
     <div className={"ws-root" + (mobile ? " ws-root--mobile" : "")} ref={rootRef}>
       {mobile ? (
-        <div className="ws-mhead">
-          <h2 className="ws-mhead__title" data-testid="surface-title" tabIndex={-1} ref={titleRef}>{SURFACE_LABELS[surface]}</h2>
-          {stats}
-        </div>
+        <>
+          <div className="ws-mhead">
+            <div className="ws-mhead__id">
+              <span className="ws-mhead__place">{props.place}</span>
+              <h2 className="ws-mhead__title" data-testid="surface-title" tabIndex={-1} ref={titleRef}>{SURFACE_LABELS[surface]}</h2>
+            </div>
+            {stats}
+            {props.headActions}
+          </div>
+          {props.banner}
+        </>
       ) : (
       <div className="ws-bar" role="group" aria-label="Estado e navegação do painel">
         {stats}
@@ -294,9 +309,9 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
           <button type="button" className="iconbtn" aria-label="Avançar para a próxima aba"
             disabled={state.cursor >= state.history.length - 1} onClick={() => dispatch({ type: "forward" })}>›</button>
           <div className="ws-modes" role="group" aria-label="Modo de exibição">
-            <button type="button" className="iconbtn" aria-pressed={mode === "chat"} onClick={showChat}>Chat</button>
+            <button type="button" className="iconbtn" aria-pressed={mode === "chat"} onClick={showChat}>Crônica</button>
             {!single && <button type="button" className="iconbtn" aria-pressed={mode === "split"}
-              onClick={() => dispatch({ type: "set_mode", mode: "split" })}>Dividido</button>}
+              onClick={() => dispatch({ type: "set_mode", mode: "split" })}>Lado a lado</button>}
             <button type="button" className="iconbtn" aria-pressed={mode === "context"} onClick={showContext}
               title={`Painel: ${TAB_LABELS[state.tab]}`}>Painel</button>
           </div>
@@ -307,7 +322,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
       <div className={`ws ws--${mode}${isDragging ? " is-dragging" : ""}`} data-mode={mode} ref={gridRef} style={style}>
         <ChatSurface data={data} log={log} thinking={thinking}
           busy={busy} blocked={blocked} active={chatVisible} onAction={onAction}
-          mobile={mobile} onOpenCombat={() => openTab("combate")} />
+          mobile={mobile} onOpenCombat={() => openTab("combate")}
+          onQuoteOffer={props.onQuoteOffer} offersDisabled={props.offersDisabled} />
         {mode === "split" && (
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separador redimensionável (window splitter) focável com setas, padrão WAI-ARIA
           <div className="ws-sep" role="separator" aria-orientation="vertical" tabIndex={0}
@@ -325,7 +341,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
             onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
-            dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />
+            dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}

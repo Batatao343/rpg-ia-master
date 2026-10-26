@@ -97,7 +97,7 @@ for (const width of [1440, 390]) {
       await expect(panel(page).getByText("Escolha uma carta ou ação")).toBeVisible();
       await expect(card(page, "Golpe do Véu")).toBeFocused();
       await card(page, "Golpe do Véu").click();
-      await page.locator("header.topbar").click({ position: { x: 5, y: 5 } });
+      await page.locator("header.topbar, .ws-mhead").first().click({ position: { x: 5, y: 5 } });
       await expect(panel(page).getByText("Escolha uma carta ou ação")).toBeVisible();
       await card(page, "Cataclismo").click({ force: true });
       await expect(card(page, "Cataclismo")).toHaveAttribute("aria-disabled", "true");
@@ -130,7 +130,7 @@ for (const width of [1440, 390]) {
       const result = await new AxeBuilder({ page }).analyze();
       expect(result.violations.filter((v) => v.impact === "critical" || v.impact === "serious")).toEqual([]);
       backend.releaseStream();
-      if (width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
+      if (width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true }).click();
       await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
       expect(actions(backend)).toHaveLength(1);
     });

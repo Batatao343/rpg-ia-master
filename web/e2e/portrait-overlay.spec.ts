@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures";
+import { test, expect, openFicha } from "./fixtures";
 
 // Regressão: o "cartão inteiro clicável" de SPEC-208 (`.card__select::after`,
 // absoluto com inset 0) vazava para os botões de ampliar arte fora de um
@@ -13,7 +13,7 @@ for (const width of [390, 1440]) {
     await page.goto("/");
     await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
     await page.getByRole("button", { name: /^Ayla/ }).click();
-    await page.getByRole("button", { name: "☰ Ficha" }).click();
+    await openFicha(page);
     const enlarge = page.getByRole("button", { name: "Ampliar retrato do personagem" });
     await expect(enlarge).toBeVisible();
 
@@ -27,7 +27,7 @@ for (const width of [390, 1440]) {
 
     if (width < 900) {
       // SPEC-216: a barra "Superfícies" substitui o grupo "Modo de exibição".
-      const chat = page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true });
+      const chat = page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true });
       await chat.click({ timeout: 3_000 });
       await expect(chat).toHaveAttribute("aria-current", "page");
     }

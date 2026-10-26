@@ -105,21 +105,33 @@
    SPEC-216 — mobile single-pane (< 900px): UMA superficie por vez
    barra inferior "Superficies" + titulo focavel; sem gaveta, split ou abas no topo
    ============================================================ */
+/* SPEC-321 R1: UMA cabeça no celular (≤ 52 px): local (trunca) + rótulo da superfície, Vitalidade/Entropia e "⋯". */
 .ws-mhead {
-  flex: none; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem 0.8rem; min-width: 0;
-  min-height: 44px; padding: 0.2rem 0.7rem; border-bottom: 1px solid var(--line-soft);
+  flex: none; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem 0.6rem; min-width: 0;
+  height: calc(52px + env(safe-area-inset-top)); box-sizing: border-box;
+  padding: env(safe-area-inset-top) calc(0.5rem + env(safe-area-inset-right)) 0 calc(0.7rem + env(safe-area-inset-left));
+  border-bottom: 1px solid var(--line-soft);
   background: oklch(0.13 0.012 250 / 0.72);
 }
+.ws-mhead__id { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.ws-mhead__place {
+  font-family: var(--display); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.04em; line-height: 1.15;
+  text-transform: uppercase; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .ws-mhead__title {
-  margin: 0; font-family: var(--display); font-size: 1rem; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--ink);
+  margin: 0; font-family: var(--display); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; line-height: 1.2;
+  text-transform: uppercase; color: var(--muted);
 }
 .ws-mhead__title:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.ws-mhead .ws-bar__status { font-size: 0.74rem; justify-content: flex-end; }
+.ws-mhead .ws-bar__status { flex: none; flex-direction: column; flex-wrap: nowrap; align-items: flex-end; gap: 0; font-size: 0.72rem; line-height: 1.25; }
+.ws-mhead .ws-stat--fight { display: none; }
+.ws-mhead .iconbtn { flex: none; min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.playmenu__trigger { font-size: 1.3rem; line-height: 1; letter-spacing: 0; }
+.ws-root > .banner { position: static; flex: none; box-shadow: none; }
 
 .mtabbar {
   flex: none; display: flex; align-items: stretch; min-width: 0;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   border-top: 1px solid var(--line); background: oklch(0.13 0.012 250 / 0.96);
 }
 .mtabbar__btn {
@@ -152,20 +164,21 @@
   html:has(.play-shell), body:has(.play-shell) { overflow: hidden; }
   .play-shell { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
   .play-shell .play { height: auto; flex: 1 1 auto; min-height: 0; }
-  .image-offers { flex: none; flex-wrap: nowrap; overflow-x: auto; gap: 8px; padding: 4px 8px; }
-  .image-offers .btn { flex: none; min-height: 44px; }
-  .image-generations { flex: none; max-height: 24dvh; overflow: auto; }
   .topbar { min-height: 0; }
   .ws-composer { position: static; padding: 0.5rem 0.7rem; }
   .ws-composer .actionbar__composer .btn,
   .ws-composer .voice-button,
   .ws-composer button[type="submit"] { min-height: 44px; min-width: 44px; }
-  .ws-composer input { min-height: 44px; font-size: 16px; }
+  .ws-composer input, .ws-composer textarea { min-height: 44px; font-size: 16px; }
+  /* SPEC-321 R9: toasts e a barra pendente ficam acima da barra de superfícies (48 px + safe-area). */
+  :root { --tabbar-h: calc(48px + env(safe-area-inset-bottom)); }
 }
 
 /* M03: com pouca altura (teclado) a narrativa encolhe; nada vaza sobre o composer */
 .ws-root--mobile .ws-chat, .ws-root--mobile .narrative-stage { min-height: 0; overflow: hidden; }
-.ws-root--mobile .scene-art { flex-shrink: 1; min-height: 0; }
+/* SPEC-321: a arte não é espremida por uma história longa (a história parte de base 0 e rola por dentro). */
+.ws-root--mobile .scene-art { flex-shrink: 0; }
+.ws-root--mobile .story { flex-basis: 0; }
 @media (max-width: 899.98px) and (max-height: 420px) {
   .ws-root--mobile .scene-art, .ws-root--mobile .placesbar { display: none; }
 }
@@ -174,4 +187,69 @@
    ao trocar de superficie; a regra global de styles.css segue intacta. */
 @media (max-width: 899.98px) and (prefers-reduced-motion: reduce) {
   html:has(.play-shell), html:has(.play-shell) *, html:has(.play-shell) *::before, html:has(.play-shell) *::after { transition-property: none !important; }
+}
+
+/* ============================================================
+   SPEC-321 — casca mobile: locais atrás de um chip, arte recolhível, menu, ofertas, piso de toque
+   (estrutura/tamanho/toque; paleta e ícones ficam para a SPEC-322)
+   ============================================================ */
+.placesbar__list { display: flex; flex-wrap: wrap; gap: 0.45rem; min-width: 0; }
+.ws-root--mobile .placesbar { flex-direction: column; align-items: flex-start; gap: 0.4rem; overflow: visible; flex-wrap: nowrap; padding-block: 0.25rem; }
+.ws-root--mobile .placesbar__list { width: 100%; }
+.placechip--toggle { border-style: solid; }
+
+/* arte de cena: recolhe por troca de classe (sem animar altura) */
+.scene-art__toggle {
+  position: absolute; left: 0.5rem; bottom: 0.25rem; z-index: 2; min-width: 44px; min-height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 0; background: transparent; color: var(--ink); font-size: 1rem; cursor: pointer; text-shadow: 0 1px 4px #000;
+}
+.scene-art__toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+@media (max-width: 899.98px) {
+  .scene-art.is-collapsed { flex: 0 0 72px; height: 72px; }
+  .scene-art.is-collapsed .scene-art__toggle { inset: 0; width: 100%; height: 100%; justify-content: flex-end; align-items: flex-end; padding: 0 0.7rem 0.2rem; }
+  .scene-art.is-collapsed p { display: none; }
+  .scene-art p { left: 3.2rem; }
+}
+@media (min-width: 900px) { .scene-art__toggle { display: none; } }
+
+/* menu "⋯" (folha) e confirmação */
+.playmenu__scrim {
+  position: fixed; inset: 0; z-index: var(--z-overlay); display: flex; align-items: flex-end; justify-content: center;
+  background: oklch(0.07 0.01 250 / 0.6);
+}
+.playmenu {
+  width: min(100%, 26rem); box-sizing: border-box; display: grid; gap: 0.5rem;
+  padding: 0.9rem 0.9rem calc(0.9rem + env(safe-area-inset-bottom));
+  border: 1px solid var(--line); border-bottom: 0; border-radius: var(--r-md) var(--r-md) 0 0; background: var(--surface);
+}
+.playmenu:focus { outline: none; }
+.playmenu__item { width: 100%; min-height: 48px; justify-content: center; }
+.playmenu__flag { margin: 0; justify-self: start; }
+.playmenu__title { margin: 0; font-family: var(--display); font-size: 1.05rem; color: var(--ink); }
+.playmenu--confirm .muted { margin: 0; }
+@media (min-width: 900px) { .playmenu__scrim { align-items: center; } .playmenu { border-bottom: 1px solid var(--line); border-radius: var(--r-md); } }
+
+/* ofertas de imagem: chip na narração + ordens no painel Personagem */
+.msg__offers { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: -0.4rem 0 1rem; }
+.msg__offer {
+  font: inherit; font-size: 0.85rem; padding: 0.35rem 0.8rem; color: var(--muted); background: transparent;
+  border: 1px dashed var(--line); border-radius: var(--r-pill); cursor: pointer;
+}
+.msg__offer:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.msg__offer:disabled { opacity: 0.5; cursor: default; }
+.art-orders { display: grid; gap: 0.6rem; justify-items: start; }
+.art-orders .image-generations { padding: 0; }
+
+/* R7 — piso de toque: ≥ 44×44 px em todo controle da tela de jogo quando o ponteiro é grosso */
+@media (pointer: coarse) {
+  .play .iconbtn, .play .btn, .play .tab, .play .codex-cat, .play .placechip, .play .inv__equip, .play .art-expand,
+  .play .lvlup__evolve button, .play .combat-card__rupture, .play .combat-card__play, .play .combat-card__details,
+  .play .msg__offer, .play .msg__cost-button, .play .scene-art__toggle, .play .worldmap__node, .play .mtabbar__btn,
+  .play .reaction-prompt button, .play .actionchip, .play .voice-button, .play .aimbar button,
+  .playmenu .btn, .playmenu__trigger {
+    min-height: 44px; min-width: 44px;
+  }
+  .play .inv__equip, .play .lvlup__evolve button, .play .combat-card__rupture, .play .combat-card__play,
+  .play .codex-cat, .play .placechip { display: inline-flex; align-items: center; justify-content: center; }
 }

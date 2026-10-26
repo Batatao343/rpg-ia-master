@@ -309,7 +309,7 @@ test.describe("J-V1 jornada vertical", () => {
     // SPEC-204 R10: o combate abre a aba Combate em split.
     await expect(panelTab("Combate")).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("region", { name: "Painel de contexto" })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Chat da aventura" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Crônica da aventura" })).toBeVisible();
     const shown = await uiParticipants();
     expect(shown.sort(), "a UI mostra exatamente os participant_id do manifesto").toEqual([...manifest].sort());
     trace.roster.frames.push({ ids: shown });

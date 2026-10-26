@@ -6,7 +6,7 @@
 //  - barra inferior: navigation "Superfícies" com botões Chat/Codex/Personagem/Combate/Bestiário/Mapa,
 //    `aria-current="page"` só no ativo, alvos >= 44px;
 //  - título da superfície: [data-testid="surface-title"] (heading, tabindex -1) recebe o foco ao trocar;
-//  - exatamente UMA superfície visível: região "Chat da aventura" OU "Painel de contexto";
+//  - exatamente UMA superfície visível: região "Crônica da aventura" OU "Painel de contexto";
 //    sem `aside.hud` / `.tactical-dock`;
 //  - narração de início de combate no chat + botão "Ir para o combate"; troca automática só DEPOIS da narração;
 //  - mira por toque na MESMA máquina do desktop: carta -> alvo; botão "Cancelar mira"; "Detalhes de <Carta>".
@@ -18,7 +18,7 @@ import { test, expect, DeterministicBackend } from "./fixtures";
 // CI) passava de 30 s e estourava o timeout default. Teto maior so no tempo; a verificacao nao muda.
 test.describe.configure({ timeout: 90_000 });
 
-const SURFACES = ["Chat", "Codex", "Personagem", "Combate", "Bestiário", "Mapa"] as const;
+const SURFACES = ["Crônica", "Codex", "Personagem", "Combate", "Bestiário", "Mapa"] as const;
 const CONTEXT = SURFACES.slice(1);
 type Surface = (typeof SURFACES)[number];
 const KEYBOARD_PX = { 320: 260, 390: 336 } as Record<number, number>;
@@ -61,7 +61,7 @@ async function expectSingleSurface(page: Page, which: "chat" | "context") {
       const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
       return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none";
     };
-    return { chat: seen("Chat da aventura"), context: seen("Painel de contexto") };
+    return { chat: seen("Crônica da aventura"), context: seen("Painel de contexto") };
   })).toEqual(which === "chat" ? { chat: true, context: false } : { chat: false, context: true });
   await expect(page.locator(".tactical-dock, aside.hud")).toHaveCount(0);
 }
@@ -110,7 +110,7 @@ test("M01 one_surface_visible", async ({ page }) => {
   await openGame(page);
   await expectSingleSurface(page, "chat");
   await expect(tabBar(page).getByRole("button")).toHaveCount(SURFACES.length);
-  await expect(tabBtn(page, "Chat")).toHaveAttribute("aria-current", "page");
+  await expect(tabBtn(page, "Crônica")).toHaveAttribute("aria-current", "page");
   // R2/R9: alvos >= 44px, barra dentro da viewport, topbar não a sobrepõe.
   for (const name of SURFACES) {
     const box = await rect(tabBtn(page, name));
@@ -120,7 +120,11 @@ test("M01 one_surface_visible", async ({ page }) => {
   const vh = page.viewportSize()!.height;
   const bar = await rect(tabBar(page));
   expect(bar.y + bar.height).toBeLessThanOrEqual(vh + 0.5);
-  expect(intersects(await rect(page.locator("header.topbar")), bar)).toBe(false);
+  // SPEC-321 R1: topbar + ws-mhead viram UMA cabeça de ≤ 52 px (sem `header.topbar` no celular).
+  await expect(page.locator("header.topbar")).toHaveCount(0);
+  const head = await rect(page.locator(".ws-mhead"));
+  expect(head.height).toBeLessThanOrEqual(52);
+  expect(intersects(head, bar)).toBe(false);
   await noOverflow(page);
   for (const name of CONTEXT) {
     await go(page, name);
@@ -128,7 +132,7 @@ test("M01 one_surface_visible", async ({ page }) => {
     await expect(page.getByRole("tablist", { name: "Abas do painel" })).toHaveCount(0);  // a barra inferior é a única navegação
     await noOverflow(page);
   }
-  await go(page, "Chat");
+  await go(page, "Crônica");
   await expectSingleSurface(page, "chat");
   await expect(composer(page)).toBeVisible();
 });
@@ -155,7 +159,7 @@ test("M02 switch_and_back_preserves_state", async ({ page, backend }) => {
 
   for (const name of [...CONTEXT, "Mapa", "Codex"] as Surface[]) {
     await go(page, name);
-    await go(page, "Chat");
+    await go(page, "Crônica");
     await expect(composer(page)).toHaveValue(draft);
     expect(await story.evaluate((el) => el.scrollTop)).toBe(240);
     expect(await pendingKeys()).toEqual(pendingBefore);
@@ -230,7 +234,7 @@ test("M04 voice_flow_and_mic_release", async ({ page, backend, baseURL }) => {
   await expect(page.locator('[data-voice-state="recording"]')).toBeVisible();
   await go(page, "Personagem");
   await expect.poll(async () => (await voiceAudit(page)).releases).toBeGreaterThan(before.releases);
-  await go(page, "Chat");
+  await go(page, "Crônica");
   await expect(page.locator('[data-voice-state="recording"]')).toHaveCount(0);
   expect(actions(backend)).toHaveLength(1);
   await noOverflow(page);
@@ -260,7 +264,7 @@ test("M05 combat_own_screen_and_outcome_in_chat", async ({ page, backend }) => {
   expect(order.indexOf("narration")).toBeGreaterThanOrEqual(0);
   expect(order.indexOf("narration")).toBeLessThan(order.indexOf("combat"));
   // Retorno rápido ao chat: narração + selo "Ir para o combate"; a superfície Combate não fica ao lado.
-  await go(page, "Chat");
+  await go(page, "Crônica");
   await expectSingleSurface(page, "chat");
   await expect(page.getByText("Saqueadores saltam da névoa; o combate começa.")).toBeVisible();
   const cta = page.getByRole("button", { name: "Ir para o combate" });
@@ -276,7 +280,7 @@ test("M05 combat_own_screen_and_outcome_in_chat", async ({ page, backend }) => {
   const outcome = page.getByRole("region", { name: "Desfecho do combate" });
   await expect(outcome).toBeVisible();
   await expect(outcome.getByRole("heading", { name: "Vitória" })).toBeVisible();
-  await go(page, "Chat");
+  await go(page, "Crônica");
   await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
   await expect(page.getByRole("region", { name: "Narrativa" }).getByText(/XP/)).toHaveCount(0);
   await noOverflow(page);
@@ -346,9 +350,27 @@ test("M07 reduced_motion_focus_aria_and_a11y", async ({ page, backend }) => {
     await assertA11y(page);
     await noOverflow(page);
   }
-  await go(page, "Chat");
+  await go(page, "Crônica");
   await expect(title(page)).toBeFocused();
-  await expect(title(page)).toHaveText("Chat");
+  await expect(title(page)).toHaveText("Crônica");
   await expect(tabBar(page).locator('[aria-current="page"]')).toHaveCount(1);
   await assertA11y(page);
+});
+
+test("M08 SPEC-321 menu ⋯ na cabeça única: abre, prende o foco, fecha com Esc e devolve o foco", async ({ page }) => {
+  await openGame(page);
+  const trigger = page.getByRole("button", { name: "Menu", exact: true });
+  await expect(trigger).toBeVisible();
+  const box = await rect(trigger);
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  await trigger.tap();
+  const menu = page.getByRole("dialog", { name: "Menu da partida" });
+  await expect(menu).toBeVisible();
+  await expect(menu.getByRole("button", { name: "Nova jornada" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(menu).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  // o local aparece uma vez na cabeça
+  await expect(page.locator(".ws-mhead__place")).toHaveCount(1);
 });

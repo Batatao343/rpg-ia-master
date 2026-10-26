@@ -46,3 +46,11 @@ test('toda requisicao leva X-RPG-Build', async () => {
   await http('/game/saves');
   assert.equal(seen, 'abcdef1+202610191345');
 });
+
+test('SPEC-321 R8: index.html tem viewport-fit=cover e theme-color; Capacitor pede status bar escura', () => {
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /name="viewport"[^>]*viewport-fit=cover/);
+  assert.match(html, /<meta name="theme-color" content="#[0-9a-fA-F]{6}"/);
+  const cap = readFileSync(new URL('../capacitor.config.ts', import.meta.url), 'utf8');
+  assert.match(cap, /StatusBar:\s*\{[^}]*style:\s*'DARK'/);
+});

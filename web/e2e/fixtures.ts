@@ -494,3 +494,13 @@ export const test = base.extend<Fixtures>({
 });
 
 export { expect };
+
+/** SPEC-321: abre a ficha (Personagem). ≥ 900 px é o atalho "☰ Ficha" da topbar; no celular a topbar some
+ *  (cabeça única) e o caminho é a barra "Superfícies". */
+export async function openFicha(page: Page) {
+  if (page.viewportSize()!.width < 900) {
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Personagem", exact: true }).click();
+  } else {
+    await page.getByRole("button", { name: /Ficha/ }).click();
+  }
+}

@@ -1,7 +1,7 @@
 // SPEC-204: shell chat + contexto (split / abas). Testes do executor — não substituem
 // as jornadas F17–F19, cuja autoria é da tarefa de eval (handoffs/SPEC-204-eval-authoring.md).
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect } from "./fixtures";
+import { test, expect, openFicha } from "./fixtures";
 import type { Page } from "@playwright/test";
 
 // Capturas vão para test-results (gitignored); as versões WebP versionadas ficam em docs/spec204/capturas.
@@ -30,7 +30,7 @@ async function switchGame(page: Page, backend: { authenticated: boolean }, name:
   await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
 }
 
-const chat = (page: Page) => page.getByRole("region", { name: "Chat da aventura" });
+const chat = (page: Page) => page.getByRole("region", { name: "Crônica da aventura" });
 const context = (page: Page) => page.getByRole("region", { name: "Painel de contexto" });
 const composer = (page: Page) => page.getByRole("textbox", { name: "Sua ação" });
 const separator = (page: Page) => page.getByRole("separator", { name: "Redimensionar chat e painel" });
@@ -132,7 +132,7 @@ test.describe("desktop 1440", () => {
     await expect(page.getByText("Nenhuma criatura registrada ainda.")).toBeVisible();
 
     // Modos: só chat (painel some, composer fica), só painel (chat some, composer fica).
-    await modes(page).getByRole("button", { name: "Chat" }).click();
+    await modes(page).getByRole("button", { name: "Crônica" }).click();
     await expect(context(page)).toBeHidden();
     await expect(separator(page)).toHaveCount(0);
     await expect(composer(page)).toBeVisible();
@@ -225,8 +225,8 @@ test.describe("desktop 1440", () => {
     await composer(page).fill("Rascunho que não foi enviado");
     // 10 trocas de aba/modo.
     const steps: Array<["tab" | "mode", string]> = [["tab", "Codex"], ["tab", "Mapa"], ["mode", "Painel"],
-      ["tab", "Personagem"], ["mode", "Chat"], ["mode", "Dividido"], ["tab", "Bestiário"], ["tab", "Combate"],
-      ["mode", "Painel"], ["mode", "Dividido"]];
+      ["tab", "Personagem"], ["mode", "Crônica"], ["mode", "Lado a lado"], ["tab", "Bestiário"], ["tab", "Combate"],
+      ["mode", "Painel"], ["mode", "Lado a lado"]];
     for (const [kind, name] of steps) {
       if (kind === "tab") await page.getByRole("tab", { name, exact: true }).click();
       else await modes(page).getByRole("button", { name }).click();
@@ -264,7 +264,7 @@ test.describe("desktop 1440", () => {
     await composer(page).fill("Outro rascunho");
     for (const name of ["Codex", "Mapa", "Combate", "Bestiário", "Personagem"]) {
       await page.getByRole("tab", { name, exact: true }).click();
-      await modes(page).getByRole("button", { name: name === "Mapa" ? "Painel" : "Dividido" }).click();
+      await modes(page).getByRole("button", { name: name === "Mapa" ? "Painel" : "Lado a lado" }).click();
     }
     expect(await pendingKeys()).toEqual(before);
     await expect(page.getByRole("button", { name: "Consultar / retomar ação pendente" })).toBeVisible();
@@ -360,10 +360,10 @@ test.describe("telefone 390", () => {
     await expect(chat(page)).toBeVisible();
     await expect(context(page)).toBeHidden();
     await expect(separator(page)).toHaveCount(0);
-    await expect(modes(page).getByRole("button", { name: "Dividido" })).toHaveCount(0);
+    await expect(modes(page).getByRole("button", { name: "Lado a lado" })).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await page.screenshot({ path: `${SHOTS}/390-chat.png` });
-    await page.getByRole("button", { name: /Ficha/ }).click();
+    await openFicha(page);
     await expect(context(page)).toBeVisible();
     await expect(chat(page)).toBeHidden();
     // SPEC-216: o composer vive só na superfície Chat; a barra "Superfícies" navega entre as superfícies.
@@ -375,7 +375,7 @@ test.describe("telefone 390", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await page.screenshot({ path: `${SHOTS}/390-contexto.png` });
     await assertA11y(page);
-    await bar.getByRole("button", { name: "Chat", exact: true }).click();
+    await bar.getByRole("button", { name: "Crônica", exact: true }).click();
     await expect(chat(page)).toBeVisible();
     await expect(composer(page)).toBeVisible();
     // A preferência split ficou gravada: em 1440 volta a dividir.
@@ -393,7 +393,7 @@ test.describe("telefone 390", () => {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
     await assertA11y(page);
     // SPEC-216: o composer vive só no Chat; a barra "Superfícies" leva até ele.
-    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true }).click();
     await expect(composer(page)).toBeVisible();
   });
 });

@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test, expect, MAP_UNREACHED } from "./fixtures";
+import { test, expect, MAP_UNREACHED, openFicha } from "./fixtures";
 import type { Page } from "@playwright/test";
 import type { CardView, GameResponse } from "../src/types";
 
@@ -56,7 +56,7 @@ test("F02 character_creation", async ({ page, backend }) => {
   await expect(page.getByText("O Chamado")).toBeVisible();
   await page.getByRole("button", { name: "Começar a jornada" }).click();
   await expect(page.getByText("Mira", { exact: true }).first()).toBeVisible();
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await expect(page.getByText(/Devoto do Abismo/).first()).toBeVisible();
   await assertA11y(page);
 });
@@ -104,7 +104,7 @@ test("F05 idempotent_replay", async ({ page, backend }) => {
 
 test("F06 map_travel", async ({ page, backend }) => {
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await page.getByRole("tab", { name: "Mapa" }).click();
   const destination = page.getByRole("button", { name: "Brumalta" });
   await expect(destination).toBeEnabled();
@@ -166,11 +166,11 @@ test("F08 combat_core", async ({ page, backend }) => {
 
 test("F09 quest_progress", async ({ page }) => {
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click(); await page.getByRole("tab", { name: /Missões/ }).click();
+  await openFicha(page); await page.getByRole("tab", { name: /Missões/ }).click();
   await expect(page.getByText("Ativa")).toBeVisible();
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await submitAction(page, "Sigo o rastro e as pegadas");
-  await page.getByRole("button", { name: /Ficha/ }).click(); await page.getByRole("tab", { name: /Missões/ }).click();
+  await openFicha(page); await page.getByRole("tab", { name: /Missões/ }).click();
   await expect(page.getByText("Concluída")).toBeVisible();
   await expect(page.getByText("Ativa")).toHaveCount(0);
   await assertA11y(page);
@@ -208,7 +208,7 @@ test("F12 art_portrait", async ({ page, backend }) => {
   backend.allowFailure(/\/game\/game-a\/art\/portrait-1$/);
   backend.states.get("game-a")!.portrait_generation_id = "portrait-1";
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await expect(page.getByRole("status", { name: undefined })).toContainText("Retrato na fila");
   const expand = page.getByRole("button", { name: "Ampliar retrato do personagem" });
   await expect(expand).toBeVisible({ timeout: 8_000 });
@@ -227,7 +227,7 @@ test("F13 session_expiry", async ({ page, backend }) => {
   backend.states.get("game-a")!.portrait_generation_id = "portrait-expiry";
   backend.expireConcurrently("/game/game-a/art/portrait-expiry", "/game/map");
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await page.getByRole("tab", { name: "Mapa" }).click();
   await expect(page.getByRole("button", { name: "Brumalta" })).toBeVisible();
   await expect.poll(() => backend.refreshCount).toBe(1);
@@ -272,23 +272,30 @@ test("F16 responsive_navigation", async ({ page }) => {
   for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 768, height: 1024 }, { width: 1440, height: 900 }]) {
     await page.setViewportSize(viewport);
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-    const logout = page.getByRole("button", { name: "Encerrar sessão" });
-    const ficha = page.getByRole("button", { name: /Ficha/ });
-    await expect(logout).toBeVisible(); await expect(ficha).toBeVisible();
-    const [a, b] = await Promise.all([logout.boundingBox(), ficha.boundingBox()]);
-    expect(a && b && (a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y)).toBeTruthy();
-    await ficha.click();
+    const compact = viewport.width < 900;
+    // SPEC-321: no celular Conta/Nova/Sair moram no menu ⋯ (cabeça única); a partir de 900 px seguem na topbar.
+    if (compact) {
+      await expect(page.getByRole("button", { name: "Menu", exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Encerrar sessão" })).toHaveCount(0);
+    } else {
+      const logout = page.getByRole("button", { name: "Encerrar sessão" });
+      const ficha = page.getByRole("button", { name: /Ficha/ });
+      await expect(logout).toBeVisible(); await expect(ficha).toBeVisible();
+      const [a, b] = await Promise.all([logout.boundingBox(), ficha.boundingBox()]);
+      expect(a && b && (a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y)).toBeTruthy();
+    }
+    await openFicha(page);
     if (viewport.width < 900) {
       // SPEC-216: uma superfície por vez; a Ficha abre Personagem e a barra "Superfícies" volta ao Chat.
       const bar = page.getByRole("navigation", { name: "Superfícies" });
       await expect(page.getByTestId("surface-title")).toHaveText("Personagem");
       await expect(bar.getByRole("button", { name: "Mapa", exact: true })).toBeVisible();
-      await bar.getByRole("button", { name: "Chat", exact: true }).click();
+      await bar.getByRole("button", { name: "Crônica", exact: true }).click();
       await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
     } else {
       await expect(page.getByRole("tab", { name: "Mapa" })).toBeVisible();
       await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
-      await ficha.click();
+      await page.getByRole("button", { name: /Ficha/ }).click();
     }
   }
   await assertA11y(page);
@@ -296,11 +303,11 @@ test("F16 responsive_navigation", async ({ page }) => {
 
 // --- SPEC-204: workspace chat + contexto (F17–F19) -------------------------------------------
 const DESKTOP = { width: 1440, height: 900 };
-const chatRegion = (page: Page) => page.getByRole("region", { name: "Chat da aventura" });
+const chatRegion = (page: Page) => page.getByRole("region", { name: "Crônica da aventura" });
 const contextRegion = (page: Page) => page.getByRole("region", { name: "Painel de contexto" });
 const composerBox = (page: Page) => page.getByRole("textbox", { name: "Sua ação" });
 const divider = (page: Page) => page.getByRole("separator", { name: "Redimensionar chat e painel" });
-const modeButton = (page: Page, name: "Chat" | "Dividido" | "Painel") =>
+const modeButton = (page: Page, name: "Crônica" | "Lado a lado" | "Painel") =>
   page.getByRole("group", { name: "Modo de exibição" }).getByRole("button", { name, exact: true });
 const panelTab = (page: Page, name: string) =>
   page.getByRole("tablist", { name: "Abas do painel" }).getByRole("tab", { name, exact: true });
@@ -313,7 +320,7 @@ async function expectTab(page: Page, name: string) {
 /** R1: no máximo duas superfícies de conteúdo; dock tático/gaveta antigos não existem. */
 async function expectAtMostTwoSurfaces(page: Page) {
   const visible = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('[aria-label="Chat da aventura"], [aria-label="Painel de contexto"], .tactical-dock, aside.hud'))
+    Array.from(document.querySelectorAll('[aria-label="Crônica da aventura"], [aria-label="Painel de contexto"], .tactical-dock, aside.hud'))
       .filter((el) => (el as HTMLElement).offsetParent !== null).length);
   expect(visible).toBeGreaterThanOrEqual(1);
   expect(visible).toBeLessThanOrEqual(2);
@@ -356,7 +363,7 @@ test("F17 workspace_modes", async ({ page, backend }) => {
 
   // R2: primeiro uso do save em ≥1100px abre split 50/50.
   await expect(chatRegion(page)).toBeVisible(); await expect(contextRegion(page)).toBeVisible();
-  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expect(modeButton(page, "Lado a lado")).toHaveAttribute("aria-pressed", "true");
   await expect(divider(page)).toHaveAttribute("aria-orientation", "vertical");
   await expect(divider(page)).toHaveAttribute("aria-valuenow", "50");
   const [c0, x0] = [(await chatRegion(page).boundingBox())!, (await contextRegion(page).boundingBox())!];
@@ -394,33 +401,33 @@ test("F17 workspace_modes", async ({ page, backend }) => {
   await expect(sep).toHaveAttribute("aria-valuenow", String(dragged));
 
   // R1: chat solo e painel solo; composer sempre visível; nunca três regiões.
-  await modeButton(page, "Chat").click();
-  await expect(modeButton(page, "Chat")).toHaveAttribute("aria-pressed", "true");
+  await modeButton(page, "Crônica").click();
+  await expect(modeButton(page, "Crônica")).toHaveAttribute("aria-pressed", "true");
   await expect(contextRegion(page)).toBeHidden(); await expect(divider(page)).toHaveCount(0);
   await expect(composerBox(page)).toBeVisible(); await expectAtMostTwoSurfaces(page);
   await modeButton(page, "Painel").click();
   await expect(modeButton(page, "Painel")).toHaveAttribute("aria-pressed", "true");
   await expect(chatRegion(page)).toBeHidden(); await expect(contextRegion(page)).toBeVisible();
   await expect(composerBox(page)).toBeVisible(); await expectAtMostTwoSurfaces(page);
-  await modeButton(page, "Dividido").click();
+  await modeButton(page, "Lado a lado").click();
   await expect(divider(page)).toHaveAttribute("aria-valuenow", String(dragged));
 
   // R9: reload restaura modo, proporção e aba do save.
   await page.reload(); await page.getByRole("button", { name: /^Ayla/ }).click();
-  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expect(modeButton(page, "Lado a lado")).toHaveAttribute("aria-pressed", "true");
   await expect(divider(page)).toHaveAttribute("aria-valuenow", String(dragged));
   await expectTab(page, "Mapa");
 
   // R12: abaixo de 1100px só uma superfície, sem modo Dividido e sem overflow.
   for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 768, height: 1024 }]) {
     await page.setViewportSize(viewport);
-    await expect(modeButton(page, "Dividido")).toHaveCount(0);
+    await expect(modeButton(page, "Lado a lado")).toHaveCount(0);
     await expect(divider(page)).toHaveCount(0);
     expect((await chatRegion(page).isVisible()) !== (await contextRegion(page).isVisible())).toBe(true);
     // SPEC-216: o composer vive só na superfície Chat; volta a ela pela barra "Superfícies".
     // (o level-up pendente reabre após o reload e cobre a barra: Esc o dispensa, como em R16)
     if (await page.getByRole("dialog").count()) await page.keyboard.press("Escape");
-    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Chat", exact: true }).click();
+    await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true }).click();
     await expect(composerBox(page)).toBeVisible();
     await expectNoOverflow(page);
   }
@@ -494,7 +501,7 @@ test("F18 tabs_history", async ({ page }) => {
 
   // Ctrl+1 → chat solo, inclusive a partir do composer.
   await page.keyboard.press("Control+1");
-  await expect(contextRegion(page)).toBeHidden(); await expect(modeButton(page, "Chat")).toHaveAttribute("aria-pressed", "true");
+  await expect(contextRegion(page)).toBeHidden(); await expect(modeButton(page, "Crônica")).toHaveAttribute("aria-pressed", "true");
   // Ctrl+2..6 abrem a aba N (e trazem o painel de volta).
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   for (const [key, name] of [["2", "Codex"], ["3", "Personagem"], ["4", "Combate"], ["5", "Bestiário"], ["6", "Mapa"]]) {
@@ -502,18 +509,18 @@ test("F18 tabs_history", async ({ page }) => {
     await expectTab(page, name); await expect(contextRegion(page)).toBeVisible();
   }
   // Ctrl+\ alterna split ↔ último modo solo (painel, aqui).
-  await modeButton(page, "Painel").click(); await modeButton(page, "Dividido").click();
+  await modeButton(page, "Painel").click(); await modeButton(page, "Lado a lado").click();
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   await page.keyboard.press("Control+\\");
   await expect(modeButton(page, "Painel")).toHaveAttribute("aria-pressed", "true"); await expect(chatRegion(page)).toBeHidden();
   await page.keyboard.press("Control+\\");
-  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true"); await expect(divider(page)).toBeVisible();
+  await expect(modeButton(page, "Lado a lado")).toHaveAttribute("aria-pressed", "true"); await expect(divider(page)).toBeVisible();
 
   // Esc no painel devolve foco ao composer sem mudar modo nem aba.
   await panelTab(page, "Mapa").focus();
   await page.keyboard.press("Escape");
   await expect(composerBox(page)).toBeFocused();
-  await expect(modeButton(page, "Dividido")).toHaveAttribute("aria-pressed", "true");
+  await expect(modeButton(page, "Lado a lado")).toHaveAttribute("aria-pressed", "true");
   await expectTab(page, "Mapa");
   await expect(composerBox(page)).toHaveValue("rascunho");
   await assertA11y(page);
@@ -546,11 +553,11 @@ test("F19 workspace_preservation", async ({ page, backend }) => {
   expect(await story.evaluate((el) => el.scrollHeight - el.clientHeight - el.scrollTop)).toBeGreaterThan(200);
 
   // R7: 10 trocas de aba/modo não tocam rascunho, scroll nem a operação pendente.
-  const steps: Array<["tab" | "mode", string]> = [["tab", "Codex"], ["mode", "Painel"], ["tab", "Combate"], ["mode", "Chat"],
-    ["mode", "Dividido"], ["tab", "Bestiário"], ["tab", "Personagem"], ["mode", "Painel"], ["tab", "Mapa"], ["mode", "Dividido"]];
+  const steps: Array<["tab" | "mode", string]> = [["tab", "Codex"], ["mode", "Painel"], ["tab", "Combate"], ["mode", "Crônica"],
+    ["mode", "Lado a lado"], ["tab", "Bestiário"], ["tab", "Personagem"], ["mode", "Painel"], ["tab", "Mapa"], ["mode", "Lado a lado"]];
   for (const [kind, name] of steps) {
     if (kind === "tab") await panelTab(page, name).click();
-    else await modeButton(page, name as "Chat" | "Dividido" | "Painel").click();
+    else await modeButton(page, name as "Crônica" | "Lado a lado" | "Painel").click();
   }
   await expect(composerBox(page)).toHaveValue(draft);
   expect(await story.evaluate((el) => el.scrollTop)).toBe(240);
@@ -956,7 +963,7 @@ test("F30 map_fog_privacy", async ({ page, backend }) => {
   const bodies: string[] = [];
   page.on("response", async (r) => { if (new URL(r.url()).pathname.startsWith("/game/map") || new URL(r.url()).pathname === "/data/map") bodies.push(await r.text()); });
   await openGame(page);
-  await page.getByRole("button", { name: /Ficha/ }).click();
+  await openFicha(page);
   await page.getByRole("tab", { name: "Mapa" }).click();
   // Alcançados/adjacentes aparecem; "Docas Velhas" é adjacente ao porto (só placa: nome).
   await expect(page.getByRole("button", { name: /Brumalta/ })).toBeVisible();

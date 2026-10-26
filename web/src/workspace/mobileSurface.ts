@@ -9,7 +9,7 @@ export const MOBILE_MAX_VIEWPORT = 900;
 
 export type Surface = "chat" | ContextTab;
 export const SURFACES: readonly Surface[] = ["chat", ...CONTEXT_TABS];
-export const SURFACE_LABELS: Record<Surface, string> = { chat: "Chat", ...TAB_LABELS };
+export const SURFACE_LABELS: Record<Surface, string> = { chat: "Crônica", ...TAB_LABELS };
 
 export function isMobileViewport(viewportPx: number): boolean {
   return viewportPx < MOBILE_MAX_VIEWPORT;

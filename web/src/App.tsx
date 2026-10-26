@@ -864,6 +864,26 @@ export function App() {
     }
   }
 
+  // SPEC-321 R6: cotação de retrato + imagens encomendadas moram no painel Personagem (não no topo da tela).
+  const artPanel = screen === "play" && data?.game_id ? (
+    <div className="art-orders">
+      {!data.combat_simulation?.enabled && !data.game_over && (
+        <button type="button" className="btn btn--ghost art-orders__quote" disabled={busy || imageBusy}
+          onClick={() => void openImageQuote(data.game_id!, "player", Boolean(data.portrait_generation_id))}>
+          {data.portrait_generation_id ? "Cotar reformulação" : "Cotar retrato"}
+        </button>
+      )}
+      {(data.art_generations || []).some(row => row.type !== "player") && (
+        <div className="image-generations" aria-label="Imagens encomendadas">
+          {(data.art_generations || []).filter(row => row.type !== "player").map(row =>
+            <GeneratedArtCard key={`${data.game_id}:${row.generation_id}`} gameId={data.game_id}
+              generationId={row.generation_id} type={row.type as "npc" | "scene"} />)}
+        </div>
+      )}
+    </div>
+  ) : null;
+  const confirmLeave = !!pending || turn.stage === "narrated" || turn.stage === "failed-after-narration";
+
   const renderedOwner = owner.current;
   const renderedSession = session.current;
   return (
@@ -874,42 +894,33 @@ export function App() {
       {imageQuote && imageQuote.session === session.current && screen === "play" &&
         <ImageQuoteDialog quote={imageQuote.quote} busy={imageBusy} error={imageError}
           onConfirm={() => void confirmImageQuote()} onCancel={() => setImageQuote(null)} />}
-      {screen === "play" && data?.game_id && !data.combat_simulation?.enabled && !data.game_over &&
-        <div className="image-offers">
-          <button className="btn btn--ghost" disabled={busy || imageBusy} onClick={() => void openImageQuote(data.game_id!, "player", Boolean(data.portrait_generation_id))}>
-            {data.portrait_generation_id ? "Cotar reformulação" : "Cotar retrato"}
+      {screen === "play" && pending && <div className={"pending-operation" + (busy ? " is-busy" : "")} role="group" aria-label="Ação pendente">
+        {/* SPEC-321: quando o turno falhou depois da narração, a linha de status do compositor já oferece
+            "Tentar de novo" — não repete o mesmo botão aqui; fica só o descarte. */}
+        {turn.stage !== "failed-after-narration" && (
+          <button className="btn btn--primary" type="button" disabled={busy}
+            onClick={() => void handleAction(pending.payload.input_text)}>
+            Consultar / retomar ação pendente
           </button>
-          {(data.art_offers || []).map(offer => <button key={offer.offer_id} className="btn btn--ghost" disabled={busy || imageBusy}
-            onClick={() => void openImageQuote(data.game_id!, offer.type, false, offer.offer_id)}>
-            {offer.type === "npc" ? "Cotar retrato de NPC" : "Cotar cena épica"}
-          </button>)}
-        </div>}
-      {screen === "play" && data?.game_id && (data.art_generations || []).some(row => row.type !== "player") &&
-        <div className="image-generations" aria-label="Imagens encomendadas">
-          {(data.art_generations || []).filter(row => row.type !== "player").map(row =>
-            <GeneratedArtCard key={`${data.game_id}:${row.generation_id}`} gameId={data.game_id}
-              generationId={row.generation_id} type={row.type as "npc" | "scene"} />)}
-        </div>}
-      {authRequired && screen !== "auth" && screen !== "bootstrap" && screen !== "account" && screen !== "play" &&
-        <button className="account-shell-link btn btn--ghost" type="button" disabled={busy}
-          onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
-          Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
-        </button>}
-      {screen === "play" && pending && <div className={"pending-operation" + (busy ? " is-busy" : "") + (turn.stage === "failed-after-narration" ? " is-raised" : "")} role="group" aria-label="Ação pendente">
-        <button className="btn btn--primary" type="button" disabled={busy}
-          onClick={() => void handleAction(pending.payload.input_text)}>
-          Consultar / retomar ação pendente
-        </button>
+        )}
         <button className="btn btn--ghost pending-operation__discard" type="button" disabled={busy}
           onClick={discardPending}>
           Descartar ação pendente
         </button>
       </div>}
       {authRequired && screen !== "auth" && screen !== "play" && screen !== "account" && (
-        <button className="session-logout btn btn--ghost" disabled={busy}
-          onClick={() => void handleLogout()}>
-          Encerrar sessão
-        </button>
+        <div className="shell-actions">
+          {screen !== "bootstrap" && (
+            <button className="account-shell-link btn btn--ghost" type="button" disabled={busy}
+              onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
+              Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+            </button>
+          )}
+          <button className="session-logout btn btn--ghost" disabled={busy}
+            onClick={() => void handleLogout()}>
+            Encerrar sessão
+          </button>
+        </div>
       )}
       {data?.death_pending && !data?.game_over && !data?.combat_simulation?.enabled && (
         <DeathModal
@@ -1015,6 +1026,10 @@ export function App() {
               onLogout={authRequired ? handleLogout : undefined}
               onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
               accountBalance={accountBalance}
+              confirmLeave={confirmLeave}
+              artPanel={artPanel}
+              onQuoteOffer={offer => { if (data?.game_id) void openImageQuote(data.game_id, offer.type, false, offer.offer_id); }}
+              offersDisabled={busy || imageBusy}
               owner={renderedOwner}
             />
           </motion.div>

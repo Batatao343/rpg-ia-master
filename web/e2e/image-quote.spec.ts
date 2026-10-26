@@ -7,7 +7,15 @@ async function openGame(page: import("@playwright/test").Page) {
   await page.route("https://fonts.googleapis.com/**", route => route.fulfill({ status: 200, contentType: "text/css", body: "" }));
   await page.goto("/");
   await page.getByRole("button", { name: /^Ayla/ }).click();
+  await openPersonagem(page);
   await expect(page.getByRole("button", { name: "Cotar retrato", exact: true })).toBeVisible();
+}
+
+/** SPEC-321 R6: "Cotar retrato" mora no painel Personagem (≥ 1100 px ele já abre em split; abaixo, vira superfície). */
+async function openPersonagem(page: import("@playwright/test").Page) {
+  const width = page.viewportSize()!.width;
+  if (width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Personagem", exact: true }).click();
+  else if (width < 1100) await page.getByRole("button", { name: /Ficha/ }).click();
 }
 
 for (const width of [390, 1440]) {
@@ -56,8 +64,7 @@ for (const width of [390, 1440]) {
     expect(confirmed).toHaveLength(1);
     expect(confirmed[0]).toMatchObject({ quote_id: quoteId, confirmed: true });
     expect(confirmed[0].action_id).toMatch(/^[0-9a-f-]{36}$/);
-    // SPEC-204: abaixo de 1100px o painel Personagem é uma superfície própria (não gaveta oculta).
-    if (width < 1100) await page.getByRole("button", { name: /Ficha/ }).click();
+    // SPEC-321: o painel Personagem já está aberto (openGame) — o retrato aparece nele.
     await expect(page.getByRole("img", { name: "Retrato do personagem" })).toBeVisible();
     await expect(page.getByText(/Resultado financeiro incerto/)).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

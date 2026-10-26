@@ -46,6 +46,8 @@ export interface ContextSurfaceProps {
   onOpenLevelUp?: () => void;
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
+  /** SPEC-321 R6: cotação de retrato/imagens encomendadas, dentro de Personagem. */
+  artPanel?: ReactNode;
 }
 
 /** SPEC-204: UM painel de contexto com cinco abas. Abas já visitadas ficam montadas
@@ -104,7 +106,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
   const open = active && tab === id;
   switch (id) {
     case "personagem":
-      return <PersonagemTab data={data} hitKey={hitKey} onEquip={props.onEquip} busy={busy} />;
+      return <PersonagemTab data={data} hitKey={hitKey} onEquip={props.onEquip} busy={busy} artPanel={props.artPanel} />;
     case "combate":
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}

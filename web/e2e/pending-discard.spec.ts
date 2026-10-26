@@ -71,3 +71,29 @@ test("SPEC-235 definitive 409 releases the pending action", async ({ page, backe
   await submitAction(page, "Sigo para o cais");
   await expect(page.getByText("O mundo responde a: Sigo para o cais").first()).toBeVisible();
 });
+
+// SPEC-321 R3/R9: "Nova jornada" confirma quando há ação pendente; a barra pendente não cobre o compositor.
+const overlaps = (a: { x: number; y: number; width: number; height: number }, b: typeof a) =>
+  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+
+for (const width of [360, 1440]) {
+  test(`SPEC-321 pending bar stays above the composer and Nova jornada asks to confirm @${width}`, async ({ page, backend }) => {
+    await page.setViewportSize({ width, height: width === 360 ? 740 : 900 });
+    await openGame(page);
+    await failOneTurn(page, backend);
+    const bar = page.getByRole("group", { name: "Ação pendente" });
+    await expect(bar).toBeVisible();
+    const composer = page.locator("form.ws-composer");
+    expect(overlaps((await bar.boundingBox())!, (await composer.boundingBox())!)).toBe(false);
+
+    if (width < 900) await page.getByRole("button", { name: "Menu", exact: true }).click();
+    await page.getByRole("button", { name: "Nova jornada" }).click();
+    const confirm = page.getByRole("alertdialog");
+    await expect(confirm).toBeVisible();
+    await confirm.getByRole("button", { name: "Continuar aqui" }).click();
+    await expect(confirm).toHaveCount(0);
+    // continua na partida, com a ação pendente intacta
+    expect(await hasPending(page)).toBe(true);
+    await expect(page.getByPlaceholder(/O que você faz/)).toBeVisible();
+  });
+}
