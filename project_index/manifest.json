@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "0f605cc9e3b001c479409d2abbb7ab8b29e3ac9f",
+  "commit_sha": "3c462e23eaef188e83221dbe36a36be76b396220",
   "edge_counts": {
-    "calls": 27892,
-    "contains": 958,
-    "defines": 13993,
-    "imports": 2299,
-    "likely_test_for": 1606,
+    "calls": 28124,
+    "contains": 963,
+    "defines": 14098,
+    "imports": 2320,
+    "likely_test_for": 1627,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:3f2963849f69242192a1458192973df78d8aa4be4a21198200521a1f09504c06",
+  "graph_hash": "sha256:ccb83861df63e99a8c5948e6af9b1f40a3e4b2c13328dd70bd2edba3a060a17b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -471,6 +471,7 @@
     "tests/spec313_helpers.py",
     "tests/spec315_helpers.py",
     "tests/spec319_helpers.py",
+    "tests/spec325_chase_helpers.py",
     "tests/spec325_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
@@ -961,6 +962,10 @@
     "tests/test_spec315_resolution.py",
     "tests/test_spec315_tiers.py",
     "tests/test_spec315_truth.py",
+    "tests/test_spec325_abandon.py",
+    "tests/test_spec325_abandon_review.py",
+    "tests/test_spec325_chase_choices.py",
+    "tests/test_spec325_chase_intents.py",
     "tests/test_spec325_flags.py",
     "tests/test_spec325_intents.py",
     "tests/test_spec325_nonlethal.py",
@@ -1183,12 +1188,12 @@
     "artifact": 9,
     "class": 936,
     "endpoint": 64,
-    "file": 1127,
-    "function": 4402,
+    "file": 1132,
+    "function": 4421,
     "method": 832,
-    "module": 958,
-    "test": 7822
+    "module": 963,
+    "test": 7908
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:89c5546ade95639be6a96abb51721a2cfc1263230dd2d35edfa7d411acb9f2f9"
+  "source_tree_hash": "sha256:70251c6a3d0694d61c434d94f26c252bcea725329de083a4eba2a47990556409"
 }
