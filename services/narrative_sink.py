@@ -95,6 +95,8 @@ class StreamGuard:
     ``replace`` final corrige.
     """
 
+    HOLD_CHARS = 120  # segura o inicio ate o preambulo meta nao poder mais casar
+
     def __init__(self, mapping: dict[str, str] | None = None, prefix: str = "") -> None:
         self.mapping = dict(mapping or {})
         self.hold = (max(len(k) for k in self.mapping) + 8) if self.mapping else 0
@@ -102,17 +104,21 @@ class StreamGuard:
         self.reset()
 
     def reset(self) -> None:
-        self.raw = self.prefix
+        self.raw = ""
         self.sent = ""
         self.broken = False
 
     def _cleaned(self) -> str:
-        text = _RECEIPT.sub("", self.raw)
+        from services.prose_guard import sanitize_player_facing
+
+        # Mesmas normalizacoes baratas do texto final (preambulo meta, marcadores do motor,
+        # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
+        text = sanitize_player_facing(_RECEIPT.sub("", self.raw))
         if self.mapping:
             from services.faction_display import conceal_text
 
             text = conceal_text(text, self.mapping)
-        return text if self.sent else text.lstrip()
+        return self.prefix + text if text else ""
 
     def _advance(self, *, final: bool) -> str:
         if self.broken:
@@ -121,10 +127,13 @@ class StreamGuard:
         if final:
             safe = len(cleaned.rstrip())
         else:
+            if len(self.raw) < self.HOLD_CHARS and "\n" not in self.raw:
+                return ""  # segura o inicio: o preambulo meta ainda pode casar
             limit = len(cleaned) - self.hold
             if limit <= len(self.sent):
                 return ""
-            safe = max((cleaned.rfind(c, 0, limit) for c in (" ", "\n", "\t")), default=-1) + 1
+            # corta ANTES do espaco: o espaco antes de pontuacao some no texto final
+            safe = max((cleaned.rfind(c, 0, limit) for c in (" ", "\n", "\t")), default=-1)
             bracket = cleaned.rfind("[")
             if bracket != -1 and "\n" not in cleaned[bracket:]:
                 safe = min(safe, bracket)
@@ -173,13 +182,14 @@ def narrate_structured(
     state: Any = None,
     key: str | None = None,
     prefix: str = "",
+    stream: bool = True,
 ):
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
     Sem sink, ou LLM sem `stream_structured` (FallbackLLM), e exatamente o invoke de antes.
     O retorno pode ser `AIMessage` (guard do chamador continua obrigatorio)."""
     streamer = getattr(llm, "stream_structured", None)
-    if streamer is None or not active():
+    if streamer is None or not active() or not stream:
         return llm.with_structured_output(schema).invoke(messages)
     guard = StreamGuard(_conceal_map(state), prefix=prefix)
     reset()  # outro no narrador no mesmo turno: recomeca limpo

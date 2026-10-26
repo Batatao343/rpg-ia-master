@@ -275,7 +275,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `sse.error` | `code`, `error_type`, `stack`, `status` |
 | `sse.fallback` | — |
 | `sse.started` | `transport` |
-| `sse.token_stream_shadow` | `identical_to_final`, `ttft_shadow_ms` |
+| `sse.token_replace` | `common_prefix_len`, `final_len`, `reason`, `shown_len` |
+| `sse.token_stream_shadow` | `identical_to_final`, `ttft_shadow_ms`, `would_replace` |
 | `sse.worker_finished_after_disconnect` | `outcome` |
 | `store.listing_row_skipped` | `error` |
 | `storyteller.failed` | `error` |

@@ -181,10 +181,14 @@ class LatencyInjectingLLM:
     # SPEC-319: o narrador usa o caminho de tokens quando ha sink; cobra a MESMA latencia
     # injetada (1 chamada) para o baseline offline nao perder a fase do narrador.
     def stream_structured(self, messages, schema, **kwargs):
+        if not hasattr(self._inner, "stream_structured"):  # ex.: FallbackLLM
+            return self.with_structured_output(schema).invoke(messages)
         self._ctx.run_call(self._tier, True)
         return self._inner.stream_structured(messages, schema, **kwargs)
 
     def stream_text(self, messages, **kwargs):
+        if not hasattr(self._inner, "stream_text"):
+            return self.invoke(messages)
         self._ctx.run_call(self._tier, False)
         return self._inner.stream_text(messages, **kwargs)
 

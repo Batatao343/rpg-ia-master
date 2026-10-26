@@ -18,7 +18,7 @@ def _env(monkeypatch):
     monkeypatch.delenv("RPG_FORCE_MOCK", raising=False)
     monkeypatch.delenv("RPG_LLM_HEDGE_MS", raising=False)
     llm_setup._CLIENT_CACHE.clear()
-    llm_setup._HEDGE_STATS.update(calls=0, hedges=0)
+    llm_setup._HEDGE_STATS.update(calls=100, hedges=0)
     yield
     llm_setup._CLIENT_CACHE.clear()
     llm_setup._HEDGE_STATS.update(calls=0, hedges=0)
@@ -107,7 +107,7 @@ def test_hedge_telemetry_outcomes_and_no_double_result(monkeypatch):
 
 def test_hedge_budget_caps_extra_calls(monkeypatch):
     monkeypatch.setenv("RPG_LLM_HEDGE_MS", "30")
-    llm_setup._HEDGE_STATS.update(calls=9, hedges=1)  # +1 chamada e +1 hedge > 10%
+    llm_setup._HEDGE_STATS.update(calls=19, hedges=2)  # +1 chamada e +1 hedge > 10%
     a, b = _pair(first_delay_a=0.2)
     install(monkeypatch, {"deepseek": a, "groq": b})
     result, _events, _att = _run(routed([("deepseek", "m1"), ("groq", "m2")]))
@@ -131,3 +131,23 @@ def test_hedge_first_fails_fast_moves_to_second(monkeypatch):
     result, events, _att = _run(routed([("deepseek", "m1"), ("groq", "m2")]))
     assert result.narrative == "texto do B"
     assert "".join(t for _k, t in events) == "texto do B"
+
+
+def test_hedge_cold_instance_needs_min_calls(monkeypatch):
+    monkeypatch.setenv("RPG_LLM_HEDGE_MS", "30")
+    llm_setup._HEDGE_STATS.update(calls=0, hedges=0)  # instancia fria: nao hedgeia a 1a chamada
+    a, b = _pair(first_delay_a=0.2)
+    install(monkeypatch, {"deepseek": a, "groq": b})
+    result, _events, _att = _run(routed([("deepseek", "m1"), ("groq", "m2")]))
+    assert result.narrative == "texto do A" and b.calls == 0
+
+
+def test_failed_first_is_not_reported_as_hedge_lost(monkeypatch):
+    """P2-2: o candidato que ja falhou nao vira `hedge_lost` (sem dupla contagem)."""
+    monkeypatch.setenv("RPG_LLM_HEDGE_MS", "400")
+    a = FakeStreamClient([], fail_before=True)
+    b = FakeStreamClient(slices(tool_args("texto do B"), 4))
+    install(monkeypatch, {"deepseek": a, "groq": b})
+    result, _events, attempts = _run(routed([("deepseek", "m1"), ("groq", "m2")]))
+    assert result.narrative == "texto do B"
+    assert [(x.model, x.outcome) for x in attempts] == [("m1", "stream_error"), ("m2", "success")]

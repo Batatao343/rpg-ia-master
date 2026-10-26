@@ -59,6 +59,15 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
   useEffect(() => { doneRef.current = onDone; });
 
   useEffect(() => {
+    if (enabled && effects && !text && shownRef.current) {
+      // SPEC-319: `reset` do servidor (fallback de provider) descarta o parcial — sem `onDone`.
+      shownRef.current = "";
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- espelha o reset vindo do stream externo
+      setDisplayedText("");
+      setRevealing(false);
+      revealRef.current = null;
+      return;
+    }
     if (!enabled || !text || !effects) {
       shownRef.current = text;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento

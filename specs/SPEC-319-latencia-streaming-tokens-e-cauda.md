@@ -128,7 +128,7 @@ p95 do `done` −30 %. Só para o provider primário OpenAI-compat; os demais ca
 ## 6. Smoke test com LLM real
 
 Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
-1. `RPG_TOKEN_STREAM=shadow`, 15 turnos: `ttft_shadow_ms` p50 e `identical_to_final` ≥ 95 %.
+1. `RPG_TOKEN_STREAM=shadow`, 15 turnos: `ttft_shadow_ms` p50 e `would_replace` < 5 % (log `sse.token_stream_shadow`); no `on`, `sse.token_replace` traz o motivo.
 2. `RPG_TOKEN_STREAM=on`, `projection_measure.py --label tokens_on --turns 15 --think 8` ×2: tabela p50/p95 de
    `ttfmc`, `ttlt`, `state`, taxa de `replace`/`reset`.
 3. `RPG_LLM_HEDGE_MS=6000`, 15 turnos: `hedged`, `hedge_won`, custo por turno vs baseline.
@@ -153,7 +153,8 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
 
 ## 8. Decisões do dono
 
-- **D1 — Default do stream:** **`shadow` na main; `on` no staging após §6 com `identical_to_final` ≥ 95 %**.
+- **D1 — Default do stream:** **`shadow` na main; `on` no staging após §6 com `would_replace` < 5 %** (critério corrigido na revisão: `identical_to_final` é igualdade estrita e sobe falso-negativo quando o final só estende o texto; `would_replace = not final.startswith(streamado)` usa a mesma regra do `on`).
+  **Rollout:** ligar `RPG_TOKEN_STREAM=on` no staging **só com `RPG_EARLY_NARRATIVE=on`** — sem isso o `replace` só chega no `state` e o texto divergente fica na tela o turno inteiro.
 - **D2 — Hedge:** **desligado por default (`0`); ligar no staging em `6000 ms` só para o tier FAST**
   (alternativa: 4000 ms — mais cauda cortada, mais custo; rejeitada até ver a distribuição do TTFT real).
 - **D3 — Texto parcial rejeitado pelo guard:** **substituir silenciosamente (`replace`)**, igual à 316 D4.
@@ -193,4 +194,17 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
      `turn_delivery` ganham `first_token_server_ms` e `pseudo_streaming=false` com token real.
   7. Flags novas em `scripts/staging/vercel_env.py` (`RPG_TOKEN_STREAM`, `RPG_LLM_HEDGE_MS`; valores de hedge
      restritos a 0/3000/4000/6000/8000). Nota para o README da SPEC-200: com token real, TTFT ≠ TTFMC.
+- **2026-10-25 · correções da revisão (`handoffs/SPEC-319-sol-review.md`, CHANGES_REQUIRED).**
+  P1-1/P2-1: narração mediada (`interlocutor_reason ∈ MEDIATION_REASONS`) e `rumor_nothing` **não streamam**
+  (`narrate_structured(..., stream=False)`): os guards de segredo/achado falso só existem no texto final.
+  P1-2: prefixo do NPC agora `**Nome:** "`; teste SSE `test_npc_route_tokens_do_not_replace`.
+  P2-3: `StreamGuard` aplica `sanitize_player_facing` (preâmbulo meta, espaços/pontuação), segura os
+  primeiros 120 chars e corta antes do espaço. P2-4: log `sse.token_replace` (`reason`, tamanhos, prefixo comum).
+  P2-5: `would_replace` no shadow (critério D1). P2-2: `hedge_lost` só para quem não terminou.
+  P2-6: `hedge_lost` não conta como falha/fallback em `llm_failures`, `llm_failed_attempts`, `llm_by_tier`.
+  P2-7: teto do hedge é **melhor-esforço por instância**: só hedgeia após `HEDGE_MIN_CALLS=10` chamadas e
+  `hedges+1 ≤ 10 % × chamadas`; conferir `hedged`/turnos no smoke 3 (instâncias frias do Vercel têm poucas chamadas).
+  P2-8: stream aplica a instrução de `_input_for_provider` e, se o JSON streamado for inválido, recorre ao
+  `invoke` estruturado do mesmo candidato (regeneração semântica) antes de passar ao próximo.
+  P2-9: `reset` não chama `onDone`. P2-10: wrapper do playtest com `hasattr`.
 

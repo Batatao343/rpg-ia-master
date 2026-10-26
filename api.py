@@ -1478,6 +1478,10 @@ def _attempt_telemetry_hook(event: LLMAttemptEvent) -> None:
 set_llm_attempt_telemetry_hook(_attempt_telemetry_hook)
 
 
+# SPEC-319 (revisao P2-6): o hedge abandonado nao e falha nem fallback do turno.
+_NOT_A_FAILURE = frozenset({"success", "hedge_lost"})
+
+
 def _llm_log_fields(
     events: list[dict] | None, attempts: list[dict] | None = None
 ) -> dict[str, Any]:
@@ -1497,7 +1501,9 @@ def _llm_log_fields(
         "llm_calls": len(events),
         "llm_requests": len(network_attempts) if attempts else len(events),
         "llm_attempts": len(attempts),
-        "llm_failures": sum(1 for event in network_attempts if event.get("outcome") != "success"),
+        "llm_failures": sum(
+            1 for event in network_attempts if event.get("outcome") not in _NOT_A_FAILURE
+        ),
         "llm_skipped": len(skipped),
         "llm_attempt_outcomes": dict(Counter(event.get("outcome") or "?" for event in attempts)),
         "llm_providers": dict(Counter(e.get("provider") or "?" for e in events)),
@@ -5514,8 +5520,10 @@ def _latency_log_fields(
                 {"attempts": 0, "failed": 0, "fallbacks": 0, "latency_ms": 0},
             )
             row["attempts"] += 1
-            row["failed"] += 0 if item.get("outcome") == "success" else 1
-            row["fallbacks"] += 1 if item.get("fell_back") else 0
+            row["failed"] += 0 if item.get("outcome") in _NOT_A_FAILURE else 1
+            row["fallbacks"] += (
+                1 if item.get("fell_back") and item.get("outcome") != "hedge_lost" else 0
+            )
             row["latency_ms"] += int(item.get("latency_ms") or 0)
         with_usage = [a for a in network if a.get("usage")]
         normalized = normalize_attempts(network, operation_id=uuid.UUID(int=0))
@@ -5540,8 +5548,12 @@ def _latency_log_fields(
                 "execution_mode": os.getenv("RPG_TURN_EXECUTION", "sequential").strip().lower(),
                 "attribution": "interval",
                 "llm_attempts": len(attempts),
-                "llm_fallbacks": sum(1 for a in network if a.get("fell_back")),
-                "llm_failed_attempts": sum(1 for a in network if a.get("outcome") != "success"),
+                "llm_fallbacks": sum(
+                    1 for a in network if a.get("fell_back") and a.get("outcome") != "hedge_lost"
+                ),
+                "llm_failed_attempts": sum(
+                    1 for a in network if a.get("outcome") not in _NOT_A_FAILURE
+                ),
                 "providers_used": sorted({str(a.get("provider") or "?") for a in network}),
                 "cost_usd": cost_usd,
                 "cost_usd_basis": basis,
@@ -6490,6 +6502,15 @@ def _stream_turn_events(
             timeline.mark("ttlt")
             _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
             outcome["token_replace"] = True
+            common = len(os.path.commonprefix([shown, final_text]))
+            # P2-4: motivo do replace (a §6 separa formatacao/abertura de guard de conteudo)
+            _sse_log(
+                "token_replace",
+                reason="start" if common < min(len(shown), 40) else "tail",
+                shown_len=len(shown),
+                final_len=len(final_text),
+                common_prefix_len=common,
+            )
             yield _sse("narrative", {"chunk": final_text, "done": True, "replace": True})
         tok["text"] = final_text
 
@@ -6575,6 +6596,9 @@ def _stream_turn_events(
                     "token_stream_shadow",
                     ttft_shadow_ms=timeline.mark_ms("first_token_shadow"),
                     identical_to_final=tok["shadow"].strip() == narrative.strip(),
+                    # D1 (revisao P2-5): mesma regra do `on` — so conta como replace se o final
+                    # nao ESTENDE o que o jogador ja teria lido.
+                    would_replace=not narrative.startswith(tok["shadow"]),
                 )
             if emitted_text is None and tok["text"]:
                 # tokens entregues e sem entrega antecipada (316 off/shadow): fecha aqui

@@ -2010,8 +2010,16 @@ def storyteller_node(state: GameState):
     turn_bl_pre_llm = turn_bl
     companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
+        from services import interlocutor as _interlocutor
         from services import rumors as _rumors_mod
         from services.narrative_sink import narrate_structured
+
+        # SPEC-319 (revisao P1-1/P2-1): o guard de segredo da narracao mediada (SPEC-202 R11) e o
+        # de achado falso de boato (SPEC-315) so rodam no texto FINAL; nesses turnos nada vai
+        # ao vivo (a 316 entrega o texto ja guardado).
+        _stream_ok = not rumor_nothing and (
+            state.get("interlocutor_reason") not in _interlocutor.MEDIATION_REASONS
+        )
 
         # SPEC-223 R5: entrada do jogador delimitada como dado.
         # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
@@ -2021,6 +2029,7 @@ def storyteller_node(state: GameState):
             _story_schema_for_rumors(_rumors_mod),
             [sys] + guard_messages(messages[-3:]),
             state=state,
+            stream=_stream_ok,
         )
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.

@@ -658,6 +658,7 @@ _STREAM_CANCELLED = object()  # SPEC-319: tentativa abandonada por perder o hedg
 
 # SPEC-319 R5: hedge. Teto de custo: no maximo ~10% das chamadas (e 1 por chamada).
 HEDGE_MAX_RATIO = 0.10
+HEDGE_MIN_CALLS = 10  # melhor-esforco POR INSTANCIA (processo); ver spec §7
 _HEDGE_LOCK = threading.Lock()
 _HEDGE_STATS = {"calls": 0, "hedges": 0}
 
@@ -1346,21 +1347,26 @@ class RoutedLLM:
             return None
         if provider not in _OPENAI_COMPAT_PROVIDERS:
             # D4: sem parser incremental para Anthropic/Gemini => invoke estruturado (SPEC-316).
-            sub = RoutedLLM(
-                self.tier,
-                self.temperature,
-                [(provider, model)],
-                [("with_structured_output", (schema,), {})] if structured else [],
-            )
-            res = sub.invoke(input)
-            ok = (
-                isinstance(res, schema)
-                if structured
-                else bool(str(getattr(res, "content", "") or "").strip())
-            )
-            if not ok:
+            res = self._invoke_single(provider, model, input, schema)
+            if res is None:
                 errors.append(f"{provider}:{model} invoke:invalid")
-            return res if ok else None
+            return res
+        if (
+            isinstance(input, (list, tuple))
+            and input
+            and isinstance(input[-1], AIMessage)
+            and structured
+        ):
+            # mesma instrucao neutra do `_input_for_provider` (OpenAI-compat + ultima msg do assistente)
+            input = [
+                *input,
+                HumanMessage(
+                    content=(
+                        "Produza agora somente a saida estruturada solicitada pela ferramenta; "
+                        "a mensagem anterior e contexto, nao uma resposta final."
+                    )
+                ),
+            ]
         build_t0 = time.perf_counter()
         try:
             client = _get_cached_client(provider, model, self.temperature)
@@ -1492,6 +1498,10 @@ class RoutedLLM:
                     usage=usage,
                 )
             )
+            if structured:
+                # P2-8: o `invoke` regenera ate 3x no mesmo provider; o stream so tenta 1x. Antes
+                # de abandonar o candidato, recorre ao invoke estruturado completo dele.
+                return self._invoke_single(provider, model, input, schema)
             return None
         _emit_attempt_telemetry(
             LLMAttemptEvent(
@@ -1509,6 +1519,22 @@ class RoutedLLM:
         )
         _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
         return result
+
+    def _invoke_single(self, provider: str, model: str, input, schema):
+        """`invoke` (com regeneracao semantica) restrito a UM candidato; `None` se invalido."""
+        sub = RoutedLLM(
+            self.tier,
+            self.temperature,
+            [(provider, model)],
+            [("with_structured_output", (schema,), {})] if schema is not None else [],
+        )
+        res = sub.invoke(input)
+        ok = (
+            isinstance(res, schema)
+            if schema is not None
+            else bool(str(getattr(res, "content", "") or "").strip())
+        )
+        return res if ok else None
 
     def _parse_streamed(self, schema, raw: str):
         """JSON completo da tool call -> instancia de `schema` (ou None). Mesma validacao Pydantic
@@ -1572,8 +1598,8 @@ class RoutedLLM:
 
         def abandon(winner: int) -> None:
             for i, (p, m, t_start) in started.items():
-                if i == winner:
-                    continue
+                if i == winner or i in ended:
+                    continue  # quem ja terminou (falhou) nao e "hedge perdido"
                 cancels[i].set()
                 _emit_attempt_telemetry(
                     LLMAttemptEvent(
@@ -1609,8 +1635,10 @@ class RoutedLLM:
                 kind, i, payload = q.get(timeout=timeout)
             except queue.Empty:
                 with _HEDGE_LOCK:
-                    allowed = _HEDGE_STATS["hedges"] + 1 <= max(
-                        1.0, HEDGE_MAX_RATIO * _HEDGE_STATS["calls"]
+                    # instancia fria (Vercel): so hedgeia depois de HEDGE_MIN_CALLS chamadas, senao
+                    # a 1a chamada de cada instancia sempre passaria do teto de 10 %
+                    allowed = _HEDGE_STATS["calls"] >= HEDGE_MIN_CALLS and (
+                        _HEDGE_STATS["hedges"] + 1 <= HEDGE_MAX_RATIO * _HEDGE_STATS["calls"]
                     )
                     if allowed:
                         _HEDGE_STATS["hedges"] += 1

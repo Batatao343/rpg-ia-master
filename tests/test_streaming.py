@@ -605,9 +605,11 @@ def test_token_deltas_arrive_before_node_phase(client, monkeypatch):
 def test_replace_when_guard_changes_streamed_text(client, monkeypatch):
     from services import prose_guard
 
-    real = prose_guard.sanitize_player_facing
+    real = prose_guard.reconcile_player_gold_claims  # guard so do texto FINAL (nao do stream)
     monkeypatch.setattr(
-        prose_guard, "sanitize_player_facing", lambda t, *a, **k: "Guardado: " + real(t, *a, **k)
+        prose_guard,
+        "reconcile_player_gold_claims",
+        lambda t, *a, **k: "Guardado: " + real(t, *a, **k),
     )
     monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
@@ -710,3 +712,30 @@ def test_tokens_plus_early_narrative_closes_once(client, monkeypatch):
     text = "".join(d["chunk"] for d in narr if not d.get("replace") and not d.get("reset"))
     replaced = [d for d in narr if d.get("replace")]
     assert (replaced[-1]["chunk"] if replaced else text) == final
+
+
+def test_npc_route_tokens_do_not_replace(client, monkeypatch):
+    """SPEC-319 (revisao P1-2): turno de NPC com tokens reais nao vira `replace` no caminho feliz."""
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+    path = persistence.save_path(gid)
+    state = persistence.load_game_state(path)
+    state["npcs"] = {"Velho Tomás": {"name": "Velho Tomás", "in_scene": True, "relationship": 5}}
+    from langchain_core.messages import HumanMessage  # noqa: F401
+
+    import api
+
+    monkeypatch.setattr(api, "_resolve_save_file", lambda gid_: path)
+    with open(path, encoding="utf-8") as fh:
+        saved = json.load(fh)
+    saved["npcs"] = state["npcs"]
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        json.dump(saved, fh, ensure_ascii=False)
+    events = _stream(client, gid, text="Pergunto ao Velho Tomás sobre a estrada")
+    route = next((d["route"] for e, d in events if e == "route"), "")
+    if route != "npc_actor":
+        pytest.skip(f"router offline nao escolheu NPC ({route})")
+    narr = [d for e, d in events if e == "narrative"]
+    assert any(d.get("live") for d in narr)
+    assert not any(d.get("replace") for d in narr)

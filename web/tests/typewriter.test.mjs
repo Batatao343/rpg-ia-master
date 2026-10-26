@@ -68,3 +68,7 @@ test('SPEC-319 R7: tokens reais fazem o cursor acompanhar; reset limpa; replace 
   assert.equal(hook.typewriterPlan('Texto antecipado', 'Outro texto final', true), 'jump');
   assert.equal(hook.typewriterPlan('Texto antecipado', 'Outro texto final', false), 'jump');
 });
+
+test('SPEC-319 P2-9: reset (texto vazio com parcial exibido) é plano clear, nunca onDone', () => {
+  assert.equal(hook.typewriterPlan('parcial', '', false), 'clear');
+});

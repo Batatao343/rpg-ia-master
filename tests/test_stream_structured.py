@@ -84,8 +84,8 @@ def test_routed_stream_emits_tokens_and_parses_full_schema(monkeypatch):
 
 
 def test_interrupted_stream_falls_back_and_resets_sink(monkeypatch):
-    raw = tool_args("Primeira tentativa que vai quebrar no meio do caminho.")
-    broken = FakeStreamClient(slices(raw, 5), fail_after=8)
+    raw = tool_args("Primeira tentativa que vai quebrar no meio do caminho. " * 6)
+    broken = FakeStreamClient(slices(raw, 5), fail_after=50)
     good_text = "Segunda tentativa completa e valida."
     good = FakeStreamClient(slices(tool_args(good_text), 5))
     install(monkeypatch, {"deepseek": broken, "groq": good})
@@ -124,7 +124,7 @@ def test_failure_before_first_chunk_does_not_reset(monkeypatch):
 
 
 def test_invalid_structured_goes_to_next_candidate(monkeypatch):
-    garbage = FakeStreamClient(['{"narrative": "abc', " sem fechar"])
+    garbage = FakeStreamClient(['{"narrative": "' + "abc " * 60, " sem fechar"])
     good = FakeStreamClient(slices(tool_args("valida."), 3))
     install(monkeypatch, {"deepseek": garbage, "groq": good})
     llm = routed([("deepseek", "m1"), ("groq", "m2")])
@@ -219,3 +219,75 @@ def test_stream_guard_final_flush_and_broken_prefix():
     guard = sink.StreamGuard({"Segredo": "algo"})
     out = guard.feed("Isto e um Segr") + guard.feed("edo antigo. ") + guard.finish()
     assert out == "Isto e um algo antigo."
+
+
+# --- revisao SPEC-319 (P1-1/P1-2/P2-1/P2-3) -------------------------------------------------
+from tests.test_streaming import _new_game, client  # noqa: E402,F401
+
+
+def _loaded_state(client):
+    import persistence
+
+    gid = _new_game(client)
+    return persistence.load_game_state(persistence.save_path(gid))
+
+
+def test_mediated_narration_is_never_streamed(client):
+    """P1-1: o guard de segredo (SPEC-202 R11) so roda no texto final => nada ao vivo."""
+    from agents.storyteller import storyteller_node
+    from services import interlocutor
+
+    state = _loaded_state(client)
+    state["interlocutor_reason"] = sorted(interlocutor.MEDIATION_REASONS)[0]
+    events, token = _collect()
+    try:
+        out = storyteller_node(state)
+    finally:
+        sink.unbind(token)
+    assert out.get("messages")
+    assert events == []
+
+
+def test_unmediated_narration_is_streamed(client):
+    from agents.storyteller import storyteller_node
+
+    state = _loaded_state(client)
+    state.pop("interlocutor_reason", None)
+    events, token = _collect()
+    try:
+        storyteller_node(state)
+    finally:
+        sink.unbind(token)
+    assert any(k == "delta" for k, _ in events)
+
+
+def test_npc_stream_is_prefix_of_final_message(client):
+    """P1-2: `**Nome:** "fala` e prefixo da mensagem final => o API manda so o sufixo, sem replace."""
+    from agents.npc import npc_actor_node
+
+    state = _loaded_state(client)
+    state["npcs"] = {"Velho Tomás": {"name": "Velho Tomás", "in_scene": True, "relationship": 5}}
+    state["active_npc_name"] = "Velho Tomás"
+    state["messages"] = [
+        *state.get("messages", []),
+        HumanMessage(content="Pergunto ao Velho Tomás sobre a estrada"),
+    ]
+    events, token = _collect()
+    try:
+        out = npc_actor_node(state)
+    finally:
+        sink.unbind(token)
+    final = out["messages"][-1].content
+    shown = "".join(t for k, t in events if k == "delta")
+    assert shown.startswith('**Velho Tomás:** "')
+    assert final.startswith(shown), (shown, final)
+
+
+def test_stream_guard_normalizes_like_final_text():
+    """P2-3: preambulo meta e espacos/pontuacao saem iguais ao texto final (sem replace falso)."""
+    from services.prose_guard import sanitize_player_facing
+
+    raw = "Aqui está a narração:\nO vento  sopra , frio .\n\nVocê avança" + " devagar" * 20
+    guard = sink.StreamGuard()
+    out = "".join(guard.feed(raw[i : i + 5]) for i in range(0, len(raw), 5)) + guard.finish()
+    assert out == sanitize_player_facing(raw)

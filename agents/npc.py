@@ -1305,14 +1305,14 @@ def npc_actor_node(state: GameState):
         from services.narrative_sink import narrate_structured
 
         # SPEC-319: a fala (`dialogue`, 1o campo) sai token a token; a mensagem final
-        # abre com `"` — o prefixo evita um `replace` so por causa da aspa.
+        # e `**Nome:** "fala"` — o prefixo evita um `replace` so por causa do rotulo/aspa.
         res = narrate_structured(
             llm,
             NPCResponse,
             [system_msg] + guard_messages(messages[-3:]),
             state=state,
             key="dialogue",
-            prefix='"',
+            prefix=f'**{npc_data["name"]}:** "',
         )
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
