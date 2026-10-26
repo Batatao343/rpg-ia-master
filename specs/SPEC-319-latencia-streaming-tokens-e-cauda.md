@@ -228,3 +228,6 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   sobre a abertura (6 palavras), para stream e final escolherem a mesma transição. Após o fix: 0/34 e 0/8.
   Telemetria: `sse.token_stream_shadow` ganhou `reason` (`none|start|tail|shorter`, `replace_reason`).
   Critério para ligar: confirmar `would_replace` < 5 % no staging com o novo `reason`.
+- **2026-10-26 (§6.1 no staging, `c024b7f`):** shadow com o fix de prefixo, 24 turnos DeepSeek + smoke e2e:
+  `would_replace` 1/25 (4 %, `reason=start`) < 5 % → critério D1 cumprido; 1ª narração p50 5,6 s / p95 14,3 s,
+  0 erros. Ligado `RPG_TOKEN_STREAM=on` no preset do staging (`RPG_EARLY_NARRATIVE=on` já estava). Próximo: §6.2–6.4.
