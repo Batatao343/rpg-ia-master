@@ -319,8 +319,7 @@ class DynamicArtRepository:
         with admin_connection(self.pool) as connection:
             row = connection.execute(
                 """select a.object_key from app.art_generations g join app.assets a
-                  on a.game_id=g.game_id and a.entity_id=g.subject_id
-                 and a.prompt_sha256=g.prompt_hash and a.source_model=g.model
+                  on a.id=g.asset_id and a.owner_id=g.owner_id
                 where g.owner_id=%s and g.game_id=%s and g.subject_type='player'
                   and g.status='ready' and a.variant='full' and a.status='ready'
                 order by g.updated_at desc limit 1""",

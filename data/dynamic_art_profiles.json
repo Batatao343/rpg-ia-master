@@ -61,7 +61,7 @@
     },
     "race_anoes_fuligem": {
       "name": "Anão da Fuligem",
-      "positive": "Soot Dwarf: short (head at the chest height of a human) but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator mask worn over the mouth or hanging at the neck (always visible) and protective goggles",
+      "positive": "Soot Dwarf: short (head at the chest height of a human) but almost square build, shoulder width rivalling height, disproportionately long arms reaching nearly to the ground, braided beard threaded with copper and blackened with grease, leather respirator hanging at the neck or pushed down (always visible, face fully visible) and protective goggles",
       "negative": "not a human; not a slim or human-proportioned figure"
     },
     "race_vrel": {

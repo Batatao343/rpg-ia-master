@@ -247,6 +247,9 @@ def test_ref_de_raca_vive_no_pacote_do_worker():
     excluded = config["functions"]["vercel_app.py"]["excludeFiles"].strip("{}").split(",")
     assert "web/public/**" in excluded
     assert not any(pattern.startswith("data") or pattern == "**" for pattern in excluded)
+    ignored = (root / ".vercelignore").read_text(encoding="utf-8").splitlines()
+    for line in (row.strip().rstrip("/") for row in ignored):
+        assert line not in {"data", "data/art_refs", "*.webp", "data/art_refs/**"}
 
 
 def test_local_interior_cai_para_a_regiao(tmp_path):

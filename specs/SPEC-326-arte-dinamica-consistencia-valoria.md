@@ -302,3 +302,37 @@ Ficha de contato e notas no handoff `handoffs/SPEC-326-smoke.md`; o dono vê a f
   - NPC: rótulo `NPC APPEARANCE (canon)` e reforço "near-black charcoal" quando a aparência diz quase preta.
   - Reformulação/identidade pede ação claramente diferente.
   - Guard R12: limiar 10 → 14 e comparação também com a saída espelhada (`dhash64_mirrored`).
+- **26/10 — revisão Sol (CHANGES_REQUIRED) aplicada.**
+  - P1-1: reforço "near-black charcoal" só para `race_cinzeus` e só quando o texto fala de pele (regex corrigida, sem ``).
+  - P1-2: nome do chefe passa por `sanitize_visual_text`.
+  - P2-1: `approved_portrait_key` junta por `a.id = g.asset_id and a.owner_id = g.owner_id`. Sem teste com Postgres:
+    a cobertura segue em `inspect.getsource`; a pilha local do Supabase não foi levantada nesta branch.
+  - P2-3: respirador do anão "pendurado no pescoço ou abaixado, rosto visível" (não conflita com "face not hidden by a mask").
+  - P2-4: em cenas, todo negativo de raça vira "the HERO only: …".
+  - P2-5: a sanitização remove rótulos de seção do prompt e imperativos que miram raça/regras/exclusões.
+  - P2-6: o teste de bundle também confere o `.vercelignore`.
+
+## Runbook (antes de `RPG_DYNAMIC_ART_ENABLED=1` no staging)
+
+1. **Price profiles (R17).** Publicar dois profiles imutáveis em `app.image_price_profiles` (ação de DB no staging,
+   com o operador) e apontar `RPG_IMAGE_PRICE_PROFILE_PORTRAIT`/`RPG_IMAGE_PRICE_PROFILE_SCENE` para eles
+   (retrato e NPC usam o portrait; o épico usa o scene; sem o scene a cotação do épico devolve 503):
+   ```sql
+   insert into app.image_price_profiles
+     (profile_id, pricing_version_id, model, size, max_provider_usd, source, expires_at)
+   select 'staging-326-portrait', pricing_version_id, 'gpt-image-2-2026-04-21', '1024x1536', 0.08,
+          'SPEC-326 medium+refs, measured ~0.05', now() + interval '90 days'
+   from app.image_price_profiles where profile_id = 'spec197-staging-portrait';
+   insert into app.image_price_profiles
+     (profile_id, pricing_version_id, model, size, max_provider_usd, source, expires_at)
+   select 'staging-326-scene', pricing_version_id, 'gpt-image-2-2026-04-21', '1536x1024', 0.08,
+          'SPEC-326 medium+refs, measured ~0.05', now() + interval '90 days'
+   from app.image_price_profiles where profile_id = 'spec197-staging-portrait';
+   ```
+   A linha é imutável (trigger); para mudar o teto, publique outro `profile_id`.
+2. **Timeout x Vercel (P2-2).** O provider tem 300 s e a função tem `maxDuration` 300 s; o drain começa um job com
+   janela mínima de ~15 s dentro de um budget de ~50 s. Uma chamada de `/images/edits` perto de 300 s pode ser morta
+   pelo Vercel antes do timeout do httpx: sem cobrança dupla (o dispatch fica em `generating`), mas a reserva espera
+   a reconciliação. Risco aceito e documentado; a saída limpa é um worker dedicado (SPEC-104) ou timeout = restante da função − margem.
+3. **Profile é contrato (P2-7).** O dispatch recalcula o prompt com o profile ao vivo: toda edição de texto do profile
+   troca `profile_version`, e o deploy acontece com a fila de arte vazia (gerações em voo dariam `Conflict`).

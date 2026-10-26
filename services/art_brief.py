@@ -15,6 +15,20 @@ CODEX_NPC_DIR = ROOT / "data" / "codex" / "npcs"
 _ROLE_MARKERS = re.compile(
     r"(?i)(system|assistant|developer|ignore previous|instruções?|prompt)\s*:"
 )
+# P2-5: rótulos de seção do próprio prompt + imperativos que mirram raça/regras/exclusões.
+_SECTION_HEADERS = re.compile(
+    r"(?i)\b(task|subject data|race|class|scene|boss|canon|exclusions|"
+    r"anatomy and pose requirements|player-declared appearance|npc appearance|"
+    r"reference image(?: \d+)?)\b\s*(\([^)]*\))?\s*:"
+)
+_OVERRIDE_IMPERATIVES = re.compile(
+    r"(?i)\b(ignore|disregard|forget|override)\b[^.;\n]{0,40}"
+    r"\b(race|rules?|instructions?|exclusions?|above)\b"
+)
+_NEAR_BLACK_SKIN = re.compile(
+    r"(?i)(pele|skin)[^.;,]{0,40}(quase pret[ao]s?|near-black)"
+    r"|(quase pret[ao]s?|near-black)[^.;,]{0,20}(pele|skin)"
+)
 _ENTITY_ID = re.compile(r"^[a-z0-9_]{1,80}$")
 _BOSS_TYPES = {"boss", "chefe"}
 MAX_REFERENCES = 2
@@ -45,6 +59,8 @@ def load_art_profile() -> dict[str, Any]:
 def sanitize_visual_text(value: object, *, limit: int) -> str:
     text = str(value or "").replace("\x00", " ")
     text = _ROLE_MARKERS.sub("", text)
+    text = _SECTION_HEADERS.sub(" ", text)
+    text = _OVERRIDE_IMPERATIVES.sub(" ", text)
     text = re.sub(r"[<>]{2,}|```", " ", text)
     return " ".join(text.split())[:limit]
 
@@ -204,7 +220,7 @@ def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief:
         sanitize_visual_text(npc.get("role"), limit=120),
         sanitize_visual_text(npc.get("persona"), limit=500),
     ]
-    if re.search(r"(?i)quase pret|near-black|preta?", appearance):
+    if race_id == "race_cinzeus" and _NEAR_BLACK_SKIN.search(appearance):
         canon_npc.append("skin must be near-black charcoal, not mid-grey")
     return {
         "subject": sanitize_visual_text(npc.get("name") or npc_id, limit=80),
@@ -250,7 +266,9 @@ def build_epic_art_brief(
         kind = str(boss.get("type") or boss.get("categoria") or "boss")
         subject = f"{boss['name']} ({kind}) confronting the hero"
         looks = sanitize_visual_text(boss.get("appearance") or boss.get("description"), limit=300)
-        brief["boss_line"] = f"{boss['name']} — {looks or profile['boss_fallback']}"
+        brief["boss_line"] = (
+            f"{sanitize_visual_text(boss['name'], limit=80)} — {looks or profile['boss_fallback']}"
+        )
     else:
         subject = (event or {}).get("detail") or "decisive confrontation"
         brief["boss_line"] = profile["boss_fallback"]
@@ -267,9 +285,11 @@ def build_epic_art_brief(
     brief["scene"] = ". ".join(
         [", ".join(part for part in scene_parts if part), profile["epic_scene_garb"]]
     )
-    # "not a human" vale só para o herói numa cena com outros figurantes (chefe pode ser humano).
+    # P2-4: negativos de raça valem só para o herói numa cena com outros figurantes.
+    race_negative = _race_parts(profile, resolve_character_race_id(player), kind="player")[1]
     brief["exclusions"] = [
-        item.replace("not a human", "the HERO is not a human", 1) for item in brief["exclusions"]
+        f"the HERO only: {item}" if race_negative and item == race_negative else item
+        for item in brief["exclusions"]
     ]
     brief["composition"] = [profile["epic_poses"][pose_id], *profile["pose_constraints"]]
     brief["reference_asset_ids"] = ["player:approved_portrait"] + (
