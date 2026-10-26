@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "64cdc29ff3650e5237159cfb1b7b3a6a529e24e2",
+  "commit_sha": "fd9e178fe6d33bc2c6435938cbb7a49d6bfa7c4c",
   "edge_counts": {
-    "calls": 28534,
-    "contains": 973,
-    "defines": 14293,
-    "imports": 2344,
-    "likely_test_for": 1645,
+    "calls": 28555,
+    "contains": 974,
+    "defines": 14309,
+    "imports": 2348,
+    "likely_test_for": 1649,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:3ff32b97bd3a488ad905e32ae709c21a789a8c121b60d6d0eb659c82dab1df2a",
+  "graph_hash": "sha256:b21120795d873179f3a6046d86c873893f128b143be610b0a988632647f6c106",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -967,6 +967,7 @@
     "tests/test_spec315_resolution.py",
     "tests/test_spec315_tiers.py",
     "tests/test_spec315_truth.py",
+    "tests/test_spec319_shadow_replay.py",
     "tests/test_spec325_abandon.py",
     "tests/test_spec325_abandon_review.py",
     "tests/test_spec325_chase_choices.py",
@@ -1198,14 +1199,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 945,
+    "class": 947,
     "endpoint": 64,
-    "file": 1144,
-    "function": 4484,
+    "file": 1145,
+    "function": 4485,
     "method": 835,
-    "module": 973,
-    "test": 8028
+    "module": 974,
+    "test": 8041
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:0393aad6f48e3cc2957487169d4e1eff6f25d5aedf90fdf35baa8fb25456a509"
+  "source_tree_hash": "sha256:75cd538e93a34c0ee82f8fe891b0878e4c7009039537510d6dbaaa8b0f306f75"
 }

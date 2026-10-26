@@ -1,14 +1,14 @@
 {
-  "commit_sha": "64cdc29ff3650e5237159cfb1b7b3a6a529e24e2",
+  "commit_sha": "fd9e178fe6d33bc2c6435938cbb7a49d6bfa7c4c",
   "edges": [
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7008
+        "line": 7011
       },
-      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:7009",
+      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:7012",
       "target": "symbol:api.delete_save_endpoint",
       "type": "route_to"
     },
@@ -171,9 +171,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7112
+        "line": 7115
       },
-      "source": "endpoint:GET:/game/chronicle/export:api.py:7113",
+      "source": "endpoint:GET:/game/chronicle/export:api.py:7116",
       "target": "symbol:api.export_chronicle",
       "type": "route_to"
     },
@@ -226,9 +226,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7000
+        "line": 7003
       },
-      "source": "endpoint:GET:/game/saves:api.py:7001",
+      "source": "endpoint:GET:/game/saves:api.py:7004",
       "target": "symbol:api.get_saves",
       "type": "route_to"
     },
@@ -479,9 +479,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6731
+        "line": 6734
       },
-      "source": "endpoint:POST:/game/action/stream:api.py:6732",
+      "source": "endpoint:POST:/game/action/stream:api.py:6735",
       "target": "symbol:api.game_action_stream",
       "type": "route_to"
     },
@@ -512,9 +512,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6823
+        "line": 6826
       },
-      "source": "endpoint:POST:/game/cards/prepare:api.py:6824",
+      "source": "endpoint:POST:/game/cards/prepare:api.py:6827",
       "target": "symbol:api.game_cards_prepare",
       "type": "route_to"
     },
@@ -523,9 +523,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7068
+        "line": 7071
       },
-      "source": "endpoint:POST:/game/chronicle/search:api.py:7069",
+      "source": "endpoint:POST:/game/chronicle/search:api.py:7072",
       "target": "symbol:api.search_chronicle_endpoint",
       "type": "route_to"
     },
@@ -556,9 +556,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6763
+        "line": 6766
       },
-      "source": "endpoint:POST:/game/equip:api.py:6764",
+      "source": "endpoint:POST:/game/equip:api.py:6767",
       "target": "symbol:api.game_equip",
       "type": "route_to"
     },
@@ -567,9 +567,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6878
+        "line": 6881
       },
-      "source": "endpoint:POST:/game/levelup:api.py:6879",
+      "source": "endpoint:POST:/game/levelup:api.py:6882",
       "target": "symbol:api.game_levelup",
       "type": "route_to"
     },
@@ -27296,6 +27296,61 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 13
+      },
+      "source": "file:tests/test_spec319_shadow_replay.py",
+      "target": "file:agents/npc.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 14
+      },
+      "source": "file:tests/test_spec319_shadow_replay.py",
+      "target": "file:agents/storyteller.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 15
+      },
+      "source": "file:tests/test_spec319_shadow_replay.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 16
+      },
+      "source": "file:tests/test_spec319_shadow_replay.py",
+      "target": "file:services/turn_outcome.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec319_shadow_replay.py",
+      "target": "module:tests.test_spec319_shadow_replay",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec325_abandon.py",
         "line": 10
       },
@@ -31477,7 +31532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 296
+        "line": 298
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._low",
@@ -31510,7 +31565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 228
+        "line": 230
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._player_facing_message",
@@ -31521,7 +31576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 201
+        "line": 203
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._price_reasons_context",
@@ -31543,7 +31598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 234
+        "line": 236
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._rumor_cache_find",
@@ -31554,7 +31609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 292
+        "line": 294
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._turn_of",
@@ -31576,7 +31631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 301
+        "line": 303
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot.loot_node",
@@ -33941,7 +33996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6988
+        "line": 6991
       },
       "source": "module:api",
       "target": "symbol:api.SaveSummary",
@@ -35987,7 +36042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7009
+        "line": 7012
       },
       "source": "module:api",
       "target": "symbol:api.delete_save_endpoint",
@@ -36020,7 +36075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7113
+        "line": 7116
       },
       "source": "module:api",
       "target": "symbol:api.export_chronicle",
@@ -36053,7 +36108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6732
+        "line": 6735
       },
       "source": "module:api",
       "target": "symbol:api.game_action_stream",
@@ -36075,7 +36130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6824
+        "line": 6827
       },
       "source": "module:api",
       "target": "symbol:api.game_cards_prepare",
@@ -36097,7 +36152,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6764
+        "line": 6767
       },
       "source": "module:api",
       "target": "symbol:api.game_equip",
@@ -36119,7 +36174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6879
+        "line": 6882
       },
       "source": "module:api",
       "target": "symbol:api.game_levelup",
@@ -36218,7 +36273,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7001
+        "line": 7004
       },
       "source": "module:api",
       "target": "symbol:api.get_saves",
@@ -36339,7 +36394,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7069
+        "line": 7072
       },
       "source": "module:api",
       "target": "symbol:api.search_chronicle_endpoint",
@@ -77061,7 +77116,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 87
+        "line": 99
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -77083,7 +77138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 170
+        "line": 197
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink._conceal_map",
@@ -77127,7 +77182,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 190
+        "line": 217
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.narrate_structured",
@@ -77138,10 +77193,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 230
+        "line": 267
       },
       "source": "module:services.narrative_sink",
       "target": "symbol:services.narrative_sink.narrate_text",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/narrative_sink.py",
+        "line": 84
+      },
+      "source": "module:services.narrative_sink",
+      "target": "symbol:services.narrative_sink.replace_reason",
       "type": "defines"
     },
     {
@@ -80548,7 +80614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 335
+        "line": 337
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard._species_heads",
@@ -80581,7 +80647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 262
+        "line": 264
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.log_if_repeats",
@@ -80592,7 +80658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 378
+        "line": 380
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.log_species_drift",
@@ -80625,7 +80691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 250
+        "line": 252
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.openings_clause",
@@ -80647,7 +80713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 198
+        "line": 200
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.remove_rejected_claims",
@@ -80658,7 +80724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 244
+        "line": 246
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.repeats",
@@ -80702,7 +80768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 348
+        "line": 350
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.species_drift",
@@ -80724,7 +80790,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 229
+        "line": 231
       },
       "source": "module:services.prose_guard",
       "target": "symbol:services.prose_guard.ultimas_aberturas",
@@ -176434,6 +176500,138 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 13
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "module:agents.npc",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 14
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "module:agents.storyteller",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "module:services.turn_outcome",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 21
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 167
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._npc_state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 209
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 135
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 48
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay._story_state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 230
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 249
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 155
+      },
+      "source": "module:tests.test_spec319_shadow_replay",
+      "target": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/test_spec325_abandon.py",
         "line": 10
       },
@@ -180912,7 +181110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 686
+        "line": 687
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
@@ -180989,7 +181187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 717
+        "line": 718
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
@@ -181000,7 +181198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 670
+        "line": 671
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_off_byte_identical",
@@ -181044,7 +181242,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 626
+        "line": 627
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_reset_event_clears_partial",
@@ -181066,7 +181264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 651
+        "line": 652
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_shadow_logs_ttft_without_deltas",
@@ -181154,7 +181352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 700
+        "line": 701
       },
       "source": "module:tests.test_streaming",
       "target": "symbol:tests.test_streaming.test_tokens_plus_early_narrative_closes_once",
@@ -190966,7 +191164,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 298
+        "line": 300
       },
       "source": "symbol:agents.loot._low",
       "target": "symbol:agents.loot._turn_of",
@@ -190977,7 +191175,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 298
+        "line": 300
       },
       "source": "symbol:agents.loot._low",
       "target": "symbol:services.latency_flags.archive_low_wanted",
@@ -190988,7 +191186,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 193
+        "line": 195
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:agents.loot._validated_narrative",
@@ -190999,7 +191197,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 198
+        "line": 200
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:agents.loot._validated_narrative",
@@ -191021,7 +191219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 196
+        "line": 198
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:observability.telemetry.log_event",
@@ -191032,7 +191230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 190
+        "line": 192
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -191043,7 +191241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 197
+        "line": 199
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -191131,7 +191329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 230
+        "line": 232
       },
       "source": "symbol:agents.loot._player_facing_message",
       "target": "symbol:services.prose_guard.normalize_protagonist_voice",
@@ -191142,7 +191340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 224
+        "line": 226
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:observability.telemetry.log_event",
@@ -191153,7 +191351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 208
+        "line": 210
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:services.economy.merchants_at",
@@ -191164,7 +191362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 211
+        "line": 213
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:services.economy.price_reasons",
@@ -191219,7 +191417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 260
+        "line": 262
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:agents.loot._narrate",
@@ -191230,7 +191428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 270
+        "line": 272
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:agents.loot._player_facing_message",
@@ -191241,7 +191439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 278
+        "line": 280
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -191274,7 +191472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 305
+        "line": 307
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._last_human",
@@ -191285,7 +191483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 389
+        "line": 391
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191296,7 +191494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 441
+        "line": 443
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191307,7 +191505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 526
+        "line": 528
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191318,7 +191516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 376
+        "line": 378
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
@@ -191329,7 +191527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 405
+        "line": 407
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
@@ -191340,7 +191538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 509
+        "line": 511
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
@@ -191351,7 +191549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 317
+        "line": 319
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._parse_trade_intent",
@@ -191362,7 +191560,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 383
+        "line": 385
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._player_facing_message",
@@ -191373,7 +191571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 412
+        "line": 414
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._player_facing_message",
@@ -191384,7 +191582,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 519
+        "line": 521
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._player_facing_message",
@@ -191395,7 +191593,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 374
+        "line": 376
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._price_reasons_context",
@@ -191406,7 +191604,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 404
+        "line": 406
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._price_reasons_context",
@@ -191417,7 +191615,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 452
+        "line": 454
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._rumor_cache_find",
@@ -191428,7 +191626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 447
+        "line": 449
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:gamedata.get_location",
@@ -191439,7 +191637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 505
+        "line": 507
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.conflict_summary.canonical_summary_text",
@@ -191450,7 +191648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 458
+        "line": 460
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.conflict_summary.loot_context",
@@ -191461,7 +191659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 486
+        "line": 488
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.claim_event",
@@ -191472,7 +191670,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 344
+        "line": 346
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.execute_craft",
@@ -191483,7 +191681,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 346
+        "line": 348
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.execute_trade",
@@ -191494,7 +191692,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 348
+        "line": 350
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.log_trade",
@@ -191505,7 +191703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 318
+        "line": 320
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.public_market_snapshot",
@@ -191516,7 +191714,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 418
+        "line": 420
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.public_market_snapshot",
@@ -191527,7 +191725,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 310
+        "line": 312
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.restock",
@@ -191538,7 +191736,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 467
+        "line": 469
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.roll_loot",
@@ -191549,7 +191747,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 432
+        "line": 434
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -191560,7 +191758,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 527
+        "line": 529
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -191912,7 +192110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1577
+        "line": 1595
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._apply_lore_proposals",
@@ -191923,7 +192121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1531
+        "line": 1549
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._canonical_npc_id",
@@ -191934,7 +192132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1583
+        "line": 1601
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc._canonical_npc_id",
@@ -192099,7 +192297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1343
+        "line": 1361
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:agents.npc.clamp_relationship_change",
@@ -192154,7 +192352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1600
+        "line": 1618
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -192165,7 +192363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1620
+        "line": 1638
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -192220,7 +192418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1610
+        "line": 1628
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.latency_flags.archive_low_wanted",
@@ -192231,7 +192429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1382
+        "line": 1400
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.latency_flags.two_phase_on",
@@ -192253,7 +192451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1439
+        "line": 1457
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
@@ -192264,7 +192462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1446
+        "line": 1464
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.bounded_audit_rows",
@@ -192275,7 +192473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1444
+        "line": 1462
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.commit_memory_facts",
@@ -192286,7 +192484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1387
+        "line": 1405
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.make_memory_fact",
@@ -192297,7 +192495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1405
+        "line": 1423
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.memory_metadata",
@@ -192308,7 +192506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1438
+        "line": 1456
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_provenance.normalize_memory_facts",
@@ -192319,7 +192517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1418
+        "line": 1436
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_retry.enqueue_npc_memory",
@@ -192330,7 +192528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1416
+        "line": 1434
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.memory_retry.normalize_pending_npc_memory",
@@ -192352,7 +192550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1316
+        "line": 1335
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prompt_guard.guard_messages",
@@ -192374,7 +192572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1326
+        "line": 1346
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.log_if_repeats",
@@ -192396,7 +192594,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1324
+        "line": 1344
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -192407,7 +192605,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1339
+        "line": 1357
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -192429,7 +192627,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1324
+        "line": 1344
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.strip_outer_quotes",
@@ -192440,7 +192638,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1327
+        "line": 1328
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.prose_guard.vary_repeated_opening",
@@ -192451,7 +192649,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1541
+        "line": 1347
+      },
+      "source": "symbol:agents.npc.npc_actor_node",
+      "target": "symbol:services.prose_guard.vary_repeated_opening",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/npc.py",
+        "line": 1559
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -192462,7 +192671,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1525
+        "line": 1543
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:services.quest_log.sync_npc_interaction",
@@ -192473,7 +192682,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1477
+        "line": 1495
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.apply_faction_reveal",
@@ -192484,7 +192693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1463
+        "line": 1481
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -192495,7 +192704,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/npc.py",
-        "line": 1613
+        "line": 1631
       },
       "source": "symbol:agents.npc.npc_actor_node",
       "target": "symbol:world_utils.ensure_faction_intel",
@@ -193584,7 +193793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2041
+        "line": 2056
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller.StoryUpdate",
@@ -193595,7 +193804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2506
+        "line": 2521
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._apply_proposed_rumors",
@@ -193661,7 +193870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2042
+        "line": 2057
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193672,7 +193881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2103
+        "line": 2118
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193683,7 +193892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2119
+        "line": 2134
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193694,7 +193903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2527
+        "line": 2542
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._deterministic_story_fallback",
@@ -193749,7 +193958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2138
+        "line": 2153
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._guard_mediation_secret",
@@ -193760,7 +193969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2319
+        "line": 2334
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._is_monetary_claim",
@@ -193771,7 +193980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2359
+        "line": 2374
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -193782,7 +193991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2396
+        "line": 2411
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -193793,7 +194002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2501
+        "line": 2516
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._log_narrative_rejected",
@@ -193826,7 +194035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2109
+        "line": 2124
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._neutralize_false_find",
@@ -193892,7 +194101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2381
+        "line": 2396
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._reward_confirmation",
@@ -193936,7 +194145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2516
+        "line": 2531
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._same_region_travel",
@@ -193969,7 +194178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2029
+        "line": 2041
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._story_schema_for_rumors",
@@ -193980,7 +194189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2251
+        "line": 2266
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:agents.storyteller._with_new_npc",
@@ -194101,7 +194310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2188
+        "line": 2203
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194112,7 +194321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2325
+        "line": 2340
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194123,7 +194332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2338
+        "line": 2353
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194134,7 +194343,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2343
+        "line": 2358
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194145,7 +194354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2522
+        "line": 2537
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:observability.telemetry.log_event",
@@ -194178,7 +194387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2509
+        "line": 2524
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.latency_flags.archive_low_wanted",
@@ -194189,7 +194398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2263
+        "line": 2278
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.latency_flags.two_phase_on",
@@ -194200,7 +194409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2181
+        "line": 2196
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.law.apply_claims",
@@ -194288,7 +194497,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2030
+        "line": 2042
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.prompt_guard.guard_messages",
@@ -194310,7 +194519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2459
+        "line": 2474
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.register_proposed_quests",
@@ -194321,7 +194530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2467
+        "line": 2482
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_action_progress",
@@ -194332,7 +194541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/storyteller.py",
-        "line": 2462
+        "line": 2477
       },
       "source": "symbol:agents.storyteller.storyteller_node",
       "target": "symbol:services.quest_log.sync_location_progress",
@@ -197940,7 +198149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6631
+        "line": 6632
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._current_request_id",
@@ -197962,7 +198171,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6719
+        "line": 6722
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._record_early_delivery",
@@ -198006,7 +198215,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6593
+        "line": 6594
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198017,7 +198226,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6596
+        "line": 6597
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198028,7 +198237,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6610
+        "line": 6611
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198039,7 +198248,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6623
+        "line": 6624
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198050,7 +198259,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6635
+        "line": 6636
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198061,7 +198270,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6653
+        "line": 6654
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198072,7 +198281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6662
+        "line": 6663
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198083,7 +198292,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6682
+        "line": 6683
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198094,7 +198303,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6684
+        "line": 6685
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198105,7 +198314,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6702
+        "line": 6705
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198116,18 +198325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6704
-      },
-      "source": "symbol:api._stream_turn_events",
-      "target": "symbol:api._sse",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6710
+        "line": 6707
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198160,7 +198358,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6717
+        "line": 6719
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198171,7 +198369,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6727
+        "line": 6720
+      },
+      "source": "symbol:api._stream_turn_events",
+      "target": "symbol:api._sse",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6730
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -198204,7 +198413,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6603
+        "line": 6604
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -198215,7 +198424,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6691
+        "line": 6692
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -198237,7 +198446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6587
+        "line": 6588
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._stream_turn_events._finish_tokens",
@@ -198303,7 +198512,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6593
+        "line": 6594
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -198314,7 +198523,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6596
+        "line": 6597
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -198325,7 +198534,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6610
+        "line": 6611
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -198336,7 +198545,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6603
+        "line": 6604
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse_log",
@@ -199469,7 +199678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7013
+        "line": 7016
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._database_profile",
@@ -199480,7 +199689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7056
+        "line": 7059
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._fail_operation",
@@ -199491,7 +199700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7059
+        "line": 7062
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._game_lock",
@@ -199502,7 +199711,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7053
+        "line": 7056
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._op_rejected",
@@ -199513,7 +199722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7051
+        "line": 7054
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._op_replayed",
@@ -199623,7 +199832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7117
+        "line": 7120
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:api._resolve_save_file",
@@ -199634,7 +199843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7118
+        "line": 7121
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:persistence.load_game_state",
@@ -199678,29 +199887,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
+        "line": 6746
+      },
+      "source": "symbol:api.game_action_stream",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6750
+      },
+      "source": "symbol:api.game_action_stream",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
         "line": 6743
-      },
-      "source": "symbol:api.game_action_stream",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6747
-      },
-      "source": "symbol:api.game_action_stream",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6740
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._load_unlocked_or_locked",
@@ -199711,7 +199920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6739
+        "line": 6742
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._resolve_save_file",
@@ -199722,7 +199931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6752
+        "line": 6755
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._stream_turn",
@@ -199755,7 +199964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6835
+        "line": 6838
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._begin_state_mutation",
@@ -199766,7 +199975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6828
+        "line": 6831
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._bind_corr",
@@ -199777,7 +199986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6867
+        "line": 6870
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._cards_block",
@@ -199788,7 +199997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6870
+        "line": 6873
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._commit_state_mutation",
@@ -199799,7 +200008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6829
+        "line": 6832
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._database_profile",
@@ -199810,7 +200019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6852
+        "line": 6855
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._fail_operation",
@@ -199821,65 +200030,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6858
+        "line": 6861
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6829
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6868
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._prepared_slots",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6847
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6848
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._reject_memorial",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6831
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._resolve_save_file",
       "type": "calls"
     },
     {
@@ -199890,6 +200044,61 @@
         "line": 6832
       },
       "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6871
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._prepared_slots",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6850
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6851
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6834
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6835
+      },
+      "source": "symbol:api.game_cards_prepare",
       "target": "symbol:persistence.load_game_state",
       "type": "calls"
     },
@@ -199898,7 +200107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6861
+        "line": 6864
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:services.error_codes.api_error",
@@ -200052,7 +200261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6775
+        "line": 6778
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._begin_state_mutation",
@@ -200063,7 +200272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6768
+        "line": 6771
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._bind_corr",
@@ -200074,7 +200283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6815
+        "line": 6818
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._commit_state_mutation",
@@ -200085,21 +200294,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6769
+        "line": 6772
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6797
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -200118,54 +200316,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6769
+        "line": 6803
       },
       "source": "symbol:api.game_equip",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6812
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._inventory_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6787
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6788
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._reject_memorial",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6771
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._resolve_save_file",
+      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -200176,6 +200330,61 @@
         "line": 6772
       },
       "source": "symbol:api.game_equip",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6815
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._inventory_block",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6790
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6791
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6774
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6775
+      },
+      "source": "symbol:api.game_equip",
       "target": "symbol:persistence.load_game_state",
       "type": "calls"
     },
@@ -200184,7 +200393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6801
+        "line": 6804
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:services.error_codes.api_error",
@@ -200228,7 +200437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6892
+        "line": 6895
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._begin_state_mutation",
@@ -200239,7 +200448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6885
+        "line": 6888
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._bind_corr",
@@ -200250,7 +200459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6972
+        "line": 6975
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._cards_block",
@@ -200261,7 +200470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6977
+        "line": 6980
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._commit_state_mutation",
@@ -200272,7 +200481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6886
+        "line": 6889
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._database_profile",
@@ -200283,7 +200492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6921
+        "line": 6924
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._fail_operation",
@@ -200294,7 +200503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6886
+        "line": 6889
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._game_lock",
@@ -200305,7 +200514,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6974
+        "line": 6977
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._levelup_block",
@@ -200316,7 +200525,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6904
+        "line": 6907
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._reject_archived",
@@ -200327,7 +200536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6905
+        "line": 6908
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._reject_memorial",
@@ -200338,7 +200547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6888
+        "line": 6891
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._resolve_save_file",
@@ -200349,7 +200558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6889
+        "line": 6892
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:persistence.load_game_state",
@@ -200360,7 +200569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6909
+        "line": 6912
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.apply_choice",
@@ -200371,7 +200580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6936
+        "line": 6939
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.eligible_subclasses",
@@ -200382,7 +200591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6970
+        "line": 6973
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.xp_to_next",
@@ -200393,7 +200602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6922
+        "line": 6925
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:services.error_codes.api_error",
@@ -200844,7 +201053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7077
+        "line": 7080
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._database_profile",
@@ -200855,7 +201064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7085
+        "line": 7088
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._meter_auxiliary_operation",
@@ -200866,7 +201075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7070
+        "line": 7073
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._resolve_save_file",
@@ -200877,7 +201086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7070
+        "line": 7073
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:persistence.load_game_state",
@@ -288580,7 +288789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 100
+        "line": 112
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.__init__",
@@ -288591,7 +288800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 136
+        "line": 161
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard._advance",
@@ -288602,7 +288811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 118
+        "line": 140
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard._cleaned",
@@ -288613,7 +288822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 162
+        "line": 189
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.feed",
@@ -288624,7 +288833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 166
+        "line": 193
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.finish",
@@ -288635,7 +288844,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 113
+        "line": 135
       },
       "source": "symbol:services.narrative_sink.StreamGuard",
       "target": "symbol:services.narrative_sink.StreamGuard.reset",
@@ -288668,7 +288877,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 208
+        "line": 238
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -288679,7 +288888,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 208
+        "line": 239
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink._conceal_map",
@@ -288690,7 +288899,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 206
+        "line": 236
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.active",
@@ -288701,7 +288910,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 214
+        "line": 251
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.emit",
@@ -288712,7 +288921,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 224
+        "line": 261
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.emit",
@@ -288723,7 +288932,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 211
+        "line": 248
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.narrate_structured.on_delta",
@@ -288734,7 +288943,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 216
+        "line": 253
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.narrate_structured.on_reset",
@@ -288745,7 +288954,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 209
+        "line": 246
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.reset",
@@ -288756,7 +288965,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 218
+        "line": 255
       },
       "source": "symbol:services.narrative_sink.narrate_structured",
       "target": "symbol:services.narrative_sink.reset",
@@ -288767,7 +288976,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 214
+        "line": 251
       },
       "source": "symbol:services.narrative_sink.narrate_structured.on_delta",
       "target": "symbol:services.narrative_sink.emit",
@@ -288778,7 +288987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 218
+        "line": 255
       },
       "source": "symbol:services.narrative_sink.narrate_structured.on_reset",
       "target": "symbol:services.narrative_sink.reset",
@@ -288789,7 +288998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 235
+        "line": 275
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.StreamGuard",
@@ -288800,7 +289009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 235
+        "line": 275
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink._conceal_map",
@@ -288811,7 +289020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 233
+        "line": 273
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.active",
@@ -288822,7 +289031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 241
+        "line": 281
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.emit",
@@ -288833,7 +289042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 251
+        "line": 291
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.emit",
@@ -288844,7 +289053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 238
+        "line": 278
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.narrate_text.on_delta",
@@ -288855,7 +289064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 243
+        "line": 283
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.narrate_text.on_reset",
@@ -288866,7 +289075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 236
+        "line": 276
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.reset",
@@ -288877,7 +289086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 245
+        "line": 285
       },
       "source": "symbol:services.narrative_sink.narrate_text",
       "target": "symbol:services.narrative_sink.reset",
@@ -288888,7 +289097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 241
+        "line": 281
       },
       "source": "symbol:services.narrative_sink.narrate_text.on_delta",
       "target": "symbol:services.narrative_sink.emit",
@@ -288899,7 +289108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/narrative_sink.py",
-        "line": 245
+        "line": 285
       },
       "source": "symbol:services.narrative_sink.narrate_text.on_reset",
       "target": "symbol:services.narrative_sink.reset",
@@ -295598,7 +295807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 266
+        "line": 268
       },
       "source": "symbol:services.prose_guard.log_if_repeats",
       "target": "symbol:services.prose_guard.opening",
@@ -295609,7 +295818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 264
+        "line": 266
       },
       "source": "symbol:services.prose_guard.log_if_repeats",
       "target": "symbol:services.prose_guard.repeats",
@@ -295620,7 +295829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 246
+        "line": 248
       },
       "source": "symbol:services.prose_guard.repeats",
       "target": "symbol:services.prose_guard.opening",
@@ -295631,7 +295840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 247
+        "line": 249
       },
       "source": "symbol:services.prose_guard.repeats",
       "target": "symbol:services.prose_guard.opening",
@@ -295664,7 +295873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 363
+        "line": 365
       },
       "source": "symbol:services.prose_guard.species_drift",
       "target": "symbol:services.prose_guard._species_heads",
@@ -295675,9 +295884,20 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 236
+        "line": 238
       },
       "source": "symbol:services.prose_guard.ultimas_aberturas",
+      "target": "symbol:services.prose_guard.opening",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prose_guard.py",
+        "line": 190
+      },
+      "source": "symbol:services.prose_guard.vary_repeated_opening",
       "target": "symbol:services.prose_guard.opening",
       "type": "calls"
     },
@@ -295697,7 +295917,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prose_guard.py",
-        "line": 193
+        "line": 195
       },
       "source": "symbol:services.prose_guard.vary_repeated_opening",
       "target": "symbol:services.prose_guard.repeats",
@@ -504990,6 +505210,281 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM.__init__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 40
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM.stream_structured",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 31
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 34
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S.invoke",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._npc_state",
+      "target": "symbol:tests.test_spec319_shadow_replay._story_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 210
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:agents.npc.NPCResponse",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 224
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:agents.npc.npc_actor_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 220
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:services.narrative_sink.bind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 226
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:services.narrative_sink.unbind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 217
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 224
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "target": "symbol:tests.test_spec319_shadow_replay._npc_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 136
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:agents.storyteller.StoryUpdate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:agents.storyteller.storyteller_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 146
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:services.narrative_sink.bind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:services.narrative_sink.unbind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:services.turn_outcome.render_player_message",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 136
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 140
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story._sink",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 148
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "target": "symbol:tests.test_spec319_shadow_replay._story_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 236
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
+      "target": "symbol:services.narrative_sink.replace_reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 233
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 250
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
+      "target": "symbol:services.narrative_sink.replace_reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 162
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
+      "target": "symbol:services.narrative_sink.replace_reason",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec319_shadow_replay.py",
+        "line": 159
+      },
+      "source": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
+      "target": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "type": "calls"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -515334,7 +515829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 688
+        "line": 689
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:persistence.save_path",
@@ -515345,7 +515840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 697
+        "line": 698
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:tests.test_streaming._names",
@@ -515356,7 +515851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 687
+        "line": 688
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515367,7 +515862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 692
+        "line": 693
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:tests.test_streaming._scrub_timings",
@@ -515378,7 +515873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 696
+        "line": 697
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:tests.test_streaming._scrub_timings",
@@ -515389,7 +515884,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 690
+        "line": 691
       },
       "source": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "target": "symbol:tests.test_streaming._token_run",
@@ -515609,7 +516104,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 723
+        "line": 724
       },
       "source": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
       "target": "symbol:persistence.load_game_state",
@@ -515620,7 +516115,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 722
+        "line": 723
       },
       "source": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
       "target": "symbol:persistence.save_path",
@@ -515631,7 +516126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 721
+        "line": 722
       },
       "source": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515642,7 +516137,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 735
+        "line": 736
       },
       "source": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
       "target": "symbol:tests.test_streaming._stream",
@@ -515653,7 +516148,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 679
+        "line": 680
       },
       "source": "symbol:tests.test_streaming.test_off_byte_identical",
       "target": "symbol:tests.test_streaming._names",
@@ -515664,7 +516159,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 677
+        "line": 678
       },
       "source": "symbol:tests.test_streaming.test_off_byte_identical",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515675,7 +516170,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 678
+        "line": 679
       },
       "source": "symbol:tests.test_streaming.test_off_byte_identical",
       "target": "symbol:tests.test_streaming._stream",
@@ -515763,7 +516258,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 616
+        "line": 617
       },
       "source": "symbol:tests.test_streaming.test_replace_when_guard_changes_streamed_text",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515774,18 +516269,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 617
+        "line": 618
       },
       "source": "symbol:tests.test_streaming.test_replace_when_guard_changes_streamed_text",
       "target": "symbol:tests.test_streaming._stream",
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_streaming.py",
+        "line": 610
+      },
+      "source": "symbol:tests.test_streaming.test_replace_when_guard_changes_streamed_text",
+      "target": "symbol:tests.test_streaming.test_replace_when_guard_changes_streamed_text._guarded",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 639
+        "line": 640
       },
       "source": "symbol:tests.test_streaming.test_reset_event_clears_partial",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515796,7 +516302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 640
+        "line": 641
       },
       "source": "symbol:tests.test_streaming.test_reset_event_clears_partial",
       "target": "symbol:tests.test_streaming._stream",
@@ -515807,7 +516313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 631
+        "line": 632
       },
       "source": "symbol:tests.test_streaming.test_reset_event_clears_partial",
       "target": "symbol:tests.test_streaming.test_reset_event_clears_partial._with_garbage",
@@ -515862,7 +516368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 661
+        "line": 662
       },
       "source": "symbol:tests.test_streaming.test_shadow_logs_ttft_without_deltas",
       "target": "symbol:tests.test_streaming._new_game",
@@ -515873,7 +516379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 662
+        "line": 663
       },
       "source": "symbol:tests.test_streaming.test_shadow_logs_ttft_without_deltas",
       "target": "symbol:tests.test_streaming._stream",
@@ -516137,7 +516643,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 709
+        "line": 710
       },
       "source": "symbol:tests.test_streaming.test_tokens_plus_early_narrative_closes_once",
       "target": "symbol:tests.test_streaming._names",
@@ -516148,7 +516654,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 703
+        "line": 704
       },
       "source": "symbol:tests.test_streaming.test_tokens_plus_early_narrative_closes_once",
       "target": "symbol:tests.test_streaming._new_game",
@@ -516159,7 +516665,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
-        "line": 704
+        "line": 705
       },
       "source": "symbol:tests.test_streaming.test_tokens_plus_early_narrative_closes_once",
       "target": "symbol:tests.test_streaming._stream",
@@ -526450,9 +526956,9 @@
       "qualified_name": null
     },
     {
-      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:7009",
+      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:7012",
       "kind": "endpoint",
-      "line": 7008,
+      "line": 7011,
       "path": "api.py",
       "qualified_name": "DELETE /game/save/{game_id}"
     },
@@ -526555,9 +527061,9 @@
       "qualified_name": "GET /data/options"
     },
     {
-      "id": "endpoint:GET:/game/chronicle/export:api.py:7113",
+      "id": "endpoint:GET:/game/chronicle/export:api.py:7116",
       "kind": "endpoint",
-      "line": 7112,
+      "line": 7115,
       "path": "api.py",
       "qualified_name": "GET /game/chronicle/export"
     },
@@ -526590,9 +527096,9 @@
       "qualified_name": "GET /game/map"
     },
     {
-      "id": "endpoint:GET:/game/saves:api.py:7001",
+      "id": "endpoint:GET:/game/saves:api.py:7004",
       "kind": "endpoint",
-      "line": 7000,
+      "line": 7003,
       "path": "api.py",
       "qualified_name": "GET /game/saves"
     },
@@ -526751,9 +527257,9 @@
       "qualified_name": "POST /finops"
     },
     {
-      "id": "endpoint:POST:/game/action/stream:api.py:6732",
+      "id": "endpoint:POST:/game/action/stream:api.py:6735",
       "kind": "endpoint",
-      "line": 6731,
+      "line": 6734,
       "path": "api.py",
       "qualified_name": "POST /game/action/stream"
     },
@@ -526772,16 +527278,16 @@
       "qualified_name": "POST /game/art/brief"
     },
     {
-      "id": "endpoint:POST:/game/cards/prepare:api.py:6824",
+      "id": "endpoint:POST:/game/cards/prepare:api.py:6827",
       "kind": "endpoint",
-      "line": 6823,
+      "line": 6826,
       "path": "api.py",
       "qualified_name": "POST /game/cards/prepare"
     },
     {
-      "id": "endpoint:POST:/game/chronicle/search:api.py:7069",
+      "id": "endpoint:POST:/game/chronicle/search:api.py:7072",
       "kind": "endpoint",
-      "line": 7068,
+      "line": 7071,
       "path": "api.py",
       "qualified_name": "POST /game/chronicle/search"
     },
@@ -526800,16 +527306,16 @@
       "qualified_name": "POST /game/death"
     },
     {
-      "id": "endpoint:POST:/game/equip:api.py:6764",
+      "id": "endpoint:POST:/game/equip:api.py:6767",
       "kind": "endpoint",
-      "line": 6763,
+      "line": 6766,
       "path": "api.py",
       "qualified_name": "POST /game/equip"
     },
     {
-      "id": "endpoint:POST:/game/levelup:api.py:6879",
+      "id": "endpoint:POST:/game/levelup:api.py:6882",
       "kind": "endpoint",
-      "line": 6878,
+      "line": 6881,
       "path": "api.py",
       "qualified_name": "POST /game/levelup"
     },
@@ -533342,6 +533848,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_spec315_truth.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec319_shadow_replay.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec319_shadow_replay.py",
       "qualified_name": null
     },
     {
@@ -541262,6 +541775,13 @@
       "qualified_name": "tests.test_spec315_truth"
     },
     {
+      "id": "module:tests.test_spec319_shadow_replay",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay"
+    },
+    {
       "id": "module:tests.test_spec325_abandon",
       "kind": "module",
       "line": 1,
@@ -542636,7 +543156,7 @@
     {
       "id": "symbol:agents.loot._low",
       "kind": "function",
-      "line": 296,
+      "line": 298,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._low"
     },
@@ -542657,14 +543177,14 @@
     {
       "id": "symbol:agents.loot._player_facing_message",
       "kind": "function",
-      "line": 228,
+      "line": 230,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._player_facing_message"
     },
     {
       "id": "symbol:agents.loot._price_reasons_context",
       "kind": "function",
-      "line": 201,
+      "line": 203,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._price_reasons_context"
     },
@@ -542678,14 +543198,14 @@
     {
       "id": "symbol:agents.loot._rumor_cache_find",
       "kind": "function",
-      "line": 234,
+      "line": 236,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._rumor_cache_find"
     },
     {
       "id": "symbol:agents.loot._turn_of",
       "kind": "function",
-      "line": 292,
+      "line": 294,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._turn_of"
     },
@@ -542699,7 +543219,7 @@
     {
       "id": "symbol:agents.loot.loot_node",
       "kind": "function",
-      "line": 301,
+      "line": 303,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot.loot_node"
     },
@@ -543861,7 +544381,7 @@
     {
       "id": "symbol:api.SaveSummary",
       "kind": "class",
-      "line": 6988,
+      "line": 6991,
       "path": "api.py",
       "qualified_name": "api.SaveSummary"
     },
@@ -544974,7 +545494,7 @@
     {
       "id": "symbol:api._stream_turn_events._finish_tokens",
       "kind": "function",
-      "line": 6587,
+      "line": 6588,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events._finish_tokens"
     },
@@ -545261,7 +545781,7 @@
     {
       "id": "symbol:api.delete_save_endpoint",
       "kind": "function",
-      "line": 7009,
+      "line": 7012,
       "path": "api.py",
       "qualified_name": "api.delete_save_endpoint"
     },
@@ -545282,7 +545802,7 @@
     {
       "id": "symbol:api.export_chronicle",
       "kind": "function",
-      "line": 7113,
+      "line": 7116,
       "path": "api.py",
       "qualified_name": "api.export_chronicle"
     },
@@ -545303,7 +545823,7 @@
     {
       "id": "symbol:api.game_action_stream",
       "kind": "function",
-      "line": 6732,
+      "line": 6735,
       "path": "api.py",
       "qualified_name": "api.game_action_stream"
     },
@@ -545317,7 +545837,7 @@
     {
       "id": "symbol:api.game_cards_prepare",
       "kind": "function",
-      "line": 6824,
+      "line": 6827,
       "path": "api.py",
       "qualified_name": "api.game_cards_prepare"
     },
@@ -545331,7 +545851,7 @@
     {
       "id": "symbol:api.game_equip",
       "kind": "function",
-      "line": 6764,
+      "line": 6767,
       "path": "api.py",
       "qualified_name": "api.game_equip"
     },
@@ -545345,7 +545865,7 @@
     {
       "id": "symbol:api.game_levelup",
       "kind": "function",
-      "line": 6879,
+      "line": 6882,
       "path": "api.py",
       "qualified_name": "api.game_levelup"
     },
@@ -545408,7 +545928,7 @@
     {
       "id": "symbol:api.get_saves",
       "kind": "function",
-      "line": 7001,
+      "line": 7004,
       "path": "api.py",
       "qualified_name": "api.get_saves"
     },
@@ -545485,7 +546005,7 @@
     {
       "id": "symbol:api.search_chronicle_endpoint",
       "kind": "function",
-      "line": 7069,
+      "line": 7072,
       "path": "api.py",
       "qualified_name": "api.search_chronicle_endpoint"
     },
@@ -574157,49 +574677,49 @@
     {
       "id": "symbol:services.narrative_sink.StreamGuard",
       "kind": "class",
-      "line": 87,
+      "line": 99,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.__init__",
       "kind": "method",
-      "line": 100,
+      "line": 112,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.__init__"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard._advance",
       "kind": "method",
-      "line": 136,
+      "line": 161,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard._advance"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard._cleaned",
       "kind": "method",
-      "line": 118,
+      "line": 140,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard._cleaned"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.feed",
       "kind": "method",
-      "line": 162,
+      "line": 189,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.feed"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.finish",
       "kind": "method",
-      "line": 166,
+      "line": 193,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.finish"
     },
     {
       "id": "symbol:services.narrative_sink.StreamGuard.reset",
       "kind": "method",
-      "line": 113,
+      "line": 135,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.StreamGuard.reset"
     },
@@ -574220,7 +574740,7 @@
     {
       "id": "symbol:services.narrative_sink._conceal_map",
       "kind": "function",
-      "line": 170,
+      "line": 197,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink._conceal_map"
     },
@@ -574248,44 +574768,51 @@
     {
       "id": "symbol:services.narrative_sink.narrate_structured",
       "kind": "function",
-      "line": 190,
+      "line": 217,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_structured.on_delta",
       "kind": "function",
-      "line": 211,
+      "line": 248,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured.on_delta"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_structured.on_reset",
       "kind": "function",
-      "line": 216,
+      "line": 253,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_structured.on_reset"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text",
       "kind": "function",
-      "line": 230,
+      "line": 267,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text.on_delta",
       "kind": "function",
-      "line": 238,
+      "line": 278,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text.on_delta"
     },
     {
       "id": "symbol:services.narrative_sink.narrate_text.on_reset",
       "kind": "function",
-      "line": 243,
+      "line": 283,
       "path": "services/narrative_sink.py",
       "qualified_name": "services.narrative_sink.narrate_text.on_reset"
+    },
+    {
+      "id": "symbol:services.narrative_sink.replace_reason",
+      "kind": "function",
+      "line": 84,
+      "path": "services/narrative_sink.py",
+      "qualified_name": "services.narrative_sink.replace_reason"
     },
     {
       "id": "symbol:services.narrative_sink.reset",
@@ -576418,7 +576945,7 @@
     {
       "id": "symbol:services.prose_guard._species_heads",
       "kind": "function",
-      "line": 335,
+      "line": 337,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard._species_heads"
     },
@@ -576439,14 +576966,14 @@
     {
       "id": "symbol:services.prose_guard.log_if_repeats",
       "kind": "function",
-      "line": 262,
+      "line": 264,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.log_if_repeats"
     },
     {
       "id": "symbol:services.prose_guard.log_species_drift",
       "kind": "function",
-      "line": 378,
+      "line": 380,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.log_species_drift"
     },
@@ -576467,7 +576994,7 @@
     {
       "id": "symbol:services.prose_guard.openings_clause",
       "kind": "function",
-      "line": 250,
+      "line": 252,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.openings_clause"
     },
@@ -576481,14 +577008,14 @@
     {
       "id": "symbol:services.prose_guard.remove_rejected_claims",
       "kind": "function",
-      "line": 198,
+      "line": 200,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.remove_rejected_claims"
     },
     {
       "id": "symbol:services.prose_guard.repeats",
       "kind": "function",
-      "line": 244,
+      "line": 246,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.repeats"
     },
@@ -576516,7 +577043,7 @@
     {
       "id": "symbol:services.prose_guard.species_drift",
       "kind": "function",
-      "line": 348,
+      "line": 350,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.species_drift"
     },
@@ -576530,7 +577057,7 @@
     {
       "id": "symbol:services.prose_guard.ultimas_aberturas",
       "kind": "function",
-      "line": 229,
+      "line": 231,
       "path": "services/prose_guard.py",
       "qualified_name": "services.prose_guard.ultimas_aberturas"
     },
@@ -635377,6 +635904,104 @@
       "qualified_name": "tests.test_spec315_truth.test_window_active_and_loot_caps_before_roll"
     },
     {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM",
+      "kind": "class",
+      "line": 21,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM.__init__",
+      "kind": "test",
+      "line": 26,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.__init__"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM.stream_structured",
+      "kind": "test",
+      "line": 40,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.stream_structured"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output",
+      "kind": "test",
+      "line": 31,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.with_structured_output"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S",
+      "kind": "class",
+      "line": 34,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S.invoke",
+      "kind": "test",
+      "line": 35,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._StreamLLM.with_structured_output._S.invoke"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._npc_state",
+      "kind": "test",
+      "line": 167,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._npc_state"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._run_npc",
+      "kind": "test",
+      "line": 209,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._run_npc"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._run_story",
+      "kind": "test",
+      "line": 135,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._run_story"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._run_story._sink",
+      "kind": "test",
+      "line": 140,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._run_story._sink"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay._story_state",
+      "kind": "test",
+      "line": 48,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay._story_state"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final",
+      "kind": "test",
+      "line": 230,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_npc_stream_is_prefix_of_final"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_replace_reason",
+      "kind": "test",
+      "line": 249,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_replace_reason"
+    },
+    {
+      "id": "symbol:tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final",
+      "kind": "test",
+      "line": 155,
+      "path": "tests/test_spec319_shadow_replay.py",
+      "qualified_name": "tests.test_spec319_shadow_replay.test_story_stream_is_prefix_of_final"
+    },
+    {
       "id": "symbol:tests.test_spec325_abandon._abandon",
       "kind": "test",
       "line": 43,
@@ -638298,7 +638923,7 @@
     {
       "id": "symbol:tests.test_streaming.test_final_state_identical_across_token_modes",
       "kind": "test",
-      "line": 686,
+      "line": 687,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_final_state_identical_across_token_modes"
     },
@@ -638354,14 +638979,14 @@
     {
       "id": "symbol:tests.test_streaming.test_npc_route_tokens_do_not_replace",
       "kind": "test",
-      "line": 717,
+      "line": 718,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_npc_route_tokens_do_not_replace"
     },
     {
       "id": "symbol:tests.test_streaming.test_off_byte_identical",
       "kind": "test",
-      "line": 670,
+      "line": 671,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_off_byte_identical"
     },
@@ -638387,16 +639012,23 @@
       "qualified_name": "tests.test_streaming.test_replace_when_guard_changes_streamed_text"
     },
     {
+      "id": "symbol:tests.test_streaming.test_replace_when_guard_changes_streamed_text._guarded",
+      "kind": "test",
+      "line": 610,
+      "path": "tests/test_streaming.py",
+      "qualified_name": "tests.test_streaming.test_replace_when_guard_changes_streamed_text._guarded"
+    },
+    {
       "id": "symbol:tests.test_streaming.test_reset_event_clears_partial",
       "kind": "test",
-      "line": 626,
+      "line": 627,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_reset_event_clears_partial"
     },
     {
       "id": "symbol:tests.test_streaming.test_reset_event_clears_partial._with_garbage",
       "kind": "test",
-      "line": 631,
+      "line": 632,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_reset_event_clears_partial._with_garbage"
     },
@@ -638417,7 +639049,7 @@
     {
       "id": "symbol:tests.test_streaming.test_shadow_logs_ttft_without_deltas",
       "kind": "test",
-      "line": 651,
+      "line": 652,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_shadow_logs_ttft_without_deltas"
     },
@@ -638501,7 +639133,7 @@
     {
       "id": "symbol:tests.test_streaming.test_tokens_plus_early_narrative_closes_once",
       "kind": "test",
-      "line": 700,
+      "line": 701,
       "path": "tests/test_streaming.py",
       "qualified_name": "tests.test_streaming.test_tokens_plus_early_narrative_closes_once"
     },
@@ -641762,5 +642394,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:0393aad6f48e3cc2957487169d4e1eff6f25d5aedf90fdf35baa8fb25456a509"
+  "source_tree_hash": "sha256:75cd538e93a34c0ee82f8fe891b0878e4c7009039537510d6dbaaa8b0f306f75"
 }
