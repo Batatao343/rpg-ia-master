@@ -8,15 +8,15 @@
 
 ## Estado em 10 linhas
 
-- `main` = `55a81bf` (26/10) = **staging** (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
+- `main` = `9775ea1` (26/10) = **staging** (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
 - **`done` (26/10):** 320–324 frontend (conferidos em 390/1440 no staging), 325 mecânicas (A não-letal/resistência, B fuga, C objetos/ordens `on`; D reforços **descartada pelo dono**), 326 arte dinâmica fiel a Valoria (`on` no staging).
-- **Latência `in-progress` (medição):** 316 + 318 → 1ª narração p50 6,7–7,5 s (era 11,1 s), p95 21–27 s (era 35–44 s); meta ≤ 7 s batida em 1 de 2 sessões. 317 rota NPC em shadow (3/3 concordância, n baixo). 319: shadow 4 % → **`RPG_TOKEN_STREAM=on` + hedge 6000 no staging (26/10, `55a81bf`)**; 1º trecho p50 2,9–4,2 s; `replace` ~9 % (`tail`); hedge 0 disparos; p95 dominada por espera de 19–59 s no Vercel ANTES da função (3–6 de 15 turnos).
+- **Latência `in-progress` (medição):** 316 + 318 → 1ª narração p50 6,7–7,5 s (era 11,1 s), p95 21–27 s (era 35–44 s); meta ≤ 7 s batida em 1 de 2 sessões. 317 rota NPC em shadow (3/3 concordância, n baixo). 319: **`RPG_TOKEN_STREAM=on` + hedge 6000 no staging**; após fix do `tail` (`9775ea1`): `replace` 0/35, TTFMC servidor p50 2,65 s; hedge 0 disparos (critério não atingido); p95 dominada por espera de 19–59 s no Vercel ANTES da função (3–6 de 15 turnos).
 - Staging: preset versionado `scripts/staging/staging_flags.json`; `wt.sh drop` agora remove a junção do node_modules.
 - Regras de máquina: e2e só `--workers=1` um arquivo por vez; nunca `uv run` direto em worktree; checar RAM (memória).
 
 ## Próximos 3 passos
 
-1. 319: §6.4 browser + replay local do `replace` `tail` (texto streamado > final); investigar a espera pré-função do Vercel (cold start/fila, bundle 319 MB) — maior alavanca da p95 agora.
+1. 319: §6.4 browser; decidir hedge (inócuo); investigar a espera pré-função do Vercel (cold start/fila, bundle 319 MB) — maior alavanca da p95 agora.
 2. 317: acumular 200 decisões shadow da rota NPC; avaliar `RPG_PROMPT_STATIC_FIRST` (cache_hit_ratio ~0,015).
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
