@@ -1,6 +1,6 @@
 # SPEC-326 — Arte dinâmica consistente com Valoria (estética, lore e raça)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono 26/10: "aprovo a 326" — D1–D7 nos padrões recomendados)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** pipeline de arte dinâmica já na `main` (`services/art_brief.py`, `workers/dynamic_art_jobs.py`, `infrastructure/openai_images.py`, cotação de imagem)
 > **Desbloqueia:** `RPG_DYNAMIC_ART_ENABLED=1` no staging (só depois do §6 aprovado)
