@@ -1,7 +1,7 @@
 ---
 status: final
 ---
-# Suporte - Valoria (RPG IA)
+# Suporte - Crônicas de Valoria
 
 > Última atualização: 17/10/2026.
 

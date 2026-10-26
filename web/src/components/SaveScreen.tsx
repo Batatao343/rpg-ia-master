@@ -2,7 +2,8 @@ import { useRef, useState } from "react";
 import type { SaveSummary } from "../types";
 import * as api from "../api";
 import { AUDIT_EXPORT_NOTICE, exportWithReauth } from "../lib/auditExport";
-import { Frame, Divider, Medallion } from "./ornaments";
+import { Frame, Divider } from "./ornaments";
+import { Sigil } from "./Sigil";
 import { Icon } from "../design/icons";
 
 // spec polish-sessao (R3): tela "Continuar jornada" — lista campanhas salvas
@@ -63,7 +64,7 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulat
   return (
     <main className="create saves-screen">
       <Frame className="create__frame">
-        <div className="create__seal"><Medallion size={48} /></div>
+        <div className="create__seal"><Sigil size={48} /></div>
         <h1 className="create__title">Continuar jornada</h1>
         <Divider />
         <ul className="savelist">
@@ -116,7 +117,7 @@ export function SaveScreen({ saves, busy, onContinue, onDelete, onNew, onSimulat
           Nova jornada
         </button>
         <button className="btn btn--ghost" type="button" disabled={busy} onClick={onSimulate}>
-          Simular combate
+          Arena de treino
         </button>
       </Frame>
 

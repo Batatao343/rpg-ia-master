@@ -1,7 +1,7 @@
 ---
 status: final
 ---
-# Política de Reembolso - Valoria (RPG IA)
+# Política de Reembolso - Crônicas de Valoria
 
 > Última atualização: 17/10/2026. Recomenda-se revisão por assessoria jurídica.
 

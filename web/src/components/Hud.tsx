@@ -5,9 +5,18 @@ import type { ChronicleChapter, ChronicleSearchHit, CombatBlock, Condition, Fact
 import { newsLabel, orderNews } from "../heardNews";
 import { SceneZones } from "./SceneZones";
 import { WoundTrack } from "./WoundTrack";
-import { Icon } from "../design/icons";
+import { Icon, type IconName } from "../design/icons";
 
-export type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
+/** SPEC-323 R2: ícone do slot do inventário, só com a família da SPEC-322 (sem arte nova por item). */
+export function itemIcon(it: { unique?: boolean; slot: string | null }): IconName {
+  if (it.unique) return "unique";
+  const slot = (it.slot ?? "").toLowerCase();
+  if (/arma|weapon|mao|mão|main/.test(slot)) return "card-active";
+  if (/armadura|armor|escudo|shield|off|corpo|body/.test(slot)) return "card-reaction";
+  return "prepared";
+}
+
+export type EquipFn =(pick: { item_id?: string; unequip_slot?: string }) => void;
 
 /* SPEC-204: o antigo <aside class="hud"> com tablist própria e auto-troca por
    combate deixou de existir. Este módulo agora só exporta os painéis, montados
@@ -86,9 +95,10 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
             <li className="empty">Vazio</li>
           ) : (
             data!.inventory.map((it, i) => (
-              <li key={`${it.id}-${i}`} className={"inv__item" + (it.equipped ? " is-equipped" : "")}>
-                <span className={it.unique ? "inv__unique" : undefined}>
-                  {it.unique ? <><Icon name="unique" label="Único" />{" "}</> : null}
+              <li key={`${it.id}-${i}`} className={"inv__item" + (it.equipped ? " is-equipped" : "")}
+                  aria-current={it.equipped ? "true" : undefined}>
+                <span className={"inv__label" + (it.unique ? " inv__unique" : "")}>
+                  <span className="inv__icon"><Icon name={itemIcon(it)} label={it.unique ? "Único" : undefined} /></span>
                   {it.name}
                   {it.qty > 1 ? ` ×${it.qty}` : ""}
                   {it.equipped ? <em className="inv__tag"> equipado</em> : null}
@@ -123,7 +133,7 @@ export function PeopleTab({ npcs }: { npcs: NpcView[] }) {
     return (
       <div>
         <p className="hud__label">Personagens</p>
-        <p className="combat-empty">Você ainda não conhece ninguém destas terras.</p>
+        <p className="combat-empty">Converse com quem cruzar seu caminho: os conhecidos aparecem aqui, com o que lembram de você.</p>
       </div>
     );
   }
@@ -232,7 +242,7 @@ export function HeardNews({ news }: { news: NewsItem[] | undefined }) {
     <div className="heard-news">
       <p className="hud__label">Ouvi dizer</p>
       {items.length === 0 ? (
-        <p className="combat-empty">Nenhum rumor chegou aos seus ouvidos — ainda.</p>
+        <p className="combat-empty">Converse com alguém numa taverna ou numa estrada movimentada para ouvir boatos.</p>
       ) : (
         <ul className="heard-news__list">
           {items.map((n, i) => (
@@ -295,7 +305,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
     return (
       <div>
         <p className="hud__label">Crônica <ProjectionSeal status={projectionStatus} /></p>
-        <p className="combat-empty">Nenhum feito digno de canção — ainda.</p>
+        <p className="combat-empty">A crônica se escreve sozinha: explore, lute ou escolha um lado e o primeiro feito entra aqui.</p>
       </div>
     );
   }
@@ -357,7 +367,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
             </div>
           )}
           {cap.entries.length === 0 ? (
-            <p className="combat-empty">Nenhum feito digno de canção — ainda.</p>
+            <p className="combat-empty">A crônica se escreve sozinha: explore, lute ou escolha um lado e o primeiro feito entra aqui.</p>
           ) : (
             <details open={!cap.digest} className="chron-raw">
               <summary>{cap.digest ? "Ver registros originais" : "Registros"}</summary>

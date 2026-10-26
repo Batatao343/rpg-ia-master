@@ -1,5 +1,5 @@
 /* ============================================================
-   Crônicas — Dark Fantasy RPG · tom The Witcher
+   Crônicas — Dark Fantasy RPG · dark fantasy
    Cena: um caçador lê um bestiário à luz de tocha, numa fortaleza fria.
    Mundo frio (aço/ardósia) + folhas de pergaminho quente + bronze fosco.
    Sangue (vermelho) = perigo, nunca decoração.
@@ -237,20 +237,20 @@ select {
 .form__actions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.7rem; }
 .form__actions .btn { width: 100%; }
 
-.simulator-shortcut {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.8rem;
-  margin: 0 0 1rem; padding: 0.75rem 1rem; color: var(--ink);
-  border: 1px solid var(--danger-dim); border-radius: var(--r-sharp);
-  background: linear-gradient(135deg, oklch(0.28 0.055 27 / 0.72), var(--bg-deep));
-  cursor: pointer; font: inherit; text-align: left;
-  transition: border-color 0.16s var(--ease), box-shadow 0.16s var(--ease), transform 0.16s var(--ease);
+/* Arena de treino (SPEC-323 R5): link ghost abaixo do wizard, sem vermelho saturado */
+.simulator-link { margin: 1.1rem auto 0; display: flex; align-items: center; gap: 0.5rem; width: auto; color: var(--muted); }
+.class-stage { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 0 0 1.2rem; }
+.class-stage__art { max-width: 260px; margin: 0 auto; }
+.class-stage__name { font-family: var(--display); font-size: 1.4rem; color: var(--accent); margin: 0 0 0.3rem; }
+.class-stage__tagline { font-style: italic; color: var(--muted); margin: 0 0 0.6rem; }
+.class-stage__desc, .class-stage__hook { margin: 0 0 0.6rem; line-height: 1.55; }
+.class-stage__hook { color: var(--muted); }
+@media (min-width: 768px) {
+  .class-stage { grid-template-columns: minmax(200px, 38%) 1fr; align-items: start; }
+  .class-stage__art { margin: 0; max-width: none; }
+  .cards--staged .card__art, .cards--staged .card__desc, .cards--staged .card__hook { display: none; }
+  .cards--staged .card { padding-top: 2.1rem; } /* espaço para o selo "Selecionado" sem cobrir o nome */
 }
-.simulator-shortcut:hover { border-color: var(--danger); transform: translateY(-1px); }
-.simulator-shortcut:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.simulator-shortcut > span:first-child { color: var(--danger-text); font-size: 1.45rem; }
-.simulator-shortcut strong, .simulator-shortcut small { display: block; }
-.simulator-shortcut strong { font-family: var(--display); letter-spacing: 0.06em; text-transform: uppercase; }
-.simulator-shortcut small { margin-top: 0.14rem; color: var(--muted); }
 
 .simulator-screen__frame { max-width: 680px; }
 .simulator-screen__loading, .simulator-screen__note { color: var(--muted); text-align: center; }
@@ -448,15 +448,14 @@ select {
 .scene-break::after { background: linear-gradient(90deg, var(--line-soft), transparent); }
 .scene-break span { color: var(--accent); opacity: 0.72; font-size: 0.95rem; }
 
-/* fala do jogador — cartão de pergaminho recuado (sem side-stripe) */
-.msg--player {
-  align-self: flex-end; max-width: 85%;
-  background: oklch(0.72 0.095 74 / 0.08);
-  border: 1px solid oklch(0.72 0.095 74 / 0.25); border-radius: var(--r-sm);
-  padding: 0.6rem 0.95rem;
+/* fala do jogador — marginália (SPEC-323 R1): itálico na coluna de leitura, marcador ›, sem caixa */
+.msg--player { position: relative; padding-left: 1.3rem; }
+.msg--player::before {
+  content: "›"; position: absolute; left: 0.2rem; top: -0.05rem;
+  font-family: var(--decorative); font-size: 1.35rem; line-height: 1.5; color: var(--accent);
 }
-.msg--player .msg__role { color: var(--accent); }
-.msg--player .msg__body { font-size: 1.05rem; color: var(--muted); font-style: italic; }
+.msg--player .msg__role { color: var(--faint); font-size: 0.74rem; margin-bottom: 0.1rem; }
+.msg--player .msg__body { font-size: 1.1rem; color: var(--muted); font-style: italic; }
 
 .msg--combat .msg__role { color: var(--danger-text); }
 .msg--combat .msg__body strong { color: var(--danger-text); }
@@ -489,7 +488,7 @@ select {
 /* ============================================================
    HUD — abas + painéis de pergaminho emoldurados
    ============================================================ */
-.hud__medallion { flex: none; color: var(--accent); }
+.hud__sigil { flex: none; color: var(--accent); }
 .hud__id { display: grid; gap: 0.1rem; min-width: 0; }
 .hud__name { font-family: var(--display); font-size: 1.1rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud__sub { margin: 0; font-size: 0.88rem; color: var(--muted); }
@@ -558,9 +557,14 @@ select {
 .stat span { font-family: var(--label); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .stat b { font-variant-numeric: tabular-nums; color: var(--ink); }
 
-.inv { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
-.inv li { font-size: 0.95rem; color: var(--muted); padding: 0.42rem 0.62rem; background: var(--bg-deep); border: 1px solid var(--line-soft); border-radius: var(--r-sm); transition: border-color 0.16s var(--ease), color 0.16s var(--ease); }
+/* Inventário (SPEC-323 R2): grade de slots com ícone; equipado marcado por aria-current */
+.inv { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: 0.45rem; }
+.inv li { font-size: 0.92rem; color: var(--muted); padding: 0.5rem 0.55rem; background: var(--bg-deep); border: 1px solid var(--line-soft); border-radius: var(--r-sharp); transition: border-color 0.16s var(--ease), color 0.16s var(--ease); }
 .inv li:hover { border-color: var(--accent); color: var(--ink); }
+.inv li[aria-current="true"] { border-color: var(--accent); }
+.inv li.empty { grid-column: 1 / -1; }
+.inv__label { display: flex; align-items: flex-start; gap: 0.4rem; min-width: 0; overflow-wrap: anywhere; }
+.inv__icon { flex: none; color: var(--accent); font-size: 1.1rem; line-height: 1.3; }
 .inv li.empty { color: var(--faint); font-style: italic; border-style: dashed; }
 .inv li.empty:hover { color: var(--faint); border-color: var(--line-soft); }
 
@@ -608,12 +612,14 @@ select {
 .worldmap__edges { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .worldmap__edge { stroke: var(--line-soft); stroke-width: 0.4; stroke-dasharray: 1.5 1.5; }
 .worldmap__node { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; gap: 3px; background: transparent; border: 0; color: var(--muted); cursor: default; }
-.worldmap__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); transition: all 0.2s var(--ease); }
-.worldmap__label { font-family: var(--label); font-size: 0.8rem; letter-spacing: 0.04em; line-height: 1; white-space: nowrap; color: var(--faint); text-shadow: 0 1px 2px var(--bg-deep); text-transform: uppercase; }
+.worldmap__dot { width: 12px; height: 12px; border-radius: 50%; background: var(--surface); border: 1px solid var(--line); transition: all 0.2s var(--ease); }
+/* rótulo legível (SPEC-323 R6): Garamond itálico ≥ 0,85rem com halo */
+.worldmap__label { font-family: var(--body); font-style: italic; font-size: 0.9rem; letter-spacing: 0.01em; line-height: 1.1; white-space: nowrap; color: var(--muted); text-shadow: 0 0 3px var(--bg-deep), 0 0 3px var(--bg-deep), 0 1px 2px var(--bg-deep); }
 .worldmap__node.is-current .worldmap__dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow), 0 0 14px 2px var(--accent-glow); animation: beacon 2.4s var(--ease) infinite; }
 .worldmap__node.is-current .worldmap__label { color: var(--accent); font-weight: 600; }
 .worldmap__node.is-fog .worldmap__dot { background: transparent; border-style: dashed; opacity: 0.45; }
 .worldmap__node.is-fog .worldmap__label { color: var(--faint); opacity: 0.5; }
+.worldmap__node.is-unnamed .worldmap__label { color: var(--muted); opacity: 0.85; font-style: normal; }
 .worldmap__node[data-danger="3"] .worldmap__dot, .worldmap__node[data-danger="4"] .worldmap__dot { border-color: var(--danger); }
 .worldmap__node.is-controlled .worldmap__dot { background: var(--danger); border-color: var(--danger); }
 .worldmap__node.is-quest-target .worldmap__label { color: var(--accent-strong); font-weight: 600; }
@@ -686,9 +692,13 @@ select {
 .abilities li.empty { color: var(--faint); font-style: italic; border-style: dashed; padding-left: 0.6rem; }
 .abilities li.empty::before { content: ""; }
 
-.people { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
-.person { padding: 0.6rem 0.7rem; background: var(--bg-deep); border: 1px solid var(--line-soft); border-radius: var(--r-sm); transition: border-color 0.16s var(--ease); }
-.person:hover { border-color: var(--line); }
+/* Pessoas (SPEC-323 R2): sem caixa, só filetes finos entre os nomes */
+.people { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.person { padding: 0.7rem 0.1rem; border-bottom: 1px solid var(--line-soft); }
+.person:last-child { border-bottom: 0; }
+.person__rel::before { content: "◆ "; font-size: 0.7em; }
+.person__rel--hostil { color: var(--danger-text); }
+.person__rel--desconfiado { color: var(--faint); }
 .person__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
 .person__name { font-family: var(--label); font-size: 0.92rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
 .person__rel { color: var(--accent); font-size: 0.8rem; letter-spacing: 0.12em; white-space: nowrap; }
@@ -749,12 +759,9 @@ select {
 .faction__meta { margin: 0.35rem 0 0; font-size: 0.78rem; color: var(--faint); }
 
 /* ---- Missões (Fase 3.3) ---- */
-.quest {
-  padding: 0.6rem 0.7rem; background: var(--bg-deep);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r-sm); transition: border-color 0.16s var(--ease);
-}
-.quest--main { border-color: var(--accent); margin: 0 0 1rem; }
+.quest { padding: 0.6rem 0.1rem; border-bottom: 1px solid var(--line-soft); }
+.quests .quest:last-child { border-bottom: 0; }
+.quest--main { padding: 0.6rem 0.7rem; background: var(--bg-deep); border: 1px solid var(--accent); border-radius: var(--r-sm); margin: 0 0 1rem; }
 .quest__arc { margin: 0 0 0.2rem; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
 .quest__title { margin: 0; font-family: var(--label); font-size: 0.96rem; color: var(--ink); text-transform: uppercase; }
 .quest__track { margin-top: 0.5rem; height: 5px; background: var(--bg); border-radius: var(--r-sm); overflow: hidden; }
@@ -762,15 +769,16 @@ select {
 
 .quests { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
 .quest--completed { opacity: 0.85; }
-.quest--failed { border-left: 3px solid var(--danger); opacity: 0.85; }
+.quest--failed { opacity: 0.85; }
 .quest__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
 .quest__status { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
 .quest__status--completed { color: var(--accent); }
 .quest__status--failed { color: var(--danger-text); }
-.quest--expired { border-left: 3px solid var(--danger); opacity: 0.85; }
+.quest--expired { opacity: 0.85; }
 .quest__status--expired { color: var(--danger-text); }
-.quest__deadline { margin: 0.2rem 0 0; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); }
-.quest__deadline--urgent { color: var(--danger-text); font-weight: 600; }
+/* prazo como etiqueta (pílula de status, SPEC-322 R7) */
+.quest__deadline { display: inline-block; margin: 0.3rem 0 0; padding: 0.1rem 0.55rem; border: 1px solid var(--line-soft); border-radius: var(--r-pill); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.quest__deadline--urgent { color: var(--danger-text); border-color: var(--danger-text); font-weight: 600; }
 .quest__desc { margin: 0.3rem 0 0.3rem; font-size: 0.9rem; font-style: italic; color: var(--muted); line-height: 1.45; }
 .quest__meta { margin: 0.2rem 0 0; font-size: 0.78rem; color: var(--muted); }
 
@@ -854,7 +862,6 @@ select {
    ============================================================ */
 @media (max-width: 900px) {
   .form__row { grid-template-columns: 1fr; }
-  .msg--player { max-width: 92%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -935,6 +942,9 @@ select {
 .placechip:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
 .placechip:disabled { opacity: 0.5; cursor: default; }
 .placechip--exit { border-style: dashed; }
+/* sugestões de contexto (SPEC-323 R10): linha rolável acima do compositor */
+.suggestions { display: flex; gap: 0.45rem; overflow-x: auto; padding: 0 0 0.45rem; scrollbar-width: none; }
+.suggestions .placechip { flex: none; white-space: nowrap; min-height: 36px; }
 
 /* spec npcs-3-camadas: traits revelados + "ouviu falar" */
 .codex-entry--heard { opacity: 0.65; }
@@ -1050,7 +1060,6 @@ select {
   .scene-art { flex-basis: 132px; }
   .scene-art p { left: 0.7rem; bottom: 0.35rem; font-size: 0.75rem; }
   .card__art { width: calc(100% + 2rem); }
-  .msg--player { max-width: 100%; }
   .actionbar { padding: 0.6rem 0.7rem calc(0.6rem + env(safe-area-inset-bottom)); position: sticky; bottom: 0; }
   .actionbar input, .actionbar textarea { min-width: 0; font-size: 16px; } /* 16px evita zoom do iOS */
   .actionchips { padding: 0.4rem 0.7rem 0; }
@@ -1365,7 +1374,10 @@ article.card[data-selected="true"]::before {
 /* SPEC-296: "Ouvi dizer" */
 .heard-news__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
 .heard-news__seal { font-style: italic; color: var(--accent); }
-.heard-news__item { border-bottom: 1px solid var(--line-soft); padding-bottom: 0.5rem; }
+/* mural de boatos (SPEC-323 R2): itálico, selo "boato" */
+.heard-news__item { border-bottom: 1px dotted var(--line); padding-bottom: 0.6rem; }
+.heard-news__item p { margin: 0.2rem 0 0; font-style: italic; font-family: var(--body); color: var(--ink); }
+.heard-news__seal { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78em; font-style: normal; }
 .person__change { margin: 0.15rem 0 0; font-size: 0.75rem; color: var(--faint); font-style: italic; }
 .faction__disp--amistoso { color: var(--accent); }
 .faction__disp--desconfiado { color: var(--faint); }

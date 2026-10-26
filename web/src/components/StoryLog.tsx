@@ -1,4 +1,5 @@
 import { Fragment, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { debugEnabled } from "../debugFlag";
 import { mdLite, roleLabel } from "../lib";
 import { useTypewriter } from "../hooks/useTypewriter";
 import { useEffectsEnabled } from "../design/motion";
@@ -129,7 +130,7 @@ function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReve
   }, [entry.id, revealing, reveal, registerReveal]);
   const shownHtml = displayedText.length >= plain.length ? html : revealHtml(html, displayedText.length);
   const [costOpen, setCostOpen] = useState(false);
-  const technical = entry.technicalCostUsd && /[1-9]/.test(entry.technicalCostUsd)
+  const technical = debugEnabled() && entry.technicalCostUsd && /[1-9]/.test(entry.technicalCostUsd)
     ? `${entry.technicalCostExact ? "Custo técnico registrado" : "Estimativa de custo técnico"}: US$ ${entry.technicalCostUsd.replace(".", ",")}`
     : null;
   const settled = entry.costMilli != null

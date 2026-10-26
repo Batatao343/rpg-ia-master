@@ -53,7 +53,7 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
           ))}
         </ul>
       ) : (
-        <p className="combat-empty">Nenhuma missão registrada — ainda.</p>
+        <p className="combat-empty">Aceite um pedido de um morador para abrir uma missão.</p>
       )}
     </div>
   );

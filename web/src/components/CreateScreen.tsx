@@ -9,7 +9,8 @@ import type {
   RaceTrait,
   StartScenario,
 } from "../types";
-import { Frame, Divider, Medallion } from "./ornaments";
+import { Frame, Divider } from "./ornaments";
+import { Sigil } from "./Sigil";
 import { VisualArtwork } from "./VisualArtwork";
 import { Icon } from "../design/icons";
 
@@ -160,26 +161,16 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
   return (
     <main className="create">
       <Frame className={"create__frame" + (wizard && step >= 1 && step <= 3 ? " create__frame--wide" : "")}>
-        <div className="create__seal"><Medallion size={48} /></div>
+        <div className="create__seal"><Sigil size={48} /></div>
         <header className="create__head">
-          <p className="kicker">Dark Fantasy · Narração por IA</p>
-          <h1 className="create__title">Forje sua lenda</h1>
+          <p className="kicker">Dark Fantasy · Narrado por um mestre artificial</p>
+          <h1 className="create__title">Valoria te espera à beira do Abismo</h1>
           {(!wizard || step === 0) && (
             <p className="create__sub">
               Um mundo sombrio aguarda. Defina quem caminha nele — o resto, a história escreve.
             </p>
           )}
         </header>
-
-        <button
-          type="button"
-          className="simulator-shortcut"
-          disabled={busy}
-          onClick={onSimulate}
-        >
-          <span aria-hidden><Icon name="combat" /></span>
-          <span><strong>Simular combate</strong><small>Entrar direto na arena · zero LLM</small></span>
-        </button>
 
         {wizard && step < 5 && (
           <nav className="wizard__steps" aria-label="Passos da criação">
@@ -257,7 +248,19 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
         {wizard && step === 2 && (
           <section>
             <h2 className="wizard__title">Como você sobrevive?</h2>
-            <div className="cards" role="radiogroup" aria-label="Vocação (classe)">
+            {className && lore.classes[className] && (
+              <div className="class-stage" aria-live="polite">
+                <VisualArtwork asset={opts.visuals?.classes?.[className] ?? null}
+                  name={className} className="class-stage__art" variant="card" />
+                <div className="class-stage__detail">
+                  <h3 className="class-stage__name">{className}</h3>
+                  <p className="class-stage__tagline">{lore.classes[className].tagline}</p>
+                  <p className="class-stage__desc">{lore.classes[className].description}</p>
+                  <p className="class-stage__hook">{lore.classes[className].playstyle}</p>
+                </div>
+              </div>
+            )}
+            <div className={"cards" + (className ? " cards--staged" : "")} role="radiogroup" aria-label="Vocação (classe)">
               {opts.classes.map((cls) => {
                 const card = lore.classes[cls];
                 return (
@@ -521,6 +524,10 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
             </button>
           </div>
         )}
+
+        <button type="button" className="btn btn--ghost simulator-link" disabled={busy} onClick={onSimulate}>
+          <Icon name="combat" /> Arena de treino
+        </button>
       </Frame>
     </main>
   );

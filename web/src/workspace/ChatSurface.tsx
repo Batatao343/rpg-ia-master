@@ -13,6 +13,7 @@ import { IDLE_TURN, type TurnWait } from "../turnWait";
 import { useComposerHeight } from "../hooks/useComposerHeight";
 import { composerHeight, shouldSubmitOnKey } from "./composerKeys";
 import { Icon } from "../design/icons";
+import { ContextSuggestions } from "../components/ContextSuggestions";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
 export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat, onQuoteOffer, offersDisabled }: {
@@ -185,6 +186,8 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
         onRetry={() => onRetry?.()}
         onFocusInput={() => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
+      <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
+        onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
       <div className="actionbar__composer">
       <textarea
         ref={setAreaRef}

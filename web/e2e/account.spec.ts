@@ -26,7 +26,7 @@ for (const width of [390, 1440]) {
     const history = backend.histories.get("game-a")!;
     Object.assign(history[0], { cost_milli: "1250", technical_cost_usd: "0.000041550",
       technical_cost_basis: "usage_ledger", technical_cost_exact: false });
-    await page.goto("/");
+    await page.goto("/?debug=1");
     await expect(page.getByRole("heading", { name: "Continuar jornada" })).toBeVisible();
     await page.getByRole("button", { name: /Conta · 3,25 Estilhas/ }).click();
     await expect(page.getByRole("heading", { name: "Minha conta" })).toBeVisible();
@@ -72,7 +72,7 @@ test("SPEC-185 fallback updates technical cost after classic action", async ({ p
       cost_milli: null, technical_cost_usd: "0.000000042",
       technical_cost_basis: "usage_ledger", technical_cost_exact: false }) }));
   await page.route("**/game/action/stream", route => route.abort("failed"));
-  await page.goto("/");
+  await page.goto("/?debug=1");
   await page.getByRole("button", { name: /^Ayla/ }).click();
   await page.getByPlaceholder(/O que você faz/).fill("Abro a porta");
   await page.getByRole("button", { name: "Agir" }).click();

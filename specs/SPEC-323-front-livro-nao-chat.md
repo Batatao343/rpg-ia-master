@@ -1,7 +1,7 @@
 # SPEC-323 — Front: livro, não chat (marginália, HUD, copy, criação, mapa, sigilo)
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Status:** `in-progress` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Depende de:** SPEC-322 (ícones e tokens), SPEC-321 (casca mobile e rótulos "Crônica")
 > **Desbloqueia:** release do beta (SPEC-197) e a loja (SPEC-198), pelo item do medalhão
 
@@ -174,3 +174,8 @@ Staging, conta logada, ~4 turnos (um com NPC em cena e um com missão ativa).
 - **D3 — nome do produto.** **Recomendado: "Crônicas de Valoria"** em todo lugar (title, PWA, loja). Alternativa: "Crônicas — RPG de Texto".
 - **D4 — headline da criação.** **Recomendado: uma frase ancorada na lore no lugar de "Forje sua lenda"**, a escolher pelo dono a partir de 2–3 opções que o executor propõe.
 - **D5 — mapa pintado (opcional).** **Recomendado: não nesta spec. Fazer só a legibilidade (R6) agora e decidir a arte depois do beta.** Se for sim, a geração da arte tem custo e passa por spec ou tarefa de arte separada.
+
+## Histórico de mudanças
+
+- 2026-10-26 — implementação (SPEC-323, branch spec-323). Decisões do dono aplicadas nos padrões recomendados: D1 kicker "Narrado por um mestre artificial" (aviso formal de IA permanece em `web/legal/terms.md`); D2 sigilo próprio (`Sigil.tsx`: anel do Abismo com fenda + Cinco Sinos em pentágono; `Medallion` removido); D3 "Crônicas de Valoria" (`src/product.ts` `PRODUCT_NAME`, `<title>`, meta description, auth, Capacitor `appName`, títulos das páginas legais); D4 headline "Valoria te espera à beira do Abismo" (alternativas propostas ao dono: "Quem responde quando Valoria chama?", "Escreva seu nome na borda do Abismo"); D5 sem mapa pintado (R7 fora; só R6).
+- Desvios: (a) `ContextSuggestions` é montado dentro do `Composer` (e não no `ChatSurface`), porque o campo de texto e o rascunho vivem lá; a lógica pura está em `src/contextSuggestions.ts` (`suggestionsFor`). (b) `NpcView` ganhou `in_scene?`/`status?` (a API já os enviava). (c) Ícones de item usam só a família da SPEC-322 (`unique`, `card-active`, `card-reaction`, `prepared`) por slot; arte nova por item exigiria vendorar ícones e atualizar créditos. (d) A etapa 1 e a 3 ganharam spec e2e nova `web/e2e/livro.spec.ts` (o `visual-surfaces` só roda em Linux pinado). (e) `account.spec.ts` usa `/?debug=1` onde afirma o custo técnico. (f) `android/.../strings.xml` (`app_name` "Valoria (staging)") e o package id ficam intocados.

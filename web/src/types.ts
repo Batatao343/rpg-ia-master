@@ -104,6 +104,8 @@ export interface NpcView {
   attitude_label: "hostil" | "desconfiado" | "neutro" | "amistoso" | "leal"; // SPEC-298: só rótulo
   recent_changes?: RecentChange[];
   last_memory: string;
+  in_scene?: boolean; // presente na cena (SPEC-323 R10 usa para sugerir "Falar com")
+  status?: string;
 }
 
 

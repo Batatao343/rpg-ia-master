@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import * as api from "../api";
 import { Frame } from "./ornaments";
+import { PRODUCT_NAME } from "../product";
 import { TurnstileChallenge } from "./TurnstileChallenge";
 import { authErrorMessage } from "../lib/authErrors";
 import { errRequestId } from "../lib/errorMessages";
@@ -108,7 +109,7 @@ export function AuthScreen({ busy, onLogin, onAuthenticated, config, error, erro
   return <main className="create">
     <Frame className="create__frame">
       <header className="create__head">
-        <p className="kicker">Crônicas de Valoria</p>
+        <p className="kicker">{PRODUCT_NAME}</p>
         <h1 className="create__title">{title}</h1>
         <p className="create__sub">{mode === "reset_request" || mode === "verify_request"
           ? "Enviaremos instruções caso o endereço possa recebê-las."

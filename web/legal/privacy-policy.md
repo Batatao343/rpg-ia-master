@@ -1,7 +1,7 @@
 ---
 status: final
 ---
-# Política de Privacidade - Valoria (RPG IA)
+# Política de Privacidade - Crônicas de Valoria
 
 > Última atualização: 24/10/2026. Recomenda-se revisão por assessoria jurídica.
 

@@ -1,7 +1,7 @@
 ---
 status: final
 ---
-# Créditos - Valoria (RPG IA)
+# Créditos - Crônicas de Valoria
 
 > Última atualização: 25/10/2026.
 

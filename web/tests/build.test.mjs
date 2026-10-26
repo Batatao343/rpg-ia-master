@@ -54,3 +54,17 @@ test('SPEC-321 R8: index.html tem viewport-fit=cover e theme-color; Capacitor pe
   const cap = readFileSync(new URL('../capacitor.config.ts', import.meta.url), 'utf8');
   assert.match(cap, /StatusBar:\s*\{[^}]*style:\s*'DARK'/);
 });
+
+test('SPEC-323 R9: um só nome de produto em title, meta, auth e Capacitor', async () => {
+  const product = readFileSync(new URL('../src/product.ts', import.meta.url), 'utf8');
+  const name = product.match(/PRODUCT_NAME = "([^"]+)"/)[1];
+  assert.equal(name, 'Crônicas de Valoria');
+  const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, new RegExp(`<title>${name}</title>`));
+  assert.match(html, new RegExp(`name="description" content="${name}`));
+  const cap = readFileSync(new URL('../capacitor.config.ts', import.meta.url), 'utf8');
+  assert.match(cap, new RegExp(`appName: '${name}'`));
+  assert.match(cap, /appId: 'dev\.rpgia\.valoria\.staging'/); // package id intocado
+  const auth = readFileSync(new URL('../src/components/AuthScreen.tsx', import.meta.url), 'utf8');
+  assert.match(auth, /\{PRODUCT_NAME\}/);
+});

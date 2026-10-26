@@ -120,12 +120,12 @@ function MapBody({ view, stale, loading, busy, blocked, selected, onSelect, onAc
               ref={(el) => { if (el) refs.current.set(n.id, el); else refs.current.delete(n.id); }}
               aria-pressed={n.id === sel?.id}
               aria-label={`${n.name}, ${STATE_TEXT[n.state]}${cost ? `, ${periodsLabel(cost.periods)}` : ""}`
-                + (n.quest_target ? ", objetivo de missão" : "") + (n.ruler ? `, sob domínio de ${n.ruler}` : "")}
+                + (n.quest_target ? ", objetivo de missão" : "") + (n.ruler ? `, sob domínio de ${n.ruler}` : "")
+                + (n.danger !== undefined ? `, perigo ${n.danger}` : "")}
               onClick={() => onSelect(n.id)}>
               <span className="worldmap__dot" />
               <span className="worldmap__label">
-                <Icon name={STATE_ICON[n.state]} />{" "}
-                {n.ruler ? <><Icon name="ruler" />{" "}</> : null}{n.quest_target ? <><Icon name="quest" />{" "}</> : null}{n.threatened ? <><Icon name="warning" />{" "}</> : null}{n.name}
+                <Icon name={n.threatened ? "warning" : n.ruler ? "ruler" : n.quest_target ? "quest" : STATE_ICON[n.state]} />{" "}{n.name}
               </span>
             </button>
           );

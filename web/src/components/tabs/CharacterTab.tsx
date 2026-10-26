@@ -4,7 +4,7 @@ import type { GameResponse, VisualAsset, WoundTrackView } from "../../types";
 import { FichaTab, type EquipFn } from "../Hud";
 import { GeneratedPortrait } from "../GeneratedPortrait";
 import { QuestsTab } from "../QuestsTab";
-import { Medallion } from "../ornaments";
+import { Sigil } from "../Sigil";
 import { VisualArtwork } from "../VisualArtwork";
 import { WoundTrack } from "../WoundTrack";
 import { RovingTablist } from "../../workspace/RovingTablist";
@@ -58,7 +58,7 @@ export function CharacterTab({ data, hitKey, onEquip, busy, artPanel }: {
   return (
     <div className="ws-sheet">
       <div className="ws-sheet__head">
-        <span className="hud__medallion"><Medallion size={36} /></span>
+        <span className="hud__sigil"><Sigil size={36} /></span>
         <div className="hud__id">
           <p className="hud__name">{p?.name || "—"}</p>
           <p className="hud__sub">{sub}</p>

@@ -18,7 +18,7 @@ const config: CapacitorConfig = {
   // identity lives in android/app/build.gradle (applicationId + namespace) and the Java package
   // dev.rpgia.valoria.staging. SPEC-198 must change all of them together for production.
   appId: 'dev.rpgia.valoria.staging',
-  appName: 'Valoria (staging)',
+  appName: 'Crônicas de Valoria',
   webDir: 'dist',
   // WebView debugging is forced to BuildConfig.DEBUG in MainActivity (release is never debuggable).
   android: { allowMixedContent: false },

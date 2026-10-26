@@ -1,7 +1,7 @@
 ---
 status: final
 ---
-# Termos de Uso - Valoria (RPG IA) - Beta fechado
+# Termos de Uso - Crônicas de Valoria - Beta fechado
 
 > Última atualização: 24/10/2026. Recomenda-se revisão por assessoria jurídica.
 
