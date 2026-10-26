@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "d3656fa85ad4b9fc06c0a00d59c3493440585b4f",
+  "commit_sha": "d766031628da6a45ffed1e45363131c8ca91d322",
   "edge_counts": {
-    "calls": 28449,
-    "contains": 969,
-    "defines": 14237,
-    "imports": 2338,
-    "likely_test_for": 1641,
+    "calls": 28526,
+    "contains": 972,
+    "defines": 14286,
+    "imports": 2343,
+    "likely_test_for": 1644,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:67566341dfdcd3ae180da48f6329c763a722d96592ed9ecf2d0202b5ddb7c5e3",
+  "graph_hash": "sha256:0efe001081563fda692fc25aa5effa548bb18a7543927b256775bf800cd0799c",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -171,6 +171,8 @@
     "persistence.py",
     "playtest/__init__.py",
     "playtest/__main__.py",
+    "playtest/capabilities.py",
+    "playtest/capability_bots.py",
     "playtest/invariants.py",
     "playtest/latency_llm.py",
     "playtest/matrix.py",
@@ -974,6 +976,7 @@
     "tests/test_spec325_nonlethal.py",
     "tests/test_spec325_objects.py",
     "tests/test_spec325_orders.py",
+    "tests/test_spec325_playtest.py",
     "tests/test_spec325_reinforcements.py",
     "tests/test_spec325_resist.py",
     "tests/test_spec_index.py",
@@ -1193,14 +1196,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 942,
+    "class": 945,
     "endpoint": 64,
-    "file": 1139,
-    "function": 4454,
-    "method": 832,
-    "module": 969,
-    "test": 8008
+    "file": 1142,
+    "function": 4482,
+    "method": 835,
+    "module": 972,
+    "test": 8023
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d68682d25a04e20bc09dcb79558ee43f2652f1bec22e33403eb4bf893b697555"
+  "source_tree_hash": "sha256:946211a4d3d8da22f50b80e19de3e5788b3804a72eb0cde291a8c680d356b5a3"
 }
