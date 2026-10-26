@@ -231,3 +231,10 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
 - **2026-10-26 (§6.1 no staging, `c024b7f`):** shadow com o fix de prefixo, 24 turnos DeepSeek + smoke e2e:
   `would_replace` 1/25 (4 %, `reason=start`) < 5 % → critério D1 cumprido; 1ª narração p50 5,6 s / p95 14,3 s,
   0 erros. Ligado `RPG_TOKEN_STREAM=on` no preset do staging (`RPG_EARLY_NARRATIVE=on` já estava). Próximo: §6.2–6.4.
+- **2026-10-26 (§6.2, `bf8392a`, `RPG_TOKEN_STREAM=on`):** `projection_measure` 15 turnos ×2, DeepSeek, 0 erros, checks ok.
+  Sessão 2: `first_chunk` p50 2,9 s / p95 11,3 s; `done` p50 5,6 s / p95 14,2 s; `state` p50 9,0 s / p95 20,2 s.
+  Sessão 1: 6/15 turnos com `ack` (1º byte SSE) de 19–39 s, fora das fases do servidor (narrador 3–5 s,
+  `lock_wait` ~100 ms) → espera de infra/Vercel, não do stream; sem ela o `first_chunk − ack` fica em 2–7 s.
+  `sse.token_replace` em produção: 3 em ~35 turnos (~9 %; 2 `tail`, 1 `start`), acima do alvo de 5 % do shadow
+  → follow-up: o `tail` mostra texto streamado MAIOR que o final (1505 vs 1391 chars), sinal de corte no final
+  que o hold de 72 chars não cobre. Ligado `RPG_LLM_HEDGE_MS=6000` (D2, só FAST) para o §6.3.
