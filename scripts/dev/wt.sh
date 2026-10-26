@@ -65,7 +65,14 @@ case "$cmd" in
     git merge -q --ff-only "$BR"
     git log --oneline -3;;
   drop)
+    # The web/node_modules junction points at MAIN's node_modules: remove the link itself
+    # (never its target) first, otherwise `worktree remove` leaves an empty dir behind and
+    # the next `wt.sh new` fails with "already exists".
+    if [ -e "$WT/web/node_modules" ]; then
+      powershell.exe -NoProfile -Command "\$i = Get-Item -LiteralPath \"$(cygpath -w "$WT/web/node_modules")\" -Force; if (\$i.Attributes -match 'ReparsePoint') { \$i.Delete() }" 2>/dev/null || true
+    fi
     git -C "$MAIN" worktree remove --force "$WT" 2>/dev/null || true
+    [ -d "$WT" ] && [ -z "$(find "$WT" -type f -print -quit 2>/dev/null)" ] && rm -rf "$WT"
     git -C "$MAIN" branch -D "$BR" 2>/dev/null || true;;
   path)
     echo "$WT";;
