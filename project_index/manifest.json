@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "84f1fe229597d4f9a7993e874646b7195a3c7a54",
+  "commit_sha": "64cdc29ff3650e5237159cfb1b7b3a6a529e24e2",
   "edge_counts": {
-    "calls": 28527,
-    "contains": 972,
-    "defines": 14288,
-    "imports": 2343,
-    "likely_test_for": 1644,
+    "calls": 28534,
+    "contains": 973,
+    "defines": 14293,
+    "imports": 2344,
+    "likely_test_for": 1645,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:429942d44562e23f4355cff7b2b02cf40e6752971742a9a864248a5279ff5a96",
+  "graph_hash": "sha256:3ff32b97bd3a488ad905e32ae709c21a789a8c121b60d6d0eb659c82dab1df2a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -501,6 +501,7 @@
     "tests/test_archived_state_persistence.py",
     "tests/test_archivist_facts.py",
     "tests/test_archivist_policy.py",
+    "tests/test_art_offer_label.py",
     "tests/test_art_state_persistence.py",
     "tests/test_art_worker_reconciliation.py",
     "tests/test_artwork_recovery_browser.py",
@@ -1199,12 +1200,12 @@
     "artifact": 9,
     "class": 945,
     "endpoint": 64,
-    "file": 1143,
-    "function": 4483,
+    "file": 1144,
+    "function": 4484,
     "method": 835,
-    "module": 972,
-    "test": 8024
+    "module": 973,
+    "test": 8028
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c9ea465f1677697741f2a6358c06f292859174146645bfc51e289bf23fd7e760"
+  "source_tree_hash": "sha256:0393aad6f48e3cc2957487169d4e1eff6f25d5aedf90fdf35baa8fb25456a509"
 }
