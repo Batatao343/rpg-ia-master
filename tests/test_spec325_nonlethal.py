@@ -94,16 +94,73 @@ def test_xp_same_as_kill(monkeypatch):
     assert killed["player"]["xp"] == spared["player"]["xp"] == 50
 
 
-def test_no_npc_killed_event_and_named_npc_survives(monkeypatch):
+@pytest.mark.parametrize("categoria", ["lacaio", "padrao", "elite", "nomeado", "chefe"])
+def test_nonlethal_every_category_incapacitated_no_npc_killed(monkeypatch, spy, categoria):
+    """D2 pelo fluxo real (sem presets): Elite/Chefe/Nomeado entram em Última Ação/Terminal
+    com o golpe e mesmo assim viram `incapacitado`, sem `npc_killed`."""
     monkeypatch.setattr(cbt, "_canonical_enemy_id", lambda e: "npc_nomeado")
-    killed = run_node(make_state([lacaio()], "ataco o goblin"), monkeypatch)
+    sheet = {"categoria": categoria}
+    if categoria in ("elite", "nomeado", "chefe"):
+        sheet.update(ferimento_espacos={"leve": 0, "grave": 0, "critico": 1})
+
+    killed = run_node(make_state([lacaio(**sheet)], "ataco o goblin"), monkeypatch)
     assert any(ev["type"] == "npc_killed" for ev in killed.get("pending_world_events", []))
+
     monkeypatch.setenv("RPG_COMBAT_NONLETHAL", "on")
-    state = make_state([lacaio()], INTENT)
-    state["npcs"] = {"Nomeado": {"id": "npc_nomeado", "name": "Nomeado"}}
-    spared = run_node(state, monkeypatch)
+    spared = run_node(make_state([lacaio(**sheet)], INTENT), monkeypatch)
+    e = spy["enemies"][0]
+    assert e["status"] == "incapacitado" and not e.get("dead")
     assert not any(ev["type"] == "npc_killed" for ev in spared.get("pending_world_events", []))
-    assert "npc_nomeado" in {n["id"] for n in state["npcs"].values()}
+    assert spy["outcome"] == "victory"
+    assert spared["combat"]["result"]["participants"][0]["final_status"] == "incapacitado"
+
+
+def test_nonlethal_shadow_elite_still_dies_like_off(monkeypatch, spy):
+    monkeypatch.setattr(cbt, "_canonical_enemy_id", lambda e: "npc_nomeado")
+    monkeypatch.setenv("RPG_COMBAT_NONLETHAL", "shadow")
+    sheet = {"categoria": "elite", "ferimento_espacos": {"leve": 0, "grave": 0, "critico": 1}}
+    out = run_node(make_state([lacaio(**sheet)], INTENT), monkeypatch)
+    assert spy["enemies"][0]["dead"]
+    assert any(ev["type"] == "npc_killed" for ev in out.get("pending_world_events", []))
+
+
+def test_hunt_anchor_incapacitated_counts_as_hunt_kill(monkeypatch):
+    from tests.spec313_helpers import setup_env
+    from tests.test_spec313_hunt import _hunt_state
+
+    setup_env(monkeypatch)
+    monkeypatch.setenv("RPG_COMBAT_NONLETHAL", "on")
+    st, _quest, aid = _hunt_state()
+    base = make_state([lacaio(id=f"{aid}_1", name="Fera")], "derrubo a fera sem matar")
+    state = {**st, **{k: v for k, v in base.items() if k not in ("world", "player")}}
+    state["player"] = base["player"]
+    state["world"] = {**st["world"], "turn_count": 19}
+    out = run_node(state, monkeypatch)
+    log = out["quests"][0]["progress_log"]
+    assert [r for r in log if r["kind"] == "hunt_kill"]
+
+
+def test_law_nonlethal_does_not_support_homicide():
+    from services import law
+
+    assert not law.supports("homicidio", "derrubo o guarda sem matar")
+    assert not law.supports("homicidio", "Sem matar.")
+    assert law.supports("homicidio", "mato o guarda")
+    assert law.supports("agressao", "ataco o guarda sem matar")
+
+
+def test_dossier_resistances_use_pt_br_labels(monkeypatch):
+    from services import bestiary_knowledge as bk
+    from services import dossiers
+
+    monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
+    monkeypatch.setattr(
+        bk,
+        "_load_all",
+        lambda **k: {"goblin": {"revealed_cards": [], "revealed_resistances": ["igneo:imune"]}},
+    )
+    _cards, res = dossiers._revealed_for({"id": "goblin", "archetype_id": "goblin"}, 2)
+    assert res == ["Ígneo (imune)"]
 
 
 def test_chip_param_declares_nonlethal_without_text(monkeypatch, spy):
@@ -116,27 +173,34 @@ def test_chip_param_declares_nonlethal_without_text(monkeypatch, spy):
     assert spy["enemies"][0]["status"] == "incapacitado"
 
 
+def _scrub(out):
+    """Retorno inteiro do nó em forma comparável (mensagens viram texto)."""
+    d = dict(out)
+    d["messages"] = [m.content for m in d.get("messages", [])]
+    return d
+
+
 def test_shadow_no_state_change(monkeypatch):
-    off = _run(monkeypatch, "off")
-    shadow = _run(monkeypatch, "shadow")
-    assert shadow["combat"] == off["combat"]
-    assert shadow["player"] == off["player"]
-    assert shadow.get("pending_world_events") == off.get("pending_world_events")
-    assert shadow["messages"][0].content == off["messages"][0].content
+    sent = {}
+
+    def run(mode):
+        monkeypatch.setenv("RPG_COMBAT_NONLETHAL", mode)
+
+        def narrate(*a, **k):
+            sent[mode] = repr((a[2], a[4], a[5]))  # logs, intent, victory
+            return "Fim."
+
+        return run_node(make_state([lacaio()], INTENT), monkeypatch, narrate=narrate)
+
+    off, shadow = run("off"), run("shadow")
+    assert _scrub(shadow) == _scrub(off)
+    assert sent["shadow"] == sent["off"]
 
 
 def test_off_ignores_declaration(monkeypatch, spy):
     _run(monkeypatch, "off")
     e = spy["enemies"][0]
     assert e["dead"] and not e.get("incapacitated")
-
-
-def test_elite_nonlethal_after_last_stand():
-    elite = _elite()
-    out = {"deaths": [], "terminal": [], "logs": []}
-    orch._check_terminal(elite, "el", out, damage_applied=True, nonlethal="on", by="player")
-    assert elite["status"] == "incapacitado" and not elite.get("dead")
-    assert out["deaths"] == [] and out["incapacitated"] == ["el"]
 
 
 def test_elite_without_flag_still_dies_after_last_stand():

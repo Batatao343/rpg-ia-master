@@ -384,13 +384,16 @@ _LETHAL_FORMS = frozenset({"destruicao_total", "queda_fatal"})
 # SPEC-325 R9: declaracao textual de golpe nao-letal (regex fechada, sem LLM).
 NONLETHAL_RE = re.compile(
     r"\bsem\s+(?:o\s+)?(?:matar|mata-?lo|mata-?la|ferir\s+mortalmente)\b"
-    r"|\bnao[\s-]+letal\b|\bnao\s+letais\b"
-    r"|\bnocaute\w*|\bnocautear\b|\bdesacord\w+"
-    r"|\bpoup(?:ar|o|arei|ando)\b"
-    r"|\bdeix(?:o|ar)\s+(?:ele|ela|o|a|-o|-a)?\s*vivo\b"
+    r"|\bnao\s+(?:o\s+|a\s+)?mate\b"
+    r"|\bnao[\s-]+letal(?:is)?\b"
+    r"|\bnocaute\w*|\bnocautear\b|\bdesacord(?:ar|e)\b"
+    r"|\bpoup(?:ar|o|e|arei|ando)(?:\s+|-)(?:o|a|os|as|ele|ela)\b"
+    r"|\bdeix(?:o|ar)\s*-?\s*(?:o|a|ele|ela)?\s*vivo\b"
+    r"|\bquero\s+(?:o|a|ele|ela)\s+vivo\b|\bcaptur(?:o|ar)\s+(?:o|a|ele|ela)?\s*vivo\b"
 )
 _NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|jamais)\s+(?:\w+\s+){0,2}$")
-_SELF_NEGATED = ("nao letal", "nao-letal", "nao letais")
+# A negacao nao atravessa virgula nem conjuncao ("nao fujo e nocauteio o guarda").
+_CLAUSE_SPLIT_RE = re.compile(r"[,;.]|\b(?:e|mas|porem|entao)\b")
 
 
 def _fold(text: str) -> str:
@@ -399,12 +402,12 @@ def _fold(text: str) -> str:
 
 
 def nonlethal_declared(text: str) -> bool:
-    """O jogador declarou um golpe nao-letal? Trata negacao ("nao vou poupar")."""
+    """O jogador declarou um golpe nao-letal? Trata negacao ("nao vou poupar o guarda",
+    "nao quero golpe nao letal, mato") dentro da mesma oracao."""
     folded = _fold(text)
     for m in NONLETHAL_RE.finditer(folded):
-        if m.group(0).startswith(_SELF_NEGATED) or m.group(0).startswith("nao"):
-            return True  # "nao letal" e a propria declaracao
-        if _NEGATION_BEFORE_RE.search(folded[: m.start()]):
+        clause = _CLAUSE_SPLIT_RE.split(folded[: m.start()])[-1]
+        if _NEGATION_BEFORE_RE.search(clause):
             continue
         return True
     return False

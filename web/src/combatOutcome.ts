@@ -13,7 +13,7 @@ export const OUTCOME_TITLES: Record<CombatResultView["outcome"], string> = {
 
 const STATUS_LABELS: Record<string, string> = {
   morto: "abatido", fugiu: "fugiu", rendido: "rendido", capturado: "capturado",
-  ausente: "partiu", ativo: "de pé",
+  ausente: "partiu", ativo: "de pé", incapacitado: "desacordado",
 };
 
 export function resultFrom(raw: unknown): CombatResultView | null {

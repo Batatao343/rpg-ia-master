@@ -219,3 +219,20 @@ def test_playtest_invariant_flags_bad_format_and_incapacitated_dead():
     }
     ids = {v.check_id for v in check_conflict_capabilities(bad, None, 1)}
     assert ids == {"conflict.incapacitated_dead", "conflict.resistance_format"}
+
+
+def test_resist_shadow_full_update_equals_off(monkeypatch):
+    imune = _tough(immunities=["cortante"], id="troll_1")
+
+    def run(mode):
+        monkeypatch.setenv("RPG_COMBAT_REVEAL_RESIST", mode)
+        monkeypatch.setenv("RPG_RUNTIME_PROFILE", "legacy")
+        out = run_node(make_state([dict(imune)], "ataco o troll"), monkeypatch)
+        d = dict(out)
+        d["messages"] = [m.content for m in d["messages"]]
+        d["enemies"] = [
+            {k: v for k, v in e.items() if k != "revealed_resistances"} for e in d["enemies"]
+        ]
+        return d
+
+    assert run("shadow") == run("off")

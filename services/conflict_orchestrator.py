@@ -1484,14 +1484,23 @@ def _resolve_actor_turn(
                 _record_class_event(out, "special:blood_leak", entropy_delta=after[0] - before[0])
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
-        _check_terminal(
-            tgt,
-            tid,
-            out,
-            damage_applied=True,
-            nonlethal=_nonlethal_mode(decl, acao, actor_id, tid, sides),
-            by=actor_id,
-        )
+        nl_mode = _nonlethal_mode(decl, acao, actor_id, tid, sides)
+        _check_terminal(tgt, tid, out, damage_applied=True, nonlethal=nl_mode, by=actor_id)
+        if (
+            nl_mode
+            and not tgt.get("dead")
+            and not tgt.get("incapacitated")
+            and not tgt.get("is_player")
+            and (tgt.get("last_stand_pending") or tgt.get("estado_terminal"))
+            and not tgt.get("last_stand_resolved")
+        ):
+            # SPEC-325 R9/D2: o golpe não-letal que enche o último Crítico de um
+            # Elite/Chefe/Nomeado ainda dispara a Última Ação, mas o desfecho
+            # terminal vira incapacitação (nunca morte) — ver _resolve_terminal_states.
+            if nl_mode == "on":
+                tgt["nonlethal_pending_by"] = actor_id
+            else:
+                _log_event("combat", "nonlethal_shadow", target=tid)
         if tgt.get("is_player") and _can_act(tgt) and _alive(actor):
             # SPEC-232 R2: passiva `contra_ataque` (tier 8) — revida 1×frequência.
             for pe in cm.triggered_passives(tgt, "on_hit_taken"):
@@ -1591,6 +1600,15 @@ def resolve_terminals(
     for actor_id in pending_ids:
         target = actors_by_id.get(actor_id)
         if not target or not target.get("estado_terminal"):
+            continue
+        if target.get("nonlethal_pending_by") and not target.get("is_player"):
+            by = str(target.pop("nonlethal_pending_by"))
+            death_flow.apply_nonlethal_finish(target)
+            target["status"] = "incapacitado"
+            target["nonlethal_by"] = by
+            if actor_id not in out.setdefault("incapacitated", []):
+                out["incapacitated"].append(actor_id)
+            out["logs"].append(f"{_name(target)} cai desacordado.")
             continue
         try:
             tactical_stabilization_round = int(target.get("_tactical_stabilization_round", -1))

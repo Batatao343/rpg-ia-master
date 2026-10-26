@@ -313,7 +313,9 @@ def _revealed_for(base: Mapping, tier: int) -> tuple:
             card = cards.get_card(str(card_id)) or {}
             if card:
                 out_cards.append({"id": str(card_id), "name": str(card.get("name", card_id))})
-        return out_cards, [str(r) for r in data.get("revealed_resistances") or []]
+        from services.combat_flags import resistance_label
+
+        return out_cards, [resistance_label(str(r)) for r in data.get("revealed_resistances") or []]
     except Exception:
         return [], []
 

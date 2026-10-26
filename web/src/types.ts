@@ -368,7 +368,7 @@ export interface EncounterView {
     participant_id: string; species_label: string; categoria: string;
     role: "hostile" | "ally" | "neutral" | "hazard";
     presence: "present" | "arrived" | "departed";
-    status: "ativo" | "morto" | "fugiu" | "rendido" | "capturado" | "ausente";
+    status: "ativo" | "morto" | "fugiu" | "rendido" | "capturado" | "ausente" | "incapacitado";
   }>;
 }
 

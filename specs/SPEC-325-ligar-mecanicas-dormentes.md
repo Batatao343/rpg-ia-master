@@ -547,3 +547,17 @@ Observações honestas sobre a medida:
   - **Desvio 3:** `staging_flags.json` não foi alterado (as flags ficam no código em `shadow` até o gate).
   - **Desvio 4:** `record_kills` do bestiário continua só para morte; o não-letal rende XP/loot (D2) mas não
     conta como "abate" no conhecimento do bestiário.
+- **2026-10-26 — Revisão Sol: `CHANGES_REQUIRED`** (`handoffs/SPEC-325-sol-review.md`). Correções:
+  - **P1-1** Elite/Chefe/Nomeado: o golpe não-letal que dispara a Última Ação marca `nonlethal_pending_by`;
+    na resolução do Estado Terminal o alvo vira `incapacitado` (sem `deaths`, sem `npc_killed`). Em `shadow`
+    só loga.
+  - **P1-2** testes pelo `combat_node` real para lacaio/padrão/elite/nomeado/chefe, sem presets.
+  - **P2-1** âncora de caça (SPEC-313) incapacitada conta como `hunt_kill` (opção a).
+  - **P2-2** `law.supports("homicidio", …)` é falso quando há declaração não-letal.
+  - **P2-3** `NONLETHAL_RE`: objeto pessoal após `poup*`, "não mate", "poupe-o", "deixo-o vivo", negação
+    limitada à oração (vírgula/conjunção).
+  - **P2-4** shadow compara o retorno inteiro e os argumentos da narração; regressão com as flags em `off`.
+  - **P2-5/6/7** rótulo `incapacitado` no painel e na união TS, rótulo pt-BR no dossiê, chip "Sem matar"
+    reseta após o envio e é ignorado se a flag sair de `on`.
+  - **Desvio 5:** a tag `poupou_inimigo` sai de `final_status == "incapacitado"` com desfecho `victory`
+    (em vez do desfecho `incapacitated_enemy` descrito no R9). O catálogo de tags passou de 15 para 16.

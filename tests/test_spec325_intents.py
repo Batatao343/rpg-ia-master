@@ -15,6 +15,14 @@ from services.combat_intents import nonlethal_declared
         "golpe não letal no lobo",
         "ataco com golpe nao-letal",
         "derrubo ele e deixo vivo",
+        "não mate o guarda",
+        "não o mate",
+        "poupe-o",
+        "poupo o guarda",
+        "deixo-o vivo",
+        "quero ele vivo",
+        "nocauteio o guarda",
+        "não fujo e nocauteio o guarda",
     ],
 )
 def test_positive(text):
@@ -28,6 +36,11 @@ def test_positive(text):
         "nunca vou nocautear esse canalha",
         "ataco o goblin",
         "mato o soldado",
+        "poupo fôlego e ataco",
+        "poupar energia, ataco com tudo",
+        "poupar é fraqueza",
+        "estou em desacordo",
+        "não quero golpe não letal, mato",
         "",
     ],
 )

@@ -72,6 +72,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const trigger = useRef<HTMLElement | null>(null);
   const prevPhase = useRef(targeting.state.phase);
 
+  const spareOn = spare && !!combat?.nonlethal_available; // flag saiu de `on` -> ignora
   const cards = combat?.cards ?? [];
   const enemies = combat?.enemies ?? [];
   const people = useMemo(() => (combat ? buildParticipants(combat, data?.party ?? []) : []), [combat, data?.party]);
@@ -125,13 +126,15 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     const [text, options] = cardPayload(card, targetId, targetId ? nameOf(targetId) : undefined,
       ruptureId === card.id, reactionCardId);
     setRuptureId(null);
-    onAction(spare ? `${text} ${SPARE_TEXT}` : text, options);
+    onAction(spareOn ? `${text} ${SPARE_TEXT}` : text, options);
+    setSpare(false); // vale só para o próximo golpe
   }
 
   function sendBasic(action: BasicActionView, targetId: string | undefined) {
     if (!targeting.begin()) return;
     const [text, options] = basicPayload(action, targetId, targetId ? nameOf(targetId) : undefined, reactionCardId);
-    onAction(spare && action.kind === "attack" ? `${text} ${SPARE_TEXT}` : text, options);
+    onAction(spareOn && action.kind === "attack" ? `${text} ${SPARE_TEXT}` : text, options);
+    if (action.kind === "attack") setSpare(false);
   }
 
   function gestureCard(card: CardView, el?: HTMLElement) {

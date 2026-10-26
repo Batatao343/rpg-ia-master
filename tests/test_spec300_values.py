@@ -60,7 +60,7 @@ def test_betrayal_traits_existem_no_catalogo():
 
 def test_catalogo_de_tags_schema():
     cat = ctags.catalog()
-    assert len(cat) == 15
+    assert len(cat) == 16  # +poupou_inimigo (SPEC-325)
     for tid, tag in cat.items():
         assert tag["source"] in {"event", "combat", "baseline", "action_regex", "engine"}
         assert 1 <= tag["magnitude"] <= 3

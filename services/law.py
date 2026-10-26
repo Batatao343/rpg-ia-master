@@ -456,6 +456,11 @@ def _perceives(state: dict, code: dict, crime_id: str, witness: str, crime_type:
 def supports(crime_type: str, player_text: str) -> bool:
     """R6.4: a AÇÃO do jogador tem suporte lexical para o tipo?"""
     pat = _LEXICON.get(crime_type)
+    if crime_type == "homicidio":
+        from services.death_flow import nonlethal_declared
+
+        if nonlethal_declared(player_text):  # SPEC-325: "sem matar" nao sustenta homicidio
+            return False
     return bool(pat and pat.search(_fold(player_text)))
 
 
