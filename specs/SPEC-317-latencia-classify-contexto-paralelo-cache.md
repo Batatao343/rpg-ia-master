@@ -210,3 +210,10 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
 - 25/10 — A/B offline do CLASSIFY: Groq-first não promovido (p50 −22 %, concordância 0,9375; p95 DeepSeek 11,4 s vs Groq 2,1 s → insumo da SPEC-319).
 - 25/10 — pousada na main com flags seguras; suíte completa verde. `done` após a medição §6 no staging (200 decisões em shadow, `cache_hit_ratio`, cold start).
 - 26/10 — medição no staging `7520848`: `router.deterministic_shadow` n=3 (vocativos), concordância 3/3; n muito abaixo de 200 → flag segue `shadow` até acumular tráfego real. `cache_hit_ratio` mediana 0,015 (round 1) → `RPG_PROMPT_STATIC_FIRST` segue off; avaliar ligar em experimento. `prefetch_hit`=8, 0 miss.
+- 26/10 (noite, staging `9775ea1`) — §6.2 R9/R10: experimento `RPG_PROMPT_STATIC_FIRST=on` (15 turnos, DeepSeek):
+  `cache_hit_ratio` mediana 0,025 → 0,052 (média 0,094 → 0,158; n 34 vs 19); custo/turno igual (US$ 0,0033), `first_chunk`
+  p50 3,4 s. Ganho pequeno e sem `evals compare` → flag volta a `off` (preset) e o experimento fica registrado.
+  §6.3 R11/R12 (`measure.py`): plano Hobby, bundle 319 MB, região gru1; `/health` p50 35 ms mas máx 19,1 s (1/30) —
+  mesma classe das esperas de 19–59 s antes de `sse.started` vistas na 319: instância nova do Vercel (cold start do
+  bundle), não import (local `import vercel_app` 1,7–2,1 s). Reduzir é trabalho de infra (bundle/plano), fora desta spec.
+  R2 continua aguardando tráfego real com vocativo a NPC presente (n=3; tráfego sintético não exercita o caminho).
