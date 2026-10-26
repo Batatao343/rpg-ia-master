@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a3b7ae1c3dbc33447b334672a8dbbda6cccfcc04",
+  "commit_sha": "0e86a5a8ed3f304c421693694da035a3e0794ada",
   "edge_counts": {
-    "calls": 27561,
-    "contains": 949,
-    "defines": 13836,
-    "imports": 2279,
-    "likely_test_for": 1591,
+    "calls": 27757,
+    "contains": 951,
+    "defines": 13920,
+    "imports": 2287,
+    "likely_test_for": 1597,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:45ed3c199aae88a0472ec6787c3d1ed3a576baa6d7d4599b0d791c833b9f1549",
+  "graph_hash": "sha256:20842106102986a8a00f812a3d394b10f0e934419e5b06623364d4df7a6a3720",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -298,6 +298,7 @@
     "services/actor_lifecycle.py",
     "services/ambient.py",
     "services/art_brief.py",
+    "services/art_similarity.py",
     "services/art_triggers.py",
     "services/asset_pipeline.py",
     "services/audit_export.py",
@@ -713,6 +714,7 @@
     "tests/test_observability_stack.py",
     "tests/test_oidc_identity.py",
     "tests/test_onboarding.py",
+    "tests/test_openai_images.py",
     "tests/test_operation_recovery_local.py",
     "tests/test_operation_replay_boundaries.py",
     "tests/test_ops_scripts_dsn_env.py",
@@ -1163,14 +1165,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 934,
+    "class": 936,
     "endpoint": 64,
-    "file": 1109,
-    "function": 4369,
-    "method": 831,
-    "module": 949,
-    "test": 7701
+    "file": 1111,
+    "function": 4389,
+    "method": 832,
+    "module": 951,
+    "test": 7762
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:afee7836985bdcace665f8247822f74c5748008029ac4727ef8dffbea606f276"
+  "source_tree_hash": "sha256:fe8e3a564bbfe4bdbbe1aece5ae95cfb6e5bd142094a057533b2091a2b7e2fb4"
 }
