@@ -133,6 +133,8 @@ WORLD_FLAGS = (
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
+    "RPG_NPC_TWO_PHASE": ("off", "on"),
+    "RPG_REPLAN_AFTER": ("off", "on"),
     "RPG_DAY_DIGEST": ("llm", "inline"),
     "RPG_ARCHIVE_POLICY": ("legacy", "lean"),
     "RPG_ARCHIVE_POLICY_SHADOW": ("0", "1"),

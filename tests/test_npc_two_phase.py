@@ -88,7 +88,7 @@ def test_enrich_completes_sheet_same_turn(monkeypatch):
     sheet = done["npcs"][NAME]
     assert sheet["sheet_status"] == "full"
     assert sheet["persona"] == "Falante e interesseiro."
-    assert sheet["role"] == "Mercador"  # o papel já mostrado não muda
+    assert sheet["role"] == "Ferreiro"  # papel provisório é só inferência: a ficha corrige
     assert sheet["hidden_traits"] == before_traits
     assert sheet["in_scene"] is True and sheet["created_turn"] == 4
     assert "messages" not in done
@@ -104,7 +104,7 @@ def test_enrich_prompt_carries_the_stub_as_fixed_context(monkeypatch):
     state, out = _narrate(monkeypatch)
     seen.clear()
     enrich.enrich_node({**state, **out})
-    assert "papel Mercador" in seen["context"] and NAME in seen["context"]
+    assert "papel provisório Mercador" in seen["context"] and NAME in seen["context"]
     assert NARRATION in seen["context"]  # só a narração JÁ exibida entra
 
 
@@ -336,3 +336,93 @@ def test_sheet_stub_streak_invariant_is_a_warning():
     npcs = {"A": {"sheet_status": "stub", "sheet_attempts": 3}, "B": {"sheet_status": "stub"}}
     found = inv.check_sheet_stub_streak({"npcs": npcs}, None, 7)
     assert [(v.check_id, v.severity) for v in found] == [("npc.sheet_stub_streak", "warning")]
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        ("Marta aguarda em silêncio.", "Desconhecido"),
+        ("O guarda acena; Marta sorri.", "Desconhecido"),
+        ("Marta veio da capital.", "Desconhecido"),
+        ("Um cão ladra e Marta pisa nos ladrilhos.", "Desconhecido"),
+        ("O guarda Marta ergue a lanterna.", "Guarda"),
+        ("Marta, a estalajadeira, serve vinho.", "Estalajadeiro"),
+        ("Você vê uma mercadora Marta no balcão.", "Mercador"),
+    ],
+)
+def test_role_only_from_adjacent_whole_word(text, expected):
+    assert storyteller._infer_role("Marta", text) == expected
+
+
+def test_digest_note_never_leaks_prompt_instruction_to_player():
+    note = (
+        "[ECOS DO MUNDO] O herói percebeu, enquanto o tempo passava: teça estes fatos na narração "
+        "em 1 a 3 frases, sem listá-los (BOATO só como boato: dizem, contam).\n"
+        "FATO: A ponte caiu.\nBOATO: Um rei voltou."
+    )
+    text = storyteller._player_facing_note(note)
+    assert "teça" not in text and "FATO" not in text and "BOATO" not in text
+    assert "A ponte caiu." in text and "Dizem por aí: Um rei voltou." in text
+
+
+def test_fallback_story_hides_inline_digest_instruction():
+    note = "[ECOS DO MUNDO] O herói percebeu, x.\nFATO: A ponte caiu."
+    out = storyteller._deterministic_story_fallback([note], {})
+    assert "percebeu" not in out and "FATO" not in out and "A ponte caiu." in out
+
+
+def _stub_state(monkeypatch, generated):
+    monkeypatch.setattr(storyteller, "generate_new_npc", lambda *a, **k: generated)
+    state, out = _narrate(monkeypatch)
+    return {**state, **out}
+
+
+def test_full_sheet_resolving_to_existing_npc_merges_stub(monkeypatch):
+    # a fábrica devolve um NPC que já existe em cena sob outro nome (dedupe do librarian)
+    existing = {
+        "Brás Tamanduá Velho": {
+            "id": "npc_bras_velho",
+            "name": "Brás Tamanduá Velho",
+            "aliases": ["Brás Tamanduá"],
+            "role": "Mercador",
+            "in_scene": False,
+            "memory": ["antigo"],
+            "interaction_count": 2,
+        }
+    }
+    monkeypatch.setattr(
+        storyteller, "generate_new_npc", lambda *a, **k: {**_full_sheet(), "aliases": []}
+    )
+    state, out = _narrate(monkeypatch)
+    cur = {**state, **out}
+    cur["npcs"] = {**existing, **cur["npcs"]}
+    cur["pending_npc_memory"] = [
+        {"operation": "add_npc_memory", "npc_id": "npc_brás_tamanduá", "facts": ["f"]}
+    ]
+    done = enrich.enrich_node(cur)
+    assert NAME not in done["npcs"]  # sem duplicata do stub
+    canon = done["npcs"]["Brás Tamanduá Velho"]
+    assert canon["in_scene"] is True and canon["interaction_count"] == 2
+    assert done["pending_npc_memory"][0]["npc_id"] == "npc_bras_velho"
+
+
+def test_dead_npc_blocks_provisional_without_retry(monkeypatch):
+    from services import npc_world
+
+    cur = _stub_state(monkeypatch, _full_sheet())
+    monkeypatch.setattr(npc_world, "dead_graph_npc", lambda *_a, **_k: True)
+    done = enrich.enrich_node(cur)
+    assert NAME not in done["npcs"]  # como no legado: morto não volta vivo
+
+
+def test_merge_keeps_stub_vitality_and_takes_full_id(monkeypatch):
+    cur = _stub_state(monkeypatch, {**_full_sheet(), "id": "npc_cache_id"})
+    cur["npcs"][NAME] = {**cur["npcs"][NAME], "vitalidade": 1, "ferimentos": {"leve": ["x"]}}
+    cur["pending_npc_memory"] = [
+        {"operation": "add_npc_memory", "npc_id": "npc_brás_tamanduá", "facts": ["f"]}
+    ]
+    done = enrich.enrich_node(cur)
+    sheet = done["npcs"][NAME]
+    assert sheet["vitalidade"] == 1 and sheet["ferimentos"] == {"leve": ["x"]}
+    assert sheet["id"] == "npc_cache_id"
+    assert done["pending_npc_memory"][0]["npc_id"] == "npc_cache_id"

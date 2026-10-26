@@ -526,11 +526,30 @@ def _guard_mediation_secret(text: str, state: GameState) -> tuple[str, list[str]
     return "\n\n".join(out), list(dict.fromkeys(rejections))
 
 
+_DIGEST_MARK = "[ECOS DO MUNDO] O herói percebeu"
+
+
+def _digest_player_text(note: str) -> str:
+    """SPEC-318 P1-3: a nota inline do digest e instrucao de prompt; o jogador so ve os fatos
+    (templates ja percebidos), com o boato como boato."""
+    out = []
+    for line in str(note).splitlines()[1:]:
+        if line.startswith("FATO:"):
+            out.append(line[len("FATO:") :].strip())
+        elif line.startswith("BOATO:"):
+            out.append("Dizem por aí: " + line[len("BOATO:") :].strip())
+    return " ".join(t for t in out if t)
+
+
 def _player_facing_note(note: str) -> str:
     """Converte notas de prompt em texto diegético; não vaza imperativos internos."""
     text = str(note or "").strip()
     if not text:
         return ""
+    if text.startswith(_DIGEST_MARK):
+        text = _digest_player_text(text)
+        if not text:
+            return ""
     text = re.sub(r"^O jogador VIAJOU para ", "Após a viagem, você chega a ", text)
     text = re.sub(r"^O jogador ENTROU em ", "Você entra em ", text)
     text = re.sub(
@@ -622,7 +641,11 @@ def _with_new_npc(
     player_inputs: tuple = (),
     state: dict | None = None,
     stub_only: bool = False,
+    outcome_out: dict | None = None,
 ) -> dict[str, dict]:
+    """`outcome_out` (SPEC-318) recebe `merged_into=<chave>` quando a ficha resolveu para um NPC
+    ja existente, `blocked=<motivo>` quando o NPC nao pode (re)entrar, ou `failed=True`."""
+    out = outcome_out if outcome_out is not None else {}
     from services import npc_layers, npc_world
     from services.entity_identity import find_runtime_npc_key
 
@@ -632,8 +655,10 @@ def _with_new_npc(
         why = npc_world.reintroduction_block({**state, "npcs": npcs}, canonical, str(home_id or ""))
         if why:
             npc_world.log_reintroduction_blocked(why)
+            out["blocked"] = why
             return npcs
     if canonical is not None:
+        out["merged_into"] = canonical
         # já conhecido: a cena o trouxe de volta (camada 3).
         # spec encontros-dedupe (exceção narrativa): re-introduzir um NPC conhecido
         # é uma decisão DELIBERADA do narrador/player (com o filtro R1 ele nem
@@ -652,6 +677,7 @@ def _with_new_npc(
         return new_npcs
     if state is not None and npc_world.dead_graph_npc(state, {"name": new_name}):
         npc_world.log_reintroduction_blocked("dead")  # SPEC-304 R8/P3: morto nao volta vivo
+        out["blocked"] = "dead"
         return npcs
     tpl = None
     pool_entry = _cast_match(cast, new_name)
@@ -682,15 +708,18 @@ def _with_new_npc(
     else:
         tpl = generate_new_npc(new_name, context=f"Local: {loc}. Cena: {narrative_text}")
     if not tpl:
+        out["failed"] = True
         return npcs
     if state is not None and npc_world.dead_graph_npc(state, tpl):
         npc_world.log_reintroduction_blocked("dead")
+        out["blocked"] = "dead"
         return npcs
     # O librarian/cache pode resolver uma referência técnica para uma ficha já
     # presente (ex.: npc_skriit_mil_olhos -> Skriit Mil-olhos). Revalida APÓS
     # a fábrica para não inserir o mesmo id sob uma segunda chave.
     canonical = find_runtime_npc_key(npcs, new_name, tpl)
     if canonical is not None:
+        out["merged_into"] = canonical
         new_npcs = dict(npcs)
         atual = dict(new_npcs[canonical])
         new_npcs[canonical] = {
@@ -734,41 +763,46 @@ def _with_new_npc(
     return new_npcs
 
 
+# palavra inteira (regex) -> papel. So vale ADJACENTE ao nome (aposto), nunca solta na frase.
 _ROLE_HINTS = (
-    ("estalajadeir", "Estalajadeiro"),
-    ("taverneir", "Taverneiro"),
-    ("mercador", "Mercador"),
-    ("comerciante", "Comerciante"),
-    ("ferreir", "Ferreiro"),
-    ("sacerdot", "Sacerdote"),
-    ("curandeir", "Curandeiro"),
-    ("guarda", "Guarda"),
-    ("soldado", "Soldado"),
-    ("capit", "Capitão"),
-    ("caçador", "Caçador"),
-    ("cacador", "Caçador"),
-    ("bardo", "Bardo"),
-    ("escriba", "Escriba"),
-    ("monge", "Monge"),
-    ("viajante", "Viajante"),
-    ("mendig", "Mendigo"),
-    ("ladr", "Ladrão"),
-    ("barqueir", "Barqueiro"),
+    (r"estalajadeir[oa]", "Estalajadeiro"),
+    (r"taverneir[oa]", "Taverneiro"),
+    (r"mercador(?:a)?", "Mercador"),
+    (r"comerciante", "Comerciante"),
+    (r"ferreir[oa]", "Ferreiro"),
+    (r"sacerdot(?:e|isa)", "Sacerdote"),
+    (r"curandeir[oa]", "Curandeiro"),
+    (r"guarda", "Guarda"),
+    (r"soldad[oa]", "Soldado"),
+    (r"capit[ãa]o|capit[ãa]", "Capitão"),
+    (r"ca[çc]ador(?:a)?", "Caçador"),
+    (r"bardo", "Bardo"),
+    (r"escriba", "Escriba"),
+    (r"monge|monja", "Monge"),
+    (r"viajante", "Viajante"),
+    (r"mendig[oa]", "Mendigo"),
+    (r"ladr[ãa]o|ladra", "Ladrão"),
+    (r"barqueir[oa]", "Barqueiro"),
 )
 
 
 def _infer_role(name: str, text: str) -> str:
-    """Papel pelo trecho da narracao ja exibida que cita o nome (regex/palavra-chave; sem LLM)."""
-    lowered_name = str(name or "").lower().strip()
-    if not lowered_name:
+    """Papel so quando o texto JA narrado o liga ao nome por aposto ('o guarda Marta',
+    'Marta, a estalajadeira'); palavra solta na frase ou subpalavra ('aguarda', 'capital',
+    'ladrilhos') nao conta. Na duvida `Desconhecido` e a ficha completa decide."""
+    clean = str(name or "").strip()
+    if not clean:
         return "Desconhecido"
-    for sentence in re.split(r"(?<=[.!?\n])\s+", str(text or "")):
-        low = sentence.lower()
-        if lowered_name not in low:
-            continue
-        for key, role in _ROLE_HINTS:
-            if key in low:
-                return role
+    n = re.escape(clean)
+    art = r"(?:(?:o|a|um|uma)\s+)?"
+    low = str(text or "")
+    for pattern, role in _ROLE_HINTS:
+        before = rf"(?<![\w]){art}(?:{pattern})\s+{n}(?!\w)"
+        after = rf"(?<!\w){n}\s*,\s*(?:(?:é|era)\s+)?(?:o|a|um|uma)\s+(?:{pattern})(?!\w)"
+        if re.search(before, low, flags=re.IGNORECASE) or re.search(
+            after, low, flags=re.IGNORECASE
+        ):
+            return role
     return "Desconhecido"
 
 

@@ -285,3 +285,9 @@ def test_spec318_latency_flags_are_allowlisted_and_not_dropped():
         ve.build_env(FILES, world_flags={"RPG_ARCHIVE_POLICY": "on"})
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_flags={"RPG_DAY_DIGEST": "shadow"})
+
+
+@pytest.mark.parametrize("name", ["RPG_NPC_TWO_PHASE", "RPG_REPLAN_AFTER"])
+def test_spec318_boolean_flags_reject_shadow(name):
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={name: "shadow"})

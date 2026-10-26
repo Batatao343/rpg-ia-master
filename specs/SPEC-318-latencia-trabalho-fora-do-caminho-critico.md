@@ -192,3 +192,19 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
     com validação de valores por flag (`WORLD_FLAG_VALUES`).
   - **Não feito aqui:** medição em staging (§6) e `evals compare` de `memory_context.jsonl` (exigem a corrida
     `lean`; nenhum dataset/expected foi tocado). `EVAL_AUTHORING_REQUIRED` continua `false`.
+- **2026-10-25 — correções da revisão (handoffs/SPEC-318-sol-review.md).**
+  - P1-1: o papel do stub só sai de aposto ao nome, em palavra inteira ("o guarda Marta", "Marta, a
+    estalajadeira"); do contrário `Desconhecido`. O papel provisório **não é mais travado**: a ficha completa
+    pode corrigi-lo (só nome e estado dinâmico do stub são preservados).
+  - P1-2: `_with_new_npc` devolve `outcome_out` (`merged_into`/`blocked`/`failed`). Ficha que resolve para NPC
+    já existente funde o stub no canônico (memória, interações, `in_scene`, `pending_npc_memory` e
+    `active_npc_name` remapeados); NPC morto/bloqueado remove o stub (legado); só falha real conta tentativa.
+  - P1-3: a nota inline do digest tem versão para o jogador (`_digest_player_text`: fatos de template, boato como
+    "Dizem por aí: …") usada por `_player_facing_note`/fallbacks; a instrução nunca chega ao jogador.
+  - P2: a fusão preserva `_NPC_DYNAMIC_FIELDS` (vitalidade/ferimentos...) e adota o `id` da ficha completa
+    (remapeando a fila); FAST do reforço de idioma do planner e do fallback plain do arquivista só valem com
+    `RPG_REPLAN_AFTER=on` / `RPG_ARCHIVE_POLICY=lean` (legado = mesmo tier); `RPG_NPC_TWO_PHASE`/`RPG_REPLAN_AFTER`
+    aceitam só `on|off` no `vercel_env`; digest limitado a `DAY_FACTS_MAX` linhas; a primeira escrita diferida
+    registra a promoção como `npc_claim_direct_write`; teste R7 ganhou cenários de viagem/descanso.
+  - Documentado (D2): num turno de reparo bloqueado pelo `action_guard` com `needs_replan`, o replan agora
+    acontece depois da narração do turno seguinte, não antes.

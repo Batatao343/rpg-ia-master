@@ -255,9 +255,10 @@ def digest_prompt_lines(state: dict, items: list) -> list[str]:
     """SPEC-318 R3: linhas `FATO:`/`BOATO:` (templates determinísticos) do digest percebido,
     para o prompt do narrador. Sem LLM; boato nunca entra como fato (SPEC-312 R22)."""
     from services import rumors
+    from services.perceived_world import DAY_FACTS_MAX
 
     lines: list[str] = []
-    for it in items or []:
+    for it in (items or [])[:DAY_FACTS_MAX]:
         t = _template_text(state, [it])
         if t:
             lines.append(f"{'BOATO' if rumors.is_rumor_item(it) else 'FATO'}: {t}")

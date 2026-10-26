@@ -461,6 +461,7 @@ def _drain_npc_memory(
     elif pending_npc_memory:
         remaining_npc_memory = []
         committed_npc_records = []
+        all_fresh = True  # SPEC-318: primeira escrita = o que o no de NPC fazia direto
         retry_window = int(turn) % _VECTOR_RETRY_EVERY == 0
         for write in pending_npc_memory:
             if deferred_mode and write.get("attempts") and not retry_window:
@@ -517,6 +518,7 @@ def _drain_npc_memory(
                 )
             else:
                 committed_npc_records.extend(npc_records)
+                all_fresh = all_fresh and deferred_mode and not write.get("attempts")
         if committed_npc_records:
             memory_facts, promoted = commit_memory_facts(
                 memory_facts,
@@ -526,7 +528,11 @@ def _drain_npc_memory(
                 memory_promotions = bounded_audit_rows(
                     [
                         *memory_promotions,
-                        {"turn": int(turn), "count": promoted, "reason": "canonical_source"},
+                        {
+                            "turn": int(turn),
+                            "count": promoted,
+                            "reason": "npc_claim_direct_write" if all_fresh else "canonical_source",
+                        },
                     ],
                     limit=MAX_MEMORY_PROMOTIONS,
                 )
@@ -1027,7 +1033,12 @@ def _archive_node(
                 current_summary
                 if suppress_free_facts and not conflict_summary
                 else _extract_summary_plain(
-                    get_llm(temperature=0.3, tier=ModelTier.FAST), context_msgs, current_summary
+                    # SPEC-318 R5: o fallback em texto puro vira FAST so na politica `lean`
+                    get_llm(temperature=0.3, tier=ModelTier.FAST)
+                    if latency_flags.archive_policy() == "lean"
+                    else llm,
+                    context_msgs,
+                    current_summary,
                 )
             )
             rag_ok = persist_records(authoritative_records) and not pending_memory_facts

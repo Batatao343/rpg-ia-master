@@ -173,6 +173,8 @@ def test_enrich_never_touches_messages():
         ["olho ao redor", "sigo em frente", "descanso um pouco"],
         ["procuro tesouro no local", "vasculho os arredores", "olho ao redor"],
         ["converso com o estalajadeiro", "pergunto sobre rumores", "olho ao redor"],
+        ["viajo para Brekmar", "descanso até o dia virar", "olho ao redor"],
+        ["descanso e acampo aqui", "descanso de novo", "viajo para Nova Arcádia"],
     ],
 )
 def test_legacy_flags_byte_identical(tmp_path, monkeypatch, texts):

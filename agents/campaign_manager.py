@@ -10,6 +10,7 @@ from observability.telemetry import log_event as _log_event
 
 # --- INTEGRAÇÃO RAG ---
 from rag import query_rag  # <--- Importação necessária
+from services import latency_flags
 from services.chronicle import default_chapter_title, open_chapter
 from services.context_builder import build_context_pack
 from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
@@ -234,7 +235,8 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
 
     def _invoke(reforco: str = ""):
         # SPEC-318 R4: o reforco de idioma e uma correcao curta -> tier FAST
-        llm_ = get_llm(temperature=0.4, tier=ModelTier.FAST) if reforco else planner_llm
+        fast = bool(reforco) and latency_flags.replan_after_on()  # legado: mesmo tier
+        llm_ = get_llm(temperature=0.4, tier=ModelTier.FAST) if fast else planner_llm
         structured = llm_.with_structured_output(CampaignPlanModel)
         msgs = [system_msg, human_msg]
         if reforco:

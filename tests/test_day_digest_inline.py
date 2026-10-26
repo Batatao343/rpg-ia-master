@@ -91,3 +91,10 @@ def test_day_turn_makes_single_fast_call(monkeypatch):
     assert _CountingLLM.calls == 0
     assert any(n["source"] == "world_engine" for n in out["world"].get("news", []))
     assert out["world_sim"]
+
+
+def test_digest_lines_are_capped(monkeypatch):
+    from services.perceived_world import DAY_FACTS_MAX
+
+    many = [_item("fome.sinal.preco", subject_id=f"s{i}") for i in range(DAY_FACTS_MAX + 5)]
+    assert len(wsim.digest_prompt_lines(_state(), many)) <= DAY_FACTS_MAX

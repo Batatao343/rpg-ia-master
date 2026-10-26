@@ -133,7 +133,8 @@ def test_plain_fallback_uses_fast(monkeypatch):
         tiers.append(tier)
         return _Bad() if tier == ModelTier.SMART else _Plain()
 
+    monkeypatch.setenv("RPG_ARCHIVE_POLICY", "lean")  # legado mantém o mesmo tier do SMART
     monkeypatch.setattr(archivist, "get_llm", fake_get_llm)
-    out = archivist.archive_node(_state())
+    out = archivist.archive_node(_state(archive_low=0))
     assert ModelTier.FAST in tiers and tiers[0] == ModelTier.SMART
     assert "estrada" in out.get("narrative_summary", "")
