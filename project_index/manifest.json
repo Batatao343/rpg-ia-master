@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4dfcbda36e996249493aef5152a2e9c4be7099ae",
+  "commit_sha": "bb101f88d283d97181168cdab6af48afdfa66118",
   "edge_counts": {
-    "calls": 28127,
-    "contains": 963,
-    "defines": 14099,
-    "imports": 2320,
-    "likely_test_for": 1627,
+    "calls": 28449,
+    "contains": 969,
+    "defines": 14237,
+    "imports": 2338,
+    "likely_test_for": 1641,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:999fae4e4c2f426a29681d8e6dfcc41392cb8b35ea8cd0585e7e4229614e1fef",
+  "graph_hash": "sha256:b300593f1e3563ebebdfc8c043bb317db1c978b010bfc9adec443df1ba6f8152",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -319,6 +319,7 @@
     "services/combat_intents.py",
     "services/combat_origin.py",
     "services/combat_targeting.py",
+    "services/companion_orders.py",
     "services/companion_prompt.py",
     "services/companion_soul.py",
     "services/companion_tags.py",
@@ -412,6 +413,7 @@
     "services/purchase_reconciliation.py",
     "services/quest_log.py",
     "services/reactions.py",
+    "services/reinforcements.py",
     "services/reputation.py",
     "services/restore_effects.py",
     "services/retention.py",
@@ -968,7 +970,11 @@
     "tests/test_spec325_chase_intents.py",
     "tests/test_spec325_flags.py",
     "tests/test_spec325_intents.py",
+    "tests/test_spec325_intents_scene.py",
     "tests/test_spec325_nonlethal.py",
+    "tests/test_spec325_objects.py",
+    "tests/test_spec325_orders.py",
+    "tests/test_spec325_reinforcements.py",
     "tests/test_spec325_resist.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
@@ -1055,6 +1061,7 @@
     "web/src/codexKnowledge.ts",
     "web/src/combat/Arena.tsx",
     "web/src/combat/CardTooltip.tsx",
+    "web/src/combat/conflictChips.ts",
     "web/src/combat/TargetChip.tsx",
     "web/src/combat/targeting.ts",
     "web/src/combat/useTargeting.ts",
@@ -1186,14 +1193,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 936,
+    "class": 942,
     "endpoint": 64,
-    "file": 1132,
-    "function": 4421,
+    "file": 1139,
+    "function": 4454,
     "method": 832,
-    "module": 963,
-    "test": 7909
+    "module": 969,
+    "test": 8008
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5ece35152d9c5ea583fc3acc8964e207e4daba31ee90eabeb298caa63184eddb"
+  "source_tree_hash": "sha256:d68682d25a04e20bc09dcb79558ee43f2652f1bec22e33403eb4bf893b697555"
 }
