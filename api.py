@@ -2804,7 +2804,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
         # SPEC-325 D8: só com a flag `on`; nunca o `pending_fate` (regra de ouro).
         if combat_flags.active("chase_approach") and chase.get("approach"):
             chase_view["approach"] = str(chase["approach"])
-        if combat_flags.active("chase_abandon"):
+        if combat_flags.abandon_mode() == "on":
             from services import chase as _chase_mod
 
             party_rows = [p for p in (state.get("party") or []) if isinstance(p, dict)]

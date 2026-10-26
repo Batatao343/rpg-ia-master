@@ -929,6 +929,10 @@ def npc_actor_node(state: GameState):
             in_party = waiting in here
         if not in_party:
             dname = member.get("name") or npc_name
+            # SPEC-325 B-P2-5: `waiting_at` pode ser id de local (abandono/lei) ou nome já exibível
+            from gamedata import get_location as _get_location
+
+            waiting = str((_get_location(waiting) or {}).get("name") or waiting)
             return {
                 "messages": [
                     AIMessage(content=f"🗣️ {dname} não está aqui. Está esperando em {waiting}.")

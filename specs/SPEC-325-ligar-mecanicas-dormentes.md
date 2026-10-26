@@ -640,3 +640,16 @@ Notas honestas sobre a medida:
     gate (§8.2) usa também o perfil `fujao`, único bot que foge. `capability_counts` (R4) e as variantes de bot
     (R18) seguem na Etapa 8. As 8 flags já estavam em `WORLD_FLAGS`/`OPTIONAL_FLAGS` desde a Fase A (teste novo
     garante).
+- **2026-10-26 — Revisão Sol da Fase B: `CHANGES_REQUIRED`** (`handoffs/SPEC-325-sol-review.md` § Fase B). Correções:
+  - **B-P1-1** (decisão do coordenador): o resgate só vale depois que o herói **saiu** e **voltou**. `apply_turn` marca
+    `pending_fate["left"]` na 1ª vez que vê `here != location`; só `left` + retorno (ou rechamada) resgata. Ficar
+    parado no local da fuga (fuga sem destino, caso dos chips) não resgata nem aplica o destino (o gate da 304
+    recusa com o herói no local): o destino espera o herói partir e cai ≥ 1 dia depois. Teste ponta a ponta
+    `combat_node` → `apply_turn` para abandono e sacrifício, sem editar o local do selo (`tests/test_spec325_abandon_review.py`).
+  - **B-P2-1** o selo/telegrama/resgate rodam fora do portão `live`; com `RPG_COMPANION_SOUL=off` o combate recusa
+    abandono/sacrifício (`combat_flags.abandon_mode()`) e `apply_turn` ainda libera o selo de quem foi rechamado.
+  - **B-P2-2/3** testes de save/load no meio do selo e da exclusão do perigo off-screen (`day_hook`).
+  - **B-P2-4** a recusa do corpo a corpo preserva `flee_attempts`. **B-P2-5** a fala do NPC mostra o nome do local.
+  - **B-P2-6** (decisão do coordenador): sacrifício aceito grava `companion_sacrificed` no `event_log` e um marco de
+    crônica percebido ("X ficou para trás para que o herói escapasse"), sem o destino e sem efeito extra de
+    reputação; nenhuma tag nova (o catálogo da SPEC-300 pode etiquetar depois).

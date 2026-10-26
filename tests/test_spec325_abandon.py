@@ -179,7 +179,7 @@ def test_fate_not_applied_same_day_but_telegraphed(monkeypatch):
     soul = up["companion_souls"][BRUNNA_ID]
     assert [t for t in soul["telegraphs"] if t["source"] == "abandono"]  # o aviso e o telegrama
     # nada aplicado: o destino segue selado na party (o apply_turn nem reescreve a party)
-    assert "party" not in up
+    assert up["party"][0]["pending_fate"]["fate"] == "morto"  # só marcou `left`; nada aplicado
     assert state["party"][0]["pending_fate"]["fate"] == "morto"
 
 

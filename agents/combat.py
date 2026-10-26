@@ -259,7 +259,7 @@ def _chase_party_choices(
     from services import combat_flags, combat_intents
 
     res: dict = {"flee": False, "logs": [], "events": [], "sacrificed": None, "abandoned": []}
-    mode = combat_flags.mode("chase_abandon")
+    mode = combat_flags.abandon_mode()
     prev = combat_meta.get("chase")
     if mode == "off" or not _chase_is_live(prev):
         return res
@@ -317,6 +317,22 @@ def _chase_party_choices(
     if sacrificed:
         res["sacrificed"] = sacrificed
         res["logs"].append(f"{name} fica para trás para segurar os perseguidores.")
+        import hashlib
+
+        # Decisão do coordenador (B-P2-6): evento + marco de crônica percebidos, sem o destino e
+        # sem efeito extra de reputação (a SPEC-300 pode etiquetar pelo catálogo de tags).
+        res["events"].append(
+            {
+                "event_id": "sacrifice-"
+                + hashlib.sha1(entry["pending_fate"]["seed"].encode()).hexdigest()[:16],
+                "turn": int(world.get("turn_count", 0) or 0),
+                "type": "companion_sacrificed",
+                "actor_id": "player",
+                "target_id": key,
+                "payload": {"name": name, "location_id": location_id, "day": day},
+                "source": "combat",
+            }
+        )
         _log_event("combat", "chase_sacrifice", level="info")
     else:
         res["logs"].append(f"{name} ficou para trás.")
@@ -348,7 +364,7 @@ def _publish_sacrifice_offer(
     from services import chase as chase_mod
     from services import combat_flags
 
-    mode = combat_flags.mode("chase_abandon")
+    mode = combat_flags.abandon_mode()
     if mode == "off":
         return
     if mode == "on" and "sacrifice_offer" in chase_state:
@@ -1545,6 +1561,7 @@ def _combat_node(state: GameState):
     else:
         logs_pre_flee = []
 
+    prior_flee_attempts = combat_meta.get("flee_attempts")
     if flee_requested:
         combat_meta["flee_attempts"] = int(combat_meta.get("flee_attempts", 0) or 0) + 1
     else:
@@ -1676,6 +1693,8 @@ def _combat_node(state: GameState):
         )
         if chase_refusal:
             combat_meta["round"] = max(0, int(combat_meta.get("round", 1) or 1) - 1)
+            if prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
+                combat_meta["flee_attempts"] = prior_flee_attempts
         _sync_enemy_knowledge(enemies)
         _reveal_resistances(out.get("attacks") or [], enemies, sides)
         logs += weather_logs + out["logs"]
@@ -1891,6 +1910,21 @@ def _combat_node(state: GameState):
     if choices["events"]:
         # SPEC-325 R12: `companion_abandoned` (sem o destino: ele fica selado na party).
         result["event_log"] = list(state.get("event_log") or []) + choices["events"]
+        from services import chronicle as _chron
+
+        _chronicle = list(state.get("chronicle") or [])
+        for _ev in choices["events"]:
+            _text = _chron.render_milestone(_ev, state.get("world_projection") or {})
+            if _text:
+                _chronicle = _chron.append_entry(
+                    _chronicle,
+                    text=_text,
+                    turn=int(_ev.get("turn", 0) or 0),
+                    kind="milestone",
+                    event_id=_ev["event_id"],
+                )
+        if _chronicle != list(state.get("chronicle") or []):
+            result["chronicle"] = _chronicle
     if world_out is not None:
         result["world"] = world_out
     if bk_changed:
@@ -2097,7 +2131,7 @@ def _attempt_flee(
         companion_luck=[roll for _aid, roll in ally_rolls],
         rng=rng,
     )
-    if combat_flags.mode("chase_abandon") == "on":
+    if combat_flags.abandon_mode() == "on":
         # R12: Sorte por aliado da rodada, base do "deixar <nome>" da rodada seguinte.
         chase_state["last_luck"] = {str(aid): roll for aid, roll in ally_rolls}
     chase_state["eligible"] = True

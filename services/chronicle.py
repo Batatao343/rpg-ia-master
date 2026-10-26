@@ -38,6 +38,7 @@ CHRONICLE_EVENT_TYPES = {
     "companion_left",
     "companion_betrayed",
     "companion_fate",
+    "companion_sacrificed",
     "faction_membership_changed",
     "npc_fate_learned",  # SPEC-304 R23: a morte off-screen entra quando o jogador SOUBE
 }
@@ -59,6 +60,7 @@ CHRONICLE_TEMPLATES: dict[str, str] = {
     "companion_left": "{who} deixou o grupo.",
     "companion_betrayed": "{who} traiu a confiança do herói e partiu.",
     "companion_fate": "{who} {fate}.",
+    "companion_sacrificed": "{who} ficou para trás para que o herói escapasse.",
     "faction_membership_changed": "{detail}",
     "npc_fate_learned": "Chegou a notícia: {who} {fate}.",
 }
@@ -115,7 +117,7 @@ def render_milestone(event: dict, projection: dict, state: dict | None = None) -
         where = str((get_location(str(payload.get("location_id") or "")) or {}).get("name") or "")
         return tmpl.format(who=who, fate=f"{verb} em {where}" if where else verb)
 
-    if etype in ("companion_left", "companion_betrayed", "companion_fate"):
+    if etype in ("companion_left", "companion_betrayed", "companion_fate", "companion_sacrificed"):
         who = str(payload.get("name") or _name(event.get("target_id")))
         fate = _FATE_TEXT.get(str(payload.get("fate") or ""), "teve um destino incerto")
         return tmpl.format(who=who, fate=fate)

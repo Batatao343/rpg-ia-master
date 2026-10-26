@@ -72,3 +72,11 @@ def is_resistance_entry(entry: object) -> bool:
         return False
     dtype, sep, effect = entry.partition(":")
     return bool(sep and dtype and effect in RESIST_EFFECTS)
+
+
+def abandon_mode() -> Mode:
+    """`chase_abandon` efetivo: sem a alma dos companheiros (`RPG_COMPANION_SOUL=off`) ninguém
+    consome o destino selado, então abandono/sacrificio ficam `off` (SPEC-325 B-P2-1)."""
+    from services import companion_soul
+
+    return "off" if companion_soul.mode() == "off" else mode("chase_abandon")

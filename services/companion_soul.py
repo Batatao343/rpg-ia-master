@@ -578,6 +578,18 @@ def _acks(state: dict) -> set[str]:
     return {str(a) for a in (state.get("companion_voice_ack") or [])}
 
 
+def _unseal_recalled(state: dict) -> dict:
+    """Alma `off`: ninguém aplica o destino selado (SPEC-325), mas o selo de quem foi rechamado
+    não pode ficar preso (ele sairia para sempre dos candidatos de abandono/sacrifício)."""
+    party = [dict(c) for c in (state.get("party") or []) if isinstance(c, dict)]
+    freed = [c for c in party if c.get("pending_fate") and c.get("active")]
+    if not freed:
+        return {}
+    for c in freed:
+        c.pop("pending_fate", None)
+    return {"party": party}
+
+
 def apply_turn(state: dict) -> dict:
     """Writer único (R19). Devolve updates parciais; ``off`` = no-op."""
     from observability.telemetry import log_event
@@ -586,7 +598,7 @@ def apply_turn(state: dict) -> dict:
 
     current_mode = mode()
     if current_mode == "off":
-        return {}
+        return _unseal_recalled(state)
     party = [dict(c) for c in (state.get("party") or []) if isinstance(c, dict)]
     souls: dict[str, dict] = {
         k: deepcopy(v)
@@ -868,82 +880,86 @@ def apply_turn(state: dict) -> dict:
             log_event("companion", "betrayed" if betray else "left", level="info")
 
     # 7b. destino SELADO de quem foi deixado na fuga (SPEC-325 R12) ------------- #
-    if live:
-        for cid in sorted({comp_id(c) for c in party if isinstance(c.get("pending_fate"), dict)}):
-            comp = next((c for c in party if comp_id(c) == cid), None)
-            soul = souls.get(cid)
-            if comp is None or soul is None or not cid:
-                continue
-            pf = comp["pending_fate"]
-            pday = _int(pf.get("day"), day)
-            location = str(pf.get("location_id") or comp.get("waiting_at") or "")
-            tele = [
-                t
-                for t in (soul.get("telegraphs") or [])
-                if isinstance(t, dict) and t.get("source") == "abandono"
-            ]
-            if not any(_int(t.get("day")) == pday and not t.get("cancelled") for t in tele):
-                # o próprio abandono é o telegrama (D1); o combate não escreve na alma
-                soul["telegraphs"] = [
-                    *(soul.get("telegraphs") or []),
-                    {
-                        "kind": "pedido_de_ajuda",
-                        "day": pday,
-                        "turn": turn,
-                        "cancelled": False,
-                        "source": "abandono",
-                    },
-                ][-5:]
-            if comp.get("active") or (here == location and not combat_active):
-                comp.pop("pending_fate", None)  # resgate: o herói voltou antes de 1 dia
-                for t in soul.get("telegraphs") or []:
-                    if isinstance(t, dict) and t.get("source") == "abandono":
-                        t["cancelled"] = True
-                changed_party = True
-                log_event("companion", "abandon_rescued", level="info")
-                continue
-            if combat_active or day - pday < TELEGRAPH_MIN_DAYS:
-                continue
-            fate = str(pf.get("fate") or "")
-            if not fate:  # fuga/esconderijo/reencontro: volta a esperar sem dano
-                comp.pop("pending_fate", None)
-                changed_party = True
-                log_event("companion", "abandon_fate_none", level="info")
-                continue
-            interim = {
-                **state,
-                "party": party,
-                "npcs": npcs,
-                "companion_souls": souls,
-                "quests": quests,
-                "event_log": list(state.get("event_log") or []) + events,
-                "chronicle": chronicle,
-            }
-            try:
-                patch = apply_companion_fate(interim, cid, fate, day)
-            except FateNotTelegraphed:
-                continue
-            events.extend(patch["event_log"][len(interim["event_log"]) :])
-            party, npcs, souls, quests = (
-                patch["party"],
-                patch["npcs"],
-                patch["companion_souls"],
-                patch["quests"],
-            )
-            for member in party:
-                if comp_id(member) == cid:
-                    member.pop("pending_fate", None)
-            changed_party = changed_npcs = changed_quests = True
-            name = str(comp.get("name") or cid)
-            feedback.append(
-                f"Chegam notícias de {name}: "
-                + {
-                    "ferido": "ficou ferido ao ser deixado para trás.",
-                    "capturado": "foi capturado.",
-                    "morto": "não sobreviveu à separação.",
-                }[fate]
-            )
-            log_event("companion", "abandon_fate_applied", level="info", fate=fate)
+    for cid in sorted({comp_id(c) for c in party if isinstance(c.get("pending_fate"), dict)}):
+        comp = next((c for c in party if comp_id(c) == cid), None)
+        soul = souls.get(cid)
+        if comp is None or soul is None or not cid:
+            continue
+        pf = comp["pending_fate"] = dict(comp["pending_fate"])  # nao muta o estado de entrada
+        pday = _int(pf.get("day"), day)
+        location = str(pf.get("location_id") or comp.get("waiting_at") or "")
+        tele = [
+            t
+            for t in (soul.get("telegraphs") or [])
+            if isinstance(t, dict) and t.get("source") == "abandono"
+        ]
+        if not any(_int(t.get("day")) == pday and not t.get("cancelled") for t in tele):
+            # o próprio abandono é o telegrama (D1); o combate não escreve na alma
+            soul["telegraphs"] = [
+                *(soul.get("telegraphs") or []),
+                {
+                    "kind": "pedido_de_ajuda",
+                    "day": pday,
+                    "turn": turn,
+                    "cancelled": False,
+                    "source": "abandono",
+                },
+            ][-5:]
+        if here != location and not pf.get("left"):
+            pf["left"] = True  # o herói saiu do local: só agora um retorno vale como resgate
+            changed_party = True
+        if comp.get("active") or (pf.get("left") and here == location and not combat_active):
+            # resgate: rechamado, ou o herói SAIU e VOLTOU antes do destino cair. Ficar parado no
+            # local da fuga (sem destino) não resgata: o destino espera o herói partir.
+            comp.pop("pending_fate", None)
+            for t in soul.get("telegraphs") or []:
+                if isinstance(t, dict) and t.get("source") == "abandono":
+                    t["cancelled"] = True
+            changed_party = True
+            log_event("companion", "abandon_rescued", level="info")
+            continue
+        if not live or combat_active or day - pday < TELEGRAPH_MIN_DAYS:
+            continue
+        fate = str(pf.get("fate") or "")
+        if not fate:  # fuga/esconderijo/reencontro: volta a esperar sem dano
+            comp.pop("pending_fate", None)
+            changed_party = True
+            log_event("companion", "abandon_fate_none", level="info")
+            continue
+        interim = {
+            **state,
+            "party": party,
+            "npcs": npcs,
+            "companion_souls": souls,
+            "quests": quests,
+            "event_log": list(state.get("event_log") or []) + events,
+            "chronicle": chronicle,
+        }
+        try:
+            patch = apply_companion_fate(interim, cid, fate, day)
+        except FateNotTelegraphed:
+            continue
+        events.extend(patch["event_log"][len(interim["event_log"]) :])
+        party, npcs, souls, quests = (
+            patch["party"],
+            patch["npcs"],
+            patch["companion_souls"],
+            patch["quests"],
+        )
+        for member in party:
+            if comp_id(member) == cid:
+                member.pop("pending_fate", None)
+        changed_party = changed_npcs = changed_quests = True
+        name = str(comp.get("name") or cid)
+        feedback.append(
+            f"Chegam notícias de {name}: "
+            + {
+                "ferido": "ficou ferido ao ser deixado para trás.",
+                "capturado": "foi capturado.",
+                "morto": "não sobreviveu à separação.",
+            }[fate]
+        )
+        log_event("companion", "abandon_fate_applied", level="info", fate=fate)
 
     # 8. escrita ---------------------------------------------------------------- #
     updates: dict[str, Any] = {"companion_souls": souls, "companion_voice_ack": None}

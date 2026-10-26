@@ -67,3 +67,70 @@ sondagem temporária (arquivo removido) combat_node, NONLETHAL=on, "sem matar": 
 sondagem NONLETHAL_RE com 30 frases pt-BR → ver P2-3
 cd web && npm test → 178 pass; tsc --noEmit → exit 0
 ```
+
+---
+
+## Fase B
+
+> **Veredito (Fase B):** `CHANGES_REQUIRED`
+> **Revisor:** Opus / Sol · **Data:** 2026-10-26 · **Commit revisado:** `afa074f2` (`git diff main...spec-325`)
+
+### Escopo
+
+R10–R13 (abordagem, ataque na fuga, abandono, sacrifício), desvios 6–11 e §8.2 da spec. Arquivos: `agents/combat.py`,
+`services/{chase,combat_intents,companion_soul,companion_tags,conflict_orchestrator,npc_world}.py`, `state.py`,
+`api.py`, `observability/events.py`, `data/companion_choice_tags.json`, `web/src/{types.ts,workspace/tabs/CombateTab.tsx}`
+e os testes novos. O gate de letalidade §8.2 ficou fora (é do coordenador).
+
+Conferido e correto:
+- Destino selado em `party[i].pending_fate`, companheiro inativo com `waiting_at`, consumido só em
+  `companion_soul.apply_turn` 7b via `apply_companion_fate` (SPEC-304). O telegrama `source="abandono"` é gravado no
+  1º turno após o selo; o destino sai só com `day - pday >= TELEGRAPH_MIN_DAYS`. Companheiro rechamado = resgate.
+- Sem destino duplo: o selo é excluído de `companions_exposed` (`companion_soul.py:985`) e do perigo do `npc_world`
+  (`npc_world.py:885`).
+- Regra de ouro: o payload de `companion_abandoned` leva só `name/location_id/day`. O `event_id` é o hash da seed,
+  não a seed. O narrador recebe "X ficou para trás". `/game/state` não expõe `pending_fate` (teste com dump). A
+  `chase_view` só ganha `approach`/`abandon_candidates`/`sacrifice_offer` com a flag `on`.
+- D3: `can_volunteer_sacrifice(soul)` exige aprovação >= `LOYAL_AT` e `coragem >= 1`, ou o traço. A oferta sai uma
+  vez por perseguição e expira na rodada seguinte. Recusar não toca a alma.
+- R10: a abordagem vale só na rodada (é removida do estado com `on`). Em `shadow`/`off` fica Agilidade, e o consumo
+  do RNG é idêntico (`ally_rolls` mantém a ordem e o número de `luck_roll`).
+- R11: à distância continua; corpo a corpo em `pressionado` limpa `combat_meta["chase"]`; em `afastado`/`quase_livre`
+  é recusado via `run_round(refusal=)`, que segue o caminho do item recusado e devolve `combat.round`.
+- `shadow` não escreve nada: `last_luck`, `sacrifice_offer` e `approach` não são persistidos; os testes off×shadow
+  comparam `combat/party/player/enemies/event_log`.
+- Catálogo 16→17 (`abandonou_companheiro`) é legítimo. O teste `vercel_env` garante as 8 flags em
+  `WORLD_FLAGS`/`OPTIONAL_FLAGS`. Nada mudou em `evals/`. Não há structured output novo nem valor do LLM: tudo é regex
+  fechada ou seed. Nenhum segredo vai a log.
+- Round-trip save/load com o selo (sondagem temporária, perfil legacy): `pending_fate`, `chase.abandoned` e
+  `last_luck` sobrevivem intactos.
+
+### Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| B-P1-1 | P1 | `services/companion_soul.py:897`; `agents/combat.py:2008` (viagem só com `flee_dest_id`); chips em `web/src/workspace/tabs/CombateTab.tsx` (sem destino) | **Abandono e sacrifício se anulam no fluxo principal.** Uma fuga sem destino (o caso do chip e de "Aceito o sacrifício.") deixa o herói no mesmo `current_location_id`. No mesmo turno, `turn_finalizer → apply_turn` vê `here == location and not combat_active` e trata isso como resgate: o selo é cancelado sem dano. Sondagem pelo `combat_node` real com `RPG_CHASE_ABANDON=on`: aceito o sacrifício → `combat.phase=ended`, local `montanhas_afiadas` → após `apply_turn`, `pending_fate=None`. O mesmo vale para o abandono quando a fuga termina sem destino. O R13 ("o companheiro segue o mesmo caminho selado") e o custo do R12 só aparecem se a fuga tiver destino. Os testes não pegam isso porque `_after` (`tests/test_spec325_abandon.py:158-172`) troca o local para `nova_arcadia` à mão. | Exigir que o herói **tenha saído** antes de valer o resgate. Opção (a): gravar `pf["left"]=True` na 1ª vez que `apply_turn` vê `here != location`, e resgatar só com `left` e `here == location`. Se o herói nunca sair, o destino precisa poder sair após >= 1 dia, mas o gate da 304 recusa `here == waiting_at`; a regra precisa ser decidida e documentada. Opção (b): fuga com selo e sem destino move o herói para um nó adjacente (o mesmo caminho do `_apply_flee_travel`). Escolher uma, registrar como desvio e adicionar um teste ponta a ponta `combat_node` (aceite/abandono + fuga) → `apply_turn` **sem** editar o local à mão. |
+| B-P2-1 | P2 | `services/companion_soul.py:871` (`if live:`) | O consumo e o resgate só rodam com `RPG_COMPANION_SOUL=on`. Com a alma em `off`/`shadow` e `RPG_CHASE_ABANDON=on`, o selo nunca é consumido nem cancelado. O companheiro fica para sempre fora de `abandon_candidates`, do sacrifício e do perigo (todos filtram `pending_fate`), mesmo depois de rechamado. | Tratar `chase_abandon` como `off` quando a alma não estiver `on` (em `_chase_party_choices`/`_publish_sacrifice_offer`/API), ou mover o resgate (active/no local) para fora do `if live`. Teste com a alma `off`. |
+| B-P2-2 | P2 | `tests/test_spec325_abandon.py` | Falta um teste versionado de round-trip save/load com o selo (`pending_fate`, `chase.last_luck/abandoned/sacrifice_offer`), como exige a regra de writer persistente. A sondagem passou no legacy. | Teste `save_game_state` → `load_game_state()` no meio do selo, e depois `apply_turn` aplicando o destino no estado carregado. |
+| B-P2-3 | P2 | `services/npc_world.py:885` | A exclusão do perigo off-screen para companheiro selado não tem teste. Só `companions_exposed` é testado (`test_peril_pipeline_skips_sealed_companion`). | Teste do `day_hook` com o companheiro selado: nenhum perigo aberto para ele. |
+| B-P2-4 | P2 | `agents/combat.py:1548-1552` | O ataque corpo a corpo recusado (R11) não é uma tentativa de fuga, então zera `flee_attempts`. Uma rodada recusada, que não gasta nada, reinicia o teto de tentativas consecutivas (`MAX_CONSECUTIVE_FLEE_ATTEMPTS`). Não há laço infinito (a recusa depende do jogador), mas a fuga com destino fica mais longa. | Na recusa, preservar `flee_attempts` (salvar antes e restaurar junto com `combat.round`). |
+| B-P2-5 | P2 | `services/chase.py:390`; `agents/npc.py:934` | `seal_fate` grava o **id** do local em `waiting_at`, e a fala "Está esperando em {waiting}" mostra o id cru (`montanhas_afiadas`). A convenção já é mista (`npc_world.resolve_location_ref` aceita os dois; `law._party_wait` também grava id). | Na mensagem do `npc.py`, resolver o id para o nome de exibição. Também pode ser follow-up geral. |
+| B-P2-6 | P2 (nota) | `agents/combat.py:_chase_party_choices` | O sacrifício aceito não gera evento nem tag para os outros companheiros, e a spec R13 não pede. Se o dono esperava efeito na alma/reputação ao aceitar (o pedido da revisão citava isso), falta definir. | Decisão do dono; nada a mudar até lá. |
+
+Sem P0.
+
+### Pendências
+
+- B-P1-1: obrigatório antes de pousar a Fase B (ou, no mínimo, antes de `RPG_CHASE_ABANDON=on`). Executor Terra, nesta spec.
+- B-P2-1 a B-P2-3: antes de `RPG_CHASE_ABANDON=on`.
+- B-P2-4 e B-P2-5: podem entrar com o P1 ou na Etapa 8. B-P2-6: decisão do dono.
+
+### Comandos rodados
+
+```text
+RAM livre 2,2 GB → testes em série (sem -n)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_spec325_{abandon,chase_choices,chase_intents,flags,intents,nonlethal,resist}.py tests/test_spec300_{values,tags}.py tests/test_spec304_{fate,perils,review}.py tests/test_spec192_vercel_env.py tests/test_conflito_fuga.py tests/test_fuga_progressiva_persistente.py tests/test_conflito16_frontend.py → 289 passed (exit 0)
+sondagem temporária (scratchpad, fora do repo): sacrifício aceito → apply_turn no mesmo local → pending_fate=None (B-P1-1); abandono com combate ativo → selo mantido
+sondagem temporária: save_game_state/load_game_state com selo → pending_fate/last_luck/abandoned idênticos
+cd web && npm test → 194 pass, 0 fail
+```
