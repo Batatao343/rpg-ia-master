@@ -230,6 +230,126 @@ def _chase_attack_gate(combat_meta: dict, decl: TurnDeclaration) -> str:
     return ""
 
 
+def _visible_scene_objects(scene: dict | None) -> list[dict]:
+    """Objetos que o herói enxerga (sem `effect`; secreto só depois de descoberto)."""
+    return cs.visible_objects(scene or {}) if scene else []
+
+
+def _object_declaration(scene: dict, intent: str) -> TurnDeclaration | None:
+    """SPEC-325 R14: nome canônico do objeto + rótulo da interação no texto (chip) vira
+    `TurnStep(kind="object")` sem LLM. `shadow` só registra; `off` não faz nada."""
+    from services import combat_flags
+    from services.combat_intents import object_step
+
+    mode = combat_flags.mode("objects")
+    if mode == "off":
+        return None
+    hit = object_step(intent, _visible_scene_objects(scene))
+    if hit is None:
+        return None
+    if mode == "shadow":
+        _log_event("combat", "objects_shadow", action="declare")
+        return None
+    return TurnDeclaration(
+        actor_id=_PLAYER_ID,
+        acao=TurnStep(kind="object", object_id=hit[0], interaction=hit[1]),
+    )
+
+
+def _valid_object_use(scene: dict | None, object_id: str | None, label: str | None) -> bool:
+    for obj in _visible_scene_objects(scene):
+        if obj.get("id") == object_id:
+            return any(it.get("label") == label for it in obj.get("interactions") or [])
+    return False
+
+
+def _effect_is_offensive(effect: dict) -> bool:
+    """Dano, ou condição nociva (dano contínuo, controle ou redutor), no catálogo fechado."""
+    kind = str(effect.get("kind") or "")
+    if kind == "damage":
+        return True
+    if kind != "apply_condition":
+        return False
+    params = effect.get("params") or {}
+    cond = cm.parse_condition(str(params.get("condition", "abissal")), source="objeto")
+    return bool(cond.get("dot") or cond.get("control") or int(cond.get("delta", 0) or 0) < 0)
+
+
+def _guard_object_step(decl: TurnDeclaration, scene: dict, active: list[dict], sides: dict) -> str:
+    """SPEC-325 R14 (só com a flag `on`): objeto inválido vira ataque básico no 1º inimigo;
+    efeito ofensivo com alvo do próprio lado é RECUSADO sem gastar a rodada. A recusa nunca
+    descreve o efeito (regra de ouro: o efeito do objeto fica oculto até o uso)."""
+    from services import combat_flags
+
+    step = decl.acao
+    if step is None or step.kind != "object" or combat_flags.mode("objects") != "on":
+        return ""
+    if not _valid_object_use(scene, step.object_id, step.interaction):
+        _log_event("combat", "object_invalid_fallback", level="info")
+        decl.acao = TurnStep(kind="attack", target_id=(active[0]["id"] if active else None))
+        return ""
+    obj = next((o for o in scene.get("objects") or [] if o.get("id") == step.object_id), {})
+    it = next((i for i in obj.get("interactions") or [] if i.get("label") == step.interaction), {})
+    effect = it.get("effect") or {}
+    target = (effect.get("params") or {}).get("target")
+    friendly = set(sides.get("hero", [])) | set(sides.get("ally", []))
+    if _effect_is_offensive(effect) and target in friendly:
+        _log_event("combat", "object_refused", level="info")
+        return f"Não dá para usar '{step.interaction}' assim agora; escolha outra ação."
+    return ""
+
+
+def _companion_orders(
+    state: dict,
+    intent: str,
+    party: list[dict],
+    enemies: list[dict],
+    scene: dict,
+    actors_by_id: dict,
+    sides: dict,
+) -> tuple[dict, list[str]]:
+    """SPEC-325 R15: "<aliado>, <verbo> [alvo]" vira `TurnDeclaration` do aliado. As
+    Restrições da alma (tabela fixa, D9) podem recusar: o aliado age pelo perfil e a recusa
+    vai para o log/narração. Aliado sem comando (medo, confusão...) ignora a ordem.
+    `shadow` só registra. Devolve `(declarações por ator, linhas de log)`."""
+    from services import combat_flags, companion_orders, tactical_profile
+    from services import companion_soul as cs_
+    from services.combat_intents import companion_order
+
+    mode = combat_flags.mode("companion_orders")
+    if mode == "off" or not intent:
+        return {}, []
+    names = {
+        str(i): str((actors_by_id.get(i) or {}).get("name") or "")
+        for i in sides.get("ally", [])
+        if actors_by_id.get(i)
+    }
+    order = companion_order(intent, names, enemies)
+    if order is None:
+        return {}, []
+    if mode == "shadow":
+        _log_event("combat", "companion_orders_shadow", verb=str(order["verb"]))
+        return {}, []
+    ally = actors_by_id[order["ally_id"]]
+    name = str(ally.get("name") or order["ally_id"])
+    if tactical_profile.loses_command(ally):
+        _log_event("combat", "companion_order_ignored", level="info")
+        return {}, [f"{name} está fora de si e ignora a ordem."]
+    entry = next((m for m in party if str(m.get("id") or m.get("name")) == order["ally_id"]), None)
+    soul = (
+        (state.get("companion_souls") or {}).get(cs_.comp_id(entry)) if entry is not None else None
+    )
+    verdict = companion_orders.validate_order(ally, soul, order)
+    if not verdict["accepted"]:
+        _log_event("combat", "companion_order_refused", level="info", verb=str(order["verb"]))
+        return {}, [f"{name} recusa a ordem: {verdict['reason']}."]
+    decl = companion_orders.ally_declaration(order, ally, scene, actors_by_id, sides)
+    if decl is None:
+        return {}, [f"{name} não consegue cumprir a ordem agora."]
+    _log_event("combat", "companion_order", level="info", verb=str(order["verb"]))
+    return {order["ally_id"]: decl}, []
+
+
 def _soul_traits(state: dict, member: dict) -> list[str]:
     from services import companion_soul as cs_
 
@@ -882,6 +1002,10 @@ def _parse_turn_declaration(
                 acao=TurnStep(kind="item", item_id=entry.get("id"), target_id=target_id),
             )
 
+    object_decl = _object_declaration(scene, intent)
+    if object_decl is not None:  # SPEC-325 R14: chip/nome canônico, sem CLASSIFY
+        return object_decl
+
     class PlayerMove(BaseModel):
         kind: str = Field(description="attack | card | item | maneuver | move | pass")
         card_id: str = Field(default="", description="id EXATO da Carta preparada, se kind=card.")
@@ -892,6 +1016,33 @@ def _parse_turn_declaration(
             description="engajar|desengajar|guardar|esconder|procurar, se kind=maneuver.",
         )
         direction: str = Field(default="", description="aproximar|afastar, se kind=move.")
+
+    # SPEC-325 R14 (só `on` e com objeto visível): o schema/prompt ganham `object` — id e
+    # rótulo EXATOS vindos de `visible_objects` (sem `effect`); fora disso, tudo igual a `off`.
+    from services import combat_flags as _cf
+
+    visible_objs = _visible_scene_objects(scene) if _cf.mode("objects") == "on" else []
+    move_model = PlayerMove
+    object_rule = ""
+    if visible_objs:
+
+        class PlayerMoveObject(PlayerMove):
+            object_id: str = Field(default="", description="id EXATO do objeto, se kind=object.")
+            interaction: str = Field(
+                default="", description="rótulo EXATO da interação, se kind=object."
+            )
+
+        move_model = PlayerMoveObject
+        listing = "; ".join(
+            f"{o['id']}={o.get('name')} ["
+            + ", ".join(str(i.get("label")) for i in o.get("interactions") or [])
+            + "]"
+            for o in visible_objs
+        )
+        object_rule = (
+            f"\n    Objetos da cena (use id e rótulo EXATOS): {listing}"
+            "\n    - Usar um objeto da cena -> kind=object + object_id + interaction."
+        )
 
     sys = SystemMessage(
         content=f"""
@@ -912,15 +1063,24 @@ def _parse_turn_declaration(
     - Beber/usar consumível -> kind=item, item_id do inventário, target_id se hostil.
     - Manobra tática (guardar/esconder/engajar/desengajar/procurar) -> kind=maneuver.
     - Mover (aproximar/afastar) -> kind=move + direction.
-    - Sem alvo claro -> kind=attack no primeiro inimigo.
+    - Sem alvo claro -> kind=attack no primeiro inimigo.{object_rule}
     """
     )
     try:
         llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
-        res = llm.with_structured_output(PlayerMove).invoke([sys, HumanMessage(content=intent)])
+        res = llm.with_structured_output(move_model).invoke([sys, HumanMessage(content=intent)])
         if isinstance(res, PlayerMove):
             kind = (res.kind or "attack").lower()
             tid = res.target_id or (enemies[0]["id"] if enemies else None)
+            if kind == "object":  # só chega aqui com `on`; id/rótulo inválido -> ataque básico
+                oid = str(getattr(res, "object_id", "") or "")
+                label = str(getattr(res, "interaction", "") or "")
+                if _valid_object_use(scene, oid, label):
+                    return TurnDeclaration(
+                        actor_id=_PLAYER_ID,
+                        acao=TurnStep(kind="object", object_id=oid, interaction=label),
+                    )
+                _log_event("combat", "object_invalid_fallback", level="info")
             if kind == "card" and res.card_id in (player.get("prepared_cards") or []):
                 card = cards.get_card(res.card_id) or {}
                 return TurnDeclaration(
@@ -1006,6 +1166,7 @@ def _canonical_player_action(
                 "move",
                 "pass",
                 "flee",
+                "object",
             }
             else "pass"
         )
@@ -1651,6 +1812,11 @@ def _combat_node(state: GameState):
         _mark_nonlethal(decl, intent)
         resolved_decl = decl
         chase_refusal = _chase_attack_gate(combat_meta, decl)  # SPEC-325 R11
+        if not chase_refusal:  # SPEC-325 R14: objeto inválido/ofensivo contra os seus
+            chase_refusal = _guard_object_step(decl, scene, active, sides)
+        order_decls, order_logs = _companion_orders(
+            state, intent, party, enemies, scene, actors_by_id, sides
+        )  # SPEC-325 R15
         # alvo inválido (inimigo já caiu / declaração pré-computada) → 1º inimigo ativo
         if (
             decl.acao
@@ -1685,7 +1851,7 @@ def _combat_node(state: GameState):
             actors_by_id,
             sides,
             round_state,
-            declarations={_PLAYER_ID: decl},
+            declarations={**order_decls, _PLAYER_ID: decl},
             prepared_abyss=scene.get("abyss_events"),
             initiator=initiator,
             rng=rng,
@@ -1697,7 +1863,7 @@ def _combat_node(state: GameState):
                 combat_meta["flee_attempts"] = prior_flee_attempts
         _sync_enemy_knowledge(enemies)
         _reveal_resistances(out.get("attacks") or [], enemies, sides)
-        logs += weather_logs + out["logs"]
+        logs += weather_logs + order_logs + out["logs"]
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
         player_cards = [

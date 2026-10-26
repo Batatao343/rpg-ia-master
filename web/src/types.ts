@@ -303,9 +303,21 @@ export interface ScenePosition {
   engaged_names: string[];
 }
 
+/** SPEC-325 R14: só rótulo/custo/usos — nunca o `effect` (regra de ouro). */
+export interface SceneObjectView {
+  id: string;
+  name: string;
+  distance_state?: string | null;
+  zone_id?: string | null;
+  interactions: { label: string; cost?: string | null }[];
+  uses_remaining?: number | null;
+}
+
 export interface ConflictSceneView {
   zones: Array<{ id: string; name: string; connections: string[] }>;
   positions: ScenePosition[];
+  /** SPEC-325: presente só com RPG_COMBAT_OBJECTS=on. */
+  objects?: SceneObjectView[];
 }
 
 export interface ChaseView {
@@ -336,6 +348,8 @@ export interface CombatBlock {
   basic_actions?: BasicActionView[];
   /** SPEC-325: presente (true) só com RPG_COMBAT_NONLETHAL=on — mostra o chip "Sem matar". */
   nonlethal_available?: boolean;
+  /** SPEC-325 R15: companheiros que aceitam ordem; só com RPG_COMPANION_ORDERS=on. */
+  companion_orders?: { id: string; name: string }[];
   scene: ConflictSceneView;
   wounds: WoundTrackView;
   chase: ChaseView;
@@ -344,7 +358,7 @@ export interface CombatBlock {
   // spec polish-sessao (R4): chips mecânicos derivados da ficha
   suggestions?: string[];
   last_player_action?: {
-    kind: "attack" | "card" | "item" | "maneuver" | "move" | "pass" | "flee";
+    kind: "attack" | "card" | "item" | "maneuver" | "move" | "pass" | "flee" | "object";
     card_id: string | null;
     item_id: string | null;
     target_id: string | null;

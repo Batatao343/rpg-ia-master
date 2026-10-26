@@ -152,10 +152,54 @@ def _resolve_maneuver(scene, actor_id, step, out):
     elif m == "esconder":
         r = cs.hide(scene, actor_id, source=step.source)
     elif m == "procurar":
+        # SPEC-325 R14: o estado "alguém escondido de mim" vale ANTES da busca (que o limpa).
+        someone_hidden = _someone_hidden_from(scene, actor_id)
         r = cs.search(scene, actor_id, step.target_id)
+        out["logs"].append(r.get("log") or r.get("error", ""))
+        if not someone_hidden:
+            _search_discovers_object(scene, actor_id, out)
+        return
     else:
         r = {"ok": False, "error": f"Manobra desconhecida: {m}.", "log": ""}
     out["logs"].append(r.get("log") or r.get("error", ""))
+
+
+def _someone_hidden_from(scene: dict, actor_id: str) -> bool:
+    return any(
+        actor_id in (p.get("hidden_from") or []) or actor_id in (p.get("approx_from") or [])
+        for p in (scene.get("positions") or {}).values()
+        if isinstance(p, dict)
+    )
+
+
+def _search_discovers_object(scene: dict, actor_id: str, out: dict) -> None:
+    """SPEC-325 R14: `procurar` sem participante escondido do ator revela o 1o objeto
+    secreto da zona dele. `shadow` so registra; `off` nao faz nada."""
+    mode = combat_flags.mode("objects")
+    if mode == "off":
+        return
+    positions = scene.get("positions") or {}
+    zone = (positions.get(actor_id) or {}).get("zone_id")
+    secret = next(
+        (
+            o
+            for o in scene.get("objects") or []
+            if o.get("secret")
+            and not o.get("discovered")
+            and not o.get("destroyed")
+            and o.get("zone_id") in (None, zone)
+        ),
+        None,
+    )
+    if secret is None:
+        return
+    if mode == "shadow":
+        from observability.telemetry import log_event
+
+        log_event("combat", "objects_shadow", action="discover")
+        return
+    found = cs.discover_object(scene, str(secret.get("id")))
+    out["logs"].append(found.get("log") or found.get("error", ""))
 
 
 def _virtude_key(card: dict | None, step, actor: dict) -> str:

@@ -70,10 +70,17 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.chase_sacrifice` | — |
 | `combat.chase_sacrifice_offered` | — |
 | `combat.chase_sacrifice_shadow` | — |
+| `combat.companion_order` | `verb` |
+| `combat.companion_order_ignored` | — |
+| `combat.companion_order_refused` | `verb` |
+| `combat.companion_orders_shadow` | `verb` |
 | `combat.enemy_knowledge_failed` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
 | `combat.nonlethal_shadow` | `target` |
+| `combat.object_invalid_fallback` | — |
+| `combat.object_refused` | — |
+| `combat.objects_shadow` | `action` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |
 | `combat.prep_timeout` | `timeout_s` |

@@ -2866,6 +2866,17 @@ def _combat_block(state: dict) -> dict[str, Any]:
     }
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
+    if combat_flags.active("objects"):
+        # SPEC-325 R14/D8: so rotulo/custo/usos (nunca `effect`); secreto so depois de descoberto.
+        from services import conflict_scene as _cs
+
+        scene_view["objects"] = _cs.visible_objects(scene)
+    if combat_flags.active("companion_orders"):
+        view["companion_orders"] = [  # SPEC-325 R15/D8: chips "<aliado>, <verbo>"
+            {"id": str(p.get("id") or p.get("name")), "name": str(p.get("name") or "")}
+            for p in (state.get("party") or [])
+            if isinstance(p, dict) and p.get("active") and not p.get("pending_fate")
+        ]
     return view
 
 

@@ -36,6 +36,10 @@ const SPARE_TEXT = "Sem matar.";
 /** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
 const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
 const SACRIFICE_TEXT = "Aceito o sacrifício.";
+/** SPEC-325 R14/R15: nome canônico + rótulo (objeto) e "<aliado>, <verbo>" (ordem), resolvidos sem LLM. */
+const OBJECT_TEXT = (label: string, name: string) => `${label} ${name}.`;
+const ORDER_TEXT = (name: string, verb: string) => `${name}, ${verb}.`;
+const ORDER_VERBS: [string, string][] = [["atacar", "Atacar"], ["proteger", "Proteger"], ["recuar", "Recuar"]];
 
 export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
@@ -247,6 +251,22 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
                 Deixar {c.name}
               </button>
             ))}
+            {combat?.scene?.objects?.flatMap((o) => o.interactions.map((it) => (
+              <button key={`obj-${o.id}-${it.label}`} className="actionchip" type="button" data-object={o.id}
+                disabled={locked}
+                title={`Usar ${o.name} (${it.label}). O efeito só se revela depois do uso.`}
+                onClick={() => { if (targeting.beginDirect()) onAction(OBJECT_TEXT(it.label, o.name)); }}>
+                {it.label} {o.name}
+              </button>
+            )))}
+            {combat?.companion_orders?.flatMap((a) => ORDER_VERBS.map(([verb, label]) => (
+              <button key={`order-${a.id}-${verb}`} className="actionchip" type="button" data-order={`${a.id}:${verb}`}
+                disabled={locked}
+                title={`Ordenar a ${a.name}: ${verb}. Ele pode recusar se contrariar seus valores.`}
+                onClick={() => { if (targeting.beginDirect()) onAction(ORDER_TEXT(a.name, verb)); }}>
+                {a.name}: {label}
+              </button>
+            )))}
             {combat?.chase?.sacrifice_offer && (
               <button className="actionchip" type="button" data-sacrifice disabled={locked}
                 title="Aceita que o companheiro fique para segurar os perseguidores. Recusar não tem custo: é só fugir."

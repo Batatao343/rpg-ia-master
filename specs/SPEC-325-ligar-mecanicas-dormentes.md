@@ -1,8 +1,8 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
-> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B implementada em `shadow` na branch `spec-325` 26/10, sem revisão nem gate; Fases C–D pendentes)
+> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B revisada + gate R17 verde; Fase C implementada em `shadow` na branch `spec-325` 26/10, sem revisão nem gate; Fase D pendente)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
-> **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fases C–D pendentes (ver §9).
+> **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fase C (R14 objetos de cena, R15 ordem a companheiro) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase C pendentes: comandos prontos em §8.3, **ainda não rodados** (coordenador). Fase D pendente (ver §9).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")
 > **Depende de:** SPEC-064, SPEC-068, SPEC-069, SPEC-070, SPEC-226, SPEC-272, SPEC-285, SPEC-300, SPEC-304 (todas `done`)
 > **Desbloqueia:** prisioneiros (consumidor de `law.deliver_prisoner`, SPEC-299 R23); follow-up 299 "derrota → prisão"; follow-up SPEC-226:165 (id único de reforço)
@@ -559,20 +559,65 @@ Notas honestas sobre a medida:
   só atua quando o bot ataca com perseguição ativa, e pode **baixar** a taxa de morte (recusa em vez de
   trocar golpes), nunca subir.
 
-## 9. Próximos passos (Fases C–D, não implementadas)
+## 8.3 Gate de letalidade da Fase C: comandos exatos (coordenador roda; subagente não)
+
+Um de cada vez, sem `-n`. Fases A e B já estão `on` no staging; a linha de base é a mesma árvore com **só as
+flags da Fase C** em `off`.
+
+```bash
+AB="RPG_COMBAT_REVEAL_RESIST=on RPG_COMBAT_NONLETHAL=on RPG_CHASE_APPROACH=on RPG_CHASE_ATTACK=on RPG_CHASE_ABANDON=on RPG_COMPANION_SOUL=on"
+ON="$AB RPG_COMBAT_OBJECTS=on RPG_COMPANION_ORDERS=on"
+OFF="$AB RPG_COMBAT_OBJECTS=off RPG_COMPANION_ORDERS=off"
+
+# (a) Arena SPEC-285: sanidade. A arena chama run_round direto (sem parser, sem chip, sem party formal),
+#     então a Fase C é neutra por construção: esperado Δ = 0,0 pp nas 32 células.
+env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_c_off.json
+env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_c_on.json
+
+# (b) Matriz SPEC-056 (5 classes x seeds 42/43 x 50 turnos), perfis `combate` e `companheiro` (único com
+#     party formal em combate; exercita o caminho de ordem quando o texto traz "<aliado>, <verbo>").
+#     Critério: M2 >= 20, 0 no_progress, 0 violação; morte do herói <= linha de base.
+for prof in combate companheiro; do
+  for cls in "Devoto do Abismo" "Sangromante" "Corruptor" "Arcanista Cinzento" "Médico de Campo"; do
+    for seed in 42 43; do
+      env $ON  bash scripts/dev/py.sh -m playtest run --profile $prof --class "$cls" --turns 50 --seed $seed
+      env $OFF bash scripts/dev/py.sh -m playtest run --profile $prof --class "$cls" --turns 50 --seed $seed
+    done
+  done
+done
+
+# (c) D5 (autorizado em 25/10, 1 campanha por fase): combate, 200 turnos, seeds 21-32, MockLLM, uma por vez.
+#     Critério: M1 <= 0,564, M2 >= 20, M5 = 0 combat.no_progress; as 2 violações `summary.lifecycle`
+#     (seeds 25/32) são pré-existentes.
+for seed in $(seq 21 32); do
+  env $ON bash scripts/dev/py.sh -m playtest run --profile combate --turns 200 --seed $seed
+done
+# agregar: bash scripts/dev/py.sh -m playtest report <run_id>
+```
+
+Notas honestas sobre a medida:
+- Os bots não dizem "<aliado>, <verbo>" nem o rótulo de objeto, e o harness não usa chips: `on` mede que a fiação
+  (parser local, `procurar` com objeto secreto, API) é neutra para a letalidade. Cenas de `fallback_safe_scene`
+  não têm objetos. O efeito fica coberto pelos testes pelo `combat_node`. As variantes de bot `usa_objeto` e de
+  ordem a aliado (R18) entram na Etapa 8.
+- Esperado: Δ = 0 pp em todas as células. O objeto pode **baixar** a morte (dano no inimigo), nunca subir, porque
+  a recusa de efeito ofensivo contra os seus impede o dano autoinfligido.
+
+## 9. Próximos passos (Fases D e Etapa 8)
 
 1. ~~**Etapa 3 (Fase B, R10/R11)**~~ feita em `shadow` (26/10); `tests/test_spec325_chase_choices.py`.
 2. ~~**Etapa 4 (Fase B, R12/R13)**~~ feita em `shadow` (26/10); `tests/test_spec325_abandon.py`. Falta o
    gate R17 da Fase B (§8.2) e a revisão Sol.
-3. **Etapa 5 (Fase C, R14):** objetos de cena (`scene.objects` na API, `TurnStep(kind="object")`, `procurar`).
-4. **Etapa 6 (Fase C, R15):** ordens a companheiro e `companion_orders.py`; gate R17 da Fase C.
+3. ~~**Etapa 5 (Fase C, R14)**~~ feita em `shadow` (26/10); `tests/test_spec325_objects.py`.
+4. ~~**Etapa 6 (Fase C, R15)**~~ feita em `shadow` (26/10); `tests/test_spec325_orders.py`,
+   `tests/test_spec325_intents_scene.py`. Falta o gate R17 da Fase C (§8.3) e a revisão Sol.
 5. **Etapa 7 (Fase D, R16):** reforços de `lider_matilha` e `reinforcements.py`; gate R17 com a célula nova da
    arena e D5.
 6. **Etapa 8 (R4, R18, R19):** `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
    cenários de §6 em `playtest/scenarios.py` e os invariantes restantes. A Fase A já tem
    `check_conflict_capabilities` (incapacitado nunca morto; formato de `revealed_resistances`).
-7. **UI restante (D8):** chips de objeto e ordem a aliado; "Sem matar" (Fase A) e "Deixar X"/"Aceitar
-   sacrifício" (Fase B) já existem (`web/src/workspace/tabs/CombateTab.tsx`, só com a flag `on`: a API manda
+7. **UI (D8):** chips de objeto e ordem a aliado (Fase C, 26/10), "Sem matar" (Fase A) e "Deixar X"/"Aceitar
+   sacrifício" (Fase B) existem (`web/src/workspace/tabs/CombateTab.tsx`, só com a flag `on`: a API manda
    `chase.abandon_candidates`/`chase.sacrifice_offer` apenas nesse caso).
 8. Adendos datados em SPEC-064/068/069/070 ("ligado pela SPEC-325") quando cada flag for a `on`.
 
@@ -654,3 +699,27 @@ Notas honestas sobre a medida:
     crônica percebido ("X ficou para trás para que o herói escapasse"), sem o destino e sem efeito extra de
     reputação; nenhuma tag nova (o catálogo da SPEC-300 pode etiquetar depois).
 - 26/10 — **gate R17 da Fase B (coordenador)**, Fase A `on` nas duas pontas, Fase B off vs on (`RPG_CHASE_APPROACH/ATTACK/ABANDON`), `RPG_COMPANION_SOUL=on`, MockLLM: (a) arena 10 seeds: máx |Δ death_rate| = **0,0 pp** nas 32 células; (b) matriz 5 classes × seeds 42/43 × 50 turnos nos perfis `combate` e `fujao`: 20/20 com 0 erro, 0 violação, 0 `no_progress`; (c) long-run `combate` 12 × 200 (seeds 21–32): 0 erro; as 2 violações `summary.lifecycle` (seeds 25/32) são as pré-existentes. Bots não declaram "deixo"/"aceito" → gate mede neutralidade da fiação.
+- **2026-10-26 — Fase C implementada (shadow).** `combat_intents.object_step/companion_order`;
+  `services/companion_orders.py` (`restrictions_from_soul` = tabela fixa D9: `honra>=2` bloqueia `atacar_rendido`
+  como `absoluta`, `compaixao>=2` bloqueia `atacar_incapacitado` como `resistente`, `coragem>=2` bloqueia
+  `abandonar_posto` como `resistente`; `validate_order` soma as restrições ao perfil do aliado e usa
+  `leverage = aprovação >= LOYAL_AT`; `ally_declaration`); `agents/combat.py`: `_object_declaration` (nome canônico +
+  rótulo, sem CLASSIFY), `PlayerMove` estendido com `object_id`/`interaction` só com a flag `on` e objeto visível,
+  `_guard_object_step` (inválido -> ataque básico; ofensivo contra os seus -> recusa sem gastar a rodada),
+  `_companion_orders` (recusa/perda de comando viram linha de log); `conflict_turn._search_discovers_object`
+  (`procurar` revela o 1º objeto secreto da zona do ator); API `scene.objects` e `companion_orders`; chips de
+  objeto e de ordem; eventos novos em `EVENTOS_DE_LOG.md`.
+  - **Desvio 12:** o texto do objeto exige o nome canônico **inteiro** do objeto e o rótulo (inteiro ou radical, para
+    "derrubo" ~ "derrubar"); nome parcial ("o pilar") não casa. O chip manda `"<rótulo> <nome>."`.
+  - **Desvio 13:** "ofensivo" = `damage` ou `apply_condition` nociva (dano contínuo, controle ou redutor). A mensagem
+    da recusa é neutra ("Não dá para usar '<rótulo>' assim agora…") e **não** descreve o efeito (regra de ouro).
+  - **Desvio 14:** declaração estruturada `object` do harness só é validada/saneada com a flag `on` (com `off`/`shadow`
+    segue o caminho anterior, byte a byte).
+  - **Desvio 15:** a ordem a aliado não altera a ação do jogador: o texto da ordem segue para o parser como antes
+    (ataque básico no 1º inimigo quando o CLASSIFY não acha outra intenção). O chip de ordem manda só a ordem.
+    `proteger` = tática `protect` no herói; `curar` = tática `support` no mais ferido; `recuar` = mover `afastar`;
+    `atacar` sem alvo nomeado usa o 1º inimigo ativo; alvo rendido/incapacitado (fora do lado inimigo ativo) cai no
+    perfil do aliado com a linha "não consegue cumprir a ordem agora".
+  - **Desvio 16:** `procurar` só revela o objeto secreto se **ninguém** estava escondido do ator **antes** da busca
+    (a busca limpa o `hidden_from`).
+  - As 8 flags já estavam em `WORLD_FLAGS`/`OPTIONAL_FLAGS` (verificado: `vercel_env.py:99-101,151-153`).
