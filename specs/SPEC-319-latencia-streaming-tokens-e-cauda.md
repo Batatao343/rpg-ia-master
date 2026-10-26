@@ -207,4 +207,9 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   P2-8: stream aplica a instrução de `_input_for_provider` e, se o JSON streamado for inválido, recorre ao
   `invoke` estruturado do mesmo candidato (regeneração semântica) antes de passar ao próximo.
   P2-9: `reset` não chama `onDone`. P2-10: wrapper do playtest com `hasattr`.
+- **2026-10-25 · re-revisão (APPROVED_WITH_FOLLOWUPS).** F-1: JSON streamado inválido não chama mais o
+  `invoke` dentro da tentativa; devolve `_StreamRetry` e o coordenador manda `reset` (e `guard.reset()`)
+  ANTES do `_invoke_single` — a cauda retida do parcial inválido nunca é emitida (R4). `reset` do route agora
+  sempre chama `on_reset` (o sink ignora se nada saiu). F-2: `StreamGuard(normalize=...)`: NPC e
+  combate/loot usam só `sanitize_meta_preamble`; storyteller mantém `sanitize_player_facing`.
 

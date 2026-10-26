@@ -654,7 +654,20 @@ def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
 
 
 _UNSET = object()
-_STREAM_CANCELLED = object()  # SPEC-319: tentativa abandonada por perder o hedge
+_STREAM_CANCELLED = object()
+
+
+class _StreamRetry:
+    """Stream deu JSON invalido: o coordenador descarta o parcial e roda o invoke do candidato."""
+
+    __slots__ = ("provider", "model")
+
+    def __init__(self, provider: str, model: str) -> None:
+        self.provider, self.model = (
+            provider,
+            model,
+        )  # SPEC-319: tentativa abandonada por perder o hedge
+
 
 # SPEC-319 R5: hedge. Teto de custo: no maximo ~10% das chamadas (e 1 por chamada).
 HEDGE_MAX_RATIO = 0.10
@@ -1293,15 +1306,22 @@ class RoutedLLM:
                 on_delta(text)
 
         def reset() -> None:
-            if sent["n"]:
-                sent["n"] = 0
-                if on_reset is not None:
-                    on_reset()
+            sent["n"] = 0
+            if on_reset is not None:  # sempre: o guard do chamador pode reter texto nao emitido
+                on_reset()
+
+        def settle(result):
+            """`_StreamRetry` => descarta o parcial e tenta o invoke estruturado do candidato."""
+            if isinstance(result, _StreamRetry):
+                reset()
+                return self._invoke_single(result.provider, result.model, input, schema)
+            return result
 
         tried: set[int] = set()
         hedge_ms = _hedge_ms() if (schema is not None and self.tier is ModelTier.FAST) else 0
         if hedge_ms > 0:
             result, tried = self._hedged_first(input, schema, key, emit, errors, hedge_ms)
+            result = settle(result)
             if result is not None:
                 return result
             reset()
@@ -1311,6 +1331,7 @@ class RoutedLLM:
             result = self._stream_attempt(
                 idx, provider, model, input, schema, key, emit, lambda: False, errors
             )
+            result = settle(result)
             if result is not None:
                 return result
             reset()  # R4: o parcial deste candidato nao vale para o proximo
@@ -1500,8 +1521,9 @@ class RoutedLLM:
             )
             if structured:
                 # P2-8: o `invoke` regenera ate 3x no mesmo provider; o stream so tenta 1x. Antes
-                # de abandonar o candidato, recorre ao invoke estruturado completo dele.
-                return self._invoke_single(provider, model, input, schema)
+                # de abandonar o candidato, o coordenador recorre ao invoke estruturado completo
+                # dele — DEPOIS de mandar `reset` ao cliente (F-1: o parcial invalido nunca fica).
+                return _StreamRetry(provider, model)
             return None
         _emit_attempt_telemetry(
             LLMAttemptEvent(

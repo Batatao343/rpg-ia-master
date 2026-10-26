@@ -90,6 +90,7 @@ def test_interrupted_stream_falls_back_and_resets_sink(monkeypatch):
     good = FakeStreamClient(slices(tool_args(good_text), 5))
     install(monkeypatch, {"deepseek": broken, "groq": good})
     attempts = []
+    previous_hook = llm_setup._ATTEMPT_TELEMETRY_HOOK  # nao pisar no hook global da API
     llm_setup.set_llm_attempt_telemetry_hook(attempts.append)
     try:
         llm = routed([("deepseek", "m1"), ("groq", "m2")])
@@ -99,7 +100,7 @@ def test_interrupted_stream_falls_back_and_resets_sink(monkeypatch):
         finally:
             sink.unbind(token)
     finally:
-        llm_setup.set_llm_attempt_telemetry_hook(None)
+        llm_setup.set_llm_attempt_telemetry_hook(previous_hook)
     assert isinstance(result, StoryUpdate) and result.narrative == good_text
     kinds = [k for k, _ in events]
     assert "reset" in kinds
@@ -291,3 +292,46 @@ def test_stream_guard_normalizes_like_final_text():
     guard = sink.StreamGuard()
     out = "".join(guard.feed(raw[i : i + 5]) for i in range(0, len(raw), 5)) + guard.finish()
     assert out == sanitize_player_facing(raw)
+
+
+def test_invalid_stream_resets_before_invoke_fallback_and_drops_tail(monkeypatch):
+    """F-1: JSON invalido => `reset` ANTES do invoke do mesmo candidato; a cauda retida do
+    parcial invalido nunca e emitida (guard.finish nao reaproveita o texto abandonado)."""
+    abandoned = "texto abandonado que nunca deve aparecer " * 5
+
+    class _Client(FakeStreamClient):
+        def with_structured_output(self, schema, **kw):
+            class _S:
+                def invoke(_s, _msgs):
+                    return {
+                        "raw": AIMessage(content=""),
+                        "parsed": StoryUpdate(narrative="via invoke valido"),
+                        "parsing_error": None,
+                    }
+
+            return _S()
+
+    bad = _Client(['{"narrative": "' + abandoned, " sem fechar"])
+    install(monkeypatch, {"deepseek": bad})
+    llm = routed([("deepseek", "m1")])
+    events, token = _collect()
+    try:
+        result = sink.narrate_structured(llm, StoryUpdate, MSGS)
+    finally:
+        sink.unbind(token)
+    assert isinstance(result, StoryUpdate) and result.narrative == "via invoke valido"
+    kinds = [k for k, _ in events]
+    assert "reset" in kinds
+    after = events[kinds.index("reset") + 1 :]
+    assert not any("abandonado" in t for _k, t in after)
+    assert not [t for k, t in after if k == "delta"]  # nada do parcial invalido depois do reset
+
+
+def test_stream_guard_normalization_is_per_node():
+    """F-2: `meta` so aplica sanitize_meta_preamble (nao colapsa espacos/pontuacao do NPC)."""
+    raw = "Aqui está a narração:\nO vento  sopra , frio" + " ao longe" * 20
+    full = sink.StreamGuard(normalize="player_facing")
+    meta = sink.StreamGuard(normalize="meta")
+    a = full.feed(raw) + full.finish()
+    b = meta.feed(raw) + meta.finish()
+    assert "sopra, frio" in a and "sopra , frio" in b

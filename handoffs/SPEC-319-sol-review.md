@@ -98,3 +98,41 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_partial_
 cd web && npm test → 169 pass, 0 fail
 probe (scratchpad, fora do repo): hedge 1º-falha → [m1 stream_error, m2 success, m1 hedge_lost]; extrator 1-char == json.loads; NPC prefix nunca é prefixo do final → 5 passed
 ```
+
+## Re-review (delta `2666aaf6..2b368347`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus (papel Sol) · **Data:** 2026-10-25 · **Commit revisado:** `2b368347`
+
+### Conferência dos achados
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **Resolvido** | agents/storyteller.py:2013-2032: `_stream_ok = not rumor_nothing and interlocutor_reason ∉ MEDIATION_REASONS` → `narrate_structured(..., stream=False)` → `invoke` (narrative_sink.py:192). Probe de ponta a ponta (scratchpad): narração mediada com "pacto com valerius" → **0 deltas**, final neutralizado ("A cena não deixa transparecer…"); controle sem mediação → a assinatura streama (o probe é sensível). **Outros caminhos:** `find_unrevealed` só é usado como guard de prosa em storyteller.py:2138. NPC, combate (`stream_text`) e loot (`stream_text`) não têm guard de segredo no texto final, então o stream não expõe nada que o final não exporia (beats são saneados no planner por `sanitize_beat`, e o resto é auditoria). |
+| P1-2 | **Resolvido** | agents/npc.py:1315 `prefix=f'**{npc_data["name"]}:** "'`; o `StreamGuard` só aplica o prefixo com texto não vazio. `test_npc_stream_is_prefix_of_final_message` (nó) e `test_npc_route_tokens_do_not_replace` (SSE; rodou, não pulou) confirmam: `live` presente e 0 `replace`. |
+| P2-1 | Resolvido | mesmo gate do P1-1 (`rumor_nothing`). |
+| P2-2 | Resolvido | llm_setup.py `abandon`: pula `i in ended`. Probe: `[m1 stream_error, m2 success]`, sem `hedge_lost`; teste `test_failed_first_is_not_reported_as_hedge_lost`. |
+| P2-3 | Resolvido (ver F-2) | `HOLD_CHARS=120`/newline + `sanitize_player_facing` no texto limpo + corte antes do espaço; `test_stream_guard_normalizes_like_final_text`. |
+| P2-4 | Resolvido | api.py `sse.token_replace` com `reason`/`shown_len`/`final_len`/`common_prefix_len` (sem conteúdo). |
+| P2-5 | Resolvido | `would_replace = not narrative.startswith(shadow)` no `sse.token_stream_shadow`; spec atualizada. |
+| P2-6 | Resolvido | api.py `_NOT_A_FAILURE` em `llm_failures`, `by_tier.failed` e `llm_failed_attempts`; `hedge_lost` fora de `fallbacks`. |
+| P2-7 | Resolvido | `HEDGE_MIN_CALLS=10` + razão de 10 %; teste de instância fria; §7 diz que é melhor-esforço por instância. |
+| P2-8 | Resolvido (ver F-1) | instrução neutra quando a última mensagem é `AIMessage`; JSON inválido → `_invoke_single` (invoke com regeneração semântica no mesmo candidato). |
+| P2-9 | Resolvido | useTypewriter.ts:62: `reset` limpa sem `onDone`; teste node. |
+| P2-10 | Resolvido | latency_llm.py: `hasattr` antes de delegar. |
+
+### Follow-ups (não bloqueiam)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| F-1 | P2 | llm_setup.py:1504; services/narrative_sink.py:208 | Fallback de JSON inválido para `_invoke_single`: o stream do mesmo candidato já pode ter emitido deltas, e o retorno não-`None` não dispara o `reset()` do `_stream_route`. O `narrate_structured` ainda chama `guard.finish()` e emite o **resto retido do texto inválido**. O jogador vê o parcial da tentativa inválida e depois recebe um `replace` com a narração regenerada (diferente). Não vaza nada, mas contraria o R4 ("falha no meio ⇒ reset"). | Antes de `_invoke_single`, sinalizar o reset (ex.: devolver um sentinel ou chamar o `reset` do `_stream_route` via callback) e não chamar `finish()` quando o resultado não veio do stream. Teste: fake com stream inválido + invoke válido → `reset` antes do final e nenhum delta do texto inválido depois dele. |
+| F-2 | P2 | services/narrative_sink.py:113-121 vs agents/npc.py:1319 | O guard aplica `sanitize_player_facing` (remove frases "Descreva…/Narre…", marcadores e espaço antes de pontuação) também para NPC/combate/loot, cujo texto final só passa por `sanitize_meta_preamble`. Diálogo com "Narre-me o que viu." ou espaço duplo → stream ≠ final → `replace` espúrio (raro). | Parametrizar a normalização por nó (`normalize=sanitize_meta_preamble` para NPC/combate/loot) ou aceitar e acompanhar pelo `sse.token_replace.reason`. |
+| F-3 | — | §6 | Ligar `on` no staging só com `RPG_EARLY_NARRATIVE=on`; critério D1 = `would_replace` < 5 %. | Coordenador/dono. |
+
+### Comandos rodados (re-review)
+
+```text
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_partial_narrative.py tests/test_schema_order.py tests/test_stream_structured.py tests/test_llm_hedge.py tests/test_streaming.py tests/test_latency_timeline.py tests/test_spec192_vercel_env.py → exit 0 (103 passed, 0 skipped)
+cd web && npm test → 170 pass, 0 fail
+probe scratchpad (mediado com assinatura / controle / hedge 1º-falha / extrator) → 7 passed
+```

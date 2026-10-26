@@ -97,7 +97,14 @@ class StreamGuard:
 
     HOLD_CHARS = 120  # segura o inicio ate o preambulo meta nao poder mais casar
 
-    def __init__(self, mapping: dict[str, str] | None = None, prefix: str = "") -> None:
+    def __init__(
+        self,
+        mapping: dict[str, str] | None = None,
+        prefix: str = "",
+        normalize: str = "player_facing",
+    ) -> None:
+        # F-2: cada no normaliza como o seu texto final (`meta` = so `sanitize_meta_preamble`).
+        self.normalize = normalize
         self.mapping = dict(mapping or {})
         self.hold = (max(len(k) for k in self.mapping) + 8) if self.mapping else 0
         self.prefix = prefix
@@ -109,11 +116,17 @@ class StreamGuard:
         self.broken = False
 
     def _cleaned(self) -> str:
-        from services.prose_guard import sanitize_player_facing
+        from services import prose_guard
+
+        sanitize = (
+            prose_guard.sanitize_meta_preamble
+            if self.normalize == "meta"
+            else prose_guard.sanitize_player_facing
+        )
 
         # Mesmas normalizacoes baratas do texto final (preambulo meta, marcadores do motor,
         # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
-        text = sanitize_player_facing(_RECEIPT.sub("", self.raw))
+        text = sanitize(_RECEIPT.sub("", self.raw))
         if self.mapping:
             from services.faction_display import conceal_text
 
@@ -183,6 +196,7 @@ def narrate_structured(
     key: str | None = None,
     prefix: str = "",
     stream: bool = True,
+    normalize: str = "player_facing",
 ):
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
@@ -191,7 +205,7 @@ def narrate_structured(
     streamer = getattr(llm, "stream_structured", None)
     if streamer is None or not active() or not stream:
         return llm.with_structured_output(schema).invoke(messages)
-    guard = StreamGuard(_conceal_map(state), prefix=prefix)
+    guard = StreamGuard(_conceal_map(state), prefix=prefix, normalize=normalize)
     reset()  # outro no narrador no mesmo turno: recomeca limpo
 
     def on_delta(text: str) -> None:
@@ -218,7 +232,7 @@ def narrate_text(llm: Any, messages: list, *, state: Any = None):
     streamer = getattr(llm, "stream_text", None)
     if streamer is None or not active():
         return llm.invoke(messages)
-    guard = StreamGuard(_conceal_map(state))
+    guard = StreamGuard(_conceal_map(state), normalize="meta")
     reset()
 
     def on_delta(text: str) -> None:

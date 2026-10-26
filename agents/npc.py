@@ -1313,6 +1313,7 @@ def npc_actor_node(state: GameState):
             state=state,
             key="dialogue",
             prefix=f'**{npc_data["name"]}:** "',
+            normalize="meta",
         )
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")

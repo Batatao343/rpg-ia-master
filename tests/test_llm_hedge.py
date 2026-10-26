@@ -29,12 +29,13 @@ def _run(llm):
     events: list[tuple[str, str]] = []
     token = sink.bind(lambda kind, text: events.append((kind, text)))
     attempts = []
+    previous_hook = llm_setup._ATTEMPT_TELEMETRY_HOOK  # nao pisar no hook global da API
     llm_setup.set_llm_attempt_telemetry_hook(attempts.append)
     try:
         result = sink.narrate_structured(llm, StoryUpdate, MSGS)
     finally:
         sink.unbind(token)
-        llm_setup.set_llm_attempt_telemetry_hook(None)
+        llm_setup.set_llm_attempt_telemetry_hook(previous_hook)
     return result, events, attempts
 
 
