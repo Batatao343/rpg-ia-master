@@ -1,5 +1,5 @@
 {
-  "commit_sha": "8c45e649798a2289c09708b42f8afdb734eb4d0f",
+  "commit_sha": "4dfcbda36e996249493aef5152a2e9c4be7099ae",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -314089,7 +314089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_audit_browser_local.py",
-        "line": 275
+        "line": 283
       },
       "source": "symbol:tests.test_audit_browser_local.test_authenticated_stream_reload_history_and_art_dialog",
       "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
@@ -633067,5 +633067,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:8bc5fb9cf495ae0b9055acd3c7ecd66dee6bde9eb040ff9bebf855cbf61456af"
+  "source_tree_hash": "sha256:5ece35152d9c5ea583fc3acc8964e207e4daba31ee90eabeb298caa63184eddb"
 }
