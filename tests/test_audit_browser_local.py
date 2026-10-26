@@ -115,24 +115,32 @@ def test_authenticated_stream_reload_history_and_art_dialog(width, tmp_path):
             )
             assert portrait.evaluate("i => getComputedStyle(i).objectFit") == "contain"
             if width < 900:
-                # SPEC-216: one surface at a time; the "Superfícies" bar returns to Chat.
+                # SPEC-216/321: one surface at a time; the "Superfícies" bar returns to
+                # the story surface, now labelled "Crônica".
                 page.get_by_role("navigation", name="Superfícies").get_by_role(
-                    "button", name="Chat", exact=True
+                    "button", name="Crônica", exact=True
                 ).click()
             elif width < 1100:
                 page.get_by_role("group", name="Modo de exibição").get_by_role(
                     "button", name="Chat", exact=True
                 ).click()
-            assert page.locator(".topbar__right button").evaluate_all("""buttons => buttons.every((a, i) => {
-                const x = a.getBoundingClientRect();
-                return buttons.slice(i + 1).every(b => {
-                    const y = b.getBoundingClientRect();
-                    return x.right <= y.left || y.right <= x.left || x.bottom <= y.top || y.bottom <= x.top;
-                });
-            })""")
-            assert page.get_by_role("button", name="Encerrar sessão").evaluate(
-                'e => !!e.closest(".topbar")'
-            )
+            if width < 900:
+                # SPEC-321: the mobile head replaces the topbar; account actions live in the
+                # "⋯" menu (same check as web/e2e/account.spec.ts).
+                page.get_by_role("button", name="Menu", exact=True).click()
+                page.get_by_role("button", name="Encerrar sessão").wait_for(timeout=10_000)
+                page.keyboard.press("Escape")
+            else:
+                assert page.locator(".topbar__right button").evaluate_all("""buttons => buttons.every((a, i) => {
+                    const x = a.getBoundingClientRect();
+                    return buttons.slice(i + 1).every(b => {
+                        const y = b.getBoundingClientRect();
+                        return x.right <= y.left || y.right <= x.left || x.bottom <= y.top || y.bottom <= x.top;
+                    });
+                })""")
+                assert page.get_by_role("button", name="Encerrar sessão").evaluate(
+                    'e => !!e.closest(".topbar")'
+                )
             before = page.request.get(base + "/game/history", params={"game_id": gid}).json()
             text = "Observo o ambiente com atenção."
             sent = []
