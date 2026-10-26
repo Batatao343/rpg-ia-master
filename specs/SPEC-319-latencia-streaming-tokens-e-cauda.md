@@ -119,11 +119,11 @@ p95 do `done` −30 %. Só para o provider primário OpenAI-compat; os demais ca
 ## 5. Critérios de aceite
 
 - [x] R1–R10 cobertos no escopo (testes novos + streaming/latência/roteamento); R9 paridade MockLLM provada (`test_mock_stream_equals_invoke_state`, `test_final_state_identical_across_token_modes`). Suíte completa: coordenador, no pouso.
-- [ ] Staging §6 (26/10, `9775ea1`: TTFMC servidor p50 2,65 s ✔; `replace` 0/35 ✔; TTLT vs baseline pós-316 ainda sem comparação limpa): **TTFMC p50 ≤ 3 s**; TTLT p50 dentro de ±5 % do baseline pós-316; `replace` em < 5 % dos turnos.
+- [x] Staging §6 (26/10, `9775ea1`: TTFMC servidor p50 2,65 s ✔; `replace` 0/35 ✔; TTLT `done` p50 6,1–7,0 s vs 6,7–7,5 s pós-316 — não piorou ✔; browser §6.4 ✔): **TTFMC p50 ≤ 3 s**; TTLT p50 dentro de ±5 % do baseline pós-316; `replace` em < 5 % dos turnos.
 - [ ] Hedge (ligado 26/10; 0 disparos em 15 turnos — a cauda vem depois do 1º delta, o gatilho não pega; critério NÃO atingido): `done` p95 −30 % com custo extra ≤ 10 % (`hedge_lost` contabilizado).
 - [x] Guard de FallbackLLM em `stream_structured` e nos agentes (`narrate_structured` devolve `AIMessage`; o `isinstance` do nó segue).
 - [x] Nenhum campo novo no save; `off` byte a byte ao HEAD (`test_off_byte_identical`).
-- [ ] Revisão independente (Sol): parser, concorrência do hedge, contextvar entre thread SSE e worker.
+- [x] Revisão independente (Sol): parser, concorrência do hedge, contextvar entre thread SSE e worker (`handoffs/SPEC-319-sol-review.md`, 2 rodadas; follow-up `tail` em `SPEC-319-sol-independent-review.md`).
 
 ## 6. Smoke test com LLM real
 
@@ -280,5 +280,5 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   cresce na tela enquanto o rodapé ainda mostra "O narrador tece o destino…" (24 e 21 comprimentos distintos em
   15 s; captura aos ~6 s corta no meio da frase). `reset` em fallback induzido NÃO foi exercitado no staging
   (exigiria `RPG_ROUTES` com 1º candidato inválido E falha no meio do stream — falha antes do 1º delta não gera
-  `reset`); coberto por `test_streaming`/`test_stream_structured`. Pendências para `done`: TTLT vs baseline
-  pós-316 e decisão do dono sobre o hedge (critério não atingido: 0 disparos).
+  `reset`); coberto por `test_streaming`/`test_stream_structured`. Pendência para `done`: decisão do dono sobre
+  o hedge (critério não atingido: 0 disparos).
