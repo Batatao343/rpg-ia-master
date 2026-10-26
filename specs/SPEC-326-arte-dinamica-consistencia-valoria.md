@@ -1,6 +1,6 @@
 # SPEC-326 — Arte dinâmica consistente com Valoria (estética, lore e raça)
 
-> **Status:** `in-progress` (aprovada 26/10, D1–D7 nos padrões recomendados; código + testes offline prontos; §6 real rodado em 26/10: 7/8 passam, épico reprovou e foi corrigido; falta re-rodar o épico, revisão independente)
+> **Status:** `in-progress` (aprovada 26/10; implementada + revisão Sol (2 P1 + 7 P2 corrigidos em `5372def5`); smoke real §6 8/8 na barra após correção do épico (US$ 0,56); pousada na main 26/10 com `RPG_DYNAMIC_ART_ENABLED` off; falta publicar price profiles portrait/scene e ligar no staging)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** pipeline de arte dinâmica já na `main` (`services/art_brief.py`, `workers/dynamic_art_jobs.py`, `infrastructure/openai_images.py`, cotação de imagem)
 > **Desbloqueia:** `RPG_DYNAMIC_ART_ENABLED=1` no staging (só depois do §6 aprovado)
@@ -208,7 +208,7 @@ Os testes são todos offline: `FakeImageGenerator` registra o `ImageGenerationIn
 ## 5. Critérios de aceite
 
 - [x] R1–R16 cobertos pelos testes acima (R17 = conferência do coordenador no staging antes do §6).
-- [x] Prompt renderizado das raças anexado em `handoffs/SPEC-326-prompts.md` (sem chamada paga).
+- [x] Prompt renderizado das raças anexado em `docs/spec326/prompts.md` (sem chamada paga).
 - [ ] §6 executado, com todas as notas acima da barra e a ficha de contato revisada pelo dono (D2).
 - [ ] `uv run pytest` verde (suíte completa offline).
 - [x] Ofertas v1 são reconstruídas sem erro (R2, `test_oferta_v1_e_reconstruida_no_quote`); briefs v1 já gravados renderizam com descritor neutro.
