@@ -233,3 +233,8 @@ some no `state`, input libera só no `state`.
 - 25/10 — pousada na main com `RPG_EARLY_NARRATIVE` no default `shadow` (zero mudança para o jogador; mede `early_gain_ms`/`early_calc_ms`). Suíte completa verde. `done` só depois da medição §6 com `on` no staging, que por P2-2 espera a SPEC-320 (cliente com selo/"não salvo"/retry).
 - 25/10 — **medição §6 no staging** (`1c0e7d12`, `RPG_EARLY_NARRATIVE=on`, DeepSeek, `projection_measure.py --turns 15 --think 8`, 2 sessões, `checks.all_ok=true`): primeira narração p50 **8,2 s / 6,8 s** vs `state` p50 10,9 s / 10,7 s na mesma sessão (ganho −2,6 a −3,8 s; baseline SPEC-213 11,1 s). Meta R§6 ≤ 7 s p50 batida em 1 de 2 sessões (média ~7,5 s) → **não marca `done` ainda**; remedir após a SPEC-318. p95 35–44 s dominado por cold start (ack p95 28–39 s) → SPEC-319 (hedge) e bundle (SPEC-317 R11/R12). Artefatos: `scratchpad/m316_on_{1,2}.json` da sessão do coordenador.
 - 26/10 — remedição no staging `e9b5f000` (316 on + 317 shadow + 318 + 319 shadow), 2 sessões × 15 turnos: primeira narração p50 **7,5 s / 6,7 s**, p95 26,8 / 21,5 s (antes 35–44 s); `state` p50 13,3 / 9,5 s; checks all_ok. Meta ≤ 7 s p50 batida em 1 de 2 sessões; cauda caiu ~40 %.
+- **2026-10-26 (noite, staging `9775ea1`, `RPG_EARLY_NARRATIVE=on` + `RPG_TOKEN_STREAM=on`):** 55 turnos reais
+  (`projection_measure` 3×15 + smokes): `turn_delivery` 53 `ok` com narração antecipada, 2 `ok` replay; **0 erro com
+  `narrative_shown`**. 1ª narração no cliente p50 3,1–4,4 s (meta ≤ 7 s ✔; era 11,1 s). p95 8,8–11,7 s nas sessões sem
+  cold start; nas com instância nova do Vercel o `ack` chega a 19–63 s (fora desta spec, ver SPEC-317 §6.3).
+  Falta: 1 falha induzida no staging (selo + retry com o mesmo `action_id`).
