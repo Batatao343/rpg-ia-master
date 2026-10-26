@@ -1,6 +1,6 @@
 # SPEC-324 — Front: a11y estrutural (headings) e atalhos de teclado
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (P1 + P2 corrigidos em `13797308`, e2e verdes); pousada na main 26/10; falta smoke §6 no staging (comparação visual, leitor de tela))
+> **Status:** `done` (aprovada 25/10; revisão Sol; pousada 26/10; conferência visual no staging `7520848`/`15f14f8` em 390×844 e 1440×900 — 6 de 7 itens corrigidos no round 2 e o 7º (rótulo de oferta de NPC) corrigido em `15f14f8`)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Depende de:** nenhuma em código. Pode correr em paralelo com a 322 ou a 323 (arquivos TSX diferentes, quase nada de CSS). Não corre em paralelo com a 321, que também mexe em `Workspace.tsx`.
 > **Desbloqueia:** —

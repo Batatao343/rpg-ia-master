@@ -1,6 +1,6 @@
 # SPEC-320 — Front: espera do turno, typewriter e banner de erro
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS, F-1..F-4 feitos); pousada na main 25/10; falta smoke §6 no staging com screenshots)
+> **Status:** `done` (aprovada 25/10; revisão Sol; pousada 26/10; conferência visual no staging `7520848`/`15f14f8` em 390×844 e 1440×900 — 6 de 7 itens corrigidos no round 2 e o 7º (rótulo de oferta de NPC) corrigido em `15f14f8`)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** nenhuma (funciona com o pseudo-streaming atual). Melhora sozinha quando SPEC-316 e SPEC-319 pousarem.
 > **Desbloqueia:** SPEC-321, SPEC-323 (que reaproveitam a linha de status do compositor)

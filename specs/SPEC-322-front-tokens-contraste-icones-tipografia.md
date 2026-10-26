@@ -1,6 +1,6 @@
 # SPEC-322 — Front: tokens de cor, contraste, raio, ícones e tipografia
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (2 P1 + 6 P2 corrigidos em `150cc87e`, e2e verdes); pousada na main 26/10; falta axe nas abas, botões 3×3, tokens dos 57 oklch literais e conferência visual no staging)
+> **Status:** `done` (aprovada 25/10; revisão Sol; pousada 26/10; conferência visual no staging `7520848`/`15f14f8` em 390×844 e 1440×900 — 6 de 7 itens corrigidos no round 2 e o 7º (rótulo de oferta de NPC) corrigido em `15f14f8`)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-321 (não rodar em paralelo: mesmos arquivos CSS)
 > **Desbloqueia:** SPEC-323 (que usa os ícones e tokens novos)

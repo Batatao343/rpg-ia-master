@@ -1,6 +1,6 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
-> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B revisada + gate R17 verde; Fases C e D implementadas em `shadow` na branch `spec-325` 26/10, sem revisão nem gate)
+> **Status:** `done` (aprovada 25/10; Fases A, B, C implementadas, revisadas, gate R17 verde e `on` no staging `15f14f8`; Fase D descartada pelo dono em 26/10 (opção 3); Etapa 8 e smoke real feitos)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fase C (R14 objetos de cena, R15 ordem a companheiro) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase C pendentes: comandos prontos em §8.3, **ainda não rodados** (coordenador). Fase D (R16 reforço de `lider_matilha`) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase D (com a célula `lider_matilha` da arena e D5) pendentes: comandos em §8.4, **ainda não rodados** (coordenador). Etapa 8 pendente (ver §9).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")

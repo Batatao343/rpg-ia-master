@@ -1,6 +1,6 @@
 # SPEC-323 — Front: livro, não chat (marginália, HUD, copy, criação, mapa, sigilo)
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (3 P1 + P2 corrigidos em `187d2555`, e2e verdes); pousada na main 26/10; falta conferência visual no staging; e2e de mapa/inventário/split pendentes (desvio))
+> **Status:** `done` (aprovada 25/10; revisão Sol; pousada 26/10; conferência visual no staging `7520848`/`15f14f8` em 390×844 e 1440×900 — 6 de 7 itens corrigidos no round 2 e o 7º (rótulo de oferta de NPC) corrigido em `15f14f8`)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Depende de:** SPEC-322 (ícones e tokens), SPEC-321 (casca mobile e rótulos "Crônica")
 > **Desbloqueia:** release do beta (SPEC-197) e a loja (SPEC-198), pelo item do medalhão

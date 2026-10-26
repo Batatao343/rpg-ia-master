@@ -1,6 +1,6 @@
 # SPEC-326 — Arte dinâmica consistente com Valoria (estética, lore e raça)
 
-> **Status:** `in-progress` (aprovada 26/10; implementada + revisão Sol (2 P1 + 7 P2 corrigidos em `5372def5`); smoke real §6 8/8 na barra após correção do épico (US$ 0,56); pousada na main 26/10 com `RPG_DYNAMIC_ART_ENABLED` off; falta publicar price profiles portrait/scene e ligar no staging)
+> **Status:** `done` (aprovada 26/10; revisão Sol; smoke real 8/8 na barra (US$ 0,56); price profiles publicados; `RPG_DYNAMIC_ART_ENABLED=1` no staging `15f14f8`; revisão das 10 primeiras gerações reais segue como rotina D2)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** pipeline de arte dinâmica já na `main` (`services/art_brief.py`, `workers/dynamic_art_jobs.py`, `infrastructure/openai_images.py`, cotação de imagem)
 > **Desbloqueia:** `RPG_DYNAMIC_ART_ENABLED=1` no staging (só depois do §6 aprovado)
