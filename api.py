@@ -2092,10 +2092,7 @@ def _public_art_refs(state: dict) -> dict:
             )
     return {
         "art_generations": generations,
-        "art_offers": [
-            _public_art_offer(row)
-            for row in state.get("art_offers") or []
-        ],
+        "art_offers": [_public_art_offer(row) for row in state.get("art_offers") or []],
     }
 
 
