@@ -1,7 +1,7 @@
 # SPEC-324 — Front: a11y estrutural (headings) e atalhos de teclado
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Status:** `in-progress` (implementada 26/10; aguarda revisão independente e smoke no staging; dono 25/10: "boa, aprovo" — D1 no padrão recomendado)
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
 > **Depende de:** nenhuma em código. Pode correr em paralelo com a 322 ou a 323 (arquivos TSX diferentes, quase nada de CSS). Não corre em paralelo com a 321, que também mexe em `Workspace.tsx`.
 > **Desbloqueia:** —
 
@@ -81,10 +81,10 @@
 
 ## 5. Critérios de aceite
 
-- [ ] Um `h1` (local), `h2` por painel e `h3` por seção; axe `heading-order` limpo; sem mudança visual (diff ≤ 1 %).
-- [ ] Atalhos fora de Ctrl/⌘+dígito; funcionam no Chromium e no Firefox (e2e); não disparam em campo de texto (exceto o foco no compositor).
-- [ ] `aria-keyshortcuts` e a tecla no `title` de cada aba e botão com atalho; folha "?" lista todos.
-- [ ] Skip link "Pular para a ação".
+- [x] Um `h1` (local), `h2` por painel e `h3` por seção; axe `heading-order` limpo; sem mudança visual (diff ≤ 1 %).
+- [x] Atalhos fora de Ctrl/⌘+dígito; funcionam no Chromium e no Firefox (e2e); não disparam em campo de texto (exceto o foco no compositor).
+- [x] `aria-keyshortcuts` e a tecla no `title` de cada aba e botão com atalho; folha "?" lista todos.
+- [x] Skip link "Pular para a ação".
 - [ ] `npm test` e o e2e do escopo verdes; `uv run pytest` verde.
 
 ## 6. Smoke test real
@@ -108,3 +108,7 @@ Staging, conta logada, 1–2 turnos.
 ## 8. Decisões do dono
 
 - **D1 — combinação de atalhos.** **Recomendado: Alt+1…6 no Windows/Linux e Ctrl+Option+1…6 no macOS, com folha "?".** Alternativa: sequências estilo Gmail (`g` depois `c`/`p`/`m`) fora de campos de texto, que são iguais em qualquer SO, porém menos óbvias.
+
+## Histórico de mudanças
+
+- 2026-10-26 · implementação (spec-executor). Desvios: (1) `run(ctx)` não está na tabela `SHORTCUTS`; a execução fica no `Workspace` (switch por id), a tabela guarda id/tecla/rótulo. (2) Atalhos de seta ficam em Alt+←/→ em todos os SO; só dígitos e `\` usam Ctrl+Option no macOS. (3) Ctrl+\ virou Alt+\ (Ctrl+Option+\ no mac). (4) h2 de painel no desktop é `sr-only` (sem mudança visual); no celular vale o h2 visível da cabeça. (5) Diff de screenshot não automatizado: sem baseline versionada, o e2e confere computed style do h3 (peso 400, margem 0, 0,8rem). (6) e2e `workspace-shell` e `critical-journeys` adaptados de Ctrl+dígito para Alt+dígito (fora de `e2e/contracts`). Testes: `web/tests/shortcuts.test.mjs` (7), `web/e2e/a11y-headings.spec.ts` (6).

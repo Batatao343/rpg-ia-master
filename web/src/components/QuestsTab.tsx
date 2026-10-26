@@ -13,7 +13,7 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
 
   return (
     <div>
-      <p className="hud__label">Missão principal</p>
+      <h3 className="hud__label">Missão principal</h3>
       {main ? (
         <div className="quest quest--main">
           {main.arc_title && <p className="quest__arc">{main.arc_title}</p>}
@@ -28,7 +28,7 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
         <p className="combat-empty">A campanha ainda não foi planejada.</p>
       )}
 
-      <p className="hud__label" style={{ marginTop: "1rem" }}>Missões ({side.length})</p>
+      <h3 className="hud__label" style={{ marginTop: "1rem" }}>Missões ({side.length})</h3>
       {side.length ? (
         <ul className="quests">
           {side.map((q) => (

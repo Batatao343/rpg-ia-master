@@ -88,8 +88,8 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
     <section className="deck" onKeyDown={arrowNav} aria-label="Acervo e preparação de Cartas">
       <header className="deck__head">
-        <h2 className="hud__label">Preparação <span className="muted">{preparedIds.length}/{slots || "—"}</span>
-          {(saving || busy) && <span className="deck__sync"> · atualizando…</span>}</h2>
+        <h3 className="hud__label">Preparação <span className="muted">{preparedIds.length}/{slots || "—"}</span>
+          {(saving || busy) && <span className="deck__sync"> · atualizando…</span>}</h3>
         {/* região viva sempre montada: erro/aplicação anunciados sem role=status */}
         <p className="deck__msg" aria-live="polite">{message}</p>
         {!reorg ? (
@@ -114,7 +114,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
             ))}
           </ul>
 
-          <h2 className="hud__label">Acervo ({cards.length})</h2>
+          <h3 className="hud__label">Acervo ({cards.length})</h3>
           <div className="deck__filters" role="group" aria-label="Filtrar Acervo">
             {TYPE_FILTERS.map(([id, label]) => (
               <button key={id} type="button" className="deck__filter" aria-pressed={typeFilter === id}
@@ -141,7 +141,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
 
           {permanent.length > 0 && (
             <>
-              <h2 className="hud__label">Passivas e Reações</h2>
+              <h3 className="hud__label">Passivas e Reações</h3>
               <ul className="deck__list" aria-label="Passivas e Virtudes">
                 {permanent.map((card) => <DeckCard key={card.id} card={card} preparable={false} />)}
               </ul>

@@ -4,6 +4,7 @@ import { ChronicleTab, FactionsTab, HeardNews, PeopleTab, type EquipFn } from ".
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
 import { RovingTablist } from "./RovingTablist";
 import { CONTEXT_TABS, TAB_LABELS, type ContextTab } from "./workspaceModel";
+import { ariaShortcut, detectPlatform, titleWithShortcut } from "./shortcuts";
 import { PersonagemTab } from "./tabs/PersonagemTab";
 import { CombateTab } from "./tabs/CombateTab";
 import { BestiarioTab } from "./tabs/BestiarioTab";
@@ -55,6 +56,7 @@ export interface ContextSurfaceProps {
 export function ContextSurface(props: ContextSurfaceProps) {
   const { data, active, tab, visited, onSelectTab, onClose, onEscape } = props;
   const fighting = !!data?.combat?.active;
+  const platform = detectPlatform();
   const scrolls = useRef(new Map<ContextTab, number>());
   const panels = useRef(new Map<ContextTab, HTMLDivElement>());
 
@@ -78,6 +80,8 @@ export function ContextSurface(props: ContextSurfaceProps) {
         <RovingTablist<ContextTab>
           items={CONTEXT_TABS.map((id) => ({
             id, label: TAB_LABELS[id],
+            title: titleWithShortcut(TAB_LABELS[id], `tab:${id}`, platform),
+            keyshortcuts: ariaShortcut(`tab:${id}`, platform),
             className: id === "combate" ? "is-combat" + (fighting ? " has-fight" : "") : undefined,
           }))}
           selected={tab} onSelect={onSelectTab} label="Abas do painel" idPrefix="ws"
@@ -93,6 +97,8 @@ export function ContextSurface(props: ContextSurfaceProps) {
           onScroll={(event) => {
             if (id === tab && active) scrolls.current.set(id, event.currentTarget.scrollTop);
           }}>
+          {/* SPEC-324: h2 do painel só p/ leitor de tela (no celular o título visível da cabeça faz esse papel). */}
+          {!props.mobile && <h2 className="sr-only">{TAB_LABELS[id]}</h2>}
           {visited.has(id) && <PanelBoundary>{renderTab(id, props)}</PanelBoundary>}
         </div>
       ))}
@@ -116,10 +122,10 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
       return <BestiarioTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         unavailable={simulation ? LAB_EMPTY : undefined} />;
     case "mapa":
-      if (simulation) return <div><p className="hud__label">Mapa do mundo</p><p className="combat-empty">{LAB_EMPTY}</p></div>;
+      if (simulation) return <div><h3 className="hud__label">Mapa do mundo</h3><p className="combat-empty">{LAB_EMPTY}</p></div>;
       return (
         <div>
-          <p className="hud__label">Mapa do mundo</p>
+          <h3 className="hud__label">Mapa do mundo</h3>
           <MapTab data={data} busy={busy} blocked={blocked} open={open} onAction={props.onAction} />
         </div>
       );
@@ -138,14 +144,14 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
               <FactionsTab factions={data?.factions ?? []} />
               {dossiers && data?.game_id && dossiers.sections.factions.length > 0 && (
                 <div>
-                  <p className="hud__label hud__label--sub">Dossiês do Codex</p>
+                  <h3 className="hud__label hud__label--sub">Dossiês do Codex</h3>
                   <DossierCategory dossiers={dossiers} gameId={data.game_id} category="factions"
                     turnCount={data.world.turn_count} />
                 </div>
               )}
               {!dossiers && codex && codex.factions.length > 0 && (
                 <div>
-                  <p className="hud__label hud__label--sub">Registros do Codex</p>
+                  <h3 className="hud__label hud__label--sub">Registros do Codex</h3>
                   <CodexCategory codex={codex} category="factions" />
                 </div>
               )}

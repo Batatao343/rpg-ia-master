@@ -110,7 +110,7 @@ export function CodexTab({
   if (unavailable) {
     return (
       <div>
-        <p className="hud__label">Codex</p>
+        <h3 className="hud__label">Codex</h3>
         <p className="combat-empty">{unavailable}</p>
       </div>
     );
@@ -127,7 +127,7 @@ export function CodexTab({
 
   return (
     <div>
-      <p className="hud__label">Codex do jogador</p>
+      <h3 className="hud__label">Codex do jogador</h3>
       <RovingTablist items={items} selected={category} onSelect={setCategory}
         label="Seções do Codex" idPrefix="codex" className="codex-cats" tabClassName="codex-cat" controlsActiveOnly />
       <div role="tabpanel" id={`codex-panel-${category}`} aria-labelledby={`codex-tab-${category}`} className="codex-section">

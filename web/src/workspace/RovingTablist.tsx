@@ -5,6 +5,9 @@ export interface TabItem<T extends string> {
   id: T;
   label: ReactNode;
   className?: string;
+  /** SPEC-324: dica (title) e aria-keyshortcuts da aba. */
+  title?: string;
+  keyshortcuts?: string;
 }
 
 /** SPEC-204 R4 / SPEC-201 A06 (M19): tablist com foco roving (←/→/Home/End),
@@ -52,6 +55,8 @@ export function RovingTablist<T extends string>({ items, selected, onSelect, lab
             aria-selected={active}
             aria-controls={active || !controlsActiveOnly ? `${idPrefix}-panel-${item.id}` : undefined}
             tabIndex={active ? 0 : -1}
+            title={item.title}
+            aria-keyshortcuts={item.keyshortcuts}
             className={[tabClassName, active ? "is-active" : "", item.className].filter(Boolean).join(" ")}
             onClick={() => onSelect(item.id)}
           >

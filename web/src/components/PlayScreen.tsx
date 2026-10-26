@@ -87,12 +87,16 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
 
   return (
     <div className={"play" + (fighting ? " is-combat" : "")}>
+      <a className="skip-link" href="#composer" onClick={(e) => {
+        e.preventDefault();
+        workspace.current?.focusComposer();
+      }}>Pular para a ação</a>
       {fighting && <div className="combat-veil" aria-hidden />}
 
       {!compact && (
         <header className="topbar">
           <div className="topbar__loc">
-            <span className="topbar__place">{data?.current_location || "—"}</span>
+            <h1 className="topbar__place">{data?.current_location || "—"}</h1>
             <span className="topbar__meta">{clock}</span>
           </div>
           <div className="topbar__right">

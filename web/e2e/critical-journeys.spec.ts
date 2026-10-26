@@ -492,28 +492,28 @@ test("F18 tabs_history", async ({ page }) => {
   await page.keyboard.press("Alt+ArrowLeft"); await expectTab(page, "Mapa");
   await page.keyboard.press("Alt+ArrowRight"); await expectTab(page, "Bestiário");
 
-  // Atalhos não disparam dentro do composer (exceto Esc e Ctrl+1) e não sujam o texto.
+  // Atalhos não disparam dentro do composer (exceto Esc e Alt+1) e não sujam o texto.
   await composerBox(page).fill("rascunho");
   await composerBox(page).focus();
-  await page.keyboard.press("Alt+ArrowLeft"); await page.keyboard.press("Control+3");
+  await page.keyboard.press("Alt+ArrowLeft"); await page.keyboard.press("Alt+3");
   await expectTab(page, "Bestiário");
   await expect(composerBox(page)).toHaveValue("rascunho");
 
-  // Ctrl+1 → chat solo, inclusive a partir do composer.
-  await page.keyboard.press("Control+1");
+  // Alt+1 → chat solo, inclusive a partir do composer.
+  await page.keyboard.press("Alt+1");
   await expect(contextRegion(page)).toBeHidden(); await expect(modeButton(page, "Crônica")).toHaveAttribute("aria-pressed", "true");
-  // Ctrl+2..6 abrem a aba N (e trazem o painel de volta).
+  // Alt+2..6 abrem a aba N (e trazem o painel de volta).
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   for (const [key, name] of [["2", "Codex"], ["3", "Personagem"], ["4", "Combate"], ["5", "Bestiário"], ["6", "Mapa"]]) {
-    await page.keyboard.press(`Control+${key}`);
+    await page.keyboard.press(`Alt+${key}`);
     await expectTab(page, name); await expect(contextRegion(page)).toBeVisible();
   }
-  // Ctrl+\ alterna split ↔ último modo solo (painel, aqui).
+  // Alt+\ alterna split ↔ último modo solo (painel, aqui).
   await modeButton(page, "Painel").click(); await modeButton(page, "Lado a lado").click();
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-  await page.keyboard.press("Control+\\");
+  await page.keyboard.press("Alt+\\");
   await expect(modeButton(page, "Painel")).toHaveAttribute("aria-pressed", "true"); await expect(chatRegion(page)).toBeHidden();
-  await page.keyboard.press("Control+\\");
+  await page.keyboard.press("Alt+\\");
   await expect(modeButton(page, "Lado a lado")).toHaveAttribute("aria-pressed", "true"); await expect(divider(page)).toBeVisible();
 
   // Esc no painel devolve foco ao composer sem mudar modo nem aba.

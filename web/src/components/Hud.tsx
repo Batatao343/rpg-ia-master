@@ -72,7 +72,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
       )}
 
       <div>
-        <p className="hud__label">Acervo de Cartas</p>
+        <h3 className="hud__label">Acervo de Cartas</h3>
         <ul className="abilities">
           {cards.length === 0 ? (
             <li className="empty">Nenhuma Carta conhecida</li>
@@ -89,7 +89,7 @@ export function FichaTab({ data, hpHitKey, onEquip, busy }: {
       </div>
 
       <div>
-        <p className="hud__label">Inventário</p>
+        <h3 className="hud__label">Inventário</h3>
         <ul className="inv">
           {(data?.inventory ?? []).length === 0 ? (
             <li className="empty">Vazio</li>
@@ -132,14 +132,14 @@ export function PeopleTab({ npcs }: { npcs: NpcView[] }) {
   if (!npcs.length) {
     return (
       <div>
-        <p className="hud__label">Personagens</p>
+        <h3 className="hud__label">Personagens</h3>
         <p className="combat-empty">Converse com quem cruzar seu caminho: os conhecidos aparecem aqui, com o que lembram de você.</p>
       </div>
     );
   }
   return (
     <div>
-      <p className="hud__label">Conhecidos ({npcs.length})</p>
+      <h3 className="hud__label">Conhecidos ({npcs.length})</h3>
       <ul className="people">
         {npcs.map((n, i) => {
           return (
@@ -171,7 +171,7 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
   if (!factions.length) {
     return (
       <div>
-        <p className="hud__label">Fações</p>
+        <h3 className="hud__label">Fações</h3>
         <p className="combat-empty">Os poderes deste mundo ainda se movem nas sombras.</p>
       </div>
     );
@@ -179,7 +179,7 @@ export function FactionsTab({ factions }: { factions: FactionView[] }) {
   const standingLabel: Record<string, string> = { hostil: "Hostil", desconfiado: "Desconfiada", neutro: "Neutra", amistoso: "Amistosa", aliado: "Aliada" };
   return (
     <div>
-      <p className="hud__label">Poderes que você conhece ({factions.length})</p>
+      <h3 className="hud__label">Poderes que você conhece ({factions.length})</h3>
       <ul className="factions">
         {factions.map((f) => {
           const hasProg = f.progress !== null && f.progress !== undefined;
@@ -240,7 +240,7 @@ export function HeardNews({ news }: { news: NewsItem[] | undefined }) {
   const items = orderNews(news);
   return (
     <div className="heard-news">
-      <p className="hud__label">Ouvi dizer</p>
+      <h3 className="hud__label">Ouvi dizer</h3>
       {items.length === 0 ? (
         <p className="combat-empty">Converse com alguém numa taverna ou numa estrada movimentada para ouvir boatos.</p>
       ) : (
@@ -304,7 +304,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
   if (!chapters.length) {
     return (
       <div>
-        <p className="hud__label">Crônica <ProjectionSeal status={projectionStatus} /></p>
+        <h3 className="hud__label">Crônica <ProjectionSeal status={projectionStatus} /></h3>
         <p className="combat-empty">A crônica se escreve sozinha: explore, lute ou escolha um lado e o primeiro feito entra aqui.</p>
       </div>
     );
@@ -323,7 +323,7 @@ export function ChronicleTab({ chapters, gameId, projectionStatus }: {
   return (
     <div>
       <div className="chron-tools">
-        <p className="hud__label">Crônica da jornada <ProjectionSeal status={projectionStatus} /></p>
+        <h3 className="hud__label">Crônica da jornada <ProjectionSeal status={projectionStatus} /></h3>
         {gameId && (
           <a className="iconbtn" href={"/game/chronicle/export?game_id=" + encodeURIComponent(gameId)}
              download title="Baixar a crônica como .txt">
@@ -392,7 +392,7 @@ export function PartyBars({ party }: { party: import("../types").PartyMember[] }
   if (!shown.length) return null;
   return (
     <div className="partyblock">
-      <p className="hud__label hud__label--sub">Companheiros</p>
+      <h3 className="hud__label hud__label--sub">Companheiros</h3>
       <ul className="party">
         {shown.map((m, i) => (
           <li key={`${m.name}-${i}`} className={"party__member" + (m.status === "morto" ? " is-dead" : "") + (!m.active ? " is-waiting" : "")}>
@@ -452,9 +452,9 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
 
   return (
     <div className="combatblock" ref={ref}>
-      <p className="hud__label">
+      <h3 className="hud__label">
         Combate {c.round ? <span className="muted">· Round {c.round}</span> : null}
-      </p>
+      </h3>
 
       <WoundTrack wounds={c.wounds} />
       {!arena && <SceneZones scene={c.scene} chase={c.chase} />}
@@ -487,7 +487,7 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
 
       {c.order.length > 0 && (
         <>
-          <p className="hud__label hud__label--sub">Iniciativa</p>
+          <h3 className="hud__label hud__label--sub">Iniciativa</h3>
           <ol className="initiative">
             {c.order.map((o, i) => (
               <li key={i} className={"init " + (o.side === "hero" ? "init--hero" : "init--enemy")}>
@@ -500,14 +500,14 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
 
       {c.player_conditions.length > 0 && (
         <>
-          <p className="hud__label hud__label--sub">Suas condições</p>
+          <h3 className="hud__label hud__label--sub">Suas condições</h3>
           <CondChips conds={c.player_conditions} />
         </>
       )}
 
       {cds.length > 0 && (
         <>
-          <p className="hud__label hud__label--sub">Recarga</p>
+          <h3 className="hud__label hud__label--sub">Recarga</h3>
           <div className="conds__row">
             {cds.map(([k, v]) => (
               <span key={k} className="cond-chip">{`${prettyItem(k)} (${v})`}</span>

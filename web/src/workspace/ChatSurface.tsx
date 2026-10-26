@@ -192,6 +192,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
       <textarea
         ref={setAreaRef}
         rows={1}
+        id="composer"
         aria-label="Sua ação"
         autoComplete="off"
         enterKeyHint="send"

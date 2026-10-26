@@ -11,15 +11,19 @@ import { useVisualViewport } from "./useVisualViewport";
 import { getChatSession, setChatSession } from "./chatSessionStore";
 import { loadWorkspace, saveWorkspace } from "./workspaceStorage";
 import {
-  CONTEXT_TABS, DEFAULT_WORKSPACE, MIN_CHAT_PX, MIN_CONTEXT_PX, SPLIT_MIN_VIEWPORT, TAB_LABELS,
+  DEFAULT_WORKSPACE, MIN_CHAT_PX, MIN_CONTEXT_PX, SPLIT_MIN_VIEWPORT, TAB_LABELS,
   clampRatio, effectiveMode, workspaceReducer, type ContextTab, type WorkspaceState,
 } from "./workspaceModel";
 import { Icon } from "../design/icons";
+import { ShortcutsSheet } from "../components/ShortcutsSheet";
+import { ariaShortcut, detectPlatform, matchShortcut, titleWithShortcut, type ShortcutId } from "./shortcuts";
 
 const SEPARATOR_PX = 12;
 
 export interface WorkspaceHandle {
   openTab: (tab: ContextTab, options?: { codexSection?: string }) => void;
+  /** SPEC-324: volta ao chat e foca o compositor (skip link, Alt+1). */
+  focusComposer: () => void;
 }
 
 interface Props {
@@ -108,11 +112,17 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   const [visited, setVisited] = useState<ReadonlySet<ContextTab>>(() => new Set());
   if (contextVisible && !visited.has(state.tab)) setVisited(new Set(visited).add(state.tab));
 
+  const focusComposer = () => {
+    dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
+    composerRef.current?.focus();
+  };
   useImperativeHandle(ref, () => ({
     openTab(tab, options) {
       if (options?.codexSection) setCodexSection(options.codexSection);
       dispatch({ type: "open_tab", tab, single });
     },
+    focusComposer,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [single]);
 
   useEffect(() => { if (gameId) saveWorkspace(owner, gameId, state); }, [owner, gameId, state]);
@@ -175,38 +185,31 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     return () => observer.disconnect();
   }, []);
 
-  // R6: atalhos globais (só com foco dentro do app; nunca com modal aberto).
+  // R6 / SPEC-324: atalhos globais (só com foco dentro do app; nunca com modal aberto).
+  // Ctrl/⌘+dígito é do navegador: usamos Alt+dígito (Ctrl+Option no macOS). Ver shortcuts.ts.
+  const platform = detectPlatform();
+  const [helpOpen, setHelpOpen] = useState(false);
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if (event.defaultPrevented || modalOpen()) return;
-      const mod = event.ctrlKey || event.metaKey;
-      if (mod && !event.altKey && event.key === "1") {
-        event.preventDefault();
+      const id = matchShortcut(event, platform, isTypingTarget(event.target));
+      if (!id) return;
+      if ((id === "back" || id === "forward") && !(event.target instanceof Element && event.target.closest(".play"))) return;
+      event.preventDefault();
+      if (id === "composer") {
         dispatch(single ? { type: "close_context", single } : { type: "set_mode", mode: "chat" });
         composerRef.current?.focus();
-        return;
-      }
-      if (isTypingTarget(event.target)) return;
-      const inside = event.target instanceof Element && !!event.target.closest(".play");
-      if (event.altKey && !mod && (event.key === "ArrowLeft" || event.key === "ArrowRight")) {
-        if (!inside) return;
-        event.preventDefault();
-        dispatch({ type: event.key === "ArrowLeft" ? "back" : "forward" });
-        return;
-      }
-      if (mod && !event.altKey && /^[2-6]$/.test(event.key)) {
-        event.preventDefault();
-        dispatch({ type: "open_tab", tab: CONTEXT_TABS[Number(event.key) - 2], single });
-        return;
-      }
-      if (mod && !event.altKey && event.key === "\\") {
-        event.preventDefault();
-        dispatch({ type: "toggle_split" });
-      }
+      } else if (id === "back" || id === "forward") dispatch({ type: id });
+      else if (id === "split") dispatch({ type: "toggle_split" });
+      else if (id === "help") setHelpOpen(true);
+      else dispatch({ type: "open_tab", tab: id.slice(4) as ContextTab, single });
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [single]);
+  }, [single, platform]);
+  const tip = (text: string, id: ShortcutId) => ({
+    title: titleWithShortcut(text, id, platform), "aria-keyshortcuts": ariaShortcut(id, platform),
+  });
 
   const usable = Math.max(0, (gridWidth || viewport) - SEPARATOR_PX);
   const ratio = clampRatio(state.ratio, usable);
@@ -293,7 +296,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
         <>
           <div className="ws-mhead">
             <div className="ws-mhead__id">
-              <span className="ws-mhead__place">{props.place}</span>
+              <h1 className="ws-mhead__place">{props.place}</h1>
               <h2 className="ws-mhead__title" data-testid="surface-title" tabIndex={-1} ref={titleRef}>{SURFACE_LABELS[surface]}</h2>
             </div>
             {stats}
@@ -305,16 +308,19 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
       <div className="ws-bar" role="group" aria-label="Estado e navegação do painel">
         {stats}
         <div className="ws-bar__nav">
-          <button type="button" className="iconbtn" aria-label="Voltar para a aba anterior"
+          <button type="button" className="iconbtn" aria-label="Voltar para a aba anterior" {...tip("Voltar para a aba anterior", "back")}
             disabled={state.cursor <= 0} onClick={() => dispatch({ type: "back" })}>‹</button>
-          <button type="button" className="iconbtn" aria-label="Avançar para a próxima aba"
+          <button type="button" className="iconbtn" aria-label="Avançar para a próxima aba" {...tip("Avançar para a próxima aba", "forward")}
             disabled={state.cursor >= state.history.length - 1} onClick={() => dispatch({ type: "forward" })}>›</button>
           <div className="ws-modes" role="group" aria-label="Modo de exibição">
-            <button type="button" className="iconbtn" aria-pressed={mode === "chat"} onClick={showChat}>Crônica</button>
+            <button type="button" className="iconbtn" aria-pressed={mode === "chat"} onClick={showChat}
+              {...tip("Crônica", "composer")}>Crônica</button>
             {!single && <button type="button" className="iconbtn" aria-pressed={mode === "split"}
-              onClick={() => dispatch({ type: "set_mode", mode: "split" })}>Lado a lado</button>}
+              onClick={() => dispatch({ type: "set_mode", mode: "split" })}
+              {...tip("Lado a lado", "split")}>Lado a lado</button>}
             <button type="button" className="iconbtn" aria-pressed={mode === "context"} onClick={showContext}
-              title={`Painel: ${TAB_LABELS[state.tab]}`}>Painel</button>
+              title={titleWithShortcut(`Painel: ${TAB_LABELS[state.tab]}`, `tab:${state.tab}`, platform)}
+              aria-keyshortcuts={ariaShortcut(`tab:${state.tab}`, platform)}>Painel</button>
           </div>
         </div>
       </div>
@@ -348,6 +354,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}
           turn={turn} onRetry={onRetryTurn} />
       </div>
+      {helpOpen && <ShortcutsSheet platform={platform} onClose={() => setHelpOpen(false)} />}
       {mobile && <MobileTabBar surface={surface} fighting={fighting} hidden={keyboardOpen} onSelect={selectSurface} />}
     </div>
   );

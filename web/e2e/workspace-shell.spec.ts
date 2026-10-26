@@ -148,17 +148,17 @@ test.describe("desktop 1440", () => {
     await page.keyboard.press("Escape");
     await expect(composer(page)).toBeFocused();
     await expect(chat(page)).toBeHidden();
-    // Ctrl+1 → chat solo mesmo com foco no composer; Ctrl+5 abre a aba 4 (Bestiário).
-    await page.keyboard.press("Control+1");
+    // Alt+1 → chat solo mesmo com foco no composer; Alt+5 abre a aba 4 (Bestiário).
+    await page.keyboard.press("Alt+1");
     await expect(context(page)).toBeHidden();
     await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.keyboard.press("Control+6");
+    await page.keyboard.press("Alt+6");
     await expect(page.getByRole("tab", { name: "Mapa" })).toHaveAttribute("aria-selected", "true");
     await expect(separator(page)).toBeVisible();
-    // Ctrl+\ alterna split ↔ último modo solo (chat, após o Ctrl+1).
-    await page.keyboard.press("Control+\\");
+    // Alt+\ alterna split ↔ último modo solo (chat, após o Alt+1).
+    await page.keyboard.press("Alt+\\");
     await expect(context(page)).toBeHidden();
-    await page.keyboard.press("Control+\\");
+    await page.keyboard.press("Alt+\\");
     await expect(separator(page)).toBeVisible();
     await assertA11y(page);
   });

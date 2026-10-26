@@ -170,7 +170,7 @@ function MapDetail({ node, option, view, busy, blocked, onAction }: {
         : <p className="maptab__lore">Região inexplorada. Só se sabe o nome na estrada.</p>}
       {node.state === "atual" && view.interiors.here.length > 0 && (
         <div>
-          <p className="hud__label hud__label--sub">Locais daqui</p>
+          <h3 className="hud__label hud__label--sub">Locais daqui</h3>
           <ul className="maptab__list">{view.interiors.here.map((i) => <li key={i.id}>{i.name}</li>)}</ul>
         </div>
       )}

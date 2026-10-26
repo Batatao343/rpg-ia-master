@@ -85,7 +85,7 @@ export function CharacterTab({ data, hitKey, onEquip, busy, artPanel }: {
         {section === "ficha" && <FichaTab data={data} hpHitKey={hitKey} onEquip={onEquip} busy={busy} />}
         {section === "ficha" && scars.length > 0 && (
           <div>
-            <p className="hud__label">Cicatrizes</p>
+            <h3 className="hud__label">Cicatrizes</h3>
             <ul className="char-scars">
               {scars.map((scar) => (
                 <li key={scar.id} className="char-scar">
@@ -103,7 +103,7 @@ export function CharacterTab({ data, hitKey, onEquip, busy, artPanel }: {
           <>
             <QuestsTab quest={data?.quest} />
             <div>
-              <p className="hud__label">Evolução do herói</p>
+              <h3 className="hud__label">Evolução do herói</h3>
               {history.length === 0 ? (
                 <p className="combat-empty">Nenhum marco de evolução registrado ainda.</p>
               ) : (

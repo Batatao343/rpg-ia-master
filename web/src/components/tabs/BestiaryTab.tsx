@@ -17,7 +17,7 @@ export function BestiaryTab({ gameId, turnCount, open, unavailable }: {
   const legacy = usePlayerCodex(gameId, turnCount, live && failed);
   return (
     <div>
-      <p className="hud__label">Bestiário</p>
+      <h3 className="hud__label">Bestiário</h3>
       {unavailable ? <p className="combat-empty">{unavailable}</p>
         : payload && gameId ? (
           <ArrivalsProvider value={arrivals}>
