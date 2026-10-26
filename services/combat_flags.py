@@ -42,11 +42,17 @@ _EFFECT_LABEL = {"imune": "imune", "resiste": "resiste", "vulneravel": "vulnerá
 RESIST_EFFECTS: tuple[str, ...] = tuple(_EFFECT_LABEL)
 
 
+# Dono 26/10 (SPEC-325 D4, opção 3): reforços abandonados — default `off` (nem shadow).
+# A variável continua aceita só para experimento explícito.
+_DEFAULT_MODE: dict[str, Mode] = {"reinforcements": "off"}
+
+
 def mode(cap: str) -> Mode:
-    """Modo da capacidade; capacidade desconhecida ou valor invalido -> `shadow`."""
+    """Modo da capacidade; capacidade desconhecida ou valor invalido -> default (`shadow`)."""
     var = ENV_VARS.get(cap)
-    raw = str(os.getenv(var, "shadow") if var else "shadow").strip().lower()
-    return raw if raw in MODES else "shadow"  # type: ignore[return-value]
+    default = _DEFAULT_MODE.get(cap, "shadow")
+    raw = str(os.getenv(var, default) if var else default).strip().lower()
+    return raw if raw in MODES else default  # type: ignore[return-value]
 
 
 def active(cap: str) -> bool:

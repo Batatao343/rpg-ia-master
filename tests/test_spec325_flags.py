@@ -10,14 +10,17 @@ def test_all_caps_have_distinct_env_vars():
     assert len(set(cf.ENV_VARS.values())) == 8
 
 
-@pytest.mark.parametrize("cap", cf.CAPS)
+_SHADOW_DEFAULT = tuple(c for c in cf.CAPS if c != "reinforcements")  # dono 26/10: reforço off
+
+
+@pytest.mark.parametrize("cap", _SHADOW_DEFAULT)
 def test_default_is_shadow(cap, monkeypatch):
     monkeypatch.delenv(cf.ENV_VARS[cap], raising=False)
     assert cf.mode(cap) == "shadow"
     assert cf.shadow(cap) and not cf.active(cap)
 
 
-@pytest.mark.parametrize("cap", cf.CAPS)
+@pytest.mark.parametrize("cap", _SHADOW_DEFAULT)
 def test_invalid_falls_back_to_shadow(cap, monkeypatch):
     monkeypatch.setenv(cf.ENV_VARS[cap], "talvez")
     assert cf.mode(cap) == "shadow"
@@ -45,3 +48,15 @@ def test_all_capability_flags_in_staging_allowlists():
     for var in cf.ENV_VARS.values():
         assert var in ve.WORLD_FLAGS, var
         assert var in ve.OPTIONAL_FLAGS, var
+
+
+def test_reforcos_abandonados_pelo_dono_default_off(monkeypatch):
+    """Dono 26/10 (D4, opção 3): reforço desligado por padrão, nem shadow."""
+    from services import combat_flags
+
+    monkeypatch.delenv("RPG_COMBAT_REINFORCEMENTS", raising=False)
+    assert combat_flags.mode("reinforcements") == "off"
+    monkeypatch.setenv("RPG_COMBAT_REINFORCEMENTS", "talvez")
+    assert combat_flags.mode("reinforcements") == "off"
+    monkeypatch.delenv("RPG_COMBAT_NONLETHAL", raising=False)
+    assert combat_flags.mode("nonlethal") == "shadow"
