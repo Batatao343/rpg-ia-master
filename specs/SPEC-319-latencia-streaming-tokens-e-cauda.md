@@ -276,3 +276,9 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   `sse.token_replace` **0 em 35 turnos** (antes ~9 %); `sse.stream_risk_hold` 2× (`acquisition`). TTFMC no servidor
   p50 2,65 s (n 28); cliente `first_chunk` p50 3,1 s / 4,4 s; `done` p50 6,1 / 7,0 s; `state` p50 10,6 / 8,8 s.
   Sessão 1 ainda com 4/15 `ack` > 5 s (espera do Vercel antes da função — mesma classe de antes).
+- **2026-10-26 (§6.4 browser, staging `9775ea1`):** Chromium 1440 e 390 (mobile), turno real: o texto da narração
+  cresce na tela enquanto o rodapé ainda mostra "O narrador tece o destino…" (24 e 21 comprimentos distintos em
+  15 s; captura aos ~6 s corta no meio da frase). `reset` em fallback induzido NÃO foi exercitado no staging
+  (exigiria `RPG_ROUTES` com 1º candidato inválido E falha no meio do stream — falha antes do 1º delta não gera
+  `reset`); coberto por `test_streaming`/`test_stream_structured`. Pendências para `done`: TTLT vs baseline
+  pós-316 e decisão do dono sobre o hedge (critério não atingido: 0 disparos).
