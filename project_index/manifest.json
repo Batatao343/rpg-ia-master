@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "01fa293d6f2cc64f5379772d3190eaadb3fcd8b0",
+  "commit_sha": "25246d5a62d4f8ec8618025d73bdea5acdf87154",
   "edge_counts": {
-    "calls": 28526,
+    "calls": 28527,
     "contains": 972,
-    "defines": 14287,
+    "defines": 14288,
     "imports": 2343,
     "likely_test_for": 1644,
     "route_to": 64
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d2d838a173705174f0643ba5f4e297617fdf34467a3d1901263dba46ce8e2416",
+  "graph_hash": "sha256:65d8ecf95f58b9d21dc5592f95c548bdbd7565403ba794b9dae430c8e0facf8f",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1059,6 +1059,7 @@
     "web/playwright.config.ts",
     "web/src/api.ts",
     "web/src/App.tsx",
+    "web/src/artOffers.ts",
     "web/src/build.ts",
     "web/src/clockLabel.ts",
     "web/src/codexKnowledge.ts",
@@ -1198,12 +1199,12 @@
     "artifact": 9,
     "class": 945,
     "endpoint": 64,
-    "file": 1142,
-    "function": 4482,
+    "file": 1143,
+    "function": 4483,
     "method": 835,
     "module": 972,
     "test": 8024
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:8ec4d11752be868b6591fc01947092fb83f9cb4d0c91b68390ec66c50cac97b3"
+  "source_tree_hash": "sha256:d2f7ba827860df0fd353d5cba3e76697645b8c6f5e2cddb69c58da1d829705d8"
 }
