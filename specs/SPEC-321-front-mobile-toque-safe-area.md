@@ -1,6 +1,6 @@
 # SPEC-321 — Front: casca mobile, alvos de toque e safe-area
 
-> **Status:** `in-progress` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito; implementada na branch `spec-321`, aguardando revisão independente)
+> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol (P1 de 1 linha + 7 P2 corrigidos em `af5579c6`, e2e verdes); pousada na main 25/10; falta smoke §6 no staging + Enter com IME em Android real)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-320 (a linha de status do compositor já existe; o banner já sai do topo)
 > **Desbloqueia:** SPEC-198 (wrapper Android: o app precisa caber e ser tocável no celular), SPEC-322
