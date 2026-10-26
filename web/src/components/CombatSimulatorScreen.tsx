@@ -63,7 +63,7 @@ export function CombatSimulatorScreen({ busy, onStart, onBack, onError }: Props)
       <Frame className="create__frame simulator-screen__frame">
         <div className="create__seal"><Sigil size={48} /></div>
         <header className="create__head">
-          <p className="kicker">Motor real · Zero LLM</p>
+          <p className="kicker">Motor real · Arena de treino</p>
           <h1 className="create__title">Laboratório de combate</h1>
           <p className="create__sub">
             Entre direto na arena para testar Cartas, Reações, Ferimentos e a IA

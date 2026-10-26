@@ -16,7 +16,7 @@ export function itemIcon(it: { unique?: boolean; slot: string | null }): IconNam
   return "prepared";
 }
 
-export type EquipFn =(pick: { item_id?: string; unequip_slot?: string }) => void;
+export type EquipFn = (pick: { item_id?: string; unequip_slot?: string }) => void;
 
 /* SPEC-204: o antigo <aside class="hud"> com tablist própria e auto-troca por
    combate deixou de existir. Este módulo agora só exporta os painéis, montados

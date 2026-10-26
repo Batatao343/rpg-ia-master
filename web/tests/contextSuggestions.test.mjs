@@ -32,10 +32,11 @@ test('beat atual vira "Seguir objetivo"; máximo 4 itens', async () => {
   const { suggestionsFor } = await load();
   const data = { ...base,
     npcs: ['A', 'B', 'C', 'D'].map(name => ({ name, in_scene: true })),
-    quest: { main: { objective: 'x', current_step: 1, beats: [{ description: 'um', status: 'done' }, { description: 'Achar o sino', status: 'pending' }] } } };
+    quest: { main: { objective: 'Achar o sino', current_step: 1, beats: [{ description: 'Etapa 1', status: 'done' }, { description: 'Etapa 2', status: 'pending' }] } } };
   const s = suggestionsFor(data);
   assert.ok(s.length <= 4);
   assert.ok(s.some(x => x.label === 'Seguir objetivo' && /Achar o sino/.test(x.text)));
+  assert.ok(!s.some(x => /Etapa/.test(x.text) || /Etapa/.test(x.label)));
 });
 
 test('em combate, game over ou simulação não sugere nada', async () => {

@@ -12,11 +12,12 @@ function files(dir) {
   });
 }
 // SPEC-323 R3: jargão de dev/IA não aparece para o jogador (comentários e código fora do alvo; só literais de texto).
-const all = files(SRC).map(p => [p, readFileSync(p, 'utf8')]);
+const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:"'`])\/\/.*$/gm, '$1');
+const all = files(SRC).map(p => [p, stripComments(readFileSync(p, 'utf8'))]);
 
 test('sem "zero LLM", "Simular combate" nem custo técnico em US$ fixo na UI do jogador', () => {
   for (const [p, s] of all) {
-    assert.doesNotMatch(s, /zero LLM/, p);
+    assert.doesNotMatch(s, /LLM/i, p);
     assert.doesNotMatch(s, />\s*Simular combate/, p);
     assert.doesNotMatch(s, /Narração por IA/, p);
   }
@@ -33,4 +34,9 @@ test('estados vazios não terminam em "— ainda."', () => {
 
 test('sem alusão a lobo/Witcher no código-fonte da web', () => {
   for (const [p, s] of all) assert.doesNotMatch(s, /\blobo\b|wolf|witcher/i, p);
+});
+
+test('aria-label do mapa só anuncia perigo de nó visitado', () => {
+  const s = readFileSync(join(SRC, 'components/WorldMap.tsx'), 'utf8');
+  assert.ok(s.includes('(known ? `, perigo ${danger}` : "")'));
 });

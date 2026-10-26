@@ -618,8 +618,8 @@ select {
 .worldmap__node.is-current .worldmap__dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-glow), 0 0 14px 2px var(--accent-glow); animation: beacon 2.4s var(--ease) infinite; }
 .worldmap__node.is-current .worldmap__label { color: var(--accent); font-weight: 600; }
 .worldmap__node.is-fog .worldmap__dot { background: transparent; border-style: dashed; opacity: 0.45; }
-.worldmap__node.is-fog .worldmap__label { color: var(--faint); opacity: 0.5; }
-.worldmap__node.is-unnamed .worldmap__label { color: var(--muted); opacity: 0.85; font-style: normal; }
+.worldmap__node.is-fog .worldmap__label { color: var(--muted); }
+.worldmap__node.is-unnamed .worldmap__label { color: var(--muted); font-style: normal; }
 .worldmap__node[data-danger="3"] .worldmap__dot, .worldmap__node[data-danger="4"] .worldmap__dot { border-color: var(--danger); }
 .worldmap__node.is-controlled .worldmap__dot { background: var(--danger); border-color: var(--danger); }
 .worldmap__node.is-quest-target .worldmap__label { color: var(--accent-strong); font-weight: 600; }
@@ -696,7 +696,7 @@ select {
 .people { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 .person { padding: 0.7rem 0.1rem; border-bottom: 1px solid var(--line-soft); }
 .person:last-child { border-bottom: 0; }
-.person__rel::before { content: "◆ "; font-size: 0.7em; }
+.person__rel::before { content: "◆ " / ""; font-size: 0.7em; }
 .person__rel--hostil { color: var(--danger-text); }
 .person__rel--desconfiado { color: var(--faint); }
 .person__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }

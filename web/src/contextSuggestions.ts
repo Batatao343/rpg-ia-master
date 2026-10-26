@@ -12,8 +12,9 @@ export function suggestionsFor(data: Partial<GameResponse> | null | undefined): 
   const present = (data.npcs ?? []).filter(n => n.in_scene && n.status !== "morto").slice(0, 2);
   for (const n of present) out.push({ id: `npc:${n.name}`, label: `Falar com ${n.name}`, text: `Falo com ${n.name}` });
   const main = data.quest?.main;
-  const beat = main?.beats?.[main.current_step]?.description?.trim();
-  if (beat && main?.beats[main.current_step].status !== "done") {
+  // A API redige os beats ("Etapa N"); o objetivo público é o único texto seguro.
+  const beat = main?.objective?.trim();
+  if (beat) {
     const short = beat.length > BEAT_MAX ? `${beat.slice(0, BEAT_MAX - 1).trimEnd()}…` : beat;
     out.push({ id: "objective", label: "Seguir objetivo", text: `Sigo o objetivo: ${short}` });
   }

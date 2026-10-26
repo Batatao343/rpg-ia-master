@@ -118,7 +118,7 @@ export function WorldMap({
         const state = isCurrent ? "local atual" : known ? "visitado" : "ainda não visitado";
         const label = `${loc.name}, ${state}`
           + (hasQuest ? ", objetivo de missão" : "") + (ruler ? `, sob domínio de ${ruler}` : "")
-          + `, perigo ${danger}`
+          + (known ? `, perigo ${danger}` : "")
           + (threatHint ? `, ameaça: ${threatHint}` : "");
         const title = known
           ? `${loc.name} · perigo ${danger}`
