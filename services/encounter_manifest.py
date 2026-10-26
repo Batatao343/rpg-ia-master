@@ -304,7 +304,8 @@ def resolve_canonical_source(
 # Manifesto
 # ---------------------------------------------------------------------------
 def _base_id(enemy_id: str) -> str:
-    return re.sub(r"_\d+$", "", str(enemy_id or ""))
+    # `_<n>` = instancia do spawn; `_r<n>` = reforco (SPEC-325 R16, id unico por conflito).
+    return re.sub(r"_r?\d+$", "", str(enemy_id or ""))
 
 
 def species_label_for(enemy: dict[str, Any]) -> str:
@@ -447,6 +448,20 @@ def apply_composition(
             if kind == "departed":
                 p["presence"] = "departed"
     return out
+
+
+def add_joined(
+    manifest: dict, enemy: dict[str, Any], cause: str, round_: int, zone_id: str = "z0"
+) -> dict:
+    """SPEC-325 R16: inimigo que entra DEPOIS do spawn (reforco de lider) vira participante
+    `arrived` + evento `joined`. Idempotente (id de participante e id de evento)."""
+    out = deepcopy(manifest)
+    pid = str(enemy.get("id") or enemy.get("name") or "enemy")
+    if not any(p.get("participant_id") == pid for p in out.get("participants") or []):
+        out.setdefault("participants", []).append(
+            _participant(enemy, presence="arrived", zone_id=zone_id)
+        )
+    return apply_composition(out, "joined", pid, cause, round_)
 
 
 def assert_immutable(before: dict, after: dict) -> None:

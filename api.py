@@ -2866,6 +2866,14 @@ def _combat_block(state: dict) -> dict[str, Any]:
     }
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
+    reinf = meta.get("reinforcement") or {}
+    if (
+        combat_flags.active("reinforcements")
+        and reinf.get("warned_round") is not None
+        and not reinf.get("fired")
+        and not reinf.get("cancelled")
+    ):
+        view["reinforcement_warning"] = True  # SPEC-325 R16: só depois do aviso (regra de ouro)
     if combat_flags.active("objects"):
         # SPEC-325 R14/D8: so rotulo/custo/usos (nunca `effect`); secreto so depois de descoberto.
         from services import conflict_scene as _cs

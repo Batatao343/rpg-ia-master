@@ -20,6 +20,11 @@ Dois bots do herói:
   Carta preparada abaixo de 50 % de Vitalidade; senão usa a Carta de ataque
   preparada de maior dano que puder pagar; senão ataque básico.
 
+Célula opcional `lider_matilha` (SPEC-325 R16/R17, Fase D): `--categories lider_matilha` luta contra
+UM Elite de arquétipo `lider_matilha` sozinho; com `RPG_COMBAT_REINFORCEMENTS=on` o aviso/chegada de
+reforço roda pelo MESMO `services.reinforcements.advance` do nó de combate. Comparar `on` vs `off`
+(critério: no máximo +3 pp de morte). Fora do default: as células atuais seguem intactas.
+
 Métrica: taxa de morte do herói por combate (e `early_deaths`: mortes em ≤ 2 rodadas, SPEC-056 R2b) (morte = Estado Terminal/Vitalidade
 0 sem aliado, como na arena da SPEC-283). Saída: JSON em stdout.
 """
@@ -64,6 +69,7 @@ from services import conflict_turn as ct  # noqa: E402
 
 CLASSES = ("Devoto do Abismo", "Sangromante", "Corruptor", "Arcanista Cinzento", "Médico de Campo")
 CATEGORIES = ("lacaio", "padrao", "elite", "chefe")
+LEADER_CELL = "lider_matilha"  # SPEC-325: célula opcional (não entra no default)
 DANGER_BY_LEVEL = {1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4}
 MAX_ROUNDS = 20
 
@@ -92,8 +98,17 @@ def creatures_by_category() -> dict[str, list[str]]:
     return {c: sorted(v) for c, v in out.items()}
 
 
+def leader_pool() -> list[str]:
+    """Elites de arquétipo `lider_matilha` (Fase D da SPEC-325)."""
+    return sorted(
+        bid
+        for bid, entry in load_bestiary().items()
+        if entry.get("arquetipo") == LEADER_CELL and normalize_categoria(entry) == "elite"
+    )
+
+
 def group_size(category: str, level: int) -> int:
-    if category == "chefe":
+    if category in ("chefe", LEADER_CELL):
         return 1
     cost = eb.CATEGORIA_COST[category]
     budget = eb.encounter_budget(level, DANGER_BY_LEVEL.get(level, 4), 0)
@@ -162,7 +177,9 @@ def hero_decl(bot: str, player: dict, target_id: str) -> ct.TurnDeclaration:
     )
 
 
-def fight(bid: str, n: int, class_name: str, level: int, seed: int, bot: str):
+def fight(
+    bid: str, n: int, class_name: str, level: int, seed: int, bot: str, reinforce: bool = False
+):
     # SPEC-287: partes do motor ainda usam o `random` global; semeá-lo por luta
     # torna a arena reproduzível (seed de str usa sha512, imune a PYTHONHASHSEED).
     random.seed(f"{bot}|{level}|{class_name}|{bid}|{n}|{seed}")
@@ -173,6 +190,15 @@ def fight(bid: str, n: int, class_name: str, level: int, seed: int, bot: str):
     scene = cs.new_scene()
     for aid in actors:
         cs.place(scene, aid)
+    meta: dict = {}
+    if reinforce:  # SPEC-325 R16: mesmo planejamento do `_prepare_scene`
+        from services import reinforcements as rf
+
+        budget = eb.encounter_budget(level, DANGER_BY_LEVEL.get(level, 4), 0)
+        for trigger in rf.plan_triggers(
+            enemies, budget, encounter_level=DANGER_BY_LEVEL.get(level, 4)
+        ):
+            cs.add_reinforcement_trigger(scene, trigger)
     cs.freeze(scene)
     rng = random.Random(seed)
     state = {"player": player}
@@ -198,11 +224,17 @@ def fight(bid: str, n: int, class_name: str, level: int, seed: int, bot: str):
             return "death", rnd
         if out.get("ended"):
             return "win", rnd
+        if reinforce:
+            rf.advance(scene, enemies, actors, sides, meta, rnd, mode="on")
     return "timeout", MAX_ROUNDS
 
 
 def run(seeds, levels, bots, classes=CLASSES, categories=CATEGORIES) -> dict:
     pool = creatures_by_category()
+    pool[LEADER_CELL] = leader_pool()
+    from services import combat_flags
+
+    reinforce = combat_flags.mode("reinforcements") == "on"
     result: dict = {}
     for bot in bots:
         for level in levels:
@@ -222,7 +254,9 @@ def run(seeds, levels, bots, classes=CLASSES, categories=CATEGORIES) -> dict:
                     d = f = 0
                     for bid in pool[cat]:
                         for seed in seeds:
-                            outcome, rounds = fight(bid, n, cls, level, seed, bot)
+                            outcome, rounds = fight(
+                                bid, n, cls, level, seed, bot, reinforce and cat == LEADER_CELL
+                            )
                             cell[outcome] += 1
                             cell["early_deaths"] += outcome == "death" and rounds <= 2
                             cell["fights"] += 1

@@ -350,6 +350,61 @@ def _companion_orders(
     return {order["ally_id"]: decl}, []
 
 
+def _plan_reinforcements(
+    scene: dict, enemies: list[dict], state: dict, player: dict, allies: list[dict], level: int
+) -> None:
+    """SPEC-325 R16: todo `lider_matilha` registra 1 gatilho ANTES de congelar a cena (Python,
+    nunca LLM). `shadow` só registra; `off` não faz nada."""
+    from services import combat_flags
+    from services import reinforcements as rf
+
+    mode = combat_flags.mode("reinforcements")
+    if mode == "off" or not any(rf.is_leader(e) for e in enemies):
+        return
+    import encounter_budget as eb
+
+    world = state.get("world") or {}
+    budget = eb.encounter_budget(
+        int(player.get("level", 1) or 1), int(world.get("danger_level", 1) or 1), len(allies)
+    )
+    triggers = rf.plan_triggers(enemies, budget, encounter_level=level)
+    if mode == "shadow":
+        _log_event("combat", "reinforcements_shadow", phase="plan", leaders=len(triggers))
+        return
+    for trigger in triggers:
+        cs.add_reinforcement_trigger(scene, trigger)
+
+
+def _advance_reinforcements(
+    scene: dict,
+    enemies: list[dict],
+    actors_by_id: dict,
+    sides: dict,
+    combat_meta: dict,
+    logs: list[str],
+) -> None:
+    """SPEC-325 R16: aviso na rodada em que o líder cai a 50 %, chegada de 1 reforço `distante`
+    na seguinte (se o líder ainda age). Id único `<base>_r<N>`; entra no manifesto como `joined`."""
+    from services import combat_flags
+    from services import encounter_manifest as em
+    from services import reinforcements as rf
+
+    mode = combat_flags.mode("reinforcements")
+    if mode == "off" or not scene:
+        return
+    round_ = int(combat_meta.get("round", 0) or 0)
+    res = rf.advance(scene, enemies, actors_by_id, sides, combat_meta, round_, mode=mode)
+    logs += res["logs"]
+    for enemy in res["spawned"]:
+        _mirror_vitals(enemy)
+        _sync_enemy_knowledge([enemy])
+        if em.is_valid_manifest(combat_meta.get("encounter")):
+            zone = ((scene.get("positions") or {}).get(enemy["id"]) or {}).get("zone_id") or "z0"
+            combat_meta["encounter"] = em.add_joined(
+                combat_meta["encounter"], enemy, "reinforcement", round_, zone
+            )
+
+
 def _soul_traits(state: dict, member: dict) -> list[str]:
     from services import companion_soul as cs_
 
@@ -894,6 +949,7 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
         cs.place(scene, a.get("id") or a.get("name"), zone_id=zone_id, distance_state="proximo")
     for e in enemies:
         cs.place(scene, e["id"], zone_id=zone_id, distance_state="proximo")
+    _plan_reinforcements(scene, enemies, state, player, allies, encounter_level)  # SPEC-325 R16
     cs.freeze(scene)
     scene["encounter_level"] = encounter_level
     return scene
@@ -1903,6 +1959,8 @@ def _combat_node(state: GameState):
         _mirror_vitals(e)
     for ally in allies:
         _mirror_vitals(ally)
+    if not (is_simulation or out.get("ended") or hero_fled or out.get("player_dead")):
+        _advance_reinforcements(scene, enemies, actors_by_id, sides, combat_meta, logs)
     for sid in out.get("scars_pending", []):
         if sid == _PLAYER_ID and death_flow.check_scar_required(player):
             llm = get_llm(temperature=0.6, tier=ModelTier.SMART)

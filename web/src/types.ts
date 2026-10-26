@@ -350,6 +350,8 @@ export interface CombatBlock {
   nonlethal_available?: boolean;
   /** SPEC-325 R15: companheiros que aceitam ordem; só com RPG_COMPANION_ORDERS=on. */
   companion_orders?: { id: string; name: string }[];
+  /** SPEC-325 R16: presente (true) só depois do aviso de reforço, até a chegada ou o cancelamento. */
+  reinforcement_warning?: boolean;
   scene: ConflictSceneView;
   wounds: WoundTrackView;
   chase: ChaseView;

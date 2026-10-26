@@ -221,6 +221,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
             onToggleRupture={(id) => setRuptureId((cur) => (cur === id ? null : id))}
             onGesture={gestureCard} onDetail={setDetailId} touch={touch} detailOpenId={detailId} />
           <CardTooltip card={detailCard} id={DETAIL_ID} touch={touch} />
+          {combat.reinforcement_warning && (
+            <p className="ws-combat__ended" role="note">Passos se aproximam: reforços a caminho.</p>
+          )}
           <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
           <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
             {basics.map((action) => {

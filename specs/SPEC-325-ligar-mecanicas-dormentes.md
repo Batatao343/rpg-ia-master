@@ -1,8 +1,8 @@
 # SPEC-325 — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 
-> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B revisada + gate R17 verde; Fase C implementada em `shadow` na branch `spec-325` 26/10, sem revisão nem gate; Fase D pendente)
+> **Status:** `in-progress` (aprovada 25/10; Fase A implementada + revisão Sol aplicada + gate R17 verde; pousada na main 26/10 com flags `shadow`; Fase B revisada + gate R17 verde; Fases C e D implementadas em `shadow` na branch `spec-325` 26/10, sem revisão nem gate)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-26
-> **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fase C (R14 objetos de cena, R15 ordem a companheiro) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase C pendentes: comandos prontos em §8.3, **ainda não rodados** (coordenador). Fase D pendente (ver §9).
+> **Progresso:** Fase A (R8, R9) pousada em `shadow`. Fase B (R10–R13: abordagem, ataque na fuga, abandono, sacrifício) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase B pendentes: comandos prontos em §8.2, **ainda não rodados** (coordenador). Fase C (R14 objetos de cena, R15 ordem a companheiro) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase C pendentes: comandos prontos em §8.3, **ainda não rodados** (coordenador). Fase D (R16 reforço de `lider_matilha`) implementada em `shadow` (26/10); revisão Sol e gate R17 da Fase D (com a célula `lider_matilha` da arena e D5) pendentes: comandos em §8.4, **ainda não rodados** (coordenador). Etapa 8 pendente (ver §9).
 > **Origem:** auditoria de regressão de 25/10, "capacidades sem chamador", itens 5 a 8; SPEC-272 §9 (decisão "manter, não ligar")
 > **Depende de:** SPEC-064, SPEC-068, SPEC-069, SPEC-070, SPEC-226, SPEC-272, SPEC-285, SPEC-300, SPEC-304 (todas `done`)
 > **Desbloqueia:** prisioneiros (consumidor de `law.deliver_prisoner`, SPEC-299 R23); follow-up 299 "derrota → prisão"; follow-up SPEC-226:165 (id único de reforço)
@@ -574,10 +574,10 @@ OFF="$AB RPG_COMBAT_OBJECTS=off RPG_COMPANION_ORDERS=off"
 env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_c_off.json
 env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_c_on.json
 
-# (b) Matriz SPEC-056 (5 classes x seeds 42/43 x 50 turnos), perfis `combate` e `companheiro` (único com
-#     party formal em combate; exercita o caminho de ordem quando o texto traz "<aliado>, <verbo>").
+# (b) Matriz SPEC-056 (5 classes x seeds 42/43 x 50 turnos), perfis `combate` e `recrutador` (o que leva
+#     party formal ao combate; exercita o caminho de ordem quando o texto traz "<aliado>, <verbo>").
 #     Critério: M2 >= 20, 0 no_progress, 0 violação; morte do herói <= linha de base.
-for prof in combate companheiro; do
+for prof in combate recrutador; do
   for cls in "Devoto do Abismo" "Sangromante" "Corruptor" "Arcanista Cinzento" "Médico de Campo"; do
     for seed in 42 43; do
       env $ON  bash scripts/dev/py.sh -m playtest run --profile $prof --class "$cls" --turns 50 --seed $seed
@@ -603,7 +603,51 @@ Notas honestas sobre a medida:
 - Esperado: Δ = 0 pp em todas as células. O objeto pode **baixar** a morte (dano no inimigo), nunca subir, porque
   a recusa de efeito ofensivo contra os seus impede o dano autoinfligido.
 
-## 9. Próximos passos (Fases D e Etapa 8)
+## 8.4 Gate de letalidade da Fase D: comandos exatos (coordenador roda; subagente não)
+
+Um de cada vez, sem `-n`. Fases A–C `on` nas duas pontas; a linha de base é a mesma árvore com **só**
+`RPG_COMBAT_REINFORCEMENTS=off`. Fase D sobe a morte por construção: gate mais forte (R17).
+
+```bash
+ABC="RPG_COMBAT_REVEAL_RESIST=on RPG_COMBAT_NONLETHAL=on RPG_CHASE_APPROACH=on RPG_CHASE_ATTACK=on RPG_CHASE_ABANDON=on RPG_COMPANION_SOUL=on RPG_COMBAT_OBJECTS=on RPG_COMPANION_ORDERS=on"
+ON="$ABC RPG_COMBAT_REINFORCEMENTS=on"
+OFF="$ABC RPG_COMBAT_REINFORCEMENTS=off"
+
+# (a) Arena SPEC-285, células atuais (neutras: nenhuma tem `lider_matilha` de reforço) E a célula nova
+#     `lider_matilha` (Elite `lider_matilha` sozinho, reforço pelo mesmo `reinforcements.advance` do nó).
+#     Critério: células atuais Δ = 0,0 pp; célula `lider_matilha`: morte ON no máximo +3 pp sobre OFF.
+env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_d_off.json
+env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 > arena_d_on.json
+env $OFF bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 --categories lider_matilha > arena_d_lider_off.json
+env $ON  bash scripts/dev/py.sh docs/spec285/arena_lethality.py 10 --categories lider_matilha > arena_d_lider_on.json
+
+# (b) Matriz SPEC-056 (5 classes x seeds 42/43 x 50 turnos), perfil `combate`. Critério: M2 >= 20, 0 no_progress.
+for cls in "Devoto do Abismo" "Sangromante" "Corruptor" "Arcanista Cinzento" "Médico de Campo"; do
+  for seed in 42 43; do
+    env $ON  bash scripts/dev/py.sh -m playtest run --profile combate --class "$cls" --turns 50 --seed $seed
+    env $OFF bash scripts/dev/py.sh -m playtest run --profile combate --class "$cls" --turns 50 --seed $seed
+  done
+done
+
+# (c) D5 (autorizado em 25/10, 1 campanha por fase): combate, 200 turnos, seeds 21-32, MockLLM, uma por vez.
+#     Critério: M1 <= 0,564, M2 >= 20, M5 = 0 combat.no_progress.
+for seed in $(seq 21 32); do
+  env $ON bash scripts/dev/py.sh -m playtest run --profile combate --turns 200 --seed $seed
+done
+# agregar: bash scripts/dev/py.sh -m playtest report <run_id>
+```
+
+Notas honestas sobre a medida (smoke do executor, 10 seeds, MockLLM, só `lider_matilha`; **não** é o gate):
+- Δ morte ON−OFF: basico L1/L3/L5/L8 = 0,0 / −8,5 / −12,5 / −11,0 pp; cartas = 0,0 / −10,5 / −5,0 / −3,5 pp. L1 é 0
+  porque o orçamento (3) não comporta Elite (5) + Lacaio (2): o reforço nunca chega (cancelado por orçamento).
+- O reforço **baixa** a morte no arena (a IA do líder/da matilha troca ataque por apoio/fuga quando há par; o
+  reforço de cópia rebaixada tende a fugir quando o líder cai). Os `timeout` sobem (≈ +8/200 por célula, só com
+  `mon_auroque_ruinas`): conferir `combat.no_progress` na matriz (b) e no long-run (c) antes de ligar. Se o gate
+  passar com folga negativa, o ajuste de balanço (reforço mais agressivo) é decisão do dono, não desta spec.
+- Os bots atuais da arena e do perfil `combate` quase não enfrentam `lider_matilha` no nível/orçamento onde o reforço
+  cabe; a célula nova existe justamente para medir o efeito.
+
+## 9. Próximos passos (Etapa 8 e revisões)
 
 1. ~~**Etapa 3 (Fase B, R10/R11)**~~ feita em `shadow` (26/10); `tests/test_spec325_chase_choices.py`.
 2. ~~**Etapa 4 (Fase B, R12/R13)**~~ feita em `shadow` (26/10); `tests/test_spec325_abandon.py`. Falta o
@@ -611,8 +655,8 @@ Notas honestas sobre a medida:
 3. ~~**Etapa 5 (Fase C, R14)**~~ feita em `shadow` (26/10); `tests/test_spec325_objects.py`.
 4. ~~**Etapa 6 (Fase C, R15)**~~ feita em `shadow` (26/10); `tests/test_spec325_orders.py`,
    `tests/test_spec325_intents_scene.py`. Falta o gate R17 da Fase C (§8.3) e a revisão Sol.
-5. **Etapa 7 (Fase D, R16):** reforços de `lider_matilha` e `reinforcements.py`; gate R17 com a célula nova da
-   arena e D5.
+5. ~~**Etapa 7 (Fase D, R16)**~~ feita em `shadow` (26/10); `tests/test_spec325_reinforcements.py`, célula
+   `lider_matilha` na arena. Falta o gate R17 da Fase D (§8.4) e a revisão Sol.
 6. **Etapa 8 (R4, R18, R19):** `capability_counts` no `playtest/telemetry.py`, variantes de bot da arena,
    cenários de §6 em `playtest/scenarios.py` e os invariantes restantes. A Fase A já tem
    `check_conflict_capabilities` (incapacitado nunca morto; formato de `revealed_resistances`).
@@ -723,3 +767,23 @@ Notas honestas sobre a medida:
   - **Desvio 16:** `procurar` só revela o objeto secreto se **ninguém** estava escondido do ator **antes** da busca
     (a busca limpa o `hidden_from`).
   - As 8 flags já estavam em `WORLD_FLAGS`/`OPTIONAL_FLAGS` (verificado: `vercel_env.py:99-101,151-153`).
+- **2026-10-26 — Fase D implementada (shadow).** `services/reinforcements.py` (`plan_triggers`, `check`, `spawn`,
+  `advance`, a única porta usada pelo nó e pela arena); `_plan_reinforcements` (em `_prepare_scene`, antes de
+  `cs.freeze`) e `_advance_reinforcements` (fim da rodada, depois de `_mirror_vitals`) em `agents/combat.py`;
+  `encounter_manifest.add_joined` e `_base_id` que também tira `_r<n>`; API `reinforcement_warning` (só entre o
+  aviso e a chegada, com a flag `on`); nota na `CombateTab`; célula opcional `lider_matilha` em
+  `docs/spec285/arena_lethality.py` (`--categories lider_matilha`; as células atuais seguem intactas).
+  - **Fecha o follow-up SPEC-226:165:** o reforço recebe `"<base>_r<N>"` de `combat_meta["next_by_template"]`,
+    distinto de `<base>_<n>` do spawn e de cadáveres; XP pela transição normal (`xp_awarded`).
+  - **Desvio 17:** o aviso sai no fim da rodada em que o líder cai a ≤ 50 % e a **chegada é no fim da rodada
+    seguinte** (não no início), para o jogador ter uma rodada inteira de contra-jogo; se o líder morrer, fugir, se
+    render ou cair nesse intervalo, o reforço é cancelado (`reinforcement.cancelled`).
+  - **Desvio 18:** o orçamento do gatilho é `encounter_budget(nível, danger_level, nº de aliados)` calculado no
+    planejamento (o `encounter_eff_danger` do spawn já foi consumido); "restante" = orçamento − custo dos inimigos
+    vivos. Por isso Elite sozinho em nível 1 (orçamento 3) nunca recebe reforço.
+  - **Desvio 19:** em `shadow` não há gatilho nem `combat_meta.reinforcement` (o estado não muda): o shadow loga
+    `reinforcements_shadow` com `phase=plan` (na preparação) e `phase=would_warn` (a cada rodada em que um líder
+    ≤ 50 % ainda age).
+  - **Desvio 20:** o template é um Lacaio da mesma `faction` (nenhum bestiário atual tem líder com Lacaio da própria
+    facção: `enemy_soldado_legiao_ferro` e a maioria cai na cópia rebaixada); na cópia só `categoria`/`type` mudam, a
+    ficha (Vitalidade etc.) é a do template do líder, como na letra do R16.
