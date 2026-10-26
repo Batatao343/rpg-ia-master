@@ -603,14 +603,15 @@ def test_token_deltas_arrive_before_node_phase(client, monkeypatch):
 
 
 def test_replace_when_guard_changes_streamed_text(client, monkeypatch):
-    from services import prose_guard
+    import agents.storyteller as stt
 
-    real = prose_guard.reconcile_player_gold_claims  # guard so do texto FINAL (nao do stream)
-    monkeypatch.setattr(
-        prose_guard,
-        "reconcile_player_gold_claims",
-        lambda t, *a, **k: "Guardado: " + real(t, *a, **k),
-    )
+    real = stt._guard_mediation_secret  # guard so do texto FINAL (nao do stream)
+
+    def _guarded(text, *a, **k):
+        out, rejections = real(text, *a, **k)
+        return "Guardado: " + out, rejections
+
+    monkeypatch.setattr(stt, "_guard_mediation_secret", _guarded)
     monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
     monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
     gid = _new_game(client)

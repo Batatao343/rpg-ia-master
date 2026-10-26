@@ -1310,14 +1310,34 @@ def npc_actor_node(state: GameState):
 
         # SPEC-319: a fala (`dialogue`, 1o campo) sai token a token; a mensagem final
         # e `**Nome:** "fala"` — o prefixo evita um `replace` so por causa do rotulo/aspa.
+        _vary_salt = (
+            f"{game_id}:{npc_id}:{int((state.get('world') or {}).get('turn_count', 0) or 0)}"
+        )
+
+        def _stream_view(partial: str) -> str:
+            """Mesma montagem do texto final (aspas externas, transicao de abertura repetida
+            ANTES da aspa, rotulo), aplicada ao parcial. Aspas externas: so a de abertura
+            (o fechamento ainda nao chegou) e, se ja chegou, a de fechamento."""
+            text = partial
+            for opener, closer in (('"', '"'), ("“", "”"), ("‘", "’")):
+                if text.startswith(opener):
+                    text = text[len(opener) :].lstrip()
+                    if text.endswith(closer):
+                        text = text[: -len(closer)].rstrip()
+                    break
+            varied = vary_repeated_opening(text, aberturas_recentes, salt=_vary_salt)
+            transition = varied[: -len(text)] if text and varied.endswith(text) else ""
+            return f'**{npc_data["name"]}:** {transition}"{text}'
+
         res = narrate_structured(
             llm,
             NPCResponse,
             [system_msg] + guard_messages(messages[-3:]),
             state=state,
             key="dialogue",
-            prefix=f'**{npc_data["name"]}:** "',
             normalize="meta",
+            finalize=_stream_view,
+            min_words=8 if aberturas_recentes else 0,
         )
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
@@ -1327,9 +1347,7 @@ def npc_actor_node(state: GameState):
         varied_dialogue = vary_repeated_opening(
             dialogue,
             aberturas_recentes,
-            salt=(
-                f"{game_id}:{npc_id}:{int((state.get('world') or {}).get('turn_count', 0) or 0)}"
-            ),
+            salt=_vary_salt,
         )
         dialogue_transition = (
             varied_dialogue[: -len(dialogue)]

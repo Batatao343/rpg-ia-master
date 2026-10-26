@@ -2024,12 +2024,27 @@ def storyteller_node(state: GameState):
         # SPEC-223 R5: entrada do jogador delimitada como dado.
         # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
         # sem sink e o `with_structured_output(...).invoke` de sempre.
+        _open_salt = f"{state.get('game_id', '')}:{(world or {}).get('turn_count', 0)}:storyteller"
+        _gold_now = int((state.get("player") or {}).get("gold", 0) or 0)
+
+        def _stream_view(partial: str) -> str:
+            # Follow-up D1: as mesmas correcoes do texto final, em fluxo — saldo de ouro e
+            # abertura repetida — para o stream ser prefixo do final (ordem igual a de baixo).
+            return prose_guard.vary_repeated_opening(
+                prose_guard.reconcile_player_gold_claims(partial, _gold_now),
+                _aberturas,
+                salt=_open_salt,
+            )
+
         update = narrate_structured(
             llm,
             _story_schema_for_rumors(_rumors_mod),
             [sys] + guard_messages(messages[-3:]),
             state=state,
             stream=_stream_ok,
+            finalize=_stream_view,
+            hold_extra=72,  # o maior padrao de saldo de ouro fecha em ~60 caracteres
+            min_words=8 if _aberturas else 0,
         )
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
@@ -2131,7 +2146,7 @@ def storyteller_node(state: GameState):
         narrative_text = prose_guard.vary_repeated_opening(
             str(narrative_text),
             _aberturas,
-            salt=(f"{state.get('game_id', '')}:{(world or {}).get('turn_count', 0)}:storyteller"),
+            salt=_open_salt,
         )
 
         # SPEC-202 R11: narração mediada não revela segredo não revelado.

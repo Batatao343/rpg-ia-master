@@ -81,6 +81,18 @@ def reset() -> None:
         pass
 
 
+def replace_reason(shown: str, final: str) -> str:
+    """Por que o stream nao e prefixo do final: `start` (divergiu na abertura: abertura repetida,
+    rotulo, aspas), `tail` (divergiu depois: saldo de ouro, guard de conteudo), `shorter`
+    (o final e menor que o ja mostrado) ou `none` (final estende o mostrado)."""
+    if final.startswith(shown):
+        return "none"
+    common = len(os.path.commonprefix([shown, final]))
+    if common >= len(final):
+        return "shorter"
+    return "start" if common < min(len(shown), 40) else "tail"
+
+
 _RECEIPT = re.compile(r"[ \t]*\[RESULTADO\][^\r\n]*")
 
 
@@ -102,11 +114,21 @@ class StreamGuard:
         mapping: dict[str, str] | None = None,
         prefix: str = "",
         normalize: str = "player_facing",
+        finalize: Callable[[str], str] | None = None,
+        hold_extra: int = 0,
+        min_words: int = 0,
     ) -> None:
         # F-2: cada no normaliza como o seu texto final (`meta` = so `sanitize_meta_preamble`).
         self.normalize = normalize
         self.mapping = dict(mapping or {})
         self.hold = (max(len(k) for k in self.mapping) + 8) if self.mapping else 0
+        # SPEC-319 (follow-up D1): `finalize` aplica em fluxo as mesmas transformacoes do texto
+        # final (abertura repetida, saldo de ouro, aspas externas, rotulo do NPC) para o stream
+        # ser prefixo do final. `hold_extra` segura o fim para padroes que so fecham depois;
+        # `min_words` segura o inicio ate a abertura (6 palavras) estar completa.
+        self.finalize = finalize
+        self.hold = max(self.hold, hold_extra)
+        self.min_words = min_words
         self.prefix = prefix
         self.reset()
 
@@ -127,11 +149,14 @@ class StreamGuard:
         # Mesmas normalizacoes baratas do texto final (preambulo meta, marcadores do motor,
         # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
         text = sanitize(_RECEIPT.sub("", self.raw))
+        if not text:
+            return ""
+        text = self.finalize(text) if self.finalize else self.prefix + text
         if self.mapping:
             from services.faction_display import conceal_text
 
             text = conceal_text(text, self.mapping)
-        return self.prefix + text if text else ""
+        return text
 
     def _advance(self, *, final: bool) -> str:
         if self.broken:
@@ -142,6 +167,8 @@ class StreamGuard:
         else:
             if len(self.raw) < self.HOLD_CHARS and "\n" not in self.raw:
                 return ""  # segura o inicio: o preambulo meta ainda pode casar
+            if self.min_words and len(self.raw.split()) < self.min_words:
+                return ""  # a abertura repetida so e decidida com as 6 primeiras palavras
             limit = len(cleaned) - self.hold
             if limit <= len(self.sent):
                 return ""
@@ -197,6 +224,9 @@ def narrate_structured(
     prefix: str = "",
     stream: bool = True,
     normalize: str = "player_facing",
+    finalize: Callable[[str], str] | None = None,
+    hold_extra: int = 0,
+    min_words: int = 0,
 ):
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
@@ -205,7 +235,14 @@ def narrate_structured(
     streamer = getattr(llm, "stream_structured", None)
     if streamer is None or not active() or not stream:
         return llm.with_structured_output(schema).invoke(messages)
-    guard = StreamGuard(_conceal_map(state), prefix=prefix, normalize=normalize)
+    guard = StreamGuard(
+        _conceal_map(state),
+        prefix=prefix,
+        normalize=normalize,
+        finalize=finalize,
+        hold_extra=hold_extra,
+        min_words=min_words,
+    )
     reset()  # outro no narrador no mesmo turno: recomeca limpo
 
     def on_delta(text: str) -> None:
@@ -227,10 +264,13 @@ def narrate_structured(
     return result
 
 
-def narrate_text(llm: Any, messages: list, *, state: Any = None):
-    """`llm.invoke(messages)` com tokens ao vivo quando ha sink (narracao plain de combate/loot)."""
+def narrate_text(llm: Any, messages: list, *, state: Any = None, stream: bool = True):
+    """`llm.invoke(messages)` com tokens ao vivo quando ha sink (narracao plain de combate/loot).
+
+    `stream=False`: o chamador sabe que o texto final sera substituido por um guard de
+    conteudo (ex.: loot canonico), entao nada vai ao vivo."""
     streamer = getattr(llm, "stream_text", None)
-    if streamer is None or not active():
+    if streamer is None or not active() or not stream:
         return llm.invoke(messages)
     guard = StreamGuard(_conceal_map(state), normalize="meta")
     reset()

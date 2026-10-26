@@ -185,7 +185,9 @@ def vary_repeated_opening(text: str, recent_openings: list[str], *, salt: str = 
     recent = [str(item or "").strip() for item in recent_openings if str(item or "").strip()]
     if not value or not any(repeats(value, item) for item in recent):
         return value
-    digest = hashlib.sha256(f"{salt}|{value}".encode()).digest()
+    # SPEC-319: o digest so olha a abertura (nao o texto inteiro), para o stream escolher a
+    # MESMA transicao que o texto final assim que as primeiras palavras chegam.
+    digest = hashlib.sha256(f"{salt}|{opening(value)}".encode()).digest()
     start = int.from_bytes(digest[:2], "big") % len(_NEUTRAL_TRANSITIONS)
     for offset in range(len(_NEUTRAL_TRANSITIONS)):
         prefix = _NEUTRAL_TRANSITIONS[(start + offset) % len(_NEUTRAL_TRANSITIONS)]

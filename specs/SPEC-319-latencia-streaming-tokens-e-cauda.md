@@ -214,3 +214,17 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   combate/loot usam só `sanitize_meta_preamble`; storyteller mantém `sanitize_player_facing`.
 
 - 26/10 — shadow no staging: `would_replace` 2/15 (13 %) no round 1 e 5/11 (45 %) no round 2, ttft_shadow p50 ~2,6 s. **Acima da meta D1 (< 5 %) → `RPG_TOKEN_STREAM` segue `shadow`**; follow-up: investigar a causa das trocas pelo `reason` de `sse.token_replace`/would_replace (prefixo anti-repetição, guard de prosa) antes de ligar.
+- **2026-10-26 · follow-up D1 (would_replace 13 %/45 % no shadow).** Causas (replay de 34 narrações do
+  storyteller + 8 de NPC, `tests/test_spec319_shadow_replay.py`; antes do fix 13/34 do storyteller divergiam):
+  (1) **abertura repetida** (`vary_repeated_opening`) só no final: 10/34 (principal causa; o NPC põe a
+  transição ANTES da aspa, então o prefixo `**Nome:** "` sempre divergia nesses turnos);
+  (2) **saldo de ouro** (`reconcile_player_gold_claims`) só no final: 3/34 (+ risco de padrão partido entre
+  deltas); (3) NPC com aspas externas no `dialogue`. Não achados no replay (sem texto nos logs de staging):
+  `_NEGATIVE_REWARD/_NEGATIVE_ITEM` em turno com ganho e `species_drift`/resumo canônico no combate (guards de
+  conteúdo, mantidos), e loot com `loot_obtido`, cuja prosa livre é sempre descartada (`narrate_text(stream=False)`).
+  Correção sem enfraquecer guard: `StreamGuard(finalize=…, hold_extra, min_words)` aplica em fluxo as MESMAS
+  funções do final (ouro → abertura; NPC: aspas + transição + rótulo), segura o início até 8 palavras (a
+  abertura de 6 palavras decide a transição) e 72 chars no fim. `vary_repeated_opening` agora faz o digest só
+  sobre a abertura (6 palavras), para stream e final escolherem a mesma transição. Após o fix: 0/34 e 0/8.
+  Telemetria: `sse.token_stream_shadow` ganhou `reason` (`none|start|tail|shorter`, `replace_reason`).
+  Critério para ligar: confirmar `would_replace` < 5 % no staging com o novo `reason`.

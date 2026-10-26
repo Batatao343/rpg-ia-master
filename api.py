@@ -6579,6 +6579,7 @@ def _stream_turn_events(
         yield _sse("narrative", {"chunk": "", "done": True})
 
     # SPEC-319: tokens reais do narrador. `on` os repassa; `shadow` so mede o TTFT.
+    from services.narrative_sink import replace_reason as _replace_reason
     from services.narrative_sink import token_stream_mode
 
     token_mode = token_stream_mode()
@@ -6602,7 +6603,7 @@ def _stream_turn_events(
             # P2-4: motivo do replace (a §6 separa formatacao/abertura de guard de conteudo)
             _sse_log(
                 "token_replace",
-                reason="start" if common < min(len(shown), 40) else "tail",
+                reason=_replace_reason(shown, final_text),
                 shown_len=len(shown),
                 final_len=len(final_text),
                 common_prefix_len=common,
@@ -6695,6 +6696,8 @@ def _stream_turn_events(
                     # D1 (revisao P2-5): mesma regra do `on` — so conta como replace se o final
                     # nao ESTENDE o que o jogador ja teria lido.
                     would_replace=not narrative.startswith(tok["shadow"]),
+                    # follow-up D1: motivo (none|start|tail|shorter) para o staging confirmar
+                    reason=_replace_reason(tok["shadow"], narrative),
                 )
             if emitted_text is None and tok["text"]:
                 # tokens entregues e sem entrega antecipada (316 off/shadow): fecha aqui

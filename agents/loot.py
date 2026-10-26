@@ -183,6 +183,8 @@ def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = 
                 SystemMessage(content=instruction),
                 HumanMessage(content=context),
             ],
+            # loot ja aplicado: `_validated_narrative` descarta a prosa livre inteira
+            stream=not (canonical_summary and canonical_summary.get("loot_obtido")),
         )
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)
