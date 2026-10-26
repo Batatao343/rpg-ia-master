@@ -1,5 +1,5 @@
 {
-  "commit_sha": "0234448101867a70eabc5b2eafc7670655edb6ff",
+  "commit_sha": "01fa293d6f2cc64f5379772d3190eaadb3fcd8b0",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -62772,7 +62772,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 77
+        "line": 83
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.abandon_mode",
@@ -62783,7 +62783,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 52
+        "line": 58
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.active",
@@ -62794,7 +62794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 69
+        "line": 75
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.is_resistance_entry",
@@ -62805,7 +62805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 45
+        "line": 50
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.mode",
@@ -62816,7 +62816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 60
+        "line": 66
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.resistance_label",
@@ -62827,7 +62827,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 56
+        "line": 62
       },
       "source": "module:services.combat_flags",
       "target": "symbol:services.combat_flags.shadow",
@@ -177381,7 +177381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 41
+        "line": 44
       },
       "source": "module:tests.test_spec325_flags",
       "target": "symbol:tests.test_spec325_flags.test_all_capability_flags_in_staging_allowlists",
@@ -177403,7 +177403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 14
+        "line": 17
       },
       "source": "module:tests.test_spec325_flags",
       "target": "symbol:tests.test_spec325_flags.test_default_is_shadow",
@@ -177414,7 +177414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 21
+        "line": 24
       },
       "source": "module:tests.test_spec325_flags",
       "target": "symbol:tests.test_spec325_flags.test_invalid_falls_back_to_shadow",
@@ -177425,7 +177425,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 32
+        "line": 53
+      },
+      "source": "module:tests.test_spec325_flags",
+      "target": "symbol:tests.test_spec325_flags.test_reforcos_abandonados_pelo_dono_default_off",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_flags.py",
+        "line": 35
       },
       "source": "module:tests.test_spec325_flags",
       "target": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
@@ -177436,7 +177447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 27
+        "line": 30
       },
       "source": "module:tests.test_spec325_flags",
       "target": "symbol:tests.test_spec325_flags.test_valid_values",
@@ -256702,7 +256713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 82
+        "line": 88
       },
       "source": "symbol:services.combat_flags.abandon_mode",
       "target": "symbol:services.combat_flags.mode",
@@ -256713,7 +256724,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 53
+        "line": 59
       },
       "source": "symbol:services.combat_flags.active",
       "target": "symbol:services.combat_flags.mode",
@@ -256724,7 +256735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/combat_flags.py",
-        "line": 57
+        "line": 63
       },
       "source": "symbol:services.combat_flags.shadow",
       "target": "symbol:services.combat_flags.mode",
@@ -506842,7 +506853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 17
+        "line": 20
       },
       "source": "symbol:tests.test_spec325_flags.test_default_is_shadow",
       "target": "symbol:services.combat_flags.active",
@@ -506853,7 +506864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 16
+        "line": 19
       },
       "source": "symbol:tests.test_spec325_flags.test_default_is_shadow",
       "target": "symbol:services.combat_flags.mode",
@@ -506864,7 +506875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 17
+        "line": 20
       },
       "source": "symbol:tests.test_spec325_flags.test_default_is_shadow",
       "target": "symbol:services.combat_flags.shadow",
@@ -506875,7 +506886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 23
+        "line": 26
       },
       "source": "symbol:tests.test_spec325_flags.test_invalid_falls_back_to_shadow",
       "target": "symbol:services.combat_flags.mode",
@@ -506886,10 +506897,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 36
+        "line": 39
       },
       "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
       "target": "symbol:services.combat_flags.is_resistance_entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_flags.py",
+        "line": 40
+      },
+      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
+      "target": "symbol:services.combat_flags.is_resistance_entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_flags.py",
+        "line": 41
+      },
+      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
+      "target": "symbol:services.combat_flags.is_resistance_entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_flags.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
+      "target": "symbol:services.combat_flags.resistance_label",
       "type": "calls"
     },
     {
@@ -506900,7 +506944,7 @@
         "line": 37
       },
       "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
-      "target": "symbol:services.combat_flags.is_resistance_entry",
+      "target": "symbol:services.combat_flags.resistance_label",
       "type": "calls"
     },
     {
@@ -506911,17 +506955,6 @@
         "line": 38
       },
       "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
-      "target": "symbol:services.combat_flags.is_resistance_entry",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_flags.py",
-        "line": 33
-      },
-      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
       "target": "symbol:services.combat_flags.resistance_label",
       "type": "calls"
     },
@@ -506930,29 +506963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_flags.py",
-        "line": 34
-      },
-      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
-      "target": "symbol:services.combat_flags.resistance_label",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_flags.py",
-        "line": 35
-      },
-      "source": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
-      "target": "symbol:services.combat_flags.resistance_label",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_flags.py",
-        "line": 29
+        "line": 32
       },
       "source": "symbol:tests.test_spec325_flags.test_valid_values",
       "target": "symbol:services.combat_flags.mode",
@@ -564663,42 +564674,42 @@
     {
       "id": "symbol:services.combat_flags.abandon_mode",
       "kind": "function",
-      "line": 77,
+      "line": 83,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.abandon_mode"
     },
     {
       "id": "symbol:services.combat_flags.active",
       "kind": "function",
-      "line": 52,
+      "line": 58,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.active"
     },
     {
       "id": "symbol:services.combat_flags.is_resistance_entry",
       "kind": "function",
-      "line": 69,
+      "line": 75,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.is_resistance_entry"
     },
     {
       "id": "symbol:services.combat_flags.mode",
       "kind": "function",
-      "line": 45,
+      "line": 50,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.mode"
     },
     {
       "id": "symbol:services.combat_flags.resistance_label",
       "kind": "function",
-      "line": 60,
+      "line": 66,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.resistance_label"
     },
     {
       "id": "symbol:services.combat_flags.shadow",
       "kind": "function",
-      "line": 56,
+      "line": 62,
       "path": "services/combat_flags.py",
       "qualified_name": "services.combat_flags.shadow"
     },
@@ -635678,7 +635689,7 @@
     {
       "id": "symbol:tests.test_spec325_flags.test_all_capability_flags_in_staging_allowlists",
       "kind": "test",
-      "line": 41,
+      "line": 44,
       "path": "tests/test_spec325_flags.py",
       "qualified_name": "tests.test_spec325_flags.test_all_capability_flags_in_staging_allowlists"
     },
@@ -635692,28 +635703,35 @@
     {
       "id": "symbol:tests.test_spec325_flags.test_default_is_shadow",
       "kind": "test",
-      "line": 14,
+      "line": 17,
       "path": "tests/test_spec325_flags.py",
       "qualified_name": "tests.test_spec325_flags.test_default_is_shadow"
     },
     {
       "id": "symbol:tests.test_spec325_flags.test_invalid_falls_back_to_shadow",
       "kind": "test",
-      "line": 21,
+      "line": 24,
       "path": "tests/test_spec325_flags.py",
       "qualified_name": "tests.test_spec325_flags.test_invalid_falls_back_to_shadow"
     },
     {
+      "id": "symbol:tests.test_spec325_flags.test_reforcos_abandonados_pelo_dono_default_off",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/test_spec325_flags.py",
+      "qualified_name": "tests.test_spec325_flags.test_reforcos_abandonados_pelo_dono_default_off"
+    },
+    {
       "id": "symbol:tests.test_spec325_flags.test_resistance_label_pt_br",
       "kind": "test",
-      "line": 32,
+      "line": 35,
       "path": "tests/test_spec325_flags.py",
       "qualified_name": "tests.test_spec325_flags.test_resistance_label_pt_br"
     },
     {
       "id": "symbol:tests.test_spec325_flags.test_valid_values",
       "kind": "test",
-      "line": 27,
+      "line": 30,
       "path": "tests/test_spec325_flags.py",
       "qualified_name": "tests.test_spec325_flags.test_valid_values"
     },
@@ -641494,5 +641512,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:946211a4d3d8da22f50b80e19de3e5788b3804a72eb0cde291a8c680d356b5a3"
+  "source_tree_hash": "sha256:8ec4d11752be868b6591fc01947092fb83f9cb4d0c91b68390ec66c50cac97b3"
 }
