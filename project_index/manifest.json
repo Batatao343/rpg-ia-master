@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b58588ccb26fa42f9434c9eeaa9217353e2671d8",
+  "commit_sha": "abad41e4fd5043519adc5c7ab003a7d1ed95ba26",
   "edge_counts": {
-    "calls": 27291,
-    "contains": 942,
-    "defines": 13703,
-    "imports": 2264,
-    "likely_test_for": 1576,
+    "calls": 27561,
+    "contains": 949,
+    "defines": 13836,
+    "imports": 2279,
+    "likely_test_for": 1591,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:23f735ad8f31a4027e6c7cfe0e85624f61374101058b4ac76fc89d1b6a163181",
+  "graph_hash": "sha256:51e2c013e2b334c7ebc457b8b5f97b5ff5f3f3ff8b10423a7b84e535578f6c55",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -387,6 +387,7 @@
     "services/memory_retry.py",
     "services/memory_summary.py",
     "services/narrative_evidence.py",
+    "services/narrative_sink.py",
     "services/npc_knowledge.py",
     "services/npc_layers.py",
     "services/npc_perils.py",
@@ -395,6 +396,7 @@
     "services/npc_world.py",
     "services/objectives.py",
     "services/operation_recovery.py",
+    "services/partial_narrative.py",
     "services/perceived_world.py",
     "services/planner_context.py",
     "services/player_knowledge.py",
@@ -465,6 +467,7 @@
     "tests/spec312_helpers.py",
     "tests/spec313_helpers.py",
     "tests/spec315_helpers.py",
+    "tests/spec319_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -669,6 +672,7 @@
     "tests/test_latency_timeline.py",
     "tests/test_lazy_imports.py",
     "tests/test_letalidade_early.py",
+    "tests/test_llm_hedge.py",
     "tests/test_llm_logging.py",
     "tests/test_local_atomic_retry.py",
     "tests/test_local_pricing_fixture.py",
@@ -713,6 +717,7 @@
     "tests/test_operation_replay_boundaries.py",
     "tests/test_ops_scripts_dsn_env.py",
     "tests/test_owner_tables_inventory.py",
+    "tests/test_partial_narrative.py",
     "tests/test_payment_logging.py",
     "tests/test_perfil_normal_invariantes.py",
     "tests/test_persistence_logs.py",
@@ -770,6 +775,7 @@
     "tests/test_runtime_profiles.py",
     "tests/test_runtime_role_local.py",
     "tests/test_s3_blob.py",
+    "tests/test_schema_order.py",
     "tests/test_session_boundary_authfail.py",
     "tests/test_session_hardening.py",
     "tests/test_session_hardening_local.py",
@@ -957,6 +963,7 @@
     "tests/test_speech_finance_local.py",
     "tests/test_speech_to_text.py",
     "tests/test_storage_security_local.py",
+    "tests/test_stream_structured.py",
     "tests/test_streaming.py",
     "tests/test_stripe_checkout.py",
     "tests/test_stripe_checkout_api.py",
@@ -1155,14 +1162,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 923,
+    "class": 934,
     "endpoint": 64,
-    "file": 1101,
-    "function": 4353,
-    "method": 798,
-    "module": 942,
-    "test": 7628
+    "file": 1108,
+    "function": 4369,
+    "method": 831,
+    "module": 949,
+    "test": 7701
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a2b111d65274ee946c587c4374be8f527cf6e8cf7b43a4f307cce234906fe6bc"
+  "source_tree_hash": "sha256:cfcebe05b2ab68408c6c6ef4c0797adaafdabb66e68ae681cf2702e35faea03c"
 }
