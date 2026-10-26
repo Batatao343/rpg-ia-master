@@ -29,14 +29,27 @@ export function typewriterStep(text: string, idx: number, charsPerTick: number =
   return { idx: next, done: next >= text.length };
 }
 
-export interface TypewriterOpts { maxMs?: number; effects?: boolean }
+/**
+ * SPEC-319 R7: o que fazer quando o texto muda. `follow` = tokens reais chegando (a entrada vem
+ * de deltas do servidor): o cursor ACOMPANHA o recebido, sem atraso artificial. `clear` = `reset`
+ * do servidor (fallback de provider no meio do stream): descarta o parcial. `jump` = `replace`
+ * (texto final não é extensão do exibido). `animate` = pseudo-streaming da SPEC-316.
+ */
+export type TypewriterPlan = "clear" | "jump" | "follow" | "animate";
+export function typewriterPlan(prev: string, text: string, follow: boolean): TypewriterPlan {
+  if (!text) return "clear";
+  if (prev && !text.startsWith(prev)) return "jump";
+  return follow ? "follow" : "animate";
+}
+
+export interface TypewriterOpts { maxMs?: number; effects?: boolean; follow?: boolean }
 
 /**
  * Hook para revelar texto progressivamente (efeito typewriter).
  * `onDone` dispara (uma vez por revelação) quando a animação termina ou é pulada via `reveal()`.
  */
 export function useTypewriter(text: string, enabled: boolean = true, onDone?: () => void, opts: TypewriterOpts = {}) {
-  const { maxMs = TYPEWRITER_MAX_MS, effects = true } = opts;
+  const { maxMs = TYPEWRITER_MAX_MS, effects = true, follow = false } = opts;
   const [displayedText, setDisplayedText] = useState(() => typewriterInitial(text, enabled, effects));
   const [revealing, setRevealing] = useState(false);
   // Texto já exibido, em ref: o React não garante rodar updaters de forma síncrona (P2-1).
@@ -59,6 +72,14 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
     // spec streaming-turno-sse: texto pode CRESCER (chunks SSE) — continua de
     // onde parou em vez de recomeçar do zero a cada chunk.
     const prev = shownRef.current;
+    if (typewriterPlan(prev, text, follow) === "follow") {
+      // SPEC-319 R7: tokens reais — mostra o que chegou agora; o fim (`done`) apenas desliga `enabled`.
+      shownRef.current = text;
+      setDisplayedText(text);
+      setRevealing(false);
+      revealRef.current = null;
+      return;
+    }
     if (prev && !text.startsWith(prev)) {
       // P2-9: `replace` (texto final diferente) não é prefixo do já exibido: revela direto, sem redigitar.
       shownRef.current = text;
@@ -92,7 +113,7 @@ export function useTypewriter(text: string, enabled: boolean = true, onDone?: ()
     setRevealing(true);
 
     return () => { finished = true; clearInterval(interval); revealRef.current = null; };
-  }, [text, enabled, effects, maxMs]);
+  }, [text, enabled, effects, maxMs, follow]);
 
   /** Revela tudo agora (toque/clique/Esc/Espaço). */
   const reveal = useCallback(() => revealRef.current?.(), []);

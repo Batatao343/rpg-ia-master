@@ -2011,10 +2011,17 @@ def storyteller_node(state: GameState):
     companion_narrated = False  # SPEC-300 R13: o ack só vale no caminho feliz
     try:
         from services import rumors as _rumors_mod
+        from services.narrative_sink import narrate_structured
 
-        story_engine = llm.with_structured_output(_story_schema_for_rumors(_rumors_mod))
         # SPEC-223 R5: entrada do jogador delimitada como dado.
-        update = story_engine.invoke([sys] + guard_messages(messages[-3:]))
+        # SPEC-319: com sink ligado (so no stream SSE) `narrative` sai token a token;
+        # sem sink e o `with_structured_output(...).invoke` de sempre.
+        update = narrate_structured(
+            llm,
+            _story_schema_for_rumors(_rumors_mod),
+            [sys] + guard_messages(messages[-3:]),
+            state=state,
+        )
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.
         companion_narrated = isinstance(update, StoryUpdate)

@@ -97,6 +97,10 @@ f791fec9f763b8a8fa40a8299f9c4ab6af9bd22a4fd4a02ccf61a4cda3d18e35  summary-typica
 `pseudo_streaming=true` ⇒ **TTFT = TTFMC (pseudo_streaming)**; TTLT − TTFMC ≈ 0 (blocos de 80 chars são
 drenados de uma vez, depois do archivist).
 
+> **SPEC-319:** com `RPG_TOKEN_STREAM=on` e provider OpenAI-compat, o 1º delta REAL de token marca
+> `first_token` (`rpg_turn_first_token_seconds`, `first_token_server_ms`) e `pseudo_streaming=false`:
+> `TTFT ≡ TTFMC` deixa de valer nesses turnos (TTFT = `first_token`; TTFMC = 1º delta não vazio).
+
 | Perfil | TTFMC p50 | TTFMC p95 | router p50/p95 | narrator p50/p95 | archivist p50/p95 | fallbacks |
 |---|---|---|---|---|---|---|
 | `typical` (330 turnos) | 6417 | 7964 | 289 / 355 | 2658 / 5996 | 3589 / 4709 | 0 |

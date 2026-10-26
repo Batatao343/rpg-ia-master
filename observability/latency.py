@@ -249,7 +249,9 @@ class TurnTimeline:
     def fields(self) -> dict[str, Any]:
         return {
             "transport": self.transport,
-            "pseudo_streaming": PSEUDO_STREAMING,
+            # SPEC-319 R6: com delta de token real (marca `first_token`) deixa de ser pseudo.
+            "pseudo_streaming": PSEUDO_STREAMING and self.mark_ms("first_token") is None,
+            "first_token_server_ms": self.mark_ms("first_token"),
             "ack_server_ms": self.mark_ms("accepted"),
             "ttfmc_server_ms": self.mark_ms("ttfmc"),
             "ttlt_server_ms": self.mark_ms("ttlt"),

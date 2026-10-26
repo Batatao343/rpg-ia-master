@@ -56,3 +56,15 @@ test('a growing text never leaves the cursor more than ~1 s behind', () => {
   const ticks = Math.ceil(900 / per);
   assert.ok(ticks * 30 <= lag + 30);
 });
+
+test('SPEC-319 R7: tokens reais fazem o cursor acompanhar; reset limpa; replace salta', () => {
+  assert.equal(hook.typewriterPlan('Olá, vi', 'Olá, viajante', true), 'follow');
+  assert.equal(hook.typewriterPlan('', 'Olá', true), 'follow');
+  // pseudo-streaming da SPEC-316 mantém a revelação animada
+  assert.equal(hook.typewriterPlan('Olá, vi', 'Olá, viajante', false), 'animate');
+  // `reset` do servidor (fallback de provider): texto vazio descarta o parcial
+  assert.equal(hook.typewriterPlan('Primeira tentativa', '', true), 'clear');
+  // `replace`: o texto final não estende o exibido -> salta sem redigitar
+  assert.equal(hook.typewriterPlan('Texto antecipado', 'Outro texto final', true), 'jump');
+  assert.equal(hook.typewriterPlan('Texto antecipado', 'Outro texto final', false), 'jump');
+});

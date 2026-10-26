@@ -477,7 +477,14 @@ export function App() {
     setLog((prev) => prev.map((e) => (e.id === id ? { ...e, text } : e)));
   }
 
-  function appendChunk(chunk: string, done: boolean) {
+  /** SPEC-319: o servidor pediu para descartar o parcial (fallback de provider): recomeça a entrada. */
+  function resetStreamText() {
+    const id = streamEntryId.current;
+    if (id === null) return;
+    setLog((prev) => prev.map((e) => (e.id === id ? { ...e, text: "" } : e)));
+  }
+
+  function appendChunk(chunk: string, done: boolean, live: boolean = false) {
     if (done) return;
     setTurn(t => (t.gotChunk ? t : { ...t, gotChunk: true }));
     const id = ensureStreamId();
@@ -485,10 +492,11 @@ export function App() {
       const idx = prev.findIndex((e) => e.id === id);
       if (idx < 0) {
         return [...prev, { id, text: chunk, role: "narrator" as const,
-          type: "STORY" as const, streaming: true, visual: pendingVisual.current?.cue }];
+          type: "STORY" as const, streaming: true, live, visual: pendingVisual.current?.cue }];
       }
       const entry = prev[idx];
-      return [...prev.slice(0, idx), { ...entry, text: entry.text + chunk }, ...prev.slice(idx + 1)];
+      return [...prev.slice(0, idx),
+        { ...entry, text: entry.text + chunk, live: entry.live || live }, ...prev.slice(idx + 1)];
     });
   }
 
@@ -580,14 +588,15 @@ export function App() {
             if (active()) setTurn(t => ({ ...t, ledger: addPhase(t.ledger, ROUTE_TEXTS[route] ?? PHASE_TEXTS.storyteller) }));
           },
           onVisual: visual => { if (active()) attachStreamVisual(visual); },
-          onChunk: (chunk, done) => {
+          onChunk: (chunk, done, live) => {
             if (active()) {
               if (!done) hadChunks = true;
               // SPEC-316: `done` = narração entregue, turno ainda NÃO salvo → selo "registrando…" até o `state`.
               else if (hadChunks) setTurn(t => ({ ...t, stage: nextStage(t.stage, "narrative-done") }));
-              appendChunk(chunk, done);
+              appendChunk(chunk, done, live);
             }
           },
+          onReset: () => { if (active()) resetStreamText(); },
           onReplace: text => { if (active()) replaceStreamText(text); },
         }, requestOptions);
         clearOwnPending();

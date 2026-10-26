@@ -178,6 +178,16 @@ class LatencyInjectingLLM:
     def stream(self, messages, *args, **kwargs):
         yield self.invoke(messages, *args, **kwargs)
 
+    # SPEC-319: o narrador usa o caminho de tokens quando ha sink; cobra a MESMA latencia
+    # injetada (1 chamada) para o baseline offline nao perder a fase do narrador.
+    def stream_structured(self, messages, schema, **kwargs):
+        self._ctx.run_call(self._tier, True)
+        return self._inner.stream_structured(messages, schema, **kwargs)
+
+    def stream_text(self, messages, **kwargs):
+        self._ctx.run_call(self._tier, False)
+        return self._inner.stream_text(messages, **kwargs)
+
     def __getattr__(self, name: str):
         return getattr(self._inner, name)
 

@@ -565,3 +565,148 @@ def test_client_disconnect_after_narrative_done_still_saves(client, monkeypatch)
             break
         time.sleep(0.1)
     assert after != before
+
+
+# ---------------------------------------------------------------------------
+# SPEC-319 — tokens reais do narrador (RPG_TOKEN_STREAM)
+# ---------------------------------------------------------------------------
+
+
+def _token_run(client, gid, mode, snapshot, monkeypatch, early="off"):
+    monkeypatch.setenv("RPG_TOKEN_STREAM", mode)
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", early)
+    path = persistence.save_path(gid)
+    with open(path, "w", encoding="utf-8", newline="") as fh:
+        fh.write(snapshot)
+    random.seed(99)
+    events = _stream(client, gid, action_id="22222222-2222-4222-8222-222222222222")
+    with open(path, encoding="utf-8", newline="") as fh:
+        return events, fh.read()
+
+
+def test_token_deltas_arrive_before_node_phase(client, monkeypatch):
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    names = _names(events)
+    live = [i for i, (e, d) in enumerate(events) if e == "narrative" and d.get("live")]
+    assert len(live) > 1
+    # os deltas saem durante o no narrador: antes da fase `storyteller` ser anunciada
+    assert live[0] < _phase_index(events, "storyteller")
+    narr = [d for e, d in events if e == "narrative"]
+    assert narr[-1]["done"] is True and names[-1] == "state"
+    text = "".join(d["chunk"] for d in narr if not d.get("replace") and not d.get("reset"))
+    replaced = [d for d in narr if d.get("replace")]
+    final = events[-1][1]["message"]
+    assert (replaced[-1]["chunk"] if replaced else text) == final
+
+
+def test_replace_when_guard_changes_streamed_text(client, monkeypatch):
+    from services import prose_guard
+
+    real = prose_guard.sanitize_player_facing
+    monkeypatch.setattr(
+        prose_guard, "sanitize_player_facing", lambda t, *a, **k: "Guardado: " + real(t, *a, **k)
+    )
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    narr = [d for e, d in events if e == "narrative"]
+    assert any(d.get("live") for d in narr)
+    replace = [d for d in narr if d.get("replace")]
+    assert len(replace) == 1 and replace[0]["done"] is True
+    assert replace[0]["chunk"] == events[-1][1]["message"]
+    assert "Guardado: " in replace[0]["chunk"]
+
+
+def test_reset_event_clears_partial(client, monkeypatch):
+    from services import narrative_sink as ns
+
+    real = ns.narrate_structured
+
+    def _with_garbage(llm, schema, messages, **kw):
+        ns.emit("parcial que sera descartado. ")
+        ns.reset()
+        return real(llm, schema, messages, **kw)
+
+    monkeypatch.setattr(ns, "narrate_structured", _with_garbage)
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    narr = [d for e, d in events if e == "narrative"]
+    idx = next(i for i, d in enumerate(narr) if d.get("reset"))
+    assert idx > 0 and narr[idx]["chunk"] == ""
+    after = "".join(d["chunk"] for d in narr[idx + 1 :] if not d.get("replace"))
+    final = events[-1][1]["message"]
+    replaced = [d for d in narr[idx + 1 :] if d.get("replace")]
+    assert "descartado" not in (replaced[-1]["chunk"] if replaced else after)
+    assert (replaced[-1]["chunk"] if replaced else after) == final
+
+
+def test_shadow_logs_ttft_without_deltas(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "shadow")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    logs = []
+    real = api._sse_log
+    monkeypatch.setattr(
+        api, "_sse_log", lambda event, **kw: (logs.append((event, kw)), real(event, **kw))
+    )
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    assert not any(d.get("live") or d.get("reset") for e, d in events if e == "narrative")
+    shadow = [kw for ev, kw in logs if ev == "token_stream_shadow"]
+    assert len(shadow) == 1
+    assert shadow[0]["ttft_shadow_ms"] is not None and shadow[0]["ttft_shadow_ms"] >= 0
+    assert isinstance(shadow[0]["identical_to_final"], bool)  # anti-repeticao pode prefixar
+
+
+def test_off_byte_identical(client, monkeypatch):
+    import api
+
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "off")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "off")
+    logs = []
+    monkeypatch.setattr(api, "_sse_log", lambda event, **kw: logs.append(event))
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    names = _names(events)
+    assert names[-1] == "state" and names[-2] == "narrative"
+    assert names.index("visual") < names.index("narrative")
+    assert "token_stream_shadow" not in logs
+    assert not any(d.get("live") for e, d in events if e == "narrative")
+
+
+def test_final_state_identical_across_token_modes(client, monkeypatch):
+    gid = _new_game(client)
+    with open(persistence.save_path(gid), encoding="utf-8", newline="") as fh:
+        snapshot = fh.read()
+    runs = {m: _token_run(client, gid, m, snapshot, monkeypatch) for m in ("off", "shadow", "on")}
+    base_state = next(d for e, d in runs["off"][0] if e == "state")
+    base_save = _scrub_timings(json.loads(runs["off"][1]))
+    for mode in ("shadow", "on"):
+        events, save = runs[mode]
+        assert next(d for e, d in events if e == "state") == base_state
+        assert _scrub_timings(json.loads(save)) == base_save
+    assert _names(runs["shadow"][0]) == _names(runs["off"][0])
+
+
+def test_tokens_plus_early_narrative_closes_once(client, monkeypatch):
+    monkeypatch.setenv("RPG_TOKEN_STREAM", "on")
+    monkeypatch.setenv("RPG_EARLY_NARRATIVE", "on")
+    gid = _new_game(client)
+    events = _stream(client, gid)
+    narr = [d for e, d in events if e == "narrative"]
+    assert narr[-1]["done"] is True
+    first_done = next(i for i, d in enumerate(narr) if d.get("done"))
+    assert first_done >= len(narr) - 2  # no maximo um replace depois do done
+    names = _names(events)
+    assert names.index("visual") > max(i for i, n in enumerate(names) if n == "narrative")
+    final = events[-1][1]["message"]
+    text = "".join(d["chunk"] for d in narr if not d.get("replace") and not d.get("reset"))
+    replaced = [d for d in narr if d.get("replace")]
+    assert (replaced[-1]["chunk"] if replaced else text) == final

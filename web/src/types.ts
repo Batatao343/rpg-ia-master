@@ -866,6 +866,7 @@ export interface LogEntry {
   type: MessageType;
   speaker?: Speaker | null;  // SPEC-202: quem respondeu (rótulo passivo)
   streaming?: boolean;  // true enquanto texto está sendo revelado (typewriter)
+  live?: boolean;  // SPEC-319: texto veio de deltas de token reais (cursor acompanha, sem atraso artificial)
   visual?: VisualCue | null;
   onTypewriterDone?: () => void;  // fim real da animação (SPEC-235 R7)
   /** SPEC-320 R11: abre capítulo (1ª narração da sessão / 1ª após trocar de local) → capitular. */

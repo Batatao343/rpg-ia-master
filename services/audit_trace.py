@@ -258,7 +258,7 @@ def turn_errors(
     attempts = [a for a in (llm_attempts or []) if isinstance(a, Mapping)]
     for index, attempt in enumerate(attempts):
         outcome = str(attempt.get("outcome") or "")
-        if outcome == "success":
+        if outcome in {"success", "hedge_lost"}:  # SPEC-319: hedge perdido nao e erro do turno
             continue
         tier = str(attempt.get("tier") or "")
         later = [a for a in attempts[index + 1 :] if str(a.get("tier") or "") == tier]

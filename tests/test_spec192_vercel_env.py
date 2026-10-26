@@ -291,3 +291,16 @@ def test_spec318_latency_flags_are_allowlisted_and_not_dropped():
 def test_spec318_boolean_flags_reject_shadow(name):
     with pytest.raises(ValueError):
         ve.build_env(FILES, world_flags={name: "shadow"})
+
+
+def test_spec319_token_stream_and_hedge_flags_are_allowlisted():
+    env, _ = ve.build_env(FILES, world_flags={"RPG_TOKEN_STREAM": "on", "RPG_LLM_HEDGE_MS": "6000"})
+    assert env["RPG_TOKEN_STREAM"] == "on" and env["RPG_LLM_HEDGE_MS"] == "6000"
+    for name in ("RPG_TOKEN_STREAM", "RPG_LLM_HEDGE_MS"):
+        assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+    plain, _ = ve.build_env(FILES)
+    assert "RPG_TOKEN_STREAM" in ve.stale_names(plain)  # ausente => o script apaga a antiga
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={"RPG_LLM_HEDGE_MS": "123"})
+    with pytest.raises(ValueError):
+        ve.build_env(FILES, world_flags={"RPG_TOKEN_STREAM": "maybe"})

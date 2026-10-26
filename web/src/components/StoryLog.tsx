@@ -121,7 +121,7 @@ function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReve
   const html = useMemo(() => mdLite(entry.text), [entry.text]);
   const plain = useMemo(() => htmlToPlain(html), [html]);
   const effects = useEffectsEnabled();
-  const { displayedText, reveal, revealing } = useTypewriter(plain, entry.streaming, entry.onTypewriterDone, { effects });
+  const { displayedText, reveal, revealing } = useTypewriter(plain, entry.streaming, entry.onTypewriterDone, { effects, follow: entry.live === true });
   useEffect(() => {
     registerReveal(entry.id, revealing ? reveal : null);
     return () => registerReveal(entry.id, null);

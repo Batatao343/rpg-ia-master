@@ -5770,6 +5770,18 @@ def _run_turn_collected(
             if early_event is not None:
                 progress(("early_narrative", early_event))
 
+    # SPEC-319: tokens do narrador so no stream SSE (POST/CLI/playtest seguem no invoke).
+    # `shadow` tambem streama (mede o TTFT), mas o SSE descarta os deltas.
+    from services import narrative_sink as _nsink
+
+    sink_token = None
+    if progress is not None and _nsink.token_stream_mode() != "off":
+
+        def _token_sink(kind: str, text: str) -> None:
+            progress(("narrative_delta" if kind == "delta" else "narrative_reset", {"text": text}))
+
+        sink_token = _nsink.bind(_token_sink, lambda: early_state["acc"])
+
     try:
         previous_state = deepcopy(state)
         from services.turn_execution import execute_graph
@@ -5905,6 +5917,8 @@ def _run_turn_collected(
         _log_event("api", "turn_failed", level="error", error=type(e).__name__, stack=safe_stack(e))
         raise HTTPException(status_code=500, detail="Erro interno ao processar o turno.")
     finally:
+        if sink_token is not None:
+            _nsink.unbind(sink_token)
         end_fallbacks(fallback_token)
         _lat.unbind(timeline_token)
         _llm_turn_events.reset(acc_token)
@@ -6318,7 +6332,10 @@ def _log_turn_delivery(
                     "evt": "turn_delivery",
                     "action_ref": timeline.extra.get("action_ref"),
                     "transport": timeline.transport,
-                    "pseudo_streaming": True,
+                    # SPEC-319 R6: com token real, TTFT != TTFMC (SPEC-200) e nao e pseudo.
+                    "pseudo_streaming": not bool((early or {}).get("token_stream", False)),
+                    "first_token_server_ms": timeline.mark_ms("first_token"),
+                    "token_replace": bool((early or {}).get("token_replace", False)),
                     "ack_server_ms": timeline.mark_ms("accepted"),
                     "ttfmc_server_ms": timeline.mark_ms("ttfmc"),
                     "ttlt_server_ms": timeline.mark_ms("ttlt"),
@@ -6453,6 +6470,29 @@ def _stream_turn_events(
         _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
         yield _sse("narrative", {"chunk": "", "done": True})
 
+    # SPEC-319: tokens reais do narrador. `on` os repassa; `shadow` so mede o TTFT.
+    from services.narrative_sink import token_stream_mode
+
+    token_mode = token_stream_mode()
+    tok = {"text": "", "shadow": "", "sent": False}  # texto ja entregue por deltas / medido
+
+    def _finish_tokens(final_text: str) -> Iterator[str]:
+        """Fecha a narracao entregue por deltas: extensao do que o jogador ja leu vira so o
+        sufixo; qualquer divergencia (guard, recibo, regra de ouro) vira `replace` (R3)."""
+        shown = tok["text"]
+        if final_text.startswith(shown):
+            for piece in narrative_chunks(final_text[len(shown) :], _NARRATIVE_CHUNK):
+                yield _sse("narrative", {"chunk": piece, "done": False})
+            timeline.mark("ttlt")
+            _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
+            yield _sse("narrative", {"chunk": "", "done": True})
+        else:
+            timeline.mark("ttlt")
+            _observe_delivery("ttlt", "rpg_turn_last_content_seconds")
+            outcome["token_replace"] = True
+            yield _sse("narrative", {"chunk": final_text, "done": True, "replace": True})
+        tok["text"] = final_text
+
     while True:
         try:
             kind, payload = q.get(timeout=_SSE_PING_S)
@@ -6461,7 +6501,7 @@ def _stream_turn_events(
             continue
         if kind == "http_error":
             outcome["value"] = "error"
-            if emitted_text is not None:
+            if emitted_text is not None or tok["text"]:
                 payload = {**payload, "narrative_shown": True}  # SPEC-316 R5
             yield _sse("error", payload)
             return
@@ -6473,18 +6513,47 @@ def _stream_turn_events(
                 "error_code": "internal_turn_error",
                 "request_id": _current_request_id(),
             }
-            if emitted_text is not None:
+            if emitted_text is not None or tok["text"]:
                 body["narrative_shown"] = True  # SPEC-316 R5
             yield _sse("error", body)
             return
         if kind == "chunk":
             mode, data = payload
+            if mode == "narrative_delta":
+                piece = str((data or {}).get("text") or "")
+                if not piece:
+                    continue
+                if token_mode == "on":
+                    if timeline.mark_ms("first_token") is None:
+                        timeline.mark("first_token")
+                        _observe_delivery("first_token", "rpg_turn_first_token_seconds")
+                    if piece.strip() and timeline.mark_ms("ttfmc") is None:
+                        timeline.mark("ttfmc")
+                        _observe_delivery("ttfmc", "rpg_turn_first_content_seconds")
+                    tok["text"] += piece
+                    outcome["phase"] = "narrative_tokens"
+                    outcome["token_stream"] = True
+                    yield _sse("narrative", {"chunk": piece, "done": False, "live": True})
+                else:  # shadow: mede sem enviar
+                    if timeline.mark_ms("first_token_shadow") is None:
+                        timeline.mark("first_token_shadow")
+                    tok["shadow"] += piece
+                continue
+            if mode == "narrative_reset":
+                if token_mode == "on" and tok["text"]:
+                    tok["text"] = ""
+                    yield _sse("narrative", {"chunk": "", "done": False, "reset": True})
+                tok["shadow"] = ""
+                continue
             if mode == "early_narrative":
                 text = str((data or {}).get("text") or "")
                 if delivery_mode == "on" and emitted_text is None and text.strip():
                     emitted_text = text
                     outcome["phase"] = "narrative_early"
-                    yield from _emit_early(text)
+                    if tok["text"]:
+                        yield from _finish_tokens(text)
+                    else:
+                        yield from _emit_early(text)
                 elif delivery_mode == "shadow" and shadow_text is None and text.strip():
                     shadow_text = text
                     timeline.mark("early_shadow")
@@ -6501,7 +6570,17 @@ def _stream_turn_events(
             resp = payload
             outcome["phase"] = "narrative"
             narrative = resp.message or ""
-            if emitted_text is None:
+            if token_mode == "shadow" and tok["shadow"]:
+                _sse_log(
+                    "token_stream_shadow",
+                    ttft_shadow_ms=timeline.mark_ms("first_token_shadow"),
+                    identical_to_final=tok["shadow"].strip() == narrative.strip(),
+                )
+            if emitted_text is None and tok["text"]:
+                # tokens entregues e sem entrega antecipada (316 off/shadow): fecha aqui
+                yield from _finish_tokens(narrative)
+                yield _sse("visual", resp.visual.model_dump(mode="json"))
+            elif emitted_text is None:
                 yield _sse("visual", resp.visual.model_dump(mode="json"))
                 for i in range(0, len(narrative), _NARRATIVE_CHUNK):
                     piece = narrative[i : i + _NARRATIVE_CHUNK]

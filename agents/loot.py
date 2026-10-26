@@ -174,11 +174,15 @@ def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = 
             else "Narre em 1-2 frases, tom dark fantasy (Valoria), o resultado MECÂNICO "
             "do jogador. NÃO altere números nem invente itens extras."
         )
-        res = llm.invoke(
+        from services.narrative_sink import narrate_text
+
+        # SPEC-319: tokens ao vivo so com sink (stream SSE); senao e o invoke de sempre.
+        res = narrate_text(
+            llm,
             [
                 SystemMessage(content=instruction),
                 HumanMessage(content=context),
-            ]
+            ],
         )
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)

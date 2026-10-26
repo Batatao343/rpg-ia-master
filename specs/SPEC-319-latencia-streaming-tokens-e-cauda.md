@@ -1,6 +1,6 @@
 # SPEC-319 — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 
-> **Status:** `approved` (dono 25/10: "boa, aprovo" — decisões nos padrões recomendados em negrito)
+> **Status:** `in-progress` (implementada na branch `spec-319`; falta revisão independente e a medição de staging §6) — dono 25/10: "boa, aprovo", decisões nos padrões recomendados em negrito
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
 > **Depende de:** SPEC-316 (`done` — canal de narração antecipada no SSE e UX de "ainda salvando"); recomendado SPEC-318 (`done`) para o ganho pleno; insumos `done`: SPEC-032 (RoutedLLM), SPEC-236 (`stream_interrupted`), SPEC-250 (fallbacks silenciosos)
 > **Desbloqueia:** —
@@ -118,11 +118,11 @@ p95 do `done` −30 %. Só para o provider primário OpenAI-compat; os demais ca
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R10 cobertos; `uv run pytest` verde; R9 paridade MockLLM provada.
+- [x] R1–R10 cobertos no escopo (testes novos + streaming/latência/roteamento); R9 paridade MockLLM provada (`test_mock_stream_equals_invoke_state`, `test_final_state_identical_across_token_modes`). Suíte completa: coordenador, no pouso.
 - [ ] Staging §6: **TTFMC p50 ≤ 3 s**; TTLT p50 dentro de ±5 % do baseline pós-316; `replace` em < 5 % dos turnos.
 - [ ] Hedge (se o dono ligar): `done` p95 −30 % com custo extra ≤ 10 % (`hedge_lost` contabilizado).
-- [ ] Guard de FallbackLLM em `stream_structured` e nos 4 agentes (texto de erro passa pelo mesmo caminho).
-- [ ] Nenhum campo novo no save; `off` byte a byte ao HEAD.
+- [x] Guard de FallbackLLM em `stream_structured` e nos agentes (`narrate_structured` devolve `AIMessage`; o `isinstance` do nó segue).
+- [x] Nenhum campo novo no save; `off` byte a byte ao HEAD (`test_off_byte_identical`).
 - [ ] Revisão independente (Sol): parser, concorrência do hedge, contextvar entre thread SSE e worker.
 
 ## 6. Smoke test com LLM real
@@ -159,3 +159,38 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
 - **D3 — Texto parcial rejeitado pelo guard:** **substituir silenciosamente (`replace`)**, igual à 316 D4.
 - **D4 — Escopo de providers:** **só OpenAI-compat (DeepSeek/Groq/MiniMax/Qwen)**; Anthropic/Gemini ficam no
   pseudo-streaming (alternativa: implementar parsers por provider — custo alto para candidatos de fallback).
+
+---
+
+## Histórico de mudanças
+
+- **2026-10-25 · implementação (Sonnet/Opus executor).** Desvios e decisões de execução, todos dentro das
+  decisões D1–D4 do dono:
+  1. `narrate_structured`/`narrate_text` (em `services/narrative_sink.py`) são o helper `_narrate` dos agentes.
+     **Combate e loot narram em texto plano** (`llm.invoke`, não structured): usam `RoutedLLM.stream_text`
+     (sem extrator JSON). Storyteller usa `stream_structured` (campo `narrative`); NPC usa `key="dialogue"`
+     (1º campo de `NPCResponse`) com `prefix='"'`, pois a mensagem final abre com aspas. O teste R10 trava
+     `narrative` (3 variantes de `StoryUpdate`) e `dialogue` (`NPCResponse`) como 1º campo.
+  2. `stream_structured(input, schema, *, on_delta, on_reset, key)` **não reaplica `_transforms`**: faz
+     `bind_tools([schema], tool_choice=<nome>)` direto no client e valida o JSON acumulado com
+     `schema.model_validate_json` (mesma validação Pydantic do invoke). JSON inválido ⇒ `invalid_structured`
+     e próximo candidato (sem regeneração semântica no mesmo provider, ao contrário do `invoke`).
+     Candidato não-OpenAI-compat ⇒ sub-`RoutedLLM` de 1 candidato com `invoke` estruturado (D4).
+  3. **Guard do texto parcial** (`StreamGuard`): só texto limpo vai ao sink — remove `[RESULTADO] …`, aplica
+     o véu SPEC-293 (`conceal_text`) segurando uma janela do tamanho do maior nome oculto e a palavra
+     parcial/`[` aberto. Prose guard, evidência e regra de ouro só existem no texto FINAL ⇒ divergência vira
+     `replace`; quando o final apenas **estende** o já exibido a API manda só o sufixo (sem `replace`).
+  4. SSE: chunks reais saem com `"live": true`; fallback de provider ⇒ `narrative {chunk:"", reset:true}`.
+     O cliente só acompanha o cursor (sem atraso) em entradas `live`; pseudo-streaming segue animado.
+     `shadow` também streama no LLM mas a API descarta os deltas e loga `sse.token_stream_shadow`
+     (`ttft_shadow_ms`, `identical_to_final` — não é sempre `true`: o anti-repetição de abertura prefixa o final).
+  5. Hedge: `RPG_LLM_HEDGE_MS`, só tier FAST e `stream_structured`; 1º delta (ou conclusão válida) vence;
+     perdedor registrado como `hedge_lost` (contado como "recebido" em `usage_metering`; ignorado em
+     `audit_trace.turn_errors`). Teto de custo: no máximo ~10 % das chamadas hedgeadas (`HEDGE_MAX_RATIO`,
+     contador por processo, +1 de folga). Log `llm.hedge` (`hedged`, `hedge_won`).
+  6. `playtest/latency_llm.py` ganhou `stream_structured`/`stream_text` (mesma latência injetada), senão o
+     baseline offline perdia a fase do narrador. Métrica nova `rpg_turn_first_token_seconds`; `rpg.turn` e
+     `turn_delivery` ganham `first_token_server_ms` e `pseudo_streaming=false` com token real.
+  7. Flags novas em `scripts/staging/vercel_env.py` (`RPG_TOKEN_STREAM`, `RPG_LLM_HEDGE_MS`; valores de hedge
+     restritos a 0/3000/4000/6000/8000). Nota para o README da SPEC-200: com token real, TTFT ≠ TTFMC.
+

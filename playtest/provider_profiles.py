@@ -95,6 +95,7 @@ class ProviderPacer:
             "invalid_structured",
             "stream_error",
             "stream_interrupted",
+            "hedge_lost",
         }
         if provider != "groq" or model != "openai/gpt-oss-120b" or not network_attempt:
             return

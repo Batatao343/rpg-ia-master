@@ -785,3 +785,32 @@ class MockLLM:
     def stream(self, messages):
         """Yield AIMessage para compatibilidade com chamadas streaming."""
         yield self.invoke(messages)
+
+    # SPEC-319 R9: mesmo resultado do invoke, com deltas fatiados a partir do MESMO texto.
+    _DELTA_SIZES = (3, 7, 12, 5, 9)
+
+    def stream_structured(self, messages, schema, *, on_delta=None, on_reset=None, key=None):
+        result = _StructuredMock(schema).invoke(messages)
+        if on_delta is not None:
+            from services.partial_narrative import NarrativeExtractor
+
+            extractor = NarrativeExtractor(key)
+            raw = result.model_dump_json()
+            pos = 0
+            step = 0
+            while pos < len(raw):
+                size = self._DELTA_SIZES[step % len(self._DELTA_SIZES)]
+                step += 1
+                piece = extractor.feed(raw[pos : pos + size])
+                pos += size
+                if piece:
+                    on_delta(piece)
+        return result
+
+    def stream_text(self, messages, *, on_delta=None, on_reset=None):
+        result = self.invoke(messages)
+        if on_delta is not None:
+            text = str(result.content)
+            for pos in range(0, len(text), 8):
+                on_delta(text[pos : pos + 8])
+        return result

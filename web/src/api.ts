@@ -140,7 +140,10 @@ export const resolveDeath = (game_id: string | null, choice: "continue" | "accep
 export interface StreamHandlers {
   onPhase?: (node: string) => void;
   onRoute?: (route: string) => void;
-  onChunk?: (chunk: string, done: boolean) => void;
+  /** `live` (SPEC-319) = delta de token real do narrador (o cursor acompanha, sem atraso artificial). */
+  onChunk?: (chunk: string, done: boolean, live?: boolean) => void;
+  /** SPEC-319: descarta o texto parcial já exibido (fallback de provider durante o stream). */
+  onReset?: () => void;
   onVisual?: (visual: VisualResponse) => void;
   /** SPEC-316: texto final que substitui o já exibido (guard/recibo mudou a prosa). */
   onReplace?: (text: string) => void;
@@ -193,8 +196,10 @@ export async function sendActionStream(
     else if (name === "route") handlers.onRoute?.(payload.route);
     else if (name === "narrative") {
       // SPEC-316: `replace` = texto final difere do antecipado; nunca é anexado como chunk.
-      if (payload.replace) handlers.onReplace?.(payload.chunk);
-      else handlers.onChunk?.(payload.chunk, payload.done);
+      // SPEC-319: `reset` = o servidor trocou de provider no meio do stream; descarta o parcial.
+      if (payload.reset) handlers.onReset?.();
+      else if (payload.replace) handlers.onReplace?.(payload.chunk);
+      else handlers.onChunk?.(payload.chunk, payload.done, payload.live === true);
     }
     else if (name === "visual") handlers.onVisual?.(payload as VisualResponse);
     else if (name === "state") finalState = payload as GameResponse;

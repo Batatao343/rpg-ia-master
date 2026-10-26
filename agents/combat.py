@@ -984,7 +984,10 @@ def _narrate(
         llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
         if getattr(llm, "is_fallback", False):
             raise RuntimeError("fallback")
-        res = llm.invoke([sys, HumanMessage(content=intent or "Continue o combate.")])
+        from services.narrative_sink import narrate_text
+
+        # SPEC-319: tokens ao vivo so com sink (stream SSE); senao e o invoke de sempre.
+        res = narrate_text(llm, [sys, HumanMessage(content=intent or "Continue o combate.")])
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)

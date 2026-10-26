@@ -20,6 +20,8 @@ LABELS = {
     "rpg_turn_phase_seconds": {"route", "phase"},
     "rpg_turn_first_content_seconds": {"route", "source"},
     "rpg_turn_last_content_seconds": {"route", "source"},
+    # SPEC-319 R6: 1o delta REAL de token (nao pseudo-streaming); so com RPG_TOKEN_STREAM=on.
+    "rpg_turn_first_token_seconds": {"route", "source"},
     "rpg_turn_duration_seconds": {"route", "outcome", "simulated"},
     "rpg_turn_commits_total": {"outcome"},
     "rpg_operation_lease_age_seconds": {"kind"},

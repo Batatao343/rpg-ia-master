@@ -53,6 +53,7 @@ _RECEIVED_OUTCOMES = frozenset(
         "invalid_structured",
         "invalid_response",
         "stream_interrupted",
+        "hedge_lost",  # SPEC-319: the abandoned hedge request still runs to completion upstream
     }
 )
 

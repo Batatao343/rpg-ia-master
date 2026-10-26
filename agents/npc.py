@@ -1302,8 +1302,18 @@ def npc_actor_node(state: GameState):
     )
 
     try:
-        actor = llm.with_structured_output(NPCResponse)
-        res = actor.invoke([system_msg] + guard_messages(messages[-3:]))
+        from services.narrative_sink import narrate_structured
+
+        # SPEC-319: a fala (`dialogue`, 1o campo) sai token a token; a mensagem final
+        # abre com `"` — o prefixo evita um `replace` so por causa da aspa.
+        res = narrate_structured(
+            llm,
+            NPCResponse,
+            [system_msg] + guard_messages(messages[-3:]),
+            state=state,
+            key="dialogue",
+            prefix='"',
+        )
         if not isinstance(res, NPCResponse):
             raise TypeError(f"structured output inválido: {type(res).__name__}")
         dialogue = strip_outer_quotes(sanitize_meta_preamble(res.dialogue))

@@ -117,6 +117,21 @@ def test_client_gone_leaves_nulls():
     assert fields["pseudo_streaming"] is True
 
 
+def test_real_token_mark_turns_off_pseudo_streaming():
+    """SPEC-319 R6: o 1o delta real marca `first_token`; TTFT deixa de ser igual ao TTFMC."""
+    clock = FakeClock()
+    tl = TurnTimeline(clock, transport="stream")
+    assert tl.fields()["pseudo_streaming"] is True
+    assert tl.fields()["first_token_server_ms"] is None
+    clock.advance(0.7)
+    tl.mark("first_token")
+    clock.advance(0.3)
+    tl.mark("ttfmc")
+    fields = tl.fields()
+    assert fields["pseudo_streaming"] is False
+    assert fields["first_token_server_ms"] == 700 and fields["ttfmc_server_ms"] == 1000
+
+
 def test_attempts_attributed_to_current_phase():
     clock = FakeClock()
     tl = TurnTimeline(clock)

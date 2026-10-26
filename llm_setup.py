@@ -98,6 +98,7 @@ LLMAttemptOutcome = Literal[
     "stream_error",
     "stream_interrupted",  # SPEC-236: cut AFTER the first chunk (provider answered)
     "invalid_structured",
+    "hedge_lost",  # SPEC-319 R5: hedge request abandoned (may still bill; counted as received)
     "success",
 ]
 
@@ -650,6 +651,42 @@ def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
             hook(event)
         except Exception as e:  # telemetria NUNCA derruba o turno
             _LOG.warning("attempt telemetry hook falhou: %s", type(e).__name__)
+
+
+_UNSET = object()
+_STREAM_CANCELLED = object()  # SPEC-319: tentativa abandonada por perder o hedge
+
+# SPEC-319 R5: hedge. Teto de custo: no maximo ~10% das chamadas (e 1 por chamada).
+HEDGE_MAX_RATIO = 0.10
+_HEDGE_LOCK = threading.Lock()
+_HEDGE_STATS = {"calls": 0, "hedges": 0}
+
+
+def _hedge_ms() -> int:
+    """`RPG_LLM_HEDGE_MS=<int>` (0 = desligado, default)."""
+    try:
+        return max(0, int(os.getenv("RPG_LLM_HEDGE_MS", "0") or 0))
+    except ValueError:
+        return 0
+
+
+def _log_hedge(tier: "ModelTier", hedge_ms: int, *, winner: int, first: int) -> None:
+    """SPEC-319 R5: `hedged` + `hedge_won` (o 2o candidato venceu o 1o)."""
+    try:
+        from observability.telemetry import current_node, log_event
+
+        log_event(
+            "llm",
+            "hedge",
+            level="info",
+            tier=getattr(tier, "value", str(tier)),
+            node=current_node(),
+            hedge_ms=int(hedge_ms),
+            hedged=True,
+            hedge_won=winner != first,
+        )
+    except Exception:  # silent-ok: o log nunca derruba o turno
+        pass
 
 
 # ---------------------------------------------------------------------------
@@ -1214,6 +1251,399 @@ class RoutedLLM:
             return
         _log_exhausted(self.tier, errors)
         yield AIMessage(content="")
+
+    # ------------------------------------------------------------------
+    # SPEC-319: streaming de tokens da narracao + hedge na cauda
+    # ------------------------------------------------------------------
+    def stream_structured(
+        self,
+        input,
+        schema,
+        *,
+        on_delta: Callable[[str], None] | None = None,
+        on_reset: Callable[[], None] | None = None,
+        key: str | None = None,
+    ):
+        """Equivalente a `with_structured_output(schema).invoke(input)` com o campo de narracao
+        (`key`, default `narrative`) entregue token a token em `on_delta`.
+
+        So candidatos OpenAI-compat streamam (tool call via `bind_tools`); os demais usam o
+        invoke estruturado de sempre. Falha no meio do stream => `on_reset()` e proximo
+        candidato. Esgotou => `AIMessage(content="")` (o guard do chamador segue obrigatorio)."""
+        return self._stream_route(input, schema, key, on_delta, on_reset)
+
+    def stream_text(
+        self,
+        input,
+        *,
+        on_delta: Callable[[str], None] | None = None,
+        on_reset: Callable[[], None] | None = None,
+    ):
+        """Equivalente a `invoke(input)` (texto plano) com os deltas em `on_delta`."""
+        return self._stream_route(input, None, None, on_delta, on_reset)
+
+    def _stream_route(self, input, schema, key, on_delta, on_reset):
+        errors: list[str] = []
+        sent = {"n": 0}
+
+        def emit(text: str) -> None:
+            sent["n"] += 1
+            if on_delta is not None:
+                on_delta(text)
+
+        def reset() -> None:
+            if sent["n"]:
+                sent["n"] = 0
+                if on_reset is not None:
+                    on_reset()
+
+        tried: set[int] = set()
+        hedge_ms = _hedge_ms() if (schema is not None and self.tier is ModelTier.FAST) else 0
+        if hedge_ms > 0:
+            result, tried = self._hedged_first(input, schema, key, emit, errors, hedge_ms)
+            if result is not None:
+                return result
+            reset()
+        for idx, (provider, model) in enumerate(self.candidates):
+            if idx in tried:
+                continue
+            result = self._stream_attempt(
+                idx, provider, model, input, schema, key, emit, lambda: False, errors
+            )
+            if result is not None:
+                return result
+            reset()  # R4: o parcial deste candidato nao vale para o proximo
+        _log_exhausted(self.tier, errors)
+        return AIMessage(content="")
+
+    def _stream_attempt(
+        self, idx, provider, model, input, schema, key, emit, cancelled, errors
+    ) -> object:
+        """Uma tentativa em UM candidato. Devolve o resultado, `None` (falhou; proximo) ou
+        `_STREAM_CANCELLED` (perdeu o hedge; a telemetria fica com o coordenador)."""
+        fell_back = idx > 0
+        structured = schema is not None
+        if _kill_switch_disabled(provider, model):  # SPEC-196
+            errors.append(f"{provider}:{model} kill_switch")
+            _log_attempt(provider, model, self.tier, idx, "kill_switch", fell_back=fell_back)
+            return None
+        circuit_reason = _OPEN_CIRCUITS.get((provider, model))
+        if circuit_reason:
+            errors.append(f"{provider}:{model} circuit")
+            _emit_attempt_telemetry(
+                LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=0,
+                    fell_back=fell_back,
+                    outcome="circuit_open",
+                    error=circuit_reason,
+                    structured=structured,
+                )
+            )
+            return None
+        if provider not in _OPENAI_COMPAT_PROVIDERS:
+            # D4: sem parser incremental para Anthropic/Gemini => invoke estruturado (SPEC-316).
+            sub = RoutedLLM(
+                self.tier,
+                self.temperature,
+                [(provider, model)],
+                [("with_structured_output", (schema,), {})] if structured else [],
+            )
+            res = sub.invoke(input)
+            ok = (
+                isinstance(res, schema)
+                if structured
+                else bool(str(getattr(res, "content", "") or "").strip())
+            )
+            if not ok:
+                errors.append(f"{provider}:{model} invoke:invalid")
+            return res if ok else None
+        build_t0 = time.perf_counter()
+        try:
+            client = _get_cached_client(provider, model, self.temperature)
+            if structured:
+                tool_name = schema.model_json_schema().get("title") or schema.__name__
+                client = client.bind_tools([schema], tool_choice=tool_name)
+        except Exception as e:
+            errors.append(f"{provider}:{model} build:{type(e).__name__}")
+            _emit_attempt_telemetry(
+                LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=int((time.perf_counter() - build_t0) * 1000),
+                    fell_back=fell_back,
+                    outcome="build_error",
+                    error=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured,
+                )
+            )
+            _open_circuit_if_permanent(provider, model, e)
+            return None
+        from services.partial_narrative import NarrativeExtractor
+
+        extractor = NarrativeExtractor(key) if structured else None
+        args_parts: list[str] = []
+        content_parts: list[str] = []
+        first_index: object = _UNSET
+        usage = None
+        chunks = 0
+        t0 = time.perf_counter()
+        _authorize_provider_attempt(provider, model)
+        try:
+            with _provider_slot(provider):
+                it = iter(client.stream(input))
+                try:
+                    for chunk in it:
+                        if cancelled():
+                            return _STREAM_CANCELLED
+                        chunks += 1
+                        usage = _usage_snapshot(chunk) or usage
+                        if not structured:
+                            text = getattr(chunk, "content", "")
+                            if isinstance(text, str) and text:
+                                content_parts.append(text)
+                                emit(text)
+                            continue
+                        piece = ""
+                        for tc in getattr(chunk, "tool_call_chunks", None) or []:
+                            tc_index = tc.get("index")
+                            if first_index is _UNSET:
+                                first_index = tc_index
+                            if tc_index != first_index:
+                                continue
+                            arg = tc.get("args")
+                            if arg:
+                                args_parts.append(arg)
+                                piece += extractor.feed(arg)
+                        text = getattr(chunk, "content", "")
+                        if (
+                            isinstance(text, str)
+                            and text
+                            and not args_parts
+                            and ("".join(content_parts) + text).lstrip().startswith("{")
+                        ):
+                            content_parts.append(text)
+                            piece += extractor.feed(text)
+                        if piece:
+                            emit(piece)
+                finally:
+                    close = getattr(it, "close", None)
+                    if callable(close):
+                        try:
+                            close()
+                        except Exception:  # silent-ok: fechar o iterador e melhor-esforco
+                            pass
+        except Exception as e:
+            if cancelled():
+                return _STREAM_CANCELLED
+            latency_ms = int((time.perf_counter() - t0) * 1000)
+            errors.append(f"{provider}:{model} stream:{type(e).__name__}")
+            _emit_attempt_telemetry(
+                LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="stream_interrupted" if chunks else "stream_error",
+                    error=str(e) if chunks else type(e).__name__,
+                    error_type=type(e).__name__,
+                    http_status=_http_status(e),
+                    structured=structured,
+                    usage=usage,
+                )
+            )
+            _open_circuit_if_permanent(provider, model, e)
+            return None
+        if cancelled():
+            return _STREAM_CANCELLED
+        latency_ms = int((time.perf_counter() - t0) * 1000)
+        result: object | None
+        failure = "no_tool_call"
+        if structured:
+            result = self._parse_streamed(schema, "".join(args_parts) or "".join(content_parts))
+            if result is None and (args_parts or content_parts):
+                failure = "schema_validation"
+        else:
+            full = "".join(content_parts)
+            result = AIMessage(content=full) if full.strip() else None
+            failure = "empty"
+        if result is None:
+            errors.append(f"{provider}:{model} structured:{failure}")
+            _emit_attempt_telemetry(
+                LLMAttemptEvent(
+                    provider=provider,
+                    model=model,
+                    tier=self.tier,
+                    attempt_index=idx,
+                    latency_ms=latency_ms,
+                    fell_back=fell_back,
+                    outcome="invalid_structured",
+                    error=failure,
+                    structured=structured,
+                    structured_failure_code=failure,
+                    usage=usage,
+                )
+            )
+            return None
+        _emit_attempt_telemetry(
+            LLMAttemptEvent(
+                provider=provider,
+                model=model,
+                tier=self.tier,
+                attempt_index=idx,
+                latency_ms=latency_ms,
+                fell_back=fell_back,
+                outcome="success",
+                error=None,
+                structured=structured,
+                usage=usage,
+            )
+        )
+        _emit_telemetry(provider, model, self.tier, latency_ms, fell_back)
+        return result
+
+    def _parse_streamed(self, schema, raw: str):
+        """JSON completo da tool call -> instancia de `schema` (ou None). Mesma validacao Pydantic
+        do invoke; nunca levanta."""
+        if not raw.strip():
+            return None
+        try:
+            return schema.model_validate_json(raw)
+        except Exception:  # silent-ok: JSON invalido => invalid_structured no chamador
+            payload = self._json_object_from_text(raw)
+            if payload is None:
+                return None
+            try:
+                return schema.model_validate(payload)
+            except Exception:  # silent-ok: idem (o chamador registra a tentativa)
+                return None
+
+    def _hedged_first(self, input, schema, key, emit, errors, hedge_ms: int):
+        """R5: dispara o 2o candidato se o 1o nao emitiu NENHUM delta em `hedge_ms`.
+
+        Devolve `(resultado|None, indices_tentados)`. O 1o a emitir delta (ou a concluir valido)
+        vence; o outro e abandonado (a request HTTP termina sozinha — SPEC-143 §2.6) e registrado
+        como `hedge_lost`. No maximo 1 hedge por chamada, com teto de ~10% das chamadas."""
+        import contextvars
+        import queue
+
+        eligible = [
+            (i, p, m)
+            for i, (p, m) in enumerate(self.candidates)
+            if p in _OPENAI_COMPAT_PROVIDERS
+            and not _kill_switch_disabled(p, m)
+            and not _OPEN_CIRCUITS.get((p, m))
+        ][:2]
+        with _HEDGE_LOCK:
+            _HEDGE_STATS["calls"] += 1
+        if len(eligible) < 2:
+            return None, set()
+        q: queue.Queue = queue.Queue()
+        cancels = {i: threading.Event() for i, _p, _m in eligible}
+        started: dict[int, tuple[str, str, float]] = {}
+
+        def start(i: int, p: str, m: str) -> None:
+            started[i] = (p, m, time.perf_counter())
+            ctx = contextvars.copy_context()
+
+            def runner() -> None:
+                res = self._stream_attempt(
+                    i,
+                    p,
+                    m,
+                    input,
+                    schema,
+                    key,
+                    lambda text, _i=i: q.put(("delta", _i, text)),
+                    cancels[i].is_set,
+                    errors,
+                )
+                q.put(("end", i, res))
+
+            threading.Thread(target=ctx.run, args=(runner,), daemon=True).start()
+
+        def abandon(winner: int) -> None:
+            for i, (p, m, t_start) in started.items():
+                if i == winner:
+                    continue
+                cancels[i].set()
+                _emit_attempt_telemetry(
+                    LLMAttemptEvent(
+                        provider=p,
+                        model=m,
+                        tier=self.tier,
+                        attempt_index=i,
+                        latency_ms=int((time.perf_counter() - t_start) * 1000),
+                        fell_back=i > 0,
+                        outcome="hedge_lost",
+                        error=None,
+                        structured=True,
+                    )
+                )
+
+        def finish(winner: int, hedged: bool) -> None:
+            if hedged:
+                _log_hedge(self.tier, hedge_ms, winner=winner, first=eligible[0][0])
+
+        first_i, first_p, first_m = eligible[0]
+        second_i, second_p, second_m = eligible[1]
+        start(first_i, first_p, first_m)
+        deadline = time.monotonic() + hedge_ms / 1000.0
+        winner: int | None = None
+        hedged = False
+        no_budget = False
+        ended: set[int] = set()
+        while True:
+            timeout = (
+                None if (len(started) > 1 or no_budget) else max(0.0, deadline - time.monotonic())
+            )
+            try:
+                kind, i, payload = q.get(timeout=timeout)
+            except queue.Empty:
+                with _HEDGE_LOCK:
+                    allowed = _HEDGE_STATS["hedges"] + 1 <= max(
+                        1.0, HEDGE_MAX_RATIO * _HEDGE_STATS["calls"]
+                    )
+                    if allowed:
+                        _HEDGE_STATS["hedges"] += 1
+                if not allowed:
+                    no_budget = True  # sem orcamento: segue so com o 1o
+                    continue
+                hedged = True
+                start(second_i, second_p, second_m)
+                continue
+            if kind == "delta":
+                if winner is None:
+                    winner = i
+                    abandon(winner)
+                if i == winner:
+                    emit(payload)
+                continue
+            ended.add(i)
+            if winner is None:
+                if payload is not None:
+                    winner = i
+                    abandon(winner)
+                    finish(winner, hedged)
+                    return payload, set(started)
+                if len(started) == 1 and second_i not in started:
+                    start(second_i, second_p, second_m)  # 1o falhou: segue para o 2o ja
+                    continue
+                if ended >= set(started):
+                    return None, set(started)
+                continue
+            if i == winner:
+                finish(winner, hedged)
+                return payload, set(started)
+            # fim do perdedor: ignorado
 
 
 # ---------------------------------------------------------------------------

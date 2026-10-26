@@ -84,6 +84,8 @@ OPTIONAL_FLAGS = (
     "RPG_ROUTER_DETERMINISTIC_NPC",
     "RPG_PROMPT_STATIC_FIRST",
     "RPG_EARLY_NARRATIVE",
+    "RPG_TOKEN_STREAM",
+    "RPG_LLM_HEDGE_MS",
     "RPG_NPC_TWO_PHASE",
     "RPG_REPLAN_AFTER",
     "RPG_DAY_DIGEST",
@@ -124,6 +126,8 @@ WORLD_FLAGS = (
     "RPG_LORE_QUESTS",
     "RPG_ROUTER_DETERMINISTIC_NPC",  # SPEC-317 R2: off|shadow|on (ausente = shadow)
     "RPG_EARLY_NARRATIVE",  # SPEC-316: off|shadow|on (ausente = shadow)
+    "RPG_TOKEN_STREAM",  # SPEC-319 R8: off|shadow|on (ausente = shadow)
+    "RPG_LLM_HEDGE_MS",  # SPEC-319 R5: ms ate o 2o candidato (ausente = 0 = sem hedge)
     "RPG_PROMPT_STATIC_FIRST",  # SPEC-317 R9: on|off (ausente = off)
     "RPG_NPC_TWO_PHASE",  # SPEC-318 R1: off|on (ausente = on)
     "RPG_REPLAN_AFTER",  # SPEC-318 R4: off|on (ausente = on)
@@ -133,6 +137,7 @@ WORLD_FLAGS = (
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
+    "RPG_LLM_HEDGE_MS": ("0", "3000", "4000", "6000", "8000"),
     "RPG_NPC_TWO_PHASE": ("off", "on"),
     "RPG_REPLAN_AFTER": ("off", "on"),
     "RPG_DAY_DIGEST": ("llm", "inline"),

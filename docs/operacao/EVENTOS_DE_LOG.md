@@ -140,6 +140,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `llm.attempt` | `attempt_index`, `cost_basis`, `error_type`, `fell_back`, `http_status`, `latency_ms`, `model`, `node`, `outcome`, `provider`, `structured_failure_code`, `tier` |
 | `llm.exhausted` | `attempts`, `node`, `tier` |
 | `llm.fallback_llm_selected` | `profile`, `reason` |
+| `llm.hedge` | `hedge_ms`, `hedge_won`, `hedged`, `node`, `tier` |
 | `llm.mock_selected` | `profile`, `reason` |
 | `llm.routes_invalid` | `error_type` |
 | `logging.config_invalid_level` | `fallback` |
@@ -274,6 +275,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `sse.error` | `code`, `error_type`, `stack`, `status` |
 | `sse.fallback` | — |
 | `sse.started` | `transport` |
+| `sse.token_stream_shadow` | `identical_to_final`, `ttft_shadow_ms` |
 | `sse.worker_finished_after_disconnect` | `outcome` |
 | `store.listing_row_skipped` | `error` |
 | `storyteller.failed` | `error` |
@@ -284,7 +286,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `stt.internal_error` | `code`, `error_type`, `stack` |
 | `stt.switch_check_failed` | `error_type`, `model`, `provider` |
 | `turn` | `error`, `events_applied`, `events_rejected`, `fallbacks`, `game_id_ref`, `latency_ms`, `narrative_rejected`, `route`, `route_fallback_reason`, `route_source`, `turn` |
-| `turn_delivery` | `ack_server_ms`, `action_ref`, `early_gain_ms`, `early_narrative`, `outcome`, `pseudo_streaming`, `state_server_ms`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
+| `turn_delivery` | `ack_server_ms`, `action_ref`, `early_gain_ms`, `early_narrative`, `first_token_server_ms`, `outcome`, `pseudo_streaming`, `state_server_ms`, `token_replace`, `transport`, `ttfmc_server_ms`, `ttlt_server_ms` |
 | `turn_finalizer.fallback` | — |
 | `vector.profile_fallback` | `error_type`, `profile` |
 | `vector.semantic_degraded` | `error_type` |
