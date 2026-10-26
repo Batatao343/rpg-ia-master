@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "7940ab8883d7ea4882ee85114688d9763a0f5a65",
+  "commit_sha": "13797308c58420a50e22b0362292507d8794c5ef",
   "edge_counts": {
     "calls": 27892,
     "contains": 958,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:d26454697368db268f015aba87833c323f42cd1ea5a3773f6e8f0d656bcc2bc1",
+  "graph_hash": "sha256:d209acdd14c4e770f9457417c9a92d7e590d9b1d44f7d29cf69a05484c2ec9c5",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1007,6 +1007,7 @@
     "tests/test_world_sim.py",
     "vercel_app.py",
     "web/capacitor.config.ts",
+    "web/e2e/a11y-headings.spec.ts",
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
     "web/e2e/checkout.spec.ts",
@@ -1082,6 +1083,7 @@
     "web/src/components/SaveScreen.tsx",
     "web/src/components/SceneArtwork.tsx",
     "web/src/components/SceneZones.tsx",
+    "web/src/components/ShortcutsSheet.tsx",
     "web/src/components/Sigil.tsx",
     "web/src/components/StoryLog.tsx",
     "web/src/components/SupportCode.tsx",
@@ -1145,6 +1147,7 @@
     "web/src/workspace/ContextSurface.tsx",
     "web/src/workspace/mobileSurface.ts",
     "web/src/workspace/RovingTablist.tsx",
+    "web/src/workspace/shortcuts.ts",
     "web/src/workspace/tabs/BestiarioTab.tsx",
     "web/src/workspace/tabs/CombateTab.tsx",
     "web/src/workspace/tabs/mapModel.ts",
@@ -1180,12 +1183,12 @@
     "artifact": 9,
     "class": 936,
     "endpoint": 64,
-    "file": 1124,
+    "file": 1127,
     "function": 4402,
     "method": 832,
     "module": 958,
     "test": 7822
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:00ebf6ac7500b0cd40991d0af56c5c538e2029c5a8142aa65f7c581f66239273"
+  "source_tree_hash": "sha256:89c5546ade95639be6a96abb51721a2cfc1263230dd2d35edfa7d411acb9f2f9"
 }

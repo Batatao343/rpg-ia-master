@@ -1,5 +1,5 @@
 {
-  "commit_sha": "7940ab8883d7ea4882ee85114688d9763a0f5a65",
+  "commit_sha": "13797308c58420a50e22b0362292507d8794c5ef",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -522174,6 +522174,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/a11y-headings.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/a11y-headings.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/account-lifecycle.spec.ts",
       "kind": "file",
       "line": 1,
@@ -522685,6 +522692,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/components/ShortcutsSheet.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/components/ShortcutsSheet.tsx",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/components/Sigil.tsx",
       "kind": "file",
       "line": 1,
@@ -523144,6 +523158,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/workspace/mobileSurface.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/workspace/shortcuts.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/workspace/shortcuts.ts",
       "qualified_name": null
     },
     {
@@ -627966,5 +627987,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:00ebf6ac7500b0cd40991d0af56c5c538e2029c5a8142aa65f7c581f66239273"
+  "source_tree_hash": "sha256:89c5546ade95639be6a96abb51721a2cfc1263230dd2d35edfa7d411acb9f2f9"
 }
