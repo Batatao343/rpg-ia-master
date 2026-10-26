@@ -1,5 +1,5 @@
 {
-  "commit_sha": "25246d5a62d4f8ec8618025d73bdea5acdf87154",
+  "commit_sha": "38afe4b651ede1e105ed284d68238d0bf1b05fac",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -146306,7 +146306,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec197_legal_pages.py",
-        "line": 12
+        "line": 13
       },
       "source": "module:tests.test_spec197_legal_pages",
       "target": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published",
@@ -618757,7 +618757,7 @@
     {
       "id": "symbol:tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published",
       "kind": "test",
-      "line": 12,
+      "line": 13,
       "path": "tests/test_spec197_legal_pages.py",
       "qualified_name": "tests.test_spec197_legal_pages.test_legal_page_served_with_csp_and_published"
     },
@@ -641548,5 +641548,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:d2f7ba827860df0fd353d5cba3e76697645b8c6f5e2cddb69c58da1d829705d8"
+  "source_tree_hash": "sha256:a258117e38b438e64a5fd37f3817bfc5f49ea3f799fa304f8d3536f6fe2a1db9"
 }
