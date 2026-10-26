@@ -1,6 +1,6 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "747f0605588a1bdc584240dd7f20d4812dae2aed",
+  "commit_sha": "f30b81f3d18fc0c1fc49d95b20aa227e435a8256",
   "edge_counts": {
     "calls": 27291,
     "contains": 942,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:2c991982afa5107723af201b2e9c0c7a128266c3f619aeacede7c77e76aab353",
+  "graph_hash": "sha256:81a0ae3e6a93dffc9ca7fab947c9e7217b700d66fa54ab689b8810198450dc43",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1009,11 +1009,13 @@
     "web/e2e/interlocutor-speaker.spec.ts",
     "web/e2e/latency.spec.ts",
     "web/e2e/map-tab.spec.ts",
+    "web/e2e/mobile-budget.spec.ts",
     "web/e2e/mobile-single-pane.spec.ts",
     "web/e2e/outcome-toast.spec.ts",
     "web/e2e/pending-discard.spec.ts",
     "web/e2e/portrait-overlay.spec.ts",
     "web/e2e/support-code.spec.ts",
+    "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
     "web/e2e/vertical-journey.spec.ts",
     "web/e2e/vertical-support.ts",
@@ -1055,6 +1057,7 @@
     "web/src/components/OnboardingHint.tsx",
     "web/src/components/ornaments.tsx",
     "web/src/components/OutcomeToast.tsx",
+    "web/src/components/PlayMenu.tsx",
     "web/src/components/PlayScreen.tsx",
     "web/src/components/QuestsTab.tsx",
     "web/src/components/ReactionPrompt.tsx",
@@ -1083,6 +1086,8 @@
     "web/src/design/tokens.ts",
     "web/src/dossiers.ts",
     "web/src/heardNews.ts",
+    "web/src/hooks/useComposerHeight.ts",
+    "web/src/hooks/useIsCompact.ts",
     "web/src/hooks/useTurnClock.ts",
     "web/src/hooks/useTypewriter.ts",
     "web/src/http.ts",
@@ -1113,6 +1118,7 @@
     "web/src/voice/wav.ts",
     "web/src/workspace/chatSessionStore.ts",
     "web/src/workspace/ChatSurface.tsx",
+    "web/src/workspace/composerKeys.ts",
     "web/src/workspace/ContextSurface.tsx",
     "web/src/workspace/mobileSurface.ts",
     "web/src/workspace/RovingTablist.tsx",
@@ -1151,12 +1157,12 @@
     "artifact": 9,
     "class": 923,
     "endpoint": 64,
-    "file": 1095,
+    "file": 1101,
     "function": 4353,
     "method": 798,
     "module": 942,
     "test": 7628
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b705c140ef9ea2f0f978a2c994ed30c20cfd9453ab823a83d67494de94fbfd0a"
+  "source_tree_hash": "sha256:a2b111d65274ee946c587c4374be8f527cf6e8cf7b43a4f307cce234906fe6bc"
 }

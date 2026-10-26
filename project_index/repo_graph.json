@@ -1,5 +1,5 @@
 {
-  "commit_sha": "747f0605588a1bdc584240dd7f20d4812dae2aed",
+  "commit_sha": "f30b81f3d18fc0c1fc49d95b20aa227e435a8256",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -511496,6 +511496,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/e2e/mobile-budget.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/mobile-budget.spec.ts",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/e2e/mobile-single-pane.spec.ts",
       "kind": "file",
       "line": 1,
@@ -511528,6 +511535,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/e2e/support-code.spec.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/e2e/touch-targets.spec.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/e2e/touch-targets.spec.ts",
       "qualified_name": null
     },
     {
@@ -511804,6 +511818,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:web/src/components/PlayMenu.tsx",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/components/PlayMenu.tsx",
+      "qualified_name": null
+    },
+    {
       "id": "file:web/src/components/PlayScreen.tsx",
       "kind": "file",
       "line": 1,
@@ -512004,6 +512025,20 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/heardNews.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/hooks/useComposerHeight.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/hooks/useComposerHeight.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/hooks/useIsCompact.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/hooks/useIsCompact.ts",
       "qualified_name": null
     },
     {
@@ -512242,6 +512277,13 @@
       "kind": "file",
       "line": 1,
       "path": "web/src/workspace/chatSessionStore.ts",
+      "qualified_name": null
+    },
+    {
+      "id": "file:web/src/workspace/composerKeys.ts",
+      "kind": "file",
+      "line": 1,
+      "path": "web/src/workspace/composerKeys.ts",
       "qualified_name": null
     },
     {
@@ -614929,5 +614971,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:b705c140ef9ea2f0f978a2c994ed30c20cfd9453ab823a83d67494de94fbfd0a"
+  "source_tree_hash": "sha256:a2b111d65274ee946c587c4374be8f527cf6e8cf7b43a4f307cce234906fe6bc"
 }
