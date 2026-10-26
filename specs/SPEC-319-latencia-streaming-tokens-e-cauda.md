@@ -245,3 +245,17 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   depois (servidor responde em ~60 ms) → fila/cold start do Vercel antes da função, fora do escopo desta spec e
   hoje o maior fator da p95. Pendente: §6.4 (browser palavra a palavra + `reset` em fallback induzido) e o
   follow-up do `tail`.
+- **2026-10-26 · follow-up `tail` (`sse.token_replace` ~9 % no staging, stream MAIOR que o final).** Causa: o texto
+  final passa por guards de CONTEUDO que cortam frases no MEIO e so decidem no fim do turno — (1) guard de evidencia
+  (`narrative_evidence.guard_current_messages`, frase a frase: morte falsa, local, posse, recompensa, segredo) aplicado
+  em `early_narrative`; (2) cortes de recibo de `render_player_message` (`_NEGATIVE_REWARD/_NEGATIVE_ITEM`);
+  (3) `remove_rejected_claims` quando `items_gained` traz item desconhecido/unico (um caso `tail` coincidiu com
+  `unknown_item`). Nenhum rodava no stream. Correcao sem afrouxar guard (opcao b, por frase, nao por no):
+  `StreamGuard(risk=…)` so mostra ao vivo as frases COMPLETAS anteriores a primeira frase que o guard pode cortar (e
+  segura a frase ainda aberta); o resto chega como sufixo do final (sem `replace`). `narrative_evidence.stream_risk_checker`
+  reaproveita `_reason` + os regex de recibo; so o narrador da cena (`hold_acquisition=True`) tambem segura frases
+  "Voce recebe/pega/encontra…" (item que o motor pode rejeitar); o estado de evidencia do storyteller e o do turno
+  (mundo/jogador apos viagem, descanso, achado). Custo: o stream para antes dessas frases e a cauda sai de uma vez.
+  Testes: `tests/test_spec319_shadow_replay.py` (`unknown_item`, `false_death_claim`, `acquire_without_item` + unitarios
+  do `risk`; os dois primeiros falham sem o fix). Residuais nao cobertos (decididos so no fim): `proposed_events`
+  invalido (narrativa inteira vira fallback) e `species_drift` no combate — `reason=start`; seguem `replace` silencioso (D3).

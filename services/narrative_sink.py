@@ -94,6 +94,8 @@ def replace_reason(shown: str, final: str) -> str:
 
 
 _RECEIPT = re.compile(r"[ \t]*\[RESULTADO\][^\r\n]*")
+# mesma segmentacao de `narrative_evidence.validate_narrative`
+_SENTENCE_SPLIT = re.compile(r"((?<=[.!?])\s+|\n+)")
 
 
 class StreamGuard:
@@ -117,7 +119,13 @@ class StreamGuard:
         finalize: Callable[[str], str] | None = None,
         hold_extra: int = 0,
         min_words: int = 0,
+        risk: Callable[[str], bool] | None = None,
     ) -> None:
+        # Follow-up tail: `risk(frase)` marca a frase que o texto final pode cortar (guard de
+        # evidencia, recibo, item rejeitado). O stream so mostra as frases COMPLETAS e seguras
+        # antes dela; o resto chega como sufixo do final (nunca como `replace`).
+        self.risk = risk
+        self._risk_cache: dict[str, bool] = {}
         # F-2: cada no normaliza como o seu texto final (`meta` = so `sanitize_meta_preamble`).
         self.normalize = normalize
         self.mapping = dict(mapping or {})
@@ -137,7 +145,9 @@ class StreamGuard:
         self.sent = ""
         self.broken = False
 
-    def _cleaned(self) -> str:
+    def _cleaned(self) -> tuple[str, str]:
+        """(texto exibivel, texto antes do veu de nomes). O guard de evidencia do final roda
+        ANTES do veu, entao o risco de frase e avaliado no segundo."""
         from services import prose_guard
 
         sanitize = (
@@ -150,20 +160,51 @@ class StreamGuard:
         # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
         text = sanitize(_RECEIPT.sub("", self.raw))
         if not text:
-            return ""
+            return "", ""
         text = self.finalize(text) if self.finalize else self.prefix + text
+        pre = text
         if self.mapping:
             from services.faction_display import conceal_text
 
             text = conceal_text(text, self.mapping)
-        return text
+        return text, pre
+
+    def _risky(self, sentence: str) -> bool:
+        hit = self._risk_cache.get(sentence)
+        if hit is None:
+            hit = bool(self.risk(sentence)) if self.risk else False
+            self._risk_cache[sentence] = hit
+        return hit
+
+    def _risk_cap(self, shown: str, pre: str, *, final: bool) -> int:
+        """Ate onde (len de `shown`) o stream pode mostrar sem passar de frase de risco ou da
+        frase ainda aberta (so antes do fim do texto). Corta ANTES do separador anterior."""
+        if self.risk is None:
+            return len(shown)
+        pre_parts = _SENTENCE_SPLIT.split(pre)
+        stop = None
+        for i in range(0, len(pre_parts), 2):
+            sentence = pre_parts[i]
+            if not sentence.strip():
+                continue
+            if (not final and i == len(pre_parts) - 1) or self._risky(sentence):
+                stop = i
+                break
+        if stop is None:
+            return len(shown)
+        if stop == 0:
+            return 0
+        post_parts = _SENTENCE_SPLIT.split(shown)
+        stop = min(stop, len(post_parts) - 1)
+        return sum(len(p) for p in post_parts[: max(stop - 1, 0)])
 
     def _advance(self, *, final: bool) -> str:
         if self.broken:
             return ""
-        cleaned = self._cleaned()
+        cleaned, pre = self._cleaned()
+        cap = self._risk_cap(cleaned, pre, final=final)
         if final:
-            safe = len(cleaned.rstrip())
+            safe = min(len(cleaned.rstrip()), cap)
         else:
             if len(self.raw) < self.HOLD_CHARS and "\n" not in self.raw:
                 return ""  # segura o inicio: o preambulo meta ainda pode casar
@@ -177,6 +218,7 @@ class StreamGuard:
             bracket = cleaned.rfind("[")
             if bracket != -1 and "\n" not in cleaned[bracket:]:
                 safe = min(safe, bracket)
+            safe = min(safe, cap)
         if safe <= len(self.sent):
             return ""
         if not cleaned.startswith(self.sent):
@@ -214,6 +256,27 @@ def _conceal_map(state: Any) -> dict[str, str]:
         return {}
 
 
+def _risk_checker(state: Any, acquisition: bool = False):
+    """`risky(frase)` do guard de evidencia para o estado do turno (None sem estado/erro)."""
+    binding = _SINK.get()
+    if not state and binding is not None and binding.state_getter is not None:
+        try:
+            state = binding.state_getter()
+        except Exception:  # silent-ok: sem estado, sem corte por risco
+            state = None
+    if not state:
+        return None
+    try:
+        from services.narrative_evidence import stream_risk_checker
+
+        return stream_risk_checker(state, acquisition=acquisition)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("sse", "stream_risk_failed", exc)
+        return None
+
+
 def narrate_structured(
     llm: Any,
     schema: type,
@@ -227,6 +290,8 @@ def narrate_structured(
     finalize: Callable[[str], str] | None = None,
     hold_extra: int = 0,
     min_words: int = 0,
+    evidence_state: Any = None,
+    hold_acquisition: bool = False,
 ):
     """`with_structured_output(schema).invoke(messages)`, com tokens ao vivo quando ha sink.
 
@@ -242,6 +307,7 @@ def narrate_structured(
         finalize=finalize,
         hold_extra=hold_extra,
         min_words=min_words,
+        risk=_risk_checker(evidence_state or state, hold_acquisition),
     )
     reset()  # outro no narrador no mesmo turno: recomeca limpo
 
@@ -272,7 +338,7 @@ def narrate_text(llm: Any, messages: list, *, state: Any = None, stream: bool = 
     streamer = getattr(llm, "stream_text", None)
     if streamer is None or not active() or not stream:
         return llm.invoke(messages)
-    guard = StreamGuard(_conceal_map(state), normalize="meta")
+    guard = StreamGuard(_conceal_map(state), normalize="meta", risk=_risk_checker(state))
     reset()
 
     def on_delta(text: str) -> None:

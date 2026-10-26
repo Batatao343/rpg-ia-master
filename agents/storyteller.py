@@ -2045,6 +2045,14 @@ def storyteller_node(state: GameState):
             finalize=_stream_view,
             hold_extra=72,  # o maior padrao de saldo de ouro fecha em ~60 caracteres
             min_words=8 if _aberturas else 0,
+            # follow-up tail: o guard de evidencia/item roda no final; o stream para antes da
+            # 1a frase que ele pode cortar (estado do turno apos viagem/descanso/achado)
+            evidence_state={
+                **state,
+                "world": world,
+                "player": rested_player or discovery_player or state.get("player") or {},
+            },
+            hold_acquisition=True,
         )
 
         # Guard crítico: FallbackLLM devolve AIMessage, não o schema solicitado.

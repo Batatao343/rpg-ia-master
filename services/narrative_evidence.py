@@ -138,6 +138,49 @@ def _reason(sentence: str, evidence: EvidenceSnapshot) -> str | None:
     return None
 
 
+# SPEC-319 (follow-up tail): frases que o texto FINAL pode cortar e que o stream nao decide.
+# "Voce <verbo de aquisicao>": o LLM costuma listar o item em `items_gained`; se o nome nao
+# resolve no catalogo, `remove_rejected_claims` tira a frase (so no fim do turno).
+_ACQUIRE = re.compile(
+    r"\bvoce\b[^.!?]{0,40}\b(?:recebe|pega|apanha|ganha|recolhe|guarda|saca|obtem|encontra|"
+    r"acha|descobre|leva consigo)\b|"
+    r"\b(?:te|lhe)\s+(?:entrega|da|oferece|estende|passa)\b|\b(?:entrega|estende|passa)-(?:te|lhe)\b"
+)
+
+
+def stream_risk_checker(state: dict | None, *, acquisition: bool = False):
+    """Devolve `risky(sentence) -> bool` para o `StreamGuard` (ou `None` sem estado).
+
+    Marca a frase que o texto final PODE remover ou reescrever (guard de evidencia, cortes de
+    recibo de `render_player_message`, item narrado que o motor talvez rejeite). O stream
+    para ANTES dela: o final apenas estende o que ja foi mostrado (sufixo, sem `replace`).
+    `acquisition`: so o narrador da cena (tem `items_gained`) segura frases de aquisicao.
+    Nunca afrouxa o guard: so decide ate onde mostrar ao vivo. Excecao => frase de risco."""
+    if not state:
+        return None
+    try:
+        evidence = build_evidence(state)
+    except Exception as exc:
+        from observability.telemetry import log_fallback
+
+        log_fallback("sse", "stream_evidence_failed", exc)
+        return None
+    from services.turn_outcome import _NEGATIVE_ITEM, _NEGATIVE_REWARD
+
+    def risky(sentence: str) -> bool:
+        try:
+            return bool(
+                _reason(sentence, evidence)
+                or _NEGATIVE_REWARD.search(sentence)
+                or _NEGATIVE_ITEM.search(sentence)
+                or (acquisition and _ACQUIRE.search(_fold(sentence)))
+            )
+        except Exception:  # silent-ok: na duvida, segura o stream (o final entrega)
+            return True
+
+    return risky
+
+
 def validate_narrative(text: str, evidence: EvidenceSnapshot, *, channel: str) -> NarrativeCheck:
     accepted, rejected = [], []
     # SPEC-234 R11: guarda o separador original (paragrafos/quebras) de cada frase.

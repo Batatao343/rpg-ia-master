@@ -164,6 +164,90 @@ def test_story_stream_is_prefix_of_final(monkeypatch):
     assert rate < MAX_REPLACE_RATE, (rate, misses)
 
 
+_LONG_A = (
+    "O vento corta as vielas de Skallgard e o cheiro de fumaça pesa sobre os telhados. "
+    "Dois guardas observam de longe, sem pressa, enquanto um sino distante marca a hora. "
+    "As janelas altas refletem um céu cor de chumbo e as vozes do mercado chegam abafadas. "
+    "Uma criança corre entre as barracas, perseguida por um cão magro e barulhento. "
+    "O padeiro empilha pães escuros sobre o balcão e conta as moedas com cuidado. "
+)
+_LONG_B = "Ao longe, os sinos tocam de novo.\n\nO que você faz?"
+
+
+def _final_with_guards(state: dict, out: dict) -> str:
+    """Texto que o jogador recebe: guard de evidencia + render (mesmo caminho do SSE)."""
+    from services.turn_delivery import early_narrative
+
+    return early_narrative(state, out, "storyteller") or ""
+
+
+def _run_story_update(update, monkeypatch) -> tuple[str, str]:
+    llm = _StreamLLM(update, "narrative")
+    monkeypatch.setattr(stt, "get_llm", lambda *a, **k: llm)
+    deltas: list[str] = []
+    token = sink.bind(
+        lambda kind, piece: deltas.append(piece) if kind == "delta" else deltas.clear()
+    )
+    state = _story_state(None, 10)
+    try:
+        out = stt.storyteller_node(state)
+    finally:
+        sink.unbind(token)
+    return "".join(deltas), _final_with_guards(state, out)
+
+
+# classes de divergencia do `tail` no staging (stream MAIOR que o final, depois de 400+ chars)
+_TAIL_CASES = {
+    "unknown_item": stt.StoryUpdate(
+        narrative=(
+            _LONG_A + "Você pega o Amuleto Inexistente de Zorn da prateleira empoeirada. "
+            "Nada mais chama a atenção." + _LONG_B
+        ),
+        items_gained=["Amuleto Inexistente de Zorn"],
+    ),
+    "false_death_claim": stt.StoryUpdate(
+        narrative=_LONG_A + "Você morreu com o golpe do guarda. A cena escurece." + _LONG_B
+    ),
+    "acquire_without_item": stt.StoryUpdate(
+        narrative=_LONG_A + "Você recebe a Runa Que Nao Existe do mercador. O sino toca." + _LONG_B,
+        items_gained=["Runa Que Nao Existe"],
+    ),
+}
+
+
+@pytest.mark.parametrize("case", sorted(_TAIL_CASES))
+def test_story_tail_divergence_classes_stream_is_prefix(case, monkeypatch):
+    shown, final = _run_story_update(_TAIL_CASES[case], monkeypatch)
+    assert shown, "o inicio seguro ainda vai ao vivo"
+    assert len(shown) > 200, "so a frase de risco e o resto ficam para o final"
+    assert final.startswith(shown), (sink.replace_reason(shown, final), shown[-80:], final[-80:])
+
+
+def test_story_without_risky_sentence_streams_everything(monkeypatch):
+    update = stt.StoryUpdate(narrative=_LONG_A + _LONG_B)
+    shown, final = _run_story_update(update, monkeypatch)
+    assert shown.strip() == final.strip()
+
+
+def test_stream_guard_risk_freezes_before_risky_sentence():
+    g = sink.StreamGuard(risk=lambda s: "perigo" in s)
+    text = (
+        "Primeira frase calma e longa o bastante para passar da janela de espera inicial. "
+        "Segunda frase também tranquila e descritiva do ambiente ao redor do herói. "
+        "Aqui há perigo declarado. Quarta frase depois do perigo continua normalmente."
+    )
+    out = "".join(g.feed(text[i : i + 5]) for i in range(0, len(text), 5)) + g.finish()
+    assert out.endswith("do herói.")
+    assert "perigo" not in out
+
+
+def test_stream_guard_risk_none_is_unchanged():
+    g = sink.StreamGuard()
+    text = "Uma frase simples e completa que cresce sem nenhum guard de risco ativo aqui. " * 3
+    out = "".join(g.feed(text[i : i + 9]) for i in range(0, len(text), 9)) + g.finish()
+    assert out == text.strip()
+
+
 def _npc_state(prior: str | None) -> dict:
     messages: list = []
     if prior:
