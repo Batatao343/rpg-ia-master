@@ -380,3 +380,24 @@ def test_check_raridade_regras_da_r3():
     ok = dict(abissal, custo_entropia=4, palavras_chave={"exaurir": True})
     assert not card_lint.check_raridade(ok)
     assert not card_lint.check_raridade(dict(dois, onda=None))  # legado: sem a regra
+
+
+def test_escala_no_efeito_principal_de_dano_e_recusada():
+    """SPEC-335 P1-1: o golpe com rolagem não aplica `escala`; só os efeitos extras escalam."""
+    escala = {"por": "entropia", "fator": 0.5, "max": 3}
+    inerte = card(efeitos=[{"kind": "dano", "categoria_arma": "leve", "dano_base": 2, "escala": escala}])
+    assert any(i.code == "escala_inerte" for i in card_lint.check_escala_principal(inerte))
+    extra = card(
+        efeitos=[
+            {"kind": "dano", "categoria_arma": "leve", "dano_base": 2},
+            {"kind": "dano", "valor": 1, "escala": escala},
+        ]
+    )
+    assert not card_lint.check_escala_principal(extra)
+
+
+def test_pool_inteiro_sem_escala_inerte():
+    from services import card_effects as fx
+
+    for c in card_lint.load_pool():
+        assert not card_lint.check_escala_principal(fx.materialize(c)), c["id"]

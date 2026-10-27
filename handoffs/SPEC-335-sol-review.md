@@ -74,7 +74,7 @@ mas foram lidos e exercitados porque as Cartas dependem deles.
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche por commit)
+Executor (Lote 2, commit `fix(cards): SPEC-335 Lote 2 review`): P1-1, P1-2, P1-3 (a)+(b: `sim.py` corrigido e arenas dos Lotes 1/2 refeitas), P2-1 a P2-7 aplicados; detalhes na §4.1 da spec. Correção ao P2-6: não há legadas `ativa`+`buff_esquiva` (as 7 são `reacao`).
 
 ## Pendências
 

@@ -72,8 +72,8 @@
       "origem": "onda-1",
       "classe": "Sangromante",
       "subclasse": "avaro",
-      "patamar": "inicial",
-      "raridade": "comum",
+      "patamar": "avancado",
+      "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
       "frequencia": "livre",
@@ -85,7 +85,11 @@
         {
           "kind": "dano",
           "categoria_arma": "leve",
-          "dano_base": 2,
+          "dano_base": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 1,
           "escala": {
             "por": "entropia",
             "fator": 0.5,
@@ -95,8 +99,8 @@
       ],
       "descricao": "O corte inicial não custa nada; a dívida que ele cria é que cresce no escuro.",
       "momento": "Melhor jogada quando a Entropia já subiu bastante e o juro acumulado vale mais que o capital.",
-      "tier": 1,
-      "level_req": 1,
+      "tier": 3,
+      "level_req": 4,
       "apex": false,
       "onda": 1,
       "versao": 1
@@ -124,13 +128,16 @@
           "alvo": "eu"
         }
       ],
-      "descricao": "Só quem já está quebrado costura a pele com o fio da casa e ganha uma cicatriz nova.",
+      "descricao": "Costura a pele com o fio da casa e guarda a cicatriz nova como moeda para depois.",
       "momento": "Melhor jogada quando a Vitalidade caiu a menos da metade e gastar mais sangue seria falência.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "palavras_chave": {
+        "guardar": true
+      }
     },
     {
       "id": "san1_ava_livro_de_dividas",
@@ -160,7 +167,10 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "palavras_chave": {
+        "guardar": true
+      }
     },
     {
       "id": "san1_ava_gota_contada",
@@ -224,7 +234,8 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
     },
     {
       "id": "san1_ava_cobranca_adiada",
@@ -269,9 +280,9 @@
       "origem": "onda-1",
       "classe": "Sangromante",
       "subclasse": "avaro",
-      "patamar": "avancado",
-      "raridade": "incomum",
-      "custo_entropia": 1,
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
       "custo_folego": 1,
       "frequencia": "cena",
       "virtude_permitida": [
@@ -281,18 +292,17 @@
       "efeitos": [
         {
           "kind": "dano",
-          "categoria_arma": "versatil",
-          "dano_base": 6
+          "categoria_arma": "leve",
+          "dano_base": 5
         }
       ],
       "palavras_chave": {
-        "sacrificio": 2,
-        "guardar": true
+        "sacrificio": 2
       },
-      "descricao": "Deixa um pedaço da coxa em penhor e fica com a lâmina por mais uma rodada.",
-      "momento": "Melhor jogada quando o golpe vale a carne que ele custa e a carta pode esperar a abertura.",
-      "tier": 3,
-      "level_req": 4,
+      "descricao": "Deixa um pedaço da coxa em penhor e leva a lâmina fundo antes que alguém peça a conta.",
+      "momento": "Melhor jogada quando o golpe vale a carne que ele custa e a abertura é agora, não depois.",
+      "tier": 1,
+      "level_req": 1,
       "apex": false,
       "onda": 1,
       "versao": 1
@@ -350,7 +360,11 @@
         {
           "kind": "dano",
           "categoria_arma": "pesada",
-          "dano_base": 8,
+          "dano_base": 8
+        },
+        {
+          "kind": "dano",
+          "valor": 2,
           "escala": {
             "por": "entropia",
             "fator": 0.5,

@@ -296,6 +296,30 @@ def _tokens_all(text: str) -> set[str]:
     return set(re.findall(r"[a-z0-9]+", fx._fold(text).replace("_", " ")))
 
 
+# SPEC-335 P1-1: o golpe com rolagem tira o dano de `conflict_turn._damage_from`
+# (`dano_base`/`categoria_arma`), que não chama `fx.scaled_value`; a `escala` só vale nos efeitos
+# EXTRAS ou disparados. No principal de dano ela é inerte (e o orçamento a cobraria).
+ESCALA_INERTE_KINDS = frozenset({"dano", "contra_ataque"})
+
+
+def check_escala_principal(card: dict) -> list[Issue]:
+    prim = fx.primary_effect(card)
+    if (
+        prim
+        and prim.get("escala") is not None
+        and str(prim.get("kind")) in ESCALA_INERTE_KINDS
+        and fx.gatilho(prim) == fx.GATILHO_PADRAO
+    ):
+        return [
+            Issue(
+                "error",
+                "escala_inerte",
+                "`escala` no efeito principal de dano não faz nada: mova-a para um efeito extra",
+            )
+        ]
+    return []
+
+
 def check_color_pie(card: dict) -> list[Issue]:
     rule = roda().get(str(card.get("classe") or ""))
     if not rule:
@@ -429,6 +453,7 @@ def lint_card(
     issues += check_voice(card)
     issues += check_raridade(card)
     issues += check_color_pie(card)
+    issues += check_escala_principal(card)
     issues += check_names(card, others)
     issues += check_redundancy(card, others, embed)
     return issues

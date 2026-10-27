@@ -44,7 +44,7 @@
       "subclasse": "silencioso",
       "patamar": "inicial",
       "raridade": "comum",
-      "custo_entropia": 1,
+      "custo_entropia": 0,
       "custo_folego": 1,
       "frequencia": "cena",
       "virtude_permitida": [
@@ -54,7 +54,7 @@
       "efeitos": [
         {
           "kind": "sangria",
-          "valor": 3
+          "valor": 2
         }
       ],
       "descricao": "Um risco fino que o alvo só sente quando o corpo já escorre.",
@@ -74,7 +74,7 @@
       "subclasse": "silencioso",
       "patamar": "inicial",
       "raridade": "comum",
-      "custo_entropia": 0,
+      "custo_entropia": 1,
       "custo_folego": 1,
       "frequencia": "turno",
       "virtude_permitida": [
@@ -93,7 +93,8 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
     },
     {
       "id": "san1_sil_olho_no_pulso",
@@ -275,14 +276,11 @@
       "efeitos": [
         {
           "kind": "sangria",
-          "valor": 4
+          "valor": 5
         }
       ],
-      "palavras_chave": {
-        "eco": true
-      },
       "descricao": "Encontra o vaso mais fundo e deixa o sangue cobrar pelo resto.",
-      "momento": "Melhor jogada quando outra carta da Postura acabou de abrir o inimigo e a sangria deve dobrar de voz.",
+      "momento": "Melhor jogada quando o inimigo é de couro grosso e só uma veia funda, deixada aberta, vai fazer diferença.",
       "tier": 4,
       "level_req": 7,
       "apex": false,

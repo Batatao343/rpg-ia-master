@@ -338,3 +338,40 @@ def test_protocolo_lote_e_preset_dos_parametros_existentes():
     assert sim.PROTOCOLO_LOTE == {"categories": ["padrao"], "per_cat": 4, "seeds": 20}
     assert sim.LIMIAR_BRANCA == 0.05 and sim.LIMIAR_DOMINANTE_USO == 0.60
     assert sim.LIMIAR_DOMINANTE_DELTA_PP == 8.0 and sim.MIN_LUTAS_DELTA == 40
+
+
+def test_bracos_diferem_so_na_carta_testada(sim):
+    """SPEC-335 P1-3: o braço "sem" não tem a Carta (mesmo já no pool) e o "com" é "sem" + ela."""
+    from collections import Counter
+
+    from services import card_lint
+
+    alvo = next(
+        c
+        for c in card_lint.load_pool()
+        if c["id"] == "san1_exp_selo_de_dor" and c.get("versao", 1) == 1
+    )
+    assert cards.get_card(alvo["id"])  # já promovida: o caso que quebrava o braço "sem"
+    sem, com = sim.build_arms(alvo, alvo["level_req"], alvo["subclasse"])
+    assert Counter(sem)[alvo["id"]] == 0
+    copias = 2 if alvo.get("patamar") in cards._COMMON_PATAMARES else 1
+    assert Counter(com) - Counter(sem) == Counter({alvo["id"]: copias})
+    assert not (Counter(sem) - Counter(com))
+    assert cards.get_card(alvo["id"])  # catálogo restaurado
+
+
+def test_ordem_do_baralho_nao_muda_a_luta(sim):
+    deck = sim.full_deck("Médico de Campo", 3)
+    a = sim.fight(
+        sim.A.creatures_by_category()["padrao"][0], 2, "Médico de Campo", 3, 1, deck, "par"
+    )
+    b = sim.fight(
+        sim.A.creatures_by_category()["padrao"][0],
+        2,
+        "Médico de Campo",
+        3,
+        1,
+        list(reversed(deck)),
+        "par",
+    )
+    assert a == b

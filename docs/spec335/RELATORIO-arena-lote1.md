@@ -7,20 +7,22 @@
 saem do catálogo na sua rodada), ao nível de entrada (`level_req`), encontro padrão (`padrao`, 4 criaturas por nível), 20 sementes
 = 80 lutas por braço. Métrica, limiares e fórmulas são os de `simulate_batch` (nada mudou no evaluator).
 
+**Arena corrigida (SPEC-335 P1-3, `sim.py`)**: o braço “sem” agora NÃO tem a Carta testada (era o mesmo multiconjunto do “com”, só em outra ordem), os dois braços usam a mesma tag de semente (pareados) e o baralho entra ordenado nas pilhas. Teste: `tests/test_card_sim.py::test_bracos_diferem_so_na_carta_testada`. Os deltas abaixo são os primeiros que medem a Carta; com 80 lutas por braço, 1 luta = 1,25 pp e ±9 pp é ruído.
+
 | Carta | uso na mão | delta de vitória | lutas | bandeiras |
 |---|---|---|---|---|
-| `arc1_cal_leitura` | 40% (41/102) | +2.5 pp | 80 | — |
-| `arc1_cal_pulso_medido` | 58% (70/120) | +2.5 pp | 80 | — |
-| `arc1_cal_prumo` | 37% (38/103) | +0.0 pp | 80 | — |
-| `arc1_cal_compasso` | 27% (28/103) | +1.2 pp | 80 | — |
-| `arc1_cal_gabarito` | 27% (28/103) | +1.3 pp | 80 | — |
-| `arc1_cal_estilhaco` | 42% (56/134) | -2.5 pp | 80 | — |
-| `arc1_cal_rede` | 56% (73/131) | -1.2 pp | 80 | — |
-| `arc1_cal_segunda_medicao` | 28% (75/264) | -2.5 pp | 80 | — |
-| `arc1_cal_folga` | 29% (17/59) | +0.0 pp | 80 | — |
-| `arc1_cal_impacto` | 32% (19/59) | -2.5 pp | 80 | — |
-| `arc1_cal_quadrante` | 26% (14/53) | -1.3 pp | 80 | — |
-| `arc1_cal_mares` | 27% (21/77) | +0.0 pp | 80 | — |
+| `arc1_cal_leitura` | 44% (43/98) | -3.7 pp | 80 | — |
+| `arc1_cal_pulso_medido` | 57% (62/109) | +3.7 pp | 80 | — |
+| `arc1_cal_prumo` | 43% (46/107) | +0.0 pp | 80 | — |
+| `arc1_cal_compasso` | 28% (30/106) | -7.5 pp | 80 | — |
+| `arc1_cal_gabarito` | 28% (29/102) | -5.0 pp | 80 | — |
+| `arc1_cal_estilhaco` | 49% (67/136) | -2.5 pp | 80 | — |
+| `arc1_cal_rede` | 54% (73/135) | +0.0 pp | 80 | — |
+| `arc1_cal_segunda_medicao` | 27% (75/275) | +0.0 pp | 80 | — |
+| `arc1_cal_folga` | 21% (14/66) | +8.8 pp | 80 | dominante |
+| `arc1_cal_impacto` | 35% (24/68) | +7.5 pp | 80 | — |
+| `arc1_cal_quadrante` | 12% (7/60) | +0.0 pp | 80 | — |
+| `arc1_cal_mares` | 26% (22/83) | +0.0 pp | 80 | — |
 | `arc1_des_faisca` | 28% (24/87) | +6.2 pp | 80 | — |
 | `arc1_des_dedos` | 21% (19/91) | +7.5 pp | 80 | — |
 | `arc1_des_palma` | 28% (24/87) | +2.5 pp | 80 | — |
@@ -46,7 +48,9 @@ saem do catálogo na sua rodada), ao nível de entrada (`level_req`), encontro p
 | `arc1_imp_orquestra` | 9% (5/54) | -1.3 pp | 80 | — |
 | `arc1_imp_ultima_gambiarra` | 43% (21/49) | +7.5 pp | 80 | — |
 
-Cartas com bandeira no protocolo final: **0**. Ajustadas até limpar (v. histórico do commit): `arc1_des_dedos`
+**Rodada com a arena corrigida (substitui a anterior)**: 1 Carta(s) com bandeira — `arc1_cal_folga` (dominante, uso 21%, +8.8 pp). `arc1_cal_folga` fica a +8,8 pp com 80 lutas (7 lutas de diferença): na prática ruído, mas acima do limiar do protocolo; coordenador decide entre ajustar ou aceitar.
+
+Histórico (arena antiga): 0 bandeiras na arena antiga. Ajustadas até limpar (v. histórico do commit): `arc1_des_dedos`
 (Vantagem → +2 de acerto), `arc1_des_palma` (dano 3 → 2), `arc1_des_corrente` (Fôlego livre → descartar 2, 1 de Fôlego, `cena`).
 Reescrevi o *efeito*. Atenção (P2-5): `arc1_des_palma` ganhou **Eco** (efeito principal só dano 2) e `arc1_des_faisca` ganhou **Ressoar** e passou a `livre`; Eco e Ressoar não pesam na decisão do bot, então para essas duas o **único freio é o orçamento**.
 

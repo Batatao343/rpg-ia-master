@@ -74,9 +74,16 @@ def injected(batch: list[dict]):
 # --------------------------------------------------------------------------
 # Baralho completo da Postura
 # --------------------------------------------------------------------------
-def full_deck(class_name: str, level: int, subclass: str = "", extra: list[str] | None = None):
+def full_deck(
+    class_name: str,
+    level: int,
+    subclass: str = "",
+    extra: list[str] | None = None,
+    reserve: int = 0,
+):
     """Básicas + Cartas do Acervo da Postura (``level_req`` ≤ nível), determinístico.
-    ``extra`` entra por último e garante vaga (substitui a mais fraca se cheio)."""
+    ``extra`` entra por último e garante vaga (substitui a mais fraca se cheio).
+    ``reserve`` deixa vagas livres no teto (para o braço "com" só ACRESCENTAR a Carta)."""
     basics = cards.basicas_for_class(class_name)
     deck: list[str] = []
     deck += (basics["golpe"][:1] or []) * 4
@@ -94,7 +101,7 @@ def full_deck(class_name: str, level: int, subclass: str = "", extra: list[str] 
     for c in pool:
         copies = 2 if c.get("patamar") in cards._COMMON_PATAMARES else 1
         for _ in range(copies):
-            if len(deck) < cards.DECK_MAX - len(extra or []):
+            if len(deck) < cards.DECK_MAX - len(extra or []) - reserve:
                 deck.append(c["id"])
     for cid in extra or []:
         if len(deck) < cards.DECK_MAX:
@@ -204,6 +211,7 @@ def _fight(bid, n, class_name, level, seed, deck, tag, seen=None):
     """Uma luta de arena com o baralho dado. Devolve ``("win"|"death"|"timeout", rodadas)``."""
     random.seed(f"{tag}|{level}|{class_name}|{bid}|{n}|{seed}")
     player = A.hero(class_name, level)
+    deck = sorted(deck)  # ordem fixa: as pilhas embaralham por semente, não pela ordem de montagem
     player["deck"] = list(deck)
     player["prepared_cards"] = list(
         dict.fromkeys(list(deck) + (player.get("prepared_cards") or []))
@@ -299,6 +307,21 @@ def per_folego(card: dict) -> dict:
     }
 
 
+def build_arms(card: dict, level: int, subclass: str) -> tuple[list[str], list[str]]:
+    """Baralhos dos dois braços: ``sem`` (a Carta fora do catálogo) e ``com`` (= ``sem`` + cópias
+    da Carta). Diferem SÓ na Carta testada (SPEC-335 P1-3)."""
+    cid = card["id"]
+    cat = cards._load_cards()
+    saved = cat.pop(cid, None)
+    copies = 2 if card.get("patamar") in cards._COMMON_PATAMARES else 1
+    try:
+        sem = full_deck(card.get("classe"), level, subclass, reserve=copies)
+    finally:
+        if saved is not None:
+            cat[cid] = saved
+    return sem, sem + [cid] * copies
+
+
 def simulate_batch(batch: list[dict], levels, categories, per_cat, seeds) -> dict:
     encs = encounters(levels, categories, per_cat)
     report: dict[str, dict] = {}
@@ -310,16 +333,11 @@ def simulate_batch(batch: list[dict], levels, categories, per_cat, seeds) -> dic
             subclass = str(card.get("subclasse") or "")
             my_levels = [lv for lv in levels if lv >= level] or [max(levels)]
             my_encs = [e for e in encs if e[2] in my_levels]
-            sem = full_deck(cls, max(my_levels), subclass)
-            com = full_deck(
-                cls,
-                max(my_levels),
-                subclass,
-                extra=[cid, cid][: 2 if card.get("patamar") in cards._COMMON_PATAMARES else 1],
-            )
+            sem, com = build_arms(card, max(my_levels), subclass)
             seen: dict = {}
-            w0, f0 = batch_fights(cls, sem, "sem", my_encs, seeds)
-            w1, f1 = batch_fights(cls, com, "com", my_encs, seeds, seen)
+            # Sementes PAREADAS: a mesma tag nos dois braços (só o baralho muda).
+            w0, f0 = batch_fights(cls, sem, "par", my_encs, seeds)
+            w1, f1 = batch_fights(cls, com, "par", my_encs, seeds, seen)
             na_mao, jogada = seen.get(cid, [0, 0])
             uso = (jogada / na_mao) if na_mao else 0.0
             delta = round(((w1 / f1) - (w0 / f0)) * 100, 1) if f0 and f1 else 0.0
