@@ -8,7 +8,7 @@
 
 ## Estado em 10 linhas
 
-- `main` = `9775ea1` (26/10) = **staging** (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
+- `main` = `5353ad8` (26/10) = **staging** (`RPG_ARCHIVE_POLICY=lean`, 318 D4) (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
 - **`done` (26/10):** 320–324 frontend (conferidos em 390/1440 no staging), 325 mecânicas (A não-letal/resistência, B fuga, C objetos/ordens `on`; D reforços **descartada pelo dono**), 326 arte dinâmica fiel a Valoria (`on` no staging).
 - **Latência `in-progress` (medição):** 316 + 318 + 319 → 1ª narração p50 3,1–4,4 s (era 11,1 s), 55 turnos sem erro; 316 falta 1 falha induzida. 317 rota NPC em shadow (n=3, espera tráfego real); `STATIC_FIRST` testado (cache 0,025→0,05, ganho pequeno → off). 319: **`RPG_TOKEN_STREAM=on` + hedge 6000 no staging**; após fix do `tail` (`9775ea1`): `replace` 0/35, TTFMC servidor p50 2,65 s; hedge 0 disparos (critério não atingido); p95 dominada por espera de 19–59 s no Vercel ANTES da função (3–6 de 15 turnos).
 - Staging: preset versionado `scripts/staging/staging_flags.json`; `wt.sh drop` agora remove a junção do node_modules.
@@ -17,7 +17,7 @@
 ## Próximos 3 passos
 
 1. 319: §6.4 browser; decidir hedge (inócuo); investigar a espera pré-função do Vercel (cold start/fila, bundle 319 MB) — maior alavanca da p95 agora.
-2. 317: acumular 200 decisões shadow (tráfego real com vocativo a NPC); cold start do Vercel = nova spec de infra (bundle 319 MB, Hobby). 318: medir turnos NPC novo/viagem + `evals compare`.
+2. 317: acumular 200 decisões shadow (tráfego real com vocativo a NPC); cold start do Vercel = nova spec de infra (bundle 319 MB, Hobby). 318: A/B feito (dia −6 s, viagem −3,5 s; NPC novo e `state` sem ganho); `compare` ok → `lean` no staging; falta medir SMART/turno com `lean` (≤ 0,45).
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
@@ -36,6 +36,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| Teto diário do staging (R$ 5) | estourou em 27/10 00:10 UTC pelas medições 316–319 (reabre ~24 h) | "sobe o teto p/ R$ X" → `--daily-cap-brl X`; senão medir `lean` (318) após o reset |
 | SPEC-319 hedge (D2) | decidir: hedge 6000 ms teve 0 disparos (a cauda vem depois do 1º token) | "desliga" → `RPG_LLM_HEDGE_MS` fora do preset, registrar e fechar 319 `done`; "mantém" → fechar com critério não atingido registrado |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
