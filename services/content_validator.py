@@ -711,7 +711,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             findings.append(Finding("cards", "error", path, "", str(exc)))
             continue
         for c in data.get("cards") or []:
-            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus"):
+            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328"):
                 continue
             cid = c.get("id", "")
             if cid in seen_ids:

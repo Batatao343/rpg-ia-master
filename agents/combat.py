@@ -982,10 +982,24 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
 # ==========================================================================
 # Identificação da ação do jogador (fala livre → TurnDeclaration, CLASSIFY)
 # ==========================================================================
-def _prepared_cards_catalog(player: dict) -> str:
+def _prepared_cards_catalog(player: dict, piles: dict | None = None) -> str:
     from services import cards
 
     linhas = []
+    if piles is not None:  # SPEC-328 R15: o catálogo do prompt é a MÃO, com o Fôlego
+        seen: set[str] = set()
+        for cid in piles.get("mao") or []:
+            c = cards.get_card(cid)
+            if not c or cid in seen:
+                continue
+            seen.add(cid)
+            linhas.append(
+                f"- {cid}: {c.get('name', cid)} | tipo {c.get('tipo')} | "
+                f"Fôlego {cards.custo_folego(c)} | Entropia {c.get('custo_entropia', 0)} | "
+                f"{c.get('descricao', '')[:50]}"
+            )
+        header = f"Fôlego disponível: {int(piles.get('folego', 0) or 0)}.\n    "
+        return header + ("\n".join(linhas) or "- (mão vazia; use ataque básico)")
     for cid in player.get("prepared_cards") or []:
         c = cards.get_card(cid)
         if not c:
@@ -995,6 +1009,28 @@ def _prepared_cards_catalog(player: dict) -> str:
             f"custo {c.get('custo_entropia', 0)} Entropia | {c.get('descricao', '')[:50]}"
         )
     return "\n".join(linhas) or "- (nenhuma carta preparada; use ataque básico)"
+
+
+def _deck_mode_now() -> str:
+    from services import card_piles
+
+    return card_piles.mode()
+
+
+def _normalize_extra_play(step: TurnStep, active: list[dict], ally_ids: list[str]) -> None:
+    """SPEC-328 R13: alvo das jogadas 2..n com as mesmas regras da 1ª."""
+    from services import cards
+
+    active_ids = [e["id"] for e in active]
+    if step.kind == "attack" and step.target_id not in set(active_ids):
+        step.target_id = active_ids[0] if active_ids else None
+    elif step.kind == "card":
+        step.target_id = _card_target_for(
+            cards.get_card(step.card_id or "") or {},
+            step.target_id,
+            active_ids=active_ids,
+            friendly_ids=[_PLAYER_ID] + [aid for aid in ally_ids if aid],
+        )
 
 
 def _usable_items_catalog(player: dict) -> str:
@@ -1035,7 +1071,7 @@ def _card_target_for(
 
 
 def _parse_turn_declaration(
-    player: dict, enemies: list[dict], intent: str, scene: dict
+    player: dict, enemies: list[dict], intent: str, scene: dict, piles: dict | None = None
 ) -> TurnDeclaration:
     """A IA IDENTIFICA a fala do jogador → `TurnDeclaration` estruturada (só
     identifica, não resolve). Guard de fallback: ataque básico no 1º inimigo.
@@ -1056,6 +1092,19 @@ def _parse_turn_declaration(
 
     folded_intent = intent.casefold()
     target_id = enemies[0]["id"] if enemies else None
+    if piles is not None:  # SPEC-328 R15: várias cartas pelo nome, na ordem em que aparecem
+        named = []
+        for cid in dict.fromkeys(list(piles.get("mao") or []) + list(player.get("deck") or [])):
+            card = cards.get_card(cid)
+            pos = folded_intent.find(str((card or {}).get("name", "")).casefold()) if card else -1
+            if pos >= 0 and card.get("name"):
+                named.append((pos, cid, card))
+        if named:
+            steps = [
+                TurnStep(kind="card", card_id=cid, target_id=_default_card_target(card, target_id))
+                for _pos, cid, card in sorted(named, key=lambda n: n[0])
+            ]
+            return TurnDeclaration(actor_id=_PLAYER_ID, acao=steps[0], jogadas=steps)
     for cid in player.get("prepared_cards") or []:
         card = cards.get_card(cid)
         if card and str(card.get("name", "")).casefold() in folded_intent:
@@ -1096,6 +1145,10 @@ def _parse_turn_declaration(
             description="engajar|desengajar|guardar|esconder|procurar, se kind=maneuver.",
         )
         direction: str = Field(default="", description="aproximar|afastar, se kind=move.")
+        extra_card_ids: list[str] = Field(
+            default_factory=list,
+            description="ids EXATOS de Cartas da mão jogadas DEPOIS da primeira, na ordem.",
+        )
 
     # SPEC-325 R14 (só `on` e com objeto visível): o schema/prompt ganham `object` — id e
     # rótulo EXATOS vindos de `visible_objects` (sem `effect`); fora disso, tudo igual a `off`.
@@ -1130,7 +1183,7 @@ def _parse_turn_declaration(
     Traduza a fala numa ação estruturada do conflito de Valoria.
 
     Cartas preparadas (use o id EXATO em card_id):
-    {_prepared_cards_catalog(player)}
+    {_prepared_cards_catalog(player, piles)}
 
     Consumíveis presentes (use o id EXATO em item_id):
     {_usable_items_catalog(player)}
@@ -1163,12 +1216,24 @@ def _parse_turn_declaration(
                 _log_event("combat", "object_invalid_fallback", level="info")
             if kind == "card" and res.card_id in (player.get("prepared_cards") or []):
                 card = cards.get_card(res.card_id) or {}
-                return TurnDeclaration(
-                    actor_id=_PLAYER_ID,
-                    acao=TurnStep(
-                        kind="card", card_id=res.card_id, target_id=_default_card_target(card, tid)
-                    ),
+                first = TurnStep(
+                    kind="card", card_id=res.card_id, target_id=_default_card_target(card, tid)
                 )
+                if piles is not None:  # SPEC-328 R15: lista validada contra o Acervo/baralho
+                    extras = [
+                        TurnStep(
+                            kind="card",
+                            card_id=x,
+                            target_id=_default_card_target(cards.get_card(x) or {}, tid),
+                        )
+                        for x in (getattr(res, "extra_card_ids", None) or [])
+                        if x in (player.get("prepared_cards") or [])
+                    ]
+                    if extras:
+                        return TurnDeclaration(
+                            actor_id=_PLAYER_ID, acao=first, jogadas=[first, *extras]
+                        )
+                return TurnDeclaration(actor_id=_PLAYER_ID, acao=first)
             if kind == "item" and res.item_id:
                 return TurnDeclaration(
                     actor_id=_PLAYER_ID,
@@ -1673,6 +1738,15 @@ def _combat_node(state: GameState):
             "instance_id": conflict_instance_id,
             "encounter_level": scene.get("encounter_level", 1),
         }
+        # SPEC-328 R5/R16: Baralho de Conflito (semente derivada do conflito → replay).
+        from services import card_piles
+
+        if card_piles.mode() != "off":
+            import zlib
+
+            combat_meta["pilhas"] = card_piles.start_piles(
+                player, zlib.crc32(conflict_instance_id.encode("utf-8"))
+            )
         # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
         combat_meta = em.safe_transition(combat_meta, "entering")
         combat_meta["encounter"] = em.build_manifest(
@@ -1902,7 +1976,13 @@ def _combat_node(state: GameState):
                         actor_id=_PLAYER_ID, acao=TurnStep(kind="attack", target_id=active[0]["id"])
                     )
                 else:
-                    decl = _parse_turn_declaration(player, active, parse_text, scene)
+                    decl = _parse_turn_declaration(
+                        player,
+                        active,
+                        parse_text,
+                        scene,
+                        piles=combat_meta.get("pilhas") if _deck_mode_now() == "on" else None,
+                    )
         _mark_nonlethal(decl, intent)
         resolved_decl = decl
         chase_refusal = _chase_attack_gate(combat_meta, decl)  # SPEC-325 R11
@@ -1936,10 +2016,19 @@ def _combat_node(state: GameState):
                 active_ids=[e["id"] for e in active],
                 friendly_ids=[_PLAYER_ID] + [aid for aid in ally_ids if aid],
             )
+        for extra_step in decl.jogadas[1:]:  # SPEC-328 R13: mesmas regras de alvo p/ a lista
+            _normalize_extra_play(extra_step, active, ally_ids)
         round_state = {
             "player": player,
             "_player_reaction_card_id": state.get("player_reaction_card_id"),
         }
+        deck_mode = _deck_mode_now()
+        if deck_mode != "off" and isinstance(combat_meta.get("pilhas"), dict):
+            import copy as _copy
+
+            combat_meta["pilhas"] = _copy.deepcopy(combat_meta["pilhas"])
+            round_state["_piles"] = combat_meta["pilhas"]
+            round_state["_deck_mode"] = deck_mode
         out = orch.run_round(
             scene,
             actors_by_id,
@@ -1956,7 +2045,7 @@ def _combat_node(state: GameState):
                 else {}
             ),
         )
-        if chase_refusal:
+        if chase_refusal or out.get("deck_refused"):
             combat_meta["round"] = max(0, int(combat_meta.get("round", 1) or 1) - 1)
             if prior_flee_attempts is not None:  # recusa não gasta nada: preserva o teto de fuga
                 combat_meta["flee_attempts"] = prior_flee_attempts
@@ -2137,6 +2226,13 @@ def _combat_node(state: GameState):
             )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")
+    if isinstance(combat_meta.get("pilhas"), dict):  # SPEC-328: pilhas vivem só no conflito
+        if combat_over:
+            combat_meta.pop("pilhas", None)
+        elif not out.get("action_refused") and _deck_mode_now() != "off":
+            from services import card_piles
+
+            card_piles.begin_round(combat_meta["pilhas"])  # mão da PRÓXIMA rodada já visível
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
     combat_meta["last_reactions"] = list(out.get("reactions") or [])

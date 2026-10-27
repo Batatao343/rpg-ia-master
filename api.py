@@ -1859,6 +1859,17 @@ class CreateCharacterRequest(BaseModel):
         return value
 
 
+class PlayStepRequest(BaseModel):
+    """Uma jogada da lista `jogadas` (SPEC-328). O motor revalida tudo."""
+
+    model_config = {"extra": "forbid"}
+    card_id: str | None = Field(default=None, max_length=128)
+    target_id: str | None = Field(default=None, max_length=128)
+    ruptura: bool = False
+    action_kind: Literal["attack", "maneuver", "pass"] | None = None
+    maneuver: Literal["engajar", "desengajar", "guardar", "esconder", "procurar"] | None = None
+
+
 class ActionRequest(BaseModel):
     # Auditoria A7: ação vira prompt — sem teto, request gigante = custo/latência.
     input_text: str = Field(max_length=2000)
@@ -1872,6 +1883,8 @@ class ActionRequest(BaseModel):
     # Laboratório/UI tática: ações fechadas evitam parse LLM de chips mecânicos.
     action_kind: Literal["attack", "maneuver", "pass", "flee"] | None = None
     maneuver: Literal["engajar", "desengajar", "guardar", "esconder", "procurar"] | None = None
+    # SPEC-328 R13: várias jogadas em ordem num único request ("Encerrar turno").
+    jogadas: list["PlayStepRequest"] | None = Field(default=None, max_length=8)
 
     @field_validator("action_id")
     @classmethod
@@ -2905,6 +2918,11 @@ def _combat_block(state: dict) -> dict[str, Any]:
     }
     if _enemy_intent.active() and meta.get("pressagios_publicos"):
         view["pressagios_publicos"] = list(meta["pressagios_publicos"])  # SPEC-329 R2/R3
+    from services import card_piles as _piles
+
+    if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
+        # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
+        view["pilhas"] = _piles.public_view(meta["pilhas"])
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}
@@ -5516,6 +5534,74 @@ def _commit_turn(
     _schedule_chronicle_jobs(state)
 
 
+def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]) -> None:
+    """SPEC-328 R13: `jogadas` → `TurnDeclaration.jogadas` (ordem preservada). Só com o
+    baralho `on` e pilhas no conflito; o motor valida mão/Fôlego/Entropia (R15)."""
+    from services import card_piles
+    from services import cards as _cards_svc
+    from services import combat_targeting as _targeting
+
+    if card_piles.mode() != "on" or not isinstance((state.get("combat") or {}).get("pilhas"), dict):
+        raise HTTPException(
+            409,
+            detail={
+                "code": "deck_off",
+                "message": "Este conflito não usa o Baralho de Conflito.",
+            },
+        )
+    default_target = str(active_enemies[0].get("id")) if active_enemies else None
+    steps: list[dict] = []
+    for play in req.jogadas or []:
+        bad = _targeting.check_declared_target(
+            state,
+            card_id=play.card_id,
+            action_kind=play.action_kind,
+            maneuver=play.maneuver,
+            target_id=play.target_id,
+        )
+        if bad:
+            raise HTTPException(
+                409,
+                detail={
+                    "code": "invalid_target",
+                    "invalid_reason": bad,
+                    "message": "O alvo escolhido deixou de ser válido. Escolha de novo.",
+                },
+            )
+        if play.card_id:
+            from agents.combat import _default_card_target
+
+            steps.append(
+                {
+                    "kind": "card",
+                    "card_id": play.card_id,
+                    "target_id": play.target_id
+                    or _default_card_target(
+                        _cards_svc.get_card(play.card_id) or {}, default_target
+                    ),
+                    "params": {"ruptura": bool(play.ruptura)},
+                }
+            )
+        elif play.action_kind == "maneuver" and play.maneuver:
+            steps.append(
+                {"kind": "maneuver", "maneuver": play.maneuver, "target_id": default_target}
+            )
+        else:
+            steps.append(
+                {
+                    "kind": play.action_kind or "attack",
+                    "target_id": play.target_id or default_target,
+                }
+            )
+    state["player_reaction_card_id"] = req.reaction_card_id
+    state["combat_declaration"] = {
+        "actor_id": "player",
+        "acao": steps[0],
+        "jogadas": steps,
+        "reaction_card_id": req.reaction_card_id,
+    }
+
+
 def _apply_action_options(state: dict, req: ActionRequest) -> None:
     """Traduz seleções da UI para a declaração que o motor já consome."""
     if not (state.get("combat") or {}).get("active"):
@@ -5526,6 +5612,8 @@ def _apply_action_options(state: dict, req: ActionRequest) -> None:
         if not enemy.get("dead")
         and enemy.get("status", "ativo") not in ("morto", "fugiu", "rendido", "incapacitado")
     ]
+    if req.jogadas:
+        return _apply_play_list(state, req, active_enemies)
     explicit_target = req.target_id
     if req.card_id and explicit_target:
         # SPEC-205 R10: Carta de suporte nunca mira um inimigo vindo da UI.

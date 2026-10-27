@@ -14,7 +14,7 @@ import logging
 import random
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (dados, condições, Entropia)
 from services import combat_flags, death_flow
@@ -52,6 +52,21 @@ class TurnDeclaration(BaseModel):
     # conflito-16: escolha antecipada da Carta que deve responder caso o
     # protagonista vire alvo nesta rodada. A janela ainda é validada pelo motor.
     reaction_card_id: str | None = None
+    # SPEC-328 R13: jogadas em ordem (Baralho de Conflito). `acao` e o atalho de
+    # `jogadas[0]`; sem a lista, o turno e o de sempre (uma `acao`).
+    jogadas: list[TurnStep] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _acao_is_first_play(self) -> "TurnDeclaration":
+        if self.jogadas and self.acao is None:
+            self.acao = self.jogadas[0]
+        return self
+
+    def plays(self) -> list[TurnStep]:
+        """Jogadas do turno: a lista (R13) ou a `acao` unica (compat)."""
+        if self.jogadas:
+            return list(self.jogadas)
+        return [self.acao] if self.acao is not None else []
 
 
 # ==========================================================================

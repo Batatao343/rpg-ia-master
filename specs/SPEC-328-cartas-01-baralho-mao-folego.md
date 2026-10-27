@@ -1,6 +1,6 @@
 # SPEC-328 — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (aprovada pelo dono 2026-10-27; implementação pronta atrás de `RPG_CARD_DECK=off`, falta revisão independente e calibração da arena)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327 (visão: combate de cartas de Valoria)
 > **Depende de:** SPEC-063, SPEC-065, SPEC-067, SPEC-209, SPEC-325 (todas `done`)
@@ -72,11 +72,20 @@ Intenção visível do inimigo (SPEC-329), keywords/combos (SPEC-330), espólio/
 6. **Arena** — rodar a arena da SPEC-285/090 `off` × `on`: duração média de conflito e taxa de vitória por classe dentro de ±15 % do `off` (calibrar `FOLEGO_BASE`/`MAO_BASE`, não as cartas).
 
 ## 5. Critérios de aceite
-- [ ] R1–R17 com teste nomeado
-- [ ] Arena `on` sem classe com vitória < 35 % ou > 80 % no encontro padrão
-- [ ] Narração: 1 chamada LLM por rodada (contador do trace)
-- [ ] `uv run pytest` verde; saves antigos carregam; guard de FallbackLLM no parser
+- [x] R1–R17 com teste nomeado (`tests/test_card_piles.py`, `test_deck_migration.py`, `test_round_multi_play.py`, `test_api_jogadas.py`)
+- [ ] Arena `on` sem classe com vitória < 35 % ou > 80 % no encontro padrão — **NÃO atingido** com Fôlego 3/mão 5 (vitória ~98 % em L1 padrão; ver `docs/spec328/arena-results-2026-10-27.md`); depende de decisão do dono (Fôlego 2, ou pressão inimiga via SPEC-329). O próprio `off` já fica fora de 35–80 % nessa arena.
+- [x] Narração: 1 chamada LLM por rodada (`test_uma_narracao_por_rodada_com_varias_jogadas`)
+- [x] Testes do escopo verdes (suíte completa é do coordenador); saves antigos carregam (combate sem `pilhas` segue no modo atual); guard de FallbackLLM no parser (`test_parser_guard_do_fallback_llm`)
 - [ ] Flag `on` no staging só depois de SPEC-334 (UI) pronta
+
+## 5b. Desvios e decisões de implementação (executor, 27/10)
+- Flag `RPG_CARD_DECK` vive em `services/card_piles.mode()` (padrão `off`), **não** em `combat_flags.CAPS` (os testes da SPEC-325 fixam 8 capacidades e o default `shadow`).
+- Mão da rodada seguinte é comprada ao **fim** da rodada (`begin_round` no nó de combate) para a UI já mostrá-la; `run_round` não compra.
+- Jogadas que não são Carta: `attack`/`item`/`maneuver` (exceto `mover`)/`object` custam **1 Fôlego**; `move`/`pass` são grátis. Lista inválida é recusada **inteira** antes de gastar (`deck_refused`, rodada não consumida).
+- Cartas básicas não têm teto de cópias (R2 pede 4 golpes + 4 guardas); `origem: "cartas-328"` é validada por `validate_cards`.
+- Pacto do Abismo debita 2 Entropia/Fôlego e dispara `on_channel` (único gatilho de classe que casa: Arcanista); registra `pacto_abismo` em `class_mechanics`.
+- Reação do jogador continua exigindo `reaction_card_id` da UI; com baralho `on` a carta precisa estar na mão e há Fôlego sobrando (sem Pacto). Auto-reação por mão fica para a SPEC-334.
+- Sem endpoint HTTP de edição de baralho (só `cards.set_deck`); a UI/endpoint entra com a SPEC-334.
 
 ## 6. Smoke com LLM real
 1. Conflito novo: mão de 5 aparece, jogar 2 cartas por texto livre ("corto e me protejo").

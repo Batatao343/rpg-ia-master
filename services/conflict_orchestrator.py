@@ -793,6 +793,10 @@ def _open_reaction_window(
                 or str(selected_player_card) not in set(reactor.get("prepared_cards") or [])
             ):
                 continue
+            from services import card_deck_round as _deck
+
+            if _deck.reaction_gate(state, reactor, card) is False:
+                continue  # SPEC-328 R12: fora da mao ou sem Folego sobrando
         else:
             card = _enemy_reaction_card(reactor)
         if not card:
@@ -826,6 +830,10 @@ def _open_reaction_window(
                 else:
                     reactor[key] = value
             continue
+        if rid == player_id:
+            from services import card_deck_round as _deck
+
+            _deck.reaction_commit(state, reactor, card)  # SPEC-328 R12 (no-op sem baralho)
         # Proteção limitada ao próximo ataque; não deixa Guarda persistente.
         cs.grant_tactical_modifier(scene, "protected", rid, rid)
         _resolve_reaction_effect(scene, reactor, rid, card, attacker_id, actors_by_id, out, rng=rng)
@@ -1978,7 +1986,16 @@ def run_round(
     # SPEC-325 R11: `refusal` vem do nó (ataque corpo a corpo durante a fuga) e segue o
     # mesmo caminho do item recusado: nada na cena é tocado, os inimigos não agem.
     refusal = refusal or _refused_player_item(actors_by_id, sides, declarations)
+    from services import card_deck_round as _deck  # SPEC-328 (atras de RPG_CARD_DECK)
+
+    deck_refusal = (
+        "" if refusal else _deck.refusal(state, actors_by_id, _player_id(sides), declarations)
+    )
+    refusal = refusal or deck_refusal
+    _deck.shadow(state, actors_by_id, _player_id(sides), declarations, out)
     if refusal:
+        if deck_refusal:
+            out["deck_refused"] = True
         # SPEC-227 R8: item recusado (ex.: Vitalidade cheia) NÃO gasta a Ação nem
         # dá turno aos inimigos — nada na cena é tocado, o jogador redeclara.
         out["logs"].append(refusal)
@@ -2178,7 +2195,12 @@ def run_round(
         decl = declarations.get(actor_id)
         if decl is None:
             decl = _enemy_decl(actor_id, actor)
-        _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+        if actor_id == player_id and _deck.deck_mode(state) == "on":
+            _deck.resolve_player_plays(
+                scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng
+            )
+        else:
+            _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         _expire_stat_conditions(actor, present_at_start, out)
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.

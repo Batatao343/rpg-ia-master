@@ -206,8 +206,8 @@ def cards_for_class(class_name: str, subclass: str = "") -> list[dict]:
     """Cartas de classe/subclasse (exclui Cartas de Virtude, tipo 'virtude')."""
     out = []
     for c in _load_cards().values():
-        if c.get("tipo") == "virtude":
-            continue
+        if c.get("tipo") == "virtude" or c.get("basica"):
+            continue  # basicas (SPEC-328) vivem no baralho, nunca no Acervo/progressao
         if c.get("classe") in (class_name, "") or class_name == "":
             if not subclass or c.get("subclasse") in (subclass, ""):
                 out.append(c)
@@ -321,6 +321,100 @@ def set_prepared(state: dict, prepared: list[str]) -> dict:
 
 
 # --------------------------------------------------------------------------
+# Baralho de Conflito (SPEC-328)
+# --------------------------------------------------------------------------
+DECK_MIN = 12
+DECK_MAX = 24
+FOLEGO_MAX_CARTA = 3
+_DECK_TIPOS = frozenset({"ativa", "reacao", "utilitaria"})
+_COMMON_PATAMARES = frozenset({"inicial", "avancado"})
+_DAMAGE_KINDS = frozenset({"dano", "dot", "contra_ataque"})
+
+
+def custo_folego(card: dict) -> int:
+    """Fôlego da Carta por rodada (R6). Valor explícito no JSON vence; senão deriva:
+    3 se Ápice/descanso_longo · 2 se tier ≥ 3 ou dano_base ≥ 8 · 0 se livre e sem dano · 1."""
+    if "custo_folego" in card:
+        try:
+            return max(0, min(FOLEGO_MAX_CARTA, int(card["custo_folego"])))
+        except (TypeError, ValueError):
+            pass
+    effect = card.get("efeito") or {}
+    freq = str(card.get("frequencia", "livre"))
+    if card.get("apex") or freq == "descanso_longo":
+        return 3
+    try:
+        dano_base = int(effect.get("dano_base", 0) or 0)
+        tier = int(card.get("tier", 1) or 1)
+    except (TypeError, ValueError):
+        dano_base, tier = 0, 1
+    if tier >= 3 or dano_base >= 8:
+        return 2
+    if freq == "livre" and str(effect.get("kind") or "") not in _DAMAGE_KINDS:
+        return 0
+    return 1
+
+
+def basicas_for_class(class_name: str) -> dict[str, list[str]]:
+    """Básicas da Postura (R2) em ordem estável: {"golpe": [...], "guarda": [...], "assinatura": [...]}
+    — a 1ª básica ofensiva, a 1ª de `protecao` e a restante (assinatura)."""
+    mine = sorted(
+        (c for c in _load_cards().values() if c.get("basica") and c.get("classe") == class_name),
+        key=lambda c: str(c.get("id")),
+    )
+    golpe = [c["id"] for c in mine if str(c.get("id")).endswith("_golpe")]
+    guarda = [c["id"] for c in mine if str(c.get("id")).endswith("_guarda")]
+    sig = [c["id"] for c in mine if c["id"] not in golpe and c["id"] not in guarda]
+    return {"golpe": golpe, "guarda": guarda, "assinatura": sig}
+
+
+def set_deck(state: dict, deck: list[str]) -> dict:
+    """Aplica um novo Baralho de Conflito (R1). Valida: reorganização permitida, ids no
+    Acervo ou nas básicas da Postura, tipo jogável, 12–24 cartas, cópias ≤ 2 (comum) /
+    ≤ 1 (rara+). Básicas não têm teto de cópias. `prepared_cards` fica derivado (R4)."""
+    if not can_reorganize(state):
+        return {"ok": False, "error": "Não é seguro reorganizar o Baralho agora.", "log": ""}
+    player = state.get("player") or {}
+    known = set(player.get("known_cards") or [])
+    basics = {
+        cid for ids in basicas_for_class(str(player.get("class_name", ""))).values() for cid in ids
+    }
+    deck = [str(c) for c in deck]
+    fora = sorted({c for c in deck if c not in known and c not in basics})
+    if fora:
+        return {"ok": False, "error": f"Cartas fora do Acervo: {fora}.", "log": ""}
+    if not DECK_MIN <= len(deck) <= DECK_MAX:
+        return {
+            "ok": False,
+            "error": f"O Baralho precisa ter de {DECK_MIN} a {DECK_MAX} Cartas (tem {len(deck)}).",
+            "log": "",
+        }
+    counts: dict[str, int] = {}
+    for cid in deck:
+        card = get_card(cid) or {}
+        if card.get("tipo") not in _DECK_TIPOS:
+            return {"ok": False, "error": f"'{cid}' não entra no Baralho.", "log": ""}
+        counts[cid] = counts.get(cid, 0) + 1
+        if cid in basics:
+            continue
+        limite = 2 if card.get("patamar") in _COMMON_PATAMARES and not card.get("apex") else 1
+        if counts[cid] > limite:
+            return {
+                "ok": False,
+                "error": f"'{card.get('name', cid)}': no máximo {limite} cópia(s) no Baralho.",
+                "log": "",
+            }
+    player["deck"] = deck
+    keep = [
+        c
+        for c in (player.get("prepared_cards") or [])
+        if (get_card(c) or {}).get("tipo") not in _DECK_TIPOS
+    ]
+    player["prepared_cards"] = list(dict.fromkeys(deck + keep))
+    return {"ok": True, "error": None, "log": f"Baralho atualizado ({len(deck)} Cartas)."}
+
+
+# --------------------------------------------------------------------------
 # Uso / frequência
 # --------------------------------------------------------------------------
 def _usage_entry(player: dict, card_id: str) -> dict:
@@ -335,7 +429,7 @@ def use_card(state: dict, card_id: str) -> dict:
     card = get_card(card_id)
     if not card:
         return {"ok": False, "error": f"Carta '{card_id}' desconhecida.", "log": ""}
-    prepared = set(player.get("prepared_cards") or [])
+    prepared = set(player.get("prepared_cards") or []) | set(player.get("deck") or [])
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
     if card_id not in prepared and card_id not in virtude_ids:
         return {"ok": False, "error": f"Carta '{card_id}' não está preparada.", "log": ""}
