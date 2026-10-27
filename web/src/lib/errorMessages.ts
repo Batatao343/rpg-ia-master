@@ -66,6 +66,7 @@ export const MESSAGES: Record<string, string> = {
   pending_operation: "Há uma ação que falhou e ainda não foi superada. Retome-a ou descarte-a.",
   history_cursor_stale: "O histórico mudou. Recarregue a lista.",
   invalid_target: "O alvo escolhido deixou de ser válido. Escolha de novo.",
+  deck_off: "Este conflito não usa o Baralho de Conflito.",
   equip_request_invalid: "Informe o item ou o espaço a esvaziar.",
   equip_rejected: "Não foi possível equipar isso.", prepare_rejected: "Não foi possível preparar essas Cartas.",
   levelup_rejected: "Escolha recusada.", invalid_request: "Parâmetros inválidos.",
