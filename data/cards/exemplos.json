@@ -370,9 +370,8 @@
         "kind": "bonus_dano_por_estagio"
       },
       "descricao": "A força que o sangue guarda cresce a cada degrau que a Virtude sobe.",
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o dano precisa acompanhá-lo, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a Virtude de força subiu um degrau e o próximo golpe precisa provar isso.",
+      "raridade": "comum"
     },
     {
       "id": "vc_mente_lucida",
@@ -391,9 +390,8 @@
         "kind": "bonus_percepcao_por_estagio"
       },
       "descricao": "A mente limpa a névoa e enxerga o que o resto da vila só pressente.",
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o olhar acompanha, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a Virtude de mente subiu e a cena pede enxergar o que ninguém mais vê.",
+      "raridade": "comum"
     },
     {
       "id": "vc_corpo_rijo",
@@ -412,9 +410,8 @@
         "kind": "bonus_vitalidade_por_estagio"
       },
       "descricao": "O corpo aprende a aguentar o que antes o quebraria.",
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a Virtude de corpo subiu e o ferimento que viria agora é suportável.",
+      "raridade": "comum"
     },
     {
       "id": "vc_agil_reflexo",
@@ -433,9 +430,8 @@
         "kind": "bonus_iniciativa_por_estagio"
       },
       "descricao": "Os reflexos chegam um fôlego antes do perigo.",
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a pressa acompanha, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a Virtude de agilidade subiu e o perigo chega antes da hora de pensar.",
+      "raridade": "comum"
     },
     {
       "id": "vc_lingua_afiada",
@@ -454,9 +450,8 @@
         "kind": "bonus_social_por_estagio"
       },
       "descricao": "A palavra certa corta mais fundo que o ferro e deixa menos sangue.",
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a palavra pesa mais, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a Virtude de palavra subiu e uma frase vale mais que um golpe.",
+      "raridade": "comum"
     }
   ]
 }

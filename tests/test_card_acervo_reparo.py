@@ -50,6 +50,25 @@ def test_80_cartas_de_tiers_5_plus_sem_texto_generico():
     assert len({c["contrapartida"] for c in t5}) == 80
 
 
+def test_pool_inteiro_sem_descricao_vazia_ou_generica():
+    """Critério da SPEC-335: 0 descrições vazias/genéricas em todo o pool."""
+    pool = card_lint.load_pool()
+    assert len(pool) > 500
+    for c in pool:
+        ruins = [
+            i.message
+            for i in card_lint.check_voice(c)
+            if "vazia" in i.message or "genérica" in i.message
+        ]
+        assert not ruins, (c["id"], ruins)
+
+
+def test_lint_recusa_descricao_vazia():
+    for desc in ("", "   ", None):
+        c = {"name": "Selo Frio", "descricao": desc}
+        assert any("vazia" in i.message for i in card_lint.check_voice(c))
+
+
 def test_lint_recusa_frase_modelo_do_gerador_antigo():
     c = {
         "name": "Selo Frio",
@@ -309,30 +328,18 @@ def test_lote5_licoes_da_revisao_dos_lotes_anteriores():
         assert prim is None or prim.get("alvo") not in ("aliados", "inimigos"), c["id"]
 
 
-# R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
-# (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
-# ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
-POSTURAS_COM_MOMENTO_PLACEHOLDER = {
-    "Inimigo",
-    "",  # Cartas de Virtude
-}
-MAX_PLACEHOLDERS = 45  # só pode diminuir (== no teste: baixe aqui ao reescrever)
+# R4: `momento` distinto por classe. Não há mais `momento_placeholder` no pool (Lote 0 fechado).
 
 
-def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():
+def test_momento_distinto_por_classe_sem_placeholder():
     pool = [c for c in card_lint.load_pool() if c.get("momento")]
-    placeholders = [c for c in pool if c.get("momento_placeholder")]
-    assert len(placeholders) == MAX_PLACEHOLDERS
-    assert not [c["id"] for c in placeholders if c.get("onda") is not None]
-    assert {c.get("classe") for c in placeholders} <= POSTURAS_COM_MOMENTO_PLACEHOLDER
+    assert not [c["id"] for c in card_lint.load_pool() if c.get("momento_placeholder")]
     por_postura: dict = {}
     for c in pool:
-        if c.get("momento_placeholder") or str(c["id"]).startswith(("inf_", "bas_")):
+        if str(c["id"]).startswith(("inf_", "bas_")):
             continue
         por_postura.setdefault(c.get("classe"), []).append(c)
     for postura, cs in por_postura.items():
-        if postura in POSTURAS_COM_MOMENTO_PLACEHOLDER:
-            continue
         momentos = [c["momento"] for c in cs]
         assert len(momentos) == len(set(momentos)), postura
         for i, a in enumerate(momentos):

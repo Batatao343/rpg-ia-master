@@ -118,7 +118,7 @@ def _effect(kind: str, value: int, index: int) -> dict:
     return effect
 
 
-KEEP_FIELDS = ("descricao", "contrapartida", "raridade", "momento", "momento_placeholder")
+KEEP_FIELDS = ("descricao", "contrapartida", "raridade", "momento")
 
 
 def _card(

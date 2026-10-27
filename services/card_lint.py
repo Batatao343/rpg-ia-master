@@ -270,6 +270,8 @@ def check_voice(card: dict) -> list[Issue]:
             Issue("error", "voz", f"nome com mais de {MAX_PALAVRAS_NOME} palavras: {name!r}")
         )
     desc = str(card.get("descricao") or "")
+    if not desc.strip():
+        out.append(Issue("error", "voz", "descrição vazia"))
     if len(desc) > MAX_CHARS_DESCRICAO:
         out.append(
             Issue("error", "voz", f"descrição com {len(desc)} > {MAX_CHARS_DESCRICAO} caracteres")

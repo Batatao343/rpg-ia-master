@@ -41,9 +41,8 @@ Torpor, Eco…): se a arena não mede, registre como limitação no relatório. 
 ### Raridade e `momento`
 
 `card_lint.check_raridade` (Cartas de onda): comum <= 1 efeito e <= 1 palavra-chave; incomum <= 2;
-abissal exige Exaurir e custo explícito; `raridade` coerente com o `patamar`. `momento_placeholder:
-true` marca `momento` de modelo (acervo legado das Posturas sem lote); o teste
-`test_card_acervo_reparo` só deixa essa lista **encolher**.
+abissal exige Exaurir e custo explícito; `raridade` coerente com o `patamar`. O `momento` de todo o
+pool é próprio (o marcador `momento_placeholder` foi removido; o teste exige 0).
 
 ## Roda das Posturas (color pie de Valoria)
 
