@@ -1,7 +1,7 @@
 # SPEC-329 — revisão sol (review)
 
 > **Veredito:** `APPROVED` (re-revisão de `35810655`; a 1ª rodada, sobre `2000cbe5`, foi `CHANGES_REQUIRED`)
-> **Revisor:** Sol (Opus) · **Data:** 2026-10-27 · **Commit revisado:** `2000cbe5`
+> **Revisor:** Sol (Opus) · **Data:** 2026-10-27 · **Commit revisado:** `2000cbe5` → `35810655`
 
 ## Escopo
 
