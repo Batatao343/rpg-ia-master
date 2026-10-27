@@ -109,18 +109,16 @@
  },
  "med1_tri_golpe_e_pulso": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 159,
-  "vezes_jogada": 92,
-  "taxa_uso": 0.579,
+  "vezes_na_mao": 157,
+  "vezes_jogada": 56,
+  "taxa_uso": 0.357,
   "vitoria_sem": 0.237,
-  "vitoria_com": 0.4,
-  "delta_pp": 16.3,
+  "vitoria_com": 0.3,
+  "delta_pp": 6.2,
   "lutas_por_braco": 80,
   "dano_por_folego": 3.0,
   "protecao_por_folego": 0.0,
-  "bandeiras": [
-   "dominante"
-  ]
+  "bandeiras": []
  },
  "med1_tri_sedar_e_remendar": {
   "classe": "Médico de Campo",

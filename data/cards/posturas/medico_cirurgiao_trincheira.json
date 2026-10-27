@@ -261,7 +261,7 @@
       "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente",
         "agilidade"

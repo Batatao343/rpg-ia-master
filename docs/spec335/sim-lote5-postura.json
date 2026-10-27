@@ -39,32 +39,32 @@
   },
   "depois": {
    "L1 padrao": [
-    58,
+    62,
     80
    ],
    "L1 elite": [
-    53,
+    50,
     80
    ],
    "L3 padrao": [
-    63,
+    65,
     80
    ],
    "L3 elite": [
-    45,
+    52,
     80
    ],
    "L5 padrao": [
-    58,
+    53,
     80
    ],
    "L5 elite": [
-    28,
+    21,
     80
    ]
   },
   "taxa_antes": 0.465,
-  "taxa_depois": 0.635
+  "taxa_depois": 0.631
  },
  "cirurgiao_trincheira": {
   "antes": {
@@ -111,16 +111,16 @@
     80
    ],
    "L5 padrao": [
-    34,
+    27,
     80
    ],
    "L5 elite": [
-    11,
+    8,
     80
    ]
   },
   "taxa_antes": 0.506,
-  "taxa_depois": 0.588
+  "taxa_depois": 0.567
  },
  "boticario": {
   "antes": {
@@ -151,32 +151,32 @@
   },
   "depois": {
    "L1 padrao": [
-    55,
-    80
-   ],
-   "L1 elite": [
-    49,
-    80
-   ],
-   "L3 padrao": [
     60,
     80
    ],
+   "L1 elite": [
+    51,
+    80
+   ],
+   "L3 padrao": [
+    59,
+    80
+   ],
    "L3 elite": [
-    45,
+    46,
     80
    ],
    "L5 padrao": [
-    39,
+    34,
     80
    ],
    "L5 elite": [
-    11,
+    7,
     80
    ]
   },
   "taxa_antes": 0.487,
-  "taxa_depois": 0.54
+  "taxa_depois": 0.535
  },
  "cirurgiao_ferro": {
   "antes": {
@@ -207,32 +207,32 @@
   },
   "depois": {
    "L1 padrao": [
-    60,
+    61,
     80
    ],
    "L1 elite": [
-    46,
+    45,
     80
    ],
    "L3 padrao": [
-    65,
+    66,
     80
    ],
    "L3 elite": [
-    43,
+    46,
     80
    ],
    "L5 padrao": [
-    51,
+    34,
     80
    ],
    "L5 elite": [
-    18,
+    9,
     80
    ]
   },
   "taxa_antes": 0.519,
-  "taxa_depois": 0.59
+  "taxa_depois": 0.544
  },
- "elapsed_s": 30.7
+ "elapsed_s": 30.6
 }

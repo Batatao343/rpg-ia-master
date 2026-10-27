@@ -12,7 +12,7 @@
       "raridade": "comum",
       "custo_entropia": 1,
       "custo_folego": 0,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente",
         "corpo"
@@ -197,7 +197,7 @@
       "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente",
         "corpo"
@@ -269,7 +269,7 @@
       "raridade": "incomum",
       "custo_entropia": 2,
       "custo_folego": 1,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente",
         "corpo"

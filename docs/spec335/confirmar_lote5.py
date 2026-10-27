@@ -37,7 +37,7 @@ SUB = {
 }
 
 
-def controle(cid: str, dano: int, sub: str) -> dict:
+def controle(cid: str, dano: int, sub: str, cat: str = "marcial") -> dict:
     return {
         "id": cid,
         "name": "Controle",
@@ -51,7 +51,7 @@ def controle(cid: str, dano: int, sub: str) -> dict:
         "custo_folego": 1,
         "frequencia": "turno",
         "virtude_permitida": ["mente"],
-        "efeitos": [{"kind": "dano", "categoria_arma": "marcial", "dano_base": dano}],
+        "efeitos": [{"kind": "dano", "categoria_arma": cat, "dano_base": dano}],
         "descricao": "controle sintetico",
         "tier": 3,
         "level_req": 4,
@@ -81,8 +81,13 @@ def main() -> None:
     out: dict = {}
     for _sub, cid in ALVOS:
         out[cid] = rodar(por_id[cid], todas)
-    for dano in (4, 5):
-        c = controle(f"ctl_medico_dano{dano}", dano, "cirurgiao_ferro")
+    # controles de so dano (`turno`, sem sustento), na MESMA subclasse e com o mesmo dano da Carta
+    for cid, dano, cat, sub in [
+        ("ctl_trincheira_dano3_leve", 3, "leve", "cirurgiao_trincheira"),
+        ("ctl_boticario_dano3_leve", 3, "leve", "boticario"),
+        ("ctl_ferro_dano4_marcial", 4, "marcial", "cirurgiao_ferro"),
+    ]:
+        c = controle(cid, dano, sub, cat)
         out[c["id"]] = rodar(c, todas)
     for cid, r in out.items():
         print(

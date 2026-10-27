@@ -1,18 +1,16 @@
 {
  "med1_fer_tala_rigida": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 184,
-  "vezes_jogada": 165,
-  "taxa_uso": 0.897,
+  "vezes_na_mao": 160,
+  "vezes_jogada": 83,
+  "taxa_uso": 0.519,
   "vitoria_sem": 0.75,
-  "vitoria_com": 0.75,
-  "delta_pp": 0.0,
+  "vitoria_com": 0.762,
+  "delta_pp": 1.2,
   "lutas_por_braco": 80,
   "dano_por_folego": 0.0,
   "protecao_por_folego": 0.0,
-  "bandeiras": [
-   "dominante"
-  ]
+  "bandeiras": []
  },
  "med1_fer_lente_de_protese": {
   "classe": "Médico de Campo",
@@ -83,12 +81,12 @@
  },
  "med1_fer_cotovelo_de_aco": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 162,
-  "vezes_jogada": 133,
-  "taxa_uso": 0.821,
+  "vezes_na_mao": 156,
+  "vezes_jogada": 71,
+  "taxa_uso": 0.455,
   "vitoria_sem": 0.263,
-  "vitoria_com": 0.487,
-  "delta_pp": 22.5,
+  "vitoria_com": 0.375,
+  "delta_pp": 11.2,
   "lutas_por_braco": 80,
   "dano_por_folego": 4.0,
   "protecao_por_folego": 2.0,
@@ -111,12 +109,12 @@
  },
  "med1_fer_pinca_de_aco": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 151,
-  "vezes_jogada": 121,
-  "taxa_uso": 0.801,
+  "vezes_na_mao": 152,
+  "vezes_jogada": 71,
+  "taxa_uso": 0.467,
   "vitoria_sem": 0.263,
-  "vitoria_com": 0.463,
-  "delta_pp": 20.0,
+  "vitoria_com": 0.35,
+  "delta_pp": 8.7,
   "lutas_por_braco": 80,
   "dano_por_folego": 4.0,
   "protecao_por_folego": 0.0,

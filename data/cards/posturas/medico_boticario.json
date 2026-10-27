@@ -51,7 +51,7 @@
           "valor": 2
         }
       ],
-      "descricao": "Sal de rocha na língua de quem carrega o Abismo: o peso da sombra diminui, e quem paga a conta é a Entropia do Médico.",
+      "descricao": "Sal de rocha na língua de quem carrega o Abismo: o peso da sombra diminui, e quem paga a conta é a Entropia do Médico, haja Carga ou não.",
       "momento": "Melhor jogada quando a Carga do Abismo de um aliado se aproxima do limite e mais uma rodada sem purga sairia cara.",
       "tier": 1,
       "level_req": 1,
@@ -160,14 +160,15 @@
       "raridade": "comum",
       "custo_entropia": 1,
       "custo_folego": 0,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente"
       ],
       "efeitos": [
         {
           "kind": "marca",
-          "valor": 2
+          "valor": 2,
+          "duracao": 2
         }
       ],
       "descricao": "Um traço de giz vermelho, cor de sangue, no peito do inimigo: o grupo todo vê onde cortar e os golpes acham a carne.",
@@ -252,7 +253,7 @@
       "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
-      "frequencia": "turno",
+      "frequencia": "cena",
       "virtude_permitida": [
         "mente"
       ],
@@ -265,10 +266,10 @@
         {
           "kind": "dot",
           "dano_base": 2,
-          "duracao": 2
+          "duracao": 1
         }
       ],
-      "descricao": "A agulha entra fina no flanco do inimigo e deixa veneno de brasa no sangue: o corte arde agora e queima por rodadas.",
+      "descricao": "A agulha entra fina no flanco do inimigo e deixa veneno de brasa no sangue: o corte arde agora e o veneno ainda queima uma vez depois.",
       "momento": "Melhor jogada quando o inimigo tem pele grossa e é preciso um corte barato que continue trabalhando depois.",
       "tier": 3,
       "level_req": 4,

@@ -70,18 +70,16 @@
  },
  "med1_bot_giz_vermelho": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 188,
-  "vezes_jogada": 164,
-  "taxa_uso": 0.872,
+  "vezes_na_mao": 141,
+  "vezes_jogada": 82,
+  "taxa_uso": 0.582,
   "vitoria_sem": 0.762,
-  "vitoria_com": 0.75,
-  "delta_pp": -1.2,
+  "vitoria_com": 0.762,
+  "delta_pp": 0.0,
   "lutas_por_braco": 80,
   "dano_por_folego": 0.0,
   "protecao_por_folego": 0.0,
-  "bandeiras": [
-   "dominante"
-  ]
+  "bandeiras": []
  },
  "med1_bot_frasco_aos_pes": {
   "classe": "Médico de Campo",
@@ -113,14 +111,14 @@
  },
  "med1_bot_agulha_envenenada": {
   "classe": "Médico de Campo",
-  "vezes_na_mao": 149,
-  "vezes_jogada": 88,
-  "taxa_uso": 0.591,
+  "vezes_na_mao": 141,
+  "vezes_jogada": 55,
+  "taxa_uso": 0.39,
   "vitoria_sem": 0.212,
-  "vitoria_com": 0.438,
-  "delta_pp": 22.5,
+  "vitoria_com": 0.388,
+  "delta_pp": 17.5,
   "lutas_por_braco": 80,
-  "dano_por_folego": 7.0,
+  "dano_por_folego": 5.0,
   "protecao_por_folego": 0.0,
   "bandeiras": [
    "dominante"

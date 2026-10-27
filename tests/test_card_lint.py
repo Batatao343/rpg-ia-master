@@ -433,3 +433,17 @@ def test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida():
     assert any(i.code == "marca_consumida" for i in card_lint.check_marca_dano(ruim))
     bom = card(efeitos=[{"kind": "dano", "categoria_arma": "leve", "dano_base": 2}, marca])
     assert not card_lint.check_marca_dano(bom)
+
+
+def test_controle_com_duracao_1_e_recusado_em_carta_de_onda():
+    """SPEC-335 (Sol Lote 5, P1-2, provisório): taunt/marca com duracao 1 expiram antes de valer."""
+    ruim = card(onda=1, efeitos=[{"kind": "marca", "valor": 2}])
+    assert any(i.code == "controle_duracao" for i in card_lint.check_controle_duracao(ruim))
+    taunt = card(onda=1, efeitos=[{"kind": "taunt", "valor": 2, "duracao": 1}])
+    assert card_lint.check_controle_duracao(taunt)
+    bom = card(onda=1, efeitos=[{"kind": "marca", "valor": 2, "duracao": 2}])
+    assert not card_lint.check_controle_duracao(bom)
+    legado = card(onda=None, efeitos=[{"kind": "taunt", "valor": 2}])  # sem `onda`: fora do lint
+    assert not card_lint.check_controle_duracao(legado)
+    pendente = card(id="san1_exp_veia_a_mostra", onda=1, efeitos=[{"kind": "taunt", "valor": 2}])
+    assert not card_lint.check_controle_duracao(pendente)
