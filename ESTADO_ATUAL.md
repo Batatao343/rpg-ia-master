@@ -77,7 +77,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: cartas na sessão `-69`; suíte 1 por vez (avisar). 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
-- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329–334, 335 lotes 0–5, 336. Voz aprovada em bloco pelo dono (27/10, sem leitura). Falta: 335 lote 6, 339 (bug tick de controle, `draft` aguardando dono), e2e/smoke real antes de `on`.
+- 27/10 cartas: `off` 328–336 (335 lotes 1–6). Voz aprovada em bloco (sem leitura). Falta: 335 Lote 0/arena por Postura, 339 (`draft`, dono), e2e/smoke antes de `on`.
 
 
 ## Como rodar

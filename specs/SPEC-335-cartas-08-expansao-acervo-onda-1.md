@@ -1,6 +1,6 @@
 # SPEC-335 — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
 
-> **Status:** `in-progress` (Lote 0 parcial + Lote 1 Arcanista pousados em 27/10 após re-revisão Sol APPROVED; Lote 2 Sangromante na branch `spec-335`, revisão Sol CHANGES_REQUIRED corrigida (aguarda re-revisão); Lote 3 Devoto revisado Sol APPROVED_WITH_FOLLOWUPS; Lote 4 Corruptor revisado Sol APPROVED_WITH_FOLLOWUPS; Lote 5 Médico de Campo na branch `spec-335` (aguarda revisão Sol); voz dos Lotes 1–6 aprovada em bloco pelo dono em 27/10, sem leitura da amostra; Lote 6 (40 neutras + 16 Cartas de tronco) e R6 (`tests/test_card_variety.py`) na branch `spec-335`, aguardam revisão Sol)
+> **Status:** `in-progress` (Lotes 1–6 + R6 pousados `off` em 27/10, todos com revisão Sol APPROVED; voz aprovada em bloco pelo dono em 27/10, sem leitura da amostra. Falta: Lote 0 — `momento` placeholder de inimigos e Virtudes (45); critério "0 descrições genéricas" no lint; arena padrão 45–75 % por Postura com baralho completo; lista provisória de controle (9 ids) até a SPEC-339)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática, glossário, orçamento), SPEC-336 (esteira de autoria e lint). Etapa 1 (reparo do acervo atual) pode começar só com SPEC-330.
@@ -79,7 +79,7 @@ Desvios/achados (revisão Sol aplicada): (1) o protocolo de arena é do coordena
 - [x] R6 verdadeiro para todas as Posturas e tiers (teste `tests/test_card_variety.py`)
 - [ ] 0 descrições vazias/genéricas (lint)
 - [ ] Nenhuma Postura com taxa de vitória fora de 45–75 % na arena padrão
-- [ ] `uv run pytest` verde
+- [x] `uv run pytest` verde
 
 ## 6. Smoke real
 Criar personagem de cada Postura, jogar 1 conflito com LLM real: narração usa o sabor da carta, não inventa efeito.
