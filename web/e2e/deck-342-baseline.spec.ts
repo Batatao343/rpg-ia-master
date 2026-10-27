@@ -43,6 +43,7 @@ for (const [width, height] of [[360, 740], [390, 844], [1440, 900]] as const) {
     const shot = { maxDiffPixelRatio: 0.01, animations: "disabled" as const };
 
     test("fora de combate", async ({ page, backend }) => {
+      expect(backend.states.size).toBeGreaterThan(0);
       await openGame(page);
       await expect(page).toHaveScreenshot(`off-idle-${width}.png`, shot);
     });

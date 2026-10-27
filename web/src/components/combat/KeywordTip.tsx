@@ -1,21 +1,29 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import type { Glossary } from "../../types";
 import { ruleSegments } from "../../combat/deck";
 
-/** SPEC-334 R2: palavra-chave em negrito + tooltip do glossário. Mouse: hover. Toque: pressão longa.
- *  Teclado/leitor de tela: a regra vem no `aria-describedby` da carta (sem tab stop extra por palavra). */
+const MARGIN = 8, TIP_W = 256; // 16rem
+
+/** SPEC-334 R2 + SPEC-342 R6/R9.1: palavra-chave em negrito. Mouse: tooltip em portal (`fixed`, preso ao viewport,
+ *  nunca cortado pelo trilho rolável). Toque: sem tooltip — as regras aparecem na barra de mira ao armar a carta.
+ *  Teclado/leitor de tela: a regra vem no `aria-describedby` da carta. */
 function Keyword({ text, regra }: { text: string; regra: string }) {
-  const [open, setOpen] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
-  const hide = () => { window.clearTimeout(timer.current); setOpen(false); };
+  const [pos, setPos] = useState<{ left: number; top: number; above: boolean } | null>(null);
+  const show = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const left = Math.max(MARGIN, Math.min(r.left, window.innerWidth - TIP_W - MARGIN));
+    const above = r.bottom + 96 > window.innerHeight;
+    setPos({ left, top: above ? r.top - 4 : r.bottom + 4, above });
+  };
   return (
-    <strong className="kw" data-keyword={text}
-      onPointerEnter={(e) => { if (e.pointerType === "mouse") setOpen(true); }}
-      onPointerLeave={hide} onPointerCancel={hide} onPointerUp={() => window.clearTimeout(timer.current)}
-      onPointerDown={(e) => { if (e.pointerType !== "mouse") timer.current = window.setTimeout(() => setOpen(true), 450); }}
-      onContextMenu={(e) => { if (open) e.preventDefault(); }}>
+    <strong className="kw" data-keyword={text} onPointerEnter={show} onPointerLeave={() => setPos(null)} onPointerCancel={() => setPos(null)}>
       {text}
-      {open && <span className="kw__tip" role="tooltip">{regra}</span>}
+      {pos && createPortal(
+        <span className="kw__tip" role="tooltip"
+          style={{ left: pos.left, top: pos.top, transform: pos.above ? "translateY(-100%)" : undefined }}>{regra}</span>,
+        document.body)}
     </strong>
   );
 }

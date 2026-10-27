@@ -17,6 +17,8 @@ import {
   basicKey, basicPayload, BASIC_LABEL, cardPayload, planBasic, planCard, REASON_TEXT,
 } from "../../combat/targeting";
 import { useTargeting } from "../../combat/useTargeting";
+import { useDeckArm } from "../../combat/useDeckArm";
+import { cardTargets } from "../../combat/deck";
 import { objectChips, orderChips, reinforcementNote } from "../../combat/conflictChips";
 
 const DETAIL_ID = "combat-card-detail";
@@ -30,9 +32,16 @@ function legacyBasics(enemyIds: string[]): BasicActionView[] {
 }
 
 /** SPEC-334 R7: no modo Baralho as manobras ficam atrás de um toque (poucos controles à vista). */
-function ManeuverFold({ deck, children }: { deck: boolean; children: React.ReactNode }) {
+function ManeuverFold({ deck, stuck, round, children }: { deck: boolean; stuck: boolean; round: number; children: React.ReactNode }) {
+  // SPEC-342 R16: mão vazia/bloqueada abre as manobras sozinhas; o jogador pode fechar e elas não reabrem na mesma rodada.
+  const [closedAt, setClosedAt] = useState<number | null>(null);
   if (!deck) return <>{children}</>;
-  return <details className="ws-combat__fold"><summary>Manobras e ações</summary>{children}</details>;
+  return (
+    <details className="ws-combat__fold" open={stuck && closedAt !== round}
+      onToggle={(e) => { if (stuck && !e.currentTarget.open) setClosedAt(round); }}>
+      <summary>Manobras e ações</summary>{children}
+    </details>
+  );
 }
 
 const isTyping = (el: EventTarget | null) => {
@@ -83,6 +92,8 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const [detailId, setDetailId] = useState<string | null>(null);
   const [announce, setAnnounce] = useState("");
   const [spare, setSpare] = useState(false); // SPEC-325: golpe não-letal ("Sem matar")
+  const deckArm = useDeckArm(); // SPEC-342 R3: carta do Baralho armada (a Arena é o único seletor de alvo)
+  const [stuck, setStuck] = useState(false); // SPEC-342 R16: mão vazia ou toda bloqueada
   const rootRef = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const prevPhase = useRef(targeting.state.phase);
@@ -104,12 +115,16 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const sourceKey = state.phase === "aiming" && state.source.kind === "basic" ? state.source.key : null;
   const aimingBasic = sourceKey ? basics.find((a) => basicKey(a) === sourceKey) : undefined;
 
-  const aimTargets: string[] | null = aimingCard
+  const deckCard = deckMode && deckArm.armed ? combat?.pilhas?.mao[deckArm.armed.index] : undefined;
+  const friendIds = people.filter((p) => p.role !== "enemy").map((p) => p.id);
+  const deckTargets: string[] | null = deckCard && deckCard.alvo !== "si"
+    ? cardTargets(deckCard, cards.find((c) => c.id === deckCard.id)?.valid_targets, enemies.map((e) => e.id), friendIds) : null;
+  const aimTargets: string[] | null = deckTargets ?? (aimingCard
     ? planCard(aimingCard, enemies, false).targets
-    : aimingBasic ? planBasic(aimingBasic, false).targets : null;
+    : aimingBasic ? planBasic(aimingBasic, false).targets : null);
   const aimMarks: Record<string, AimMark> | undefined = aimTargets ? Object.fromEntries(people.map((p) => {
     const valid = aimTargets.includes(p.id);
-    const supportCard = aimingCard?.target_kind === "self";
+    const supportCard = aimingCard?.target_kind === "self" || deckCard?.alvo === "aliado";
     const reason = valid ? undefined
       : p.role === "enemy" ? (supportCard ? "Esta carta só mira você e aliados" : "Oculto ou fora de alcance")
       : "Esta ação só mira inimigos";
@@ -124,7 +139,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     prevPhase.current = state.phase;
     if (state.phase === "aiming") {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
-      setAnnounce(`Mirando ${aimLabel}: escolha um alvo.`);
+      setAnnounce(`Mirando ${aimLabel}: escolha ${deckMode ? "o alvo na arena" : "um alvo"}.`);
       rootRef.current?.querySelector<HTMLElement>("button[data-target].is-valid")?.focus();
     } else if (before === "aiming" && state.phase === "idle") {
       setAnnounce("Mira cancelada.");
@@ -132,6 +147,13 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.phase]);
+
+  // SPEC-342 R15.1: carta do Baralho armada sem alvo fixado → foco no 1º alvo válido da Arena.
+  const deckAimKey = deckArm.armed && !deckArm.armed.targetId && deckTargets?.length ? `${deckArm.armed.index}` : "";
+  useEffect(() => {
+    if (deckAimKey) rootRef.current?.querySelector<HTMLElement>("button[data-target].is-valid")?.focus();
+  }, [deckAimKey, deckArm.armed?.targetId]);
+  useEffect(() => { if (!live) deckArm.disarm(); }, [live]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const lastResult = combat?.last_player_action?.result;
   useEffect(() => {
@@ -174,6 +196,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     if (el) trigger.current = el;
     const plan = planBasic(action, busy);
     if (plan.mode === "blocked") { setAnnounce(plan.reason ? `${BASIC_LABEL[basicKey(action)]}: ${REASON_TEXT[plan.reason]}.` : ""); return; }
+    deckArm.disarm(); // R3.4: mira de manobra e de carta são exclusivas
     if (plan.mode === "direct") {
       if (!targeting.beginDirect()) return;
       const [text, options] = basicPayload(action, plan.directTarget, plan.directTarget ? nameOf(plan.directTarget) : undefined, reactionCardId);
@@ -184,6 +207,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   }
 
   function pick(targetId: string) {
+    if (deckCard) { deckArm.setTarget(targetId); return; }
     if (aimingCard) sendCard(aimingCard, targetId);
     else if (aimingBasic) sendBasic(aimingBasic, targetId);
   }
@@ -222,19 +246,26 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
       )}
       {live && combat && (
         <>
-          <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} />
-          {deckMode && state.phase === "aiming" && (
-            <div className="aimbar" data-aim-safe>
-              <span>{`Mirando ${aimLabel}: escolha um alvo`}</span>
-              <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar mira" : "Cancelar (Esc)"}</button>
-            </div>
-          )}
           {deckMode ? (
             <DeckCombat combat={combat} gameId={data?.game_id ?? null} entropy={data?.player_stats?.entropy ?? null}
               busy={locked} touch={touch} nameOf={nameOf} onAnnounce={setAnnounce}
-              onEnd={(text, jogadas) => { if (targeting.beginDirect()) onAction(text, { jogadas, reaction_card_id: reactionCardId }); }} />
+              friendIds={friendIds} armed={deckArm.armed}
+              onArm={(index, targets) => { targeting.cancel(); deckArm.arm(index, targets); }}
+              onDisarm={deckArm.disarm} onClearTarget={deckArm.clearTarget}
+              spareAvailable={!!combat.nonlethal_available} spare={spareOn} onSpare={() => setSpare((v) => !v)} onStuck={setStuck}
+              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} omens={omens} />}
+              maneuverAim={state.phase === "aiming" ? (
+                <div className="aimbar" data-aim-safe>
+                  <span>{`Mirando ${aimLabel}: escolha o alvo na arena.`}</span>
+                  <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar" : "Cancelar (Esc)"}</button>
+                </div>
+              ) : undefined}
+              onEnd={(text, jogadas) => {
+                if (targeting.beginDirect()) { onAction(text, { jogadas, reaction_card_id: reactionCardId }); setSpare(false); }
+              }} />
           ) : (
             <>
+              <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} />
               <div className="aimbar" data-aim-safe>
                 <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
                   : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>
@@ -253,7 +284,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
             <p className="ws-combat__ended" role="note">{reinforcementNote(combat)}</p>
           )}
           <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
-          <ManeuverFold deck={deckMode}>
+          <ManeuverFold deck={deckMode} stuck={stuck} round={combat.round}>
           <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
             {basics.map((action) => {
               const key = basicKey(action);
@@ -268,7 +299,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
                 </button>
               );
             })}
-            {combat?.nonlethal_available && (
+            {combat?.nonlethal_available && !deckMode && (
               <button className="actionchip" type="button" data-spare aria-pressed={spare}
                 title="O próximo golpe derruba o alvo sem matá-lo (se a forma do ataque permitir)."
                 onClick={() => setSpare((v) => !v)}>

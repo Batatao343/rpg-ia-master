@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from "react";
-import type { CombatBlock, EncounterView, PartyMember } from "../types";
+import type { CombatBlock, EncounterView, OmenView, PartyMember } from "../types";
 import { ChaseTrack } from "../components/SceneZones";
 import { TargetChip, type AimMark, type Participant } from "./TargetChip";
 
@@ -44,12 +44,14 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
 }
 
 /** SPEC-205 R11: arena por zonas com participantes clicáveis (evolução de SceneZones). */
-export function Arena({ combat, party, aim, onPick }: {
+export function Arena({ combat, party, aim, onPick, omens }: {
   combat: CombatBlock;
   party: PartyMember[];
   /** id → marca de validade, só durante a mira. */
   aim?: Record<string, AimMark>;
   onPick: (id: string) => void;
+  /** SPEC-342 R8: id do inimigo → presságio. Só o modo Baralho passa isto; sem ele a Arena fica idêntica. */
+  omens?: Record<string, OmenView>;
 }) {
   const people = buildParticipants(combat, party);
   const zones = combat.scene.zones;
@@ -81,7 +83,7 @@ export function Arena({ combat, party, aim, onPick }: {
             <div className="arena__members">
               {g.members.map((p) => (
                 <TargetChip key={p.id} p={p} aim={aim ? (aim[p.id] ?? { valid: false }) : undefined}
-                  onPick={onPick} />
+                  onPick={onPick} omen={omens?.[p.id]} />
               ))}
             </div>
           </article>

@@ -1,10 +1,50 @@
-/** SPEC-334 R1: faixa única da cena — contador de rodadas. As Cartas de Cena e o Relógio do Abismo
- *  (SPEC-331) entram em `extras` quando a API os mandar; sem eles, só a rodada. */
-export function SceneStrip({ round, extras = [] }: { round: number; extras?: Array<{ key: string; label: string }> }) {
+import type { SceneCardsView, SceneObjectiveView, ScenePressagioView } from "../../types";
+import { Icon } from "../../design/icons";
+import { clockBody, clockLine, objectiveLine } from "../../combat/deck";
+
+/** SPEC-334 R1 + SPEC-342 R2: faixa da cena. Sem `cena`/`objetivo`/`pressagios` (Cartas de Cena `off`) é só a rodada.
+ *  Com eles: um `details` (1 elemento interativo) e, FORA dele, a previsão da próxima rodada. */
+export function SceneStrip({ round, cena, objetivo, pressagios = [] }: {
+  round: number;
+  cena?: SceneCardsView;
+  objetivo?: SceneObjectiveView;
+  pressagios?: ScenePressagioView[];
+}) {
+  const omens = (
+    <>
+      {pressagios.map((p) => (
+        <p key={p.id} className="scene-omen" data-scene-omen={p.id}>
+          <Icon name={p.quando === "relogio" ? "abyss" : "warning"} />
+          <span>Na próxima rodada: {p.pressagio}</span>
+        </p>
+      ))}
+    </>
+  );
+  if (!cena && !objetivo) {
+    return (
+      <>
+        <p className="scene-strip"><span>Rodada {round}</span></p>
+        {omens}
+      </>
+    );
+  }
+  const goal = objetivo ? objectiveLine(objetivo) : "";
   return (
-    <p className="scene-strip">
-      <span>Rodada {round}</span>
-      {extras.map((e) => <span key={e.key} className="scene-strip__extra">{e.label}</span>)}
-    </p>
+    <>
+      <details className="scene-strip">
+        <summary>
+          <span>Rodada {round}</span>
+          {cena?.cartas.map((c) => <span key={c.id} className="scene-strip__extra">{c.nome}</span>)}
+          {goal && <span className="scene-strip__extra">{goal}</span>}
+          {cena && <span className="scene-strip__extra">{clockLine(cena.relogio)}</span>}
+        </summary>
+        <div className="scene-strip__body">
+          {cena?.cartas.map((c) => <p key={c.id}><strong>{c.nome}.</strong> {c.sabor}</p>)}
+          {goal && <p>{goal}.</p>}
+          {cena && <p>{clockBody(cena.relogio)}</p>}
+        </div>
+      </details>
+      {omens}
+    </>
   );
 }

@@ -386,6 +386,10 @@ export interface CombatBlock {
   mech_log?: string[];
   /** SPEC-329: só com `RPG_ENEMY_INTENT=on`. */
   pressagios_publicos?: PressagioView[];
+  /** SPEC-331/342: só com `RPG_SCENE_CARDS=on`. */
+  pressagios_cena?: ScenePressagioView[];
+  objetivo?: SceneObjectiveView;
+  cena?: SceneCardsView;
   /** SPEC-325: presente (true) só com RPG_COMBAT_NONLETHAL=on — mostra o chip "Sem matar". */
   nonlethal_available?: boolean;
   /** SPEC-325 R15: companheiros que aceitam ordem; só com RPG_COMPANION_ORDERS=on. */
@@ -1166,3 +1170,10 @@ export interface MapView {
   travel_gate: { blocked: boolean; reason: string };
   looming_threat: string;
 }
+
+/** SPEC-342 R2.2: faixa de cena (Cartas de Cena, Objetivo, Relógio do Abismo). */
+export interface ScenePressagioView { id: string; nome: string; pressagio: string; quando: "inicio_rodada" | "fim_rodada" | "a_cada_n_rodadas" | "relogio"; rodada: number }
+export interface SceneObjectiveView { tipo: "sobreviver_n_rodadas" | "proteger" | "alcancar_zona" | "destruir_objeto" | "interromper_ritual" | "capturar_vivo"; alvo_nome?: string; n?: number; rodada: number; resultado: "cumprido" | "falhou" | null }
+export interface SceneCardsView { cartas: { id: string; nome: string; sabor: string }[]; relogio: { desde: number; teto: number; rodada: number; ativo: boolean } }
+/** SPEC-342 R8: presságio pronto para exibir no chip do inimigo. */
+export interface OmenView { icon: import("./design/icons").IconName; text: string; num: string | null; card: string | null; veiled: boolean; spoken: string }

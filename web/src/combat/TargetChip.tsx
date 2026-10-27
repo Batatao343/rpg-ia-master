@@ -1,4 +1,5 @@
-import type { Condition } from "../types";
+import type { Condition, OmenView } from "../types";
+import { Icon } from "../design/icons";
 
 export interface Participant {
   id: string;
@@ -18,10 +19,12 @@ export interface Participant {
 export type AimMark = { valid: boolean; reason?: string } | undefined;
 
 /** SPEC-205 R11: participante da arena. Vira botão só enquanto há mira ativa. */
-export function TargetChip({ p, aim, onPick }: {
+export function TargetChip({ p, aim, onPick, omen }: {
   p: Participant;
   aim: AimMark;
   onPick: (id: string) => void;
+  /** SPEC-342 R8: presságio do inimigo (só no modo Baralho). */
+  omen?: OmenView;
 }) {
   const pct = p.vit != null && p.max ? Math.max(0, Math.min(100, Math.round((p.vit / p.max) * 100))) : null;
   const body = (
@@ -42,14 +45,21 @@ export function TargetChip({ p, aim, onPick }: {
         <span className="tchip__tags">{p.conditions.map((c, i) => <em key={i}>{c.name}</em>)}</span>
       )}
       {p.intel.length > 0 && <span className="tchip__meta">{`Revelado: ${p.intel.join(", ")}`}</span>}
+      {omen && (
+        <span className={`tchip__omen${omen.veiled ? " is-veiled" : ""}`} data-omen={omen.veiled ? "veiled" : "known"}>
+          <Icon name={omen.icon} />
+          <span>{omen.text}{omen.card ? ` — ${omen.card}` : ""}</span>
+          {omen.num && <span className="tchip__omen-num">{omen.num}</span>}
+        </span>
+      )}
     </>
   );
   const cls = `tchip tchip--${p.role}${aim ? (aim.valid ? " is-valid" : " is-invalid") : ""}`;
   if (!aim) return <div className={cls} data-participant={p.id}>{body}</div>;
   const effectState = aim.valid ? "valid" : "invalid";
-  const label = aim.valid
+  const label = (aim.valid
     ? `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
-    : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`;
+    : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`) + (omen ? `. Presságio: ${omen.spoken}` : "");
   return (
     <button type="button" className={cls} data-target={p.id} data-aim-safe aria-label={label}
       data-effect="target.valid" data-effect-state={effectState}

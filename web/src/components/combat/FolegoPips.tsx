@@ -1,15 +1,15 @@
 import type { PilesView } from "../../types";
 import type { FolegoState } from "../../combat/deck";
 
-/** SPEC-334 R3: 3 pips de Fôlego (cheio = livre, riscado = reservado pela fila) e, ao fim, os pips do
- *  Pacto do Abismo "emprestados" em cor de Entropia — com o aviso do custo quando a fila os usa. */
+/** SPEC-334 R3 + SPEC-342 R9.4/R20: Fôlego em texto ("Fôlego 2 de 3", fonte acessível) + pips só visuais.
+ *  Livre = disco cheio; reservado pela fila = anel cheio de contorno; vazio = anel tracejado. O Pacto do Abismo
+ *  (emprestado) usa a cor de Entropia; o `status` fica sempre montado para o aviso ser anunciado ao aparecer. */
 export function FolegoPips({ piles, state }: { piles: PilesView; state: FolegoState }) {
   const own = Math.max(0, piles.folego);
-  const label = `Fôlego: ${state.free} livre${state.free === 1 ? "" : "s"} de ${piles.folego_max}` +
-    (state.borrowed ? `; a fila toma ${state.borrowed} emprestado do Abismo` : "");
   return (
-    <div className="folego">
-      <span className="folego__pips" role="img" aria-label={label}>
+    <span className="folego">
+      <span className="folego__label">Fôlego {state.free} de {piles.folego_max}</span>
+      <span className="folego__pips" aria-hidden="true">
         {Array.from({ length: Math.max(piles.folego_max, own) }, (_, i) => (
           <span key={i} className={`folego__pip${i < own ? "" : " is-empty"}${i < own && i >= state.free ? " is-reserved" : ""}`} />
         ))}
@@ -17,12 +17,9 @@ export function FolegoPips({ piles, state }: { piles: PilesView; state: FolegoSt
           <span key={`p${i}`} className={`folego__pip folego__pip--pacto${i < state.borrowed ? " is-reserved" : ""}`} />
         ))}
       </span>
-      <span className="folego__label" aria-hidden="true">Fôlego</span>
-      {state.borrowed > 0 && (
-        <span className="folego__warn" role="status">
-          Pacto do Abismo: {state.borrowed} emprestado — custa Entropia e +1 Carga.
-        </span>
-      )}
-    </div>
+      <span className="folego__warn" role="status">
+        {state.borrowed > 0 ? `O Abismo empresta ${state.borrowed} de fôlego: custa Entropia e +1 Carga.` : ""}
+      </span>
+    </span>
   );
 }
