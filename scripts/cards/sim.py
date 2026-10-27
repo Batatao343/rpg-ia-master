@@ -19,6 +19,7 @@ import argparse
 import contextlib
 import importlib.util
 import json
+import logging
 import os
 import random
 import sys
@@ -31,7 +32,11 @@ _spec = importlib.util.spec_from_file_location(
     "arena285", os.path.join(ROOT, "docs", "spec285", "arena_lethality.py")
 )
 A = importlib.util.module_from_spec(_spec)
+# A arena da 285 faz `logging.disable(CRITICAL)` global ao ser importada; isso
+# silenciaria o log do processo inteiro (e dos testes seguintes). Restaura.
+_prev_disable = logging.root.manager.disable
 _spec.loader.exec_module(A)  # type: ignore[union-attr]
+logging.disable(_prev_disable)
 
 from services import card_effects as fx  # noqa: E402
 from services import card_piles, cards  # noqa: E402
