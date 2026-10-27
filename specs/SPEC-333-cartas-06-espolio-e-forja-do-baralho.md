@@ -1,6 +1,6 @@
 # SPEC-333 — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
 
-> **Status:** `in-progress` (implementada `off` em 27/10 atrás de `RPG_CARD_REWARDS=off|shadow|on`; falta revisão independente Sol, smoke real §6 e jornadas e2e — ver §8)
+> **Status:** `in-progress` (implementada `off` em 27/10 atrás de `RPG_CARD_REWARDS=off|shadow|on`; revisão Sol APPROVED em 27/10 (`86a95c78`); falta smoke real §6 e jornadas e2e — ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (baralho), SPEC-330 (Fardo/Purgar), SPEC-209 (aba Combate fora de encontro)
