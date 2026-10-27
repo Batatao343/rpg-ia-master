@@ -1,7 +1,7 @@
 # SPEC-336 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Opus 5.5, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `9e7ae471` (sobre `b79d2cdd`)
+> **Veredito:** `APPROVED` (re-revisão de `58220923`; a 1ª rodada em `9e7ae471` foi `CHANGES_REQUIRED`)
+> **Revisor:** Sol (Opus 5.5, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `9e7ae471` (1ª rodada) · `58220923` (re-revisão)
 
 ## Escopo
 
@@ -40,11 +40,21 @@ Conferido e ok:
 
 ## Correções aplicadas
 
-Nenhuma até agora (revisão inicial).
+Commit `58220923` (re-revisado só o delta sobre `c15faa85`):
+
+- **P1-1, fechado.** `lint_batch` agora mantém no pool as cartas de mesmo id (`card_lint.py:383`). Refiz o probe: lote com o mesmo id e `versao: 1` é recusado (erro `nome`); com `versao: 2` é promovido.
+- **P1-2, fechado.** O `validate_cards` ganhou uma checagem global de `(id, versao)` duplicado e de `versao` não crescente. A checagem vale para legado e onda e roda antes do `continue` das cartas de onda. Probe: o mesmo id com `versao: 1` em dois arquivos agora dá erro, e a troca legítima v1 → v2 (v2 em `posturas/`) passa sem achado.
+- **P2-1, fechado.** `card_telemetry.source_scope("auto")` via `contextvars` envolve o `apply_choice` dentro de `auto_resolve_choices`. `card_offered`/`card_picked` levam `source`, que está no catálogo regenerado, e o `metrics.py` descarta `source == "auto"`. O campo `source` é um rótulo fixo, sem PII.
+- **P2-2, fechado.** `card_effects.versao()` faz a coerção (`"2a"`/`True` → 1) e é usado no loader e no lint. O validator dá aviso (`warning`) quando a `versao` é inválida.
+- **P2-3, fechado.** O loader usa `card_lint.iter_card_files` como fonte única, e os `_*.json` do topo ficam fora.
+- **Catálogo:** refiz a comparação loader `main` × branch. São 323 cartas nos dois, com os mesmos ids, o mesmo conteúdo, 0 duplicados e 0 com `versao`.
+- **`observability/events.py`:** `ruff format --check` deu "already formatted" e `ruff check` passou.
+
+Observação, não bloqueante: a checagem "versao não crescente" depende da ordem do `os.walk`, que lê primeiro os arquivos do topo e depois as subpastas. Ela daria falso positivo se uma v2 ficasse num arquivo de topo e a v1 em `posturas/`. O `promote` sempre grava em `posturas/`, então hoje isso não acontece. Se acontecer um dia, basta reduzir a checagem à unicidade de `(id, versao)`.
 
 ## Pendências
 
-- P1-1 e P1-2 bloqueiam o pouso, porque são o critério (f) e a R7 da spec. Os P2 podem virar follow-up do executor nesta mesma spec.
+- Os 5 achados foram fechados em `58220923` (ver acima). Nenhum bloqueio para o pouso.
 - Já registrado na §8: coluna de vitória do `metrics.py` sem evento de fim de conflito, hoje via `--resultados`.
 - Smoke real §6 (com chave, custo SMART) continua com o dono.
 
@@ -55,5 +65,16 @@ git diff main...HEAD --stat → 25 arquivos, +2694/-16
 py.sh scratchpad/cmp_cards.py (loader main × branch) → 323/323, mesmos ids, mesmo conteúdo, 0 ids duplicados, 0 com versao
 py.sh scratchpad/probe_promote.py → mesmo id e versao=1: promote aprova; validate_cards com duplicata (id, versao) → 0 achados
 py.sh -m pytest -q -p no:cacheprovider tests/test_card_{lint,sim,draft}.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_card_piles.py tests/test_cards_prepare_api.py tests/test_progression_20.py tests/test_progression_v4.py → verde (113 passed, serial; RAM livre 2,2 GB)
+py.sh scripts/validate_content.py → 0 ERRO(S) · 0 AVISO(S)
+```
+
+Re-revisão (`58220923`):
+
+```text
+py.sh scratchpad/probe2.py → P1-1: v1 recusada / v2 promovida; P1-2: (id, versao) duplicado = erro; bump v1→v2 sem achado; versao("2a")=1
+py.sh scratchpad/cmp_cards.py → 323/323, mesmos ids e conteúdo, 0 duplicados, 0 com versao
+py.sh -m ruff format --check (events.py, card_*, cards.py, content_validator.py, card_effects.py, progression.py, scripts/cards, testes) → 16 files already formatted; ruff check → All checks passed
+py.sh -m pytest -q -n 2 tests/test_card_{lint,sim,draft}.py test_card_piles test_cards_prepare_api test_progression_{20,v4} test_log_event_registry test_no_silent_except → 121 passed
+py.sh -m pytest -q tests/test_eval_governance.py tests/test_handoff_names.py → verde
 py.sh scripts/validate_content.py → 0 ERRO(S) · 0 AVISO(S)
 ```
