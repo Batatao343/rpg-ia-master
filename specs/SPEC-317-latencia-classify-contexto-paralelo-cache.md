@@ -1,6 +1,6 @@
 # SPEC-317 — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main 25/10 com flags seguras: rota NPC determinística `shadow`, janela do router e prompt estático-primeiro `off`; falta medição §6 no staging)
+> **Status:** `done` (aprovada 25/10; pousada 25/10; R1 Groq e R2 rota NPC medidos e não promovidos, `STATIC_FIRST` off, R11 retirado pelo dono; re-revisão Sol 27/10 APPROVED_WITH_FOLLOWUPS)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma (independente da SPEC-316); insumos `done`: SPEC-032 (ROUTES), SPEC-143 (NO-GO do fan-out), SPEC-214 (NO-GO do cache de cena), SPEC-217/229 (pré-classificação determinística)
 > **Desbloqueia:** reavaliação de `RPG_TURN_EXECUTION=concurrent` (SPEC-143) sem contenção de provider
@@ -147,12 +147,12 @@ embeddings). Mecânica e evals intocados; só o produto muda.
 
 ## 5. Critérios de aceite
 
-- [ ] R1 medido no staging com tabela p50/p95 por tier e concordância; decisão registrada (promovido ou não).
-- [ ] R2 em `shadow` ≥ 200 decisões com concordância ≥ 97 % antes de `on`; `evals compare` do router sem piora.
-- [ ] R5–R8: embedding por turno STORY = 1; por rodada de combate = 0 (asserts com contador).
-- [ ] R10: `cache_hit_ratio` registrado; promoção só com `evals compare` sem piora.
+- [x] R1 medido no staging com tabela p50/p95 por tier e concordância; decisão registrada (promovido ou não). — 27/10: CLASSIFY p50/p95 Groq 0,81/0,84 s (n=6) × DeepSeek 1,88/2,28 s (n=13), −57 %; concordância do replay offline 0,9375 < 95 % → **não promovido**.
+- [x] R2 em `shadow` ≥ 200 decisões com concordância ≥ 97 % antes de `on`; `evals compare` do router sem piora. — 27/10: 216 decisões, 93,1 % < 97 % → flag **fica `shadow`** (gate respeitado); `evals compare` routing_actions sem regressão (25/10).
+- [x] R5–R8: embedding por turno STORY = 1; por rodada de combate = 0 (asserts com contador).
+- [x] R10: `cache_hit_ratio` registrado (mediana 0,015–0,05; `STATIC_FIRST` não promovido); promoção só com `evals compare` sem piora.
 - [x] ~~Import de `vercel_app` −30 % (`-X importtime` antes/depois anexado)~~ **retirado pelo dono 27/10** (medido −3 %: 1,68 → 1,63 s; ver histórico); cold start medido (`scripts/staging/measure.py`) ✔.
-- [ ] `uv run pytest` verde; nenhum `with_structured_output` novo; saves antigos carregam.
+- [x] `uv run pytest` verde (pouso 25/10 e suíte 27/10); nenhum `with_structured_output` novo; saves antigos carregam.
 
 ## 6. Smoke test com LLM real
 
@@ -228,3 +228,18 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
   cabe no bundle" (bundle 319 MB) e diz que cold start acompanha o tamanho do bundle; pré-aquecimento só nos
   planos pagos. A espera de 19–59 s antes da função é instância nova do Vercel, não import → spec de infra
   (dieta do bundle, conferir Fluid compute, ping de aquecimento, plano).
+- 27/10 — **R2:** harness local com CLASSIFY real (DeepSeek), entradas fixadas antes de rodar
+  (`docs/spec317/r2_shadow_harness.py`: 6 NPCs × 40 falas, vocativo e "falo com/pergunto a"): 240 entradas,
+  216 decisões do atalho (24 excluídas pelo léxico), concordância 201/216 = **93,1 %** < 97 % → `shadow` mantido.
+  As 15 discordâncias acertam rota e NPC; divergem na abordagem social (`pedir_favor` em "me ajudar a encontrar
+  o caminho"/"guarde um segredo"; `sondar` em "viu alguém estranho"/"o que se diz sobre mim"), que o caminho `on`
+  trocaria por `conversar`. Ajustar o léxico exigiria um conjunto novo (não reusar este). No staging o Jev
+  `primary` decide antes do atalho, por isso n=3 lá.
+- 27/10 — **R1 no staging** (`0640bff`, `--classify-routes groq_first`, 2×15 turnos; restaurado `default`):
+  CLASSIFY Groq `gpt-oss-20b` p50 0,81 s / p95 0,84 s (n=6, 0 fallback) × DeepSeek 1,88 / 2,28 s (n=13) → −57 %.
+  Só ~20 % dos turnos chamam CLASSIFY (o Jev decide a rota), então TTFMC p50 não muda (2,9 × 2,6 s). Concordância
+  do replay offline 0,9375 < 95 % → **não promovido**; ROUTES inalterado.
+- 27/10 — Re-revisão Sol das correções de `a52b0058` (`handoffs/SPEC-317-sol-review.md`): APPROVED_WITH_FOLLOWUPS,
+  P1-1 e P2-1..9 resolvidos/aceitos. Follow-ups: F1 léxico conservador (frases educadas mandam ao CLASSIFY → menos
+  cobertura do atalho); F2 shadow não diz qual parte divergiu (rota/NPC/abordagem). → **`done`**. A rota NPC
+  determinística segue `shadow` (93,1 % < 97 %); promover exige spec/medição nova.

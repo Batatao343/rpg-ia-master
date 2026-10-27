@@ -76,3 +76,35 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_router_i
 script (scratchpad) prompts main × branch com flag off → story/npc/router IDENTICAL
 script (scratchpad) léxico R2 em 13 frases → "ameaço", "esfaqueio", "corto", "soco", "mata", "desafio", "mentindo" passam pelo atalho
 ```
+
+## Re-revisão 2026-10-27
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus / Sol · **Base:** `main` @ `28955fc7` (correções em `a52b0058`; depois disso só `agents/loot.py` — SPEC-318/319 — e `scripts/staging/vercel_env.py` — flags 316/318/319/325/326 — mudaram nos arquivos do escopo, sem tocar nos trechos da 317).
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **Resolvido** | `agents/router.py` `_log_deterministic_shadow` (~:402): `agree` exige rota NPC + mesmo NPC + `social_intent is None`; o `social_intent` só é posto quando o CLASSIFY devolve abordagem ≠ `conversar` (:615-625), então a métrica não fica enviesada para baixo. Léxico `_NON_PLAIN_TALK_RE` casa contra `interlocutor._norm` (NFKD sem combining + casefold) e ganhou raízes de combate/coerção/sondagem. Testes: 13 probes (`test_vocative_probe_phrases_go_to_classify`) + `test_shadow_disagrees_when_classify_finds_social_approach`. |
+| P2-1 | **Resolvido** | Atalho depois do `pending.primary_routing()`; com o Jev primary decidindo, a linha de shadow sai com `decided_by="jev"` (evento registrado em `observability/events.py`). Teste `test_deterministic_shortcut_runs_after_jev_primary`. Na promoção do R2, filtrar por `decided_by` (ver follow-up F1). |
+| P2-2 | **Resolvido (risco aceito)** | R4 atrás de `RPG_ROUTER_WINDOW_TRIM` (default `off`, ausente do preset do staging); com trim `on`, a narração inteira é mantida se a cabeça descartada tem ameaça. `evals compare` registrado na spec §7.1 (MockLLM ⇒ só prova os gates Python); como o default é `off`, não há mudança de comportamento em produção. |
+| P2-3 | **Resolvido** | `agents/loot.py` `_resolve_item_ref`: `copy.deepcopy(world)` antes de `merchant_stock`; teste `test_resolve_item_ref_does_not_mutate_state`. |
+| P2-4 | **Resolvido** | `_QTY_HINT_RE` cobre 11–mil, `par`, `punhado`, `dezena`, `centena`, `duzia`, `meia`; teste `test_number_words_call_classify`. |
+| P2-5 | **Resolvido** | (a) `start_prefetch` pula turno provável não-STORY (`likely_non_story`, puro, sem LLM); (b) `take` não espera future que não começou (folga 100 ms, `reason=not_started`); (c) hit/miss em `info`. Teste `test_no_prefetch_for_non_story_turns`. `_STARTED` é limpo na expulsão (limitado a 8). |
+| P2-6 | **Resolvido** | `rag._INDEX_CACHE` é `OrderedDict` com `move_to_end` no hit (sob o lock) e `popitem(last=False)`; teste `test_lru_keeps_hot_index_when_cache_is_full`. |
+| P2-7 | **Resolvido** | `tests/test_prompt_order.py` `_MAIN_GOLDEN` (sha256 dos 3 prompts de `main` pré-317 com flag off). Passa no `main` atual. |
+| P2-8 | **Resolvido / aceito** | `prompt_layout.DYNAMIC_LABEL` abre o bloco dinâmico em static-first; `STATIC_FIRST` segue `off` (decisão do coordenador após medir cache 0,025→0,05). |
+| P2-9 | **Resolvido** | `vercel_env.py`: `RPG_ROUTES` saiu de `OPTIONAL_FLAGS`; só é removido com `--classify-routes default` (ou preset), e o preset atual não tem `classify_routes` ⇒ valor manual sobrevive. |
+
+Regressão: nenhuma encontrada. Sem `with_structured_output` novo, sem segredo em log, nada em `evals/`.
+
+### Follow-ups (não bloqueiam)
+
+- **F1 (promoção do R2):** o léxico ampliado é conservador (falha para o CLASSIFY) mas pega falas educadas comuns: `favor` casa "por favor", `mat[aeo]\w*` casa "mato" (vegetação)/"matéria", `pag[oa]\w*` casa "pagão", `abr[oi]\w*` casa "abrigo", `cort[aeo]\w*` casa "corte" (a corte), `segur[oa]\w*` casa "seguro", `verdade` casa "é verdade?". Não é bug (o shadow só cobre menos turnos e o ganho de latência do `on` encolhe), mas, antes de promover para `on`, medir a cobertura (fração de vocativos que chegam ao shadow) além do `agree`, e contar só `decided_by=classify` para o gate.
+- **F2:** o 93,1 % em 216 decisões fica abaixo do gate (97 %), então `shadow` está correto; se quiserem reavaliar, analisar os `agree=False` por causa (rota vs NPC vs abordagem social) — hoje o evento não diz qual parte divergiu.
+
+### Comandos rodados
+
+```text
+git show a52b0058 (diff dos arquivos de código e testes); git diff a52b0058 HEAD --stat -- <arquivos do escopo>
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore -n 2 tests/test_router_interlocutor.py tests/test_loot_trade_intent.py tests/test_rag_index_cache.py tests/test_context_prefetch.py tests/test_combat_context.py tests/test_prompt_order.py tests/test_classify_ab.py tests/test_spec192_vercel_env.py tests/test_jev_router_port.py → 129 passed (exit 0)
+```
