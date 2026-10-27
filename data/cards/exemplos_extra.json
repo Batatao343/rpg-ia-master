@@ -91,9 +91,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "O corpo promete um golpe e entrega outro, sempre a um fio do alvo.",
-      "momento": "Melhor jogada quando o alvo é escorregadio e a mira precisa de ajuda, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a defesa inimiga está presa a um gesto falso e o seguinte golpe pede pontaria fácil.",
+      "raridade": "comum"
     },
     {
       "id": "lamina_gemea",
@@ -116,9 +115,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Duas lâminas cantam a mesma cantiga, uma meia batida depois da outra.",
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando duas armas pedem a mesma rodada e o inimigo só tem uma guarda para oferecer.",
+      "raridade": "comum"
     },
     {
       "id": "passo_leve",
@@ -138,9 +136,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Quem sangrou muito aprende a pisar sem acordar o chão.",
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a sala dorme, o chão range e o sangue velho ainda mancha o caminho do fugitivo.",
+      "raridade": "comum"
     },
     {
       "id": "esporos",

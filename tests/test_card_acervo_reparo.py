@@ -92,18 +92,46 @@ def test_lote1_passa_no_lint_contra_o_acervo():
         assert fx.budget_error(c) is None, c["id"]
 
 
+# ----------------------------------------------------------------- Lote 2 (Sangromante)
+def _lote2() -> list[dict]:
+    return [
+        c
+        for c in card_lint.load_pool()
+        if c.get("onda") == 1 and c.get("classe") == "Sangromante"
+    ]
+
+
+def test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada():
+    cs = _lote2()
+    assert len(cs) == 36
+    assert Counter(c["subclasse"] for c in cs) == {"exposto": 12, "avaro": 12, "silencioso": 12}
+    assert len({c["id"] for c in cs}) == 36
+    # P2-7: mais comuns e menos incomuns que o Lote 1 (16/13/5/2); alvo da R3 = 50/30/15/5.
+    assert Counter(c["raridade"] for c in cs) == {"comum": 20, "incomum": 10, "rara": 4, "abissal": 2}
+
+
+def test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
+    pool = card_lint.load_pool()
+    for c in _lote2():
+        others = [o for o in pool if o["id"] != c["id"]]
+        assert not card_lint.errors(card_lint.lint_card(c, others)), c["id"]
+        assert fx.budget_error(c) is None, c["id"]
+    legado = [c for c in pool if c.get("classe") == "Sangromante" and c.get("onda") is None]
+    assert len(legado) >= 53
+    assert not [c["id"] for c in legado if c.get("momento_placeholder")]
+
+
 # R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
 # (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
 # ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
 POSTURAS_COM_MOMENTO_PLACEHOLDER = {
     "Devoto do Abismo",
-    "Sangromante",
     "Corruptor",
     "Médico de Campo",
     "Inimigo",
     "",  # Cartas de Virtude
 }
-MAX_PLACEHOLDERS = 255  # só pode diminuir (== no teste: baixe aqui ao reescrever)
+MAX_PLACEHOLDERS = 202  # só pode diminuir (== no teste: baixe aqui ao reescrever)
 
 
 def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():

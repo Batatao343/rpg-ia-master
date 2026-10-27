@@ -49,3 +49,53 @@ ondas:
   - arc1_imp_terceiro_dia
   - arc1_imp_orquestra
   - arc1_imp_ultima_gambiarra
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: null
+  voz_status: pendente-dono
+  amostra_voz:
+  - san1_ava_juros_do_primeiro
+  - san1_exp_plateia_cega
+  - san1_exp_talho_publico
+  - san1_exp_teatro_de_facas
+  - san1_exp_veia_a_mostra
+  - san1_sil_pe_de_pluma
+  - san1_sil_silencio_cobrado
+  cartas:
+  - san1_exp_talho_publico
+  - san1_exp_veia_a_mostra
+  - san1_exp_cicatriz_aberta
+  - san1_exp_aplauso_de_ferro
+  - san1_exp_segundo_ato
+  - san1_exp_sangue_na_areia
+  - san1_exp_gole_rubro
+  - san1_exp_credencial_de_dor
+  - san1_exp_plateia_cega
+  - san1_exp_bis_de_cicatriz
+  - san1_exp_teatro_de_facas
+  - san1_exp_ultima_cortina
+  - san1_ava_moeda_guardada
+  - san1_ava_cofre_estreito
+  - san1_ava_juros_do_primeiro
+  - san1_ava_poupar_ferida
+  - san1_ava_livro_de_dividas
+  - san1_ava_gota_contada
+  - san1_ava_mao_fechada
+  - san1_ava_cobranca_adiada
+  - san1_ava_penhor_de_carne
+  - san1_ava_hipoteca_de_sangue
+  - san1_ava_execucao_da_divida
+  - san1_ava_cofre_sem_fundo
+  - san1_sil_fio_de_barbeiro
+  - san1_sil_veneno_vermelho
+  - san1_sil_pe_de_pluma
+  - san1_sil_olho_no_pulso
+  - san1_sil_estancar_calado
+  - san1_sil_marca_de_unha
+  - san1_sil_corte_sem_aviso
+  - san1_sil_ponto_cego
+  - san1_sil_arterial_fina
+  - san1_sil_silencio_cobrado
+  - san1_sil_cirurgia_sem_testemunha
+  - san1_sil_ultima_gota

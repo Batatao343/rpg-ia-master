@@ -1,0 +1,416 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "san1_exp_talho_publico",
+      "name": "Talho Público",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "A lâmina abre o braço de quem a empunha e a rua inteira vê o vermelho.",
+      "momento": "Melhor jogada quando a luta mal começou e vale pagar um pouco de sangue para marcar a abertura.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_veia_a_mostra",
+      "name": "Veia à Mostra",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "taunt",
+          "valor": 2
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "Rasga a manga e exibe a veia; todo ferro da praça aprende o caminho até ela.",
+      "momento": "Melhor jogada quando um companheiro frágil precisa que as lâminas inimigas mirem noutra direção.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_cicatriz_aberta",
+      "name": "Cicatriz Aberta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 2
+        }
+      ],
+      "descricao": "A cicatriz velha reabre por vontade própria e o corte seguinte pesa mais.",
+      "momento": "Melhor jogada quando o golpe forte já está na mão e só falta aquecer o braço antes dele.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_aplauso_de_ferro",
+      "name": "Aplauso de Ferro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "contra_ataque",
+          "dano_base": 3
+        }
+      ],
+      "descricao": "Cada pancada recebida vira palmas, e a lâmina responde no mesmo compasso.",
+      "momento": "Melhor jogada quando o inimigo vai bater de qualquer jeito e a resposta deve sair na hora.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_segundo_ato",
+      "name": "Segundo Ato",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "eco": true
+      },
+      "descricao": "O público pede de novo, e a lâmina sai mais fundo da segunda vez.",
+      "momento": "Melhor jogada quando uma carta da Postura acabou de cair e o repique ainda pode correr.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_sangue_na_areia",
+      "name": "Sangue na Areia",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um risco de sangue no chão, e o inimigo segue pingando atrás de si.",
+      "momento": "Melhor jogada quando o adversário ainda vai durar muitas rodadas e a ferida pode trabalhar sozinha.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_gole_rubro",
+      "name": "Gole Rubro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "O sangue que escorre do inimigo volta, quente e emprestado, pela garganta de quem o abriu.",
+      "momento": "Melhor jogada quando o próprio fôlego pede um empréstimo de vida e o alvo ainda sangra no chão.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_credencial_de_dor",
+      "name": "Selo de Cicatriz",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 7
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "Reabre a pior cicatriz como quem mostra um selo e cobra respeito com o ferro.",
+      "momento": "Melhor jogada quando o corpo aguenta a conta e o inimigo precisa de um golpe que ninguém esqueça.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_plateia_cega",
+      "name": "Plateia Cega",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "taunt",
+          "valor": 3
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 2
+        }
+      ],
+      "descricao": "Todos olham a ferida aberta, ninguém repara na outra mão afiando a lâmina.",
+      "momento": "Melhor jogada quando vários inimigos disputam o alvo e a atenção deles vale mais que o dano.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_bis_de_cicatriz",
+      "name": "Bis de Cicatriz",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 4
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "palavras_chave": {
+        "eco": true
+      },
+      "descricao": "A mesma cicatriz canta duas vezes, a segunda já com o gosto do ferro.",
+      "momento": "Melhor jogada quando a luta pede dois cortes seguidos na mesma rodada sem trocar de postura.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_teatro_de_facas",
+      "name": "Teatro de Facas",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 7
+        },
+        {
+          "kind": "taunt",
+          "valor": 3
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "quando": "ao_receber_dano"
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 3
+      },
+      "descricao": "O palco se enche de ferro e cada ferida do dono devolve uma faca ao primeiro que a causou.",
+      "momento": "Melhor jogada quando o grupo cerca o Sangromante e cada pancada recebida pode virar uma resposta.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_exp_ultima_cortina",
+      "name": "Última Cortina",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "exposto",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 11
+        },
+        {
+          "kind": "dano",
+          "valor": 6,
+          "alvo": "inimigos"
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 4,
+        "exaurir": true
+      },
+      "descricao": "Fecha a cortina com o próprio sangue: quem assistiu sai marcado, quem atuou não volta.",
+      "momento": "Melhor jogada quando a luta está perdida na plateia e vale gastar tudo num único final.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

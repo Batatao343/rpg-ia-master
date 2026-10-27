@@ -552,9 +552,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "Uma cláusula escrita em sangue: o golpe só vale se o contrato for cumprido.",
       "contrapartida": "A cláusula se paga em Entropia alta e só se assina de novo no próximo turno.",
-      "momento": "Melhor jogada quando a vida já está baixa e o contrato de sangue ainda rende ao seu favor.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o golpe só vale se a cláusula escrita em sangue for cumprida à risca.",
+      "raridade": "rara"
     },
     {
       "id": "san_t6_tronco",
@@ -584,9 +583,8 @@
       "papel": "tier-6-reacao-buff_defesa-1",
       "descricao": "A dor guardada na reserva abre a porta no momento certo.",
       "contrapartida": "A dor guardada custa Entropia pesada e libera uma vez por turno.",
-      "momento": "Melhor jogada quando o golpe mais forte do inimigo se aproxima e a dor guardada pode amortecê-lo.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a dor guardada na reserva precisa abrir uma porta no momento exato.",
+      "raridade": "rara"
     },
     {
       "id": "san_t7_tronco",
@@ -616,9 +614,8 @@
       "papel": "tier-7-passiva-vantagem-2",
       "descricao": "O preço é pago antes, e o sangue cobra com juros depois.",
       "contrapartida": "O preço adiantado vale uma vez por cena e esvazia a Entropia.",
-      "momento": "Melhor jogada quando a cena será curta e o sangue pode ser gasto agora sem medo da dívida.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o preço antecipado já foi pago e o sangue cobra com juros mais adiante.",
+      "raridade": "abissal"
     },
     {
       "id": "san_t8_tronco",
@@ -648,9 +645,8 @@
       "papel": "tier-8-utilitaria-utilitaria-3",
       "descricao": "A última moeda de sangue compra o que ouro nenhum compraria.",
       "contrapartida": "A moeda é única por cena, e a Entropia vai ao limite para cunhá-la.",
-      "momento": "Melhor jogada quando a rota exige um sacrifício final e o sangue ainda cobre a conta.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a última moeda de sangue pode comprar o que ouro algum compraria.",
+      "raridade": "abissal"
     },
     {
       "id": "san_exposto_t5",
@@ -681,9 +677,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "O palco das cicatrizes exibe a dor como espetáculo, e o inimigo hesita ao ver.",
       "contrapartida": "O espetáculo pede Entropia alta e um intervalo de um turno.",
-      "momento": "Melhor jogada quando há plateia hostil por perto e a dor exposta pode virar arma.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o palco das cicatrizes exibe a dor inteira e o inimigo só aprende a recuar tarde.",
+      "raridade": "rara"
     },
     {
       "id": "san_exposto_t7",
@@ -713,9 +708,8 @@
       "papel": "tier-7-reacao-contra_ataque-1",
       "descricao": "O aplauso cruel responde a cada golpe recebido com outro, mais fundo.",
       "contrapartida": "O aplauso soa uma vez por cena, e a Entropia paga o ingresso.",
-      "momento": "Melhor jogada quando o inimigo escolhe bater primeiro e a plateia espera o troco.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando cada pancada recebida deve ser respondida em aplauso cruel com outra de igual peso.",
+      "raridade": "abissal"
     },
     {
       "id": "san_exposto_t8",
@@ -746,9 +740,8 @@
       "papel": "tier-8-passiva-aplicar_condicao-2",
       "descricao": "A dor em evidência deixa o inimigo cego pelo medo de olhar.",
       "contrapartida": "A dor só se exibe assim uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando um inimigo teimoso resiste e a dor exibida pode quebrar a vontade dele.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo hesita diante da dor exibida e o medo de olhar vale um turno inteiro.",
+      "raridade": "abissal"
     },
     {
       "id": "san_exposto_apice",
@@ -779,9 +772,8 @@
       "papel": "tier-9-ativa-dano-0",
       "descricao": "O testemunho escarlate é lido em voz alta, e ninguém sai da sala igual.",
       "contrapartida": "O testemunho exige Entropia alta e um descanso longo; a Carga do Abismo ouve.",
-      "momento": "Melhor jogada quando todos os olhos estão nele e o testemunho pode virar a mesa de uma vez.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o testemunho escarlate pode ser lido em voz alta e ninguém sai da sala sem ouvi-lo.",
+      "raridade": "abissal"
     },
     {
       "id": "san_avaro_t5",
@@ -811,9 +803,8 @@
       "papel": "tier-5-ativa-contra_ataque-4",
       "descricao": "O cofre de sangue guarda cada gota para o dia em que a dívida vence.",
       "contrapartida": "O cofre abre uma vez por turno e cobra Entropia alta pela chave.",
-      "momento": "Melhor jogada quando o inimigo acumulou dano contra o grupo e é hora de cobrar com juros.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o cofre de sangue guardou cada gota para o dia em que a dívida for cobrada.",
+      "raridade": "rara"
     },
     {
       "id": "san_avaro_t7",
@@ -844,9 +835,8 @@
       "papel": "tier-7-reacao-aplicar_condicao-5",
       "descricao": "O juro composto faz cada golpe sofrido valer mais para quem o devolve.",
       "contrapartida": "O juro só rende uma vez por cena, ao custo de Entropia alta.",
-      "momento": "Melhor jogada quando o avaro já levou muitos golpes e o juro precisa ser cobrado.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o juro composto faz cada golpe sofrido valer mais para quem o devolve.",
+      "raridade": "abissal"
     },
     {
       "id": "san_avaro_t8",
@@ -877,9 +867,8 @@
       "papel": "tier-8-passiva-dano-6",
       "descricao": "A cobrança final nunca perdoa: o que foi devido é tomado, com sobra.",
       "contrapartida": "A cobrança vem uma vez por cena e consome a Entropia até o limite.",
-      "momento": "Melhor jogada quando o alvo é o devedor mais antigo da luta e a conta chegou ao fim.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a cobrança final tomou tudo o que era devido e nada fica de fora da conta.",
+      "raridade": "abissal"
     },
     {
       "id": "san_avaro_apice",
@@ -909,9 +898,8 @@
       "papel": "tier-9-ativa-contra_ataque-1",
       "descricao": "A fortuna rubra é um tesouro que só existe enquanto alguém sangra por ele.",
       "contrapartida": "Fortuna cara: Entropia alta, descanso longo, e a Carga fica de garantia.",
-      "momento": "Melhor jogada quando todo o sangue gasto na luta precisa virar lucro em um único golpe.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a fortuna rubra existe só enquanto alguém sangra e o tesouro está prestes a ser gasto.",
+      "raridade": "abissal"
     },
     {
       "id": "san_silencioso_t5",
@@ -942,9 +930,8 @@
       "papel": "tier-5-ativa-aplicar_condicao-8",
       "descricao": "O corte sem eco entra e sai sem que o ar perceba.",
       "contrapartida": "O corte pede Entropia alta e depois um turno de quietude.",
-      "momento": "Melhor jogada quando o alvo está distraído e o corte pode ser dado sem chamar a luta.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o corte sem eco entra e sai sem que o ar perceba e o alvo fica exposto.",
+      "raridade": "rara"
     },
     {
       "id": "san_silencioso_t7",
@@ -975,9 +962,8 @@
       "papel": "tier-7-reacao-dano-9",
       "descricao": "A economia perfeita gasta só o necessário e devolve o resto em golpe.",
       "contrapartida": "A economia só rende uma vez por cena, e a Entropia é a moeda.",
-      "momento": "Melhor jogada quando cada gota de sangue conta e o golpe precisa render o dobro com custo mínimo.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a economia perfeita gasta só o necessário e devolve o resto ao bolso.",
+      "raridade": "abissal"
     },
     {
       "id": "san_silencioso_t8",
@@ -1007,9 +993,8 @@
       "papel": "tier-8-passiva-contra_ataque-10",
       "descricao": "A dívida invisível cresce no escuro e chega no momento exato.",
       "contrapartida": "A dívida invisível cobra uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando o inimigo nem sabe que está devendo e o silêncio ainda protege o plano.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a dívida invisível cresce no escuro e chega ao devedor no instante exato.",
+      "raridade": "abissal"
     },
     {
       "id": "san_silencioso_apice",
@@ -1040,9 +1025,8 @@
       "papel": "tier-9-ativa-aplicar_condicao-2",
       "descricao": "A última assinatura é feita sem tinta, e o contrato se cumpre sem testemunhas.",
       "contrapartida": "A assinatura final pede Entropia alta e descanso longo; a Carga assina junto.",
-      "momento": "Melhor jogada quando o alvo é um só e o golpe final precisa chegar sem aviso.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a última assinatura é feita sem tinta e o contrato de sangue se cumpre sozinho.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_t5_tronco",

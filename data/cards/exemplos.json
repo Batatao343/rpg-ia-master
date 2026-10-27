@@ -102,9 +102,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "A lâmina abre o caminho e o sangue paga a passagem.",
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o alvo está ao alcance da lâmina e nenhuma carta fina serve melhor que um corte honesto.",
+      "raridade": "comum"
     },
     {
       "id": "hemorragia",
@@ -127,9 +126,8 @@
       "level_req": 4,
       "apex": false,
       "descricao": "O corte não fecha; o ferro lembra da carne por muito tempo.",
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o adversário é paciente demais e a ferida deve ficar aberta enquanto as outras cartas esperam.",
+      "raridade": "incomum"
     },
     {
       "id": "reflexo_lamina",
@@ -152,9 +150,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "O aço de quem ataca encontra o aço que já esperava por ele.",
-      "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o atacante já tem o braço erguido e o aço dele vai encontrar o seu no caminho.",
+      "raridade": "comum"
     },
     {
       "id": "toque_corrosivo",

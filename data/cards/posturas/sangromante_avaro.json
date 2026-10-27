@@ -1,0 +1,422 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "san1_ava_moeda_guardada",
+      "name": "Moeda Guardada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "Uma moeda de sangue escondida na luva, gasta só quando o preço compensa.",
+      "momento": "Melhor jogada quando o golpe barato deve esperar na mão até o inimigo baixar a guarda.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_cofre_estreito",
+      "name": "Cofre Estreito",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 2
+        }
+      ],
+      "descricao": "Fecha a mão sobre a ferida e a força que sobraria se acumula na palma.",
+      "momento": "Melhor jogada quando o ataque pesado vem logo depois e a conta precisa render em dobro.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_juros_do_primeiro",
+      "name": "Juros do Primeiro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2,
+          "escala": {
+            "por": "entropia",
+            "fator": 0.5,
+            "max": 3
+          }
+        }
+      ],
+      "descricao": "O corte inicial não custa nada; a dívida que ele cria é que cresce no escuro.",
+      "momento": "Melhor jogada quando a Entropia já subiu bastante e o juro acumulado vale mais que o capital.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_poupar_ferida",
+      "name": "Poupar Ferida",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Só quem já está quebrado costura a pele com o fio da casa e ganha uma cicatriz nova.",
+      "momento": "Melhor jogada quando a Vitalidade caiu a menos da metade e gastar mais sangue seria falência.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_livro_de_dividas",
+      "name": "Livro de Dívidas",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca",
+          "valor": 2
+        }
+      ],
+      "descricao": "Anota o nome do credor no ar, e o ferro seguinte sabe a quem cobrar.",
+      "momento": "Melhor jogada quando um único inimigo deve receber o golpe grande e precisa estar apontado.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_gota_contada",
+      "name": "Gota Contada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        }
+      ],
+      "palavras_chave": {
+        "ressoar": 1
+      },
+      "descricao": "Cada gota de sangue sai numerada; a última sempre custa mais do que a primeira.",
+      "momento": "Melhor jogada quando a mesma carta já soou nesta cena e o tom ainda pode subir.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_mao_fechada",
+      "name": "Mão Fechada",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_esquiva",
+          "valor": 2
+        }
+      ],
+      "descricao": "Aperta o punho, aperta o corpo, e nem a névoa acha onde cobrar.",
+      "momento": "Melhor jogada quando não sobra Entropia para gastar e o melhor lance é só não perder.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_cobranca_adiada",
+      "name": "Cobrança Adiada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 4
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "chamado": 4
+        }
+      ],
+      "descricao": "A dívida dorme até o Abismo encher o peito, e o golpe cobra o atraso.",
+      "momento": "Melhor jogada quando o Abismo já pesa no peito e o corte guardado pode sair inteiro.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_penhor_de_carne",
+      "name": "Penhor de Carne",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 6
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 2,
+        "guardar": true
+      },
+      "descricao": "Deixa um pedaço da coxa em penhor e fica com a lâmina por mais uma rodada.",
+      "momento": "Melhor jogada quando o golpe vale a carne que ele custa e a carta pode esperar a abertura.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_hipoteca_de_sangue",
+      "name": "Hipoteca de Sangue",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 4
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 2
+      },
+      "descricao": "Assina com o próprio pulso a promessa de pagar o dobro depois.",
+      "momento": "Melhor jogada quando o golpe decisivo está a uma carta de distância e vale endividar o corpo.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_execucao_da_divida",
+      "name": "Execução da Dívida",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 8,
+          "escala": {
+            "por": "entropia",
+            "fator": 0.5,
+            "max": 4
+          }
+        },
+        {
+          "kind": "dano",
+          "valor": 6,
+          "chamado": 6
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "O Avaro lê em voz alta cada gota de sangue guardada e o golpe único cai de uma vez.",
+      "momento": "Melhor jogada quando a Entropia chegou ao topo e todo o capital de sangue pode virar um só corte.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_ava_cofre_sem_fundo",
+      "name": "Cofre sem Fundo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "avaro",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 9
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 3
+        },
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu",
+          "quando": "ao_derrubar"
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "O cofre engole o que cai e cospe de volta uma sede de sangue ainda maior.",
+      "momento": "Melhor jogada quando o alvo está perto de cair e o troféu pode devolver o fôlego perdido.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

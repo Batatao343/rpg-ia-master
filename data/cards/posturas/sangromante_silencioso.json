@@ -1,0 +1,415 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "san1_sil_fio_de_barbeiro",
+      "name": "Fio de Barbeiro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "descricao": "Nem um gesto sobrando, nem uma gota a mais: a navalha escolhe a veia.",
+      "momento": "Melhor jogada quando o mesmo corte limpo já soou nesta cena e a repetição afia o gume sem teatro.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "palavras_chave": {
+        "ressoar": 1
+      }
+    },
+    {
+      "id": "san1_sil_veneno_vermelho",
+      "name": "Veneno Vermelho",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 3
+        }
+      ],
+      "descricao": "Um risco fino que o alvo só sente quando o corpo já escorre.",
+      "momento": "Melhor jogada quando o inimigo é duro de quebrar e o tempo trabalha a favor da navalha.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_pe_de_pluma",
+      "name": "Pé de Pluma",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_esquiva",
+          "valor": 2
+        }
+      ],
+      "descricao": "Quem sangrou calado aprendeu a pisar sem acordar a sombra do chão.",
+      "momento": "Melhor jogada quando o ataque inimigo é barulhento e a resposta certa é simplesmente não estar lá.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_olho_no_pulso",
+      "name": "Olho no Pulso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "vitalidade"
+        }
+      ],
+      "descricao": "Escuta o sangue do outro e descobre quanto ele ainda tem para dar.",
+      "momento": "Melhor jogada quando falta saber quanto falta para derrubar o alvo antes de escolher a navalha.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_estancar_calado",
+      "name": "Estancar Calado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Aperta a ferida entre dois dedos, e a cicatriz fecha antes que alguém note.",
+      "momento": "Melhor jogada quando a própria ferida goteja, ninguém ainda notou e um golpe vai chegar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_marca_de_unha",
+      "name": "Marca de Unha",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um arranhão discreto mostra ao ferro seguinte onde a pele é mais fina.",
+      "momento": "Melhor jogada quando o plano é um golpe só e o alvo precisa estar riscado antes.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_corte_sem_aviso",
+      "name": "Corte Sem Aviso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 6
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "descricao": "A lâmina entra, sai, e só depois o alvo percebe a cor do chão.",
+      "momento": "Melhor jogada quando o inimigo ainda não percebeu a luta e um golpe duplo cabe num só gesto.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_ponto_cego",
+      "name": "Ponto Cego",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "vantagem",
+          "valor": 2
+        }
+      ],
+      "descricao": "Entra pelo lado em que o inimigo nunca olha, na sombra, e deixa a lâmina falar.",
+      "momento": "Melhor jogada quando o alvo está distraído com outro e a faca deve entrar pela sombra.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_arterial_fina",
+      "name": "Arterial Fina",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 4
+        }
+      ],
+      "palavras_chave": {
+        "eco": true
+      },
+      "descricao": "Encontra o vaso mais fundo e deixa o sangue cobrar pelo resto.",
+      "momento": "Melhor jogada quando outra carta da Postura acabou de abrir o inimigo e a sangria deve dobrar de voz.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_silencio_cobrado",
+      "name": "Silêncio Cobrado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "cura",
+          "valor": 4,
+          "alvo": "eu",
+          "se": {
+            "alvo_tem": "sangria"
+          }
+        }
+      ],
+      "descricao": "O silêncio custa caro: o que foi roubado do alvo volta, em goles, ao ladrão.",
+      "momento": "Melhor jogada quando o alvo sangra, o dono do golpe está ferido e os dois lados da conta se fecham.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_cirurgia_sem_testemunha",
+      "name": "Cirurgia sem Testemunha",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 2,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 8
+        },
+        {
+          "kind": "sangria",
+          "valor": 4
+        },
+        {
+          "kind": "marca",
+          "valor": 2
+        }
+      ],
+      "descricao": "Corte, marca e fuga em três gestos; ninguém na sala vê o dono da lâmina.",
+      "momento": "Melhor jogada quando o inimigo importante está de costas para o resto da luta.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "san1_sil_ultima_gota",
+      "name": "Última Gota",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Sangromante",
+      "subclasse": "silencioso",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 11
+        },
+        {
+          "kind": "sangria",
+          "valor": 6
+        },
+        {
+          "kind": "cura",
+          "valor": 5,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 3,
+        "exaurir": true
+      },
+      "descricao": "Beberam tudo o que podiam; sobra a gota de sangue que decide quem fica de pé.",
+      "momento": "Melhor jogada quando a luta se resume a um alvo ainda vivo e ao pulso que resta ao próprio Sangromante.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

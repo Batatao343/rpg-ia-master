@@ -386,6 +386,9 @@ def _active_test(kind: str) -> Callable[[], None]:
 
             _p, _e, ally, *_ = _play_active(kind, "ally", prep=down)
             assert not ally.get("estado_terminal")
+        elif kind == "sangria":  # SPEC-335 Lote 2: Carta real, pelo caminho de Carta
+            _p, enemy, *_ = _play_active(kind, "e")
+            assert any(c.get("keyword") == "sangria" for c in enemy["active_conditions"])
         elif kind in ("protecao", "vantagem", "buff_defesa", "buff_acerto", "buff_dano"):
             stat = {
                 "protecao": "protection",
@@ -804,6 +807,7 @@ for _k in (
     "vigilia",
     "revelar",
     "mover_alvo_zona",
+    "sangria",
 ):
     EFFECT_TESTS[f"card:ativa:{_k}"] = _active_test(_k)
 for _k in (
