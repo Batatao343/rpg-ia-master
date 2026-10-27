@@ -7,6 +7,7 @@ import json
 import pytest
 
 from services import companion_orders as co
+from services.prompt_guard import unwrap_player_input
 from tests.spec325_chase_helpers import BRUNNA, BRUNNA_ID, chaser, first_state, step
 from tests.spec325_helpers import run_node
 
@@ -191,7 +192,7 @@ class _SpyLLM:
 
         class _Bound:
             def invoke(self, msgs):
-                seen.append(str(msgs[-1].content))
+                seen.append(unwrap_player_input(str(msgs[-1].content)))
                 return model(kind="attack")
 
         return _Bound()
