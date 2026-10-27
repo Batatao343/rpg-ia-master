@@ -886,7 +886,18 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
         with open(ondas_file, encoding="utf-8") as f:
             ondas = (yaml.safe_load(f) or {}).get("ondas") or []
         for onda in ondas:
-            if onda.get("voz_status", "aprovada") != "aprovada" or not onda.get("revisor_voz"):
+            aprovada = onda.get("voz_status", "aprovada") == "aprovada"
+            if aprovada and not card_lint.revisor_valido(onda.get("revisor_voz")):
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        ondas_file,
+                        f"onda-{onda.get('onda')}",
+                        "voz 'aprovada' sem revisor_voz real (identificador)",
+                    )
+                )
+            if not aprovada or not onda.get("revisor_voz"):
                 ids = ", ".join(onda.get("cartas") or [])
                 findings.append(
                     Finding(

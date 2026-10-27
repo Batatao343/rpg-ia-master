@@ -48,7 +48,7 @@ saem do catálogo na sua rodada), ao nível de entrada (`level_req`), encontro p
 
 Cartas com bandeira no protocolo final: **0**. Ajustadas até limpar (v. histórico do commit): `arc1_des_dedos`
 (Vantagem → +2 de acerto), `arc1_des_palma` (dano 3 → 2), `arc1_des_corrente` (Fôlego livre → descartar 2, 1 de Fôlego, `cena`).
-Reescrevi o *efeito*, não movi poder para efeitos que a arena não mede.
+Reescrevi o *efeito*. Atenção (P2-5): `arc1_des_palma` ganhou **Eco** (efeito principal só dano 2) e `arc1_des_faisca` ganhou **Ressoar** e passou a `livre`; Eco e Ressoar não pesam na decisão do bot, então para essas duas o **único freio é o orçamento**.
 
 ## Limitações da arena (declaradas, não contornadas)
 

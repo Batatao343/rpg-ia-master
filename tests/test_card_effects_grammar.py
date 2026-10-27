@@ -482,7 +482,10 @@ def test_validador_rejeita_carta_fora_do_orcamento(tmp_path):
 
 
 def test_validador_acervo_real_continua_limpo():
-    assert [f for f in validate_cards() if f.severity == "error"] == []  # AVISO de voz pendente é esperado
+    achados = validate_cards()
+    assert [f for f in achados if f.severity == "error"] == []
+    # único aviso aceito: voz pendente de onda `pendente-dono`
+    assert all(f.severity != "warning" or "voz pendente" in f.message for f in achados)
 
 
 def test_golden_extra_cobre_acerto_erro_e_critico():

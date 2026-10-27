@@ -19,7 +19,6 @@ import datetime as dt
 import hashlib
 import json
 import os
-import re
 import sys
 
 import yaml
@@ -91,14 +90,7 @@ def evaluate(
     return ok, recusadas
 
 
-_REVISOR_REAL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{1,39}$")
-_REVISOR_FALSO = ("pendente", "posterior", "amostra", "depois", "tbd", "todo", "null", "none")
-
-
-def revisor_valido(nome: str | None) -> bool:
-    """Revisor real = um identificador (``dono``, ``guilherme``), nunca texto livre nem promessa."""
-    nome = (nome or "").strip()
-    return bool(_REVISOR_REAL.match(nome)) and not any(f in nome.lower() for f in _REVISOR_FALSO)
+revisor_valido = card_lint.revisor_valido
 
 
 def promote(

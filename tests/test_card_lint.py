@@ -360,3 +360,23 @@ def test_auto_resolved_choices_marked_source_auto(monkeypatch):
     seen.clear()
     card_telemetry.picked("x")
     assert seen[0][1]["source"] == "player"
+
+
+def test_check_raridade_regras_da_r3():
+    base = dict(card(onda=1), raridade="comum", patamar="inicial")
+    assert not card_lint.check_raridade(base)
+    dois = dict(base, efeitos=[{"kind": "cura", "valor": 3}, {"kind": "comprar", "valor": 1}])
+    assert "raridade" in codes(card_lint.check_raridade(dois))
+    kws = dict(base, palavras_chave={"guardar": True, "eco": True})
+    assert "raridade" in codes(card_lint.check_raridade(kws))
+    assert not card_lint.check_raridade(dict(dois, raridade="incomum", patamar="avancado"))
+    tres = dict(dois, efeitos=dois["efeitos"] + [{"kind": "protecao", "valor": 1}])
+    assert card_lint.errors(
+        card_lint.check_raridade(dict(tres, raridade="incomum", patamar="avancado"))
+    )
+    assert card_lint.errors(card_lint.check_raridade(dict(base, patamar="avancado")))
+    abissal = dict(base, raridade="abissal", patamar="lendario", custo_entropia=0)
+    assert card_lint.errors(card_lint.check_raridade(abissal))
+    ok = dict(abissal, custo_entropia=4, palavras_chave={"exaurir": True})
+    assert not card_lint.check_raridade(ok)
+    assert not card_lint.check_raridade(dict(dois, onda=None))  # legado: sem a regra

@@ -38,6 +38,16 @@ MIN_CARTAS_POR_PALAVRA_NOVA = 6  # R9
 
 # SPEC-335 R5: frases-modelo do gerador antigo (scripts/gen_tiers_5_plus.py); proibidas.
 GENERICAS = ("converte_risco_acumulado", "decisao_mecanica_de_fim_de_campanha")
+_REVISOR_REAL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{1,39}$")
+_REVISOR_FALSO = ("pendente", "posterior", "amostra", "depois", "tbd", "todo", "null", "none")
+
+
+def revisor_valido(nome: str | None) -> bool:
+    """Revisor real = identificador (``dono``), nunca texto livre nem promessa (SPEC-335 P1-1)."""
+    nome = (nome or "").strip()
+    return bool(_REVISOR_REAL.match(nome)) and not any(f in nome.lower() for f in _REVISOR_FALSO)
+
+
 GENERICAS_CONTRAPARTIDA = ("consome_entropia_e_respeita_a_frequencia",)
 
 # SPEC-335 R3: raridade = complexidade. Patamares aceitos por raridade.

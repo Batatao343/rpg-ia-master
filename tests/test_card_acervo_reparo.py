@@ -103,13 +103,14 @@ POSTURAS_COM_MOMENTO_PLACEHOLDER = {
     "Inimigo",
     "",  # Cartas de Virtude
 }
-MAX_PLACEHOLDERS = 255  # só pode diminuir
+MAX_PLACEHOLDERS = 255  # só pode diminuir (== no teste: baixe aqui ao reescrever)
 
 
 def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():
     pool = [c for c in card_lint.load_pool() if c.get("momento")]
     placeholders = [c for c in pool if c.get("momento_placeholder")]
-    assert len(placeholders) <= MAX_PLACEHOLDERS
+    assert len(placeholders) == MAX_PLACEHOLDERS
+    assert not [c["id"] for c in placeholders if c.get("onda") is not None]
     assert {c.get("classe") for c in placeholders} <= POSTURAS_COM_MOMENTO_PLACEHOLDER
     por_postura: dict = {}
     for c in pool:

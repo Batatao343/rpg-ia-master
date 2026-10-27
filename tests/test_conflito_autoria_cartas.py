@@ -254,7 +254,10 @@ def test_carta_autoral_usavel_pelo_motor():
 def test_lint_das_cartas_reais_sem_erro():
     from services.content_validator import validate_cards
 
-    assert [f for f in validate_cards() if f.severity == "error"] == []  # AVISO de voz pendente é esperado
+    achados = validate_cards()
+    assert [f for f in achados if f.severity == "error"] == []
+    # único aviso aceito: voz pendente de onda `pendente-dono`
+    assert all(f.severity != "warning" or "voz pendente" in f.message for f in achados)
 
 
 def test_lint_pega_carta_ruim(tmp_path):
