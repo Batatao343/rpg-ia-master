@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c759b6d0926c37c375ecd72df8364af3bce28e55",
+  "commit_sha": "17227ba01d3f8191aaea2fa187b050a0a711f770",
   "edge_counts": {
-    "calls": 30997,
-    "contains": 1028,
-    "defines": 15311,
-    "imports": 2516,
-    "likely_test_for": 1766,
-    "route_to": 66
+    "calls": 31469,
+    "contains": 1033,
+    "defines": 15457,
+    "imports": 2536,
+    "likely_test_for": 1782,
+    "route_to": 68
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b0fff87fa926fed5211bc587610a453d1abba005c0e3e1b6d1e5214d2f55b7c5",
+  "graph_hash": "sha256:309749de0894c384bbc082c422504adebc026176df47267d9f277dfdc6d5f329",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -324,6 +324,8 @@
     "services/card_effects.py",
     "services/card_lint.py",
     "services/card_piles.py",
+    "services/card_rewards.py",
+    "services/card_status.py",
     "services/card_telemetry.py",
     "services/cards.py",
     "services/chase.py",
@@ -575,6 +577,7 @@
     "tests/test_card_effects_review_spec330.py",
     "tests/test_card_lint.py",
     "tests/test_card_piles.py",
+    "tests/test_card_rewards.py",
     "tests/test_card_sim.py",
     "tests/test_cards_prepare_api.py",
     "tests/test_chaos_local.py",
@@ -690,6 +693,7 @@
     "tests/test_fix_vitalidade_terminal.py",
     "tests/test_fixes_playtest.py",
     "tests/test_flee_alert_wiring.py",
+    "tests/test_forge.py",
     "tests/test_frontend_accessibility_contracts.py",
     "tests/test_frontend_auth_bootstrap.py",
     "tests/test_frontend_visual_contracts.py",
@@ -1075,6 +1079,7 @@
     "tests/test_world_event_proof.py",
     "tests/test_world_rejection_logs.py",
     "tests/test_world_sim.py",
+    "tests/test_wound_status_cards.py",
     "vercel_app.py",
     "web/capacitor.config.ts",
     "web/e2e/a11y-headings.spec.ts",
@@ -1117,6 +1122,7 @@
     "web/src/App.tsx",
     "web/src/artOffers.ts",
     "web/src/build.ts",
+    "web/src/cardRewards.ts",
     "web/src/clockLabel.ts",
     "web/src/codexKnowledge.ts",
     "web/src/combat/Arena.tsx",
@@ -1135,7 +1141,9 @@
     "web/src/components/CodexTab.tsx",
     "web/src/components/combat/DeckCombat.tsx",
     "web/src/components/combat/EnemyStrip.tsx",
+    "web/src/components/combat/EspolioPanel.tsx",
     "web/src/components/combat/FolegoPips.tsx",
+    "web/src/components/combat/ForjaPanel.tsx",
     "web/src/components/combat/Hand.tsx",
     "web/src/components/combat/KeywordTip.tsx",
     "web/src/components/combat/MechLog.tsx",
@@ -1263,14 +1271,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 973,
-    "endpoint": 66,
-    "file": 1209,
-    "function": 4824,
+    "class": 976,
+    "endpoint": 68,
+    "file": 1217,
+    "function": 4877,
     "method": 843,
-    "module": 1028,
-    "test": 8670
+    "module": 1033,
+    "test": 8760
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:2a35a0163c51339933790ca3b1aef783d6d9d3a4c06ad8aecbf00ff4ff74e4c5"
+  "source_tree_hash": "sha256:15c0ae48baa656bd16b5329eba3a07b5b918ba392deac7809a5ab6f9f258d18f"
 }
