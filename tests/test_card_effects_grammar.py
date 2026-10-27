@@ -92,7 +92,7 @@ def test_equivalencia_das_308_cartas_legadas_contra_o_motor_anterior():
         golden = json.load(f)
     legacy = eq.legacy_cards()
     assert len(legacy) == len(golden) == 308
-    diffs = [cid for cid, c in sorted(legacy.items()) if eq.run_card(c) != golden[cid]]
+    diffs = [cid for cid, c in sorted(legacy.items()) if eq.run_card_full(c) != golden[cid]]
     assert diffs == []
 
 
@@ -103,7 +103,7 @@ def test_equivalencia_forma_lista_igual_a_forma_legada(monkeypatch):
     diffs = []
     for cid, card in sorted(eq.legacy_cards().items()):
         monkeypatch.setitem(catalog, cid, _list_form(card))
-        if eq.run_card(catalog[cid]) != golden[cid]:
+        if eq.run_card_full(catalog[cid]) != golden[cid]:
             diffs.append(cid)
         monkeypatch.setitem(catalog, cid, card)
     assert diffs == []

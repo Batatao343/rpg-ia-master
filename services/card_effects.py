@@ -38,6 +38,7 @@ import copy
 import json
 import math
 import os
+import random
 import re
 import unicodedata
 from collections import deque
@@ -123,6 +124,7 @@ TURN_EVENT_KEYS = (
     "gatilhos",
     "gatilhos_descartados",
     "pendente_pilhas",
+    "pilhas_eventos",
     "revelacoes",
     "extra_hits",
     "class_mechanics",
@@ -240,6 +242,11 @@ class Ctx:
     # SPEC-325: modo não-letal do golpe declarado pelo ator do turno corrente.
     nonlethal: str = ""
     nonlethal_actor: str | None = None
+    # SPEC-330 R6/R7: pilhas do jogador (so com RPG_CARD_DECK=on); sem elas os
+    # efeitos de pilha seguem inertes (`pendente_pilhas`).
+    piles: dict | None = None
+    piles_actor: str | None = None
+    pile_depth: int = 0
     queue: deque = field(default_factory=deque)
     depth: int = 0
     draining: bool = False
@@ -360,8 +367,13 @@ def _played(actor: dict) -> list[dict]:
     return actor.setdefault("_cartas_rodada", [])
 
 
-def record_play(actor: dict, card: dict, target_id: str | None) -> None:
-    """Registra a Carta jogada nesta rodada (condições ``ultima_carta_*``, Eco)."""
+def record_play(actor: dict, card: dict, target_id: str | None, scene: dict | None = None) -> None:
+    """Registra a Carta jogada nesta rodada (condições ``ultima_carta_*``, Eco) e,
+    com ``scene``, a contagem de jogadas na cena (**Ressoar**)."""
+    if scene is not None and keywords(card).get("ressoar"):
+        key = f"{actor.get('id') or actor.get('name')}:{card.get('id')}"
+        counts = scene.setdefault("ressoar", {})
+        counts[key] = int(counts.get(key, 0) or 0) + 1
     _played(actor).append(
         {
             "card_id": card.get("id"),
@@ -728,13 +740,15 @@ def _apply_on(ctx, eff, actor, actor_id, target, tid, out, card) -> None:
             revealed.append(campo)
         out.setdefault("revelacoes", []).append({"target_id": tid, "campo": campo})
         logs.append(f"{_name(actor)} lê {_name(target)}: {campo} à mostra.")
+        _persist_revelation(target, campo)
     elif kind == "copiar_ultima":
         _copy_last(ctx, actor, actor_id, out)
     elif kind in PILE_KINDS:
-        # SPEC-328 (pilhas) ainda não pousou: registra, sem efeito no motor.
-        out.setdefault("pendente_pilhas", []).append(
-            {"kind": kind, "actor_id": actor_id, "valor": value, "card_id": card.get("id")}
-        )
+        if not _apply_pile(ctx, kind, eff, actor_id, value, out, card):
+            # Sem baralho `on` (ou ator sem pilhas): registra, sem efeito no motor.
+            out.setdefault("pendente_pilhas", []).append(
+                {"kind": kind, "actor_id": actor_id, "valor": value, "card_id": card.get("id")}
+            )
     elif kind == "dano":
         dtype = str(eff.get("dano_tipo") or "cortante")
         dano = value + consume_marca_abismo(actor, target, out)
@@ -775,6 +789,204 @@ def _apply_on(ctx, eff, actor, actor_id, target, tid, out, card) -> None:
         )
     else:
         logs.append(f"{card.get('name', source)}: efeito sem resolução fora de turno ({kind!r}).")
+
+
+# --------------------------------------------------------------------------
+# Revelar -> bestiary_knowledge (SPEC-330 D-11 P2-5)
+# --------------------------------------------------------------------------
+def _persist_revelation(target: dict, campo: str) -> None:
+    """``revelar`` torna público o que o painel de combate esconde e, no perfil
+    ``legacy``, grava no bestiário (como ``_reveal_resistances`` do nó de combate).
+    Só inimigos; falha de persistência é cosmética e nunca derruba o turno."""
+    if target.get("is_player") or target.get("player") or campo not in ("resistencias", "cartas"):
+        return
+    from observability.telemetry import log_event
+    from services import bestiary_knowledge as bk
+
+    shared = os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() == "legacy"
+    try:
+        if campo == "resistencias":
+            from services.conflict_damage import net_resistance
+
+            entries = [f"{t}:imune" for t in target.get("immunities") or []]
+            for dtype, raw in (target.get("resistances") or {}).items():
+                mod = net_resistance(raw if isinstance(raw, list) else [raw])
+                if mod:
+                    entries.append(f"{dtype}:{'resiste' if mod < 0 else 'vulneravel'}")
+            for entry in entries:
+                if entry in (target.get("revealed_resistances") or []):
+                    continue
+                if shared:
+                    bk.reveal_resistance(target, entry)
+                else:
+                    target.setdefault("revealed_resistances", []).append(entry)
+        else:
+            for entry in target.get("cartas") or target.get("enemy_cards") or []:
+                cid = entry.get("id") if isinstance(entry, dict) else entry
+                if not cid or bk.is_card_revealed(target, str(cid)):
+                    continue
+                if shared:
+                    bk.reveal_card(target, str(cid))
+                else:
+                    target.setdefault("revealed_cards", []).append(str(cid))
+    except Exception:
+        log_event("combat", "revelar_knowledge_failed", level="warning")
+
+
+# --------------------------------------------------------------------------
+# Pilhas (SPEC-330 R6/R7 sobre a SPEC-328) — só com o Baralho `on`
+# --------------------------------------------------------------------------
+def _rng_of(ctx: Ctx) -> random.Random | None:
+    return ctx.rng if isinstance(ctx.rng, random.Random) else None
+
+
+def _apply_pile(
+    ctx: Ctx, kind: str, eff: dict, actor_id: str, value: int, out: dict, card: dict
+) -> bool:
+    """Resolve um efeito de pilha nas pilhas do jogador. False = sem pilhas (inerte).
+    Só o jogador mexe na própria mão; o inimigo só põe Fardo nela (``gerar_carta``)."""
+    from services import card_piles as cp
+
+    piles = ctx.piles
+    if not isinstance(piles, dict):
+        return False
+    own = actor_id == ctx.piles_actor
+    cid_eff = str(eff.get("id") or eff.get("card_id") or "")
+    if not own and not (kind == "gerar_carta" and cp.is_fardo(cp.card_of(cid_eff))):
+        return False
+    logs = out.setdefault("logs", [])
+    events = out.setdefault("pilhas_eventos", [])
+    who = _name(ctx.actors_by_id.get(actor_id))
+    if kind == "comprar":
+        drawn = cp.draw(piles, value, _rng_of(ctx))
+        logs.append(f"{who} compra {len(drawn)} Carta(s).")
+        events.append({"kind": "comprar", "cartas": list(drawn), "card_id": card.get("id")})
+        for cid in drawn:
+            pile_trigger(ctx, "ao_comprar", cid, actor_id, out)
+    elif kind == "descartar":
+        ids = cp.pick_discards(
+            piles,
+            value,
+            escolha=bool(eff.get("escolha")),
+            rng=_rng_of(ctx),
+            protect=str(card.get("id") or ""),
+        )
+        gone = cp.discard_cards(piles, ids)
+        logs.append(f"{who} descarta {len(gone)} Carta(s).")
+        events.append({"kind": "descartar", "cartas": list(gone), "card_id": card.get("id")})
+        for cid in gone:
+            pile_trigger(ctx, "ao_descartar", cid, actor_id, out)
+    elif kind == "ganhar_folego":
+        got = cp.gain_folego(piles, value)
+        logs.append(f"{who} ganha {got} de Fôlego.")
+        events.append({"kind": "ganhar_folego", "valor": got})
+    elif kind == "gerar_carta":
+        pilha = str(eff.get("pilha") or "mao")
+        ok = cp.add_card(piles, cid_eff, pilha)
+        nome = cp.card_of(cid_eff).get("name") or cid_eff
+        logs.append(
+            f"{nome} entra em {pilha}."
+            if ok
+            else f"{card.get('name', 'Carta')}: não foi possível gerar {cid_eff!r}."
+        )
+        events.append({"kind": "gerar_carta", "carta": cid_eff, "pilha": pilha, "ok": ok})
+    elif kind == "purgar_fardo":
+        n = cp.purge_fardos(piles, value)
+        logs.append(f"{who} purga {n} Fardo(s).")
+        events.append({"kind": "purgar_fardo", "valor": n})
+    return True
+
+
+def pile_trigger(ctx: Ctx, gatilho_: str, card_id: str, actor_id: str, out: dict) -> None:
+    """Gatilhos da PRÓPRIA Carta ao mudar de pilha (``ao_comprar``/``ao_descartar``/
+    ``ao_exaurir``) — Vazão é o ``ao_descartar`` de uma Carta com a palavra-chave.
+    Profundidade máx. ``MAX_DEPTH`` (efeito de pilha que descarta Carta com Vazão…)."""
+    from services import cards
+
+    card = cards.get_card(card_id)
+    if not card or ctx.pile_depth >= MAX_DEPTH:
+        return
+    effects = [e for e in normalize(card) if gatilho(e) == gatilho_]
+    if not effects:
+        return
+    actor = ctx.actors_by_id.get(actor_id) or {}
+    ctx.pile_depth += 1
+    try:
+        for eff in effects:
+            if not _chamado_ok(eff, actor) or not check(eff.get("se"), ctx, actor_id, None):
+                continue
+            out.setdefault("gatilhos", []).append(
+                {
+                    "gatilho": gatilho_,
+                    "sujeito_id": actor_id,
+                    "card_id": card_id,
+                    "kind": eff.get("kind"),
+                    "profundidade": ctx.pile_depth,
+                }
+            )
+            apply_effect(ctx, eff, actor_id, None, out, card=card)
+    finally:
+        ctx.pile_depth -= 1
+
+
+# --------------------------------------------------------------------------
+# Ressoar / Eco (SPEC-330 R6)
+# --------------------------------------------------------------------------
+_VALUE_KEYS = ("valor", "dano_base", "n")
+
+
+def _bump(eff: dict, delta: int, *, half: bool = False) -> dict:
+    """Cópia do efeito com o valor numérico alterado (soma ``delta`` ou divide por 2)."""
+    out = dict(eff)
+    for key in _VALUE_KEYS:
+        if out.get(key) is not None:
+            try:
+                v = int(out[key])
+            except (TypeError, ValueError):
+                return out
+            out[key] = max(1, v // 2) if half and v > 0 else v + delta
+            return out
+    return out
+
+
+def prepare_play(scene: dict | None, card: dict | None, actor: dict, actor_id: str) -> dict | None:
+    """**Ressoar N**: cada jogada anterior desta Carta na cena soma N ao valor do efeito
+    principal. Devolve uma cópia (o catálogo nunca é mutado); sem Ressoar, a própria Carta."""
+    n = int(keywords(card).get("ressoar", 0) or 0)
+    if not card or n <= 0 or scene is None:
+        return card
+    key = f"{actor.get('id') or actor.get('name')}:{card.get('id')}"
+    before = int((scene.get("ressoar") or {}).get(key, 0) or 0)
+    prim = primary_effect(card)
+    if before <= 0 or prim is None:
+        return card
+    bumped = _bump(prim, n * before)
+    new = dict(card)
+    new["efeito"] = bumped
+    if isinstance(card.get("efeitos"), list):
+        idx = primary_index(card)
+        if idx is not None:
+            new["efeitos"] = [bumped if i == idx else e for i, e in enumerate(card["efeitos"])]
+    return new
+
+
+def echo(ctx: Ctx, card: dict, actor_id: str, target_id: str | None, out: dict) -> bool:
+    """**Eco**: jogada depois de outra Carta da mesma Postura nesta rodada, repete o
+    efeito principal pela metade (valor numérico ÷ 2, mín. 1). Roda antes de
+    ``record_play`` — ``_cartas_rodada`` ainda só tem as Cartas anteriores."""
+    actor = ctx.actors_by_id.get(actor_id) or {}
+    classe = _fold(card.get("classe"))
+    if not keywords(card).get("eco") or not classe:
+        return False
+    if not any(_fold(p.get("classe")) == classe for p in actor.get("_cartas_rodada") or []):
+        return False
+    prim = primary_effect(card)
+    if prim is None or not check(prim.get("se"), ctx, actor_id, target_id):
+        return False
+    out.setdefault("logs", []).append(f"Eco: {card.get('name', 'a Carta')} ressoa pela metade.")
+    out.setdefault("keywords", []).append({"keyword": "eco", "actor_id": actor_id})
+    apply_effect(ctx, _bump(prim, 0, half=True), actor_id, target_id, out, card=card)
+    return True
 
 
 def _ensure_turn_out(out: dict) -> dict:
@@ -857,6 +1069,7 @@ def resolve_extras(ctx: Ctx, card: dict, actor_id: str, target_id: str | None, o
                 {"keyword": "chamado", "actor_id": actor_id, "k": int(eff["chamado"])}
             )
         apply_effect(ctx, eff, actor_id, target_id, out, card=card)
+    echo(ctx, card, actor_id, target_id, out)
     arm(ctx, card, actor_id)
     if keywords(card).get("interromper") and target_id:
         interrupt(ctx, actor_id, target_id, out)

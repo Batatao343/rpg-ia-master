@@ -121,6 +121,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "combat.reinforcements_warned": (),
     "combat.reveal_resist": ("effect",),
     "combat.reveal_resist_shadow": ("effect",),
+    "combat.revelar_knowledge_failed": (),
     "combat.spawn_failed": ("error",),
     "combat.spawn_fallback": (),
     "combat.spawn_identity_mismatch": (),

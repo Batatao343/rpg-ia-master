@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; falta Grupo B no motor sobre a SPEC-328, follow-ups D-11 e smoke real)
+> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; Grupo B ligado às pilhas da SPEC-328 e follow-ups P2-4/P2-5 em 27/10, pendentes revisão e smoke real)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
@@ -140,9 +140,36 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
 - **D-9 Orçamento.** `custo_folego` = campo explícito ou regra da 328 R6; raridade por
   `patamar`. Faixas calibradas nas 308 (pesos/faixas, não as Cartas); utilitária e
   virtude isentas.
-- **D-10 Grupo B no motor.** `comprar`/`descartar`/`ganhar_folego`/`gerar_carta`/
-  `purgar_fardo` só registram `out["pendente_pilhas"]`; Exaurir/Guardar/Eco/Ressoar/
-  Fardo/Vazão não têm efeito no motor até a 328 (follow-up).
+- **D-10 Grupo B no motor (substituída pela D-12).** Na 1ª passada os efeitos de pilha só
+  registravam `pendente_pilhas`; continua assim fora do modo `on` (e para o inimigo, exceto
+  Fardo).
+- **D-12 Grupo B sobre as pilhas (2ª passada, 27/10; só `RPG_CARD_DECK=on`).** `Ctx.piles`/
+  `piles_actor` são ligados em `run_round` quando `deck_mode(state) == "on"`; sem isso nada
+  muda (golden das 308 igual; `shadow`/`off` seguem inertes, `pendente_pilhas` incluso).
+  - **Exaurir:** `play_to_pile` manda para `exaurida` (como `cena`/`descanso_*`) e dispara o
+    `ao_exaurir` da própria Carta. **Guardar:** `end_round` (fim da rodada, depois de
+    `fim_rodada`) marca `piles["guardadas"]`; `begin_round` já poupava essas.
+  - **Vazão:** no mesmo `end_round`, toda Carta com Vazão que sobra na mão (não jogada, não
+    guardada) dispara o `ao_descartar` dela; também dispara quando `descartar` a leva.
+    `pile_trigger` (próprio da Carta: `ao_comprar`/`ao_descartar`/`ao_exaurir`) tem
+    profundidade máx. 3 (`ctx.pile_depth`). `ao_comprar` só nas compras por efeito; a compra
+    de início de rodada (`begin_round`) fica fora do contexto e não dispara.
+  - **Eco:** em `resolve_extras`, antes de `record_play`: se há Carta anterior da mesma
+    Postura na rodada, repete o efeito principal com o valor numérico ÷ 2 (mín. 1; efeito
+    sem valor numérico repete igual). **Ressoar N:** `scene["ressoar"]["ator:carta"]` conta
+    jogadas na cena (`record_play(..., scene)`); `prepare_play` devolve cópia da Carta com
+    N × jogadas anteriores somados ao valor do principal (catálogo intacto).
+  - **Fardo:** palavra-chave `fardo` (glossário); `Estilhaço de Cinza` agora declara
+    `palavras_chave: {fardo: true}` e `is_fardo` vale para o id base, `injogavel` ou a
+    palavra-chave (plano/pagamento/`public_view`). `gerar_carta` aceita `mao`/`compra`
+    (topo)/`descarte`; Fardo gerado soma em `fardos`. Inimigo pode plantar Fardo na mão do
+    jogador via `gerar_carta`; nenhum outro efeito de pilha vale para o inimigo.
+  - **Efeitos de pilha:** `comprar(n)` (reembaralha + Fardo como em 328), `descartar(n,
+    escolha)` — com `escolha` a política determinística (sem UI ainda) leva Fardo, depois
+    Carta com Vazão, depois a mais à direita; sem `escolha`, ao acaso com o RNG persistido;
+    poupa uma cópia da Carta em jogo —, `ganhar_folego(n)` (teto `FOLEGO_MAX` = 6, decisão
+    minha p/ não haver loop), `gerar_carta`, `purgar_fardo` (mão → descarte → monte).
+    Eventos em `out["pilhas_eventos"]` (agregado pela rodada via `TURN_EVENT_KEYS`).
 - **D-11 Revisão Sol (`handoffs/SPEC-330-sol-review.md`).** Corrigidos: P1-1 (Interromper
   × ações extras, D-6), P1-2 (`ao_derrubar` por categoria, D-5), P2-1 (efeito hostil sem
   `alvo` em Carta de suporte vai ao 1º oponente, nunca ao conjurador/aliado), P2-2 (teste
@@ -150,8 +177,13 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   (D-5), P2-6 (dano extra usa o modo não-letal do golpe declarado — SPEC-325), P2-7
   (`alvo_tem`/`eu_tenho` só aceitam condição do catálogo: nomeadas, controles, `marca`,
   `sangramento` e palavras-chave). Testes em `tests/test_card_effects_review_spec330.py`.
-- **Follow-ups registrados.** P2-4: o golden de equivalência usa uma seed com acerto
-  garantido; para passivas/utilitárias/virtudes compara só modificadores (gatilhos
-  `on_hit`/`on_attack`, erro e crítico não exercitados — o diff não toca esses ramos).
-  P2-5: `revelar` grava `_revelado` na ficha e registra `out["revelacoes"]`, mas ainda não
-  persiste no `bestiary_knowledge` (ligar na SPEC-332/335).
+- **D-11 follow-ups fechados (27/10).** P2-4: o golden (`spec330_legacy_golden.json`,
+  regerado com o código pré-330 `8bd4f384` num worktree descartável) tem a seed 7 com Mira
+  e `extra` com as seeds 21 e 1337 SEM Mira (erro/acerto/crítico), além de `on_attack`/
+  `on_hit` das passivas/virtudes e `cards.use_card` das utilitárias; o teste compara os
+  três cenários nas formas legada e `efeitos=[efeito]`. P2-5: `revelar` (`resistencias`/
+  `cartas`) agora grava no `bestiary_knowledge` (perfil `legacy`; outros perfis só marcam
+  `revealed_*` na ficha; falha → `combat.revelar_knowledge_failed`, cosmética).
+- **Follow-ups abertos.** Fardo por evento do Abismo (hoje só por Carta de inimigo/efeito);
+  política de `descartar` com `escolha` real exige UI (SPEC-333); `ao_comprar` na compra de
+  início de rodada; texto/UI do `FOLEGO_MAX`; smoke real (§6) e re-revisão do Grupo B.

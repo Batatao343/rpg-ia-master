@@ -408,6 +408,7 @@ def _resolve_attack_step(
                 return
             card, step.card_id, effect_kind = None, None, "dano"
     if card is not None:
+        card = fx.prepare_play(scene, card, actor, actor_id)  # SPEC-330 R6: Ressoar
         support = effect_kind in _SUPPORT_EFFECTS
         reason = _invalid_target_reason(
             scene, actor, actor_id, actors_by_id, step, support=support, sides=sides
@@ -492,7 +493,7 @@ def _resolve_attack_step(
             else:
                 _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
             fx.resolve_extras(fx_ctx, card, actor_id, step.target_id or actor_id, out)
-            fx.record_play(actor, card, step.target_id)
+            fx.record_play(actor, card, step.target_id, scene)
             return
 
     reason = _invalid_target_reason(
@@ -605,7 +606,7 @@ def _resolve_attack_step(
     if card is not None:
         if not atk["acerto"]:
             fx.arm(fx._ctx_for(scene, actors_by_id, sides, rng), card, actor_id)
-        fx.record_play(actor, card, step.target_id)
+        fx.record_play(actor, card, step.target_id, scene)
 
     # atacar oculto: revela DEPOIS da resolução (R11)
     if scene.get("positions", {}).get(actor_id):

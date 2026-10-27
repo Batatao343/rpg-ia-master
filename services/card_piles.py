@@ -36,10 +36,32 @@ FARDO_CARD: dict[str, Any] = {
     "frequencia": "livre",
     "descricao": "Um caco do Abismo entre as suas cartas: pesa na mão e não serve a ninguém.",
     "injogavel": True,
+    "palavras_chave": {"fardo": True},  # SPEC-330 R6: o glossario define o Fardo
 }
+FOLEGO_MAX = FOLEGO_BASE + 3  # SPEC-330: teto de `ganhar_folego` (sem teto vira loop infinito)
+PILHAS_GERAVEIS = ("mao", "compra", "descarte")
 
 _NO_COST_MANEUVERS = {"mover"}
 _FREE_KINDS = {"pass", "move"}
+
+
+def card_of(card_id: str) -> dict:
+    """Carta do catalogo; o Fardo base fica fora do catalogo (`FARDO_CARD`)."""
+    return FARDO_CARD if card_id == FARDO_ID else (cards.get_card(card_id) or {})
+
+
+def has_kw(card: dict | None, name: str) -> bool:
+    """Palavra-chave de propriedade da Carta (SPEC-330 R6), lista ou objeto."""
+    raw = (card or {}).get("palavras_chave") or {}
+    if isinstance(raw, list):
+        return name in raw
+    return bool(raw.get(name)) if isinstance(raw, dict) else False
+
+
+def is_fardo(card: dict | None) -> bool:
+    """Fardo = Carta-maldicao injogavel (`fardo`/`injogavel`/id base)."""
+    c = card or {}
+    return bool(c.get("id") == FARDO_ID or c.get("injogavel") or has_kw(c, "fardo"))
 
 
 def mode() -> Mode:
@@ -219,12 +241,96 @@ def play_to_pile(piles: dict, card_id: str) -> str:
     freq = str(card.get("frequencia", "livre"))
     if card_id not in piles["mao"]:
         return ""
-    if freq in ("cena", "descanso_curto", "descanso_longo"):
+    if freq in ("cena", "descanso_curto", "descanso_longo") or has_kw(card, "exaurir"):
         exhaust(piles, card_id)
         return "exaurida"
     piles["mao"].remove(card_id)
     piles["descarte"] = list(piles["descarte"]) + [card_id]
     return "descarte"
+
+
+# ==========================================================================
+# Efeitos de pilha (SPEC-330 R6/R7) - so com o Baralho `on`
+# ==========================================================================
+def gain_folego(piles: dict, n: int) -> int:
+    """`ganhar_folego`: soma ao Folego da rodada ate `FOLEGO_MAX`. Devolve o ganho real."""
+    before = int(piles.get("folego", 0) or 0)
+    piles["folego"] = min(FOLEGO_MAX, before + max(0, int(n)))
+    return piles["folego"] - before
+
+
+def add_card(piles: dict, card_id: str, pilha: str = "mao") -> bool:
+    """`gerar_carta`: poe uma copia em `mao`/`descarte` (fim) ou `compra` (topo).
+    Fardo gerado conta em `fardos`. False se a Carta nao existe ou a pilha e invalida."""
+    if pilha not in PILHAS_GERAVEIS or not card_of(card_id):
+        return False
+    if pilha == "compra":
+        piles["compra"] = [card_id] + list(piles["compra"])
+    else:
+        piles[pilha] = list(piles[pilha]) + [card_id]
+    if is_fardo(card_of(card_id)):
+        piles["fardos"] = int(piles.get("fardos", 0) or 0) + 1
+    return True
+
+
+def purge_fardos(piles: dict, n: int) -> int:
+    """`purgar_fardo`: remove ate `n` Fardos (mao, depois descarte, depois monte)."""
+    left = max(0, int(n))
+    removed = 0
+    for pile in ("mao", "descarte", "compra"):
+        kept: list[str] = []
+        for cid in piles[pile]:
+            if left and is_fardo(card_of(cid)):
+                left -= 1
+                removed += 1
+            else:
+                kept.append(cid)
+        piles[pile] = kept
+    return removed
+
+
+def pick_discards(
+    piles: dict, n: int, *, escolha: bool, rng: random.Random | None = None, protect: str = ""
+) -> list[str]:
+    """Quais Cartas da mao `descartar` leva. `escolha` (a politica do jogador, sem UI
+    ainda): Fardo primeiro, depois Carta com Vazao, depois a mais a direita. Sem
+    `escolha`: ao acaso (rng persistido). `protect` poupa UMA copia (a Carta em jogo)."""
+    hand = list(piles["mao"])
+    if protect and protect in hand:
+        hand.remove(protect)
+    n = min(max(0, int(n)), len(hand))
+    if not n:
+        return []
+    if escolha:
+
+        def rank(cid: str) -> int:
+            c = card_of(cid)
+            return 0 if is_fardo(c) else (1 if has_kw(c, "vazao") else 2)
+
+        order = sorted(range(len(hand)), key=lambda i: (rank(hand[i]), -i))
+        return [hand[i] for i in order[:n]]
+    r = _rng(piles, rng)
+    idx = r.sample(range(len(hand)), n)
+    return [hand[i] for i in sorted(idx)]
+
+
+def discard_cards(piles: dict, ids: list[str]) -> list[str]:
+    """Move as Cartas escolhidas da mao para o descarte (uma copia por id)."""
+    gone: list[str] = []
+    for cid in ids:
+        if cid in piles["mao"]:
+            piles["mao"].remove(cid)
+            piles["descarte"] = list(piles["descarte"]) + [cid]
+            gone.append(cid)
+    return gone
+
+
+def mark_guardadas(piles: dict) -> list[str]:
+    """Guardar (R6): as Cartas da mao com a palavra-chave sobrevivem ao descarte do fim
+    da rodada. Devolve as marcadas."""
+    keep = [cid for cid in piles["mao"] if has_kw(card_of(cid), "guardar")]
+    piles["guardadas"] = keep
+    return keep
 
 
 # ==========================================================================
@@ -320,7 +426,7 @@ def pay_cost(
 
 def can_pay(piles: dict, player: dict, card: dict, *, allow_pact: bool = True) -> dict:
     """`PayPlan` de uma Carta (so consulta; a mao e checada por `plan_plays`/`pay`)."""
-    if card.get("injogavel") or card.get("id") == FARDO_ID:
+    if is_fardo(card):
         return {
             "folego": 0,
             "emprestado": 0,
@@ -391,7 +497,7 @@ def plan_plays(
             virtue = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
             if card is None:
                 return {"ok": False, "motivo": f"Carta '{cid}' desconhecida.", **total}
-            if card.get("injogavel") or cid == FARDO_ID:
+            if is_fardo(card):
                 return {
                     "ok": False,
                     "motivo": f"{card.get('name', 'Esta carta')} é um Fardo e não pode ser jogada.",
@@ -452,15 +558,16 @@ def public_view(piles: dict | None) -> dict | None:
         return None
     hand = []
     for cid in piles.get("mao") or []:
-        card = FARDO_CARD if cid == FARDO_ID else (cards.get_card(cid) or {})
+        card = card_of(cid)
+        fardo = is_fardo(card)
         hand.append(
             {
                 "id": cid,
                 "name": card.get("name", cid),
                 "tipo": card.get("tipo"),
-                "custo_folego": 0 if cid == FARDO_ID else cards.custo_folego(card),
+                "custo_folego": 0 if fardo else cards.custo_folego(card),
                 "custo_entropia": int(card.get("custo_entropia", 0) or 0),
-                "jogavel": cid != FARDO_ID,
+                "jogavel": not fardo,
             }
         )
     return {

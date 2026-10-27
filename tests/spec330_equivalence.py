@@ -30,7 +30,13 @@ def _strip(value):
     return value
 
 
-def run_card(card: dict) -> dict:
+# P2-4 (revisao Sol): alem da seed 7 (acerto garantido pela Mira), duas seeds SEM Mira
+# exercitam erro, acerto e critico; passivas disparam `on_hit`/`on_attack`; utilitarias
+# passam por `cards.use_card`. A chave `extra` guarda esses cenarios.
+EXTRA_SEEDS = (21, 1337)
+
+
+def run_card(card: dict, seed: int = 7, mira: bool = True) -> dict:
     """Resolve a Carta como o motor faz (por tipo) e devolve {sha, logs}."""
     import combat_mechanics as cm
     from services import cards
@@ -43,7 +49,7 @@ def run_card(card: dict) -> dict:
         base.update(kw)
         return orch.ensure_combat_sheet(base, is_player=(aid == "player"))
 
-    random.seed(11)  # fórmulas de dado usam o `random` global
+    random.seed(11 if seed == 7 else seed)  # fórmulas de dado usam o `random` global
     cid = card["id"]
     player = actor(
         "player",
@@ -54,9 +60,10 @@ def run_card(card: dict) -> dict:
         max_entropy=99,
         level=20,
     )
-    cm.apply_condition(
-        player, {"name": "Mira", "dot": 0, "duration": 9, "stat": "attack", "delta": 40}
-    )
+    if mira:
+        cm.apply_condition(
+            player, {"name": "Mira", "dot": 0, "duration": 9, "stat": "attack", "delta": 40}
+        )
     actors = {
         "player": player,
         "e": actor("e"),
@@ -79,19 +86,35 @@ def run_card(card: dict) -> dict:
             ),
             state={"player": player},
             sides={"hero": ["player", "ally"], "enemy": ["e"]},
-            rng=random.Random(7),
+            rng=random.Random(seed),
         )
         out = {k: v for k, v in out.items() if k != "cards_used"}
     elif tipo == "reacao":
         orch._resolve_reaction_effect(
-            scene, player, "player", cards.get_card(cid), "e", actors, out, rng=random.Random(7)
+            scene, player, "player", cards.get_card(cid), "e", actors, out, rng=random.Random(seed)
         )
     else:
         # Só os stats não-nulos: a SPEC-330 acrescenta stats novos (zerados) ao dict.
         out["mods"] = {k: v for k, v in cm.combat_modifiers(player).items() if v}
         out["passives"] = cm.player_passives(player)
+        if seed == 7:  # gatilhos on_hit/on_attack (passiva/virtude) e uso da utilitaria
+            trig: dict = {"logs": []}
+            for trigger in ("on_attack", "on_hit"):
+                fired = ct._fire_triggered_passive(player, trigger, trig)
+                trig[trigger] = fired
+            if tipo == "utilitaria":
+                trig["uso"] = cards.use_card({"player": player}, cid)
+            trig["usage"] = player.get("card_usage")
+            out["gatilhos"] = trig
     blob = json.dumps(_strip([out, actors, scene]), sort_keys=True, default=str, ensure_ascii=False)
     return {"sha": hashlib.sha256(blob.encode("utf-8")).hexdigest(), "logs": out.get("logs", [])}
+
+
+def run_card_full(card: dict) -> dict:
+    """Cenario base (seed 7, Mira) + `extra` (seeds sem Mira)."""
+    res = run_card(card)
+    res["extra"] = {f"s{sd}": run_card(card, seed=sd, mira=False) for sd in EXTRA_SEEDS}
+    return res
 
 
 def legacy_cards() -> dict:
@@ -106,7 +129,7 @@ def legacy_cards() -> dict:
 
 
 def build_golden() -> dict:
-    return {cid: run_card(c) for cid, c in sorted(legacy_cards().items())}
+    return {cid: run_card_full(c) for cid, c in sorted(legacy_cards().items())}
 
 
 if __name__ == "__main__":

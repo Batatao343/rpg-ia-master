@@ -141,7 +141,13 @@ def resolve_player_plays(
                 for u in (out.get("cards_used") or [])[used_before:]
             )
             if used:
-                card_piles.play_to_pile(piles, str(step.card_id))
+                dest = card_piles.play_to_pile(piles, str(step.card_id))
+                if dest == "exaurida":  # SPEC-330 R6: gatilho ao_exaurir da propria Carta
+                    from services import card_effects as fx
+
+                    ctx = fx.current()
+                    if ctx is not None:
+                        fx.pile_trigger(ctx, "ao_exaurir", str(step.card_id), actor_id, out)
             elif cost:
                 # a Carta nao resolveu (ex.: Entropia propria insuficiente): desfaz TUDO
                 piles["folego"] = int(piles.get("folego", 0) or 0) + plan["folego"]
@@ -158,6 +164,29 @@ def resolve_player_plays(
             seen = True
         deduped.append(turn_id)
     out["resolved_turns"] = deduped
+
+
+def end_round(ctx, state, player_id, out: dict) -> None:
+    """Fim da rodada do jogador (SPEC-330 R6, so modo `on`): **Guardar** poupa a Carta do
+    descarte; as demais Cartas que sobram na mao serao descartadas SEM serem jogadas e,
+    se tiverem **Vazao**, ativam o efeito `ao_descartar` agora (a mao em si so e
+    descartada por `begin_round`, depois)."""
+    if deck_mode(state) != "on" or ctx is None or not player_id:
+        return
+    from services import card_effects as fx
+
+    piles = state["_piles"]
+    kept = card_piles.mark_guardadas(piles)
+    if kept:
+        out.setdefault("pilhas_eventos", []).append({"kind": "guardar", "cartas": list(kept)})
+    budget = list(kept)
+    for cid in list(piles["mao"]):
+        if cid in budget:
+            budget.remove(cid)
+            continue
+        if card_piles.has_kw(card_piles.card_of(cid), "vazao"):
+            out.setdefault("pilhas_eventos", []).append({"kind": "vazao", "carta": cid})
+            fx.pile_trigger(ctx, "ao_descartar", cid, player_id, out)
 
 
 def _guarding(scene, actor_id) -> bool:

@@ -2173,6 +2173,10 @@ def _run_round(
     ctx = fx.current()
     if ctx is not None:
         ctx.rng = rng
+        if _deck.deck_mode(state) == "on":
+            # SPEC-330 R6/R7: efeitos de pilha agem nas pilhas do jogador (so `on`).
+            ctx.piles = state["_piles"]
+            ctx.piles_actor = _player_id(sides)
         if intent_mode == "on" and frozen is not None:
             # SPEC-330 Interromper lê o presságio pendente (não em `shadow`).
             ctx.pressagios = frozen
@@ -2329,6 +2333,8 @@ def _run_round(
     for aid in sorted(actors_by_id):
         if _alive(actors_by_id[aid]):
             fx.fire("fim_rodada", sujeito_id=aid, out=out)
+    if player is not None and _alive(player):
+        _deck.end_round(fx.current(), state, player_id, out)  # SPEC-330: Guardar/Vazao
 
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]
