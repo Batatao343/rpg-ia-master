@@ -101,6 +101,8 @@ llm_playtest"`), como os contratos da Fase 11.
 **Skills do projeto:** `/qa` = pytest token-lean durante iteração (só falhas);
 `/wrap-up` = ritual de fim de tarefa (suíte completa + docs + commit).
 
+**Feature flags (SPEC-340):** toda `RPG_*` é registrada em `config/flags.yaml` (kind/validade); o gate roda na suíte default — ver `docs/guias/TESTES.md` § Flags.
+
 **Autoria de conteúdo (Fase 7.2):** adicionar/curar entidade do mundo segue
 `docs/guias/AUTORIA.md` — templates em `docs/templates/codex/`, lint via
 `uv run python scripts/validate_content.py`, curadoria migration-safe em

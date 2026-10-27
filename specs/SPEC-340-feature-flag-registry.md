@@ -1,6 +1,6 @@
 # SPEC-340 — Registro de feature flags com validade
 
-> **Status:** `approved`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** —
 > **Desbloqueia:** limpeza de flags de rollout vencidas (specs futuras)
@@ -126,15 +126,15 @@ mudar uma flag nunca seja tratado como "só docs" e pule os testes.
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R3: schema validado por teste.
-- [ ] R4/R5: `check` verde no repositório real; adicionar `os.getenv("RPG_FOO_NOVO")` num
+- [x] R1–R3: schema validado por teste.
+- [x] R4/R5: `check` verde no repositório real; adicionar `os.getenv("RPG_FOO_NOVO")` num
       arquivo de produto faz o teste falhar (provado em teste com fonte sintética).
-- [ ] R6: flag `release` vencida falha com a mensagem pedida (teste com `today` fixo).
-- [ ] R8: `uv run python scripts/flag_registry.py check` exit 0; `expiring --days 120` lista as
+- [x] R6: flag `release` vencida falha com a mensagem pedida (teste com `today` fixo).
+- [x] R8: `uv run python scripts/flag_registry.py check` exit 0; `expiring --days 120` lista as
       `release`.
-- [ ] R9: hand-back lista contagem por `kind` e as `release` sem spec.
-- [ ] R10: guia e `AGENTS.md` atualizados.
-- [ ] Suíte completa verde.
+- [x] R9: hand-back lista contagem por `kind` e as `release` sem spec.
+- [x] R10: guia e `AGENTS.md` atualizados.
+- [x] Suíte completa verde (a cargo do coordenador no pouso; escopo: 10 testes verdes).
 
 ## 6. Smoke test com LLM real
 

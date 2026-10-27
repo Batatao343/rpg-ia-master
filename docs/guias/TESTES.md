@@ -55,3 +55,14 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 `uv tool install pre-commit && pre-commit install` — ruff, fim de linha LF, YAML,
 arquivo > 500 KB, marcador de conflito, `spec_index.py check` e teto do ESTADO,
 só nos arquivos staged.
+
+## Flags
+
+Toda variável `RPG_*` lida pelo código mora em `config/flags.yaml` (SPEC-340); o teste
+`tests/test_flag_registry.py` (suíte default) falha com flag nova sem registro, entrada órfã ou
+flag `release` vencida.
+
+- **Registrar:** adicione a entrada (`kind`, `default`, `spec`, `note`; `release` exige
+  `expires: AAAA-MM-DD`, ~90 dias). Nome montado em runtime: entrada com `pattern: true` e regex.
+- **Renovar:** mude `expires` e justifique no `note`. **Remover:** apague a leitura no código e a entrada.
+- CLI: `uv run python scripts/flag_registry.py check | list [--kind K] | expiring --days N`.
