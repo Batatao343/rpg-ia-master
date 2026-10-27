@@ -166,7 +166,8 @@ async def _validation_exception_handler(request: Request, exc: RequestValidation
         error_count=len(errors),
     )
     rid = _current_request_id()
-    body: dict[str, Any] = {"detail": [
+    body: dict[str, Any] = {
+        "detail": [
             # SPEC-337 R19: nunca devolve ``input``/``ctx``/``url`` (eco de senha/segredo).
             {
                 "type": e.get("type"),
@@ -175,7 +176,8 @@ async def _validation_exception_handler(request: Request, exc: RequestValidation
             }
             for e in errors
         ],
-        "code": "validation_failed"}
+        "code": "validation_failed",
+    }
     if rid:
         body["request_id"] = rid
     return JSONResponse(body, status_code=422, headers={"X-Request-ID": rid} if rid else None)

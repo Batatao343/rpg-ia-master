@@ -182,8 +182,8 @@ def test_no_route_overrides_frame_or_csp(client_factory):
         else:
             response = client.post(route.path, json={"__probe__": 1})
         assert response.headers.get("x-frame-options") == "DENY", route.path
-        assert (
-            response.headers.get("content-security-policy") == api.CONTENT_SECURITY_POLICY
-        ), route.path
+        assert response.headers.get("content-security-policy") == api.CONTENT_SECURITY_POLICY, (
+            route.path
+        )
         seen += 1
     assert seen > 20

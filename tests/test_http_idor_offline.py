@@ -31,7 +31,9 @@ def test_fixture_is_database_profile(two_principals):
     from fastapi.testclient import TestClient
 
     anon = TestClient(api.app, raise_server_exceptions=False)
-    assert anon.get("/game/state", params={"game_id": str(two_principals.game_a)}).status_code == 401
+    assert (
+        anon.get("/game/state", params={"game_id": str(two_principals.game_a)}).status_code == 401
+    )
 
 
 def test_owner_reads_own_game_through_swapped_store(two_principals):
@@ -112,11 +114,7 @@ class _FakeArtRepo:
         from infrastructure.contracts import Conflict
 
         row = self.rows.get(generation_id)
-        if (
-            not row
-            or row["owner"] != principal.user_id
-            or row["game_id"] != game_id
-        ):
+        if not row or row["owner"] != principal.user_id or row["game_id"] != game_id:
             raise Conflict("quality_not_available")
         row["status"] = "ready" if approved else "rejected_quality"
 
@@ -127,9 +125,7 @@ def test_art_quality_rejects_generation_of_other_game(two_principals, monkeypatc
     rows = {gen: {"owner": tp.a.user_id, "game_id": other_game, "status": "ready"}}
     _FakeArtRepo.rows = rows
     monkeypatch.setattr("services.dynamic_art.DynamicArtRepository", _FakeArtRepo)
-    monkeypatch.setattr(
-        tp.runtime, "resources", (object(),)
-    )
+    monkeypatch.setattr(tp.runtime, "resources", (object(),))
     out = tp.client_a.post(f"/game/{tp.game_a}/art/{gen}/quality", json={"approved": False})
     assert out.status_code == 409, out.text
     assert out.json()["detail"] == "Arte não disponível para avaliação."
@@ -180,7 +176,9 @@ class _EmptyArtRepo:
         raise Conflict("none")
 
 
-@pytest.mark.parametrize("method,path,body", _ROUTES, ids=[f"{m} {p.split('?')[0]}" for m, p, _ in _ROUTES])
+@pytest.mark.parametrize(
+    "method,path,body", _ROUTES, ids=[f"{m} {p.split('?')[0]}" for m, p, _ in _ROUTES]
+)
 def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, path, body):
     tp = two_principals
     gid = str(tp.game_a)
@@ -188,9 +186,7 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     monkeypatch.setattr(tp.runtime, "resources", (object(),))
     from infrastructure.request_context import current_principal
 
-    monkeypatch.setattr(
-        "api._image_finance", lambda: (tp.runtime, current_principal(), object())
-    )
+    monkeypatch.setattr("api._image_finance", lambda: (tp.runtime, current_principal(), object()))
     url = path.replace("{g}", gid)
     payload = (
         None

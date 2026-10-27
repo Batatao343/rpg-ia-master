@@ -19,7 +19,9 @@ def legacy_client(monkeypatch):
 
 
 def test_default_origins_assumption():
-    assert GOOD in api._CORS_ORIGINS and EVIL not in api._CORS_ORIGINS and "*" not in api._CORS_ORIGINS
+    assert (
+        GOOD in api._CORS_ORIGINS and EVIL not in api._CORS_ORIGINS and "*" not in api._CORS_ORIGINS
+    )
 
 
 def test_allowed_origin_gets_acao_with_credentials(legacy_client):

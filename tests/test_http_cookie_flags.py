@@ -57,7 +57,9 @@ def _prime(client, a, *, secure_env: bool):
 def _fire(flow, client, identity, a, monkeypatch):
     headers = _prime(client, a, secure_env=False)
     if flow == "login":
-        return client.post("/auth/login", json={"email": "a@test.test", "password": "long-password"})
+        return client.post(
+            "/auth/login", json={"email": "a@test.test", "password": "long-password"}
+        )
     if flow == "refresh":
         monkeypatch.setattr(
             identity,

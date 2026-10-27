@@ -7,12 +7,35 @@ import os
 import subprocess
 import sys
 import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from uuid import uuid4
 
 import httpx
 
 ROOT = Path(__file__).resolve().parents[1]
+
+# SPEC-337 R20/R21: RLS/Storage/IDOR reais entram no gate e NÃO podem ficar `skipped`.
+SECURITY_TEST_FILES = (
+    "tests/test_rls_local.py",
+    "tests/test_storage_security_local.py",
+    "tests/test_http_idor_local.py",
+)
+
+
+def _skipped_security_tests(junit_path: Path) -> list[str]:
+    """Testes dos arquivos de segurança que ficaram `skipped` no JUnit (R21)."""
+    if not junit_path.exists():
+        return []
+    stems = {Path(name).stem for name in SECURITY_TEST_FILES}
+    skipped: list[str] = []
+    for case in ET.parse(junit_path).getroot().iter("testcase"):
+        classname = case.get("classname", "")
+        if not any(classname == f"tests.{stem}" or f".{stem}" in classname for stem in stems):
+            continue
+        if case.find("skipped") is not None:
+            skipped.append(f"{classname}::{case.get('name')}")
+    return skipped
 
 
 def main() -> int:
@@ -25,6 +48,16 @@ def main() -> int:
         "RPG_AUDIT_BROWSER_URL": url,
         "RPG_TEST_DATABASE_URL": "postgresql://postgres:postgres@127.0.0.1:55322/postgres",
     }
+    from scripts.start_local_api import _supabase_status
+
+    status = _supabase_status()  # SPEC-337 R20: sem estas, test_storage_security_local pula
+    env.update(
+        {
+            "SUPABASE_URL": status["API_URL"],
+            "SUPABASE_PUBLISHABLE_KEY": status["PUBLISHABLE_KEY"],
+            "SUPABASE_SERVICE_ROLE_KEY": status["SERVICE_ROLE_KEY"],
+        }
+    )
     artifacts = ROOT / "readiness_artifacts" / "audit"
     artifacts.mkdir(parents=True, exist_ok=True)
     env["RPG_AUDIT_ARTIFACTS"] = str(artifacts)
@@ -67,12 +100,17 @@ def main() -> int:
                 "tests/test_artwork_recovery_browser.py",
                 "tests/test_process_crash_local.py",
                 "tests/test_mutation_api_local.py",
+                *SECURITY_TEST_FILES,
                 f"--junitxml={artifacts / 'results.xml'}",
             ],
             cwd=ROOT,
             env=env,
             check=False,
         ).returncode
+        skipped = _skipped_security_tests(artifacts / "results.xml")
+        if skipped:
+            print(f"audit gate: testes de segurança pulados (proibido): {skipped}", file=sys.stderr)
+            result_code = result_code or 1
         return result_code
     finally:
         # Only the child created above, never another developer's server.

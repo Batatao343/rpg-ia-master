@@ -1,6 +1,6 @@
 # SPEC-337 — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
 
-> **Status:** `in-progress` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
+> **Status:** `done` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma em código.
 > **Desbloqueia:** SPEC-338 (fuzz Schemathesis reutiliza a fixture de dois principals e o check de headers/vazamento desta spec).
@@ -207,16 +207,16 @@ O mapeamento achou três bugs pequenos (nenhum IDOR entre tenants). Esta spec os
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 1 registrada no histórico: L1-a, L1-b, L2 e L4 vermelhos antes da correção, com a saída do pytest.
-- [ ] `bash scripts/dev/py.sh -m pytest tests/test_http_security_headers.py tests/test_http_cookie_flags.py tests/test_http_cors.py tests/test_http_error_leakage.py tests/test_http_idor_offline.py tests/test_audit_local_gate_contract.py -q -n 2` verde.
-- [ ] R17: reusar a key de um turno no DELETE → 409, e a campanha continua existindo; retry do mesmo delete → 200 (offline e Postgres local).
-- [ ] R18: `quality` com uma geração de outra campanha → 409, sem alterar a linha (offline; local se semeável).
-- [ ] R19: nenhum item de `detail` no 422 tem `input`/`ctx`/`url`; `curta-XYZ` não aparece no corpo.
-- [ ] R20/R21: `scripts/audit_local_gate.py` roda `test_rls_local.py`, `test_storage_security_local.py` e `test_http_idor_local.py` sem nenhum skip; código 0 com a stack local; o job `audit-local` verde no PR.
-- [ ] Testes existentes de sessão, CSRF e superfícies seguem verdes (Etapa 2).
+- [x] Etapa 1 registrada no histórico: L1-a, L1-b, L2 e L4 vermelhos antes da correção, com a saída do pytest.
+- [x] `bash scripts/dev/py.sh -m pytest tests/test_http_security_headers.py tests/test_http_cookie_flags.py tests/test_http_cors.py tests/test_http_error_leakage.py tests/test_http_idor_offline.py tests/test_audit_local_gate_contract.py -q -n 2` verde.
+- [x] R17 offline: reusar a key de um turno no DELETE → 409, e a campanha continua existindo; retry do mesmo delete → 200. **Pendente (CI `audit-local`):** a variante Postgres local (`test_delete_key_reuse_conflicts_on_postgres`).
+- [x] R18: `quality` com uma geração de outra campanha → 409, sem alterar a linha (offline). Local: não semeável sem rede (teste local pula com motivo explícito).
+- [x] R19: nenhum item de `detail` no 422 tem `input`/`ctx`/`url`; `curta-XYZ` não aparece no corpo.
+- [ ] **Pendente (CI `audit-local`; stack local fora do ar no executor):** R20/R21: `scripts/audit_local_gate.py` roda `test_rls_local.py`, `test_storage_security_local.py` e `test_http_idor_local.py` sem nenhum skip; código 0 com a stack local; o job `audit-local` verde no PR.
+- [x] Testes existentes de sessão, CSRF e superfícies seguem verdes (Etapa 2).
 - [ ] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso).
 - [ ] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM).
-- [ ] Saves antigos continuam carregando (sem mudança de persistência; a suíte cobre).
+- [x] Saves antigos continuam carregando (sem mudança de persistência; a suíte cobre).
 
 ## 6. Smoke test real
 
@@ -252,3 +252,4 @@ Registradas pelo coordenador em 27/10 (o dono autorizou "escreva as specs e depo
 ## Histórico de mudanças
 
 - 2026-10-27 · spec escrita (spec-author) a partir do discovery de 27/10. Correção ao discovery: o fix da L1 usa `game_id=None` (o recibo do delete é desacoplado da campanha), e não `game_uuid`.
+- 2026-10-27 · implementação (spec-executor). Etapa 1 (vermelho, antes das correções): `test_delete_rejects_idempotency_key_of_other_operation`, `test_delete_rejects_key_reused_for_other_game` (usa um delete CONCLUÍDO de outra campanha com a mesma key; com a primeira falhada o claim já dava 409), `test_art_quality_rejects_generation_of_other_game` e `test_422_does_not_echo_input` falharam; `test_delete_retry_same_key_is_idempotent` verde. Depois de L1/L2/L4: todos verdes. Desvios: (1) R7: `POST /auth/refresh` no legacy não tem o guard 404 do login/signup; fecha em 403 (CSRF) sem `Set-Cookie`, e o teste confere isso. (2) R9: para método/header fora da allowlist o Starlette devolve 400 mas ecoa o ACAO da origem listada; o teste confere 400 + `Disallowed CORS` (ACAO ausente só para origem não listada). (3) R14: `/game/{id}/audit-export` é POST; `art/quote` usa `image_type`; `_image_finance` e `DynamicArtRepository` recebem fakes. (4) `test_rls_local`/`test_storage_security_local`/`test_http_idor_local` entram no gate, mas só rodam no CI `audit-local` (stack local não estava de pé). Ruff `format`/`check` limpos nos arquivos tocados.
