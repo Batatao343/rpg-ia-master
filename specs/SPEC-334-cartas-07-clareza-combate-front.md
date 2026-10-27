@@ -1,6 +1,6 @@
 # SPEC-334 — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (executor entregue; aguarda revisão Sol + jornada Playwright)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (contrato `pilhas`/`jogadas`), SPEC-329 (`pressagios_publicos`), SPEC-330 (`_glossario.json`, `render_card_text`), SPEC-320–324 (tokens, mobile, a11y, "livro não chat")
@@ -44,13 +44,22 @@ Arte de carta por carta (usar ícone por palavra-chave/tipo). Animações além 
 3. Playwright (autoria em tarefa separada, ver cabeçalho).
 
 ## 5. Critérios de aceite
-- [ ] Preview exato (teste estatístico) e sem efeito colateral
-- [ ] Um request por rodada do jogador
+- [x] Preview exato (teste estatístico) e sem efeito colateral
+- [x] Um request por rodada do jogador (fila local → `jogadas`)
 - [ ] Conferido em 390 px e 1440 px no staging
-- [ ] `npm run build` e `uv run pytest` verdes
+- [x] `npm run build` e pytest do escopo verdes (suíte completa: pouso)
 
 ## 6. Smoke real
 Rodada completa no staging com LLM real: ler presságio → preview → fila de 2 cartas → encerrar → log + narração coerentes.
 
 ## 7. Riscos
 - Preview com informação demais em criatura desconhecida: preview mostra só o **seu** lado (chance/dano), nunca resistências ocultas (respeita `public_panel`).
+
+## 8. Notas de implementação (desvios e follow-ups, 2026-10-27)
+- Atrás da flag: a UI nova só aparece com `combat.pilhas` (`RPG_CARD_DECK=on`); sem isso `CardHand` segue idêntico.
+- `POST /game/combat/preview`: chance exata por enumeração do 2d10/3d10 via `resolve_attack` real (rng roteirizado). `dano_min/max` = acerto/crítico **brutos** (sem Proteção/resistência/imunidade do alvo, regra de ouro); `ferimento_provavel` só usa a Vitalidade pública. Erros: `preview_no_combat`, `preview_invalid` (409). `GET /data/cards/glossario` estático.
+- Servidor: `pilhas` ganhou `texto`, `palavras_chave`, `alvo` por carta e `listas` (nomes ordenados; nunca a ordem do monte); `combat.mech_log` (R6) montado em `agents/combat.py` a partir de `out["attacks"]` (+ `card_id` no ataque).
+- **R1:** `EnemyStrip` mostra só o presságio (nome/Vitalidade já vivem na Arena); `SceneStrip` mostra só a rodada — Cartas de Cena e Relógio do Abismo entram quando a SPEC-331 pousar (`extras`).
+- **R7:** manobras ficam num `<details>` no modo Baralho; pilhas num único botão. A medição "≤ 12 elementos interativos em 390 px" é do Playwright (não medida aqui).
+- **R9 parcial:** o texto livre continua funcionando (caminho SPEC-328 R15), mas a UI **não** mostra a fila resultante antes de enviar (precisa de endpoint de parse) — follow-up.
+- Testes web: `node --test` (lógica pura + marcação SSR). Snapshot 390/1440 e jornadas = Playwright (EVAL_AUTHORING_REQUIRED).

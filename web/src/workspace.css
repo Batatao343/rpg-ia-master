@@ -274,3 +274,54 @@
 .shortcuts__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
 .shortcuts__list li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0.6rem; align-items: baseline; }
 .shortcuts__keys { font-family: var(--label); font-size: 0.85rem; color: var(--accent); }
+
+/* SPEC-334: combate do Baralho (só existe com `combat.pilhas`). Tokens apenas; livro, não chat. */
+.deck-combat { display: flex; flex-direction: column; gap: 0.7rem; min-width: 0; }
+.scene-strip { display: flex; gap: 0.8rem; margin: 0; color: var(--faint); font: 0.8rem var(--label); letter-spacing: 0.12em; text-transform: uppercase; }
+.enemy-strip { list-style: none; margin: 0; padding: 0.45rem 0.7rem; border: 1px solid var(--line-soft); border-left: 3px solid var(--danger-text); border-radius: var(--r-sm); color: var(--ink); font-size: 0.9rem; }
+.enemy-strip li + li { margin-top: 0.2rem; }
+.folego { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.folego__pips { display: inline-flex; gap: 0.3rem; }
+.folego__pip { width: 0.85rem; height: 0.85rem; border-radius: 50%; border: 1px solid var(--accent); background: var(--accent); }
+.folego__pip.is-empty { background: transparent; opacity: 0.4; }
+.folego__pip.is-reserved { background: transparent; }
+.folego__pip--pacto { border-color: var(--abyss); background: transparent; opacity: 0.55; }
+.folego__pip--pacto.is-reserved { background: var(--abyss); opacity: 1; }
+.folego__label { color: var(--muted); font-size: 0.8rem; }
+.folego__warn { flex-basis: 100%; color: var(--abyss-text); font-size: 0.8rem; }
+.deck-hand__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.4rem; }
+.deck-hand h2 { margin: 0; font: 1rem var(--display); letter-spacing: 0.06em; text-transform: uppercase; }
+.deck-hand__piles { min-height: 2.2rem; padding: 0.25rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-sharp); background: var(--surface); color: var(--muted); font-size: 0.8rem; cursor: pointer; }
+.deck-hand__list { margin-bottom: 0.5rem; padding: 0.5rem 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); font-size: 0.85rem; }
+.deck-hand__list p { display: flex; gap: 0.8rem; margin: 0 0 0.3rem; }
+.deck-hand__list button { min-height: 2.2rem; padding: 0; border: 0; background: transparent; cursor: pointer; color: var(--muted); }
+.deck-hand__list [aria-pressed="true"] { color: var(--accent); text-decoration: underline; }
+.deck-hand__list ul { margin: 0; padding-left: 1.1rem; }
+.deck-hand__rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(165px, 215px); gap: 0.55rem; overflow-x: auto; padding: 0.15rem 0 0.35rem; scroll-snap-type: x proximity; }
+.deck-card.is-dim { opacity: 0.5; }
+.deck-card__pips { color: var(--accent); letter-spacing: 0.15em; }
+.deck-card .kw { position: relative; border-bottom: 1px dotted var(--accent); cursor: help; }
+.kw__tip { position: absolute; z-index: 2; left: 0; top: 100%; width: max-content; max-width: 16rem; margin-top: 0.25rem; padding: 0.4rem 0.55rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg-deep); color: var(--ink); font-weight: 400; font-size: 0.8rem; line-height: 1.35; text-transform: none; letter-spacing: 0; }
+.deck-target { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.preview-chip { flex-basis: 100%; margin: 0; padding: 0.35rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--ink); font-size: 0.9rem; }
+.preview-chip__k { color: var(--accent); font: 0.75rem var(--label); letter-spacing: 0.14em; text-transform: uppercase; }
+.play-queue { display: flex; flex-direction: column; gap: 0.5rem; padding: 0.55rem 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); }
+.play-queue__empty { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.play-queue__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.play-queue__list li { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.play-queue__item { min-height: 2.2rem; padding: 0.2rem 0.5rem; border: 1px solid var(--line); border-radius: var(--r-sharp); background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.play-queue__list .is-selected .play-queue__item { border-color: var(--accent); }
+.play-queue__n { color: var(--accent); font-weight: 700; }
+.play-queue__to { color: var(--muted); }
+.play-queue__ops { display: inline-flex; gap: 0.3rem; }
+.play-queue__ops button { min-width: 2.2rem; min-height: 2.2rem; border: 1px solid var(--line); border-radius: var(--r-sharp); background: var(--surface); color: var(--ink); cursor: pointer; }
+.play-queue__ops button:disabled, .play-queue__submit:disabled { opacity: 0.45; cursor: default; }
+.play-queue__end { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.play-queue__submit { min-height: 2.6rem; padding: 0.35rem 1rem; border: 1px solid var(--accent); border-radius: var(--r-sharp); background: var(--state-selected); color: var(--ink); font: 0.9rem var(--label); letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+.play-queue__clear { min-height: 2.2rem; padding: 0.25rem 0.6rem; border: 0; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; }
+.mech-log, .ws-combat__fold { color: var(--muted); font-size: 0.85rem; }
+.mech-log summary, .ws-combat__fold summary { cursor: pointer; min-height: 2.2rem; display: flex; align-items: center; }
+.mech-log ol { margin: 0.3rem 0 0; padding-left: 1.2rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) {
+  .deck-hand__rail { grid-auto-columns: 72vw; }
+}

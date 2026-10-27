@@ -3,6 +3,7 @@ import type { ActionOptions, BasicActionView, CardView, GameResponse } from "../
 import { CombatTab } from "../../components/Hud";
 import { CombatDeckTab } from "../../components/tabs/CombatDeckTab";
 import { CardHand } from "../../components/CardHand";
+import { DeckCombat } from "../../components/combat/DeckCombat";
 import { ReactionPrompt } from "../../components/ReactionPrompt";
 import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
@@ -23,6 +24,12 @@ function legacyBasics(enemyIds: string[]): BasicActionView[] {
     ({ kind, maneuver, valid_targets: targets, invalid_reason: null, cost: 0 });
   return [row("attack", undefined, enemyIds), row("maneuver", "engajar", enemyIds), row("maneuver", "guardar"),
     row("maneuver", "esconder"), row("maneuver", "procurar", enemyIds), row("flee")];
+}
+
+/** SPEC-334 R7: no modo Baralho as manobras ficam atrás de um toque (poucos controles à vista). */
+function ManeuverFold({ deck, children }: { deck: boolean; children: React.ReactNode }) {
+  if (!deck) return <>{children}</>;
+  return <details className="ws-combat__fold"><summary>Manobras e ações</summary>{children}</details>;
 }
 
 const isTyping = (el: EventTarget | null) => {
@@ -82,6 +89,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const nameOf = (id: string) => people.find((p) => p.id === id)?.name;
   const basics = combat ? (combat.basic_actions ?? legacyBasics(enemies.map((e) => e.id))) : [];
   const activeCards = cards.filter((c) => c.type === "ativa");
+  const deckMode = !!combat?.pilhas; // SPEC-334: sem `pilhas` (flag off) a UI atual segue idêntica
 
   const state = targeting.state;
   const aimingCard: CardView | undefined = state.phase === "aiming" && state.source.kind === "card"
@@ -175,7 +183,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
 
   // Atalhos 1–9 para a mão (P2): opcionais, ignorados ao digitar.
   useEffect(() => {
-    if (!live) return;
+    if (!live || deckMode) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) return;
       if (!/^[1-9]$/.test(event.key)) return;
@@ -205,22 +213,37 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
       {live && combat && (
         <>
           <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} />
-          <div className="aimbar" data-aim-safe>
-            <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
-              : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>
-            {state.phase === "aiming" && (
+          {deckMode && state.phase === "aiming" && (
+            <div className="aimbar" data-aim-safe>
+              <span>{`Mirando ${aimLabel}: escolha um alvo`}</span>
               <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar mira" : "Cancelar (Esc)"}</button>
-            )}
-          </div>
-          <CardHand cards={cards} enemies={enemies} busy={locked}
-            aimingCardId={aimingCard?.id} ruptureId={ruptureId} detailId={DETAIL_ID}
-            onToggleRupture={(id) => setRuptureId((cur) => (cur === id ? null : id))}
-            onGesture={gestureCard} onDetail={setDetailId} touch={touch} detailOpenId={detailId} />
-          <CardTooltip card={detailCard} id={DETAIL_ID} touch={touch} />
+            </div>
+          )}
+          {deckMode ? (
+            <DeckCombat combat={combat} gameId={data?.game_id ?? null} entropy={data?.player_stats?.entropy ?? null}
+              busy={locked} touch={touch} nameOf={nameOf} onAnnounce={setAnnounce}
+              onEnd={(text, jogadas) => { if (targeting.beginDirect()) onAction(text, { jogadas, reaction_card_id: reactionCardId }); }} />
+          ) : (
+            <>
+              <div className="aimbar" data-aim-safe>
+                <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
+                  : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>
+                {state.phase === "aiming" && (
+                  <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar mira" : "Cancelar (Esc)"}</button>
+                )}
+              </div>
+              <CardHand cards={cards} enemies={enemies} busy={locked}
+                aimingCardId={aimingCard?.id} ruptureId={ruptureId} detailId={DETAIL_ID}
+                onToggleRupture={(id) => setRuptureId((cur) => (cur === id ? null : id))}
+                onGesture={gestureCard} onDetail={setDetailId} touch={touch} detailOpenId={detailId} />
+              <CardTooltip card={detailCard} id={DETAIL_ID} touch={touch} />
+            </>
+          )}
           {reinforcementNote(combat) && (
             <p className="ws-combat__ended" role="note">{reinforcementNote(combat)}</p>
           )}
           <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
+          <ManeuverFold deck={deckMode}>
           <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
             {basics.map((action) => {
               const key = basicKey(action);
@@ -272,6 +295,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               </button>
             )}
           </div>
+          </ManeuverFold>
         </>
       )}
       {!fighting && !data?.combat_simulation?.enabled && (

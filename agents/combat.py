@@ -2262,6 +2262,12 @@ def _combat_node(state: GameState):
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
     combat_meta["last_reactions"] = list(out.get("reactions") or [])
+    if not out.get("action_refused"):  # SPEC-334 R6: log mecânico (números do motor, sem LLM)
+        from services import combat_preview as _preview
+
+        combat_meta["last_mech_log"] = _preview.mech_log(
+            out.get("attacks") or [], [player, *enemies]
+        )
     combat_meta["last_tactics"] = list(out.get("tactics") or [])
     if combat_over:
         from services import cards

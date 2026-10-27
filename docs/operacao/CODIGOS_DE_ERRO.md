@@ -83,6 +83,8 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `pending_operation` | Há ação falha pendente a retomar/descartar. |
 | `player_offer_not_required` | Oferta de jogador não exigida. |
 | `prepare_rejected` | Regra de Cartas recusou a preparação. |
+| `preview_invalid` | Prévia de jogada com carta/alvo inválido ou não ofensivo (409). |
+| `preview_no_combat` | Prévia de jogada sem conflito em andamento (409). |
 | `rate_limited` | Limite de requisições por IP/owner excedido (429). |
 | `recent_session_required` | Operação sensível exige prova recente de senha. |
 | `reformulation_only_player` | Reformulação só para jogador. |

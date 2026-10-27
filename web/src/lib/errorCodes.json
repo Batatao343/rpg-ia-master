@@ -76,6 +76,8 @@
   "pending_operation",
   "player_offer_not_required",
   "prepare_rejected",
+  "preview_invalid",
+  "preview_no_combat",
   "rate_limited",
   "recent_session_required",
   "reformulation_only_player",

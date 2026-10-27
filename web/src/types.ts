@@ -346,6 +346,12 @@ export interface CombatBlock {
   enemies: EnemyView[];
   cards: CardView[];
   basic_actions?: BasicActionView[];
+  /** SPEC-328: só com `RPG_CARD_DECK=on` (sem isto a UI atual segue idêntica). */
+  pilhas?: PilesView;
+  /** SPEC-334 R6: linhas do log mecânico da última rodada (só com pilhas). */
+  mech_log?: string[];
+  /** SPEC-329: só com `RPG_ENEMY_INTENT=on`. */
+  pressagios_publicos?: PressagioView[];
   /** SPEC-325: presente (true) só com RPG_COMBAT_NONLETHAL=on — mostra o chip "Sem matar". */
   nonlethal_available?: boolean;
   /** SPEC-325 R15: companheiros que aceitam ordem; só com RPG_COMPANION_ORDERS=on. */
@@ -413,7 +419,69 @@ export interface ActionOptions {
   reaction_card_id?: string;
   action_kind?: "attack" | "maneuver" | "pass" | "flee";
   maneuver?: "engajar" | "desengajar" | "guardar" | "esconder" | "procurar";
+  /** SPEC-334 R5/SPEC-328 R13: várias jogadas em ordem num único request ("Encerrar turno"). */
+  jogadas?: PlayStep[];
 }
+
+export interface PlayStep {
+  card_id?: string;
+  target_id?: string;
+  ruptura?: boolean;
+  action_kind?: "attack" | "maneuver" | "pass";
+  maneuver?: "engajar" | "desengajar" | "guardar" | "esconder" | "procurar";
+}
+
+/** SPEC-328 R16 / SPEC-334: carta da mão como o servidor a descreve (texto gerado, sem LLM). */
+export interface HandCard {
+  id: string;
+  name: string;
+  tipo?: string | null;
+  custo_folego: number;
+  custo_entropia: number;
+  jogavel: boolean;
+  /** "inimigo" pede alvo (e tem prévia); "si" resolve sem alvo. */
+  alvo?: "inimigo" | "si";
+  texto?: string;
+  palavras_chave?: string[];
+}
+
+export interface PileEntry { id: string; name: string }
+export interface PilesView {
+  mao: HandCard[];
+  listas?: { compra: PileEntry[]; descarte: PileEntry[]; exaurida: PileEntry[] };
+  compra: number;
+  descarte: number;
+  exaurida: number;
+  folego: number;
+  folego_max: number;
+  folego_emprestado: number;
+  pacto_max: number;
+}
+
+/** SPEC-329 R2/R3: presságio público de um inimigo (o que o jogador já sabe ler). */
+export interface PressagioView {
+  actor_id: string;
+  tipo: string;
+  alvo_id: string | null;
+  valor_estimado: number | null;
+  faixa: [number, number] | null;
+  carta_nome: string | null;
+  sinal: string;
+}
+
+/** SPEC-334 R4: prévia determinística (POST /game/combat/preview). */
+export interface PreviewResult {
+  chance_acerto_pct: number;
+  chance_critico_pct: number;
+  dano_min: number;
+  dano_max: number;
+  ferimento_provavel: "leve" | "grave" | "critico" | null;
+  efeitos_extra: string[];
+  pressagio_frustrado: boolean;
+}
+
+export interface GlossaryEntry { nome: string; regra: string; sabor?: string }
+export type Glossary = Record<string, GlossaryEntry>;
 
 export interface CombatSimulatorEnemy {
   id: string;

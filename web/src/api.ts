@@ -6,6 +6,8 @@ import type {
   CombatSimulatorPayload,
   ActionOptions,
   GameResponse,
+  Glossary,
+  PreviewResult,
   OnboardingData,
   PlayerCodex,
   DossiersPayload,
@@ -125,6 +127,21 @@ export const sendAction = (input_text: string, game_id: string | null, options: 
     method: "POST",
     body: JSON.stringify({ input_text, game_id, ...options }),
   });
+
+/** SPEC-334 R4: prévia pura (sem LLM, sem gravar). */
+export const previewPlay = (game_id: string | null, card_id: string | null, target_id: string, signal?: AbortSignal) =>
+  req<PreviewResult>("/game/combat/preview", {
+    method: "POST", signal,
+    body: JSON.stringify({ game_id, ...(card_id ? { card_id } : {}), target_id }),
+  });
+
+/** SPEC-334 R2: glossário de palavras-chave (estático, cacheado no cliente). */
+let glossaryCache: Promise<Glossary> | null = null;
+export const getGlossary = (): Promise<Glossary> => {
+  glossaryCache ??= req<{ palavras_chave?: Glossary }>("/data/cards/glossario")
+    .then((g) => g.palavras_chave ?? {}).catch(() => { glossaryCache = null; return {}; });
+  return glossaryCache;
+};
 
 // spec checkpoints-morte (D2): resolve a tela de morte —
 // "continue" restaura do checkpoint, "accept" encerra em memorial.

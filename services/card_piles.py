@@ -20,6 +20,7 @@ import random
 from collections.abc import Callable
 from typing import Any, Literal
 
+from services import card_effects as fx
 from services import cards
 
 Mode = Literal["off", "shadow", "on"]
@@ -584,6 +585,17 @@ def plan_plays(
 # ==========================================================================
 # Visao publica (API) - nunca a ordem do monte
 # ==========================================================================
+def _target_kind(card: dict) -> str:
+    from services import conflict_turn as ct
+
+    kind = str((card.get("efeito") or {}).get("kind") or "")
+    return "inimigo" if kind in ct._ATTACK_EFFECTS else "si"
+
+
+def _rule_text(card: dict) -> str:
+    return fx.render_card_text(card)
+
+
 def public_view(piles: dict | None) -> dict | None:
     if not isinstance(piles, dict):
         return None
@@ -599,10 +611,26 @@ def public_view(piles: dict | None) -> dict | None:
                 "custo_folego": 0 if fardo else cards.custo_folego(card),
                 "custo_entropia": int(card.get("custo_entropia", 0) or 0),
                 "jogavel": not fardo,
+                "alvo": _target_kind(card),  # SPEC-334: o front decide se pede alvo/prévia
+                "texto": _rule_text(card),  # SPEC-334 R2: texto gerado, sem LLM
+                "palavras_chave": sorted(fx.keywords(card)),
             }
         )
+
+    def names(key: str) -> list[dict]:
+        # SPEC-334 R3: conteúdo por NOME ordenado — nunca a ordem do monte.
+        rows = [
+            {
+                "id": c,
+                "name": (FARDO_CARD if c == FARDO_ID else (cards.get_card(c) or {})).get("name", c),
+            }
+            for c in piles.get(key) or []
+        ]
+        return sorted(rows, key=lambda r: (str(r["name"]).lower(), r["id"]))
+
     return {
         "mao": hand,
+        "listas": {k: names(k) for k in ("compra", "descarte", "exaurida")},
         "compra": len(piles.get("compra") or []),
         "descarte": len(piles.get("descarte") or []),
         "exaurida": len(piles.get("exaurida") or []),

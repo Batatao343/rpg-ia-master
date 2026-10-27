@@ -2923,6 +2923,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
         view["pilhas"] = _piles.public_view(meta["pilhas"])
+        view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}
@@ -3770,6 +3771,53 @@ def get_current_state(game_id: str | None = None):
     if not state:
         raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
     return format_response(state)
+
+
+class CombatPreviewRequest(BaseModel):
+    """SPEC-334 R4: pré-visualização de uma jogada. Puro: sem LLM e sem tocar o save."""
+
+    model_config = {"extra": "forbid"}
+    game_id: str | None = None
+    card_id: str | None = Field(default=None, max_length=128)
+    target_id: str = Field(max_length=128)
+
+
+@app.post("/game/combat/preview")
+def combat_preview(req: CombatPreviewRequest, response: Response):
+    """Chance de acerto (2d10 exato), faixa de dano e ferimento provável do seu lado.
+    Nunca expõe resistência/imunidade do alvo. Não grava nada."""
+    from services import combat_preview as _preview
+
+    state = load_game_state(_resolve_save_file(req.game_id))
+    if not state:
+        raise HTTPException(status_code=404, detail="Nenhum jogo salvo encontrado.")
+    if not (state.get("combat") or {}).get("active"):
+        raise HTTPException(
+            409, detail={"code": "preview_no_combat", "message": "Não há conflito em andamento."}
+        )
+    try:
+        result = _preview.preview(state, req.card_id, req.target_id)
+    except ValueError as exc:
+        code = str(exc)
+        if code not in ("card_unknown", "target_unknown", "not_offensive"):
+            raise
+        raise HTTPException(
+            409,
+            detail={
+                "code": "preview_invalid",
+                "invalid_reason": code,
+                "message": "Essa jogada não tem prévia (carta ou alvo inválido).",
+            },
+        ) from exc
+    response.headers["Cache-Control"] = "private, no-store"
+    return result
+
+
+@app.get("/data/cards/glossario")
+def cards_glossary(response: Response):
+    """SPEC-334: glossário de palavras-chave (tooltip do front); estático e cacheável."""
+    response.headers["Cache-Control"] = "public, max-age=3600"
+    return load_json_data("cards/_glossario.json") or {}
 
 
 @app.get("/game/codex")
