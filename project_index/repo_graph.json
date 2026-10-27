@@ -1,5 +1,5 @@
 {
-  "commit_sha": "99dded5c74e5024da500b611b94114d188df7703",
+  "commit_sha": "5c52db1d447663b4f726a02348475f12a6d81d04",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -13463,17 +13463,6 @@
       },
       "source": "file:tests/test_http_idor_local.py",
       "target": "file:tests/test_http_idor_offline.py",
-      "type": "likely_test_for"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_http_idor_local.py",
-        "line": 21
-      },
-      "source": "file:tests/test_http_idor_local.py",
-      "target": "file:tests/test_postgres_jobs_local.py",
       "type": "likely_test_for"
     },
     {
@@ -123426,18 +123415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 21
-      },
-      "source": "module:tests.test_http_idor_local",
-      "target": "module:tests.test_postgres_jobs_local",
-      "type": "imports"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_http_idor_local.py",
-        "line": 28
+        "line": 27
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local._login",
@@ -123448,7 +123426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 38
+        "line": 37
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local._new_game",
@@ -123459,7 +123437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 55
+        "line": 54
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local.duo",
@@ -123470,7 +123448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 118
+        "line": 128
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
@@ -123481,7 +123459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 96
+        "line": 106
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local",
@@ -375689,7 +375667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 70
+        "line": 79
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -375700,7 +375678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 67
+        "line": 76
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
@@ -375711,7 +375689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 90
+        "line": 99
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
@@ -375722,7 +375700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 68
+        "line": 77
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.test_http_idor_local._login",
@@ -375733,7 +375711,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 72
+        "line": 81
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.test_http_idor_local._new_game",
@@ -375744,7 +375722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 137
+        "line": 147
       },
       "source": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
       "target": "symbol:tests.test_http_idor_local._new_game",
@@ -607002,35 +606980,35 @@
     {
       "id": "symbol:tests.test_http_idor_local._login",
       "kind": "test",
-      "line": 28,
+      "line": 27,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local._login"
     },
     {
       "id": "symbol:tests.test_http_idor_local._new_game",
       "kind": "test",
-      "line": 38,
+      "line": 37,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local._new_game"
     },
     {
       "id": "symbol:tests.test_http_idor_local.duo",
       "kind": "test",
-      "line": 55,
+      "line": 54,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local.duo"
     },
     {
       "id": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
       "kind": "test",
-      "line": 118,
+      "line": 128,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres"
     },
     {
       "id": "symbol:tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local",
       "kind": "test",
-      "line": 96,
+      "line": 106,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local"
     },
@@ -646187,5 +646165,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:cdbe2e28bd4491208201a473588d006a2e6b61c29235abb1565b40afcd250143"
+  "source_tree_hash": "sha256:7ae21a6216b024e8186537a97399211702377a749589581f040b79629c333e64"
 }
