@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e50a0d3d71c6ddb6322a77f02a21e460bca6d45f",
+  "commit_sha": "462d4747f53a4482194786eccbce9b1a5cefd261",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -108840,7 +108840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 156
+        "line": 161
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
@@ -108851,7 +108851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 145
+        "line": 150
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
@@ -108862,7 +108862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 183
+        "line": 188
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
@@ -361026,7 +361026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 168
+        "line": 173
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_effects.keywords",
@@ -361037,7 +361037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 160
+        "line": 165
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_effects.normalize",
@@ -361048,7 +361048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 167
+        "line": 172
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -361059,7 +361059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 159
+        "line": 164
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -361070,7 +361070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 150
+        "line": 155
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_effects.budget_error",
@@ -361081,7 +361081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 149
+        "line": 154
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.errors",
@@ -361092,7 +361092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 149
+        "line": 154
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.lint_card",
@@ -361103,7 +361103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 146
+        "line": 151
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.load_pool",
@@ -361114,7 +361114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 147
+        "line": 152
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -361125,7 +361125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 184
+        "line": 189
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.load_pool",
@@ -361136,7 +361136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 201
+        "line": 206
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.similarity",
@@ -645151,21 +645151,21 @@
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "kind": "test",
-      "line": 156,
+      "line": 161,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "kind": "test",
-      "line": 145,
+      "line": 150,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "kind": "test",
-      "line": 183,
+      "line": 188,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem"
     },
@@ -702004,5 +702004,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:35a9abcea27dafe43e90370cb52cd00c2e13236d9a806818b344238d3d8113d3"
+  "source_tree_hash": "sha256:6943fd105cec7b4b237be78f8ca0c05ba0c990518c7f8598e95229e0c30f8590"
 }
