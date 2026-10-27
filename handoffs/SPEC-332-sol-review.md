@@ -191,3 +191,17 @@ bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_decks
 bash scripts/dev/py.sh scripts/check_handoff_names.py → exit 0
 script ad hoc (on, 30 % vida, bestiário inteiro): plan com assinatura e prenuncio(r-1) None → 21 criaturas
 ```
+
+### Re-revisão do P1-4 (delta `69996967..68bf1e91`)
+
+> **Veredito (lote 2, final):** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus (papel Sol) · **Data:** 2026-10-27 · **Commit revisado:** `68bf1e91`
+
+- **P1-4 resolvido.** `plan()` retém a assinatura com o mesmo `_badly_wounded` do `prenuncio`, então os dois lados voltam a ser simétricos. O chefe a 39 % (fase 2) continua usando o Decreto.
+- **Teste de regressão.** `test_plan_signature_implies_previous_round_prenuncio_for_whole_bestiary` cobre o bestiário inteiro a 30 % e a 60 %. O teste não passa por vacuidade: a 60 % há 442 rodadas com assinatura, todas com Presságio na rodada anterior. A 30 %, nenhuma criatura joga assinatura.
+- **P2-7 registrado como follow-up na spec**, para a SPEC-334/336 antes de `on`: a promessa já anunciada ainda pode não se cumprir se o inimigo cair abaixo de 35 % entre o anúncio e a jogada. Não bloqueia, porque o recurso está atrás de `off`.
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_decks.py tests/test_boss_phases.py tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_spec283_enemy_support_cards.py → 85 passed
+script ad hoc (on, 60 %): rodadas com assinatura no bestiário → 442 (teste não vácuo)
+```
