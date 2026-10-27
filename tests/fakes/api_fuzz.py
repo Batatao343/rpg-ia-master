@@ -8,6 +8,7 @@ carregar sem o grupo ``fuzz``.
 from __future__ import annotations
 
 import contextlib
+import itertools
 import os
 import socket
 import uuid
@@ -119,15 +120,21 @@ def seed_catalog(case: Any) -> None:
 
 
 def run_case(
-    case: Any, client: Any, *, seed: str | None = None, catalog: bool = False
+    case: Any,
+    client: Any,
+    *,
+    seed: str | None = None,
+    catalog: bool = False,
+    seeded: bool | None = None,
 ) -> Any | None:
     """Executa um case no ``TestClient``; ``None`` = rejeitado pelo próprio cliente.
 
-    Em ~1/3 dos exemplos (decisão determinística pelo conteúdo) o case é semeado com o
+    Nos exemplos em que ``seeded`` vale (alternados por ``fuzz_operation``; sem o argumento,
+    ~1/3 por crc32 do conteúdo) o case é semeado com o
     ``game_id`` real, ``action_id``/``Idempotency-Key`` e, nas rotas de grafo, o catálogo.
     """
     digest = zlib.crc32(repr((case.path_parameters, case.query, case.body)).encode())
-    if digest % 3 == 0:
+    if seeded if seeded is not None else digest % 3 == 0:
         if seed is not None:
             seed_game_id(case, seed)
             seed_idempotency(case, digest)
@@ -187,11 +194,12 @@ def fuzz_operation(
     from hypothesis import given
 
     statuses: Counter[str] = Counter()
+    calls = itertools.count()
 
     @given(case=operation.as_strategy())
     @fuzz_settings(max_examples)
     def probe(case: Any) -> None:
-        response = run_case(case, client, seed=seed, catalog=catalog)
+        response = run_case(case, client, seed=seed, catalog=catalog, seeded=next(calls) % 2 == 0)
         if response is not None:
             statuses[_status_key(response)] += 1
             try:
