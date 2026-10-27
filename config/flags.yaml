@@ -8,22 +8,22 @@ RPG_ACCOUNT_RECOVERY_BATCH:
   note: "ajuste operacional (account recovery batch)"
 RPG_ADMIN_ALLOW_PROFILE:
   kind: config
-  default: "RPG_KILL_SWITCHES_OFF"
+  default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (admin allow profile)"
 RPG_ADMIN_DATABASE_URL:
   kind: config
-  default: ""
+  default: null
   spec: SPEC-224
   note: "configuração de ambiente (nunca o valor) (admin database url)"
 RPG_ADMIN_DB_PASSWORD:
   kind: config
-  default: "RPG_ADMIN_DATABASE_URL"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (admin db password)"
 RPG_ALLOW_INSECURE_HOSTED:
   kind: config
-  default: "RPG_ALLOW_LEGACY_EXPOSED"
+  default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (allow insecure hosted)"
 RPG_ALLOW_LEGACY_EXPOSED:
@@ -43,12 +43,12 @@ RPG_API_FUZZ_REQUIRED:
   note: "CI: fuzz da API obrigatório"
 RPG_ARCHIVE_POLICY:
   kind: ops
-  default: "RPG_ARCHIVE_POLICY_SHADOW"
+  default: "legacy"
   spec: SPEC-318
   note: "gate do arquivista; staging usa lean"
 RPG_ARCHIVE_POLICY_SHADOW:
   kind: ops
-  default: ""
+  default: "0"
   spec: SPEC-318
   note: "modo sombra da política do arquivista (medição)"
 RPG_AUDIT_ARTIFACTS:
@@ -98,7 +98,7 @@ RPG_AUTH_MODE:
   note: "configuração de ambiente (nunca o valor) (auth mode)"
 RPG_BACKUP_ROOT:
   kind: config
-  default: "readiness_artifacts"
+  default: null
   spec: SPEC-274
   note: "configuração de ambiente (nunca o valor) (backup root)"
 RPG_BIND_HOST:
@@ -118,14 +118,14 @@ RPG_BROWSER_EXECUTABLE:
   note: "só teste/CI/desenvolvimento (browser executable)"
 RPG_CALENDAR:
   kind: release
-  default: ""
+  default: "on"
   spec: SPEC-303
   expires: 2027-01-25
   note: "calendário de mundo vivo"
 RPG_CARD_DECK:
   kind: release
   default: "off"
-  spec: SPEC-327
+  spec: SPEC-328
   expires: 2027-01-25
   note: "conflito como baralho/mão/Fôlego"
 RPG_CARD_REWARDS:
@@ -136,19 +136,19 @@ RPG_CARD_REWARDS:
   note: "espólio de cartas"
 RPG_CHASE_ABANDON:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "fuga: abandonar"
 RPG_CHASE_APPROACH:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "fuga: aproximar"
 RPG_CHASE_ATTACK:
   kind: release
-  default: "chase_abandon"
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "fuga: atacar"
@@ -169,31 +169,31 @@ RPG_CLIENT_LATENCY_REPORT:
   note: "ajuste operacional (client latency report)"
 RPG_COMBAT_NONLETHAL:
   kind: release
-  default: "chase_approach"
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "golpe não-letal"
 RPG_COMBAT_OBJECTS:
   kind: release
-  default: "companion_orders"
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "objetos de cena no combate"
 RPG_COMBAT_REINFORCEMENTS:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-325
   expires: 2027-01-25
   note: "reforços no combate"
 RPG_COMBAT_REVEAL_RESIST:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "resistência revelada"
 RPG_COMPANION_ORDERS:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-325
   expires: 2027-01-25
   note: "ordens a companheiro"
@@ -205,7 +205,7 @@ RPG_COMPANION_ROMANCE:
   note: "romance de companheiro"
 RPG_COMPANION_SOUL:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-300
   expires: 2027-01-25
   note: "alma de companheiro"
@@ -221,7 +221,7 @@ RPG_CONTEXT_MAX_CONCURRENCY:
   note: "ajuste operacional (context max concurrency)"
 RPG_CONTEXT_PREFETCH:
   kind: release
-  default: ""
+  default: "on"
   spec: SPEC-317
   expires: 2027-01-25
   note: "prefetch de contexto"
@@ -237,7 +237,7 @@ RPG_COOKIE_SECURE:
   note: "configuração de ambiente (nunca o valor) (cookie secure)"
 RPG_CORS_ORIGINS:
   kind: config
-  default: ""
+  default: null
   spec: SPEC-025
   note: "configuração de ambiente (nunca o valor) (cors origins)"
 RPG_CRON_BUDGET_SECONDS:
@@ -272,12 +272,12 @@ RPG_CRON_SECRET:
   note: "configuração de ambiente (nunca o valor) (cron secret)"
 RPG_DAILY_SPEND_CAP_BRL:
   kind: ops
-  default: ""
+  default: null
   spec: SPEC-219
   note: "ajuste operacional (daily spend cap brl)"
 RPG_DAILY_SPEND_CAP_MODEL_SWITCHES:
   kind: kill_switch
-  default: ""
+  default: null
   spec: SPEC-219
   note: "desligamento de emergência (daily spend cap model switches)"
 RPG_DAILY_SPEND_CAP_TEXT:
@@ -297,7 +297,7 @@ RPG_DAILY_TURN_QUOTA:
   note: "ajuste operacional (daily turn quota)"
 RPG_DAY_DIGEST:
   kind: release
-  default: null
+  default: "inline"
   spec: SPEC-318
   expires: 2027-01-25
   note: "resumo diário do mundo"
@@ -321,12 +321,6 @@ RPG_DB_POOL_TIMEOUT_SECONDS:
   default: "10"
   spec: null
   note: "ajuste operacional (db pool timeout seconds)"
-"RPG_DB_POOL_[A-Z0-9_]*":
-  kind: ops
-  pattern: true
-  default: null
-  spec: null
-  note: "nomes montados em runtime com este prefixo"
 RPG_DB_SLOW_MS:
   kind: ops
   default: "500"
@@ -339,7 +333,7 @@ RPG_DYNAMIC_ART_ENABLED:
   note: "liga arte dinâmica"
 RPG_EARLY_NARRATIVE:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-316
   expires: 2027-01-25
   note: "narração entregue antes do arquivista"
@@ -362,12 +356,12 @@ RPG_ENEMY_DECKS:
 RPG_ENEMY_INTENT:
   kind: release
   default: "off"
-  spec: SPEC-327
+  spec: SPEC-329
   expires: 2027-01-25
   note: "presságio (intenção do inimigo)"
 RPG_EXPOSE_OPENAPI:
   kind: config
-  default: "RPG_POOL_ALLOW_MOCK_EVAL"
+  default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (expose openapi)"
 RPG_FINOPS_ALERT_HOURS:
@@ -462,12 +456,12 @@ RPG_IMAGE_DEFER_MAX_HOURS:
   note: "ajuste operacional (image defer max hours)"
 RPG_IMAGE_PRICE_PROFILE:
   kind: ops
-  default: ""
+  default: null
   spec: null
   note: "ajuste operacional (image price profile)"
 RPG_IMAGE_PRICE_PROFILE_PORTRAIT:
   kind: ops
-  default: "RPG_IMAGE_PRICE_PROFILE_SCENE"
+  default: null
   spec: SPEC-326
   note: "ajuste operacional (image price profile portrait)"
 RPG_IMAGE_PRICE_PROFILE_SCENE:
@@ -482,15 +476,14 @@ RPG_INDEX_CACHE:
   note: "cache de índice FAISS"
 RPG_JEV_ROUTER_MODE:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-217
   expires: 2027-01-25
   note: "rollout do roteador JEV"
 RPG_JEV_ROUTER_PRIMARY_APPROVED:
-  kind: release
-  default: "RPG_NPC_KNOWLEDGE"
+  kind: ops
+  default: null
   spec: SPEC-217
-  expires: 2027-01-25
   note: "aprovação do roteador JEV primário"
 RPG_JOB_QUEUE:
   kind: config
@@ -499,12 +492,12 @@ RPG_JOB_QUEUE:
   note: "configuração de ambiente (nunca o valor) (job queue)"
 RPG_KILL_SWITCHES_OFF:
   kind: kill_switch
-  default: ""
+  default: null
   spec: SPEC-218
   note: "desliga leitura dos kill switches (emergência)"
 RPG_KILL_SWITCH_CAP_FAIL_OPEN:
   kind: kill_switch
-  default: ""
+  default: null
   spec: SPEC-236
   note: "desligamento de emergência (kill switch cap fail open)"
 RPG_KILL_SWITCH_FAIL_CLOSED:
@@ -513,10 +506,10 @@ RPG_KILL_SWITCH_FAIL_CLOSED:
   spec: SPEC-218
   note: "desligamento de emergência (kill switch fail closed)"
 RPG_KILL_SWITCH_TTL_SECONDS:
-  kind: kill_switch
+  kind: ops
   default: "5"
   spec: null
-  note: "desligamento de emergência (kill switch ttl seconds)"
+  note: "ajuste operacional (kill switch ttl seconds)"
 RPG_LATENCY_REAL_AUTHORIZED:
   kind: dev
   default: null
@@ -524,7 +517,7 @@ RPG_LATENCY_REAL_AUTHORIZED:
   note: "só teste/CI/desenvolvimento (latency real authorized)"
 RPG_LAW:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-299
   expires: 2027-01-25
   note: "lei/justiça do mundo"
@@ -538,15 +531,15 @@ RPG_LIMIT_TURN_OWNER:
   default: null
   spec: null
   note: "ajuste operacional (limit turn owner)"
-"RPG_LIMIT_[A-Z0-9_]*":
+"RPG_LIMIT_[A-Z0-9_]+_(?:IP|OWNER)":
   kind: ops
   pattern: true
   default: null
-  spec: SPEC-219
-  note: "nomes montados em runtime com este prefixo"
+  spec: null
+  note: "nomes montados em runtime (por classe/provider/área)"
 RPG_LLM_HEDGE_MS:
   kind: release
-  default: null
+  default: "0"
   spec: SPEC-319
   expires: 2027-01-25
   note: "hedge na cauda do narrador"
@@ -560,12 +553,12 @@ RPG_LLM_MAX_CONCURRENCY_DEEPSEEK:
   default: null
   spec: null
   note: "ajuste operacional (llm max concurrency deepseek)"
-"RPG_LLM_MAX_CONCURRENCY_[A-Z0-9_]*":
+"RPG_LLM_MAX_CONCURRENCY_[A-Z]+":
   kind: ops
   pattern: true
   default: null
   spec: null
-  note: "nomes montados em runtime com este prefixo"
+  note: "nomes montados em runtime (por classe/provider/área)"
 RPG_LOCAL_DB_URL:
   kind: dev
   default: null
@@ -581,12 +574,12 @@ RPG_LOG_LEVEL_LIBRARIAN:
   default: null
   spec: SPEC-239
   note: "ajuste operacional (log level librarian)"
-"RPG_LOG_LEVEL_[A-Z0-9_]*":
+"RPG_LOG_LEVEL_[A-Z0-9_]+":
   kind: ops
   pattern: true
   default: null
-  spec: SPEC-239
-  note: "nomes montados em runtime com este prefixo"
+  spec: null
+  note: "nomes montados em runtime (por classe/provider/área)"
 RPG_LOG_PROPAGATE:
   kind: ops
   default: "0"
@@ -594,7 +587,7 @@ RPG_LOG_PROPAGATE:
   note: "ajuste operacional (log propagate)"
 RPG_LORE_QUESTS:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-313
   expires: 2027-01-25
   note: "quests de lore"
@@ -610,7 +603,7 @@ RPG_METRICS_SQL_CACHE_S:
   note: "ajuste operacional (metrics sql cache s)"
 RPG_METRICS_TOKEN:
   kind: config
-  default: ""
+  default: null
   spec: SPEC-219
   note: "configuração de ambiente (nunca o valor) (metrics token)"
 RPG_NO_MOCK:
@@ -626,25 +619,25 @@ RPG_NPC_KNOWLEDGE:
   note: "conhecimento de NPC"
 RPG_NPC_SELF:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-310
   expires: 2027-01-25
   note: "NPC com vida própria"
 RPG_NPC_TWO_PHASE:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-318
   expires: 2027-01-25
   note: "ficha de NPC em duas fases"
 RPG_NPC_WORLD:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-304
   expires: 2027-01-25
   note: "NPCs no mundo vivo"
 RPG_OIDC_AUDIENCE:
   kind: config
-  default: ""
+  default: null
   spec: SPEC-220
   note: "configuração de ambiente (nunca o valor) (oidc audience)"
 RPG_OIDC_ISSUER:
@@ -659,22 +652,22 @@ RPG_OIDC_JWKS_URL:
   note: "configuração de ambiente (nunca o valor) (oidc jwks url)"
 RPG_OIDC_USERINFO_URL:
   kind: config
-  default: ""
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (oidc userinfo url)"
 RPG_PLAYTEST_FORCED_ADOPT:
   kind: dev
-  default: ""
+  default: null
   spec: SPEC-315
   note: "só teste/CI/desenvolvimento (playtest forced adopt)"
 RPG_PLAYTEST_RUNS_DIR:
   kind: dev
-  default: "playtest_runs"
+  default: null
   spec: null
   note: "só teste/CI/desenvolvimento (playtest runs dir)"
 RPG_PLAYTEST_SAVES_DIR:
   kind: dev
-  default: "saves_playtest"
+  default: null
   spec: SPEC-274
   note: "só teste/CI/desenvolvimento (playtest saves dir)"
 RPG_PLAYTEST_STALE_SECONDS:
@@ -699,7 +692,7 @@ RPG_PLAY_ACCOUNT_KEY:
   note: "configuração de ambiente (nunca o valor) (play account key)"
 RPG_POOL_ALLOW_MOCK_EVAL:
   kind: dev
-  default: ""
+  default: null
   spec: SPEC-297
   note: "só teste/CI/desenvolvimento (pool allow mock eval)"
 RPG_POOL_DUP_THRESHOLD:
@@ -738,10 +731,9 @@ RPG_PREP_TIMEOUT_SECONDS:
   spec: SPEC-232
   note: "ajuste operacional (prep timeout seconds)"
 RPG_PROJECTION_MODE:
-  kind: release
-  default: null
+  kind: ops
+  default: "inline"
   spec: SPEC-213
-  expires: 2027-01-25
   note: "modo de projeção"
 RPG_PROJECTION_WAIT_SECONDS:
   kind: ops
@@ -756,12 +748,12 @@ RPG_PROMPT_STATIC_FIRST:
   note: "prompt com parte estática primeiro"
 RPG_PROTECTED_PROJECT_REFS:
   kind: config
-  default: ""
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (protected project refs)"
 RPG_RATE_CARD_MAX_AGE_DAYS:
   kind: ops
-  default: ""
+  default: null
   spec: SPEC-236
   note: "ajuste operacional (rate card max age days)"
 RPG_RATE_CARD_WARN_DAYS:
@@ -781,7 +773,7 @@ RPG_RATE_LIMIT_STORE:
   note: "configuração de ambiente (nunca o valor) (rate limit store)"
 RPG_REPLAN_AFTER:
   kind: release
-  default: "RPG_DAY_DIGEST"
+  default: "on"
   spec: SPEC-318
   expires: 2027-01-25
   note: "gate de replanejamento da campanha"
@@ -797,7 +789,7 @@ RPG_ROOT:
   note: "só teste/CI/desenvolvimento (root)"
 RPG_ROUTER_DETERMINISTIC_NPC:
   kind: release
-  default: null
+  default: "shadow"
   spec: SPEC-317
   expires: 2027-01-25
   note: "rota NPC determinística"
@@ -809,24 +801,24 @@ RPG_ROUTER_WINDOW_TRIM:
   note: "janela reduzida no roteador"
 RPG_ROUTES:
   kind: config
-  default: "Arquivo JSON mesclado com ROUTES"
+  default: null
   spec: SPEC-032
   note: "configuração de ambiente (nunca o valor) (routes)"
 RPG_RUMORS:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-312
   expires: 2027-01-25
   note: "rumores"
 RPG_RUMORS_ADOPTED:
   kind: release
-  default: ""
+  default: "shadow"
   spec: SPEC-315
   expires: 2027-01-25
   note: "rumores adotados"
 RPG_RUMORS_PROPOSED:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-312
   expires: 2027-01-25
   note: "rumores propostos"
@@ -847,7 +839,7 @@ RPG_RUNTIME_DATABASE_URL:
   note: "configuração de ambiente (nunca o valor) (runtime database url)"
 RPG_RUNTIME_DB_PASSWORD:
   kind: config
-  default: "RPG_RUNTIME_DATABASE_URL"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (runtime db password)"
 RPG_RUNTIME_PROFILE:
@@ -857,7 +849,7 @@ RPG_RUNTIME_PROFILE:
   note: "configuração de ambiente (nunca o valor) (runtime profile)"
 RPG_S3_BUCKET:
   kind: config
-  default: ""
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (s3 bucket)"
 RPG_S3_ENDPOINT:
@@ -883,7 +875,7 @@ RPG_SESSION_SECRET:
   note: "configuração de ambiente (nunca o valor) (session secret)"
 RPG_SHARED_POOL:
   kind: release
-  default: null
+  default: "off"
   spec: SPEC-297
   expires: 2027-01-25
   note: "pool compartilhado de entidades"
@@ -914,12 +906,12 @@ RPG_SPEECH_OPENAI_MODEL:
   note: "ajuste operacional (speech openai model)"
 RPG_SPEECH_PRICING_VERSION:
   kind: ops
-  default: ""
+  default: null
   spec: null
   note: "ajuste operacional (speech pricing version)"
 RPG_STAGING_DB_URL:
   kind: config
-  default: "--env-file"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging db url)"
 RPG_STAGING_REDIRECT_URLS:
@@ -934,27 +926,27 @@ RPG_STAGING_SITE_URL:
   note: "configuração de ambiente (nunca o valor) (staging site url)"
 RPG_STAGING_SMOKE_CAPTCHA_TOKEN:
   kind: dev
-  default: ""
+  default: null
   spec: null
   note: "só teste/CI/desenvolvimento (staging smoke captcha token)"
 RPG_STAGING_SMTP_ADMIN_EMAIL:
   kind: config
-  default: "smtp_sender_name"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging smtp admin email)"
 RPG_STAGING_SMTP_HOST:
   kind: config
-  default: "smtp_port"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging smtp host)"
 RPG_STAGING_SMTP_PASS:
   kind: config
-  default: "smtp_admin_email"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging smtp pass)"
 RPG_STAGING_SMTP_PORT:
   kind: config
-  default: "smtp_user"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging smtp port)"
 RPG_STAGING_SMTP_SENDER_NAME:
@@ -964,18 +956,12 @@ RPG_STAGING_SMTP_SENDER_NAME:
   note: "configuração de ambiente (nunca o valor) (staging smtp sender name)"
 RPG_STAGING_SMTP_USER:
   kind: config
-  default: "smtp_pass"
-  spec: null
-  note: "configuração de ambiente (nunca o valor) (staging smtp user)"
-"RPG_STAGING_SMTP_[A-Z0-9_]*":
-  kind: config
-  pattern: true
   default: null
   spec: null
-  note: "nomes montados em runtime com este prefixo"
+  note: "configuração de ambiente (nunca o valor) (staging smtp user)"
 RPG_STAGING_TURNSTILE_SECRET:
   kind: config
-  default: "TURNSTILE_SECRET_KEY"
+  default: null
   spec: null
   note: "configuração de ambiente (nunca o valor) (staging turnstile secret)"
 RPG_STRIPE_ALLOWED_SKUS:
@@ -1011,7 +997,7 @@ RPG_TRUSTED_PROXY_HOPS:
   note: "ajuste operacional (trusted proxy hops)"
 RPG_TURNSTILE_SECRET:
   kind: config
-  default: ""
+  default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (turnstile secret)"
 RPG_TURNSTILE_SITE_KEY:
@@ -1061,13 +1047,13 @@ RPG_WALLET_RECOVERY_GRACE_SECONDS:
   note: "ajuste operacional (wallet recovery grace seconds)"
 RPG_WORLD_ENGINE:
   kind: release
-  default: ""
+  default: "on"
   spec: SPEC-301
   expires: 2027-01-25
   note: "motor de mundo vivo"
 RPG_WORLD_QUESTS:
   kind: release
-  default: null
+  default: "on"
   spec: SPEC-305
   expires: 2027-01-25
   note: "quests de mundo"

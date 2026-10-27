@@ -87,3 +87,17 @@ def test_scan_sources_detects_new_flag_in_synthetic_repo(tmp_path):
 
 def test_repo_registry_is_complete():
     assert fr.check(ROOT) == 0
+
+
+def test_default_that_looks_like_variable_name_rejected():
+    errs = fr.validate({"RPG_A": _entry(default="RPG_OTHER")}, {"RPG_A": {"a"}}, TODAY)
+    assert any("default" in x for x in errs)
+
+
+def test_scan_ignores_truncated_prefix_tokens(tmp_path):
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    (tmp_path / "mod.py").write_text('"""RPG_DB_POOL_* e RPG_REAL_FLAG"""\n', encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=tmp_path, check=True)
+    found = fr.scan_sources(tmp_path)
+    assert "RPG_DB_POOL_" not in found
+    assert "RPG_REAL_FLAG" in found
