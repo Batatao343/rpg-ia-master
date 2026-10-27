@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "d4c507d239d28eedc15a8117f6b84288be577104",
+  "commit_sha": "51b376b738fd9d0341a378b3f9c2a46b5a9f9885",
   "edge_counts": {
-    "calls": 29736,
-    "contains": 999,
-    "defines": 14798,
-    "imports": 2423,
-    "likely_test_for": 1709,
+    "calls": 29981,
+    "contains": 1000,
+    "defines": 14873,
+    "imports": 2430,
+    "likely_test_for": 1716,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e2b185a60797fd3334c51b5b72ab710fe845136645ef11cc7ede8cbb8677e62c",
+  "graph_hash": "sha256:f041178cc49c40db05e7257109d91c9db8aba5e2edd02a36804f3a07d51a2cf2",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -551,6 +551,7 @@
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_card_effects_grammar.py",
+    "tests/test_card_effects_piles.py",
     "tests/test_card_effects_review_spec330.py",
     "tests/test_card_piles.py",
     "tests/test_cards_prepare_api.py",
@@ -1226,12 +1227,12 @@
     "artifact": 9,
     "class": 960,
     "endpoint": 64,
-    "file": 1170,
-    "function": 4643,
+    "file": 1171,
+    "function": 4662,
     "method": 840,
-    "module": 999,
-    "test": 8354
+    "module": 1000,
+    "test": 8410
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9bc3dca7be059081e0ee8ea0bde99c2bf0a20a6d9983553c5a479ea8ff4f459e"
+  "source_tree_hash": "sha256:078d9acc9ca7ba3b8095f259892b4ce17fb7284a5675f04bfc6d03d1c91726cd"
 }
