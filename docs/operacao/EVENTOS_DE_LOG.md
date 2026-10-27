@@ -52,6 +52,11 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `campaign.replan` | `deferred`, `outcome`, `reason` |
 | `campaign.world_replan_trigger` | `cause` |
 | `campaign_manager.fallback` | — |
+| `card_draft.fallback` | — |
+| `cards.card_exhausted` | `card_id` |
+| `cards.card_offered` | `card_id`, `picked`, `source` |
+| `cards.card_picked` | `card_id`, `source` |
+| `cards.card_played` | `card_id`, `pile` |
 | `character.ai_failed` | `error` |
 | `client.error` | `beacon_request_id`, `build`, `client`, `code`, `error_name`, `kind`, `request_id`, `route`, `stack`, `ts` |
 | `client_latency` | `ack_ms`, `action_ref`, `first_phase_ms`, `outcome`, `state_ms`, `transport`, `ttfmc_ms`, `ttlt_ms` |
@@ -96,6 +101,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.reinforcements_warned` | — |
 | `combat.reveal_resist` | `effect` |
 | `combat.reveal_resist_shadow` | `effect` |
+| `combat.revelar_knowledge_failed` | — |
 | `combat.scene_card_dropped` | `reason` |
 | `combat.scene_card_shadow` | `card_id`, `rnd` |
 | `combat.scene_cards_catalog_unavailable` | — |
