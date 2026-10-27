@@ -1,0 +1,129 @@
+{
+  "_meta": "SPEC-335 R6: 4 Cartas de TRONCO (sem subclasse, nivel 1) de Arcanista Cinzento. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
+  "cards": [
+    {
+      "id": "arc1_tro_centelha_ressoante",
+      "name": "Centelha Ressoante",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        }
+      ],
+      "palavras_chave": {
+        "ressoar": 1
+      },
+      "descricao": "Uma centelha de éter que continua a vibrar depois do impacto: o tom dela acorda a próxima carta.",
+      "momento": "Melhor jogada quando a próxima carta da rodada gosta de eco de éter e a centelha prepara o terreno.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_tro_marca_de_giz",
+      "name": "Marca de Giz",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "Círculo de giz e cinza traçado com cálculo: guarda o corpo agora e a jogada para depois.",
+      "momento": "Melhor jogada quando a rodada pede proteção barata e vale reservar a carta para uma cena mais difícil.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_tro_lance_calculado",
+      "name": "Lance Calculado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "comprar",
+          "valor": 1
+        }
+      ],
+      "descricao": "Cada lance já estava no caderno de cinza: o Arcanista vira a página e a carta certa aparece.",
+      "momento": "Melhor jogada quando a mão está cheia de jogadas fracas e uma carta nova pode ser a que salva a rodada.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_tro_contrassinal",
+      "name": "Contrassinal",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "Um sinal riscado em éter no ar corta o ritual do inimigo ao meio: a conta dele falha e o golpe entra.",
+      "momento": "Melhor jogada quando o inimigo prepara uma jogada cara e cortar o preparo vale mais que o dano em si.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

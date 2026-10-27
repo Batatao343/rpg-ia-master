@@ -1,0 +1,96 @@
+{
+  "_meta": "SPEC-335 R6: 3 Cartas de TRONCO (sem subclasse, nivel 1) de Médico de Campo. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
+  "cards": [
+    {
+      "id": "med1_tro_faixa_bem_dada",
+      "name": "Faixa Bem Dada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "Faixa apertada na medida: estanca o sangue e deixa a mão livre para o próximo corte.",
+      "momento": "Melhor jogada quando o ferido ainda tem de lutar e um curativo guardado vale mais que uma cura imediata.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tro_dose_de_torpor",
+      "name": "Dose de Torpor",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Poção de sono em dose pequena: o inimigo desacelera como se a cinza lhe pesasse nos ombros.",
+      "momento": "Melhor jogada quando o maior inimigo bate demais e uma dose o desacelera até o grupo se refazer.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tro_plantao_curto",
+      "name": "Plantão Curto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Plantão curto na trincheira, de olho aberto: nenhuma ferida passa sem ser vista antes de abrir.",
+      "momento": "Melhor jogada quando o grupo vai receber golpes seguidos e o médico precisa estar firme de pé para a hora do trabalho.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

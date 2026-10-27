@@ -1,0 +1,1398 @@
+{
+  "_meta": "SPEC-335 Lote 6: 40 Cartas neutras de Valoria (R2). classe `Neutra`: nunca entram em cards_for_class de uma Postura nem no baralho inicial; so chegam por espolio (services/card_rewards, fonte `neutra`). `regiao` (region_id do mapa) limita o espolio a regiao; sem `regiao` = qualquer lugar. `origem_lore` = id do codex.",
+  "cards": [
+    {
+      "id": "neu1_na_espada_da_legiao",
+      "name": "Espada da Legião",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        }
+      ],
+      "descricao": "Ferro das fundições, forjado em série para quem marcha sob o Código: sem arte, sem falha.",
+      "momento": "Melhor jogada quando um golpe seguro e sem truque basta para fechar a rodada diante de um só inimigo.",
+      "origem_lore": "legiao_ferro",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_fuligem_das_chamines",
+      "name": "Fuligem das Chaminés",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Um punhado de fuligem negra e cinza das chaminés, atirado no rosto: o inimigo tosse e luta às cegas.",
+      "momento": "Melhor jogada quando um inimigo de golpe certeiro está prestes a agir e cegá-lo por uma rodada o faz errar.",
+      "origem_lore": "story_itens_nova_arcadia",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_gazua_dos_telhados",
+      "name": "Gazua dos Telhados",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "vantagem",
+          "valor": 1,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Ferramenta de ladrão que vive por cima da cidade: abre o caminho certo antes de o ferro sair.",
+      "momento": "Melhor jogada quando o próximo golpe é o que importa e uma brecha bem escolhida pesa mais que força.",
+      "origem_lore": "quadrilha_telhados",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_salvo_conduto_falso",
+      "name": "Salvo-Conduto Falso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Selo da Legião, assinatura de oficial: tudo falso, mas o brutamontes vê o ferro da lei e perde o ímpeto.",
+      "momento": "Melhor jogada quando o inimigo teme a Legião mais do que a você e uma ordem forjada o faz recuar.",
+      "origem_lore": "mao_sombria",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_selo_da_legiao",
+      "name": "Selo da Legião",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        }
+      ],
+      "descricao": "Quem ergue o selo impõe o Código: o ferro avança em bloco e o inimigo recua um passo.",
+      "momento": "Melhor jogada quando o grupo precisa de espaço para respirar e o selo abre uma brecha na linha inimiga.",
+      "origem_lore": "legiao_ferro",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_elixir_do_doutor_vane",
+      "name": "Elixir do Doutor Vane",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 5,
+          "alvo": "eu"
+        },
+        {
+          "kind": "purga_condicao",
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "Remédio brutal que cura quase tudo: a dor é tão violenta quanto o mal, e o sangue paga a conta.",
+      "momento": "Melhor jogada quando uma condição ruim e um ferimento fundo chegam juntos e uma dose cruel resolve os dois.",
+      "origem_lore": "npc_doutor_silas_vane",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_na_lembranca_do_aco",
+      "name": "Lembrança do Aço",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "nova_arcadia",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 2,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 5
+        },
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 3
+        }
+      ],
+      "descricao": "Lâmina de aço de sangue: cada talho relembra a morte que a forjou, e a ferida segue ardendo.",
+      "momento": "Melhor jogada quando o inimigo é grande e vai demorar a cair: o primeiro talho abre e a ferida trabalha sozinha.",
+      "origem_lore": "encapuzados_fornalha",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_lanca_de_gancho",
+      "name": "Lança de Gancho",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Gancho de ferro nascido do gelo: ancora a presa no chão como a um urso-titã, e ela não sai do lugar.",
+      "momento": "Melhor jogada quando o inimigo tenta rodear ou fugir e ancorá-lo desfaz o plano dele por uma rodada.",
+      "origem_lore": "story_itens_skallgard",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_traje_branco",
+      "name": "Traje Branco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Peles brancas dos batedores do Ermo: o corpo some na névoa de neve e o golpe mal encontra onde pegar.",
+      "momento": "Melhor jogada quando o dano vem de longe e basta se fazer difícil de ver por uma rodada.",
+      "origem_lore": "story_itens_skallgard",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_aguardente_de_liquen",
+      "name": "Aguardente de Líquen",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Destilado de líquen sob a neve, servido nos túneis quentes: aquece o peito como brasa e fecha o corte por dentro.",
+      "momento": "Melhor jogada quando o frio e o sangue perdido pedem um gole sem gastar o Fôlego do turno.",
+      "origem_lore": "story_itens_skallgard",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_luvas_de_veia_de_calor",
+      "name": "Luvas de Veia-de-Calor",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "purga_condicao",
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Veias de calor costuradas no couro mantêm a mão firme no frio: o veneno é arrancado antes que cresça.",
+      "momento": "Melhor jogada quando uma condição ruim ameaça travar o seu turno e a mão firme limpa o corpo no ato.",
+      "origem_lore": "story_itens_skallgard",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_emboscada_dos_renegados",
+      "name": "Emboscada dos Renegados",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Os exilados do Ermo pensam como caçadores: um corte rápido, o flanco aberto, e a sombra do ferro deixa a presa exposta.",
+      "momento": "Melhor jogada quando o grupo vai atacar em seguida e abrir a guarda do inimigo vale mais que o dano.",
+      "origem_lore": "renegados_ermo",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_machado_de_vorr",
+      "name": "Machado de Vorr",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "Liga azulada que mantém o fio onde o frio parte o ferro comum: o machado racha a armadura de quem o encara.",
+      "momento": "Melhor jogada quando um inimigo encouraçado concentra o dano do grupo e abrir a carapaça rende golpes seguintes.",
+      "origem_lore": "story_itens_skallgard",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_er_cerco_do_branco",
+      "name": "Cerco do Branco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "skallgard",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "alvo": "inimigos"
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "O Pastor-Branco conduz o rebanho pela névoa: o golpe varre a linha inteira e o frio pesa nos membros.",
+      "momento": "Melhor jogada quando vários inimigos avançam juntos e um golpe de varredura os deixa lentos no mesmo gelo.",
+      "origem_lore": "mon_o_pastor_branco",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_sabre_de_pirata",
+      "name": "Sabre de Pirata",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 4
+        }
+      ],
+      "descricao": "Arma das tripulações do porto sem lei: lâmina curta, suja de sal e feita para a luta apertada do convés.",
+      "momento": "Melhor jogada quando o alvo está colado e uma lâmina rápida decide antes de ele se preparar.",
+      "origem_lore": "grupos_piratas_rivais",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_grogue_do_porto",
+      "name": "Grogue do Porto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 3,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Destilado forte da Boca do Fundo: queima a garganta como brasa e solta o braço de quem aguenta o gole.",
+      "momento": "Melhor jogada quando o grupo vai investir nas próximas rodadas e um gole bruto aumenta cada golpe.",
+      "origem_lore": "story_itens_costa_negra",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_tinta_de_polvo",
+      "name": "Tinta de Polvo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Tinta dos polvos sob as docas, base de fumaça de contrabandista: a nuvem de sombra engole o olhar do inimigo.",
+      "momento": "Melhor jogada quando o inimigo vai agir por duas rodadas seguidas e a nuvem o deixa sem alvo claro.",
+      "origem_lore": "story_itens_costa_negra",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_madeira_de_naufragio",
+      "name": "Madeira de Naufrágio",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Tábua arrancada de um casco partido nas docas velhas: fede a maré e a ferro, mas segura o golpe que viria.",
+      "momento": "Melhor jogada quando um golpe grande se aproxima e uma tábua firme à frente do peito faz toda a diferença.",
+      "origem_lore": "story_itens_costa_negra",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_arpao_de_osso",
+      "name": "Arpão de Osso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Osso de leviatã afiado pelos Osshari: a ponta entra fundo e prende a presa no lugar.",
+      "momento": "Melhor jogada quando a presa é grande e arisca e fixá-la ao chão deixa o resto do grupo golpear com calma.",
+      "origem_lore": "osshari_brekmar",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_doce_de_mare",
+      "name": "Doce de Maré",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 4,
+          "alvo": "eu"
+        },
+        {
+          "kind": "buff_acerto",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Iguaria da Casa das Marés: o prazer fecha a ferida e acende o olhar, e o preço fica na sombra para depois.",
+      "momento": "Melhor jogada quando o ferido precisa voltar à luta já e aceita pagar com Entropia o gosto que prende.",
+      "origem_lore": "casa_mares_dominio_lyss",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_br_pistola_de_pederneira",
+      "name": "Pistola de Pederneira",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 8
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Tecnologia rara de capitão de prestígio: um estampido, fumaça de pólvora e ferro quente, e o inimigo perde a coragem.",
+      "momento": "Melhor jogada quando um único disparo decide a cena e o medo do estrondo derruba o ímpeto do resto.",
+      "origem_lore": "npc_capita_tormenta_ruiva",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ka_residuo_sanguineo",
+      "name": "Resíduo Sanguíneo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 2
+        }
+      ],
+      "descricao": "Resíduo da sangrinomancia de Kahen: um toque e o sangue do inimigo escorre sem parar.",
+      "momento": "Melhor jogada quando o inimigo é resistente e demora a cair: a ferida aberta cresce a cada rodada.",
+      "origem_lore": "npc_veu_de_sangue",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ka_divida_gravada",
+      "name": "Dívida Gravada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Nome riscado a ferro no Poço das Dívidas: o alvo carrega o peso do que deve, e todo golpe contra ele rende.",
+      "momento": "Melhor jogada quando o grupo concentra o ataque num só inimigo e a marca faz cada golpe contar mais.",
+      "origem_lore": "art_registro_dividas_poco",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ka_guarda_de_sangue",
+      "name": "Guarda de Sangue",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "descricao": "Guarda de sangrinomante: a mão se fecha em escudo de sangue e a ferida do inimigo se abre sem aviso.",
+      "momento": "Melhor jogada quando o inimigo bate forte e continua batendo, e a defesa já deixa a ferida cobrando por você.",
+      "origem_lore": "mon_guarda_sangrinomante_de_kahen",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ka_equilibrio_de_kahen",
+      "name": "Equilíbrio de Kahen",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 3
+        },
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Kahen não vence, impede que alguém vença: o inimigo trava, hesita e fica na sombra, sem impulso para ganhar.",
+      "momento": "Melhor jogada quando a luta se desequilibra e o que importa é segurar o ritmo até o grupo se reorganizar.",
+      "origem_lore": "poder_kahen",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ka_xadrez_com_lyss",
+      "name": "Xadrez com Lyss",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "brekmar",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "ganhar_folego",
+          "valor": 2
+        },
+        {
+          "kind": "comprar",
+          "valor": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "Jogo velado contra a demônia da Casa das Marés: quem aceita a aposta rouba tempo do Abismo e paga com a alma.",
+      "momento": "Melhor jogada quando a mão está vazia e a rodada decisiva pede mais jogadas do que o Fôlego permitiria.",
+      "origem_lore": "npc_lyss",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_pedagio_de_sangue",
+      "name": "Pedágio de Sangue",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 6
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "Os orcs das saídas cobram em bens ou em sangue, e quem não paga em bens aprende a golpear com raiva.",
+      "momento": "Melhor jogada quando o inimigo é grande e um golpe cru, sem enfeite, vale mais que qualquer plano.",
+      "origem_lore": "bandos_orc_saidas_baixas",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_martelo_de_guerra_anao",
+      "name": "Martelo de Guerra Anão",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 8
+        }
+      ],
+      "descricao": "Forja anã recuperada das profundezas: pesa como a ruína do Reino e quebra o que não puder abrigar.",
+      "momento": "Melhor jogada quando um único golpe pesado derruba a ameaça maior e o turno todo vale ser gasto nele.",
+      "origem_lore": "ultimos_anoes_reino",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_corda_de_aranha",
+      "name": "Corda de Aranha",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Seda de aranha-de-pedra, leve e firme: prende o corpo à rocha e dá pé onde o chão é só ruína.",
+      "momento": "Melhor jogada quando o terreno é traiçoeiro e duas rodadas de passo firme valem mais que um golpe.",
+      "origem_lore": "story_itens_montanhas_afiadas",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_emboscada_de_gruumsha",
+      "name": "Emboscada de Gruumsha",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "se": {
+            "alvo_tem": "exposto"
+          }
+        }
+      ],
+      "descricao": "A chefe orc monta emboscadas inteligentes: primeiro a guarda se abre, depois o ferro entra onde dói.",
+      "momento": "Melhor jogada quando o inimigo ainda está de guarda alta e abrir a defesa antes do golpe rende o dobro.",
+      "origem_lore": "npc_gruumsha_quebra_espinha",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_pavor_do_fundo",
+      "name": "Pavor do Fundo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Os orcs têm pavor das profundezas e sabem despertá-lo nos outros: o grito do abismo faz o inimigo recuar.",
+      "momento": "Melhor jogada quando o inimigo mais forte ameaça o grupo e um grito do fundo o faz hesitar enquanto você se firma.",
+      "origem_lore": "mon_orcs_das_saidas_baixas",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_sb_reliquia_arma_ana",
+      "name": "Relíquia-Arma Anã",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "regiao": "montanhas_afiadas",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 8
+        },
+        {
+          "kind": "rachadura",
+          "valor": 3
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        }
+      ],
+      "descricao": "Arma anã de ferro perdido, saqueada das ruínas pelos goblins: o golpe racha a pedra e o inimigo com ela.",
+      "momento": "Melhor jogada quando o inimigo se esconde atrás de armadura grossa e uma relíquia pesada abre caminho a todos.",
+      "origem_lore": "story_itens_montanhas_afiadas",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_lanterna_de_aranha",
+      "name": "Lanterna de Aranha",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "resistencias"
+        }
+      ],
+      "descricao": "Luz fria de aranha-lanterna, dura e sem fumaça: mostra onde a sombra esconde o ponto fraco do inimigo.",
+      "momento": "Melhor jogada quando o grupo não sabe do que o inimigo é feito e uma luz firme revela o que ele resiste.",
+      "origem_lore": "story_itens_montanhas_afiadas",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_talisma_de_lebre",
+      "name": "Talismã de Lebre",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_esquiva",
+          "valor": 3,
+          "duracao": 1
+        }
+      ],
+      "gatilho": "ao_ser_atacado",
+      "descricao": "Pata de lebre-de-duas-cabeças pendurada ao pescoço: o corpo se joga para o lado antes de o ferro chegar.",
+      "momento": "Melhor jogada quando o inimigo golpeia com força e uma esquiva guardada vale mais que uma resposta.",
+      "origem_lore": "story_itens_pradaria_ruinas",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_flecha_de_cristal",
+      "name": "Flecha de Cristal",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Ponta de cristal do deserto de vidro: ao entrar na carne, o éter congela e o membro pesa como pedra.",
+      "momento": "Melhor jogada quando o inimigo rápido precisa ser contido e o cristal o deixa pesado de uma vez só.",
+      "origem_lore": "story_itens_deserto_zhur",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_nectar_da_furia",
+      "name": "Néctar da Fúria",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 4,
+          "duracao": 2
+        }
+      ],
+      "palavras_chave": {
+        "sacrificio": 1
+      },
+      "descricao": "Néctar da selva que acende o sangue: o golpe sai mais forte, e o corpo cobra caro por isso.",
+      "momento": "Melhor jogada quando o grupo está a um ou dois golpes da vitória e o preço em sangue ainda compensa.",
+      "origem_lore": "story_itens_selva_xylos",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_armadura_de_quitina",
+      "name": "Armadura de Quitina",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5,
+          "alvo": "eu"
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "quando": "ao_receber_dano"
+        }
+      ],
+      "descricao": "Carapaça de quitina da selva: dura por fora, cheia de espinhos como osso por dentro, e quem bate sente a resposta.",
+      "momento": "Melhor jogada quando o inimigo bate várias vezes no mesmo alvo e cada golpe recebido devolve um ferimento.",
+      "origem_lore": "story_itens_selva_xylos",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_cataplasma_de_resina",
+      "name": "Cataplasma de Resina",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu"
+        },
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Resina da selva fechando a ferida: estanca o sangue e endurece como casca por cima do curativo.",
+      "momento": "Melhor jogada quando o ferido ainda tem de aguentar mais uma rodada e a casca de resina compra tempo.",
+      "origem_lore": "story_itens_selva_xylos",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_lamina_de_vidro_negro",
+      "name": "Lâmina de Vidro Negro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 4
+        },
+        {
+          "kind": "sangria",
+          "valor": 3
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "Vidro negro do deserto de Zhur, mais afiado que ferro: corta fundo, sangra fino e racha onde passa.",
+      "momento": "Melhor jogada quando o inimigo é duro e vai demorar a cair: o fio de vidro abre três feridas com um só movimento.",
+      "origem_lore": "story_itens_deserto_zhur",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "neu1_ge_ampulheta_de_vaelorn",
+      "name": "Ampulheta de Vaelorn",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Neutra",
+      "neutra": true,
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 8,
+          "alvo": "eu"
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 2
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "Relíquia de um tempo que já se foi: vira a ampulheta e as feridas voltam ao que eram antes do golpe, ao custo de um instante roubado.",
+      "momento": "Melhor jogada quando a Vitalidade está no fio e o tempo roubado devolve o corpo e ainda deixa Fôlego para agir.",
+      "origem_lore": "art_ampulheta_vaelorn",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

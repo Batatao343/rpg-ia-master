@@ -878,6 +878,18 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
                     )
         for issue in card_lint.lint_wave(wave_cards):
             findings.append(Finding("cards", "error", cards_dir, "onda", issue.message))
+        # SPEC-335 R2 (Lote 6): `origem_lore` aponta um id real do codex; Carta neutra exige.
+        codex_dir = os.path.join(os.path.dirname(os.path.abspath(cards_dir)), "codex")
+        codex_ids = {str(fm.get("id")) for _p, fm, _b in _parse_codex(codex_dir) if fm.get("id")}
+        for card in wave_cards:
+            lore = card.get("origem_lore")
+            if not lore:
+                if card.get("neutra"):
+                    msg = "Carta neutra sem `origem_lore` (id do codex)"
+                    findings.append(Finding("cards", "error", cards_dir, card["id"], msg))
+            elif codex_ids and str(lore) not in codex_ids:
+                msg = f"`origem_lore` {lore!r} não é um id do codex"
+                findings.append(Finding("cards", "error", cards_dir, card["id"], msg))
     # SPEC-335 P1-1: onda promovida sem revisão de voz do dono vira AVISO (nunca atestado falso)
     ondas_file = os.path.join(cards_dir, "_ondas.yaml")
     if os.path.isfile(ondas_file):

@@ -254,3 +254,89 @@ ondas:
   - med1_fer_braco_de_colosso
   - med1_fer_ancora_de_ferro
   - med1_fer_cirurgia_no_ferro
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  amostra_voz:
+  - neu1_na_lembranca_do_aco
+  - neu1_er_cerco_do_branco
+  - neu1_br_doce_de_mare
+  - neu1_ka_xadrez_com_lyss
+  - neu1_sb_emboscada_de_gruumsha
+  - neu1_ge_talisma_de_lebre
+  - neu1_ge_ampulheta_de_vaelorn
+  cartas:
+  - neu1_na_espada_da_legiao
+  - neu1_na_fuligem_das_chamines
+  - neu1_na_gazua_dos_telhados
+  - neu1_na_salvo_conduto_falso
+  - neu1_na_selo_da_legiao
+  - neu1_na_elixir_do_doutor_vane
+  - neu1_na_lembranca_do_aco
+  - neu1_er_lanca_de_gancho
+  - neu1_er_traje_branco
+  - neu1_er_aguardente_de_liquen
+  - neu1_er_luvas_de_veia_de_calor
+  - neu1_er_emboscada_dos_renegados
+  - neu1_er_machado_de_vorr
+  - neu1_er_cerco_do_branco
+  - neu1_br_sabre_de_pirata
+  - neu1_br_grogue_do_porto
+  - neu1_br_tinta_de_polvo
+  - neu1_br_madeira_de_naufragio
+  - neu1_br_arpao_de_osso
+  - neu1_br_doce_de_mare
+  - neu1_br_pistola_de_pederneira
+  - neu1_ka_residuo_sanguineo
+  - neu1_ka_divida_gravada
+  - neu1_ka_guarda_de_sangue
+  - neu1_ka_equilibrio_de_kahen
+  - neu1_ka_xadrez_com_lyss
+  - neu1_sb_pedagio_de_sangue
+  - neu1_sb_martelo_de_guerra_anao
+  - neu1_sb_corda_de_aranha
+  - neu1_sb_emboscada_de_gruumsha
+  - neu1_sb_pavor_do_fundo
+  - neu1_sb_reliquia_arma_ana
+  - neu1_ge_lanterna_de_aranha
+  - neu1_ge_talisma_de_lebre
+  - neu1_ge_flecha_de_cristal
+  - neu1_ge_nectar_da_furia
+  - neu1_ge_armadura_de_quitina
+  - neu1_ge_cataplasma_de_resina
+  - neu1_ge_lamina_de_vidro_negro
+  - neu1_ge_ampulheta_de_vaelorn
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura). Tronco do nível 1 (R6), 16 Cartas sem subclasse
+  amostra_voz:
+  - dev1_tro_palavra_que_corta
+  - san1_tro_veia_aberta
+  - cor1_tro_sinal_do_abismo
+  - arc1_tro_marca_de_giz
+  - arc1_tro_contrassinal
+  - med1_tro_faixa_bem_dada
+  - med1_tro_plantao_curto
+  cartas:
+  - arc1_tro_centelha_ressoante
+  - arc1_tro_marca_de_giz
+  - arc1_tro_lance_calculado
+  - arc1_tro_contrassinal
+  - cor1_tro_fresta_no_osso
+  - cor1_tro_peso_na_alma
+  - cor1_tro_sinal_do_abismo
+  - dev1_tro_vigilia_de_cinza
+  - dev1_tro_palavra_que_corta
+  - dev1_tro_dedo_de_sentenca
+  - med1_tro_faixa_bem_dada
+  - med1_tro_dose_de_torpor
+  - med1_tro_plantao_curto
+  - san1_tro_corte_de_penitencia
+  - san1_tro_veia_aberta
+  - san1_tro_eco_de_ferida

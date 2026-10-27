@@ -1,4 +1,4 @@
-"""SPEC-335 R5 (Lote 0) e Lote 1: reparo do acervo e Arcanista Cinzento da onda 1."""
+"""SPEC-335 R5 (Lote 0), Lotes 1-6 (Posturas e neutras) e tronco do nível 1: acervo da onda 1."""
 
 from collections import Counter
 
@@ -63,7 +63,7 @@ def _onda1() -> list[dict]:
     return [
         c
         for c in card_lint.load_pool()
-        if c.get("onda") == 1 and c.get("classe") == "Arcanista Cinzento"
+        if c.get("onda") == 1 and c.get("classe") == "Arcanista Cinzento" and c.get("subclasse")
     ]
 
 
@@ -95,7 +95,9 @@ def test_lote1_passa_no_lint_contra_o_acervo():
 # ----------------------------------------------------------------- Lote 2 (Sangromante)
 def _lote2() -> list[dict]:
     return [
-        c for c in card_lint.load_pool() if c.get("onda") == 1 and c.get("classe") == "Sangromante"
+        c
+        for c in card_lint.load_pool()
+        if c.get("onda") == 1 and c.get("classe") == "Sangromante" and c.get("subclasse")
     ]
 
 
@@ -129,7 +131,7 @@ def _lote3() -> list[dict]:
     return [
         c
         for c in card_lint.load_pool()
-        if c.get("onda") == 1 and c.get("classe") == "Devoto do Abismo"
+        if c.get("onda") == 1 and c.get("classe") == "Devoto do Abismo" and c.get("subclasse")
     ]
 
 
@@ -176,7 +178,9 @@ def test_lote3_licoes_da_revisao_do_lote2():
 # ----------------------------------------------------------------- Lote 4 (Corruptor)
 def _lote4() -> list[dict]:
     return [
-        c for c in card_lint.load_pool() if c.get("onda") == 1 and c.get("classe") == "Corruptor"
+        c
+        for c in card_lint.load_pool()
+        if c.get("onda") == 1 and c.get("classe") == "Corruptor" and c.get("subclasse")
     ]
 
 
@@ -234,7 +238,7 @@ def _lote5() -> list[dict]:
     return [
         c
         for c in card_lint.load_pool()
-        if c.get("onda") == 1 and c.get("classe") == "Médico de Campo"
+        if c.get("onda") == 1 and c.get("classe") == "Médico de Campo" and c.get("subclasse")
     ]
 
 
@@ -334,3 +338,180 @@ def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():
         for i, a in enumerate(momentos):
             for b in momentos[i + 1 :]:
                 assert card_lint.similarity(a, b) < card_lint.LIMIAR_MOMENTO, (postura, a, b)
+
+
+# ----------------------------------------------------------------- Lote 6 (40 neutras de Valoria, R2)
+POSTURAS = (
+    "Devoto do Abismo",
+    "Sangromante",
+    "Corruptor",
+    "Arcanista Cinzento",
+    "Médico de Campo",
+)
+# region_id do mapa (data/world_map.json) onde as neutras regionais podem sair no espólio.
+REGIOES_NEUTRAS = {"nova_arcadia", "skallgard", "brekmar", "montanhas_afiadas"}
+
+
+def _neutras() -> list[dict]:
+    return [c for c in card_lint.load_pool() if c.get("classe") == "Neutra"]
+
+
+def test_lote6_40_neutras_raridade_20_12_6_2_e_regioes():
+    cs = _neutras()
+    assert len(cs) == 40
+    assert len({c["id"] for c in cs}) == 40
+    assert all(c["id"].startswith("neu1_") and c.get("neutra") is True for c in cs)
+    assert all(not c.get("subclasse") and c.get("onda") == 1 for c in cs)
+    assert Counter(c["raridade"] for c in cs) == {
+        "comum": 20,
+        "incomum": 12,
+        "rara": 6,
+        "abissal": 2,
+    }
+    regioes = Counter(c.get("regiao") for c in cs)
+    assert set(regioes) - {None} == REGIOES_NEUTRAS  # as regiões do R2 estão representadas
+    assert regioes[None] >= 6  # itens gerais (lore_nova/items.txt): saem em qualquer lugar
+
+
+def test_lote6_origem_lore_e_um_id_real_do_codex():
+    from services import content_validator as cv
+
+    ids = {str(fm.get("id")) for _p, fm, _b in cv._parse_codex(cv.CODEX_DIR) if fm.get("id")}
+    assert ids
+    for c in _neutras():
+        assert c.get("origem_lore") in ids, (c["id"], c.get("origem_lore"))
+    lore = {c["origem_lore"] for c in _neutras()}
+    # Kahen, Saídas Baixas e Ermo têm âncora própria no codex
+    assert {"poder_kahen", "bandos_orc_saidas_baixas", "renegados_ermo"} <= lore
+
+
+def test_validador_recusa_origem_lore_invalida_e_neutra_sem_lore(tmp_path):
+    import json
+
+    from services import content_validator as cv
+
+    cards_dir = tmp_path / "cards"
+    codex_dir = tmp_path / "codex"
+    cards_dir.mkdir()
+    codex_dir.mkdir()
+    (codex_dir / "a.md").write_text(
+        "---\nid: lugar_real\ntype: location\nname: A\naliases: []\ntags: []\nvisibility: public\n"
+        "---\n\nx\n",
+        encoding="utf-8",
+    )
+    base = next(c for c in _neutras() if c["id"] == "neu1_na_espada_da_legiao")
+    ruim = dict(base, id="neu1_zz_ruim", name="Ruim Zero", origem_lore="id_que_nao_existe")
+    sem = {k: v for k, v in base.items() if k != "origem_lore"}
+    sem.update(id="neu1_zz_sem", name="Sem Lore Zero")
+    ok = dict(base, id="neu1_zz_ok", name="Bom Zero", origem_lore="lugar_real")
+    (cards_dir / "n.json").write_text(json.dumps({"cards": [ruim, sem, ok]}), encoding="utf-8")
+    msgs: dict[str, str] = {}
+    for f in cv.validate_cards(str(cards_dir)):
+        if f.severity == "error":
+            msgs[f.entity_id] = msgs.get(f.entity_id, "") + " | " + f.message
+    assert "origem_lore" in msgs.get("neu1_zz_ruim", "")
+    assert "origem_lore" in msgs.get("neu1_zz_sem", "")
+    assert "origem_lore" not in msgs.get("neu1_zz_ok", "")
+
+
+def test_lote6_passa_no_lint_e_no_orcamento_sem_avisos():
+    pool = card_lint.load_pool()
+    for c in _neutras():
+        others = [o for o in pool if o["id"] != c["id"]]
+        issues = card_lint.lint_card(c, others)
+        assert not card_lint.errors(issues), (c["id"], issues)
+        assert not [i for i in issues if i.level == "warn"], (c["id"], issues)
+        assert fx.budget_error(c) is None, c["id"]
+
+
+def test_lote6_licoes_da_revisao_dos_lotes_anteriores():
+    """Mesmas regras dos Lotes 2-5, aplicadas às neutras (que não têm roda de Postura)."""
+    nomeadas = {"protecao", "buff_defesa", "buff_acerto", "buff_dano", "vantagem", "dot", "marca"}
+    for c in _neutras():
+        effs = fx.normalize(c)
+        kinds = [e["kind"] for e in effs]
+        if c["tipo"] == "reacao":
+            assert c.get("gatilho"), c["id"]
+            assert len(effs) == 1 and fx.custo_folego(c) >= 1, c["id"]
+        if c["tipo"] == "ativa":
+            assert "buff_esquiva" not in kinds, c["id"]
+        assert "taunt" not in kinds, c["id"]  # Provocar só vale com aliados
+        assert not card_lint.check_escala_principal(c), c["id"]
+        assert not card_lint.check_marca_dano(c), c["id"]
+        assert not card_lint.check_revelar_publico(c), c["id"]
+        assert not card_lint.check_reacao_folego(c), c["id"]
+        assert not card_lint.check_controle_duracao(c), c["id"]
+        if fx.custo_folego(c) == 0:
+            assert c["frequencia"] == "cena", c["id"]
+        assert sum(1 for k in kinds if k in nomeadas) <= 1, c["id"]
+        prim = fx.primary_effect(c)
+        assert prim is None or prim.get("alvo") not in ("aliados", "inimigos"), c["id"]
+        if c["raridade"] == "abissal":  # só chefe; Exaurir e custo explícito
+            assert fx.keywords(c).get("exaurir") and c["custo_entropia"] > 0, c["id"]
+        assert len(c["descricao"]) <= 140, c["id"]
+
+
+def test_lote6_neutras_nao_vazam_para_nenhuma_postura_nem_para_o_baralho_inicial():
+    import character_creator as cc
+    import progression
+    from services import cards
+
+    ids = {c["id"] for c in _neutras()}
+    for postura in POSTURAS:
+        assert not ids & {c["id"] for c in cards.cards_for_class(postura)}, postura
+        player = {"class_name": postura, "level": 20, "known_cards": [], "subclass": ""}
+        assert not ids & set(progression.eligible_cards(player)), postura
+        inicial = cc._resolve_starting_cards({}, postura, {})
+        assert not ids & set(inicial["known_cards"] + inicial["prepared_cards"]), postura
+
+
+def test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao():
+    from services import card_rewards as cr
+
+    def estado(local: str, level: int = 20) -> dict:
+        player = {"class_name": "Corruptor", "level": level, "known_cards": [], "subclass": ""}
+        return {"player": player, "world": {"current_location_id": local}}
+
+    ids = {c["id"]: c for c in _neutras()}
+    # local = nó dentro da região (na_anel_ferro -> nova_arcadia): o region_id entra no sorteio
+    vistas: set[str] = set()
+    for seed in range(400):
+        vistas.update(cr.roll_rewards(estado("na_anel_ferro"), None, seed))
+    neutras_vistas = vistas & set(ids)
+    assert any(i.startswith("neu1_na_") for i in neutras_vistas)
+    assert not any(i.startswith("neu1_er_") for i in neutras_vistas)  # Ermo só em skallgard
+    assert not any(i.startswith("neu1_sb_") for i in neutras_vistas)
+    assert any(i.startswith("neu1_ge_") for i in neutras_vistas)  # itens gerais: qualquer lugar
+    assert not [i for i in neutras_vistas if ids[i]["raridade"] == "abissal"]  # abissal: só chefe
+    boss = [{"id": "x", "categoria": "chefe"}]
+    chefe: set[str] = set()
+    for seed in range(600):
+        chefe.update(cr.roll_rewards(estado("brekmar"), None, seed, defeated=boss))
+    assert any(ids[i]["raridade"] == "abissal" for i in chefe & set(ids))
+    baixo: set[str] = set()
+    for seed in range(300):  # nível 1 respeita level_req: só as comuns
+        baixo.update(cr.roll_rewards(estado("skallgard", level=1), None, seed))
+    assert all(ids[i]["raridade"] == "comum" for i in baixo & set(ids))
+    assert any(i.startswith("neu1_er_") for i in baixo & set(ids))
+
+
+# ----------------------------------------------------------------- R6: tronco do nível 1
+def test_tronco_cartas_por_postura_sem_subclasse_nivel_1():
+    pool = card_lint.load_pool()
+    cs = [c for c in pool if "_tro_" in str(c["id"])]
+    assert Counter(c["classe"] for c in cs) == {
+        "Devoto do Abismo": 3,
+        "Sangromante": 3,
+        "Corruptor": 3,
+        "Arcanista Cinzento": 4,
+        "Médico de Campo": 3,
+    }
+    for c in cs:
+        assert not c.get("subclasse") and c["level_req"] == 1 and c["raridade"] == "comum"
+        assert c.get("onda") == 1 and c["tipo"] == "ativa"
+        others = [o for o in pool if o["id"] != c["id"]]
+        issues = card_lint.lint_card(c, others)
+        assert not issues, (c["id"], issues)
+        assert fx.budget_error(c) is None, c["id"]
+        if fx.custo_folego(c) == 0:
+            assert c["frequencia"] == "cena", c["id"]

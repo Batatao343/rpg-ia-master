@@ -1,0 +1,97 @@
+{
+  "_meta": "SPEC-335 R6: 3 Cartas de TRONCO (sem subclasse, nivel 1) de Devoto do Abismo. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
+  "cards": [
+    {
+      "id": "dev1_tro_vigilia_de_cinza",
+      "name": "Vigília de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Vigília curta sobre a cinza do altar: o corpo firme espera o golpe e o recebe menos fundo.",
+      "momento": "Melhor jogada quando o primeiro golpe da cena vai vir de qualquer jeito e é preciso chegar inteiro à segunda rodada.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_tro_palavra_que_corta",
+      "name": "Palavra que Corta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "Uma sentença seca, dita no meio do rito do Abismo: o golpe sai antes de a reza dele terminar.",
+      "momento": "Melhor jogada quando o inimigo começa um preparo demorado e uma interrupção seca desfaz a rodada dele.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_tro_dedo_de_sentenca",
+      "name": "Dedo de Sentença",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "O dedo aponta a falha na armadura do pecador e a fé faz o resto: a casca de ferro racha sozinha.",
+      "momento": "Melhor jogada quando um inimigo encouraçado domina a cena e a fé precisa abrir a armadura antes do dano.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

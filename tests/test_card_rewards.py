@@ -40,7 +40,8 @@ def rewards_on(monkeypatch):
 
 def _fake_catalog(monkeypatch, rows):
     """Injeta Cartas sintéticas no catálogo (restaurado pelo monkeypatch)."""
-    catalog = dict(cards.all_cards())
+    # SPEC-335 Lote 6: as neutras reais (classe Neutra) ficam fora; estes testes usam as sinteticas.
+    catalog = {k: v for k, v in cards.all_cards().items() if v.get("classe") != "Neutra"}
     for cid, patamar, extra in rows:
         catalog[cid] = {
             "id": cid,

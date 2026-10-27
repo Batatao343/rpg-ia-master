@@ -1,0 +1,92 @@
+{
+  "_meta": "SPEC-335 R6: 3 Cartas de TRONCO (sem subclasse, nivel 1) de Corruptor. Cobrem as palavras-chave que o Acervo de nivel 1-2 (so tronco) nao tinha.",
+  "cards": [
+    {
+      "id": "cor1_tro_fresta_no_osso",
+      "name": "Fresta no Osso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "O toque do Abismo acha a fresta no osso e a alarga: a defesa do inimigo perde a firmeza.",
+      "momento": "Melhor jogada quando o grupo tem golpes fortes na fila e uma armadura rachada faz cada um render mais.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_tro_peso_na_alma",
+      "name": "Peso na Alma",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um peso de sombra sem nome cai sobre o inimigo, e o braço dele demora a obedecer.",
+      "momento": "Melhor jogada quando o inimigo bate forte e o torpor corta o dano que ele devolveria nas próximas rodadas.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_tro_sinal_do_abismo",
+      "name": "Sinal do Abismo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 2
+        }
+      ],
+      "descricao": "O Abismo risca um sinal na testa do alvo: o próximo golpe que ele receber pesa muito mais.",
+      "momento": "Melhor jogada quando um aliado vai desferir o golpe grande da rodada e o sinal garante que ele pese.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

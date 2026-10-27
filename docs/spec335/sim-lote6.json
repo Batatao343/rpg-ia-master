@@ -1,0 +1,1166 @@
+{
+ "neu1_na_espada_da_legiao": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 104,
+   "vezes_jogada": 71,
+   "taxa_uso": 0.683,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.838,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.649,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.787,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_na_fuligem_das_chamines": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 111,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.694,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.825,
+   "delta_pp": -3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 120,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.617,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.75,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_na_gazua_dos_telhados": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.681,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.787,
+   "delta_pp": -7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 118,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.627,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.738,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_na_salvo_conduto_falso": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.681,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.85,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.643,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.75,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_na_selo_da_legiao": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 157,
+   "vezes_jogada": 48,
+   "taxa_uso": 0.306,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.613,
+   "delta_pp": 3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 140,
+   "vezes_jogada": 49,
+   "taxa_uso": 0.35,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.463,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_na_elixir_do_doutor_vane": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 66,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.227,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.713,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 49,
+   "vezes_jogada": 14,
+   "taxa_uso": 0.286,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.675,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_na_lembranca_do_aco": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 58,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.259,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.787,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 24,
+   "taxa_uso": 0.471,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.688,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_er_lanca_de_gancho": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.272,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.487,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.713,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_er_traje_branco": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 33,
+   "taxa_uso": 0.292,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.825,
+   "delta_pp": -3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 117,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.265,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.8,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_er_aguardente_de_liquen": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 12,
+   "taxa_uso": 0.105,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 124,
+   "vezes_jogada": 12,
+   "taxa_uso": 0.097,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.838,
+   "delta_pp": 10.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_er_luvas_de_veia_de_calor": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.14,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 28,
+   "taxa_uso": 0.241,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.762,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_er_emboscada_dos_renegados": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 58,
+   "taxa_uso": 0.408,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.588,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 127,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.441,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.55,
+   "delta_pp": 6.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_er_machado_de_vorr": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 62,
+   "vezes_jogada": 37,
+   "taxa_uso": 0.597,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.75,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 47,
+   "vezes_jogada": 34,
+   "taxa_uso": 0.723,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.6,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_er_cerco_do_branco": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 56,
+   "vezes_jogada": 7,
+   "taxa_uso": 0.125,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.825,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 50,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.42,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.738,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_br_sabre_de_pirata": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 108,
+   "vezes_jogada": 71,
+   "taxa_uso": 0.657,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.838,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 109,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.679,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.838,
+   "delta_pp": 10.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_br_grogue_do_porto": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 112,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.688,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.638,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.8,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_br_tinta_de_polvo": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.272,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 118,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.475,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.725,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_br_madeira_de_naufragio": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 33,
+   "taxa_uso": 0.292,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.838,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 117,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.265,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.8,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_br_arpao_de_osso": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 131,
+   "vezes_jogada": 73,
+   "taxa_uso": 0.557,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.575,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 123,
+   "vezes_jogada": 70,
+   "taxa_uso": 0.569,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.562,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_br_doce_de_mare": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 66,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.227,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.713,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 49,
+   "vezes_jogada": 14,
+   "taxa_uso": 0.286,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.662,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_br_pistola_de_pederneira": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 58,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.259,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.8,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 24,
+   "taxa_uso": 0.471,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.688,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ka_residuo_sanguineo": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.274,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.483,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.8,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ka_divida_gravada": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.274,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.812,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.496,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.75,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ka_guarda_de_sangue": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 154,
+   "vezes_jogada": 48,
+   "taxa_uso": 0.312,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.55,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 1.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 132,
+   "vezes_jogada": 49,
+   "taxa_uso": 0.371,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.5,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 1.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ka_equilibrio_de_kahen": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 56,
+   "vezes_jogada": 7,
+   "taxa_uso": 0.125,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.8,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 6,
+   "taxa_uso": 0.118,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.725,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ka_xadrez_com_lyss": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 60,
+   "vezes_jogada": 10,
+   "taxa_uso": 0.167,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.838,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 48,
+   "vezes_jogada": 5,
+   "taxa_uso": 0.104,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.713,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_sb_pedagio_de_sangue": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 103,
+   "vezes_jogada": 76,
+   "taxa_uso": 0.738,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.825,
+   "delta_pp": -3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 112,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.661,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.75,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_sb_martelo_de_guerra_anao": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 107,
+   "vezes_jogada": 62,
+   "taxa_uso": 0.579,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.838,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 62,
+   "taxa_uso": 0.534,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.787,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_sb_corda_de_aranha": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 109,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.706,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.85,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 74,
+   "taxa_uso": 0.643,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.812,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_sb_emboscada_de_gruumsha": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 143,
+   "vezes_jogada": 53,
+   "taxa_uso": 0.371,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.588,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 130,
+   "vezes_jogada": 52,
+   "taxa_uso": 0.4,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.5,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_sb_pavor_do_fundo": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 65,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.323,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.725,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 49,
+   "vezes_jogada": 13,
+   "taxa_uso": 0.265,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.575,
+   "delta_pp": -8.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_sb_reliquia_arma_ana": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 58,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.259,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.787,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 24,
+   "taxa_uso": 0.471,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.688,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ge_lanterna_de_aranha": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 32,
+   "taxa_uso": 0.281,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 73,
+   "taxa_uso": 0.629,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.713,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_ge_talisma_de_lebre": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 120,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.762,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  }
+ },
+ "neu1_ge_flecha_de_cristal": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 31,
+   "taxa_uso": 0.272,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.8,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.487,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.713,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ge_nectar_da_furia": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 81,
+   "taxa_uso": 0.57,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.6,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 121,
+   "vezes_jogada": 73,
+   "taxa_uso": 0.603,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.537,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "neu1_ge_armadura_de_quitina": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 64,
+   "vezes_jogada": 20,
+   "taxa_uso": 0.312,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.725,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 5.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 49,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.327,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.613,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 5.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ge_cataplasma_de_resina": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 179,
+   "vezes_jogada": 25,
+   "taxa_uso": 0.14,
+   "vitoria_sem": 0.575,
+   "vitoria_com": 0.637,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 150,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.18,
+   "vitoria_sem": 0.487,
+   "vitoria_com": 0.487,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ge_lamina_de_vidro_negro": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 56,
+   "vezes_jogada": 7,
+   "taxa_uso": 0.125,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.825,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 50,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.42,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.762,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "neu1_ge_ampulheta_de_vaelorn": {
+  "devoto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 59,
+   "vezes_jogada": 7,
+   "taxa_uso": 0.119,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.863,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arcanista": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 47,
+   "vezes_jogada": 9,
+   "taxa_uso": 0.191,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.725,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ }
+}

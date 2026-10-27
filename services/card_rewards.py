@@ -18,6 +18,7 @@ import os
 import random
 from typing import Any, Literal
 
+import gamedata
 import inventory as inv_mod
 from services import card_telemetry, cards
 
@@ -145,6 +146,13 @@ def roll_rewards(
         for v in (world.get("current_location_id"), world.get("region_id"), world.get("region"))
         if v
     }
+    # SPEC-335 Lote 6: `regiao` das neutras e o `region_id` do mapa (o local atual e um no dentro
+    # da regiao, ex.: `na_anel_ferro` -> `nova_arcadia`); sem isto a Carta regional nunca saia.
+    loc_region = (gamedata.get_location(str(world.get("current_location_id") or "")) or {}).get(
+        "region_id"
+    )
+    if loc_region:
+        region_ids.add(str(loc_region))
     pools = _pools(player, defeated, boss=boss, region_ids=region_ids)
     rng = random.Random(f"{int(seed)}:espolio")
     weights = BOSS_RARITY_WEIGHTS if boss else RARITY_WEIGHTS
