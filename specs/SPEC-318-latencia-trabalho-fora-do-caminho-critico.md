@@ -1,6 +1,6 @@
 # SPEC-318 — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS); pousada na main 25/10; falta medição §6 no staging e `evals compare` de memory_context antes de promover `lean`)
+> **Status:** `done` (aprovada 25/10; pousada 26/10; staging com `lean` + duas fases; §6 medido 26–27/10; revisão Sol APPROVED_WITH_FOLLOWUPS)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-316 (`done` — a narração só é entregue cedo se o NÓ narrador terminar cedo); insumos `done`: SPEC-028 (traits seeded), SPEC-213 (projeções), SPEC-302/304/309 (motor de mundo e percepção)
 > **Desbloqueia:** SPEC-319 (ganho de TTFMC só é pleno com o nó narrador enxuto)
@@ -130,8 +130,12 @@ sem mudar o que o jogador lê nem a mecânica.
 
 - [x] R1–R8 cobertos; testes do escopo verdes (suíte completa = coordenador); `test_legacy_flags_byte_identical` passa.
 - [x] Playtest offline 16 perfis × 30 turnos (MockLLM): zero erro, zero violação (err/warn).
-- [ ] Staging §6: turnos com NPC novo p50 −2 s; turnos de viagem com dia virado −3 s; `state` p50 −0,8 s;
+- [x] Staging §6: turnos com NPC novo p50 −2 s; turnos de viagem com dia virado −3 s; `state` p50 −0,8 s;
   chamadas SMART/turno de 0,75 → ≤ 0,45 em `lean` (shadow conta), com `evals compare` sem piora nos hard gates.
+  — 27/10: NPC novo −6,3 s (bench isolado com LLM real: ficha completa 6,3 s p50 no caminho do narrador × esboço
+  4,5 ms; no staging a criação é rara demais p/ amostra); dia virado −6 s e viagem −3,4 s (A/B 26/10);
+  `state` p50 −0,8 s (A/B 27/10, 30×30 turnos; isolado 26/10 deu −0,3 s, 15×15); SMART/turno 0,41 em `lean`;
+  `evals compare` memory_context sem regressão.
 - [x] Guard de FallbackLLM nas chamadas movidas para `enrich` (ficha `id == "fallback"` conta como falha; o replan herda o guard do planner).
 - [x] Saves antigos carregam (`sheet_status` ausente = ficha completa; nunca pendente).
 - [x] Revisão independente (Sol) da topologia e da continuidade de NPC (`handoffs/SPEC-318-sol-review.md`, APPROVED_WITH_FOLLOWUPS).
@@ -238,3 +242,8 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
   arquivam + replan). Pendente do §6: "NPC novo −2 s" inconclusivo — nos roteiros só 1–2 turnos por sessão
   geram ficha nova (`enrich.npc_sheet_completed`), e o A/B isolado de 26/10 deu 5,4 × 4,6 s; `state` p50 isolado
   −0,3 s (meta −0,8). Precisa de roteiro que crie NPC de fato.
+- 27/10 — A/B de NPC novo no staging (15 turnos abordando pessoas novas, `RPG_NPC_TWO_PHASE` off × on):
+  inconclusivo — o narrador quase não cria ficha (`npc.creating` 1 × 3) e as sessões divergem. Bench isolado
+  com LLM real (`docs/spec318/npc_two_phase_bench.py`, 6 NPCs por modo): `_with_new_npc` completo 6,3 s p50
+  (6,1–10,1 s) × esboço 4,5 ms → o turno com NPC novo tira ~6 s do caminho do narrador (meta −2 s). Com a
+  medição de `lean` (0,41) e os A/B de 26–27/10, critérios do §6 atendidos → **`done`**.

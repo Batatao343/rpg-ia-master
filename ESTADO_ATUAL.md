@@ -10,14 +10,14 @@
 
 - staging = `0640bff` (preset: `lean`, stream `on`, hedge `0`; smokes verdes). Mundo vivo 296–315 `done` (297: 1ª promoção do pool).
 - 320–326 `done` (26/10). 327–338: outra sessão.
-- **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). 316/317/319 `done`; 318 falta "NPC novo −2 s" (A/B rodando); loot sem tokens ao vivo.
+- **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`** (318: NPC novo −6 s isolado, `lean` 0,41 SMART/turno); loot sem tokens ao vivo.
 - Staging: preset versionado `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree; checar RAM (CLAUDE.md).
 
 ## Próximos 3 passos
 
 1. Turno inteiro (~10 s até o `state`, igual ao OFF): investigar arquivista/commit após a narração. Cold start do Vercel: quando o dono pagar a Vercel.
-2. 318: A/B de NPC novo (`RPG_NPC_TWO_PHASE`); deploy da main no staging (fix do loot); bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente); 319 P2-1 medir `replace` no combate.
+2. Bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente); 319 P2-1 medir `replace` no combate.
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
@@ -57,7 +57,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 - 2026-10-27 · SPEC-328 `draft` — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 - 2026-10-27 · SPEC-327 `draft` — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
 - 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
-- 2026-10-27 · SPEC-318 `in-progress` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
+- 2026-10-27 · SPEC-318 `done` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 - 2026-10-27 · SPEC-317 `done` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 - 2026-10-27 · SPEC-316 `done` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 - 2026-10-26 · SPEC-326 `done` — Arte dinâmica consistente com Valoria (estética, lore e raça)
