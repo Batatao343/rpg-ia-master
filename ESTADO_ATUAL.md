@@ -45,7 +45,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 
 <!-- recent:start -->
 - 2026-10-27 · SPEC-340 `done` — Registro de feature flags com validade
-- 2026-10-27 · SPEC-339 `draft` — controle-duracao-tick
+- 2026-10-27 · SPEC-339 `done` — Controle aplicado por oponente expira antes de valer (tick de duração)
 - 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
 - 2026-10-27 · SPEC-337 `done` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
 - 2026-10-27 · SPEC-336 `in-progress` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
@@ -62,13 +62,6 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 - 2026-10-27 · SPEC-318 `done` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 - 2026-10-27 · SPEC-317 `done` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 - 2026-10-27 · SPEC-316 `done` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
-- 2026-10-26 · SPEC-326 `done` — Arte dinâmica consistente com Valoria (estética, lore e raça)
-- 2026-10-26 · SPEC-325 `done` — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
-- 2026-10-26 · SPEC-324 `done` — Front: a11y estrutural (headings) e atalhos de teclado
-- 2026-10-26 · SPEC-323 `done` — Front: livro, não chat (marginália, HUD, copy, criação, mapa, sigilo)
-- 2026-10-26 · SPEC-322 `done` — Front: tokens de cor, contraste, raio, ícones e tipografia
-- 2026-10-26 · SPEC-321 `done` — Front: casca mobile, alvos de toque e safe-area
-- 2026-10-26 · SPEC-320 `done` — Front: espera do turno, typewriter e banner de erro
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -77,7 +70,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: cartas na sessão `-69`; suíte 1 por vez (avisar). 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
-- 27/10 cartas: `off` 328–336 (335 lotes 1–6). Voz aprovada em bloco (sem leitura). Falta: arena por Postura (Sangromante ~80 %, Corruptor/alma ~34 % elite) → após 339 (`draft`, dono), e2e/smoke antes de `on`.
+- 27/10 cartas: `off` 328–336; 339 `done` (Provocar/Marca d=1 valem; arena sem viés: Sangromante 78 %, demais 58–70 %). Falta: spec de balanço do Sangromante, e2e/smoke LLM antes de `on`.
 
 
 ## Como rodar
