@@ -130,11 +130,12 @@ def test_membro_falho_tira_um_de_folego_na_rodada_em_que_e_comprada():
     p = _player()
     piles = _piles(p, compra=["sts_membro_falho", GOLPE, GOLPE, GOLPE, GOLPE, GOLPE])
     piles["mao"] = []
-    cp.begin_round(piles)
+    drawn: list[str] = []
+    cp.begin_round(piles, drawn_out=drawn)
     assert "sts_membro_falho" in piles["mao"] and piles["folego"] == 3
-    logs = cs.on_hand_drawn(piles, p)
+    logs = cs.on_hand_drawn(piles, p, drawn)
     assert piles["folego"] == 2 and logs
-    assert cs.on_hand_drawn(piles, p) == [] and piles["folego"] == 2  # não repete
+    assert "comprou" not in piles  # o save de combate não ganha chave nova (P2-1)
     cp.begin_round(piles)  # a rodada seguinte volta ao Fôlego cheio
     assert piles["folego"] == 3
 
@@ -143,8 +144,9 @@ def test_sangue_nos_olhos_deixa_cego_por_uma_rodada():
     p = _player()
     piles = _piles(p, compra=["sts_sangue_olhos", GOLPE, GOLPE, GOLPE, GOLPE, GOLPE])
     piles["mao"] = []
-    cp.begin_round(piles)
-    cs.on_hand_drawn(piles, p)
+    drawn: list[str] = []
+    cp.begin_round(piles, drawn_out=drawn)
+    cs.on_hand_drawn(piles, p, drawn)
     cego = [c for c in p["active_conditions"] if str(c.get("name", "")).lower() == "cego"]
     assert cego and cego[0]["duration"] == 1 and cego[0].get("stat") == "advantage"
 
@@ -352,7 +354,7 @@ def test_sussurro_ja_no_inicio_vai_para_a_mao():
     assert SUS in piles["mao"]
 
 
-def test_sussurro_joga_a_zero_de_folego_e_da_entropia():
+def test_sussurro_joga_a_zero_de_folego_e_cobra_uma_carga():
     p = _player(entropy=3)
     _alto(p)
     piles = cp.start_piles(p, 4)
@@ -362,8 +364,10 @@ def test_sussurro_joga_a_zero_de_folego_e_da_entropia():
     piles["folego"] = 0
     plan = cp.plan_plays(piles, p, [step])
     assert plan["ok"] and plan["folego_total"] == 0 and plan["emprestado"] == 0
+    charge = p["abyss_charge"]
     res = cards.use_card({"player": p}, SUS)
-    assert res["ok"] and p["entropy"] == 5  # +2 de Entropia
+    assert res["ok"] and p["entropy"] == 3  # sem ganho de Entropia (combustível)
+    assert p["abyss_charge"] == charge + 1  # jogar custa +1 Carga
 
 
 def test_sussurro_so_vale_dentro_do_conflito():
@@ -396,3 +400,23 @@ def test_sussurro_jogado_nao_apodrece_nem_volta():
         cs.on_round_end(piles, p, cs.wound_counts(p))
     assert cp.FARDO_ID not in piles["mao"] + piles["compra"] + piles["descarte"]
     assert piles["exaurida"].count(SUS) == 1 and SUS not in p["cartas_cena"]
+
+
+def test_no_de_combate_explica_a_carta_de_status_no_log_e_na_narracao(monkeypatch):
+    agent, state = _node_state(monkeypatch, wound=("grave", "braco"))
+    state["combat"]["pilhas"]["compra"] = ["bas_san_guarda"] * 10
+    out = agent._combat_node(state)
+    mech = out["combat"]["last_mech_log"]
+    assert any("Membro Falho" in line for line in mech)
+    assert "Membro Falho" in out["messages"][0].content
+
+
+def test_save_de_combate_com_rewards_off_nao_ganha_chaves(monkeypatch):
+    monkeypatch.setenv("RPG_CARD_REWARDS", "off")
+    agent, state = _node_state(monkeypatch)
+    state["combat"]["pilhas"]["compra"] = ["bas_san_guarda"] * 10
+    out = agent._combat_node(state)
+    piles = out["combat"]["pilhas"]
+    assert "comprou" not in piles and "sussurro" not in piles
+    assert "cartas_cena" not in out["player"] and "espolio_pendente" not in out["player"]
+    assert "Membro Falho" not in out["messages"][0].content

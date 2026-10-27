@@ -513,7 +513,7 @@ def set_deck(state: dict, deck: list[str]) -> dict:
     keep = [
         c
         for c in (player.get("prepared_cards") or [])
-        if (get_card(c) or {}).get("tipo") not in _DECK_TIPOS
+        if (get_card(c) or {}).get("tipo") not in (_DECK_TIPOS | STATUS_TIPOS)
     ]
     player["prepared_cards"] = list(dict.fromkeys(deck + keep))
     return {"ok": True, "error": None, "log": f"Baralho atualizado ({len(deck)} Cartas)."}
@@ -566,16 +566,19 @@ def use_card(state: dict, card_id: str) -> dict:
 
     if custo:
         player["entropy"] = int(player.get("entropy", 0)) - custo
-        cap = int(player.get("max_entropy", 0) or 0)
-        if custo < 0 and cap > 0:  # SPEC-333 R9: custo negativo = ganho, limitado ao teto
-            player["entropy"] = min(player["entropy"], cap)
+    carga = int(
+        card.get("gera_carga", 0) or 0
+    )  # SPEC-333 R9: o Sussurro cobra Carga, nao da Entropia
+    if carga > 0:
+        player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + carga
     for k in _ALL_COUNTERS:
         entry[k] = int(entry.get(k, 0)) + 1
     return {
         "ok": True,
         "error": None,
         "log": f"Usa {card.get('name', card_id)}"
-        + (f" (+{-custo} Entropia)" if custo < 0 else f" (-{custo} Entropia)" if custo else ""),
+        + (f" (-{custo} Entropia)" if custo else "")
+        + (f" — +{carga} Carga do Abismo" if carga > 0 else ""),
         "cost": custo,
         "base_cost": custo_base,
         "dependencia_applied": custo > custo_base,

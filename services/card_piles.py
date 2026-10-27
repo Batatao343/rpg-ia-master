@@ -187,7 +187,7 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
         "pacto_carga": False,
     }
     _rng(piles, rng).shuffle(piles["compra"])
-    piles["comprou"] = draw(piles, MAO_BASE, rng)  # SPEC-333: o que chegou a mao nesta compra
+    draw(piles, MAO_BASE, rng)
     return piles
 
 
@@ -235,10 +235,14 @@ def discard_hand(piles: dict) -> list[str]:
     return gone
 
 
-def begin_round(piles: dict, rng: random.Random | None = None) -> dict:
+def begin_round(
+    piles: dict, rng: random.Random | None = None, drawn_out: list | None = None
+) -> dict:
     """Inicio de rodada do jogador (R5): descarta, compra ate `MAO_BASE`, Folego cheio."""
     discard_hand(piles)
-    piles["comprou"] = draw(piles, MAO_BASE - len(piles["mao"]), rng)
+    drawn = draw(piles, MAO_BASE - len(piles["mao"]), rng)
+    if drawn_out is not None:  # SPEC-333: quem chegou a mao agora (fora do save)
+        drawn_out.extend(drawn)
     piles["folego"] = min(FOLEGO_MAX, FOLEGO_BASE + int(piles.get("folego_bonus", 0) or 0))
     piles["folego_cheio"] = piles["folego"]  # teto efetivo desta rodada (base + bonus)
     piles["folego_bonus"] = 0

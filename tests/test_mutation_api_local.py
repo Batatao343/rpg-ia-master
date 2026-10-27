@@ -144,3 +144,22 @@ def test_prepare_cards_shares_equip_kind_without_key_collision(campaign):
     replay = client.post("/game/cards/prepare", json=prep)
     assert replay.status_code == 200 and replay.json() == first.json()
     assert store.get(principal, game).version == version
+
+
+def test_espolio_replay_with_same_action_id_pays_once(campaign, monkeypatch):
+    """SPEC-333 (revisão Sol P2-7): replay do mesmo action_id devolve o recibo; +15 ouro 1×."""
+    client, store, principal, game = campaign
+    from services import card_rewards as cr
+
+    state = store.get(principal, game)
+    # o servidor local precisa de RPG_CARD_REWARDS=on; sem espólio pendente o teste não se aplica
+    if not (state.state.get("player") or {}).get("espolio_pendente"):
+        pytest.skip("campanha local sem espólio pendente / flag RPG_CARD_REWARDS desligada")
+    body = {"game_id": str(game), "action_id": str(uuid4()), "card_id": None}
+    first = client.post("/game/espolio", json=body)
+    assert first.status_code == 200, first.text
+    version = store.get(principal, game).version
+    replay = client.post("/game/espolio", json=body)
+    assert replay.status_code == 200 and replay.json() == first.json()
+    assert store.get(principal, game).version == version
+    assert cr.REFUSE_GOLD == 15

@@ -320,3 +320,53 @@ def test_forja_pela_api(client, monkeypatch):
     assert r.status_code == 400 and r.json()["code"] == "forja_rejected"
     r = _post(client, "/game/forja", gid, acao="inventada")
     assert r.status_code == 422
+
+
+def test_espolio_mesmo_action_id_nao_paga_duas_vezes(client, monkeypatch):
+    """P2-7: reenviar a recusa com o MESMO action_id não dá +15 de ouro de novo."""
+    gid = _new(client)
+    st = _load(gid)
+    cr.grant_after_conflict(
+        st, st["player"], conflict_id="c", seed=5, defeated=[], objective_result=None, turn=1
+    )
+    _save(st)
+    gold = _load(gid)["player"]["gold"]
+    body = {"game_id": gid, "action_id": str(uuid.uuid4()), "card_id": None}
+    assert client.post("/game/espolio", json=body).status_code == 200
+    again = client.post("/game/espolio", json=body)
+    assert again.status_code in (200, 400)
+    assert _load(gid)["player"]["gold"] == gold + 15
+
+
+def test_purgar_tambem_limpa_prepared_cards():
+    st = _state()
+    _cicatriz(st)
+    p = st["player"]
+    assert "mld_cicatriz_braco" in p["prepared_cards"]
+    st["party"] = [{"class_name": "Médico de Campo", "active": True}]
+    assert cr.purge_curse(st, "scar_braco_0", "medico")["ok"]
+    assert "mld_cicatriz_braco" not in p["prepared_cards"]
+    # set_deck também não "mantém" status/maldição na Preparação
+    p["prepared_cards"].append("mld_cicatriz_braco")
+    assert cards.set_deck(st, list(p["deck"]))["ok"]
+    assert "mld_cicatriz_braco" not in p["prepared_cards"]
+
+
+def test_shadow_mede_sem_tocar_ficha_nem_baralho(monkeypatch):
+    monkeypatch.setenv("RPG_CARD_REWARDS", "shadow")
+    st = _state()
+    p = st["player"]
+    before = {k: (list(v) if isinstance(v, list) else v) for k, v in p.items()}
+    assert cr.register_scar_curse(p, {"id": "scar_braco_0", "origem": "braco"}) is None
+    cr.on_long_rest(p)
+    assert p == before and "cicatriz_cartas" not in p and "forja_esquecer" not in p
+    p["espolio_pendente"] = {"id": "x", "ofertas": ["a"], "recusa_ouro": 15}
+    assert cr.public_pending(p) is None and cr.public_forge(st) is None
+    for res in (
+        cr.accept(st, None),
+        cr.forget(st, "x", "templo"),
+        cr.sharpen(st, "x"),
+        cr.purge_curse(st, "s", "templo"),
+    ):
+        assert not res["ok"]
+    assert p["gold"] == before["gold"]

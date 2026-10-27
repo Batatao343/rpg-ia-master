@@ -57,7 +57,7 @@
     },
     {
       "id": "sus_sussurro_abismo",
-      "name": "Sussurro do Abismo",
+      "name": "Sussurro Faminto",
       "tipo": "ativa",
       "origem": "cartas-333",
       "classe": "Abismo",
@@ -66,12 +66,13 @@
       "tier": 1,
       "level_req": 1,
       "frequencia": "cena",
-      "custo_entropia": -2,
+      "custo_entropia": 0,
+      "gera_carga": 1,
       "custo_folego": 0,
       "virtude_permitida": ["forca"],
       "efeito": { "kind": "dano", "categoria_arma": "pesada", "dano_base": 10 },
       "descricao": "A voz do Abismo empresta o golpe e cobra o silêncio depois.",
-      "momento": "Entra no baralho quando a Carga do Abismo está alta; some se ninguém a ouvir.",
+      "momento": "Entra no baralho quando a Carga do Abismo está alta; jogá-la cobra mais Carga.",
       "apex": false
     },
     {

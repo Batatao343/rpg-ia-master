@@ -7,7 +7,7 @@ Ganchos puros chamados por `agents/combat.py` entre as rodadas, so com
       leve `sts_dor_surda`, grave `sts_membro_falho`, critico `sts_sangue_olhos`. Vivem so nas
       pilhas do conflito, entao saem sozinhas no fim dele (`combat["pilhas"]` e descartado).
 - R9  Carga do Abismo >= patamar `moderado` da classe -> 1 `sus_sussurro_abismo` por cena
-      (jogavel a 0 de Folego, +2 de Entropia). Nao jogada em 2 rodadas, vira o Fardo base.
+      (jogavel a 0 de Folego; jogar custa +1 Carga do Abismo). Nao jogada em 2 rodadas, vira o Fardo base.
 - `ao_comprar_status` (vocabulario fechado, JSON da Carta): `exaurir_fim_rodada`, `folego`,
   `condicao`+`rodadas`.
 """
@@ -68,11 +68,10 @@ def _insert_sussurro(piles: dict, player: dict, pilha: str, logs: list[str]) -> 
     logs.append("O Abismo sussurra: uma Carta nova se oferece ao seu Baralho.")
 
 
-def on_hand_drawn(piles: dict, player: dict) -> list[str]:
+def on_hand_drawn(piles: dict, player: dict, drawn: list[str]) -> list[str]:
     """Efeitos `ao_comprar_status` das Cartas que chegaram a mao na ultima compra."""
     logs: list[str] = []
-    drawn = list(piles.get("comprou") or [])
-    piles["comprou"] = []
+    drawn = list(drawn)
     for cid in drawn:
         spec = _spec(cid)
         if not spec:
@@ -99,7 +98,7 @@ def on_start(piles: dict, player: dict) -> list[str]:
     logs: list[str] = []
     if _abyss_high(player):
         _insert_sussurro(piles, player, "mao", logs)
-    return logs + on_hand_drawn(piles, player)
+    return logs + on_hand_drawn(piles, player, list(piles["mao"]))
 
 
 def on_round_end(piles: dict, player: dict, wounds_before: dict[str, int]) -> list[str]:

@@ -210,11 +210,24 @@ def _fail(msg: str, *, conflito: bool = False) -> dict:
     return {"ok": False, "error": msg, "log": "", "conflito": conflito}
 
 
+def _requires_on(fn):
+    """P1-1: todo writer so age com `RPG_CARD_REWARDS=on` (`shadow` mede sem tocar a ficha)."""
+    import functools
+
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        if mode() != "on":
+            return _fail("Espólio e Forja de Cartas estão desligados.", conflito=True)
+        return fn(*args, **kwargs)
+
+    return wrapper
+
+
 def _set_prepared_from_deck(player: dict) -> None:
     keep = [
         c
         for c in (player.get("prepared_cards") or [])
-        if (cards.get_card(c) or {}).get("tipo") not in _DECK_TIPOS
+        if (cards.get_card(c) or {}).get("tipo") not in _DECK_TIPOS | cards.STATUS_TIPOS
     ]
     player["prepared_cards"] = list(dict.fromkeys(list(player.get("deck") or []) + keep))
 
@@ -250,6 +263,7 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     return "acervo"
 
 
+@_requires_on
 def accept(state: dict, card_id: str | None) -> dict:
     """R1: escolhe 1 das ofertas (`card_id`) ou recusa (`None`/""): recusar paga ouro."""
     player = state.get("player") or {}
@@ -295,7 +309,7 @@ def accept(state: dict, card_id: str | None) -> dict:
 # ==========================================================================
 def on_long_rest(player: dict) -> None:
     """R4: cada descanso longo concede UMA carga de Esquecer (nao acumula alem de 1)."""
-    if mode() == "off":
+    if mode() != "on":
         return
     player["forja_esquecer"] = 1
 
@@ -339,6 +353,7 @@ def _guard_forge(state: dict) -> dict | None:
     return None
 
 
+@_requires_on
 def forget(state: dict, card_id: str, via: str) -> dict:
     """R4: tira 1 copia do BARALHO (o Acervo fica). `via`: `descanso` (1 por descanso longo)
     ou `templo` (por ouro, sem limite). Maldicao de Cicatriz so sai com Purgar."""
@@ -409,6 +424,7 @@ def sharpen_material(player: dict) -> str | None:
     return None
 
 
+@_requires_on
 def sharpen(state: dict, card_id: str) -> dict:
     """R5: Carta COMUM do Acervo vira a versao `+`, consumindo 1 material raro."""
     if (err := _guard_forge(state)) is not None:
@@ -457,7 +473,7 @@ def curse_card_for_scar(scar: dict) -> str:
 def register_scar_curse(player: dict, scar: dict) -> str | None:
     """Liga a Cicatriz a uma maldicao (Fardo) no baralho, permanente ate Purgar. Idempotente
     por `scar.id`. Com a flag `off` nao toca a ficha."""
-    if mode() == "off" or not scar.get("id"):
+    if mode() != "on" or not scar.get("id"):
         return None
     rows = list(player.get("cicatriz_cartas") or [])
     if any(r.get("scar_id") == scar["id"] for r in rows):
@@ -471,6 +487,7 @@ def register_scar_curse(player: dict, scar: dict) -> str | None:
     return cid
 
 
+@_requires_on
 def purge_curse(state: dict, scar_id: str, via: str) -> dict:
     """R8: trata a Cicatriz fora de combate — `templo` ou `medico` (Medico de Campo no
     grupo/ficha), por ouro. Tira a maldicao do baralho; a Cicatriz em si segue na ficha."""
@@ -532,7 +549,7 @@ def card_view(card_id: str) -> dict:
 
 def public_pending(player: dict) -> dict | None:
     pending = player.get("espolio_pendente")
-    if mode() == "off" or not isinstance(pending, dict) or not pending.get("ofertas"):
+    if mode() != "on" or not isinstance(pending, dict) or not pending.get("ofertas"):
         return None
     known = set(player.get("known_cards") or [])
     return {
