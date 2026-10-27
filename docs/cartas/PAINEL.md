@@ -3,7 +3,7 @@
 > Gerado por `scripts/cards/painel.py` (SPEC-336). Não edite à mão.
 
 - Cartas de jogador: **278** (meta de 12 meses: ~1200).
-- Cartas de inimigo: **40**.
+- Cartas de inimigo: **128**.
 - Meta por onda mensal: +60 de jogador e +20 de inimigo (cortes permitidos).
 
 ### Por Postura
