@@ -8,8 +8,8 @@ export function FolegoPips({ piles, state }: { piles: PilesView; state: FolegoSt
   const label = `Fôlego: ${state.free} livre${state.free === 1 ? "" : "s"} de ${piles.folego_max}` +
     (state.borrowed ? `; a fila toma ${state.borrowed} emprestado do Abismo` : "");
   return (
-    <div className="folego" role="img" aria-label={label}>
-      <span className="folego__pips" aria-hidden="true">
+    <div className="folego">
+      <span className="folego__pips" role="img" aria-label={label}>
         {Array.from({ length: Math.max(piles.folego_max, own) }, (_, i) => (
           <span key={i} className={`folego__pip${i < own ? "" : " is-empty"}${i < own && i >= state.free ? " is-reserved" : ""}`} />
         ))}
@@ -17,7 +17,7 @@ export function FolegoPips({ piles, state }: { piles: PilesView; state: FolegoSt
           <span key={`p${i}`} className={`folego__pip folego__pip--pacto${i < state.borrowed ? " is-reserved" : ""}`} />
         ))}
       </span>
-      <span className="folego__label">Fôlego</span>
+      <span className="folego__label" aria-hidden="true">Fôlego</span>
       {state.borrowed > 0 && (
         <span className="folego__warn" role="status">
           Pacto do Abismo: {state.borrowed} emprestado — custa Entropia e +1 Carga.

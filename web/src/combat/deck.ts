@@ -94,7 +94,7 @@ const fmtPct = (n: number) => `${Number.isInteger(n) ? n : n.toFixed(1).replace(
 
 /** "55 % · 4–7 de dano · pode Sangrar" — só o lado do jogador (nunca defesa oculta do alvo). */
 export function previewLine(p: PreviewResult): string {
-  const parts = [fmtPct(p.chance_acerto_pct)];
+  const parts = [(p.aproximado ? "≈ " : "") + fmtPct(p.chance_acerto_pct)];
   if (p.dano_max > 0) parts.push(p.dano_min === p.dano_max ? `${p.dano_min} de dano` : `${p.dano_min}–${p.dano_max} de dano`);
   if (p.ferimento_provavel) parts.push(`ferimento ${p.ferimento_provavel} provável`);
   if (p.efeitos_extra.includes("Sangramento")) parts.push("pode Sangrar");

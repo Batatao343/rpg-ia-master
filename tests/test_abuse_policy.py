@@ -38,6 +38,7 @@ ART = "7f1c1c0e-5d0e-4e0e-9a3e-0b0e0e0e0e0e"
         ("POST", "/game/prologue", "llm_aux"),
         ("POST", "/game/art/brief", "llm_aux"),
         ("POST", "/game/combat-simulator", "llm_aux"),
+        ("POST", "/game/combat/preview", "preview"),
         ("POST", "/game/chronicle/search", "embedding"),
         ("POST", f"/game/{GAME}/art/quote", "quote"),
         ("POST", f"/game/{GAME}/art/confirm", "quote"),

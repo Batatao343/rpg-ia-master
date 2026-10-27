@@ -440,7 +440,7 @@ export interface HandCard {
   custo_entropia: number;
   jogavel: boolean;
   /** "inimigo" pede alvo (e tem prévia); "si" resolve sem alvo. */
-  alvo?: "inimigo" | "si";
+  alvo?: "inimigo" | "aliado" | "si";
   texto?: string;
   palavras_chave?: string[];
 }
@@ -478,6 +478,8 @@ export interface PreviewResult {
   ferimento_provavel: "leve" | "grave" | "critico" | null;
   efeitos_extra: string[];
   pressagio_frustrado: boolean;
+  /** Há modificador que a prévia não resolve (passiva de gatilho, fórmula rolada). */
+  aproximado?: boolean;
 }
 
 export interface GlossaryEntry { nome: string; regra: string; sabor?: string }

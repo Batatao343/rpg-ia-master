@@ -11,18 +11,16 @@ from __future__ import annotations
 
 import copy
 import itertools
-import re
 from typing import Any
 
 import combat_mechanics as cm
 import gamedata
+from services import bestiary_knowledge as bk
 from services import card_effects as fx
 from services import cards
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 from services.conflict_resolution import resolve_attack, virtude_value
-
-_DICE_RE = re.compile(r"(\d*)d(\d+)([+-]\d+)?")
 
 
 class _Scripted:
@@ -36,48 +34,47 @@ class _Scripted:
 
 
 def exact_attack_distribution(attacker: dict, target: dict, **kw: Any) -> dict[str, float]:
-    """P(erro/acerto/critico/supercritico) exata, via ``resolve_attack`` real."""
-    advantage = int(kw.get("advantage", 0) or 0)
-    n = 3 if advantage else 2
+    """P(erro/acerto/critico/supercritico) exata, via ``resolve_attack`` real.
+
+    Sempre enumera 3 dados: o motor pode trocar o saldo de Vantagem por dentro (condições do
+    atacante, ex.: ``cego``) e o rng roteirizado só consome os dados que o caminho real pede —
+    cada desfecho do caminho de 2 dados é contado 10× igual, então a razão segue exata."""
     counts = {"erro": 0, "acerto": 0, "critico": 0, "supercritico": 0}
     total = 0
-    for dice in itertools.product(range(1, 11), repeat=n):
+    for dice in itertools.product(range(1, 11), repeat=3):
         res = resolve_attack(attacker, target, rng=_Scripted(dice), **kw)
         counts[res["resultado"]] += 1
         total += 1
     return {k: v / total for k, v in counts.items()}
 
 
-def _base_damage(card: dict | None, actor: dict) -> int:
-    """Dano-base FLAT; fórmula legada usa a média arredondada (preview não rola)."""
+def _uses_formula(card: dict | None, actor: dict) -> bool:
+    """O dano do motor (``_damage_from``) cairia na via legada que ROLA dados."""
     ef = (card or {}).get("efeito") or {}
-    if ef.get("dano_base") is not None:
-        return max(0, int(ef["dano_base"]))
-    if ef.get("categoria_arma") in ct._DANO_BASE_ARMA:
-        return ct._DANO_BASE_ARMA[ef["categoria_arma"]]
-    formula = ef.get("formula") or ((card is None) and actor.get("attack_formula"))
-    if formula:
-        m = _DICE_RE.fullmatch(str(formula).replace(" ", ""))
-        if not m:
-            return ct._DANO_BASICO_DEFAULT
-        n, faces, bonus = int(m.group(1) or 1), int(m.group(2)), int(m.group(3) or 0)
-        return max(0, (n * (faces + 1)) // 2 + bonus)
-    base = actor.get("dano_base_arma")
-    return max(0, int(base)) if base is not None else ct._DANO_BASICO_DEFAULT
+    if ef.get("dano_base") is not None or ef.get("categoria_arma") in ct._DANO_BASE_ARMA:
+        return False
+    return bool(ef.get("formula") or actor.get("attack_formula"))
 
 
 def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     """Preview de ``card_id`` (ou ataque básico se ``None``) contra ``target_id``.
 
-    Levanta ``ValueError`` com código estável: ``card_unknown``, ``target_unknown``,
-    ``not_offensive``."""
+    Levanta ``ValueError`` com código estável: ``card_unknown``, ``card_not_in_hand``,
+    ``card_not_active``, ``target_unknown``, ``not_offensive``. ``aproximado`` = há
+    modificador que a prévia não resolve (passiva de gatilho, fórmula de dano rolada)."""
     player = copy.deepcopy(state.get("player") or {})
     player.setdefault("is_player", True)
+    meta = state.get("combat") or {}
     card = None
     if card_id:
+        piles = meta.get("pilhas")
+        if isinstance(piles, dict) and card_id not in (piles.get("mao") or []):
+            raise ValueError("card_not_in_hand")
         card = cards.effective_card(player, card_id)
         if not card:
             raise ValueError("card_unknown")
+        if card.get("tipo") != "ativa":
+            raise ValueError("card_not_active")
         kind = str((card.get("efeito") or {}).get("kind") or "")
         if kind not in ct._ATTACK_EFFECTS:
             raise ValueError("not_offensive")
@@ -88,15 +85,18 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
         raise ValueError("target_unknown")
     target = copy.deepcopy(enemy)
 
-    meta = state.get("combat") or {}
-    scene = copy.deepcopy(meta.get("scene") or {})
+    scene = copy.deepcopy(meta.get("scene") or {})  # cópia: o consumo tático não vaza
     advantage = 0
     if (scene.get("positions") or {}).get("player"):
         advantage += cs.occlusion_attack_modifier(scene, "player", str(target_id))["advantage"]
     advantage += cs.guard_offense_modifier(scene, "player")
     advantage += cs.guard_defense_modifier(scene, str(target_id))
+    advantage += cs.consume_tactical_attack_modifier(scene, "player", str(target_id))
     if cm.has_control(target, "marca"):
         advantage += 1
+    aproximado = bool(cm.triggered_passives(player, "on_attack")) or bool(
+        cm.triggered_passives(player, "on_hit")
+    )
 
     step = ct.TurnStep(kind="card" if card else "attack", card_id=card_id)
     virtude_key = ct._virtude_key(card, step, player)
@@ -106,34 +106,48 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     )
     p_hit = dist["acerto"] + dist["critico"] + dist["supercritico"]
 
-    dtype = "cortante"
-    if card:
-        ef = card.get("efeito") or {}
-        dtype = ef.get("damage_type") or ef.get("tipo_dano") or dtype
-    base = _base_damage(card, player)
-    base += cm.early_game_damage_bonus(int(player.get("level", 1) or 1))
-    base = max(
-        0,
-        base
-        + int(cm.combat_modifiers(player).get("damage", 0))
-        + cm.damage_type_bonus(player, dtype),
-    )
     direct = card is None or str((card.get("efeito") or {}).get("kind") or "dano") in (
         ct._DIRECT_DAMAGE_EFFECTS
     )
-    dano_min, dano_max = (base, base * 2) if direct else (0, 0)  # acerto .. crítico
+    dano_min = dano_max = 0
+    dtype = "cortante"
+    if direct:
+        if _uses_formula(card, player):
+            aproximado = True  # `_damage_from` rolaria dados; o preview usa o dano-base padrão
+            base, dtype = ct._damage_from(
+                card and {**card, "efeito": {**(card.get("efeito") or {}), "formula": None}},
+                {k: v for k, v in player.items() if k != "attack_formula"},
+                step,
+            )
+        else:
+            base, dtype = ct._damage_from(card, player, step)  # MESMO caminho do motor
+        base += cm.early_game_damage_bonus(int(player.get("level", 1) or 1))
+        base = max(
+            0,
+            base
+            + int(cm.combat_modifiers(player).get("damage", 0))
+            + cm.damage_type_bonus(player, dtype),
+        )
+        base += fx.consume_marca_abismo(player, target, None)  # cópias; a Marca é pública
+        pct = fx.damage_pct(player, "dealt") + fx.damage_pct(target, "taken")
 
-    vit = int(target.get("vitalidade", target.get("hp", 0)) or 0)
+        def _final(mult: int) -> int:
+            raw = base * mult
+            return fx.apply_pct(raw, pct) if pct and raw > 0 else raw
+
+        dano_min, dano_max = _final(1), _final(2)  # acerto .. crítico, brutos (sem defesa do alvo)
+
+    # Ferimento só com a Virtude `corpo` que o painel público revela; senão, omitido.
     ferimento = None
-    if direct and dano_min > vit:
-        corpo = (target.get("virtudes") or {}).get("corpo", 0)
+    corpo = ((bk.public_panel(target).get("virtudes")) or {}).get("corpo")
+    vit = int(target.get("vitalidade", target.get("hp", 0)) or 0)
+    if direct and corpo is not None and dano_min > vit:
         ferimento = gamedata.categoria_ferimento(corpo, dano_min - vit)
     efeitos: list[str] = []
     if ferimento and dtype == "cortante":
         efeitos.append("Sangramento")
     if card:
-        for kw in fx.keywords(card):
-            efeitos.append(kw)
+        efeitos.extend(fx.keywords(card))
 
     pressagios = [
         p for p in (meta.get("pressagios_publicos") or []) if p.get("actor_id") == str(target_id)
@@ -148,6 +162,7 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
         "ferimento_provavel": ferimento,
         "efeitos_extra": efeitos,
         "pressagio_frustrado": frustra,
+        "aproximado": aproximado,
     }
 
 
@@ -161,7 +176,7 @@ _RESULT_LABEL = {
 
 def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
     """R6: uma linha por ataque da rodada, só com números que o motor já resolveu.
-    Ex.: ``Você · Corte Raso → Lobo · 2d10 13 + 2 = 15 vs 12 · acerto · 5 dano``."""
+    Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``."""
     names = {
         str(a.get("id") or ("player" if a.get("is_player") else "")): a.get("name") or "?"
         for a in actors
@@ -184,3 +199,12 @@ def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
             f"vs {atk.get('esquiva_alvo')} · {tail}"
         )
     return lines
+
+
+def store_mech_log(meta: dict, out: dict, actors: list[dict]) -> None:
+    """R6: grava o log mecânico da rodada. Só com o Baralho `on` (save `off` fica idêntico)."""
+    from services import card_piles
+
+    if card_piles.mode() != "on" or out.get("action_refused"):
+        return
+    meta["last_mech_log"] = mech_log(out.get("attacks") or [], actors)

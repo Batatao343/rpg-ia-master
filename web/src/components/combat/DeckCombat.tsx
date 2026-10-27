@@ -51,11 +51,11 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   const armedCard: HandCard | null = armed ? piles.mao[armed.index] ?? null : null;
   const targetsFor = (card: HandCard): string[] => {
     const known = combat.cards.find((c) => c.id === card.id)?.valid_targets;
-    return known ?? enemyIds;
+    return known ?? (card.alvo === "aliado" ? [] : enemyIds);
   };
 
   // Prévia: só com carta + alvo escolhidos; cancela a anterior (sem round-trip pendente).
-  const previewKey = armedCard && armed?.targetId ? `${armedCard.id}|${armed.targetId}` : "";
+  const previewKey = armedCard?.alvo === "inimigo" && armed?.targetId ? `${armedCard.id}|${armed.targetId}` : "";
   useEffect(() => {
     if (!previewKey || !armedCard || !armed?.targetId) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
@@ -76,10 +76,18 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     const reason = reasons[index];
     if (reason) { onAnnounce(`${card.name}: indisponível.`); return; }
     if (armed?.index === index) { setArmed(null); return; } // 2º toque desarma
+    if (card.alvo === "aliado") { playAlly(card, index); return; }
     if (card.alvo !== "inimigo") { add(card); return; }
     const targets = targetsFor(card);
     if (!targets.length) { onAnnounce(`${card.name}: sem alvo válido.`); return; }
     setArmed({ index, targetId: targets.length === 1 ? targets[0] : undefined });
+  }
+
+  function playAlly(card: HandCard, index: number) {
+    // Suporte que mira aliado: 0–1 alvo conhecido → direto; vários → escolhe (sem prévia).
+    const targets = combat.cards.find((c) => c.id === card.id)?.valid_targets ?? [];
+    if (targets.length <= 1) { add(card, targets[0]); return; }
+    setArmed({ index });
   }
 
   function add(card: HandCard, targetId?: string) {
@@ -94,11 +102,12 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   // Atalhos (R8): 1–5 cartas · Enter encerra · Esc desarma/limpa. Ignorados ao digitar ou sobre botões.
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) return;
+      if (event.defaultPrevented || busy || event.ctrlKey || event.metaKey || event.altKey || isTyping(event.target)) return;
+      if (document.querySelector("[aria-modal='true'], dialog[open]")) return; // modal aberto: o atalho não é do combate
       if (/^[1-5]$/.test(event.key)) {
         const index = Number(event.key) - 1, card = piles.mao[index];
         if (card) { event.preventDefault(); play(card, index, rootRef.current?.querySelectorAll<HTMLElement>(".deck-card")[index]); }
-      } else if (event.key === "Enter" && !(event.target as HTMLElement | null)?.closest?.("button, summary, a, [role=tab]")) {
+      } else if (event.key === "Enter" && !(event.target as HTMLElement | null)?.closest?.("button, summary, a, [role=button], [role=tab], [tabindex]")) {
         if (queue.length) { event.preventDefault(); end(); }
       } else if (event.key === "Escape") {
         if (armed) { event.preventDefault(); setArmed(null); trigger.current?.focus(); }
@@ -122,7 +131,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
               <span>Alvo:</span>
               {targetsFor(armedCard).map((id) => (
                 <button key={id} type="button" className="actionchip" data-target-pick={id}
-                  onClick={() => setArmed({ index: armed!.index, targetId: id })}>{nameOf(id) ?? id}</button>
+                  onClick={() => { if (armedCard.alvo === "aliado") add(armedCard, id); else setArmed({ index: armed!.index, targetId: id }); }}>{nameOf(id) ?? id}</button>
               ))}
             </>
           ) : (

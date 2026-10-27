@@ -46,6 +46,8 @@ test('Fôlego: o Pacto aparece como pips emprestados com o aviso do custo', asyn
   assert.doesNotMatch(none, /Pacto do Abismo:/);
   const out = html(h(FolegoPips, { piles, state: { spent: 4, free: 0, borrowed: 1, room: 2 } }));
   assert.match(out, /folego__pip--pacto is-reserved/);
+  assert.match(out, /<span class="folego__pips" role="img"[^>]*>(?:(?!<\/span><span class="folego__label).)*<\/span><span class="folego__label"/s); // aviso fora do role=img
+  assert.match(out, /role="status">Pacto do Abismo/);
   assert.match(out, /Pacto do Abismo: 1 emprestado — custa Entropia e \+1 Carga\./);
 });
 

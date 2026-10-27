@@ -585,11 +585,28 @@ def plan_plays(
 # ==========================================================================
 # Visao publica (API) - nunca a ordem do monte
 # ==========================================================================
+_ALLY_KINDS = frozenset(
+    {
+        "cura",
+        "estabilizar",
+        "protecao",
+        "buff_defesa",
+        "buff_acerto",
+        "buff_dano",
+        "reduzir_carga_aliado",
+        "purga_condicao",
+    }
+)
+
+
 def _target_kind(card: dict) -> str:
+    """`inimigo` pede alvo hostil (e tem prévia); `aliado` mira aliado/si; `si` não pede alvo."""
     from services import conflict_turn as ct
 
     kind = str((card.get("efeito") or {}).get("kind") or "")
-    return "inimigo" if kind in ct._ATTACK_EFFECTS else "si"
+    if kind in ct._ATTACK_EFFECTS:
+        return "inimigo"
+    return "aliado" if kind in _ALLY_KINDS else "si"
 
 
 def _rule_text(card: dict) -> str:

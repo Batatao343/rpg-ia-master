@@ -54,6 +54,7 @@ def test_preview_nao_altera_estado_e_nao_vaza_defesa(monkeypatch):
         "dano_max",
         "ferimento_provavel",
         "efeitos_extra",
+        "aproximado",
         "pressagio_frustrado",
     }
 
@@ -125,3 +126,58 @@ def test_pilhas_publicas_trazem_texto_e_listas_ordenadas_por_nome(monkeypatch):
         names = [r["name"].lower() for r in rows]
         assert names == sorted(names)
     assert len(view["listas"]["compra"]) == view["compra"]
+
+
+@pytest.mark.parametrize("delta", [-1, 1])
+def test_condicao_de_vantagem_do_jogador_muda_a_chance_exata(monkeypatch, delta):
+    """P1-2: o saldo vindo de condição (ex.: `cego`) é resolvido dentro de resolve_attack."""
+    state = _state(monkeypatch)
+    player, enemy = state["player"], state["enemies"][0]
+    player["active_conditions"] = [
+        {"name": "x", "stat": "advantage", "delta": delta, "duration": 2}
+    ]
+    dist = cpv.exact_attack_distribution(player, enemy, virtude_key="forca", advantage=0)
+    rng = random.Random(7)
+    n = 10_000
+    hits = sum(
+        resolve_attack(player, enemy, virtude_key="forca", advantage=0, rng=rng)["acerto"]
+        for _ in range(n)
+    )
+    assert abs(hits / n - (1 - dist["erro"])) < 0.01
+    neutro = cpv.exact_attack_distribution(
+        {**player, "active_conditions": []}, enemy, virtude_key="forca", advantage=0
+    )
+    assert (dist["erro"] > neutro["erro"]) == (delta < 0)
+
+
+def test_ferimento_nao_usa_corpo_oculto_e_valida_mao(monkeypatch):
+    state = _state(monkeypatch)
+    enemy = state["enemies"][0]
+    enemy["vitalidade"] = 1
+    enemy.setdefault("virtudes", {})["corpo"] = 0
+    out = cpv.preview(state, GOLPE, str(enemy["id"]))
+    assert out["ferimento_provavel"] is None and "Sangramento" not in out["efeitos_extra"]
+    state["combat"]["pilhas"] = {"mao": ["outra"]}
+    with pytest.raises(ValueError, match="card_not_in_hand"):
+        cpv.preview(state, GOLPE, str(enemy["id"]))
+
+
+def test_mech_log_so_com_baralho_on(monkeypatch):
+    atk = {"actor_id": "player", "target_id": "x", "dice_kept": [1, 2], "resultado": "erro"}
+    out = {"attacks": [atk]}
+    monkeypatch.setenv("RPG_CARD_DECK", "off")
+    meta: dict = {}
+    cpv.store_mech_log(meta, out, [])
+    assert meta == {}
+    monkeypatch.setenv("RPG_CARD_DECK", "on")
+    cpv.store_mech_log(meta, out, [])
+    assert len(meta["last_mech_log"]) == 1
+
+
+def test_modificador_nao_coberto_marca_aproximado(monkeypatch):
+    state = _state(monkeypatch)
+    eid = str(state["enemies"][0]["id"])
+    assert cpv.preview(state, GOLPE, eid)["aproximado"] is False
+    state["player"]["attack_formula"] = "1d6"
+    out = cpv.preview(state, None, eid)
+    assert out["aproximado"] is True

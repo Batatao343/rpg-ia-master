@@ -3799,7 +3799,13 @@ def combat_preview(req: CombatPreviewRequest, response: Response):
         result = _preview.preview(state, req.card_id, req.target_id)
     except ValueError as exc:
         code = str(exc)
-        if code not in ("card_unknown", "target_unknown", "not_offensive"):
+        if code not in (
+            "card_unknown",
+            "card_not_in_hand",
+            "card_not_active",
+            "target_unknown",
+            "not_offensive",
+        ):
             raise
         raise HTTPException(
             409,
