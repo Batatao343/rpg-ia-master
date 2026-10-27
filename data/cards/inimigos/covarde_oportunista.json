@@ -1,0 +1,157 @@
+{
+  "_meta": "SPEC-332: baralho da família covarde_oportunista (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_covarde_oportunista_golpe_pelas_costas",
+      "name": "Golpe pelas Costas",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Aproveita o instante em que o alvo olha para outro lado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_faca_suja",
+      "name": "Faca Suja",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 1,
+        "duracao": 3,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "A lâmina leva lama e coisa pior; a ferida não fecha bem.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_punhado_de_cinza",
+      "name": "Punhado de Cinza",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "Joga cinza dos bolsos e foge antes que o alvo veja.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_gritinho_de_socorro",
+      "name": "Gritinho de Socorro",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 2
+      },
+      "descricao": "Ganido agudo que faz os companheiros virarem a cabeça.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_pernas_rapidas",
+      "name": "Pernas Rápidas",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Quem corre cedo é quem corre sempre.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_encolher_na_sombra",
+      "name": "Encolher na Sombra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 2
+      },
+      "descricao": "Some entre caixotes e panos, pequeno demais para ser achado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_sujeira_nos_olhos",
+      "name": "Sujeira nos Olhos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desmoralizado",
+        "duracao": 2
+      },
+      "descricao": "Cospe e xinga, e o alvo perde a firmeza do golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_covarde_oportunista_mordida_covarde",
+      "name": "Mordida Covarde",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "covarde_oportunista",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Morde o tornozelo e recua antes do troco.",
+      "oculta": true
+    }
+  ]
+}

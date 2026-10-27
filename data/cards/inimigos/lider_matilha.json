@@ -1,0 +1,154 @@
+{
+  "_meta": "SPEC-332: baralho da família lider_matilha (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_lider_matilha_uivo_de_reuniao",
+      "name": "Uivo de Reunião",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "O uivo chama os seus e aperta a mira de todos.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_mordida_do_alfa",
+      "name": "Mordida do Alfa",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O alfa quebra osso antes de a matilha chegar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_cercar_a_presa",
+      "name": "Cercar a Presa",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 3
+      },
+      "descricao": "Chama a atenção para si enquanto os outros contornam.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_pressao_da_matilha",
+      "name": "Pressão da Matilha",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "Quanto mais perto os seus, mais fundo morde cada um.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_rosnado_de_comando",
+      "name": "Rosnado de Comando",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "O rosnado do líder faz o alvo recuar meio passo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_golpe_de_ponta",
+      "name": "Golpe de Ponta",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Ataca primeiro e abre a trilha para os outros.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_arrastar_o_ferido",
+      "name": "Arrastar o Ferido",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 2
+      },
+      "descricao": "Puxa o alvo para onde a matilha o espera.",
+      "oculta": true
+    },
+    {
+      "id": "inf_lider_matilha_rastrear_o_fraco",
+      "name": "Rastrear o Fraco",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "lider_matilha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "Fareja onde o alvo está mais frágil e avisa os seus.",
+      "oculta": true
+    }
+  ]
+}

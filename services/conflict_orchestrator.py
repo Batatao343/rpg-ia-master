@@ -32,6 +32,7 @@ from services import abyss_events, combat_flags, death_flow
 from services import card_effects as fx
 from services import conflict_scene as cs
 from services import conflict_turn as ct
+from services import enemy_decks as _edk_mod
 from services import reactions as rx
 from services import tactical_profile as tp
 from services.conflict_damage import resolve_damage_and_wounds
@@ -145,6 +146,9 @@ def ensure_combat_sheet(actor: dict, *, is_player: bool = False, is_ally: bool =
             if "bst_defesa_instintiva" not in known_ids:
                 enemy_cards.append("bst_defesa_instintiva")
             actor["cartas"] = enemy_cards
+            from services import enemy_decks as _edk  # SPEC-332 (atras de RPG_ENEMY_DECKS)
+
+            _edk.apply_deck(actor)
     gamedata.sync_legacy_hp_aliases(actor)
     return actor
 
@@ -507,6 +511,22 @@ def enemy_declaration(
     forced_attack = bool(actor.pop("_forced_attack", None))
     if forced_attack and action_key not in {"flee", "surrender"}:
         action_key = "attack"  # SPEC-275 R5: quebra de impasse — ataca.
+    # SPEC-332: padrao de intencao/assinatura. Gatilho especifico do perfil (vida baixa,
+    # alvo vulneravel...) tem precedencia: o plano so vale quando decide o `sempre`.
+    deck_plan = None
+    if (
+        _edk_mod.active()
+        and not forced_attack
+        and action_key not in {"flee", "surrender"}
+        and decision.get("trigger") in (None, "sempre")
+    ):
+        deck_plan = _edk_mod.plan(
+            actor, int(decision_state.get("_rodada_decisao") or cs.tactical_round(scene))
+        )
+        if deck_plan is not None and action_key in {"support", "flank", "protect", "stabilize"}:
+            # Perfil de apoio/flanco (lider de matilha, covarde): o padrao nao troca o carater
+            # dele por ataque; so a assinatura (a jogada memoravel) pode sobrepor.
+            deck_plan["slot"] = "mover"
     if action_key == "control" and not canonical["controle_disponivel"]:
         action_key = "attack"
     if action_key == "flank" and not canonical["sem_flanco"]:
@@ -528,6 +548,18 @@ def enemy_declaration(
 
     if target is None:
         return ct.TurnDeclaration(actor_id=actor_id, acao=ct.TurnStep(kind="pass"))
+
+    if (
+        deck_plan is not None
+        and taunted_target is None
+        and not cm.has_control(actor, "silence")
+        and actor_id in set(sides.get("enemy", []))
+    ):
+        planned = _enemy_deck_declaration(
+            scene, actor, actor_id, actors_by_id, sides, canonical, deck_plan, target
+        )
+        if planned is not None:
+            return planned
 
     tactical_target = {
         "protect": canonical["_ally_danger_target"],
@@ -680,18 +712,76 @@ def _get_card(card_id: str) -> dict | None:
     return cards.get_card(card_id)
 
 
+def _enemy_deck_declaration(
+    scene: dict,
+    actor: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    canonical: dict,
+    plan: dict,
+    target: str,
+) -> "ct.TurnDeclaration | None":
+    """SPEC-332 R3/R4: escolhe a Carta DENTRO do baralho montado conforme o padrao da
+    rodada. Assinatura primeiro (telegrafada pelo Pressagio na rodada anterior); depois o
+    tipo do padrao. ``None`` = nao ha o que fazer pelo padrao: segue o fluxo do perfil."""
+    from services import cards
+
+    rnd = int(plan.get("rnd") or 1)
+    sig = plan.get("assinatura")
+    if sig and cards.can_use_enemy_card(actor, sig, expected_type="ativa"):
+        kind = str(((_get_card(sig) or {}).get("efeito") or {}).get("kind") or "")
+        who = actor_id if kind in ct._SUPPORT_EFFECTS else target
+        return ct.TurnDeclaration(
+            actor_id=actor_id, acao=ct.TurnStep(kind="card", card_id=sig, target_id=who)
+        )
+    slot = str(plan.get("slot") or "ataque")
+    if slot in ("reforco_proprio", "defesa"):
+        choice = _enemy_support_card(
+            scene, actor, actor_id, actors_by_id, sides, canonical, "attack"
+        )
+        if choice is None:
+            return None
+        card_id, who, direction = choice
+        return ct.TurnDeclaration(
+            actor_id=actor_id,
+            acao=ct.TurnStep(kind="card", card_id=card_id, target_id=who, direction=direction),
+        )
+    if slot == "mover":
+        return None
+    from services import enemy_decks as edk
+
+    skip = {str(a["carta"]) for a in [edk.assinatura_of(actor)] if a}
+    kinds = edk.card_pool_kinds(slot)
+    card_id = _enemy_offensive_card(
+        actor, scene=scene, actor_id=actor_id, kinds=kinds, rotate=rnd, skip=skip
+    )
+    if card_id is None and slot == "enfraquecer":
+        return None  # sem controle no baralho: o perfil decide
+    step = ct.TurnStep(kind="card" if card_id else "attack", card_id=card_id, target_id=target)
+    return ct.TurnDeclaration(actor_id=actor_id, acao=step)
+
+
 def _enemy_offensive_card(
     actor: dict,
     *,
     scene: dict | None = None,
     actor_id: str = "",
     allow_hide: bool = True,
+    kinds: "frozenset[str] | None" = None,
+    rotate: int = 0,
+    skip: "set[str] | None" = None,
 ) -> str | None:
     """Primeira Carta de inimigo ofensiva utilizável (assinatura oculta da 15) —
-    só id embutido na ficha; inimigo NÃO usa o Acervo do jogador."""
+    só id embutido na ficha; inimigo NÃO usa o Acervo do jogador.
+    SPEC-332: ``kinds`` restringe aos efeitos do padrao, ``rotate`` alterna entre os
+    candidatos por rodada e ``skip`` reserva a assinatura. Sem eles, comportamento antigo."""
     from services import cards
 
+    found: list[str] = []
     for card_id in cards.enemy_card_ids(actor):
+        if skip and card_id in skip:
+            continue
         card = cards.get_card(card_id) or {}
         effect_kind = str((card.get("efeito") or {}).get("kind") or "")
         position = ((scene or {}).get("positions") or {}).get(actor_id) or {}
@@ -708,8 +798,16 @@ def _enemy_offensive_card(
         # `esconder` segue elegível (Mimetismo Morto) — mira o próprio ator (R2).
         if effect_kind not in ct._ATTACK_EFFECTS and effect_kind != "esconder":
             continue
+        if kinds is not None and effect_kind not in kinds:
+            continue
         if cards.can_use_enemy_card(actor, card_id, expected_type="ativa"):
-            return card_id
+            if not rotate:
+                return card_id
+            found.append(card_id)
+    if found:
+        from services import enemy_decks as _edk
+
+        return found[_edk.rotate_index(actor, rotate, len(found))]
     return None
 
 
@@ -2090,6 +2188,10 @@ def _run_round(
     if _scene_ctx is not None:
         _sc.tick(_scene_ctx, _scene_rnd, "inicio_rodada", out)
         _sc.abyss_clock(_scene_ctx, _scene_rnd, out)
+    # SPEC-332: fase de chefe (so `on`) ANTES do presságio; troca de fase invalida o congelado.
+    phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out)
+    if _edk_mod.mode() == "shadow":
+        out["decks_shadow"] = _edk_mod.shadow_summary(actors_by_id, sides)
     # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
     # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
     from services import enemy_intent as ei
@@ -2100,7 +2202,7 @@ def _run_round(
     if intent_mode != "off":
         frozen = (
             pressagios
-            if (intent_mode == "on" and pressagios is not None)
+            if (intent_mode == "on" and pressagios is not None and not phase_changed)
             else ei.forecast_round(scene, actors_by_id, sides, rng, scene_state=scene_state)
         )
 

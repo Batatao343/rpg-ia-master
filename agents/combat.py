@@ -2267,10 +2267,19 @@ def _combat_node(state: GameState):
         combat_meta.pop("pressagios_publicos", None)
     if _enemy_intent.active() and not combat_over and not is_simulation and not refused:
         try:
-            _next_round = _enemy_intent.forecast_round(scene, actors_by_id, sides, rng)
+            from services import enemy_decks as _enemy_decks
+
+            _exec_round = cs.tactical_round(scene) + 1  # rodada em que estas intenções valem
+            _next_round = _enemy_intent.forecast_round(
+                scene,
+                actors_by_id,
+                sides,
+                rng,
+                scene_state=({"_rodada_decisao": _exec_round} if _enemy_decks.active() else None),
+            )
             combat_meta["pressagios"] = _next_round
             combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
-                _next_round, actors_by_id
+                _next_round, actors_by_id, _exec_round
             )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")

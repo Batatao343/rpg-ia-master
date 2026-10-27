@@ -1,0 +1,154 @@
+{
+  "_meta": "SPEC-332: baralho da família guardiao (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_guardiao_muralha_de_escudo",
+      "name": "Muralha de Escudo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 7
+      },
+      "descricao": "O escudo fecha a linha, e nada passa sem pagar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_golpe_de_pomo",
+      "name": "Golpe de Pomo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O pomo da espada acerta o queixo antes da lâmina.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_barrar_o_caminho",
+      "name": "Barrar o Caminho",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 4
+      },
+      "descricao": "Planta-se no meio do caminho e chama os golpes para si.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_juramento_de_ferro",
+      "name": "Juramento de Ferro",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 2
+      },
+      "descricao": "Jurou não recuar, e o ferro responde à promessa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_estocada_firme",
+      "name": "Estocada Firme",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Um único golpe medido, sem pressa e sem desvio.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_empurrar_a_linha",
+      "name": "Empurrar a Linha",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 2
+      },
+      "descricao": "Avança o escudo e faz o alvo pisar para trás.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_olhar_de_sentinela",
+      "name": "Olhar de Sentinela",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "exposto",
+        "duracao": 2
+      },
+      "descricao": "Nada lhe escapa; a falha do alvo vira alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_guardiao_pulso_da_vigilia",
+      "name": "Pulso da Vigília",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "guardiao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Um pulso de ferro renova a guarda de quem está ao lado.",
+      "oculta": true
+    }
+  ]
+}

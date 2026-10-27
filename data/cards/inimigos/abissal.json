@@ -1,0 +1,158 @@
+{
+  "_meta": "SPEC-332: baralho da família abissal (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_abissal_toque_do_abismo",
+      "name": "Toque do Abismo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "abissal"
+      },
+      "descricao": "A mão do Abismo atravessa o corpo e leva algo junto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_fenda_sob_os_pes",
+      "name": "Fenda sob os Pés",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "O chão se abre num sorriso escuro e prende quem pisa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_sussurro_sem_boca",
+      "name": "Sussurro sem Boca",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Uma voz sem origem diz coisas que o alvo já temia.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_sede_de_entropia",
+      "name": "Sede de Entropia",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "O Abismo escolhe o alvo e não o larga mais.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_veu_de_cinza",
+      "name": "Véu de Cinza",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "descricao": "A cinza gira em torno do corpo e engole o golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_dissolver",
+      "name": "Dissolver",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "abissal"
+      },
+      "descricao": "A carne se desfaz devagar, como cera ao lado do fogo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_rachar_a_realidade",
+      "name": "Rachar a Realidade",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "abissal"
+      },
+      "descricao": "O ar racha, e o que vem de dentro não é deste mundo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_abissal_silencio_do_vazio",
+      "name": "Silêncio do Vazio",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "abissal",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "silenciado",
+        "duracao": 1
+      },
+      "descricao": "O vazio traga o som, e a palavra não chega ao fim.",
+      "oculta": true
+    }
+  ]
+}

@@ -334,7 +334,9 @@ def test_loader_traversal_matches_lint_and_keeps_323_cards():
     from services import cards
 
     ids = {c["id"] for c in card_lint.load_pool()}
-    assert set(cards.all_cards()) == ids and len(ids) == 323
+    assert set(cards.all_cards()) == ids
+    # SPEC-332: os 88 baralhos de familia de inimigo (`cartas-332`) vieram depois das 323.
+    assert len({i for i in ids if not i.startswith("inf_")}) == 323
 
 
 def test_auto_resolved_choices_marked_source_auto(monkeypatch):

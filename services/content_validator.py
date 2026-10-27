@@ -752,7 +752,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             last_version[cid0] = max(ver, last_version.get(cid0, 0))
             if c.get("onda") is not None:
                 wave_cards.append(c)  # SPEC-336: lint pleno (voz, color pie, duplicata, onda)
-            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328"):
+            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328", "cartas-332"):
                 if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
                     budget = fx.budget_error(fx.materialize(c))
                     if budget:

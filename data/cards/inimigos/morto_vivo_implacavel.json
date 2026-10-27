@@ -1,0 +1,156 @@
+{
+  "_meta": "SPEC-332: baralho da família morto_vivo_implacavel (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_morto_vivo_implacavel_abraco_da_cova",
+      "name": "Abraço da Cova",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Braços sem pulso fecham como terra molhada sobre um caixão.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_toque_de_podridao",
+      "name": "Toque de Podridão",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 1,
+        "duracao": 4,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "A carne apodrecida do morto passa para o vivo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_lamento_dos_sem_nome",
+      "name": "Lamento dos Sem Nome",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Um gemido sem fôlego, de quem nunca teve túmulo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_passo_sem_pressa",
+      "name": "Passo sem Pressa",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 2
+      },
+      "descricao": "Não corre; chega, porque o tempo está a seu favor.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_ossos_que_nao_caem",
+      "name": "Ossos que Não Caem",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "descricao": "Os ossos se juntam de novo antes de o golpe terminar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_frio_de_sepultura",
+      "name": "Frio de Sepultura",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "O frio da cova sobe pelo braço e rouba a força.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_agarrar_e_puxar",
+      "name": "Agarrar e Puxar",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 1
+      },
+      "descricao": "Dedos de osso se prendem no tornozelo e não largam.",
+      "oculta": true
+    },
+    {
+      "id": "inf_morto_vivo_implacavel_fome_dos_mortos",
+      "name": "Fome dos Mortos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "morto_vivo_implacavel",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 1
+      },
+      "descricao": "Os mortos não comem, mas o vazio por dentro pede.",
+      "oculta": true
+    }
+  ]
+}

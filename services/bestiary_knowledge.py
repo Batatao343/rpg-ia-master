@@ -44,6 +44,11 @@ def public_panel(enemy: dict) -> dict:
     for f in _PUBLIC_FIELDS:
         if f in enemy:
             panel[f] = enemy[f]
+    from services import enemy_decks as _edk  # SPEC-332 R6: padrão conhecido ("costuma: ...")
+
+    costuma = _edk.padrao_publico(enemy)
+    if costuma:
+        panel["costuma"] = costuma
     # armadura expõe só Proteção/Integridade, nunca resist_tipos ocultos
     armor = enemy.get("armor") or {}
     if armor:

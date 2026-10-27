@@ -1,0 +1,158 @@
+{
+  "_meta": "SPEC-332: baralho da família conjurador (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_conjurador_raio_de_eter",
+      "name": "Raio de Éter",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "arcano"
+      },
+      "descricao": "O éter se dobra em feixe e rasga o ar até o alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_nevoa_sufocante",
+      "name": "Névoa Sufocante",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 2
+      },
+      "descricao": "Uma névoa cinzenta engole o rosto do alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_grilhoes_de_sombra",
+      "name": "Grilhões de Sombra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "A sombra do alvo se agarra ao chão e não solta.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_sussurro_do_abismo",
+      "name": "Sussurro do Abismo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Uma voz sem boca diz o nome do alvo, e todos ouvem.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_escudo_de_cinzas",
+      "name": "Escudo de Cinzas",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Cinzas giram em torno do conjurador e amortecem o golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_brasa_viva",
+      "name": "Brasa Viva",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "Uma brasa gruda na pele e continua a arder.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_silencio_forcado",
+      "name": "Silêncio Forçado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "silenciado",
+        "duracao": 1
+      },
+      "descricao": "A palavra morre na garganta de quem a tentava dizer.",
+      "oculta": true
+    },
+    {
+      "id": "inf_conjurador_pulso_de_fenda",
+      "name": "Pulso de Fenda",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "conjurador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "arcano"
+      },
+      "descricao": "Uma fenda abre e fecha ao lado do alvo, arrancando-lhe o fôlego.",
+      "oculta": true
+    }
+  ]
+}

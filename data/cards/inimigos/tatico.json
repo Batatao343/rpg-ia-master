@@ -1,0 +1,156 @@
+{
+  "_meta": "SPEC-332: baralho da família tatico (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_tatico_corte_calculado",
+      "name": "Corte Calculado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Nada de ferocidade; cada corte tem ponto e razão.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_ordem_de_flanco",
+      "name": "Ordem de Flanco",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Um assobio curto manda os seus para as costas do alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_finta_e_golpe",
+      "name": "Finta e Golpe",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Finge o golpe alto e entra baixo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_apontar_a_falha",
+      "name": "Apontar a Falha",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "Aponta a brecha, e os companheiros acertam onde importa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_cobertura_cerrada",
+      "name": "Cobertura Cerrada",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "Fecha fileira com quem está ao lado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_rede_de_cordas",
+      "name": "Rede de Cordas",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Cordas lançadas dos dois lados prendem as pernas do alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_golpe_de_oportunidade",
+      "name": "Golpe de Oportunidade",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Se a guarda abre um dedo, a lâmina entra.",
+      "oculta": true
+    },
+    {
+      "id": "inf_tatico_grito_de_comando",
+      "name": "Grito de Comando",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "tatico",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 1
+      },
+      "descricao": "Uma ordem seca, e todos miram melhor.",
+      "oculta": true
+    }
+  ]
+}

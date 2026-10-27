@@ -285,17 +285,25 @@ def public_intent(
     return view
 
 
-def public_round(frozen: dict[str, list[dict]], actors_by_id: dict[str, dict]) -> list[dict]:
-    """Lista pública (uma linha por ação, ordem dos inimigos) para `combat.pressagios_publicos`."""
+def public_round(
+    frozen: dict[str, list[dict]], actors_by_id: dict[str, dict], rnd: int | None = None
+) -> list[dict]:
+    """Lista pública (uma linha por ação, ordem dos inimigos) para `combat.pressagios_publicos`.
+    SPEC-332 (`RPG_ENEMY_DECKS=on`, com `rnd` = rodada em que estas intenções valem): a primeira
+    linha do inimigo ganha `prenuncio` quando a assinatura dele cai na rodada SEGUINTE."""
+    from services import enemy_decks as edk
+
     rows: list[dict] = []
     for aid, intents in frozen.items():
         enemy = actors_by_id.get(aid) or {"id": aid}
-        for it in intents:
-            rows.append(
-                public_intent(
-                    it, knowledge_level(enemy, it.get("carta_id")), actors_by_id=actors_by_id
-                )
+        warn = edk.prenuncio(enemy, rnd) if (edk.active() and rnd is not None) else None
+        for i, it in enumerate(intents):
+            row = public_intent(
+                it, knowledge_level(enemy, it.get("carta_id")), actors_by_id=actors_by_id
             )
+            if warn and i == 0:
+                row["prenuncio"] = warn
+            rows.append(row)
     return rows
 
 

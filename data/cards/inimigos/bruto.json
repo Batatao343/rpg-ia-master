@@ -1,0 +1,157 @@
+{
+  "_meta": "SPEC-332: baralho da família bruto (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_bruto_pancada_de_tronco",
+      "name": "Pancada de Tronco",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O braço desce como tronco caído, sem aviso nem arte.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_investida_cega",
+      "name": "Investida Cega",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Baixa a cabeça e corre contra o que estiver na frente.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_empurrao_de_ombro",
+      "name": "Empurrão de Ombro",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "O ombro arremessa o alvo longe como saco de grão.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_rugido_de_guerra",
+      "name": "Rugido de Guerra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Um urro que ressoa nas pedras e quebra a coragem.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_pele_de_couro",
+      "name": "Pele de Couro",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "A pele grossa de cicatrizes antigas apara o golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_furia_acumulada",
+      "name": "Fúria Acumulada",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "Cada ferida só atiça a raiva, e o próximo golpe vem mais forte.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_mao_que_esmaga",
+      "name": "Mão que Esmaga",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desarmado_risco",
+        "duracao": 2
+      },
+      "descricao": "Fecha a mão sobre o punho do alvo até soltar a arma.",
+      "oculta": true
+    },
+    {
+      "id": "inf_bruto_soco_de_ruina",
+      "name": "Soco de Ruína",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bruto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 9,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O punho cai como pedra de muralha em ruína.",
+      "oculta": true
+    }
+  ]
+}

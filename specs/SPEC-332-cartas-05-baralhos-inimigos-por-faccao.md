@@ -1,6 +1,6 @@
 # SPEC-332 — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (dono aprovou 2026-10-27; motor + 11 famílias entregues, facções e chefes = próximo lote)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-329 (presságio), SPEC-330 (gramática), SPEC-283 (IA usa cartas de suporte)
@@ -52,9 +52,30 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 3. Conteúdo em 3 lotes (famílias → facções → chefes), cada lote validado + arena por família (taxa de vitória do jogador por família entre 45–85 % no nível-alvo).
 
 ## 5. Critérios de aceite
-- [ ] Nenhuma carta de inimigo usada por > 15 criaturas
-- [ ] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem
-- [ ] Arena por família dentro da faixa; `uv run pytest` verde
+- [~] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim; legadas: ver desvio)
+- [~] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (famílias: sim; facções: próximo lote)
+- [~] Arena por família dentro da faixa (medida; 2 células-família fora, `off` já fora em vários nichos); pytest do escopo verde
+
+### Entrega 1 (27/10, branch spec-332) e desvios
+
+- **Feito:** motor `services/enemy_decks.py` atrás de `RPG_ENEMY_DECKS=off|shadow|on` (default `off`, byte-idêntico);
+  R1 (11 famílias x 8 cartas, `data/cards/inimigos/<familia>.json`, origem `cartas-332`, classe `Inimigo`,
+  `_decks.json` com `padrao` + 2 `assinaturas` por família); R3 (próprias + 3-5 família + 0-3 facção por hash de
+  `id`+seed, aplicado em `ensure_combat_sheet`); R4 (`padrao`/`assinatura` em `tactical_profile` ou default da família;
+  gatilho do perfil que não é `sempre` tem precedência; perfil de apoio/flanco só recebe a assinatura; assinatura
+  com `desvio` por criatura e nunca antes da rodada 2; `prenuncio` no Presságio da 329 = 1 rodada antes, campo
+  `prenuncio` em `pressagios_publicos`); R5 motor de fases (`fases` no perfil: `baralho_extra`, `padrao`,
+  `assinatura`, `narracao`; troca narrada em `out.logs`, invalida o presságio congelado); R6 `costuma:` no painel
+  público quando `revealed_cards` existe (mesmo `bestiary_knowledge`).
+- **Desvio R7:** não criei faixa de orçamento própria de inimigo; as cartas são `patamar: inicial` e passam na
+  faixa `comum` existente (teste `test_new_enemy_cards_pass_vocabulary_budget_and_voice`).
+- **Desvio critério 1:** "nenhuma carta usada por > 15 criaturas" vale para as cartas NOVAS (`inf_*`, testado). As
+  legadas `bst_bote_certeiro` (21) e `bst_toque_gelido` (15) continuam nas criaturas do `bestiary.json` (mexer lá
+  mudaria o `off`): curadoria do bestiário = próximo lote.
+- **Desvio fora de escopo:** nenhuma carta/fase chama reforço (descartado pelo dono na 325 D; teste cobre).
+- **Pendente (próximo lote):** R2 facções (`faccao_<id>.json`: o pool já é lido de `data/cards/inimigos/faccao_*.json`
+  e `faccoes` em `_decks.json` está vazio), `fases` autoradas nos 11 chefes/54 elites, `abissal` sem criatura no
+  bestiário, calibragem de `lider_matilha`/`bruto` (arena: `docs/spec332/arena-results-2026-10-27.md`) antes de `on`.
 
 ## 6. Smoke real
 1. Lutar contra a Legião de Ferro: presságio de assinatura 1 rodada antes. 2. Segundo encontro com a família: padrão visível. 3. Chefe muda de fase com narração.

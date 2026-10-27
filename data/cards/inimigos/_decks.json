@@ -1,0 +1,219 @@
+{
+  "_meta": "SPEC-332: padrão de intenção e assinatura por família. telegrafo = frase do Presságio 1 rodada antes. Facções: próximo lote.",
+  "familias": {
+    "predador": {
+      "padrao": [
+        "ataque",
+        "ataque",
+        "enfraquecer"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_predador_salto_presa",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} encolhe o corpo, os músculos tremendo como corda esticada."
+        },
+        {
+          "carta": "inf_predador_rasgo_aberto",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} range as garras no chão, escolhendo onde cortar."
+        }
+      ]
+    },
+    "covarde_oportunista": {
+      "padrao": [
+        "ataque",
+        "enfraquecer",
+        "mover"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_covarde_oportunista_golpe_pelas_costas",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} some do canto do olho e reaparece atrás de alguém."
+        },
+        {
+          "carta": "inf_covarde_oportunista_faca_suja",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} esfrega a lâmina na lama e sorri de lado."
+        }
+      ]
+    },
+    "conjurador": {
+      "padrao": [
+        "enfraquecer",
+        "ataque",
+        "reforco_proprio"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_conjurador_pulso_de_fenda",
+          "a_cada_n": 4,
+          "telegrafo": "{nome} traça no ar uma figura que sangra luz."
+        },
+        {
+          "carta": "inf_conjurador_raio_de_eter",
+          "a_cada_n": 4,
+          "telegrafo": "O éter vibra em torno de {nome}, pronto a descer sobre alguém."
+        }
+      ]
+    },
+    "morto_vivo_implacavel": {
+      "padrao": [
+        "ataque",
+        "ataque",
+        "ataque",
+        "reforco_proprio"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_morto_vivo_implacavel_abraco_da_cova",
+          "a_cada_n": 4,
+          "telegrafo": "{nome} estende os braços e o frio da cova vem junto."
+        },
+        {
+          "carta": "inf_morto_vivo_implacavel_toque_de_podridao",
+          "a_cada_n": 4,
+          "telegrafo": "Um ar rançoso rodeia {nome}, lento e certo."
+        }
+      ]
+    },
+    "bruto": {
+      "padrao": [
+        "ataque",
+        "ataque",
+        "reforco_proprio"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_bruto_pancada_de_tronco",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} ergue os dois punhos acima da cabeça e respira fundo."
+        },
+        {
+          "carta": "inf_bruto_soco_de_ruina",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} recua um passo e arma o ombro, a terra tremendo sob ele."
+        }
+      ]
+    },
+    "guardiao": {
+      "padrao": [
+        "defesa",
+        "ataque",
+        "ataque"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_guardiao_estocada_firme",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} firma o escudo e leva a lâmina à altura dos olhos."
+        },
+        {
+          "carta": "inf_guardiao_golpe_de_pomo",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} gira o pomo da espada, medindo o queixo de alguém."
+        }
+      ]
+    },
+    "predador_apice": {
+      "padrao": [
+        "ataque",
+        "enfraquecer",
+        "ataque",
+        "ataque"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_predador_apice_sentenca_do_apice",
+          "a_cada_n": 5,
+          "telegrafo": "{nome} abaixa o corpo; o chão parece prender a respiração."
+        },
+        {
+          "carta": "inf_predador_apice_dilacerar",
+          "a_cada_n": 5,
+          "telegrafo": "{nome} abre as garras devagar, uma a uma, olhando para alguém."
+        }
+      ]
+    },
+    "tatico": {
+      "padrao": [
+        "enfraquecer",
+        "ataque",
+        "reforco_proprio",
+        "ataque"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_tatico_finta_e_golpe",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} desloca o peso para trás, como quem prepara a finta."
+        },
+        {
+          "carta": "inf_tatico_corte_calculado",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} estuda a guarda de alguém sem piscar."
+        }
+      ]
+    },
+    "lider_matilha": {
+      "padrao": [
+        "ataque",
+        "reforco_proprio",
+        "ataque",
+        "enfraquecer"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_lider_matilha_uivo_de_reuniao",
+          "a_cada_n": 4,
+          "telegrafo": "{nome} ergue o focinho e enche o peito para um uivo."
+        },
+        {
+          "carta": "inf_lider_matilha_mordida_do_alfa",
+          "a_cada_n": 4,
+          "telegrafo": "{nome} avança devagar, dentes à mostra, escolhendo o primeiro osso."
+        }
+      ]
+    },
+    "emboscador": {
+      "padrao": [
+        "enfraquecer",
+        "ataque",
+        "mover"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_emboscador_golpe_da_tocaia",
+          "a_cada_n": 3,
+          "telegrafo": "Um brilho curto nas sombras: {nome} já escolheu onde ferir."
+        },
+        {
+          "carta": "inf_emboscador_lamina_de_sombra",
+          "a_cada_n": 3,
+          "telegrafo": "{nome} se funde um pouco mais ao escuro, sem ruído."
+        }
+      ]
+    },
+    "abissal": {
+      "padrao": [
+        "enfraquecer",
+        "ataque",
+        "ataque"
+      ],
+      "assinaturas": [
+        {
+          "carta": "inf_abissal_toque_do_abismo",
+          "a_cada_n": 3,
+          "telegrafo": "A sombra de {nome} se alonga além do corpo, buscando alguém."
+        },
+        {
+          "carta": "inf_abissal_rachar_a_realidade",
+          "a_cada_n": 3,
+          "telegrafo": "O ar em torno de {nome} range como vidro antes de quebrar."
+        }
+      ]
+    }
+  },
+  "faccoes": {}
+}

@@ -124,11 +124,12 @@ def run_card_full(card: dict) -> dict:
 def legacy_cards() -> dict:
     from services import cards
 
-    # As básicas da SPEC-328 (origem `cartas-328`) chegaram depois do golden.
+    # Cartas que chegaram depois do golden: básicas da SPEC-328 (`cartas-328`) e baralhos de
+    # inimigo da SPEC-332 (`cartas-332`).
     return {
         cid: c
         for cid, c in cards.all_cards().items()
-        if "efeitos" not in c and c.get("origem") != "cartas-328"
+        if "efeitos" not in c and c.get("origem") not in ("cartas-328", "cartas-332")
     }
 
 

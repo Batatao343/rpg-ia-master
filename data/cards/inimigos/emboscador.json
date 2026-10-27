@@ -1,0 +1,156 @@
+{
+  "_meta": "SPEC-332: baralho da família emboscador (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_emboscador_golpe_da_tocaia",
+      "name": "Golpe da Tocaia",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Esperou imóvel por horas; o golpe dura um suspiro.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_sumir_na_poeira",
+      "name": "Sumir na Poeira",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 3
+      },
+      "descricao": "Some no chão e no vento como se nunca tivesse estado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_dardo_sonolento",
+      "name": "Dardo Sonolento",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "Um dardo fino, e o braço do alvo pesa como chumbo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_laco_no_tornozelo",
+      "name": "Laço no Tornozelo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Um laço escondido se fecha no tornozelo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_visao_de_falha",
+      "name": "Visão de Falha",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "Observou por tanto tempo que sabe onde o alvo vai ceder.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_lamina_de_sombra",
+      "name": "Lâmina de Sombra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Sai do escuro e volta para ele antes da resposta.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_areia_nos_olhos",
+      "name": "Areia nos Olhos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "Um punhado de areia, e o mundo some por um instante.",
+      "oculta": true
+    },
+    {
+      "id": "inf_emboscador_recuar_para_o_nada",
+      "name": "Recuar para o Nada",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "emboscador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Dois passos para trás, e o escuro o engole.",
+      "oculta": true
+    }
+  ]
+}
