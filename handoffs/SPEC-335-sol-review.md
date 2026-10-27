@@ -1,5 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
+> **Veredito Lote 4 (Corruptor, `25b00b3f`):** `CHANGES_REQUIRED` (1 P1: `revelar vitalidade` inerte, também no Lote 2; 4 P2)
 > **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
 > **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
 > **Veredito Lotes 0–1 (`565b0d0b`):** `APPROVED_WITH_FOLLOWUPS` (histórico abaixo, inalterado)
@@ -8,6 +9,89 @@
 > Nota de nome: o coordenador pediu `handoffs/SPEC-335-sol-review-lote2.md`, mas esse nome
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
+
+# Lote 4 — Corruptor (`main...25b00b3f`)
+
+> **Veredito:** `CHANGES_REQUIRED` (1 P1, 4 P2). A correção é pequena: um campo de uma Carta,
+> mais a mesma correção numa Carta do Lote 2 que já está na `main`.
+
+## Escopo
+
+Commit `25b00b3f`, sobre a `main` com os Lotes 1–3. Entram as 3
+`data/cards/posturas/corruptor_{alma,biologia,inorganica}.json` (36 `cor1_*`), os 4 arquivos
+legados com `momento`, `_ondas.yaml`, `docs/spec335/` (relatório, script e 4 JSON), a spec e
+`tests/test_card_acervo_reparo.py`. Nada em `evals/`, `services/` ou `sim.py`.
+
+## Conferido
+
+- **Legadas e golden da 330: OK.** Comparei `main` e HEAD em `exemplos`, `exemplos_extra`,
+  `corruptor` e `tiers_5_plus`. Mudaram 53 Cartas, só em `momento`/`momento_placeholder`.
+  Golden e snapshot passam.
+- **Motor real, as 36 Cartas** (`ct.resolve_turn`):
+  - Rachadura, Torpor, Marca do Abismo (com Vantagem pelo controle `marca`) e os DoTs aparecem
+    no alvo.
+  - As condições `amedrontado`/`medo` → `fear` (−2 de acerto), `enraizado` → `root`,
+    `silenciado` → `silence` (bloqueia Carta em `conflict_turn.py:405`), `desmoralizado`,
+    `exposto` e `desarmado_risco` têm efeito mecânico.
+  - O dano condicional (`se alvo_tem desmoralizado/rachadura`) vem sempre com dano
+    incondicional.
+  - O Chamado 3/4 só dispara com Entropia suficiente.
+  - Toda `escala` está em efeito extra e vale: Colheita Podre conta a condição nova, 1 → 2.
+  - Não há Eco nem Provocar, e as 3 reações têm `gatilho`.
+  - `revelar cartas` e `revelar resistencias` gravam no bestiário (`_persist_revelation`) e
+    aparecem no painel (`revealed_cards`/`revealed_resistances`).
+  - **Exceção: `revelar vitalidade` (P1-1).**
+- **`guardar` no motor: funciona, mas só com o baralho `on`.** Com `RPG_CARD_DECK=on`,
+  `card_deck_round.end_round` chama `mark_guardadas`. Testei direto: mão [Ponto Fraco, Sussurro
+  Rouco] → `discard_hand` mantém só Ponto Fraco. Com o baralho `off`, que é o padrão hoje,
+  `guardar` não faz nada, e Ponto Fraco e Ler o Metal ficam diferentes das irmãs só no custo
+  (P2-3).
+- **Regra da Marca do Abismo com dano:** nenhuma Carta do lote junta Marca e `dano` no mesmo
+  efeito, e na prática a regra se cumpre. O teste, porém, olha a ordem da lista, não a ordem em
+  que o motor resolve (P2-2).
+- **Reações com Fôlego 0:** a única do catálogo inteiro (49 reações) é `cor1_bio_pele_podre`
+  (P2-1).
+- **Orçamento e raridade: OK** (20/10/4/2). O teste exige lint sem aviso, e nenhum nome nem id
+  colide nos 640 objetos nomeados.
+- **Voz:** a onda tem `aprovada`, `revisor_voz: dono` e a `nota_voz` "sem leitura".
+  `validate_content` dá 0 erros e 0 avisos.
+- **Arena reproduzível:** rodei `--protocolo lote` de novo em `corruptor_biologia.json`, e o
+  JSON saiu idêntico. Nenhum delta passa de +8 pp; Banquete de Vermes foi de +7,5 para −1,2 pp
+  com 320 lutas. As bandeiras de uso (4 `dominante` e 1 `em_branco`) são artefato do bot, como
+  nos lotes anteriores.
+
+## Achados
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P1-1 | P1 | `data/cards/posturas/corruptor_biologia.json:115` (`cor1_bio_ler_a_carne`); **também** `data/cards/posturas/sangromante_silencioso.json:118` (`san1_sil_olho_no_pulso`, Lote 2, já na `main`) | **`revelar vitalidade` não faz nada.** A Vitalidade do inimigo já é pública: `bestiary_knowledge._PUBLIC_FIELDS` traz `vitalidade`/`max_vitalidade`, e `api.py:2854` sempre a envia ao painel. O efeito só grava `_revelado`, que ninguém lê, e `_persist_revelation` ignora o campo. As duas Cartas, que só fazem isso, são Cartas em branco. Deixei passar no Lote 2. | Trocar o `campo` (`resistencias` ou `cartas`, diferenciando da irmã por custo ou `guardar`) ou dar um efeito real. No catálogo, tirar `vitalidade` de `REVELAR_CAMPOS` ou fazer o lint recusar, com teste. Conferir também `intencao`: o presságio já é visível (329), e nenhuma Carta o usa hoje. |
+| P2-1 | P2 | `corruptor_biologia.json` (`cor1_bio_pele_podre`) | É a única reação de Fôlego 0 entre as 49 do catálogo. A R12 da 328 diz "Guardar Fôlego para reagir é uma escolha real", e `can_pay` aceita a Carta com 0 de Fôlego sobrando. Ela escapa dessa troca; o único freio é 2 de Entropia e `turno`. | `custo_folego: 1`, baixando a Entropia para 1 se o orçamento pedir. Lint na 336: `reacao` exige Fôlego ≥ 1. |
+| P2-2 | P2 | `tests/test_card_acervo_reparo.py` (`test_lote4_licoes…`) | A regra "sem dano depois da Marca" olha a ordem da **lista**, mas o motor resolve primeiro o efeito principal (`fx.primary_index`: o primeiro `ao_jogar` incondicional de kind legado) e depois os extras. `[dano (com se), marca]` passa no teste e consome a Marca (a principal vira a Marca, e o dano condicional vem depois). `[marca, dano]` é recusado, mas é seguro (o dano é o principal). | Montar a ordem real, `[primary_effect] + extra_effects`, e checar `dano` depois da `marca_do_abismo` nela. De preferência como regra do `card_lint`, que vale para todos os lotes. |
+| P2-3 | P2 | `corruptor_inorganica.json` (`ponto_fraco`, `ler_o_metal`) | A diferença para as irmãs vem de `guardar`, que só funciona com o baralho `on`. Com o padrão `off` de hoje, sobra só a diferença de custo. | Nada no lote. Registrar na 336/R6 (`test_card_variety`) que a variedade não pode depender só de palavra-chave de pilha. |
+| P2-4 | P2 | `corruptor_alma.json` (`nome_apagado`, `semente_de_culpa`) | "vira a marca de **todos** os golpes": a Marca do Abismo dá Vantagem por 3 rodadas, mas o bônus de dano e a Entropia só valem no **próximo** dano e então a Marca some. | Ajustar a `descricao` de Nome Apagado. A de Semente de Culpa ("o próximo golpe pesa mais") está correta. |
+
+`armadura_comprometida` sem label continua como follow-up, já registrado pelo executor.
+
+## Pendências
+
+- P1-1 (as duas Cartas, mais a regra de `REVELAR_CAMPOS`/lint) e P2-1: executor, nesta
+  branch, antes do pouso.
+- P2-2: executor (teste) ou 336 (`card_lint`).
+- P2-3 e P2-4: opcionais (336 e texto).
+
+## Comandos rodados (Lote 4)
+
+```text
+scratchpad/sol3_cmp.py (main × HEAD, 4 legados) → 53 Cartas, só momento/momento_placeholder
+scratchpad/sol3_play.py (36 cor1_* por ct.resolve_turn + render_card_text) → só revelar vitalidade inerte
+grep _PUBLIC_FIELDS / api.py:2854 / _persist_revelation → vitalidade sempre pública; _revelado sem leitor
+card_piles: mark_guardadas + discard_hand (mão [ponto_fraco, sussurro_rouco]) → mantém só ponto_fraco
+card_piles.can_pay(pele_podre, folego=0) → ok=True; reações com Fôlego 0 no catálogo: 1 de 49
+sim.py --lote data/cards/posturas/corruptor_biologia.json --protocolo lote --out <scratchpad> → idêntico a sim-lote4-biologia.json
+scratchpad/sol4_names.py (640 objetos nomeados) → 0 colisões
+pytest -q -n 2 test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_card_sim, test_mecanica_orfa, test_handoff_names, test_card_piles → exit 0
+scripts/validate_content.py → 0 erros, 0 avisos
+```
 
 # Lote 3 — Devoto do Abismo (`main...8874f777`)
 
