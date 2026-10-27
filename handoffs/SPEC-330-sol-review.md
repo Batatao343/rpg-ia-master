@@ -1,7 +1,7 @@
 # SPEC-330 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `87716758`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
+> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `b3e4d3c0` (1ª rodada: `87716758`)
 
 ## Escopo
 
@@ -49,15 +49,50 @@ O que está correto:
 | P2-6 | P2 | `services/card_effects.py:720` | O extra `dano` chama `_check_terminal` sem `nonlethal`: golpe declarado não-letal (SPEC-325) com dano extra pode matar. | Propagar o modo não-letal da declaração, ou documentar. |
 | P2-7 | P2 | `services/card_effects.py:1401-1404` | O argumento de `alvo_tem`/`eu_tenho` aceita qualquer texto, sem passar pelo catálogo de condições. É o vocabulário de R2 parcialmente aberto. | Validar contra `NAMED_CONDITIONS` + controles + palavras-chave. |
 
+
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche, um commit por item)
+Tudo em `b3e4d3c0`. Re-revisão do delta `96054968..b3e4d3c0`:
+
+- **P1-1 — ok.** Agora há `has_fallen` (queda real, sem atordoamento). Em `interrupt`, o
+  atordoamento só interrompe se for a 1ª ação (cursor == 0). Em `_enemy_decl` (`on`), um intent
+  com `interrompido_por` vira frustrado e não age (nunca aparece nos dois). Na ação extra de
+  quem caiu, o intent interrompido é registrado como frustrado.
+  Testes: `test_atordoar_depois_da_1a_acao_do_chefe_nao_interrompe`,
+  `test_atordoar_antes_da_1a_acao_interrompe_uma_vez`,
+  `test_queda_real_depois_da_1a_acao_interrompe_a_extra`, `test_presagio_interrompido_nunca_se_cumpre`.
+- **P1-2 — ok.** `fallen_before` é medido antes de `ct.resolve_turn`. `ao_derrubar` dispara
+  para quem caiu no turno (golpe, extra ou gatilho) e atordoar não conta. Teste parametrizado
+  com 7 categorias (lacaio, padrão, elite, chefe, nomeado, companheiro, jogador) + `test_atordoar_nao_e_derrubar`.
+- **P2-1 — ok.** `_targets_for`: hostil sem `alvo` só usa `target_id` se ele for oponente;
+  senão cai no 1º oponente. Teste dedicado.
+- **P2-2 — ok.** `test_caminho_de_erro_nao_roda_extras_mas_arma_e_registra`.
+- **P2-3 — ok.** `fx.on_damage` centraliza `ao_receber_dano`/`ao_aliado_sofrer`: golpe
+  (`_hit_events`), dano extra/de gatilho (`_apply_on`) e DoT (`_tick_conditions_v4` → `_fx_damage`).
+  Não conta duas vezes, porque o extra vai para `extra_hits` e não para `attacks`, que é o que
+  `_hit_events` lê. O teste de laço ficou sem patch (eco real pelo motor) e continua `[1, 2, 3]`
+  com o 4º descartado. Todo disparo aninhado entra na fila com profundidade +1, então nenhum
+  caminho escapa do teto 3. As Cartas legadas não armam gatilho e não há passiva legada com
+  `quando`, logo o efeito é no-op. O golden das 308 segue idêntico (fixture intocada no delta,
+  teste de equivalência verde).
+- **P2-6 — ok.** `Ctx.nonlethal`/`nonlethal_actor` são ligados durante o `resolve_turn` do ator
+  (e limpos no `finally`); o dano extra repassa `nonlethal` ao `_check_terminal`.
+  Teste: `test_dano_extra_respeita_golpe_nao_letal`.
+- **P2-7 — ok.** `known_condition_names()` (NAMED_CONDITIONS + controles + marca/sangramento +
+  palavras-chave) valida `alvo_tem`/`eu_tenho`. Teste parametrizado.
+- **`off`/`shadow` (SPEC-329):** continuam inertes. Conferi com um teste scratch (apagado) no
+  `run_round` com Chefe `acoes_por_rodada=2` e a Carta de Interromper: nos dois modos não houve
+  keyword `interromper`, nem `ao_pressagio_frustrado`, nem `pressagios_frustrados`.
+
+Sem achado novo bloqueante. Observação P3: a ação extra de quem não pode agir agora consome o
+cursor sem frustrar quando não houve Interromper. Não muda nada observável (o ator está fora), mas
+vale lembrar se a 329 passar a relatar intents não executados.
 
 ## Pendências
 
-- P1-1 e P1-2 bloqueiam o pouso: correção pequena, com teste, na própria SPEC-330.
-- P2-1..P2-7 podem virar follow-up: P2-5 → SPEC-332/335; P2-1/P2-2/P2-3/P2-6/P2-7 → SPEC-330 ou
-  uma hotfix posterior, a critério do coordenador.
+- P2-4 (cobertura das 86 utilitárias/passivas/virtudes no golden) e P2-5 (`revelar` →
+  `bestiary_knowledge`) ficam como follow-up, registrados na spec §8 D-11.
+- Sugestão P3: transformar a checagem scratch de `off`/`shadow` num teste de integração no `run_round`.
 
 ## Comandos rodados
 
@@ -67,4 +102,5 @@ golden regen a partir de git archive 8bd4f384 (scratchpad) → 308 308 equal []
 pytest -n 2 test_card_effects_grammar test_keywords_valoria test_log_event_registry test_no_silent_except test_enemy_intent test_enemy_intent_node test_mecanica_orfa → 194 passed
 repro P1-1 (Chefe acoes_por_rodada=2, initiator=enemy) → interromper + gatilho, e depois "cumpre o presságio" (teste scratch, apagado)
 repro P1-2 (golpe letal por categoria) → lacaio/padrão disparam ao_derrubar; elite não (teste scratch, apagado)
+re-revisão b3e4d3c0: pytest -n 2 test_card_effects_review_spec330 test_card_effects_grammar test_keywords_valoria test_log_event_registry test_no_silent_except test_enemy_intent test_enemy_intent_node test_mecanica_orfa test_spec325_intents + scratch off/shadow → 241 passed, rc=0
 ```
