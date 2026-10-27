@@ -151,7 +151,7 @@ embeddings). Mecânica e evals intocados; só o produto muda.
 - [ ] R2 em `shadow` ≥ 200 decisões com concordância ≥ 97 % antes de `on`; `evals compare` do router sem piora.
 - [ ] R5–R8: embedding por turno STORY = 1; por rodada de combate = 0 (asserts com contador).
 - [ ] R10: `cache_hit_ratio` registrado; promoção só com `evals compare` sem piora.
-- [ ] Import de `vercel_app` −30 % (`-X importtime` antes/depois anexado); cold start medido (`scripts/staging/measure.py`).
+- [x] ~~Import de `vercel_app` −30 % (`-X importtime` antes/depois anexado)~~ **retirado pelo dono 27/10** (medido −3 %: 1,68 → 1,63 s; ver histórico); cold start medido (`scripts/staging/measure.py`) ✔.
 - [ ] `uv run pytest` verde; nenhum `with_structured_output` novo; saves antigos carregam.
 
 ## 6. Smoke test com LLM real
@@ -219,3 +219,12 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
   R2 continua aguardando tráfego real com vocativo a NPC presente (n=3; tráfego sintético não exercita o caminho).
 - 27/10 — No A/B OFF×ON ([docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)) prefetch de contexto e cache de índice ficaram ligados nos dois braços (sem
   flag no `vercel_env.py`), logo o ganho isolado da 317 não foi medido. R2 segue esperando 200 decisões reais.
+- 27/10 — **R11 meta −30 % retirada pelo dono** ("pode tirar a meta se vc acha que é impossível", após pesquisa).
+  Medição: `import vercel_app` 1,68 s (pré-317 `9211ee6`) × 1,63 s (main), 5 rodadas; sem `.pyc` +0,4 s.
+  `-X importtime`: fastapi 0,34 s, langchain_core (retrievers→tracers→langsmith 0,31 s), langgraph 0,18 s,
+  `rag`/`character_creator` 0,56 s — SDKs/PIL/faiss já não estavam no caminho antes da 317. Adiar `rag` só
+  ajudaria o `/health`: todo turno usa RAG, então o custo só muda de lugar. `lazy import` (PEP 810) é do
+  Python 3.15; o runtime do Vercel é 3.13. Pesquisa: Vercel pré-compila bytecode desde 21/07/2026 "até onde
+  cabe no bundle" (bundle 319 MB) e diz que cold start acompanha o tamanho do bundle; pré-aquecimento só nos
+  planos pagos. A espera de 19–59 s antes da função é instância nova do Vercel, não import → spec de infra
+  (dieta do bundle, conferir Fluid compute, ping de aquecimento, plano).

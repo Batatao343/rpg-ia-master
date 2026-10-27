@@ -36,7 +36,6 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| SPEC-317 R11 (import −30 %) | decidir: medido −3 % (1,68 → 1,63 s); o que pesa é fastapi/langchain_core/langgraph, obrigatórios; cold start do Vercel não é import | "tira a meta" → riscar o critério com registro; "mantém" → 317 fica aberta |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
 ## Decisões recentes (≤ 2 dias)
