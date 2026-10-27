@@ -1,6 +1,6 @@
 # SPEC-329 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
+> **Veredito:** `APPROVED` (re-revisão de `35810655`; a 1ª rodada, sobre `2000cbe5`, foi `CHANGES_REQUIRED`)
 > **Revisor:** Sol (Opus) · **Data:** 2026-10-27 · **Commit revisado:** `2000cbe5`
 
 ## Escopo
@@ -77,4 +77,27 @@ P1-1 testes de nó+save/load+API em `tests/test_enemy_intent_node.py` (on e off)
 ```text
 git diff main...HEAD --stat → 7 arquivos, +919/-9
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_intent.py tests/test_spec275_stalemate.py tests/test_tactical_archetypes_runtime.py → 56 passed
+```
+
+## Re-revisão (Sol, 2026-10-27, commit `35810655`)
+
+**Veredito: `APPROVED`.** Revisei só o delta `2000cbe5..35810655`.
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | resolvido | Novo `tests/test_enemy_intent_node.py`. O teste `test_on_roundtrip_through_node_and_save` passa pelo `combat_node` real com save/load de verdade entre as rodadas (`_reload` usa `persistence._state_to_save_data` → JSON → `_raw_to_state`). Ele confere que a rodada N+1 recebe exatamente o `combat.pressagios` congelado e salvo, que a execução gera cumprido ou frustrado, que a visão pública não tem `declaration`/`carta_id`, e que `_combat_block` só mostra `pressagios_publicos` com a flag `on`. `test_off_save_has_no_new_keys` cobre o `off` no save. |
+| P1-2 | resolvido | `services/enemy_intent.py:177-182` agora faz uma cópia rasa de **todos** os atores e copia a lista `_last_class_mechanics`. Como a provocação usa `setdefault`/`append`, tudo cai no sandbox. `test_forecast_taunt_does_not_touch_the_taunter` roda 12 seeds (com e sem o sorteio de provocação) e confere que `actors` fica igual por comparação profunda. |
+| P2-3 | resolvido | `services/conflict_orchestrator.py:2048`: o presságio cumprido gera uma linha em `out["logs"]`, que chega ao narrador (`agents/combat.py:1965`). Só acontece no modo `on`. |
+| P2-5 | resolvido | `test_frustrated_incapaz_when_enemy_dies_mid_round`: o motivo é `incapaz`, a frustração é do ator morto e a linha de frustração vem depois de "B é derrotado.". |
+| P2-1 (R1) | resolvido no texto | O R1 agora diz "a partir da 2ª rodada" e explica por quê (o spawn e a 1ª rodada acontecem no mesmo request). A pausa antes da 1ª rodada foi mandada para a SPEC-328/334. O §5.1 (d) está consistente com isso. |
+| P2-2, P2-4 | registrados como follow-up | O §5.1 registra que 11,7 % é um piso e manda alcance e `empurrao` para a SPEC-330. |
+
+Pontos que continuam valendo (nenhum bloqueia o pouso com a flag em `off`):
+
+- A spec segue sem `done`, porque o critério da arena com `on` está aberto.
+- Antes de ligar `on`, é preciso medir o `shadow` com a previsão congelada no fim da rodada anterior (P2-2).
+- O dono ainda precisa revisar o catálogo de sinais.
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_spec275_stalemate.py tests/test_tactical_archetypes_runtime.py tests/test_encounter_lifecycle_reload.py → 70 passed
 ```
