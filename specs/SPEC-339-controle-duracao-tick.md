@@ -1,6 +1,6 @@
 # SPEC-339 — Controle aplicado por oponente expira antes de valer (tick de duração)
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-232 (`done`, expiração de buff/debuff no fim do turno), SPEC-329 (presságio), SPEC-330 (golden de equivalência das 308 Cartas). Para a Etapa 5, SPEC-335 com o lint provisório de `taunt`/`marca` já pousado na `main`.
 > **Desbloqueia:** Cartas de onda (SPEC-335/336) com `taunt`/`marca` de `duracao` 1; rebalanceamento do Devoto (Provocar).
@@ -214,7 +214,7 @@ Arquivos de Postura com `taunt`/`marca` (para o R15, levantados por `Grep`): `po
 - [x] Herdado da SPEC-335 (critério 45–75 % por Postura): depois do bugfix, refazer a arena por Postura **por subclasse**, com o viés de ordem do `full_deck` corrigido e mais criaturas/sementes. Ponto de partida (27/10, `docs/spec335/RELATORIO-arena-posturas.md`): Sangromante ~80 % no padrão, Corruptor/alma ~34 % com elite. O ajuste de poder, se preciso, é uma spec de balanceamento à parte (R16).
 - [x] `CONTROLE_DURACAO_PENDENTES` vazia (as 9 Cartas dos Lotes 2–3 validadas com o motor corrigido).
 - [x] R16/R17: nenhum número de Carta nem limite de teste de balanço alterado nesta spec.
-- [ ] `uv run pytest` verde (suíte completa offline, 1× no pouso pelo coordenador).
+- [x] `uv run pytest` verde (suíte completa offline, 1× no pouso pelo coordenador).
 - [x] Saves antigos continuam carregando (condição sem marcador tica como antes).
 - [x] Guard de FallbackLLM: não se aplica, porque não há `with_structured_output` novo.
 
