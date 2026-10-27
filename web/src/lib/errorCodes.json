@@ -24,6 +24,7 @@
   "cron_task_failed",
   "csrf_invalid",
   "death_pending",
+  "deck_off",
   "email_not_confirmed",
   "equip_rejected",
   "equip_request_invalid",

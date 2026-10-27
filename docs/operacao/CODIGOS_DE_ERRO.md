@@ -31,6 +31,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `cron_task_failed` | Tarefa de cron falhou. |
 | `csrf_invalid` | Token CSRF ausente/inválido. |
 | `death_pending` | Queda pendente: resolver a tela de morte antes. |
+| `deck_off` | Jogadas em lista sem o Baralho de Conflito ativo (409). |
 | `email_not_confirmed` | E-mail ainda não confirmado. |
 | `equip_rejected` | Regra de inventário recusou o equipamento. |
 | `equip_request_invalid` | Pedido de equipar/desequipar incompleto. |

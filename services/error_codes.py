@@ -72,6 +72,7 @@ CODE_DOCS: dict[str, str] = {
     "pending_operation": "Há ação falha pendente a retomar/descartar.",
     "history_cursor_stale": "Cursor de histórico obsoleto.",
     "invalid_target": "Alvo de combate deixou de ser válido.",
+    "deck_off": "Jogadas em lista sem o Baralho de Conflito ativo (409).",
     "equip_request_invalid": "Pedido de equipar/desequipar incompleto.",
     "equip_rejected": "Regra de inventário recusou o equipamento.",
     "prepare_rejected": "Regra de Cartas recusou a preparação.",

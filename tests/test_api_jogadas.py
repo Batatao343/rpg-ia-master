@@ -265,8 +265,13 @@ def test_save_load_no_meio_do_conflito_e_mais_uma_rodada(monkeypatch, tmp_path):
     import persistence
 
     monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
+    import random
+
     state = _start_state(monkeypatch, "on")
     state["combat_declaration"] = None
+    # Semente fixa também na 1ª rodada: sem ela o conflito às vezes termina na
+    # rodada 2 (flake sob xdist).
+    random.seed(5)
     first = combat_agent._combat_node(state)
     assert first["combat"]["active"] is True  # R-5: conflito precisa seguir ativo
     mid = {**state, **{k: v for k, v in first.items() if k != "messages"}}
@@ -275,8 +280,6 @@ def test_save_load_no_meio_do_conflito_e_mais_uma_rodada(monkeypatch, tmp_path):
     loaded = persistence.load_game_state(persistence.save_path(mid["game_id"]))
     assert loaded["combat"]["pilhas"] == mid["combat"]["pilhas"]
     loaded["messages"] = [HumanMessage(content="Encerrar turno")]
-    import random
-
     random.seed(5)
     a = combat_agent._combat_node(deepcopy(mid))
     random.seed(5)
