@@ -46,12 +46,12 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 <!-- recent:start -->
 - 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
 - 2026-10-27 · SPEC-337 `done` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
-- 2026-10-27 · SPEC-336 `approved` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
+- 2026-10-27 · SPEC-336 `in-progress` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 - 2026-10-27 · SPEC-335 `approved` — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
-- 2026-10-27 · SPEC-334 `approved` — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
+- 2026-10-27 · SPEC-334 `in-progress` — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
 - 2026-10-27 · SPEC-333 `approved` — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
 - 2026-10-27 · SPEC-332 `approved` — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
-- 2026-10-27 · SPEC-331 `approved` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
+- 2026-10-27 · SPEC-331 `in-progress` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
 - 2026-10-27 · SPEC-330 `in-progress` — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 - 2026-10-27 · SPEC-329 `in-progress` — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
 - 2026-10-27 · SPEC-328 `in-progress` — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
@@ -75,7 +75,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: 327–336 sessão `-69`; suíte completa 1 por vez (avisar). 337–338 `done`: testes HTTP de segurança + RLS no `audit-local`; fuzz Schemathesis no job `api-fuzz` (bloqueante).
-- 27/10 cartas: 329, 328, 330A pousadas `off`. Antes de `on`: calibrar Fôlego (arena 42→73 %), dono revisa `pressagio_sinais.json` e `basicas.json`.
+- 27/10 cartas: pousadas `off` 328 (Fôlego 2, `RPG_FOLEGO_BASE`), 329, 330 A+B, 331, 334, 336. Em execução: 335, 332, 333. Dono revisa voz: `pressagio_sinais.json`, `basicas.json`, `cartas_de_cena.json`. CI do origin vermelho (`deck_off` sem pt-BR) até o próximo push.
 
 
 ## Como rodar
