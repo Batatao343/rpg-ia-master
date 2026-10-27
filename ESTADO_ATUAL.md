@@ -9,7 +9,7 @@
 ## Estado em 10 linhas
 
 - staging = `0e01677` (preset: `lean`, stream `on`, hedge `0`; smokes verdes). Mundo vivo 296–315 `done` (297: 1ª promoção do pool).
-- 320–326 `done` (26/10). 327–338: outra sessão.
+- 320–326 `done` (26/10).
 - **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`** (318: NPC novo −6 s isolado, `lean` 0,41 SMART/turno); loot sem tokens ao vivo.
 - Staging: preset versionado `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree; checar RAM (CLAUDE.md).
@@ -77,6 +77,7 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 `CHANGELOG.md` (seção `## AAAA-MM-DD`) e esvazie a seção.
 
 <!-- onda:inserir-aqui -->
+- 27/10: donos das abertas — 327–336 sessão `-69`, 337–338 sessão `-91`; suíte completa 1 por vez (avisar).
 
 
 ## Como rodar
