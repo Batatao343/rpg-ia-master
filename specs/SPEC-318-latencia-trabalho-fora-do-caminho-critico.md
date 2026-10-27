@@ -134,7 +134,7 @@ sem mudar o que o jogador lê nem a mecânica.
   chamadas SMART/turno de 0,75 → ≤ 0,45 em `lean` (shadow conta), com `evals compare` sem piora nos hard gates.
 - [x] Guard de FallbackLLM nas chamadas movidas para `enrich` (ficha `id == "fallback"` conta como falha; o replan herda o guard do planner).
 - [x] Saves antigos carregam (`sheet_status` ausente = ficha completa; nunca pendente).
-- [ ] Revisão independente (Sol) da topologia e da continuidade de NPC.
+- [x] Revisão independente (Sol) da topologia e da continuidade de NPC (`handoffs/SPEC-318-sol-review.md`, APPROVED_WITH_FOLLOWUPS).
 
 ## 6. Smoke test com LLM real
 

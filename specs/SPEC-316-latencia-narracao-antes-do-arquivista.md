@@ -1,6 +1,6 @@
 # SPEC-316 — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main em `shadow` 25/10; falta medição §6 com `on` no staging, que espera a SPEC-320)
+> **Status:** `done` (aprovada 25/10; pousada 25/10; `on` no staging; A/B 27/10 em `docs/spec316/staging-measure-2026-10-27.md`; re-revisão Sol 27/10 APPROVED_WITH_FOLLOWUPS)
 > **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-036 (`done`, SSE), SPEC-200 (`done`, marcas ttfmc/ttlt), SPEC-213 (`done`, projeções), SPEC-247 (`done`, worker SSE sobrevive à desconexão)
 > **Desbloqueia:** SPEC-318 (trabalho fora do caminho crítico), SPEC-319 (streaming de tokens e cauda)
@@ -179,13 +179,13 @@ state {GameResponse}                    <- turno commitado; libera o input
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R10 cobertos pelos testes nomeados; `uv run pytest` verde (suíte completa offline, 1×, no pouso).
-- [ ] `test_final_state_identical_on_vs_off` prova R6 (save + `GameResponse` iguais).
-- [ ] Medição §6 no staging: **TTFMC p50 ≤ 7 s** (de 11,1 s) e p95 não pior que o baseline em mais de 10 %;
+- [x] R1–R10 cobertos pelos testes nomeados; `uv run pytest` verde (suíte completa offline, 1×, no pouso).
+- [x] `test_final_state_identical_on_vs_off` prova R6 (save + `GameResponse` iguais).
+- [x] Medição §6 no staging (27/10, 30+30 turnos: TTFMC p50 2,6 s; p95 11,2 × 25,1 s; `state` p50 10,1 × 10,9 s — melhor, não pior; `lock_wait` p50 55–58 ms): **TTFMC p50 ≤ 7 s** (de 11,1 s) e p95 não pior que o baseline em mais de 10 %;
   `state` p50 dentro de ±5 % do baseline (nada foi empurrado para o turno seguinte: `lock_wait` p50 < 150 ms).
-- [ ] Zero `narrative_shown` em 30 turnos sem falha induzida; 1 falha induzida mostra o selo e o retry recupera.
-- [ ] Nenhum `with_structured_output` novo. Saves antigos carregam (nenhum campo novo).
-- [ ] Revisão independente (Sol) do caminho SSE × worker.
+- [x] Zero `narrative_shown` em 30 turnos sem falha induzida (29/29 `ok`); falha induzida 27/10 com DeepSeek real, local (commit forçado a falhar → `error` com `narrative_shown`, save inalterado, retry com o mesmo `action_id` → `state`) + e2e do selo/retry no cliente; 1 falha induzida mostra o selo e o retry recupera.
+- [x] Nenhum `with_structured_output` novo. Saves antigos carregam (nenhum campo novo).
+- [x] Revisão independente (Sol) do caminho SSE × worker (`handoffs/SPEC-316-sol-review.md`, re-revisão 27/10).
 
 ## 6. Smoke test com LLM real
 
@@ -242,3 +242,8 @@ some no `state`, input libera só no `state`.
   p95 15,5–26,1 s → 9,8–11,8 s (melhor, não pior). **Estado final (input liberado) sem ganho**: p50 8,2–11,4 ×
   9,8–11,4 s, p95 15,5–26,1 × 17,0–17,1 s (empate no ruído). 29/29 entregas antecipadas `ok`, 0 `narrative_shown`.
   Segue `in-progress`: falta 1 falha induzida no staging (selo + retry).
+- 27/10 — Falha induzida: local com DeepSeek real (o staging não tem gancho de falha); servidor ok e e2e do cliente
+  (`turn-wait.spec.ts` "316: erro com narrative_shown") verde. Re-revisão Sol das correções de `bee2a4f4`:
+  APPROVED_WITH_FOLLOWUPS — F-1 (pré-existente, SPEC-199: resposta só com `[RESULTADO]` chega crua; `strip_receipt`
+  no fallback de `player_facing_message`, bugfix separado) e F-2 (assert de save inalterado no teste offline do
+  retry). → **`done`**.

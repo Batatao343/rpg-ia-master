@@ -10,14 +10,14 @@
 
 - staging = `0640bff` (27/10; preset: `lean`, stream `on`, hedge `0`) (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
 - **`done` (26/10):** 320–324 frontend (conferidos em 390/1440 no staging), 325 mecânicas (A não-letal/resistência, B fuga, C objetos/ordens `on`; D reforços **descartada pelo dono**), 326 arte dinâmica fiel a Valoria (`on` no staging).
-- **Latência — A/B OFF×ON 27/10 (60 turnos, [doc](docs/spec316/staging-measure-2026-10-27.md)):** 1ª narração p50 8,2–11,4 s → 2,6 s, p95 15,5–26 → 9,8–11,8 s; narração completa 6,1 s; **turno inteiro (input libera) sem ganho** (p50 ~10 s nos dois). 319 `done` (hedge retirado pelo dono). 316 falta 1 falha induzida; 318 SMART/turno 0,59 (meta ≤ 0,45 não atingida); 317 R2 espera 200 decisões reais.
+- **Latência — A/B OFF×ON 27/10 (60 turnos, [doc](docs/spec316/staging-measure-2026-10-27.md)):** 1ª narração p50 8,2–11,4 s → 2,6 s, p95 15,5–26 → 9,8–11,8 s; narração completa 6,1 s; **turno inteiro (input libera) sem ganho** (p50 ~10 s nos dois). 316 e 319 `done` (hedge retirado pelo dono; 316 falha induzida com LLM real local + re-revisão Sol ok); 318 SMART/turno 0,59 (meta ≤ 0,45 não atingida); 317 R2 espera 200 decisões reais.
 - Staging: preset versionado `scripts/staging/staging_flags.json`; `wt.sh drop` agora remove a junção do node_modules.
 - Regras de máquina: e2e só `--workers=1` um arquivo por vez; nunca `uv run` direto em worktree; checar RAM (memória).
 
 ## Próximos 3 passos
 
 1. Turno inteiro: input só libera no `state` (~10 s p50, igual ao OFF) — investigar o que segura o `state` após a narração (arquivista/commit no mesmo request) e o cold start do Vercel (bundle 319 MB, Hobby) → spec nova.
-2. 318: baixar SMART/turno (0,59 → ≤ 0,45); 316: 1 falha induzida no staging; 317: acumular 200 decisões shadow.
+2. 318: SMART/turno no roteiro do baseline (medindo); 317: re-revisão Sol de `a52b0058`, R2 200 decisões (harness local com LLM real), R1 A/B Groq no staging; bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente).
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
@@ -36,6 +36,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
+| SPEC-317 R11 (import −30 %) | decidir: medido −3 % (1,68 → 1,63 s); o que pesa é fastapi/langchain_core/langgraph, obrigatórios; cold start do Vercel não é import | "tira a meta" → riscar o critério com registro; "mantém" → 317 fica aberta |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
 ## Decisões recentes (≤ 2 dias)
@@ -47,7 +48,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 2 --write ESTADO_A
 - 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 - 2026-10-27 · SPEC-318 `in-progress` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 - 2026-10-27 · SPEC-317 `in-progress` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
-- 2026-10-27 · SPEC-316 `in-progress` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
+- 2026-10-27 · SPEC-316 `done` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 - 2026-10-26 · SPEC-326 `done` — Arte dinâmica consistente com Valoria (estética, lore e raça)
 - 2026-10-26 · SPEC-325 `done` — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 - 2026-10-26 · SPEC-324 `done` — Front: a11y estrutural (headings) e atalhos de teclado

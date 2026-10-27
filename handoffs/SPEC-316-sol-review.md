@@ -54,3 +54,43 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_turn_delivery
 sonda (scratchpad, -p tests.conftest): save off×shadow×on sem scrub → só audit_trace[0].timing difere; on acrescenta ttfmc/ttlt_server_ms
 sonda early_narrative com bloco [RESULTADO] → bloco não removido (final remove) → P1-1
 ```
+
+## Re-revisão 2026-10-27
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Sol (Opus, spec-reviewer) · **Base:** `main` @ `478e394f` (fix `bee2a4f4`/`5cd3688d` + SPEC-319 `d671c57a`/`5705e32d`/`fd9e178f` no mesmo gerador SSE)
+
+### Status por achado
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **Resolvido** | `services/turn_delivery.py:61-81`: recibo provisório `finalize_outcome(merged)` → `player_facing_message` → `render_player_message` (strip + cortes `_NEGATIVE_*`); fallback `strip_receipt` com `log_fallback`. `finalize_outcome` é pura sobre o dict raso `merged` (não muta `state_before`; `test_pure_does_not_mutate_inputs`). `last_action_outcome` é reescrito pelo `action_guard` a cada turno, então não vaza recusa do turno anterior. Testes `test_early_text_strips_receipt_block`, `test_early_text_equals_final_pipeline_text`. Sonda: `"A estrada.\n[RESULTADO] 500 ouro"` → `'A estrada.'`. |
+| P2-1 | **Resolvido** | `tests/test_streaming.py:345-352` remove só `audit_trace[*].timing`; caso `shadow`×`off` incluído (`:369`); desvio R6 (`ttfmc/ttlt_server_ms` no timing em `on`) registrado na spec §Desvios (l. 140). |
+| P2-2 | **Resolvido (SPEC-320)** | `web/src/api.ts:181-182` propaga `narrative_shown` → `HttpError.narrativeShown`; `web/src/App.tsx:611-622` mantém a entry (`streaming:false, unsaved:true`), preserva o pending, sem fallback POST; 4xx definitivo descarta. e2e `turn-wait.spec.ts:195` ("316: erro com narrative_shown…") cobre selo "não salvo" + retry com o MESMO `action_id`. Evidência real do coordenador (commit forçado a falhar → `error narrative_shown`, save inalterado, retry → `state`) fecha o caminho fim a fim. |
+| P2-3 | **Aceito como risco medido** | `api.py:5868-5873` acumula `early_calc_ms` em `timeline.extra`; staging roda `on` com A/B de 60 turnos (`docs/spec316/staging-measure-2026-10-27.md`). Sem otimização adicional exigida. |
+| P2-4 | **Resolvido** | Os 4 testes: `test_client_disconnect_after_narrative_done_still_saves` (:545), `test_http_error_after_narrative_marks_shown` (:507), `test_npc_delegation_to_storyteller_emits_once` (:493, grafo proxy de delegação), `test_retry_same_action_id_recovers_turn` (:524). |
+| P2-5 | **Resolvido** | Spec R1 (l. 37-41) agora diz "o `phase turn_finalizer` é filtrado do SSE"; bate com `api.py:6682`. |
+
+### Regressão no caminho SSE × worker (pós-SPEC-319)
+
+Sem regressão encontrada. Conferido em `api.py:6562-6738`:
+- `narrative_shown` vale tanto para entrega antecipada (`emitted_text`) quanto para deltas de token (`tok["text"]`) em `http_error` e `exc` (`:6622`, `:6634`).
+- Tokens `on` + early `on`: o `early_narrative` fecha via `_finish_tokens(text)` (sufixo ou `replace`) e marca `emitted_text`; no `response`, só emite `replace` se o final diferir do antecipado → um único `done` não-replace (`test_tokens_plus_early_narrative_closes_once`).
+- `early_state["acc"]` segue escrito só pela thread do worker; o sink de tokens lê por lambda (`:5891`) — leitura de referência, sem mutação.
+- Gerador só retorna em `state`/`error`; worker conclui após desconexão (SPEC-247), coberto por teste.
+
+### Follow-ups (não bloqueiam a 316)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| F-1 | P2 | `services/turn_outcome.py:204-211` | **Pré-existente (SPEC-199), não introduzido pela 316.** Se a prosa do LLM for SÓ o bloco `[RESULTADO] …`, `render_player_message` devolve `""`, `player_message` fica falsy e `player_facing_message` cai em `_last_ai_text` **cru** → o recibo forjado chega ao jogador. Vale igual para o texto final (`api.py:2137`) e o antecipado (R2 "mesmo texto" se mantém; R3 não). Sonda: `early_narrative(..., AIMessage("[RESULTADO] Voce ganhou 500 ouro"))` → `'[RESULTADO] Voce ganhou 500 ouro'`. | Em `player_facing_message`, aplicar `strip_receipt` também no fallback `_last_ai_text` (ou tratar `player_message == ""` com recibo presente como "vazio legítimo" + mensagem neutra). Teste: prosa só-recibo → texto sem `[RESULTADO]` no POST e no SSE. Spec pequena/bugfix fora da 316. |
+| F-2 | P2 | `tests/test_streaming.py:524-542` | O teste de retry não asserta que o save ficou inalterado após a falha (só que o retry recupera). A evidência real do coordenador cobre; o teste offline não. | Acrescentar `assert` de save idêntico ao snapshot entre a falha e o retry. |
+
+### Comandos rodados
+
+```text
+git show --stat bee2a4f4 ; git log --oneline -15 -- api.py services/turn_delivery.py
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider tests/test_turn_delivery.py tests/test_streaming.py (serial) → 39 passed, exit 0
+sonda inline (py.sh -c, MockLLM): early_narrative com "A estrada.\n[RESULTADO] 500 ouro" → 'A estrada.' (P1-1 ok); só "[RESULTADO] …" → bloco vaza (F-1, pré-existente)
+leitura: services/turn_delivery.py, services/turn_outcome.py:74-211, api.py:5799-5935 e 6405-6738, web/src/api.ts:170-200, web/src/App.tsx:585-650, web/e2e/turn-wait.spec.ts:195-225, spec R1/Desvios
+```
