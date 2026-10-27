@@ -1,7 +1,7 @@
 # SPEC-338 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Claude Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `f227219b` (+ `20ff4810`, que só mexe na spec)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `d921b917` + `b8f0b1b0`; 1ª rodada foi `CHANGES_REQUIRED`)
+> **Revisor:** Claude Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commits revisados:** `f227219b` (1ª rodada) · `d921b917` + `b8f0b1b0` (re-revisão)
 
 ## Escopo
 
@@ -67,18 +67,39 @@ Não encontrei problemas nestes pontos:
 
 ## Correções aplicadas
 
-Nenhuma. O revisor só edita este arquivo.
+Feitas pelo executor em `d921b917` e `b8f0b1b0`. Conferi cada uma no diff e rodei o fuzz de novo.
+
+- **P1-1:** `seed_idempotency` coloca `action_id` (UUID v5 derivado do digest) e `Idempotency-Key` no DELETE; o seed passa a valer em exemplos alternados. Distribuição medida no DB-offline:
+  - `action`: 200 em 13 exemplos;
+  - `cards/prepare`: 200 em 8;
+  - `DELETE save`: 200 em 1 e 404 em 12;
+  - `death`: 409 `no_pending_death` em 13;
+  - `levelup`: `levelup_rejected` em 13;
+  - `equip`: `equip_rejected` em 2 e `equip_request_invalid` em 11.
+
+  `_assert_reached` com `GATE_CODES` transforma em teste a exigência de que pelo menos um exemplo passe do gate em cada rota de `MUST_REACH_HANDLER`. **Julgamento:** basta que `equip`, `levelup` e `death` cheguem à regra de negócio. Os três códigos saem depois de `load_game_state` e de `_begin_state_mutation`, isto é, depois do claim, dentro de `operation_scope` (`api.py:6782-6817`). Assim o caminho de claim e de `_fail_operation` fica exercitado. O commit (`commit_game`) é exercitado por `action` e `cards/prepare`, que chegam a 200.
+- **P1-2:** `seed_catalog` preenche race, class_name, region e enemy_id com valores válidos. Resultado: `new`, `prologue` e `combat-simulator` dão 200 em 3 de 5 exemplos cada; `art/brief` dá 200 em 5 de 5.
+- **P1-3:** o job `api-fuzz` ganhou o passo `RPG_API_FUZZ_REQUIRED=1 uv run pytest tests/test_api_fuzz_harness.py`. O harness respeita a variável, e `test_api_fuzz_job_contract` cobre o passo novo.
+- **P1-4:** `operations/{operation_id}` saiu da allowlist do DB, com o motivo no comentário; o legacy continua cobrindo. `DB_OPS` passou a ter 19 operações.
+- **P2-1:** `test_scope_is_locked` fixa as 8 exclusões, as 4 rotas de grafo e as 19 operações do DB.
+- **P2-2:** o legacy semeia uma campanha real pela fixture `legacy_seed`. Exemplo: o DELETE legacy deu 200 em 1 e 404 em 12.
+- **P2-3:** o health check só suprime os três itens do R16.
+
+**O fake novo não mascara 500 de produto.** O `commit_game` de `tests/fakes/two_principals.py` grava no `FileGameStore` e devolve o recibo, sem `try/except`: qualquer erro de store ou de conflito sobe para o handler e aparece como 5xx. Ele aceita `**_kwargs` (custo, latência, `record_turn`), que não têm efeito offline. O `_NoRowsConnection` em `resources[0]` só é consultado, nas rotas da allowlist, pelo gate de falhas pendentes (`api.py:5223`), e sempre devolve "sem falha". O efeito é uma lacuna de cobertura, não uma máscara: o ramo "falha pendente bloqueia o turno" não roda no fuzz e segue com os testes da 316/337 e com o `infra_local`. SQL inválido também passaria por ele, o que é aceitável num perfil offline que não pretende validar SQL. As rotas que usam `admin_connection(resources[0])` ou repositórios Postgres continuam fora da allowlist.
 
 ## Pendências
 
-- Corrigir P1-1 a P1-4 e rodar de novo o fuzz completo. Conferir na distribuição de status que
-  cada rota de escrita do DB e as rotas de grafo chegam ao handler.
-- P2-1 a P2-3 podem virar follow-up, a critério do coordenador.
+- Follow-up opcional (P2): semear um `item_id` do inventário de A em `equip` e um caso com XP suficiente em `levelup`, para que essas duas rotas também cheguem ao `commit_game`. Hoje o commit só é exercitado por `action` e `cards/prepare`.
+- Follow-up opcional (P2): o comentário do `DB_ALLOWED_RE` justifica a exclusão de `operations/{id}` por depender de `resources[0]`. O fake agora tem `resources[0]`, mas sem linhas; o motivo continua válido e o texto pode dizer isso explicitamente.
 - O job `api-fuzz` verde no PR e o registro da duração seguem com o agente do PR.
 
 ## Comandos rodados
 
 ```text
+# re-revisão (b8f0b1b0)
+py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -s → rc=0, 69 passed em 41 s; STATUS por operação conforme acima
+RPG_API_FUZZ_REQUIRED=1 py.sh -m pytest tests/test_api_fuzz_harness.py → 8 passed, 0 skipped
+# 1ª rodada (f227219b)
 git diff main...HEAD --stat → 10 arquivos, +775/-2
 uv export --frozen --no-dev … | diff - requirements.txt → só a linha de comentário do comando difere
 git diff main...HEAD -- uv.lock | grep '^-[^-]' → 0 linhas removidas
