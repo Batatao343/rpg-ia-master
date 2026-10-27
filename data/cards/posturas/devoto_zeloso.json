@@ -247,7 +247,7 @@
           "valor": 2
         }
       ],
-      "descricao": "Golpeia com ferro e grita o nome do amado; havendo mais de um inimigo, todos olham para o zeloso.",
+      "descricao": "Golpeia com ferro e grita o nome do amado; havendo mais de um inimigo, provoca o alvo atingido.",
       "momento": "Melhor jogada quando vários inimigos cercam o grupo e um golpe seguro ainda abre a luta.",
       "tier": 3,
       "level_req": 4,
@@ -323,7 +323,7 @@
       "palavras_chave": {
         "interromper": true
       },
-      "descricao": "Chega com o ferro antes do golpe do inimigo; se o derruba no meio do ataque, o alívio vem em fôlego.",
+      "descricao": "Chega com o ferro antes do golpe do inimigo; se o derruba no meio do ataque, recupera Vitalidade.",
       "momento": "Melhor jogada quando o inimigo mais perigoso já anunciou o ataque e abatê-lo antes vale uma cura.",
       "tier": 4,
       "level_req": 7,
@@ -363,7 +363,7 @@
           "quando": "ao_receber_dano"
         }
       ],
-      "descricao": "Entra na frente de tudo: o couro endurece, os olhos hostis se voltam e cada golpe recebido volta em ferro.",
+      "descricao": "Entra na frente de tudo: o couro endurece, o primeiro oponente passa a olhar para o Devoto e cada golpe recebido volta em ferro.",
       "momento": "Melhor jogada quando o grupo cercado precisa de um muro e o muro precisa morder quem o toca.",
       "tier": 5,
       "level_req": 9,
@@ -406,7 +406,7 @@
       "palavras_chave": {
         "exaurir": true
       },
-      "descricao": "O zelo vira fúria do Abismo: o golpe cai, os inimigos o seguem e a guarda cobre quem ficou para trás.",
+      "descricao": "O zelo vira fúria do Abismo: o golpe cai, provoca o alvo atingido e a guarda cobre quem ficou para trás.",
       "momento": "Melhor jogada quando o grupo está a um golpe da derrota e o Devoto precisa ser a única presa em campo.",
       "tier": 7,
       "level_req": 15,

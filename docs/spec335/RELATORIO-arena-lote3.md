@@ -63,3 +63,14 @@
 
 - O bot ordena pelo `dano_base` do principal; Vigília, Taunt, Marca, Torpor, Rachadura, gatilhos `ao_receber_dano`/`ao_aliado_sofrer`/`inicio_rodada`/`ao_derrubar` e cura condicional não pesam na decisão: o freio é o orçamento (`fx.budget_error`, todas dentro da faixa).
 - Reações não são declaradas pelo bot; efeitos que dependem de aliado (`ao_aliado_sofrer`, Provocar entre vários alvos) não aparecem em luta solo — por isso nenhuma Carta tem Provocar como único ganho.
+
+## Bênção do Aço a +8,4 pp (revisão Sol, `handoffs/SPEC-335-sol-review.md`)
+
+| Versão | Sementes | Lutas por braço | Delta |
+|---|---|---|---|
+| atual | 20–99 (relatório) | 320 | +8,4 pp |
+| atual | 100–199 | 400 | +10,2 pp |
+| dano 4 → 3 | 0–99 | 400 | +8,8 pp |
+| Vigília 2 → 1 | 100–199 | 400 | +9,2 pp |
+
+Somadas as rodadas da versão atual, o delta fica em ~+9,4 pp (≈ 1 erro-padrão acima do limiar de +8). Cortar dano ou Vigília quase não move o número: pesa a Carta existir no baralho de nível 4, cujo braço "sem" fica fino (as irmãs saem do catálogo) e vence só 33–38 %. **Decisão: aceitar, sem nerf.** Follow-up da 336: medir o delta por substituição de uma básica de mesmo custo, ou montar o braço base com as irmãs.
