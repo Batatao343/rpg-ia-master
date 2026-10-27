@@ -45,17 +45,17 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 
 <!-- recent:start -->
 - 2026-10-27 · SPEC-338 `approved` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
-- 2026-10-27 · SPEC-337 `approved` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
-- 2026-10-27 · SPEC-336 `draft` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
-- 2026-10-27 · SPEC-335 `draft` — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
-- 2026-10-27 · SPEC-334 `draft` — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
-- 2026-10-27 · SPEC-333 `draft` — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
-- 2026-10-27 · SPEC-332 `draft` — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
-- 2026-10-27 · SPEC-331 `draft` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
-- 2026-10-27 · SPEC-330 `draft` — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
-- 2026-10-27 · SPEC-329 `draft` — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
-- 2026-10-27 · SPEC-328 `draft` — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
-- 2026-10-27 · SPEC-327 `draft` — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
+- 2026-10-27 · SPEC-337 `done` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
+- 2026-10-27 · SPEC-336 `approved` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
+- 2026-10-27 · SPEC-335 `approved` — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
+- 2026-10-27 · SPEC-334 `approved` — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
+- 2026-10-27 · SPEC-333 `approved` — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
+- 2026-10-27 · SPEC-332 `approved` — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
+- 2026-10-27 · SPEC-331 `approved` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
+- 2026-10-27 · SPEC-330 `in-progress` — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
+- 2026-10-27 · SPEC-329 `in-progress` — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
+- 2026-10-27 · SPEC-328 `in-progress` — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
+- 2026-10-27 · SPEC-327 `approved` — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
 - 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 - 2026-10-27 · SPEC-318 `done` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 - 2026-10-27 · SPEC-317 `done` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
@@ -67,6 +67,8 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 - 2026-10-26 · SPEC-322 `done` — Front: tokens de cor, contraste, raio, ícones e tipografia
 - 2026-10-26 · SPEC-321 `done` — Front: casca mobile, alvos de toque e safe-area
 - 2026-10-26 · SPEC-320 `done` — Front: espera do turno, typewriter e banner de erro
+- 2026-10-25 · SPEC-315 `done` — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
+- 2026-10-25 · SPEC-314 `done` — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -78,6 +80,7 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
 
 <!-- onda:inserir-aqui -->
 - 27/10: donos das abertas — 327–336 sessão `-69`, 337–338 sessão `-91`; suíte completa 1 por vez (avisar).
+- 27/10 épico cartas (327–336, aprovado com os padrões da 327 §4): pousadas `off` 329 Presságio, 328 Baralho/Mão/Fôlego, 330 gramática Grupo A (308 legadas idênticas, golden). Antes de `on`: calibrar Fôlego com bot que jogue o baralho (arena 42→73 % só com básicas), revisar frases `pressagio_sinais.json` e 15 básicas (dono). Próximo: 330 Grupo B, 334 front, 331 cena, 336 esteira.
 
 
 ## Como rodar
