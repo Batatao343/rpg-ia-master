@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "4674e30e6140b8b11ad35ca3f0b28307c3e7982e",
+  "commit_sha": "ea3ba71b48149f2501d2c92af7603b99846ca8d4",
   "edge_counts": {
-    "calls": 30071,
-    "contains": 1011,
-    "defines": 14942,
-    "imports": 2445,
-    "likely_test_for": 1712,
+    "calls": 30316,
+    "contains": 1012,
+    "defines": 15017,
+    "imports": 2452,
+    "likely_test_for": 1719,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:df134a7884bb3a3c1b2cbd84f9e962ca4f0dafccfa68c30ba93516b99b225ac3",
+  "graph_hash": "sha256:298037439d5a9a05ae53cd594c45de32f5a26e97354052653ca1e9231e99fe94",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -561,6 +561,7 @@
     "tests/test_campaign_grounding_deferred.py",
     "tests/test_card_draft.py",
     "tests/test_card_effects_grammar.py",
+    "tests/test_card_effects_piles.py",
     "tests/test_card_effects_review_spec330.py",
     "tests/test_card_lint.py",
     "tests/test_card_piles.py",
@@ -1238,12 +1239,12 @@
     "artifact": 9,
     "class": 966,
     "endpoint": 64,
-    "file": 1182,
-    "function": 4717,
+    "file": 1183,
+    "function": 4736,
     "method": 841,
-    "module": 1011,
-    "test": 8417
+    "module": 1012,
+    "test": 8473
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:7a164516b9fa2e3b530f260cd1bbd99b779ab605e768d7c7ff82d44240d4c74b"
+  "source_tree_hash": "sha256:a617f7c695d2bc7c3e3f7cd94b5e069cdf6deb8ae2106327a39c85aaa928204d"
 }
