@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e7b19833f9ff2121b45482e7292280d29d785a79",
+  "commit_sha": "1098e22525e6d45a2361f8312ebae11f91d33ead",
   "edge_counts": {
-    "calls": 29981,
-    "contains": 1000,
-    "defines": 14873,
-    "imports": 2430,
-    "likely_test_for": 1716,
+    "calls": 30014,
+    "contains": 1003,
+    "defines": 14920,
+    "imports": 2437,
+    "likely_test_for": 1723,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:947cdccf97224b7138f3e4df4efece567f1230ece1611c5d6c5c1c5d769ce7f6",
+  "graph_hash": "sha256:b5d4506fa714e43ea37ee7b78b3d3cca53fa0e7e40bdfb97bebfce551eafa7c3",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -460,6 +460,7 @@
     "state.py",
     "tests/conftest.py",
     "tests/fakes/__init__.py",
+    "tests/fakes/api_fuzz.py",
     "tests/fakes/fake_image_generator.py",
     "tests/fakes/local_auth.py",
     "tests/fakes/local_image_finance.py",
@@ -506,6 +507,8 @@
     "tests/test_ambient_consumers.py",
     "tests/test_api_access_log.py",
     "tests/test_api_attempt_telemetry.py",
+    "tests/test_api_fuzz_harness.py",
+    "tests/test_api_fuzz_schemathesis.py",
     "tests/test_api_jogadas.py",
     "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
@@ -1225,14 +1228,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 960,
+    "class": 961,
     "endpoint": 64,
-    "file": 1171,
+    "file": 1174,
     "function": 4662,
     "method": 840,
-    "module": 1000,
-    "test": 8410
+    "module": 1003,
+    "test": 8456
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:078d9acc9ca7ba3b8095f259892b4ce17fb7284a5675f04bfc6d03d1c91726cd"
+  "source_tree_hash": "sha256:258d7a8929e58f25359a6f49d4c2db14ecaebfe6e0afb235c0c3157498db973b"
 }

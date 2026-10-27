@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e7b19833f9ff2121b45482e7292280d29d785a79",
+  "commit_sha": "1098e22525e6d45a2361f8312ebae11f91d33ead",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -5120,6 +5120,28 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 22
+      },
+      "source": "file:tests/fakes/api_fuzz.py",
+      "target": "file:tests/fakes/two_principals.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 1
+      },
+      "source": "file:tests/fakes/api_fuzz.py",
+      "target": "module:tests.fakes.api_fuzz",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/fakes/fake_image_generator.py",
         "line": 7
       },
@@ -5253,7 +5275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 24
+        "line": 25
       },
       "source": "file:tests/fakes/two_principals.py",
       "target": "file:services/auth_sessions.py",
@@ -6786,6 +6808,94 @@
       },
       "source": "file:tests/test_api_attempt_telemetry.py",
       "target": "module:tests.test_api_attempt_telemetry",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 15
+      },
+      "source": "file:tests/test_api_fuzz_harness.py",
+      "target": "file:api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 16
+      },
+      "source": "file:tests/test_api_fuzz_harness.py",
+      "target": "file:scripts/ci_docs_only.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 17
+      },
+      "source": "file:tests/test_api_fuzz_harness.py",
+      "target": "file:tests/fakes/api_fuzz.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 1
+      },
+      "source": "file:tests/test_api_fuzz_harness.py",
+      "target": "module:tests.test_api_fuzz_harness",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 22
+      },
+      "source": "file:tests/test_api_fuzz_schemathesis.py",
+      "target": "file:api.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 23
+      },
+      "source": "file:tests/test_api_fuzz_schemathesis.py",
+      "target": "file:tests/fakes/api_fuzz.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 27
+      },
+      "source": "file:tests/test_api_fuzz_schemathesis.py",
+      "target": "file:tests/fakes/two_principals.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 1
+      },
+      "source": "file:tests/test_api_fuzz_schemathesis.py",
+      "target": "module:tests.test_api_fuzz_schemathesis",
       "type": "contains"
     },
     {
@@ -92702,6 +92812,149 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "tests/conftest.py",
+        "line": 208
+      },
+      "source": "module:tests.conftest",
+      "target": "symbol:tests.conftest.pytest_ignore_collect",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 22
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "module:tests.fakes.two_principals",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 53
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz._detail",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 150
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz._status_key",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 62
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 216
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_failures",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 181
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 161
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_settings",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 231
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 122
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.run_case",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 107
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.seed_catalog",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 87
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.seed_game_id",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 96
+      },
+      "source": "module:tests.fakes.api_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.seed_idempotency",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "tests/fakes/fake_image_generator.py",
         "line": 7
       },
@@ -92857,7 +93110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 24
+        "line": 25
       },
       "source": "module:tests.fakes.two_principals",
       "target": "module:services.auth_sessions",
@@ -92868,7 +93121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 31
+        "line": 32
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.FakeIdentity",
@@ -92879,7 +93132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 46
+        "line": 57
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
@@ -92890,7 +93143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 84
+        "line": 122
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.TwoPrincipals",
@@ -92901,7 +93154,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 96
+        "line": 102
+      },
+      "source": "module:tests.fakes.two_principals",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 134
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals._client",
@@ -92912,7 +93176,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 198
+        "line": 237
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.assert_security_headers",
@@ -92923,7 +93187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 182
+        "line": 221
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.forbidden_leak",
@@ -92934,7 +93198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 217
+        "line": 256
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.spa_mount",
@@ -92945,7 +93209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 107
+        "line": 145
       },
       "source": "module:tests.fakes.two_principals",
       "target": "symbol:tests.fakes.two_principals.two_principals",
@@ -96865,6 +97129,281 @@
       },
       "source": "module:tests.test_api_attempt_telemetry",
       "target": "symbol:tests.test_api_attempt_telemetry.test_failed_new_game_records_player_creation_attempt",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 15
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "module:api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 16
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "module:scripts.ci_docs_only",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 17
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "module:tests.fakes.api_fuzz",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 33
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_api_fuzz_file_is_not_a_doc_test",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 97
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_api_fuzz_job_contract",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 56
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_check_response_accepts_only_intentional_503",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 66
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_check_response_flags_leak",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 114
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_fuzz_group_is_isolated_from_runtime_requirements",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 72
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 40
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_intentional_503_allowlist_matches_source",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 47
+      },
+      "source": "module:tests.test_api_fuzz_harness",
+      "target": "symbol:tests.test_api_fuzz_harness.test_network_is_blocked_inside_fuzz",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 22
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "module:api",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 23
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "module:tests.fakes.api_fuzz",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 27
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "module:tests.fakes.two_principals",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 133
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._assert_reached",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 78
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._block_network",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 73
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._ids",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 60
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._labels",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 69
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._op",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 84
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.legacy_client",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 91
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.legacy_seed",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 193
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_db_offline",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 181
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 187
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 140
+      },
+      "source": "module:tests.test_api_fuzz_schemathesis",
+      "target": "symbol:tests.test_api_fuzz_schemathesis.test_scope_is_locked",
       "type": "defines"
     },
     {
@@ -323688,6 +324227,193 @@
       "type": "defines"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 66
+      },
+      "source": "symbol:tests.fakes.api_fuzz.check_response",
+      "target": "symbol:tests.fakes.api_fuzz._detail",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 70
+      },
+      "source": "symbol:tests.fakes.api_fuzz.check_response",
+      "target": "symbol:tests.fakes.two_principals.assert_security_headers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 71
+      },
+      "source": "symbol:tests.fakes.api_fuzz.check_response",
+      "target": "symbol:tests.fakes.two_principals.forbidden_leak",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 224
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_failures",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 204
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "target": "symbol:tests.fakes.api_fuzz._status_key",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 206
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 201
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation.probe",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 200
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_settings",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 202
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "target": "symbol:tests.fakes.api_fuzz.run_case",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 204
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation.probe",
+      "target": "symbol:tests.fakes.api_fuzz._status_key",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 206
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation.probe",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 202
+      },
+      "source": "symbol:tests.fakes.api_fuzz.fuzz_operation.probe",
+      "target": "symbol:tests.fakes.api_fuzz.run_case",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 235
+      },
+      "source": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "target": "symbol:tests.fakes.api_fuzz.network_blocked.blocked",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 238
+      },
+      "source": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "target": "symbol:tests.fakes.api_fuzz.network_blocked.guarded_connect",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 142
+      },
+      "source": "symbol:tests.fakes.api_fuzz.run_case",
+      "target": "symbol:tests.fakes.api_fuzz.seed_catalog",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 139
+      },
+      "source": "symbol:tests.fakes.api_fuzz.run_case",
+      "target": "symbol:tests.fakes.api_fuzz.seed_game_id",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/api_fuzz.py",
+        "line": 140
+      },
+      "source": "symbol:tests.fakes.api_fuzz.run_case",
+      "target": "symbol:tests.fakes.api_fuzz.seed_idempotency",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -323780,7 +324506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 34
+        "line": 35
       },
       "source": "symbol:tests.fakes.two_principals.FakeIdentity",
       "target": "symbol:tests.fakes.two_principals.FakeIdentity.__init__",
@@ -323791,22 +324517,44 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 38
+        "line": 47
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity",
+      "target": "symbol:tests.fakes.two_principals.FakeIdentity.login",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 53
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity",
+      "target": "symbol:tests.fakes.two_principals.FakeIdentity.logout",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 50
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity",
+      "target": "symbol:tests.fakes.two_principals.FakeIdentity.signup",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 39
       },
       "source": "symbol:tests.fakes.two_principals.FakeIdentity",
       "target": "symbol:tests.fakes.two_principals.FakeIdentity.verify",
       "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/fakes/two_principals.py",
-        "line": 35
-      },
-      "source": "symbol:tests.fakes.two_principals.FakeIdentity.__init__",
-      "target": "symbol:infrastructure.contracts.Principal",
-      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -323824,7 +324572,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 43
+        "line": 37
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity.__init__",
+      "target": "symbol:infrastructure.contracts.Principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 48
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity.login",
+      "target": "symbol:infrastructure.contracts.Unauthorized",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 51
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeIdentity.signup",
+      "target": "symbol:infrastructure.contracts.Unauthorized",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 44
       },
       "source": "symbol:tests.fakes.two_principals.FakeIdentity.verify",
       "target": "symbol:infrastructure.contracts.Unauthorized",
@@ -323835,7 +324616,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 49
+        "line": 60
       },
       "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
       "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.__init__",
@@ -323846,7 +324627,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 70
+        "line": 89
       },
       "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
       "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.commit_delete",
@@ -323857,7 +324638,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 54
+        "line": 81
+      },
+      "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
+      "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.commit_game",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 65
       },
       "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
       "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.receipt",
@@ -323868,7 +324660,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 75
+        "line": 94
       },
       "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.commit_delete",
       "target": "symbol:infrastructure.contracts.NotFound",
@@ -323879,18 +324671,73 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 65
+        "line": 76
       },
       "source": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.receipt",
       "target": "symbol:infrastructure.contracts.Conflict",
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 105
+      },
+      "source": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection.__enter__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 108
+      },
+      "source": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection.__exit__",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 111
+      },
+      "source": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection.execute",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 117
+      },
+      "source": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection.fetchall",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 114
+      },
+      "source": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "target": "symbol:tests.fakes.two_principals._NoRowsConnection.fetchone",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 98
+        "line": 136
       },
       "source": "symbol:tests.fakes.two_principals._client",
       "target": "symbol:services.auth_sessions.CsrfSigner",
@@ -323901,7 +324748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 138
+        "line": 176
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:infrastructure.local_adapters.FileGameStore",
@@ -323912,7 +324759,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 144
+        "line": 188
+      },
+      "source": "symbol:tests.fakes.two_principals.two_principals",
+      "target": "symbol:infrastructure.local_adapters.JsonRuntimeCatalogStore",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/fakes/two_principals.py",
+        "line": 182
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:infrastructure.local_adapters.MemoryRateLimiter",
@@ -323923,7 +324781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 135
+        "line": 173
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:tests.fakes.two_principals.FakeIdentity",
@@ -323934,7 +324792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 141
+        "line": 179
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
@@ -323945,7 +324803,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 155
+        "line": 194
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:tests.fakes.two_principals.TwoPrincipals",
@@ -323956,7 +324814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 156
+        "line": 195
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:tests.fakes.two_principals._client",
@@ -323967,7 +324825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/fakes/two_principals.py",
-        "line": 157
+        "line": 196
       },
       "source": "symbol:tests.fakes.two_principals.two_principals",
       "target": "symbol:tests.fakes.two_principals._client",
@@ -330043,6 +330901,215 @@
       },
       "source": "symbol:tests.test_api_attempt_telemetry.test_failed_new_game_records_player_creation_attempt.fail_create",
       "target": "symbol:llm_setup.LLMAttemptEvent",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_check_response_accepts_only_intentional_503",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_check_response_accepts_only_intentional_503",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_check_response_flags_leak",
+      "target": "symbol:tests.fakes.api_fuzz.check_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_failures",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 80
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "target": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.boom",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "target": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.fine",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "target": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.off",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_harness.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_api_fuzz_harness.test_network_is_blocked_inside_fuzz",
+      "target": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis._block_network",
+      "target": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_db_offline",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 198
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_db_offline",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._assert_reached",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 196
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_db_offline",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._op",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 182
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 183
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._assert_reached",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 182
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._op",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 188
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph",
+      "target": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 189
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._assert_reached",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 188
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._op",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_fuzz_schemathesis.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_api_fuzz_schemathesis.test_scope_is_locked",
+      "target": "symbol:tests.test_api_fuzz_schemathesis._labels",
       "type": "calls"
     },
     {
@@ -554117,6 +555184,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/fakes/api_fuzz.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/fakes/fake_image_generator.py",
       "kind": "file",
       "line": 1,
@@ -554436,6 +555510,20 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_api_attempt_telemetry.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_api_fuzz_harness.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_api_fuzz_schemathesis.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_api_fuzz_schemathesis.py",
       "qualified_name": null
     },
     {
@@ -562223,6 +563311,13 @@
       "qualified_name": "tests.fakes"
     },
     {
+      "id": "module:tests.fakes.api_fuzz",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz"
+    },
+    {
       "id": "module:tests.fakes.fake_image_generator",
       "kind": "module",
       "line": 1,
@@ -562543,6 +563638,20 @@
       "line": 1,
       "path": "tests/test_api_attempt_telemetry.py",
       "qualified_name": "tests.test_api_attempt_telemetry"
+    },
+    {
+      "id": "module:tests.test_api_fuzz_harness",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness"
+    },
+    {
+      "id": "module:tests.test_api_fuzz_schemathesis",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis"
     },
     {
       "id": "module:tests.test_api_jogadas",
@@ -608185,6 +609294,111 @@
       "qualified_name": "tests.conftest.pytest_configure"
     },
     {
+      "id": "symbol:tests.conftest.pytest_ignore_collect",
+      "kind": "test",
+      "line": 208,
+      "path": "tests/conftest.py",
+      "qualified_name": "tests.conftest.pytest_ignore_collect"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz._detail",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz._detail"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz._status_key",
+      "kind": "test",
+      "line": 150,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz._status_key"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.check_response",
+      "kind": "test",
+      "line": 62,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.check_response"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.fuzz_failures",
+      "kind": "test",
+      "line": 216,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.fuzz_failures"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.fuzz_operation",
+      "kind": "test",
+      "line": 181,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.fuzz_operation"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.fuzz_operation.probe",
+      "kind": "test",
+      "line": 201,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.fuzz_operation.probe"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.fuzz_settings",
+      "kind": "test",
+      "line": 161,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.fuzz_settings"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.network_blocked",
+      "kind": "test",
+      "line": 231,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.network_blocked"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.network_blocked.blocked",
+      "kind": "test",
+      "line": 235,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.network_blocked.blocked"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.network_blocked.guarded_connect",
+      "kind": "test",
+      "line": 238,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.network_blocked.guarded_connect"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.run_case",
+      "kind": "test",
+      "line": 122,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.run_case"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.seed_catalog",
+      "kind": "test",
+      "line": 107,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.seed_catalog"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.seed_game_id",
+      "kind": "test",
+      "line": 87,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.seed_game_id"
+    },
+    {
+      "id": "symbol:tests.fakes.api_fuzz.seed_idempotency",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/fakes/api_fuzz.py",
+      "qualified_name": "tests.fakes.api_fuzz.seed_idempotency"
+    },
+    {
       "id": "symbol:tests.fakes.fake_image_generator.FakeImageGenerator",
       "kind": "class",
       "line": 10,
@@ -608257,91 +609471,161 @@
     {
       "id": "symbol:tests.fakes.two_principals.FakeIdentity",
       "kind": "class",
-      "line": 31,
+      "line": 32,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeIdentity"
     },
     {
       "id": "symbol:tests.fakes.two_principals.FakeIdentity.__init__",
       "kind": "test",
-      "line": 34,
+      "line": 35,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeIdentity.__init__"
     },
     {
+      "id": "symbol:tests.fakes.two_principals.FakeIdentity.login",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals.FakeIdentity.login"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals.FakeIdentity.logout",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals.FakeIdentity.logout"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals.FakeIdentity.signup",
+      "kind": "test",
+      "line": 50,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals.FakeIdentity.signup"
+    },
+    {
       "id": "symbol:tests.fakes.two_principals.FakeIdentity.verify",
       "kind": "test",
-      "line": 38,
+      "line": 39,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeIdentity.verify"
     },
     {
       "id": "symbol:tests.fakes.two_principals.FakeTurnCoordinator",
       "kind": "class",
-      "line": 46,
+      "line": 57,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeTurnCoordinator"
     },
     {
       "id": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.__init__",
       "kind": "test",
-      "line": 49,
+      "line": 60,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeTurnCoordinator.__init__"
     },
     {
       "id": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.commit_delete",
       "kind": "test",
-      "line": 70,
+      "line": 89,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeTurnCoordinator.commit_delete"
     },
     {
+      "id": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.commit_game",
+      "kind": "test",
+      "line": 81,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals.FakeTurnCoordinator.commit_game"
+    },
+    {
       "id": "symbol:tests.fakes.two_principals.FakeTurnCoordinator.receipt",
       "kind": "test",
-      "line": 54,
+      "line": 65,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.FakeTurnCoordinator.receipt"
     },
     {
       "id": "symbol:tests.fakes.two_principals.TwoPrincipals",
       "kind": "class",
-      "line": 84,
+      "line": 122,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.TwoPrincipals"
     },
     {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection",
+      "kind": "class",
+      "line": 102,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection.__enter__",
+      "kind": "test",
+      "line": 105,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection.__enter__"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection.__exit__",
+      "kind": "test",
+      "line": 108,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection.__exit__"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection.execute",
+      "kind": "test",
+      "line": 111,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection.execute"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection.fetchall",
+      "kind": "test",
+      "line": 117,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection.fetchall"
+    },
+    {
+      "id": "symbol:tests.fakes.two_principals._NoRowsConnection.fetchone",
+      "kind": "test",
+      "line": 114,
+      "path": "tests/fakes/two_principals.py",
+      "qualified_name": "tests.fakes.two_principals._NoRowsConnection.fetchone"
+    },
+    {
       "id": "symbol:tests.fakes.two_principals._client",
       "kind": "test",
-      "line": 96,
+      "line": 134,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals._client"
     },
     {
       "id": "symbol:tests.fakes.two_principals.assert_security_headers",
       "kind": "test",
-      "line": 198,
+      "line": 237,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.assert_security_headers"
     },
     {
       "id": "symbol:tests.fakes.two_principals.forbidden_leak",
       "kind": "test",
-      "line": 182,
+      "line": 221,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.forbidden_leak"
     },
     {
       "id": "symbol:tests.fakes.two_principals.spa_mount",
       "kind": "test",
-      "line": 217,
+      "line": 256,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.spa_mount"
     },
     {
       "id": "symbol:tests.fakes.two_principals.two_principals",
       "kind": "test",
-      "line": 107,
+      "line": 145,
       "path": "tests/fakes/two_principals.py",
       "qualified_name": "tests.fakes.two_principals.two_principals"
     },
@@ -611032,6 +612316,160 @@
       "line": 227,
       "path": "tests/test_api_attempt_telemetry.py",
       "qualified_name": "tests.test_api_attempt_telemetry.test_failed_new_game_records_player_creation_attempt.fail_create"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_api_fuzz_file_is_not_a_doc_test",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_api_fuzz_file_is_not_a_doc_test"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_api_fuzz_job_contract",
+      "kind": "test",
+      "line": 97,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_api_fuzz_job_contract"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_check_response_accepts_only_intentional_503",
+      "kind": "test",
+      "line": 56,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_check_response_accepts_only_intentional_503"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_check_response_flags_leak",
+      "kind": "test",
+      "line": 66,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_check_response_flags_leak"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_fuzz_group_is_isolated_from_runtime_requirements",
+      "kind": "test",
+      "line": 114,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_fuzz_group_is_isolated_from_runtime_requirements"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500",
+      "kind": "test",
+      "line": 72,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_harness_flags_injected_500"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.boom",
+      "kind": "test",
+      "line": 80,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_harness_flags_injected_500.boom"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.fine",
+      "kind": "test",
+      "line": 84,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_harness_flags_injected_500.fine"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_harness_flags_injected_500.off",
+      "kind": "test",
+      "line": 88,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_harness_flags_injected_500.off"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_intentional_503_allowlist_matches_source",
+      "kind": "test",
+      "line": 40,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_intentional_503_allowlist_matches_source"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_harness.test_network_is_blocked_inside_fuzz",
+      "kind": "test",
+      "line": 47,
+      "path": "tests/test_api_fuzz_harness.py",
+      "qualified_name": "tests.test_api_fuzz_harness.test_network_is_blocked_inside_fuzz"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis._assert_reached",
+      "kind": "test",
+      "line": 133,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis._assert_reached"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis._block_network",
+      "kind": "test",
+      "line": 78,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis._block_network"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis._ids",
+      "kind": "test",
+      "line": 73,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis._ids"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis._labels",
+      "kind": "test",
+      "line": 60,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis._labels"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis._op",
+      "kind": "test",
+      "line": 69,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis._op"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.legacy_client",
+      "kind": "test",
+      "line": 84,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.legacy_client"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.legacy_seed",
+      "kind": "test",
+      "line": 91,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.legacy_seed"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_db_offline",
+      "kind": "test",
+      "line": 193,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.test_fuzz_db_offline"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast",
+      "kind": "test",
+      "line": 181,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.test_fuzz_legacy_fast"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph",
+      "kind": "test",
+      "line": 187,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.test_fuzz_legacy_graph"
+    },
+    {
+      "id": "symbol:tests.test_api_fuzz_schemathesis.test_scope_is_locked",
+      "kind": "test",
+      "line": 140,
+      "path": "tests/test_api_fuzz_schemathesis.py",
+      "qualified_name": "tests.test_api_fuzz_schemathesis.test_scope_is_locked"
     },
     {
       "id": "symbol:tests.test_api_jogadas._parser_state",
@@ -670521,5 +671959,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:078d9acc9ca7ba3b8095f259892b4ce17fb7284a5675f04bfc6d03d1c91726cd"
+  "source_tree_hash": "sha256:258d7a8929e58f25359a6f49d4c2db14ecaebfe6e0afb235c0c3157498db973b"
 }
