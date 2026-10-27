@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "645cf5273141a198aa307e35b2158de130f93cd1",
+  "commit_sha": "73855bf9720e4836a6658f66c05c46c2a746d187",
   "edge_counts": {
-    "calls": 30728,
-    "contains": 1023,
-    "defines": 15217,
-    "imports": 2498,
-    "likely_test_for": 1754,
+    "calls": 30937,
+    "contains": 1027,
+    "defines": 15293,
+    "imports": 2514,
+    "likely_test_for": 1764,
     "route_to": 66
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:5b3eba33d3e1bfdf91961bc03ac42d9b6ba48e9cd7ab9cd0ef5566d8ff8f0699",
+  "graph_hash": "sha256:c47730f9ee034f676aceb7cc4e581316263918e175de26e6ab312e5a85ddb11e",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -93,6 +93,7 @@
     "docs/spec317/r2_shadow_harness.py",
     "docs/spec318/npc_two_phase_bench.py",
     "docs/spec328/arena_deck.py",
+    "docs/spec332/arena_familias.py",
     "docs/spec336/arena_folego_full.py",
     "encounter_budget.py",
     "evals/__init__.py",
@@ -365,6 +366,7 @@
     "services/embedding_pricing.py",
     "services/encounter_manifest.py",
     "services/encounter_preparation.py",
+    "services/enemy_decks.py",
     "services/enemy_intent.py",
     "services/entity_identity.py",
     "services/error_codes.py",
@@ -551,6 +553,7 @@
     "tests/test_blob_contract.py",
     "tests/test_boot_log.py",
     "tests/test_boot_policy.py",
+    "tests/test_boss_phases.py",
     "tests/test_browser_local.py",
     "tests/test_bug_api_pending_erros.py",
     "tests/test_bug_combate_modificadores.py",
@@ -639,6 +642,7 @@
     "tests/test_encounter_identity_repro.py",
     "tests/test_encounter_lifecycle_reload.py",
     "tests/test_encounter_manifest.py",
+    "tests/test_enemy_decks.py",
     "tests/test_enemy_intent.py",
     "tests/test_enemy_intent_node.py",
     "tests/test_enrich_node.py",
@@ -1260,12 +1264,12 @@
     "artifact": 9,
     "class": 973,
     "endpoint": 66,
-    "file": 1204,
-    "function": 4788,
+    "file": 1208,
+    "function": 4821,
     "method": 843,
-    "module": 1023,
-    "test": 8612
+    "module": 1027,
+    "test": 8655
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b65fd1b99922352b3c27663ec643cd985c2810ddebe102b384459991b72fc42d"
+  "source_tree_hash": "sha256:30538b525fb509a151d93010976798749cc0974e619582f19488d164abc5c7a4"
 }
