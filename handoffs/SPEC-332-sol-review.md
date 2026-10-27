@@ -162,3 +162,32 @@ smoke ad hoc: Valerius solo a 25 % no `on` → fase 2 + presságio cumprido, dep
 ### Correções aplicadas (executor)
 
 P1-1, P1-2, P1-3 e P2-1..P2-6 corrigidos na `spec-332` (ver spec, "Correções da revisão Sol (lote 2)"); aguardando re-revisão.
+
+### Re-revisão do lote 2 (delta `128edd12..ed34e595`)
+
+> **Veredito (lote 2, re-revisão):** `CHANGES_REQUIRED`. Os P1-1..P1-3 e os P2 originais foram resolvidos, mas a correção do P1-1 introduziu a regressão P1-4.
+> **Revisor:** Opus (papel Sol) · **Data:** 2026-10-27 · **Commit revisado:** `ed34e595`
+
+Conferência dos achados:
+
+- **P1-1 OK.** As fases agora entram a 60/40, acima do limiar de 35 %. `test_phase_two_boss_uses_signature_before_fleeing` mostra Valerius a 39 % jogando o Decreto pela `enemy_declaration` real, e `prenuncio` não promete com vida <= 35 % nem com ferimento grave/crítico.
+- **P1-2 OK.** `_ENEMY_HEAL_SUPPORT` cobre o caso de si mesmo a <= 70 % e o de aliado ferido (`_ally_wounded_target` existe em `conflict_orchestrator.py:471`). Há teste estático de que todo `inf_*` pode ser escolhido pela IA. O `off` não muda, porque nenhuma carta do bestiário tem `cura`, e a Seiva é a única carta `cura` de inimigo.
+- **P1-3 OK.** As cartas viraram "Poeira do Cais" e "Corda no Passo", e o teste de nomes cobre o catálogo inteiro.
+- **P2 OK:**
+  - P2-1: a troca entra na cota da família, o pool do `predador` foi de 8 para 12 cartas, e o teste verifica `inf_* <= 15` em 12 seeds. A spec registra a variância residual.
+  - P2-2: a asserção do teste agora é real.
+  - P2-3: as narrações usam `{nome}`, cada chefe tem a sua, e quando o dano pula fases todas são narradas.
+  - P2-4: o critério 2 voltou para `[~]`.
+  - P2-5: arquivo órfão gera log, com teste.
+  - P2-6: o handoff foi fundido e `check_handoff_names.py` passa.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-4 | P1 | `services/enemy_decks.py:345` (`plan`) x `:363-364` (`prenuncio`) | **Regressão do 329: assinatura jogada sem Presságio.** A nova trava `_badly_wounded` só existe no `prenuncio`; o `plan()` continua liberando a assinatura. Em criaturas cujo perfil não tem gatilho de vida baixa antes do `sempre`, e em chefes/membros de bando com `plano_falhou` mas sem estarem sozinhos ou cercados, o `sempre` decide abaixo de 35 % e a assinatura é jogada sem aviso na rodada anterior. Medi com script ad hoc (`on`, 30 % de vida): **21 criaturas** do bestiário têm uma rodada em que `plan(r).assinatura` existe e `prenuncio(r-1)` é `None`, por exemplo `enemy_soldado_legiao_ferro` com `inf_lider_matilha_uivo_de_reuniao` na rodada 3. Antes do delta, os dois lados eram simétricos. | Aplicar a mesma condição nos dois lados: em `plan()`, `carta = None` quando `_badly_wounded(actor)`, e o slot do padrão segue. A alternativa é derivar a trava do gatilho que de fato decide. Teste de regressão: para todo o bestiário em `on`, a 30 % e a 60 %, `plan(r)["assinatura"]` implica `prenuncio(r-1)`. |
+| P2-7 | P2 | `services/enemy_decks.py:363` | Resta uma janela inerente: o Presságio é decidido no fim da rodada e o chefe pode cair abaixo de 35 % antes de agir na seguinte, aí foge e não cumpre o anunciado. Com 60/40 isso é raro. | Follow-up opcional: registrar telemetria `pressagio_nao_cumprido` ou, nas fases, deixar o chefe ignorar `plano_falhou` na rodada da assinatura. |
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_decks.py tests/test_boss_phases.py tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_spec283_enemy_support_cards.py tests/test_card_effects_grammar.py tests/test_card_lint.py → 149 passed
+bash scripts/dev/py.sh scripts/check_handoff_names.py → exit 0
+script ad hoc (on, 30 % vida, bestiário inteiro): plan com assinatura e prenuncio(r-1) None → 21 criaturas
+```
