@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import importlib.util
 import json
 import logging
@@ -97,7 +98,15 @@ def full_deck(
         and int(c.get("level_req", 1) or 1) <= level
         and c["id"] not in (extra or [])
     ]
-    pool.sort(key=lambda c: (-int(c.get("tier", 1) or 1), c["id"]))
+    # SPEC-339: dentro do tier a ordem era `id`, e os ids `*1_` (onda 1) vencem os legados
+    # (`'1' < '_'`) quando o baralho enche: viés de ordem. Agora o desempate é um hash estável
+    # de (Postura, subclasse, nível, id): sem viés por origem, mesmo baralho a cada chamada.
+    pool.sort(
+        key=lambda c: (
+            -int(c.get("tier", 1) or 1),
+            hashlib.sha256(f"{class_name}|{subclass}|{level}|{c['id']}".encode()).hexdigest(),
+        )
+    )
     for c in pool:
         copies = 2 if c.get("patamar") in cards._COMMON_PATAMARES else 1
         for _ in range(copies):

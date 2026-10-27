@@ -106,6 +106,14 @@ def test_full_deck_is_legal(sim):
         assert any(c for c in deck if not (cards.get_card(c) or {}).get("basica"))
 
 
+def test_full_deck_is_deterministic_and_not_id_ordered_within_tier(sim):
+    """SPEC-339: o desempate no tier é hash estável, não o `id` (que favorecia `*1_`)."""
+    a = sim.full_deck("Devoto do Abismo", 5, "zeloso")
+    assert a == sim.full_deck("Devoto do Abismo", 5, "zeloso")
+    extra = [c for c in dict.fromkeys(a) if not (cards.get_card(c) or {}).get("basica")]
+    assert extra != sorted(extra, key=lambda c: (-int(cards.get_card(c).get("tier", 1) or 1), c))
+
+
 def test_pipeline_end_to_end_ten_cards(sim, tmp_path, monkeypatch):
     """Esteira ponta a ponta num lote de 10: lint -> sim -> promote."""
     lint = _load("lint")

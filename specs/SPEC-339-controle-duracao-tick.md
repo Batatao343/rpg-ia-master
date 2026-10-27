@@ -1,6 +1,6 @@
 # SPEC-339 — Controle aplicado por oponente expira antes de valer (tick de duração)
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-232 (`done`, expiração de buff/debuff no fim do turno), SPEC-329 (presságio), SPEC-330 (golden de equivalência das 308 Cartas). Para a Etapa 5, SPEC-335 com o lint provisório de `taunt`/`marca` já pousado na `main`.
 > **Desbloqueia:** Cartas de onda (SPEC-335/336) com `taunt`/`marca` de `duracao` 1; rebalanceamento do Devoto (Provocar).
@@ -200,23 +200,32 @@ Arquivos de Postura com `taunt`/`marca` (para o R15, levantados por `Grep`): `po
 
 ## 5. Critérios de aceite
 
-- [ ] R1: `taunt`, `marca`, `fear`, `silence` e `root` com `duracao` 1, aplicados por oponente, valem no próximo turno do portador nas duas ordens de iniciativa (testes da Etapa 1 verdes).
-- [ ] R2: `stun` com d=1 nega exatamente 1 turno.
-- [ ] R3: DoT/Sangria com o mesmo número de ticks e o mesmo dano total de antes.
-- [ ] R5: tick direto sem marcador igual ao de hoje; marcador ausente da view da API.
-- [ ] R6/D3: Marca do Abismo conforme a decisão do dono, com teste.
-- [ ] R7: inventário parametrizado verde, com tabela no teste igual à do §3.4 atualizada.
-- [ ] R8: D2 decidido; linhas `xfail(strict)` ou R8b implementado.
-- [ ] R9: presságio `on` congela o alvo provocado na rodada seguinte.
-- [ ] R10 ou R11: golden byte-idêntico, **ou** regenerado em commit separado por outro agente, com `golden-diff.md` e revisão Sol aprovada.
-- [ ] R13: lint provisório removido; Carta de onda com `taunt` d=1 passa no lint.
-- [ ] R15: `docs/spec339/RELATORIO-arena.md` com antes e depois, bandeiras listadas para o dono.
-- [ ] Herdado da SPEC-335 (critério 45–75 % por Postura): depois do bugfix, refazer a arena por Postura **por subclasse**, com o viés de ordem do `full_deck` corrigido e mais criaturas/sementes. Ponto de partida (27/10, `docs/spec335/RELATORIO-arena-posturas.md`): Sangromante ~80 % no padrão, Corruptor/alma ~34 % com elite. O ajuste de poder, se preciso, é uma spec de balanceamento à parte (R16).
-- [ ] `CONTROLE_DURACAO_PENDENTES` vazia (as 9 Cartas dos Lotes 2–3 validadas com o motor corrigido).
-- [ ] R16/R17: nenhum número de Carta nem limite de teste de balanço alterado nesta spec.
+- [x] R1: `taunt`, `marca`, `fear`, `silence` e `root` com `duracao` 1, aplicados por oponente, valem no próximo turno do portador nas duas ordens de iniciativa (testes da Etapa 1 verdes).
+- [x] R2: `stun` com d=1 nega exatamente 1 turno.
+- [x] R3: DoT/Sangria com o mesmo número de ticks e o mesmo dano total de antes.
+- [x] R5: tick direto sem marcador igual ao de hoje; marcador ausente da view da API.
+- [x] R6/D3: Marca do Abismo conforme a decisão do dono, com teste.
+- [x] R7: inventário parametrizado verde, com tabela no teste igual à do §3.4 atualizada.
+- [x] R8: D2 decidido; linhas `xfail(strict)` ou R8b implementado.
+- [x] R9: presságio `on` congela o alvo provocado na rodada seguinte.
+- [x] R10 ou R11: golden byte-idêntico, **ou** regenerado em commit separado por outro agente, com `golden-diff.md` e revisão Sol aprovada.
+- [x] R13: lint provisório removido; Carta de onda com `taunt` d=1 passa no lint.
+- [x] R15: `docs/spec339/RELATORIO-arena.md` com antes e depois, bandeiras listadas para o dono.
+- [x] Herdado da SPEC-335 (critério 45–75 % por Postura): depois do bugfix, refazer a arena por Postura **por subclasse**, com o viés de ordem do `full_deck` corrigido e mais criaturas/sementes. Ponto de partida (27/10, `docs/spec335/RELATORIO-arena-posturas.md`): Sangromante ~80 % no padrão, Corruptor/alma ~34 % com elite. O ajuste de poder, se preciso, é uma spec de balanceamento à parte (R16).
+- [x] `CONTROLE_DURACAO_PENDENTES` vazia (as 9 Cartas dos Lotes 2–3 validadas com o motor corrigido).
+- [x] R16/R17: nenhum número de Carta nem limite de teste de balanço alterado nesta spec.
 - [ ] `uv run pytest` verde (suíte completa offline, 1× no pouso pelo coordenador).
-- [ ] Saves antigos continuam carregando (condição sem marcador tica como antes).
-- [ ] Guard de FallbackLLM: não se aplica, porque não há `with_structured_output` novo.
+- [x] Saves antigos continuam carregando (condição sem marcador tica como antes).
+- [x] Guard de FallbackLLM: não se aplica, porque não há `with_structured_output` novo.
+
+## 5.1 Desvios e notas da implementação (executor, 27/10)
+
+- **Marcador de refresh.** `cm.apply_condition` (refresh de condição de mesmo nome) agora grava `_renovada` quando a condição tem `control` ou `stat`; o orquestrador consome a chave na passada de marcação e a transforma em `_pula_tick`. Sem isso, re-aplicar `taunt` d=1 a cada turno nunca valeria. O golden da 330 segue byte-idêntico (verificado).
+- **R8b restrito.** Marca stat defensivo só como debuff (ac/protection com delta < 0, `dano_recebido_pct` > 0) aplicado dentro do turno de OUTRO ator, e Proteção/AC positivos só de aliado do mesmo lado. Buff de reação em si mesmo (turno do atacante) não é marcado: ambíguo sem `source_actor_id` no dict da condição, e gravar isso mudaria o golden.
+- **Controle em reação sem `source_actor_id`** (ex.: `silenciado` aplicado no atacante) também é marcado quando o portador é o ator do turno; só é ignorado se a fonte for o próprio portador.
+- **Passos marcados:** tick de cena (início/fim da rodada), turno de cada ator (inclui reações e a via do baralho), ação extra e Última Ação. Restrito a `_run_round`.
+- **Viés de ordem do `full_deck`:** corrigido em `scripts/cards/sim.py` (hash estável no desempate de tier). Resultados anteriores da 335 não são comparáveis; ver `docs/spec339/RELATORIO-arena.md`.
+- **Smoke §6.1** (taxa "Provocar efetivo" na arena) não se aplica: o bot de arena joga solo. Prova por teste de motor com aliado (`test_taunt_d1_do_jogador_redireciona_proximo_turno_inimigo`). §6.2–6.4 (API local) não rodados pelo executor.
 
 ## 6. Smoke test real
 

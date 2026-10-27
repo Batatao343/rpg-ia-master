@@ -1,0 +1,2712 @@
+{
+ "label": "antes",
+ "cards": {
+  "dev1_con_cinza_no_peito": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 110,
+   "vezes_jogada": 25,
+   "taxa_uso": 0.227,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.825,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "dev1_con_veu_de_incenso": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 110,
+   "vezes_jogada": 102,
+   "taxa_uso": 0.927,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.9,
+   "delta_pp": 13.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_con_cajado_votivo": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 109,
+   "vezes_jogada": 101,
+   "taxa_uso": 0.927,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.838,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_con_uncao_curta": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 118,
+   "vezes_jogada": 14,
+   "taxa_uso": 0.119,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.838,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_con_selo_contra_o_abismo": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.825,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 5.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "dev1_con_postura_de_oracao": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 116,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.25,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.825,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_con_marca_votiva": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 110,
+   "vezes_jogada": 59,
+   "taxa_uso": 0.536,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.787,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_con_cicatriz_votiva": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 181,
+   "vezes_jogada": 59,
+   "taxa_uso": 0.326,
+   "vitoria_sem": 0.325,
+   "vitoria_com": 0.438,
+   "delta_pp": 11.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_con_bencao_do_aco": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 156,
+   "vezes_jogada": 82,
+   "taxa_uso": 0.526,
+   "vitoria_sem": 0.325,
+   "vitoria_com": 0.475,
+   "delta_pp": 15.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_con_hora_canonica": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 73,
+   "vezes_jogada": 33,
+   "taxa_uso": 0.452,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.75,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  },
+  "dev1_con_missa_fechada": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 70,
+   "vezes_jogada": 8,
+   "taxa_uso": 0.114,
+   "vitoria_sem": 0.838,
+   "vitoria_com": 0.8,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "dev1_con_sacramento_do_vazio": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 60,
+   "vezes_jogada": 37,
+   "taxa_uso": 0.617,
+   "vitoria_sem": 0.825,
+   "vitoria_com": 0.825,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.5,
+   "protecao_por_folego": 4.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_zel_mao_na_frente": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 108,
+   "vezes_jogada": 62,
+   "taxa_uso": 0.574,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.787,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_dedo_apontado": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 58,
+   "taxa_uso": 0.513,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_mao_no_peito": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.67,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev1_zel_ciume_subito": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 111,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.8,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "dev1_zel_anteparo_ciumento": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 111,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.8,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "dev1_zel_olhar_fixo": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 20,
+   "taxa_uso": 0.175,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.8,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_zelo_em_brasa": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 110,
+   "vezes_jogada": 18,
+   "taxa_uso": 0.164,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.812,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_ciume_aberto": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 152,
+   "vezes_jogada": 84,
+   "taxa_uso": 0.553,
+   "vitoria_sem": 0.425,
+   "vitoria_com": 0.425,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_ninguem_toca": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 169,
+   "vezes_jogada": 61,
+   "taxa_uso": 0.361,
+   "vitoria_sem": 0.425,
+   "vitoria_com": 0.375,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "dev1_zel_ferro_antes_do_ferro": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 76,
+   "vezes_jogada": 32,
+   "taxa_uso": 0.421,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.725,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev1_zel_corpo_entre": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 68,
+   "vezes_jogada": 10,
+   "taxa_uso": 0.147,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.775,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.5,
+   "bandeiras": []
+  },
+  "dev1_zel_ninguem_mais": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 67,
+   "vezes_jogada": 34,
+   "taxa_uso": 0.507,
+   "vitoria_sem": 0.838,
+   "vitoria_com": 0.8,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.5,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "san1_ava_moeda_guardada": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 127,
+   "vezes_jogada": 59,
+   "taxa_uso": 0.465,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.95,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_cofre_estreito": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 101,
+   "vezes_jogada": 18,
+   "taxa_uso": 0.178,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.887,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_juros_do_primeiro": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 128,
+   "vezes_jogada": 52,
+   "taxa_uso": 0.406,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.487,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_poupar_ferida": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 202,
+   "vezes_jogada": 10,
+   "taxa_uso": 0.05,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.925,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "san1_ava_livro_de_dividas": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 149,
+   "vezes_jogada": 42,
+   "taxa_uso": 0.282,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.925,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_gota_contada": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 100,
+   "vezes_jogada": 63,
+   "taxa_uso": 0.63,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.912,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 2.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_ava_mao_fechada": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 101,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.887,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "san1_ava_cobranca_adiada": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 126,
+   "vezes_jogada": 61,
+   "taxa_uso": 0.484,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.512,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_penhor_de_carne": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 104,
+   "vezes_jogada": 71,
+   "taxa_uso": 0.683,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.938,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_ava_hipoteca_de_sangue": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 53,
+   "vezes_jogada": 23,
+   "taxa_uso": 0.434,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.525,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_ava_execucao_da_divida": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 54,
+   "vezes_jogada": 35,
+   "taxa_uso": 0.648,
+   "vitoria_sem": 0.6,
+   "vitoria_com": 0.675,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_ava_cofre_sem_fundo": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 81,
+   "vezes_jogada": 40,
+   "taxa_uso": 0.494,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.688,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_talho_publico": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 47,
+   "taxa_uso": 0.566,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.887,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_veia_a_mostra": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 42,
+   "taxa_uso": 0.368,
+   "vitoria_sem": 0.45,
+   "vitoria_com": 0.512,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_cicatriz_aberta": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 61,
+   "taxa_uso": 0.735,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.875,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_exp_aplauso_de_ferro": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.875,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "san1_exp_segundo_ato": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 84,
+   "vezes_jogada": 47,
+   "taxa_uso": 0.56,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.938,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_sangue_na_areia": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.349,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.887,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_gole_rubro": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 85,
+   "vezes_jogada": 8,
+   "taxa_uso": 0.094,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.875,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_selo_de_dor": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 82,
+   "vezes_jogada": 61,
+   "taxa_uso": 0.744,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.887,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_exp_plateia_cega": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 121,
+   "vezes_jogada": 37,
+   "taxa_uso": 0.306,
+   "vitoria_sem": 0.45,
+   "vitoria_com": 0.512,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_bis_de_cicatriz": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 55,
+   "vezes_jogada": 18,
+   "taxa_uso": 0.327,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.6,
+   "delta_pp": 8.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_exp_teatro_de_facas": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 50,
+   "vezes_jogada": 13,
+   "taxa_uso": 0.26,
+   "vitoria_sem": 0.688,
+   "vitoria_com": 0.625,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_exp_ultima_cortina": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 42,
+   "vezes_jogada": 18,
+   "taxa_uso": 0.429,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.775,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 8.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_fio_de_barbeiro": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 36,
+   "taxa_uso": 0.419,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.9,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_veneno_vermelho": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.186,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.9,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_pe_de_pluma": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 87,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.887,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "san1_sil_olho_no_pulso": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.186,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.887,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_estancar_calado": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 88,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.182,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.875,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "san1_sil_marca_de_unha": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.186,
+   "vitoria_sem": 0.863,
+   "vitoria_com": 0.887,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_corte_sem_aviso": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 109,
+   "vezes_jogada": 77,
+   "taxa_uso": 0.706,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.662,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_sil_ponto_cego": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 118,
+   "vezes_jogada": 55,
+   "taxa_uso": 0.466,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.613,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_arterial_fina": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 66,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.227,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.613,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 15.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_silencio_cobrado": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 66,
+   "vezes_jogada": 15,
+   "taxa_uso": 0.227,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.6,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san1_sil_cirurgia_sem_testemunha": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 33,
+   "taxa_uso": 0.647,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.675,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 9.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "san1_sil_ultima_gota": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 43,
+   "vezes_jogada": 30,
+   "taxa_uso": 0.698,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.738,
+   "delta_pp": 3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 16.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_alm_semente_de_culpa": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 122,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.221,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.688,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_sussurro_rouco": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 124,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.218,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.675,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_voz_que_falta": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 125,
+   "vezes_jogada": 30,
+   "taxa_uso": 0.24,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.662,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_rosto_do_pavor": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 124,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.218,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.675,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_pe_no_vazio": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 122,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.221,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.688,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_ler_a_culpa": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 124,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.218,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.675,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_duvida_reflexa": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 121,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.675,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "cor1_alm_culpa_antiga": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 63,
+   "taxa_uso": 0.444,
+   "vitoria_sem": 0.15,
+   "vitoria_com": 0.212,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_cerco_de_vozes": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 70,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.229,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.5,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_alm_lembranca_errada": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 68,
+   "vezes_jogada": 41,
+   "taxa_uso": 0.603,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.5,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_alm_corredor_sem_eco": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 61,
+   "vezes_jogada": 3,
+   "taxa_uso": 0.049,
+   "vitoria_sem": 0.6,
+   "vitoria_com": 0.6,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "cor1_alm_nome_apagado": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 65,
+   "vezes_jogada": 9,
+   "taxa_uso": 0.138,
+   "vitoria_sem": 0.588,
+   "vitoria_com": 0.588,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_mofo_quente": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 110,
+   "vezes_jogada": 50,
+   "taxa_uso": 0.455,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.762,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_febre_lenta": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 113,
+   "vezes_jogada": 41,
+   "taxa_uso": 0.363,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.713,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_raiz_na_pele": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 115,
+   "vezes_jogada": 78,
+   "taxa_uso": 0.678,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.762,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_bio_ler_a_carne": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 41,
+   "taxa_uso": 0.36,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.7,
+   "delta_pp": -7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_mordida_do_bolor": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 78,
+   "taxa_uso": 0.684,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.8,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_bio_pele_podre": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 114,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.75,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "cor1_bio_nariz_de_coveiro": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 112,
+   "vezes_jogada": 12,
+   "taxa_uso": 0.107,
+   "vitoria_sem": 0.775,
+   "vitoria_com": 0.725,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_carne_tenra": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 125,
+   "vezes_jogada": 37,
+   "taxa_uso": 0.296,
+   "vitoria_sem": 0.45,
+   "vitoria_com": 0.475,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_golpe_de_mofo": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 65,
+   "vezes_jogada": 49,
+   "taxa_uso": 0.754,
+   "vitoria_sem": 0.562,
+   "vitoria_com": 0.613,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_bio_colheita_podre": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 71,
+   "vezes_jogada": 12,
+   "taxa_uso": 0.169,
+   "vitoria_sem": 0.562,
+   "vitoria_com": 0.588,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 10.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_metastase_viva": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 67,
+   "vezes_jogada": 28,
+   "taxa_uso": 0.418,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.725,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_bio_banquete_de_vermes": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 63,
+   "vezes_jogada": 20,
+   "taxa_uso": 0.317,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.562,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 12.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_gancho_de_ferro": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 120,
+   "vezes_jogada": 38,
+   "taxa_uso": 0.317,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.75,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_junta_emperrada": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 119,
+   "vezes_jogada": 38,
+   "taxa_uso": 0.319,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.75,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_estalo_de_viga": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 119,
+   "vezes_jogada": 67,
+   "taxa_uso": 0.563,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.775,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_medir_a_fadiga": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 120,
+   "vezes_jogada": 10,
+   "taxa_uso": 0.083,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.75,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_estilhaco_de_ferro": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 120,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.75,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "cor1_ino_carapaca_de_ferrugem": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 123,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.22,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 0.762,
+   "delta_pp": 1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": []
+  },
+  "cor1_ino_oxido_no_gume": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 135,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.156,
+   "vitoria_sem": 0.312,
+   "vitoria_com": 0.312,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_peso_morto": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 135,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.156,
+   "vitoria_sem": 0.312,
+   "vitoria_com": 0.312,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_estrutura_cansada": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 64,
+   "vezes_jogada": 32,
+   "taxa_uso": 0.5,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.512,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_dobra_forcada": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 67,
+   "vezes_jogada": 13,
+   "taxa_uso": 0.194,
+   "vitoria_sem": 0.512,
+   "vitoria_com": 0.525,
+   "delta_pp": 1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_ino_colapso_programado": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 63,
+   "vezes_jogada": 38,
+   "taxa_uso": 0.603,
+   "vitoria_sem": 0.65,
+   "vitoria_com": 0.65,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_ino_geometria_da_ruina": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 67,
+   "vezes_jogada": 4,
+   "taxa_uso": 0.06,
+   "vitoria_sem": 0.5,
+   "vitoria_com": 0.613,
+   "delta_pp": 11.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 1.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "cor1_tro_fresta_no_osso": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 98,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.296,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.75,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_tro_peso_na_alma": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 98,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.296,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.762,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "cor1_tro_sinal_do_abismo": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 97,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.299,
+   "vitoria_sem": 0.762,
+   "vitoria_com": 0.762,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_faisca": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 19,
+   "taxa_uso": 0.229,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 2.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_dedos": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "arc1_des_palma": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 82,
+   "vezes_jogada": 19,
+   "taxa_uso": 0.232,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 2.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_corrente": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "arc1_des_brasa": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "arc1_des_garganta": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 83,
+   "vezes_jogada": 19,
+   "taxa_uso": 0.229,
+   "vitoria_sem": 0.8,
+   "vitoria_com": 0.775,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_sobrecarga": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 125,
+   "vezes_jogada": 46,
+   "taxa_uso": 0.368,
+   "vitoria_sem": 0.287,
+   "vitoria_com": 0.388,
+   "delta_pp": 10.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_des_vazao_selvagem": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 122,
+   "vezes_jogada": 62,
+   "taxa_uso": 0.508,
+   "vitoria_sem": 0.287,
+   "vitoria_com": 0.338,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_raio_livre": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 57,
+   "vezes_jogada": 26,
+   "taxa_uso": 0.456,
+   "vitoria_sem": 0.525,
+   "vitoria_com": 0.5,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 4.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_estouro_contido": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 21,
+   "taxa_uso": 0.148,
+   "vitoria_sem": 0.287,
+   "vitoria_com": 0.263,
+   "delta_pp": -2.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_des_fenda": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 51,
+   "vezes_jogada": 22,
+   "taxa_uso": 0.431,
+   "vitoria_sem": 0.55,
+   "vitoria_com": 0.637,
+   "delta_pp": 8.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_des_caldeira_sem_fundo": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 52,
+   "vezes_jogada": 32,
+   "taxa_uso": 0.615,
+   "vitoria_sem": 0.675,
+   "vitoria_com": 0.713,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 10.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_parafuso": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 88,
+   "vezes_jogada": 43,
+   "taxa_uso": 0.489,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.863,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_imp_gambiarra": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 180,
+   "vezes_jogada": 97,
+   "taxa_uso": 0.539,
+   "vitoria_sem": 0.212,
+   "vitoria_com": 0.362,
+   "delta_pp": 15.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_carretel": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 91,
+   "vezes_jogada": 43,
+   "taxa_uso": 0.473,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.838,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_imp_olho_latao": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 94,
+   "vezes_jogada": 43,
+   "taxa_uso": 0.457,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.825,
+   "delta_pp": -5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_imp_mola": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 90,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.838,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "arc1_imp_remendo_cobre": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 92,
+   "vezes_jogada": 33,
+   "taxa_uso": 0.359,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.863,
+   "delta_pp": -1.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": []
+  },
+  "arc1_imp_bomba_estopim": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 143,
+   "vezes_jogada": 70,
+   "taxa_uso": 0.49,
+   "vitoria_sem": 0.212,
+   "vitoria_com": 0.438,
+   "delta_pp": 22.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_truque": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 185,
+   "vezes_jogada": 101,
+   "taxa_uso": 0.546,
+   "vitoria_sem": 0.212,
+   "vitoria_com": 0.338,
+   "delta_pp": 12.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_arame": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 55,
+   "vezes_jogada": 34,
+   "taxa_uso": 0.618,
+   "vitoria_sem": 0.362,
+   "vitoria_com": 0.475,
+   "delta_pp": 11.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_terceiro_dia": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 54,
+   "vezes_jogada": 20,
+   "taxa_uso": 0.37,
+   "vitoria_sem": 0.613,
+   "vitoria_com": 0.55,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc1_imp_orquestra": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 47,
+   "vezes_jogada": 2,
+   "taxa_uso": 0.043,
+   "vitoria_sem": 0.7,
+   "vitoria_com": 0.738,
+   "delta_pp": 3.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 2.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "arc1_imp_ultima_gambiarra": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 49,
+   "vezes_jogada": 18,
+   "taxa_uso": 0.367,
+   "vitoria_sem": 0.662,
+   "vitoria_com": 0.625,
+   "delta_pp": -3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_emplasto_espesso": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 204,
+   "vezes_jogada": 147,
+   "taxa_uso": 0.721,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.812,
+   "delta_pp": 8.8,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med1_bot_sal_na_sombra": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 157,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.478,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.787,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_po_nos_olhos": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 151,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.497,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.825,
+   "delta_pp": 10.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med1_bot_visco_de_raiz": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 145,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.517,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.762,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_gota_de_veneno": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 134,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.56,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.838,
+   "delta_pp": 11.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med1_bot_giz_vermelho": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.528,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.775,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_frasco_aos_pes": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 195,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.725,
+   "vitoria_com": 0.8,
+   "delta_pp": 7.5,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "med1_bot_antidoto_de_cinza": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 154,
+   "vezes_jogada": 45,
+   "taxa_uso": 0.292,
+   "vitoria_sem": 0.237,
+   "vitoria_com": 0.175,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_agulha_envenenada": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 159,
+   "vezes_jogada": 57,
+   "taxa_uso": 0.358,
+   "vitoria_sem": 0.237,
+   "vitoria_com": 0.338,
+   "delta_pp": 10.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med1_bot_amargo_forte": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 82,
+   "vezes_jogada": 52,
+   "taxa_uso": 0.634,
+   "vitoria_sem": 0.362,
+   "vitoria_com": 0.412,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med1_bot_fumigacao_geral": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 73,
+   "vezes_jogada": 16,
+   "taxa_uso": 0.219,
+   "vitoria_sem": 0.675,
+   "vitoria_com": 0.662,
+   "delta_pp": -1.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "med1_bot_elixir_imperfeito": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 68,
+   "vezes_jogada": 11,
+   "taxa_uso": 0.162,
+   "vitoria_sem": 0.688,
+   "vitoria_com": 0.688,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev_provocacao": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 22,
+   "vezes_jogada": 2,
+   "taxa_uso": 0.091,
+   "vitoria_sem": 0.562,
+   "vitoria_com": 0.5,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev_cons_marca": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 60,
+   "vezes_jogada": 43,
+   "taxa_uso": 0.717,
+   "vitoria_sem": 0.771,
+   "vitoria_com": 0.708,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 48,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "dev_zel_ciume": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 86,
+   "vezes_jogada": 27,
+   "taxa_uso": 0.314,
+   "vitoria_sem": 0.688,
+   "vitoria_com": 0.688,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 48,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev_zel_possessao": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 29,
+   "vezes_jogada": 5,
+   "taxa_uso": 0.172,
+   "vitoria_sem": 0.375,
+   "vitoria_com": 0.438,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "dev_zel_interdito": {
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 34,
+   "vezes_jogada": 3,
+   "taxa_uso": 0.088,
+   "vitoria_sem": 0.375,
+   "vitoria_com": 0.438,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san_exp_espetaculo": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 74,
+   "vezes_jogada": 29,
+   "taxa_uso": 0.392,
+   "vitoria_sem": 0.708,
+   "vitoria_com": 0.729,
+   "delta_pp": 2.1,
+   "lutas_por_braco": 48,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "san_exp_aplausos": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 16,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.375,
+   "vitoria_com": 0.625,
+   "delta_pp": 25.0,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "san_sil_fio": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 15,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.812,
+   "vitoria_com": 0.812,
+   "delta_pp": 0.0,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "san_sil_pulso": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 11,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.688,
+   "vitoria_com": 0.75,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "cor_bio_raiz": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 8,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.625,
+   "vitoria_com": 0.562,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "cor_alm_eco": {
+   "classe": "Corruptor",
+   "vezes_na_mao": 24,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.25,
+   "vitoria_com": 0.375,
+   "delta_pp": 12.5,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "em_branco"
+   ]
+  },
+  "med_marca_triagem": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 30,
+   "vezes_jogada": 5,
+   "taxa_uso": 0.167,
+   "vitoria_sem": 0.438,
+   "vitoria_com": 0.312,
+   "delta_pp": -12.5,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "arc_imp_grampo": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 29,
+   "vezes_jogada": 6,
+   "taxa_uso": 0.207,
+   "vitoria_sem": 0.5,
+   "vitoria_com": 0.438,
+   "delta_pp": -6.2,
+   "lutas_por_braco": 16,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ },
+ "posturas": {
+  "Devoto do Abismo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      65,
+      80
+     ],
+     "L1 elite": [
+      50,
+      80
+     ],
+     "L3 padrao": [
+      69,
+      80
+     ],
+     "L3 elite": [
+      54,
+      80
+     ],
+     "L5 padrao": [
+      44,
+      80
+     ],
+     "L5 elite": [
+      25,
+      80
+     ]
+    },
+    "total": 0.64,
+    "padrao": 0.742,
+    "elite": 0.537
+   },
+   "consagrado": {
+    "celulas": {
+     "L1 padrao": [
+      66,
+      80
+     ],
+     "L1 elite": [
+      50,
+      80
+     ],
+     "L3 padrao": [
+      73,
+      80
+     ],
+     "L3 elite": [
+      62,
+      80
+     ],
+     "L5 padrao": [
+      44,
+      80
+     ],
+     "L5 elite": [
+      23,
+      80
+     ]
+    },
+    "total": 0.662,
+    "padrao": 0.762,
+    "elite": 0.562
+   },
+   "zeloso": {
+    "celulas": {
+     "L1 padrao": [
+      61,
+      80
+     ],
+     "L1 elite": [
+      45,
+      80
+     ],
+     "L3 padrao": [
+      68,
+      80
+     ],
+     "L3 elite": [
+      52,
+      80
+     ],
+     "L5 padrao": [
+      39,
+      80
+     ],
+     "L5 elite": [
+      17,
+      80
+     ]
+    },
+    "total": 0.588,
+    "padrao": 0.7,
+    "elite": 0.475
+   },
+   "enlutado": {
+    "celulas": {
+     "L1 padrao": [
+      63,
+      80
+     ],
+     "L1 elite": [
+      46,
+      80
+     ],
+     "L3 padrao": [
+      68,
+      80
+     ],
+     "L3 elite": [
+      53,
+      80
+     ],
+     "L5 padrao": [
+      44,
+      80
+     ],
+     "L5 elite": [
+      21,
+      80
+     ]
+    },
+    "total": 0.615,
+    "padrao": 0.729,
+    "elite": 0.5
+   }
+  },
+  "Sangromante": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      70,
+      80
+     ],
+     "L1 elite": [
+      58,
+      80
+     ],
+     "L3 padrao": [
+      60,
+      80
+     ],
+     "L3 elite": [
+      42,
+      80
+     ],
+     "L5 padrao": [
+      56,
+      80
+     ],
+     "L5 elite": [
+      26,
+      80
+     ]
+    },
+    "total": 0.65,
+    "padrao": 0.775,
+    "elite": 0.525
+   },
+   "exposto": {
+    "celulas": {
+     "L1 padrao": [
+      71,
+      80
+     ],
+     "L1 elite": [
+      55,
+      80
+     ],
+     "L3 padrao": [
+      62,
+      80
+     ],
+     "L3 elite": [
+      43,
+      80
+     ],
+     "L5 padrao": [
+      49,
+      80
+     ],
+     "L5 elite": [
+      15,
+      80
+     ]
+    },
+    "total": 0.615,
+    "padrao": 0.758,
+    "elite": 0.471
+   },
+   "avaro": {
+    "celulas": {
+     "L1 padrao": [
+      73,
+      80
+     ],
+     "L1 elite": [
+      52,
+      80
+     ],
+     "L3 padrao": [
+      64,
+      80
+     ],
+     "L3 elite": [
+      47,
+      80
+     ],
+     "L5 padrao": [
+      53,
+      80
+     ],
+     "L5 elite": [
+      30,
+      80
+     ]
+    },
+    "total": 0.665,
+    "padrao": 0.792,
+    "elite": 0.537
+   },
+   "silencioso": {
+    "celulas": {
+     "L1 padrao": [
+      71,
+      80
+     ],
+     "L1 elite": [
+      53,
+      80
+     ],
+     "L3 padrao": [
+      63,
+      80
+     ],
+     "L3 elite": [
+      46,
+      80
+     ],
+     "L5 padrao": [
+      58,
+      80
+     ],
+     "L5 elite": [
+      30,
+      80
+     ]
+    },
+    "total": 0.669,
+    "padrao": 0.8,
+    "elite": 0.537
+   }
+  },
+  "Corruptor": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      59,
+      80
+     ],
+     "L1 elite": [
+      46,
+      80
+     ],
+     "L3 padrao": [
+      57,
+      80
+     ],
+     "L3 elite": [
+      31,
+      80
+     ],
+     "L5 padrao": [
+      24,
+      80
+     ],
+     "L5 elite": [
+      7,
+      80
+     ]
+    },
+    "total": 0.467,
+    "padrao": 0.583,
+    "elite": 0.35
+   },
+   "biologia": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      54,
+      80
+     ],
+     "L3 padrao": [
+      56,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      36,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.542,
+    "padrao": 0.642,
+    "elite": 0.442
+   },
+   "alma": {
+    "celulas": {
+     "L1 padrao": [
+      56,
+      80
+     ],
+     "L1 elite": [
+      43,
+      80
+     ],
+     "L3 padrao": [
+      52,
+      80
+     ],
+     "L3 elite": [
+      29,
+      80
+     ],
+     "L5 padrao": [
+      22,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.438,
+    "padrao": 0.542,
+    "elite": 0.333
+   },
+   "inorganica": {
+    "celulas": {
+     "L1 padrao": [
+      60,
+      80
+     ],
+     "L1 elite": [
+      51,
+      80
+     ],
+     "L3 padrao": [
+      59,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      25,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.515,
+    "padrao": 0.6,
+    "elite": 0.429
+   }
+  },
+  "Arcanista Cinzento": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      67,
+      80
+     ],
+     "L1 elite": [
+      39,
+      80
+     ],
+     "L3 padrao": [
+      47,
+      80
+     ],
+     "L3 elite": [
+      29,
+      80
+     ],
+     "L5 padrao": [
+      32,
+      80
+     ],
+     "L5 elite": [
+      15,
+      80
+     ]
+    },
+    "total": 0.477,
+    "padrao": 0.608,
+    "elite": 0.346
+   },
+   "calibrado": {
+    "celulas": {
+     "L1 padrao": [
+      67,
+      80
+     ],
+     "L1 elite": [
+      45,
+      80
+     ],
+     "L3 padrao": [
+      65,
+      80
+     ],
+     "L3 elite": [
+      42,
+      80
+     ],
+     "L5 padrao": [
+      19,
+      80
+     ],
+     "L5 elite": [
+      9,
+      80
+     ]
+    },
+    "total": 0.515,
+    "padrao": 0.629,
+    "elite": 0.4
+   },
+   "descoberto": {
+    "celulas": {
+     "L1 padrao": [
+      59,
+      80
+     ],
+     "L1 elite": [
+      38,
+      80
+     ],
+     "L3 padrao": [
+      52,
+      80
+     ],
+     "L3 elite": [
+      29,
+      80
+     ],
+     "L5 padrao": [
+      32,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.454,
+    "padrao": 0.596,
+    "elite": 0.312
+   },
+   "improvisador": {
+    "celulas": {
+     "L1 padrao": [
+      66,
+      80
+     ],
+     "L1 elite": [
+      46,
+      80
+     ],
+     "L3 padrao": [
+      64,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      33,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.544,
+    "padrao": 0.679,
+    "elite": 0.408
+   }
+  },
+  "Médico de Campo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      63,
+      80
+     ],
+     "L1 elite": [
+      52,
+      80
+     ],
+     "L3 padrao": [
+      61,
+      80
+     ],
+     "L3 elite": [
+      37,
+      80
+     ],
+     "L5 padrao": [
+      23,
+      80
+     ],
+     "L5 elite": [
+      6,
+      80
+     ]
+    },
+    "total": 0.504,
+    "padrao": 0.613,
+    "elite": 0.396
+   },
+   "cirurgiao_trincheira": {
+    "celulas": {
+     "L1 padrao": [
+      66,
+      80
+     ],
+     "L1 elite": [
+      50,
+      80
+     ],
+     "L3 padrao": [
+      62,
+      80
+     ],
+     "L3 elite": [
+      51,
+      80
+     ],
+     "L5 padrao": [
+      22,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.54,
+    "padrao": 0.625,
+    "elite": 0.454
+   },
+   "boticario": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      50,
+      80
+     ],
+     "L3 padrao": [
+      67,
+      80
+     ],
+     "L3 elite": [
+      54,
+      80
+     ],
+     "L5 padrao": [
+      27,
+      80
+     ],
+     "L5 elite": [
+      6,
+      80
+     ]
+    },
+    "total": 0.554,
+    "padrao": 0.65,
+    "elite": 0.458
+   },
+   "cirurgiao_ferro": {
+    "celulas": {
+     "L1 padrao": [
+      64,
+      80
+     ],
+     "L1 elite": [
+      61,
+      80
+     ],
+     "L3 padrao": [
+      66,
+      80
+     ],
+     "L3 elite": [
+      54,
+      80
+     ],
+     "L5 padrao": [
+      36,
+      80
+     ],
+     "L5 elite": [
+      10,
+      80
+     ]
+    },
+    "total": 0.606,
+    "padrao": 0.692,
+    "elite": 0.521
+   }
+  }
+ },
+ "inimigos": {
+  "Devoto do Abismo": {
+   "lacaio": [
+    26,
+    40
+   ],
+   "padrao": [
+    33,
+    40
+   ],
+   "elite": [
+    25,
+    40
+   ],
+   "chefe": [
+    27,
+    40
+   ]
+  },
+  "Sangromante": {
+   "lacaio": [
+    29,
+    40
+   ],
+   "padrao": [
+    28,
+    40
+   ],
+   "elite": [
+    19,
+    40
+   ],
+   "chefe": [
+    25,
+    40
+   ]
+  }
+ },
+ "elapsed_s": 210.1
+}
