@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, MotionConfig } from "motion/react";
+import { AnimatePresence, motion, MotionConfig, useReducedMotion } from "motion/react";
 import * as api from "./api";
 import { isNativeApp, isAndroidClient } from "./native/platform";
 import { playAdapter } from "./purchases";
@@ -46,6 +46,8 @@ const LS_KEY = "cronicas_game_id";
 export function App() {
   type Screen = "bootstrap" | "auth" | "saves" | "create" | "simulator" | "play" | "account";
   const [screen, setScreen] = useState<Screen>("bootstrap");
+  // reducedMotion="user" só desliga transform/layout; o fade de opacidade entre telas também para.
+  const reduceMotion = useReducedMotion();
   const accountReturn = useRef<Screen>("saves");
   const checkoutReturnRequested = () => ["success", "cancel"].includes(
     new URLSearchParams(window.location.search).get("checkout") || "");
@@ -917,7 +919,7 @@ export function App() {
   const renderedOwner = owner.current;
   const renderedSession = session.current;
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="user" transition={reduceMotion ? { duration: 0 } : undefined}>
       <div className="atmosphere" aria-hidden />
       <EmberField />
       {screen !== "play" && <Banner state={banner} onDone={clearBanner} />}

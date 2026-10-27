@@ -105,7 +105,10 @@ test('R4: so design/primitives.tsx e os legados importam motion; combat/ e desig
 test('R5: bloco global de reduced-motion e MotionConfig user permanecem', () => {
   const styles = readFileSync(here('../src/styles.css'), 'utf8');
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)\s*\{\s*\*, \*::before, \*::after \{ animation: none !important; transition-duration: 0\.01ms !important; \}\s*\.ember-canvas \{ display: none; \}/);
-  assert.match(readFileSync(here('../src/App.tsx'), 'utf8'), /<MotionConfig reducedMotion="user">/);
+  const app = readFileSync(here('../src/App.tsx'), 'utf8');
+  assert.match(app, /<MotionConfig reducedMotion="user"[ >]/);
+  // reducedMotion="user" não para fades de opacidade; com reduce a transição global é zerada.
+  assert.match(app, /transition=\{reduceMotion \? \{ duration: 0 \} : undefined\}/);
 });
 
 test('R8: sem dependencia nova de animacao (GSAP/lottie/three)', () => {
