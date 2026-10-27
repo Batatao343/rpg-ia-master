@@ -1,5 +1,5 @@
 {
-  "commit_sha": "7e1116226d3f2279fcac9038634c7c9db9decf65",
+  "commit_sha": "fcf92925e2ec377bed9eaa9c9bb82b444b2763ed",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -70461,7 +70461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 737
+        "line": 741
       },
       "source": "module:services.conflict_turn",
       "target": "symbol:services.conflict_turn._apply_attack_card_effect",
@@ -70472,7 +70472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 782
+        "line": 786
       },
       "source": "module:services.conflict_turn",
       "target": "symbol:services.conflict_turn._check_death",
@@ -70494,7 +70494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 726
+        "line": 730
       },
       "source": "module:services.conflict_turn",
       "target": "symbol:services.conflict_turn._effect_amount",
@@ -70582,7 +70582,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 617
+        "line": 621
       },
       "source": "module:services.conflict_turn",
       "target": "symbol:services.conflict_turn._resolve_support_card",
@@ -70637,7 +70637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 716
+        "line": 720
       },
       "source": "module:services.conflict_turn",
       "target": "symbol:services.conflict_turn._support_use_phrase",
@@ -281551,7 +281551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 747
+        "line": 751
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -281562,7 +281562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 761
+        "line": 765
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -281573,7 +281573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 767
+        "line": 771
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -281584,7 +281584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 745
+        "line": 749
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -281595,7 +281595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 759
+        "line": 763
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:combat_mechanics.parse_condition",
@@ -281606,7 +281606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 763
+        "line": 767
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:services.conflict_scene.move_distance",
@@ -281617,7 +281617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 740
+        "line": 744
       },
       "source": "symbol:services.conflict_turn._apply_attack_card_effect",
       "target": "symbol:services.conflict_turn._effect_amount",
@@ -281628,7 +281628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 786
+        "line": 790
       },
       "source": "symbol:services.conflict_turn._check_death",
       "target": "symbol:services.death_flow.should_trigger_last_stand",
@@ -281639,7 +281639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 787
+        "line": 791
       },
       "source": "symbol:services.conflict_turn._check_death",
       "target": "symbol:services.death_flow.trigger_last_stand",
@@ -281672,7 +281672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 732
+        "line": 736
       },
       "source": "symbol:services.conflict_turn._effect_amount",
       "target": "symbol:combat_mechanics.roll_dice_numeric",
@@ -281738,7 +281738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 605
+        "line": 609
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -281749,7 +281749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 561
+        "line": 565
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -281760,7 +281760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 562
+        "line": 566
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:combat_mechanics.damage_type_bonus",
@@ -281771,7 +281771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 556
+        "line": 560
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:combat_mechanics.early_game_damage_bonus",
@@ -281804,7 +281804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 601
+        "line": 605
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:combat_mechanics.parse_condition",
@@ -281837,7 +281837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 585
+        "line": 589
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects._ctx_for",
@@ -281848,7 +281848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 597
+        "line": 601
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects._ctx_for",
@@ -281859,7 +281859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 609
+        "line": 613
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects._ctx_for",
@@ -281881,7 +281881,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 584
+        "line": 588
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.apply_effect",
@@ -281892,7 +281892,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 609
+        "line": 613
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.arm",
@@ -281903,7 +281903,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 567
+        "line": 571
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.consume_marca_abismo",
@@ -281914,7 +281914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 574
+        "line": 578
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.damage_pct",
@@ -281958,7 +281958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 610
+        "line": 614
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.record_play",
@@ -281980,7 +281980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 596
+        "line": 600
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.card_effects.resolve_extras",
@@ -281991,7 +281991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 579
+        "line": 583
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.combat_flags.mode",
@@ -282013,7 +282013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 568
+        "line": 572
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_damage.resolve_damage_and_wounds",
@@ -282057,7 +282057,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 549
+        "line": 553
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_scene.engage",
@@ -282101,7 +282101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 614
+        "line": 618
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_scene.reveal_after_attack",
@@ -282112,7 +282112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 593
+        "line": 597
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_turn._apply_attack_card_effect",
@@ -282123,7 +282123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 582
+        "line": 586
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_turn._check_death",
@@ -282134,7 +282134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 554
+        "line": 558
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_turn._damage_from",
@@ -282156,7 +282156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 552
+        "line": 556
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_turn._fire_triggered_passive",
@@ -282189,7 +282189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 547
+        "line": 551
       },
       "source": "symbol:services.conflict_turn._resolve_attack_step",
       "target": "symbol:services.conflict_turn._is_melee",
@@ -282365,7 +282365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 706
+        "line": 710
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -282376,7 +282376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 629
+        "line": 633
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -282387,7 +282387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 673
+        "line": 677
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:combat_mechanics.reduce_ally_abyss",
@@ -282398,7 +282398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 676
+        "line": 680
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:services.conflict_scene.hide",
@@ -282409,7 +282409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 681
+        "line": 685
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:services.conflict_scene.move_distance",
@@ -282420,7 +282420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/conflict_turn.py",
-        "line": 623
+        "line": 627
       },
       "source": "symbol:services.conflict_turn._resolve_support_card",
       "target": "symbol:services.conflict_turn._effect_amount",
@@ -601506,14 +601506,14 @@
     {
       "id": "symbol:services.conflict_turn._apply_attack_card_effect",
       "kind": "function",
-      "line": 737,
+      "line": 741,
       "path": "services/conflict_turn.py",
       "qualified_name": "services.conflict_turn._apply_attack_card_effect"
     },
     {
       "id": "symbol:services.conflict_turn._check_death",
       "kind": "function",
-      "line": 782,
+      "line": 786,
       "path": "services/conflict_turn.py",
       "qualified_name": "services.conflict_turn._check_death"
     },
@@ -601527,7 +601527,7 @@
     {
       "id": "symbol:services.conflict_turn._effect_amount",
       "kind": "function",
-      "line": 726,
+      "line": 730,
       "path": "services/conflict_turn.py",
       "qualified_name": "services.conflict_turn._effect_amount"
     },
@@ -601583,7 +601583,7 @@
     {
       "id": "symbol:services.conflict_turn._resolve_support_card",
       "kind": "function",
-      "line": 617,
+      "line": 621,
       "path": "services/conflict_turn.py",
       "qualified_name": "services.conflict_turn._resolve_support_card"
     },
@@ -601618,7 +601618,7 @@
     {
       "id": "symbol:services.conflict_turn._support_use_phrase",
       "kind": "function",
-      "line": 716,
+      "line": 720,
       "path": "services/conflict_turn.py",
       "qualified_name": "services.conflict_turn._support_use_phrase"
     },
@@ -680297,5 +680297,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:cfe7f31c00057f8483f07abf94d0d6222751ecef32d7abe38eb8e44d533d1b4b"
+  "source_tree_hash": "sha256:4a7097a42976601575a83e0450123d89bb25d3099043f5a0ef2f9c99b0133160"
 }
