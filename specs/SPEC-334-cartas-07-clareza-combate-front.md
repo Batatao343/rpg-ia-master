@@ -1,6 +1,6 @@
 # SPEC-334 — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
 
-> **Status:** `in-progress` (executor entregue; aguarda revisão Sol + jornada Playwright)
+> **Status:** `in-progress` (front pousado atrás de `combat.pilhas` em 27/10 após re-revisão Sol APPROVED; falta jornada Playwright 390/1440 (EVAL_AUTHORING), R9 fila do texto livre, faixa da SPEC-331)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (contrato `pilhas`/`jogadas`), SPEC-329 (`pressagios_publicos`), SPEC-330 (`_glossario.json`, `render_card_text`), SPEC-320–324 (tokens, mobile, a11y, "livro não chat")
