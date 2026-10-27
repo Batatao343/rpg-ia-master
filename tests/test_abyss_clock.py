@@ -2,8 +2,6 @@
 
 import random
 
-import pytest
-
 from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 
@@ -17,7 +15,7 @@ def _actor(aid, **kw):
 
 
 def _arena(cartas=()):
-    player = _actor("player", entropy=0, max_entropy=20)
+    player = _actor("player", abyss_charge=0)
     e = _actor("e")
     scene = cs.new_scene()
     for i in ("player", "e"):
@@ -44,7 +42,7 @@ def test_off_nao_muda_entropia(monkeypatch):
     for r in range(7):
         out = _round(scene, actors, sides, r)
         assert "abyss_clock" not in out
-    assert actors["player"]["entropy"] == 0
+    assert actors["player"]["abyss_charge"] == 0
 
 
 def test_relogio_so_a_partir_da_rodada_5(monkeypatch):
@@ -58,7 +56,7 @@ def test_relogio_so_a_partir_da_rodada_5(monkeypatch):
             break
     assert seen[:4] == [None, None, None, None]
     assert seen[4:] == list(range(5, 5 + len(seen[4:])))
-    assert actors["player"]["entropy"] >= len(seen[4:])  # +1 por rodada do Relógio
+    assert actors["player"]["abyss_charge"] == len(seen[4:])  # D-331-4: +1 Carga por rodada
 
 
 def test_relogio_dispara_de_novo_a_carta_mais_forte(monkeypatch):

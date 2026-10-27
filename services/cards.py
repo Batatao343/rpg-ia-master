@@ -180,14 +180,25 @@ def reload_cards() -> None:
     global _CARDS, _VIRTUE_SUGGESTIONS
     _CARDS = None
     _VIRTUE_SUGGESTIONS = None
+    _TEMP_CARDS.clear()
 
 
 def all_cards() -> dict[str, dict]:
     return _load_cards()
 
 
+_TEMP_CARDS: dict[str, dict] = {}  # SPEC-331 R6: cartas de objeto de cena (nunca no catalogo)
+_TEMP_CAP = 64
+
+
+def register_temp_card(card: dict) -> None:
+    if len(_TEMP_CARDS) >= _TEMP_CAP and card["id"] not in _TEMP_CARDS:
+        _TEMP_CARDS.clear()  # efemeras e reconstruidas a cada sync: o teto so evita vazamento
+    _TEMP_CARDS[card["id"]] = card
+
+
 def get_card(card_id: str) -> dict | None:
-    return _load_cards().get(card_id)
+    return _load_cards().get(card_id) or _TEMP_CARDS.get(card_id)
 
 
 def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict | None:

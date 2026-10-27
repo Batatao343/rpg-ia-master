@@ -243,16 +243,6 @@ def test_a_cada_n_rodadas_e_uma_vez(on):
     assert scene["objects"][0]["destroyed"] is True
 
 
-def test_entropia_da_carta_de_cena_respeita_o_teto(on):
-    player = _actor("player", entropy=2, max_entropy=3)
-    actors = {"player": player, "e": _actor("e")}
-    scene = _scene(cartas=["vigilia_dos_druidas_cinzentos"])
-    out = {"logs": [], "terminal": [], "deaths": []}
-    sc.tick(_ctx(scene, actors), 1, "fim_rodada", out)
-    sc.tick(_ctx(scene, actors), 2, "fim_rodada", out)
-    assert player["entropy"] == 3
-
-
 def test_shadow_registra_mas_nao_muda_estado(monkeypatch):
     monkeypatch.setenv("RPG_SCENE_CARDS", "shadow")
     actors = {"player": _actor("player"), "e": _actor("e")}

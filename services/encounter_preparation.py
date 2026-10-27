@@ -526,7 +526,21 @@ def _scene_cards_prompt(ctx: dict) -> str:
         return ""
     options = _sc.prompt_options(ctx.get("location"))
     sep = chr(10)
-    lines = [sep + "Objetivo opcional (objetivo.tipo SÓ de: " + ", ".join(_sc.OBJETIVOS) + ")."]
+    foes = [
+        str(e.get("id") or e.get("name")) for e in ctx.get("enemies") or [] if isinstance(e, dict)
+    ]
+    friends = [str(a) for a in ctx.get("allies") or []]
+    lines = [
+        sep
+        + "Objetivo opcional (objetivo.tipo SÓ de: "
+        + ", ".join(_sc.OBJETIVOS)
+        + "). objetivo.alvo: proteger = id de aliado ("
+        + (", ".join(friends) or "nenhum")
+        + "); alcancar_zona = id de uma zona criada nesta resposta; destruir_objeto = id de um "
+        + "objeto criado nesta resposta; interromper_ritual = id de inimigo ("
+        + (", ".join(foes) or "nenhum")
+        + "). Sem alvo válido, omita o objetivo."
+    ]
     if options:
         lines.append(
             "cartas_de_cena: 0-2 ids SÓ desta lista (ou vazio se nenhuma combina):"

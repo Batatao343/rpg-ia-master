@@ -1229,7 +1229,10 @@ def _parse_turn_declaration(
                         acao=TurnStep(kind="object", object_id=oid, interaction=label),
                     )
                 _log_event("combat", "object_invalid_fallback", level="info")
-            if kind == "card" and res.card_id in (player.get("prepared_cards") or []):
+            if kind == "card" and (
+                res.card_id in (player.get("prepared_cards") or [])
+                or _scene_cards.in_hand(piles, res.card_id)  # SPEC-331 P1-1
+            ):
                 card = cards.get_card(res.card_id) or {}
                 first = TurnStep(
                     kind="card", card_id=res.card_id, target_id=_default_card_target(card, tid)
@@ -1243,6 +1246,7 @@ def _parse_turn_declaration(
                         )
                         for x in (getattr(res, "extra_card_ids", None) or [])
                         if x in (player.get("prepared_cards") or [])
+                        or _scene_cards.in_hand(piles, x)
                     ]
                     if extras:
                         return TurnDeclaration(
@@ -1783,7 +1787,7 @@ def _combat_node(state: GameState):
                 player, zlib.crc32(conflict_instance_id.encode("utf-8"))
             )
             _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
-        if _scene_cards.enabled():  # SPEC-331 R3: presságio de cena da rodada 1
+        if _scene_cards.active():  # SPEC-331 R3: presságio de cena da rodada 1
             combat_meta["pressagios_cena"] = _scene_cards.forecast(scene, 1)
         # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
         combat_meta = em.safe_transition(combat_meta, "entering")
@@ -1961,6 +1965,8 @@ def _combat_node(state: GameState):
         world_out.pop("encounter_surprise", None)
     weather_logs = _apply_weather_hazard(player, world, rng=rng)
     _register_environmental_damage_terminal(player, weather_logs)
+    if isinstance(combat_meta.get("pilhas"), dict):  # SPEC-331 P1-1: cartas de objeto no turno
+        _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)
     resolved_decl: TurnDeclaration | None = declaration
     flee_allowed = _can_attempt_flee(player)
     if flee_requested and flee_allowed:
@@ -2175,6 +2181,8 @@ def _combat_node(state: GameState):
             elif recovery_state == "acordado":
                 participant["conscious"] = True
     victory = combat_over and not player_dead and not hero_fled and bool(dead or downed)
+    if scene.get("objetivo_resultado") == "falhou":  # SPEC-331 P2-1: objetivo falho = sem espólio
+        victory = False
 
     # ---- XP determinístico (fugitivo/queda letal não contam) ----
     level_up_events: list[dict] = []
@@ -2266,7 +2274,7 @@ def _combat_node(state: GameState):
             )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")
-    if _scene_cards.enabled():  # SPEC-331 R3: o que dispara na PRÓXIMA rodada
+    if _scene_cards.active():  # SPEC-331 R3: o que dispara na PRÓXIMA rodada
         if combat_over:
             combat_meta.pop("pressagios_cena", None)
         elif not refused:

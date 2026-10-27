@@ -35,7 +35,7 @@ Rótulos: **[F]** fato (HEAD `a8361681`) · **[D?]** decisão pendente · **[R]*
 - **R6** — Com SPEC-328 `on`: ao entrar/estar na zona de um objeto com interação, a interação vira **carta temporária** na mão (`gerar_carta`, Exaurir, Fôlego 1). Sai da mão ao sair da zona. Sem SPEC-328, segue o fluxo de interação atual.
 
 **Relógio**
-- **R7** — Todo conflito tem **Relógio do Abismo**: a partir da rodada `R0 = 5` [D?], no início de cada rodada todos os participantes ganham +1 Entropia e a Carta de Cena mais forte dispara de novo. Narrado como "o Abismo se aproxima". Substitui o empate silencioso por pressão crescente; `_stalemate_guard` fica como rede de segurança.
+- **R7** — Todo conflito tem **Relógio do Abismo**: a partir da rodada `R0 = 5` (D6), no início de cada rodada todos os participantes que têm Carga ganham +1 Carga do Abismo (D-331-4: não Entropia) e a Carta de Cena mais forte dispara de novo. Narrado como "o Abismo se aproxima". Substitui o empate silencioso por pressão crescente; `_stalemate_guard` fica como rede de segurança.
 
 **LLM**
 - **R8** — O prompt de preparação recebe só os ids/nome/sabor elegíveis (máx. 12) e escolhe; nenhum efeito numérico no prompt. Guard de FallbackLLM: falha → cena sem Cartas de Cena e objetivo padrão.
@@ -77,3 +77,10 @@ Cartas de Cena criadas pela LLM (proibido — só catálogo). Mapa visual de zon
 - **R5:** `out["objetivo"]={tipo,resultado}` + `scene["objetivo_resultado"]`; `_encounter_outcome` mapeia cumprido→`victory`, falhou→`defeat`. Espólio (SPEC-333) lê `objetivo_resultado`.
 - **R6:** `scene_cards.sync_hand` (só `on` + `RPG_CARD_DECK=on`) injeta no catálogo em memória cartas `cena_<obj>_<hash>` (Exaurir, Fôlego 1, `frequencia: cena`) para `damage`/`apply_condition`; sai da mão ao sair da zona e nunca entra em compra/descarte.
 - **Presságio de cena:** `combat["pressagios_cena"]` = lista pública `{id,nome,pressagio,quando,rodada}` da próxima rodada (SPEC-334 consome).
+
+## 9. Correções da revisão Sol (2026-10-27)
+
+- **D-331-4 (R7 corrigido, decisão do coordenador):** o Relógio do Abismo dá **+1 Carga do Abismo** por rodada, a partir da rodada 5, a todo participante que tem Carga (jogador e fichas que já a carregam), disparando `ao_entrar_carga`; o Abismo dispara pelo caminho normal (`_maybe_abyss`). Entropia é combustível das Cartas, então **não** é mais ganha pelo Relógio. A ação de cena `entropia` virou `carga` (3 cartas do catálogo). Mantém o redisparo da Carta de Cena mais forte.
+- P1-1: `sync_hand` roda no início do nó; CLASSIFY aceita `cena_*` da mão; temporárias em registro separado (`cards.register_temp_card`, limpo por `reload_cards`), fora de `cards_for_class`/catálogo (P2-4).
+- P1-3: a view de combate da API expõe `pressagios_cena` e `objetivo` (`tipo`, `alvo_nome`, `n`, `rodada`, `resultado`) com a flag `on`.
+- P2-1: objetivo falho = `victory=False` (sem espólio) e `defeat`. P2-2: dano/efeito de ambiente sem fonte (sem retaliação/Marca/crédito de queda). P2-3: `shadow` não grava `cena_estado` nem `pressagios_cena`. P2-6: o prompt lista alvos válidos. P2-7: `forecast` prevê o redisparo do Relógio.

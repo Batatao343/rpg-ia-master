@@ -108,12 +108,12 @@
       "efeitos": [],
       "acoes": [
         {
-          "tipo": "entropia",
+          "tipo": "carga",
           "n": 1
         }
       ],
       "pressagio": "Os Druidas Cinzentos velam em silêncio; o Abismo vai se aproximar de todos no fim da rodada.",
-      "sabor": "Os Druidas marcam as poças e as clareiras; sob o olhar deles o Abismo vem mais perto e mais barato."
+      "sabor": "Os Druidas marcam as poças e as clareiras; sob o olhar deles o Abismo vem mais perto."
     },
     {
       "id": "telhado_que_cede",
@@ -453,7 +453,7 @@
       "efeitos": [],
       "acoes": [
         {
-          "tipo": "entropia",
+          "tipo": "carga",
           "n": 1
         }
       ],
@@ -541,7 +541,7 @@
       "efeitos": [],
       "acoes": [
         {
-          "tipo": "entropia",
+          "tipo": "carga",
           "n": 1
         }
       ],

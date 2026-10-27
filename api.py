@@ -2918,6 +2918,14 @@ def _combat_block(state: dict) -> dict[str, Any]:
     }
     if _enemy_intent.active() and meta.get("pressagios_publicos"):
         view["pressagios_publicos"] = list(meta["pressagios_publicos"])  # SPEC-329 R2/R3
+    from services import scene_cards as _scene_cards
+
+    if _scene_cards.active():  # SPEC-331 R3/R4: presságio de cena + objetivo público
+        view["pressagios_cena"] = list(meta.get("pressagios_cena") or [])
+        _names = {str(e.get("id")): e.get("name") for e in enemies if e.get("id")}
+        _objective = _scene_cards.public_objective(meta.get("scene"), _names)
+        if _objective:
+            view["objetivo"] = _objective
     from services import card_piles as _piles
 
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):

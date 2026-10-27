@@ -43,7 +43,8 @@ OBJETIVOS = (
 MOMENTOS = ("inicio_rodada", "fim_rodada", "a_cada_n_rodadas")
 ESCOPOS = ("todos", "herois", "inimigos")
 FILTROS = ("visivel", "zona_inicial")
-ACOES = ("entropia", "deslocar", "objeto_cai")
+ACOES = ("carga", "deslocar", "objeto_cai")
+AMBIENTE = "ambiente"  # fonte neutra do dano de cena (P2-2)
 TEMP_PREFIX = "cena_"
 
 
@@ -307,23 +308,29 @@ def _due(card: dict, rnd: int, momento: str, st: dict) -> bool:
 
 def forecast(scene: dict, rnd: int) -> list[dict]:
     """R3: cartas que disparam na rodada `rnd`, no mesmo contrato publico do Pressagio
-    (so texto: id, nome, pressagio, quando). Nunca revela numeros."""
-    if not enabled():
+    (so texto: id, nome, pressagio, quando). Nunca revela numeros. Leitura pura: nao
+    grava nada na cena. Inclui o redisparo da carta mais forte pelo Relogio (P2-7)."""
+    if not active():
         return []
-    st = _state(scene) if scene.get("cartas_de_cena") else {"fired": []}
+    st = scene.get("cena_estado") or {"fired": []}
     out = []
     for card in scene_cards_of(scene):
         if any(_due(card, rnd, m, st) for m in ("inicio_rodada", "fim_rodada")):
-            out.append(
-                {
-                    "id": card["id"],
-                    "nome": card["nome"],
-                    "pressagio": card["pressagio"],
-                    "quando": card["quando"],
-                    "rodada": rnd,
-                }
-            )
+            out.append(_public(card, rnd))
+    top = strongest(scene)
+    if top is not None and rnd >= ABYSS_CLOCK_START and not any(o["id"] == top["id"] for o in out):
+        out.append({**_public(top, rnd), "quando": "relogio"})
     return out
+
+
+def _public(card: dict, rnd: int) -> dict:
+    return {
+        "id": card["id"],
+        "nome": card["nome"],
+        "pressagio": card["pressagio"],
+        "quando": card["quando"],
+        "rodada": rnd,
+    }
 
 
 def _alive(actor: dict | None) -> bool:
@@ -355,13 +362,55 @@ def _targets(ctx, card: dict) -> list[str]:
     return out
 
 
-def _gain_entropy(actor: dict, n: int) -> int:
-    if "entropy" not in actor and not actor.get("is_player"):
+def _gain_charge(ctx, aid: str, n: int, out: dict) -> int:
+    """+n Carga do Abismo (D-331-4: pressao, nao recurso). So quem tem Carga (o jogador
+    e fichas que ja a carregam). O Abismo dispara pelo caminho normal (`_maybe_abyss`,
+    fim da rodada) e o gatilho `ao_entrar_carga` roda."""
+    from services import card_effects as fx
+
+    actor = ctx.actors_by_id.get(aid) or {}
+    if "abyss_charge" not in actor and not actor.get("is_player"):
         return 0
-    before = int(actor.get("entropy", 0) or 0)
-    mx = int(actor.get("max_entropy", 0) or 0)
-    actor["entropy"] = min(mx, before + n) if mx > 0 else before + n
-    return int(actor["entropy"]) - before
+    actor["abyss_charge"] = int(actor.get("abyss_charge", 0) or 0) + n
+    fx.fire("ao_entrar_carga", sujeito_id=aid, out=out, ctx=ctx)
+    return n
+
+
+def _apply_ambient(ctx, eff: dict, aid: str, card: dict, out: dict) -> None:
+    """Efeito de AMBIENTE (P2-2): fonte neutra - sem retaliacao contra a vitima, sem
+    Marca do Abismo nem bonus de dano de ninguem, sem credito de queda."""
+    import combat_mechanics as cm
+    from services import card_effects as fx
+    from services import conflict_orchestrator as orch
+
+    actor = ctx.actors_by_id[aid]
+    kind = str(eff.get("kind"))
+    value = fx.base_value(eff)
+    src = card["id"]
+    logs = out.setdefault("logs", [])
+    if kind == "rachadura":
+        logs.append(cm.apply_condition(actor, fx.rachadura_condition(value, src)))
+    elif kind == "torpor":
+        logs.append(cm.apply_condition(actor, fx.torpor_condition(value, src)))
+    elif kind == "sangria":
+        logs.append(cm.apply_condition(actor, fx.sangria_condition(value, src)))
+    elif kind == "vigilia":
+        logs.append(fx.add_vigilia(actor, value, src))
+    elif kind == "marca_do_abismo":
+        logs.append(cm.apply_condition(actor, fx.marca_abismo_condition(value, src, "")))
+    elif kind == "dano":
+        from services.conflict_damage import resolve_damage_and_wounds
+
+        res = resolve_damage_and_wounds(
+            actor,
+            damage_base=max(0, value),
+            damage_type=str(eff.get("dano_tipo") or "cortante"),
+            dealt_pct=0,
+            rng=ctx.rng,
+        )
+        logs.append("; ".join(res["log"]))
+        orch._check_terminal(actor, aid, fx._ensure_turn_out(out), damage_applied=True, by=AMBIENTE)
+        fx.on_damage(ctx, aid, None, int(res.get("dano_final", 0) or 0), out)
 
 
 def _fire_card(ctx, card: dict, out: dict) -> bool:
@@ -387,7 +436,6 @@ def _fire_card(ctx, card: dict, out: dict) -> bool:
     if not targets and not card.get("acoes"):
         return False
     logs.append(f"{nome}: {card['sabor']}")
-    src = {"id": card["id"], "name": nome}
     for aid in targets:
         actor = ctx.actors_by_id[aid]
         for eff in card.get("efeitos") or []:
@@ -398,13 +446,13 @@ def _fire_card(ctx, card: dict, out: dict) -> bool:
                 cond["duration"] = max(1, int(eff.get("duracao", 1) or 1))
                 logs.append(cm.apply_condition(actor, cond))
             else:
-                fx.apply_effect(ctx, {**eff, "alvo": "eu"}, aid, aid, out, card=src)
+                _apply_ambient(ctx, eff, aid, card, out)
         for act in card.get("acoes") or []:
-            if act.get("tipo") == "entropia":
-                gained = _gain_entropy(actor, int(act.get("n", 1) or 1))
+            if act.get("tipo") == "carga":
+                gained = _gain_charge(ctx, aid, int(act.get("n", 1) or 1), out)
                 if gained:
                     logs.append(
-                        f"{actor.get('name', aid)} sente o Abismo mais perto (+{gained} Entropia)."
+                        f"{actor.get('name', aid)} sente o Abismo mais perto (+{gained} Carga)."
                     )
             elif act.get("tipo") == "deslocar":
                 res = cs.move_distance(scene, aid, str(act.get("direcao") or "afastar"))
@@ -420,12 +468,13 @@ def tick(ctx, rnd: int, momento: str = "fim_rodada", out: dict | None = None) ->
     out = out if out is not None else {}
     if not enabled() or not ctx.scene.get("cartas_de_cena"):
         return []
-    st = _state(ctx.scene)
+    shadow = mode() == "shadow"  # shadow: so le (P2-3), nunca grava na cena
+    st = dict(ctx.scene.get("cena_estado") or {}) if shadow else _state(ctx.scene)
     events: list[dict] = []
     for card in scene_cards_of(ctx.scene):
         if not _due(card, rnd, momento, st):
             continue
-        if mode() == "shadow":
+        if shadow:
             _log_event("combat", "scene_card_shadow", level="info", card_id=card["id"], rnd=rnd)
             continue
         if _fire_card(ctx, card, out):
@@ -453,8 +502,8 @@ def strongest(scene: dict) -> dict | None:
 
 
 def abyss_clock(ctx, rnd: int, out: dict | None = None) -> bool:
-    """A partir da rodada R0=5: +1 Entropia a todos e a Carta de Cena mais forte dispara
-    de novo. `shadow` so registra. True se o Relogio agiu nesta rodada."""
+    """A partir da rodada R0=5: +1 Carga do Abismo a quem a tem (D-331-4) e a Carta de Cena
+    mais forte dispara de novo. `shadow` so registra. True se o Relogio agiu nesta rodada."""
     out = out if out is not None else {}
     if not enabled() or rnd < ABYSS_CLOCK_START:
         return False
@@ -467,7 +516,7 @@ def abyss_clock(ctx, rnd: int, out: dict | None = None) -> bool:
     for aid in sorted(set(sum((list(v) for v in sides.values()), []))):
         actor = ctx.actors_by_id.get(aid)
         if _alive(actor):
-            _gain_entropy(actor, 1)
+            _gain_charge(ctx, aid, 1, out)
     card = strongest(ctx.scene)
     if card is not None:
         _fire_card(ctx, card, out)
@@ -650,9 +699,8 @@ def sync_hand(scene: dict, piles: dict | None, player_id: str) -> list[str]:
         return []
     pos = (scene.get("positions") or {}).get(player_id) or {}
     wanted = object_cards(scene, pos.get("zone_id"))
-    catalog_ = cards._load_cards()
     for c in wanted:
-        catalog_[c["id"]] = c
+        cards.register_temp_card(c)  # registro separado: fora do catalogo e da progressao
     wanted_ids = [c["id"] for c in wanted]
     for pile in ("compra", "descarte"):  # temporarias nunca viram baralho
         piles[pile] = [i for i in piles.get(pile, []) if not str(i).startswith(TEMP_PREFIX)]
@@ -663,3 +711,45 @@ def sync_hand(scene: dict, piles: dict | None, player_id: str) -> list[str]:
         if cid not in piles["mao"] and cid not in piles.get("exaurida", []):
             piles["mao"].append(cid)
     return [i for i in piles["mao"] if str(i).startswith(TEMP_PREFIX)]
+
+
+def in_hand(piles: dict | None, card_id: Any) -> bool:
+    """P1-1: carta temporaria de objeto presente na mao (CLASSIFY/validacao a aceitam)."""
+    return (
+        isinstance(piles, dict)
+        and str(card_id or "").startswith(TEMP_PREFIX)
+        and card_id in (piles.get("mao") or [])
+    )
+
+
+# ==========================================================================
+# Visao publica (API) - P1-3
+# ==========================================================================
+def public_objective(scene: dict | None, names: dict | None = None) -> dict | None:
+    """Objetivo que o jogador ve: tipo, alvo por NOME, n e progresso. Nada de efeito."""
+    if not active() or not isinstance(scene, dict):
+        return None
+    obj = scene.get("objetivo")
+    if not isinstance(obj, dict) or obj.get("tipo") in (None, "derrotar_todos"):
+        return None
+    from services import conflict_scene as cs
+
+    alvo = obj.get("alvo")
+    nome = None
+    if alvo:
+        nome = (names or {}).get(str(alvo))
+        for coll in ("zones", "objects"):
+            for item in scene.get(coll) or []:
+                if item.get("id") == alvo:
+                    nome = nome or item.get("name") or alvo
+        nome = nome or str(alvo)
+    view = {
+        "tipo": obj["tipo"],
+        "rodada": cs.tactical_round(scene),
+        "resultado": scene.get("objetivo_resultado"),
+    }
+    if nome:
+        view["alvo_nome"] = nome
+    if obj.get("n"):
+        view["n"] = int(obj["n"])
+    return view
