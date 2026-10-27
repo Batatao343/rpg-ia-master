@@ -1,7 +1,7 @@
 # SPEC-334 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `b11be055`
+> **Veredito:** `APPROVED` (re-revisão de `1145b2e1`; a 1ª rodada sobre `b11be055` foi `CHANGES_REQUIRED`)
+> **Revisor:** Sol (Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commits revisados:** `b11be055`, `1145b2e1`
 
 ## Escopo
 
@@ -51,20 +51,37 @@ Sem P0. Sem segredo em log, sem mudança em `evals/`, sem writer persistente nov
 
 ## Correções aplicadas
 
-Nenhuma ainda (revisão sobre `b11be055`). P1-1 e P1-2 bloqueiam o pouso.
+Commit `1145b2e1` (re-revisado por Sol, mesmo dia):
+
+| ID | Status | Conferência |
+|---|---|---|
+| P1-1 | corrigido | Classe `preview` (`^/game/combat/preview$`, POST, 120/IP, 60/owner) em `services/abuse_policy.py:55`; caso novo em `test_classify`; `test_every_money_route_in_api_has_a_class` verde. |
+| P1-2 | corrigido | `exact_attack_distribution` sempre enumera 3 dados (o `_Scripted` só consome o que o caminho real pede; com saldo 0 cada desfecho conta 10× igual, a distribuição continua exata). O repro com jogador `cego` agora devolve 200 (56,8 %). |
+| P2-1 | corrigido | Corpo só via `bestiary_knowledge.public_panel(target)`; como o painel não expõe Virtudes, `ferimento_provavel` fica `None` (conservador, sem vazamento). |
+| P2-2 | corrigido | `store_mech_log` só grava com `card_piles.mode() == "on"`; save `off` idêntico. |
+| P2-3 | corrigido | Atalhos ignoram `defaultPrevented`, `busy` e modal (`[aria-modal='true'], dialog[open]`); o Enter também ignora `[role=button]` e `[tabindex]`. |
+| P2-4 | corrigido | Valida mão (`card_not_in_hand`) e `tipo == "ativa"` (`card_not_active`), as duas como `invalid_reason` de `preview_invalid` (não são códigos novos de topo, então o catálogo não muda); reusa `ct._damage_from`; inclui modificador tático, Marca do Abismo e `dealt`/`taken` pct; marca `aproximado` (passiva de gatilho, fórmula rolada) e o front mostra "≈". **Pureza confirmada:** com `attack_formula` + Marca do Abismo no alvo, `state == before` e `random.getstate()` igual (a fórmula é removida das cópias antes de `_damage_from`, então `roll_dice_numeric` não roda; a Marca e o tático são consumidos só nas cópias). |
+| P2-5 | corrigido | `role="img"` só nos pips; o aviso do Pacto ficou como irmão com `role=status`. |
+| P2-6 | corrigido | `alvo: "aliado"` para efeitos de suporte; o front escolhe alvo aliado sem prévia. |
+
+Resíduo (P2, não bloqueia): `fx.damage_pct(target, "taken")` (`services/combat_preview.py`, cálculo de `pct`) usa `combat_modifiers`, que soma **passivas** do alvo às condições. Hoje o único `dano_recebido_pct` vem da Rachadura (condição pública); nenhum dado em `data/` usa esse stat em passiva. Se um inimigo ganhar uma passiva assim, a prévia passa a revelá-la. Correção futura: usar só `cm.condition_modifiers(target)`.
 
 ## Pendências
 
-- P1-1, P1-2: executor (Terra) antes do pouso; re-revisão Sol só desses dois + P2-2/P2-3 se feitos.
-- P2-4, P2-6 e R9 parcial (fila resultante do texto livre): follow-up da SPEC-334 / spec seguinte do épico 327.
+- Resíduo `taken` pct via passiva do alvo (acima): follow-up do épico 327.
+- R9 parcial (fila resultante do texto livre): follow-up registrado no §8 da spec.
 - Playwright (jornadas, 390/1440, ≤ 12 interativos em 390 px): EVAL_AUTHORING separado.
 
 ## Comandos rodados
 
 ```text
-bash scripts/dev/py.sh -m pytest -n 2 tests/test_abuse_policy.py tests/test_combat_preview.py tests/test_error_envelope.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_card_piles.py tests/test_deck_migration.py → 1 failed (test_every_money_route_in_api_has_a_class), 121 passed
+# 1ª rodada (b11be055)
+py.sh -m pytest -n 2 <7 arquivos do escopo + governança> → 1 failed (test_every_money_route_in_api_has_a_class), 121 passed
 py.sh scratchpad/repro334.py (jogador `cego` + preview bas_san_golpe) → IndexError pop from empty list
-cd web && npm run lint → exit 0 (eslint + 13 css/contrast)
-cd web && npm run build → ok (aviso de chunk > 500 kB pré-existente)
-cd web && npm test → 226/226 pass
+web: npm run lint → 0 · npm run build → ok · npm test → 226/226
+# re-revisão (1145b2e1)
+py.sh -m pytest -n 2 tests/test_abuse_policy.py tests/test_combat_preview.py tests/test_error_envelope.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_card_piles.py tests/test_deck_migration.py → 128 passed
+py.sh scratchpad/repro334.py → 200, chance 56,8 %
+py.sh scratchpad/pure334.py (attack_formula + Marca do Abismo) → state_equal True, random_equal True, aproximado True
+web: npm run lint → 0 · npm run build → 0 · npm test → 226/226
 ```
