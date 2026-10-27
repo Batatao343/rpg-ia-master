@@ -1,6 +1,6 @@
 # SPEC-335 — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
 
-> **Status:** `in-progress` (aprovada pelo dono em 2026-10-27; Lote 0 e Lote 1 entregues — ver "Andamento")
+> **Status:** `in-progress` (Lote 0 parcial + Lote 1 Arcanista pousados em 27/10 após re-revisão Sol APPROVED; voz do Lote 1 `pendente-dono` — bloqueia release; faltam Lotes 2–6 e `test_card_variety`)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática, glossário, orçamento), SPEC-336 (esteira de autoria e lint). Etapa 1 (reparo do acervo atual) pode começar só com SPEC-330.
