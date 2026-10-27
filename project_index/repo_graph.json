@@ -1,5 +1,5 @@
 {
-  "commit_sha": "1db123493e911b4484816bfe2b063933f753e5a9",
+  "commit_sha": "f3f30927ff4ddd213655002336f7abcdccad94ac",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -71385,7 +71385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 205
+        "line": 206
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.ApiError",
@@ -71396,7 +71396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 224
+        "line": 225
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.api_error",
@@ -71407,7 +71407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 188
+        "line": 189
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.code_for",
@@ -71418,7 +71418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 229
+        "line": 230
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.envelope",
@@ -71429,7 +71429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 175
+        "line": 176
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.is_code",
@@ -71440,7 +71440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 179
+        "line": 180
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.prose_code",
@@ -71451,7 +71451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 244
+        "line": 245
       },
       "source": "module:services.error_codes",
       "target": "symbol:services.error_codes.render_markdown",
@@ -95354,7 +95354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 312
+        "line": 315
       },
       "source": "module:tests.test_api_jogadas",
       "target": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta",
@@ -95486,7 +95486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 294
+        "line": 297
       },
       "source": "module:tests.test_api_jogadas",
       "target": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
@@ -277767,7 +277767,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 208
+        "line": 209
       },
       "source": "symbol:services.error_codes.ApiError",
       "target": "symbol:services.error_codes.ApiError.__init__",
@@ -277778,7 +277778,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 226
+        "line": 227
       },
       "source": "symbol:services.error_codes.api_error",
       "target": "symbol:services.error_codes.ApiError",
@@ -277789,7 +277789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 190
+        "line": 191
       },
       "source": "symbol:services.error_codes.code_for",
       "target": "symbol:services.error_codes.is_code",
@@ -277800,7 +277800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 194
+        "line": 195
       },
       "source": "symbol:services.error_codes.code_for",
       "target": "symbol:services.error_codes.is_code",
@@ -277811,7 +277811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 197
+        "line": 198
       },
       "source": "symbol:services.error_codes.code_for",
       "target": "symbol:services.error_codes.is_code",
@@ -277822,7 +277822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 199
+        "line": 200
       },
       "source": "symbol:services.error_codes.code_for",
       "target": "symbol:services.error_codes.prose_code",
@@ -277833,7 +277833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/error_codes.py",
-        "line": 237
+        "line": 238
       },
       "source": "symbol:services.error_codes.envelope",
       "target": "symbol:services.error_codes.code_for",
@@ -323714,7 +323714,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 330
+        "line": 333
       },
       "source": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta",
       "target": "symbol:tests.test_api_jogadas._state",
@@ -323725,7 +323725,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 321
+        "line": 324
       },
       "source": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta",
       "target": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.load",
@@ -323736,7 +323736,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 317
+        "line": 320
       },
       "source": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta",
       "target": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.save",
@@ -324132,7 +324132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 307
+        "line": 310
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:agents.combat._combat_node",
@@ -324143,7 +324143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 306
+        "line": 309
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:api._apply_action_options",
@@ -324154,7 +324154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 306
+        "line": 309
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:tests.test_api_jogadas._plays",
@@ -324165,7 +324165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 306
+        "line": 309
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:tests.test_api_jogadas._req",
@@ -324176,7 +324176,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 296
+        "line": 299
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:tests.test_api_jogadas._state",
@@ -324187,7 +324187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
-        "line": 301
+        "line": 304
       },
       "source": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "target": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios._Pack",
@@ -324198,40 +324198,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_api_jogadas.py",
+        "line": 275
+      },
+      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
+      "target": "symbol:agents.combat._combat_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_jogadas.py",
+        "line": 284
+      },
+      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
+      "target": "symbol:agents.combat._combat_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_jogadas.py",
+        "line": 286
+      },
+      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
+      "target": "symbol:agents.combat._combat_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_api_jogadas.py",
         "line": 270
-      },
-      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
-      "target": "symbol:agents.combat._combat_node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_api_jogadas.py",
-        "line": 281
-      },
-      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
-      "target": "symbol:agents.combat._combat_node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_api_jogadas.py",
-        "line": 283
-      },
-      "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
-      "target": "symbol:agents.combat._combat_node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_api_jogadas.py",
-        "line": 268
       },
       "source": "symbol:tests.test_api_jogadas.test_save_load_no_meio_do_conflito_e_mais_uma_rodada",
       "target": "symbol:tests.test_api_jogadas._start_state",
@@ -582162,56 +582162,56 @@
     {
       "id": "symbol:services.error_codes.ApiError",
       "kind": "class",
-      "line": 205,
+      "line": 206,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.ApiError"
     },
     {
       "id": "symbol:services.error_codes.ApiError.__init__",
       "kind": "method",
-      "line": 208,
+      "line": 209,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.ApiError.__init__"
     },
     {
       "id": "symbol:services.error_codes.api_error",
       "kind": "function",
-      "line": 224,
+      "line": 225,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.api_error"
     },
     {
       "id": "symbol:services.error_codes.code_for",
       "kind": "function",
-      "line": 188,
+      "line": 189,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.code_for"
     },
     {
       "id": "symbol:services.error_codes.envelope",
       "kind": "function",
-      "line": 229,
+      "line": 230,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.envelope"
     },
     {
       "id": "symbol:services.error_codes.is_code",
       "kind": "function",
-      "line": 175,
+      "line": 176,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.is_code"
     },
     {
       "id": "symbol:services.error_codes.prose_code",
       "kind": "function",
-      "line": 179,
+      "line": 180,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.prose_code"
     },
     {
       "id": "symbol:services.error_codes.render_markdown",
       "kind": "function",
-      "line": 244,
+      "line": 245,
       "path": "services/error_codes.py",
       "qualified_name": "services.error_codes.render_markdown"
     },
@@ -597996,21 +597996,21 @@
     {
       "id": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta",
       "kind": "test",
-      "line": 312,
+      "line": 315,
       "path": "tests/test_api_jogadas.py",
       "qualified_name": "tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta"
     },
     {
       "id": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.load",
       "kind": "test",
-      "line": 321,
+      "line": 324,
       "path": "tests/test_api_jogadas.py",
       "qualified_name": "tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.load"
     },
     {
       "id": "symbol:tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.save",
       "kind": "test",
-      "line": 317,
+      "line": 320,
       "path": "tests/test_api_jogadas.py",
       "qualified_name": "tests.test_api_jogadas.test_api_action_com_jogadas_e_pilhas_na_resposta.save"
     },
@@ -598115,14 +598115,14 @@
     {
       "id": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios",
       "kind": "test",
-      "line": 294,
+      "line": 297,
       "path": "tests/test_api_jogadas.py",
       "qualified_name": "tests.test_api_jogadas.test_recusa_preserva_pressagios"
     },
     {
       "id": "symbol:tests.test_api_jogadas.test_recusa_preserva_pressagios._Pack",
       "kind": "class",
-      "line": 301,
+      "line": 304,
       "path": "tests/test_api_jogadas.py",
       "qualified_name": "tests.test_api_jogadas.test_recusa_preserva_pressagios._Pack"
     },
@@ -656417,5 +656417,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f7a11e59285eeb9b72311501973cac7fe6c4396677c5d2349e4d8ce01188022a"
+  "source_tree_hash": "sha256:c5cbebaca77238cce0785060895dd7f8a373b90e5e91b0e2675ee13f51f92f3f"
 }
