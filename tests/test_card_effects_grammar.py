@@ -325,8 +325,10 @@ def test_alvo_inimigos_e_escala():
 
 # ---------------------------------------------------------------- R8 texto gerado
 def test_texto_gerado_snapshot_das_308_cartas():
-    texts = {cid: fx.render_card_text(c) for cid, c in sorted(cards.all_cards().items())}
+    texts = {cid: fx.render_card_text(c) for cid, c in sorted(eq.legacy_cards().items())}
     assert len(texts) == 308 and all(texts.values())
+    basicas = [c for c in cards.all_cards().values() if c.get("origem") == "cartas-328"]
+    assert len(basicas) == 15 and all(fx.render_card_text(c) for c in basicas)
     if os.environ.get("RPG_UPDATE_SNAPSHOT") == "1":
         with open(_SNAPSHOT, "w", encoding="utf-8", newline="\n") as f:
             json.dump(texts, f, ensure_ascii=False, indent=1, sort_keys=True)

@@ -97,7 +97,12 @@ def run_card(card: dict) -> dict:
 def legacy_cards() -> dict:
     from services import cards
 
-    return {cid: c for cid, c in cards.all_cards().items() if "efeitos" not in c}
+    # As básicas da SPEC-328 (origem `cartas-328`) chegaram depois do golden.
+    return {
+        cid: c
+        for cid, c in cards.all_cards().items()
+        if "efeitos" not in c and c.get("origem") != "cartas-328"
+    }
 
 
 def build_golden() -> dict:
