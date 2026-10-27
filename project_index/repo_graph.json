@@ -1,5 +1,5 @@
 {
-  "commit_sha": "7245038bd838338966e5b7ea200256eb0634f5d8",
+  "commit_sha": "283e0dcaf59a75edf436981942cf7e5b9279476f",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -94133,7 +94133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/spec330_equivalence.py",
-        "line": 103
+        "line": 108
       },
       "source": "module:tests.spec330_equivalence",
       "target": "symbol:tests.spec330_equivalence.build_golden",
@@ -103703,7 +103703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 408
+        "line": 410
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar._good",
@@ -103736,7 +103736,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 401
+        "line": 403
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar._write_cards",
@@ -103890,7 +103890,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 375
+        "line": 377
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_orcamento_as_308_cartas_cabem_na_faixa",
@@ -103901,7 +103901,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 380
+        "line": 382
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem",
@@ -103934,7 +103934,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 385
+        "line": 387
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono",
@@ -103945,7 +103945,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 348
+        "line": 350
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_texto_das_cartas_compostas",
@@ -103967,7 +103967,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 338
+        "line": 340
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_texto_nunca_mente_sobre_o_numero",
@@ -103978,7 +103978,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 415
+        "line": 417
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida",
@@ -103989,7 +103989,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 482
+        "line": 484
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_validador_acervo_real_continua_limpo",
@@ -104000,7 +104000,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 471
+        "line": 473
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento",
@@ -104011,7 +104011,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 466
+        "line": 468
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida",
@@ -104022,7 +104022,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 461
+        "line": 463
       },
       "source": "module:tests.test_card_effects_grammar",
       "target": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo",
@@ -323527,7 +323527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/spec330_equivalence.py",
-        "line": 104
+        "line": 109
       },
       "source": "symbol:tests.spec330_equivalence.build_golden",
       "target": "symbol:tests.spec330_equivalence.legacy_cards",
@@ -323538,7 +323538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/spec330_equivalence.py",
-        "line": 104
+        "line": 109
       },
       "source": "symbol:tests.spec330_equivalence.build_golden",
       "target": "symbol:tests.spec330_equivalence.run_card",
@@ -342480,7 +342480,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 409
+        "line": 411
       },
       "source": "symbol:tests.test_card_effects_grammar._good",
       "target": "symbol:tests.test_card_effects_grammar._examples",
@@ -343250,7 +343250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 376
+        "line": 378
       },
       "source": "symbol:tests.test_card_effects_grammar.test_orcamento_as_308_cartas_cabem_na_faixa",
       "target": "symbol:services.card_effects.budget_error",
@@ -343261,7 +343261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 376
+        "line": 378
       },
       "source": "symbol:tests.test_card_effects_grammar.test_orcamento_as_308_cartas_cabem_na_faixa",
       "target": "symbol:services.cards.all_cards",
@@ -343272,7 +343272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 382
+        "line": 384
       },
       "source": "symbol:tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem",
       "target": "symbol:services.card_effects.budget_error",
@@ -343283,7 +343283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 382
+        "line": 384
       },
       "source": "symbol:tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem",
       "target": "symbol:services.card_effects.materialize",
@@ -343294,7 +343294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 381
+        "line": 383
       },
       "source": "symbol:tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem",
       "target": "symbol:tests.test_card_effects_grammar._examples",
@@ -343426,7 +343426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 397
+        "line": 399
       },
       "source": "symbol:tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono",
       "target": "symbol:services.card_effects.custo_folego",
@@ -343437,7 +343437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 395
+        "line": 397
       },
       "source": "symbol:tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono",
       "target": "symbol:services.card_effects.power_score",
@@ -343448,7 +343448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 396
+        "line": 398
       },
       "source": "symbol:tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono",
       "target": "symbol:services.card_effects.power_score",
@@ -343459,7 +343459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 349
+        "line": 351
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_das_cartas_compostas",
       "target": "symbol:services.card_effects.materialize",
@@ -343470,7 +343470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 371
+        "line": 373
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_das_cartas_compostas",
       "target": "symbol:services.card_effects.render_card_text",
@@ -343481,7 +343481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 349
+        "line": 351
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_das_cartas_compostas",
       "target": "symbol:tests.test_card_effects_grammar._examples",
@@ -343503,7 +343503,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 328
+        "line": 331
+      },
+      "source": "symbol:tests.test_card_effects_grammar.test_texto_gerado_snapshot_das_308_cartas",
+      "target": "symbol:services.card_effects.render_card_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_effects_grammar.py",
+        "line": 330
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_gerado_snapshot_das_308_cartas",
       "target": "symbol:services.cards.all_cards",
@@ -343514,7 +343525,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 341
+        "line": 328
+      },
+      "source": "symbol:tests.test_card_effects_grammar.test_texto_gerado_snapshot_das_308_cartas",
+      "target": "symbol:tests.spec330_equivalence.legacy_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_effects_grammar.py",
+        "line": 343
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_nunca_mente_sobre_o_numero",
       "target": "symbol:services.card_effects.render_card_text",
@@ -343525,7 +343547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 339
+        "line": 341
       },
       "source": "symbol:tests.test_card_effects_grammar.test_texto_nunca_mente_sobre_o_numero",
       "target": "symbol:services.cards.all_cards",
@@ -343536,7 +343558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 416
+        "line": 418
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida",
       "target": "symbol:services.content_validator.validate_cards",
@@ -343547,7 +343569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 416
+        "line": 418
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida",
       "target": "symbol:tests.test_card_effects_grammar._good",
@@ -343558,7 +343580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 416
+        "line": 418
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida",
       "target": "symbol:tests.test_card_effects_grammar._write_cards",
@@ -343569,7 +343591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 483
+        "line": 485
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_acervo_real_continua_limpo",
       "target": "symbol:services.content_validator.validate_cards",
@@ -343580,7 +343602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 478
+        "line": 480
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento",
       "target": "symbol:services.content_validator.validate_cards",
@@ -343591,7 +343613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 472
+        "line": 474
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento",
       "target": "symbol:tests.test_card_effects_grammar._good",
@@ -343602,7 +343624,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 478
+        "line": 480
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento",
       "target": "symbol:tests.test_card_effects_grammar._write_cards",
@@ -343613,7 +343635,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 467
+        "line": 469
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida",
       "target": "symbol:services.content_validator.validate_cards",
@@ -343624,7 +343646,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 467
+        "line": 469
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida",
       "target": "symbol:tests.test_card_effects_grammar._good",
@@ -343635,7 +343657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 467
+        "line": 469
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida",
       "target": "symbol:tests.test_card_effects_grammar._write_cards",
@@ -343646,7 +343668,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 462
+        "line": 464
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo",
       "target": "symbol:services.content_validator.validate_cards",
@@ -343657,7 +343679,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 462
+        "line": 464
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo",
       "target": "symbol:tests.test_card_effects_grammar._good",
@@ -343668,7 +343690,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_effects_grammar.py",
-        "line": 462
+        "line": 464
       },
       "source": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo",
       "target": "symbol:tests.test_card_effects_grammar._write_cards",
@@ -605229,7 +605251,7 @@
     {
       "id": "symbol:tests.spec330_equivalence.build_golden",
       "kind": "test",
-      "line": 103,
+      "line": 108,
       "path": "tests/spec330_equivalence.py",
       "qualified_name": "tests.spec330_equivalence.build_golden"
     },
@@ -611928,7 +611950,7 @@
     {
       "id": "symbol:tests.test_card_effects_grammar._good",
       "kind": "test",
-      "line": 408,
+      "line": 410,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar._good"
     },
@@ -611949,7 +611971,7 @@
     {
       "id": "symbol:tests.test_card_effects_grammar._write_cards",
       "kind": "test",
-      "line": 401,
+      "line": 403,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar._write_cards"
     },
@@ -612054,14 +612076,14 @@
     {
       "id": "symbol:tests.test_card_effects_grammar.test_orcamento_as_308_cartas_cabem_na_faixa",
       "kind": "test",
-      "line": 375,
+      "line": 377,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_orcamento_as_308_cartas_cabem_na_faixa"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem",
       "kind": "test",
-      "line": 380,
+      "line": 382,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_orcamento_cartas_compostas_cabem"
     },
@@ -612082,14 +612104,14 @@
     {
       "id": "symbol:tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono",
       "kind": "test",
-      "line": 385,
+      "line": 387,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_power_score_e_deterministico_e_monotono"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_texto_das_cartas_compostas",
       "kind": "test",
-      "line": 348,
+      "line": 350,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_texto_das_cartas_compostas"
     },
@@ -612103,42 +612125,42 @@
     {
       "id": "symbol:tests.test_card_effects_grammar.test_texto_nunca_mente_sobre_o_numero",
       "kind": "test",
-      "line": 338,
+      "line": 340,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_texto_nunca_mente_sobre_o_numero"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida",
       "kind": "test",
-      "line": 415,
+      "line": 417,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_validador_aceita_carta_composta_valida"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_validador_acervo_real_continua_limpo",
       "kind": "test",
-      "line": 482,
+      "line": 484,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_validador_acervo_real_continua_limpo"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento",
       "kind": "test",
-      "line": 471,
+      "line": 473,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_validador_rejeita_carta_fora_do_orcamento"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida",
       "kind": "test",
-      "line": 466,
+      "line": 468,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_validador_rejeita_palavra_chave_desconhecida"
     },
     {
       "id": "symbol:tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo",
       "kind": "test",
-      "line": 461,
+      "line": 463,
       "path": "tests/test_card_effects_grammar.py",
       "qualified_name": "tests.test_card_effects_grammar.test_validador_rejeita_vocabulario_fora_do_catalogo"
     },
@@ -666275,5 +666297,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:6755e241f21cea9f4befea304b79b7ac395c8f373260081f45b2e82063711d66"
+  "source_tree_hash": "sha256:9bc3dca7be059081e0ee8ea0bde99c2bf0a20a6d9983553c5a479ea8ff4f459e"
 }
