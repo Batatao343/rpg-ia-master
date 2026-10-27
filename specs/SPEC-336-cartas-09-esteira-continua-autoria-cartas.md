@@ -1,6 +1,6 @@
 # SPEC-336 — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 
-> **Status:** `in-progress` (implementada na branch spec-336, 27/10; aguarda revisão independente Sol; smoke real com chave é do dono — custo SMART)
+> **Status:** `in-progress` (esteira pousada em 27/10 após re-revisão Sol APPROVED; falta smoke real do draft com chave e evento de fim de conflito para a métrica de vitória)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática + `power_score` + `render_card_text`), SPEC-090/285 (arena/simulação de combate)
