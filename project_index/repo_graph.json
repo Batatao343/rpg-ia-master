@@ -1,5 +1,5 @@
 {
-  "commit_sha": "41e7c12151e11ee45c56f1c154779c6d009d7ef2",
+  "commit_sha": "6c57d5820b63cc2408efbcb647703802a2a70918",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -31532,7 +31532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 298
+        "line": 299
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._low",
@@ -31565,7 +31565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 230
+        "line": 231
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._player_facing_message",
@@ -31576,7 +31576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 203
+        "line": 204
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._price_reasons_context",
@@ -31598,7 +31598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 236
+        "line": 237
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._rumor_cache_find",
@@ -31609,7 +31609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 294
+        "line": 295
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot._turn_of",
@@ -31631,7 +31631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 303
+        "line": 304
       },
       "source": "module:agents.loot",
       "target": "symbol:agents.loot.loot_node",
@@ -181319,6 +181319,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_streaming.py",
+        "line": 748
+      },
+      "source": "module:tests.test_streaming",
+      "target": "symbol:tests.test_streaming.test_loot_narration_never_streams_tokens",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_streaming.py",
         "line": 493
       },
       "source": "module:tests.test_streaming",
@@ -191307,7 +191318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 300
+        "line": 301
       },
       "source": "symbol:agents.loot._low",
       "target": "symbol:agents.loot._turn_of",
@@ -191318,7 +191329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 300
+        "line": 301
       },
       "source": "symbol:agents.loot._low",
       "target": "symbol:services.latency_flags.archive_low_wanted",
@@ -191329,7 +191340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 195
+        "line": 196
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:agents.loot._validated_narrative",
@@ -191340,7 +191351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 200
+        "line": 201
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:agents.loot._validated_narrative",
@@ -191362,7 +191373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 198
+        "line": 199
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:observability.telemetry.log_event",
@@ -191373,7 +191384,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 192
+        "line": 193
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -191384,7 +191395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 199
+        "line": 200
       },
       "source": "symbol:agents.loot._narrate",
       "target": "symbol:services.prose_guard.sanitize_meta_preamble",
@@ -191472,7 +191483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 232
+        "line": 233
       },
       "source": "symbol:agents.loot._player_facing_message",
       "target": "symbol:services.prose_guard.normalize_protagonist_voice",
@@ -191483,7 +191494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 226
+        "line": 227
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:observability.telemetry.log_event",
@@ -191494,7 +191505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 210
+        "line": 211
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:services.economy.merchants_at",
@@ -191505,7 +191516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 213
+        "line": 214
       },
       "source": "symbol:agents.loot._price_reasons_context",
       "target": "symbol:services.economy.price_reasons",
@@ -191560,7 +191571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 262
+        "line": 263
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:agents.loot._narrate",
@@ -191571,7 +191582,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 272
+        "line": 273
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:agents.loot._player_facing_message",
@@ -191582,7 +191593,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 280
+        "line": 281
       },
       "source": "symbol:agents.loot._rumor_cache_find",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -191615,7 +191626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 307
+        "line": 308
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._last_human",
@@ -191626,7 +191637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 391
+        "line": 392
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191637,7 +191648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 443
+        "line": 444
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191648,7 +191659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 528
+        "line": 529
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._low",
@@ -191659,7 +191670,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 378
+        "line": 379
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
@@ -191670,7 +191681,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 407
+        "line": 408
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
@@ -191681,164 +191692,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 511
+        "line": 512
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:agents.loot._narrate",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 319
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._parse_trade_intent",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 385
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._player_facing_message",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 414
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._player_facing_message",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 521
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._player_facing_message",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 376
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._price_reasons_context",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 406
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._price_reasons_context",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 454
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:agents.loot._rumor_cache_find",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 449
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:gamedata.get_location",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 507
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.conflict_summary.canonical_summary_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 460
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.conflict_summary.loot_context",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 488
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.economy.claim_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 346
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.economy.execute_craft",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 348
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.economy.execute_trade",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "agents/loot.py",
-        "line": 350
-      },
-      "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.economy.log_trade",
       "type": "calls"
     },
     {
@@ -191849,7 +191706,7 @@
         "line": 320
       },
       "source": "symbol:agents.loot.loot_node",
-      "target": "symbol:services.economy.public_market_snapshot",
+      "target": "symbol:agents.loot._parse_trade_intent",
       "type": "calls"
     },
     {
@@ -191857,7 +191714,150 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 420
+        "line": 386
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._player_facing_message",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 415
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._player_facing_message",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 522
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._player_facing_message",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 377
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._price_reasons_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 407
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._price_reasons_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 455
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:agents.loot._rumor_cache_find",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 450
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:gamedata.get_location",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 508
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.conflict_summary.canonical_summary_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 461
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.conflict_summary.loot_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 489
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.economy.claim_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 347
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.economy.execute_craft",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 349
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.economy.execute_trade",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 351
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.economy.log_trade",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 321
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.public_market_snapshot",
@@ -191868,7 +191868,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 312
+        "line": 421
+      },
+      "source": "symbol:agents.loot.loot_node",
+      "target": "symbol:services.economy.public_market_snapshot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "agents/loot.py",
+        "line": 313
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.restock",
@@ -191879,7 +191890,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 469
+        "line": 470
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.economy.roll_loot",
@@ -191890,7 +191901,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 434
+        "line": 435
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -191901,7 +191912,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "agents/loot.py",
-        "line": 529
+        "line": 530
       },
       "source": "symbol:agents.loot.loot_node",
       "target": "symbol:services.turn_outcome.record_gain",
@@ -516606,6 +516617,17 @@
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_streaming.py",
+        "line": 757
+      },
+      "source": "symbol:tests.test_streaming.test_loot_narration_never_streams_tokens",
+      "target": "symbol:tests.test_streaming.test_loot_narration_never_streams_tokens._fake",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
@@ -543695,7 +543717,7 @@
     {
       "id": "symbol:agents.loot._low",
       "kind": "function",
-      "line": 298,
+      "line": 299,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._low"
     },
@@ -543716,14 +543738,14 @@
     {
       "id": "symbol:agents.loot._player_facing_message",
       "kind": "function",
-      "line": 230,
+      "line": 231,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._player_facing_message"
     },
     {
       "id": "symbol:agents.loot._price_reasons_context",
       "kind": "function",
-      "line": 203,
+      "line": 204,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._price_reasons_context"
     },
@@ -543737,14 +543759,14 @@
     {
       "id": "symbol:agents.loot._rumor_cache_find",
       "kind": "function",
-      "line": 236,
+      "line": 237,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._rumor_cache_find"
     },
     {
       "id": "symbol:agents.loot._turn_of",
       "kind": "function",
-      "line": 294,
+      "line": 295,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot._turn_of"
     },
@@ -543758,7 +543780,7 @@
     {
       "id": "symbol:agents.loot.loot_node",
       "kind": "function",
-      "line": 303,
+      "line": 304,
       "path": "agents/loot.py",
       "qualified_name": "agents.loot.loot_node"
     },
@@ -639642,6 +639664,20 @@
       "qualified_name": "tests.test_streaming.test_log_de_turno_tem_custo_e_providers"
     },
     {
+      "id": "symbol:tests.test_streaming.test_loot_narration_never_streams_tokens",
+      "kind": "test",
+      "line": 748,
+      "path": "tests/test_streaming.py",
+      "qualified_name": "tests.test_streaming.test_loot_narration_never_streams_tokens"
+    },
+    {
+      "id": "symbol:tests.test_streaming.test_loot_narration_never_streams_tokens._fake",
+      "kind": "test",
+      "line": 757,
+      "path": "tests/test_streaming.py",
+      "qualified_name": "tests.test_streaming.test_loot_narration_never_streams_tokens._fake"
+    },
+    {
       "id": "symbol:tests.test_streaming.test_npc_delegation_to_storyteller_emits_once",
       "kind": "test",
       "line": 493,
@@ -643066,5 +643102,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:2ba8b1a0ac9bc49246febc59c80e8cea48cddf5ba5f3aad08032106cbc1b2f51"
+  "source_tree_hash": "sha256:eca2b364a864c40de9602035f5472a871e47cf8340d7e9f44ac6005bf8dbc63b"
 }
