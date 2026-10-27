@@ -130,8 +130,8 @@ Por isso o oráculo **não** é conformidade de resposta, e sim:
 
 **Esboço do caminho principal** (confirmar no spike; nomes da 4.x podem divergir):
 ```python
-schema = schemathesis.openapi.from_asgi("/openapi.json", api.app)          # caminho A
-schema = schemathesis.openapi.from_dict(api.app.openapi())                 # caminho B
+schema = schemathesis.openapi.from_asgi("/openapi.json", api.app)  # caminho A
+schema = schemathesis.openapi.from_dict(api.app.openapi())  # caminho B
 fast = schema.exclude(path_regex=EXCLUDED_RE).exclude(path_regex=GRAPH_RE)
 ```
 O `api.app.openapi()` funciona independentemente de `openapi_url` (FastAPI gera o dict), o que torna o caminho B viável até em perfil sem documentação exposta.
