@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f0d982eda583d8955ad78901131427cbf4ae4fd1",
+  "commit_sha": "8f29e08cf0a60cf659ed5213e6f19bd3d7d333fa",
   "edge_counts": {
-    "calls": 28585,
-    "contains": 974,
-    "defines": 14330,
-    "imports": 2348,
-    "likely_test_for": 1649,
+    "calls": 28661,
+    "contains": 983,
+    "defines": 14416,
+    "imports": 2370,
+    "likely_test_for": 1668,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1c8e6d8059282f1f197d9f4f3da03bbc242718719be1117442ae447aba528340",
+  "graph_hash": "sha256:cc492beee77645fd58518dd91573baeac557eae7e45c527c855279696a97de6a",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -90,6 +90,7 @@
     "docs/spec285/arena_lethality.py",
     "docs/spec302/world_engine_sim.py",
     "docs/spec304/npc_world_sim.py",
+    "docs/spec317/r2_shadow_harness.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -458,6 +459,7 @@
     "tests/fakes/local_image_finance.py",
     "tests/fakes/local_portrait.py",
     "tests/fakes/local_pricing.py",
+    "tests/fakes/two_principals.py",
     "tests/prompt_capture.py",
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
@@ -510,6 +512,7 @@
     "tests/test_audit_export.py",
     "tests/test_audit_export_local.py",
     "tests/test_audit_fixes.py",
+    "tests/test_audit_local_gate_contract.py",
     "tests/test_audit_real_contracts.py",
     "tests/test_audit_redaction.py",
     "tests/test_audit_reward_contracts.py",
@@ -662,6 +665,12 @@
     "tests/test_hardening_persistencia_sse.py",
     "tests/test_hosted_supabase_contract.py",
     "tests/test_hosted_supabase_local.py",
+    "tests/test_http_cookie_flags.py",
+    "tests/test_http_cors.py",
+    "tests/test_http_error_leakage.py",
+    "tests/test_http_idor_local.py",
+    "tests/test_http_idor_offline.py",
+    "tests/test_http_security_headers.py",
     "tests/test_image_pricing.py",
     "tests/test_image_quotes.py",
     "tests/test_image_quotes_local.py",
@@ -1199,14 +1208,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 947,
+    "class": 953,
     "endpoint": 64,
-    "file": 1145,
-    "function": 4489,
+    "file": 1154,
+    "function": 4491,
     "method": 838,
-    "module": 974,
-    "test": 8055
+    "module": 983,
+    "test": 8133
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:eca2b364a864c40de9602035f5472a871e47cf8340d7e9f44ac6005bf8dbc63b"
+  "source_tree_hash": "sha256:b1df0b24ed663863987fc09c5e4a847b8cd0875326407d150dce3fbfa7a12a69"
 }
