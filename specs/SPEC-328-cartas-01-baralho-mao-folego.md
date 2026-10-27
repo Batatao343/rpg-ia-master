@@ -83,7 +83,10 @@ Intenção visível do inimigo (SPEC-329), keywords/combos (SPEC-330), espólio/
 - Mão da rodada seguinte é comprada ao **fim** da rodada (`begin_round` no nó de combate) para a UI já mostrá-la; `run_round` não compra.
 - Jogadas que não são Carta: `attack`/`item`/`maneuver` (exceto `mover`)/`object` custam **1 Fôlego**; `move`/`pass` são grátis. Lista inválida é recusada **inteira** antes de gastar (`deck_refused`, rodada não consumida).
 - Cartas básicas não têm teto de cópias (R2 pede 4 golpes + 4 guardas); `origem: "cartas-328"` é validada por `validate_cards`.
-- Pacto do Abismo debita 2 Entropia/Fôlego e dispara `on_channel` (único gatilho de classe que casa: Arcanista); registra `pacto_abismo` em `class_mechanics`.
+- **Pacto do Abismo (revisão Sol P1-2, decisão do coordenador dentro do D3):** para TODAS as Posturas, cada Fôlego emprestado dá **+2 Entropia** (ganho direto, clamp em `max_entropy`) e o Pacto da rodada dá **+1 Carga do Abismo** (1×/rodada; o Abismo dispara pelas regras de fim de rodada). Não usa `on_channel` nem gasta o teto de gatilho de classe; registra `pacto_abismo` em `class_mechanics`. Reembolso (Carta não resolveu) desfaz Fôlego, Entropia e Carga.
+- P1-1: `extra_card_ids` só no schema CLASSIFY com baralho `on`. P1-3: `start_piles` não muda a ficha (shadow limpo); `on` guarda `prepared_cards_pre_deck` e `off` restaura; `use_card` só aceita o `deck` com a flag `on`.
+- P2-1 nome mais longo vence no parser. P2-2: a Guarda dura a rodada (restaurada entre jogadas); gatilhos de classe "por turno" já usam o contador zerado 1×/rodada em `run_round`. P2-5: `last_player_action.plays` (aditivo, só com >1 jogada).
+- Calibração: derivação R6 com `dano_base ≥ 5` não mudou a arena (ver `docs/spec328/arena-results-2026-10-27.md`); mantida a de 8.
 - Reação do jogador continua exigindo `reaction_card_id` da UI; com baralho `on` a carta precisa estar na mão e há Fôlego sobrando (sem Pacto). Auto-reação por mão fica para a SPEC-334.
 - Sem endpoint HTTP de edição de baralho (só `cards.set_deck`); a UI/endpoint entra com a SPEC-334.
 

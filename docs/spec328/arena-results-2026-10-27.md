@@ -23,3 +23,19 @@ combate encurta ~30-50% com vitória bem acima do `off` (fora do critério de ±
 Observação: o próprio `off` já fica fora de 35-80% nesta arena (L1 Sangromante/Corruptor 25%, L5 0-50%), então o
 critério "35-80% por classe" precisa de decisão do dono sobre o alvo (calibrar com SPEC-329/inimigos ou Fôlego 2).
 Nenhuma constante foi alterada: `FOLEGO_BASE=3` / `MAO_BASE=5` (padrões aprovados). Flag permanece `off`.
+
+## Rodada 2 (revisão Sol) - derivação R6: custo 2 a partir de `dano_base >= 5` (em vez de 8)
+
+`--dano2 5` x `--dano2 8`, mesma amostra (360 combates/modo), Fôlego 3 e 2, mão 5:
+
+| Fôlego | `dano2` | Célula | Vitória off | Vitória on | Rodadas off | Rodadas on |
+|---|---|---|---|---|---|---|
+| 3 | 8 | todas | 42% | 73% | 4.5 | 3.1 |
+| 3 | 5 | todas | 42% | 73% | 4.5 | 3.1 |
+| 2 | 8 | todas | 42% | 63% | 4.5 | 3.6 |
+| 2 | 5 | todas | 42% | 63% | 4.5 | 3.6 |
+
+Resultado idêntico: o bot joga as básicas (`custo_folego: 1` explícito) e nenhuma carta do baralho inicial tem
+`dano_base` entre 5 e 7 que mude a mão. A derivação 5 **não** aproxima do `off` (+31 pp continua); mantida a atual (8).
+A alavanca real é a economia de ações (Fôlego), não a derivação. O Pacto (agora +2 Entropia/+1 Carga) não entra
+nesta arena porque o bot nunca toma emprestado.

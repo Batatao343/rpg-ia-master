@@ -123,34 +123,98 @@ def test_carta_fora_da_mao_rejeita_sem_gastar_nada():
     assert (state["_piles"], actors["player"]["entropy"]) == before
 
 
-def test_folego_insuficiente_rejeita_a_lista_inteira():
+def test_entropia_propria_da_carta_insuficiente_rejeita_a_lista_inteira():
     scene, actors, sides, state = _setup(entropy=0)
-    atk = ct.TurnStep(kind="attack", target_id="gob_1")
-    lista = [_card("bas_san_golpe"), _card("bas_san_golpe"), atk, atk]
     before = copy.deepcopy(state["_piles"])
-    out = _run(scene, actors, sides, state, _plays(*lista))
+    out = _run(
+        scene, actors, sides, state, _plays(_card("bas_san_golpe"), _card("san_finta", "player"))
+    )
     assert out["deck_refused"] and out["cards_used"] == []
     assert "Entropia insuficiente" in " ".join(out["logs"])
     assert state["_piles"] == before
 
 
-def test_pacto_do_abismo_paga_entropia_e_narra_o_custo():
-    scene, actors, sides, state = _setup(entropy=6)
+@pytest.mark.parametrize(
+    "cls",
+    ["Devoto do Abismo", "Sangromante", "Corruptor", "Arcanista Cinzento", "Médico de Campo"],
+)
+def test_pacto_do_abismo_cobra_entropia_e_carga_em_todas_as_posturas(cls):
+    golpe = cards.basicas_for_class(cls)["golpe"][0]
+    scene, actors, sides, state = _setup(
+        class_name=cls, entropy=3, max_entropy=10, hand=[golpe, golpe, golpe, golpe, golpe]
+    )
     atk = ct.TurnStep(kind="attack", target_id="gob_1")
     out = _run(
         scene,
         actors,
         sides,
         state,
-        _plays(_card("bas_san_golpe"), _card("bas_san_golpe"), atk, atk),
+        _plays(_card(golpe), _card(golpe), atk, atk),
     )
     piles = state["_piles"]
-    assert piles["folego"] == 0 and piles["folego_emprestado"] == 1
+    assert piles["folego"] == 0 and piles["folego_emprestado"] == 1 and piles["pacto_carga"]
     assert "Pacto do Abismo" in " ".join(out["logs"])
     pacto = [e for e in out["class_mechanics"] if e["kind"] == "pacto_abismo"]
     assert pacto and pacto[0]["entropia_extra"] == 2 and pacto[0]["emprestado"] == 1
-    # 4 Folego = 3 + 1 emprestado (2 Entropia); Sangromante ainda ganha com auto-dano/golpes
-    assert actors["player"]["entropy"] <= 6 - 2 + 5
+    # o Pacto nao passa pelo gatilho de classe (nao gasta o teto por turno) e sempre da +1 Carga
+    assert actors["player"]["abyss_charge"] >= 1
+    assert actors["player"]["entropy"] >= 3 + 2 - 5  # +2 do Pacto; golpes podem gastar/ganhar
+
+
+def test_pacto_nao_ocupa_o_teto_de_gatilho_de_classe():
+    scene, actors, sides, state = _setup(class_name="Arcanista Cinzento", entropy=3)
+    atk = ct.TurnStep(kind="attack", target_id="gob_1")
+    _run(scene, actors, sides, state, _plays(atk, atk, atk, atk))
+    assert int(actors["player"].get("_entropy_trigger_turn", 0) or 0) == 0
+
+
+def test_reembolso_pos_pacto_desfaz_entropia_e_carga(monkeypatch):
+    scene, actors, sides, state = _setup(entropy=6)
+    state["_piles"]["folego"] = 0  # forca o Pacto na 1a jogada
+    from services import conflict_orchestrator as o
+
+    # a carta "nao resolve": o motor devolve sem registrar `cards_used`
+    monkeypatch.setattr(o, "_resolve_actor_turn", lambda *a, **k: None)
+    from services import card_deck_round as dr
+
+    decl = _plays(_card("bas_san_golpe"))
+    snap = (actors["player"]["entropy"], actors["player"]["abyss_charge"])
+    dr.resolve_player_plays(
+        scene,
+        actors["player"],
+        "player",
+        actors,
+        sides,
+        decl,
+        state,
+        {"logs": [], "cards_used": []},
+        random.Random(1),
+    )
+    assert (actors["player"]["entropy"], actors["player"]["abyss_charge"]) == snap
+    p = state["_piles"]
+    assert p["folego"] == 0 and p["folego_emprestado"] == 0 and not p["pacto_carga"]
+    assert "bas_san_golpe" in p["mao"]
+
+
+def test_guarda_sobrevive_as_jogadas_seguintes_da_rodada():
+    scene, actors, sides, state = _setup()
+    guardar = ct.TurnStep(kind="maneuver", maneuver="guardar")
+    _run(scene, actors, sides, state, _plays(guardar, _card("bas_san_golpe")))
+    # a Guarda foi posta na 1a jogada; a 2a (resolve_turn) nao pode zera-la
+    # (o inimigo ainda agiu depois, entao checamos o estado da cena na saida)
+    assert cs._pos(scene, "player")["guarding"] is True
+
+
+def test_last_player_action_registra_a_lista(monkeypatch):
+    import agents.combat as ac
+
+    decl = _plays(_card("bas_san_golpe"), _card("bas_san_guarda", "player"))
+    action = ac._canonical_player_action(decl, {"attacks": []})
+    assert [p["card_id"] for p in action["plays"]] == ["bas_san_golpe", "bas_san_guarda"]
+    single = ac._canonical_player_action(
+        ct.TurnDeclaration(actor_id="player", acao=_card("bas_san_golpe")), {"attacks": []}
+    )
+    assert "plays" not in single
 
 
 def test_pacto_nao_passa_de_dois_por_rodada():

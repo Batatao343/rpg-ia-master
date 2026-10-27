@@ -91,6 +91,7 @@ def resolve_player_plays(
         orch._resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         return
     last = len(plays) - 1
+    carry_guard = False
     for i, step in enumerate(plays):
         if i and not orch._can_act(actor):
             break
@@ -104,7 +105,12 @@ def resolve_player_plays(
         kind = str(step.kind or "pass").lower()
         card = cards.get_card(step.card_id or "") if kind == "card" else None
         cost = card_piles.step_folego(step)
-        plan = {"emprestado": 0, "entropia_extra": 0, "ok": True, "motivo": ""}
+        snap = (
+            int(actor.get("entropy", 0) or 0),
+            int(actor.get("abyss_charge", 0) or 0),
+            bool(piles.get("pacto_carga")),
+        )
+        plan = {"folego": 0, "emprestado": 0, "entropia_extra": 0, "ok": True, "motivo": ""}
         if cost:
             plan = card_piles.pay_cost(
                 piles,
@@ -117,9 +123,10 @@ def resolve_player_plays(
                 out["logs"].append(plan["motivo"])
                 continue
         if plan["emprestado"]:
+            card_piles.apply_pact(piles, actor, plan)
             out["logs"].append(
-                f"Pacto do Abismo: você toma {plan['emprestado']} Fôlego emprestado e paga "
-                f"{plan['entropia_extra']} Entropia."
+                f"Pacto do Abismo: você toma {plan['emprestado']} Fôlego emprestado; "
+                f"o Abismo empresta, e cobra: +{plan['entropia_extra']} Entropia e Carga."
             )
             orch._record_class_event(
                 out,
@@ -127,9 +134,11 @@ def resolve_player_plays(
                 emprestado=plan["emprestado"],
                 entropia_extra=plan["entropia_extra"],
             )
-            orch._entropy_event(actor, {"kind": "on_channel"}, out)
         used_before = len(out.get("cards_used") or [])
         orch._resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, sub, state, out, rng)
+        if carry_guard:  # P2-2: `resolve_turn` zera a Guarda a cada jogada; ela dura a rodada
+            _restore_guard(scene, actor_id)
+        carry_guard = _guarding(scene, actor_id)
         if kind == "card" and card is not None:
             used = any(
                 u.get("actor_id") == actor_id and u.get("card_id") == step.card_id
@@ -138,12 +147,12 @@ def resolve_player_plays(
             if used:
                 card_piles.play_to_pile(piles, str(step.card_id))
             elif cost:
-                # a Carta nao resolveu (ex.: Entropia propria insuficiente): devolve o custo
-                piles["folego"] = int(piles.get("folego", 0) or 0) + (cost - plan["emprestado"])
+                # a Carta nao resolveu (ex.: Entropia propria insuficiente): desfaz TUDO
+                piles["folego"] = int(piles.get("folego", 0) or 0) + plan["folego"]
                 piles["folego_emprestado"] = max(
                     0, int(piles.get("folego_emprestado", 0) or 0) - plan["emprestado"]
                 )
-                actor["entropy"] = int(actor.get("entropy", 0) or 0) + plan["entropia_extra"]
+                actor["entropy"], actor["abyss_charge"], piles["pacto_carga"] = snap
     seen = False
     deduped: list = []
     for turn_id in out.get("resolved_turns") or []:
@@ -153,6 +162,21 @@ def resolve_player_plays(
             seen = True
         deduped.append(turn_id)
     out["resolved_turns"] = deduped
+
+
+def _guarding(scene, actor_id) -> bool:
+    from services import conflict_scene as cs
+
+    pos = cs._pos(scene, actor_id)
+    return bool(pos and pos.get("guarding"))
+
+
+def _restore_guard(scene, actor_id) -> None:
+    from services import conflict_scene as cs
+
+    pos = cs._pos(scene, actor_id)
+    if pos is not None:
+        pos["guarding"] = True
 
 
 def reaction_gate(state, reactor, card) -> bool | None:

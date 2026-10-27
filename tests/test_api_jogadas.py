@@ -176,3 +176,152 @@ def test_flag_off_ignora_pilhas_salvas(monkeypatch):
     saved = deepcopy(state["combat"]["pilhas"])
     out = combat_agent._combat_node(state)
     assert out["combat"]["pilhas"] == saved and out["combat"]["round"] == 1
+
+
+# ------------------------------------------------------------------ revisão Sol (P1-1, P1-3, P2-1, P2-4)
+def _schema_probe(monkeypatch, player, enemies, scene, piles):
+    seen = []
+
+    class _Probe:
+        def with_structured_output(self, model):
+            seen.append(model)
+            return self
+
+        def invoke(self, _messages):
+            return AIMessage(content="erro")
+
+    monkeypatch.setattr(combat_agent, "get_llm", lambda *a, **k: _Probe())
+    combat_agent._parse_turn_declaration(player, enemies, "faço algo estranho", scene, piles=piles)
+    return seen[0]
+
+
+def test_schema_classify_so_tem_extra_card_ids_com_baralho(monkeypatch):
+    player, enemies, scene, piles = _parser_state(monkeypatch)
+    assert (
+        "extra_card_ids" in _schema_probe(monkeypatch, player, enemies, scene, piles).model_fields
+    )
+    assert (
+        "extra_card_ids"
+        not in _schema_probe(monkeypatch, player, enemies, scene, None).model_fields
+    )
+
+
+def test_nome_mais_longo_vence_sem_duplicar(monkeypatch):
+    from services import cards
+
+    player, enemies, scene, piles = _parser_state(monkeypatch)
+    base = deepcopy(cards.get_card(GOLPE))
+    curta = {**base, "id": "x_vazao", "name": "Vazão"}
+    longa = {**base, "id": "x_vazao_c", "name": "Vazão Controlada"}
+    monkeypatch.setitem(cards.all_cards(), "x_vazao", curta)
+    monkeypatch.setitem(cards.all_cards(), "x_vazao_c", longa)
+    piles["mao"] += ["x_vazao", "x_vazao_c"]
+    decl = combat_agent._parse_turn_declaration(
+        player, enemies, "uso Vazão Controlada", scene, piles=piles
+    )
+    assert [s.card_id for s in decl.plays()] == ["x_vazao_c"]
+
+
+def _start_state(monkeypatch, mode):
+    from langchain_core.messages import SystemMessage
+
+    monkeypatch.setenv("RPG_CARD_DECK", mode)
+    state = api._build_combat_simulator_state(_request(quantity=1))
+    state["combat"] = {}
+    state["messages"] = [SystemMessage(content="COMBAT START")]
+    return state
+
+
+def test_no_cria_pilhas_no_inicio_com_semente_derivada(monkeypatch):
+    import zlib
+
+    state = _start_state(monkeypatch, "on")
+    out = combat_agent._combat_node(state)
+    meta = out["combat"]
+    expected = zlib.crc32(meta["instance_id"].encode("utf-8"))
+    assert meta["pilhas"]["seed"] == expected
+    assert "prepared_cards_pre_deck" in out["player"] and out["player"]["deck"]
+
+
+def test_shadow_nao_muda_a_ficha_e_off_restaura_a_preparacao(monkeypatch):
+    state = _start_state(monkeypatch, "shadow")
+    before = deepcopy(state["player"]["prepared_cards"])
+    out = combat_agent._combat_node(state)
+    assert out["player"]["prepared_cards"] == before and "deck" not in out["player"]
+    assert "pilhas" in out["combat"]
+    # on -> off: rollback da Preparação
+    state = _start_state(monkeypatch, "on")
+    before = deepcopy(state["player"]["prepared_cards"])
+    on = combat_agent._combat_node(state)
+    assert on["player"]["prepared_cards"] != before
+    monkeypatch.setenv("RPG_CARD_DECK", "off")
+    st2 = _start_state(monkeypatch, "off")
+    st2["player"] = on["player"]
+    off = combat_agent._combat_node(st2)
+    assert off["player"]["prepared_cards"] == before
+
+
+def test_save_load_no_meio_do_conflito_e_mais_uma_rodada(monkeypatch, tmp_path):
+    import persistence
+
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(tmp_path))
+    state = _start_state(monkeypatch, "on")
+    state["combat_declaration"] = None
+    first = combat_agent._combat_node(state)
+    mid = {**state, **{k: v for k, v in first.items() if k != "messages"}}
+    mid["messages"] = [HumanMessage(content="Encerrar turno")]
+    assert persistence.save_game_state(deepcopy(mid)) is True
+    loaded = persistence.load_game_state(persistence.save_path(mid["game_id"]))
+    assert loaded["combat"]["pilhas"] == mid["combat"]["pilhas"]
+    loaded["messages"] = [HumanMessage(content="Encerrar turno")]
+    import random
+
+    random.seed(5)
+    a = combat_agent._combat_node(deepcopy(mid))
+    random.seed(5)
+    b = combat_agent._combat_node(loaded)
+    assert a["combat"]["pilhas"] == b["combat"]["pilhas"]
+    assert a["combat"]["round"] == b["combat"]["round"] == 2 or a["combat"]["active"] is False
+
+
+def test_api_action_com_jogadas_e_pilhas_na_resposta(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    saved = {}
+
+    def save(state):
+        saved[state["game_id"]] = deepcopy(state)
+        return True
+
+    def load(path=None):
+        if not path:
+            return None
+        gid = path.replace("\\", "/").rsplit("/", 1)[-1].removesuffix(".json")
+        return deepcopy(saved.get(gid))
+
+    monkeypatch.setattr(api, "save_game_state", save)
+    monkeypatch.setattr(api, "load_game_state", load)
+    monkeypatch.setattr("services.checkpoints.maybe_write", lambda *a, **k: None)
+    state = _state(monkeypatch)
+    state["game_id"] = "0d8f5b1e-4c3a-4f6e-9b7a-2e1d3c4b5a69"
+    state["combat_simulation"] = {"enabled": True, "enemy_id": "x", "quantity": 1}
+    saved["0d8f5b1e-4c3a-4f6e-9b7a-2e1d3c4b5a69"] = deepcopy(state)
+    eid = state["enemies"][0]["id"]
+    client = TestClient(api.app)
+    res = client.post(
+        "/game/action",
+        json={
+            "game_id": "0d8f5b1e-4c3a-4f6e-9b7a-2e1d3c4b5a69",
+            "input_text": "Encerrar turno",
+            "jogadas": [
+                {"card_id": GOLPE, "target_id": eid},
+                {"card_id": GUARDA, "target_id": "player"},
+            ],
+        },
+    )
+    assert res.status_code == 200, res.text
+    body = res.json()
+    assert body["combat"]["pilhas"]["folego"] == cp.FOLEGO_BASE
+    assert len(body["combat"]["pilhas"]["mao"]) == cp.MAO_BASE
+    after = saved["0d8f5b1e-4c3a-4f6e-9b7a-2e1d3c4b5a69"]["combat"]
+    assert [p["card_id"] for p in after["last_player_action"]["plays"]] == [GOLPE, GUARDA]

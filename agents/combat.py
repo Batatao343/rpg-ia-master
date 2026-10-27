@@ -1093,12 +1093,20 @@ def _parse_turn_declaration(
     folded_intent = intent.casefold()
     target_id = enemies[0]["id"] if enemies else None
     if piles is not None:  # SPEC-328 R15: várias cartas pelo nome, na ordem em que aparecem
-        named = []
+        cands = []
         for cid in dict.fromkeys(list(piles.get("mao") or []) + list(player.get("deck") or [])):
             card = cards.get_card(cid)
-            pos = folded_intent.find(str((card or {}).get("name", "")).casefold()) if card else -1
-            if pos >= 0 and card.get("name"):
-                named.append((pos, cid, card))
+            name = str((card or {}).get("name", "")).casefold()
+            pos = folded_intent.find(name) if name else -1
+            if pos >= 0:
+                cands.append((pos, pos + len(name), cid, card))
+        named = []  # P2-1: o nome mais longo vence; nomes contidos em outro não duplicam
+        taken: list[tuple[int, int]] = []
+        for pos, end, cid, card in sorted(cands, key=lambda c: (-(c[1] - c[0]), c[0])):
+            if any(pos < e and end > s for s, e in taken):
+                continue
+            taken.append((pos, end))
+            named.append((pos, cid, card))
         if named:
             steps = [
                 TurnStep(kind="card", card_id=cid, target_id=_default_card_target(card, target_id))
@@ -1145,10 +1153,6 @@ def _parse_turn_declaration(
             description="engajar|desengajar|guardar|esconder|procurar, se kind=maneuver.",
         )
         direction: str = Field(default="", description="aproximar|afastar, se kind=move.")
-        extra_card_ids: list[str] = Field(
-            default_factory=list,
-            description="ids EXATOS de Cartas da mão jogadas DEPOIS da primeira, na ordem.",
-        )
 
     # SPEC-325 R14 (só `on` e com objeto visível): o schema/prompt ganham `object` — id e
     # rótulo EXATOS vindos de `visible_objects` (sem `effect`); fora disso, tudo igual a `off`.
@@ -1156,10 +1160,19 @@ def _parse_turn_declaration(
 
     visible_objs = _visible_scene_objects(scene) if _cf.mode("objects") == "on" else []
     move_model = PlayerMove
+    if piles is not None:  # SPEC-328 P1-1: o campo só existe no schema com baralho ativo
+
+        class PlayerMoveDeck(PlayerMove):
+            extra_card_ids: list[str] = Field(
+                default_factory=list,
+                description="ids EXATOS de Cartas da mão jogadas DEPOIS da primeira, na ordem.",
+            )
+
+        move_model = PlayerMoveDeck
     object_rule = ""
     if visible_objs:
 
-        class PlayerMoveObject(PlayerMove):
+        class PlayerMoveObject(move_model):
             object_id: str = Field(default="", description="id EXATO do objeto, se kind=object.")
             interaction: str = Field(
                 default="", description="rótulo EXATO da interação, se kind=object."
@@ -1354,6 +1367,11 @@ def _canonical_player_action(
         "flee_destination_id": flee_destination_id,
         "chase_track": (chase_state or {}).get("trilha") if flee_requested else None,
     }
+    if declaration is not None and len(declaration.jogadas) > 1:  # SPEC-328 P2-5 (aditivo)
+        action["plays"] = [
+            {"kind": s.kind, "card_id": s.card_id, "target_id": s.target_id}
+            for s in declaration.jogadas
+        ]
     if flee_requested and (chase_state or {}).get("approach"):
         action["chase_approach"] = chase_state["approach"]  # SPEC-325 R10 (só com a flag `on`)
     return action
@@ -1649,6 +1667,10 @@ def _combat_node(state: GameState):
         return {"next": "dm_router"}
 
     player = dict(state["player"])
+    if _deck_mode_now() == "off" and "prepared_cards_pre_deck" in player:
+        from services import card_piles as _cp
+
+        _cp.deactivate_deck(player)  # SPEC-328 P1-3: flag voltou a `off` → Preparação de antes
     orch.ensure_combat_sheet(player, is_player=True)
     enemies = [orch.ensure_combat_sheet(dict(e)) for e in (state.get("enemies") or [])]
     combat_meta = dict(state.get("combat") or {})
@@ -1741,6 +1763,8 @@ def _combat_node(state: GameState):
         # SPEC-328 R5/R16: Baralho de Conflito (semente derivada do conflito → replay).
         from services import card_piles
 
+        if card_piles.mode() == "on":
+            card_piles.activate_deck(player)  # P1-3: guarda a Preparação original p/ rollback
         if card_piles.mode() != "off":
             import zlib
 

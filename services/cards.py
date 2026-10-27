@@ -326,6 +326,7 @@ def set_prepared(state: dict, prepared: list[str]) -> dict:
 DECK_MIN = 12
 DECK_MAX = 24
 FOLEGO_MAX_CARTA = 3
+DANO_BASE_FOLEGO_2 = 8  # R6: dano_base a partir daqui custa 2 Fôlego (calibração: 5?)
 _DECK_TIPOS = frozenset({"ativa", "reacao", "utilitaria"})
 _COMMON_PATAMARES = frozenset({"inicial", "avancado"})
 _DAMAGE_KINDS = frozenset({"dano", "dot", "contra_ataque"})
@@ -348,7 +349,7 @@ def custo_folego(card: dict) -> int:
         tier = int(card.get("tier", 1) or 1)
     except (TypeError, ValueError):
         dano_base, tier = 0, 1
-    if tier >= 3 or dano_base >= 8:
+    if tier >= 3 or dano_base >= DANO_BASE_FOLEGO_2:
         return 2
     if freq == "livre" and str(effect.get("kind") or "") not in _DAMAGE_KINDS:
         return 0
@@ -429,7 +430,12 @@ def use_card(state: dict, card_id: str) -> dict:
     card = get_card(card_id)
     if not card:
         return {"ok": False, "error": f"Carta '{card_id}' desconhecida.", "log": ""}
-    prepared = set(player.get("prepared_cards") or []) | set(player.get("deck") or [])
+    prepared = set(player.get("prepared_cards") or [])
+    if player.get("deck"):  # SPEC-328: com o baralho `on`, basicas e cartas do baralho valem
+        from services import card_piles
+
+        if card_piles.mode() == "on":
+            prepared |= set(player["deck"])
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
     if card_id not in prepared and card_id not in virtude_ids:
         return {"ok": False, "error": f"Carta '{card_id}' não está preparada.", "log": ""}

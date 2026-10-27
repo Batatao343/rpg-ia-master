@@ -176,10 +176,12 @@ def main() -> None:
     ap.add_argument("--categories", default="padrao,elite")
     ap.add_argument("--per-cat", type=int, default=4)
     ap.add_argument("--folego", type=int, default=card_piles.FOLEGO_BASE)
+    ap.add_argument("--dano2", type=int, default=cards.DANO_BASE_FOLEGO_2)
     ap.add_argument("--mao", type=int, default=card_piles.MAO_BASE)
     args = ap.parse_args()
     card_piles.FOLEGO_BASE = args.folego
     card_piles.MAO_BASE = args.mao
+    cards.DANO_BASE_FOLEGO_2 = args.dano2
     t0 = time.time()
     cells = run(
         range(args.seeds),
@@ -209,6 +211,7 @@ def main() -> None:
                 "seeds": args.seeds,
                 "folego": args.folego,
                 "mao": args.mao,
+                "dano2": args.dano2,
                 "elapsed_s": round(time.time() - t0, 1),
                 "summary": summary,
             },

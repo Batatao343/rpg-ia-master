@@ -69,6 +69,27 @@ def _starting_deck_ids(player: dict) -> list[str]:
     return deck[: cards.DECK_MAX]
 
 
+def activate_deck(player: dict) -> None:
+    """Modo `on` (P1-3): garante baralho + `prepared_cards` derivado, guardando o original
+    em `prepared_cards_pre_deck` para o rollback se a flag voltar a `off`."""
+    if migrate_deck(player) or "prepared_cards_pre_deck" in player:
+        return
+    player["prepared_cards_pre_deck"] = list(player.get("prepared_cards") or [])
+    keep = [
+        c
+        for c in player["prepared_cards"]
+        if (cards.get_card(c) or {}).get("tipo") not in cards._DECK_TIPOS
+    ]
+    player["prepared_cards"] = list(dict.fromkeys(list(player.get("deck") or []) + keep))
+
+
+def deactivate_deck(player: dict) -> None:
+    """Flag voltou a `off`: restaura a Preparação anterior (o `deck` fica guardado)."""
+    pre = player.pop("prepared_cards_pre_deck", None)
+    if pre is not None:
+        player["prepared_cards"] = list(pre)
+
+
 def migrate_deck(player: dict) -> bool:
     """Migracao idempotente (R3). Devolve True se montou o baralho. Com `deck` valido
     nao mexe; `prepared_cards` e re-derivado do baralho (R4) preservando passivas."""
@@ -78,6 +99,7 @@ def migrate_deck(player: dict) -> bool:
         player["deck"] = _starting_deck_ids(player)
         changed = True
     if changed:
+        player.setdefault("prepared_cards_pre_deck", list(player.get("prepared_cards") or []))
         keep = [
             c
             for c in (player.get("prepared_cards") or [])
@@ -110,11 +132,10 @@ def _locked_for_scene(player: dict, card_id: str) -> bool:
 
 def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> dict:
     """Inicio do conflito (R5): embaralha com a semente e compra a mao inicial."""
-    if not player.get("deck"):
-        migrate_deck(player)
+    deck_ids = list(player.get("deck") or []) or _starting_deck_ids(player)  # sem mutar a ficha
     live: list[str] = []
     out: list[str] = []
-    for cid in player.get("deck") or []:
+    for cid in deck_ids:
         (out if _locked_for_scene(player, cid) else live).append(cid)
     piles: dict[str, Any] = {
         "compra": live,
@@ -127,6 +148,7 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
         "seed": int(seed),
         "embaralhos": 0,
         "fardos": 0,
+        "pacto_carga": False,
     }
     _rng(piles, rng).shuffle(piles["compra"])
     draw(piles, MAO_BASE, rng)
@@ -178,6 +200,7 @@ def begin_round(piles: dict, rng: random.Random | None = None) -> dict:
     draw(piles, MAO_BASE - len(piles["mao"]), rng)
     piles["folego"] = FOLEGO_BASE
     piles["folego_emprestado"] = 0
+    piles["pacto_carga"] = False
     return piles
 
 
@@ -237,12 +260,23 @@ def _plan(
             return plan
         plan["emprestado"] = falta
         plan["entropia_extra"] = falta * PACTO_ENTROPIA_POR_FOLEGO
-    if plan["entropia_extra"] + entropy_cost > entropia:
-        plan.update(
-            ok=False,
-            motivo=f"Entropia insuficiente ({entropia}/{plan['entropia_extra'] + entropy_cost}).",
-        )
+    # O Pacto GANHA Entropia (nao exige); so a Entropia propria da carta precisa estar no pool.
+    if entropy_cost > entropia:
+        plan.update(ok=False, motivo=f"Entropia insuficiente ({entropia}/{entropy_cost}).")
     return plan
+
+
+def apply_pact(piles: dict, player: dict, plan: dict) -> None:
+    """Consequencia do Pacto (todas as Posturas): +2 Entropia por Folego emprestado, pelo
+    ganho generico (clamp em `max_entropy`), e +1 Carga do Abismo na 1a vez da rodada."""
+    if not plan.get("emprestado"):
+        return
+    mx = int(player.get("max_entropy", 0) or 0)
+    now = int(player.get("entropy", 0) or 0) + int(plan["entropia_extra"])
+    player["entropy"] = min(mx, now) if mx > 0 else now
+    if not piles.get("pacto_carga"):
+        piles["pacto_carga"] = True
+        player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + 1
 
 
 def pay_cost(
@@ -270,8 +304,6 @@ def pay_cost(
         piles["folego_emprestado"] = (
             int(piles.get("folego_emprestado", 0) or 0) + plan["emprestado"]
         )
-        if plan["entropia_extra"]:
-            player["entropy"] = int(player.get("entropy", 0) or 0) - plan["entropia_extra"]
     return plan
 
 
@@ -389,7 +421,13 @@ def plan_plays(
             return {"ok": False, "motivo": plan["motivo"], **total}
         sim["folego"] = max(0, int(sim["folego"]) - plan["folego"])
         sim["folego_emprestado"] = int(sim["folego_emprestado"]) + plan["emprestado"]
-        entropy -= plan["entropia_extra"] + entropy_cost
+        entropy -= entropy_cost
+        mx = int(player.get("max_entropy", 0) or 0)
+        entropy = (
+            min(mx, entropy + plan["entropia_extra"])
+            if mx > 0
+            else entropy + plan["entropia_extra"]
+        )
         total["folego_total"] += cost
         total["emprestado"] += plan["emprestado"]
         total["entropia_extra"] += plan["entropia_extra"]

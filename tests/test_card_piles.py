@@ -182,35 +182,44 @@ def test_pagamento_normal_so_folego():
     assert p["entropy"] == 6
 
 
-def test_pacto_dois_entropia_por_folego_com_teto_dois():
+def test_pacto_empresta_ate_dois_e_ganha_entropia_e_carga():
     p = _player()
     piles = cp.start_piles(p, 1)
     piles["folego"] = 0
     plan = cp.pay(piles, p, _golpe())
-    assert plan == {
-        "folego": 0,
-        "emprestado": 1,
-        "entropia_extra": 2,
-        "ok": True,
-        "motivo": "",
-    }
-    assert p["entropy"] == 4 and piles["folego_emprestado"] == 1
-    assert cp.pay(piles, p, _golpe())["ok"]  # 2o emprestimo
-    assert p["entropy"] == 2 and piles["folego_emprestado"] == 2
+    assert plan == {"folego": 0, "emprestado": 1, "entropia_extra": 2, "ok": True, "motivo": ""}
+    cp.apply_pact(piles, p, plan)
+    assert p["entropy"] == 8 and piles["folego_emprestado"] == 1  # +2 Entropia
+    assert p["abyss_charge"] == 1  # +1 Carga na 1a vez da rodada
+    plan = cp.pay(piles, p, _golpe())
+    cp.apply_pact(piles, p, plan)
+    assert p["entropy"] == 10 and piles["folego_emprestado"] == 2  # clamp em max_entropy
+    assert p["abyss_charge"] == 1  # Carga so 1x por rodada
     third = cp.can_pay(piles, p, _golpe())
     assert not third["ok"] and "no máximo 2" in third["motivo"]
-    assert p["entropy"] == 2  # rejeitado nao gasta nada
 
 
-def test_pacto_exige_entropia():
+def test_pacto_entropia_respeita_o_teto():
     p = _player()
-    p["entropy"] = 1
+    p["entropy"] = 9
     piles = cp.start_piles(p, 1)
-    piles["folego"] = 0
-    before = copy.deepcopy(piles)
-    plan = cp.pay(piles, p, _golpe())
-    assert not plan["ok"] and "Entropia" in plan["motivo"]
-    assert piles == before and p["entropy"] == 1
+    plan = {"emprestado": 1, "entropia_extra": 2}
+    cp.apply_pact(piles, p, plan)
+    assert p["entropy"] == p["max_entropy"]
+
+
+def test_start_piles_nao_muda_a_ficha_e_deck_tem_rollback():
+    p = _starter()
+    before = copy.deepcopy(p)
+    cp.start_piles(p, 1)  # shadow: so calcula
+    assert p == before
+    cp.activate_deck(p)
+    assert p["prepared_cards_pre_deck"] == before["prepared_cards"]
+    assert set(p["deck"]) <= set(p["prepared_cards"])
+    cp.deactivate_deck(p)
+    assert p["prepared_cards"] == before["prepared_cards"] and "prepared_cards_pre_deck" not in p
+    cp.activate_deck(p)  # reativar com o baralho ja guardado re-deriva
+    assert set(p["deck"]) <= set(p["prepared_cards"]) and "prepared_cards_pre_deck" in p
 
 
 def test_custo_entropia_da_carta_vale_alem_do_folego():
