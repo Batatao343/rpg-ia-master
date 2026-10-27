@@ -1,7 +1,7 @@
 # SPEC-332 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Sol (Claude Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `894d4a83`
+> **Veredito:** `APPROVED` (re-revisão do delta `302d9dcd`; 1ª rodada: `APPROVED_WITH_FOLLOWUPS` em `894d4a83`)
+> **Revisor:** Sol (Claude Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `894d4a83` → `302d9dcd`
 
 ## Escopo
 
@@ -61,7 +61,20 @@ nenhum valor de LLM novo, nenhum structured output novo, nenhum segredo em log.
 
 ## Correções aplicadas
 
-Nenhuma (revisão só leitura).
+Re-revisão do delta `7f3a6a72..302d9dcd` (Sol, 27/10): **APPROVED**.
+
+- **P2-1 — corrigido.** `apply_phases` roda também no fim de `_run_round` (`conflict_orchestrator.py:2461`), depois do dano e antes do forecast do nó, e grava `fase_rnd`. Não há aplicação dupla: a fase é monotônica (`reached <= current` → `continue`), e a chamada do início da rodada só dispara se algo (tick de cena/Abismo) cruzar um limiar entre as duas chamadas. O spy de `test_phase_applied_at_end_of_round_before_next_forecast` confirma 2 chamadas por rodada e uma só narração.
+- **P2-2 — corrigido.** A assinatura de fase leva `_fase`, e `_sig_falls_on` exige `rnd >= fase_rnd + 1`. O `prenuncio` vai a `out.logs` quando o Presságio não está `on` (gate `edk.active()`, `ei` importado antes no mesmo escopo, `_alive(None)` seguro).
+- **P2-3 — corrigido.** Os marcadores agora são separados (`_deck332_shadow` × `_deck332`), e há teste de round-trip JSON com e sem o marcador. Resta uma ressalva, que registro como **F-1** abaixo.
+- **P2-4 — corrigido.** `deck_seed = crc32(game_id|turn_count|target_hint)` é gravado em `_instances` só quando o modo não é `off`, e o limite de 15 é testado com ids `<base>_1`.
+- **P2-5 — corrigido.** `legacy_cards()` filtra pelas chaves do golden, e `test_equivalencia_das_308...` segue exigindo `len(legacy) == len(golden) == 308` com diff vazio (o caso da carta legada removida continua coberto).
+- **P2-8 — corrigido.** `control` entrou no conjunto preservado.
+- **`off` byte-idêntico — confirmado.** `apply_deck` sai no topo; `apply_phases` devolve False sem tocar a ficha; o log de `prenuncio` é gated por `active()`; o spawn não grava `deck_seed` (`_deck_seed=None`); `enemy_declaration` não mudou no caminho `off`. Golden 308 verde, e os testes de spawn/encontro também verdes.
+
+Follow-ups novos (P2, não bloqueiam):
+- **F-1** (`enemy_decks.py:217-223`): a heurística "ficha já tem carta `inf_*`/facção → já montada" faz o baralho ser pulado em silêncio se a curadoria do bestiário (próximo lote, desvio do critério 1) puser cartas `inf_*` nas `cartas` próprias de uma criatura. Correção: decidir por `_deck332`, e usar a heurística só se o marcador faltar **e** a ficha tiver mais cartas da família do que o bestiário dá; ou exigir no `validate_content` que o bestiário não referencie `inf_*`.
+- **F-2** (`tests/spec330_equivalence.py:124-131`): `build_golden()` agora depende do próprio golden, então não dá para regenerá-lo do zero (aceitável: o golden é congelado pré-330). Também deixou de existir a guarda "carta nova em formato legado sem `efeitos`". Sugestão: um teste curto em que toda carta fora do golden tem `efeitos` ou origem pós-golden conhecida.
+- P2-6 e P2-7 seguem como follow-ups registrados na spec (SPEC-334).
 
 ## Pendências
 
@@ -76,4 +89,6 @@ Nenhuma (revisão só leitura).
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_spec283_enemy_support_cards.py tests/test_scene_cards_node.py tests/test_enemy_decks.py tests/test_boss_phases.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_error_envelope.py tests/test_card_effects_grammar.py tests/test_card_lint.py → 148 passed in 17.62s
 bash scripts/dev/py.sh scripts/validate_content.py → 0 erros, 0 avisos
 probe (scratch, removido): famílias no bestiário 21/15/15/15/14/12/11/10/6/5, abissal 0; kinds das 88 cartas sem invocação; rebuild sem _deck332 7→9 cartas
+re-revisão 302d9dcd: mesmo conjunto de 11 arquivos -n 2 → 155 passed in 14.53s
+re-revisão 302d9dcd: tests/test_encounter_identity_repro.py tests/test_encounter_manifest.py tests/test_spec272_conflito_ligado.py -n 2 → 38 passed in 3.60s
 ```
