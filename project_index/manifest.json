@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f8c0de09abfa1949b8978d89037bd0d70aa54ebd",
+  "commit_sha": "6f1dfdbfb14aa1a7ca0e951b7c52e5caf2845b37",
   "edge_counts": {
-    "calls": 31899,
-    "contains": 1043,
-    "defines": 15614,
-    "imports": 2548,
-    "likely_test_for": 1788,
+    "calls": 31951,
+    "contains": 1044,
+    "defines": 15635,
+    "imports": 2553,
+    "likely_test_for": 1793,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7493ac718bcdf5e062606d7f8bed9d36de83bef24ceb41260a469e5085afa27f",
+  "graph_hash": "sha256:ea4eee5e88dee4ef575773cf87b527553323020e162d17cb72e65946d9d98446",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1049,6 +1049,7 @@
     "tests/test_spec325_reinforcements.py",
     "tests/test_spec325_resist.py",
     "tests/test_spec339_duracao_condicoes.py",
+    "tests/test_spec343_security.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1281,14 +1282,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 977,
+    "class": 978,
     "endpoint": 68,
-    "file": 1227,
-    "function": 4916,
+    "file": 1228,
+    "function": 4918,
     "method": 843,
-    "module": 1043,
-    "test": 8877
+    "module": 1044,
+    "test": 8895
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6a1adbb7bef84f8a4e9d52cb7cedeb9127dfbc7601ca710ef5d24acc9d93ddc5"
+  "source_tree_hash": "sha256:7bfffbb5893b8dfcdeab89cb055a33e645d30a74ae9ac9dc588858aa79faea87"
 }
