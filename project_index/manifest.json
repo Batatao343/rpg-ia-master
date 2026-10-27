@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "5bcc795e54fe23f21921494188bb9ca8ccad2589",
+  "commit_sha": "9164cb16279ac0c76e4f4afa345873ef608074d2",
   "edge_counts": {
-    "calls": 31684,
-    "contains": 1037,
-    "defines": 15537,
-    "imports": 2538,
-    "likely_test_for": 1782,
+    "calls": 31728,
+    "contains": 1040,
+    "defines": 15556,
+    "imports": 2543,
+    "likely_test_for": 1784,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:589047ca47cfcf43d4417270c0881fd9697cbe7ba32d730f75141ec5a580ba4d",
+  "graph_hash": "sha256:0f6a20e7bdef9fb649317e0efd95f1bbd5d2076c095fcbe122f72c2c9c3573f1",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -94,8 +94,10 @@
     "docs/spec318/npc_two_phase_bench.py",
     "docs/spec328/arena_deck.py",
     "docs/spec332/arena_familias.py",
+    "docs/spec335/arena_neutras_lote6.py",
     "docs/spec335/arena_postura_medico.py",
     "docs/spec335/confirmar_lote5.py",
+    "docs/spec335/confirmar_tronco_lote6.py",
     "docs/spec336/arena_folego_full.py",
     "encounter_budget.py",
     "evals/__init__.py",
@@ -582,6 +584,7 @@
     "tests/test_card_piles.py",
     "tests/test_card_rewards.py",
     "tests/test_card_sim.py",
+    "tests/test_card_variety.py",
     "tests/test_cards_prepare_api.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
@@ -1277,12 +1280,12 @@
     "artifact": 9,
     "class": 976,
     "endpoint": 68,
-    "file": 1221,
-    "function": 4899,
+    "file": 1224,
+    "function": 4903,
     "method": 843,
-    "module": 1037,
-    "test": 8818
+    "module": 1040,
+    "test": 8833
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c84fea9316bdd10596f21f017236b533f485fc343c41228cd4277dcc0a709f06"
+  "source_tree_hash": "sha256:314817f24de57daa27a1f98d9973217cf7096e84c14e2879edc073d752a9ebb4"
 }
