@@ -85,6 +85,15 @@ def test_bucket_privado_isola_objeto_a_b_e_signed_url_expira():
         object_url = f"{base}/storage/v1/object/authenticated/rpg-dynamic/{path}"
         headers_a = {"apikey": publishable, "Authorization": f"Bearer {token_a}"}
         headers_b = {"apikey": publishable, "Authorization": f"Bearer {token_b}"}
+        # Controle positivo: a mesma URL serve o objeto ao service role, então as negações
+        # abaixo não passam só porque o path está errado.
+        served = httpx.get(
+            object_url,
+            headers={"apikey": service, "Authorization": f"Bearer {service}"},
+            timeout=10,
+        )
+        assert served.status_code == 200
+        assert served.content == payload
         # SPEC-224 D-B: o cliente (`authenticated`) não lê `rpg-dynamic` direto, nem o dono;
         # o backend lê via service role e o acesso do cliente é por signed URL.
         assert httpx.get(object_url, headers=headers_a, timeout=10).status_code in (400, 403, 404)
