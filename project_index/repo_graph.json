@@ -1,5 +1,5 @@
 {
-  "commit_sha": "787b04144ff8967873f92cdf3392b4e6469b510d",
+  "commit_sha": "acb8a4db18da143806897212e66e2bcabc2d9a73",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -57338,7 +57338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 60
+        "line": 65
       },
       "source": "module:scripts.flag_registry",
       "target": "symbol:scripts.flag_registry._as_date",
@@ -57360,7 +57360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 121
+        "line": 126
       },
       "source": "module:scripts.flag_registry",
       "target": "symbol:scripts.flag_registry.check",
@@ -57382,7 +57382,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 129
+        "line": 136
       },
       "source": "module:scripts.flag_registry",
       "target": "symbol:scripts.flag_registry.main",
@@ -57404,7 +57404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 73
+        "line": 78
       },
       "source": "module:scripts.flag_registry",
       "target": "symbol:scripts.flag_registry.validate",
@@ -260354,7 +260354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 123
+        "line": 129
       },
       "source": "symbol:scripts.flag_registry.check",
       "target": "symbol:scripts.flag_registry.load",
@@ -260365,7 +260365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 123
+        "line": 129
       },
       "source": "symbol:scripts.flag_registry.check",
       "target": "symbol:scripts.flag_registry.scan_sources",
@@ -260376,7 +260376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 123
+        "line": 128
       },
       "source": "symbol:scripts.flag_registry.check",
       "target": "symbol:scripts.flag_registry.validate",
@@ -260387,7 +260387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 149
+        "line": 156
       },
       "source": "symbol:scripts.flag_registry.main",
       "target": "symbol:scripts.flag_registry._as_date",
@@ -260398,7 +260398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 139
+        "line": 146
       },
       "source": "symbol:scripts.flag_registry.main",
       "target": "symbol:scripts.flag_registry.check",
@@ -260409,7 +260409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 140
+        "line": 147
       },
       "source": "symbol:scripts.flag_registry.main",
       "target": "symbol:scripts.flag_registry.load",
@@ -260420,7 +260420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 45
+        "line": 50
       },
       "source": "symbol:scripts.flag_registry.scan_sources",
       "target": "symbol:scripts.flag_registry._is_product_source",
@@ -260431,7 +260431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/flag_registry.py",
-        "line": 95
+        "line": 100
       },
       "source": "symbol:scripts.flag_registry.validate",
       "target": "symbol:scripts.flag_registry._as_date",
@@ -614593,7 +614593,7 @@
     {
       "id": "symbol:scripts.flag_registry._as_date",
       "kind": "function",
-      "line": 60,
+      "line": 65,
       "path": "scripts/flag_registry.py",
       "qualified_name": "scripts.flag_registry._as_date"
     },
@@ -614607,7 +614607,7 @@
     {
       "id": "symbol:scripts.flag_registry.check",
       "kind": "function",
-      "line": 121,
+      "line": 126,
       "path": "scripts/flag_registry.py",
       "qualified_name": "scripts.flag_registry.check"
     },
@@ -614621,7 +614621,7 @@
     {
       "id": "symbol:scripts.flag_registry.main",
       "kind": "function",
-      "line": 129,
+      "line": 136,
       "path": "scripts/flag_registry.py",
       "qualified_name": "scripts.flag_registry.main"
     },
@@ -614635,7 +614635,7 @@
     {
       "id": "symbol:scripts.flag_registry.validate",
       "kind": "function",
-      "line": 73,
+      "line": 78,
       "path": "scripts/flag_registry.py",
       "qualified_name": "scripts.flag_registry.validate"
     },
@@ -705186,5 +705186,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:314817f24de57daa27a1f98d9973217cf7096e84c14e2879edc073d752a9ebb4"
+  "source_tree_hash": "sha256:f3b52ea8f75f4bd8d9778c3bfcf36198f0bd77176dd9b177ec2b63857b2616d3"
 }
