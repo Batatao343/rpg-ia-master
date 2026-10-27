@@ -34,6 +34,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-198 | Play Console (taxa), package ID, service account | "criei o Play Console" → `applicationId`, upload interno, licença real |
 | Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
+| Auth staging/prod (343) | confirmar `RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED=1` e captcha `gotrue` na Vercel | "confirmei" → fechar achado de enumeração; Stripe live → virar gate `livemode` |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
@@ -70,6 +71,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: cartas na sessão `-69`; suíte 1 por vez (avisar). 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
+- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`. Aceitos: CSRF sem vínculo à sessão, `rate_limit_buckets` sem RLS, FAISS pickle contido.
 - 27/10 cartas: `off` 328–336; 339 `done` (Provocar/Marca d=1 valem; arena sem viés: Sangromante 78 %, demais 58–70 %). Falta: spec de balanço do Sangromante, e2e/smoke LLM antes de `on`.
 
 
