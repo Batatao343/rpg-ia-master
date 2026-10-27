@@ -1,5 +1,5 @@
 {
-  "commit_sha": "e44582809556bbad2e0b35f2f2d19308b8007791",
+  "commit_sha": "a65c930bc9da5008ff47ce0e3422471f75654454",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -2661,6 +2661,17 @@
       },
       "source": "file:scripts/finops_margin_sim.py",
       "target": "module:scripts.finops_margin_sim",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 1
+      },
+      "source": "file:scripts/flag_registry.py",
+      "target": "module:scripts.flag_registry",
       "type": "contains"
     },
     {
@@ -14112,6 +14123,17 @@
       },
       "source": "file:tests/test_fixes_playtest.py",
       "target": "module:tests.test_fixes_playtest",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 1
+      },
+      "source": "file:tests/test_flag_registry.py",
+      "target": "module:tests.test_flag_registry",
       "type": "contains"
     },
     {
@@ -57188,6 +57210,83 @@
       },
       "source": "module:scripts.finops_margin_sim",
       "target": "symbol:scripts.finops_margin_sim.simulate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 60
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry._as_date",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 35
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry._is_product_source",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 121
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry.check",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 30
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry.load",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 129
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 41
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry.scan_sources",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 73
+      },
+      "source": "module:scripts.flag_registry",
+      "target": "symbol:scripts.flag_registry.validate",
       "type": "defines"
     },
     {
@@ -134100,6 +134199,149 @@
       },
       "source": "module:tests.test_fixes_playtest",
       "target": "symbol:tests.test_fixes_playtest.test_r5_zonas_apex_no_mapa",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 15
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 92
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_default_that_looks_like_variable_name_rejected",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 68
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 52
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_expired_release_fails_with_message",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 46
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_expires_forbidden_outside_release",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 58
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_invalid_kind_and_spec_format",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 29
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_missing_flag_reported",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 23
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_ok_registry_has_no_errors",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 34
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_orphan_reported",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 39
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_release_requires_expires",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 88
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_repo_registry_is_complete",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 97
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_scan_ignores_truncated_prefix_tokens",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 75
+      },
+      "source": "module:tests.test_flag_registry",
+      "target": "symbol:tests.test_flag_registry.test_scan_sources_detects_new_flag_in_synthetic_repo",
       "type": "defines"
     },
     {
@@ -259753,6 +259995,94 @@
       },
       "source": "symbol:scripts.finops_margin_sim.simulate",
       "target": "symbol:services.shard_pricing._ratio_units",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 123
+      },
+      "source": "symbol:scripts.flag_registry.check",
+      "target": "symbol:scripts.flag_registry.load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 123
+      },
+      "source": "symbol:scripts.flag_registry.check",
+      "target": "symbol:scripts.flag_registry.scan_sources",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 123
+      },
+      "source": "symbol:scripts.flag_registry.check",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 149
+      },
+      "source": "symbol:scripts.flag_registry.main",
+      "target": "symbol:scripts.flag_registry._as_date",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 139
+      },
+      "source": "symbol:scripts.flag_registry.main",
+      "target": "symbol:scripts.flag_registry.check",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 140
+      },
+      "source": "symbol:scripts.flag_registry.main",
+      "target": "symbol:scripts.flag_registry.load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 45
+      },
+      "source": "symbol:scripts.flag_registry.scan_sources",
+      "target": "symbol:scripts.flag_registry._is_product_source",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/flag_registry.py",
+        "line": 95
+      },
+      "source": "symbol:scripts.flag_registry.validate",
+      "target": "symbol:scripts.flag_registry._as_date",
       "type": "calls"
     },
     {
@@ -413600,6 +413930,248 @@
       "source": "symbol:tests.test_fixes_playtest.test_r2_npc_prompt_anti_repeticao._Rec",
       "target": "symbol:tests.test_fixes_playtest.test_r2_npc_prompt_anti_repeticao._Rec.with_structured_output",
       "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_flag_registry.test_default_that_looks_like_variable_name_rejected",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_flag_registry.test_default_that_looks_like_variable_name_rejected",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 70
+      },
+      "source": "symbol:tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 71
+      },
+      "source": "symbol:tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_flag_registry.test_expired_release_fails_with_message",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 53
+      },
+      "source": "symbol:tests.test_flag_registry.test_expired_release_fails_with_message",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 48
+      },
+      "source": "symbol:tests.test_flag_registry.test_expires_forbidden_outside_release",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 47
+      },
+      "source": "symbol:tests.test_flag_registry.test_expires_forbidden_outside_release",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 59
+      },
+      "source": "symbol:tests.test_flag_registry.test_invalid_kind_and_spec_format",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_flag_registry.test_invalid_kind_and_spec_format",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_flag_registry.test_missing_flag_reported",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 26
+      },
+      "source": "symbol:tests.test_flag_registry.test_ok_registry_has_no_errors",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 24
+      },
+      "source": "symbol:tests.test_flag_registry.test_ok_registry_has_no_errors",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_flag_registry.test_orphan_reported",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 35
+      },
+      "source": "symbol:tests.test_flag_registry.test_orphan_reported",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 42
+      },
+      "source": "symbol:tests.test_flag_registry.test_release_requires_expires",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 40
+      },
+      "source": "symbol:tests.test_flag_registry.test_release_requires_expires",
+      "target": "symbol:tests.test_flag_registry._entry",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 89
+      },
+      "source": "symbol:tests.test_flag_registry.test_repo_registry_is_complete",
+      "target": "symbol:scripts.flag_registry.check",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_flag_registry.test_scan_ignores_truncated_prefix_tokens",
+      "target": "symbol:scripts.flag_registry.scan_sources",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_flag_registry.test_scan_sources_detects_new_flag_in_synthetic_repo",
+      "target": "symbol:scripts.flag_registry.scan_sources",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_flag_registry.py",
+        "line": 84
+      },
+      "source": "symbol:tests.test_flag_registry.test_scan_sources_detects_new_flag_in_synthetic_repo",
+      "target": "symbol:scripts.flag_registry.validate",
+      "type": "calls"
     },
     {
       "confidence": "static_exact",
@@ -580386,6 +580958,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:scripts/flag_registry.py",
+      "kind": "file",
+      "line": 1,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:scripts/frontend_eval_report.py",
       "kind": "file",
       "line": 1,
@@ -583610,6 +584189,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_fixes_playtest.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_flag_registry.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_flag_registry.py",
       "qualified_name": null
     },
     {
@@ -588828,6 +589414,13 @@
       "qualified_name": "scripts.finops_margin_sim"
     },
     {
+      "id": "module:scripts.flag_registry",
+      "kind": "module",
+      "line": 1,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry"
+    },
+    {
       "id": "module:scripts.frontend_eval_report",
       "kind": "module",
       "line": 1,
@@ -592053,6 +592646,13 @@
       "line": 1,
       "path": "tests/test_fixes_playtest.py",
       "qualified_name": "tests.test_fixes_playtest"
+    },
+    {
+      "id": "module:tests.test_flag_registry",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry"
     },
     {
       "id": "module:tests.test_flee_alert_wiring",
@@ -613116,6 +613716,55 @@
       "line": 72,
       "path": "scripts/finops_margin_sim.py",
       "qualified_name": "scripts.finops_margin_sim.simulate"
+    },
+    {
+      "id": "symbol:scripts.flag_registry._as_date",
+      "kind": "function",
+      "line": 60,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry._as_date"
+    },
+    {
+      "id": "symbol:scripts.flag_registry._is_product_source",
+      "kind": "function",
+      "line": 35,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry._is_product_source"
+    },
+    {
+      "id": "symbol:scripts.flag_registry.check",
+      "kind": "function",
+      "line": 121,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry.check"
+    },
+    {
+      "id": "symbol:scripts.flag_registry.load",
+      "kind": "function",
+      "line": 30,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry.load"
+    },
+    {
+      "id": "symbol:scripts.flag_registry.main",
+      "kind": "function",
+      "line": 129,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry.main"
+    },
+    {
+      "id": "symbol:scripts.flag_registry.scan_sources",
+      "kind": "function",
+      "line": 41,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry.scan_sources"
+    },
+    {
+      "id": "symbol:scripts.flag_registry.validate",
+      "kind": "function",
+      "line": 73,
+      "path": "scripts/flag_registry.py",
+      "qualified_name": "scripts.flag_registry.validate"
     },
     {
       "id": "symbol:scripts.frontend_eval_report._messages",
@@ -661677,6 +662326,97 @@
       "qualified_name": "tests.test_fixes_playtest.test_r5_zonas_apex_no_mapa"
     },
     {
+      "id": "symbol:tests.test_flag_registry._entry",
+      "kind": "test",
+      "line": 15,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry._entry"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_default_that_looks_like_variable_name_rejected",
+      "kind": "test",
+      "line": 92,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_default_that_looks_like_variable_name_rejected"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan",
+      "kind": "test",
+      "line": 68,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_dynamic_pattern_covers_found_and_not_orphan"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_expired_release_fails_with_message",
+      "kind": "test",
+      "line": 52,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_expired_release_fails_with_message"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_expires_forbidden_outside_release",
+      "kind": "test",
+      "line": 46,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_expires_forbidden_outside_release"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_invalid_kind_and_spec_format",
+      "kind": "test",
+      "line": 58,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_invalid_kind_and_spec_format"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_missing_flag_reported",
+      "kind": "test",
+      "line": 29,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_missing_flag_reported"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_ok_registry_has_no_errors",
+      "kind": "test",
+      "line": 23,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_ok_registry_has_no_errors"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_orphan_reported",
+      "kind": "test",
+      "line": 34,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_orphan_reported"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_release_requires_expires",
+      "kind": "test",
+      "line": 39,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_release_requires_expires"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_repo_registry_is_complete",
+      "kind": "test",
+      "line": 88,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_repo_registry_is_complete"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_scan_ignores_truncated_prefix_tokens",
+      "kind": "test",
+      "line": 97,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_scan_ignores_truncated_prefix_tokens"
+    },
+    {
+      "id": "symbol:tests.test_flag_registry.test_scan_sources_detects_new_flag_in_synthetic_repo",
+      "kind": "test",
+      "line": 75,
+      "path": "tests/test_flag_registry.py",
+      "qualified_name": "tests.test_flag_registry.test_scan_sources_detects_new_flag_in_synthetic_repo"
+    },
+    {
       "id": "symbol:tests.test_flee_alert_wiring._force_enemy_flee",
       "kind": "test",
       "line": 26,
@@ -703468,5 +704208,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:9d18ca121b96bb062f1a04d1c45afa4128269b76dbb7fa3c78b470651affe037"
+  "source_tree_hash": "sha256:c84fea9316bdd10596f21f017236b533f485fc343c41228cd4277dcc0a709f06"
 }

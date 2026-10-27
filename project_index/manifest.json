@@ -1,10 +1,10 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "e44582809556bbad2e0b35f2f2d19308b8007791",
+  "commit_sha": "a65c930bc9da5008ff47ce0e3422471f75654454",
   "edge_counts": {
-    "calls": 31654,
-    "contains": 1035,
-    "defines": 15517,
+    "calls": 31684,
+    "contains": 1037,
+    "defines": 15537,
     "imports": 2538,
     "likely_test_for": 1782,
     "route_to": 68
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e0e506b097be551dc3ce37f435f2f693a5065cb9bbb2d4e3706e8fd07118873f",
+  "graph_hash": "sha256:c1399ff561df8e4523b6a13a745ac307399c60eaee9d0b01fb0593df7614f46c",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -233,6 +233,7 @@
     "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
     "scripts/finops_margin_sim.py",
+    "scripts/flag_registry.py",
     "scripts/frontend_eval_report.py",
     "scripts/gen_cards_v4.py",
     "scripts/gen_classes_v2.py",
@@ -694,6 +695,7 @@
     "tests/test_feedback_ledger_recompensas.py",
     "tests/test_fix_vitalidade_terminal.py",
     "tests/test_fixes_playtest.py",
+    "tests/test_flag_registry.py",
     "tests/test_flee_alert_wiring.py",
     "tests/test_forge.py",
     "tests/test_frontend_accessibility_contracts.py",
@@ -1275,12 +1277,12 @@
     "artifact": 9,
     "class": 976,
     "endpoint": 68,
-    "file": 1219,
-    "function": 4892,
+    "file": 1221,
+    "function": 4899,
     "method": 843,
-    "module": 1035,
-    "test": 8805
+    "module": 1037,
+    "test": 8818
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9d18ca121b96bb062f1a04d1c45afa4128269b76dbb7fa3c78b470651affe037"
+  "source_tree_hash": "sha256:c84fea9316bdd10596f21f017236b533f485fc343c41228cd4277dcc0a709f06"
 }
