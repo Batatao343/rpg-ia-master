@@ -1,0 +1,424 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "cor1_ino_ponto_fraco",
+      "name": "Ponto Fraco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "O Corruptor aponta a trinca que o ferro esconde, a guarda do alvo se abre e a carta fica na mão.",
+      "momento": "Melhor jogada quando o inimigo encouraçado resiste a tudo e a mão tem golpes baratos prontos para entrar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_junta_emperrada",
+      "name": "Junta Emperrada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "A ferrugem de ferro velho trava as juntas do alvo e os golpes seguintes encontram a brecha.",
+      "momento": "Melhor jogada quando um grupo de aliados acabou de chegar e o primeiro a bater precisa abrir a armadura para os demais.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_estalo_de_viga",
+      "name": "Estalo de Viga",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "Um estalo de osso e ferro quebra o apoio do golpe alheio; se o alvo cair, o ataque dele morre no ar.",
+      "momento": "Melhor jogada quando o inimigo já anunciou o golpe pesado e a viga certa quebra o impulso antes de ele cair.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_ler_o_metal",
+      "name": "Ler o Metal",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "resistencias"
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "O ferro conta ao Corruptor onde envelheceu mal: as resistências do alvo ficam à vista e a carta fica na mão.",
+      "momento": "Melhor jogada quando o tipo de dano a usar é incerto e errar a escolha gastaria Fôlego demais.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_estilhaco_de_ferro",
+      "name": "Estilhaço de Ferro",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "contra_ataque",
+          "valor": 3
+        }
+      ],
+      "descricao": "Lascas de ferro velho saltam do Corruptor contra quem o ataca, como um revide de ruína.",
+      "momento": "Melhor jogada quando o inimigo mais perigoso acaba de se colar ao Corruptor e a resposta pode doer antes da próxima investida.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "cor1_ino_carapaca_de_ferrugem",
+      "name": "Carapaça de Ferrugem",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Escamas de ferrugem crescem sobre o Corruptor, como cinza dura, e absorvem o primeiro tranco da rodada.",
+      "momento": "Melhor jogada quando o Corruptor está sozinho na linha de frente e precisa segurar a rodada sem recuar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_oxido_no_gume",
+      "name": "Óxido no Gume",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desarmado_risco",
+          "duracao": 2
+        }
+      ],
+      "descricao": "O óxido corre pela lâmina e pela armadura do alvo: ele recebe mais dano e fere com menos força.",
+      "momento": "Melhor jogada quando o inimigo troca golpes com a linha de frente e os dois lados do duelo precisam pender a nosso favor.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_peso_morto",
+      "name": "Peso Morto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "descricao": "O ferro do alvo pesa como chumbo e deixa uma fenda aberta: ele bate com menos força e defende pior.",
+      "momento": "Melhor jogada quando um guerreiro blindado avança devagar e o grupo quer castigar sem pressa o passo lento dele.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_estrutura_cansada",
+      "name": "Estrutura Cansada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "se": {
+            "alvo_tem": "rachadura"
+          }
+        }
+      ],
+      "descricao": "O golpe encontra a fadiga do ferro: contra o que já está rachado, a quebra é completa e a ruína vem junto.",
+      "momento": "Melhor jogada quando a armadura do alvo já foi trincada por outra carta e um golpe forte pode terminar o serviço.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_dobra_forcada",
+      "name": "Dobra Forçada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 3
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "chamado": 3
+        }
+      ],
+      "descricao": "O Corruptor dobra o ferro contra a vontade dele; quem já desceu fundo no Abismo dobra mais forte.",
+      "momento": "Melhor jogada quando a Entropia já passou do primeiro degrau e a peça maior do inimigo precisa ceder de vez.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_colapso_programado",
+      "name": "Colapso Programado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 7
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um golpe no ponto exato derruba a ruína toda: o alvo é ferido, rachado e lançado para longe do Corruptor.",
+      "momento": "Melhor jogada quando o inimigo mais pesado está colado ao grupo e abrir espaço enquanto o fere resolve duas urgências.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_ino_geometria_da_ruina",
+      "name": "Geometria da Ruína",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "inorganica",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 3
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "escala": {
+            "por": "condicoes_alvo",
+            "fator": 1,
+            "max": 3
+          }
+        }
+      ],
+      "descricao": "O Corruptor desenha no ar as linhas por onde a ruína desaba: o metal racha, prende o alvo e cada mal nele pesa em dano.",
+      "momento": "Melhor jogada quando um colosso de pedra ou ferro domina o campo e a mão já empilhou nele várias fraquezas.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

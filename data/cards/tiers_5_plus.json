@@ -1041,9 +1041,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "A colheita da ruína corta o que o tempo já apodreceu.",
       "contrapartida": "A colheita custa Entropia alta e só se repete a cada turno.",
-      "momento": "Melhor jogada quando o alvo já está fraco e a ruína pode ser colhida de uma vez.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo parece intacto por fora e já apodrece por dentro, pronto para ser ceifado de uma vez.",
+      "raridade": "rara"
     },
     {
       "id": "cor_t6_tronco",
@@ -1073,9 +1072,8 @@
       "papel": "tier-6-reacao-buff_defesa-1",
       "descricao": "O pacto de ferrugem endurece o corpo enquanto corrói o que o toca.",
       "contrapartida": "A ferrugem do pacto cobra Entropia pesada e se renova uma vez por turno.",
-      "momento": "Melhor jogada quando o golpe vem e o corruptor quer que o atacante pague com a própria arma.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o Corruptor vai receber uma saraivada de golpes e o pacto pode endurecer a pele enquanto corrói quem toca.",
+      "raridade": "rara"
     },
     {
       "id": "cor_t7_tronco",
@@ -1105,9 +1103,8 @@
       "papel": "tier-7-passiva-vantagem-2",
       "descricao": "O jardim decomposto floresce em torno do corruptor e a podridão vira vantagem.",
       "contrapartida": "O jardim floresce uma vez por cena, adubado com Entropia alta.",
-      "momento": "Melhor jogada quando o campo está apertado e a podridão do jardim pode cercar os inimigos.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o campo inteiro vira pasto de mofo e o jardim em volta do Corruptor floresce a favor dele.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_t8_tronco",
@@ -1137,9 +1134,8 @@
       "papel": "tier-8-utilitaria-utilitaria-3",
       "descricao": "A entropia compartilhada divide o fardo entre todos, de bom grado ou à força.",
       "contrapartida": "Dividir o fardo custa Entropia no limite, uma vez por cena.",
-      "momento": "Melhor jogada quando a Entropia do grupo está desigual e o corruptor pode redistribuí-la.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo está à beira do colapso e dividir a carga do Abismo entre todos ainda os mantém de pé.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_biologia_t5",
@@ -1170,9 +1166,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "A ecologia da febre faz do corpo do inimigo um viveiro de pragas.",
       "contrapartida": "A febre pede Entropia alta e leva um turno para voltar.",
-      "momento": "Melhor jogada quando o alvo é carne e osso e a febre pode se espalhar até os vizinhos.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o corpo inimigo é grande o bastante para hospedar pragas e a febre pode fazer dele um viveiro.",
+      "raridade": "rara"
     },
     {
       "id": "cor_biologia_t7",
@@ -1202,9 +1197,8 @@
       "papel": "tier-7-reacao-contra_ataque-1",
       "descricao": "O anticorpo trai o corpo que o carrega e volta-se contra o hospedeiro.",
       "contrapartida": "O anticorpo só trai uma vez por cena, e a Entropia paga a traição.",
-      "momento": "Melhor jogada quando o inimigo está cheio de pragas e o troco precisa vir de dentro.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o hospedeiro carrega anticorpos próprios e a defesa dele pode se virar contra o dono.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_biologia_t8",
@@ -1235,9 +1229,8 @@
       "papel": "tier-8-passiva-aplicar_condicao-2",
       "descricao": "A carne muda em estações: primavera de pus, outono de osso.",
       "contrapartida": "A estação muda uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando o corpo do alvo já está doente e a estação pode empurrá-lo ao limite.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luta atravessa longos turnos e a carne do inimigo muda de estado conforme as estações do apodrecer.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_biologia_apice",
@@ -1268,9 +1261,8 @@
       "papel": "tier-9-ativa-dano-0",
       "descricao": "A gênese da podridão é a primeira doença, a que dá nome às outras.",
       "contrapartida": "A gênese exige Entropia alta e descanso longo; a Carga do Abismo cresce junto.",
-      "momento": "Melhor jogada quando o grupo inimigo é grande e a gênese pode contaminar todos de uma vez.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma única doença precisa nomear todas as outras e o alvo é a última peça de uma campanha.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_alma_t5",
@@ -1300,9 +1292,8 @@
       "papel": "tier-5-ativa-contra_ataque-4",
       "descricao": "A liturgia do desalento sussurra ao inimigo que não vale a pena continuar.",
       "contrapartida": "O sussurro custa Entropia alta e precisa de um turno para recuperar o fôlego.",
-      "momento": "Melhor jogada quando a vontade do alvo já fraqueja e o sussurro pode quebrá-la de vez.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a hesitação inimiga já aparece e um canto de renúncia pode convencê-lo a não continuar.",
+      "raridade": "rara"
     },
     {
       "id": "cor_alma_t7",
@@ -1333,9 +1324,8 @@
       "papel": "tier-7-reacao-aplicar_condicao-5",
       "descricao": "A vontade oca não tem mais o que defender, e o inimigo sente o vazio.",
       "contrapartida": "O vazio abre uma vez por cena e gasta Entropia alta.",
-      "momento": "Melhor jogada quando o inimigo mais confiante precisa duvidar de si antes de atacar.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a vontade do inimigo esvaziou e o oco que sobrou já não defende nada de verdade.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_alma_t8",
@@ -1366,9 +1356,8 @@
       "papel": "tier-8-passiva-dano-6",
       "descricao": "O coro da renúncia canta no fundo da cabeça de quem ainda resiste.",
       "contrapartida": "O coro canta uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando várias mentes inimigas se mantêm firmes e o coro pode dobrá-las juntas.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando vozes de desistência rondam o campo e ainda falta empurrar o último resistente para dentro do coro.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_alma_apice",
@@ -1398,9 +1387,8 @@
       "papel": "tier-9-ativa-contra_ataque-1",
       "descricao": "O eclipse interior apaga a luz de dentro, e o inimigo só vê o escuro de si mesmo.",
       "contrapartida": "O eclipse pede Entropia alta, descanso longo, e a Carga fica no escuro.",
-      "momento": "Melhor jogada quando um chefe de vontade forte domina o campo e precisa ser calado por dentro.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luz interior do alvo é o último apoio dele e apagá-la deixa só o escuro à vista.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_inorganica_t5",
@@ -1431,9 +1419,8 @@
       "papel": "tier-5-ativa-aplicar_condicao-8",
       "descricao": "A catedral de ferrugem se ergue no metal do inimigo e o consome pelas juntas.",
       "contrapartida": "A ferrugem trabalha por um turno e cobra Entropia alta.",
-      "momento": "Melhor jogada quando o alvo veste ferro pesado e a ferrugem pode abrir as juntas da armadura.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando toda a armadura do inimigo é de ferro e uma catedral de ferrugem pode consumi-la por dentro.",
+      "raridade": "rara"
     },
     {
       "id": "cor_inorganica_t7",
@@ -1464,9 +1451,8 @@
       "papel": "tier-7-reacao-dano-9",
       "descricao": "A fratura mineral corre pela pedra e pelo osso até encontrar o ponto fraco.",
       "contrapartida": "A fratura corre uma vez por cena e custa Entropia alta.",
-      "momento": "Melhor jogada quando o terreno é de pedra e a fratura pode atingir quem estiver apoiado nela.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o golpe vem de uma construção de pedra e a fratura mineral pode ser devolvida a quem o desferiu.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_inorganica_t8",
@@ -1496,9 +1482,8 @@
       "papel": "tier-8-passiva-contra_ataque-10",
       "descricao": "O pó dos impérios é tudo o que sobra de quem achou que duraria para sempre.",
       "contrapartida": "O pó se levanta uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando o inimigo confia na própria fortaleza e o pó pode desfazê-la.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um império inteiro virou pó ao redor e a poeira dele ainda dá um último bote contra o vivo.",
+      "raridade": "abissal"
     },
     {
       "id": "cor_inorganica_apice",
@@ -1529,9 +1514,8 @@
       "papel": "tier-9-ativa-aplicar_condicao-2",
       "descricao": "A idade do colapso chega para tudo o que foi construído, e não pede licença.",
       "contrapartida": "O colapso pede Entropia alta e descanso longo; a Carga permanece como cinza.",
-      "momento": "Melhor jogada quando o campo inteiro é feito de pedra e ferro e o colapso pode derrubar tudo.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a obra mais orgulhosa do inimigo está de pé e a idade do colapso pode chegar para ela na hora.",
+      "raridade": "abissal"
     },
     {
       "id": "arc_t5_tronco",

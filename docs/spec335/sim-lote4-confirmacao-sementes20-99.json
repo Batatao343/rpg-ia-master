@@ -1,0 +1,30 @@
+{
+ "cor1_bio_banquete_de_vermes": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 204,
+  "vezes_jogada": 126,
+  "taxa_uso": 0.618,
+  "vitoria_sem": 0.766,
+  "vitoria_com": 0.753,
+  "delta_pp": -1.2,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 12.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "cor1_alm_semente_de_culpa": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 399,
+  "vezes_jogada": 112,
+  "taxa_uso": 0.281,
+  "vitoria_sem": 0.744,
+  "vitoria_com": 0.753,
+  "delta_pp": 0.9,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ }
+}

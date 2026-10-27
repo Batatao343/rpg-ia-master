@@ -152,3 +152,54 @@ ondas:
   - dev1_enl_luto_que_aquece
   - dev1_enl_cortejo_de_cinzas
   - dev1_enl_missa_dos_ausentes
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  amostra_voz:
+  - cor1_bio_pele_podre
+  - cor1_bio_colheita_podre
+  - cor1_alm_semente_de_culpa
+  - cor1_alm_corredor_sem_eco
+  - cor1_alm_nome_apagado
+  - cor1_ino_oxido_no_gume
+  - cor1_ino_estrutura_cansada
+  cartas:
+  - cor1_bio_mofo_quente
+  - cor1_bio_febre_lenta
+  - cor1_bio_raiz_na_pele
+  - cor1_bio_ler_a_carne
+  - cor1_bio_mordida_do_bolor
+  - cor1_bio_pele_podre
+  - cor1_bio_nariz_de_coveiro
+  - cor1_bio_carne_tenra
+  - cor1_bio_golpe_de_mofo
+  - cor1_bio_colheita_podre
+  - cor1_bio_metastase_viva
+  - cor1_bio_banquete_de_vermes
+  - cor1_alm_semente_de_culpa
+  - cor1_alm_sussurro_rouco
+  - cor1_alm_voz_que_falta
+  - cor1_alm_rosto_do_pavor
+  - cor1_alm_pe_no_vazio
+  - cor1_alm_ler_a_culpa
+  - cor1_alm_duvida_reflexa
+  - cor1_alm_culpa_antiga
+  - cor1_alm_cerco_de_vozes
+  - cor1_alm_lembranca_errada
+  - cor1_alm_corredor_sem_eco
+  - cor1_alm_nome_apagado
+  - cor1_ino_ponto_fraco
+  - cor1_ino_junta_emperrada
+  - cor1_ino_estalo_de_viga
+  - cor1_ino_ler_o_metal
+  - cor1_ino_estilhaco_de_ferro
+  - cor1_ino_carapaca_de_ferrugem
+  - cor1_ino_oxido_no_gume
+  - cor1_ino_peso_morto
+  - cor1_ino_estrutura_cansada
+  - cor1_ino_dobra_forcada
+  - cor1_ino_colapso_programado
+  - cor1_ino_geometria_da_ruina

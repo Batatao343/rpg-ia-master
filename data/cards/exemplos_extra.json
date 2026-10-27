@@ -157,9 +157,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Uma nuvem fina de esporos pousa no couro e começa a trabalhar.",
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo respira fundo antes de uma investida e a nuvem pode assentar justamente nesse fôlego.",
+      "raridade": "comum"
     },
     {
       "id": "carne_docil",
@@ -179,9 +178,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "A carne alheia amolece diante de quem fala a língua da podridão.",
-      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o alvo já amoleceu por outro mal e falar a língua da podridão faz o resto ceder.",
+      "raridade": "comum"
     },
     {
       "id": "farejar_praga",
@@ -201,9 +199,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "O ar carrega o recado da doença muito antes dos sintomas.",
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o vento traz um recado de doença e o grupo precisa decidir se atravessa o vilarejo ou o contorna.",
+      "raridade": "comum"
     },
     {
       "id": "faisca_cinza",

@@ -1,0 +1,419 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "cor1_bio_mofo_quente",
+      "name": "Mofo Quente",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 4
+        }
+      ],
+      "descricao": "Um mofo de cinza morna cria raiz na pele do alvo e come devagar, rodada após rodada.",
+      "momento": "Melhor jogada quando a luta promete se arrastar e o apodrecimento pode trabalhar sozinho enquanto a mão cuida de outra coisa.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_febre_lenta",
+      "name": "Febre Lenta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "A febre do Abismo assenta nos braços do alvo, e cada golpe dele chega mais fraco por algumas rodadas.",
+      "momento": "Melhor jogada quando o bruto da cena vai bater duas vezes antes de alguém reagir e cada pancada a menos poupa sangue.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_raiz_na_pele",
+      "name": "Raiz na Pele",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Raízes de sombra confundem carne com chão e prendem os pés do alvo onde ele está.",
+      "momento": "Melhor jogada quando um inimigo corre para a retaguarda e a sua mão precisa de uma rodada para armar o resto.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_ler_a_carne",
+      "name": "Ler a Carne",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "vitalidade"
+        }
+      ],
+      "descricao": "Cor, cheiro e pulso contam ao Corruptor quanto da vida do alvo ainda resiste.",
+      "momento": "Melhor jogada quando há dúvida sobre qual inimigo cai primeiro e gastar a mão no errado seria desperdício.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_mordida_do_bolor",
+      "name": "Mordida do Bolor",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        }
+      ],
+      "descricao": "Um golpe seco de punho coberto de bolor, que fere agora e cheira a cinza.",
+      "momento": "Melhor jogada quando o alvo está ferido e a mão precisa de um golpe direto, barato e sem enfeite para fechá-lo.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_pele_podre",
+      "name": "Pele Podre",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "torpor",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Quem fere o Corruptor sente a cicatriz da própria carne pesar, e o braço que atacou perde força nas rodadas seguintes.",
+      "momento": "Melhor jogada quando o inimigo mais perigoso mergulha no corpo a corpo e o castigo pode vir antes da segunda investida.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "cor1_bio_nariz_de_coveiro",
+      "name": "Nariz de Coveiro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_acerto",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "O Corruptor fareja o cheiro do osso podre e mira com mais certeza por duas rodadas.",
+      "momento": "Melhor jogada quando o próximo golpe é o que fecha uma luta apertada e errar custaria o turno inteiro.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_carne_tenra",
+      "name": "Carne Tenra",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "A carne cede onde o Abismo já tocou: os golpes ferem mais, e a podridão corre atrás deles.",
+      "momento": "Melhor jogada quando os aliados ainda vão bater várias vezes e o alvo precisa estar frágil antes da próxima salva.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_golpe_de_mofo",
+      "name": "Golpe de Mofo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Uma pancada que deixa mofo de cinza dentro da ferida, e ele continua o trabalho quando a mão já se foi.",
+      "momento": "Melhor jogada quando o alvo está ao alcance e o Corruptor quer ferir agora sem abrir mão do dano que dura.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_colheita_podre",
+      "name": "Colheita Podre",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dot",
+          "dano_base": 3,
+          "duracao": 3
+        },
+        {
+          "kind": "dano",
+          "valor": 1,
+          "escala": {
+            "por": "condicoes_alvo",
+            "fator": 1,
+            "max": 3
+          }
+        }
+      ],
+      "descricao": "O que apodrece no alvo é colhido como sangue: o dano extra cresce com cada mal que ele carrega, o novo inclusive.",
+      "momento": "Melhor jogada quando o inimigo já vem enfermo de outras mãos e cada praga acumulada vira dano imediato.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_metastase_viva",
+      "name": "Metástase Viva",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dot",
+          "dano_base": 4,
+          "duracao": 3
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 2,
+          "escala": {
+            "por": "condicoes_alvo",
+            "fator": 1,
+            "max": 3
+          }
+        }
+      ],
+      "descricao": "A doença aprende o corpo do alvo e chama mais doença: o veneno corre, a defesa racha e o dano cresce com os males.",
+      "momento": "Melhor jogada quando um único inimigo grande sustenta a luta e vale gastar a rodada inteira para derretê-lo por dentro.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_bio_banquete_de_vermes",
+      "name": "Banquete de Vermes",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "biologia",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 9
+        },
+        {
+          "kind": "dot",
+          "dano_base": 5,
+          "duracao": 3
+        },
+        {
+          "kind": "torpor",
+          "valor": 3
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "Os vermes que esperavam sob a pele sobem de uma vez e devoram o alvo; a carta vira cinzas depois do festim.",
+      "momento": "Melhor jogada quando o chefe da cena está de pé e uma só carta precisa tirar dele a vida e a força, sem volta.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

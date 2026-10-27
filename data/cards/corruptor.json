@@ -26,9 +26,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o primeiro contato com o inimigo é de graça e a podridão pode começar a andar antes de qualquer resposta.",
+      "raridade": "comum"
     },
     {
       "id": "cor_esporos",
@@ -55,9 +54,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando vários corpos se amontoam no mesmo corredor e a nuvem pega mais pulmões do que um dedo apontado pegaria.",
+      "raridade": "comum"
     },
     {
       "id": "cor_carne_docil",
@@ -78,9 +76,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o baralho já carrega bastante dano contínuo e cada praga em campo precisa render um pouco mais.",
+      "raridade": "comum"
     },
     {
       "id": "cor_farejar",
@@ -101,9 +98,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo entra num lugar abandonado e o cheiro de doença conta, antes do perigo, onde ele mora.",
+      "raridade": "comum"
     },
     {
       "id": "cor_semear",
@@ -130,9 +126,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo precisa de tempo e o veneno cobra devagar, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luta tem pausas longas e semear cedo deixa a ruína trabalhar enquanto o grupo respira.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_simbiose",
@@ -153,9 +148,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando há carniça, mofo ou ferrugem por toda a cena e o Corruptor pode transformá-los em vantagem.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_colapso",
@@ -182,9 +176,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo foge ou recua e o dano deve seguir atrás dele, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o alvo é um chefe resistente e anos de desgaste precisam caber em poucas respirações.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_gangrena",
@@ -211,9 +204,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um ferimento aberto já escorre no inimigo e a gangrena pode alargar o que o aço começou.",
+      "raridade": "comum"
     },
     {
       "id": "cor_bio_metastase",
@@ -280,9 +272,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando há vários inimigos colados e a doença precisa saltar de corpo em corpo sem outro gesto do Corruptor.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_necrose",
@@ -303,9 +294,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o primeiro alvo já está doente e cada tecido morto pode alimentar a próxima praga.",
+      "raridade": "comum"
     },
     {
       "id": "cor_alm_duvida",
@@ -333,9 +323,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o líder inimigo grita ordens firmes e uma pergunta bem plantada derruba o ânimo da tropa inteira.",
+      "raridade": "comum"
     },
     {
       "id": "cor_alm_desespero",
@@ -402,9 +391,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo é mais forte que o grupo e a condição equilibra a balança, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo acredita estar ganhando e uma visão do fim pode virar o jogo dentro da cabeça dele.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_erosao",
@@ -425,9 +413,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a moral inimiga já está rachada e basta empurrar o alicerce para ela desabar de vez.",
+      "raridade": "comum"
     },
     {
       "id": "cor_ino_ferrugem",
@@ -454,9 +441,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o adversário confia na espada e na couraça e a idade das duas pode ser antecipada em um toque.",
+      "raridade": "comum"
     },
     {
       "id": "cor_ino_fadiga",
@@ -523,9 +509,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o escudo do inimigo é o centro da defesa e uma microfratura vale mais que mil golpes de frente.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_corrosao",
@@ -546,9 +531,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o metal alheio já está arranhado e cada marca nova serve de alavanca para o golpe seguinte.",
+      "raridade": "comum"
     },
     {
       "id": "cor_bio_micelio",
@@ -574,9 +558,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo precisa de tempo e o veneno cobra devagar, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a formação inimiga está espalhada e o fungo precisa atravessar a distância entre os corpos sozinho.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_raiz",
@@ -601,9 +584,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo tenta fugir ou flanquear e fibras vivas podem plantá-lo no chão por três rodadas inteiras.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_eco",
@@ -627,9 +609,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o alvo hesita diante de um aliado ferido e a pior lembrança dele pode apontar cada falha.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_vazio",
@@ -654,9 +635,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando uma condição aberta agora faz render os golpes seguintes, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo mais teimoso nunca aceita recuar e só um isolamento total quebra a vontade dele.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_geometria_ferrugem",
@@ -680,9 +660,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando metal enferrujado jaz por perto e dobrá-lo em abrigo de arestas sai mais barato que correr.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_colapso",
@@ -706,9 +685,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma estrutura sustenta o inimigo e apagar a linha que a segura derruba o cenário com ele.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_membrana",
@@ -733,9 +711,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um projétil vem na direção do Corruptor e a película pode fechar antes da ponta tocar a pele.",
+      "raridade": "comum"
     },
     {
       "id": "cor_chao_morde",
@@ -760,9 +737,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, e a janela de reação está aberta, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um brutamontes avança sobre o Corruptor e pedra e raiz podem lançá-lo de volta ao ponto de partida.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ler_cicatriz",
@@ -786,9 +762,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um estranho chega ferido e as marcas no corpo dele contam mais que qualquer conversa.",
+      "raridade": "comum"
     },
     {
       "id": "cor_modelar_chave",
@@ -812,9 +787,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando um descanso curto abre espaço para a Carta e o grupo ganha tempo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma porta, trava ou engrenagem barra o caminho e osso ou madeira convencidos abrem passagem sem barulho.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_acido_memoria",
@@ -840,9 +814,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo depende de um gesto treinado e corroer o hábito antes da carne trava a técnica dele.",
+      "raridade": "comum"
     },
     {
       "id": "cor_fratura_util",
@@ -867,9 +840,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o cenário está cheio de quinas e o Corruptor pode usar os estilhaços como armamento improvisado.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_nome_invertido",
@@ -894,9 +866,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o alvo se orgulha do próprio nome e pronunciá-lo ao contrário desfaz as certezas dele.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_adaptacao_residual",
@@ -918,9 +889,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o mesmo golpe vem de novo e o corpo já registrou como se desviar dele da vez anterior.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_matriz_rejeicao",
@@ -942,9 +912,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma transformação foi recusada há pouco e as camadas descartadas ainda servem de couraça.",
+      "raridade": "incomum"
     }
   ]
 }

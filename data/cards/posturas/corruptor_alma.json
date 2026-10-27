@@ -1,0 +1,410 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "cor1_alm_semente_de_culpa",
+      "name": "Semente de Culpa",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 2
+        }
+      ],
+      "descricao": "Uma culpa de sombra aponta o alvo: ataques contra ele ganham vantagem, o próximo golpe pesa mais e quem acerta ganha Entropia.",
+      "momento": "Melhor jogada quando os aliados estão prestes a atacar o mesmo inimigo e o primeiro acerto deve valer em dobro.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_sussurro_rouco",
+      "name": "Sussurro Rouco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Um sussurro rouco de sombra pergunta ao alvo por que ainda luta, e a mira dele perde a firmeza.",
+      "momento": "Melhor jogada quando o inimigo depende de uma pontaria apertada para ferir e um tremor já basta para desviar o golpe.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_voz_que_falta",
+      "name": "Voz que Falta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "silenciado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "O silêncio fecha a garganta do alvo: sem palavras, gritos nem encantos por algumas rodadas.",
+      "momento": "Melhor jogada quando o conjurador inimigo está prestes a invocar algo e a sala inteira precisa de silêncio.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_rosto_do_pavor",
+      "name": "Rosto do Pavor",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Por um instante o alvo vê o Abismo do próprio fim e hesita, de coração na boca, errando mais.",
+      "momento": "Melhor jogada quando um golpe decisivo do inimigo está a caminho e uma rodada de medo corta a ameaça na raiz.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_pe_no_vazio",
+      "name": "Pé no Vazio",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "mover_alvo_zona",
+          "direcao": "afastar"
+        }
+      ],
+      "descricao": "O alvo sente um abismo sob os pés e recua, abrindo espaço entre ele e o Corruptor.",
+      "momento": "Melhor jogada quando um brutamontes colou no Corruptor e o espaço de uma rodada vale mais que qualquer dano.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_ler_a_culpa",
+      "name": "Ler a Culpa",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "cartas"
+        }
+      ],
+      "descricao": "O Corruptor escuta a sombra que pesa na alma do alvo e descobre as cartas que ele guarda para jogar.",
+      "momento": "Melhor jogada quando o inimigo é um rosto novo e conhecer o repertório dele orienta todas as escolhas seguintes.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_duvida_reflexa",
+      "name": "Dúvida Reflexa",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_esquiva",
+          "valor": 3,
+          "duracao": 1
+        }
+      ],
+      "descricao": "A dúvida escorrega na mira de quem atira de longe: o Corruptor, sombra entre sombras, fica mais difícil de acertar.",
+      "momento": "Melhor jogada quando um arqueiro escolheu o Corruptor como alvo e a pontaria dele pode falhar no tiro seguinte.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_alvo_distancia"
+    },
+    {
+      "id": "cor1_alm_culpa_antiga",
+      "name": "Culpa Antiga",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "A culpa antiga, bruta como ferro velho, aponta o alvo e rói a coragem dele ao mesmo tempo.",
+      "momento": "Melhor jogada quando um inimigo de elite precisa cair em uma rodada e o grupo tem golpes de sobra para cobrar a marca.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_cerco_de_vozes",
+      "name": "Cerco de Vozes",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Vozes de névoa cercam o alvo; o medo trava o braço e o golpe que ainda sai chega mais fraco.",
+      "momento": "Melhor jogada quando o inimigo ameaça um aliado frágil e o medo precisa cortar tanto a mira quanto a força.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_lembranca_errada",
+      "name": "Lembrança Errada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "se": {
+            "alvo_tem": "desmoralizado"
+          }
+        }
+      ],
+      "descricao": "Uma lembrança trocada abre a guarda do alvo como lâmina; contra quem já duvida, o golpe fere ainda mais.",
+      "momento": "Melhor jogada quando a dúvida já foi plantada na rodada anterior e o golpe seguinte pode colher o que foi semeado.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_corredor_sem_eco",
+      "name": "Corredor sem Eco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 3
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 3,
+          "chamado": 4
+        }
+      ],
+      "descricao": "O alvo é levado a um corredor onde só o Abismo responde: marcado e com medo; quem já desceu fundo ainda o deixa sem força.",
+      "momento": "Melhor jogada quando a Entropia do Corruptor já ferve e o alvo, sozinho, não tem para onde fugir da própria mente.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "cor1_alm_nome_apagado",
+      "name": "Nome Apagado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Corruptor",
+      "subclasse": "alma",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "carisma"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 6
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 3
+        },
+        {
+          "kind": "torpor",
+          "valor": 3
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "O nome do alvo é riscado do Abismo: ele treme, enfraquece e vira a marca de todos os golpes; a carta vira cinzas depois.",
+      "momento": "Melhor jogada quando uma ameaça sem rosto domina a cena e apagar a vontade dela abre caminho para o grupo inteiro.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

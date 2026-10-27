@@ -171,9 +171,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Um dedo de ferrugem viva roe o couro e depois a carne.",
-      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo veste couro grosso e o dedo de ferrugem pode roer a proteção antes de chegar à pele.",
+      "raridade": "comum"
     },
     {
       "id": "praga_lenta",
@@ -196,9 +195,8 @@
       "level_req": 4,
       "apex": false,
       "descricao": "A podridão entra devagar e não pede licença para ficar.",
-      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo pretende recuar e deixar que a praga cobre, aos poucos, o preço da perseguição.",
+      "raridade": "incomum"
     },
     {
       "id": "simbiose",
@@ -218,9 +216,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "O nariz aprende a ler a decomposição como outros leem mapas.",
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o cheiro de decomposição domina o ar e ler o campo como um mapa evita uma emboscada.",
+      "raridade": "comum"
     },
     {
       "id": "raio_cinza",

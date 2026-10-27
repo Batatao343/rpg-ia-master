@@ -173,16 +173,71 @@ def test_lote3_licoes_da_revisao_do_lote2():
         assert not fx.keywords(c).get("eco"), c["id"]  # o Lote 3 não usa Eco
 
 
+# ----------------------------------------------------------------- Lote 4 (Corruptor)
+def _lote4() -> list[dict]:
+    return [
+        c for c in card_lint.load_pool() if c.get("onda") == 1 and c.get("classe") == "Corruptor"
+    ]
+
+
+def test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2():
+    cs = _lote4()
+    assert len(cs) == 36
+    assert Counter(c["subclasse"] for c in cs) == {"biologia": 12, "alma": 12, "inorganica": 12}
+    assert len({c["id"] for c in cs}) == 36
+    assert all(c["id"].startswith("cor1_") for c in cs)
+    assert Counter(c["raridade"] for c in cs) == {
+        "comum": 20,
+        "incomum": 10,
+        "rara": 4,
+        "abissal": 2,
+    }
+
+
+def test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
+    pool = card_lint.load_pool()
+    for c in _lote4():
+        others = [o for o in pool if o["id"] != c["id"]]
+        issues = card_lint.lint_card(c, others)
+        assert not card_lint.errors(issues), c["id"]
+        assert not [i for i in issues if i.level == "warn"], (c["id"], issues)
+        assert fx.budget_error(c) is None, c["id"]
+    legado = [c for c in pool if c.get("classe") == "Corruptor" and c.get("onda") is None]
+    assert len(legado) >= 53
+    assert not [c["id"] for c in legado if c.get("momento_placeholder")]
+
+
+def test_lote4_licoes_da_revisao_dos_lotes_anteriores():
+    """Reação com gatilho; sem `ativa`+buff_esquiva; sem Provocar/Eco; `escala` só em efeito
+    extra; cor da roda (sem cura, sem Proteção/Vigília em aliado); a Marca do Abismo não é
+    consumida pelo dano da própria Carta (o dano extra vem antes ou não existe)."""
+    for c in _lote4():
+        effs = fx.normalize(c)
+        kinds = [e["kind"] for e in effs]
+        if c["tipo"] == "reacao":
+            assert c.get("gatilho"), c["id"]
+            assert len(effs) == 1, c["id"]
+        if c["tipo"] == "ativa":
+            assert "buff_esquiva" not in kinds, c["id"]
+        assert "taunt" not in kinds, c["id"]
+        assert not fx.keywords(c).get("eco"), c["id"]
+        assert not card_lint.check_escala_principal(c), c["id"]
+        assert not {"cura", "estabilizar"} & set(kinds), c["id"]
+        assert all(e.get("alvo") not in ("aliados",) for e in effs), c["id"]
+        if "marca_do_abismo" in kinds:
+            depois = kinds[kinds.index("marca_do_abismo") + 1 :]
+            assert "dano" not in depois, c["id"]  # o dano consumiria a Marca da própria Carta
+
+
 # R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
 # (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
 # ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
 POSTURAS_COM_MOMENTO_PLACEHOLDER = {
-    "Corruptor",
     "Médico de Campo",
     "Inimigo",
     "",  # Cartas de Virtude
 }
-MAX_PLACEHOLDERS = 150  # só pode diminuir (== no teste: baixe aqui ao reescrever)
+MAX_PLACEHOLDERS = 97  # só pode diminuir (== no teste: baixe aqui ao reescrever)
 
 
 def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():

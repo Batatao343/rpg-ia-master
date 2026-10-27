@@ -1,0 +1,162 @@
+{
+ "cor1_alm_semente_de_culpa": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.258,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.75,
+  "delta_pp": 5.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_sussurro_rouco": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.258,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.738,
+  "delta_pp": 3.8,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_voz_que_falta": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 121,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.256,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.75,
+  "delta_pp": 5.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_rosto_do_pavor": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.258,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.738,
+  "delta_pp": 3.8,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_pe_no_vazio": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.258,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.75,
+  "delta_pp": 5.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_ler_a_culpa": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.258,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.738,
+  "delta_pp": 3.8,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_duvida_reflexa": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 118,
+  "vezes_jogada": 0,
+  "taxa_uso": 0.0,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.713,
+  "delta_pp": 1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "uso_nao_medido"
+  ]
+ },
+ "cor1_alm_culpa_antiga": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 138,
+  "vezes_jogada": 57,
+  "taxa_uso": 0.413,
+  "vitoria_sem": 0.275,
+  "vitoria_com": 0.3,
+  "delta_pp": 2.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_cerco_de_vozes": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 74,
+  "vezes_jogada": 30,
+  "taxa_uso": 0.405,
+  "vitoria_sem": 0.438,
+  "vitoria_com": 0.375,
+  "delta_pp": -6.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_lembranca_errada": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 71,
+  "vezes_jogada": 51,
+  "taxa_uso": 0.718,
+  "vitoria_sem": 0.438,
+  "vitoria_com": 0.425,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 7.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "cor1_alm_corredor_sem_eco": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 66,
+  "vezes_jogada": 7,
+  "taxa_uso": 0.106,
+  "vitoria_sem": 0.588,
+  "vitoria_com": 0.537,
+  "delta_pp": -5.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_alm_nome_apagado": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 64,
+  "vezes_jogada": 7,
+  "taxa_uso": 0.109,
+  "vitoria_sem": 0.537,
+  "vitoria_com": 0.562,
+  "delta_pp": 2.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ }
+}

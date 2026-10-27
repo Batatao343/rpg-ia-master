@@ -1,0 +1,162 @@
+{
+ "cor1_ino_ponto_fraco": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 229,
+  "vezes_jogada": 42,
+  "taxa_uso": 0.183,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.725,
+  "delta_pp": -3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_junta_emperrada": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 119,
+  "vezes_jogada": 33,
+  "taxa_uso": 0.277,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.762,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_estalo_de_viga": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 119,
+  "vezes_jogada": 67,
+  "taxa_uso": 0.563,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.775,
+  "delta_pp": 1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_ler_o_metal": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 229,
+  "vezes_jogada": 42,
+  "taxa_uso": 0.183,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.725,
+  "delta_pp": -3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_estilhaco_de_ferro": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 126,
+  "vezes_jogada": 0,
+  "taxa_uso": 0.0,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.725,
+  "delta_pp": -3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "uso_nao_medido"
+  ]
+ },
+ "cor1_ino_carapaca_de_ferrugem": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 129,
+  "vezes_jogada": 32,
+  "taxa_uso": 0.248,
+  "vitoria_sem": 0.762,
+  "vitoria_com": 0.738,
+  "delta_pp": -2.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 4.0,
+  "bandeiras": []
+ },
+ "cor1_ino_oxido_no_gume": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 131,
+  "vezes_jogada": 33,
+  "taxa_uso": 0.252,
+  "vitoria_sem": 0.3,
+  "vitoria_com": 0.3,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_peso_morto": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 133,
+  "vezes_jogada": 33,
+  "taxa_uso": 0.248,
+  "vitoria_sem": 0.3,
+  "vitoria_com": 0.3,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_estrutura_cansada": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 67,
+  "vezes_jogada": 31,
+  "taxa_uso": 0.463,
+  "vitoria_sem": 0.512,
+  "vitoria_com": 0.45,
+  "delta_pp": -6.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 7.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_dobra_forcada": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 69,
+  "vezes_jogada": 13,
+  "taxa_uso": 0.188,
+  "vitoria_sem": 0.512,
+  "vitoria_com": 0.475,
+  "delta_pp": -3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_colapso_programado": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 63,
+  "vezes_jogada": 32,
+  "taxa_uso": 0.508,
+  "vitoria_sem": 0.512,
+  "vitoria_com": 0.525,
+  "delta_pp": 1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 3.5,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "cor1_ino_geometria_da_ruina": {
+  "classe": "Corruptor",
+  "vezes_na_mao": 65,
+  "vezes_jogada": 3,
+  "taxa_uso": 0.046,
+  "vitoria_sem": 0.562,
+  "vitoria_com": 0.6,
+  "delta_pp": 3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 1.5,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "em_branco"
+  ]
+ }
+}
