@@ -1,6 +1,6 @@
 # SPEC-328 — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 
-> **Status:** `in-progress` (pousada `off` em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; antes de `on`: calibração do Fôlego com bot que jogue o baralho inteiro, R-4, UI SPEC-334)
+> **Status:** `in-progress` (pousada `off`; Fôlego calibrado para 2 em 27/10 (`RPG_FOLEGO_BASE`); antes de `on`: R-4 e smoke real)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327 (visão: combate de cartas de Valoria)
 > **Depende de:** SPEC-063, SPEC-065, SPEC-067, SPEC-209, SPEC-325 (todas `done`)
@@ -101,3 +101,11 @@ Intenção visível do inimigo (SPEC-329), keywords/combos (SPEC-330), espólio/
 - Balanceamento: a curva de cartas atual foi feita para "1 ação/rodada"; com Fôlego 3, cartas baratas podem empilhar dano. Mitigação: arena (Etapa 6) e custo derivado conservador.
 - Latência: requests por rodada não aumentam (R13/R14).
 - Inimigos não mudam nesta spec (seguem `enemy_declaration`).
+
+## Calibração do Fôlego (27/10, Etapa 6)
+
+Arena com bot que joga o baralho completo (SPEC-336, `docs/spec336/arena-folego-completo-2026-10-27.md`,
+160 lutas por célula): vitória geral `off` 43 % → Fôlego 2 53 % (+10 pp) · Fôlego 3 62 % (+19 pp).
+Só Fôlego 2 cabe no critério (±15 pp). `FOLEGO_BASE` passa a **2** por padrão, configurável por
+`RPG_FOLEGO_BASE` (1..4) sem deploy — dentro do D2 da SPEC-327 ("calibrável na arena").
+Alerta: Médico de Campo cai a 9–16 % em L5 (revisar na SPEC-335).

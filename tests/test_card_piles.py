@@ -7,6 +7,14 @@ import pytest
 from services import card_piles as cp
 from services import cards, content_validator
 
+
+@pytest.fixture(autouse=True)
+def _folego_3(monkeypatch):
+    """Cenários escritos para Fôlego 3 e teto 6; o padrão calibrado (2) tem teste próprio."""
+    monkeypatch.setattr(cp, "FOLEGO_BASE", 3)
+    monkeypatch.setattr(cp, "FOLEGO_MAX", 6)
+
+
 CLASSES = [
     "Devoto do Abismo",
     "Sangromante",
@@ -330,3 +338,15 @@ def test_flag_default_off_e_invalida_vira_off(monkeypatch):
     assert cp.mode() == "off"
     monkeypatch.setenv("RPG_CARD_DECK", "ON")
     assert cp.mode() == "on"
+
+
+def test_folego_padrao_calibrado_e_env(monkeypatch):
+    """SPEC-328 Etapa 6: padrão 2; `RPG_FOLEGO_BASE` sobrescreve, com limite 1..4."""
+    monkeypatch.delenv("RPG_FOLEGO_BASE", raising=False)
+    assert cp._folego_base_from_env() == 2
+    monkeypatch.setenv("RPG_FOLEGO_BASE", "3")
+    assert cp._folego_base_from_env() == 3
+    monkeypatch.setenv("RPG_FOLEGO_BASE", "9")
+    assert cp._folego_base_from_env() == 4
+    monkeypatch.setenv("RPG_FOLEGO_BASE", "x")
+    assert cp._folego_base_from_env() == 2

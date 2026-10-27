@@ -26,7 +26,19 @@ from services import cards
 Mode = Literal["off", "shadow", "on"]
 
 MAO_BASE = 5
-FOLEGO_BASE = 3
+
+
+def _folego_base_from_env() -> int:
+    """SPEC-328 Etapa 6 (calibração, 27/10): padrão 2 — com o bot que joga o baralho
+    inteiro, Fôlego 2 fica +10 pp sobre o `off` e 3 fica +19 pp (limite da spec: 15).
+    `RPG_FOLEGO_BASE` sobrescreve (1..4) sem deploy de código."""
+    try:
+        return min(4, max(1, int(os.environ.get("RPG_FOLEGO_BASE", "2"))))
+    except ValueError:  # silent-ok: valor inválido na env cai no padrão
+        return 2
+
+
+FOLEGO_BASE = _folego_base_from_env()
 PACTO_ENTROPIA_POR_FOLEGO = 2
 PACTO_MAX_FOLEGO = 2
 FARDO_ID = "fardo_estilhaco"

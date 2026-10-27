@@ -12,6 +12,14 @@ from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 
+
+@pytest.fixture(autouse=True)
+def _folego_3(monkeypatch):
+    """Cenários escritos para Fôlego 3 e teto 6; o padrão calibrado (2) tem teste próprio."""
+    monkeypatch.setattr(cp, "FOLEGO_BASE", 3)
+    monkeypatch.setattr(cp, "FOLEGO_MAX", 6)
+
+
 HAND = ["bas_san_golpe", "bas_san_guarda", "bas_san_golpe", "san_esquiva", "san_finta"]
 
 

@@ -13,6 +13,14 @@ import api
 from services import card_piles as cp
 from tests.test_combat_simulator import _request
 
+
+@pytest.fixture(autouse=True)
+def _folego_3(monkeypatch):
+    """Cenários escritos para Fôlego 3 e teto 6; o padrão calibrado (2) tem teste próprio."""
+    monkeypatch.setattr(cp, "FOLEGO_BASE", 3)
+    monkeypatch.setattr(cp, "FOLEGO_MAX", 6)
+
+
 GOLPE, GUARDA = "bas_san_golpe", "bas_san_guarda"
 
 
@@ -158,7 +166,7 @@ def test_catalogo_do_prompt_e_a_mao_com_folego(monkeypatch):
 def test_visao_publica_do_combate_expoe_mao_e_contagens(monkeypatch):
     state = _state(monkeypatch)
     view = api._combat_block(state)
-    assert view["pilhas"]["folego"] == 3 and len(view["pilhas"]["mao"]) == 5
+    assert view["pilhas"]["folego"] == cp.FOLEGO_BASE and len(view["pilhas"]["mao"]) == 5
     assert isinstance(view["pilhas"]["compra"], int) and "ordem" not in view["pilhas"]
     monkeypatch.setenv("RPG_CARD_DECK", "off")
     assert "pilhas" not in api._combat_block(state)
