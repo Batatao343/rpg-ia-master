@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "618dde1695ac4e6e726d9940f9e9263bb30419e9",
+  "commit_sha": "7245038bd838338966e5b7ea200256eb0634f5d8",
   "edge_counts": {
-    "calls": 29190,
-    "contains": 994,
-    "defines": 14616,
-    "imports": 2400,
-    "likely_test_for": 1689,
+    "calls": 29734,
+    "contains": 999,
+    "defines": 14798,
+    "imports": 2423,
+    "likely_test_for": 1709,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:910a14d34d7d29081b86ccfefc2187fc31384a927a28ae47dfda0f9e007fffc7",
+  "graph_hash": "sha256:9176456a6a18882235bbb74589cb17385d3becd9152ec3fb451b3791416cd7f3",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -313,6 +313,7 @@
     "services/bestiary_knowledge.py",
     "services/body_limit.py",
     "services/card_deck_round.py",
+    "services/card_effects.py",
     "services/card_piles.py",
     "services/cards.py",
     "services/chase.py",
@@ -484,6 +485,7 @@
     "tests/spec319_helpers.py",
     "tests/spec325_chase_helpers.py",
     "tests/spec325_helpers.py",
+    "tests/spec330_equivalence.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_account_api.py",
@@ -548,6 +550,8 @@
     "tests/test_bug_mundo_perigo_luz_clima.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
+    "tests/test_card_effects_grammar.py",
+    "tests/test_card_effects_review_spec330.py",
     "tests/test_card_piles.py",
     "tests/test_cards_prepare_api.py",
     "tests/test_chaos_local.py",
@@ -695,6 +699,7 @@
     "tests/test_jev_router_port.py",
     "tests/test_jev_target_loot_experiment.py",
     "tests/test_job_logging.py",
+    "tests/test_keywords_valoria.py",
     "tests/test_latency_baseline_offline.py",
     "tests/test_latency_client_endpoint.py",
     "tests/test_latency_metrics_compat.py",
@@ -1219,14 +1224,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 959,
+    "class": 960,
     "endpoint": 64,
-    "file": 1165,
-    "function": 4555,
+    "file": 1170,
+    "function": 4643,
     "method": 840,
-    "module": 994,
-    "test": 8261
+    "module": 999,
+    "test": 8354
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c5cbebaca77238cce0785060895dd7f8a373b90e5e91b0e2675ee13f51f92f3f"
+  "source_tree_hash": "sha256:6755e241f21cea9f4befea304b79b7ac395c8f373260081f45b2e82063711d66"
 }
