@@ -345,3 +345,5 @@ Se 1–3 falharem: **não** reajustar com essas sementes (R3). Parar e devolver 
 - **D8 — Teste de artefato (R18)** que lê os JSON da arena e trava as `versoes` alteradas? **Recomendação: sim, só com o escopo das Cartas desta spec.** Ele usa os limites existentes (45–75 % e o piso do exposto desta spec) e falha se alguém mudar essas Cartas sem refazer a arena. Custo: a esteira da 336 precisa refazer a arena ao mexer nelas, o que é desejável.
 
 **Decisões do dono (27/10, "aprovo!!"):** todas as recomendações D1–D8.
+
+**Execução (27/10):** Etapas 0–3 feitas; avaro fechou (74,6 %), silencioso parou em 76,2 % com o pacote R11 (só 2 Cartas de onda no baralho L5). Confirmação 20–99 do pacote final **não** rodada (R3); testes de arena em `xfail(strict)`. Detalhes e opções em `docs/spec341/RELATORIO.md`. `culpa_antiga` e `san_exp_espetaculo` não se confirmaram (ruído, 20–99).

@@ -1,0 +1,983 @@
+{
+ "avaro": {
+  "corte_sangrento": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 4.9,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 1.6
+  },
+  "hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 1.3,
+   "padrao": 0.4
+  },
+  "reflexo_lamina": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "finta_sangue": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -3.8,
+   "L5": 0.0,
+   "padrao": -1.3
+  },
+  "lamina_gemea": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 1.3,
+   "L5": 0.0,
+   "padrao": 0.4
+  },
+  "passo_leve": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 2.5,
+   "L3": -3.8,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san1_ava_moeda_guardada": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_cofre_estreito": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -6.3,
+   "L5": 0.0,
+   "padrao": -2.1
+  },
+  "san1_ava_juros_do_primeiro": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 13.8,
+   "padrao": 4.6
+  },
+  "san1_ava_poupar_ferida": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_livro_de_dividas": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_gota_contada": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -5.0,
+   "L5": 0.0,
+   "padrao": -1.7
+  },
+  "san1_ava_mao_fechada": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_cobranca_adiada": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 13.8,
+   "padrao": 4.6
+  },
+  "san1_ava_penhor_de_carne": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -6.3,
+   "L5": 0.0,
+   "padrao": -2.1
+  },
+  "san1_ava_hipoteca_de_sangue": {
+   "origem": "onda",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_execucao_da_divida": {
+   "origem": "onda",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_ava_cofre_sem_fundo": {
+   "origem": "onda",
+   "level_req": 12,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_corte_troca": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -2.6,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.9
+  },
+  "san_finta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -1.3,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san_esquiva": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -1.3,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san_passo": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -1.3,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -1.3
+  },
+  "san_hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 10.0,
+   "padrao": 3.3
+  },
+  "san_ultimo_lance": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_ava_reserva": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 2.5,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_ava_juros": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 2.5,
+   "padrao": 0.8
+  },
+  "san_ava_juros_carne": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_ava_falencia": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_desvio_arterial": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_troco_carmesim": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 10.0,
+   "padrao": 3.3
+  },
+  "san_ouvir_veias": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -1.3,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san_assinar_sangue": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 8.8,
+   "padrao": 2.9
+  },
+  "san_sangria_lenta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_transfusao_hostil": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 12.5,
+   "padrao": 4.2
+  },
+  "san_passo_capilar": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t5_tronco": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t6_tronco": {
+   "origem": "legada",
+   "level_req": 12,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t8_tronco": {
+   "origem": "legada",
+   "level_req": 18,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_avaro_t5": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_avaro_t7": {
+   "origem": "legada",
+   "level_req": 15,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "_baseline": {
+   "L1": 0.912,
+   "L3": 0.8,
+   "L5": 0.65
+  }
+ },
+ "silencioso": {
+  "corte_sangrento": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "reflexo_lamina": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -5.1,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -2.5
+  },
+  "finta_sangue": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -3.8,
+   "L5": 0.0,
+   "padrao": -1.3
+  },
+  "lamina_gemea": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "passo_leve": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -5.1,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -1.7
+  },
+  "san1_sil_fio_de_barbeiro": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_sil_veneno_vermelho": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san1_sil_pe_de_pluma": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": -5.1,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -1.7
+  },
+  "san1_sil_olho_no_pulso": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -3.8,
+   "L5": 0.0,
+   "padrao": -1.3
+  },
+  "san1_sil_estancar_calado": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -1.3,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san1_sil_marca_de_unha": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_sil_corte_sem_aviso": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 10.0,
+   "padrao": 3.3
+  },
+  "san1_sil_ponto_cego": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 5.1,
+   "padrao": 1.7
+  },
+  "san1_sil_arterial_fina": {
+   "origem": "onda",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_sil_silencio_cobrado": {
+   "origem": "onda",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_sil_cirurgia_sem_testemunha": {
+   "origem": "onda",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_sil_ultima_gota": {
+   "origem": "onda",
+   "level_req": 15,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_corte_troca": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -5.1,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -1.7
+  },
+  "san_finta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -2.5,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san_esquiva": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san_passo": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 3.8,
+   "padrao": 1.3
+  },
+  "san_ultimo_lance": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_sil_exato": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -1.3,
+   "L5": 0.0,
+   "padrao": -0.4
+  },
+  "san_sil_veia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 5.1,
+   "padrao": 1.7
+  },
+  "san_sil_fio": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 3.8,
+   "padrao": 1.3
+  },
+  "san_sil_pulso": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_desvio_arterial": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san_troco_carmesim": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 7.6,
+   "padrao": 2.5
+  },
+  "san_ouvir_veias": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -2.5,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san_assinar_sangue": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 3.8,
+   "padrao": 1.3
+  },
+  "san_sangria_lenta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_transfusao_hostil": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 3.8,
+   "padrao": 1.3
+  },
+  "san_passo_capilar": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t5_tronco": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t6_tronco": {
+   "origem": "legada",
+   "level_req": 12,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t8_tronco": {
+   "origem": "legada",
+   "level_req": 18,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_silencioso_t5": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_silencioso_t7": {
+   "origem": "legada",
+   "level_req": 15,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "_baseline": {
+   "L1": 0.887,
+   "L3": 0.787,
+   "L5": 0.713
+  }
+ },
+ "exposto": {
+  "corte_sangrento": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 2.5,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.8
+  },
+  "hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "reflexo_lamina": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -6.2,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -2.9
+  },
+  "finta_sangue": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -4.9,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -1.6
+  },
+  "lamina_gemea": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "passo_leve": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -6.2,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": -2.1
+  },
+  "san1_exp_talho_publico": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_veia_a_mostra": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": -3.7,
+   "padrao": -1.2
+  },
+  "san1_exp_cicatriz_aberta": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -3.7,
+   "L5": 0.0,
+   "padrao": -1.2
+  },
+  "san1_exp_aplauso_de_ferro": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": -2.5,
+   "L5": 0.0,
+   "padrao": -0.8
+  },
+  "san1_exp_segundo_ato": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_sangue_na_areia": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 1.3,
+   "L3": 2.5,
+   "L5": 0.0,
+   "padrao": 1.3
+  },
+  "san1_exp_gole_rubro": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_selo_de_dor": {
+   "origem": "onda",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_plateia_cega": {
+   "origem": "onda",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": -2.5,
+   "padrao": -0.8
+  },
+  "san1_exp_bis_de_cicatriz": {
+   "origem": "onda",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_teatro_de_facas": {
+   "origem": "onda",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san1_exp_ultima_cortina": {
+   "origem": "onda",
+   "level_req": 15,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_corte_troca": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_finta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_esquiva": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -1.2,
+   "L3": 3.7,
+   "L5": 0.0,
+   "padrao": 0.8
+  },
+  "san_passo": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_hemorragia": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_ultimo_lance": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_exp_espetaculo": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": -2.4,
+   "L3": -8.8,
+   "L5": 0.0,
+   "padrao": -3.7
+  },
+  "san_exp_credencial": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_exp_aplausos": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": -2.5,
+   "padrao": -0.8
+  },
+  "san_exp_bis": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_desvio_arterial": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 3.7,
+   "L5": 0.0,
+   "padrao": 1.2
+  },
+  "san_troco_carmesim": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 1.2,
+   "padrao": 0.4
+  },
+  "san_ouvir_veias": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_assinar_sangue": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": -2.5,
+   "padrao": -0.8
+  },
+  "san_sangria_lenta": {
+   "origem": "legada",
+   "level_req": 1,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_transfusao_hostil": {
+   "origem": "legada",
+   "level_req": 4,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 2.5,
+   "padrao": 0.8
+  },
+  "san_passo_capilar": {
+   "origem": "legada",
+   "level_req": 7,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t5_tronco": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t6_tronco": {
+   "origem": "legada",
+   "level_req": 12,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_t8_tronco": {
+   "origem": "legada",
+   "level_req": 18,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_exposto_t5": {
+   "origem": "legada",
+   "level_req": 9,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "san_exposto_t7": {
+   "origem": "legada",
+   "level_req": 15,
+   "L1": 0.0,
+   "L3": 0.0,
+   "L5": 0.0,
+   "padrao": 0.0
+  },
+  "_baseline": {
+   "L1": 0.863,
+   "L3": 0.775,
+   "L5": 0.475
+  }
+ }
+}
