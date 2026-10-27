@@ -135,13 +135,16 @@ def _mark_nonlethal(decl: TurnDeclaration, intent: str) -> None:
     from services import combat_flags
     from services.combat_intents import nonlethal_declared
 
-    step = decl.acao
-    if step is None or step.kind not in ("attack", "card"):
-        return
     if combat_flags.mode("nonlethal") == "off":
         return
-    if step.params.get("nao_letal") or nonlethal_declared(intent):
-        step.params["nao_letal"] = True
+    steps = [decl.acao] if decl.acao is not None else []
+    steps += [s for s in (decl.jogadas or []) if all(s is not t for t in steps)]  # SPEC-342 R1.3
+    declared = nonlethal_declared(intent)
+    for step in steps:
+        if step.kind not in ("attack", "card"):
+            continue
+        if step.params.get("nao_letal") or declared:
+            step.params["nao_letal"] = True
 
 
 def _reveal_resistances(attacks: list[dict], enemies: list[dict], sides: dict) -> None:

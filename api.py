@@ -2974,6 +2974,9 @@ def _combat_block(state: dict) -> dict[str, Any]:
         _objective = _scene_cards.public_objective(meta.get("scene"), _names)
         if _objective:
             view["objetivo"] = _objective
+        _cena = _scene_cards.public_scene(meta.get("scene"))  # SPEC-342 R2.1
+        if _cena:
+            view["cena"] = _cena
     from services import card_piles as _piles
 
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):

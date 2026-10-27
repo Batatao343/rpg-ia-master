@@ -758,3 +758,25 @@ def public_objective(scene: dict | None, names: dict | None = None) -> dict | No
     if obj.get("n"):
         view["n"] = int(obj["n"])
     return view
+
+
+def public_scene(scene: dict | None) -> dict | None:
+    """SPEC-342 R2.1: faixa de cena que o jogador ve (nome + sabor das cartas e o estado do
+    Relogio do Abismo). Sem efeitos/acoes/quando. `None` sem a flag ou sem cena."""
+    if not active() or not isinstance(scene, dict):
+        return None
+    from services import conflict_scene as cs
+
+    rnd = cs.tactical_round(scene)
+    return {
+        "cartas": [
+            {"id": c["id"], "nome": c.get("nome", c["id"]), "sabor": c.get("sabor", "")}
+            for c in scene_cards_of(scene)
+        ],
+        "relogio": {
+            "desde": ABYSS_CLOCK_START,
+            "teto": ABYSS_CLOCK_HARD_CAP,
+            "rodada": rnd,
+            "ativo": rnd >= ABYSS_CLOCK_START,
+        },
+    }
