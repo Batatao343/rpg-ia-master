@@ -1,6 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
-> **Veredito Lote 4 (Corruptor, `25b00b3f`):** `CHANGES_REQUIRED` (1 P1: `revelar vitalidade` inerte, também no Lote 2; 4 P2)
+> **Veredito Lote 4 (Corruptor):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `7a40ae9d` (a 1ª rodada, em `25b00b3f`, deu `CHANGES_REQUIRED` com 1 P1 e 4 P2)
 > **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
 > **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
 > **Veredito Lotes 0–1 (`565b0d0b`):** `APPROVED_WITH_FOLLOWUPS` (histórico abaixo, inalterado)
@@ -10,7 +10,68 @@
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
 
-# Lote 4 — Corruptor (`main...25b00b3f`)
+# Lote 4 — re-revisão (`fb2c2d42..7a40ae9d`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. O P1 está resolvido e os P2 aplicados. Ficam 2 P2
+> novos de texto/registro, que não bloqueiam.
+
+## Conferência
+
+| ID | Situação |
+|---|---|
+| P1-1 | **Resolvido.** `cor1_bio_ler_a_carne` → `revelar resistencias`; `san1_sil_olho_no_pulso` → `revelar cartas` (v2). Os dois campos gravam no bestiário (`_persist_revelation`) e aparecem no painel. O lint `check_revelar_publico` recusa `vitalidade` (erro) e avisa `intencao`, para Carta de qualquer origem; `test_revelar_de_campo_publico_e_recusado` cobre. |
+| P2-1 | **Resolvido.** `pele_podre` agora custa 1 de Fôlego e 3 de Entropia. `check_reacao_folego` vale só para Cartas de onda; as legadas ficam como estão. |
+| P2-2 | **Resolvido.** `check_marca_dano` monta `[primary_effect] + extra_effects`, a ordem real do motor, e tem teste. |
+| P2-3 | **Resolvido.** Saíram Ponto Fraco e Ler o Metal; entraram Gancho de Ferro (`mover_alvo_zona aproximar`) e Medir a Fadiga (`buff_dano 2`, `turno`). |
+| P2-4 | **Resolvido.** A `descricao` de Nome Apagado agora diz "o próximo golpe", e a Entropia subiu de 3 para 4. |
+
+## As 2 Cartas novas no motor, em luta solo
+
+- **Medir a Fadiga (`buff_dano`): funciona.** Com o baralho `off`, cada turno é uma ação, mas
+  `_expire_stat_conditions` só desconta buffs que já existiam no início do turno. O buff jogado
+  no turno vale então para o golpe do turno seguinte: dano médio de 5,5 → 7,7 em 20 sementes.
+  Com o baralho `on`, vale já para o golpe seguinte da mesma rodada.
+- **Gancho de Ferro (`mover_alvo_zona aproximar`): funciona, mas o uso em luta solo é
+  estreito.** Com o inimigo visível em `distante`, ele volta para `proximo`. A distância, porém,
+  não restringe ataque no motor (não existe regra de alcance para o golpe do jogador). O efeito
+  real em luta solo é **cortar a fuga**, porque o inimigo só escapa ao chegar a `separado`. Num
+  inimigo **escondido** a Carta nem pode ser jogada ("sem posição conhecida — não pode mirar
+  direto"). Ver P2-5.
+
+## A v2 de `olho_no_pulso` quebra save, replay ou golden?
+
+**Não.**
+- **Save:** o save guarda só o **id** (decks, `known_cards`, uso); o motor lê a Carta vigente.
+- **Versão:** `fx.versao` é só metadado, e nenhum código busca Carta por versão (os únicos
+  leitores são `content_validator` e `card_lint`).
+- **Golden/snapshot da 330:** cobre só as 308 legadas.
+- **Replay:** não há fixture nem replay que cite `san1_sil_olho_no_pulso`.
+- O efeito muda para quem já a tem no baralho, mas isso é o esperado (R7 da 336: "motor lê
+  versão vigente"), e a Carta antiga não fazia nada.
+
+## Achados novos
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P2-5 | P2 | `corruptor_inorganica.json` (`cor1_ino_gancho_de_ferro`) | A `descricao` ("ao alcance de qualquer lâmina") e o `momento` ("o arqueiro inimigo se esconde atrás da linha") prometem alcance e tirar o inimigo do esconderijo. Não existe regra de alcance para o golpe, e alvo escondido não pode ser mirado. O uso real é impedir a fuga. | Reescrever para o uso real (por exemplo, "puxa de volta quem tenta fugir"). Na 336, decidir se a distância deve pesar no golpe; hoje Mão no Peito (Lote 3) e Pé no Vazio têm o mesmo limite. |
+| P2-6 | P2 | `_ondas.yaml` | Gancho de Ferro, Medir a Fadiga e a v2 de Olho no Pulso entraram **depois** da aprovação de voz em bloco do dono, e a onda continua `aprovada`. | Acrescentar à `nota_voz` da onda do Lote 4, e da do Lote 2 pelo Olho no Pulso, que as substituições de 27/10 vieram depois da aprovação, ou levá-las ao dono na próxima amostra. |
+
+A arena não mede `revelar`, `mover_alvo_zona` nem `buff_dano`, como avisou o executor: o
+delta das 2 Cartas novas (0,0 e −3,7 pp) diz pouco. O freio é o orçamento, e as duas passam.
+
+## Comandos rodados (re-revisão do Lote 4)
+
+```text
+git diff fb2c2d42..7a40ae9d (11 arquivos) → lidos card_lint.py, 4 JSON de Cartas, testes, relatório
+scratchpad/sol4b.py: Medir a Fadiga (turno seguinte, 20 sementes) → dano médio 5,5 → 7,7; Gancho em inimigo visível distante → proximo; em inimigo escondido → "não pode mirar direto"
+grep versao em services/, scripts/, api, persistence → só metadado (validator e lint); nenhuma fixture cita olho_no_pulso
+sim.py --lote data/cards/posturas/corruptor_inorganica.json --protocolo lote --out <scratchpad> → idêntico a sim-lote4-inorganica.json
+scripts/cards/lint.py corruptor_{alma,biologia,inorganica}.json → só "id já existe"
+pytest -q -n 2 test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_card_sim, test_mecanica_orfa, test_handoff_names, test_card_piles → exit 0
+scripts/validate_content.py → 0 erros, 0 avisos
+```
+
+# Lote 4 — 1ª rodada (`main...25b00b3f`)
 
 > **Veredito:** `CHANGES_REQUIRED` (1 P1, 4 P2). A correção é pequena: um campo de uma Carta,
 > mais a mesma correção numa Carta do Lote 2 que já está na `main`.
