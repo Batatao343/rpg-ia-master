@@ -403,3 +403,33 @@ def test_pool_inteiro_sem_escala_inerte():
 
     for c in card_lint.load_pool():
         assert not card_lint.check_escala_principal(fx.materialize(c)), c["id"]
+
+
+def test_revelar_de_campo_publico_e_recusado():
+    """SPEC-335 (Sol Lote 4, P1-1): `revelar vitalidade` não faz nada (já é público)."""
+    inerte = card(efeitos=[{"kind": "revelar", "campo": "vitalidade"}])
+    assert any(
+        i.level == "error" and i.code == "revelar_publico"
+        for i in card_lint.check_revelar_publico(inerte)
+    )
+    pressagio = card(efeitos=[{"kind": "revelar", "campo": "intencao"}])
+    assert [i.level for i in card_lint.check_revelar_publico(pressagio)] == ["warn"]
+    for campo in ("resistencias", "cartas"):
+        ok = card(efeitos=[{"kind": "revelar", "campo": campo}])
+        assert not card_lint.check_revelar_publico(ok)
+
+
+def test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida():
+    """SPEC-335 (Sol Lote 4, P2-1/P2-2)."""
+    base = {"tipo": "reacao", "onda": 1, "custo_folego": 0, "gatilho": "ao_ser_atacado"}
+    r0 = card(efeitos=[{"kind": "aplicar_condicao", "condicao": "torpor", "duracao": 1}], **base)
+    assert any(i.code == "reacao_folego" for i in card_lint.check_reacao_folego(r0))
+    r1 = dict(r0, custo_folego=1)
+    assert not card_lint.check_reacao_folego(r1)
+    marca = {"kind": "marca_do_abismo", "valor": 2}
+    dano = {"kind": "dano", "valor": 3, "se": {"alvo_tem": "rachadura"}}
+    # ordem real: o principal (marca) vem antes do extra `dano`, mesmo listado primeiro
+    ruim = card(efeitos=[dano, marca])
+    assert any(i.code == "marca_consumida" for i in card_lint.check_marca_dano(ruim))
+    bom = card(efeitos=[{"kind": "dano", "categoria_arma": "leve", "dano_base": 2}, marca])
+    assert not card_lint.check_marca_dano(bom)

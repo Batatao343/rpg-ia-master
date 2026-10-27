@@ -1,12 +1,12 @@
 {
- "cor1_ino_ponto_fraco": {
+ "cor1_ino_gancho_de_ferro": {
   "classe": "Corruptor",
-  "vezes_na_mao": 229,
-  "vezes_jogada": 42,
-  "taxa_uso": 0.183,
+  "vezes_na_mao": 119,
+  "vezes_jogada": 33,
+  "taxa_uso": 0.277,
   "vitoria_sem": 0.762,
-  "vitoria_com": 0.725,
-  "delta_pp": -3.7,
+  "vitoria_com": 0.762,
+  "delta_pp": 0.0,
   "lutas_por_braco": 80,
   "dano_por_folego": 0.0,
   "protecao_por_folego": 0.0,
@@ -38,11 +38,11 @@
   "protecao_por_folego": 0.0,
   "bandeiras": []
  },
- "cor1_ino_ler_o_metal": {
+ "cor1_ino_medir_a_fadiga": {
   "classe": "Corruptor",
-  "vezes_na_mao": 229,
-  "vezes_jogada": 42,
-  "taxa_uso": 0.183,
+  "vezes_na_mao": 123,
+  "vezes_jogada": 14,
+  "taxa_uso": 0.114,
   "vitoria_sem": 0.762,
   "vitoria_com": 0.725,
   "delta_pp": -3.7,

@@ -320,6 +320,51 @@ def check_escala_principal(card: dict) -> list[Issue]:
     return []
 
 
+# SPEC-335 (revisão Sol do Lote 4): `revelar` de campo que o painel já mostra não faz nada.
+REVELAR_PUBLICO_ERRO = frozenset({"vitalidade"})  # sempre no painel (`bestiary_knowledge`)
+REVELAR_PUBLICO_AVISO = frozenset({"intencao"})  # o presságio (329) já mostra a intenção
+
+
+def check_revelar_publico(card: dict) -> list[Issue]:
+    out: list[Issue] = []
+    for eff in fx.normalize(card):
+        if eff.get("kind") != "revelar":
+            continue
+        campo = str(eff.get("campo", "resistencias"))
+        if campo in REVELAR_PUBLICO_ERRO:
+            msg = f"`revelar {campo}` é inerte: o campo já é público no painel"
+            out.append(Issue("error", "revelar_publico", msg))
+        elif campo in REVELAR_PUBLICO_AVISO:
+            msg = f"`revelar {campo}` duplica o que o presságio já mostra"
+            out.append(Issue("warn", "revelar_publico", msg))
+    return out
+
+
+def check_reacao_folego(card: dict) -> list[Issue]:
+    """Reação de Carta de onda exige Fôlego >= 1 (R12 da 328: guardar Fôlego para reagir é
+    uma escolha). O acervo legado fica de fora (há reações de Fôlego 0, inalteradas)."""
+    if card.get("onda") is None or card.get("tipo") != "reacao":
+        return []
+    if fx.custo_folego(card) < 1:
+        return [Issue("error", "reacao_folego", "reação com custo de Fôlego 0 (mínimo 1)")]
+    return []
+
+
+def check_marca_dano(card: dict) -> list[Issue]:
+    """A Marca do Abismo some no próximo dano: um `dano` depois dela, na ordem REAL do motor
+    (principal e depois os extras), a consome na própria Carta."""
+    prim = fx.primary_effect(card)
+    ordem = ([prim] if prim else []) + fx.extra_effects(card)
+    vistos_marca = False
+    for eff in ordem:
+        if eff.get("kind") == "marca_do_abismo":
+            vistos_marca = True
+        elif vistos_marca and eff.get("kind") in ("dano", "contra_ataque"):
+            msg = "`dano` depois da Marca do Abismo na mesma Carta a consome no ato"
+            return [Issue("error", "marca_consumida", msg)]
+    return []
+
+
 def check_color_pie(card: dict) -> list[Issue]:
     rule = roda().get(str(card.get("classe") or ""))
     if not rule:
@@ -454,6 +499,9 @@ def lint_card(
     issues += check_raridade(card)
     issues += check_color_pie(card)
     issues += check_escala_principal(card)
+    issues += check_revelar_publico(card)
+    issues += check_reacao_folego(card)
+    issues += check_marca_dano(card)
     issues += check_names(card, others)
     issues += check_redundancy(card, others, embed)
     return issues

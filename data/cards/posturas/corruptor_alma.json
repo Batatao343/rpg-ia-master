@@ -71,7 +71,7 @@
       "subclasse": "alma",
       "patamar": "inicial",
       "raridade": "comum",
-      "custo_entropia": 3,
+      "custo_entropia": 4,
       "custo_folego": 1,
       "frequencia": "turno",
       "virtude_permitida": [
@@ -398,7 +398,7 @@
       "palavras_chave": {
         "exaurir": true
       },
-      "descricao": "O nome do alvo é riscado do Abismo: ele treme, enfraquece e vira a marca de todos os golpes; a carta vira cinzas depois.",
+      "descricao": "O nome do alvo é riscado do Abismo: ele treme, enfraquece e o próximo golpe contra ele pesa mais; a carta vira cinzas.",
       "momento": "Melhor jogada quando uma ameaça sem rosto domina a cena e apagar a vontade dela abre caminho para o grupo inteiro.",
       "tier": 7,
       "level_req": 15,

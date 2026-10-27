@@ -30,10 +30,10 @@
 | `cor1_alm_lembranca_errada` | 72% (51/71) | -1.3 pp | 80 | dominante |
 | `cor1_alm_corredor_sem_eco` | 11% (7/66) | -5.0 pp | 80 | — |
 | `cor1_alm_nome_apagado` | 11% (7/64) | +2.5 pp | 80 | — |
-| `cor1_ino_ponto_fraco` | 18% (42/229) | -3.7 pp | 80 | — |
+| `cor1_ino_gancho_de_ferro` | 28% (33/119) | +0.0 pp | 80 | — |
 | `cor1_ino_junta_emperrada` | 28% (33/119) | +0.0 pp | 80 | — |
 | `cor1_ino_estalo_de_viga` | 56% (67/119) | +1.3 pp | 80 | — |
-| `cor1_ino_ler_o_metal` | 18% (42/229) | -3.7 pp | 80 | — |
+| `cor1_ino_medir_a_fadiga` | 11% (14/123) | -3.7 pp | 80 | — |
 | `cor1_ino_estilhaco_de_ferro` | 0% (0/126) | -3.7 pp | 80 | uso_nao_medido |
 | `cor1_ino_carapaca_de_ferrugem` | 25% (32/129) | -2.5 pp | 80 | — |
 | `cor1_ino_oxido_no_gume` | 25% (33/131) | +0.0 pp | 80 | — |
@@ -57,3 +57,7 @@ Cada uma das 36 Cartas foi jogada por `ct.resolve_turn` (suporte em si mesmo, ho
 ## Limitações da arena
 
 - O bot ordena pelo `dano_base` do principal; Rachadura, Torpor, Marca, condições, DoT e cura condicional não pesam na decisão. Reações não são declaradas.
+
+## Correções da revisão Sol (Lote 4)
+
+Arena refeita após as correções: mesmos números e mesmas bandeiras (nenhum delta acima de +8 pp; o maior segue sendo `cor1_bio_banquete_de_vermes`, ruído conferido). `revelar`, `mover_alvo_zona` e `buff_dano` não são medidos pela arena.

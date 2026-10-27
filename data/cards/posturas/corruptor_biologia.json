@@ -112,11 +112,11 @@
       "efeitos": [
         {
           "kind": "revelar",
-          "campo": "vitalidade"
+          "campo": "resistencias"
         }
       ],
-      "descricao": "Cor, cheiro e pulso contam ao Corruptor quanto da vida do alvo ainda resiste.",
-      "momento": "Melhor jogada quando há dúvida sobre qual inimigo cai primeiro e gastar a mão no errado seria desperdício.",
+      "descricao": "Cor, cheiro e pulso contam ao Corruptor a que a carne do alvo resiste e a que ela cede.",
+      "momento": "Melhor jogada quando o couro do inimigo é estranho e escolher o tipo de dano errado desperdiçaria a rodada.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
@@ -163,8 +163,8 @@
       "subclasse": "biologia",
       "patamar": "inicial",
       "raridade": "comum",
-      "custo_entropia": 2,
-      "custo_folego": 0,
+      "custo_entropia": 3,
+      "custo_folego": 1,
       "frequencia": "turno",
       "virtude_permitida": [
         "mente",

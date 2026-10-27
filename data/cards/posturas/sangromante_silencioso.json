@@ -115,16 +115,16 @@
       "efeitos": [
         {
           "kind": "revelar",
-          "campo": "vitalidade"
+          "campo": "cartas"
         }
       ],
-      "descricao": "Escuta o sangue do outro e descobre quanto ele ainda tem para dar.",
-      "momento": "Melhor jogada quando falta saber quanto falta para derrubar o alvo antes de escolher a navalha.",
+      "descricao": "Escuta o sangue do outro e descobre as cartas que ele ainda guarda para dar.",
+      "momento": "Melhor jogada quando falta saber que golpes o alvo guarda antes de escolher a navalha.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "san1_sil_estancar_calado",

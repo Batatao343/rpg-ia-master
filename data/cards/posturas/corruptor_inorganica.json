@@ -2,8 +2,8 @@
   "_meta": "Cartas promovidas pela esteira SPEC-336.",
   "cards": [
     {
-      "id": "cor1_ino_ponto_fraco",
-      "name": "Ponto Fraco",
+      "id": "cor1_ino_gancho_de_ferro",
+      "name": "Gancho de Ferro",
       "tipo": "ativa",
       "origem": "onda-1",
       "classe": "Corruptor",
@@ -19,16 +19,12 @@
       ],
       "efeitos": [
         {
-          "kind": "aplicar_condicao",
-          "condicao": "exposto",
-          "duracao": 2
+          "kind": "mover_alvo_zona",
+          "direcao": "aproximar"
         }
       ],
-      "palavras_chave": {
-        "guardar": true
-      },
-      "descricao": "O Corruptor aponta a trinca que o ferro esconde, a guarda do alvo se abre e a carta fica na mão.",
-      "momento": "Melhor jogada quando o inimigo encouraçado resiste a tudo e a mão tem golpes baratos prontos para entrar.",
+      "descricao": "Um gancho de ferro velho puxa o alvo para junto do Corruptor, ao alcance de qualquer lâmina.",
+      "momento": "Melhor jogada quando o arqueiro inimigo se esconde atrás da linha e precisa ser trazido para onde a mão do grupo alcança.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
@@ -100,8 +96,8 @@
       "versao": 1
     },
     {
-      "id": "cor1_ino_ler_o_metal",
-      "name": "Ler o Metal",
+      "id": "cor1_ino_medir_a_fadiga",
+      "name": "Medir a Fadiga",
       "tipo": "ativa",
       "origem": "onda-1",
       "classe": "Corruptor",
@@ -110,22 +106,19 @@
       "raridade": "comum",
       "custo_entropia": 0,
       "custo_folego": 1,
-      "frequencia": "cena",
+      "frequencia": "turno",
       "virtude_permitida": [
         "mente",
         "forca"
       ],
       "efeitos": [
         {
-          "kind": "revelar",
-          "campo": "resistencias"
+          "kind": "buff_dano",
+          "valor": 2
         }
       ],
-      "palavras_chave": {
-        "guardar": true
-      },
-      "descricao": "O ferro conta ao Corruptor onde envelheceu mal: as resistências do alvo ficam à vista e a carta fica na mão.",
-      "momento": "Melhor jogada quando o tipo de dano a usar é incerto e errar a escolha gastaria Fôlego demais.",
+      "descricao": "O Corruptor lê onde o ferro envelheceu mal e o próximo golpe dele cai exatamente nessa fenda.",
+      "momento": "Melhor jogada quando o inimigo de armadura pesada ainda não foi tocado e o primeiro golpe precisa abrir caminho.",
       "tier": 1,
       "level_req": 1,
       "apex": false,

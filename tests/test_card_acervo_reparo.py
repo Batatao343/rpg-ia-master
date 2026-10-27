@@ -224,9 +224,9 @@ def test_lote4_licoes_da_revisao_dos_lotes_anteriores():
         assert not card_lint.check_escala_principal(c), c["id"]
         assert not {"cura", "estabilizar"} & set(kinds), c["id"]
         assert all(e.get("alvo") not in ("aliados",) for e in effs), c["id"]
-        if "marca_do_abismo" in kinds:
-            depois = kinds[kinds.index("marca_do_abismo") + 1 :]
-            assert "dano" not in depois, c["id"]  # o dano consumiria a Marca da própria Carta
+        assert not card_lint.check_marca_dano(c), c["id"]  # Marca consumida pelo próprio dano
+        assert not card_lint.check_revelar_publico(c), c["id"]
+        assert not card_lint.check_reacao_folego(c), c["id"]
 
 
 # R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
