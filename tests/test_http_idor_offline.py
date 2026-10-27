@@ -162,6 +162,31 @@ _ROUTES = [
 ]
 
 
+def _patch_audit_source(monkeypatch):
+    """Pula só o SQL (``account_deletions``/turns); a checagem de dono é o ``store.get`` real."""
+
+    class _OwnerCheckedAuditSource:
+        def __init__(self, _pool, game_store, principal):
+            self.store, self.principal = game_store, principal
+
+        def load(self, game_id):
+            return object() if self.store.get(self.principal, game_id) else None
+
+    monkeypatch.setattr("infrastructure.audit_source.PostgresAuditSource", _OwnerCheckedAuditSource)
+    monkeypatch.setattr("services.audit_export.bundle_zip", lambda *_a, **_k: b"zip")
+
+
+def test_audit_export_owner_with_recent_session_is_not_404(two_principals, monkeypatch):
+    from services.account_security import proof
+
+    tp = two_principals
+    _patch_audit_source(monkeypatch)
+    monkeypatch.setattr(tp.store, "pool", None, raising=False)
+    tp.client_a.cookies.set("rpg_recent", proof(tp.a.user_id, "recent", "a"))
+    out = tp.client_a.post(f"/game/{tp.game_a}/audit-export", json={})
+    assert out.status_code == 200, out.text
+
+
 # 404 em tudo; exceções explícitas por rota (hoje nenhuma: B tem sessão recente abaixo).
 _EXPECTED_STATUS: dict[str, int] = {}
 
@@ -192,14 +217,7 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     monkeypatch.setattr("api._image_finance", lambda: (tp.runtime, current_principal(), object()))
     from services.account_security import proof
 
-    class _NoRowsAuditSource:  # o filtro de dono do Postgres devolve None para outro principal
-        def __init__(self, *_a, **_k):
-            pass
-
-        def load(self, _game):
-            return None
-
-    monkeypatch.setattr("infrastructure.audit_source.PostgresAuditSource", _NoRowsAuditSource)
+    _patch_audit_source(monkeypatch)
     monkeypatch.setattr(tp.store, "pool", None, raising=False)
 
     # audit-export exige sessão recente; com ela o 404 vem da checagem de dono.
