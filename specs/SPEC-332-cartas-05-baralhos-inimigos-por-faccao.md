@@ -1,6 +1,6 @@
 # SPEC-332 — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
 
-> **Status:** `in-progress` (dono aprovou 2026-10-27; motor + 11 famílias entregues, facções e chefes = próximo lote)
+> **Status:** `in-progress` (Entrega 1 — motor + 11 famílias — pousada `off` em 27/10 após re-revisão Sol APPROVED; próximo lote: 10 facções, fases de chefe, curadoria do bestiário, F-1, calibrar lider_matilha/bruto)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-329 (presságio), SPEC-330 (gramática), SPEC-283 (IA usa cartas de suporte)
