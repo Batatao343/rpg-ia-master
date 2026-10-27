@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "30b193551804806615414441e83dd203ebebbe0f",
+  "commit_sha": "1db123493e911b4484816bfe2b063933f753e5a9",
   "edge_counts": {
-    "calls": 28791,
-    "contains": 987,
-    "defines": 14465,
-    "imports": 2380,
-    "likely_test_for": 1676,
+    "calls": 29190,
+    "contains": 994,
+    "defines": 14616,
+    "imports": 2400,
+    "likely_test_for": 1689,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:0a54981b27138f8f4a0c7785a25c9c9c074e1ffeafbe9a0b40da7b8f8a5f0eb0",
+  "graph_hash": "sha256:270e722720d971915b73c73617c941a5f6cd9024de1e3e296dd46e2b6700ca59",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -92,6 +92,7 @@
     "docs/spec304/npc_world_sim.py",
     "docs/spec317/r2_shadow_harness.py",
     "docs/spec318/npc_two_phase_bench.py",
+    "docs/spec328/arena_deck.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -311,6 +312,8 @@
     "services/auth_sessions.py",
     "services/bestiary_knowledge.py",
     "services/body_limit.py",
+    "services/card_deck_round.py",
+    "services/card_piles.py",
     "services/cards.py",
     "services/chase.py",
     "services/checkpoints.py",
@@ -501,6 +504,7 @@
     "tests/test_ambient_consumers.py",
     "tests/test_api_access_log.py",
     "tests/test_api_attempt_telemetry.py",
+    "tests/test_api_jogadas.py",
     "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
     "tests/test_archivist_facts.py",
@@ -544,6 +548,7 @@
     "tests/test_bug_mundo_perigo_luz_clima.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
+    "tests/test_card_piles.py",
     "tests/test_cards_prepare_api.py",
     "tests/test_chaos_local.py",
     "tests/test_checkout_integrity.py",
@@ -593,6 +598,7 @@
     "tests/test_day_digest_inline.py",
     "tests/test_db_logging.py",
     "tests/test_death_flow.py",
+    "tests/test_deck_migration.py",
     "tests/test_dev_stack.py",
     "tests/test_dev_tooling.py",
     "tests/test_dossier_leak.py",
@@ -792,6 +798,7 @@
     "tests/test_rls_effective.py",
     "tests/test_rls_local.py",
     "tests/test_rls_runtime_config.py",
+    "tests/test_round_multi_play.py",
     "tests/test_router_interlocutor.py",
     "tests/test_routing.py",
     "tests/test_routing_tiers.py",
@@ -1212,14 +1219,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 953,
+    "class": 959,
     "endpoint": 64,
-    "file": 1158,
-    "function": 4510,
-    "method": 838,
-    "module": 987,
-    "test": 8163
+    "file": 1165,
+    "function": 4555,
+    "method": 840,
+    "module": 994,
+    "test": 8261
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:c497e8924a7ae93751c92244152cb9c25e0b2b35e847b6121ae0d55e70658852"
+  "source_tree_hash": "sha256:f7a11e59285eeb9b72311501973cac7fe6c4396677c5d2349e4d8ce01188022a"
 }
