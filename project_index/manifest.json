@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "f8843a55c3625af83f40b2f97773083700d9f3aa",
+  "commit_sha": "7e1116226d3f2279fcac9038634c7c9db9decf65",
   "edge_counts": {
-    "calls": 30349,
-    "contains": 1015,
-    "defines": 15064,
-    "imports": 2459,
-    "likely_test_for": 1726,
-    "route_to": 64
+    "calls": 30412,
+    "contains": 1017,
+    "defines": 15089,
+    "imports": 2472,
+    "likely_test_for": 1730,
+    "route_to": 66
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:14484ef4c4e900a2de95c5fe5a7629a6436ffed05d4153901fcd8596f5591fa1",
+  "graph_hash": "sha256:33f5a7c95dac3360f17b785be422e50db465d36f852f39eec60d2ad662da8785",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -335,6 +335,7 @@
     "services/combat_flags.py",
     "services/combat_intents.py",
     "services/combat_origin.py",
+    "services/combat_preview.py",
     "services/combat_targeting.py",
     "services/companion_orders.py",
     "services/companion_prompt.py",
@@ -584,6 +585,7 @@
     "tests/test_client_error_beacon.py",
     "tests/test_combat_context.py",
     "tests/test_combat_lifecycle.py",
+    "tests/test_combat_preview.py",
     "tests/test_combat_simulator.py",
     "tests/test_combat_targeting.py",
     "tests/test_combat_xp_outside_prose.py",
@@ -1109,6 +1111,7 @@
     "web/src/combat/Arena.tsx",
     "web/src/combat/CardTooltip.tsx",
     "web/src/combat/conflictChips.ts",
+    "web/src/combat/deck.ts",
     "web/src/combat/TargetChip.tsx",
     "web/src/combat/targeting.ts",
     "web/src/combat/useTargeting.ts",
@@ -1119,6 +1122,15 @@
     "web/src/components/Banner.tsx",
     "web/src/components/CardHand.tsx",
     "web/src/components/CodexTab.tsx",
+    "web/src/components/combat/DeckCombat.tsx",
+    "web/src/components/combat/EnemyStrip.tsx",
+    "web/src/components/combat/FolegoPips.tsx",
+    "web/src/components/combat/Hand.tsx",
+    "web/src/components/combat/KeywordTip.tsx",
+    "web/src/components/combat/MechLog.tsx",
+    "web/src/components/combat/PlayQueue.tsx",
+    "web/src/components/combat/PreviewChip.tsx",
+    "web/src/components/combat/SceneStrip.tsx",
     "web/src/components/CombatOutcomePanel.tsx",
     "web/src/components/CombatSimulatorScreen.tsx",
     "web/src/components/ContextSuggestions.tsx",
@@ -1240,14 +1252,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 967,
-    "endpoint": 64,
-    "file": 1186,
-    "function": 4736,
-    "method": 841,
-    "module": 1015,
-    "test": 8519
+    "class": 969,
+    "endpoint": 66,
+    "file": 1198,
+    "function": 4746,
+    "method": 843,
+    "module": 1017,
+    "test": 8530
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5c39b066c54440ea6a926ffb1dd3199fc054f6cc134ee4497b1334d580f4fb4f"
+  "source_tree_hash": "sha256:cfe7f31c00057f8483f07abf94d0d6222751ecef32d7abe38eb8e44d533d1b4b"
 }
