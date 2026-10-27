@@ -3,7 +3,7 @@ import { useModalFocus } from "../workspace/useModalFocus";
 import { SHORTCUTS, shortcutKeys, type Platform } from "../workspace/shortcuts";
 
 /** SPEC-324 R4: folha "Atalhos" (tecla `?`). Modal com foco preso (`useModalFocus`); `Esc` fecha e devolve o foco. */
-export function ShortcutsSheet({ platform, onClose }: { platform: Platform; onClose: () => void }) {
+export function ShortcutsSheet({ platform, onClose, deck = false }: { platform: Platform; onClose: () => void; deck?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   useModalFocus(ref, onClose);
   return (
@@ -20,6 +20,16 @@ export function ShortcutsSheet({ platform, onClose }: { platform: Platform; onCl
             </li>
           ))}
         </ul>
+        {deck && (
+          <section aria-labelledby="shortcuts-deck">
+            <p id="shortcuts-deck" className="playmenu__title">No combate com Baralho</p>
+            <ul className="shortcuts__list">
+              <li><kbd className="shortcuts__keys">1–5</kbd><span>Armar a carta da mão</span></li>
+              <li><kbd className="shortcuts__keys">Enter</kbd><span>Encerrar a rodada</span></li>
+              <li><kbd className="shortcuts__keys">Esc</kbd><span>Desarmar ou desfazer a fila</span></li>
+            </ul>
+          </section>
+        )}
         <p className="muted shortcuts__note">
           No Linux, Alt+1…8 pode trocar de aba no Chrome/Firefox; no macOS, Ctrl+Option é o modificador do VoiceOver.
         </p>

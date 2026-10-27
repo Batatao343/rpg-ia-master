@@ -146,12 +146,13 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
       } else if (event.key === "Enter" && !(event.target as HTMLElement | null)?.closest?.("button, summary, a, [role=button], [role=tab], [tabindex]")) {
         if (queue.length) { event.preventDefault(); end(); }
       } else if (event.key === "Escape") {
-        if (armed) { event.preventDefault(); disarm(); }
-        else if (queue.length) { event.preventDefault(); setQueue([]); setSelected(null); onAnnounce("Fila desfeita."); }
+        if (armed) { event.preventDefault(); event.stopPropagation(); disarm(); }
+        else if (queue.length) { event.preventDefault(); event.stopPropagation(); setQueue([]); setSelected(null); onAnnounce("Fila desfeita."); }
       }
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    // captura: o painel de contexto trata Esc em onKeyDown (React) e o marcaria como tratado antes de nós
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
   });
 
   const rules = armedCard && touch ? keywordRules(armedCard.texto ?? "", glossary) : [];

@@ -94,7 +94,7 @@
   display: grid; gap: 0.7rem; padding: 0.9rem 1rem; border: 1px solid var(--line);
   border-radius: var(--r-md); background: var(--surface-2); min-width: 0;
 }
-.espolio__title, .forja__title { margin: 0; font-size: 1.1rem; color: var(--accent); }
+.espolio__title, .forja__title { margin: 0; }
 .espolio__lead, .forja__hint, .forja__why { margin: 0; color: var(--muted); font-size: 0.9rem; }
 .espolio__offers { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
@@ -103,7 +103,7 @@
 .espolio__card--rara { border-color: var(--accent); }
 .espolio__card--abissal { border-color: var(--abyss); }
 .espolio__top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
-.espolio__top h3 { margin: 0; color: var(--ink); font: 0.95rem var(--label); letter-spacing: 0.04em; }
+.espolio__top h4 { margin: 0; color: var(--ink); font: 0.95rem var(--label); letter-spacing: 0.04em; }
 .espolio__rarity { color: var(--faint); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
 .espolio__cost, .espolio__rules, .espolio__flavor { margin: 0; font-size: 0.88rem; }
 .espolio__cost { color: var(--muted); }
@@ -111,12 +111,16 @@
 .espolio__refuse { justify-self: start; }
 .espolio__msg, .forja__msg { margin: 0; min-height: 1.2em; color: var(--muted); font-size: 0.88rem; }
 .forja__deck { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
-.forja__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 0.8rem; }
 .forja__name { color: var(--ink); }
 .forja__actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .forja__curse { color: var(--abyss-text); font-size: 0.85rem; }
 .forja__sharpen, .forja__scars { display: grid; gap: 0.4rem; }
-.forja h3 { margin: 0; font-size: 0.95rem; color: var(--accent); }
+.forja__bar, .forja__confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.forja__confirm { padding-top: 0.4rem; border-top: 1px solid var(--line-soft); color: var(--ink); font-size: 0.9rem; }
+.forja__row { box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 0.8rem; width: 100%; min-height: 2.2rem; padding: 0.3rem 0.6rem; border: 1px solid var(--line-soft); border-radius: var(--r-sharp); background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer; }
+.forja__row[aria-pressed="true"] { border-color: var(--accent); }
+.espolio__card { cursor: default; }
+.combat-card.deck-card { min-height: auto; }
 
 @media (max-width: 480px) {
   .ws-bar { padding: 0.3rem 0.55rem; }
@@ -336,7 +340,7 @@ details.scene-strip { display: block; }
 .deck-hand__list ul { margin: 0; padding-left: 1.1rem; }
 .deck-hand__stuck { margin: 0 0 0.5rem; color: var(--muted); font-size: 0.9rem; }
 .deck-hand__rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(165px, 215px); gap: 0.55rem; overflow-x: auto; padding: 0.15rem 0 0.35rem; scroll-snap-type: x proximity; }
-.deck-card { min-height: auto; }
+
 .deck-card.is-dim .combat-card__name, .deck-card.is-dim .combat-card__desc, .deck-card.is-dim .deck-card__pips { opacity: 0.5; }
 .deck-card .combat-card__state { opacity: 1; color: var(--muted); }
 .deck-card .combat-card__desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
@@ -384,3 +388,8 @@ details.scene-strip { display: block; }
   .aimbar[data-deck-aim] button { min-height: 44px; min-width: 44px; }
   .deck-card { -webkit-touch-callout: none; user-select: none; }
 }
+
+/* SPEC-342 R19.2 — espolio a espera na aba Combate (ponto de destaque) */
+.tab.is-combat.has-loot:not(.has-fight)::after { content: ""; position: absolute; top: 5px; right: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.mtabbar__btn.has-loot { position: relative; }
+.mtabbar__btn.has-loot::after { content: ""; position: absolute; top: 6px; right: 28%; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }

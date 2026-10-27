@@ -361,8 +361,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}
           turn={turn} onRetry={onRetryTurn} />
       </div>
-      {helpOpen && <ShortcutsSheet platform={platform} onClose={() => setHelpOpen(false)} />}
-      {mobile && <MobileTabBar surface={surface} fighting={fighting} hidden={keyboardOpen} onSelect={selectSurface} />}
+      {helpOpen && <ShortcutsSheet platform={platform} deck={!!data?.combat?.pilhas} onClose={() => setHelpOpen(false)} />}
+      {mobile && <MobileTabBar surface={surface} fighting={fighting} loot={!!data?.player_stats?.espolio_pendente} hidden={keyboardOpen} onSelect={selectSurface} />}
     </div>
   );
 });

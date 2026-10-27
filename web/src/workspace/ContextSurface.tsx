@@ -58,6 +58,7 @@ export interface ContextSurfaceProps {
 export function ContextSurface(props: ContextSurfaceProps) {
   const { data, active, tab, visited, onSelectTab, onClose, onEscape } = props;
   const fighting = !!data?.combat?.active;
+  const lootWaiting = !!data?.player_stats?.espolio_pendente && tab !== "combate"; // SPEC-342 R19.2
   const platform = detectPlatform();
   const scrolls = useRef(new Map<ContextTab, number>());
   const panels = useRef(new Map<ContextTab, HTMLDivElement>());
@@ -81,10 +82,10 @@ export function ContextSurface(props: ContextSurfaceProps) {
       {!props.mobile && <div className="ws-ctx__head">
         <RovingTablist<ContextTab>
           items={CONTEXT_TABS.map((id) => ({
-            id, label: TAB_LABELS[id],
+            id, label: id === "combate" && lootWaiting ? <>{TAB_LABELS[id]}<span className="sr-only"> — espólio à espera</span></> : TAB_LABELS[id],
             title: titleWithShortcut(TAB_LABELS[id], `tab:${id}`, platform),
             keyshortcuts: ariaShortcut(`tab:${id}`, platform),
-            className: id === "combate" ? "is-combat" + (fighting ? " has-fight" : "") : undefined,
+            className: id === "combate" ? "is-combat" + (fighting ? " has-fight" : "") + (lootWaiting ? " has-loot" : "") : undefined,
           }))}
           selected={tab} onSelect={onSelectTab} label="Abas do painel" idPrefix="ws"
           className="tabs ws-tabs" tabClassName="tab" />
