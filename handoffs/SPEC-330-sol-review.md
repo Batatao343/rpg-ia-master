@@ -1,7 +1,7 @@
 # SPEC-330 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (Grupo B re-revisão, `966a84e4`; 1ª do Grupo B: `CHANGES_REQUIRED` em `81afd2a7`) · Grupo A + intérprete: `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
-> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `966a84e4` (Grupo B re-revisão); `81afd2a7` (Grupo B); antes `b3e4d3c0`/`87716758`
+> **Veredito:** `APPROVED` (Grupo B, 2ª re-revisão de `e7df0e24`; antes `CHANGES_REQUIRED` em `966a84e4` e `81afd2a7`) · Grupo A + intérprete: `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
+> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `e7df0e24` (Grupo B, 2ª re-revisão); `966a84e4`, `81afd2a7` (Grupo B); antes `b3e4d3c0`/`87716758`
 
 ## Escopo
 
@@ -242,4 +242,43 @@ harness sem deaths/terminal no motor 8bd4f384 → KeyError 'deaths' em 10 Cartas
 repro B2-P1-1 (scratch): comprar → retidas ['t_vazao', …]; gatilho ao_descartar de t_vazao disparado; begin_round → t_vazao na mão seguinte
 pytest -n 2 test_card_effects_piles test_card_effects_grammar test_card_effects_review_spec330 test_card_piles test_keywords_valoria test_log_event_registry test_no_silent_except test_error_envelope test_deck_migration test_enemy_intent test_enemy_intent_node → 199 passed, rc=0
 pytest test_round_multi_play → 25 passed, rc=0
+```
+
+## 2ª re-revisão do Grupo B — `e7df0e24`
+
+> **Veredito:** `APPROVED`. B2-P1-1, B2-P2-1 e B2-P2-2 estão corrigidos e não há achado novo.
+
+Delta revisado: `f8a8833f..e7df0e24` (`services/card_deck_round.py`, `services/card_piles.py`,
+spec D-13, `tests/test_card_effects_piles.py`).
+
+- **B2-P1-1 — ok.** `end_round` chama `mark_guardadas` e depois simula `discard_hand` numa
+  `deepcopy` das pilhas. A Vazão dispara só para o que esse descarte de fato tiraria, que é a
+  mesma regra que o `begin_round` aplica depois. A Carta retida não dispara mais. Rodei de novo
+  o scratch da rodada anterior: `t_vazao` comprada por `comprar` fica em `retidas`, não dispara
+  nenhum gatilho e abre a mão seguinte. O excedente acima de `MAO_BASE` dispara, com teste
+  dedicado. Gatilhos que mexem nas pilhas reais durante o laço não afetam a lista, porque ela
+  vem da cópia.
+- **B2-P2-1 — ok.** `_forget` tira uma ocorrência de `retidas` (ou de `guardadas`) quando
+  `discard_cards` ou `purge_fardos` (na mão) removem uma cópia. A semântica é por contagem: as
+  cópias são indistinguíveis, então o número de cópias poupadas acompanha as que sobram.
+  `guardadas` está vazia durante as jogadas (o `begin_round` zera e o `mark_guardadas` só roda no
+  fim), então a ordem retidas→guardadas não muda o resultado. `play_to_pile`/`exhaust` não
+  precisam de `_forget`: a cópia jogada pertence à mão anterior à compra e a contagem de retidas
+  continua certa.
+- **B2-P2-2 — ok.** `begin_round` grava `folego_cheio`, o teto efetivo da rodada. `public_view`
+  expõe `folego_max` com esse valor (default `FOLEGO_BASE` em pilhas antigas, sem migração) e
+  `folego_bonus_pendente`. Tudo é JSON puro. Nenhum consumidor quebra: o front não tipa as
+  pilhas e `api.py`/manifest não leem esses campos (`test_encounter_manifest` verde).
+
+Pendências que continuam registradas na spec (não bloqueiam): smoke real (§6), política de
+`descartar` com `escolha` via UI (SPEC-333), `_bump` na autoria (SPEC-335), `ao_comprar` na
+compra do início de rodada e Fardo por evento do Abismo.
+
+Comandos rodados (2ª re-revisão):
+
+```text
+git diff f8a8833f..e7df0e24 --stat → 4 arquivos, +82/−6
+scratch B2-P1-1 de novo → retidas ['t_vazao', …]; vazao fired: [] ; t_vazao na mão seguinte
+pytest -n 2 test_card_effects_piles test_card_effects_grammar test_card_effects_review_spec330 test_card_piles test_round_multi_play test_keywords_valoria test_log_event_registry test_no_silent_except test_error_envelope test_deck_migration → 208 passed, rc=0
+pytest -n 2 test_encounter_manifest → 21 passed, rc=0
 ```
