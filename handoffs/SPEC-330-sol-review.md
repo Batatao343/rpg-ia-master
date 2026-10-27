@@ -1,7 +1,7 @@
 # SPEC-330 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (Grupo B, `81afd2a7`) · Grupo A + intérprete: `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
-> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `81afd2a7` (Grupo B); antes `b3e4d3c0`/`87716758`
+> **Veredito:** `CHANGES_REQUIRED` (Grupo B re-revisão, `966a84e4`; 1ª do Grupo B: `CHANGES_REQUIRED` em `81afd2a7`) · Grupo A + intérprete: `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
+> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `966a84e4` (Grupo B re-revisão); `81afd2a7` (Grupo B); antes `b3e4d3c0`/`87716758`
 
 ## Escopo
 
@@ -189,4 +189,57 @@ instrumentação das seeds extra (21, 1337, sem Mira) → 270 ataques, todos "ac
 repro B-P1-1 (scratch): comprar 2 → na rodada seguinte as 2 estão no descarte; ganhar_folego deixa 4 → na rodada seguinte 3
 RNG de produção (rng=random, json round-trip, random global variando) → descarte idêntico 3×, embaralhos=2
 pytest -n 2 -p no:cacheprovider test_card_effects_piles test_card_effects_grammar test_card_effects_review_spec330 test_card_piles test_keywords_valoria test_log_event_registry test_no_silent_except test_error_envelope test_deck_migration test_enemy_intent test_enemy_intent_node → 186 passed, rc=0
+```
+
+## Re-revisão do Grupo B — `966a84e4`
+
+> **Veredito:** `CHANGES_REQUIRED` (1 P1 novo, introduzido pela correção do B-P1-1; 2 P2)
+
+Delta revisado: `b842d2ad..966a84e4` (`services/card_effects.py`, `services/card_piles.py`,
+`data/cards/_glossario.json`, spec D-12/D-13/§5, `tests/spec330_equivalence.py`, golden,
+`tests/test_card_effects_grammar.py`, `tests/test_card_effects_piles.py`).
+
+Correções conferidas:
+- **B-P1-1 — corrigido em parte.** `comprar` e `gerar_carta` para a mão agora gravam
+  `piles["retidas"]`. `discard_hand` poupa primeiro as `guardadas`, depois as `retidas`, dentro
+  de `MAO_BASE`, e manda o excedente ao descarte. `ganhar_folego` virou
+  `folego_bonus` (≤ `FOLEGO_MAX` − base), que `begin_round` soma e zera. Os testes passam por
+  `run_round` → `begin_round`. Monte e descarte vazios não geram Fardo. Sobrou um efeito
+  colateral com Vazão (B2-P1-1).
+- **B-P2-1 — ok.** Regerei o golden de forma independente: `git archive 8bd4f384` no scratch,
+  sem `services/card_effects.py`, com o `spec330_equivalence.py` de `966a84e4`. Deu 308/308
+  iguais ao golden commitado. As seeds extras (2, 13, 21) cobrem `acerto` 149, `erro` 149 e
+  `critico` 149, e um teste novo exige os três desfechos. **Harness `deaths`/`terminal`:** confirmei
+  a justificativa. Sem essas chaves, o motor antigo estoura `KeyError: 'deaths'` em 10 Cartas
+  `reacao`, só nas seeds sem Mira, quando a reação mata. Nas `ativa` o `out` é substituído pelo
+  retorno de `resolve_turn`, então a mudança não as afeta. O `out` inicial é o mesmo nos dois
+  lados e entra no hash, logo não esconde diferença. Em produção o `out` do `run_round` já
+  traz `deaths`/`terminal`.
+- **B-P2-2 — ok.** Ficou decidido que Eco e Ressoar independem das pilhas (D-13, nota no
+  glossário). Há testes em `off`: o Eco é inerte com uma ação por rodada e o Ressoar escala na
+  cena.
+- **B-P2-3 — ok.** O teste usa `rng=random` (o módulo, como o nó faz), round-trip JSON e o
+  `random` global variando entre execuções. O resultado é idêntico e `embaralhos` ≥ 2.
+- **B-P2-4 — ok.** A Carta `t_praga` do inimigo passa pelo `run_round`. Em `on` o Fardo entra na
+  mão (retido para a próxima). Em `shadow`/`off` vira só `pendente_pilhas`. Um aliado não planta
+  Fardo: o filtro agora usa `sides["enemy"]`.
+- **B-P2-5 — ok.** O §5 e o cabeçalho da spec foram atualizados.
+- **P3 — ok.** `gain_folego` nunca devolve ganho negativo. Uma restrição de aliado foi
+  aplicada. `_bump` e o custo baixo de `descartar` ficaram registrados em D-13.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| B2-P1-1 | P1 | `services/card_deck_round.py:182` (`end_round`) × `services/card_piles.py:202` (`discard_hand`) | **Vazão dispara para uma Carta retida, que não é descartada.** `end_round` só desconta as `guardadas` do orçamento e ignora as `retidas`. Reproduzi no scratch: `t_comprar` compra `t_vazao` e ela vai para `retidas`. Na mesma rodada `end_round` dispara o `ao_descartar` (Sangria) dela e registra `{"kind":"vazao"}`. Depois o `begin_round` mantém `t_vazao` na mão da próxima rodada. O R6 diz "ao ser descartada sem ser jogada", então isso dá o efeito de graça, e ele pode disparar de novo na rodada seguinte se ela não for jogada. O inverso também falha: uma Carta com Vazão que sobra além de `MAO_BASE` (excedente de guardadas/retidas) é descartada sem disparar. | Em `end_round`, decidir quem dispara Vazão pela mesma regra do descarte. Por exemplo, `gone = card_piles.discard_hand(copy.deepcopy(piles))` (simulação, depois de `mark_guardadas`) e disparar Vazão para cada Carta de `gone` com a palavra-chave. Testes: Carta com Vazão comprada por `comprar` não dispara e chega à próxima mão; Carta com Vazão no excedente de `MAO_BASE` dispara. |
+| B2-P2-1 | P2 | `services/card_piles.py:334` (`discard_cards`), `:293` (`purge_fardos`) | `descartar` e `purgar_fardo` tiram a Carta da mão mas não de `retidas`/`guardadas`. Se a mão tiver outra cópia do mesmo id, o orçamento de `discard_hand` poupa a cópia errada. Exemplo: o Fardo retido é purgado e um segundo Fardo, que iria ao descarte, fica na mão. | Ao tirar uma Carta da mão por efeito, remover também uma ocorrência dela de `retidas` (e de `guardadas`). Teste com duas cópias. |
+| B2-P2-2 | P2 | `services/card_piles.py:596` (`public_view`) | `folego_max` continua `FOLEGO_BASE` (3), mas com `folego_bonus` o Fôlego da rodada pode chegar a 6. A API mostraria "6/3", e o bônus pendente não aparece em lugar nenhum. | Expor `folego_max` = Fôlego cheio da rodada (ou `FOLEGO_MAX`) e `folego_bonus` pendente. Pode ficar como follow-up de UI (SPEC-333), se registrado na spec. |
+
+Comandos rodados (re-revisão):
+
+```text
+git diff b842d2ad..966a84e4 --stat → 8 arquivos, +5613/−1090
+golden regen: git archive 8bd4f384 (sem card_effects) + spec330_equivalence.py de 966a84e4 → 308 308 equal []; extra res: acerto 149 / erro 149 / critico 149
+harness sem deaths/terminal no motor 8bd4f384 → KeyError 'deaths' em 10 Cartas reacao (só seeds sem Mira); ativa não afetada
+repro B2-P1-1 (scratch): comprar → retidas ['t_vazao', …]; gatilho ao_descartar de t_vazao disparado; begin_round → t_vazao na mão seguinte
+pytest -n 2 test_card_effects_piles test_card_effects_grammar test_card_effects_review_spec330 test_card_piles test_keywords_valoria test_log_event_registry test_no_silent_except test_error_envelope test_deck_migration test_enemy_intent test_enemy_intent_node → 199 passed, rc=0
+pytest test_round_multi_play → 25 passed, rc=0
 ```
