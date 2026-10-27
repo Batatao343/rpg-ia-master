@@ -1,7 +1,7 @@
 # SPEC-318 — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 
 > **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS); pousada na main 25/10; falta medição §6 no staging e `evals compare` de memory_context antes de promover `lean`)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-316 (`done` — a narração só é entregue cedo se o NÓ narrador terminar cedo); insumos `done`: SPEC-028 (traits seeded), SPEC-213 (projeções), SPEC-302/304/309 (motor de mundo e percepção)
 > **Desbloqueia:** SPEC-319 (ganho de TTFMC só é pleno com o nó narrador enxuto)
 > **Origem:** investigação de latência 2026-10-25 (oportunidades #5 e #6)
@@ -228,3 +228,7 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
 - 26/10 (noite) — **`evals compare` de `memory_context.jsonl`** (MockLLM, dataset intocado): `spec318-lean` × `spec318-legacy`
   com métricas idênticas (recall@5 1,0, mrr 0,833, write_precision 1,0, leak 0), `passed: true`, `regressions: []`.
   Pela D4, `RPG_ARCHIVE_POLICY=lean` entra no preset do staging; medir SMART/turno (meta ≤ 0,45) com `lean` ativo.
+- 27/10 — A/B OFF×ON (OFF inclui `RPG_NPC_TWO_PHASE=off`, `RPG_REPLAN_AFTER=off`, `RPG_DAY_DIGEST=llm`,
+  `RPG_ARCHIVE_POLICY=legacy`; [docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)). Com `lean`: SMART/turno 0,47 e 0,71 (média 0,59; OFF 0,77/0,60) → meta
+  ≤ 0,45 **não atingida**. `state` p50 sem ganho (8,2–11,4 × 9,8–11,4 s); descanso: 1ª narração 14–18 s → 2,4–4,1 s.
+  Segue `in-progress`.

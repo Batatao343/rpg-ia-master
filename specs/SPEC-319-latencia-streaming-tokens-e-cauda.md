@@ -1,7 +1,7 @@
 # SPEC-319 — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 
-> **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol 2 rodadas (APPROVED_WITH_FOLLOWUPS, F-1/F-2 feitos); pousada na main 26/10 com `RPG_TOKEN_STREAM=shadow` e hedge 0; falta medição §6 no staging)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Status:** `done` (aprovada 25/10; pousada 26/10; staging `RPG_TOKEN_STREAM=on`; hedge retirado pelo dono 27/10 — `RPG_LLM_HEDGE_MS=0`; A/B 27/10 em `docs/spec316/staging-measure-2026-10-27.md`)
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-316 (`done` — canal de narração antecipada no SSE e UX de "ainda salvando"); recomendado SPEC-318 (`done`) para o ganho pleno; insumos `done`: SPEC-032 (RoutedLLM), SPEC-236 (`stream_interrupted`), SPEC-250 (fallbacks silenciosos)
 > **Desbloqueia:** —
 > **Origem:** investigação de latência 2026-10-25 (oportunidades #2 e #8)
@@ -120,7 +120,7 @@ p95 do `done` −30 %. Só para o provider primário OpenAI-compat; os demais ca
 
 - [x] R1–R10 cobertos no escopo (testes novos + streaming/latência/roteamento); R9 paridade MockLLM provada (`test_mock_stream_equals_invoke_state`, `test_final_state_identical_across_token_modes`). Suíte completa: coordenador, no pouso.
 - [x] Staging §6 (26/10, `9775ea1`: TTFMC servidor p50 2,65 s ✔; `replace` 0/35 ✔; TTLT `done` p50 6,1–7,0 s vs 6,7–7,5 s pós-316 — não piorou ✔; browser §6.4 ✔): **TTFMC p50 ≤ 3 s**; TTLT p50 dentro de ±5 % do baseline pós-316; `replace` em < 5 % dos turnos.
-- [ ] Hedge (ligado 26/10; 0 disparos em 15 turnos — a cauda vem depois do 1º delta, o gatilho não pega; critério NÃO atingido): `done` p95 −30 % com custo extra ≤ 10 % (`hedge_lost` contabilizado).
+- [x] ~~Hedge: `done` p95 −30 % com custo extra ≤ 10 % (`hedge_lost` contabilizado).~~ **Retirado pelo dono em 27/10 (D2):** 0 disparos em 15 turnos a 6000 ms (a cauda vem depois do 1º delta, o gatilho não pega); hedge desligado (`RPG_LLM_HEDGE_MS=0`), código fica dormente.
 - [x] Guard de FallbackLLM em `stream_structured` e nos agentes (`narrate_structured` devolve `AIMessage`; o `isinstance` do nó segue).
 - [x] Nenhum campo novo no save; `off` byte a byte ao HEAD (`test_off_byte_identical`).
 - [x] Revisão independente (Sol): parser, concorrência do hedge, contextvar entre thread SSE e worker (`handoffs/SPEC-319-sol-review.md`, 2 rodadas; follow-up `tail` em `SPEC-319-sol-independent-review.md`).
@@ -155,7 +155,7 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
 
 - **D1 — Default do stream:** **`shadow` na main; `on` no staging após §6 com `would_replace` < 5 %** (critério corrigido na revisão: `identical_to_final` é igualdade estrita e sobe falso-negativo quando o final só estende o texto; `would_replace = not final.startswith(streamado)` usa a mesma regra do `on`).
   **Rollout:** ligar `RPG_TOKEN_STREAM=on` no staging **só com `RPG_EARLY_NARRATIVE=on`** — sem isso o `replace` só chega no `state` e o texto divergente fica na tela o turno inteiro.
-- **D2 — Hedge:** **desligado por default (`0`); ligar no staging em `6000 ms` só para o tier FAST**
+- **D2 — Hedge:** **desligado por default (`0`); ligar no staging em `6000 ms` só para o tier FAST** · **27/10: dono mandou desligar** (0 disparos; staging volta a `0`)
   (alternativa: 4000 ms — mais cauda cortada, mais custo; rejeitada até ver a distribuição do TTFT real).
 - **D3 — Texto parcial rejeitado pelo guard:** **substituir silenciosamente (`replace`)**, igual à 316 D4.
 - **D4 — Escopo de providers:** **só OpenAI-compat (DeepSeek/Groq/MiniMax/Qwen)**; Anthropic/Gemini ficam no
@@ -282,3 +282,10 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   (exigiria `RPG_ROUTES` com 1º candidato inválido E falha no meio do stream — falha antes do 1º delta não gera
   `reset`); coberto por `test_streaming`/`test_stream_structured`. Pendência para `done`: decisão do dono sobre
   o hedge (critério não atingido: 0 disparos).
+- 27/10 — **D2 revista pelo dono: hedge desligado.** Preset do staging `RPG_LLM_HEDGE_MS=0` (era 6000). Motivo: 0
+  disparos em 15 turnos; o 1º delta chega em ~2 s e a lentidão é a cauda, que o gatilho (sem delta em N ms) não
+  cobre. Critério do hedge retirado (não atingido, registrado acima). Código do hedge permanece, dormente.
+  Dono pediu medição completa antes de fechar: A/B OFF (316–319 desligadas) × ON no staging, intercalado 2×.
+- 27/10 — A/B OFF×ON intercalado 2× no staging (60 turnos, [docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)): TTFMC servidor p50 2,4 s (OFF 8–10,8 s);
+  `done` p50 6,1 s (OFF 8,2–11,4 s); `replace` 0/29; 0 erro. Critérios restantes atendidos e hedge retirado pelo
+  dono → **`done`**.

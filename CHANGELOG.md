@@ -5,6 +5,13 @@
 
 ---
 
+## 2026-10-27 — A/B de latência 316–319 e hedge desligado
+
+- Dono desligou o hedge da SPEC-319 (D2): preset `RPG_LLM_HEDGE_MS=0`; 319 `done`.
+- A/B OFF×ON intercalado 2× no staging (60 turnos, `docs/spec316/staging-measure-2026-10-27.md`): 1ª narração
+  p50 8,2–11,4 s → 2,6 s; narração completa 6,1 s; turno inteiro (`state`) sem ganho (~10 s nos dois braços);
+  SMART/turno com `lean` 0,59 (meta 318 ≤ 0,45 não atingida); 0 erro, 0 `replace`.
+
 ## 2026-10-24/25 — mundo vivo, onda 2 (regra de ouro e munição para a LLM)
 
 - **24/10:** revisão orquestrada (Fable) → specs 308–313 aprovadas; 308 `done`; staging com tudo do mundo vivo `on`; cláusula de mundo compartilhado nos Termos/Privacidade; sementes de NPC aprovadas. Regra de RAM/processos registrada em `CLAUDE.md`.

@@ -1,7 +1,7 @@
 # SPEC-317 — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
 
 > **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main 25/10 com flags seguras: rota NPC determinística `shadow`, janela do router e prompt estático-primeiro `off`; falta medição §6 no staging)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma (independente da SPEC-316); insumos `done`: SPEC-032 (ROUTES), SPEC-143 (NO-GO do fan-out), SPEC-214 (NO-GO do cache de cena), SPEC-217/229 (pré-classificação determinística)
 > **Desbloqueia:** reavaliação de `RPG_TURN_EXECUTION=concurrent` (SPEC-143) sem contenção de provider
 > **Origem:** investigação de latência 2026-10-25 (oportunidades #3, #4, #7, #10)
@@ -217,3 +217,5 @@ Alvos: CLASSIFY p50 ≤ 0,8 s; TTLT p50 −1 s vs baseline do dia; ack p95 ≤ 3
   mesma classe das esperas de 19–59 s antes de `sse.started` vistas na 319: instância nova do Vercel (cold start do
   bundle), não import (local `import vercel_app` 1,7–2,1 s). Reduzir é trabalho de infra (bundle/plano), fora desta spec.
   R2 continua aguardando tráfego real com vocativo a NPC presente (n=3; tráfego sintético não exercita o caminho).
+- 27/10 — No A/B OFF×ON ([docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)) prefetch de contexto e cache de índice ficaram ligados nos dois braços (sem
+  flag no `vercel_env.py`), logo o ganho isolado da 317 não foi medido. R2 segue esperando 200 decisões reais.

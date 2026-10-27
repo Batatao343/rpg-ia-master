@@ -1,7 +1,7 @@
 # SPEC-316 — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 
 > **Status:** `in-progress` (aprovada 25/10; implementada + revisão Sol aplicada; pousada na main em `shadow` 25/10; falta medição §6 com `on` no staging, que espera a SPEC-320)
-> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-25
+> **Criada:** 2026-10-25 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-036 (`done`, SSE), SPEC-200 (`done`, marcas ttfmc/ttlt), SPEC-213 (`done`, projeções), SPEC-247 (`done`, worker SSE sobrevive à desconexão)
 > **Desbloqueia:** SPEC-318 (trabalho fora do caminho crítico), SPEC-319 (streaming de tokens e cauda)
 > **Origem:** investigação de latência 2026-10-25 (relatório do coordenador, oportunidade #1)
@@ -238,3 +238,7 @@ some no `state`, input libera só no `state`.
   `narrative_shown`**. 1ª narração no cliente p50 3,1–4,4 s (meta ≤ 7 s ✔; era 11,1 s). p95 8,8–11,7 s nas sessões sem
   cold start; nas com instância nova do Vercel o `ack` chega a 19–63 s (fora desta spec, ver SPEC-317 §6.3).
   Falta: 1 falha induzida no staging (selo + retry com o mesmo `action_id`).
+- 27/10 — A/B OFF×ON intercalado 2× no staging (60 turnos, [docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)). 1ª narração p50 8,2–11,4 s → 2,6 s;
+  p95 15,5–26,1 s → 9,8–11,8 s (melhor, não pior). **Estado final (input liberado) sem ganho**: p50 8,2–11,4 ×
+  9,8–11,4 s, p95 15,5–26,1 × 17,0–17,1 s (empate no ruído). 29/29 entregas antecipadas `ok`, 0 `narrative_shown`.
+  Segue `in-progress`: falta 1 falha induzida no staging (selo + retry).

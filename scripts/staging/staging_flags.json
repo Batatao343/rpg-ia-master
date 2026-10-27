@@ -1,6 +1,6 @@
 {
   "_doc": "Estado APROVADO pelo dono para o staging. vercel_env.py carrega isto por padrao; flags da CLI sobrescrevem; --no-preset volta aos defaults antigos do script. Mudou a decisao? Edite aqui (com a data) e commite.",
-  "_updated": "2026-10-25: dono aprovou rumores (312), quests de lore (313) e arte dinamica (off ate o teste de consistencia de arte passar); mundo vivo on desde 24/10; Jev primary desde 18/10; 25/10 SPEC-316 early narration on (SPEC-320 landed, P2-2 gate satisfied); 26/10 SPEC-325 fases A e B on (gate R17 verde, D6); 26/10 arte dinâmica on (SPEC-326 smoke 8/8, price profiles publicados); 26/10 SPEC-325 fase C on; reforços (D) abandonados pelo dono; 26/10 SPEC-319 D1 RPG_TOKEN_STREAM on (shadow would_replace 1/25 = 4 % < 5 %); 26/10 SPEC-319 D2 RPG_LLM_HEDGE_MS 6000 (FAST) para §6.3; 26/10 SPEC-318 D4 RPG_ARCHIVE_POLICY lean (evals compare memory_context sem regressao)",
+  "_updated": "2026-10-25: dono aprovou rumores (312), quests de lore (313) e arte dinamica (off ate o teste de consistencia de arte passar); mundo vivo on desde 24/10; Jev primary desde 18/10; 25/10 SPEC-316 early narration on (SPEC-320 landed, P2-2 gate satisfied); 26/10 SPEC-325 fases A e B on (gate R17 verde, D6); 26/10 arte dinâmica on (SPEC-326 smoke 8/8, price profiles publicados); 26/10 SPEC-325 fase C on; reforços (D) abandonados pelo dono; 26/10 SPEC-319 D1 RPG_TOKEN_STREAM on (shadow would_replace 1/25 = 4 % < 5 %); 26/10 SPEC-319 D2 RPG_LLM_HEDGE_MS 6000 (FAST) para §6.3; 26/10 SPEC-318 D4 RPG_ARCHIVE_POLICY lean (evals compare memory_context sem regressao); 27/10 SPEC-319 D2 dono desligou o hedge (RPG_LLM_HEDGE_MS 0: 0 disparos em 6000 ms)",
   "jev_router_mode": "primary",
   "owner_approved_primary": true,
   "npc_knowledge": "on",
@@ -21,7 +21,7 @@
     "RPG_COMBAT_OBJECTS": "on",
     "RPG_COMPANION_ORDERS": "on",
     "RPG_TOKEN_STREAM": "on",
-    "RPG_LLM_HEDGE_MS": "6000",
+    "RPG_LLM_HEDGE_MS": "0",
     "RPG_ARCHIVE_POLICY": "lean"
   }
 }

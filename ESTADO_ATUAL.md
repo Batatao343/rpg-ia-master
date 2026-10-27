@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-26
+# ESTADO_ATUAL — 2026-10-27
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,16 +8,16 @@
 
 ## Estado em 10 linhas
 
-- `main` = `5353ad8` (26/10) = **staging** (`RPG_ARCHIVE_POLICY=lean`, 318 D4) (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
+- staging = `0640bff` (27/10; preset: `lean`, stream `on`, hedge `0`) (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
 - **`done` (26/10):** 320–324 frontend (conferidos em 390/1440 no staging), 325 mecânicas (A não-letal/resistência, B fuga, C objetos/ordens `on`; D reforços **descartada pelo dono**), 326 arte dinâmica fiel a Valoria (`on` no staging).
-- **Latência `in-progress` (medição):** 316 + 318 + 319 → 1ª narração p50 3,1–4,4 s (era 11,1 s), 55 turnos sem erro; 316 falta 1 falha induzida. 317 rota NPC em shadow (n=3, espera tráfego real); `STATIC_FIRST` testado (cache 0,025→0,05, ganho pequeno → off). 319: **`RPG_TOKEN_STREAM=on` + hedge 6000 no staging**; após fix do `tail` (`9775ea1`): `replace` 0/35, TTFMC servidor p50 2,65 s; hedge 0 disparos (critério não atingido); p95 dominada por espera de 19–59 s no Vercel ANTES da função (3–6 de 15 turnos).
+- **Latência — A/B OFF×ON 27/10 (60 turnos, [doc](docs/spec316/staging-measure-2026-10-27.md)):** 1ª narração p50 8,2–11,4 s → 2,6 s, p95 15,5–26 → 9,8–11,8 s; narração completa 6,1 s; **turno inteiro (input libera) sem ganho** (p50 ~10 s nos dois). 319 `done` (hedge retirado pelo dono). 316 falta 1 falha induzida; 318 SMART/turno 0,59 (meta ≤ 0,45 não atingida); 317 R2 espera 200 decisões reais.
 - Staging: preset versionado `scripts/staging/staging_flags.json`; `wt.sh drop` agora remove a junção do node_modules.
 - Regras de máquina: e2e só `--workers=1` um arquivo por vez; nunca `uv run` direto em worktree; checar RAM (memória).
 
 ## Próximos 3 passos
 
-1. 319: §6.4 browser; decidir hedge (inócuo); investigar a espera pré-função do Vercel (cold start/fila, bundle 319 MB) — maior alavanca da p95 agora.
-2. 317: acumular 200 decisões shadow (tráfego real com vocativo a NPC); cold start do Vercel = nova spec de infra (bundle 319 MB, Hobby). 318: A/B feito (dia −6 s, viagem −3,5 s; NPC novo e `state` sem ganho); `compare` ok → `lean` no staging; falta medir SMART/turno com `lean` (≤ 0,45).
+1. Turno inteiro: input só libera no `state` (~10 s p50, igual ao OFF) — investigar o que segura o `state` após a narração (arquivista/commit no mesmo request) e o cold start do Vercel (bundle 319 MB, Hobby) → spec nova.
+2. 318: baixar SMART/turno (0,59 → ≤ 0,45); 316: 1 falha induzida no staging; 317: acumular 200 decisões shadow.
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
@@ -36,16 +36,18 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
-| Teto diário do staging (R$ 5) | estourou em 27/10 00:10 UTC pelas medições 316–319 (reabre ~24 h) | "sobe o teto p/ R$ X" → `--daily-cap-brl X`; senão medir `lean` (318) após o reset |
-| SPEC-319 hedge (D2) | decidir: hedge 6000 ms teve 0 disparos (a cauda vem depois do 1º token) | "desliga" → `RPG_LLM_HEDGE_MS` fora do preset, registrar e fechar 319 `done`; "mantém" → fechar com critério não atingido registrado |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
-## Decisões recentes (≤ 7 dias)
+## Decisões recentes (≤ 2 dias)
 
-Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_ATUAL.md`
+Gerado por `uv run python scripts/spec_index.py recent --days 2 --write ESTADO_ATUAL.md`
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
+- 2026-10-27 · SPEC-318 `in-progress` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
+- 2026-10-27 · SPEC-317 `in-progress` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
+- 2026-10-27 · SPEC-316 `in-progress` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 - 2026-10-26 · SPEC-326 `done` — Arte dinâmica consistente com Valoria (estética, lore e raça)
 - 2026-10-26 · SPEC-325 `done` — Ligar as mecânicas de conflito dormentes (fuga com escolhas, golpe não-letal, resistência revelada, objetos de cena, ordens a companheiro, reforços)
 - 2026-10-26 · SPEC-324 `done` — Front: a11y estrutural (headings) e atalhos de teclado
@@ -53,10 +55,8 @@ Gerado por `uv run python scripts/spec_index.py recent --days 7 --write ESTADO_A
 - 2026-10-26 · SPEC-322 `done` — Front: tokens de cor, contraste, raio, ícones e tipografia
 - 2026-10-26 · SPEC-321 `done` — Front: casca mobile, alvos de toque e safe-area
 - 2026-10-26 · SPEC-320 `done` — Front: espera do turno, typewriter e banner de erro
-- 2026-10-26 · SPEC-319 `in-progress` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
-- 2026-10-26 · SPEC-318 `in-progress` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
-- 2026-10-26 · SPEC-317 `in-progress` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
-- 2026-10-26 · SPEC-316 `in-progress` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
+- 2026-10-25 · SPEC-315 `done` — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
+- 2026-10-25 · SPEC-314 `done` — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
