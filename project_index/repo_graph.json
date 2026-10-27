@@ -1,5 +1,5 @@
 {
-  "commit_sha": "199c9c823ff94fab57170560727d93d4c44ebfc6",
+  "commit_sha": "a221fb475e224a854fe63377f597e106a7a1eb2d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -16616,7 +16616,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 912
+        "line": 916
       },
       "source": "file:tests/test_mecanica_orfa.py",
       "target": "file:services/reactions.py",
@@ -56139,7 +56139,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 203
+        "line": 210
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim._fight",
@@ -56150,7 +56150,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 114
+        "line": 121
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim._kind",
@@ -56161,7 +56161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 266
+        "line": 274
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.batch_fights",
@@ -56172,7 +56172,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 185
+        "line": 310
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim.build_arms",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 192
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.deck_env",
@@ -56183,7 +56194,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 256
+        "line": 264
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.encounters",
@@ -56194,7 +56205,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 198
+        "line": 205
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.fight",
@@ -56216,7 +56227,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 118
+        "line": 125
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.full_deck_decl",
@@ -56238,7 +56249,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 389
+        "line": 407
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.main",
@@ -56249,7 +56260,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 279
+        "line": 287
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.per_folego",
@@ -56260,7 +56271,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 249
+        "line": 257
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.pick",
@@ -56271,7 +56282,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 302
+        "line": 325
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -56282,7 +56293,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 367
+        "line": 385
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.simulate_protocolo_lote",
@@ -66237,7 +66248,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 339
+        "line": 363
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint._vigente",
@@ -66270,7 +66281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 299
+        "line": 323
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -66281,7 +66292,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 349
+        "line": 305
+      },
+      "source": "module:services.card_lint",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 373
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_names",
@@ -66303,7 +66325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 369
+        "line": 393
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -66347,7 +66369,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 485
+        "line": 510
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.errors",
@@ -66380,7 +66402,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 437
+        "line": 462
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_batch",
@@ -66391,7 +66413,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 413
+        "line": 437
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_card",
@@ -66402,7 +66424,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 456
+        "line": 481
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_wave",
@@ -108697,6 +108719,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 96
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo._lote2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 62
       },
       "source": "module:tests.test_card_acervo_reparo",
@@ -108763,7 +108796,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 109
+        "line": 113
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 104
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 137
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
@@ -110534,6 +110589,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_lint.py",
+        "line": 385
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
         "line": 194
       },
       "source": "module:tests.test_card_lint",
@@ -110593,6 +110659,17 @@
       },
       "source": "module:tests.test_card_lint",
       "target": "symbol:tests.test_card_lint.test_out_of_budget_is_error",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 399
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_pool_inteiro_sem_escala_inerte",
       "type": "defines"
     },
     {
@@ -111469,6 +111546,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim.py",
+        "line": 343
+      },
+      "source": "module:tests.test_card_sim",
+      "target": "symbol:tests.test_card_sim.test_bracos_diferem_so_na_carta_testada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim.py",
         "line": 242
       },
       "source": "module:tests.test_card_sim",
@@ -111517,6 +111605,17 @@
       },
       "source": "module:tests.test_card_sim",
       "target": "symbol:tests.test_card_sim.test_metrics_table_and_cut_rule",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim.py",
+        "line": 363
+      },
+      "source": "module:tests.test_card_sim",
+      "target": "symbol:tests.test_card_sim.test_ordem_do_baralho_nao_muda_a_luta",
       "type": "defines"
     },
     {
@@ -143028,7 +143127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 912
+        "line": 916
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "module:services.reactions",
@@ -143083,7 +143182,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 521
+        "line": 524
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -143094,7 +143193,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 483
+        "line": 486
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._condition_test",
@@ -143105,7 +143204,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 579
+        "line": 582
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._consequence_test",
@@ -143127,7 +143226,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 525
+        "line": 528
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._entropy_trigger_test",
@@ -143138,7 +143237,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 656
+        "line": 659
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._equipped",
@@ -143149,7 +143248,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 708
+        "line": 711
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._gatilho_test",
@@ -143160,7 +143259,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 615
+        "line": 618
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._item_by",
@@ -143171,7 +143270,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 621
+        "line": 624
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._item_effect_test",
@@ -143182,7 +143281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 665
+        "line": 668
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._item_passive_test",
@@ -143226,7 +143325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 435
+        "line": 438
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._reaction_test",
@@ -143237,7 +143336,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 865
+        "line": 869
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._reuse_test",
@@ -143259,7 +143358,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 542
+        "line": 545
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._special_rule_test",
@@ -143281,7 +143380,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 751
+        "line": 754
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._trait_test",
@@ -143303,7 +143402,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 847
+        "line": 851
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa._utility_test",
@@ -143325,7 +143424,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 943
+        "line": 947
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa.test_efeito_observavel",
@@ -143336,7 +143435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 934
+        "line": 938
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa.test_registro_nao_tem_teste_morto_de_chave_inexistente",
@@ -143347,7 +143446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 927
+        "line": 931
       },
       "source": "module:tests.test_mecanica_orfa",
       "target": "symbol:tests.test_mecanica_orfa.test_todo_kind_dos_dados_tem_teste_de_efeito",
@@ -257527,7 +257626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 232
+        "line": 240
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:scripts.cards.sim.full_deck_decl",
@@ -257538,7 +257637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 245
+        "line": 253
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.card_piles.begin_round",
@@ -257549,7 +257648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 221
+        "line": 229
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.card_piles.start_piles",
@@ -257560,7 +257659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 224
+        "line": 232
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -257571,7 +257670,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 233
+        "line": 241
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -257582,7 +257681,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 219
+        "line": 227
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.freeze",
@@ -257593,7 +257692,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 216
+        "line": 224
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.new_scene",
@@ -257604,7 +257703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 218
+        "line": 226
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.place",
@@ -257615,7 +257714,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 270
+        "line": 278
       },
       "source": "symbol:scripts.cards.sim.batch_fights",
       "target": "symbol:scripts.cards.sim.fight",
@@ -257626,7 +257725,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 262
+        "line": 318
+      },
+      "source": "symbol:scripts.cards.sim.build_arms",
+      "target": "symbol:scripts.cards.sim.full_deck",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 314
+      },
+      "source": "symbol:scripts.cards.sim.build_arms",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 270
       },
       "source": "symbol:scripts.cards.sim.encounters",
       "target": "symbol:scripts.cards.sim.pick",
@@ -257637,7 +257758,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 200
+        "line": 207
       },
       "source": "symbol:scripts.cards.sim.fight",
       "target": "symbol:scripts.cards.sim._fight",
@@ -257648,7 +257769,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 199
+        "line": 206
       },
       "source": "symbol:scripts.cards.sim.fight",
       "target": "symbol:scripts.cards.sim.deck_env",
@@ -257659,7 +257780,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 80
+        "line": 87
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.basicas_for_class",
@@ -257670,7 +257791,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 87
+        "line": 94
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.cards_for_class",
@@ -257681,32 +257802,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 105
+        "line": 112
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.get_card",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
-        "line": 161
-      },
-      "source": "symbol:scripts.cards.sim.full_deck_decl",
-      "target": "symbol:scripts.cards.sim._kind",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
-        "line": 165
-      },
-      "source": "symbol:scripts.cards.sim.full_deck_decl",
-      "target": "symbol:scripts.cards.sim._kind",
       "type": "calls"
     },
     {
@@ -257725,7 +257824,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 174
+        "line": 172
+      },
+      "source": "symbol:scripts.cards.sim.full_deck_decl",
+      "target": "symbol:scripts.cards.sim._kind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 175
+      },
+      "source": "symbol:scripts.cards.sim.full_deck_decl",
+      "target": "symbol:scripts.cards.sim._kind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 181
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim._kind",
@@ -257736,7 +257857,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 146
+        "line": 153
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.play",
@@ -257747,7 +257868,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 139
+        "line": 146
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.try_add",
@@ -257758,7 +257879,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 128
+        "line": 135
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.usable",
@@ -257769,7 +257890,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 140
+        "line": 147
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.card_piles.plan_plays",
@@ -257780,7 +257901,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 129
+        "line": 136
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.cards.get_card",
@@ -257791,7 +257912,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 178
+        "line": 185
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -257802,7 +257923,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 150
+        "line": 157
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -257813,7 +257934,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 177
+        "line": 184
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -257824,7 +257945,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 150
+        "line": 157
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.play",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -257835,7 +257956,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 140
+        "line": 147
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.try_add",
       "target": "symbol:services.card_piles.plan_plays",
@@ -257846,7 +257967,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 129
+        "line": 136
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.usable",
       "target": "symbol:services.cards.get_card",
@@ -257879,7 +258000,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 410
+        "line": 428
       },
       "source": "symbol:scripts.cards.sim.main",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -257890,7 +258011,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 408
+        "line": 426
       },
       "source": "symbol:scripts.cards.sim.main",
       "target": "symbol:scripts.cards.sim.simulate_protocolo_lote",
@@ -257901,7 +258022,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 287
+        "line": 295
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects._formula_avg",
@@ -257912,7 +258033,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 287
+        "line": 295
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.base_value",
@@ -257923,7 +258044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 281
+        "line": 289
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.custo_folego",
@@ -257934,7 +258055,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 284
+        "line": 292
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.gatilho",
@@ -257945,7 +258066,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 283
+        "line": 291
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.normalize",
@@ -257956,7 +258077,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 328
+        "line": 346
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim._kind",
@@ -257967,7 +258088,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 321
+        "line": 339
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.batch_fights",
@@ -257978,7 +258099,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 322
+        "line": 340
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.batch_fights",
@@ -257989,7 +258110,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 303
+        "line": 336
+      },
+      "source": "symbol:scripts.cards.sim.simulate_batch",
+      "target": "symbol:scripts.cards.sim.build_arms",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 326
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.encounters",
@@ -258000,29 +258132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 313
-      },
-      "source": "symbol:scripts.cards.sim.simulate_batch",
-      "target": "symbol:scripts.cards.sim.full_deck",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
-        "line": 314
-      },
-      "source": "symbol:scripts.cards.sim.simulate_batch",
-      "target": "symbol:scripts.cards.sim.full_deck",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
-        "line": 305
+        "line": 328
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.injected",
@@ -258033,7 +258143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 354
+        "line": 372
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.per_folego",
@@ -258044,7 +258154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 376
+        "line": 394
       },
       "source": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -258055,7 +258165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 370
+        "line": 388
       },
       "source": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "target": "symbol:services.cards._load_cards",
@@ -276612,7 +276722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 344
+        "line": 368
       },
       "source": "symbol:services.card_lint._vigente",
       "target": "symbol:services.card_effects.versao",
@@ -276645,7 +276755,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 322
+        "line": 346
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.base_value",
@@ -276656,7 +276766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 332
+        "line": 356
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -276667,7 +276777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 304
+        "line": 328
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.keywords",
@@ -276678,43 +276788,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 305
+        "line": 329
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.normalize",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 310
-      },
-      "source": "symbol:services.card_lint.check_color_pie",
-      "target": "symbol:services.card_lint.Issue",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 314
-      },
-      "source": "symbol:services.card_lint.check_color_pie",
-      "target": "symbol:services.card_lint.Issue",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 325
-      },
-      "source": "symbol:services.card_lint.check_color_pie",
-      "target": "symbol:services.card_lint.Issue",
       "type": "calls"
     },
     {
@@ -276733,7 +276810,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 300
+        "line": 338
+      },
+      "source": "symbol:services.card_lint.check_color_pie",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 349
+      },
+      "source": "symbol:services.card_lint.check_color_pie",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 358
+      },
+      "source": "symbol:services.card_lint.check_color_pie",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 324
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.roda",
@@ -276744,7 +276854,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 350
+        "line": 311
+      },
+      "source": "symbol:services.card_lint.check_escala_principal",
+      "target": "symbol:services.card_effects.gatilho",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 306
+      },
+      "source": "symbol:services.card_lint.check_escala_principal",
+      "target": "symbol:services.card_effects.primary_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 314
+      },
+      "source": "symbol:services.card_lint.check_escala_principal",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 374
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -276755,7 +276898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 362
+        "line": 386
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -276766,7 +276909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 353
+        "line": 377
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -276777,7 +276920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 358
+        "line": 382
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -276788,7 +276931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 355
+        "line": 379
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -276799,7 +276942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 364
+        "line": 388
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -276810,7 +276953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 351
+        "line": 375
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint._vigente",
@@ -276898,7 +277041,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 388
+        "line": 412
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -276909,7 +277052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 396
+        "line": 420
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -276920,7 +277063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 404
+        "line": 428
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -276931,7 +277074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 377
+        "line": 401
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint._vigente",
@@ -276942,7 +277085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 374
+        "line": 398
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -276953,7 +277096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 385
+        "line": 409
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -276964,7 +277107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 381
+        "line": 405
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.similarity",
@@ -277272,7 +277415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 452
+        "line": 477
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_effects.materialize",
@@ -277283,7 +277426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 449
+        "line": 474
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_lint.lint_card",
@@ -277294,7 +277437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 421
+        "line": 445
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_effects.materialize",
@@ -277305,7 +277448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 428
+        "line": 452
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_budget",
@@ -277316,7 +277459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 431
+        "line": 455
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -277327,7 +277470,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 432
+        "line": 456
+      },
+      "source": "symbol:services.card_lint.lint_card",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 457
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_names",
@@ -277338,7 +277492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 430
+        "line": 454
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_raridade",
@@ -277349,7 +277503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 433
+        "line": 458
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -277360,7 +277514,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 423
+        "line": 447
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_schema",
@@ -277371,7 +277525,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 426
+        "line": 450
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_vocabulary",
@@ -277382,7 +277536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 429
+        "line": 453
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_voice",
@@ -277393,7 +277547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 473
+        "line": 498
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -277404,7 +277558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 461
+        "line": 486
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.glossary",
@@ -277415,7 +277569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 466
+        "line": 491
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -277426,7 +277580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 476
+        "line": 501
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -360597,6 +360751,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_card_acervo_reparo._lote2",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 65
       },
       "source": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -360729,7 +360894,73 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 110
+        "line": 118
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.errors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 117
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.lint_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 114
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 115
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:tests.test_card_acervo_reparo._lote2",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 105
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
+      "target": "symbol:tests.test_card_acervo_reparo._lote2",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 138
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.load_pool",
@@ -360740,7 +360971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 127
+        "line": 155
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.similarity",
@@ -366020,6 +366251,50 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_lint.py",
+        "line": 389
+      },
+      "source": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 396
+      },
+      "source": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 388
+      },
+      "source": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 390
+      },
+      "source": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
         "line": 201
       },
       "source": "symbol:tests.test_card_lint.test_loader_ignores_drafts_and_reads_highest_version",
@@ -366211,6 +366486,39 @@
       },
       "source": "symbol:tests.test_card_lint.test_out_of_budget_is_error",
       "target": "symbol:tests.test_card_lint.codes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 403
+      },
+      "source": "symbol:tests.test_card_lint.test_pool_inteiro_sem_escala_inerte",
+      "target": "symbol:services.card_effects.materialize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 403
+      },
+      "source": "symbol:tests.test_card_lint.test_pool_inteiro_sem_escala_inerte",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 402
+      },
+      "source": "symbol:tests.test_card_lint.test_pool_inteiro_sem_escala_inerte",
+      "target": "symbol:services.card_lint.load_pool",
       "type": "calls"
     },
     {
@@ -368972,6 +369280,28 @@
       },
       "source": "symbol:tests.test_card_sim.sim",
       "target": "symbol:tests.test_card_sim._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim.py",
+        "line": 354
+      },
+      "source": "symbol:tests.test_card_sim.test_bracos_diferem_so_na_carta_testada",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim.py",
+        "line": 360
+      },
+      "source": "symbol:tests.test_card_sim.test_bracos_diferem_so_na_carta_testada",
+      "target": "symbol:services.cards.get_card",
       "type": "calls"
     },
     {
@@ -431998,7 +432328,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 408
+        "line": 411
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -432009,7 +432339,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 398
+        "line": 401
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432020,7 +432350,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 419
+        "line": 422
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432130,7 +432460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 397
+        "line": 390
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432163,7 +432493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 410
+        "line": 406
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432185,7 +432515,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 418
+        "line": 416
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432218,7 +432548,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 408
+        "line": 427
+      },
+      "source": "symbol:tests.test_mecanica_orfa._active_test",
+      "target": "symbol:tests.test_mecanica_orfa._play_active",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 411
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -432229,7 +432570,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 398
+        "line": 401
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432240,7 +432581,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 419
+        "line": 422
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432339,7 +432680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 397
+        "line": 390
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432372,7 +432713,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 410
+        "line": 406
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432394,7 +432735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 418
+        "line": 416
       },
       "source": "symbol:tests.test_mecanica_orfa._active_test.run",
       "target": "symbol:tests.test_mecanica_orfa._play_active",
@@ -432427,6 +432768,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
+        "line": 427
+      },
+      "source": "symbol:tests.test_mecanica_orfa._active_test.run",
+      "target": "symbol:tests.test_mecanica_orfa._play_active",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
         "line": 104
       },
       "source": "symbol:tests.test_mecanica_orfa._actor",
@@ -432438,7 +432790,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 522
+        "line": 525
       },
       "source": "symbol:tests.test_mecanica_orfa._class_player",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -432449,7 +432801,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 488
+        "line": 491
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -432460,7 +432812,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 487
+        "line": 490
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432471,7 +432823,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 489
+        "line": 492
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432482,7 +432834,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 509
+        "line": 512
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:combat_mechanics.has_control",
@@ -432493,7 +432845,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 485
+        "line": 488
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:combat_mechanics.parse_condition",
@@ -432504,7 +432856,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 493
+        "line": 496
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:services.conflict_orchestrator._tick_conditions_v4",
@@ -432515,7 +432867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 501
+        "line": 504
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -432526,7 +432878,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 503
+        "line": 506
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -432537,7 +432889,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 498
+        "line": 501
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:services.conflict_turn.resolve_turn",
@@ -432548,7 +432900,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 486
+        "line": 489
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -432559,7 +432911,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 500
+        "line": 503
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -432570,7 +432922,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 496
+        "line": 499
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:tests.test_mecanica_orfa._card_with",
@@ -432581,7 +432933,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 484
+        "line": 487
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:tests.test_mecanica_orfa._condition_test.run",
@@ -432592,7 +432944,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 499
+        "line": 502
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test",
       "target": "symbol:tests.test_mecanica_orfa._scene",
@@ -432603,7 +432955,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 488
+        "line": 491
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:combat_mechanics.apply_condition",
@@ -432614,7 +432966,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 487
+        "line": 490
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432625,7 +432977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 489
+        "line": 492
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432636,7 +432988,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 509
+        "line": 512
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:combat_mechanics.has_control",
@@ -432647,7 +432999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 485
+        "line": 488
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:combat_mechanics.parse_condition",
@@ -432658,7 +433010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 493
+        "line": 496
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:services.conflict_orchestrator._tick_conditions_v4",
@@ -432669,7 +433021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 501
+        "line": 504
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -432680,7 +433032,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 503
+        "line": 506
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -432691,7 +433043,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 498
+        "line": 501
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:services.conflict_turn.resolve_turn",
@@ -432702,7 +433054,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 486
+        "line": 489
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -432713,21 +433065,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 500
+        "line": 503
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 496
-      },
-      "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
-      "target": "symbol:tests.test_mecanica_orfa._card_with",
       "type": "calls"
     },
     {
@@ -432738,95 +433079,18 @@
         "line": 499
       },
       "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
+      "target": "symbol:tests.test_mecanica_orfa._card_with",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 502
+      },
+      "source": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "target": "symbol:tests.test_mecanica_orfa._scene",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 596
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:combat_mechanics.apply_scar",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 600
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:combat_mechanics.apply_transformacao",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 607
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:combat_mechanics.check_recidiva",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 608
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:combat_mechanics.combat_modifiers",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 604
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:combat_mechanics.dependencia_cost",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 584
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:tests.test_mecanica_orfa._class_player",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 585
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:tests.test_mecanica_orfa._class_player",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 595
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:tests.test_mecanica_orfa._class_player",
       "type": "calls"
     },
     {
@@ -432837,7 +433101,7 @@
         "line": 599
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test",
-      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "target": "symbol:combat_mechanics.apply_scar",
       "type": "calls"
     },
     {
@@ -432846,6 +433110,83 @@
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
         "line": 603
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:combat_mechanics.apply_transformacao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 610
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:combat_mechanics.check_recidiva",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 611
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 607
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:combat_mechanics.dependencia_cost",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 587
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 588
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 598
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 602
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432857,6 +433198,17 @@
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
         "line": 606
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test",
+      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 609
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432867,7 +433219,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 580
+        "line": 583
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test",
       "target": "symbol:tests.test_mecanica_orfa._consequence_test.run",
@@ -432878,7 +433230,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 596
+        "line": 599
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:combat_mechanics.apply_scar",
@@ -432889,7 +433241,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 600
+        "line": 603
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:combat_mechanics.apply_transformacao",
@@ -432900,7 +433252,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 607
+        "line": 610
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:combat_mechanics.check_recidiva",
@@ -432911,7 +433263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 608
+        "line": 611
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -432922,7 +433274,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 604
+        "line": 607
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:combat_mechanics.dependencia_cost",
@@ -432933,7 +433285,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 584
+        "line": 587
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432944,7 +433296,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 585
+        "line": 588
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432955,7 +433307,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 595
+        "line": 598
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432966,18 +433318,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 599
-      },
-      "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
-      "target": "symbol:tests.test_mecanica_orfa._class_player",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 603
+        "line": 602
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -432989,6 +433330,17 @@
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
         "line": 606
+      },
+      "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
+      "target": "symbol:tests.test_mecanica_orfa._class_player",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 609
       },
       "source": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -433043,7 +433395,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 536
+        "line": 539
       },
       "source": "symbol:tests.test_mecanica_orfa._entropy_trigger_test",
       "target": "symbol:combat_mechanics.apply_entropy_trigger",
@@ -433054,7 +433406,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 535
+        "line": 538
       },
       "source": "symbol:tests.test_mecanica_orfa._entropy_trigger_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -433065,7 +433417,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 534
+        "line": 537
       },
       "source": "symbol:tests.test_mecanica_orfa._entropy_trigger_test",
       "target": "symbol:tests.test_mecanica_orfa._entropy_trigger_test.run",
@@ -433076,7 +433428,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 536
+        "line": 539
       },
       "source": "symbol:tests.test_mecanica_orfa._entropy_trigger_test.run",
       "target": "symbol:combat_mechanics.apply_entropy_trigger",
@@ -433087,7 +433439,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 535
+        "line": 538
       },
       "source": "symbol:tests.test_mecanica_orfa._entropy_trigger_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -433098,7 +433450,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 657
+        "line": 660
       },
       "source": "symbol:tests.test_mecanica_orfa._equipped",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433109,7 +433461,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 711
+        "line": 714
       },
       "source": "symbol:tests.test_mecanica_orfa._gatilho_test",
       "target": "symbol:tests.test_mecanica_orfa._gatilho_test.run",
@@ -433120,7 +433472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 641
+        "line": 644
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433131,7 +433483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 649
+        "line": 652
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433142,7 +433494,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 636
+        "line": 639
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433153,7 +433505,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 637
+        "line": 640
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433164,7 +433516,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 625
+        "line": 628
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:tests.test_mecanica_orfa._item_by",
@@ -433175,7 +433527,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 622
+        "line": 625
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "target": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
@@ -433186,7 +433538,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 641
+        "line": 644
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433197,7 +433549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 649
+        "line": 652
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433208,7 +433560,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 636
+        "line": 639
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433219,7 +433571,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 637
+        "line": 640
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433230,21 +433582,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 625
+        "line": 628
       },
       "source": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "target": "symbol:tests.test_mecanica_orfa._item_by",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 681
-      },
-      "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
-      "target": "symbol:combat_mechanics.combat_modifiers",
       "type": "calls"
     },
     {
@@ -433263,7 +433604,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 686
+        "line": 687
+      },
+      "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 689
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:combat_mechanics.damage_type_bonus",
@@ -433274,7 +433626,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 700
+        "line": 703
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -433285,7 +433637,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 701
+        "line": 704
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -433296,7 +433648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 678
+        "line": 681
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433307,7 +433659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 679
+        "line": 682
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:tests.test_mecanica_orfa._equipped",
@@ -433318,7 +433670,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 683
+        "line": 686
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:tests.test_mecanica_orfa._equipped",
@@ -433329,7 +433681,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 667
+        "line": 670
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:tests.test_mecanica_orfa._item_by",
@@ -433340,22 +433692,11 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 666
+        "line": 669
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "target": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 681
-      },
-      "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
-      "target": "symbol:combat_mechanics.combat_modifiers",
-      "type": "calls"
     },
     {
       "confidence": "static_best_effort",
@@ -433373,7 +433714,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 686
+        "line": 687
+      },
+      "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
+      "target": "symbol:combat_mechanics.combat_modifiers",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 689
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:combat_mechanics.damage_type_bonus",
@@ -433384,7 +433736,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 700
+        "line": 703
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -433395,7 +433747,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 701
+        "line": 704
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:combat_mechanics.is_condition_resisted",
@@ -433406,7 +433758,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 678
+        "line": 681
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433417,7 +433769,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 679
+        "line": 682
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:tests.test_mecanica_orfa._equipped",
@@ -433428,7 +433780,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 683
+        "line": 686
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:tests.test_mecanica_orfa._equipped",
@@ -433439,7 +433791,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 667
+        "line": 670
       },
       "source": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "target": "symbol:tests.test_mecanica_orfa._item_by",
@@ -433692,7 +434044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 452
+        "line": 455
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433703,7 +434055,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 470
+        "line": 473
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433714,21 +434066,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 457
+        "line": 460
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:services.conflict_orchestrator._resolve_reaction_effect",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 440
-      },
-      "source": "symbol:tests.test_mecanica_orfa._reaction_test",
-      "target": "symbol:tests.test_mecanica_orfa._actor",
       "type": "calls"
     },
     {
@@ -433747,7 +434088,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 437
+        "line": 446
+      },
+      "source": "symbol:tests.test_mecanica_orfa._reaction_test",
+      "target": "symbol:tests.test_mecanica_orfa._actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 440
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:tests.test_mecanica_orfa._card_with",
@@ -433758,7 +434110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 436
+        "line": 439
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:tests.test_mecanica_orfa._reaction_test.run",
@@ -433769,7 +434121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 448
+        "line": 451
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test",
       "target": "symbol:tests.test_mecanica_orfa._scene",
@@ -433780,7 +434132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 452
+        "line": 455
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433791,7 +434143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 470
+        "line": 473
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -433802,21 +434154,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 457
+        "line": 460
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "target": "symbol:services.conflict_orchestrator._resolve_reaction_effect",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_mecanica_orfa.py",
-        "line": 440
-      },
-      "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
-      "target": "symbol:tests.test_mecanica_orfa._actor",
       "type": "calls"
     },
     {
@@ -433835,7 +434176,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 437
+        "line": 446
+      },
+      "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
+      "target": "symbol:tests.test_mecanica_orfa._actor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_mecanica_orfa.py",
+        "line": 440
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "target": "symbol:tests.test_mecanica_orfa._card_with",
@@ -433846,7 +434198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 448
+        "line": 451
       },
       "source": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "target": "symbol:tests.test_mecanica_orfa._scene",
@@ -433857,7 +434209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 866
+        "line": 870
       },
       "source": "symbol:tests.test_mecanica_orfa._reuse_test",
       "target": "symbol:tests.test_mecanica_orfa._reuse_test.run",
@@ -433901,7 +434253,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 548
+        "line": 551
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.apply_blood_leak",
@@ -433912,7 +434264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 552
+        "line": 555
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.arm_boiler",
@@ -433923,7 +434275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 570
+        "line": 573
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -433934,7 +434286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 571
+        "line": 574
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -433945,7 +434297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 561
+        "line": 564
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.reduce_ally_abyss",
@@ -433956,7 +434308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 545
+        "line": 548
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.taunt_aggro_multiplier",
@@ -433967,7 +434319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 556
+        "line": 559
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:combat_mechanics.tick_boiler",
@@ -433978,7 +434330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 560
+        "line": 563
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -433989,7 +434341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 545
+        "line": 548
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434000,7 +434352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 547
+        "line": 550
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434011,7 +434363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 551
+        "line": 554
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434022,7 +434374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 559
+        "line": 562
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434033,7 +434385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 570
+        "line": 573
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434044,7 +434396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 571
+        "line": 574
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434055,7 +434407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 543
+        "line": 546
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "target": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
@@ -434066,7 +434418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 548
+        "line": 551
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.apply_blood_leak",
@@ -434077,7 +434429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 552
+        "line": 555
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.arm_boiler",
@@ -434088,7 +434440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 570
+        "line": 573
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -434099,7 +434451,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 571
+        "line": 574
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.entropy_config",
@@ -434110,7 +434462,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 561
+        "line": 564
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.reduce_ally_abyss",
@@ -434121,7 +434473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 545
+        "line": 548
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.taunt_aggro_multiplier",
@@ -434132,7 +434484,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 556
+        "line": 559
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:combat_mechanics.tick_boiler",
@@ -434143,7 +434495,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 560
+        "line": 563
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._actor",
@@ -434154,7 +434506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 545
+        "line": 548
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434165,7 +434517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 547
+        "line": 550
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434176,7 +434528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 551
+        "line": 554
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434187,7 +434539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 559
+        "line": 562
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434198,7 +434550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 570
+        "line": 573
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434209,7 +434561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 571
+        "line": 574
       },
       "source": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "target": "symbol:tests.test_mecanica_orfa._class_player",
@@ -434385,7 +434737,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 752
+        "line": 755
       },
       "source": "symbol:tests.test_mecanica_orfa._trait_test",
       "target": "symbol:tests.test_mecanica_orfa._trait_test.run",
@@ -434737,7 +435089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 935
+        "line": 939
       },
       "source": "symbol:tests.test_mecanica_orfa.test_registro_nao_tem_teste_morto_de_chave_inexistente",
       "target": "symbol:tests.test_mecanica_orfa.inventory",
@@ -434748,7 +435100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_mecanica_orfa.py",
-        "line": 928
+        "line": 932
       },
       "source": "symbol:tests.test_mecanica_orfa.test_todo_kind_dos_dados_tem_teste_de_efeito",
       "target": "symbol:tests.test_mecanica_orfa.inventory",
@@ -610775,42 +611127,49 @@
     {
       "id": "symbol:scripts.cards.sim._fight",
       "kind": "function",
-      "line": 203,
+      "line": 210,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim._fight"
     },
     {
       "id": "symbol:scripts.cards.sim._kind",
       "kind": "function",
-      "line": 114,
+      "line": 121,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim._kind"
     },
     {
       "id": "symbol:scripts.cards.sim.batch_fights",
       "kind": "function",
-      "line": 266,
+      "line": 274,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.batch_fights"
     },
     {
+      "id": "symbol:scripts.cards.sim.build_arms",
+      "kind": "function",
+      "line": 310,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim.build_arms"
+    },
+    {
       "id": "symbol:scripts.cards.sim.deck_env",
       "kind": "function",
-      "line": 185,
+      "line": 192,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.deck_env"
     },
     {
       "id": "symbol:scripts.cards.sim.encounters",
       "kind": "function",
-      "line": 256,
+      "line": 264,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.encounters"
     },
     {
       "id": "symbol:scripts.cards.sim.fight",
       "kind": "function",
-      "line": 198,
+      "line": 205,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.fight"
     },
@@ -610824,28 +611183,28 @@
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl",
       "kind": "function",
-      "line": 118,
+      "line": 125,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.play",
       "kind": "function",
-      "line": 146,
+      "line": 153,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.play"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.try_add",
       "kind": "function",
-      "line": 139,
+      "line": 146,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.try_add"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.usable",
       "kind": "function",
-      "line": 128,
+      "line": 135,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.usable"
     },
@@ -610859,35 +611218,35 @@
     {
       "id": "symbol:scripts.cards.sim.main",
       "kind": "function",
-      "line": 389,
+      "line": 407,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.main"
     },
     {
       "id": "symbol:scripts.cards.sim.per_folego",
       "kind": "function",
-      "line": 279,
+      "line": 287,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.per_folego"
     },
     {
       "id": "symbol:scripts.cards.sim.pick",
       "kind": "function",
-      "line": 249,
+      "line": 257,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.pick"
     },
     {
       "id": "symbol:scripts.cards.sim.simulate_batch",
       "kind": "function",
-      "line": 302,
+      "line": 325,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.simulate_batch"
     },
     {
       "id": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "kind": "function",
-      "line": 367,
+      "line": 385,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.simulate_protocolo_lote"
     },
@@ -616872,7 +617231,7 @@
     {
       "id": "symbol:services.card_lint._vigente",
       "kind": "function",
-      "line": 339,
+      "line": 363,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint._vigente"
     },
@@ -616893,14 +617252,21 @@
     {
       "id": "symbol:services.card_lint.check_color_pie",
       "kind": "function",
-      "line": 299,
+      "line": 323,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_color_pie"
     },
     {
+      "id": "symbol:services.card_lint.check_escala_principal",
+      "kind": "function",
+      "line": 305,
+      "path": "services/card_lint.py",
+      "qualified_name": "services.card_lint.check_escala_principal"
+    },
+    {
       "id": "symbol:services.card_lint.check_names",
       "kind": "function",
-      "line": 349,
+      "line": 373,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_names"
     },
@@ -616914,7 +617280,7 @@
     {
       "id": "symbol:services.card_lint.check_redundancy",
       "kind": "function",
-      "line": 369,
+      "line": 393,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_redundancy"
     },
@@ -616942,7 +617308,7 @@
     {
       "id": "symbol:services.card_lint.errors",
       "kind": "function",
-      "line": 485,
+      "line": 510,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.errors"
     },
@@ -616963,21 +617329,21 @@
     {
       "id": "symbol:services.card_lint.lint_batch",
       "kind": "function",
-      "line": 437,
+      "line": 462,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_batch"
     },
     {
       "id": "symbol:services.card_lint.lint_card",
       "kind": "function",
-      "line": 413,
+      "line": 437,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_card"
     },
     {
       "id": "symbol:services.card_lint.lint_wave",
       "kind": "function",
-      "line": 456,
+      "line": 481,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_wave"
     },
@@ -644541,6 +644907,13 @@
       "qualified_name": "tests.test_card_acervo_reparo._legacy"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo._lote2",
+      "kind": "test",
+      "line": 96,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo._lote2"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo._onda1",
       "kind": "test",
       "line": 62,
@@ -644583,9 +644956,23 @@
       "qualified_name": "tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "kind": "test",
+      "line": 113,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
+      "kind": "test",
+      "line": 104,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "kind": "test",
-      "line": 109,
+      "line": 137,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem"
     },
@@ -645598,6 +645985,13 @@
       "qualified_name": "tests.test_card_lint.test_duplicate_detected_by_signature_and_momento"
     },
     {
+      "id": "symbol:tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada",
+      "kind": "test",
+      "line": 385,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_escala_no_efeito_principal_de_dano_e_recusada"
+    },
+    {
       "id": "symbol:tests.test_card_lint.test_loader_ignores_drafts_and_reads_highest_version",
       "kind": "test",
       "line": 194,
@@ -645638,6 +646032,13 @@
       "line": 127,
       "path": "tests/test_card_lint.py",
       "qualified_name": "tests.test_card_lint.test_out_of_budget_is_error"
+    },
+    {
+      "id": "symbol:tests.test_card_lint.test_pool_inteiro_sem_escala_inerte",
+      "kind": "test",
+      "line": 399,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_pool_inteiro_sem_escala_inerte"
     },
     {
       "id": "symbol:tests.test_card_lint.test_promote_refuses_existing_id",
@@ -646165,6 +646566,13 @@
       "qualified_name": "tests.test_card_sim.sim"
     },
     {
+      "id": "symbol:tests.test_card_sim.test_bracos_diferem_so_na_carta_testada",
+      "kind": "test",
+      "line": 343,
+      "path": "tests/test_card_sim.py",
+      "qualified_name": "tests.test_card_sim.test_bracos_diferem_so_na_carta_testada"
+    },
+    {
       "id": "symbol:tests.test_card_sim.test_card_events_are_emitted",
       "kind": "test",
       "line": 242,
@@ -646198,6 +646606,13 @@
       "line": 211,
       "path": "tests/test_card_sim.py",
       "qualified_name": "tests.test_card_sim.test_metrics_table_and_cut_rule"
+    },
+    {
+      "id": "symbol:tests.test_card_sim.test_ordem_do_baralho_nao_muda_a_luta",
+      "kind": "test",
+      "line": 363,
+      "path": "tests/test_card_sim.py",
+      "qualified_name": "tests.test_card_sim.test_ordem_do_baralho_nao_muda_a_luta"
     },
     {
       "id": "symbol:tests.test_card_sim.test_painel_counts_cards",
@@ -665753,35 +666168,35 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._class_player",
       "kind": "test",
-      "line": 521,
+      "line": 524,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._class_player"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._condition_test",
       "kind": "test",
-      "line": 483,
+      "line": 486,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._condition_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._condition_test.run",
       "kind": "test",
-      "line": 484,
+      "line": 487,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._condition_test.run"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._consequence_test",
       "kind": "test",
-      "line": 579,
+      "line": 582,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._consequence_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._consequence_test.run",
       "kind": "test",
-      "line": 580,
+      "line": 583,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._consequence_test.run"
     },
@@ -665795,70 +666210,70 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._entropy_trigger_test",
       "kind": "test",
-      "line": 525,
+      "line": 528,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._entropy_trigger_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._entropy_trigger_test.run",
       "kind": "test",
-      "line": 534,
+      "line": 537,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._entropy_trigger_test.run"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._equipped",
       "kind": "test",
-      "line": 656,
+      "line": 659,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._equipped"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._gatilho_test",
       "kind": "test",
-      "line": 708,
+      "line": 711,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._gatilho_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._gatilho_test.run",
       "kind": "test",
-      "line": 711,
+      "line": 714,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._gatilho_test.run"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._item_by",
       "kind": "test",
-      "line": 615,
+      "line": 618,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._item_by"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._item_effect_test",
       "kind": "test",
-      "line": 621,
+      "line": 624,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._item_effect_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._item_effect_test.run",
       "kind": "test",
-      "line": 622,
+      "line": 625,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._item_effect_test.run"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._item_passive_test",
       "kind": "test",
-      "line": 665,
+      "line": 668,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._item_passive_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._item_passive_test.run",
       "kind": "test",
-      "line": 666,
+      "line": 669,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._item_passive_test.run"
     },
@@ -665900,28 +666315,28 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._reaction_test",
       "kind": "test",
-      "line": 435,
+      "line": 438,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._reaction_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._reaction_test.run",
       "kind": "test",
-      "line": 436,
+      "line": 439,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._reaction_test.run"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._reuse_test",
       "kind": "test",
-      "line": 865,
+      "line": 869,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._reuse_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._reuse_test.run",
       "kind": "test",
-      "line": 866,
+      "line": 870,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._reuse_test.run"
     },
@@ -665935,14 +666350,14 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._special_rule_test",
       "kind": "test",
-      "line": 542,
+      "line": 545,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._special_rule_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._special_rule_test.run",
       "kind": "test",
-      "line": 543,
+      "line": 546,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._special_rule_test.run"
     },
@@ -665956,14 +666371,14 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._trait_test",
       "kind": "test",
-      "line": 751,
+      "line": 754,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._trait_test"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa._trait_test.run",
       "kind": "test",
-      "line": 752,
+      "line": 755,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._trait_test.run"
     },
@@ -665984,7 +666399,7 @@
     {
       "id": "symbol:tests.test_mecanica_orfa._utility_test",
       "kind": "test",
-      "line": 847,
+      "line": 851,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa._utility_test"
     },
@@ -666005,21 +666420,21 @@
     {
       "id": "symbol:tests.test_mecanica_orfa.test_efeito_observavel",
       "kind": "test",
-      "line": 943,
+      "line": 947,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa.test_efeito_observavel"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa.test_registro_nao_tem_teste_morto_de_chave_inexistente",
       "kind": "test",
-      "line": 934,
+      "line": 938,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa.test_registro_nao_tem_teste_morto_de_chave_inexistente"
     },
     {
       "id": "symbol:tests.test_mecanica_orfa.test_todo_kind_dos_dados_tem_teste_de_efeito",
       "kind": "test",
-      "line": 927,
+      "line": 931,
       "path": "tests/test_mecanica_orfa.py",
       "qualified_name": "tests.test_mecanica_orfa.test_todo_kind_dos_dados_tem_teste_de_efeito"
     },
@@ -701396,5 +701811,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:72eac28c7d4093ee889373678653c434605d67977fee8b6fd6208fea45fea28b"
+  "source_tree_hash": "sha256:4acfd017b4db326440b89eb0b67cef5e496ec776bbff2639a827ef27beca44c3"
 }
