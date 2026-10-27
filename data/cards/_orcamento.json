@@ -12,7 +12,9 @@
   },
   "tipos_isentos": [
     "utilitaria",
-    "virtude"
+    "virtude",
+    "status",
+    "maldicao"
   ],
   "pesos": {
     "kind": {

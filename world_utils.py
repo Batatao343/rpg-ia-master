@@ -317,6 +317,9 @@ def apply_rest(player: dict, world: dict, allies: list = None) -> tuple[dict, di
         from services import cards
 
         cards.reset_card_usage({"player": player}, "descanso_longo")
+        from services import card_rewards
+
+        card_rewards.on_long_rest(player)  # SPEC-333 R4: 1 carga de Esquecer (flag != off)
         from services import death_flow
 
         recovery_state = death_flow.post_combat_consciousness(player)

@@ -372,6 +372,9 @@ def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dic
         scar = _fallback_scar(participant)
     participant.setdefault("scars", []).append(scar)
     participant["scar_pending"] = False
+    from services import card_rewards
+
+    card_rewards.register_scar_curse(participant, scar)  # SPEC-333 R8 (flag `off` = no-op)
     return scar
 
 

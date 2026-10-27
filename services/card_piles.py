@@ -101,7 +101,8 @@ def _starting_deck_ids(player: dict) -> list[str]:
     pad = (basics["golpe"] + basics["guarda"])[:1]
     while pad and len(deck) < cards.DECK_MIN:
         deck.append(pad[0])
-    return deck[: cards.DECK_MAX]
+    curses = cards.scar_curse_ids(player)  # SPEC-333 R8: Cicatrizes ja registradas entram juntas
+    return deck[: max(0, cards.DECK_MAX - len(curses))] + curses
 
 
 def activate_deck(player: dict) -> None:
@@ -186,7 +187,7 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
         "pacto_carga": False,
     }
     _rng(piles, rng).shuffle(piles["compra"])
-    draw(piles, MAO_BASE, rng)
+    piles["comprou"] = draw(piles, MAO_BASE, rng)  # SPEC-333: o que chegou a mao nesta compra
     return piles
 
 
@@ -237,7 +238,7 @@ def discard_hand(piles: dict) -> list[str]:
 def begin_round(piles: dict, rng: random.Random | None = None) -> dict:
     """Inicio de rodada do jogador (R5): descarta, compra ate `MAO_BASE`, Folego cheio."""
     discard_hand(piles)
-    draw(piles, MAO_BASE - len(piles["mao"]), rng)
+    piles["comprou"] = draw(piles, MAO_BASE - len(piles["mao"]), rng)
     piles["folego"] = min(FOLEGO_MAX, FOLEGO_BASE + int(piles.get("folego_bonus", 0) or 0))
     piles["folego_cheio"] = piles["folego"]  # teto efetivo desta rodada (base + bonus)
     piles["folego_bonus"] = 0

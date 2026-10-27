@@ -46,6 +46,8 @@ ART = "7f1c1c0e-5d0e-4e0e-9a3e-0b0e0e0e0e0e"
         ("POST", "/game/equip", "mutation"),
         ("POST", "/game/levelup", "mutation"),
         ("POST", "/game/cards/prepare", "mutation"),
+        ("POST", "/game/espolio", "mutation"),
+        ("POST", "/game/forja", "mutation"),
         ("DELETE", f"/game/save/{GAME}", "mutation"),
         ("POST", f"/game/{GAME}/art/{ART}/quality", "mutation"),
         ("POST", "/account/checkout", "payments"),

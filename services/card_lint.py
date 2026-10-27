@@ -25,7 +25,8 @@ PATAMARES = frozenset(
     {"inicial", "avancado", "superior", "epico_i", "epico_ii", "lendario", "mitico", "apice"}
 )
 FREQUENCIAS = frozenset({"livre", "turno", "cena", "descanso_curto", "descanso_longo"})
-TIPOS = frozenset({"ativa", "passiva", "utilitaria", "reacao", "virtude"})
+TIPOS = frozenset({"ativa", "passiva", "utilitaria", "reacao", "virtude", "status", "maldicao"})
+_SEM_EFEITO_OK = frozenset({"status"})  # SPEC-333: efeito = `ao_comprar_status` (card_status.py)
 RARIDADES = frozenset({"comum", "incomum", "rara", "abissal"})
 OBRIGATORIOS = ("id", "name", "tipo", "classe", "patamar", "frequencia", "descricao", "tier")
 
@@ -199,7 +200,7 @@ def check_schema(card: dict, *, exigir_momento: bool = True) -> list[Issue]:
     for key in OBRIGATORIOS:
         if card.get(key) in (None, ""):
             out.append(Issue("error", "schema", f"campo obrigatório ausente: {key}"))
-    if not (card.get("efeitos") or card.get("efeito")):
+    if not (card.get("efeitos") or card.get("efeito") or card.get("tipo") in _SEM_EFEITO_OK):
         out.append(Issue("error", "schema", "sem efeitos"))
     if card.get("tipo") not in TIPOS:
         out.append(Issue("error", "schema", f"tipo inválido: {card.get('tipo')!r}"))

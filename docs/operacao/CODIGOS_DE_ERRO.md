@@ -25,6 +25,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `captcha_invalid` | Captcha recusado. |
 | `captcha_required` | Captcha obrigatório. |
 | `captcha_unavailable` | Provedor de captcha indisponível. |
+| `card_rewards_off` | Espólio/Forja de Cartas desligados neste ambiente (409). |
 | `chronicle_query_invalid` | Busca da crônica inválida. |
 | `credentials_invalid` | E-mail/senha incorretos. |
 | `cron_not_configured` | Segredo do cron ausente (fail closed). |
@@ -35,6 +36,8 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `email_not_confirmed` | E-mail ainda não confirmado. |
 | `equip_rejected` | Regra de inventário recusou o equipamento. |
 | `equip_request_invalid` | Pedido de equipar/desequipar incompleto. |
+| `espolio_rejected` | Regra do espólio de Cartas recusou a escolha. |
+| `forja_rejected` | Regra da Forja do baralho recusou a ação. |
 | `game_archived` | Save arquivado por migração de sistema. |
 | `game_id_invalid` | game_id não é UUID. |
 | `game_not_found` | Jogo inexistente ou de outro owner. |

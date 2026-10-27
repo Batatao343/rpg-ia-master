@@ -89,6 +89,35 @@
   border-radius: var(--r-sm); color: var(--muted); font-size: 0.9rem;
 }
 
+/* SPEC-333: espólio de Cartas (pós-conflito) e Forja do baralho (fora de encontro). */
+.espolio, .forja {
+  display: grid; gap: 0.7rem; padding: 0.9rem 1rem; border: 1px solid var(--line);
+  border-radius: var(--r-md); background: var(--surface-2); min-width: 0;
+}
+.espolio__title, .forja__title { margin: 0; font-size: 1.1rem; color: var(--accent); }
+.espolio__lead, .forja__hint, .forja__why { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.espolio__offers { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.espolio__card { display: grid; gap: 0.4rem; align-content: start; padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface); }
+.espolio__card--rara { border-color: var(--accent); }
+.espolio__card--abissal { border-color: var(--abyss); }
+.espolio__top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+.espolio__top h3 { margin: 0; color: var(--ink); font: 0.95rem var(--label); letter-spacing: 0.04em; }
+.espolio__rarity { color: var(--faint); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.espolio__cost, .espolio__rules, .espolio__flavor { margin: 0; font-size: 0.88rem; }
+.espolio__cost { color: var(--muted); }
+.espolio__flavor { color: var(--muted); font-style: italic; }
+.espolio__refuse { justify-self: start; }
+.espolio__msg, .forja__msg { margin: 0; min-height: 1.2em; color: var(--muted); font-size: 0.88rem; }
+.forja__deck { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.forja__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 0.8rem; }
+.forja__name { color: var(--ink); }
+.forja__actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.forja__curse { color: var(--abyss-text); font-size: 0.85rem; }
+.forja__sharpen, .forja__scars { display: grid; gap: 0.4rem; }
+.forja h3 { margin: 0; font-size: 0.95rem; color: var(--accent); }
+
 @media (max-width: 480px) {
   .ws-bar { padding: 0.3rem 0.55rem; }
   .ws-bar__status { font-size: 0.75rem; }

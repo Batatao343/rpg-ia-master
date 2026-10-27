@@ -6,6 +6,9 @@ import { CardHand } from "../../components/CardHand";
 import { DeckCombat } from "../../components/combat/DeckCombat";
 import { ReactionPrompt } from "../../components/ReactionPrompt";
 import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
+import { EspolioPanel } from "../../components/combat/EspolioPanel";
+import { ForjaPanel } from "../../components/combat/ForjaPanel";
+import { forgeHasContent, type RewardSender } from "../../cardRewards";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
 import { Arena, buildParticipants } from "../../combat/Arena";
 import { CardTooltip } from "../../combat/CardTooltip";
@@ -44,7 +47,7 @@ const SPARE_TEXT = "Sem matar.";
 /** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
 const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
 const SACRIFICE_TEXT = "Aceito o sacrifício.";
-export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onOpenLevelUp, dismissedResult, onDismissResult }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onOpenLevelUp, dismissedResult, onDismissResult }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -58,6 +61,8 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   onAction: (text: string, options?: ActionOptions) => void;
   /** SPEC-209: preparar Cartas fora de encontro; devolve a mensagem de erro (ou null). */
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  /** SPEC-333: espólio de Cartas e Forja do baralho (só quando a API trouxer os blocos). */
+  onCardReward?: RewardSender;
   onOpenLevelUp?: () => void;
   /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
   dismissedResult?: string | null;
@@ -90,6 +95,8 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const basics = combat ? (combat.basic_actions ?? legacyBasics(enemies.map((e) => e.id))) : [];
   const activeCards = cards.filter((c) => c.type === "ativa");
   const deckMode = !!combat?.pilhas; // SPEC-334: sem `pilhas` (flag off) a UI atual segue idêntica
+  const espolio = data?.player_stats?.espolio_pendente; // SPEC-333: só com RPG_CARD_REWARDS=on
+  const forja = data?.player_stats?.forja;
 
   const state = targeting.state;
   const aimingCard: CardView | undefined = state.phase === "aiming" && state.source.kind === "card"
@@ -207,6 +214,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
           onContinue={() => dismissResult(combatResult.result_event_id)} />
       )}
+      {!fighting && onCardReward && espolio && (
+        <EspolioPanel espolio={espolio} busy={busy} onChoose={onCardReward} />
+      )}
       {!fighting && ended && (
         <p className="ws-combat__ended" role="note">Combate encerrado — o desfecho está na narrativa.</p>
       )}
@@ -300,6 +310,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
       )}
       {!fighting && !data?.combat_simulation?.enabled && (
         <CombatDeckTab stats={data?.player_stats} busy={busy} onPrepare={onPrepareCards} onOpenLevelUp={onOpenLevelUp} />
+      )}
+      {!fighting && !data?.combat_simulation?.enabled && onCardReward && forgeHasContent(forja) && (
+        <ForjaPanel forja={forja} cards={data?.player_stats?.cards ?? []} busy={busy} onForge={onCardReward} />
       )}
       <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} />
     </div>

@@ -21,7 +21,7 @@ from collections import Counter, defaultdict, deque
 from contextlib import contextmanager, nullcontext
 from copy import deepcopy
 from typing import Annotated, Any, Dict, List, Literal, Optional
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.exceptions import RequestValidationError
@@ -1970,6 +1970,25 @@ class PrepareCardsRequest(BaseModel):
     action_id: str | None = Field(default=None, max_length=36)
 
 
+class EspolioRequest(BaseModel):
+    """SPEC-333 R1: escolhe 1 Carta do espólio pós-conflito ou recusa (`card_id` vazio)."""
+
+    game_id: str | None = None
+    card_id: str | None = Field(default=None, max_length=80)
+    action_id: str | None = Field(default=None, max_length=36)
+
+
+class ForjaRequest(BaseModel):
+    """SPEC-333 R4/R5/R8: ações de forja fora de combate (validação 100% Python)."""
+
+    game_id: str | None = None
+    acao: Literal["esquecer", "afiar", "purgar"]
+    card_id: str | None = Field(default=None, max_length=80)
+    scar_id: str | None = Field(default=None, max_length=80)
+    via: Literal["descanso", "templo", "medico"] | None = None
+    action_id: str | None = Field(default=None, max_length=36)
+
+
 class LevelUpRequest(BaseModel):
     """Conflito v2: consome escolha de Carta/evolução ou de Virtude."""
 
@@ -2232,6 +2251,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             "xp_next_level": progression.xp_to_next(int(player.get("level", 1) or 1)),
             "pending_choices": player.get("pending_choices", []) or [],
             "level_up": _levelup_block(player),
+            **_card_reward_blocks(state),  # SPEC-333: so existem com RPG_CARD_REWARDS=on
         },
         inventory=_inventory_block(state["player"]),
         current_location=state["world"]["current_location"],
@@ -2367,6 +2387,22 @@ def _abyss_tier_view(player: dict) -> str:
         # SPEC-235 R8: sem Carga não há o que ocultar — chip some até acumular.
         return "?" if int(player.get("abyss_charge", 0) or 0) > 0 else "nenhum"
     return _cm.abyss_tier(player)
+
+
+def _card_reward_blocks(state: dict) -> dict[str, Any]:
+    """SPEC-333: blocos `espolio_pendente` (painel pos-conflito) e `forja` (aba Combate fora
+    de encontro). Vazio com a flag `off`/sem o que mostrar: o contrato antigo nao muda."""
+    from services import card_rewards
+
+    out: dict[str, Any] = {}
+    player = state.get("player") or {}
+    pending = card_rewards.public_pending(player)
+    if pending is not None:
+        out["espolio_pendente"] = pending
+    forge = card_rewards.public_forge(state)
+    if forge is not None:
+        out["forja"] = forge
+    return out
 
 
 def _can_reorganize_view(state: dict) -> dict[str, Any]:
@@ -7039,6 +7075,100 @@ def game_cards_prepare(req: PrepareCardsRequest):
                 claim=claim,
                 request_hash=request_hash,
             )
+
+
+def _card_reward_mutation(
+    game_id: str | None,
+    action_id: str | None,
+    payload: dict,
+    apply: Callable[[dict], dict],
+    reject_code: str,
+) -> Any:
+    """SPEC-333: esqueleto das mutações do espólio/forja (mesmo contrato de idempotência de
+    `/game/cards/prepare`; reaproveita o kind `equip` — CHECK do banco). A regra mora em
+    `services.card_rewards`; aqui só o transporte."""
+    from services import card_rewards
+
+    _bind_corr(game_id, action_id)
+    lock = _game_lock(game_id) if not _database_profile() else nullcontext()
+    with lock:
+        file_to_load = _resolve_save_file(game_id)
+        state = load_game_state(file_to_load)
+        if not state:
+            raise HTTPException(status_code=404, detail="Jogo não encontrado.")
+        claim, request_hash, receipt = _begin_state_mutation(
+            state, action_id=action_id, kind="equip", payload=payload
+        )
+        if receipt is not None:
+            return receipt
+        from infrastructure.runtime import get_runtime
+        from services.turn_execution import operation_scope
+
+        with operation_scope(get_runtime().turn_coordinator if claim else None, claim):
+            _reject_archived(state)
+            _reject_memorial(state)
+            if state.get("death_pending"):
+                raise HTTPException(409, "Resolva a queda antes desta alteração.")
+            if (state.get("combat_simulation") or {}).get("enabled"):
+                _fail_operation(claim, "simulation")
+                raise HTTPException(409, "O laboratório de combate não tem preparação persistente.")
+            if card_rewards.mode() != "on":
+                _fail_operation(claim, "card_rewards_off")
+                raise api_error(409, "card_rewards_off")
+            result = apply(state)
+            if not result["ok"]:
+                _fail_operation(claim, reject_code)
+                raise api_error(
+                    409 if result.get("conflito") else 400, reject_code, detail=result["error"]
+                )
+            player = state["player"]
+            response = {
+                "ok": True,
+                "log": result.get("log", ""),
+                "player_stats": {
+                    "gold": int(player.get("gold", 0) or 0),
+                    "cards": _cards_block(player),
+                    "prepared_slots": _prepared_slots(player),
+                    **_card_reward_blocks(state),
+                },
+                "espolio_pendente": _card_reward_blocks(state).get("espolio_pendente"),
+            }
+            return _commit_state_mutation(state, response, claim=claim, request_hash=request_hash)
+
+
+@app.post("/game/espolio")
+def game_espolio(req: EspolioRequest):
+    """SPEC-333 R1/R3: escolhe 1 das 3 Cartas do espólio (ou recusa por 15 de ouro)."""
+    from services import card_rewards
+
+    return _card_reward_mutation(
+        req.game_id,
+        req.action_id,
+        req.model_dump(mode="json", exclude={"action_id"}),
+        lambda state: card_rewards.accept(state, req.card_id or None),
+        "espolio_rejected",
+    )
+
+
+@app.post("/game/forja")
+def game_forja(req: ForjaRequest):
+    """SPEC-333 R4/R5/R8: esquecer / afiar / purgar Cicatriz, fora de combate."""
+    from services import card_rewards
+
+    def apply(state: dict) -> dict:
+        if req.acao == "esquecer":
+            return card_rewards.forget(state, req.card_id or "", req.via or "")
+        if req.acao == "afiar":
+            return card_rewards.sharpen(state, req.card_id or "")
+        return card_rewards.purge_curse(state, req.scar_id or "", req.via or "")
+
+    return _card_reward_mutation(
+        req.game_id,
+        req.action_id,
+        req.model_dump(mode="json", exclude={"action_id"}),
+        apply,
+        "forja_rejected",
+    )
 
 
 @app.post("/game/levelup")

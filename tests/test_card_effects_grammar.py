@@ -339,7 +339,7 @@ def test_texto_gerado_snapshot_das_308_cartas():
 
 def test_texto_nunca_mente_sobre_o_numero():
     for card in cards.all_cards().values():
-        eff = card["efeito"]
+        eff = card.get("efeito") or {}  # status/maldição (SPEC-333) não têm efeito principal
         text = fx.render_card_text(card)
         if eff.get("kind") == "dano" and eff.get("dano_base") is not None:
             assert f"Causa {eff['dano_base']} de dano" in text, card["id"]

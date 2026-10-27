@@ -330,7 +330,7 @@ def test_non_numeric_versao_does_not_break_catalog(tmp_path, monkeypatch):
     )
 
 
-def test_loader_traversal_matches_lint_and_keeps_323_legacy_cards():
+def test_loader_traversal_matches_lint_and_keeps_legacy_cards():
     from services import cards
 
     ids = {c["id"] for c in card_lint.load_pool()}
@@ -338,7 +338,7 @@ def test_loader_traversal_matches_lint_and_keeps_323_legacy_cards():
     pool = card_lint.load_pool()
     # ondas (SPEC-335+) e baralhos de família (`inf_`, SPEC-332) crescem; o legado fica fixo
     legado = {c["id"] for c in pool if c.get("onda") is None and not c["id"].startswith("inf_")}
-    assert len(legado) == 323
+    assert len(legado) == 332  # 323 + 9 da SPEC-333
     assert {c["id"] for c in pool if c.get("onda") is not None} <= ids
 
 

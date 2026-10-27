@@ -366,6 +366,25 @@ export const postPrepareCards = (payload: { prepared: string[]; game_id?: string
     body: JSON.stringify({ ...payload, action_id: crypto.randomUUID() }),
   });
 
+// SPEC-333: espólio de Cartas (escolher 1 de 3 / recusar) e Forja do baralho.
+export interface CardRewardResult {
+  ok: boolean;
+  log: string;
+  player_stats: Partial<import("./types").PlayerStats>;
+}
+export type CardRewardRequest =
+  | { kind: "espolio"; card_id: string | null }
+  | { kind: "forja"; acao: "esquecer"; card_id: string; via: "descanso" | "templo" }
+  | { kind: "forja"; acao: "afiar"; card_id: string }
+  | { kind: "forja"; acao: "purgar"; scar_id: string; via: "templo" | "medico" };
+export const postCardReward = (request: CardRewardRequest, gameId?: string | null) => {
+  const { kind, ...body } = request;
+  return req<CardRewardResult>(kind === "espolio" ? "/game/espolio" : "/game/forja", {
+    method: "POST",
+    body: JSON.stringify({ ...body, game_id: gameId, action_id: crypto.randomUUID() }),
+  });
+};
+
 export const postLevelUp = (payload: {
   choice_id: string;
   card_id?: string;

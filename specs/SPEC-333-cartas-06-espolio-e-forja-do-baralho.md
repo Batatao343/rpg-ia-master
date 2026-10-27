@@ -1,6 +1,6 @@
 # SPEC-333 — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (implementada `off` em 27/10 atrás de `RPG_CARD_REWARDS=off|shadow|on`; falta revisão independente Sol, smoke real §6 e jornadas e2e — ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (baralho), SPEC-330 (Fardo/Purgar), SPEC-209 (aba Combate fora de encontro)
@@ -50,9 +50,9 @@ Loja de cartas em cidades com preço dinâmico (follow-up junto da economia). Tr
 4. Playtest harness (`playtest/`) 50 turnos: baralho médio fica entre 15–22 cartas.
 
 ## 5. Critérios de aceite
-- [ ] R1–R9 com teste; jornada e2e autorada em tarefa separada
-- [ ] Nenhuma recompensa fora do tier; ouro só via regra (mecânica é Python)
-- [ ] `uv run pytest` verde; saves antigos (sem espólio) carregam
+- [x] R1–R9 com teste (`test_card_rewards.py`, `test_forge.py`, `test_wound_status_cards.py`); jornada e2e autorada em tarefa separada (pendente)
+- [x] Nenhuma recompensa fora do tier; ouro só via regra (mecânica é Python)
+- [ ] `uv run pytest` verde (suíte completa: coordenador no pouso); saves antigos (sem espólio) carregam (campos opcionais; flag `off` não toca a ficha)
 
 ## 6. Smoke real
 1. Vencer bandidos da Mão Sombria → espólio com 1 carta da facção. 2. Ganhar Ferimento grave → carta "Membro Falho" na mão, some ao fim. 3. Descanso longo → esquecer 1 carta.
@@ -60,3 +60,14 @@ Loja de cartas em cidades com preço dinâmico (follow-up junto da economia). Tr
 ## 7. Riscos
 - Inchaço de baralho → R6 + Esquecer + recusa recompensada.
 - Maldição frustrante: sempre há como purgar, e o lado positivo da cicatriz fica jogável.
+
+## 8. Implementação e desvios (27/10)
+Flag `RPG_CARD_REWARDS=off|shadow|on` (padrão `off`; `shadow` só mede, `source=auto`). Decisões do dono: espólio "1 de 3" a cada vitória real / objetivo `cumprido` (SPEC-331; `falhou` = nada), recusa = 15 de ouro. Módulos: `services/card_rewards.py` (sorteio, `accept`, `forget`, `sharpen`, `purge_curse`, blocos da API), `services/card_status.py` (R7/R9 dentro do conflito), `data/cards/status_e_maldicoes.json` (9 Cartas, `origem: cartas-333`, fora do Acervo/progressão/espólio). API: `POST /game/espolio`, `POST /game/forja` (classe `mutation`; erros `espolio_rejected`/`forja_rejected`/`card_rewards_off`); `player_stats.espolio_pendente` e `.forja` só com a flag `on`. Telemetria: `card_offered`/`card_picked` com `source=espolio`.
+Interpretações e desvios (revisar):
+- **Fonte "neutras/regionais"**: lê o catálogo dinamicamente (classe vazia/`Neutra`, `regiao` opcional); hoje não há Cartas assim (SPEC-335), então a fatia cai nas demais fontes. "Saque de técnica" = `cartas` dos inimigos derrotados (`enemy_card_ids`; SPEC-332 alimenta). Abissal = `raridade: abissal` ou apice, só com chefe derrotado (`categoria: chefe`); `epica` conta como `rara`.
+- **R7**: o status entra no TOPO do monte (chega à mão da rodada seguinte). Dor Surda = injogável, pesa 1 rodada e sai do ciclo (Exaurir); a opção "1 Fôlego para descartar" **não foi implementada** (exigiria nova jogada na UI; follow-up). Membro Falho cobra −1 Fôlego na rodada em que é comprada; Sangue nos Olhos aplica Cego por 1 rodada. Vocabulário: campo `ao_comprar_status` (fechado) lido por `card_status.py`.
+- **R8**: a maldição (Fardo + Vazão) é escolhida pela região do Ferimento; o "lado positivo" é um efeito de Vazão fixo por região (a frase do LLM em `habilidade_positiva_relacionada` é só sabor — número vem de Python). `set_deck` não deixa tirar a maldição; Purgar fora de combate (`templo`/`medico`, 40 de ouro). Em combate, `purgar_fardo` continua aliviando só aquele conflito.
+- **R9**: Sussurro do Abismo (`sus_sussurro_abismo`) usa `custo_entropia: -2` (ganho de Entropia, limitado a `max_entropy`) e `custo_folego: 0`; jogável via `player["cartas_cena"]` (limpa no fim do conflito). Apodrece em Estilhaço de Cinza após 2 rodadas sem ser jogada.
+- **Templo/curandeiro**: sem tag própria no mapa, vale tag `templo|santuario|curandeiro|hospicio` ou cidade segura (`cidade`+`seguro`). Descanso longo concede 1 carga de Esquecer (`forja_esquecer`).
+- **Afiar**: material = item `type: material` com raridade rara (novo `essencia_de_cinza`; ainda sem fonte de drop/loja — follow-up). A versão `+` vem de `afiada` na Carta; sem `afiada`, +1 no valor numérico do efeito principal; Carta sem valor numérico (fórmula legada) não é afiável.
+- `data/cards/_orcamento.json`: `status`/`maldicao` entram em `tipos_isentos`; `tests/spec330_equivalence.py` e o teste de 323 Cartas passaram a reconhecer `cartas-333`.

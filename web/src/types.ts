@@ -87,6 +87,40 @@ export interface PlayerStats {
   virtue_cards?: Array<{ card_id: string; name: string; type: string; description: string;
     virtude: string; mastery: number; effective_stage: number }>;
   evolvable_card_ids?: string[];
+  /** SPEC-333: só existem com RPG_CARD_REWARDS=on (servidor antigo/flag off = a UI não muda). */
+  espolio_pendente?: EspolioPendente;
+  forja?: ForjaView;
+}
+
+/** SPEC-333 R1/R3: 3 Cartas do espólio pós-conflito; recusar paga `recusa_ouro`. */
+export interface EspolioOferta {
+  id: string;
+  name: string;
+  tipo?: string;
+  raridade: "comum" | "incomum" | "rara" | "abissal";
+  custo_folego: number;
+  custo_entropia: number;
+  texto: string;
+  descricao: string;
+  conhecida: boolean;
+}
+export interface EspolioPendente {
+  id: string;
+  origem: "vitoria" | "objetivo";
+  recusa_ouro: number;
+  ofertas: EspolioOferta[];
+}
+
+/** SPEC-333 R4/R5/R8: o servidor decide o que a Forja permite agora (o front nunca recalcula). */
+export interface ForjaView {
+  permitido: boolean;
+  motivo: string;
+  baralho: Array<{ id: string; name: string; copias: number; esquecivel: boolean }>;
+  baralho_min: number;
+  esquecer: { descanso: boolean; templo: boolean; ouro: number };
+  afiar: { material: string | null; afiaveis: string[]; afiadas: string[] };
+  cicatrizes: Array<{ scar_id: string; card_id: string; name: string }>;
+  purgar: { templo: boolean; medico: boolean; ouro: number };
 }
 
 /** Cicatriz permanente (morte rica). O dado não tem turno de origem — nunca exibido. */

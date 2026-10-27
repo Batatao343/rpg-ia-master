@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
+import type { RewardSender } from "../cardRewards";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
 import { shards } from "./AccountScreen";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
@@ -25,6 +26,7 @@ interface Props {
   onLevelUp: (choiceId: string, pick: LevelUpPick) => void;
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  onCardReward?: RewardSender;
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
@@ -40,7 +42,7 @@ interface Props {
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
   const compact = useIsCompact();
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
@@ -124,7 +126,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
-        onPrepareCards={onPrepareCards} onOpenLevelUp={openLevelUp}
+        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onOpenLevelUp={openLevelUp}
         artPanel={artPanel} onQuoteOffer={onQuoteOffer} offersDisabled={offersDisabled}
         place={data?.current_location || "—"} banner={compact ? banner : undefined}
         headActions={compact ? (

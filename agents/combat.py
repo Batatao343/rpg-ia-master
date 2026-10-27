@@ -16,6 +16,7 @@ Fluxo de 1 chamada = 1 RODADA:
 
 import random
 import re
+import zlib
 from typing import Dict, List, NamedTuple, Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -29,7 +30,7 @@ from observability.telemetry import log_event as _log_event
 from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_summary as summ
-from services import death_flow
+from services import card_rewards, card_status, death_flow
 from services import discovery as disc
 from services import encounter_preparation as prep
 from services import enemy_intent as _enemy_intent
@@ -1709,6 +1710,7 @@ def _combat_node(state: GameState):
     bestiary_knowledge = dict(state.get("bestiary_knowledge") or {})
     bk_changed = False
     is_simulation = bool((state.get("combat_simulation") or {}).get("enabled"))
+    wounds_before: dict[str, int] = {}  # SPEC-333 R7: Ferimentos antes da rodada
     # SPEC-226 R1: mortos que já constavam no estado de entrada não rendem de novo.
     dead_before = {
         str(e.get("id") or e.get("name"))
@@ -1796,12 +1798,13 @@ def _combat_node(state: GameState):
         if card_piles.mode() == "on":
             card_piles.activate_deck(player)  # P1-3: guarda a Preparação original p/ rollback
         if card_piles.mode() != "off":
-            import zlib
-
             combat_meta["pilhas"] = card_piles.start_piles(
                 player, zlib.crc32(conflict_instance_id.encode("utf-8"))
             )
             _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+            card_status.on_start(combat_meta["pilhas"], player)  # SPEC-333 R9 (so rewards `on`)
+        if card_rewards.mode() != "off":
+            card_rewards.expire_pending(player)  # SPEC-333 R3: espolio nao decidido expira
         if _scene_cards.active():  # SPEC-331 R3: presságio de cena da rodada 1
             combat_meta["pressagios_cena"] = _scene_cards.forecast(scene, 1)
         # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
@@ -2088,6 +2091,7 @@ def _combat_node(state: GameState):
             combat_meta["pilhas"] = _copy.deepcopy(combat_meta["pilhas"])
             round_state["_piles"] = combat_meta["pilhas"]
             round_state["_deck_mode"] = deck_mode
+        wounds_before = card_status.wound_counts(player)
         out = orch.run_round(
             scene,
             actors_by_id,
@@ -2311,7 +2315,10 @@ def _combat_node(state: GameState):
         elif not out.get("action_refused") and _deck_mode_now() != "off":
             from services import card_piles
 
+            card_status.on_round_end(combat_meta["pilhas"], player, wounds_before)  # SPEC-333 R7/R9
             card_piles.begin_round(combat_meta["pilhas"])  # mão da PRÓXIMA rodada já visível
+            if card_status.active():
+                card_status.on_hand_drawn(combat_meta["pilhas"], player)
             _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
@@ -2324,6 +2331,22 @@ def _combat_node(state: GameState):
         from services import cards
 
         cards.reset_card_usage({"player": player}, "cena")
+        card_status.cleanup(player)  # SPEC-333: Cartas temporarias saem com o conflito
+        if (
+            (victory or scene.get("objetivo_resultado") == "cumprido")
+            and not (player_dead or hero_fled or is_simulation)
+            and card_rewards.mode() != "off"
+        ):
+            # SPEC-333 R1/R3: espolio so em vitoria real ou objetivo cumprido (SPEC-331).
+            card_rewards.grant_after_conflict(
+                state,
+                player,
+                conflict_id=str(combat_meta.get("instance_id") or ""),
+                seed=zlib.crc32(f"{combat_meta.get('instance_id')}:espolio".encode()),
+                defeated=dead + downed,
+                objective_result=scene.get("objetivo_resultado"),
+                turn=turn,
+            )
         combat_meta["scene"] = None
         combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.

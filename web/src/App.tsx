@@ -815,6 +815,27 @@ export function App() {
     }
   }
 
+  // SPEC-333: espólio de Cartas / Forja. A regra mora no servidor; o estado canônico volta do GET
+  // (os blocos `espolio_pendente`/`forja` somem sozinhos quando a ação é aceita).
+  async function handleCardReward(request: api.CardRewardRequest): Promise<{ ok: boolean; message: string }> {
+    if (busy || !gameId.current) return { ok: false, message: "Aguarde a ação em andamento." };
+    const generation = session.current, gid = gameId.current;
+    try {
+      const done = await api.postCardReward(request, gid);
+      try {
+        const r = await api.getState(gid);
+        if (session.current === generation) setData(r);
+      } catch {
+        // A ação já foi gravada: mescla o que a resposta trouxe em vez de fingir recusa.
+        if (session.current === generation) setData((prev) => prev && prev.game_id === gid ? {
+          ...prev, player_stats: { ...prev.player_stats, ...done.player_stats } } : prev);
+      }
+      return { ok: true, message: done.log };
+    } catch (err) {
+      return { ok: false, message: errMsg(err) };
+    }
+  }
+
   // SPEC-209 R4/R7: preparar Cartas. Devolve a mensagem do servidor (ou null) para a aba
   // desfazer a mudança otimista; o estado canônico volta sempre do GET.
   async function handlePrepareCards(prepared: string[]): Promise<string | null> {
@@ -1032,6 +1053,7 @@ export function App() {
               onLevelUp={handleLevelUp}
               onEquip={handleEquip}
               onPrepareCards={handlePrepareCards}
+              onCardReward={handleCardReward}
               onLogout={authRequired ? handleLogout : undefined}
               onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
               accountBalance={accountBalance}

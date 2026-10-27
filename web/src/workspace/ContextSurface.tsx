@@ -1,5 +1,6 @@
 import { Component, useLayoutEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import type { ActionOptions, GameResponse } from "../types";
+import type { RewardSender } from "../cardRewards";
 import { ChronicleTab, FactionsTab, HeardNews, PeopleTab, type EquipFn } from "../components/Hud";
 import { CodexCategory, CodexTab, DossierCategory, type CodexSection } from "../components/CodexTab";
 import { RovingTablist } from "./RovingTablist";
@@ -44,6 +45,7 @@ export interface ContextSurfaceProps {
   onAction: (text: string, options?: ActionOptions) => void;
   onEquip?: EquipFn;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  onCardReward?: RewardSender;
   onOpenLevelUp?: () => void;
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
@@ -116,7 +118,7 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
     case "combate":
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
-        onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
+        onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onOpenLevelUp={props.onOpenLevelUp}
         dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />;
     case "bestiario":
       return <BestiarioTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}

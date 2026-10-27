@@ -72,6 +72,9 @@ export const MESSAGES: Record<string, string> = {
   equip_request_invalid: "Informe o item ou o espaço a esvaziar.",
   equip_rejected: "Não foi possível equipar isso.", prepare_rejected: "Não foi possível preparar essas Cartas.",
   levelup_rejected: "Escolha recusada.", invalid_request: "Parâmetros inválidos.",
+  espolio_rejected: "Não foi possível escolher essa Carta do espólio.",
+  forja_rejected: "A Forja não pôde fazer isso agora.",
+  card_rewards_off: "O espólio e a Forja de Cartas estão desligados neste ambiente.",
   chronicle_query_invalid: "Busca inválida.", onboarding_unavailable: "O conteúdo de introdução está indisponível.",
   // arte
   art_unavailable: "Retrato ou reformulação indisponível.", art_check_previous: "Confira a geração anterior antes de reformular.",

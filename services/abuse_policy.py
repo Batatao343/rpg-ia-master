@@ -57,7 +57,7 @@ ROUTE_CLASSES: dict[str, RouteClass] = {
         _rc("quote", rf"^/game/{_ID}/art/(quote|confirm|player/confirm)$", ("POST",), 30, 10),
         _rc(
             "mutation",
-            rf"^/game/(equip|levelup|cards/prepare)$|^/game/save/{_ID}$|^/game/{_ID}/art/{_ID}/quality$",
+            rf"^/game/(equip|levelup|cards/prepare|espolio|forja)$|^/game/save/{_ID}$|^/game/{_ID}/art/{_ID}/quality$",
             ("POST", "DELETE"),
             60,
             30,

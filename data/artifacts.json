@@ -313,6 +313,24 @@
       "active_ability": null
     }
   },
+  "essencia_de_cinza": {
+    "name": "Essência de Cinza",
+    "type": "material",
+    "rarity": "raro",
+    "value_gold": 60,
+    "description": "Cinza que guardou a memória de um golpe; afia uma técnica até ela cortar de novo.",
+    "stackable": true,
+    "combat_stats": {
+      "attack_bonus": 0,
+      "damage_dice": "0",
+      "attribute": "none",
+      "ac_bonus": 0
+    },
+    "mechanics": {
+      "passive_effects": [],
+      "active_ability": null
+    }
+  },
   "minerio_ferro": {
     "name": "Minério de Ferro",
     "type": "material",

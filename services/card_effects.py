@@ -1515,8 +1515,25 @@ def render_card_text(card: dict) -> str:
             parts.append(_kw_bold(key))
     head = ". ".join(parts)
     body = ". ".join(render_effect(e) for e in normalize(card))
-    text = ". ".join(p for p in (head, body) if p)
+    status = _status_text(card)
+    text = ". ".join(p for p in (head, status, body) if p)
     return (text + ".") if text else ""
+
+
+def _status_text(card: dict) -> str:
+    """SPEC-333 R7: texto das Cartas de status (``ao_comprar_status``, vocabulário fechado)."""
+    spec = card.get("ao_comprar_status")
+    if not isinstance(spec, dict):
+        return ""
+    parts: list[str] = []
+    if spec.get("exaurir_fim_rodada"):
+        parts.append("Injogável; é exaurida ao fim da rodada em que for comprada")
+    if spec.get("folego"):
+        parts.append(f"Ao ser comprada: {int(spec['folego']):+d} de Fôlego nesta rodada")
+    if spec.get("condicao"):
+        nome = _CONDICAO_LABEL.get(str(spec["condicao"]), str(spec["condicao"]).capitalize())
+        parts.append(f"Ao ser comprada: {nome} por {int(spec.get('rodadas', 1) or 1)} rodada(s)")
+    return ". ".join(parts)
 
 
 # --------------------------------------------------------------------------
@@ -1748,7 +1765,12 @@ def validate_card(card: dict) -> list[str]:
             for i, eff in enumerate(raw):
                 errs += validate_effect(eff, f"efeitos[{i}]")
             prim = primary_effect(card)
-            if prim is None and card.get("tipo") not in ("passiva", "virtude"):
+            if prim is None and card.get("tipo") not in (
+                "passiva",
+                "virtude",
+                "status",
+                "maldicao",
+            ):
                 # Passiva pode ser só gatilhos; Carta jogável precisa do principal.
                 errs.append("efeitos sem efeito principal (ao_jogar, sem condição)")
             elif card.get("efeito") and card["efeito"] != prim:

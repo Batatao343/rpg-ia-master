@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useStat
   type CSSProperties, type ReactNode, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
+import type { RewardSender } from "../cardRewards";
 import { useVitalityHit, type EquipFn } from "../components/Hud";
 import { ChatSurface, Composer } from "./ChatSurface";
 import { ContextSurface } from "./ContextSurface";
@@ -39,6 +40,7 @@ interface Props {
   onAction: (text: string, options?: ActionOptions) => void;
   onEquip?: EquipFn;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
+  onCardReward?: RewardSender;
   onOpenLevelUp?: () => void;
   /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
   dismissedResult?: string | null;
@@ -352,7 +354,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
-            onPrepareCards={props.onPrepareCards} onOpenLevelUp={props.onOpenLevelUp}
+            onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onOpenLevelUp={props.onOpenLevelUp}
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked}

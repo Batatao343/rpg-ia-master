@@ -143,6 +143,14 @@ _ALL_COUNTERS = (
 
 _CARDS: dict[str, dict] | None = None
 
+# SPEC-333: Cartas que o jogo insere (Ferimento/Cicatriz); nunca ofertadas nem no Acervo.
+STATUS_TIPOS = frozenset({"status", "maldicao"})
+
+
+def scene_card_ids(player: dict) -> set[str]:
+    """SPEC-333 R9: Cartas temporarias do conflito (Sussurro do Abismo), jogaveis sem Acervo."""
+    return {str(c) for c in (player.get("cartas_cena") or [])}
+
 
 def _card_files() -> list[str]:
     """JSONs de Cartas em ``data/cards/`` (mesma travessia do lint: recursiva, sem ``_*``)."""
@@ -232,6 +240,8 @@ def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict
             card.pop("efeitos", None)
         if evo.get("ruptura"):
             card["_ruptura_evoluida"] = copy.deepcopy(evo["ruptura"])
+    if (player.get("afiadas") or {}).get(card_id):  # SPEC-333 R5: versao `+` permanente
+        card = _apply_afiada(card)
     if ruptura:
         effect = card.pop("_ruptura_evoluida", None)
         if effect is None:
@@ -243,12 +253,45 @@ def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict
     return card
 
 
+_AFIADA_KEYS = ("dano_base", "valor")
+
+
+def _apply_afiada(card: dict) -> dict:
+    """SPEC-333 R5: versao `+` — `afiada: {valor_delta?, custo_folego?, custo_entropia?}` na
+    propria Carta; sem `afiada`, +1 no valor do efeito principal. Opera numa COPIA."""
+    spec = card.get("afiada") if isinstance(card.get("afiada"), dict) else {}
+    if "custo_folego" in spec:
+        card["custo_folego"] = max(0, int(spec["custo_folego"]))
+    if "custo_entropia" in spec:
+        card["custo_entropia"] = int(spec["custo_entropia"])
+    cost_only = "custo_folego" in spec or "custo_entropia" in spec
+    delta = int(spec.get("valor_delta", 0 if cost_only else 1))
+    principal = card.get("efeito")
+    if delta and isinstance(principal, dict):
+        # `efeito` e `efeitos[0]` podem ser o MESMO dict (materialize + deepcopy): soma 1x.
+        targets = [principal] + [
+            e for e in (card.get("efeitos") or []) if isinstance(e, dict) and e == principal
+        ]
+        done: set[int] = set()
+        for eff in targets:
+            if id(eff) in done:
+                continue
+            done.add(id(eff))
+            for key in _AFIADA_KEYS:
+                if isinstance(eff.get(key), int) and not isinstance(eff.get(key), bool):
+                    eff[key] = eff[key] + delta
+                    break
+    return card
+
+
 def cards_for_class(class_name: str, subclass: str = "") -> list[dict]:
     """Cartas de classe/subclasse (exclui Cartas de Virtude, tipo 'virtude')."""
     out = []
     for c in _load_cards().values():
         if c.get("tipo") == "virtude" or c.get("basica"):
             continue  # basicas (SPEC-328) vivem no baralho, nunca no Acervo/progressao
+        if c.get("tipo") in STATUS_TIPOS or c.get("origem") == "cartas-333":
+            continue  # SPEC-333: status/maldicao/Sussurro entram so por regra, nunca por escolha
         if c.get("classe") in (class_name, "") or class_name == "":
             if not subclass or c.get("subclasse") in (subclass, ""):
                 out.append(c)
@@ -397,6 +440,15 @@ def custo_folego(card: dict) -> int:
     return 1
 
 
+def scar_curse_ids(player: dict) -> list[str]:
+    """SPEC-333 R8: ids (com repeticao) das maldicoes de Cicatriz ligadas a esta ficha."""
+    return [
+        str(row.get("card_id"))
+        for row in (player.get("cicatriz_cartas") or [])
+        if isinstance(row, dict) and row.get("card_id")
+    ]
+
+
 def basicas_for_class(class_name: str) -> dict[str, list[str]]:
     """Básicas da Postura (R2) em ordem estável: {"golpe": [...], "guarda": [...], "assinatura": [...]}
     — a 1ª básica ofensiva, a 1ª de `protecao` e a restante (assinatura)."""
@@ -422,9 +474,18 @@ def set_deck(state: dict, deck: list[str]) -> dict:
         cid for ids in basicas_for_class(str(player.get("class_name", ""))).values() for cid in ids
     }
     deck = [str(c) for c in deck]
-    fora = sorted({c for c in deck if c not in known and c not in basics})
+    curses = scar_curse_ids(player)  # SPEC-333 R8: maldicao de Cicatriz e permanente ate Purgar
+    fora = sorted({c for c in deck if c not in known and c not in basics and c not in curses})
     if fora:
         return {"ok": False, "error": f"Cartas fora do Acervo: {fora}.", "log": ""}
+    for cid in set(curses):
+        if deck.count(cid) < curses.count(cid):
+            return {
+                "ok": False,
+                "error": f"'{(get_card(cid) or {}).get('name', cid)}' é uma Cicatriz: "
+                "só sai com Purgar.",
+                "log": "",
+            }
     if not DECK_MIN <= len(deck) <= DECK_MAX:
         return {
             "ok": False,
@@ -434,6 +495,8 @@ def set_deck(state: dict, deck: list[str]) -> dict:
     counts: dict[str, int] = {}
     for cid in deck:
         card = get_card(cid) or {}
+        if cid in curses:
+            continue
         if card.get("tipo") not in _DECK_TIPOS:
             return {"ok": False, "error": f"'{cid}' não entra no Baralho.", "log": ""}
         counts[cid] = counts.get(cid, 0) + 1
@@ -478,6 +541,7 @@ def use_card(state: dict, card_id: str) -> dict:
         if card_piles.mode() == "on":
             prepared |= set(player["deck"])
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
+    prepared |= scene_card_ids(player)  # SPEC-333 R9: Sussurro do Abismo (so no conflito)
     if card_id not in prepared and card_id not in virtude_ids:
         return {"ok": False, "error": f"Carta '{card_id}' não está preparada.", "log": ""}
 
@@ -502,12 +566,16 @@ def use_card(state: dict, card_id: str) -> dict:
 
     if custo:
         player["entropy"] = int(player.get("entropy", 0)) - custo
+        cap = int(player.get("max_entropy", 0) or 0)
+        if custo < 0 and cap > 0:  # SPEC-333 R9: custo negativo = ganho, limitado ao teto
+            player["entropy"] = min(player["entropy"], cap)
     for k in _ALL_COUNTERS:
         entry[k] = int(entry.get(k, 0)) + 1
     return {
         "ok": True,
         "error": None,
-        "log": f"Usa {card.get('name', card_id)}" + (f" (-{custo} Entropia)" if custo else ""),
+        "log": f"Usa {card.get('name', card_id)}"
+        + (f" (+{-custo} Entropia)" if custo < 0 else f" (-{custo} Entropia)" if custo else ""),
         "cost": custo,
         "base_cost": custo_base,
         "dependencia_applied": custo > custo_base,
@@ -554,6 +622,7 @@ def can_use_card(player: dict, card_id: str) -> bool:
         return False
     prepared = set(player.get("prepared_cards") or [])
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
+    prepared |= scene_card_ids(player)
     if card_id not in prepared and card_id not in virtude_ids:
         return False
     counter = FREQ_COUNTER.get(str(card.get("frequencia", "livre")))
