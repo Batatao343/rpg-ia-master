@@ -18,7 +18,6 @@ import pytest
 from infrastructure.contracts import Principal
 from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
 from tests.test_http_idor_offline import _EXPECTED_STATUS, _ROUTES
-from tests.test_postgres_jobs_local import infra  # noqa: F401
 
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
 
@@ -51,13 +50,23 @@ def _new_game(client: httpx.Client, name: str) -> UUID:
     return UUID(created.json()["game_id"])
 
 
-@pytest.fixture
-def duo(infra):  # noqa: F811
+@pytest.fixture(scope="module")
+def duo():
+    """Módulo inteiro: 1 login por principal (o limiter de auth é 20/15 min por IP)."""
     base = os.getenv("RPG_AUDIT_BROWSER_URL")
     if not base:
         pytest.skip("local audit API required")
     assert urlsplit(base).hostname in {"127.0.0.1", "localhost"}
-    store, _, coordinator, _ = infra
+    pytest.importorskip("psycopg")
+    from infrastructure.postgres import PostgresGameStore, PostgresPool
+    from infrastructure.postgres_turns import PostgresTurnCoordinator
+
+    dsn = os.getenv("RPG_TEST_DATABASE_URL")
+    if not dsn:
+        pytest.skip("RPG_TEST_DATABASE_URL ausente")
+    pool = PostgresPool(dsn, max_size=3)
+    store = PostgresGameStore(pool)
+    coordinator = PostgresTurnCoordinator(pool, lease_seconds=2)
     users: list[UUID] = []
     clients: list[httpx.Client] = []
     games: list[tuple[Principal, UUID]] = []
@@ -88,6 +97,7 @@ def duo(infra):  # noqa: F811
             store.delete(principal, game)
         for user in users:
             delete_confirmed_user(user)
+        pool.close()
 
 
 @pytest.mark.parametrize(
