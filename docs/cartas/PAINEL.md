@@ -2,7 +2,7 @@
 
 > Gerado por `scripts/cards/painel.py` (SPEC-336). Não edite à mão.
 
-- Cartas de jogador: **314** (meta de 12 meses: ~1200).
+- Cartas de jogador: **323** (meta de 12 meses: ~1200).
 - Cartas de inimigo: **128**.
 - Meta por onda mensal: +60 de jogador e +20 de inimigo (cortes permitidos).
 
@@ -15,21 +15,24 @@
 | Sangromante | 56 |
 | Devoto do Abismo | 55 |
 | Médico de Campo | 55 |
+| Cicatriz | 5 |
+| Ferimento | 3 |
+| Abismo | 1 |
 
 ### Por raridade
 
 | Valor | Cartas |
 |---|---|
-| comum | 121 |
+| comum | 129 |
 | incomum | 106 |
 | abissal | 57 |
-| rara | 30 |
+| rara | 31 |
 
 ### Por tier
 
 | Valor | Cartas |
 |---|---|
-| 1 | 92 |
+| 1 | 101 |
 | 3 | 74 |
 | 4 | 32 |
 | 2 | 29 |
@@ -43,7 +46,7 @@
 
 | Valor | Cartas |
 |---|---|
-| dano | 75 |
+| dano | 76 |
 | aplicar_condicao | 33 |
 | contra_ataque | 26 |
 | utilitaria | 25 |
@@ -54,14 +57,14 @@
 | buff_dano | 9 |
 | marca | 8 |
 | empurrao | 7 |
+| ganhar_folego | 7 |
 | perception | 7 |
 | taunt | 7 |
 | vantagem | 7 |
 | buff_acerto | 6 |
 | buff_esquiva | 6 |
+| comprar | 6 |
 | buff_iniciativa | 5 |
-| comprar | 5 |
-| ganhar_folego | 5 |
 | purga_condicao | 5 |
 | buff_cura | 4 |
 | buff_dot | 4 |
@@ -69,6 +72,7 @@
 | estabilizar | 3 |
 | rachadura | 3 |
 | torpor | 3 |
+| vigilia | 3 |
 | bonus_vitalidade_por_estagio | 2 |
 | copiar_ultima | 2 |
 | descartar | 2 |
@@ -79,22 +83,22 @@
 | bonus_percepcao_por_estagio | 1 |
 | mover_alvo_zona | 1 |
 | reduzir_carga_aliado | 1 |
-| vigilia | 1 |
 
 ### Por palavra-chave
 
 | Valor | Cartas |
 |---|---|
+| fardo | 8 |
+| vazao | 6 |
 | chamado | 5 |
+| exaurir | 3 |
 | guardar | 3 |
 | rachadura | 3 |
 | torpor | 3 |
-| exaurir | 2 |
+| vigilia | 3 |
 | ressoar | 2 |
 | eco | 1 |
 | interromper | 1 |
-| vazao | 1 |
-| vigilia | 1 |
 
 ### Por onda (cartas com `onda`)
 
