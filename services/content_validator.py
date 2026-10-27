@@ -705,6 +705,8 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
     seen_ids: dict[str, str] = {}
     late_cards: list[dict] = []
     wave_cards: list[dict] = []
+    seen_versions: dict[tuple, str] = {}
+    last_version: dict[str, int] = {}
     for path in card_lint.iter_card_files(cards_dir):  # recursivo; ignora `_*` (rascunhos)
         try:
             with open(path, encoding="utf-8") as f:
@@ -718,6 +720,36 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
                 for msg in fx.validate_card(c):
                     findings.append(Finding("cards", "error", path, c.get("id", ""), msg))
+            cid0 = c.get("id", "")
+            if c.get("versao") is not None and fx.versao(c) != c.get("versao"):
+                findings.append(
+                    Finding(
+                        "cards", "warning", path, cid0, "versao inválida (vale 1): use inteiro >= 1"
+                    )
+                )
+            ver = fx.versao(c)
+            if (cid0, ver) in seen_versions:
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        path,
+                        cid0,
+                        f"(id, versao)=({cid0}, {ver}) duplicado (também em {seen_versions[(cid0, ver)]})",
+                    )
+                )
+            elif cid0 in last_version and ver <= last_version[cid0]:
+                findings.append(
+                    Finding(
+                        "cards",
+                        "error",
+                        path,
+                        cid0,
+                        f"versao {ver} não é maior que a anterior ({last_version[cid0]}) do mesmo id",
+                    )
+                )
+            seen_versions.setdefault((cid0, ver), path)
+            last_version[cid0] = max(ver, last_version.get(cid0, 0))
             if c.get("onda") is not None:
                 wave_cards.append(c)  # SPEC-336: lint pleno (voz, color pie, duplicata, onda)
             if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328"):
@@ -730,7 +762,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             budget = fx.budget_error(fx.materialize(c))
             if budget:
                 findings.append(Finding("cards", "error", path, cid, budget))
-            if cid in seen_ids:
+            if cid in seen_ids and fx.versao(c) <= 1:  # versões acima de 1: ver checagem de versao
                 findings.append(
                     Finding(
                         "cards", "error", path, cid, f"id duplicado (também em {seen_ids[cid]})"
@@ -830,7 +862,13 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             for issue in card_lint.lint_card(card, others):
                 if issue.level == "error" and issue.code not in ("vocabulario", "orcamento"):
                     findings.append(
-                        Finding("cards", "error", cards_dir, card["id"], f"{issue.code}: {issue.message}")
+                        Finding(
+                            "cards",
+                            "error",
+                            cards_dir,
+                            card["id"],
+                            f"{issue.code}: {issue.message}",
+                        )
                     )
         for issue in card_lint.lint_wave(wave_cards):
             findings.append(Finding("cards", "error", cards_dir, "onda", issue.message))

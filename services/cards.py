@@ -144,13 +144,10 @@ _CARDS: dict[str, dict] | None = None
 
 
 def _card_files() -> list[str]:
-    """JSONs de Cartas em ``data/cards/`` (recursivo; pastas ``_*`` — rascunhos — ficam fora)."""
-    base = os.path.join(gamedata.DATA_DIR, "cards")
-    out: list[str] = []
-    for root, dirs, files in os.walk(base):
-        dirs[:] = sorted(d for d in dirs if not d.startswith("_"))
-        out += [os.path.join(root, fn) for fn in sorted(files) if fn.endswith(".json")]
-    return sorted(out)
+    """JSONs de Cartas em ``data/cards/`` (mesma travessia do lint: recursiva, sem ``_*``)."""
+    from services import card_lint
+
+    return sorted(card_lint.iter_card_files(os.path.join(gamedata.DATA_DIR, "cards")))
 
 
 def _load_cards() -> dict[str, dict]:
@@ -172,7 +169,7 @@ def _load_cards() -> dict[str, dict]:
 
                 prev = out.get(c["id"])
                 # SPEC-336 R7: a versão vigente é a de maior `versao` (saves guardam só o id).
-                if prev is None or int(c.get("versao", 1) or 1) >= int(prev.get("versao", 1) or 1):
+                if prev is None or card_effects.versao(c) >= card_effects.versao(prev):
                     out[c["id"]] = card_effects.materialize(c)
     _CARDS = out
     return out

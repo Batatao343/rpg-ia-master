@@ -258,3 +258,19 @@ def test_painel_counts_cards():
     painel = _load("painel")
     text = painel.build()
     assert "Cartas de jogador" in text and "Por Postura" in text and "Por palavra-chave" in text
+
+
+def test_metrics_excludes_auto_source():
+    metrics = _load("metrics")
+    lines = [
+        json.dumps(
+            {"event": "cards.card_offered", "card_id": "x", "picked": True, "source": "auto"}
+        )
+    ] * 5
+    lines += [
+        json.dumps(
+            {"event": "cards.card_offered", "card_id": "y", "picked": True, "source": "player"}
+        )
+    ]
+    t = metrics.aggregate(lines)
+    assert "x" not in t and t["y"]["escolhas"] == 1

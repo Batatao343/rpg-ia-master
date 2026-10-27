@@ -46,8 +46,10 @@ def aggregate(lines, resultados: dict | None = None) -> dict[str, dict]:
         ev = parse_line(line)
         if not ev or not ev.get("card_id"):
             continue
-        row = rows[str(ev["card_id"])]
         name = ev["event"]
+        if name in ("cards.card_offered", "cards.card_picked") and ev.get("source") == "auto":
+            continue  # resolução automática (criação em nível alto) não é escolha do jogador
+        row = rows[str(ev["card_id"])]
         if name == "cards.card_offered":
             row["ofertas"] += 1
             if ev.get("picked") is True:

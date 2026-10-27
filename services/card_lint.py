@@ -280,7 +280,7 @@ def _vigente(pool: list[dict]) -> list[dict]:
     best: dict[str, dict] = {}
     for c in pool:
         cur = best.get(c["id"])
-        if cur is None or int(c.get("versao", 1) or 1) >= int(cur.get("versao", 1) or 1):
+        if cur is None or fx.versao(c) >= fx.versao(cur):
             best[c["id"]] = c
     return list(best.values())
 
@@ -289,15 +289,12 @@ def check_names(card: dict, pool: list[dict]) -> list[Issue]:
     name = fx._fold(card.get("name"))
     for other in _vigente(pool):
         if other["id"] == card["id"]:
-            if (
-                int(card.get("versao", 1) or 1) <= int(other.get("versao", 1) or 1)
-                and other is not card
-            ):
+            if fx.versao(card) <= fx.versao(other) and other is not card:
                 return [
                     Issue(
                         "error",
                         "nome",
-                        f"id {card['id']!r} já existe na versão {other.get('versao', 1)} (suba `versao`)",
+                        f"id {card['id']!r} já existe na versão {fx.versao(other)} (suba `versao`)",
                     )
                 ]
             continue
@@ -383,7 +380,7 @@ def lint_batch(
     embed: Callable[[str], list[float]] | None = None,
 ) -> dict[str, list[Issue]]:
     """Cada Carta do lote contra o pool E contra as outras do lote."""
-    base = [c for c in (pool or []) if c.get("id") not in {b.get("id") for b in batch}]
+    base = list(pool or [])  # inclui o mesmo id: só entra se `versao` for estritamente maior
     result: dict[str, list[Issue]] = {}
     seen: list[dict] = []
     for card in batch:

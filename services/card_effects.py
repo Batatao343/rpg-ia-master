@@ -1536,6 +1536,12 @@ def reload() -> None:
     _ORCAMENTO = None
 
 
+def versao(card: dict | None) -> int:
+    """`versao` da Carta (R7); ausente ou inválida = 1 (o validador acusa a inválida)."""
+    v = (card or {}).get("versao", 1)
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 1 else 1
+
+
 def raridade(card: dict) -> str:
     cfg = budget_config()
     return str(cfg["raridade_por_patamar"].get(str(card.get("patamar") or ""), "comum"))

@@ -217,3 +217,141 @@ def test_loader_ignores_drafts_and_reads_highest_version(tmp_path, monkeypatch):
 )
 def test_cli_scripts_exist(fn):
     assert os.path.isfile(os.path.join("scripts", "cards", fn))
+
+
+# --- Revisão Sol (P1-1, P1-2, P2-1..3) ---------------------------------------
+def test_batch_refuses_existing_id_unless_versao_strictly_higher():
+    pool = [card(id="med_x", name="Nome X")]
+    same = card(id="med_x", name="Nome X")
+    assert "nome" in codes(card_lint.lint_batch([same], pool)["med_x"])
+    assert not card_lint.errors(
+        card_lint.lint_batch([card(id="med_x", name="Nome X", versao=2)], pool)["med_x"]
+    )
+
+
+def test_batch_refuses_legacy_id_without_versao():
+    legacy = {k: v for k, v in card(id="med_leg", name="Legada").items() if k != "versao"}
+    new = card(id="med_leg", name="Legada")
+    assert "nome" in codes(card_lint.lint_batch([new], [legacy])["med_leg"])
+
+
+def test_promote_refuses_existing_id(tmp_path):
+    import importlib.util
+    import sys
+
+    spec = importlib.util.spec_from_file_location(
+        "cards_promote_sol", os.path.join("scripts", "cards", "promote.py")
+    )
+    promote = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = promote
+    spec.loader.exec_module(promote)
+    cdir = tmp_path / "cards"
+    (cdir / "posturas").mkdir(parents=True)
+    (cdir / "posturas" / "a.json").write_text(
+        json.dumps({"cards": [card(id="med_x", name="Nome X")]}), encoding="utf-8"
+    )
+    lote = tmp_path / "l.json"
+    lote.write_text(
+        json.dumps(
+            {
+                "cards": [
+                    card(
+                        id="med_x",
+                        name="Nome X",
+                        momento="Outro momento bem distinto de pacto e fardo.",
+                    )
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    res = promote.promote(
+        str(lote),
+        {"med_x": {"bandeiras": []}},
+        onda=2,
+        autor="t",
+        revisor_voz="dono",
+        cards_dir=str(cdir),
+    )
+    assert "med_x" in res["recusadas"] and not res["promovidas"]
+
+
+def _write(cdir, name, cards_):
+    (cdir / "posturas").mkdir(parents=True, exist_ok=True)
+    (cdir / "posturas" / name).write_text(json.dumps({"cards": cards_}), encoding="utf-8")
+
+
+def _errors(cdir):
+    from services.content_validator import validate_cards
+
+    return [f.message for f in validate_cards(str(cdir)) if f.severity == "error"]
+
+
+def test_validator_requires_unique_and_increasing_id_versao_across_files(tmp_path):
+    cdir = tmp_path / "cards"
+    legacy = {
+        "id": "dup_id",
+        "name": "Velha",
+        "tipo": "ativa",
+        "classe": "Médico de Campo",
+        "patamar": "inicial",
+        "frequencia": "livre",
+        "efeito": {"kind": "cura", "valor": 3},
+        "descricao": "x",
+        "tier": 1,
+        "level_req": 1,
+    }
+    _write(cdir, "a.json", [legacy])
+    _write(cdir, "b.json", [card(id="dup_id", name="Nova", versao=1)])
+    assert any("(dup_id, 1) duplicado" in m for m in _errors(cdir))
+    _write(cdir, "b.json", [card(id="dup_id", name="Nova", versao=2)])
+    assert not any("dup_id" in m and "versao" in m for m in _errors(cdir))
+    _write(cdir, "a.json", [{**legacy, "versao": 3}])
+    assert any("não é maior" in m for m in _errors(cdir))
+
+
+def test_non_numeric_versao_does_not_break_catalog(tmp_path, monkeypatch):
+    from services import cards
+    from services.content_validator import validate_cards
+
+    monkeypatch.setattr(cards.gamedata, "DATA_DIR", str(tmp_path))
+    cdir = tmp_path / "cards"
+    _write(
+        cdir, "a.json", [card(id="med_v", versao="dois"), card(id="med_w", name="W", versao=None)]
+    )
+    cards.reload_cards()
+    try:
+        assert cards.get_card("med_v") is not None
+    finally:
+        cards.reload_cards()
+    assert any(
+        f.severity == "warning" and "versao inválida" in f.message
+        for f in validate_cards(str(cdir))
+    )
+
+
+def test_loader_traversal_matches_lint_and_keeps_323_cards():
+    from services import cards
+
+    ids = {c["id"] for c in card_lint.load_pool()}
+    assert set(cards.all_cards()) == ids and len(ids) == 323
+
+
+def test_auto_resolved_choices_marked_source_auto(monkeypatch):
+    import progression
+    from services import card_telemetry
+
+    seen = []
+    monkeypatch.setattr(card_telemetry, "log_event", lambda a, e, **kw: seen.append((e, kw)))
+    p = {
+        "class_name": "Médico de Campo",
+        "level": 2,
+        "known_cards": [],
+        "pending_choices": [{"id": "lvl2-carta", "level": 2, "kind": "carta"}],
+    }
+    progression.auto_resolve_choices(p)
+    picks = [kw for e, kw in seen if e in ("card_picked", "card_offered")]
+    assert picks and all(kw["source"] == "auto" for kw in picks)
+    seen.clear()
+    card_telemetry.picked("x")
+    assert seen[0][1]["source"] == "player"

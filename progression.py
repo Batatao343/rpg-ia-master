@@ -439,7 +439,7 @@ def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
     """Resolve TODAS as pending_choices de forma determinística (menor Virtude,
     primeira subclasse elegível, primeira Carta por id…). Usado na criação em nível
     alto (SPEC-227 R9). Mesmas regras do harness `start_level`; sem aleatoriedade."""
-    from services import cards
+    from services import card_telemetry, cards
 
     p = dict(player)
     for _ in range(max_passes):
@@ -489,7 +489,8 @@ def auto_resolve_choices(player: dict, *, max_passes: int = 25) -> dict:
                         kwargs.update(evolve_card_id=evolvable[0], caminho="A")
             if not kwargs:
                 continue
-            updated, error = apply_choice(p, str(choice.get("id") or ""), **kwargs)
+            with card_telemetry.source_scope("auto"):  # SPEC-336 R6: não é pick do jogador
+                updated, error = apply_choice(p, str(choice.get("id") or ""), **kwargs)
             if not error:
                 p = updated
                 applied_any = True
