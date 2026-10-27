@@ -179,11 +179,11 @@ def end_round(ctx, state, player_id, out: dict) -> None:
     kept = card_piles.mark_guardadas(piles)
     if kept:
         out.setdefault("pilhas_eventos", []).append({"kind": "guardar", "cartas": list(kept)})
-    budget = list(kept)
-    for cid in list(piles["mao"]):
-        if cid in budget:
-            budget.remove(cid)
-            continue
+    # Mesma regra do descarte real (`begin_round`): simula `discard_hand` numa copia.
+    import copy
+
+    sim = copy.deepcopy(piles)
+    for cid in card_piles.discard_hand(sim):
         if card_piles.has_kw(card_piles.card_of(cid), "vazao"):
             out.setdefault("pilhas_eventos", []).append({"kind": "vazao", "carta": cid})
             fx.pile_trigger(ctx, "ao_descartar", cid, player_id, out)

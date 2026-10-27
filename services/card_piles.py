@@ -226,6 +226,7 @@ def begin_round(piles: dict, rng: random.Random | None = None) -> dict:
     discard_hand(piles)
     draw(piles, MAO_BASE - len(piles["mao"]), rng)
     piles["folego"] = min(FOLEGO_MAX, FOLEGO_BASE + int(piles.get("folego_bonus", 0) or 0))
+    piles["folego_cheio"] = piles["folego"]  # teto efetivo desta rodada (base + bonus)
     piles["folego_bonus"] = 0
     piles["folego_emprestado"] = 0
     piles["pacto_carga"] = False
@@ -300,6 +301,8 @@ def purge_fardos(piles: dict, n: int) -> int:
             if left and is_fardo(card_of(cid)):
                 left -= 1
                 removed += 1
+                if pile == "mao":
+                    _forget(piles, cid)
             else:
                 kept.append(cid)
         piles[pile] = kept
@@ -331,6 +334,16 @@ def pick_discards(
     return [hand[i] for i in sorted(idx)]
 
 
+def _forget(piles: dict, card_id: str) -> None:
+    """A copia saiu da mao: tira UMA ocorrencia de `retidas`/`guardadas` (se houver)."""
+    for key in ("retidas", "guardadas"):
+        lst = list(piles.get(key) or [])
+        if card_id in lst:
+            lst.remove(card_id)
+            piles[key] = lst
+            return
+
+
 def discard_cards(piles: dict, ids: list[str]) -> list[str]:
     """Move as Cartas escolhidas da mao para o descarte (uma copia por id)."""
     gone: list[str] = []
@@ -338,6 +351,7 @@ def discard_cards(piles: dict, ids: list[str]) -> list[str]:
         if cid in piles["mao"]:
             piles["mao"].remove(cid)
             piles["descarte"] = list(piles["descarte"]) + [cid]
+            _forget(piles, cid)
             gone.append(cid)
     return gone
 
@@ -593,7 +607,8 @@ def public_view(piles: dict | None) -> dict | None:
         "descarte": len(piles.get("descarte") or []),
         "exaurida": len(piles.get("exaurida") or []),
         "folego": int(piles.get("folego", 0) or 0),
-        "folego_max": FOLEGO_BASE,
+        "folego_max": int(piles.get("folego_cheio", FOLEGO_BASE) or FOLEGO_BASE),
+        "folego_bonus_pendente": int(piles.get("folego_bonus", 0) or 0),
         "folego_emprestado": int(piles.get("folego_emprestado", 0) or 0),
         "pacto_max": PACTO_MAX_FOLEGO,
     }

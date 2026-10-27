@@ -200,6 +200,11 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
     `valor`/`dano_base`/`n` (fixar na autoria, SPEC-335); `descartar` é quase sem custo
     enquanto a mão toda vai ao descarte no fim da rodada (só dispara Vazão ou tira Carta com
     Guardar).
+  - **Re-revisão (B2).** Vazão no `end_round` usa a MESMA regra do descarte: simula
+    `discard_hand` numa cópia (após `mark_guardadas`); retidas não disparam, excedente acima
+    de `MAO_BASE` dispara. `discard_cards`/`purge_fardos` tiram também uma ocorrência de
+    `retidas`/`guardadas`. `public_view` expõe `folego_max` efetivo da rodada
+    (`piles["folego_cheio"]`) e `folego_bonus_pendente` (o front não tem tipo de pilhas).
 - **D-11 follow-ups fechados (27/10).** P2-4: o golden (`spec330_legacy_golden.json`,
   regerado com o código pré-330 `8bd4f384` num worktree descartável) tem a seed 7 com Mira
   e `extra` com as seeds 21 e 1337 SEM Mira (erro/acerto/crítico), além de `on_attack`/

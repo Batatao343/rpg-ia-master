@@ -647,3 +647,59 @@ def test_inimigo_fardo_fora_do_on_vira_so_pendente(mode, monkeypatch):
 def test_aliado_nao_planta_fardo(monkeypatch):
     state, out = _fardo_enemy_run("on", monkeypatch, ally=True)
     assert cp.FARDO_ID not in state["_piles"]["mao"]
+
+
+# ------------------------------------------------------------------ re-revisao: Vazao = regra do descarte
+def test_vazao_nao_dispara_para_carta_retida():
+    s = _setup(["t_comprar", "bas_san_golpe"], compra=["t_vazao", "san_esquiva"])
+    _run(s, _step("t_comprar", "player"))
+    assert "t_vazao" in s[3]["_piles"]["retidas"]
+    assert not fx.has_condition(s[1]["gob_1"], "sangria")  # retida sobrevive: nao e descartada
+    cp.begin_round(s[3]["_piles"])
+    assert "t_vazao" in s[3]["_piles"]["mao"]
+
+
+def test_vazao_dispara_para_excedente_acima_do_limite_da_mao():
+    s = _setup(["bas_san_golpe"] * 5 + ["t_vazao"])
+    piles = s[3]["_piles"]
+    piles["guardadas"] = []
+    piles["retidas"] = ["bas_san_golpe"] * 5  # as 5 primeiras ocupam o limite; t_vazao sobra
+    scene, actors, sides, state = s
+    token = fx.bind(scene, actors, sides, rng=random.Random(1))
+    try:
+        from services import card_deck_round as deck
+
+        o: dict = {"logs": []}
+        deck.end_round(fx.current(), state, "player", o)
+    finally:
+        fx.unbind(token)
+    assert {"kind": "vazao", "carta": "t_vazao"} in o["pilhas_eventos"]
+
+
+# ------------------------------------------------------------------ re-revisao: copias e retidas
+def test_discard_cards_e_purge_removem_uma_ocorrencia_de_retidas():
+    piles = {
+        "mao": ["a", "a", cp.FARDO_ID, cp.FARDO_ID],
+        "descarte": [],
+        "compra": [],
+        "retidas": ["a", cp.FARDO_ID],
+        "guardadas": ["a"],
+    }
+    cp.discard_cards(piles, ["a"])
+    assert piles["mao"].count("a") == 1
+    assert piles["retidas"].count("a") + piles["guardadas"].count("a") == 1
+    cp.purge_fardos(piles, 1)
+    assert piles["mao"].count(cp.FARDO_ID) == 1 and piles["retidas"] == []
+
+
+# ------------------------------------------------------------------ re-revisao: public_view
+def test_public_view_expoe_folego_efetivo_e_bonus_pendente():
+    s = _setup(["t_folego"])
+    piles = s[3]["_piles"]
+    _run(s, _step("t_folego", "player"))
+    view = cp.public_view(piles)
+    assert view["folego_max"] == cp.FOLEGO_BASE and view["folego_bonus_pendente"] == 2
+    cp.begin_round(piles)
+    view = cp.public_view(piles)
+    assert view["folego_max"] == cp.FOLEGO_BASE + 2 and view["folego_bonus_pendente"] == 0
+    assert view["folego"] == view["folego_max"] <= cp.FOLEGO_MAX
