@@ -9,25 +9,23 @@ from __future__ import annotations
 
 from observability.telemetry import log_event
 
-AREA = "cards"
-
 
 def offered(card_ids: list[str], *, picked: str = "") -> None:
     """Cada Carta elegível apresentada numa escolha de nível (uma oferta por Carta)."""
     for cid in card_ids:
-        log_event(AREA, "card_offered", card_id=str(cid), picked=str(cid) == str(picked))
+        log_event("cards", "card_offered", card_id=str(cid), picked=str(cid) == str(picked))
 
 
 def picked(card_id: str) -> None:
-    log_event(AREA, "card_picked", card_id=str(card_id))
+    log_event("cards", "card_picked", card_id=str(card_id))
 
 
 def played(card_id: str, destino: str = "") -> None:
     """Carta jogada em conflito; ``destino`` = pilha (``descarte``/``exaurida``)."""
-    log_event(AREA, "card_played", card_id=str(card_id), pile=str(destino))
+    log_event("cards", "card_played", card_id=str(card_id), pile=str(destino))
     if destino == "exaurida":
         exhausted(card_id)
 
 
 def exhausted(card_id: str) -> None:
-    log_event(AREA, "card_exhausted", card_id=str(card_id))
+    log_event("cards", "card_exhausted", card_id=str(card_id))

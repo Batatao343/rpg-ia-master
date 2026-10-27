@@ -59,6 +59,10 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "campaign.world_replan_trigger": ("cause",),
     "campaign_manager.fallback": (),
     "card_draft.fallback": (),
+    "cards.card_exhausted": ("card_id",),
+    "cards.card_offered": ("card_id", "picked"),
+    "cards.card_picked": ("card_id",),
+    "cards.card_played": ("card_id", "pile"),
     "character.ai_failed": ("error",),
     "client.error": (
         "beacon_request_id",
