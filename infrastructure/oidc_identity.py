@@ -158,7 +158,7 @@ class OidcIdentityProvider:
             if isinstance(audiences, str)
             else (audiences if isinstance(audiences, list) else [])
         )
-        if self.audience not in audiences and claims.get("azp") != self.audience:
+        if self.audience not in audiences:
             raise Unauthorized("token inválido", reason="bad_aud")
         exp, nbf = claims.get("exp"), claims.get("nbf", now)
         for value in (exp, nbf):  # NumericDate: número finito, nunca bool/string

@@ -898,7 +898,12 @@ def _require_allowed_origin(request: Request) -> None:
 
 
 def _auth_abuse(
-    request: Request, *, action: str, email: str = "", captcha_token: str | None = None
+    request: Request,
+    *,
+    action: str,
+    email: str = "",
+    captcha_token: str | None = None,
+    access: str = "",
 ) -> None:
     from infrastructure.contracts import Unauthorized
     from infrastructure.runtime import get_runtime
@@ -906,7 +911,7 @@ def _auth_abuse(
 
     _require_allowed_origin(request)
     runtime = get_runtime()
-    auth_limit(runtime, request, action=action, email=email)
+    auth_limit(runtime, request, action=action, email=email, access=access)
     from services.account_security import captcha_config
 
     captcha_mode = captcha_config()["mode"]
@@ -1039,18 +1044,25 @@ def auth_reauthenticate(body: ReauthRequest, request: Request, response: Respons
     from services.auth_sessions import ACCESS_COOKIE
 
     runtime = _lifecycle_runtime()
-    _auth_abuse(request, action="reauth", captcha_token=body.captcha_token)
+    access = request.cookies.get(ACCESS_COOKIE) or ""
+    _auth_abuse(request, action="reauth", captcha_token=body.captcha_token, access=access)
     try:
         _validate_auth_csrf(request)
-        access = request.cookies.get(ACCESS_COOKIE)
-        from services.account_security import captcha_config
+        from services.account_security import auth_limit, auth_success, captcha_config
 
-        if captcha_config()["mode"] == "gotrue":
-            owner = runtime.identity_verifier.reauthenticate(
-                access, body.password, captcha_token=body.captcha_token
-            )
-        else:
-            owner = runtime.identity_verifier.reauthenticate(access, body.password)
+        if not access:
+            raise Unauthorized("invalid_token")
+        try:
+            if captcha_config()["mode"] == "gotrue":
+                owner = runtime.identity_verifier.reauthenticate(
+                    access, body.password, captcha_token=body.captcha_token
+                )
+            else:
+                owner = runtime.identity_verifier.reauthenticate(access, body.password)
+        except Unauthorized:
+            auth_limit(runtime, request, action="reauth", stage="failure", access=access)
+            raise
+        auth_success(runtime, action="reauth", email="", request=request, access=access)
         _set_recent_cookie(response, owner, access)
         return {"recent": True}
     except Unauthorized as exc:

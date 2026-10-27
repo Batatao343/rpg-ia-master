@@ -136,6 +136,8 @@ LOGIN_EMAIL_FAILURES = (10, 900)  # só falhas de credencial, chave (e-mail, IP)
 EMAIL_IP_ATTEMPTS = (5, 900)  # signup/reset/verify: chave (e-mail, IP)
 EMAIL_ONLY_ATTEMPTS = (20, 3600)  # folgado, contra e-mail bombing de IPs distintos
 IP_ATTEMPTS = (20, 900)
+REAUTH_FAILURES = (5, 900)  # SPEC-343: falhas de senha do reauth, por sessão (digest do cookie)
+LOGIN_EMAIL_ONLY_FAILURES = (50, 3600)  # SPEC-343: falhas de login por e-mail, de qualquer IP
 EMAIL_ACTIONS = ("login", "signup", "reset", "verify")
 
 
@@ -173,7 +175,23 @@ def _login_failure_key(email: str, remote: str) -> str:
     return f"auth:login:emailip:{_digest(_normal(email))}:{_digest(remote)}"
 
 
-def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "attempt") -> None:
+def _login_email_key(address: str) -> str:
+    return f"auth:login:email:{_digest(_normal(address))}"
+
+
+def _reauth_failure_key(access: str) -> str:
+    return f"auth:reauth:fail:{_digest(access)}"
+
+
+def auth_limit(
+    runtime,
+    request,
+    *,
+    action: str,
+    email: str = "",
+    stage: str = "attempt",
+    access: str = "",
+) -> None:
     """IP bucket per attempt; address buckets per SPEC-220 R4.
 
     login: the (address, IP) bucket counts only credential failures (``stage="failure"``)
@@ -194,6 +212,25 @@ def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "
                 bucket="email",
                 key=key,
             )
+            only_key = _login_email_key(address)
+            _too_many(
+                limiter.consume(
+                    only_key,
+                    limit=LOGIN_EMAIL_ONLY_FAILURES[0],
+                    window_seconds=LOGIN_EMAIL_ONLY_FAILURES[1],
+                ),
+                action=action,
+                bucket="email",
+                key=only_key,
+            )
+        elif action == "reauth" and access:
+            key = _reauth_failure_key(access)
+            _too_many(
+                limiter.consume(key, limit=REAUTH_FAILURES[0], window_seconds=REAUTH_FAILURES[1]),
+                action=action,
+                bucket="session",
+                key=key,
+            )
         return
     ip_key = f"auth:{action}:ip:{_digest(remote)}"
     _too_many(
@@ -202,6 +239,17 @@ def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "
         bucket="ip",
         key=ip_key,
     )
+    if action == "reauth" and access:
+        peek = getattr(limiter, "peek", None)
+        if peek is not None:
+            key = _reauth_failure_key(access)
+            _too_many(
+                peek(key, limit=REAUTH_FAILURES[0], window_seconds=REAUTH_FAILURES[1]),
+                action=action,
+                bucket="session",
+                key=key,
+            )
+        return
     if not address:
         return
     if action == "login":
@@ -213,6 +261,17 @@ def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "
                 action=action,
                 bucket="email",
                 key=key,
+            )
+            only_key = _login_email_key(address)
+            _too_many(
+                peek(
+                    only_key,
+                    limit=LOGIN_EMAIL_ONLY_FAILURES[0],
+                    window_seconds=LOGIN_EMAIL_ONLY_FAILURES[1],
+                ),
+                action=action,
+                bucket="email",
+                key=only_key,
             )
         return
     digest = _digest(address)
@@ -234,11 +293,16 @@ def auth_limit(runtime, request, *, action: str, email: str = "", stage: str = "
     )
 
 
-def auth_success(runtime, *, action: str, email: str, request=None) -> None:
-    """A correct login clears the (address, IP) failure counter (SPEC-220 R4)."""
+def auth_success(runtime, *, action: str, email: str, request=None, access: str = "") -> None:
+    """A correct login clears the (address, IP) failure counters (SPEC-220 R4, SPEC-343)."""
     reset = getattr(runtime.rate_limiter, "reset", None)
-    if action == "login" and _normal(email) and reset is not None:
+    if reset is None:
+        return
+    if action == "login" and _normal(email):
         reset(_login_failure_key(email, _remote(request)))
+        reset(_login_email_key(email))
+    elif action == "reauth" and access:
+        reset(_reauth_failure_key(access))
 
 
 def auth_email_bucket_keys(email: str) -> tuple[str, ...]:

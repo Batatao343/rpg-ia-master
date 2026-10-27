@@ -1,6 +1,6 @@
 # SPEC-343 — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
 
-> **Status:** `approved` (Aprovação: dono, 27/10, inspeção de segurança geral — "faz uma inspeção de segurança geral criando e executando specs do que encontrar")
+> **Status:** `done` (Aprovação: dono, 27/10, inspeção de segurança geral — "faz uma inspeção de segurança geral criando e executando specs do que encontrar")
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-220 (`done`, limites de auth), SPEC-337 (`done`, bateria HTTP).
 > **Desbloqueia:** —
@@ -72,12 +72,12 @@ def auth_success(runtime, *, action: str, email: str, request=None, access: str 
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R3: reauth bloqueia na 6ª falha de senha por sessão, zera no sucesso, não consome em 403/401-sem-cookie.
-- [ ] R4–R5: 51ª falha do mesmo e-mail em IPs distintos → 429; sucesso zera; chave nova listada em `auth_email_bucket_keys`.
-- [ ] R6: log de `rate_limited` sem e-mail/token em claro.
-- [ ] R7: `azp` não substitui `aud`.
-- [ ] R8–R9: migration nova; varredura estática prova RLS em toda tabela `app.*`.
-- [ ] Nenhuma flag `RPG_*` nova; `tests/test_flag_registry.py` verde.
+- [x] R1–R3: reauth bloqueia na 6ª falha de senha por sessão, zera no sucesso, não consome em 403/401-sem-cookie.
+- [x] R4–R5: 51ª falha do mesmo e-mail em IPs distintos → 429; sucesso zera; chave nova listada em `auth_email_bucket_keys`.
+- [x] R6: log de `rate_limited` sem e-mail/token em claro.
+- [x] R7: `azp` não substitui `aud`.
+- [x] R8–R9: migration nova; varredura estática prova RLS em toda tabela `app.*`.
+- [x] Nenhuma flag `RPG_*` nova; `tests/test_flag_registry.py` verde.
 - [ ] Suíte completa verde no pouso; revisão independente APPROVED.
 
 ## 6. Smoke test real
@@ -99,3 +99,5 @@ Offline (perfil DB offline com `MemoryRateLimiter`): os testes de R1 e R4 **são
 ## Histórico de mudanças
 
 - 2026-10-27 — criada (`approved`) a partir da inspeção de segurança geral.
+
+- 2026-10-27 — implementada (`done`). Desvio R9: a varredura achou `app.rate_limit_buckets` também sem RLS (criada em 20260819001850; rpg_api revogado, acessada só pelo backend). Sem banco local para provar o efeito em `rpg_runtime`, ficou como exceção explícita (`RLS_EXCEPTIONS`) no teste; follow-up próprio.

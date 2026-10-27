@@ -107,8 +107,14 @@ def test_rejects_bad_claims(provider, keys, case):
         provider.verify(_token(keys, **case))
 
 
-def test_azp_can_carry_audience(provider, keys):
-    assert provider.verify(_token(keys, aud="account", azp=AUD)).subject == "external-user"
+def test_azp_does_not_replace_audience(provider, keys):
+    with pytest.raises(Unauthorized):
+        provider.verify(_token(keys, aud="account", azp=AUD))
+
+
+def test_aud_list_containing_audience_is_accepted(provider, keys):
+    out = provider.verify(_token(keys, aud=["account", AUD], azp="other"))
+    assert out.subject == "external-user"
 
 
 @pytest.mark.parametrize("alg", ["none", "HS256"])
