@@ -1,5 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
+> **Veredito resíduos (`14dce909`):** `APPROVED_WITH_FOLLOWUPS` (só `momento` mudou; pousar já e adiar o ajuste por Postura para depois da SPEC-339, com o critério 45–75 % aberto)
 > **Veredito Lote 6 + R6 (`3e59ef20`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 5 P2; meta "≥ 520" da spec com a conta errada: a base correta dá 483, entregue 499)
 > **Veredito Lote 5 (Médico de Campo):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `72f82c23` (a 1ª rodada, em `75452e54`, deu `CHANGES_REQUIRED` com 2 P1 e 4 P2; o bugfix de motor fica na SPEC-339)
 > **Veredito Lote 4 (Corruptor):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `7a40ae9d` (a 1ª rodada, em `25b00b3f`, deu `CHANGES_REQUIRED` com 1 P1 e 4 P2)
@@ -11,6 +12,79 @@
 > Nota de nome: o coordenador pediu `handoffs/SPEC-335-sol-review-lote2.md`, mas esse nome
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
+
+# Resíduos da SPEC-335 (`14dce909`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. Concordo em pousar já e deixar o ajuste de poder por
+> Postura para depois da SPEC-339, com as condições da seção "Pousar agora?".
+
+## Conferido
+
+1. **Só `momento` mudou: OK.** Comparei `14dce909~1` com `14dce909` Carta a Carta em
+   `bestiario.json` e `exemplos.json`. Mudaram 45 Cartas, e só em `momento`/`momento_placeholder`;
+   ids e ordem são os mesmos. Passam o golden e o snapshot da 330 (`test_card_effects_grammar`),
+   `test_enemy_decks` e `test_conflito_autoria_bestiario` (baralhos de inimigo da 332), além de
+   `test_card_variety`.
+2. **A remoção do placeholder não quebra nada: OK.**
+   - Nenhum código de `services/`, dos scripts ou do validador lê `momento_placeholder`; só os
+     testes, que agora exigem 0.
+   - `gen_tiers_5_plus.KEEP_FIELDS` perdeu o campo sem efeito colateral.
+   - `check_voice` recusa `descricao` vazia (`""`, espaços, `None`), e o teste varre o pool
+     inteiro (mais de 500 Cartas) atrás de descrição vazia ou de frase-modelo.
+   - `validate_content` dá 0/0.
+   - **Incidente meu, já desfeito:** ao testar o gerador, rodei `gen_tiers_5_plus.py` sem
+     argumentos. Mesmo sem `--force`, ele **reescreveu 10 arquivos de dados** (`basicas.json`,
+     `tiers_5_plus.json`, os das Posturas e `classes.json`) com CRLF, ordem de chaves diferente e
+     listas expandidas. Não mudou nenhum valor, mas sujou o diff. Restaurei com `git checkout`, e a
+     árvore está limpa. Ver P2-1.
+3. **A arena por Postura não basta para decidir balanceamento.** Ela serve como alarme, não como
+   régua, por estes motivos:
+   - **Viés de ordem do `full_deck`**: no mesmo tier, a escolha segue o id, não a qualidade.
+   - **A linha "todas as subclasses"** usa um baralho impossível para o jogador (mistura as 3
+     subclasses). É dessa linha que vêm o Devoto a 77,1 % e o Médico a 75,0 %.
+   - **Amostra pequena**: 4 criaturas por categoria. A variância está mais na escolha das criaturas
+     do que nas 20 sementes, então o erro real é maior que os ±3 pp do relatório.
+   - **O bot** não usa reações nem pondera controle.
+   - **Provocar e Marca de `duracao` 1 não fazem nada** até a SPEC-339, o que pesa sobretudo no
+     Devoto e no Sangromante.
+
+   Dois sinais são robustos o bastante para guiar a próxima rodada:
+   - **Sangromante acima de 75 % no padrão em todas as subclasses** (79,2 / 80,0 / 81,7).
+   - **Corruptor/alma no fundo** (44,6 no padrão / 34,4 com elite).
+
+   No Devoto, por subclasse só o consagrado passa de 75 % (76,7), dentro do erro.
+
+## Pousar agora?
+
+**Concordo em pousar e adiar o ajuste.** Mexer no poder agora seria refeito: com a SPEC-339,
+Provocar e Marca passam a valer e os números mudam. Condições:
+
+- O critério "45–75 %" fica **aberto** na spec, como está. A 335 **não** vai para `done` enquanto
+  ele não for fechado ou passado formalmente a outra spec: a SPEC-339 (critério de aceite: refazer
+  a arena das Posturas depois do bugfix) ou a 336.
+- Antes da próxima medição: ordenar o `full_deck` por poder ou por amostra com semente (P2-3 do
+  Lote 5), usar só as linhas **por subclasse** e aumentar as criaturas (`--per-cat` ≥ 8) ou as
+  sementes.
+- Registrar no ESTADO o risco do Sangromante a ~80 %. As Cartas de onda já estão no jogo `off`
+  como opção de Acervo; o baralho `on` e o espólio continuam desligados.
+
+## Achados
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P2-1 | P2 | `scripts/gen_tiers_5_plus.py` (ferramenta, anterior a este commit) | Rodar sem argumentos regrava 10 arquivos de dados com CRLF, outra ordem de chaves e listas expandidas, apesar do "sem `--force` só preenche o que falta". O risco é alguém commitar um diff enorme sem mudança semântica. | Escrever com `newline="\n"` e o mesmo formato dos arquivos (ou não gravar se nada mudou), e acrescentar `--check` sem escrita. 336. |
+| P2-2 | P2 | `docs/spec335/RELATORIO-arena-posturas.md` | A tabela principal usa a linha "todas as subclasses", que não é um baralho possível de jogador. | Pôr as linhas por subclasse em destaque e registrar que o critério será medido por subclasse, com o `full_deck` corrigido, depois da SPEC-339. |
+
+## Comandos rodados (resíduos)
+
+```text
+scratchpad/sol7_cmp.py (14dce909~1 × 14dce909: bestiario.json, exemplos.json) → 45 Cartas, só momento/momento_placeholder
+grep momento_placeholder (.py/.json/.yaml fora de docs/historico e handoffs) → só tests/test_card_acervo_reparo.py
+pytest -q -n 2 test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_enemy_decks, test_conflito_autoria_bestiario, test_card_variety, test_handoff_names → exit 0
+scripts/validate_content.py → 0 erros, 0 avisos
+scripts/gen_tiers_5_plus.py (sem argumentos, por engano) → regravou 10 arquivos (CRLF/formato); restaurados com git checkout; árvore limpa
+arena_posturas.py: não rodei de novo (cerca de 9.600 lutas); leitura do script e do JSON
+```
 
 # Lote 6 + R6 (`main...3e59ef20`)
 
