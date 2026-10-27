@@ -1941,8 +1941,11 @@ def run_round(
     initiator: str | None = None,
     rng=None,
     refusal: str = "",
+    pressagios: dict | None = None,
 ) -> dict:
     """Resolve uma RODADA inteira. `sides` = {"hero":[ids], "ally":[ids], "enemy":[ids]}.
+    `pressagios` (SPEC-329, flag `RPG_ENEMY_INTENT=on`): intenções congeladas no fim da rodada
+    anterior; ausente (save antigo/1ª rodada) = calcula no início desta rodada.
     `declarations[actor_id]` = TurnDeclaration do jogador/aliado controlado; inimigos
     sem declaração recebem uma via `enemy_declaration`. Retorna
     {logs, deaths, terminal, scars_pending, player_dead, ended, reason, initiative}."""
@@ -1986,6 +1989,66 @@ def run_round(
     if stalemate_events:
         out["stalemate_events"] = stalemate_events
         out["logs"].extend(ev["log"] for ev in stalemate_events)
+    # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
+    # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
+    from services import enemy_intent as ei
+
+    intent_mode = ei.mode()
+    frozen: dict | None = None
+    intent_cursor: dict[str, int] = {}
+    if intent_mode != "off":
+        frozen = (
+            pressagios
+            if (intent_mode == "on" and pressagios is not None)
+            else ei.forecast_round(scene, actors_by_id, sides, rng, scene_state=scene_state)
+        )
+
+    def _next_intent(actor_id: str) -> dict | None:
+        i = intent_cursor.get(actor_id, 0)
+        intent_cursor[actor_id] = i + 1
+        lst = (frozen or {}).get(actor_id) or []
+        return lst[i] if i < len(lst) else None
+
+    def _frustrate(actor_id: str, intent: dict, motivo: str) -> None:
+        # R4/R5: presságio que ficou impossível (gancho da keyword "Interromper", SPEC-330).
+        a = actors_by_id.get(actor_id) or {}
+        out.setdefault("pressagios_frustrados", []).append(
+            {"actor_id": actor_id, "tipo": intent["tipo"], "motivo": motivo}
+        )
+        out["logs"].append(ei.frustrated_line(intent, actors_by_id))
+        from services import mechanics_trace as _mt
+
+        _mt.record_step("pressagio_frustrado", actor=actor_id, reason=motivo, card_id=None)
+        logger.info("pressagio_frustrado actor=%s motivo=%s name=%s", actor_id, motivo, _name(a))
+
+    def _enemy_decl(actor_id: str, actor: dict):
+        def late():
+            return enemy_declaration(
+                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
+            )
+
+        if frozen is None:
+            return late()
+        intent = _next_intent(actor_id)
+        if intent_mode == "shadow":
+            decl_late = late()
+            if intent is not None:
+                sh = out.setdefault("intent_shadow", {"total": 0, "changed": 0})
+                sh["total"] += 1
+                sh["changed"] += int(intent["declaration"] != decl_late.model_dump())
+            return decl_late
+        if intent is None or actor.get("_forced_attack"):
+            return late()
+        if ei.still_possible(intent, actors_by_id, scene):
+            if intent["tipo"] == "render-se":
+                actor["surrendered"] = True
+            out.setdefault("pressagios_cumpridos", []).append(
+                {"actor_id": actor_id, "tipo": intent["tipo"], "alvo_id": intent.get("alvo_id")}
+            )
+            return ct.TurnDeclaration(**intent["declaration"])
+        _frustrate(actor_id, intent, "impossivel")
+        return late()
+
     player = _find_player(actors_by_id, sides)
     player_id = _player_id(sides)
     player_decl = declarations.get(player_id) if player_id else None
@@ -2076,14 +2139,16 @@ def run_round(
             if actor is None or not _can_act(actor) or actor_id in denied:
                 continue
             out["logs"].append(f"{_name(actor)} age de novo.")
-            decl = enemy_declaration(
-                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
-            )
+            decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
             continue
         acted.add(actor_id)
         if actor is None or not _can_act(actor):
             denied.add(actor_id)
+            if intent_mode == "on" and frozen is not None:
+                _it = _next_intent(actor_id)
+                if _it is not None:
+                    _frustrate(actor_id, _it, "incapaz")
             continue
         # Controle é observado ANTES do tick: duration=1 precisa negar exatamente
         # esta ação e só então expirar. O fluxo anterior removia stun/sleep antes
@@ -2095,17 +2160,23 @@ def run_round(
         dot_applied = _tick_conditions_v4(actor, out, rng=rng)
         _check_terminal(actor, actor_id, out, damage_applied=dot_applied)
         if not _can_act(actor):
+            if intent_mode == "on" and frozen is not None:
+                _it = _next_intent(actor_id)
+                if _it is not None:
+                    _frustrate(actor_id, _it, "incapaz")
             continue
         if stunned_this_turn:
             denied.add(actor_id)
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
+            if intent_mode == "on" and frozen is not None:
+                _it = _next_intent(actor_id)
+                if _it is not None:
+                    _frustrate(actor_id, _it, "atordoado")
             _expire_stat_conditions(actor, present_at_start, out)
             continue
         decl = declarations.get(actor_id)
         if decl is None:
-            decl = enemy_declaration(
-                scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
-            )
+            decl = _enemy_decl(actor_id, actor)
         _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         _expire_stat_conditions(actor, present_at_start, out)
 

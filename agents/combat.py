@@ -32,6 +32,7 @@ from services import conflict_summary as summ
 from services import death_flow
 from services import discovery as disc
 from services import encounter_preparation as prep
+from services import enemy_intent as _enemy_intent
 from services import graph_resolver as gr
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
@@ -1949,6 +1950,11 @@ def _combat_node(state: GameState):
             initiator=initiator,
             rng=rng,
             **({"refusal": chase_refusal} if chase_refusal else {}),
+            **(
+                {"pressagios": combat_meta["pressagios"]}
+                if _enemy_intent.active() and isinstance(combat_meta.get("pressagios"), dict)
+                else {}
+            ),
         )
         if chase_refusal:
             combat_meta["round"] = max(0, int(combat_meta.get("round", 1) or 1) - 1)
@@ -2119,6 +2125,18 @@ def _combat_node(state: GameState):
         scene_tr = [live_tr.get(str(a.get("id") or a.get("name")), a) for a in scene_tr]
         combat_meta["scene_allies"] = scene_tr
     combat_meta["active"] = not combat_over
+    # SPEC-329 R1: congela o Presságio da PRÓXIMA rodada (a UI o mostra antes da jogada).
+    combat_meta.pop("pressagios", None)
+    combat_meta.pop("pressagios_publicos", None)
+    if _enemy_intent.active() and not combat_over and not is_simulation:
+        try:
+            _next_round = _enemy_intent.forecast_round(scene, actors_by_id, sides, rng)
+            combat_meta["pressagios"] = _next_round
+            combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
+                _next_round, actors_by_id
+            )
+        except Exception:  # cosmético: nunca derruba o turno
+            _log_event("combat", "pressagio_forecast_failed", level="warning")
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
     combat_meta["last_reactions"] = list(out.get("reactions") or [])

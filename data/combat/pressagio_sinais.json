@@ -1,0 +1,167 @@
+{
+  "_meta": "SPEC-329: frases de Presságio por tipo x família. {nome} = nome do inimigo; {alvo} = nome do alvo. Rascunho do coordenador na voz de Valoria; revisão do dono pendente.",
+  "ataque": {
+    "default": [
+      "O ar se parte antes do golpe: {nome} arma o braço contra {alvo}.",
+      "{nome} firma os pés e mede {alvo} com olhos de quem já decidiu."
+    ],
+    "fera": [
+      "Os músculos de {nome} se encolhem como mola; {alvo} é a presa.",
+      "Um rosnado baixo, dentes à mostra: {nome} vai saltar sobre {alvo}."
+    ],
+    "morto_inquieto": [
+      "Os ossos de {nome} estalam, secos; a mão podre se ergue para {alvo}.",
+      "{nome} arrasta o corpo sem pressa, e o frio da cova aponta para {alvo}."
+    ],
+    "legiao": [
+      "O ferro range: {nome} baixa a lâmina na direção de {alvo}.",
+      "Disciplina de quartel: {nome} ergue o escudo e escolhe {alvo}."
+    ],
+    "culto": [
+      "{nome} murmura uma litania entre dentes, o punhal voltado a {alvo}.",
+      "A chama azul tremula no olhar de {nome}; {alvo} é o sacrifício."
+    ],
+    "ermo": [
+      "Poeira sobe dos pés de {nome}; o golpe já tem o nome de {alvo}.",
+      "{nome} contorna em silêncio, o vento do ermo lhe empurra para {alvo}."
+    ],
+    "abissal": [
+      "A sombra de {nome} se alonga além do corpo, estendendo-se até {alvo}.",
+      "O cinza escorre de {nome}: o Abismo quer {alvo}."
+    ]
+  },
+  "ataque_multiplo": {
+    "default": [
+      "{nome} abre os braços: o golpe vai varrer mais de um de vocês.",
+      "O ar vibra em arco largo; {nome} não mira só em {alvo}."
+    ],
+    "fera": [
+      "{nome} gira o corpo todo, garras abertas, em volta da roda.",
+      "Um uivo longo reúne a fúria de {nome} contra todos à frente."
+    ],
+    "morto_inquieto": [
+      "{nome} ergue os dois braços, e a cova inteira parece se inclinar.",
+      "O frio se espalha em onda: {nome} vai tocar a todos."
+    ],
+    "legiao": [
+      "{nome} ergue a lança em arco: varredura de formação.",
+      "O ferro corta o ar em semicírculo; {nome} limpa a linha."
+    ],
+    "culto": [
+      "A litania de {nome} sobe de tom, e a chama azul se abre em leque.",
+      "{nome} ergue o cálice: a oferenda é o grupo inteiro."
+    ],
+    "ermo": [
+      "A areia gira em redemoinho em torno de {nome}.",
+      "{nome} golpeia o chão, e a terra estala em todas as direções."
+    ],
+    "abissal": [
+      "O Abismo se abre em coroa em torno de {nome}; ninguém está fora do alcance.",
+      "Fios de cinza se espalham dos dedos de {nome}, buscando todos."
+    ]
+  },
+  "defesa": {
+    "default": [
+      "{nome} recua o peso do corpo e se cobre: vai aguentar o próximo golpe.",
+      "{nome} fecha a guarda, olhos fixos em {alvo}."
+    ],
+    "fera": [
+      "{nome} se encolhe sobre si, pelo eriçado, e espera.",
+      "O corpo de {nome} se achata ao chão, pronto para amortecer."
+    ],
+    "morto_inquieto": [
+      "{nome} cruza os braços ressequidos sobre o peito, fechando-se.",
+      "Os ossos de {nome} se travam em posição, rígidos como pedra."
+    ],
+    "legiao": [
+      "O escudo de {nome} bate no chão: muralha de ferro.",
+      "{nome} ergue o escudo e firma a perna: ninguém passa."
+    ],
+    "culto": [
+      "{nome} traça um sinal no ar, e a chama azul se curva em proteção.",
+      "Um sussurro de proteção: {nome} se veste de reza."
+    ],
+    "ermo": [
+      "{nome} se abaixa atrás do que o ermo lhe oferece e espreita.",
+      "Sem sair do lugar, {nome} se cobre de poeira e silêncio."
+    ],
+    "abissal": [
+      "A sombra de {nome} se adensa como uma carapaça de cinza.",
+      "O Abismo se fecha ao redor de {nome}, abafando o que vier."
+    ]
+  },
+  "reforco_proprio": {
+    "default": [
+      "{nome} reúne forças; algo nele está se preparando.",
+      "{nome} respira fundo, e o corpo parece mais firme."
+    ],
+    "legiao": [
+      "{nome} ergue a voz em ordem de formação: o bando se aperta.",
+      "Uma ordem seca de {nome}, e o ferro dos companheiros se alinha."
+    ],
+    "culto": [
+      "{nome} sussurra bênçãos sobre quem está ao lado.",
+      "A chama azul de {nome} se divide e alimenta os fiéis."
+    ]
+  },
+  "enfraquecer": {
+    "default": [
+      "{nome} mira em algo que não é a carne de {alvo}.",
+      "O olhar de {nome} em {alvo} é de quem quer quebrar, não matar."
+    ],
+    "fera": [
+      "{nome} baixa o focinho e cerca {alvo}, tentando derrubá-lo.",
+      "Garras se abrem para prender, não para rasgar: {nome} quer {alvo} no chão."
+    ],
+    "morto_inquieto": [
+      "O frio da cova vaza das mãos de {nome} na direção de {alvo}.",
+      "{nome} estende dedos secos: um toque que rouba o calor de {alvo}."
+    ],
+    "legiao": [
+      "{nome} ergue o escudo para empurrar: prender {alvo} na linha.",
+      "O ferro de {nome} busca o joelho de {alvo}."
+    ],
+    "culto": [
+      "{nome} sibila uma maldição, o dedo apontado para {alvo}.",
+      "Fumaça azul sobe das mãos de {nome} e busca {alvo}."
+    ],
+    "ermo": [
+      "{nome} recolhe a terra em punhado, mirando os olhos de {alvo}.",
+      "Um laço improvisado gira na mão de {nome}; {alvo} é o alvo."
+    ],
+    "abissal": [
+      "O cinza se estende de {nome} em fios, tentando enredar {alvo}.",
+      "{nome} sussurra uma voz que não é dele, e ela busca {alvo}."
+    ]
+  },
+  "mover": {
+    "default": [
+      "{nome} muda de posição, rodeando a cena.",
+      "{nome} se desloca para flanquear {alvo}."
+    ]
+  },
+  "fugir": {
+    "default": [
+      "{nome} olha para a saída; o peito dele já decidiu.",
+      "Os olhos de {nome} procuram um buraco no cerco."
+    ]
+  },
+  "render-se": {
+    "default": [
+      "{nome} largou o olhar de combate; a arma pesa em sua mão.",
+      "As mãos de {nome} tremem, e a vontade de lutar escorre."
+    ]
+  },
+  "desconhecido": {
+    "default": [
+      "{nome} observa em silêncio. O que vem a seguir, ninguém sabe.",
+      "Algo se mexe em {nome}, mas não dá para ler."
+    ]
+  },
+  "_frustrado": {
+    "default": [
+      "O golpe de {nome} morreu no ar.",
+      "{nome} perde o momento: o que ele havia decidido já não é possível."
+    ]
+  }
+}

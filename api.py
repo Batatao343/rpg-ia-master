@@ -73,6 +73,7 @@ from persistence import (
     save_path,
 )
 from services import combat_flags
+from services import enemy_intent as _enemy_intent
 from services import npc_world as _npc_world
 from services import quest_log
 from services import state_views as sv
@@ -2902,6 +2903,8 @@ def _combat_block(state: dict) -> dict[str, Any]:
         "last_player_action": meta.get("last_player_action"),
         "reactions": meta.get("last_reactions", []),
     }
+    if _enemy_intent.active() and meta.get("pressagios_publicos"):
+        view["pressagios_publicos"] = list(meta["pressagios_publicos"])  # SPEC-329 R2/R3
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}

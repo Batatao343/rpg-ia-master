@@ -48,9 +48,14 @@ Em Valoria isso se chama **Presságio**: o que o inimigo vai fazer aparece como 
 3. `on` + API + narração.
 
 ## 5. Critérios de aceite
-- [ ] R1–R9 com teste
-- [ ] Arena `on`: dano recebido médio pelo jogador cai (cartas defensivas passam a valer) sem taxa de vitória sair de 40–80 %
-- [ ] `uv run pytest` verde; saves de combate em curso sem `pressagios` continuam (calcula na próxima rodada)
+- [x] R1–R9 com teste (`tests/test_enemy_intent.py`, 16 testes)
+- [ ] Arena `on`: dano recebido médio pelo jogador cai (cartas defensivas passam a valer) sem taxa de vitória sair de 40–80 % — **pendente**: só o `shadow` foi medido (abaixo); o `on` depende de a UI/bot do herói usar o presságio
+- [x] saves de combate em curso sem `pressagios` continuam (calcula no início da rodada); suíte completa fica para o pouso
+
+## 5.1 Implementação (executor, 2026-10-27)
+- Flag própria `RPG_ENEMY_INTENT` em `services/enemy_intent.py` (default `off`), **fora** de `combat_flags.CAPS` para não alterar os contratos de 8 flags da SPEC-325.
+- `shadow` na arena SPEC-285 (2 seeds, níveis 1 e 5, bot `cartas`): 15 313 decisões comparadas, 1 789 mudariam (**11,7 %** < 30 %) — ordem do perfil tático não precisa de revisão.
+- Desvios: (a) "fora de alcance" em `still_possible` não é checado (só alvo morto/fugiu/rendido/incapacitado, executor incapaz, Carta inutilizável); (b) R5 cobre atordoamento (registra `pressagio_frustrado`, motivo `atordoado`); `empurrao` não tem gancho próprio; (c) catálogo de sinais: 4 tipos com 6 famílias × 2 frases e os demais só `default` × 2 (rascunho na voz de Valoria; dono revisa); (d) 1ª rodada de um encontro novo não tem presságio visível (congela ao fim da 1ª rodada; o motor calcula no início se faltar).
 
 ## 6. Smoke real
 1. Lutar contra criatura nova: só tipo/alvo. 2. Mesma família depois de estudada: faixa e nome da carta. 3. Matar o alvo antes: narração de presságio frustrado.
