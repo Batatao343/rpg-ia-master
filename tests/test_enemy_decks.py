@@ -329,3 +329,53 @@ def test_support_profile_keeps_character_only_signature_overrides(monkeypatch):
     # sem aliado para apoiar o perfil cai em ataque basico/carta; so a assinatura e imposta
     assert _decl(scene, actors, sides, "lobo_1", 3).acao.card_id == "bst_golpe_mestre"
     assert _decl(scene, actors, sides, "lobo_1", 4).acao.card_id != "bst_golpe_mestre"
+
+
+def test_shadow_marker_does_not_block_a_later_on(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "shadow")
+    e = _enemy(cartas=["bst_bote_certeiro"])
+    assert e.get("_deck332_shadow") and not e.get("_deck332")
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    orch.ensure_combat_sheet(e)
+    assert e.get("_deck332") and any(c.startswith("inf_predador_") for c in e["cartas"])
+
+
+def test_save_load_round_trip_keeps_deck_and_phase(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    e = _enemy(cartas=["bst_bote_certeiro"])
+    e["fase_idx"] = 1
+    before = list(e["cartas"])
+    again = orch.ensure_combat_sheet(json.loads(json.dumps(e)))
+    assert again["cartas"] == before and again["fase_idx"] == 1
+    # ficha reconstruida sem o marcador: nao soma 3-5 cartas de novo
+    stripped = json.loads(json.dumps(e))
+    stripped.pop("_deck332")
+    assert orch.ensure_combat_sheet(stripped)["cartas"] == before
+
+
+def test_usage_limit_with_instance_ids_and_real_seeds(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    import zlib
+
+    from agents.bestiary import load_bestiary
+
+    use = collections.Counter()
+    for bid, entry in load_bestiary().items():
+        seed = zlib.crc32(f"game-x|3|{bid}".encode())
+        deck = edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
+        use.update(c for c in deck if c.startswith("inf_"))
+    assert use and max(use.values()) <= 15, use.most_common(3)
+
+
+def test_control_profile_keeps_tactic_pattern_does_not_replace(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    e = _enemy(
+        cartas=["bst_bote_certeiro"],
+        tactical_profile={
+            "priorities": [{"trigger": "sempre", "tipo": "obrigatorio", "action_key": "control"}],
+            "padrao": ["ataque"],
+        },
+    )
+    scene, actors, sides = _world(e)
+    d = _decl(scene, actors, sides, "lobo_1", 1)
+    assert not (d.acao.kind == "card" and d.acao.card_id == "bst_bote_certeiro")

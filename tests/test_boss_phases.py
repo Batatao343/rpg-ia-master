@@ -141,3 +141,62 @@ def test_run_round_narrates_phase_and_recomputes_the_presságio(monkeypatch):
     # o presságio congelado antigo (passar a vez) foi descartado e recalculado na nova fase
     assert not any("cumpre o que o presságio anunciava" in line for line in out["logs"][:1])
     assert boss["fase_idx"] == 1
+
+
+def test_phase_applied_at_end_of_round_before_next_forecast(monkeypatch):
+    boss = _boss()
+    scene, actors, sides = _world(boss)
+    calls = []
+    real = edk.apply_phases
+
+    def spy(a, s, out, rnd=0):
+        calls.append(rnd)
+        if len(calls) == 2:  # 2a chamada = fim da rodada (depois do dano)
+            boss["vitalidade"] = 16
+        return real(a, s, out, rnd)
+
+    monkeypatch.setattr(edk, "apply_phases", spy)
+    decl = {"player": ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="pass"))}
+    out = orch.run_round(scene, actors, sides, {}, declarations=decl, rng=random.Random(3))
+    assert len(calls) == 2 and boss["fase_idx"] >= 1
+    assert any("cospe sangue" in line for line in out["logs"])
+    assert boss["fase_rnd"] == calls[1] + 1
+
+
+def test_phase_signature_waits_one_telegraphed_round():
+    boss = _boss()
+    boss["tactical_profile"]["fases"][0]["assinatura"] = {
+        "carta": "bst_furia_final",
+        "a_cada_n": 2,
+        "desvio": 0,
+        "telegrafo": "{nome} sangra e sorri.",
+    }
+    _, actors, sides = _world(boss)
+    boss["vitalidade"] = 20
+    edk.apply_phases(actors, sides, {"logs": []}, rnd=3)  # fase 1 vale a partir da rodada 4
+    assert boss["fase_rnd"] == 4
+    sig = edk.assinatura_of(boss)
+    assert sig["_fase"] is True
+    assert edk._sig_falls_on(boss, sig, 4) is False  # cairia (par), mas sem telégrafo prévio
+    assert edk.prenuncio(boss, 3) is None
+    assert edk._sig_falls_on(boss, sig, 6) is True
+    assert edk.prenuncio(boss, 5) == "Valerius sangra e sorri."
+
+
+def test_signature_warning_goes_to_log_when_intent_is_off():
+    boss = _boss()
+    boss["tactical_profile"]["assinatura"] = {
+        "carta": "bst_golpe_mestre",
+        "a_cada_n": 3,
+        "desvio": 0,
+        "telegrafo": "{nome} range os dentes.",
+    }
+    boss["cartas"].append("bst_golpe_mestre")
+    scene, actors, sides = _world(boss)
+    decl = {"player": ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="pass"))}
+    texts = []
+    for _ in range(2):
+        texts += orch.run_round(scene, actors, sides, {}, declarations=decl, rng=random.Random(3))[
+            "logs"
+        ]
+    assert texts.count("Valerius range os dentes.") == 1  # fim da rodada 2 avisa a 3

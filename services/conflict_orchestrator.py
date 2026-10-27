@@ -523,7 +523,13 @@ def enemy_declaration(
         deck_plan = _edk_mod.plan(
             actor, int(decision_state.get("_rodada_decisao") or cs.tactical_round(scene))
         )
-        if deck_plan is not None and action_key in {"support", "flank", "protect", "stabilize"}:
+        if deck_plan is not None and action_key in {
+            "support",
+            "flank",
+            "protect",
+            "stabilize",
+            "control",
+        }:
             # Perfil de apoio/flanco (lider de matilha, covarde): o padrao nao troca o carater
             # dele por ataque; so a assinatura (a jogada memoravel) pode sobrepor.
             deck_plan["slot"] = "mover"
@@ -2189,7 +2195,7 @@ def _run_round(
         _sc.tick(_scene_ctx, _scene_rnd, "inicio_rodada", out)
         _sc.abyss_clock(_scene_ctx, _scene_rnd, out)
     # SPEC-332: fase de chefe (so `on`) ANTES do presságio; troca de fase invalida o congelado.
-    phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out)
+    phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
     if _edk_mod.mode() == "shadow":
         out["decks_shadow"] = _edk_mod.shadow_summary(actors_by_id, sides)
     # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
@@ -2450,6 +2456,15 @@ def _run_round(
     if player is not None and _alive(player):
         _deck.end_round(fx.current(), state, player_id, out)  # SPEC-330: Guardar/Vazao
 
+    # SPEC-332 P2-1/P2-2: fase de chefe no FIM da rodada (depois do dano), para o presságio da
+    # rodada seguinte já nascer na fase nova; sem Presságio `on` o aviso da assinatura vai ao log.
+    _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
+    if _edk_mod.active() and ei.mode() != "on":
+        for _eid in sides.get("enemy", []):
+            _en = actors_by_id.get(_eid)
+            _warn = _edk_mod.prenuncio(_en, cs.tactical_round(scene)) if _alive(_en) else None
+            if _warn:
+                out["logs"].append(_warn)
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]
     out["reason"] = end["reason"]

@@ -77,6 +77,18 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
   e `faccoes` em `_decks.json` está vazio), `fases` autoradas nos 11 chefes/54 elites, `abissal` sem criatura no
   bestiário, calibragem de `lider_matilha`/`bruto` (arena: `docs/spec332/arena-results-2026-10-27.md`) antes de `on`.
 
+### Correções da revisão Sol (27/10)
+
+- **P2-1/P2-2:** `apply_phases` roda também no FIM de `_run_round` (antes do forecast seguinte); a assinatura de uma
+  fase nova só cai depois de uma rodada telegrafada (`fase_rnd`); com `RPG_ENEMY_INTENT` != `on` o `prenuncio` vai
+  ao log narrado no fim da rodada. **P2-3:** `_deck332_shadow` (shadow) separado de `_deck332` (on); ficha
+  reconstruída já montada não soma de novo; round-trip testado. **P2-4:** `deck_seed` = crc32(game_id|turno|alvo)
+  gravado no spawn (`agents/combat._instances`); limite de 15 testado com ids `<base>_1`. **P2-5:** o helper do golden
+  filtra pelas chaves do golden. **P2-8:** perfil `sempre`→`control` também é preservado (só a assinatura sobrepõe).
+- **Follow-up P2-6:** `known_pattern` usa `revealed_cards` (por arquétipo, acende ao 1º uso de carta), não um contador
+  de conflitos por família; ligar ao `bestiary_knowledge` na SPEC-334. **Follow-up P2-7:** `prenuncio`/`costuma` ainda
+  não são renderizados em `web/` — front na SPEC-334 antes de `on`.
+
 ## 6. Smoke real
 1. Lutar contra a Legião de Ferro: presságio de assinatura 1 rodada antes. 2. Segundo encontro com a família: padrão visível. 3. Chefe muda de fase com narração.
 

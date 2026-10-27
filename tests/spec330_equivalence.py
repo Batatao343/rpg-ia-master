@@ -122,15 +122,13 @@ def run_card_full(card: dict) -> dict:
 
 
 def legacy_cards() -> dict:
+    """As Cartas do golden (308): filtra pelas CHAVES do golden, não por `origem` (cartas
+    novas de specs posteriores não exigem editar este helper)."""
     from services import cards
 
-    # Cartas que chegaram depois do golden: básicas da SPEC-328 (`cartas-328`) e baralhos de
-    # inimigo da SPEC-332 (`cartas-332`).
-    return {
-        cid: c
-        for cid, c in cards.all_cards().items()
-        if "efeitos" not in c and c.get("origem") not in ("cartas-328", "cartas-332")
-    }
+    with open(GOLDEN, encoding="utf-8") as f:
+        keys = set(json.load(f))
+    return {cid: c for cid, c in cards.all_cards().items() if cid in keys}
 
 
 def build_golden() -> dict:

@@ -669,7 +669,9 @@ def _grounded_template(
     )
 
 
-def _instances(template: dict, count: int, next_by_template: dict[str, int]) -> list[dict]:
+def _instances(
+    template: dict, count: int, next_by_template: dict[str, int], deck_seed: int | None = None
+) -> list[dict]:
     out = []
     base_id = str(template.get("id") or "enemy")
     for _ in range(count):
@@ -678,6 +680,8 @@ def _instances(template: dict, count: int, next_by_template: dict[str, int]) -> 
         inst = dict(template)
         inst["id"] = f"{base_id}_{number}"
         inst.setdefault("archetype_id", base_id)  # SPEC-272: chave do bestiário
+        if deck_seed is not None:
+            inst["deck_seed"] = deck_seed  # SPEC-332 R3 (só com RPG_ENEMY_DECKS != off)
         inst["name"] = f"{template['name']} {number}" if count > 1 else template["name"]
         out.append(orch.ensure_combat_sheet(inst))
     return out
@@ -744,6 +748,17 @@ def _spawn_v4_enemies(
         f"nível_do_encontro={encounter_level}"
     )
     next_instance_by_template: dict[str, int] = {}
+    import zlib as _zlib
+
+    from services import enemy_decks as _edk_spawn
+
+    _deck_seed = (
+        _zlib.crc32(
+            f"{(state or {}).get('game_id') or 'game'}|{world.get('turn_count', 0)}|{target_hint}".encode()
+        )
+        if _edk_spawn.mode() != "off"
+        else None
+    )
     protected: set = set()
     canonical = em.resolve_canonical_source(
         state or {}, target_hint, (state or {}).get("combat_encounter_hint")
@@ -754,7 +769,7 @@ def _spawn_v4_enemies(
         for bid, count in canonical["groups"]:
             template = template_by_id(bid, encounter_level=encounter_level)
             if template:
-                enemies += _instances(template, count, next_instance_by_template)
+                enemies += _instances(template, count, next_instance_by_template, _deck_seed)
                 protected.add(bid)
         if enemies:
             meta.update(source=canonical["source"], target_ref=canonical["target_ref"])
@@ -791,7 +806,7 @@ def _spawn_v4_enemies(
                     groups = grounded or [(str(target_hint).strip(), em.hint_count(target_hint))]
                 for name, count in groups:
                     template = _grounded_template(name, mechanical_context, encounter_level, state)
-                    enemies += _instances(template, count, next_instance_by_template)
+                    enemies += _instances(template, count, next_instance_by_template, _deck_seed)
                 if enemies:
                     meta.update(source="scanner", target_ref=str(target_hint or ""))
         except Exception as e:

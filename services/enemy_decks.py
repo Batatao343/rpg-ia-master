@@ -179,7 +179,7 @@ def family_signature(creature: dict, seed: int | str = 0) -> dict | None:
 
 def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     """Baralho de conflito da criatura: próprias + 3-5 da família + 0-3 da facção.
-    Determinístico por ``id`` + ``seed``; mantém a ordem das próprias e nunca repete."""
+    Determinístico por ``id`` + ``seed`` (``deck_seed`` do conflito, gravado no spawn); mantém a ordem das próprias e nunca repete."""
     deck = _own_ids(creature)
     cid = creature.get("id")
     fam = family_key(creature)
@@ -208,15 +208,27 @@ def apply_deck(actor: dict, seed: int | str | None = None) -> None:
     """Chamado ao normalizar a ficha do inimigo. ``on`` troca ``cartas``; ``shadow`` só
     guarda o baralho em ``_deck_shadow`` (para medir). Idempotente."""
     m = mode()
-    if m == "off" or actor.get("_deck332"):
+    if m == "off":
         return
-    deck = build_enemy_deck(actor, actor.get("deck_seed", 0) if seed is None else seed)
     if m == "on":
-        actor["cartas"] = deck
+        if actor.get("_deck332"):
+            return
+        pools = _pools()
+        known = {
+            c for ids in (*pools["familias"].values(), *pools["faccoes"].values()) for c in ids
+        }
+        if known & set(_own_ids(actor)):  # ficha reconstruída já montada: não soma de novo
+            actor["_deck332"] = True
+            return
+        actor["cartas"] = build_enemy_deck(
+            actor, actor.get("deck_seed", 0) if seed is None else seed
+        )
         actor["_deck332"] = True
-    else:
-        actor["_deck_shadow"] = deck
-        actor["_deck332"] = True
+    elif not actor.get("_deck332_shadow"):
+        actor["_deck_shadow"] = build_enemy_deck(
+            actor, actor.get("deck_seed", 0) if seed is None else seed
+        )
+        actor["_deck332_shadow"] = True
 
 
 # --------------------------------------------------------------------------
@@ -246,13 +258,16 @@ def pattern_of(actor: dict) -> list[str]:
 
 def assinatura_of(actor: dict) -> dict | None:
     """``{carta, a_cada_n, telegrafo}``: fase > perfil > família. ``a_cada_n >= 2``."""
+    phase_sig = _phase_cfg(actor).get("assinatura")
     cands = (
-        _phase_cfg(actor).get("assinatura"),
+        phase_sig,
         _profile(actor).get("assinatura"),
         family_signature(actor, actor.get("deck_seed", 0)),
     )
     for cand in cands:
         if isinstance(cand, dict) and cand.get("carta"):
+            if cand is phase_sig:
+                cand = {**cand, "_fase": True}
             try:
                 n = int(cand.get("a_cada_n", 3))
             except (TypeError, ValueError):
@@ -271,6 +286,8 @@ def _sig_falls_on(actor: dict, sig: dict, rnd: int) -> bool:
         off = int(sig["desvio"])
     except (KeyError, TypeError, ValueError):
         off = _h(actor.get("id"), "desvio") % n
+    if sig.get("_fase") and rnd < int(actor.get("fase_rnd", 0) or 0) + 1:
+        return False  # assinatura de fase nova: só depois de uma rodada telegrafada
     return rnd >= 2 and (rnd + off) % n == 0
 
 
@@ -340,7 +357,9 @@ def _vitality_pct(actor: dict) -> float:
     return max(0.0, min(100.0, 100.0 * cur / max(1.0, mx)))
 
 
-def apply_phases(actors_by_id: dict[str, dict], sides: dict[str, list[str]], out: dict) -> bool:
+def apply_phases(
+    actors_by_id: dict[str, dict], sides: dict[str, list[str]], out: dict, rnd: int = 0
+) -> bool:
     """Troca de fase dos inimigos vivos (só ``on``). Fase só avança, nunca volta.
     Acrescenta ``baralho_extra`` a ``cartas`` e narra em ``out['logs']``. Devolve True
     se alguém mudou de fase (o chamador refaz o presságio)."""
@@ -369,6 +388,7 @@ def apply_phases(actors_by_id: dict[str, dict], sides: dict[str, list[str]], out
                     cartas.append(str(extra))
             actor["cartas"] = cartas
         actor["fase_idx"] = reached
+        actor["fase_rnd"] = int(rnd) + 1  # 1ª rodada da fase nova (assinatura dela: depois)
         fase = fases[reached - 1]
         nome = str(actor.get("name") or aid)
         linha = str(fase.get("narracao") or "{nome} muda de postura; a luta não será a mesma.")
