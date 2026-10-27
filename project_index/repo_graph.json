@@ -1,5 +1,5 @@
 {
-  "commit_sha": "c971f1b5586be77e9303337aa7f11fd20639879b",
+  "commit_sha": "fb400b639a519fc93a82efe353b2617ad908ffb4",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -29940,7 +29940,7 @@
         "line": 10
       },
       "source": "file:tests/test_spec325_orders.py",
-      "target": "file:tests/spec325_chase_helpers.py",
+      "target": "file:services/prompt_guard.py",
       "type": "likely_test_for"
     },
     {
@@ -29949,6 +29949,17 @@
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
         "line": 11
+      },
+      "source": "file:tests/test_spec325_orders.py",
+      "target": "file:tests/spec325_chase_helpers.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 12
       },
       "source": "file:tests/test_spec325_orders.py",
       "target": "file:tests/spec325_helpers.py",
@@ -195600,7 +195611,7 @@
         "line": 10
       },
       "source": "module:tests.test_spec325_orders",
-      "target": "module:tests.spec325_chase_helpers",
+      "target": "module:services.prompt_guard",
       "type": "imports"
     },
     {
@@ -195611,6 +195622,17 @@
         "line": 11
       },
       "source": "module:tests.test_spec325_orders",
+      "target": "module:tests.spec325_chase_helpers",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 12
+      },
+      "source": "module:tests.test_spec325_orders",
       "target": "module:tests.spec325_helpers",
       "type": "imports"
     },
@@ -195619,7 +195641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 185
+        "line": 186
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._SpyLLM",
@@ -195630,7 +195652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 23
+        "line": 24
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._fallen",
@@ -195641,7 +195663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 15
+        "line": 16
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._flags",
@@ -195652,7 +195674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 53
+        "line": 54
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._joined",
@@ -195663,7 +195685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 156
+        "line": 157
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._norm",
@@ -195674,7 +195696,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 39
+        "line": 40
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -195685,7 +195707,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 29
+        "line": 30
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -195696,7 +195718,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 19
+        "line": 20
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders._surrendered",
@@ -195707,7 +195729,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 79
+        "line": 80
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile",
@@ -195718,7 +195740,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 173
+        "line": 174
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_api_order_chips_only_with_flag_on",
@@ -195729,7 +195751,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 101
+        "line": 102
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_lost_command_ignores_order",
@@ -195740,7 +195762,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 63
+        "line": 64
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
@@ -195751,7 +195773,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 57
+        "line": 58
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_becomes_ally_declaration",
@@ -195762,7 +195784,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 200
+        "line": 201
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
@@ -195773,7 +195795,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 73
+        "line": 74
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_ignored_when_flag_off",
@@ -195784,7 +195806,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 213
+        "line": 214
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
@@ -195795,7 +195817,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 225
+        "line": 226
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
@@ -195806,7 +195828,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 111
+        "line": 112
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
@@ -195817,7 +195839,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 93
+        "line": 94
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
@@ -195828,7 +195850,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 119
+        "line": 120
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_restrictions_table_from_soul",
@@ -195839,7 +195861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 142
+        "line": 143
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
@@ -195850,7 +195872,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 162
+        "line": 163
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
@@ -195861,7 +195883,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 133
+        "line": 134
       },
       "source": "module:tests.test_spec325_orders",
       "target": "symbol:tests.test_spec325_orders.test_validate_order_leverage_from_approval",
@@ -562557,7 +562579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 186
+        "line": 187
       },
       "source": "symbol:tests.test_spec325_orders._SpyLLM",
       "target": "symbol:tests.test_spec325_orders._SpyLLM.__init__",
@@ -562568,18 +562590,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 189
+        "line": 190
       },
       "source": "symbol:tests.test_spec325_orders._SpyLLM",
       "target": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output",
       "type": "defines"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output",
+      "target": "symbol:services.prompt_guard.unwrap_player_input",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 192
+        "line": 193
       },
       "source": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output",
       "target": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound",
@@ -562590,7 +562623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 193
+        "line": 194
       },
       "source": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound",
       "target": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound.invoke",
@@ -562601,7 +562634,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 24
+        "line": 195
+      },
+      "source": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound.invoke",
+      "target": "symbol:services.prompt_guard.unwrap_player_input",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 25
       },
       "source": "symbol:tests.test_spec325_orders._fallen",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -562612,7 +562656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 49
+        "line": 50
       },
       "source": "symbol:tests.test_spec325_orders._order",
       "target": "symbol:tests.spec325_chase_helpers.step",
@@ -562623,7 +562667,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 42
+        "line": 43
       },
       "source": "symbol:tests.test_spec325_orders._order",
       "target": "symbol:tests.spec325_helpers.run_node",
@@ -562634,7 +562678,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 45
+        "line": 46
       },
       "source": "symbol:tests.test_spec325_orders._order",
       "target": "symbol:tests.test_spec325_orders._order.narrate",
@@ -562645,7 +562689,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 41
+        "line": 42
       },
       "source": "symbol:tests.test_spec325_orders._order",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -562656,7 +562700,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 30
+        "line": 31
       },
       "source": "symbol:tests.test_spec325_orders._state",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -562667,7 +562711,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 30
+        "line": 31
       },
       "source": "symbol:tests.test_spec325_orders._state",
       "target": "symbol:tests.spec325_chase_helpers.first_state",
@@ -562678,7 +562722,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 20
+        "line": 21
       },
       "source": "symbol:tests.test_spec325_orders._surrendered",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -562689,7 +562733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 86
+        "line": 87
       },
       "source": "symbol:tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -562700,7 +562744,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 81
+        "line": 82
       },
       "source": "symbol:tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562711,10 +562755,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 86
+        "line": 87
       },
       "source": "symbol:tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile",
       "target": "symbol:tests.test_spec325_orders._surrendered",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec325_orders.test_api_order_chips_only_with_flag_on",
+      "target": "symbol:tests.spec325_helpers.run_node",
       "type": "calls"
     },
     {
@@ -562725,17 +562780,6 @@
         "line": 177
       },
       "source": "symbol:tests.test_spec325_orders.test_api_order_chips_only_with_flag_on",
-      "target": "symbol:tests.spec325_helpers.run_node",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 176
-      },
-      "source": "symbol:tests.test_spec325_orders.test_api_order_chips_only_with_flag_on",
       "target": "symbol:tests.test_spec325_orders._state",
       "type": "calls"
     },
@@ -562744,7 +562788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 102
+        "line": 103
       },
       "source": "symbol:tests.test_spec325_orders.test_lost_command_ignores_order",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562755,17 +562799,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 64
-      },
-      "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
-      "target": "symbol:tests.spec325_chase_helpers.chaser",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
         "line": 65
       },
       "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
@@ -562777,7 +562810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 69
+        "line": 66
       },
       "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -562788,7 +562821,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 65
+        "line": 70
+      },
+      "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
+      "target": "symbol:tests.spec325_chase_helpers.chaser",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 66
       },
       "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562799,7 +562843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 69
+        "line": 70
       },
       "source": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562810,7 +562854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 58
+        "line": 59
       },
       "source": "symbol:tests.test_spec325_orders.test_order_becomes_ally_declaration",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562821,21 +562865,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 208
+        "line": 209
       },
       "source": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
       "target": "symbol:tests.spec325_chase_helpers.step",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 206
-      },
-      "source": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
-      "target": "symbol:tests.spec325_helpers.run_node",
       "type": "calls"
     },
     {
@@ -562846,6 +562879,17 @@
         "line": 207
       },
       "source": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
+      "target": "symbol:tests.spec325_helpers.run_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 208
+      },
+      "source": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
       "target": "symbol:tests.test_spec325_orders._SpyLLM",
       "type": "calls"
     },
@@ -562854,7 +562898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 205
+        "line": 206
       },
       "source": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -562865,7 +562909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 75
+        "line": 76
       },
       "source": "symbol:tests.test_spec325_orders.test_order_ignored_when_flag_off",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -562876,21 +562920,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 220
+        "line": 221
       },
       "source": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
       "target": "symbol:tests.spec325_chase_helpers.step",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 218
-      },
-      "source": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
-      "target": "symbol:tests.spec325_helpers.run_node",
       "type": "calls"
     },
     {
@@ -562901,6 +562934,17 @@
         "line": 219
       },
       "source": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
+      "target": "symbol:tests.spec325_helpers.run_node",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 220
+      },
+      "source": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
       "target": "symbol:tests.test_spec325_orders._SpyLLM",
       "type": "calls"
     },
@@ -562909,7 +562953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 217
+        "line": 218
       },
       "source": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -562920,7 +562964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 233
+        "line": 234
       },
       "source": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
       "target": "symbol:tests.spec325_chase_helpers.step",
@@ -562931,7 +562975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 231
+        "line": 232
       },
       "source": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
       "target": "symbol:tests.spec325_helpers.run_node",
@@ -562942,7 +562986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 232
+        "line": 233
       },
       "source": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
       "target": "symbol:tests.test_spec325_orders._SpyLLM",
@@ -562953,7 +562997,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 230
+        "line": 231
       },
       "source": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -562964,10 +563008,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 112
+        "line": 113
       },
       "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 114
+      },
+      "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
+      "target": "symbol:tests.test_spec325_orders._order",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 116
+      },
+      "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
+      "target": "symbol:tests.test_spec325_orders._order",
       "type": "calls"
     },
     {
@@ -562978,51 +563044,7 @@
         "line": 113
       },
       "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
-      "target": "symbol:tests.test_spec325_orders._order",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 115
-      },
-      "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
-      "target": "symbol:tests.test_spec325_orders._order",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 112
-      },
-      "source": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
       "target": "symbol:tests.test_spec325_orders._surrendered",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 94
-      },
-      "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
-      "target": "symbol:tests.spec325_chase_helpers.chaser",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 94
-      },
-      "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
-      "target": "symbol:tests.test_spec325_orders._fallen",
       "type": "calls"
     },
     {
@@ -563033,7 +563055,7 @@
         "line": 95
       },
       "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
-      "target": "symbol:tests.test_spec325_orders._order",
+      "target": "symbol:tests.spec325_chase_helpers.chaser",
       "type": "calls"
     },
     {
@@ -563041,7 +563063,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 97
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
+      "target": "symbol:tests.test_spec325_orders._fallen",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 96
       },
       "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
       "target": "symbol:tests.test_spec325_orders._order",
@@ -563052,10 +563085,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 120
+        "line": 98
       },
-      "source": "symbol:tests.test_spec325_orders.test_restrictions_table_from_soul",
-      "target": "symbol:services.companion_orders.restrictions_from_soul",
+      "source": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
+      "target": "symbol:tests.test_spec325_orders._order",
       "type": "calls"
     },
     {
@@ -563074,7 +563107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 124
+        "line": 122
       },
       "source": "symbol:tests.test_spec325_orders.test_restrictions_table_from_soul",
       "target": "symbol:services.companion_orders.restrictions_from_soul",
@@ -563085,7 +563118,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 143
+        "line": 125
+      },
+      "source": "symbol:tests.test_spec325_orders.test_restrictions_table_from_soul",
+      "target": "symbol:services.companion_orders.restrictions_from_soul",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 144
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -563096,7 +563140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 152
+        "line": 153
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.spec325_chase_helpers.step",
@@ -563107,7 +563151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 145
+        "line": 146
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.spec325_helpers.run_node",
@@ -563118,7 +563162,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 143
+        "line": 144
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -563129,7 +563173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 143
+        "line": 144
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.test_spec325_orders._surrendered",
@@ -563140,7 +563184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 148
+        "line": 149
       },
       "source": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "target": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction.narrate",
@@ -563151,7 +563195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 166
+        "line": 167
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.spec325_chase_helpers.chaser",
@@ -563162,7 +563206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 168
+        "line": 169
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.spec325_chase_helpers.step",
@@ -563173,7 +563217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 167
+        "line": 168
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.spec325_helpers.run_node",
@@ -563184,7 +563228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 169
+        "line": 170
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.test_spec325_orders._norm",
@@ -563195,7 +563239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 166
+        "line": 167
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.test_spec325_orders._state",
@@ -563206,21 +563250,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 166
+        "line": 167
       },
       "source": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "target": "symbol:tests.test_spec325_orders._surrendered",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec325_orders.py",
-        "line": 136
-      },
-      "source": "symbol:tests.test_spec325_orders.test_validate_order_leverage_from_approval",
-      "target": "symbol:services.companion_orders.validate_order",
       "type": "calls"
     },
     {
@@ -563239,7 +563272,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec325_orders.py",
-        "line": 139
+        "line": 138
+      },
+      "source": "symbol:tests.test_spec325_orders.test_validate_order_leverage_from_approval",
+      "target": "symbol:services.companion_orders.validate_order",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec325_orders.py",
+        "line": 140
       },
       "source": "symbol:tests.test_spec325_orders.test_validate_order_leverage_from_approval",
       "target": "symbol:services.companion_orders.validate_order",
@@ -704157,203 +704201,203 @@
     {
       "id": "symbol:tests.test_spec325_orders._SpyLLM",
       "kind": "class",
-      "line": 185,
+      "line": 186,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._SpyLLM"
     },
     {
       "id": "symbol:tests.test_spec325_orders._SpyLLM.__init__",
       "kind": "test",
-      "line": 186,
+      "line": 187,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._SpyLLM.__init__"
     },
     {
       "id": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output",
       "kind": "test",
-      "line": 189,
+      "line": 190,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._SpyLLM.with_structured_output"
     },
     {
       "id": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound",
       "kind": "class",
-      "line": 192,
+      "line": 193,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._SpyLLM.with_structured_output._Bound"
     },
     {
       "id": "symbol:tests.test_spec325_orders._SpyLLM.with_structured_output._Bound.invoke",
       "kind": "test",
-      "line": 193,
+      "line": 194,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._SpyLLM.with_structured_output._Bound.invoke"
     },
     {
       "id": "symbol:tests.test_spec325_orders._fallen",
       "kind": "test",
-      "line": 23,
+      "line": 24,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._fallen"
     },
     {
       "id": "symbol:tests.test_spec325_orders._flags",
       "kind": "test",
-      "line": 15,
+      "line": 16,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._flags"
     },
     {
       "id": "symbol:tests.test_spec325_orders._joined",
       "kind": "test",
-      "line": 53,
+      "line": 54,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._joined"
     },
     {
       "id": "symbol:tests.test_spec325_orders._norm",
       "kind": "test",
-      "line": 156,
+      "line": 157,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._norm"
     },
     {
       "id": "symbol:tests.test_spec325_orders._order",
       "kind": "test",
-      "line": 39,
+      "line": 40,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._order"
     },
     {
       "id": "symbol:tests.test_spec325_orders._order.narrate",
       "kind": "test",
-      "line": 45,
+      "line": 46,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._order.narrate"
     },
     {
       "id": "symbol:tests.test_spec325_orders._state",
       "kind": "test",
-      "line": 29,
+      "line": 30,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._state"
     },
     {
       "id": "symbol:tests.test_spec325_orders._surrendered",
       "kind": "test",
-      "line": 19,
+      "line": 20,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders._surrendered"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile",
       "kind": "test",
-      "line": 79,
+      "line": 80,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_absolute_restriction_refuses_and_ally_uses_profile"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_api_order_chips_only_with_flag_on",
       "kind": "test",
-      "line": 173,
+      "line": 174,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_api_order_chips_only_with_flag_on"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_lost_command_ignores_order",
       "kind": "test",
-      "line": 101,
+      "line": 102,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_lost_command_ignores_order"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally",
       "kind": "test",
-      "line": 63,
+      "line": 64,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_attack_resolves_attack_by_ally"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_becomes_ally_declaration",
       "kind": "test",
-      "line": 57,
+      "line": 58,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_becomes_ally_declaration"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify",
       "kind": "test",
-      "line": 200,
+      "line": 201,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_clause_not_sent_to_player_classify"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_ignored_when_flag_off",
       "kind": "test",
-      "line": 73,
+      "line": 74,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_ignored_when_flag_off"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_only_skips_classify",
       "kind": "test",
-      "line": 213,
+      "line": 214,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_only_skips_classify"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_order_text_still_classified_when_flag_off",
       "kind": "test",
-      "line": 225,
+      "line": 226,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_order_text_still_classified_when_flag_off"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_player_action_unchanged_on_refusal",
       "kind": "test",
-      "line": 111,
+      "line": 112,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_player_action_unchanged_on_refusal"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_resistant_yields_with_loyalty",
       "kind": "test",
-      "line": 93,
+      "line": 94,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_resistant_yields_with_loyalty"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_restrictions_table_from_soul",
       "kind": "test",
-      "line": 119,
+      "line": 120,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_restrictions_table_from_soul"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction",
       "kind": "test",
-      "line": 142,
+      "line": 143,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction.narrate",
       "kind": "test",
-      "line": 148,
+      "line": 149,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_scene_ally_without_soul_has_no_restriction.narrate"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_shadow_no_state_change",
       "kind": "test",
-      "line": 162,
+      "line": 163,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_shadow_no_state_change"
     },
     {
       "id": "symbol:tests.test_spec325_orders.test_validate_order_leverage_from_approval",
       "kind": "test",
-      "line": 133,
+      "line": 134,
       "path": "tests/test_spec325_orders.py",
       "qualified_name": "tests.test_spec325_orders.test_validate_order_leverage_from_approval"
     },
@@ -710204,5 +710248,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:4d40c1185caa81d60d8180a3df8d700b7328dc264e835a9c7afcd7efe96a61fd"
+  "source_tree_hash": "sha256:954d23900c49a0c7a59759e903e104260f14393f2605d7b427b3c64ac284f2f4"
 }
