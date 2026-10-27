@@ -211,6 +211,8 @@ Arquivos de Postura com `taunt`/`marca` (para o R15, levantados por `Grep`): `po
 - [ ] R10 ou R11: golden byte-idêntico, **ou** regenerado em commit separado por outro agente, com `golden-diff.md` e revisão Sol aprovada.
 - [ ] R13: lint provisório removido; Carta de onda com `taunt` d=1 passa no lint.
 - [ ] R15: `docs/spec339/RELATORIO-arena.md` com antes e depois, bandeiras listadas para o dono.
+- [ ] Herdado da SPEC-335 (critério 45–75 % por Postura): depois do bugfix, refazer a arena por Postura **por subclasse**, com o viés de ordem do `full_deck` corrigido e mais criaturas/sementes. Ponto de partida (27/10, `docs/spec335/RELATORIO-arena-posturas.md`): Sangromante ~80 % no padrão, Corruptor/alma ~34 % com elite. O ajuste de poder, se preciso, é uma spec de balanceamento à parte (R16).
+- [ ] `CONTROLE_DURACAO_PENDENTES` vazia (as 9 Cartas dos Lotes 2–3 validadas com o motor corrigido).
 - [ ] R16/R17: nenhum número de Carta nem limite de teste de balanço alterado nesta spec.
 - [ ] `uv run pytest` verde (suíte completa offline, 1× no pouso pelo coordenador).
 - [ ] Saves antigos continuam carregando (condição sem marcador tica como antes).
