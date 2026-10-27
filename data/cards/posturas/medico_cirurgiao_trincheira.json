@@ -1,0 +1,405 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "med1_tri_remendo_rapido",
+      "name": "Remendo Rápido",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3
+        }
+      ],
+      "descricao": "Fio e agulha no meio do tumulto: a ferida de quem o Médico alcançar deixa de verter sangue e fecha em dois nós.",
+      "momento": "Melhor jogada quando um golpe acabou de abrir uma ferida feia e a rodada só deixa tempo para um nó.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_maca_erguida",
+      "name": "Maca Erguida",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Lona e varas viram parede de trincheira diante do Médico: a vigília guarda a vida dele até que o golpe a gaste.",
+      "momento": "Melhor jogada quando o inimigo vai desferir o golpe mais pesado da rodada e o Médico não tem tempo de recuar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_ordem_curta",
+      "name": "Ordem Curta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "vantagem",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Uma palavra seca na fumaça da trincheira: quem a ouve enxerga a brecha no inimigo e acerta onde dói.",
+      "momento": "Melhor jogada quando o golpe seguinte de quem a recebe decide a rodada e uma brecha vale mais que força bruta.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_no_desfeito",
+      "name": "Nó Desfeito",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "purga_condicao"
+        }
+      ],
+      "descricao": "Um corte no nó certo solta um dos males que prendiam o corpo: veneno, medo ou corda caem como pele velha.",
+      "momento": "Melhor jogada quando uma condição nociva amarra o alvo e a rodada seguinte seria perdida se ele continuasse preso.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_sedativo_seco",
+      "name": "Sedativo Seco",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Uma agulha de papoula no ombro do inimigo: o braço pesa de sono e cada golpe dele sai mais fraco, como cinza.",
+      "momento": "Melhor jogada quando o inimigo mais forte ainda tem a rodada inteira para bater e o dano dele precisa encolher.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_pancada_de_cabo",
+      "name": "Pancada de Cabo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "O cabo do bisturi na junta do pulso: se o inimigo armava um golpe, a mão afrouxa e o golpe morre no ar.",
+      "momento": "Melhor jogada quando o inimigo armou um golpe pesado e uma pancada barata no pulso desfaz a ameaça antes de cair.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_respiro_forcado",
+      "name": "Respiro Forçado",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3
+        }
+      ],
+      "descricao": "Mordendo o couro da bainha, o Médico aperta o próprio curativo no instante em que o golpe vem e segura o pulso da vida no corpo.",
+      "momento": "Melhor jogada quando o Médico já sangra e vê o golpe vindo: um curativo agora vale mais que um depois.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "med1_tri_sutura_sob_fogo",
+      "name": "Sutura sob Fogo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 5
+        },
+        {
+          "kind": "protecao",
+          "valor": 3
+        }
+      ],
+      "descricao": "Agulha e fio sob fogo cerrado, e uma placa de couro no ombro do ferido: o sangue estanca e o próximo golpe pesa menos.",
+      "momento": "Melhor jogada quando o ferido não pode sair da linha de tiro e precisa de pele nova e de uma placa antes do disparo.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_golpe_e_pulso",
+      "name": "Golpe e Pulso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "cura",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "O Médico bate para abrir caminho e, no mesmo gesto, aperta o curativo do próprio pulso: se o golpe acerta, o corpo respira melhor.",
+      "momento": "Melhor jogada quando o Médico está na frente, ferido, e precisa de um golpe que também pague o próprio conserto.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_sedar_e_remendar",
+      "name": "Sedar e Remendar",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 4
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Uma agulha acalma o ferido enquanto outra põe o sono no ombro do inimigo mais próximo: o sangue estanca e o golpe dele pesa menos.",
+      "momento": "Melhor jogada quando um aliado cai e o inimigo mais próximo ainda bate forte: curar e cansar o agressor na mesma jogada.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_hospital_de_lona",
+      "name": "Hospital de Lona",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 6
+        },
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "aliados"
+        },
+        {
+          "kind": "estabilizar",
+          "valor": 1
+        }
+      ],
+      "descricao": "Na trincheira, a maca vira hospital de lona: o ferido é fechado, a linha ganha couro nos ombros e o caído ainda respira.",
+      "momento": "Melhor jogada quando a linha inteira cambaleia e um aliado já está caído: uma só jogada tem de segurar todos.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_tri_pulso_emprestado",
+      "name": "Pulso Emprestado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_trincheira",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 5,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 9
+        },
+        {
+          "kind": "purga_condicao",
+          "alvo": "aliados"
+        },
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "aliados"
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "O Médico empresta o próprio pulso à linha inteira: todos respiram, o mal solta e a carta vira cinzas.",
+      "momento": "Melhor jogada quando a luta já foi perdida uma vez e o grupo inteiro precisa se erguer de uma só vez.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

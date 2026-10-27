@@ -1,0 +1,144 @@
+{
+ "med1_tri_pancada_de_cabo": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 596,
+  "vezes_jogada": 292,
+  "taxa_uso": 0.49,
+  "vitoria_sem": 0.772,
+  "vitoria_com": 0.803,
+  "delta_pp": 3.1,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "med1_tri_golpe_e_pulso": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 749,
+  "vezes_jogada": 491,
+  "taxa_uso": 0.656,
+  "vitoria_sem": 0.237,
+  "vitoria_com": 0.388,
+  "delta_pp": 15.0,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_tri_pulso_emprestado": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 230,
+  "vezes_jogada": 19,
+  "taxa_uso": 0.083,
+  "vitoria_sem": 0.719,
+  "vitoria_com": 0.734,
+  "delta_pp": 1.6,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 2.0,
+  "bandeiras": []
+ },
+ "med1_bot_agulha_envenenada": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 653,
+  "vezes_jogada": 426,
+  "taxa_uso": 0.652,
+  "vitoria_sem": 0.259,
+  "vitoria_com": 0.425,
+  "delta_pp": 16.6,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 7.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_cotovelo_de_aco": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 827,
+  "vezes_jogada": 637,
+  "taxa_uso": 0.77,
+  "vitoria_sem": 0.234,
+  "vitoria_com": 0.434,
+  "delta_pp": 20.0,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 2.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_pinca_de_aco": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 741,
+  "vezes_jogada": 576,
+  "taxa_uso": 0.777,
+  "vitoria_sem": 0.234,
+  "vitoria_com": 0.409,
+  "delta_pp": 17.5,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_ancora_de_ferro": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 354,
+  "vezes_jogada": 78,
+  "taxa_uso": 0.22,
+  "vitoria_sem": 0.591,
+  "vitoria_com": 0.616,
+  "delta_pp": 2.5,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 5.5,
+  "bandeiras": []
+ },
+ "med1_fer_cirurgia_no_ferro": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 275,
+  "vezes_jogada": 42,
+  "taxa_uso": 0.153,
+  "vitoria_sem": 0.684,
+  "vitoria_com": 0.725,
+  "delta_pp": 4.1,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 2.5,
+  "bandeiras": []
+ },
+ "ctl_medico_dano4": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 780,
+  "vezes_jogada": 563,
+  "taxa_uso": 0.722,
+  "vitoria_sem": 0.234,
+  "vitoria_com": 0.334,
+  "delta_pp": 10.0,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "ctl_medico_dano5": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 753,
+  "vezes_jogada": 549,
+  "taxa_uso": 0.729,
+  "vitoria_sem": 0.234,
+  "vitoria_com": 0.397,
+  "delta_pp": 16.2,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 5.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ }
+}

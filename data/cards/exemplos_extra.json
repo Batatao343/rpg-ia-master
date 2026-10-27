@@ -289,9 +289,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Couro, nó e a certeza de que a vida ainda cabe num pulso apertado.",
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um membro sangra sem parar e um nó de couro no ponto certo contém a perda até o fim da cena.",
+      "raridade": "comum"
     },
     {
       "id": "antitoxina",
@@ -312,9 +311,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Um gole de cinza e ervas tira da corrente o que ela não devia ter.",
-      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o veneno de uma criatura ainda não fez efeito completo e o antídoto certo chega antes dos primeiros sinais.",
+      "raridade": "comum"
     },
     {
       "id": "triagem",
@@ -334,9 +332,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Um olhar frio separa quem ainda tem tempo de quem já não tem.",
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a emboscada acabou e cabe ao Médico percorrer a fila de feridos e dizer quem pode esperar e quem não.",
+      "raridade": "comum"
     }
   ]
 }

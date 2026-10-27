@@ -1,0 +1,168 @@
+{
+ "med1_fer_tala_rigida": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 184,
+  "vezes_jogada": 165,
+  "taxa_uso": 0.897,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.75,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_lente_de_protese": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 149,
+  "vezes_jogada": 83,
+  "taxa_uso": 0.557,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.787,
+  "delta_pp": 3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "med1_fer_pistao_de_campo": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 145,
+  "vezes_jogada": 57,
+  "taxa_uso": 0.393,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.75,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "med1_fer_cravo_na_junta": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 147,
+  "vezes_jogada": 83,
+  "taxa_uso": 0.565,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.787,
+  "delta_pp": 3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "med1_fer_garra_de_protese": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 180,
+  "vezes_jogada": 97,
+  "taxa_uso": 0.539,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.787,
+  "delta_pp": 3.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "med1_fer_placa_no_peito": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 189,
+  "vezes_jogada": 0,
+  "taxa_uso": 0.0,
+  "vitoria_sem": 0.75,
+  "vitoria_com": 0.762,
+  "delta_pp": 1.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "uso_nao_medido"
+  ]
+ },
+ "med1_fer_cotovelo_de_aco": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 162,
+  "vezes_jogada": 133,
+  "taxa_uso": 0.821,
+  "vitoria_sem": 0.263,
+  "vitoria_com": 0.487,
+  "delta_pp": 22.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 2.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_armadura_de_campo": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 170,
+  "vezes_jogada": 55,
+  "taxa_uso": 0.324,
+  "vitoria_sem": 0.263,
+  "vitoria_com": 0.325,
+  "delta_pp": 6.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 3.0,
+  "bandeiras": []
+ },
+ "med1_fer_pinca_de_aco": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 151,
+  "vezes_jogada": 121,
+  "taxa_uso": 0.801,
+  "vitoria_sem": 0.263,
+  "vitoria_com": 0.463,
+  "delta_pp": 20.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_braco_de_colosso": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 83,
+  "vezes_jogada": 30,
+  "taxa_uso": 0.361,
+  "vitoria_sem": 0.463,
+  "vitoria_com": 0.525,
+  "delta_pp": 6.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 4.0,
+  "bandeiras": []
+ },
+ "med1_fer_ancora_de_ferro": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 89,
+  "vezes_jogada": 29,
+  "taxa_uso": 0.326,
+  "vitoria_sem": 0.562,
+  "vitoria_com": 0.65,
+  "delta_pp": 8.8,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 5.5,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "med1_fer_cirurgia_no_ferro": {
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 73,
+  "vezes_jogada": 19,
+  "taxa_uso": 0.26,
+  "vitoria_sem": 0.688,
+  "vitoria_com": 0.762,
+  "delta_pp": 7.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 2.5,
+  "bandeiras": []
+ }
+}

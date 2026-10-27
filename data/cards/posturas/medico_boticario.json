@@ -1,0 +1,395 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "med1_bot_emplasto_espesso",
+      "name": "Emplasto Espesso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3
+        }
+      ],
+      "descricao": "Emplasto de musgo, cinza e sebo sobre a ferida: o curativo endurece como casca e amortece o golpe seguinte de quem o veste.",
+      "momento": "Melhor jogada quando o ferido vai continuar na luta e uma casca de emplasto compra a rodada que a cura não compraria.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_sal_na_sombra",
+      "name": "Sal na Sombra",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "reduzir_carga_aliado",
+          "valor": 2
+        }
+      ],
+      "descricao": "Sal de rocha na língua de quem carrega o Abismo: o peso da sombra diminui, e quem paga a conta é a Entropia do Médico.",
+      "momento": "Melhor jogada quando a Carga do Abismo de um aliado se aproxima do limite e mais uma rodada sem purga sairia cara.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_po_nos_olhos",
+      "name": "Pó de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Cinza e pimenta jogadas no rosto: o inimigo tateia às cegas e erra o que antes acertaria.",
+      "momento": "Melhor jogada quando um inimigo de olhar aguçado ameaça o grupo e cegá-lo por um instante o faz errar o golpe.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_visco_de_raiz",
+      "name": "Visco de Raiz",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Visco de raiz espalhado no chão de cinza: os pés do inimigo colam e ele não consegue sair do lugar.",
+      "momento": "Melhor jogada quando o inimigo tenta fugir ou rodear o grupo e prendê-lo no mesmo ponto desfaz o plano dele.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_gota_de_veneno",
+      "name": "Gota de Veneno",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 3
+        }
+      ],
+      "descricao": "Uma gota de veneno de poço na ponta da agulha: a ferida é pequena, mas o mal anda no sangue por rodadas.",
+      "momento": "Melhor jogada quando a luta vai durar e um veneno lento trabalha enquanto o Médico cuida de quem cai.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_giz_vermelho",
+      "name": "Giz Vermelho",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um traço de giz vermelho, cor de sangue, no peito do inimigo: o grupo todo vê onde cortar e os golpes acham a carne.",
+      "momento": "Melhor jogada quando o grupo vai atacar o mesmo inimigo em sequência e todos precisam enxergar o ponto fraco primeiro.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_frasco_aos_pes",
+      "name": "Frasco aos Pés",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "amedrontado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Um frasco estoura aos pés de quem fecha a distância: o cheiro doce do Abismo faz o agressor recuar com medo.",
+      "momento": "Melhor jogada quando um bruto avança para o corpo a corpo e um susto na hora certa o faz perder o impulso.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_inimigo_engajar"
+    },
+    {
+      "id": "med1_bot_antidoto_de_cinza",
+      "name": "Antídoto de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "purga_condicao"
+        },
+        {
+          "kind": "cura",
+          "valor": 2
+        }
+      ],
+      "descricao": "Cinza de osso e raiz amarga numa só dose: o veneno sai do sangue e a cor volta ao rosto de quem ia embora.",
+      "momento": "Melhor jogada quando um mal no sangue prende o alvo e a Vitalidade dele já está no fim: tirar o mal e fechar a ferida.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_agulha_envenenada",
+      "name": "Agulha Envenenada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "A agulha entra fina no flanco do inimigo e deixa veneno de brasa no sangue: o corte arde agora e queima por rodadas.",
+      "momento": "Melhor jogada quando o inimigo tem pele grossa e é preciso um corte barato que continue trabalhando depois.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_amargo_forte",
+      "name": "Amargo Forte",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 3,
+          "duracao": 2
+        },
+        {
+          "kind": "reduzir_carga_aliado",
+          "valor": 2
+        }
+      ],
+      "descricao": "Um estimulante amargo acorda o braço e queima o peso da sombra: o golpe pesa mais e a Carga do Abismo diminui.",
+      "momento": "Melhor jogada quando a Carga do Abismo de um aliado está alta e a luta pede dano forte antes que ela estoure.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_fumigacao_geral",
+      "name": "Fumigação Geral",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 5
+        },
+        {
+          "kind": "purga_condicao",
+          "alvo": "aliados"
+        },
+        {
+          "kind": "reduzir_carga_aliado",
+          "valor": 2
+        }
+      ],
+      "descricao": "O boticário queima ervas e cinza no centro do acampamento: a fumaça fecha a ferida de um e leva o mal de todos para longe.",
+      "momento": "Melhor jogada quando vários aliados carregam males diferentes ao mesmo tempo e um só gesto limpa a linha inteira.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_bot_elixir_imperfeito",
+      "name": "Elixir Imperfeito",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 5,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 8
+        },
+        {
+          "kind": "purga_condicao",
+          "alvo": "aliados"
+        },
+        {
+          "kind": "torpor",
+          "valor": 3
+        },
+        {
+          "kind": "reduzir_carga_aliado",
+          "valor": 4
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "A mistura que nenhum boticário deveria beber: cura o escolhido, limpa a linha e adormece o inimigo; a carta vira cinzas.",
+      "momento": "Melhor jogada quando a luta está perdida e só uma aposta no limite do veneno pode virar a mesa.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

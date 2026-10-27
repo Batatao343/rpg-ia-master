@@ -2051,9 +2051,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "A triagem impossível escolhe quem fica de pé e paga o preço da escolha.",
       "contrapartida": "A escolha custa Entropia alta e se repete só no turno seguinte.",
-      "momento": "Melhor jogada quando o grupo está ferido demais para salvar todos e alguém precisa decidir.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo está ferido demais para salvar todos e o Médico escolhe qual inimigo cai primeiro, mesmo pagando caro.",
+      "raridade": "rara"
     },
     {
       "id": "med_t6_tronco",
@@ -2083,9 +2082,8 @@
       "papel": "tier-6-reacao-buff_defesa-1",
       "descricao": "O pulso de reserva guarda o último fio de vida para quando a mão faltar.",
       "contrapartida": "A reserva pesa em Entropia e só abre uma vez por turno.",
-      "momento": "Melhor jogada quando um aliado vai cair no próximo golpe e a reserva pode segurá-lo.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um golpe decisivo vai cair sobre o Médico e a reserva do pulso pode endurecer o corpo por algumas rodadas.",
+      "raridade": "rara"
     },
     {
       "id": "med_t7_tronco",
@@ -2115,9 +2113,8 @@
       "papel": "tier-7-passiva-vantagem-2",
       "descricao": "O protocolo da última luz acende uma chama que o inimigo não consegue apagar.",
       "contrapartida": "A luz acende uma vez por cena e queima Entropia alta.",
-      "momento": "Melhor jogada quando o grupo está encurralado e a última luz pode empurrar a escuridão.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo está encurralado no escuro e a última luz do protocolo abre uma brecha para acertar.",
+      "raridade": "abissal"
     },
     {
       "id": "med_t8_tronco",
@@ -2147,9 +2144,8 @@
       "papel": "tier-8-utilitaria-utilitaria-3",
       "descricao": "O juramento de retorno traz de volta quem prometeu voltar.",
       "contrapartida": "O retorno vale uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando um aliado caiu e ainda há tempo de chamá-lo de volta.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um companheiro tombou e a cena ainda deixa tempo para o juramento de retorno chamá-lo de volta.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_trincheira_t5",
@@ -2180,9 +2176,8 @@
       "papel": "tier-5-ativa-dano-0",
       "descricao": "A triagem de guerra corta o que não tem salvação e remenda o que tem.",
       "contrapartida": "A triagem custa Entropia alta e leva um turno para ser refeita.",
-      "momento": "Melhor jogada quando a linha de frente sangra e cada segundo decide quem se levanta.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a linha de frente sangra e cortar o inimigo mais perigoso salva mais gente que remendar um só.",
+      "raridade": "rara"
     },
     {
       "id": "med_cirurgiao_trincheira_t7",
@@ -2212,9 +2207,8 @@
       "papel": "tier-7-reacao-contra_ataque-1",
       "descricao": "A dose necessária é a que o paciente aguenta e nem uma gota a mais.",
       "contrapartida": "A dose só se mede uma vez por cena, e a Entropia a paga.",
-      "momento": "Melhor jogada quando o aliado está no limite e a dose exata pode mantê-lo de pé.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o aliado está no limite e a dose exata, dada na hora do golpe, devolve ao agressor o que ele trouxe.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_trincheira_t8",
@@ -2245,9 +2239,8 @@
       "papel": "tier-8-passiva-aplicar_condicao-2",
       "descricao": "O corte limpo é feito sem dúvida: a lâmina sabe onde a morte começa.",
       "contrapartida": "O corte limpo vale uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando o alvo está exposto e um único corte pode resolver o que o tempo não resolveria.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a defesa do inimigo tem uma fresta do tamanho de uma lâmina e o Médico sabe exatamente onde enfiá-la.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_trincheira_apice",
@@ -2278,9 +2271,8 @@
       "papel": "tier-9-ativa-dano-0",
       "descricao": "Um hospital cabe numa só pessoa quando a guerra não deixa tempo de construir outro.",
       "contrapartida": "O hospital exige Entropia alta e descanso longo; a Carga do Abismo permanece.",
-      "momento": "Melhor jogada quando a retaguarda desabou e o campo inteiro precisa de socorro de uma vez.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a retaguarda desabou e o campo inteiro depende de um só Médico para ferir e socorrer ao mesmo tempo.",
+      "raridade": "abissal"
     },
     {
       "id": "med_boticario_t5",
@@ -2310,9 +2302,8 @@
       "papel": "tier-5-ativa-contra_ataque-4",
       "descricao": "A dor compartilhada divide o peso entre quem a sente e quem a causou.",
       "contrapartida": "Repartir a dor custa Entropia alta, e só se repete no turno seguinte.",
-      "momento": "Melhor jogada quando um aliado sofre mais que os outros e a dor pode ser repartida.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado sofre mais que os outros e o boticário reparte a dor devolvendo parte dela a quem a causou.",
+      "raridade": "rara"
     },
     {
       "id": "med_boticario_t7",
@@ -2343,9 +2334,8 @@
       "papel": "tier-7-reacao-aplicar_condicao-5",
       "descricao": "O pulso solidário bate por todos e puxa a vida do chão.",
       "contrapartida": "O pulso bate por todos uma vez por cena, ao preço de Entropia alta.",
-      "momento": "Melhor jogada quando todos estão feridos e o boticário quer cuidar do grupo inteiro.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando todos estão feridos ao mesmo tempo e um pulso partilhado abre a guarda do agressor para o grupo.",
+      "raridade": "abissal"
     },
     {
       "id": "med_boticario_t8",
@@ -2376,9 +2366,8 @@
       "papel": "tier-8-passiva-dano-6",
       "descricao": "O luto clínico é a calma de quem já viu demais e ainda tem a mão firme.",
       "contrapartida": "O luto clínico pesa na Entropia, no limite, e vale uma vez por cena.",
-      "momento": "Melhor jogada quando uma baixa abalou o grupo e o boticário precisa seguir adiante mesmo assim.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma baixa abalou o grupo e o boticário transforma o luto em calma para ferir sem tremer.",
+      "raridade": "abissal"
     },
     {
       "id": "med_boticario_apice",
@@ -2408,9 +2397,8 @@
       "papel": "tier-9-ativa-contra_ataque-1",
       "descricao": "O coração de todos bate no peito de um só, e quem o ouve se levanta.",
       "contrapartida": "O coração de todos pede Entropia alta, descanso longo, e a Carga fica.",
-      "momento": "Melhor jogada quando a luta já foi perdida uma vez e o grupo precisa se levantar de novo.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luta já foi perdida uma vez e um coração emprestado a todos devolve ao grupo a força de revidar.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_ferro_t5",
@@ -2441,9 +2429,8 @@
       "papel": "tier-5-ativa-aplicar_condicao-8",
       "descricao": "O protocolo absoluto não admite exceção, e a ferida obedece.",
       "contrapartida": "O protocolo exige Entropia alta e silêncio de um turno depois.",
-      "momento": "Melhor jogada quando a ferida é grave e só um procedimento estrito impede o pior.",
-      "raridade": "rara",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo se protege atrás de brechas e regras próprias e um protocolo estrito expõe o ponto cego dele.",
+      "raridade": "rara"
     },
     {
       "id": "med_cirurgiao_ferro_t7",
@@ -2474,9 +2461,8 @@
       "papel": "tier-7-reacao-dano-9",
       "descricao": "Remédio ou ruína: a dose decide o que o corpo vai se tornar.",
       "contrapartida": "A aposta só se faz uma vez por cena, e a Entropia é a fiança.",
-      "momento": "Melhor jogada quando o aliado está em estado grave e a aposta pode salvá-lo ou perdê-lo.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o aliado está em estado grave e a aposta numa dose pode salvá-lo ou arruiná-lo, e o inimigo paga o resto.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_ferro_t8",
@@ -2506,9 +2492,8 @@
       "papel": "tier-8-passiva-contra_ataque-10",
       "descricao": "A cirurgia de fé opera a alma antes do corpo e o corpo agradece.",
       "contrapartida": "A cirurgia opera uma vez por cena, com a Entropia no limite.",
-      "momento": "Melhor jogada quando o grupo perdeu a esperança e a fé do cirurgião pode restituí-la.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo perdeu a esperança e a fé do cirurgião, aplicada no instante do golpe, devolve o ânimo.",
+      "raridade": "abissal"
     },
     {
       "id": "med_cirurgiao_ferro_apice",
@@ -2539,9 +2524,8 @@
       "papel": "tier-9-ativa-aplicar_condicao-2",
       "descricao": "O milagre imperdoável devolve a vida e cobra a conta em memória.",
       "contrapartida": "O milagre custa Entropia alta e descanso longo; a Carga cobra a sua parte.",
-      "momento": "Melhor jogada quando a morte já bateu à porta e ninguém mais sabe o que fazer.",
-      "raridade": "abissal",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a morte já bateu à porta e ninguém mais sabe o que fazer, e um milagre cobra a conta em memória.",
+      "raridade": "abissal"
     }
   ]
 }

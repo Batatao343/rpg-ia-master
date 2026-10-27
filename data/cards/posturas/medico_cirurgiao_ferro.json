@@ -1,0 +1,413 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "med1_fer_tala_rigida",
+      "name": "Tala Rígida",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Uma tala de ferro frio amarrada ao braço desvia a lâmina e faz o inimigo errar o alvo por algumas rodadas.",
+      "momento": "Melhor jogada quando o inimigo golpeia sempre no mesmo ponto e uma tala firme faz a lâmina deslizar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_lente_de_protese",
+      "name": "Lente de Prótese",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_acerto",
+          "valor": 3,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Uma lente de latão e ferro presa à órbita fecha a mira de quem a recebe: por algumas rodadas o golpe acha o alvo.",
+      "momento": "Melhor jogada quando o golpe decisivo do grupo depende de acertar e o alvo é escorregadio demais para a mira comum.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_pistao_de_campo",
+      "name": "Pistão de Campo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "empurrao"
+        }
+      ],
+      "descricao": "Um pistão de ferro na palma empurra o inimigo para longe, abrindo espaço entre ele e o ferido.",
+      "momento": "Melhor jogada quando um bruto colou no ferido e a distância de uma rodada vale mais que qualquer curativo.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_cravo_na_junta",
+      "name": "Cravo na Junta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Um cravo de ferro entre as placas do inimigo abre a guarda dele: por algumas rodadas todo golpe encontra carne exposta.",
+      "momento": "Melhor jogada quando o inimigo veste placas pesadas e uma fresta aberta primeiro faz o resto da luta render.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_garra_de_protese",
+      "name": "Garra de Prótese",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desarmado_risco",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Uma garra de ferro no antebraço engancha o punho do inimigo e tira a firmeza da arma: o golpe dele perde peso.",
+      "momento": "Melhor jogada quando o inimigo empunha uma arma enorme e uma garra no punho vale mais que um golpe no peito.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_placa_no_peito",
+      "name": "Placa no Peito",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 3,
+          "duracao": 1
+        }
+      ],
+      "descricao": "O Médico gira a placa de ferro sobre o peito quando o tiro vem de longe, e a seta resvala na cinza do metal.",
+      "momento": "Melhor jogada quando um arqueiro escolheu o Médico como alvo e a pontaria dele pode falhar no tiro seguinte.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_alvo_distancia"
+    },
+    {
+      "id": "med1_fer_cotovelo_de_aco",
+      "name": "Cotovelo de Aço",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "O cotovelo de ferro bate primeiro e a placa do ombro sobe junto: se o golpe acerta, o revide encontra metal.",
+      "momento": "Melhor jogada quando o Médico está sozinho na frente e um golpe forte precisa trazer defesa junto.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_armadura_de_campo",
+      "name": "Armadura de Campo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 3,
+          "duracao": 2
+        },
+        {
+          "kind": "vigilia",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Placas aparafusadas sobre o gibão e uma vigília de ferro sobre o resto: o inimigo erra mais e o golpe que passa encontra metal.",
+      "momento": "Melhor jogada quando o inimigo tem mais golpes que o Médico tem Fôlego e a defesa precisa aguentar a rodada inteira.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_pinca_de_aco",
+      "name": "Pinça de Aço",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "exposto",
+          "duracao": 2
+        }
+      ],
+      "descricao": "A pinça morde a juntura de ferro da placa e a deixa aberta: o golpe fere e todo golpe seguinte encontra carne.",
+      "momento": "Melhor jogada quando o inimigo se esconde atrás de armadura e o primeiro golpe precisa abrir caminho para os outros.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_braco_de_colosso",
+      "name": "Braço de Colosso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 3,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_dano",
+          "valor": 3,
+          "duracao": 2
+        },
+        {
+          "kind": "vigilia",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Pistões de ferro no braço do ferido dão a ele a memória de um gigante: bate mais forte por rodadas e a vigília guarda o Médico.",
+      "momento": "Melhor jogada quando a luta é longa e o ferido, escolhido como arma do grupo, vai golpear em todas as rodadas.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_ancora_de_ferro",
+      "name": "Âncora de Ferro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5
+        },
+        {
+          "kind": "vigilia",
+          "valor": 6,
+          "alvo": "eu"
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Âncora de ferro cravada no chão: o aliado se abriga, o Médico não recua e o inimigo que investe sente o braço pesar.",
+      "momento": "Melhor jogada quando a linha precisa segurar o chão por várias rodadas e ninguém pode recuar.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "med1_fer_cirurgia_no_ferro",
+      "name": "Cirurgia no Ferro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "cirurgiao_ferro",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 7
+        },
+        {
+          "kind": "vigilia",
+          "valor": 5,
+          "alvo": "eu"
+        },
+        {
+          "kind": "buff_defesa",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Uma cirurgia de ferro em plena luta: o corpo fecha, a placa se ajusta e o Médico passa a guardar a linha com o próprio metal.",
+      "momento": "Melhor jogada quando o ferido é o pilar do grupo e fechá-lo com metal garante que ele aguente o resto da luta.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

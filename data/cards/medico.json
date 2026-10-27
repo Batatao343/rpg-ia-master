@@ -22,9 +22,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o golpe do inimigo deixou um corte aberto e o Médico tem uma mão livre para fechá-lo com linha grossa.",
+      "raridade": "comum"
     },
     {
       "id": "med_torniquete",
@@ -47,9 +46,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a ferida jorra sangue demais para esperar o fim da luta e um laço apertado compra mais algumas rodadas.",
+      "raridade": "comum"
     },
     {
       "id": "med_estabilizar",
@@ -72,9 +70,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado cai no limiar da morte e só um Médico a tempo o arrasta de volta antes de a contagem fechar.",
+      "raridade": "incomum"
     },
     {
       "id": "med_mao_firme",
@@ -95,9 +92,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo conta com curas repetidas e uma mão que nunca treme faz cada uma delas render um pouco mais.",
+      "raridade": "comum"
     },
     {
       "id": "med_triagem",
@@ -118,9 +114,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a cena traz muitos feridos de uma só vez e alguém precisa decidir, num olhar, quem recebe o primeiro cuidado.",
+      "raridade": "comum"
     },
     {
       "id": "med_antitoxina",
@@ -142,9 +137,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado cambaleia envenenado e um antídoto bebido agora impede que o mal chegue ao coração.",
+      "raridade": "incomum"
     },
     {
       "id": "med_ultima_hora",
@@ -167,9 +161,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando a rodada deu respiro e a Vitalidade perdida pode voltar, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luta virou e um aliado está a um golpe do chão: gastar tudo numa só cura pode ser a única saída.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_reflexo",
@@ -193,9 +186,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado desaba sob o ataque e o Médico, já a postos, chega ao corpo antes do segundo tiro.",
+      "raridade": "comum"
     },
     {
       "id": "med_tri_intervencao",
@@ -252,9 +244,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o fogo cruzado não dá trégua e uma intervenção firme, ali mesmo na linha, vale mais que recuar o ferido.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_sangue_frio",
@@ -275,9 +266,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o caos ao redor ameaça fazer as mãos do Médico tremerem e a calma de quem já viu pior segura a cura.",
+      "raridade": "comum"
     },
     {
       "id": "med_bot_composto",
@@ -300,9 +290,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o aliado mais forte vai atacar e um estimulante barato pode pesar mais na lâmina que uma cura tardia.",
+      "raridade": "comum"
     },
     {
       "id": "med_bot_purga",
@@ -359,9 +348,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a Carga do Abismo de um aliado ameaça passar do limite, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a sombra pesa demais sobre um aliado e esvaziar o peso dele agora evita que o Abismo cobre mais tarde.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_reagente",
@@ -382,9 +370,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo enfrenta venenos de mil espécies e o Médico, que decorou cada antídoto, deixa a cura mais certeira.",
+      "raridade": "comum"
     },
     {
       "id": "med_fer_talas",
@@ -407,9 +394,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o aliado vai levar um golpe pesado e ferro amarrado ao osso o faz aguentar mais uma rodada em pé.",
+      "raridade": "comum"
     },
     {
       "id": "med_fer_protese",
@@ -466,9 +452,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado ferido ainda é a melhor arma do grupo e uma peça de guerra transforma a dor dele em golpe.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_solda",
@@ -489,9 +474,8 @@
       "tier": 2,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e a solda viva faz o metal enxertado proteger tanto quanto sustenta.",
+      "raridade": "comum"
     },
     {
       "id": "med_tri_corredor",
@@ -515,9 +499,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um ferido está preso sob fogo e abrir um corredor de ordens curtas o leva até a zona protegida.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_segundo",
@@ -541,9 +524,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando dois aliados caíram juntos e as compressões alternadas do Médico precisam trazer os dois de volta.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_nevoa",
@@ -567,9 +549,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando veneno, esporo e pânico tomam a mesma área e uma névoa antisséptica limpa tudo de uma só vez.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_panacea",
@@ -593,9 +574,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a ferida é grave demais para ervas comuns e vale arriscar três substâncias que não deviam se misturar.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_ancora",
@@ -619,9 +599,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando um aliado frágil vai ser alvo e a proteção o cobre, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado frágil corre o risco de ser arrastado para fora da posição e a prótese o prende ao chão.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_colosso",
@@ -645,9 +624,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando a luta é longa e o dano a mais se paga a cada golpe, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado de braço forte vai desferir o golpe do dia e pistões de campo podem multiplicar o peso dele.",
+      "raridade": "incomum"
     },
     {
       "id": "med_placa_reflexa",
@@ -672,9 +650,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando uma lâmina mira o ponto fatal de um aliado e a tala tirada do estojo pode entrar entre o golpe e o órgão.",
+      "raridade": "comum"
     },
     {
       "id": "med_dose_choque",
@@ -699,9 +676,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a ordem de ação decide a rodada e agir primeiro vale mais que golpear forte, e a janela de reação está aberta, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado paralisado perde a vez e uma agulha no ponto certo devolve a ele o próximo segundo.",
+      "raridade": "incomum"
     },
     {
       "id": "med_autopsia_campo",
@@ -725,9 +701,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o corpo de uma criatura desconhecida jaz no chão e entender como morreu mostra como o próximo pode morrer.",
+      "raridade": "comum"
     },
     {
       "id": "med_hospital_improviso",
@@ -751,9 +726,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo está ferido demais para seguir e qualquer ruína com teto pode virar enfermaria para a noite.",
+      "raridade": "incomum"
     },
     {
       "id": "med_corte_descompressao",
@@ -777,9 +751,8 @@
       "tier": 1,
       "level_req": 1,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo foi atingido por veneno ou medo e limpar a condição vale uma rodada, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando um aliado incha de pressão, veneno ou éter por dentro e um corte preciso alivia antes de ele rebentar.",
+      "raridade": "comum"
     },
     {
       "id": "med_marca_triagem",
@@ -803,9 +776,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o chefe da cena precisa cair rápido e marcar o ponto dele com giz faz cada golpe seguinte render mais.",
+      "raridade": "incomum"
     },
     {
       "id": "med_serra_ossea",
@@ -830,9 +802,8 @@
       "tier": 4,
       "level_req": 7,
       "apex": false,
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a armadura do inimigo é osso e couro vivo e uma serra de amputação encontra juntas que a espada ignora.",
+      "raridade": "incomum"
     },
     {
       "id": "med_protocolo_retornar",
@@ -854,9 +825,8 @@
       "tier": 3,
       "level_req": 4,
       "apex": false,
-      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a cura acompanha, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o Médico já levantou um aliado uma vez e o protocolo aprendido deixa a próxima cura mais forte.",
+      "raridade": "incomum"
     }
   ]
 }

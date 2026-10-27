@@ -306,9 +306,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Agulha, fio e pressa: a ferida fecha antes que a dor tenha opinião.",
-      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o ferimento é raso mas atrapalha e uma sutura rápida devolve o braço ao combate sem perder a vez.",
+      "raridade": "comum"
     },
     {
       "id": "estabilizar",
@@ -330,9 +329,8 @@
       "level_req": 4,
       "apex": false,
       "descricao": "Mãos firmes seguram o último fio de vida até o sangue lembrar o caminho.",
-      "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a ferida é funda e a rodada tem tempo para um tratamento mais pesado que um simples laço.",
+      "raridade": "incomum"
     },
     {
       "id": "mao_firme",
@@ -352,9 +350,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Nem o tremor da guerra desvia a mão que já viu coisa pior.",
-      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o Médico acabou de salvar alguém e a firmeza ganha na primeira cura ainda serve para a segunda.",
+      "raridade": "comum"
     },
     {
       "id": "vc_forca_bruta",

@@ -229,15 +229,85 @@ def test_lote4_licoes_da_revisao_dos_lotes_anteriores():
         assert not card_lint.check_reacao_folego(c), c["id"]
 
 
+# ----------------------------------------------------------------- Lote 5 (Médico de Campo)
+def _lote5() -> list[dict]:
+    return [
+        c
+        for c in card_lint.load_pool()
+        if c.get("onda") == 1 and c.get("classe") == "Médico de Campo"
+    ]
+
+
+def test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2():
+    cs = _lote5()
+    assert len(cs) == 36
+    assert Counter(c["subclasse"] for c in cs) == {
+        "cirurgiao_trincheira": 12,
+        "boticario": 12,
+        "cirurgiao_ferro": 12,
+    }
+    assert len({c["id"] for c in cs}) == 36
+    assert all(c["id"].startswith("med1_") for c in cs)
+    assert Counter(c["raridade"] for c in cs) == {
+        "comum": 20,
+        "incomum": 10,
+        "rara": 4,
+        "abissal": 2,
+    }
+
+
+def test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
+    pool = card_lint.load_pool()
+    for c in _lote5():
+        others = [o for o in pool if o["id"] != c["id"]]
+        issues = card_lint.lint_card(c, others)
+        assert not card_lint.errors(issues), c["id"]
+        assert not [i for i in issues if i.level == "warn"], (c["id"], issues)
+        assert fx.budget_error(c) is None, c["id"]
+    legado = [c for c in pool if c.get("classe") == "Médico de Campo" and c.get("onda") is None]
+    assert len(legado) >= 52
+    assert not [c["id"] for c in legado if c.get("momento_placeholder")]
+
+
+def test_lote5_licoes_da_revisao_dos_lotes_anteriores():
+    """Reação com gatilho e um só efeito; sem `ativa`+buff_esquiva; sem Provocar/Eco/Rachadura;
+    `escala` só em efeito extra; dano ate o teto da roda; cada Carta vale em luta solo (algum
+    efeito que não depende de aliado); nenhuma condição de estatística repetida na mesma Carta
+    (a 2ª seria engolida pela 1ª, que leva o nome da Carta)."""
+    # kinds cuja condição leva o NOME da Carta: dois deles na mesma Carta, o 2º é engolido.
+    nomeadas = {"protecao", "buff_defesa", "buff_acerto", "buff_dano", "vantagem", "dot", "marca"}
+    for c in _lote5():
+        effs = fx.normalize(c)
+        kinds = [e["kind"] for e in effs]
+        if c["tipo"] == "reacao":
+            assert c.get("gatilho"), c["id"]
+            assert len(effs) == 1, c["id"]
+            assert fx.custo_folego(c) >= 1, c["id"]
+        if c["tipo"] == "ativa":
+            assert "buff_esquiva" not in kinds, c["id"]
+        assert not {"taunt", "rachadura"} & set(kinds), c["id"]
+        assert not fx.keywords(c).get("eco"), c["id"]
+        assert not card_lint.check_escala_principal(c), c["id"]
+        assert not card_lint.check_marca_dano(c), c["id"]
+        assert not card_lint.check_revelar_publico(c), c["id"]
+        assert not card_lint.check_reacao_folego(c), c["id"]
+        assert all(e.get("kind") != "mover_alvo_zona" for e in effs), c["id"]
+        assert sum(1 for k in kinds if k in nomeadas) <= 1, c["id"]
+        # luta solo: estabilizar sozinho só vale com aliado caído (sem aliado, é Carta morta).
+        assert set(kinds) != {"estabilizar"}, c["id"]
+        # primário legado ignora `alvo`: área só em efeito extra.
+        prim = fx.primary_effect(c)
+        assert prim is None or prim.get("alvo") not in ("aliados", "inimigos"), c["id"]
+
+
 # R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
 # (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
 # ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
 POSTURAS_COM_MOMENTO_PLACEHOLDER = {
-    "Médico de Campo",
     "Inimigo",
     "",  # Cartas de Virtude
 }
-MAX_PLACEHOLDERS = 97  # só pode diminuir (== no teste: baixe aqui ao reescrever)
+MAX_PLACEHOLDERS = 45  # só pode diminuir (== no teste: baixe aqui ao reescrever)
 
 
 def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():

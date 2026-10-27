@@ -1,0 +1,238 @@
+{
+ "seeds": 20,
+ "levels": [
+  1,
+  3,
+  5
+ ],
+ "categories": [
+  "padrao",
+  "elite"
+ ],
+ "n_cartas_novas": 36,
+ "todas_as_subclasses": {
+  "antes": {
+   "L1 padrao": [
+    57,
+    80
+   ],
+   "L1 elite": [
+    50,
+    80
+   ],
+   "L3 padrao": [
+    63,
+    80
+   ],
+   "L3 elite": [
+    38,
+    80
+   ],
+   "L5 padrao": [
+    11,
+    80
+   ],
+   "L5 elite": [
+    4,
+    80
+   ]
+  },
+  "depois": {
+   "L1 padrao": [
+    58,
+    80
+   ],
+   "L1 elite": [
+    53,
+    80
+   ],
+   "L3 padrao": [
+    63,
+    80
+   ],
+   "L3 elite": [
+    45,
+    80
+   ],
+   "L5 padrao": [
+    58,
+    80
+   ],
+   "L5 elite": [
+    28,
+    80
+   ]
+  },
+  "taxa_antes": 0.465,
+  "taxa_depois": 0.635
+ },
+ "cirurgiao_trincheira": {
+  "antes": {
+   "L1 padrao": [
+    61,
+    80
+   ],
+   "L1 elite": [
+    51,
+    80
+   ],
+   "L3 padrao": [
+    66,
+    80
+   ],
+   "L3 elite": [
+    39,
+    80
+   ],
+   "L5 padrao": [
+    19,
+    80
+   ],
+   "L5 elite": [
+    7,
+    80
+   ]
+  },
+  "depois": {
+   "L1 padrao": [
+    61,
+    80
+   ],
+   "L1 elite": [
+    59,
+    80
+   ],
+   "L3 padrao": [
+    66,
+    80
+   ],
+   "L3 elite": [
+    51,
+    80
+   ],
+   "L5 padrao": [
+    34,
+    80
+   ],
+   "L5 elite": [
+    11,
+    80
+   ]
+  },
+  "taxa_antes": 0.506,
+  "taxa_depois": 0.588
+ },
+ "boticario": {
+  "antes": {
+   "L1 padrao": [
+    58,
+    80
+   ],
+   "L1 elite": [
+    51,
+    80
+   ],
+   "L3 padrao": [
+    67,
+    80
+   ],
+   "L3 elite": [
+    43,
+    80
+   ],
+   "L5 padrao": [
+    9,
+    80
+   ],
+   "L5 elite": [
+    6,
+    80
+   ]
+  },
+  "depois": {
+   "L1 padrao": [
+    55,
+    80
+   ],
+   "L1 elite": [
+    49,
+    80
+   ],
+   "L3 padrao": [
+    60,
+    80
+   ],
+   "L3 elite": [
+    45,
+    80
+   ],
+   "L5 padrao": [
+    39,
+    80
+   ],
+   "L5 elite": [
+    11,
+    80
+   ]
+  },
+  "taxa_antes": 0.487,
+  "taxa_depois": 0.54
+ },
+ "cirurgiao_ferro": {
+  "antes": {
+   "L1 padrao": [
+    58,
+    80
+   ],
+   "L1 elite": [
+    62,
+    80
+   ],
+   "L3 padrao": [
+    69,
+    80
+   ],
+   "L3 elite": [
+    45,
+    80
+   ],
+   "L5 padrao": [
+    11,
+    80
+   ],
+   "L5 elite": [
+    4,
+    80
+   ]
+  },
+  "depois": {
+   "L1 padrao": [
+    60,
+    80
+   ],
+   "L1 elite": [
+    46,
+    80
+   ],
+   "L3 padrao": [
+    65,
+    80
+   ],
+   "L3 elite": [
+    43,
+    80
+   ],
+   "L5 padrao": [
+    51,
+    80
+   ],
+   "L5 elite": [
+    18,
+    80
+   ]
+  },
+  "taxa_antes": 0.519,
+  "taxa_depois": 0.59
+ },
+ "elapsed_s": 30.7
+}

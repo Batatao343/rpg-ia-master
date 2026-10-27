@@ -203,3 +203,54 @@ ondas:
   - cor1_ino_dobra_forcada
   - cor1_ino_colapso_programado
   - cor1_ino_geometria_da_ruina
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  amostra_voz:
+  - med1_tri_remendo_rapido
+  - med1_tri_hospital_de_lona
+  - med1_tri_pulso_emprestado
+  - med1_bot_sal_na_sombra
+  - med1_bot_elixir_imperfeito
+  - med1_fer_pistao_de_campo
+  - med1_fer_cotovelo_de_aco
+  cartas:
+  - med1_tri_remendo_rapido
+  - med1_tri_maca_erguida
+  - med1_tri_ordem_curta
+  - med1_tri_no_desfeito
+  - med1_tri_sedativo_seco
+  - med1_tri_pancada_de_cabo
+  - med1_tri_respiro_forcado
+  - med1_tri_sutura_sob_fogo
+  - med1_tri_golpe_e_pulso
+  - med1_tri_sedar_e_remendar
+  - med1_tri_hospital_de_lona
+  - med1_tri_pulso_emprestado
+  - med1_bot_emplasto_espesso
+  - med1_bot_sal_na_sombra
+  - med1_bot_po_nos_olhos
+  - med1_bot_visco_de_raiz
+  - med1_bot_gota_de_veneno
+  - med1_bot_giz_vermelho
+  - med1_bot_frasco_aos_pes
+  - med1_bot_antidoto_de_cinza
+  - med1_bot_agulha_envenenada
+  - med1_bot_amargo_forte
+  - med1_bot_fumigacao_geral
+  - med1_bot_elixir_imperfeito
+  - med1_fer_tala_rigida
+  - med1_fer_lente_de_protese
+  - med1_fer_pistao_de_campo
+  - med1_fer_cravo_na_junta
+  - med1_fer_garra_de_protese
+  - med1_fer_placa_no_peito
+  - med1_fer_cotovelo_de_aco
+  - med1_fer_armadura_de_campo
+  - med1_fer_pinca_de_aco
+  - med1_fer_braco_de_colosso
+  - med1_fer_ancora_de_ferro
+  - med1_fer_cirurgia_no_ferro
