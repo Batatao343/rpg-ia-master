@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c7ed5535513be9f3a3643538114055bc46dd7b45",
+  "commit_sha": "cb2ed9f1168550c49ab017b8d5fc7b21f96410ba",
   "edge_counts": {
-    "calls": 30937,
-    "contains": 1027,
-    "defines": 15293,
-    "imports": 2514,
-    "likely_test_for": 1764,
+    "calls": 30997,
+    "contains": 1028,
+    "defines": 15311,
+    "imports": 2516,
+    "likely_test_for": 1766,
     "route_to": 66
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:9980d94370ef40929daa087ea7b9415f156dab7f8158c0bb011ff419459ea611",
+  "graph_hash": "sha256:2c160c26fcbb1f204de771978e4bca84c0ea928ced6c3776c3a000a4255f502b",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -568,6 +568,7 @@
     "tests/test_bug_mundo_perigo_luz_clima.py",
     "tests/test_bug_npc_ciclo_de_vida.py",
     "tests/test_campaign_grounding_deferred.py",
+    "tests/test_card_acervo_reparo.py",
     "tests/test_card_draft.py",
     "tests/test_card_effects_grammar.py",
     "tests/test_card_effects_piles.py",
@@ -1264,12 +1265,12 @@
     "artifact": 9,
     "class": 973,
     "endpoint": 66,
-    "file": 1208,
-    "function": 4821,
+    "file": 1209,
+    "function": 4824,
     "method": 843,
-    "module": 1027,
-    "test": 8655
+    "module": 1028,
+    "test": 8670
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:30538b525fb509a151d93010976798749cc0974e619582f19488d164abc5c7a4"
+  "source_tree_hash": "sha256:2a35a0163c51339933790ca3b1aef783d6d9d3a4c06ad8aecbf00ff4ff74e4c5"
 }
