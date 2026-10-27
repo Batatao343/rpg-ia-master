@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "452e8f4640828672c224cf5e5c53bdb20239e5fa",
+  "commit_sha": "da4185ed8edb37a961f4745697b4c372a58c5ed6",
   "edge_counts": {
-    "calls": 31737,
-    "contains": 1041,
-    "defines": 15561,
-    "imports": 2543,
-    "likely_test_for": 1784,
+    "calls": 31899,
+    "contains": 1043,
+    "defines": 15614,
+    "imports": 2548,
+    "likely_test_for": 1788,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:f980303c49bb6e8b49989e35bd173217e89980d468b80833cd08bf536e6d4705",
+  "graph_hash": "sha256:215e363e4229d4e35fc3b5ee6d6defb630f9471eec7577f4084969e91a239f69",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -100,6 +100,7 @@
     "docs/spec335/confirmar_lote5.py",
     "docs/spec335/confirmar_tronco_lote6.py",
     "docs/spec336/arena_folego_full.py",
+    "docs/spec339/arena_spec339.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -1047,6 +1048,7 @@
     "tests/test_spec325_playtest.py",
     "tests/test_spec325_reinforcements.py",
     "tests/test_spec325_resist.py",
+    "tests/test_spec339_duracao_condicoes.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1279,14 +1281,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 976,
+    "class": 977,
     "endpoint": 68,
-    "file": 1225,
-    "function": 4906,
+    "file": 1227,
+    "function": 4916,
     "method": 843,
-    "module": 1041,
-    "test": 8835
+    "module": 1043,
+    "test": 8877
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:2cc4954f701c4c60e24ed047bfd34caaf21b2350917669f4cc5f3032c0cd03ba"
+  "source_tree_hash": "sha256:6a1adbb7bef84f8a4e9d52cb7cedeb9127dfbc7601ca710ef5d24acc9d93ddc5"
 }
