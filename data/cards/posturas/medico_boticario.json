@@ -167,8 +167,7 @@
       "efeitos": [
         {
           "kind": "marca",
-          "valor": 2,
-          "duracao": 2
+          "valor": 2
         }
       ],
       "descricao": "Um traço de giz vermelho, cor de sangue, no peito do inimigo: o grupo todo vê onde cortar e os golpes acham a carne.",
@@ -177,7 +176,7 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "med1_bot_frasco_aos_pes",

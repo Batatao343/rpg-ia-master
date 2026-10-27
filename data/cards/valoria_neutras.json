@@ -771,8 +771,7 @@
       "efeitos": [
         {
           "kind": "marca",
-          "valor": 2,
-          "duracao": 2
+          "valor": 2
         }
       ],
       "descricao": "Nome riscado a ferro no Poço das Dívidas: o alvo carrega o peso do que deve, e todo golpe contra ele rende.",
@@ -782,7 +781,7 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "neu1_ka_guarda_de_sangue",
