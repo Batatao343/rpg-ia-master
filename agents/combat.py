@@ -38,6 +38,7 @@ from services import graph_resolver as gr
 from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
+from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages, wrap_player_input
 from state import GameState
 
 _PLAYER_ID = "player"
@@ -788,11 +789,11 @@ def _spawn_v4_enemies(
         sys_prompt = (
             f"Analise a narrativa recente. O combate começou. Identifique QUAIS "
             f"inimigos estão presentes e QUANTOS. Use a dica: '{target_hint}'. "
-            f"Ex.: 'Três orcs surgem' -> [{{name:'Orc', count:3}}]."
+            f"Ex.: 'Três orcs surgem' -> [{{name:'Orc', count:3}}]. " + PLAYER_INPUT_RULE
         )
         try:
             scan = llm.with_structured_output(EncounterScanner).invoke(
-                [SystemMessage(content=sys_prompt)] + messages[-2:]
+                [SystemMessage(content=sys_prompt)] + guard_messages(messages[-2:])
             )
             if isinstance(scan, EncounterScanner):
                 flavor = scan.flavor_text or flavor
@@ -1228,11 +1229,14 @@ def _parse_turn_declaration(
     - Manobra tática (guardar/esconder/engajar/desengajar/procurar) -> kind=maneuver.
     - Mover (aproximar/afastar) -> kind=move + direction.
     - Sem alvo claro -> kind=attack no primeiro inimigo.{object_rule}
+    {PLAYER_INPUT_RULE}
     """
     )
     try:
         llm = get_llm(temperature=0.0, tier=ModelTier.CLASSIFY)
-        res = llm.with_structured_output(move_model).invoke([sys, HumanMessage(content=intent)])
+        res = llm.with_structured_output(move_model).invoke(
+            [sys, HumanMessage(content=wrap_player_input(intent))]
+        )
         if isinstance(res, PlayerMove):
             kind = (res.kind or "attack").lower()
             tid = res.target_id or (enemies[0]["id"] if enemies else None)
@@ -1590,8 +1594,9 @@ def _narrate(
     permanentes; Vitalidade é fôlego/vigor. Use o CONTEXTO só para ambientar.
 
     {("ENTRADA: " + spawned_flavor) if spawned_flavor else ""}
-    Ação do jogador: {intent}
+    Ação do jogador: {wrap_player_input(intent)}
     {world_ctx}
+    {PLAYER_INPUT_RULE}
     <log_mecanico>
     {log_str}
     </log_mecanico>
@@ -1609,7 +1614,9 @@ def _narrate(
         from services.narrative_sink import narrate_text
 
         # SPEC-319: tokens ao vivo so com sink (stream SSE); senao e o invoke de sempre.
-        res = narrate_text(llm, [sys, HumanMessage(content=intent or "Continue o combate.")])
+        res = narrate_text(
+            llm, [sys, HumanMessage(content=wrap_player_input(intent or "Continue o combate."))]
+        )
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):
             text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)

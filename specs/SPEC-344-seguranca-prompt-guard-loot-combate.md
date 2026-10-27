@@ -1,6 +1,6 @@
 # SPEC-344 — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
 
-> **Status:** `approved` (Aprovação: dono, 27/10, inspeção de segurança geral — "faz uma inspeção de segurança geral criando e executando specs do que encontrar")
+> **Status:** `done` (Aprovação: dono, 27/10, inspeção de segurança geral — "faz uma inspeção de segurança geral criando e executando specs do que encontrar")
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-223 (`done`, `services/prompt_guard.py` e corpus de injeção).
 > **Desbloqueia:** —
@@ -72,11 +72,11 @@ No front, a narração é renderizada com `dangerouslySetInnerHTML` a partir de 
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R4: os 4 sites recebem entrada delimitada e a regra no system prompt (R7 verde).
-- [ ] R5: testes de loot e combate existentes verdes sem alterar expectativas.
-- [ ] R6: ≥ 6 casos novos no corpus; LLM obediente não altera ouro/inventário/HP fora do que `economy`/`conflict_orchestrator` autorizam.
-- [ ] R8: teste `mdLite` verde.
-- [ ] Nenhuma flag `RPG_*` nova; nada em `evals/` protegido.
+- [x] R1–R4: os 4 sites recebem entrada delimitada e a regra no system prompt (R7 verde).
+- [x] R5: testes de loot e combate existentes verdes sem alterar expectativas.
+- [x] R6: ≥ 6 casos novos no corpus; LLM obediente não altera ouro/inventário/HP fora do que `economy`/`conflict_orchestrator` autorizam.
+- [x] R8: teste `mdLite` verde.
+- [x] Nenhuma flag `RPG_*` nova; nada em `evals/` protegido.
 - [ ] Suíte completa verde no pouso; revisão independente APPROVED.
 
 ## 6. Smoke test real
@@ -95,3 +95,4 @@ Offline: os testes de R6/R7 são o smoke (MockLLM). Com chave real, opcional: `u
 ## Histórico de mudanças
 
 - 2026-10-27 — criada (`approved`) a partir da inspeção de segurança geral.
+- 2026-10-27 — implementada (`done`); R5 sem mudança no `mock_llm` (já desembrulha); narração do combate também delimita `Ação do jogador` dentro do system prompt.

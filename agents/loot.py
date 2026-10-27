@@ -20,6 +20,7 @@ from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services import conflict_summary as conflict_summary_service
 from services import economy, latency_flags, prose_guard
+from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages, unwrap_player_input
 from services.turn_outcome import record_gain
 from state import GameState
 
@@ -146,13 +147,14 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
                 "Você identifica transações de RPG. Classifique a fala do jogador em "
                 "buy (comprar do mercador), sell (vender item próprio) ou craft "
                 "(forjar/criar/melhorar). item_ref = o nome do item/receita citado. "
-                f"Contexto da cena: {loot_source}."
+                f"Contexto da cena: {loot_source}. " + PLAYER_INPUT_RULE
             )
         )
         res = llm.with_structured_output(TradeIntent).invoke(
-            [sys, HumanMessage(content=text or "negociar")]
+            [sys, *guard_messages([HumanMessage(content=text or "negociar")])]
         )
         if isinstance(res, TradeIntent) and res.item_ref:
+            res = res.model_copy(update={"item_ref": unwrap_player_input(res.item_ref)[:60]})
             return res.model_copy(update={"mode": explicit_mode}) if explicit_mode else res
     except Exception as e:
         _log_event("loot", "trade_parse_failed", level="warning", error=type(e).__name__)
