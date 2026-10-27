@@ -1,6 +1,6 @@
 # SPEC-339 — Controle aplicado por oponente expira antes de valer (tick de duração)
 
-> **Status:** `draft`
+> **Status:** `approved`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-232 (`done`, expiração de buff/debuff no fim do turno), SPEC-329 (presságio), SPEC-330 (golden de equivalência das 308 Cartas). Para a Etapa 5, SPEC-335 com o lint provisório de `taunt`/`marca` já pousado na `main`.
 > **Desbloqueia:** Cartas de onda (SPEC-335/336) com `taunt`/`marca` de `duracao` 1; rebalanceamento do Devoto (Provocar).
@@ -247,3 +247,9 @@ Não há LLM no caminho: o tick é determinístico. O smoke real é sobre o moto
 - **D5 — Arena de inimigos:** incluir no R15 a medição de encontros com baralhos de inimigo que usam `taunt`/`marca` (SPEC-332)? Recomendação: sim, só medir.
 - **D6 — Flag:** corrigir sem flag (recomendado, porque é bug e não feature) ou pôr atrás de `RPG_CONTROL_TICK_FIX` com default `on`, para poder reverter no staging?
 - **D7 — Pôr `tests/fixtures/spec330_legacy_golden.json` em `evals/protected-paths.txt`?** Muda a governança de eval, então quem decide é o dono.
+
+**Decisões do dono (27/10, "aprovado, siga esses passos"):** todas as recomendações.
+D1 = design A (marcador no orquestrador, golden intacto). D2 = sim, R8b na mesma spec.
+D3 = sim, Marca do Abismo vale 3 turnos efetivos. D4 = só listar as bandeiras novas (R16).
+D5 = sim, só medir os baralhos de inimigo. D6 = sem flag. D7 = sim, golden em
+`evals/protected-paths.txt` (commit próprio; publicação via `/eval-publish` se o gate pedir).
