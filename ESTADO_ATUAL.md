@@ -16,7 +16,7 @@
 
 ## Próximos 3 passos
 
-1. Turno inteiro: input só libera no `state` (~10 s p50, igual ao OFF) — investigar o que segura o `state` após a narração (arquivista/commit no mesmo request) e o cold start do Vercel (bundle 319 MB, Hobby) → spec nova.
+1. Turno inteiro: input só libera no `state` (~10 s p50, igual ao OFF) — investigar o que segura o `state` após a narração (arquivista/commit no mesmo request) (cold start do Vercel fica para quando o dono pagar a Vercel).
 2. 318: SMART/turno no roteiro do baseline (medindo); 317: re-revisão Sol de `a52b0058`, R2 200 decisões (harness local com LLM real), R1 A/B Groq no staging; bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente).
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
@@ -30,7 +30,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | Conta no staging (R-01) | criar/entrar em https://rpg-ia-master-staging.vercel.app e confirmar o e-mail | "confirmei e loguei" → fechar R-01 no risk register + checklist |
 | SPEC-222 compra de teste | criar conta Stripe (modo teste) e colar `STRIPE_SECRET_KEY=sk_test_…` + webhook secret no `.env.staging` | "colei a Stripe" → env no staging, compra de teste, `purchase_token IS NULL`, fechar 222 (exceto domínio) |
 | SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei o domínio X" → URLs legais, CORS/cookies, checklist |
-| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release |
+| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release; ao pagar a Vercel → spec de infra do cold start (19–59 s: dieta do bundle 319 MB, Fluid, aquecimento; adiada pelo dono 27/10) |
 | SPEC-198 | Play Console (taxa), package ID, service account | "criei o Play Console" → `applicationId`, upload interno, licença real |
 | Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
