@@ -8,8 +8,8 @@
 
 ## Estado em 10 linhas
 
-- staging = `0e01677` (preset: `lean`, stream `on`, hedge `0`; smokes verdes). Mundo vivo 296–315 `done` (297: 1ª promoção do pool).
-- 320–326 `done` (26/10).
+- staging = `0e01677` (`lean`, stream `on`, hedge `0`; smokes verdes). 296–315 e 320–326 `done`.
+- Épico cartas 327–336 em execução (sessão `-69`), tudo atrás de flag `off`.
 - **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`** (318: NPC novo −6 s isolado, `lean` 0,41 SMART/turno); loot sem tokens ao vivo.
 - Staging: preset versionado `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree; checar RAM (CLAUDE.md).
@@ -67,20 +67,15 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 - 2026-10-26 · SPEC-322 `done` — Front: tokens de cor, contraste, raio, ícones e tipografia
 - 2026-10-26 · SPEC-321 `done` — Front: casca mobile, alvos de toque e safe-area
 - 2026-10-26 · SPEC-320 `done` — Front: espera do turno, typewriter e banner de erro
-- 2026-10-25 · SPEC-315 `done` — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
-- 2026-10-25 · SPEC-314 `done` — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
 
-O **coordenador** insere aqui, logo abaixo do marcador, no máximo um parágrafo de
-≤ 6 linhas por frente/spec da onda atual. Subagentes **não** editam este arquivo:
-devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas para
-`CHANGELOG.md` (seção `## AAAA-MM-DD`) e esvazie a seção.
+Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 <!-- onda:inserir-aqui -->
 - 27/10: donos das abertas — 327–336 sessão `-69`, 337–338 sessão `-91`; suíte completa 1 por vez (avisar).
-- 27/10 épico cartas (327–336, aprovado com os padrões da 327 §4): pousadas `off` 329 Presságio, 328 Baralho/Mão/Fôlego, 330 gramática Grupo A (308 legadas idênticas, golden). Antes de `on`: calibrar Fôlego com bot que jogue o baralho (arena 42→73 % só com básicas), revisar frases `pressagio_sinais.json` e 15 básicas (dono). Próximo: 330 Grupo B, 334 front, 331 cena, 336 esteira.
+- 27/10 cartas: 329, 328, 330A pousadas `off`. Antes de `on`: calibrar Fôlego (arena 42→73 %), dono revisa `pressagio_sinais.json` e `basicas.json`.
 
 
 ## Como rodar
@@ -93,10 +88,7 @@ devolvem o parágrafo no hand-back. Ao abrir a próxima onda, mova estas notas p
   `uv run uvicorn api:app --port 8000` · `cd web && npm run build`.
 - Suíte em camadas e paralelismo: `docs/guias/TESTES.md`.
 - Worktree por spec: `/spec-new` (ver `CLAUDE.md` § Fluxo de spec).
-- `.env` é carregado com `override=True`; o Git Bash não enxerga variáveis de ambiente
-  do Windows definidas depois que ele abriu.
-- Ambiente/quotas/providers em detalhe: `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`
-  § "Como rodar" e `.env.example`.
+- `.env` com `override=True`. Detalhes: `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`, `.env.example`.
 
 ## Limitações conhecidas
 
