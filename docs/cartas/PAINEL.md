@@ -2,7 +2,7 @@
 
 > Gerado por `scripts/cards/painel.py` (SPEC-336). Não edite à mão.
 
-- Cartas de jogador: **395** (meta de 12 meses: ~1200).
+- Cartas de jogador: **431** (meta de 12 meses: ~1200).
 - Cartas de inimigo: **204**.
 - Meta por onda mensal: +60 de jogador e +20 de inimigo (cortes permitidos).
 
@@ -11,9 +11,9 @@
 | Valor | Cartas |
 |---|---|
 | Arcanista Cinzento | 92 |
+| Corruptor | 92 |
 | Sangromante | 92 |
 | Devoto do Abismo | 91 |
-| Corruptor | 56 |
 | Médico de Campo | 55 |
 | Cicatriz | 5 |
 | Ferimento | 3 |
@@ -23,90 +23,90 @@
 
 | Valor | Cartas |
 |---|---|
-| comum | 169 |
-| incomum | 126 |
-| abissal | 61 |
-| rara | 39 |
+| comum | 189 |
+| incomum | 136 |
+| abissal | 63 |
+| rara | 43 |
 
 ### Por tier
 
 | Valor | Cartas |
 |---|---|
-| 1 | 141 |
-| 3 | 86 |
-| 4 | 40 |
+| 1 | 161 |
+| 3 | 90 |
+| 4 | 46 |
+| 5 | 31 |
 | 2 | 29 |
-| 5 | 29 |
-| 7 | 25 |
+| 7 | 27 |
 | 8 | 21 |
 | 9 | 15 |
-| 6 | 9 |
+| 6 | 11 |
 
 ### Por kind de efeito
 
 | Valor | Cartas |
 |---|---|
-| dano | 111 |
-| aplicar_condicao | 37 |
-| contra_ataque | 27 |
-| protecao | 26 |
+| dano | 122 |
+| aplicar_condicao | 49 |
+| contra_ataque | 28 |
+| protecao | 27 |
 | utilitaria | 25 |
 | cura | 24 |
-| dot | 18 |
+| dot | 24 |
+| buff_dano | 15 |
 | buff_defesa | 15 |
-| buff_dano | 14 |
 | taunt | 13 |
+| torpor | 13 |
 | marca | 11 |
+| rachadura | 11 |
 | vigilia | 10 |
+| buff_esquiva | 9 |
 | vantagem | 9 |
-| buff_esquiva | 8 |
-| buff_acerto | 7 |
-| empurrao | 7 |
+| buff_acerto | 8 |
+| empurrao | 8 |
 | ganhar_folego | 7 |
 | perception | 7 |
 | sangria | 7 |
-| torpor | 7 |
 | comprar | 6 |
+| revelar | 6 |
 | buff_iniciativa | 5 |
+| marca_do_abismo | 5 |
 | purga_condicao | 5 |
 | buff_cura | 4 |
 | buff_dot | 4 |
-| rachadura | 4 |
+| mover_alvo_zona | 4 |
 | reposicionar | 4 |
-| revelar | 4 |
 | estabilizar | 3 |
 | bonus_vitalidade_por_estagio | 2 |
 | copiar_ultima | 2 |
 | descartar | 2 |
 | esconder | 2 |
-| mover_alvo_zona | 2 |
 | bonus_cura_por_estagio | 1 |
 | bonus_esquiva_por_estagio | 1 |
 | bonus_percepcao_por_estagio | 1 |
-| marca_do_abismo | 1 |
 | reduzir_carga_aliado | 1 |
 
 ### Por palavra-chave
 
 | Valor | Cartas |
 |---|---|
+| torpor | 13 |
+| rachadura | 11 |
 | guardar | 10 |
 | vigilia | 10 |
+| chamado | 9 |
+| exaurir | 9 |
 | sacrificio | 9 |
 | fardo | 8 |
-| chamado | 7 |
-| exaurir | 7 |
 | sangria | 7 |
-| torpor | 7 |
 | vazao | 6 |
+| marca_do_abismo | 5 |
 | ressoar | 5 |
-| rachadura | 4 |
+| interromper | 4 |
 | eco | 3 |
-| interromper | 3 |
-| marca_do_abismo | 1 |
 
 ### Por onda (cartas com `onda`)
 
 | Valor | Cartas |
 |---|---|
-| 1 | 108 |
+| 1 | 144 |
