@@ -200,6 +200,7 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
             return None
 
     monkeypatch.setattr("infrastructure.audit_source.PostgresAuditSource", _NoRowsAuditSource)
+    monkeypatch.setattr(tp.store, "pool", None, raising=False)
 
     # audit-export exige sessão recente; com ela o 404 vem da checagem de dono.
     tp.client_b.cookies.set("rpg_recent", proof(tp.b.user_id, "recent", "b"))
