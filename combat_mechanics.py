@@ -523,6 +523,9 @@ def apply_condition(entity: dict, cond: dict) -> str:
         if c.get("name", "").lower() == cond.get("name", "").lower():
             c["duration"] = max(c.get("duration", 0), cond.get("duration", 0))
             c["dot"] = max(c.get("dot", 0), cond.get("dot", 0))
+            if cond.get("control") or cond.get("stat"):
+                # SPEC-339: o orquestrador distingue "renovada agora" de "já estava" (R1).
+                c["_renovada"] = True
             return f"{entity.get('name', 'Alvo')}: condição {cond['name']} renovada"
     conds.append(dict(cond))
     return f"{entity.get('name', 'Alvo')}: ganha condição {cond['name']}"

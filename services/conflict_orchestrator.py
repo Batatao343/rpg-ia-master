@@ -209,6 +209,72 @@ def _apply_dot_v4(target: dict, dot: int, dtype: str, out: dict, rng=None) -> No
     return int(result.get("dano_final", 0) or 0)
 
 
+# SPEC-339: controles lidos DEPOIS do tick do portador (stun é lido antes: não entra).
+_LATE_READ_CONTROLS: frozenset[str] = frozenset({"taunt", "marca", "fear", "root", "silence"})
+_SKIP_KEY = "_pula_tick"
+
+
+def _is_defensive_debuff(c: dict) -> bool:
+    """Stat de leitura defensiva que PIORA o portador (exposto, Rachadura, armadura comprometida)."""
+    stat, delta = c.get("stat"), int(c.get("delta", 0) or 0)
+    return (stat in ("ac", "protection") and delta < 0) or (
+        stat == "dano_recebido_pct" and delta > 0
+    )
+
+
+def _snapshot_conditions(actors_by_id: dict[str, dict]) -> dict[str, list[dict]]:
+    return {aid: list(a.get("active_conditions") or []) for aid, a in actors_by_id.items()}
+
+
+def _mark_fresh_conditions(
+    before: dict[str, list[dict]],
+    actors_by_id: dict[str, dict],
+    current_actor_id: str | None,
+    sides: dict[str, list[str]] | None = None,
+) -> int:
+    """SPEC-339: depois de um passo da rodada, marca (`_pula_tick`) a condição NOVA (ou
+    renovada) que outro ator pôs em Y, para o 1º tick/expiração de Y não a consumir antes de
+    valer. Controle de leitura tardia: Y != ator do turno, ou Y é o ator do turno e a fonte é
+    outra (reação). Stat defensivo (R8b): só dentro do turno de outro ator e só se for
+    debuff (ou buff dado por aliado do mesmo lado). `stun` e DoT nunca recebem marcador."""
+    marked = 0
+    for aid, actor in actors_by_id.items():
+        prev = before.get(aid, [])
+        for c in actor.get("active_conditions") or []:
+            renewed = bool(c.pop("_renovada", False))
+            if not (renewed or not any(c is p for p in prev)):
+                continue
+            if c.get("persistente"):
+                continue
+            ctl = c.get("control")
+            if ctl:
+                if ctl not in _LATE_READ_CONTROLS or int(c.get("dot", 0) or 0) > 0:
+                    continue
+                if aid == current_actor_id and str(c.get("source_actor_id") or "") == aid:
+                    continue
+            elif _is_stat_only(c):
+                if current_actor_id is None or aid == current_actor_id:
+                    continue
+                if not _is_defensive_debuff(c):
+                    same_side = any(
+                        aid in ids and current_actor_id in ids
+                        for s, ids in (sides or {}).items()
+                        if s in ("hero", "ally")
+                    )
+                    if not (
+                        same_side
+                        and c.get("stat") in ("ac", "protection")
+                        and int(c.get("delta", 0) or 0) > 0
+                    ):
+                        continue
+            else:
+                continue
+            if not c.get(_SKIP_KEY):
+                c[_SKIP_KEY] = True
+                marked += 1
+    return marked
+
+
 def _is_stat_only(condition: dict) -> bool:
     """Buff/debuff puro ({stat, delta} sem DoT nem controle)."""
     return (
@@ -229,6 +295,9 @@ def _expire_stat_conditions(actor: dict, present_at_start: list, out: dict) -> N
             survivors.append(c)
             continue
         if _is_stat_only(c) and any(c is p for p in present_at_start):
+            if c.pop(_SKIP_KEY, False):  # SPEC-339 R8b: aplicada por outro ator, vale mais 1 turno
+                survivors.append(c)
+                continue
             c["duration"] = int(c.get("duration", 0) or 0) - 1
             if c["duration"] <= 0:
                 out["logs"].append(f"{_name(actor)}: {c.get('name', 'condição')} terminou.")
@@ -249,6 +318,10 @@ def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
             survivors.append(c)
             continue
         dot = int(c.get("dot", 0) or 0)
+        if c.pop(_SKIP_KEY, False) and dot <= 0:
+            # SPEC-339 R1: controle aplicado por outro ator pula o 1º tick do portador.
+            survivors.append(c)
+            continue
         if dot > 0:
             damage_applied = True
             dealt = _apply_dot_v4(
@@ -2207,8 +2280,10 @@ def _run_round(
     _scene_rnd = cs.tactical_round(scene)
     _scene_ctx = fx.current() if _sc.enabled() else None
     if _scene_ctx is not None:
+        _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
         _sc.tick(_scene_ctx, _scene_rnd, "inicio_rodada", out)
         _sc.abyss_clock(_scene_ctx, _scene_rnd, out)
+        _mark_fresh_conditions(_cond_before, actors_by_id, None, sides)
     # SPEC-332: fase de chefe (so `on`) ANTES do presságio; troca de fase invalida o congelado.
     phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
     if _edk_mod.mode() == "shadow":
@@ -2387,6 +2462,7 @@ def _run_round(
 
     for actor_id in seq:
         actor = actors_by_id.get(actor_id)
+        _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
         if actor_id in acted:
             # Ação extra: só se a 1ª não foi negada e o ator segue de pé. Stun
             # aplicado no meio da rodada vale para a próxima, como para todos.
@@ -2399,6 +2475,7 @@ def _run_round(
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+            _mark_fresh_conditions(_cond_before, actors_by_id, actor_id, sides)
             continue
         acted.add(actor_id)
         if actor is None or not _can_act(actor):
@@ -2441,14 +2518,17 @@ def _run_round(
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+        _mark_fresh_conditions(_cond_before, actors_by_id, actor_id, sides)
         _expire_stat_conditions(actor, present_at_start, out)
 
+    _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
     if _scene_ctx is not None:  # SPEC-331: fim de rodada da cena, antes do terminal
         _sc.tick(_scene_ctx, _scene_rnd, "fim_rodada", out)
         _sc.clock_hard_stop(_scene_ctx, _scene_rnd, out)
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
     _resolve_last_stands(scene, actors_by_id, sides, out, rng)
+    _mark_fresh_conditions(_cond_before, actors_by_id, None, sides)
 
     # Estabilização do Estado Terminal disparado nesta rodada (07, R6=A).
     resolve_terminals(actors_by_id, sides, out, scene=scene, rng=rng)
