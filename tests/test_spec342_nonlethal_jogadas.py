@@ -42,3 +42,21 @@ def test_no_declaration_no_mark(monkeypatch):
     decl = _decl()
     cbt._mark_nonlethal(decl, "Encerro a rodada: Guardar, Golpe.")
     assert all("nao_letal" not in s.params for s in decl.jogadas)
+
+
+def test_wrapped_player_input_still_marks_nonlethal(monkeypatch):
+    """SPEC-344: a entrada embrulhada em <entrada_do_jogador> nao quebra o 'Sem matar.'."""
+    from services.death_flow import nonlethal_declared
+    from services.prompt_guard import wrap_player_input
+
+    monkeypatch.setenv("RPG_COMBAT_NONLETHAL", "on")
+    text = "Encerro a rodada: Guardar, Golpe. Sem matar."
+    assert nonlethal_declared(wrap_player_input(text))
+    assert not nonlethal_declared(wrap_player_input("Encerrar turno: Guardar, Golpe."))
+    decl = _decl()
+    cbt._mark_nonlethal(decl, wrap_player_input(text))
+    assert decl.jogadas[1].params["nao_letal"] is True
+    # o texto legado continua valendo
+    old = _decl()
+    cbt._mark_nonlethal(old, "Encerrar turno: Guardar, Golpe. Sem matar.")
+    assert old.jogadas[1].params["nao_letal"] is True
