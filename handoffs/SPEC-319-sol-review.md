@@ -136,3 +136,71 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_partial_
 cd web && npm test → 170 pass, 0 fail
 probe scratchpad (mediado com assinatura / controle / hedge 1º-falha / extrator) → 7 passed
 ```
+
+
+## Revisão do follow-up loot (27/10, commit 2300913d)
+
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** Opus / papel Sol · **Data:** 2026-10-27 · **Commit revisado:** `2300913d`
+
+## Escopo
+
+Branch `fix-319-loot`, 1 commit sobre a `main` (`2300913d`): `agents/loot.py` (`_narrate`
+passa `stream=False` sempre), `tests/test_streaming.py` (teste novo parametrizado) e
+nota no histórico da `specs/SPEC-319-*.md`. Também li o caminho SSE em `api.py`
+(`_timeline_progress`, `_emit_early`, `_finish_tokens`, tratamento de `early_narrative`
+e `response`), `services/narrative_sink.narrate_text`, `services/turn_delivery.early_narrative`
+e `agents/combat.py::_narrate` e o pós-processamento dele. Fora do escopo: o `tail` do
+storyteller (1/58), que a spec deixa em observação.
+
+## Verificações pedidas
+
+1. **A narração chega cedo e o estado final é idêntico: OK.** Com `stream=False`,
+   `narrate_text` cai direto em `llm.invoke(messages)` (`services/narrative_sink.py:376-377`),
+   que é o mesmo caminho do POST/CLI. Assim não sai nenhum `narrative_delta`/`reset` e
+   `tok["text"]` fica vazio. `loot_agent` está em `NARRATING_NODES`
+   (`services/turn_delivery.py:13`), então `_timeline_progress` calcula `early_narrative`
+   na update do nó (`api.py:5870-5879`). Com `tok["text"]` vazio, `api.py:6666-6675` vai
+   para `_emit_early(text)`, não para `_finish_tokens`, e nunca dá `replace` por `tail`. O
+   `res.content` passa pelo mesmo `sanitize_meta_preamble` → `_validated_narrative` de
+   antes, e o estado não depende do sink. O hedge (`llm_setup.py:1321`) vale só para
+   chamadas com schema no tier FAST, então o loot plain não perde hedge.
+2. **Nenhum outro caminho de loot streama tokens: OK.** `agents/loot.py` só importa o sink
+   em `_narrate` (linha 177). O `TradeIntent` estruturado (linha 152) usa
+   `with_structured_output(...).invoke`, sem `stream_structured`/`stream_text`. Os 4
+   pontos de chamada (`263`, `379`, `408`, `512`) passam todos por `_narrate`.
+3. **O combate tem o mesmo risco de `tail`/`replace`: SIM (só apontado).** Ver P2-1.
+4. **O teste falha sem o fix: OK.** Troquei `agents/loot.py` pela versão da `main` e as 2
+   parametrizações falharam (`seen == [True]`). Restaurei o arquivo e o `git status`
+   ficou limpo. O teste só é válido porque o MockLLM não é `is_fallback`. Se fosse, `seen`
+   ficaria `[]` e o teste falharia, então não há falso verde silencioso.
+
+Guard de structured output: inalterado (o `TradeIntent` mantém o guard). Valor de LLM sem
+validação: nenhum novo. Writer persistente: nenhum. Segredo em log: nenhum. `evals/`:
+não tocado.
+
+## Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-1 | P2 | `agents/combat.py:1506` (+ `2111-2112`, `1513-1517`) | O combate streama tokens (`narrate_text` com `stream=True` por padrão), mas o texto final é reescrito depois do stream: `summ.narrative_or_fallback(conflict_sum, narrative)` no fim do combate (`combat_over`), fallback determinístico inteiro quando `species_drift` dispara, e `sanitize_meta_preamble`. É a mesma classe de causa do loot: `replace` (`tail`/`start`) nos turnos de vitória/fim e no drift de espécie. | Follow-up, não corrigir aqui: medir `token_replace` por rota `combat` no staging. Se aparecer, passar `stream=not combat_over` (o resumo canônico só existe no fim) e/ou mover o guard de espécie para o `StreamGuard` (`risk`). |
+| P2-2 | P2 | `tests/test_streaming.py:743-763` | O teste prova só o argumento `stream=False`. Não há teste de integração SSE da rota loot que confirme `early_narrative` sem `live`/`replace`, no estilo de `test_npc_route_tokens_do_not_replace`. | Opcional: acrescentar um teste SSE de rota loot que confira ausência de `live` e de `replace` e presença do chunk antecipado. |
+| P2-3 | P2 | `handoffs/SPEC-319-loot-stream-review.md` | O nome pedido pelo coordenador (`-loot-stream-review`) não segue o padrão `SPEC-NNN[-papel]-<tipo>` do template. `scripts/check_handoff_names.py` pode rejeitar. | Renomear no pouso se o lint reclamar (ex.: `SPEC-319-sol-review.md`, se não colidir). |
+
+## Correções aplicadas
+
+Nenhuma (revisão só leitura).
+
+## Pendências
+
+- P2-1 → coordenador decide se vira nota na SPEC-319 (observação de staging) ou uma spec nova.
+- P2-2 → opcional, junto do P2-1.
+
+## Comandos rodados
+
+```text
+git diff main...HEAD --stat → 3 arquivos (+30/-3)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore tests/test_streaming.py tests/test_stream_structured.py tests/test_loot*.py -n 2 → todos verdes
+(agents/loot.py da main) pytest tests/test_streaming.py::test_loot_narration_never_streams_tokens → 2 failed (esperado); arquivo restaurado, git status limpo
+```

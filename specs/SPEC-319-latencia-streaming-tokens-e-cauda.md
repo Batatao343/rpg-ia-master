@@ -296,3 +296,5 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   Correção: `agents/loot.py` chama `narrate_text(..., stream=False)` sempre (prosa de 1–2 frases, ~1,5–2,3 s; sai
   inteira pelo canal antecipado da 316). Teste `test_loot_narration_never_streams_tokens`. O 3º (storyteller,
   final menor que o mostrado: corte do guard final não previsto pelo `risk`) fica em observação (1/58).
+  Revisão Sol do fix: APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-319-sol-review.md` § follow-up loot) — P2-1: combate
+  streama e reescreve no fim (vitória/`species_drift`); medir `token_replace` da rota combate antes de mexer.
