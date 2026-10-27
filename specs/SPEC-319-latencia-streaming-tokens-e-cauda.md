@@ -289,3 +289,5 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
 - 27/10 — A/B OFF×ON intercalado 2× no staging (60 turnos, [docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)): TTFMC servidor p50 2,4 s (OFF 8–10,8 s);
   `done` p50 6,1 s (OFF 8,2–11,4 s); `replace` 0/29; 0 erro. Critérios restantes atendidos e hedge retirado pelo
   dono → **`done`**.
+- 27/10 (pós-`done`) — nas 2 sessões de `lean` (29 turnos) houve 3 `sse.token_replace` reason `tail` (10 %);
+  somado às sessões ON do A/B (0/29), 3/58 = 5,2 % — no limite da meta < 5 %. Investigar os casos `tail`.

@@ -232,3 +232,9 @@ stub responde coerente no turno seguinte; plano novo aparece no turno após a tr
   `RPG_ARCHIVE_POLICY=legacy`; [docs/spec316/staging-measure-2026-10-27.md](../docs/spec316/staging-measure-2026-10-27.md)). Com `lean`: SMART/turno 0,47 e 0,71 (média 0,59; OFF 0,77/0,60) → meta
   ≤ 0,45 **não atingida**. `state` p50 sem ganho (8,2–11,4 × 9,8–11,4 s); descanso: 1ª narração 14–18 s → 2,4–4,1 s.
   Segue `in-progress`.
+- 27/10 — `lean` no roteiro padrão do `projection_measure` (o do baseline 0,75; 2×15 turnos, staging `0640bff`):
+  **SMART/turno 0,41** (29 turnos com log; 17×0, 12×1) → meta ≤ 0,45 ✔; custo/turno US$ 0,0030; 3 `replan`.
+  Os 0,59 do A/B vinham do roteiro de estresse (4/15 turnos com troca de região/virada de dia, que sempre
+  arquivam + replan). Pendente do §6: "NPC novo −2 s" inconclusivo — nos roteiros só 1–2 turnos por sessão
+  geram ficha nova (`enrich.npc_sheet_completed`), e o A/B isolado de 26/10 deu 5,4 × 4,6 s; `state` p50 isolado
+  −0,3 s (meta −0,8). Precisa de roteiro que crie NPC de fato.
