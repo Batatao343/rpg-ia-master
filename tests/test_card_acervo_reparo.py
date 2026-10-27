@@ -95,9 +95,7 @@ def test_lote1_passa_no_lint_contra_o_acervo():
 # ----------------------------------------------------------------- Lote 2 (Sangromante)
 def _lote2() -> list[dict]:
     return [
-        c
-        for c in card_lint.load_pool()
-        if c.get("onda") == 1 and c.get("classe") == "Sangromante"
+        c for c in card_lint.load_pool() if c.get("onda") == 1 and c.get("classe") == "Sangromante"
     ]
 
 
@@ -107,7 +105,12 @@ def test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada():
     assert Counter(c["subclasse"] for c in cs) == {"exposto": 12, "avaro": 12, "silencioso": 12}
     assert len({c["id"] for c in cs}) == 36
     # P2-7: mais comuns e menos incomuns que o Lote 1 (16/13/5/2); alvo da R3 = 50/30/15/5.
-    assert Counter(c["raridade"] for c in cs) == {"comum": 20, "incomum": 10, "rara": 4, "abissal": 2}
+    assert Counter(c["raridade"] for c in cs) == {
+        "comum": 20,
+        "incomum": 10,
+        "rara": 4,
+        "abissal": 2,
+    }
 
 
 def test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():

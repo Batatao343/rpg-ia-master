@@ -385,7 +385,9 @@ def test_check_raridade_regras_da_r3():
 def test_escala_no_efeito_principal_de_dano_e_recusada():
     """SPEC-335 P1-1: o golpe com rolagem não aplica `escala`; só os efeitos extras escalam."""
     escala = {"por": "entropia", "fator": 0.5, "max": 3}
-    inerte = card(efeitos=[{"kind": "dano", "categoria_arma": "leve", "dano_base": 2, "escala": escala}])
+    inerte = card(
+        efeitos=[{"kind": "dano", "categoria_arma": "leve", "dano_base": 2, "escala": escala}]
+    )
     assert any(i.code == "escala_inerte" for i in card_lint.check_escala_principal(inerte))
     extra = card(
         efeitos=[
