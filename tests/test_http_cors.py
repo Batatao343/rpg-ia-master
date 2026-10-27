@@ -68,6 +68,8 @@ def test_preflight_denied(kind, kwargs, legacy_client):
         # Starlette ecoa o ACAO da origem permitida no 400 (o navegador reprova pelo status);
         # o que fecha o preflight é o 400 + motivo no corpo.
         assert "Disallowed CORS" in out.text
+        assert "PUT" not in out.headers.get("access-control-allow-methods", "")
+        assert "x-evil" not in out.headers.get("access-control-allow-headers", "").lower()
 
 
 def _mutate(tp, origin):

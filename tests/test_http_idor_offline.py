@@ -1,13 +1,12 @@
 """SPEC-337: IDOR offline (dois principals), controle positivo e correções L1/L2.
 
 Matriz R14 (principal B contra o ``game_id`` de A). Rotas que dependem de Postgres
-(``runtime.resources[0]``) recebem repositório fake; ``/game/{g}/operations/{op}`` e
-``/account/checkout`` ficam só na matriz local (``test_http_idor_local.py``).
+(``runtime.resources[0]``) recebem repositório fake; ``/account/checkout/{order_id}`` fica
+fora (exige pedido real) e é omissão documentada em ``test_http_idor_local.py``.
 """
 
 from __future__ import annotations
 
-import hashlib
 from uuid import uuid4
 
 import pytest
@@ -163,6 +162,10 @@ _ROUTES = [
 ]
 
 
+# 404 em tudo; exceções explícitas por rota (hoje nenhuma: B tem sessão recente abaixo).
+_EXPECTED_STATUS: dict[str, int] = {}
+
+
 class _EmptyArtRepo:
     def __init__(self, *_a, **_k):
         pass
@@ -187,6 +190,19 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     from infrastructure.request_context import current_principal
 
     monkeypatch.setattr("api._image_finance", lambda: (tp.runtime, current_principal(), object()))
+    from services.account_security import proof
+
+    class _NoRowsAuditSource:  # o filtro de dono do Postgres devolve None para outro principal
+        def __init__(self, *_a, **_k):
+            pass
+
+        def load(self, _game):
+            return None
+
+    monkeypatch.setattr("infrastructure.audit_source.PostgresAuditSource", _NoRowsAuditSource)
+
+    # audit-export exige sessão recente; com ela o 404 vem da checagem de dono.
+    tp.client_b.cookies.set("rpg_recent", proof(tp.b.user_id, "recent", "b"))
     url = path.replace("{g}", gid)
     payload = (
         None
@@ -197,14 +213,10 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     before = _a_state(tp).version
     kwargs = {"json": payload} if payload is not None else {}
     response = tp.client_b.request(method, url, headers=headers, **kwargs)
-    assert response.status_code in {400, 403, 404, 409}, (
+    assert response.status_code == _EXPECTED_STATUS.get(path.split("?")[0], 404), (
         f"{method} {path}: {response.status_code} {response.text[:200]}"
     )
     assert tp.seed_name not in response.text
     after = _a_state(tp)
     assert after.version == before
     assert tp.seed_name in str(after.state.get("player", {}).get("name"))
-
-
-def _digest(game):
-    return hashlib.sha256(f"delete:{game}".encode()).hexdigest()

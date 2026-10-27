@@ -17,7 +17,7 @@ import pytest
 
 from infrastructure.contracts import Principal
 from tests.fakes.local_auth import create_confirmed_user, delete_confirmed_user
-from tests.test_http_idor_offline import _ROUTES
+from tests.test_http_idor_offline import _EXPECTED_STATUS, _ROUTES
 from tests.test_postgres_jobs_local import infra  # noqa: F401
 
 pytestmark = [pytest.mark.infra_local, pytest.mark.security_local]
@@ -105,7 +105,11 @@ def test_principal_b_cannot_touch_game_a_local(duo, method, path, body):
         }
     before = duo["store"].get(duo["principal_a"], duo["game_a"])
     response = duo["b"].request(method, url, headers={"Idempotency-Key": str(uuid4())}, **kwargs)
-    assert response.status_code in {400, 403, 404, 409}, (method, path, response.text[:200])
+    assert response.status_code == _EXPECTED_STATUS.get(path.split("?")[0], 404), (
+        method,
+        path,
+        response.text[:200],
+    )
     assert duo["seed"] not in response.text
     after = duo["store"].get(duo["principal_a"], duo["game_a"])
     assert after is not None and after.version == before.version
@@ -140,8 +144,3 @@ def test_delete_key_reuse_conflicts_on_postgres(duo):
     # a mesma key apontando para OUTRA campanha é recusada.
     mismatch = duo["a"].delete(f"/game/save/{game}", headers={"Idempotency-Key": retry_key})
     assert mismatch.status_code == 409
-
-
-def test_art_quality_cross_game_on_postgres(duo):
-    """R18 no Postgres: precisa de uma geração `ready` semeável sem rede."""
-    pytest.skip("sem geração de arte 'ready' semeável sem rede nesta stack; coberto offline")

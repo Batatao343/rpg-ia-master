@@ -43,3 +43,17 @@ def test_skip_in_security_file_is_reported(tmp_path):
 def test_no_skip_is_clean_and_other_files_ignored(tmp_path):
     assert gate._skipped_security_tests(_junit(tmp_path, skip=False)) == []
     assert gate._skipped_security_tests(tmp_path / "missing.xml") == []
+
+
+def test_gate_script_imports_when_run_as_script(tmp_path):
+    """P0-1: `python scripts/audit_local_gate.py` põe `scripts/` (não a raiz) em sys.path[0]."""
+    import subprocess
+    import sys
+
+    code = "import runpy; runpy.run_path(r'%s', run_name='audit_gate_probe'); print('ok')" % (
+        ROOT / "scripts" / "audit_local_gate.py"
+    )
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", code], cwd=tmp_path, capture_output=True, text=True
+    )
+    assert result.returncode == 0 and "ok" in result.stdout, result.stderr[-500:]
