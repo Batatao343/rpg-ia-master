@@ -1,7 +1,7 @@
 # SPEC-330 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
-> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `b3e4d3c0` (1ª rodada: `87716758`)
+> **Veredito:** `CHANGES_REQUIRED` (Grupo B, `81afd2a7`) · Grupo A + intérprete: `APPROVED_WITH_FOLLOWUPS` (re-revisão de `b3e4d3c0`; 1ª rodada: `CHANGES_REQUIRED` em `87716758`)
+> **Revisor:** Sol (Opus, contexto separado) · **Data:** 2026-10-27 · **Commit revisado:** `81afd2a7` (Grupo B); antes `b3e4d3c0`/`87716758`
 
 ## Escopo
 
@@ -103,4 +103,90 @@ pytest -n 2 test_card_effects_grammar test_keywords_valoria test_log_event_regis
 repro P1-1 (Chefe acoes_por_rodada=2, initiator=enemy) → interromper + gatilho, e depois "cumpre o presságio" (teste scratch, apagado)
 repro P1-2 (golpe letal por categoria) → lacaio/padrão disparam ao_derrubar; elite não (teste scratch, apagado)
 re-revisão b3e4d3c0: pytest -n 2 test_card_effects_review_spec330 test_card_effects_grammar test_keywords_valoria test_log_event_registry test_no_silent_except test_enemy_intent test_enemy_intent_node test_mecanica_orfa test_spec325_intents + scratch off/shadow → 241 passed, rc=0
+```
+
+---
+
+# Grupo B (2ª passada) — `81afd2a7`
+
+> **Veredito do Grupo B:** `CHANGES_REQUIRED` (1 P1, 5 P2)
+
+## Escopo (Grupo B)
+
+`main...HEAD` = `81afd2a7` sobre a `main` com 328/329/330A. Arquivos revisados:
+`services/card_effects.py` (`_apply_pile`, `pile_trigger`, `prepare_play`/Ressoar, `echo`/Eco,
+`_persist_revelation`), `services/card_piles.py` (`is_fardo`, `FOLEGO_MAX`, `gain_folego`,
+`add_card`, `purge_fardos`, `pick_discards`, `discard_cards`, `mark_guardadas`, Exaurir em
+`play_to_pile`), `services/card_deck_round.py` (`ao_exaurir`, `end_round`), as ligações em
+`conflict_orchestrator` e `conflict_turn`, o evento `combat.revelar_knowledge_failed`,
+`tests/spec330_equivalence.py` com o golden regerado, `tests/test_card_effects_piles.py` e a
+spec §8 (D-10, D-12, D-11). Conferido contra R6, R7 e os follow-ups P2-4 e P2-5.
+
+O que está correto:
+- **Golden das 308 (a).** Regerei de forma independente: `git archive 8bd4f384` no scratchpad
+  (sem `services/card_effects.py`) mais o `tests/spec330_equivalence.py` do HEAD. Deu 308/308
+  iguais ao `tests/fixtures/spec330_legacy_golden.json` commitado, com a chave `extra` nas 308.
+  O golden é honesto. O teste compara as formas legada e `efeitos=[efeito]`. O limite está em
+  B-P2-1.
+- **`off`/`shadow` inertes nas pilhas (a/b).** `ctx.piles` só é ligado quando
+  `deck_mode(state) == "on"`. Sem ele, `_apply_pile` devolve False e o efeito vai para
+  `pendente_pilhas`, como antes. `end_round` retorna cedo fora de `on`. `ao_exaurir` depende de
+  `play_to_pile`, que só roda no `resolve_player_plays` (`on`). Os testes paramétricos de
+  `off`/`shadow` conferem as pilhas byte a byte.
+- **Fardo pelo inimigo (b).** Só acontece com as pilhas ligadas (`on`) e só para `gerar_carta`
+  de Carta `is_fardo`. Qualquer outro efeito de pilha vindo de quem não é o jogador vira
+  `pendente_pilhas`. Em `off`/`shadow` nada muda. `is_fardo` reconhece o id base, `injogavel` e a
+  palavra-chave. A troca em `plan_plays`, `can_pay` e `public_view` não altera o acervo atual,
+  porque nenhuma Carta do catálogo tem `injogavel` nem `fardo`.
+- **Teto e anti-loop (c).** `gain_folego` limita o Fôlego a `FOLEGO_MAX` = 6. `pile_trigger`
+  tem profundidade própria (`pile_depth` ≤ 3, com reset no `finally`). Eco chama `apply_effect`
+  uma vez só e nunca volta a `resolve_extras`. Ressoar só conta em `record_play` e não dispara
+  nada. Não encontrei caminho de loop.
+- **`descartar` determinístico, com RNG persistido (c).** Em produção o `rng` do nó é o módulo
+  `random`, que não é instância de `random.Random`. Por isso `_rng_of` devolve None, e
+  `pick_discards`/`draw` usam `_rng(piles)` = `Random(f"{seed}:{embaralhos}")`, com o contador
+  guardado nas próprias pilhas (JSON puro). Conferi num scratch: três execuções, com `json`
+  round-trip das pilhas e o `random` global semeado de forma diferente em cada uma, deram o
+  mesmo descarte e `embaralhos == 2`. O teste correspondente está em B-P2-3.
+- **`revelar` grava no `bestiary_knowledge` (d).** Só o perfil `legacy` chama `bk.reveal_*`,
+  que persiste em disco. Nos outros perfis o efeito só marca `revealed_*` na ficha, sem I/O. O
+  formato (`tipo:imune|resiste|vulneravel`) é o mesmo do `_reveal_resistances` da SPEC-325. Uma
+  exceção vira `combat.revelar_knowledge_failed`, registrado em `observability/events.py` e
+  `EVENTOS_DE_LOG.md`. Nenhuma Carta do acervo usa `revelar` hoje.
+- **Writers persistentes.** `scene["ressoar"]` (str→int) e os campos novos de `piles` são JSON
+  puro. `evals/` não foi tocado, não há segredo em log e não entrou structured output novo.
+
+## Achados (Grupo B)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| B-P1-1 | P1 | `services/card_effects.py:860-881` × `agents/combat.py:2261` + `services/card_piles.py:219-226` | **`comprar` e `ganhar_folego` não têm efeito útil no jogo real.** As `jogadas` da rodada são fechadas e validadas por `plan_plays` antes de resolver. Logo depois do `run_round`, o nó de combate chama `begin_round`, que descarta a mão inteira (menos as guardadas) e devolve o Fôlego a `FOLEGO_BASE`. Reproduzi num scratch. Com `t_comprar` e o monte com 8 Cartas, a mão termina a rodada como `['bas_san_golpe','bas_san_guarda']`, e na rodada seguinte as duas compradas estão no **descarte**. Com `t_folego`, o Fôlego termina em 4 e volta a 3 na rodada seguinte. Na prática `comprar` só tira 2 Cartas do monte. Se o monte esvaziar, ainda reembaralha e acrescenta um Fardo, o que piora a situação. `ganhar_folego` só reduz o Pacto de uma jogada posterior da mesma lista. O texto gerado promete compra e Fôlego que o jogador não consegue usar, contra R8 ("o texto nunca mente sobre a mecânica"). Os testes conferem a pilha no meio da rodada e nunca passam por `begin_round`. Por enquanto o problema não aparece (flag `off` por padrão e nenhuma Carta do acervo usa esses efeitos), mas a SPEC-335 vai criar Cartas em cima disso. | Decidir a semântica no modelo de declaração em lote e registrá-la em D-12. Sugestão: (1) as Cartas compradas por efeito entram num orçamento de retenção (como `guardadas`, consumido por `discard_hand`) e chegam à mão da próxima rodada; (2) `ganhar_folego` vira `folego_bonus`, que `begin_round` soma até `FOLEGO_MAX`. A alternativa é `plan_plays` simular o ganho, se ele valer na própria rodada. Faltam testes que passem por `run_round` → `begin_round` e provem que a Carta comprada e o Fôlego ganho estão disponíveis na declaração seguinte. |
+| B-P2-1 | P2 | `tests/spec330_equivalence.py:36` + spec §8 D-11 | **P2-4 não está fechado.** D-11 diz que as seeds 21 e 1337 sem Mira cobrem "erro/acerto/crítico". Instrumentei `ct.resolve_turn` nas 2×308 execuções de `extra`: houve 270 ataques, **todos com `resultado == "acerto"`**, nenhum `erro` e nenhum `critico`/`supercritico`. Como todas as Cartas usam a mesma seed, todas tiram a mesma rolagem. O golden continua honesto, mas não cobre os ramos que o follow-up pedia. Os gatilhos `on_attack`/`on_hit` e o `use_card` das utilitárias (seed 7) estão cobertos. | Escolher seeds que produzam de fato `erro` e `critico` (ou forçar as rolagens) e regerar o golden a partir de `8bd4f384`. Acrescentar ao teste um assert de cobertura: entre os cenários `extra`, pelo menos um ataque `erro` e um `critico`. Se isso não for feito, corrigir o texto de D-11 e reabrir P2-4. |
+| B-P2-2 | P2 | `services/conflict_turn.py:411`, `services/card_effects.py:952-990` × spec D-12 | **Eco e Ressoar não dependem de `RPG_CARD_DECK`.** `prepare_play`, `record_play(..., scene)` e `echo` também rodam em `off`/`shadow`, o que contradiz o "só `RPG_CARD_DECK=on`" do título de D-12. Hoje nada muda (nenhuma Carta tem `eco`/`ressoar` e o golden é idêntico), mas uma Carta com Ressoar já escalaria em `off`. | Documentar em D-12 que Eco e Ressoar independem das pilhas (o mais coerente, já que nenhum dos dois precisa delas) ou condicioná-los a `deck_mode`. Nos dois casos, um teste em `off` com uma Carta Ressoar fixa o comportamento escolhido. |
+| B-P2-3 | P2 | `tests/test_card_effects_piles.py:175` | `test_descartar_ao_acaso_e_deterministico_pela_semente` muda `piles["seed"]`, mas passa `rng=random.Random(5)` ao `run_round`. Assim `_rng_of` usa o RNG da rodada, e o caminho de produção (RNG persistido em `seed`/`embaralhos`) nunca é exercitado. O teste também não faz round-trip de save/load. | Chamar `run_round(..., rng=random)`, como o nó faz, com `json` round-trip das pilhas entre duas execuções. Verificar `embaralhos` e o mesmo descarte com o `random` global semeado de forma diferente, como no scratch desta revisão. |
+| B-P2-4 | P2 | `tests/test_card_effects_piles.py:235` | O Fardo plantado pelo inimigo só é testado chamando `fx.apply_effect` à mão, com `ctx.piles` ligado pelo próprio teste. Falta o teste de integração: Carta de inimigo com `gerar_carta` de Fardo, resolvida pelo `run_round` em `on`, chegando à mão, e a mesma rodada em `off`/`shadow` virando só `pendente_pilhas`. | Teste ponta a ponta via `run_round`, com o inimigo tendo a Carta em `cartas`, nos 3 modos. |
+| B-P2-5 | P2 | spec §5 (critério "14 palavras-chave…") | O critério de aceite ainda diz "efeito no motor depois da 328". Com o Grupo B ligado, o critério e o smoke real do §6 precisam refletir o estado novo. | Atualizar o §5 junto com a correção de B-P1-1. |
+
+Observações P3 (não bloqueiam):
+- Se `before > FOLEGO_MAX`, `gain_folego` devolveria ganho negativo. Hoje isso não acontece,
+  porque o Fôlego só sobe por esse caminho, mas `max(before, min(...))` elimina o risco.
+- No modelo atual, `descartar` quase não tem custo, porque a mão inteira já é descartada no fim
+  da rodada. Na prática ele só dispara Vazão ou tira da mão uma Carta com Guardar. Vale registrar
+  em D-12 junto com B-P1-1.
+- `_bump` altera a primeira chave que encontra entre `valor`, `dano_base` e `n`. Numa Carta cujo
+  efeito principal tenha `valor` (por exemplo, uma duração) e `dano_base`, Eco e Ressoar mexeriam
+  em `valor`. Fixar isso na autoria (SPEC-335).
+- Um aliado que não é o jogador também passa no filtro "não-dono + Fardo" de `_apply_pile` e
+  poderia plantar um Fardo na mão do herói. Se não for intencional, restringir a
+  `sides["enemy"]`.
+
+## Comandos rodados (Grupo B)
+
+```text
+git diff main...HEAD --stat → 12 arquivos, +5698/−120 (1 commit 81afd2a7)
+golden regen: git archive 8bd4f384 (scratch, sem card_effects) + spec330_equivalence.py do HEAD → 308 308 equal [] (todas com extra)
+instrumentação das seeds extra (21, 1337, sem Mira) → 270 ataques, todos "acerto"; 0 erro, 0 crítico
+repro B-P1-1 (scratch): comprar 2 → na rodada seguinte as 2 estão no descarte; ganhar_folego deixa 4 → na rodada seguinte 3
+RNG de produção (rng=random, json round-trip, random global variando) → descarte idêntico 3×, embaralhos=2
+pytest -n 2 -p no:cacheprovider test_card_effects_piles test_card_effects_grammar test_card_effects_review_spec330 test_card_piles test_keywords_valoria test_log_event_registry test_no_silent_except test_error_envelope test_deck_migration test_enemy_intent test_enemy_intent_node → 186 passed, rc=0
 ```
