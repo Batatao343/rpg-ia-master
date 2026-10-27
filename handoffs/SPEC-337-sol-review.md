@@ -1,7 +1,7 @@
 # SPEC-337 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Claude Opus 5.5 / papel Sol (revisão técnica) · **Data:** 2026-10-27 · **Commit revisado:** `e6621890`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `687cba2e` + `1e6ebf6b`; 1ª passada: `CHANGES_REQUIRED`)
+> **Revisor:** Claude Opus 5.5 / papel Sol (revisão técnica) · **Data:** 2026-10-27 · **Commit revisado:** `e6621890` → re-revisão `1e6ebf6b`
 
 ## Escopo
 
@@ -47,9 +47,21 @@ O que está correto:
 
 ## Correções aplicadas
 
-Nenhuma (revisão só leitura; o executor corrige).
+Re-revisão (executor, `687cba2e` + `1e6ebf6b`):
+
+- **P0-1 fechado.** `sys.path.insert(0, ROOT)` no topo + import no módulo. `bash scripts/dev/py.sh scripts/audit_local_gate.py` agora passa do import e só para em `npx supabase status` (stack local fora do ar aqui, esperado; nenhum processo sobe antes). Teste novo `test_gate_script_imports_when_run_as_script` (`-I` + `runpy`, cwd=tmp) prova o import em processo filho.
+- **P0-2 fechado.** O teste de skip incondicional foi removido; a omissão de L2 no Postgres segue documentada.
+- **P1-1 fechado.** Cabeçalho da spec voltou para `in-progress`.
+- **P2-2, P2-3, P2-4 fechados.** Docstring corrigido e `_digest` removido; asserts de `PUT`/`x-evil` fora de Allow-Methods/Allow-Headers; `endswith`.
+- **P2-1 parcial.** A matriz agora exige 404 (`_EXPECTED_STATUS` vazio) e B tem `rpg_recent`. Mas, para o `audit-export`, o fake `_NoRowsAuditSource.load` (`tests/test_http_idor_offline.py:195-199`) devolve `None` **para qualquer principal**. O 404 sai do fake, não da checagem de dono real (`PostgresAuditSource.load` → `self.store.get(self.principal, game_id)`, `infrastructure/audit_source.py:38`). A rota fica tautológica no offline (`store.pool=None` só serve para o construtor). Não é bug de produto: a checagem real é `store.get` por principal, já coberta pelas outras 20 rotas, e a matriz local (Postgres real, sem fake) cobre `audit-export` de verdade. Fica como follow-up **P2-5**.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-5 | P2 | `tests/test_http_idor_offline.py:195-199` | O fake de `PostgresAuditSource` devolve `None` sem consultar o store, e o 404 do `audit-export` não prova a checagem de dono no offline. | No fake, pular só a consulta de `account_deletions` e delegar para o store: `def __init__(self, pool, store, principal)`; `load` → `return None if self.store.get(self.principal, game) is None else <AuditSource mínimo>`. Com controle positivo: A com `rpg_recent` recebe 200 ou um status ≠ 404. |
 
 ## Pendências
+
+- P2-5 (acima): endurecer o fake do `audit-export` no offline (executor da 337 ou da 338).
 
 - Depois de P0-1/P0-2: rodar `scripts/audit_local_gate.py` com a stack local de pé (ou o job `audit-local` no PR) e conferir zero `<skipped>` nos três arquivos. Isso fecha R20/R21 e a variante Postgres de R17.
 - L2 contra o Postgres continua sem cobertura local (o SQL só é exercitado em produção). Follow-up: semear uma linha `art_generations` `ready` direto por SQL no teste local, sem rede, já que o `infra` dá acesso ao pool.
@@ -61,4 +73,7 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_http_sec
 bash scripts/dev/py.sh -m pytest -q -n 2 tests/test_abuse_policy.py tests/test_polish_sessao.py tests/test_turn_trace_logs.py tests/test_error_envelope.py tests/test_dynamic_art_jobs.py tests/test_auth_gotrue_error_mapping.py → 113 passed
 pytest tests/test_http_idor_offline.py -k principal_b com plugin de log de status (scratchpad) → 20×404, audit-export 403 recent_session_required
 bash scripts/dev/py.sh scripts/audit_local_gate.py → ModuleNotFoundError: No module named 'scripts' (linha 51), antes de subir qualquer processo
+# re-revisão (1e6ebf6b)
+bash scripts/dev/py.sh scripts/audit_local_gate.py → import OK; CalledProcessError em npx supabase status (stack local fora do ar; esperado)
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 <7 arquivos da spec> → 103 passed, 22 skipped (todos idor_local: RPG_TEST_DATABASE_URL ausente)
 ```
