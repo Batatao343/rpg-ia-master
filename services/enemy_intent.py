@@ -104,7 +104,7 @@ def _fork_rng(rng) -> random.Random:
     forked = random.Random()
     try:
         forked.setstate((rng or random).getstate())
-    except Exception:
+    except Exception:  # silent-ok: rng sem getstate → seed fixa
         forked.seed(0)
     return forked
 
