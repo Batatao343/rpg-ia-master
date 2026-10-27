@@ -1,6 +1,6 @@
 # SPEC-336 — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática + `power_score` + `render_card_text`), SPEC-090/285 (arena/simulação de combate)

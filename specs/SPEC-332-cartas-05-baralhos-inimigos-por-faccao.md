@@ -1,6 +1,6 @@
 # SPEC-332 — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-329 (presságio), SPEC-330 (gramática), SPEC-283 (IA usa cartas de suporte)

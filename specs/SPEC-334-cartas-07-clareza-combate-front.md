@@ -1,6 +1,6 @@
 # SPEC-334 — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (contrato `pilhas`/`jogadas`), SPEC-329 (`pressagios_publicos`), SPEC-330 (`_glossario.json`, `render_card_text`), SPEC-320–324 (tokens, mobile, a11y, "livro não chat")

@@ -1,6 +1,6 @@
 # SPEC-327 — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Tipo:** épico / guarda-chuva (sem código próprio; define princípios, ordem e decisões do dono)
 > **Depende de:** Conflito v2 (SPEC-062–077) e SPEC-325, todas `done`
@@ -58,7 +58,14 @@ Volume ao fim da onda 1: ~308 + 15 básicas + 180 Postura + 40 neutras + ~180 in
 
 Flags: `RPG_CARD_DECK`, `RPG_ENEMY_INTENT` (`off|shadow|on`), padrão `off`; `on` no staging só com o front (SPEC-334) pronto e arena verde.
 
-## 4. Decisões do dono (bloqueiam `approved`)
+## 4. Decisões do dono
+
+**Fechadas em 27/10:** o dono aprovou o épico ("boa, continue e execute") com as
+recomendações abaixo como padrão: D1 sim (atrás de flag), D2 Fôlego 3 / mão 5,
+D3 Pacto 2:1 teto 2, D4 nomes propostos, D5 roda como na tabela, D6 rodada 5,
+D7 sim (recusa = 15 de ouro), D8 amostra de 20 % + 1 onda/mês, D9 ordem
+Arcanista → Sangromante → Devoto → Corruptor → Médico. Tudo nasce `off`; nomes e
+números podem mudar sem nova spec (dados, não código).
 
 - **D1** Aceita trocar "preparadas fixas" por **baralho com compra** (SPEC-328)? É a mudança que mais muda a sensação. *Recomendo: sim, atrás de flag.*
 - **D2** Recurso por rodada se chama **Fôlego**, 3 por rodada, mão 5? *(calibrável na arena)*

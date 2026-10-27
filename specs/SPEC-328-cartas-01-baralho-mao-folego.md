@@ -1,6 +1,6 @@
 # SPEC-328 — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327 (visão: combate de cartas de Valoria)
 > **Depende de:** SPEC-063, SPEC-065, SPEC-067, SPEC-209, SPEC-325 (todas `done`)

@@ -1,6 +1,6 @@
 # SPEC-329 — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
 
-> **Status:** `draft`
+> **Status:** `approved` (dono, 2026-10-27)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-069, SPEC-283, SPEC-295 (todas `done`); **não** depende da SPEC-328 (funciona também no modo atual de 1 ação)
