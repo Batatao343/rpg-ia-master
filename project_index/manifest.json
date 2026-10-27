@@ -1,9 +1,9 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "8f29e08cf0a60cf659ed5213e6f19bd3d7d333fa",
+  "commit_sha": "99dded5c74e5024da500b611b94114d188df7703",
   "edge_counts": {
     "calls": 28661,
-    "contains": 983,
+    "contains": 984,
     "defines": 14416,
     "imports": 2370,
     "likely_test_for": 1668,
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:cc492beee77645fd58518dd91573baeac557eae7e45c527c855279696a97de6a",
+  "graph_hash": "sha256:d114eb1dfb5e46f0137e08ab9beb47317fa389acbc9416400f3e840ca606f9fb",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -91,6 +91,7 @@
     "docs/spec302/world_engine_sim.py",
     "docs/spec304/npc_world_sim.py",
     "docs/spec317/r2_shadow_harness.py",
+    "docs/spec318/npc_two_phase_bench.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -1210,12 +1211,12 @@
     "artifact": 9,
     "class": 953,
     "endpoint": 64,
-    "file": 1154,
+    "file": 1155,
     "function": 4491,
     "method": 838,
-    "module": 983,
+    "module": 984,
     "test": 8133
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:b1df0b24ed663863987fc09c5e4a847b8cd0875326407d150dce3fbfa7a12a69"
+  "source_tree_hash": "sha256:cdbe2e28bd4491208201a473588d006a2e6b61c29235abb1565b40afcd250143"
 }

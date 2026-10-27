@@ -1,5 +1,5 @@
 {
-  "commit_sha": "8f29e08cf0a60cf659ed5213e6f19bd3d7d333fa",
+  "commit_sha": "99dded5c74e5024da500b611b94114d188df7703",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1077,6 +1077,17 @@
       },
       "source": "file:docs/spec317/r2_shadow_harness.py",
       "target": "module:docs.spec317.r2_shadow_harness",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec318/npc_two_phase_bench.py",
+        "line": 1
+      },
+      "source": "file:docs/spec318/npc_two_phase_bench.py",
+      "target": "module:docs.spec318.npc_two_phase_bench",
       "type": "contains"
     },
     {
@@ -530626,6 +530637,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec318/npc_two_phase_bench.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec318/npc_two_phase_bench.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:encounter_budget.py",
       "kind": "file",
       "line": 1,
@@ -538611,6 +538629,13 @@
       "line": 1,
       "path": "docs/spec317/r2_shadow_harness.py",
       "qualified_name": "docs.spec317.r2_shadow_harness"
+    },
+    {
+      "id": "module:docs.spec318.npc_two_phase_bench",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec318/npc_two_phase_bench.py",
+      "qualified_name": "docs.spec318.npc_two_phase_bench"
     },
     {
       "id": "module:encounter_budget",
@@ -646162,5 +646187,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:b1df0b24ed663863987fc09c5e4a847b8cd0875326407d150dce3fbfa7a12a69"
+  "source_tree_hash": "sha256:cdbe2e28bd4491208201a473588d006a2e6b61c29235abb1565b40afcd250143"
 }
