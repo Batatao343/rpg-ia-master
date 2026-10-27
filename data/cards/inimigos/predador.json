@@ -151,6 +151,81 @@
       },
       "descricao": "A fome vence o medo, e cada golpe vem mais fundo.",
       "oculta": true
+    },
+    {
+      "id": "inf_predador_uivo_de_fome",
+      "name": "Uivo de Fome",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "virtude_permitida": [],
+      "oculta": true,
+      "frequencia": "cena",
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "O uivo sobe e arrepia até quem já vai morrer."
+    },
+    {
+      "id": "inf_predador_arranhao_fundo",
+      "name": "Arranhão Fundo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "virtude_permitida": [],
+      "oculta": true,
+      "frequencia": "turno",
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Três garras abrem a pele numa linha só."
+    },
+    {
+      "id": "inf_predador_cheiro_de_sangue",
+      "name": "Cheiro de Sangue",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "virtude_permitida": [],
+      "oculta": true,
+      "frequencia": "cena",
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "O faro prende no ferido e não larga mais."
+    },
+    {
+      "id": "inf_predador_passada_silenciosa",
+      "name": "Passada Silenciosa",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "predador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "virtude_permitida": [],
+      "oculta": true,
+      "frequencia": "cena",
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Acompanha a presa de lado, baixo, sem pisar em nada que estale."
     }
   ]
 }

@@ -637,6 +637,7 @@ def enemy_declaration(
 _ENEMY_DEFENSIVE_SUPPORT = frozenset({"protecao", "buff_defesa"})
 _ENEMY_OFFENSIVE_SUPPORT = frozenset({"buff_dano", "buff_acerto", "vantagem"})
 _ENEMY_MOVE_SUPPORT = frozenset({"reposicionar"})
+_ENEMY_HEAL_SUPPORT = frozenset({"cura"})  # SPEC-332: ferido (si ou aliado) -> cura
 
 
 def _has_condition_from(actor: dict | None, card_id: str) -> bool:
@@ -670,7 +671,13 @@ def _enemy_support_card(
     usable: list[tuple[str, str]] = []
     for card_id in cards.enemy_card_ids(actor):
         kind = str(((cards.get_card(card_id) or {}).get("efeito") or {}).get("kind") or "")
-        if kind not in _ENEMY_DEFENSIVE_SUPPORT | _ENEMY_OFFENSIVE_SUPPORT | _ENEMY_MOVE_SUPPORT:
+        if (
+            kind
+            not in _ENEMY_DEFENSIVE_SUPPORT
+            | _ENEMY_OFFENSIVE_SUPPORT
+            | _ENEMY_MOVE_SUPPORT
+            | _ENEMY_HEAL_SUPPORT
+        ):
             continue
         if cards.can_use_enemy_card(actor, card_id, expected_type="ativa"):
             usable.append((card_id, kind))
@@ -694,6 +701,14 @@ def _enemy_support_card(
         if valid(danger, card_id):
             return card_id, danger, None
         if self_hurt and valid(actor_id, card_id):
+            return card_id, actor_id, None
+    for card_id, kind in usable:
+        if kind not in _ENEMY_HEAL_SUPPORT:
+            continue
+        wounded = canonical.get("_ally_wounded_target")
+        if valid(wounded, card_id):
+            return card_id, wounded, None
+        if _vitality_ratio(actor) <= 0.7 and valid(actor_id, card_id):
             return card_id, actor_id, None
     for card_id, kind in usable:
         if kind not in _ENEMY_OFFENSIVE_SUPPORT:

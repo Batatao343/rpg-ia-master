@@ -416,15 +416,17 @@ def test_ten_factions_with_6_to_8_cards_and_an_exclusive_card_each():
             assert card and card.get("classe") == "Inimigo" and card.get("subclasse") == fac
 
 
-def test_faction_cards_do_not_collide_with_player_card_names():
-    jogador = {
-        _fold_name(c.get("name"))
-        for c in cards._load_cards().values()
-        if c.get("classe") != "Inimigo" and not str(c.get("id", "")).startswith("bst_")
+def test_enemy_card_names_are_unique_across_the_whole_catalog():
+    # inimigo x jogador, inimigo x inimigo e inimigo x bst_: nenhum `inf_*` repete nome de outra carta
+    by_name: dict[str, list[str]] = collections.defaultdict(list)
+    for cid, card in cards._load_cards().items():
+        by_name[_fold_name(card.get("name"))].append(cid)
+    repetidos = {
+        n: ids
+        for n, ids in by_name.items()
+        if len(ids) > 1 and any(i.startswith("inf_") for i in ids)
     }
-    for fac in FACCOES:
-        for cid in edk._pools()["faccoes"][fac]:
-            assert _fold_name(cards.get_card(cid)["name"]) not in jogador, cid
+    assert not repetidos, repetidos
 
 
 def test_bestiary_factions_get_faction_cards_when_on(monkeypatch):
@@ -444,17 +446,23 @@ def test_bestiary_factions_get_faction_cards_when_on(monkeypatch):
     assert len(ganhou) >= 9
 
 
-def test_legacy_shared_card_is_curated_only_with_on(monkeypatch):
+def test_legacy_shared_card_is_curated_only_with_on_and_nothing_passes_15():
     from agents.bestiary import load_bestiary
 
     shared = "bst_bote_certeiro"
-    for seed in range(4):
-        use = collections.Counter()
-        for bid, entry in load_bestiary().items():
-            deck = edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
-            use.update(deck)
-        assert use[shared] <= 15, (seed, use[shared])
-    # off: o bestiário e a ficha seguem intactos
+    mp = pytest.MonkeyPatch()
+    mp.setenv("RPG_ENEMY_DECKS", "on")
+    try:
+        for seed in range(12):
+            use = collections.Counter()
+            for bid, entry in load_bestiary().items():
+                use.update(edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed))
+            assert use[shared] <= 15, (seed, use[shared])
+            sobe = {k: v for k, v in use.items() if k.startswith("inf_") and v > 15}
+            assert not sobe, (seed, sobe)  # o teto vale para as cartas novas, em toda seed
+    finally:
+        mp.undo()
+    # off: o bestiario e a ficha seguem intactos
     e = _enemy(cartas=[shared])
     assert e["cartas"] == [shared, "bst_defesa_instintiva"]
 
@@ -478,3 +486,62 @@ def test_f1_inf_cards_in_bestiary_do_not_skip_the_deck(monkeypatch):
     stripped = json.loads(json.dumps(e))
     stripped.pop("_deck332")
     assert orch.ensure_combat_sheet(stripped)["cartas"] == e["cartas"]
+
+
+# --- Revisao Sol (lote 2): cura alcancavel, todas as cartas escolhiveis, pools orfaos -----
+def test_every_inf_card_effect_is_reachable_by_the_enemy_ai():
+    from services import conflict_orchestrator as o
+    from services import conflict_turn as ct
+
+    alcancavel = (
+        ct._ATTACK_EFFECTS
+        | o._ENEMY_DEFENSIVE_SUPPORT
+        | o._ENEMY_OFFENSIVE_SUPPORT
+        | o._ENEMY_MOVE_SUPPORT
+        | o._ENEMY_HEAL_SUPPORT
+        | {"esconder"}
+    )
+    for cid, card in cards._load_cards().items():
+        if cid.startswith("inf_"):
+            kind = card["efeito"]["kind"]
+            assert kind in alcancavel, (cid, kind)
+
+
+def test_wounded_druid_uses_cura_on_itself_and_healthy_one_does_not(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    seiva = "inf_fac_druidas_renegados_seiva_do_ciclo"
+    druida = _enemy("druida_1", name="Druida", arquetipo="conjurador", cartas=[seiva])
+    druida["cartas"] = [seiva]
+    druida["vitalidade"] = 10
+    scene = cs.new_scene()
+    player = _player()
+    for i in ("player", "druida_1"):
+        cs.place(scene, i)
+    cs.freeze(scene)
+    actors = {"player": player, "druida_1": druida}
+    sides = {"hero": ["player"], "ally": [], "enemy": ["druida_1"]}
+    canonical = orch.derive_tactical_scene_state(scene, "druida_1", actors, sides)
+    got = orch._enemy_support_card(scene, druida, "druida_1", actors, sides, canonical, "attack")
+    assert got and got[0] == seiva and got[1] == "druida_1"
+    druida["vitalidade"] = druida["max_vitalidade"]
+    canonical = orch.derive_tactical_scene_state(scene, "druida_1", actors, sides)
+    assert (
+        orch._enemy_support_card(scene, druida, "druida_1", actors, sides, canonical, "attack")
+        is None
+    )
+
+
+def test_unrecognised_card_file_is_logged(monkeypatch, tmp_path, caplog):
+    (tmp_path / "orfao.json").write_text('{"cards": [{"id": "x"}]}', encoding="utf-8")
+    real = edk._DIR
+    monkeypatch.setattr(edk, "_DIR", tmp_path)
+    edk.reload()
+    with caplog.at_level("WARNING"):
+        edk._pools()
+    assert "orfao.json" in caplog.text
+    monkeypatch.setattr(edk, "_DIR", real)
+    edk.reload()
+    caplog.clear()
+    with caplog.at_level("WARNING"):
+        edk._pools()
+    assert "ignorado" not in caplog.text  # o repo real nao tem arquivo orfao

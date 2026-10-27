@@ -213,9 +213,9 @@ def test_all_twelve_bosses_have_two_authored_phases_with_valid_cards():
     fases = edk._meta()["fases"]
     for bid in bosses:
         fs = fases[bid]
-        assert [f["ate_vitalidade_pct"] for f in fs] == [60, 30]
+        assert [f["ate_vitalidade_pct"] for f in fs] == [60, 40]
         for f in fs:
-            assert f["padrao"] and f["narracao"]
+            assert f["padrao"] and "{nome}" in f["narracao"]
             for c in f["baralho_extra"]:
                 assert cards.get_card(c), (bid, c)
         sig = fs[1]["assinatura"]
@@ -247,4 +247,76 @@ def test_authored_boss_phase_applies_from_decks_json_only_when_on(monkeypatch):
     out = {}
     assert edk.apply_phases({b["id"]: b}, {"enemy": [b["id"]]}, out, rnd=2)
     assert b["fase_idx"] == 1 and "inf_predador_apice_pele_de_veterano" in b["cartas"]
-    assert out["logs"] and "Lorde" in out["logs"][0] or out["logs"]
+    assert any("Lorde" in line for line in out["logs"])
+    assert out["fases"] == [{"actor_id": b["id"], "fase": 1}]
+
+
+def test_authored_phase_narrations_are_distinct_per_boss():
+    fases = edk._meta()["fases"]
+    for idx in (0, 1):
+        textos = [fs[idx]["narracao"] for fs in fases.values()]
+        assert len(set(textos)) == len(textos)
+
+
+def test_phase_jump_narrates_every_phase_crossed():
+    boss = _boss()
+    _, actors, sides = _world(boss)
+    boss["vitalidade"] = 8  # 20 %: cruza as fases de 70 % e 30 % de uma vez
+    out: dict = {"logs": []}
+    assert edk.apply_phases(actors, sides, out, rnd=1)
+    assert out["fases"] == [
+        {"actor_id": "chefe_1", "fase": 1},
+        {"actor_id": "chefe_1", "fase": 2},
+    ]
+    assert len(out["logs"]) == 2 and "cospe sangue" in out["logs"][0]
+
+
+def _valerius():
+    from agents.bestiary import load_bestiary
+
+    entry = load_bestiary()["enemy_boss_valerius"]
+    boss = orch.ensure_combat_sheet({**entry, "id": "enemy_boss_valerius_1"})
+    boss["archetype_id"] = "enemy_boss_valerius"
+    return boss
+
+
+def test_prenuncio_does_not_promise_when_the_boss_would_flee():
+    boss = _valerius()
+    boss["vitalidade"] = int(boss["max_vitalidade"] * 0.39)
+    edk.apply_phases({boss["id"]: boss}, {"enemy": [boss["id"]]}, {"logs": []}, rnd=1)
+    assert boss["fase_idx"] == 2 and "inf_chefe_decreto_de_ferro" in boss["cartas"]
+    sig = edk.assinatura_of(boss)
+    ex = next(r for r in range(3, 14) if edk._sig_falls_on(boss, sig, r + 1))
+    assert edk.prenuncio(boss, ex)  # a ~39 % o `sempre` decide: promete
+    boss["vitalidade"] = int(boss["max_vitalidade"] * 0.30)  # <= 35 %: o perfil foge, nao promete
+    assert edk.prenuncio(boss, ex) is None
+
+
+def test_phase_two_boss_uses_signature_before_fleeing():
+    """Fase 2 a ~39 % (acima de `muito_ferido` 35 %): o chefe solo ainda joga a assinatura."""
+    boss = _valerius()
+    boss["vitalidade"] = int(boss["max_vitalidade"] * 0.39)
+    scene = cs.new_scene()
+    player = orch.ensure_combat_sheet(
+        {
+            "id": "player",
+            "name": "Heroi",
+            "is_player": True,
+            "class_name": "Devoto do Abismo",
+            "virtudes": {"forca": 4, "agilidade": 3, "corpo": 3, "mente": 1, "carisma": 1},
+        },
+        is_player=True,
+    )
+    for i in ("player", boss["id"]):
+        cs.place(scene, i)
+    cs.freeze(scene)
+    actors = {"player": player, boss["id"]: boss}
+    sides = {"hero": ["player"], "ally": [], "enemy": [boss["id"]]}
+    edk.apply_phases(actors, sides, {"logs": []}, rnd=1)
+    assert boss["fase_idx"] == 2
+    sig = edk.assinatura_of(boss)
+    rnd = next(r for r in range(3, 14) if edk._sig_falls_on(boss, sig, r))
+    decl = orch.enemy_declaration(
+        scene, boss["id"], actors, sides, scene_state={"_rodada_decisao": rnd}
+    )
+    assert decl.acao.card_id == sig["carta"]

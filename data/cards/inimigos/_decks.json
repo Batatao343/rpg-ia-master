@@ -232,10 +232,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "O Lorde desembainha por inteiro: a guarda dele fecha, e a paciência acaba."
+        "narracao": "{nome} desembainha por inteiro: a guarda fecha, e a paciência acaba."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_decreto_de_ferro"
         ],
@@ -249,7 +249,7 @@
           "a_cada_n": 2,
           "telegrafo": "{nome} ergue o decreto e a guarda inteira prende o fôlego."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} rasga o decreto no meio e avança sem guarda alguma."
       }
     ],
     "enemy_boss_vibora": [
@@ -264,10 +264,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "A Víbora some e reaparece de lado: agora ela escolhe o alvo, não o contrato."
+        "narracao": "{nome} some e reaparece de lado: agora ela escolhe o alvo, não o contrato."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_mordida_da_vibora"
         ],
@@ -281,7 +281,7 @@
           "a_cada_n": 2,
           "telegrafo": "{nome} se enrola sobre si mesma, a língua provando o ar."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} para de sibilar. O silêncio é pior que a mordida."
       }
     ],
     "enemy_boss_general_escorpiao": [
@@ -296,10 +296,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "O General arranca a armadura quebrada; o que sobra é só o ferrão."
+        "narracao": "{nome} arranca a armadura quebrada; o que sobra é só o ferrão."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_ferrao_do_general"
         ],
@@ -313,7 +313,7 @@
           "a_cada_n": 2,
           "telegrafo": "{nome} arqueia a cauda sobre as costas e mira."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} cai de quatro no chão e a cauda fica solta, sem dono."
       }
     ],
     "enemy_boss_arauto_nevoa": [
@@ -328,10 +328,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "A névoa engrossa em volta do Arauto, e as vozes dentro dela ficam mais próximas."
+        "narracao": "A névoa engrossa em volta de {nome}, e as vozes dentro dela ficam mais próximas."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_mortalha_de_nevoa"
         ],
@@ -345,7 +345,7 @@
           "a_cada_n": 2,
           "telegrafo": "A névoa em volta de {nome} para de se mexer, como quem escuta."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} se desfaz na própria névoa, e todo o ar vira dele."
       }
     ],
     "enemy_gigante_gelo_norte": [
@@ -360,10 +360,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "Trincas azuis correm pelo Titã de Gelo, e o frio que sai delas queima."
+        "narracao": "Trincas azuis correm por {nome}, e o frio que sai delas queima."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_geada_que_prende"
         ],
@@ -377,7 +377,7 @@
           "a_cada_n": 2,
           "telegrafo": "O ar em volta de {nome} racha de frio, estalo por estalo."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} racha ao meio e o gelo de dentro, mais antigo, respira."
       }
     ],
     "enemy_aranha_de_cristal": [
@@ -392,10 +392,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "Rachaduras luminosas abrem na carapaça: a Aranha fica frágil e mais rápida."
+        "narracao": "Rachaduras luminosas abrem na carapaça de {nome}: frágil, e mais rápida."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_fio_de_cristal"
         ],
@@ -409,7 +409,7 @@
           "a_cada_n": 2,
           "telegrafo": "{nome} vibra um fio de cristal entre as patas dianteiras."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} estilhaça as próprias patas e continua, cada caco um fio."
       }
     ],
     "mon_urso_tita": [
@@ -424,10 +424,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "O Urso-Titã sangra e não recua: cada ferida o deixa maior que antes."
+        "narracao": "{nome} sangra e não recua: cada ferida o deixa maior que antes."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_rugido_do_tita"
         ],
@@ -441,7 +441,7 @@
           "a_cada_n": 2,
           "telegrafo": "{nome} se ergue nas patas de trás, o peito cheio de ar."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} abandona o instinto de caçar e passa a só destruir."
       }
     ],
     "mon_o_que_come_nas_praias": [
@@ -456,10 +456,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "O Que Come nas Praias recua para a água e volta com a maré inteira atrás dele."
+        "narracao": "{nome} recua para a água e volta com a maré inteira atrás dele."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_mare_que_engole"
         ],
@@ -473,7 +473,7 @@
           "a_cada_n": 2,
           "telegrafo": "A areia em volta de {nome} afunda em círculo, devagar."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} abre a boca para além do que a boca devia ser."
       }
     ],
     "mon_locomotiva_penitente": [
@@ -488,10 +488,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "A caldeira da Locomotiva passa do vermelho; o ferro range pedindo perdão."
+        "narracao": "A caldeira de {nome} passa do vermelho; o ferro range pedindo perdão."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_vapor_penitente"
         ],
@@ -505,7 +505,7 @@
           "a_cada_n": 2,
           "telegrafo": "A caldeira de {nome} apita, um som longo e rouco."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} deixa os trilhos e a penitência vira velocidade pura."
       }
     ],
     "mon_mae_micelio": [
@@ -520,10 +520,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "A Mãe do Micélio se abre ao meio: o que sai de dentro é mais velho que ela."
+        "narracao": "{nome} se abre ao meio: o que sai de dentro é mais velho que ela."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_esporos_da_mae"
         ],
@@ -537,7 +537,7 @@
           "a_cada_n": 2,
           "telegrafo": "O chão em volta de {nome} tremula, coberto de fios brancos."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} solta todos os esporos de uma vez, e a sala inteira respira com ela."
       }
     ],
     "mon_leviata_caldeira": [
@@ -552,10 +552,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "O Leviatã emerge pela metade e a água da caldeira ferve em volta dele."
+        "narracao": "{nome} emerge pela metade e a água da caldeira ferve em volta."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_caldeira_azul"
         ],
@@ -569,7 +569,7 @@
           "a_cada_n": 2,
           "telegrafo": "A água em volta de {nome} borbulha, azul e quente."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} mergulha e volta com a caldeira inteira nas costas."
       }
     ],
     "mon_eclipse_caminhante": [
@@ -584,10 +584,10 @@
           "ataque",
           "reforco_proprio"
         ],
-        "narracao": "A luz recua do Eclipse Caminhante, e o que ele deixa no chão não é sombra comum."
+        "narracao": "A luz recua de {nome}, e o que ele deixa no chão não é sombra comum."
       },
       {
-        "ate_vitalidade_pct": 30,
+        "ate_vitalidade_pct": 40,
         "baralho_extra": [
           "inf_chefe_sombra_do_eclipse"
         ],
@@ -601,7 +601,7 @@
           "a_cada_n": 2,
           "telegrafo": "A sombra de {nome} se alonga contra a luz, esticada demais."
         },
-        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+        "narracao": "{nome} fecha o último vão de luz, e o eclipse deixa de ser só uma imagem."
       }
     ]
   }

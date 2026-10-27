@@ -60,8 +60,8 @@
       "oculta": true
     },
     {
-      "id": "inf_fac_grupos_piratas_rivais_areia_nos_olhos",
-      "name": "Areia nos Olhos",
+      "id": "inf_fac_grupos_piratas_rivais_poeira_do_cais",
+      "name": "Poeira do Cais",
       "origem": "cartas-332",
       "classe": "Inimigo",
       "subclasse": "grupos_piratas_rivais",

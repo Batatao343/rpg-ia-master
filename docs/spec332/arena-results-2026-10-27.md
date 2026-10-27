@@ -36,7 +36,7 @@ de chefe (chefes ficam fora da arena). Alvo usado (decisão do coordenador): 45-
 
 | Família | L3 off | L3 on | Δpp | L5 off | L5 on | Δpp |
 |---|---|---|---|---|---|---|
-| predador | 52,0 | 48,5 | -3,5 | 23,5 | 30,5 | +7,0 |
+| predador | 52,0 | 51,5 | -0,5 | 23,5 | 28,0 | +4,5 |
 | covarde_oportunista | 84,5 | 79,5 | -5,0 | 88,0 | 75,5 | -12,5 |
 | conjurador | 57,0 | 51,5 | -5,5 | 45,5 | 40,5 | -5,0 |
 | morto_vivo_implacavel | 40,5 | 25,5 | -15,0 | 16,0 | 9,5 | -6,5 |
@@ -54,3 +54,6 @@ de chefe (chefes ficam fora da arena). Alvo usado (decisão do coordenador): 45-
 - Ainda fora de 45-85 % no `on`: predador L5, morto_vivo L3/L5, guardiao L3/L5, apex L5, emboscador L5, conjurador L5
   (40,5), bruto L5 - todos já fora (ou na borda) no `off`; piores deltas de `on`: morto_vivo L3 (-15), covarde L5
   (-12,5), guardiao L3 (-11,5). Decisão do dono: manter o `off` como régua ou subir o piso desses nichos.
+
+Reexecução após a revisão Sol do lote 2 (pool de `predador` 8 -> 12 cartas para o teto de 15 usos; fases de chefe 60/40;
+`cura` escolhível): só `predador` mudou (L3 51,5 / -0,5 pp; L5 28,0 / +4,5 pp); as demais células ficaram idênticas.

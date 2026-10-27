@@ -97,8 +97,8 @@
       "oculta": true
     },
     {
-      "id": "inf_fac_renegados_ermo_laco_no_tornozelo",
-      "name": "Laço no Tornozelo",
+      "id": "inf_fac_renegados_ermo_corda_no_passo",
+      "name": "Corda no Passo",
       "origem": "cartas-332",
       "classe": "Inimigo",
       "subclasse": "renegados_ermo",

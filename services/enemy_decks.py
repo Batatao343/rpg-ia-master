@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 import unicodedata
@@ -72,6 +73,8 @@ _SLOT_LABEL = {
     "mover": "manobra",
 }
 
+_EXTRA_FILES = frozenset({"chefes"})  # cartas de fase de chefe: não são pool de família
+_LOG = logging.getLogger(__name__)
 _meta_cache: dict | None = None
 _pools_cache: dict | None = None
 
@@ -119,8 +122,10 @@ def _pools() -> dict[str, dict[str, list[str]]]:
                 stem = path.stem
                 if stem.startswith("faccao_"):
                     facs[stem[len("faccao_") :]] = ids
-                elif stem in FAMILIAS:  # `chefes.json` (cartas de fase) não é pool de família
+                elif stem in FAMILIAS:
                     fams[stem] = ids
+                elif stem not in _EXTRA_FILES:  # arquivo órfão: fora de FAMILIAS/faccao_/chefes
+                    _LOG.warning("enemy_decks: arquivo de baralho ignorado: %s", path.name)
         _pools_cache = {"familias": fams, "faccoes": facs}
     return _pools_cache
 
@@ -178,13 +183,12 @@ def family_signature(creature: dict, seed: int | str = 0) -> dict | None:
     return sigs[_h(creature.get("id"), seed, "sig") % len(sigs)]
 
 
-def _curate_shared(
-    creature: dict, deck: list[str], fam: str | None, pools: dict, seed: int | str
-) -> list[str]:
+def _curate_shared(creature: dict, deck: list[str], seed: int | str) -> tuple[list[str], int]:
     """Curadoria do bestiário (critério 1), só com ``on``: cartas legadas compartilhadas por
     dezenas de criaturas (``legadas_compartilhadas`` em ``_decks.json``) ficam em metade delas
-    (hash de id+seed); na outra metade trocam por um ataque da família. O ``bestiary.json``
-    não muda, então ``off`` segue idêntico."""
+    (hash de id+seed). Devolve ``(deck, n_retiradas)``: a montagem garante um ataque da família
+    no lugar, SEM aumentar o número de cartas da família (não empurra nenhuma carta nova acima
+    do teto de uso). O ``bestiary.json`` não muda, então ``off`` segue idêntico."""
     shared = set(_meta().get("legadas_compartilhadas") or [])
     out: list[str] = []
     dropped = 0
@@ -193,22 +197,13 @@ def _curate_shared(
             dropped += 1
         else:
             out.append(card_id)
-    if not dropped:
-        return deck
-    if not fam:
-        return deck  # sem família para repor: mantém a carta legada
+    return out, dropped
+
+
+def _is_attack(card_id: str) -> bool:
     from services import cards
 
-    atk = sorted(
-        (
-            c
-            for c in pools["familias"].get(fam, [])
-            if c not in out
-            and ((cards.get_card(c) or {}).get("efeito") or {}).get("kind") == "dano"
-        ),
-        key=lambda c: _h(creature.get("id"), seed, "curadoria_atk", c),
-    )
-    return out + atk[:dropped]
+    return ((cards.get_card(card_id) or {}).get("efeito") or {}).get("kind") == "dano"
 
 
 def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
@@ -218,7 +213,9 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     cid = creature.get("id")
     fam = family_key(creature)
     pools = _pools()
-    deck = _curate_shared(creature, deck, fam, pools, seed)
+    deck, dropped = _curate_shared(creature, deck, seed)
+    if dropped and not fam:
+        deck, dropped = _own_ids(creature), 0  # sem família para repor: mantém a carta legada
     sig = family_signature(creature, seed)
     if fam:
         # a assinatura alternativa (a outra de `assinaturas`) só vale como assinatura
@@ -229,6 +226,11 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
         if sig and sig["carta"] not in deck:
             picked.append(sig["carta"])
         rest = sorted((c for c in pool if c not in picked), key=lambda c: _h(cid, seed, "fam", c))
+        if dropped and not any(_is_attack(c) for c in (*deck, *picked)):
+            atk = next((c for c in rest if _is_attack(c)), None)
+            if atk:  # o ataque que repõe a carta legada entra dentro da cota da família
+                picked.append(atk)
+                rest.remove(atk)
         picked += rest[: max(0, want - len(picked))]
         deck += picked
     fac = _fold(creature.get("faction"))
@@ -345,10 +347,20 @@ def plan(actor: dict, rnd: int) -> dict | None:
     return {"slot": slot, "assinatura": carta, "rnd": rnd}
 
 
+def _badly_wounded(actor: dict) -> bool:
+    """Espelha ``vitalidade_baixa`` do orquestrador (<= 35 % ou ferimento grave/crítico)."""
+    if _vitality_pct(actor) <= 35.0:
+        return True
+    wounds = actor.get("ferimentos") or {}
+    return isinstance(wounds, dict) and any(wounds.get(k) for k in ("grave", "critico"))
+
+
 def prenuncio(actor: dict, rnd_exec: int) -> str | None:
     """Frase do Presságio quando a assinatura cai na rodada SEGUINTE a ``rnd_exec``."""
     sig = assinatura_of(actor)
     if not sig:
+        return None
+    if _badly_wounded(actor):  # perfil decidiria por fuga/recuo, não pelo `sempre`: não promete
         return None
     if not _sig_falls_on(actor, sig, rnd_exec + 1):
         return None
@@ -431,11 +443,13 @@ def apply_phases(
             actor["cartas"] = cartas
         actor["fase_idx"] = reached
         actor["fase_rnd"] = int(rnd) + 1  # 1ª rodada da fase nova (assinatura dela: depois)
-        fase = fases[reached - 1]
         nome = str(actor.get("name") or aid)
-        linha = str(fase.get("narracao") or "{nome} muda de postura; a luta não será a mesma.")
-        out.setdefault("logs", []).append(linha.format(nome=nome))
-        out.setdefault("fases", []).append({"actor_id": aid, "fase": reached})
+        for idx in range(current, reached):  # dano que pula fases narra todas, em ordem
+            linha = str(
+                fases[idx].get("narracao") or "{nome} muda de postura; a luta não será a mesma."
+            )
+            out.setdefault("logs", []).append(linha.format(nome=nome))
+            out.setdefault("fases", []).append({"actor_id": aid, "fase": idx + 1})
         changed = True
     return changed
 

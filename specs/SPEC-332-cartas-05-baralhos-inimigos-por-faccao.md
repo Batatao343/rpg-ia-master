@@ -52,8 +52,8 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 3. Conteúdo em 3 lotes (famílias → facções → chefes), cada lote validado + arena por família (taxa de vitória do jogador por família entre 45–85 % no nível-alvo).
 
 ## 5. Critérios de aceite
-- [x] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim; `bst_bote_certeiro` (21) curada só em `on`, seeds 0-3 testadas)
-- [x] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (famílias e 10 facções; teste `test_ten_factions_...`)
+- [x] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim, seeds 0-11 testadas; `bst_bote_certeiro` (21) curada só em `on`; 1 seed em ~60 ainda passa de 15 por variância da assinatura `rasgo_aberto`)
+- [~] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (11 famílias e 10 facções; 4 facções do bestiário ainda sem baralho: tribos_devoradores_sol, bandos_nomades, colmeia_hospedeiros, mercadores_escravos_pradaria — SPEC-336)
 - [~] Arena por família dentro da faixa (medida; 2 células-família fora, `off` já fora em vários nichos); pytest do escopo verde
 
 ### Entrega 1 (27/10, branch spec-332) e desvios
@@ -100,7 +100,7 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
   compartilhada, sem Carta de Cena): "Fumo de Destilação" é um DoT, "Muralha de Escudos" uma proteção. Mecânicas novas
   entram quando a 330/331 as expuserem ao inimigo.
 - **R5 fases:** `fases` dos 12 chefes em `_decks.json` (por id do bestiário/`archetype_id`; o `bestiary.json` não muda,
-  logo `off` idêntico): fase 60 % (carta de apoio + padrão) e 30 % (carta-assinatura própria `inf_chefe_*` em
+  logo `off` idêntico): fase 60 % (carta de apoio + padrão) e 40 % (acima do `muito_ferido` de 35 %, para o chefe solo usar a assinatura antes de fugir) (carta-assinatura própria `inf_chefe_*` em
   `chefes.json`, `a_cada_n: 2`, telegrafada). `chefes.json` não é pool de família (`_pools` só lê `FAMILIAS`).
 - **Curadoria:** `legadas_compartilhadas: [bst_bote_certeiro]` — em `on`, metade das criaturas (hash id+seed) troca a
   carta por um ataque da família (`_curate_shared`). `bst_toque_gelido` (15) já cumpre "não mais que 15".
@@ -108,6 +108,11 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 - **Arena (amostra maior, 200 combates/célula):** [resultados](../docs/spec332/arena-results-2026-10-27.md), com o delta
   `on` - `off` por célula. `bruto` estava OK (o -18 era ruído); `lider_matilha` calibrada (mordida do alfa 8 -> 5,
   uivo 2 -> 1): L3 +3,5 / L5 -7 pp. Alvo usado: 45-85 % (decisão do coordenador); nichos fora da faixa já estavam fora no `off`.
+- **Correções da revisão Sol (lote 2):** P1-1 fases 60/40 + `prenuncio` não promete com vitalidade <= 35 % ou ferimento
+  grave/crítico; P1-2 a IA de suporte escolhe `cura` (si <= 70 % ou aliado ferido) e há teste de que todo efeito `inf_*`
+  é alcançável; P1-3 renomeadas "Poeira do Cais" e "Corda no Passo" e o teste de nomes cobre todo o catálogo; P2: a
+  troca do `bote_certeiro` entra na cota da família (sem cartas a mais) e `predador` ganhou 4 cartas (pool 12); narração
+  de fase com `{nome}`, própria por chefe e uma por fase cruzada; `_pools` loga arquivo órfão.
 - **Pendente:** front de `prenuncio`/`costuma` (SPEC-334); conteúdo das 4 facções restantes e chefes nomeados (336);
   decisão do dono sobre o alvo da arena (nichos fracos: morto_vivo, guardiao, apex L5).
 
