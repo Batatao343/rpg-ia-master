@@ -69,42 +69,48 @@ def duo():
     coordinator = PostgresTurnCoordinator(pool, lease_seconds=2)
     users: list[UUID] = []
     clients: list[httpx.Client] = []
-    games: list[tuple[Principal, UUID]] = []
     try:
         emails = [f"idor-{who}-{uuid4().hex}@example.test" for who in ("a", "b")]
         for email in emails:
             users.append(create_confirmed_user(email, PASSWORD))
         client_a, client_b = (_login(base, email) for email in emails)
         clients += [client_a, client_b]
-        principal_a = Principal(users[0], "test", str(users[0]), local=True)
-        seed = f"Semente-{uuid4().hex[:8]}"
-        game_a = _new_game(client_a, seed)
-        games.append((principal_a, game_a))
         yield {
             "a": client_a,
             "b": client_b,
-            "principal_a": principal_a,
-            "game_a": game_a,
-            "seed": seed,
+            "principal_a": Principal(users[0], "test", str(users[0]), local=True),
             "store": store,
             "coordinator": coordinator,
-            "track": lambda game: games.append((principal_a, game)),
         }
     finally:
         for client in clients:
             client.close()
-        for principal, game in games:
-            store.delete(principal, game)
         for user in users:
             delete_confirmed_user(user)
         pool.close()
 
 
+@pytest.fixture
+def game_a(duo):
+    """Campanha nova por teste: o isolamento não depende da ordem (o DELETE não vaza).
+
+    ``/game/new`` não passa pelo limiter de auth; só os logins ficam no escopo de módulo.
+    """
+    games: list[UUID] = []
+    seed = f"Semente-{uuid4().hex[:8]}"
+    games.append(_new_game(duo["a"], seed))
+    try:
+        yield {"id": games[0], "seed": seed, "track": games.append}
+    finally:
+        for game in games:
+            duo["store"].delete(duo["principal_a"], game)
+
+
 @pytest.mark.parametrize(
     "method,path,body", _ROUTES, ids=[f"{m} {p.split('?')[0]}" for m, p, _ in _ROUTES]
 )
-def test_principal_b_cannot_touch_game_a_local(duo, method, path, body):
-    gid = str(duo["game_a"])
+def test_principal_b_cannot_touch_game_a_local(duo, game_a, method, path, body):
+    gid = str(game_a["id"])
     # controle positivo (L3): A lê a própria campanha na mesma execução.
     assert duo["a"].get("/game/state", params={"game_id": gid}).status_code == 200
     url = path.replace("{g}", gid)
@@ -113,22 +119,22 @@ def test_principal_b_cannot_touch_game_a_local(duo, method, path, body):
         kwargs["json"] = {
             k: (v.replace("{g}", gid) if isinstance(v, str) else v) for k, v in body.items()
         }
-    before = duo["store"].get(duo["principal_a"], duo["game_a"])
+    before = duo["store"].get(duo["principal_a"], game_a["id"])
     response = duo["b"].request(method, url, headers={"Idempotency-Key": str(uuid4())}, **kwargs)
     assert response.status_code == _EXPECTED_STATUS.get(path.split("?")[0], 404), (
         method,
         path,
         response.text[:200],
     )
-    assert duo["seed"] not in response.text
-    after = duo["store"].get(duo["principal_a"], duo["game_a"])
+    assert game_a["seed"] not in response.text
+    after = duo["store"].get(duo["principal_a"], game_a["id"])
     assert after is not None and after.version == before.version
 
 
-def test_delete_key_reuse_conflicts_on_postgres(duo):
+def test_delete_key_reuse_conflicts_on_postgres(duo, game_a):
     """R17: key de um turno concluído reaproveitada no DELETE -> 409; o jogo permanece."""
     key = uuid4()
-    game = duo["game_a"]
+    game = game_a["id"]
     claim = duo["coordinator"].claim(
         duo["principal_a"],
         key,
@@ -145,7 +151,7 @@ def test_delete_key_reuse_conflicts_on_postgres(duo):
 
     # retry legítimo do MESMO delete segue idempotente (guarda do game_id=None).
     spare = _new_game(duo["a"], "Descartavel")
-    duo["track"](spare)
+    game_a["track"](spare)
     retry_key = str(uuid4())
     first = duo["a"].delete(f"/game/save/{spare}", headers={"Idempotency-Key": retry_key})
     again = duo["a"].delete(f"/game/save/{spare}", headers={"Idempotency-Key": retry_key})

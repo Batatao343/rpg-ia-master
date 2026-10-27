@@ -85,6 +85,12 @@ def main() -> int:
                 time.sleep(1)
             else:
                 raise RuntimeError("local audit API readiness timed out")
+        # Orçamento de login: todos os testes abaixo batem na mesma API local, do mesmo IP,
+        # e dividem o limiter de auth (`account_security.IP_ATTEMPTS` = 20 por 15 min).
+        # Hoje são 3 POST /auth/login (2 em test_http_idor_local, 1 em
+        # test_mutation_api_local); o storage loga direto no GoTrue e não conta. Arquivo
+        # novo: login com escopo de módulo, nunca por teste. Nunca afrouxar o limiter de
+        # produção para caber aqui.
         result_code = subprocess.run(
             [
                 sys.executable,
