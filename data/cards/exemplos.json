@@ -19,7 +19,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um golpe de convite: quem o recebe sente o Abismo acenar por trás do ombro de quem bate.",
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "muralha_viva",
@@ -49,7 +52,10 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "descricao": "O corpo vira parede e a fé, argamassa; nada passa por quem jurou ficar.",
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "conviccao_passiva",
@@ -67,7 +73,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "A certeza do juramento endurece a pele antes de qualquer lâmina chegar.",
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "corte_sangrento",
@@ -88,7 +97,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "A lâmina abre o caminho e o sangue paga a passagem.",
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "hemorragia",
@@ -109,7 +121,10 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "descricao": "O corte não fecha; o ferro lembra da carne por muito tempo.",
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "reflexo_lamina",
@@ -130,7 +145,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O aço de quem ataca encontra o aço que já esperava por ele.",
+      "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, e a janela de reação está aberta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "toque_corrosivo",
@@ -151,7 +169,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um dedo de ferrugem viva roe o couro e depois a carne.",
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "praga_lenta",
@@ -172,7 +193,10 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "descricao": "A podridão entra devagar e não pede licença para ficar.",
+      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "simbiose",
@@ -190,7 +214,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O nariz aprende a ler a decomposição como outros leem mapas.",
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "raio_cinza",
@@ -210,7 +237,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um raio da cor das cinzas parte o ar e deixa cheiro de éter queimado.",
+      "momento": "Melhor jogada quando a luta começa e o alvo mais forte pede o primeiro raio.",
+      "raridade": "comum"
     },
     {
       "id": "manto_bruma",
@@ -230,7 +260,10 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "descricao": "A névoa responde ao chamado e dobra a luz ao redor de quem a veste.",
+      "momento": "Melhor jogada quando a retirada precisa de névoa e ninguém pode ser visto.",
+      "raridade": "incomum"
     },
     {
       "id": "leitura_arcana",
@@ -248,7 +281,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Traços esquecidos na pedra se alinham e confessam o que significam.",
+      "momento": "Melhor jogada quando uma inscrição trava o caminho e o éter pode traduzi-la.",
+      "raridade": "comum"
     },
     {
       "id": "sutura_rapida",
@@ -268,7 +304,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Agulha, fio e pressa: a ferida fecha antes que a dor tenha opinião.",
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "estabilizar",
@@ -288,7 +327,10 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "descricao": "Mãos firmes seguram o último fio de vida até o sangue lembrar o caminho.",
+      "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "mao_firme",
@@ -306,7 +348,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Nem o tremor da guerra desvia a mão que já viu coisa pior.",
+      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "vc_forca_bruta",
@@ -323,7 +368,10 @@
       ],
       "efeito": {
         "kind": "bonus_dano_por_estagio"
-      }
+      },
+      "descricao": "A força que o sangue guarda cresce a cada degrau que a Virtude sobe.",
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o dano precisa acompanhá-lo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "vc_mente_lucida",
@@ -340,7 +388,10 @@
       ],
       "efeito": {
         "kind": "bonus_percepcao_por_estagio"
-      }
+      },
+      "descricao": "A mente limpa a névoa e enxerga o que o resto da vila só pressente.",
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o olhar acompanha, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "vc_corpo_rijo",
@@ -357,7 +408,10 @@
       ],
       "efeito": {
         "kind": "bonus_vitalidade_por_estagio"
-      }
+      },
+      "descricao": "O corpo aprende a aguentar o que antes o quebraria.",
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "vc_agil_reflexo",
@@ -374,7 +428,10 @@
       ],
       "efeito": {
         "kind": "bonus_iniciativa_por_estagio"
-      }
+      },
+      "descricao": "Os reflexos chegam um fôlego antes do perigo.",
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a pressa acompanha, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "vc_lingua_afiada",
@@ -391,7 +448,10 @@
       ],
       "efeito": {
         "kind": "bonus_social_por_estagio"
-      }
+      },
+      "descricao": "A palavra certa corta mais fundo que o ferro e deixa menos sangue.",
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a palavra pesa mais, no começo do conflito.",
+      "raridade": "comum"
     }
   ]
 }

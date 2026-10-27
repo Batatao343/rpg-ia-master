@@ -36,6 +36,9 @@ MAX_CHARS_DESCRICAO = 140
 MAX_PALAVRAS_NOVAS_POR_ONDA = 2  # R9
 MIN_CARTAS_POR_PALAVRA_NOVA = 6  # R9
 
+# SPEC-335 R5: frases-modelo do gerador antigo (scripts/gen_tiers_5_plus.py); proibidas.
+GENERICAS = ("converte_risco_acumulado", "decisao_mecanica_de_fim_de_campanha")
+
 _STOP = frozenset(
     "a o as os um uma de do da dos das em no na nos nas e ou que se por para com sem ao aos "
     "quando mais menos mesmo mesma seu sua seus suas ele ela eles elas e o".split()
@@ -220,6 +223,8 @@ def check_voice(card: dict) -> list[Issue]:
         )
     if re.search(r"\d", desc):
         out.append(Issue("error", "voz", "número na descrição (o número vem do texto gerado)"))
+    if any(frase in fx._fold(desc) for frase in GENERICAS):
+        out.append(Issue("error", "voz", "descrição genérica (frase-modelo, sem sabor próprio)"))
     banned = set(lexico()["proibidos"])
     for field in ("name", "descricao", "momento"):
         hit = sorted(_tokens_all(str(card.get(field) or "")) & banned)

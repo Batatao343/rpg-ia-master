@@ -1,0 +1,50 @@
+ondas:
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono (amostra de 20%, revisão posterior)
+  amostra_voz:
+  - arc1_cal_estilhaco
+  - arc1_cal_mares
+  - arc1_cal_quadrante
+  - arc1_cal_segunda_medicao
+  - arc1_des_brasa
+  - arc1_des_caldeira_sem_fundo
+  - arc1_imp_ultima_gambiarra
+  cartas:
+  - arc1_cal_leitura
+  - arc1_cal_pulso_medido
+  - arc1_cal_prumo
+  - arc1_cal_compasso
+  - arc1_cal_gabarito
+  - arc1_cal_estilhaco
+  - arc1_cal_rede
+  - arc1_cal_segunda_medicao
+  - arc1_cal_folga
+  - arc1_cal_impacto
+  - arc1_cal_quadrante
+  - arc1_cal_mares
+  - arc1_des_faisca
+  - arc1_des_dedos
+  - arc1_des_palma
+  - arc1_des_corrente
+  - arc1_des_brasa
+  - arc1_des_garganta
+  - arc1_des_sobrecarga
+  - arc1_des_vazao_selvagem
+  - arc1_des_raio_livre
+  - arc1_des_estouro_contido
+  - arc1_des_fenda
+  - arc1_des_caldeira_sem_fundo
+  - arc1_imp_parafuso
+  - arc1_imp_gambiarra
+  - arc1_imp_carretel
+  - arc1_imp_olho_latao
+  - arc1_imp_mola
+  - arc1_imp_remendo_cobre
+  - arc1_imp_bomba_estopim
+  - arc1_imp_truque
+  - arc1_imp_arame
+  - arc1_imp_terceiro_dia
+  - arc1_imp_orquestra
+  - arc1_imp_ultima_gambiarra

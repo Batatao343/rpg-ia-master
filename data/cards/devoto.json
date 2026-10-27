@@ -22,7 +22,9 @@
       "descricao": "Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_muralha_viva",
@@ -44,7 +46,9 @@
       "descricao": "Planta os pés e vira anteparo de carne para os que estão atrás.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_conviccao",
@@ -64,7 +68,9 @@
       "descricao": "Quem não teme o Abismo não recua um passo — a guarda nunca abre por susto.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_aguentar",
@@ -84,7 +90,9 @@
       "descricao": "O corpo aprende a hospedar sofrimento.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_provocacao",
@@ -106,7 +114,9 @@
       "descricao": "Chama o perigo pelo nome, e ele atende.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_encaixe",
@@ -129,7 +139,9 @@
       "gatilho": "ao_ser_atacado",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, e a janela de reação está aberta, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_sentinela",
@@ -152,7 +164,9 @@
       "descricao": "Um único mandobre que sela a brecha e quebra a linha inimiga.",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo já sangra e um golpe a mais fecha a conta, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_cons_marca",
@@ -174,7 +188,9 @@
       "descricao": "Risca no próprio antebraço o nome do inimigo — agora é pessoal.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_cons_liturgia",
@@ -230,7 +246,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_cons_estigma",
@@ -250,7 +268,9 @@
       "descricao": "As cicatrizes rituais distribuem o impacto — o corpo virou relicário.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_zel_ciume",
@@ -272,7 +292,9 @@
       "descricao": "Ninguém mais toca no que é dele — nem o inimigo, nem o aliado.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_zel_possessao",
@@ -328,7 +350,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo escolhe a presa mais fraca e o provocador a rouba, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_zel_vigilia",
@@ -348,7 +372,9 @@
       "descricao": "Dorme de olho aberto para que nada leve o que ama antes dele.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a ordem de ação decide a rodada e agir primeiro vale mais que golpear forte, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_enl_lamento",
@@ -371,7 +397,9 @@
       "descricao": "Uma dor tão nua que o inimigo hesita em continuar de pé.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_enl_luto",
@@ -433,7 +461,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_enl_memoria",
@@ -453,7 +483,9 @@
       "descricao": "O luto é um mapa dos que já se foram.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_cons_relicario",
@@ -476,7 +508,9 @@
       "papel": "proteger aliado marcado",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado frágil vai ser alvo e a proteção o cobre, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_cons_comunhao",
@@ -499,7 +533,9 @@
       "papel": "estabilização ritual à distância",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_zel_interdito",
@@ -522,7 +558,9 @@
       "papel": "impedir troca de alvo",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_zel_retorno",
@@ -545,7 +583,9 @@
       "papel": "retaliação contra agressor marcado",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_enl_cortejo",
@@ -570,7 +610,9 @@
       "papel": "pressão abissal por luto",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_enl_testemunho",
@@ -593,7 +635,9 @@
       "papel": "vantagem coletiva contra assassino",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o golpe seguinte é decisivo e a Vantagem vale mais que força, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_reflexo_bastiao",
@@ -617,7 +661,9 @@
       "papel": "fechar brecha ao ser flanqueado",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e a janela de reação está aberta, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_ombro_porta",
@@ -641,7 +687,9 @@
       "papel": "interromper avanço inimigo",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, e a janela de reação está aberta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_vigiar_ruina",
@@ -664,7 +712,9 @@
       "papel": "detectar ameaça em vigília",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_carregar_caido",
@@ -687,7 +737,9 @@
       "papel": "resgate sob carga",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_passo_interposto",
@@ -710,7 +762,9 @@
       "papel": "trocar posição com aliado exposto",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "dev_nome_proibido",
@@ -734,7 +788,9 @@
       "papel": "quebrar coragem pelo nome",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_martelo_penitente",
@@ -758,7 +814,9 @@
       "papel": "golpe pesado contra alvo que feriu aliado",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a mão não oferece nada melhor e o dano ainda rende, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "dev_promessa_imovel",
@@ -779,7 +837,9 @@
       "papel": "vitalidade por juramento mantido",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, e o efeito já está armado, com a luta em andamento.",
+      "raridade": "incomum"
     }
   ]
 }

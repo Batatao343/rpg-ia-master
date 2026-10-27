@@ -1,0 +1,441 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "arc1_des_faisca",
+      "name": "Faísca Sem Ordem",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 1,
+          "chamado": 2
+        }
+      ],
+      "descricao": "Sai da ponta dos dedos sem pedir licença ao instrumento.",
+      "momento": "Melhor jogada quando a Entropia passou do primeiro degrau e um golpe barato ganha dente.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_dedos",
+      "name": "Dedos Abertos",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vantagem",
+          "duracao": 1
+        },
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Sem luva nem isolante, a mão sente o alvo antes de tocá-lo.",
+      "momento": "Melhor jogada quando o golpe pesado está na mão e a Vantagem faz ele acertar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_palma",
+      "name": "Palma de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 0,
+          "escala": {
+            "por": "entropia",
+            "fator": 0.5,
+            "max": 2
+          }
+        }
+      ],
+      "descricao": "A palma aberta devolve ao alvo tudo o que o éter acumulou.",
+      "momento": "Melhor jogada quando a Entropia está alta e cada ponto dela pode virar dano no mesmo golpe.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_corrente",
+      "name": "Corrente Solta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "descartar",
+          "valor": 1,
+          "escolha": true
+        },
+        {
+          "kind": "comprar",
+          "valor": 1
+        }
+      ],
+      "descricao": "A corrente solta o elo gasto e puxa outro da escuridão.",
+      "momento": "Melhor jogada quando uma carta morta atrapalha a mão e o baralho ainda guarda a resposta.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_brasa",
+      "name": "Brasa Estourando",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_esquiva",
+          "valor": 2
+        }
+      ],
+      "descricao": "A brasa estoura entre o golpe e a pele.",
+      "momento": "Melhor jogada quando o inimigo escolhe o conjurador e a esquiva sai mais barata que a guarda.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_garganta",
+      "name": "Éter na Garganta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "silenciado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "O grito vira fumaça antes de sair.",
+      "momento": "Melhor jogada quando o inimigo vai invocar ou gritar e o silêncio corta a jogada dele.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_sobrecarga",
+      "name": "Sobrecarga Assumida",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 6
+        },
+        {
+          "kind": "rachadura",
+          "valor": 1
+        }
+      ],
+      "descricao": "O instrumento grita, o braço treme, e o alvo racha.",
+      "momento": "Melhor jogada quando o alvo é o último em pé e a cena pode terminar nesta rodada.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_vazao_selvagem",
+      "name": "Vazão Selvagem",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 1,
+          "quando": "ao_descartar"
+        }
+      ],
+      "palavras_chave": {
+        "vazao": true
+      },
+      "descricao": "Se a mão a solta sem usar, a caldeira ao menos respira.",
+      "momento": "Melhor jogada quando o baralho descarta muito e cada carta solta pode virar fôlego.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_raio_livre",
+      "name": "Raio Sem Cabresto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 7
+        },
+        {
+          "kind": "dano",
+          "valor": 2,
+          "alvo": "inimigos",
+          "chamado": 5
+        }
+      ],
+      "descricao": "O raio corre solto pelo campo e escolhe sozinho onde morder.",
+      "momento": "Melhor jogada quando a Entropia chegou ao topo e há inimigos espalhados pelo campo.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_estouro_contido",
+      "name": "Estouro Contido",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "atordoado",
+          "duracao": 1
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "O estouro fica preso na palma até o alvo ousar se mexer.",
+      "momento": "Melhor jogada quando o inimigo anuncia o golpe mais perigoso da rodada e precisa ser derrubado antes.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_fenda",
+      "name": "Fenda Aberta no Éter",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 9
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "alvo": "inimigos"
+        },
+        {
+          "kind": "rachadura",
+          "valor": 1
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "chamado": 4
+        }
+      ],
+      "descricao": "Um corte na corrente de éter vaza para dentro do campo de batalha.",
+      "momento": "Melhor jogada quando a cena é cheia de inimigos juntos e a Entropia aguenta mais uma abertura.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_des_caldeira_sem_fundo",
+      "name": "Caldeira Sem Fundo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "descoberto",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 11
+        },
+        {
+          "kind": "dano",
+          "valor": 5,
+          "alvo": "inimigos"
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "chamado": 5
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "A caldeira não tem fundo, e o que cai nela volta como trovão.",
+      "momento": "Melhor jogada quando a luta decisiva pede tudo de uma vez e o conjurador aceita o refluxo.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "mecanica_classe": {
+        "auto_dano": 2
+      }
+    }
+  ]
+}

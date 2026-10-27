@@ -1,6 +1,6 @@
 # SPEC-335 — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (aprovada pelo dono em 2026-10-27; Lote 0 e Lote 1 entregues — ver "Andamento")
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática, glossário, orçamento), SPEC-336 (esteira de autoria e lint). Etapa 1 (reparo do acervo atual) pode começar só com SPEC-330.
@@ -52,6 +52,15 @@ Cartas de inimigo (SPEC-332), Cartas de Cena (SPEC-331), status/maldições (SPE
 2. **Lotes 1–5** — uma Postura por lote (36 cartas), na ordem que o dono preferir [D?].
 3. **Lote 6** — 40 neutras de Valoria.
 4. Após cada lote: lint, arena, revisão do dono, `uv run python scripts/validate_content.py`, reindex RAG se o codex for tocado.
+
+## 4.1 Andamento (decisões do dono 27/10: roda como na tabela; ordem D9 Arcanista → Sangromante → Devoto → Corruptor → Médico; voz por amostra de 20 %)
+
+- [x] **Lote 0 (R5)** — 35 `descricao` vazias preenchidas; 80 de `tiers_5_plus.json` com `descricao` e `contrapartida` próprias (80 únicas); `raridade` (derivada do `patamar`: inicial=comum, avançado/superior=incomum, épico=rara, lendário/mítico/ápice=abissal; inimigos=comum) e `momento` nas 308. Zero mudança mecânica: golden da 330 e snapshot do texto gerado **não** foram regerados e passam. Os `momento` das 80 de `tiers_5_plus` e das 37 do Arcanista são escritos à mão; os das demais (~190, 4 Posturas + virtudes + 40 de inimigo) saem de modelo por `kind` (situação em rodízio) — **a voz deles é rascunho e vai na amostra do dono**. `card_lint.check_voice` passou a recusar a frase-modelo antiga (`GENERICAS`); `gen_tiers_5_plus.py` ainda regenera o texto genérico se for rodado (não rodar; follow-up).
+- [x] **Lote 1 — Arcanista Cinzento** (`data/cards/posturas/arcanista_cinzento_{calibrado,descoberto,improvisador}.json`, onda 1, registrado em `_ondas.yaml`): 36 Cartas, 12 por subclasse, raridade 18/11/5/2; lint verde, sim sem bandeira (relatório por nível de entrada, 20 sementes), promovidas por `promote.py`. Amostra de voz (7): `arc1_cal_estilhaco`, `arc1_cal_mares`, `arc1_cal_quadrante`, `arc1_cal_segunda_medicao`, `arc1_des_brasa`, `arc1_des_caldeira_sem_fundo`, `arc1_imp_ultima_gambiarra`.
+- [ ] Lotes 2–5 (Sangromante, Devoto, Corruptor, Médico) e Lote 6 (40 neutras).
+- [ ] R6 (`tests/test_card_variety.py`) — só fecha quando as 5 Posturas tiverem os lotes.
+
+Desvios/achados da execução: (1) a arena atribui `uso` pela ordem de `dano_base` do efeito principal e joga todo suporte `custo_folego: 0` sempre; Entropia não limita o bot (reserva de ~70). Para passar sem bandeira, as Cartas de golpe carregam o poder em efeitos secundários (área, Chamado, Rachadura) e as de custo livre ficam `cena`. (2) Delta de vitória com < 100 lutas tem ruído de ±9 pp: o relatório do lote foi gerado por nível de entrada com 20 sementes (`scripts/cards/sim.py` → `simulate_batch`, sem alterar o evaluator). (3) Defensivas continuam com delta negativo na arena (`arc1_cal_segunda_medicao` −15 pp, `arc1_cal_rede` −11 pp): o bot só joga defesa quando ferido; não é bandeira, mas fica para a revisão. (4) `tests/test_card_lint.py` (323 → 359 Cartas) e `tests/test_mecanica_orfa.py` (cinco `kind`s da 330 agora aparecem como principal de Carta ativa; reaproveitam os testes de efeito da 330) foram atualizados.
 
 ## 5. Critérios de aceite
 - [ ] Acervo de jogador ≥ 520 cartas (308 + 180 + 40 − cortes)

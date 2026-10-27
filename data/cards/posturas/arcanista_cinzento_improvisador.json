@@ -1,0 +1,421 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "arc1_imp_parafuso",
+      "name": "Parafuso Arremessado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        },
+        {
+          "kind": "marca",
+          "duracao": 1
+        }
+      ],
+      "descricao": "O parafuso ricocheteia e deixa o alvo marcado para o próximo golpe.",
+      "momento": "Melhor jogada quando um aliado vai agir logo depois e precisa de um alvo mais fácil de acertar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_gambiarra",
+      "name": "Gambiarra de Fôlego",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 1
+        },
+        {
+          "kind": "descartar",
+          "valor": 1
+        }
+      ],
+      "descricao": "Um fio puxado de onde não devia dá fôlego, ao custo de algo solto.",
+      "momento": "Melhor jogada quando a mão tem uma carta de dois de Fôlego e falta exatamente um para jogá-la.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_carretel",
+      "name": "Carretel Furtivo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "mover_alvo_zona",
+          "direcao": "afastar"
+        }
+      ],
+      "descricao": "O carretel desenrola e arrasta o inimigo para longe do corpo.",
+      "momento": "Melhor jogada quando um brutamontes está colado em quem não aguenta e o espaço compra uma rodada.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_olho_latao",
+      "name": "Olho de Latão",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "resistencias"
+        }
+      ],
+      "descricao": "A lente de latão estala e o couro do monstro vira papel de leitura.",
+      "momento": "Melhor jogada quando o primeiro golpe não rendeu e vale descobrir contra o que o inimigo resiste.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_mola",
+      "name": "Armadilha de Mola",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "contra_ataque",
+          "valor": 3
+        }
+      ],
+      "descricao": "A mola salta quando o inimigo toca onde não devia.",
+      "momento": "Melhor jogada quando o inimigo ataca de perto e o conjurador quer cobrar na mesma batida.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_remendo_cobre",
+      "name": "Remendo de Cobre",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 2,
+          "alvo": "aliados"
+        }
+      ],
+      "descricao": "Uma placa de cobre e ferro, batida às pressas, cobre o flanco de quem está ao lado.",
+      "momento": "Melhor jogada quando o grupo inteiro vai apanhar de um ataque em área e o cobre cobre todos.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_bomba_estopim",
+      "name": "Bomba de Estopim",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "alvo": "inimigos"
+        }
+      ],
+      "descricao": "Estopim curto, pólvora de oficina e nenhum plano de volta.",
+      "momento": "Melhor jogada quando o grupo inimigo está apinhado numa porta e o estopim pode pegar todos.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_truque",
+      "name": "Truque de Sucateiro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "copiar_ultima"
+        },
+        {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Aprendeu a imitar o que acabou de ver, só que mais torto.",
+      "momento": "Melhor jogada quando a última carta jogada foi a melhor da rodada e vale repeti-la.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_arame",
+      "name": "Armadilha de Arame",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "marca",
+          "duracao": 2
+        }
+      ],
+      "descricao": "Arame fino cruza o chão e o inimigo só percebe quando tropeça.",
+      "momento": "Melhor jogada quando um inimigo veloz corre atrás do grupo e precisa ser preso antes do contato.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_terceiro_dia",
+      "name": "Máquina do Terceiro Dia",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "versatil",
+          "dano_base": 6
+        },
+        {
+          "kind": "comprar",
+          "valor": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Montada em três dias de insônia, funciona em três tempos.",
+      "momento": "Melhor jogada quando o conjurador teve tempo de preparar a cena e quer uma jogada cheia.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_orquestra",
+      "name": "Orquestra de Sucata",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 5,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "alvo": "inimigos"
+        },
+        {
+          "kind": "descartar",
+          "valor": 1,
+          "escolha": true
+        }
+      ],
+      "palavras_chave": {
+        "ressoar": 1
+      },
+      "descricao": "Cada peça de lixo toca uma nota, e juntas a música derruba paredes.",
+      "momento": "Melhor jogada quando há uma carta inútil na mão e o campo cheio de inimigos pede barulho.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_imp_ultima_gambiarra",
+      "name": "Última Gambiarra",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "improvisador",
+      "patamar": "mitico",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "copiar_ultima"
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 2
+        },
+        {
+          "kind": "comprar",
+          "valor": 2
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "Quando tudo está quebrado, o sucateiro monta mais uma, e ela funciona.",
+      "momento": "Melhor jogada quando a rodada já teve a melhor carta e o Fôlego sobrou para tentar uma segunda.",
+      "tier": 8,
+      "level_req": 18,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

@@ -330,13 +330,18 @@ def test_non_numeric_versao_does_not_break_catalog(tmp_path, monkeypatch):
     )
 
 
-def test_loader_traversal_matches_lint_and_keeps_323_cards():
+def test_loader_traversal_matches_lint_and_keeps_323_legacy_cards():
     from services import cards
 
     ids = {c["id"] for c in card_lint.load_pool()}
     assert set(cards.all_cards()) == ids
-    # SPEC-332: os 88 baralhos de familia de inimigo (`cartas-332`) vieram depois das 323.
-    assert len({i for i in ids if not i.startswith("inf_")}) == 323
+    pool = card_lint.load_pool()
+    # ondas (SPEC-335+) e baralhos de família (`inf_`, SPEC-332) crescem; o legado fica fixo
+    legado = {
+        c["id"] for c in pool if c.get("onda") is None and not c["id"].startswith("inf_")
+    }
+    assert len(legado) == 323
+    assert {c["id"] for c in pool if c.get("onda") is not None} <= ids
 
 
 def test_auto_resolved_choices_marked_source_auto(monkeypatch):

@@ -845,6 +845,49 @@ def _utility_test():
 
 EFFECT_TESTS["card:utilitaria:utilitaria"] = _utility_test
 EFFECT_TESTS["card:utilitaria:perception"] = _utility_test
+
+
+# SPEC-335: kinds da gramática da SPEC-330 que agora aparecem como efeito principal de
+# Cartas ativas do acervo. Cada um reaproveita o teste de efeito da própria 330.
+def _vigilia_test() -> None:
+    from services import card_effects as fx
+
+    actor = orch.ensure_combat_sheet({"id": "p", "name": "p"}, is_player=True)
+    fx.add_vigilia(actor, 2, "teste")
+    assert cm.combat_modifiers(actor)["vigilia"] == 2
+
+
+def _reuse_test(module: str, name: str) -> Callable[[], None]:
+    def run():
+        import importlib
+
+        from services import card_effects as fx
+        from services import cards
+
+        mod = importlib.import_module(f"tests.{module}")
+        with pytest.MonkeyPatch.context() as mp:
+            if hasattr(mod, "SYN"):  # replica a fixture autouse do módulo (Cartas sintéticas)
+                mp.setenv("RPG_CARD_DECK", "on")
+                catalog = cards._load_cards()
+                for cid, extra in mod.SYN.items():
+                    mp.setitem(catalog, cid, fx.materialize({"id": cid, **mod._BASE, **extra}))
+            getattr(mod, name)()
+
+    return run
+
+
+EFFECT_TESTS["card:ativa:vigilia"] = _vigilia_test
+for _k in ("revelar", "mover_alvo_zona"):
+    EFFECT_TESTS[f"card:ativa:{_k}"] = _reuse_test(
+        "test_card_effects_grammar", "test_mover_alvo_zona_e_revelar"
+    )
+EFFECT_TESTS["card:ativa:comprar"] = _reuse_test(
+    "test_card_effects_piles", "test_comprar_traz_cartas_do_monte_para_a_mao"
+)
+EFFECT_TESTS["card:ativa:descartar"] = _reuse_test(
+    "test_card_effects_piles",
+    "test_descartar_com_escolha_leva_o_fardo_primeiro_e_poupa_a_carta_em_jogo",
+)
 for _name in cm.NAMED_CONDITIONS:
     EFFECT_TESTS[f"condicao:{_name}"] = _condition_test(_name)
 for _name in ("atordoado", "amedrontado", "dominado", "enraizado"):

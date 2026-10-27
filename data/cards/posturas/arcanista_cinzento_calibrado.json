@@ -1,0 +1,418 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "arc1_cal_leitura",
+      "name": "Leitura de Pressão",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "revelar",
+          "campo": "intencao"
+        },
+        {
+          "kind": "comprar",
+          "valor": 1
+        }
+      ],
+      "descricao": "O mostrador treme e confessa o que o inimigo ainda esconde.",
+      "momento": "Melhor jogada quando a mão está vazia de dano e o próximo golpe do inimigo é uma incógnita.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_pulso_medido",
+      "name": "Pulso Medido",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "Um estalo contado, guardado na palma até o instante exato.",
+      "momento": "Melhor jogada quando o golpe barato deve esperar na mão por uma abertura que ainda vai surgir.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_prumo",
+      "name": "Prumo de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "O fio de prumo desce e a cinza assenta uma parede fina no ar.",
+      "momento": "Melhor jogada quando o conjurador é o alvo óbvio da próxima rodada e a Entropia está baixa.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_compasso",
+      "name": "Compasso Aberto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "comprar",
+          "valor": 1
+        }
+      ],
+      "descricao": "O compasso gira uma volta a mais e a mão ganha o próximo passo.",
+      "momento": "Melhor jogada quando a mão está cheia de cartas fracas e falta a peça que fecha o plano.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_gabarito",
+      "name": "Gabarito Cinzento",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_acerto",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Traços de giz no ferro mostram onde a mira deve cair.",
+      "momento": "Melhor jogada quando o alvo é escorregadio e os dois golpes seguintes são os que decidem.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_estilhaco",
+      "name": "Estilhaço de Lente",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 2,
+          "alvo": "inimigos"
+        }
+      ],
+      "descricao": "A lente racha ao meio e cada caco carrega um fio de luz cinza.",
+      "momento": "Melhor jogada quando três inimigos se agrupam e um único estalo pode tocar todos.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_rede",
+      "name": "Rede de Cálculo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        }
+      ],
+      "descricao": "Linhas finas de éter prendem o braço do alvo e o fazem pesar.",
+      "momento": "Melhor jogada quando o inimigo mais forte ainda não agiu e o grupo precisa diminuir o golpe dele.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_segunda_medicao",
+      "name": "Segunda Medição",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 0,
+      "custo_folego": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        },
+        {
+          "kind": "comprar",
+          "valor": 1,
+          "se": {
+            "cartas_jogadas_na_rodada_min": 1
+          }
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "Medir duas vezes, cortar uma: a mão aprende com o próprio erro.",
+      "momento": "Melhor jogada quando uma carta já foi jogada na rodada e a defesa pode reabastecer a mão.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_folga",
+      "name": "Folga de Tolerância",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        },
+        {
+          "kind": "ganhar_folego",
+          "valor": 1
+        }
+      ],
+      "descricao": "A tolerância do metal absorve o choque e devolve o fôlego.",
+      "momento": "Melhor jogada quando o Fôlego da rodada acabou e o conjurador ainda precisa de uma carta cara.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_impacto",
+      "name": "Cálculo de Impacto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "chamado": 3
+        }
+      ],
+      "descricao": "Todo número certo cobra o seu preço em pressão.",
+      "momento": "Melhor jogada quando a Entropia já cruzou o limite do Chamado e o alvo está parado.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_quadrante",
+      "name": "Quadrante Fechado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 2
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "chamado": 4
+        }
+      ],
+      "descricao": "Quatro linhas se fecham ao redor do alvo e não deixam nada passar.",
+      "momento": "Melhor jogada quando um chefe domina a cena e o grupo precisa amolecer e travar ao mesmo tempo.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "arc1_cal_mares",
+      "name": "Tabela de Marés",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "calibrado",
+      "patamar": "epico_ii",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "comprar",
+          "valor": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "As marés do éter sobem e descem em hora marcada, e a tabela sabe a hora.",
+      "momento": "Melhor jogada quando a luta entrou no ritmo e vale trocar o fôlego da rodada por mais opções.",
+      "tier": 6,
+      "level_req": 12,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

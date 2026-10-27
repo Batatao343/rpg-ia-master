@@ -19,7 +19,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um ombro de fé empurra o inimigo para longe do que se jurou proteger.",
+      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "grito_provocador",
@@ -39,7 +42,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O grito rasga o ar e todos os olhos hostis voltam-se para quem gritou.",
+      "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "resistir_devoto",
@@ -57,7 +63,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Quando as pernas pedem descanso, o juramento pede mais um passo.",
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "finta_sangue",
@@ -77,7 +86,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O corpo promete um golpe e entrega outro, sempre a um fio do alvo.",
+      "momento": "Melhor jogada quando o alvo é escorregadio e a mira precisa de ajuda, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "lamina_gemea",
@@ -98,7 +110,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Duas lâminas cantam a mesma cantiga, uma meia batida depois da outra.",
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "passo_leve",
@@ -116,7 +131,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Quem sangrou muito aprende a pisar sem acordar o chão.",
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "esporos",
@@ -137,7 +155,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Uma nuvem fina de esporos pousa no couro e começa a trabalhar.",
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "carne_docil",
@@ -155,7 +176,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "A carne alheia amolece diante de quem fala a língua da podridão.",
+      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "farejar_praga",
@@ -173,7 +197,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O ar carrega o recado da doença muito antes dos sintomas.",
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "faisca_cinza",
@@ -193,7 +220,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um estalo curto de éter acende a ponta dos dedos e morre no alvo.",
+      "momento": "Melhor jogada quando sobra um fôlego e o alvo já está ferido o bastante para a faísca bastar.",
+      "raridade": "comum"
     },
     {
       "id": "empuxo_arcano",
@@ -213,7 +243,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "O éter dobra o espaço em volta do inimigo e o arremessa para trás.",
+      "momento": "Melhor jogada quando um inimigo investe e o empuxo o devolve antes do contato.",
+      "raridade": "comum"
     },
     {
       "id": "olho_arcano",
@@ -231,7 +264,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "A corrente de éter pisca em azul para quem sabe olhar.",
+      "momento": "Melhor jogada quando o perigo ainda está fora de vista e a corrente de éter pisca.",
+      "raridade": "comum"
     },
     {
       "id": "torniquete",
@@ -251,7 +287,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Couro, nó e a certeza de que a vida ainda cabe num pulso apertado.",
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "antitoxina",
@@ -270,7 +309,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um gole de cinza e ervas tira da corrente o que ela não devia ter.",
+      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "triagem",
@@ -288,7 +330,10 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "descricao": "Um olhar frio separa quem ainda tem tempo de quem já não tem.",
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     }
   ]
 }

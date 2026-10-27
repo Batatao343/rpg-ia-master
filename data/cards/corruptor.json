@@ -25,7 +25,9 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_esporos",
@@ -51,7 +53,9 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_carne_docil",
@@ -71,7 +75,9 @@
       "descricao": "A matéria já quer ceder; ele só precisa pedir com jeito.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_farejar",
@@ -91,7 +97,9 @@
       "descricao": "Segue o cheiro do que já está morrendo.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_semear",
@@ -117,7 +125,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo precisa de tempo e o veneno cobra devagar, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_simbiose",
@@ -137,7 +147,9 @@
       "descricao": "Faz da podridão alheia um aliado silencioso.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_colapso",
@@ -163,7 +175,9 @@
       },
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo foge ou recua e o dano deve seguir atrás dele, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_gangrena",
@@ -189,7 +203,9 @@
       },
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_bio_metastase",
@@ -255,7 +271,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_necrose",
@@ -275,7 +293,9 @@
       "descricao": "Cada tecido morto vira adubo para o próximo.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_alm_duvida",
@@ -302,7 +322,9 @@
       },
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_alm_desespero",
@@ -368,7 +390,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo é mais forte que o grupo e a condição equilibra a balança, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_erosao",
@@ -388,7 +412,9 @@
       "descricao": "Onde a moral já range, ele empurra o alicerce.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_ino_ferrugem",
@@ -414,7 +440,9 @@
       },
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_ino_fadiga",
@@ -480,7 +508,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_corrosao",
@@ -500,7 +530,9 @@
       "descricao": "Cada arranhão no metal alheio vira uma alavanca para o próximo.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_bio_micelio",
@@ -525,7 +557,9 @@
       "papel": "contágio entre corpos próximos",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo precisa de tempo e o veneno cobra devagar, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_bio_raiz",
@@ -549,7 +583,9 @@
       "papel": "imobilização orgânica duradoura",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_eco",
@@ -572,7 +608,9 @@
       "papel": "marcar culpa para ataques mentais",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_alm_vazio",
@@ -596,7 +634,9 @@
       "papel": "isolamento psíquico",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando uma condição aberta agora faz render os golpes seguintes, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_geometria_ferrugem",
@@ -619,7 +659,9 @@
       "papel": "converter armadura corroída em cobertura",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ino_colapso",
@@ -642,7 +684,9 @@
       "papel": "derrubar formação e cenário",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_membrana",
@@ -666,7 +710,9 @@
       "papel": "absorver projétil em tecido mutado",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, e a janela de reação está aberta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_chao_morde",
@@ -690,7 +736,9 @@
       "papel": "repelir quem invade zona",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, e a janela de reação está aberta, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_ler_cicatriz",
@@ -713,7 +761,9 @@
       "papel": "deduzir história biológica",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_modelar_chave",
@@ -736,7 +786,9 @@
       "papel": "engenharia orgânica improvisada",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um descanso curto abre espaço para a Carta e o grupo ganha tempo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_acido_memoria",
@@ -761,7 +813,9 @@
       "papel": "corrosão que apaga técnica",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "cor_fratura_util",
@@ -785,7 +839,9 @@
       "papel": "dano que cria objeto de cobertura",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_nome_invertido",
@@ -809,7 +865,9 @@
       "papel": "desfazer identidade social",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_adaptacao_residual",
@@ -830,7 +888,9 @@
       "papel": "defesa após sofrer novo dano",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "cor_matriz_rejeicao",
@@ -851,7 +911,9 @@
       "papel": "vitalidade de formas assimiladas",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, e o efeito já está armado, com a luta em andamento.",
+      "raridade": "incomum"
     }
   ]
 }

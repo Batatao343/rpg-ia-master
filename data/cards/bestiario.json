@@ -16,7 +16,9 @@
         "kind": "protecao",
         "valor": 1
       },
-      "descricao": "Um reflexo curto desvia o golpe que chegaria limpo."
+      "descricao": "Um reflexo curto desvia o golpe que chegaria limpo.",
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_bote_certeiro",
@@ -35,7 +37,9 @@
         "dano_base": 8
       },
       "descricao": "O predador encontra a jugular exposta.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_golpe_sombras",
@@ -54,7 +58,9 @@
         "dano_base": 6
       },
       "descricao": "Ataque vindo do escuro, antes de qualquer reação.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo já sangra e um golpe a mais fecha a conta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_pancada_esmagadora",
@@ -73,7 +79,9 @@
         "dano_base": 10
       },
       "descricao": "Um golpe que rebenta a guarda.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a mão não oferece nada melhor e o dano ainda rende, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_ordem_foco",
@@ -91,7 +99,9 @@
         "valor": 2
       },
       "descricao": "Aponta o alvo a abater; o bando converge.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_fuga_suja",
@@ -109,7 +119,9 @@
         "valor": 1
       },
       "descricao": "Joga terra nos olhos e some na confusão.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o grupo precisa sumir da vista e a fuga ainda é possível, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_furia_final",
@@ -127,7 +139,9 @@
         "valor": 4
       },
       "descricao": "Sem recuo possível, entrega tudo num último acesso.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_uivo_comando",
@@ -145,7 +159,9 @@
         "valor": 3
       },
       "descricao": "Um brado que reorganiza a matilha em torno da presa.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_descarga_arcana",
@@ -164,7 +180,9 @@
         "dano_base": 8
       },
       "descricao": "Libera de uma vez a energia contida.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo mais perigoso está exposto e a janela fecha logo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_postura_muralha",
@@ -182,7 +200,9 @@
         "valor": 6
       },
       "descricao": "Fecha a passagem com o próprio corpo.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_toque_gelido",
@@ -201,7 +221,9 @@
         "duracao": 3
       },
       "descricao": "O frio do outro lado drena a vida devagar.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_golpe_mestre",
@@ -220,7 +242,9 @@
         "dano_base": 14
       },
       "descricao": "O ápice de um predador que já matou muitos.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando sobra Entropia e o golpe pode ser pago sem susto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_sopro_gelido",
@@ -240,7 +264,9 @@
         "dano_tipo": "gelido"
       },
       "descricao": "Uma lufada que congela os pulmões.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_baforada_ignea",
@@ -260,7 +286,9 @@
         "dano_tipo": "igneo"
       },
       "descricao": "Fogo cuspido em arco.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_mordida_infecciosa",
@@ -279,7 +307,9 @@
         "duracao": 4,
         "dano_tipo": "corrosivo"
       },
-      "descricao": "A ferida apodrece antes de fechar."
+      "descricao": "A ferida apodrece antes de fechar.",
+      "momento": "Melhor jogada quando o grupo precisa de tempo e o veneno cobra devagar, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_teia",
@@ -297,7 +327,9 @@
         "condicao": "enraizado",
         "duracao": 2
       },
-      "descricao": "Prende a presa no lugar."
+      "descricao": "Prende a presa no lugar.",
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_bafo_acido",
@@ -316,7 +348,9 @@
         "dano_base": 6,
         "dano_tipo": "corrosivo"
       },
-      "descricao": "Cospe uma gosma que corrói metal e carne."
+      "descricao": "Cospe uma gosma que corrói metal e carne.",
+      "momento": "Melhor jogada quando o inimigo já sangra e um golpe a mais fecha a conta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_petrificar",
@@ -335,7 +369,9 @@
         "duracao": 1
       },
       "descricao": "Por um instante o corpo vira pedra.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo é mais forte que o grupo e a condição equilibra a balança, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_grito_terror",
@@ -354,7 +390,9 @@
         "duracao": 2
       },
       "descricao": "Um som que não deveria existir.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando uma condição aberta agora faz render os golpes seguintes, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_fuligem_arcadia",
@@ -373,7 +411,9 @@
         "duracao": 1
       },
       "descricao": "A fuligem de Nova Arcádia apaga olhos e lampiões.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo está perto de agir e a condição pode atrasá-lo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_lodo_melancolia",
@@ -393,7 +433,9 @@
         "dano_tipo": "corrosivo"
       },
       "descricao": "O pântano continua corroendo mesmo depois do contato.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo foge ou recua e o dano deve seguir atrás dele, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_vidro_zhur",
@@ -413,7 +455,9 @@
         "dano_tipo": "perfurante"
       },
       "descricao": "Vidro solar atravessa juntas antes de se partir.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a mão não oferece nada melhor e o dano ainda rende, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_sussurro_thessavar",
@@ -431,7 +475,9 @@
         "valor": 4
       },
       "descricao": "A floresta escolhe uma presa e passa seu nome de folha em folha.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo é o único que importa e marcá-lo orienta a luta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_esporo_xylos",
@@ -450,7 +496,9 @@
         "duracao": 2
       },
       "descricao": "Esporos de Xylos costuram pés, solo e vontade.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_noite_skallgard",
@@ -468,7 +516,9 @@
         "valor": 5
       },
       "descricao": "A noite de Skallgard endurece a fome e o golpe.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a luta é longa e o dano a mais se paga a cada golpe, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_eter_aethelgard",
@@ -488,7 +538,9 @@
         "dano_tipo": "arcano"
       },
       "descricao": "Éter destilado escapa por uma fissura que não estava ali.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_mare_ophidia",
@@ -506,7 +558,9 @@
         "valor": 3
       },
       "descricao": "Uma onda curta arrasta a formação para onde o recife quer.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_osso_costa",
@@ -524,7 +578,9 @@
         "valor": 5
       },
       "descricao": "Ossos da Costa Negra se fecham como uma segunda caixa torácica.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando um aliado frágil vai ser alvo e a proteção o cobre, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_eco_montanhas",
@@ -544,7 +600,9 @@
         "dano_tipo": "cortante"
       },
       "descricao": "A montanha devolve o golpe por um ângulo impossível.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo mais perigoso está exposto e a janela fecha logo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_poeira_pradaria",
@@ -562,7 +620,9 @@
         "valor": 2
       },
       "descricao": "Ruínas e capim escondem uma rota que só a criatura reconhece.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_sino_brekmar",
@@ -580,7 +640,9 @@
         "valor": 5
       },
       "descricao": "O som de Brekmar faz cada credor olhar para o mesmo devedor.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo escolhe a presa mais fraca e o provocador a rouba, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_sangrar_alcateia",
@@ -598,7 +660,9 @@
         "valor": 3
       },
       "descricao": "O primeiro corte vira cheiro e o cheiro vira ordem de caça.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_casca_reativa",
@@ -616,7 +680,9 @@
         "dano_base": 3
       },
       "descricao": "A carapaça estilhaça contra quem golpeia de perto.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_saliva_paralisante",
@@ -635,7 +701,9 @@
         "duracao": 1
       },
       "descricao": "A mordida entrega um segundo de paralisia absoluta.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo é mais forte que o grupo e a condição equilibra a balança, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_coro_colmeia",
@@ -653,7 +721,9 @@
         "valor": 4
       },
       "descricao": "Muitas vozes ajustam o ataque como se fossem uma mente.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o alvo é escorregadio e a mira precisa de ajuda, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_carregar_ruina",
@@ -671,7 +741,9 @@
         "valor": 3
       },
       "descricao": "A criatura atravessa cobertura e leva a presa junto.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando o inimigo ocupa o ponto ruim e precisa trocar de lugar, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_mimetismo_morto",
@@ -689,7 +761,9 @@
         "valor": 3
       },
       "descricao": "Imita matéria sem vida até o instante da emboscada.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando uma emboscada pede silêncio e a névoa serve ao plano, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_fenda_sonica",
@@ -709,7 +783,9 @@
         "dano_tipo": "impactante"
       },
       "descricao": "Um estalo abre dor por dentro da armadura.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando sobra Entropia e o golpe pode ser pago sem susto, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_roubar_calor",
@@ -727,7 +803,9 @@
         "valor": 4
       },
       "descricao": "O calor drenado endurece a criatura e deixa o alvo tremendo.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "bst_ordem_quebrar",
@@ -745,7 +823,9 @@
         "valor": 4
       },
       "descricao": "Um comando curto transforma o bando numa cunha viva.",
-      "oculta": true
+      "oculta": true,
+      "momento": "Melhor jogada quando um alvo precisa sair da linha para o aliado agir, no começo do conflito.",
+      "raridade": "comum"
     }
   ]
 }

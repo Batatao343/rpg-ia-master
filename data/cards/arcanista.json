@@ -25,7 +25,9 @@
       },
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a caldeira passou do ponto seguro e um alvo firme pede o raio inteiro.",
+      "raridade": "comum"
     },
     {
       "id": "arc_faisca",
@@ -48,7 +50,9 @@
       "descricao": "Um estalo menor, de graça, para manter a caldeira aquecida.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a Entropia está zerada e só resta manter a caldeira aquecida com algo barato.",
+      "raridade": "comum"
     },
     {
       "id": "arc_vazao",
@@ -68,7 +72,9 @@
       "descricao": "Sangra a pressão antes que o instrumento estoure.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a pressão ameaça estourar o instrumento e ainda falta uma cena de caminho.",
+      "raridade": "comum"
     },
     {
       "id": "arc_olho",
@@ -88,7 +94,9 @@
       "descricao": "Enxerga a corrente de éter que os outros só sentem como arrepio.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta ainda não começou e o éter denuncia quem espreita.",
+      "raridade": "comum"
     },
     {
       "id": "arc_empuxo",
@@ -110,7 +118,9 @@
       "descricao": "Uma onda muda de pressão joga o inimigo para longe.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um inimigo cola no conjurador e o espaço vale mais que o dano.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_manto",
@@ -132,7 +142,9 @@
       "descricao": "Condensa éter cinzento em névoa e some dentro dela.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo precisa sumir da vista e o éter ainda responde por uma cena.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_torrente",
@@ -158,7 +170,9 @@
       },
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um único alvo pesado domina a cena e uma descarga total o desmonta.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_cal_valvula",
@@ -181,7 +195,9 @@
       "gatilho": "ao_ser_atacado",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o golpe chega e a esquiva do instrumentista é a única saída barata.",
+      "raridade": "comum"
     },
     {
       "id": "arc_cal_feixe",
@@ -245,7 +261,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a medida está certa e o feixe precisa acertar o ponto exato.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_cal_regulagem",
@@ -265,7 +283,9 @@
       "descricao": "Margem de segurança em tudo — sobra fôlego para aparar o imprevisto.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta é longa e a regulagem fina se paga em cada rodada.",
+      "raridade": "comum"
     },
     {
       "id": "arc_des_mao_nua",
@@ -291,7 +311,9 @@
       },
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a vida aguenta o refluxo e o inimigo está perto demais para o cajado.",
+      "raridade": "comum"
     },
     {
       "id": "arc_des_sobrecarga",
@@ -359,7 +381,9 @@
       },
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a cena vira corrida entre cair rápido e derrubar o alvo primeiro.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_des_nervo",
@@ -379,7 +403,9 @@
       "descricao": "Sentir o éter na pele afia cada descarga — ao custo da própria segurança.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a Entropia já corre solta e cada golpe precisa pesar mais.",
+      "raridade": "comum"
     },
     {
       "id": "arc_imp_geringonca",
@@ -399,7 +425,9 @@
       "descricao": "Um cano velho e um prego viram condutor de éter.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a missão trava num mecanismo quebrado e sobra sucata na bolsa.",
+      "raridade": "comum"
     },
     {
       "id": "arc_imp_bomba",
@@ -469,7 +497,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando vários inimigos se amontoam e a sucata explode melhor que o éter limpo.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_imp_remendo",
@@ -489,7 +519,9 @@
       "descricao": "Sempre tem uma peça sobrando para a próxima virada.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a iniciativa decide a rodada e o improviso já está armado antes do gongo.",
+      "raridade": "comum"
     },
     {
       "id": "arc_cal_malha",
@@ -512,7 +544,9 @@
       "papel": "calibrar disparos do grupo",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado precisa acertar um alvo escorregadio e a malha corrige a mira.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_cal_zero",
@@ -536,7 +570,9 @@
       "papel": "paralisar ao fechar todas as variáveis",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um só inimigo decide a luta e o cálculo precisa pará-lo por duas rodadas.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_des_nervo_exposto",
@@ -559,7 +595,9 @@
       "papel": "vantagem em canalização sem foco",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o conjurador aceita o risco e abre brecha na defesa do alvo.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_des_horizonte",
@@ -583,7 +621,9 @@
       "papel": "descarga máxima com risco corporal",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo é definitivo e o isolante já não importa, só a descarga.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_imp_grampo",
@@ -606,7 +646,9 @@
       "papel": "fixar fenômeno instável em objeto",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo ataca em sequência e um grampo no alvo facilita os golpes seguintes.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_imp_maquina",
@@ -629,7 +671,9 @@
       "papel": "explosão direcional descartável",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a máquina só funciona uma vez e o inimigo precisa ir longe de vez.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_aterramento",
@@ -653,7 +697,9 @@
       "papel": "dissipar descarga recebida",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o golpe vem e o conjurador quer proteção barata sem soltar o cajado.",
+      "raridade": "comum"
     },
     {
       "id": "arc_refracao",
@@ -677,7 +723,9 @@
       "papel": "deslocar imagem sob mira",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia o golpe perigoso e a luz precisa desviá-lo.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_auscultar_eter",
@@ -700,7 +748,9 @@
       "papel": "detectar magia residual",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia pede ler a corrente de éter antes do primeiro passo.",
+      "raridade": "comum"
     },
     {
       "id": "arc_ponte_curta",
@@ -723,7 +773,9 @@
       "papel": "bypass arcano temporário",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando uma porta arcana trava a rota e um minuto de corrente basta.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_vetor_quebrado",
@@ -746,7 +798,9 @@
       "papel": "teleporte curto desalinhado",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo precisa mudar de lugar para abrir a linha do aliado.",
+      "raridade": "comum"
     },
     {
       "id": "arc_pulso_inverso",
@@ -769,7 +823,9 @@
       "papel": "remover condição por inversão",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando uma condição nociva prende o aliado e o pulso invertido a rasga.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_raio_cinza",
@@ -793,7 +849,9 @@
       "papel": "dano arcano em linha",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a distância permite dano grande e a Entropia aguenta a descarga.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_equacao_persistente",
@@ -814,7 +872,9 @@
       "papel": "iniciativa após estudar cena",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o combate começa e a iniciativa vale a primeira palavra.",
+      "raridade": "incomum"
     },
     {
       "id": "arc_constante_cinza",
@@ -835,7 +895,9 @@
       "papel": "percepção crescente de anomalias",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o éter cresce com o Estágio e a percepção fina decide o rumo.",
+      "raridade": "incomum"
     }
   ]
 }

@@ -21,7 +21,9 @@
       "descricao": "Fecha o corte sob fogo — mãos firmes onde as balas passam.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_torniquete",
@@ -43,7 +45,9 @@
       "descricao": "Corta a hemorragia antes que o corpo perceba a perda.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_estabilizar",
@@ -65,7 +69,9 @@
       "descricao": "Traz de volta do umbral quem o Abismo já reclamava.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_mao_firme",
@@ -85,7 +91,9 @@
       "descricao": "Não treme nem quando o mundo treme — cada ponto rende mais.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_triagem",
@@ -105,7 +113,9 @@
       "descricao": "Num olhar, sabe quem espera e quem não pode.",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_antitoxina",
@@ -126,7 +136,9 @@
       "descricao": "Neutraliza veneno, praga ou maldição com o composto certo.",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_ultima_hora",
@@ -148,7 +160,9 @@
       "descricao": "Gasta tudo para arrancar um aliado das mãos do fim.",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a rodada deu respiro e a Vitalidade perdida pode voltar, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_reflexo",
@@ -171,7 +185,9 @@
       "gatilho": "aliado_cai",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, e a janela de reação está aberta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_tri_intervencao",
@@ -227,7 +243,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_sangue_frio",
@@ -247,7 +265,9 @@
       "descricao": "O caos ao redor não entra nas mãos — cura mais quem está pior.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_bot_composto",
@@ -269,7 +289,9 @@
       "descricao": "Uma dose que faz o aliado bater mais forte por um tempo.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_bot_purga",
@@ -325,7 +347,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a Carga do Abismo de um aliado ameaça passar do limite, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_reagente",
@@ -345,7 +369,9 @@
       "descricao": "Conhece o antídoto de cada veneno de Valoria de cor.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_fer_talas",
@@ -367,7 +393,9 @@
       "descricao": "Amarra ferro à carne para que o aliado aguente mais um round.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_fer_protese",
@@ -423,7 +451,9 @@
       "central": true,
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_solda",
@@ -443,7 +473,9 @@
       "descricao": "O metal que enxerta protege tanto quanto sustenta.",
       "tier": 2,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_tri_corredor",
@@ -466,7 +498,9 @@
       "papel": "retirar ferido sob fogo",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_tri_segundo",
@@ -489,7 +523,9 @@
       "papel": "estabilizar múltiplos terminais",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_nevoa",
@@ -512,7 +548,9 @@
       "papel": "purga em zona",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_bot_panacea",
@@ -535,7 +573,9 @@
       "papel": "cura superior com reagentes raros",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_ancora",
@@ -558,7 +598,9 @@
       "papel": "fixar aliado contra deslocamento",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando um aliado frágil vai ser alvo e a proteção o cobre, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_fer_colosso",
@@ -581,7 +623,9 @@
       "papel": "amplificar força de aliado",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a luta é longa e o dano a mais se paga a cada golpe, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_placa_reflexa",
@@ -605,7 +649,9 @@
       "papel": "interpor tala contra crítico",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, e a janela de reação está aberta, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_dose_choque",
@@ -629,7 +675,9 @@
       "papel": "reativar aliado que hesita",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a ordem de ação decide a rodada e agir primeiro vale mais que golpear forte, e a janela de reação está aberta, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_autopsia_campo",
@@ -652,7 +700,9 @@
       "papel": "diagnosticar causa e fraqueza",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_hospital_improviso",
@@ -675,7 +725,9 @@
       "papel": "criar refúgio médico",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_corte_descompressao",
@@ -698,7 +750,9 @@
       "papel": "remover condição física aguda",
       "tier": 1,
       "level_req": 1,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo foi atingido por veneno ou medo e limpar a condição vale uma rodada, no começo do conflito.",
+      "raridade": "comum"
     },
     {
       "id": "med_marca_triagem",
@@ -721,7 +775,9 @@
       "papel": "priorizar cura e proteção",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_serra_ossea",
@@ -745,7 +801,9 @@
       "papel": "dano preciso contra armadura orgânica",
       "tier": 4,
       "level_req": 7,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
+      "raridade": "incomum"
     },
     {
       "id": "med_protocolo_retornar",
@@ -766,7 +824,9 @@
       "papel": "cura crescente após estabilizar",
       "tier": 3,
       "level_req": 4,
-      "apex": false
+      "apex": false,
+      "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a cura acompanha, e o efeito já está armado, com a luta em andamento.",
+      "raridade": "incomum"
     }
   ]
 }
