@@ -1,7 +1,7 @@
 # SPEC-333 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Opus, revisor independente) · **Data:** 2026-10-27 · **Commit revisado:** `426a9951`
+> **Veredito:** `APPROVED` (re-revisão de `a2e6b95c`; a 1ª revisão de `426a9951` foi `CHANGES_REQUIRED`)
+> **Revisor:** Sol (Opus, revisor independente) · **Data:** 2026-10-27 · **Commit revisado:** `426a9951` → re-revisão `a2e6b95c`
 
 ## Escopo
 
@@ -67,21 +67,29 @@ SPEC-331) não rende espólio por causa do guard `not hero_fled`. Confirmar se �
 
 ## Correções aplicadas
 
-—
+Re-revisão (Sol, 2026-10-27) do commit `a2e6b95c`, rebaseado em `main` `fda7b39a`. Todos os achados foram fechados:
+
+- **P1-1:** `register_scar_curse` e `on_long_rest` só agem com `mode() == "on"`. `accept`, `forget`, `sharpen` e `purge_curse` ficaram atrás de `@_requires_on`. Em `combat.py`, `expire_pending` só roda com `on`. Teste `test_shadow_mede_sem_tocar_ficha_nem_baralho`: a ficha fica igual.
+- **P2-1:** `piles["comprou"]` foi removido. `begin_round(..., drawn_out=)` passa a lista por argumento, então nenhuma chave nova vai para o save.
+- **P2-2:** `_set_prepared_from_deck` e `cards.set_deck` excluem `STATUS_TIPOS` do `keep`. Teste `test_purgar_tambem_limpa_prepared_cards`.
+- **P2-3:** `public_pending` só mostra o espólio com `on`.
+- **P2-4:** as mensagens de `card_status` vão para `last_mech_log` e são acrescentadas à narração.
+- **P2-5:** o Sussurro passou a ter `custo_entropia: 0` e `gera_carga: 1`. `use_card` soma Carga do Abismo do mesmo jeito que os outros writers (sem teto, como `card_piles`/`death_flow`). `gera_carga` só existe nessa Carta, então nenhuma outra muda. O nome mudou para "Sussurro Faminto" por colisão com um inimigo da SPEC-332; o id ficou igual.
+- **P2-6:** o hunk de `spec330_equivalence.py` saiu do diff, e a contagem voltou a `== 332`, exata.
+- **P2-7:** dois testes de replay. No legacy, o ouro sobe +15 uma vez só. No perfil com banco, `test_espolio_replay_with_same_action_id_pays_once` confirma que o recibo é idêntico e que a versão do save não muda.
+- **Pergunta do objetivo:** um objetivo `cumprido` rende espólio mesmo quando o herói sai da cena; fuga comum não rende.
+
+Observação P3 (não bloqueia): as mensagens de status são acrescentadas à `narrative` depois da prosa. Com o stream de tokens (SPEC-319) ligado, esse trecho só aparece no `state` final, não nos tokens. Só acontece com a flag `on`.
 
 ## Pendências
 
-- P1-1 é obrigatório antes do pouso. P2-1 a P2-3 são baratos e recomendados no mesmo ciclo. P2-4 e P2-7
-  podem virar follow-up do executor. P2-5 é decisão do dono/Astra. P2-6 se resolve no rebase depois de
-  SPEC-332.
 - Follow-ups da spec: jornadas e2e (EVAL_AUTHORING), smoke real §6, fonte de `essencia_de_cinza`,
   Dor Surda "pagar 1 Fôlego para descartar".
 
 ## Comandos rodados
 
 ```text
-bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_card_rewards.py tests/test_forge.py tests/test_wound_status_cards.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_error_envelope.py tests/test_abuse_policy.py tests/test_card_effects_grammar.py tests/test_card_lint.py → 201 passed
-bash scripts/dev/py.sh scripts/validate_content.py → 0 erros, 0 avisos
-web: npm run lint → exit 0 · npm run build → exit 0 · npm test → 229/229 pass
-script de sondagem (scratchpad) → reproduziu P1-1, P2-1 e P2-2
+1ª revisão (426a9951): pytest -n 2 escopo + guardas → 201 passed · validate_content → 0 erros · web lint/build/test → ok, 229/229
+re-revisão (a2e6b95c): pytest -n 2 test_card_rewards, test_forge, test_wound_status_cards, test_mutation_api_local, test_card_lint, test_card_effects_grammar, test_abuse_policy, test_error_envelope, test_log_event_registry, test_no_silent_except, test_card_piles, test_card_effects_review_spec330, test_deck_migration, test_enemy_decks → 293 passed, 6 skipped
+re-revisão: scripts/validate_content.py → 0 erros, 0 avisos
 ```
