@@ -1,7 +1,7 @@
 # SPEC-339 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `5c62e129`
+> **Veredito:** `APPROVED` (re-revisão; revisão inicial em `5c62e129` era `CHANGES_REQUIRED`)
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `5c62e129` → re-revisão em `8f738ba1`
 
 ## Escopo
 
@@ -44,22 +44,40 @@ O que está correto e foi conferido:
 
 ## Correções aplicadas
 
-Nenhuma ainda (revisão inicial).
+Todas no commit `8f738ba1` (`fix(combat): address SPEC-339 Sol review …`), re-verificadas com
+sondas e testes:
+
+- **P1-1 (fechado):** `same_side = aid in team and current_actor_id in team`, com `team = hero ∪ ally`.
+  Sonda: companheiro → jogador `protection +2` agora marca 1. Teste novo
+  `test_buff_de_companheiro_vale_quando_o_inimigo_ataca`.
+- **P1-2 (fechado):** `taunt_frozen_acted`. Com o presságio `on`, `taunt` em quem já agiu na rodada
+  não é marcado, porque o congelamento do fim da rodada o lê antes do tick. Sonda `on/enemy`: o Voto
+  Sussurrado sai no tick da rodada 2 e só o congelamento da rodada 2 o vê (antes, também o da 3).
+  `on/heroes` e `off` nas 2 ordens ficam iguais à revisão inicial. Teste
+  `test_presagio_on_taunt_d1_afeta_exatamente_uma_declaracao[ordem]` nas duas ordens via `run_round`.
+  Modo `shadow` segue o caminho `off` (`_tf_acted` devolve `None`), o que está correto porque a
+  decisão executada é a tardia.
+- **P2-1 (fechado):** `_renovada` só quando `cond.duration >= c.duration`. Sonda: o refresh d=1 sobre
+  d=3 não marca e a duração fica 3. Teste `test_refresh_mais_fraco_nao_ganha_marcador`.
+- **P2-2 (fechado):** `_run_round` faz `pop("_renovada")` de todos os atores no início da rodada
+  (depois da recusa, antes do tick de cena). Teste `test_renovada_nao_vaza_de_fora_de_combate`.
+- **P2-3 (fechado):** a asserção do R1 agora cobre todas as linhas, e o R9 passa por `run_round` nas
+  duas ordens.
+- **P2-4:** só registro (sem mudança de código, conforme a recomendação).
 
 ## Pendências
 
-- P1-1: corrigir nesta spec (executor), com teste.
-- P1-2: aceitável como follow-up **bloqueante para ligar `RPG_ENEMY_INTENT=on`**, se o coordenador
-  preferir não segurar o bugfix do caminho `off`. Nesse caso, registrar na spec (§5.1) e na 329/334.
-- P2-1/P2-2: recomendados nesta spec (correções de poucas linhas).
-- Bandeiras `dominante` novas (`cor1_alm_culpa_antiga`, `san_exp_espetaculo`) e Sangromante acima de 75 %:
-  com o dono/336 (R16), como está no relatório.
+- Nenhuma da revisão. Fora dela: as bandeiras `dominante` novas (`cor1_alm_culpa_antiga`,
+  `san_exp_espetaculo`) e o Sangromante acima de 75 % ficam com o dono/336 (R16), como diz o relatório.
+- Smoke de API §6.2–6.4 e a suíte completa ficam com o coordenador no pouso.
 
 ## Comandos rodados
 
 ```text
 git diff main...spec-339 --stat → 14 arquivos; tests/fixtures/ sem diff (golden byte-idêntico)
-bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -p no:warnings -n 2 tests/test_spec339_duracao_condicoes.py tests/test_card_lint.py tests/test_card_sim.py tests/test_card_effects_grammar.py tests/test_conflito_orquestrador.py tests/test_mecanica_orfa.py tests/test_keywords_valoria.py tests/test_enemy_intent.py tests/test_eval_governance.py tests/test_ci_eval_gates.py tests/test_card_acervo_reparo.py → rc=0 (~440 passed)
-sonda (scratchpad) run_round bas_dev_voto + aliado, intent off/on × heroes/enemy → off ok nas 2 ordens; on/enemy: taunt d=1 presente no congelamento das rodadas 2 e 3 (P1-2)
-sonda _mark_fresh_conditions companheiro→jogador protection+2 → 0 marcadas (P1-1); refresh taunt d=1 sobre d=3 → marcada (P2-1)
+pytest -n 2 (11 arquivos do escopo: spec339, card_lint, card_sim, card_effects_grammar, conflito_orquestrador, mecanica_orfa, keywords_valoria, enemy_intent, eval_governance, ci_eval_gates, card_acervo_reparo) em 5c62e129 → rc=0 (~440)
+sondas (scratchpad) em 5c62e129 → P1-1 0 marcadas; P1-2 taunt nos congelamentos 2 e 3 (on/enemy); P2-1 refresh fraco marcado
+re-revisão em 8f738ba1: git diff 5c62e129..8f738ba1 → combat_mechanics, conflict_orchestrator, testes, spec
+mesmas sondas em 8f738ba1 → aliado→jogador 1 marcada; refresh fraco 0 e duração 3; on/enemy taunt só no congelamento da rodada 2; off inalterado
+mesmo pytest -n 2 em 8f738ba1 → rc=0; git diff main...spec-339 -- tests/fixtures/ → vazio
 ```
