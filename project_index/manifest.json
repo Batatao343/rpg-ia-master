@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "ea3ba71b48149f2501d2c92af7603b99846ca8d4",
+  "commit_sha": "1a7f10d7197ac410351e2d89bb95ae7d03fa0ac9",
   "edge_counts": {
-    "calls": 30316,
-    "contains": 1012,
-    "defines": 15017,
-    "imports": 2452,
-    "likely_test_for": 1719,
+    "calls": 30349,
+    "contains": 1015,
+    "defines": 15064,
+    "imports": 2459,
+    "likely_test_for": 1726,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:298037439d5a9a05ae53cd594c45de32f5a26e97354052653ca1e9231e99fe94",
+  "graph_hash": "sha256:41a56b6c52fe40f4019836094e879e6b46d1f21a4a721feb4fad86a5122ef588",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -469,6 +469,7 @@
     "state.py",
     "tests/conftest.py",
     "tests/fakes/__init__.py",
+    "tests/fakes/api_fuzz.py",
     "tests/fakes/fake_image_generator.py",
     "tests/fakes/local_auth.py",
     "tests/fakes/local_image_finance.py",
@@ -515,6 +516,8 @@
     "tests/test_ambient_consumers.py",
     "tests/test_api_access_log.py",
     "tests/test_api_attempt_telemetry.py",
+    "tests/test_api_fuzz_harness.py",
+    "tests/test_api_fuzz_schemathesis.py",
     "tests/test_api_jogadas.py",
     "tests/test_api_npc_knowledge_private.py",
     "tests/test_archived_state_persistence.py",
@@ -1237,14 +1240,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 966,
+    "class": 967,
     "endpoint": 64,
-    "file": 1183,
+    "file": 1186,
     "function": 4736,
     "method": 841,
-    "module": 1012,
-    "test": 8473
+    "module": 1015,
+    "test": 8519
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:a617f7c695d2bc7c3e3f7cd94b5e069cdf6deb8ae2106327a39c85aaa928204d"
+  "source_tree_hash": "sha256:5c39b066c54440ea6a926ffb1dd3199fc054f6cc134ee4497b1334d580f4fb4f"
 }
