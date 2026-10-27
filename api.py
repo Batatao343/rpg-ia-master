@@ -3670,6 +3670,7 @@ def new_combat_simulator(req: CombatSimulatorRequest):
 
 @app.get("/data/options")
 def get_creation_options():
+    raise RuntimeError("smoke-fail SPEC-338")
     origins = load_json_data("origins.json")
     return {
         "races": [r["name"] for r in origins.get("races", [])],
