@@ -61,7 +61,7 @@ O mapeamento achou três bugs pequenos (nenhum IDOR entre tenants). Esta spec os
   - Com `Origin: http://localhost:5173` (default): `Access-Control-Allow-Origin` igual à origem, `Access-Control-Allow-Credentials: true` e `Vary` contendo `Origin`.
   - Com `Origin: https://evil.example`: nenhum `Access-Control-Allow-Origin`.
   - Nunca sai `Access-Control-Allow-Origin: *`.
-- **R9 — preflight.** `OPTIONS /health` com origem listada e `Access-Control-Request-Method: POST` responde 200 com o método em `Access-Control-Allow-Methods`. Respondem 400 sem `Access-Control-Allow-Origin`:
+- **R9 — preflight.** `OPTIONS /health` com origem listada e `Access-Control-Request-Method: POST` responde 200 com o método em `Access-Control-Allow-Methods`. Respondem 400 (sem `Access-Control-Allow-Origin` só no caso de origem não listada; para método/header fora da allowlist o Starlette ecoa o ACAO da origem listada no 400, então o teste confere o 400 e `Disallowed CORS …` no corpo):
   - origem não listada;
   - método `PUT`;
   - header pedido fora da allowlist (`x-evil`).
