@@ -75,7 +75,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: 327–336 sessão `-69`; suíte completa 1 por vez (avisar). 337–338 `done` (segurança HTTP; fuzz `api-fuzz`).
-- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329–334, 335 lotes 0–4, 336. Voz aprovada em bloco pelo dono (27/10, sem leitura). Falta: 335 lotes 5–6, e2e/smoke real antes de `on`.
+- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329–334, 335 lotes 0–5, 336. Voz aprovada em bloco pelo dono (27/10, sem leitura). Falta: 335 lote 6, 339 (bug tick de controle, `draft` aguardando dono), e2e/smoke real antes de `on`.
 
 
 ## Como rodar
