@@ -1,0 +1,119 @@
+{
+  "_meta": "SPEC-332: baralho da facção cultistas_destilacao (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_cultistas_destilacao_fumo_de_destilacao",
+      "name": "Fumo de Destilação",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "O vapor do alambique entra pelo nariz e fica.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultistas_destilacao_vapor_entorpecente",
+      "name": "Vapor Entorpecente",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "Os braços pesam como se fossem de chumbo derretido.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultistas_destilacao_fumaca_densa",
+      "name": "Fumaça Densa",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "A nuvem cobre o beco, e só os cultistas sabem a saída.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultistas_destilacao_cheiro_de_alambique",
+      "name": "Cheiro de Alambique",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "O fedor doce gruda no alvo e guia os outros até ele.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultistas_destilacao_faca_de_cobre",
+      "name": "Faca de Cobre",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Uma lâmina fina, esverdeada, feita para sangrar devagar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultistas_destilacao_veu_do_destilado",
+      "name": "Véu do Destilado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "cultistas_destilacao",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Uma película de vapor amortece o que vier.",
+      "oculta": true
+    }
+  ]
+}

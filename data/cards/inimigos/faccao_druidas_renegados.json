@@ -1,0 +1,119 @@
+{
+  "_meta": "SPEC-332: baralho da facção druidas_renegados (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_druidas_renegados_seiva_do_ciclo",
+      "name": "Seiva do Ciclo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "cura",
+        "valor": 3
+      },
+      "descricao": "A seiva fecha a ferida como a estação fecha o ano.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_druidas_renegados_raizes_do_cinzento",
+      "name": "Raízes do Cinzento",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "A terra cinza se ergue em fios e segura os pés.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_druidas_renegados_casca_viva",
+      "name": "Casca Viva",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "A pele endurece como tronco velho, rugosa e paciente.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_druidas_renegados_ferrao_de_espinheiro",
+      "name": "Ferrão de Espinheiro",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Os espinhos crescem no punho e cravam sem fazer barulho.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_druidas_renegados_chamado_da_mata_cinza",
+      "name": "Chamado da Mata Cinza",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A mata cinza se mexe inteira contra quem a feriu.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_druidas_renegados_esporos_mansos",
+      "name": "Esporos Mansos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "druidas_renegados",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "Um pó suave desce, e os músculos esquecem a pressa.",
+      "oculta": true
+    }
+  ]
+}

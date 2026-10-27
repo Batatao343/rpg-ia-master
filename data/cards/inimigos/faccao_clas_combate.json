@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-332: baralho da facção clas_combate (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_clas_combate_danca_de_duelo",
+      "name": "Dança de Duelo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "Os pés riscam o chão, e a lâmina já sabe o resto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_combate_golpe_do_campeao",
+      "name": "Golpe do Campeão",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Um golpe aprendido em cem arenas, sem enfeite.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_combate_estocada_de_arena",
+      "name": "Estocada de Arena",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Reta, curta e limpa, para a plateia ver.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_combate_desafio_aceito",
+      "name": "Desafio Aceito",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "O dedo aponta, e o resto da arena entende quem é o alvo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_combate_chamado_ao_duelo",
+      "name": "Chamado ao Duelo",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 3
+      },
+      "descricao": "Joga a luva e exige que o outro responda de frente.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_combate_honra_ferida",
+      "name": "Honra Ferida",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "clas_combate",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desmoralizado",
+        "duracao": 2
+      },
+      "descricao": "Uma palavra bem escolhida corta mais fundo que a lâmina.",
+      "oculta": true
+    }
+  ]
+}

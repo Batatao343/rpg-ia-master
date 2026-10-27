@@ -200,3 +200,51 @@ def test_signature_warning_goes_to_log_when_intent_is_off():
             "logs"
         ]
     assert texts.count("Valerius range os dentes.") == 1  # fim da rodada 2 avisa a 3
+
+
+# --- Lote 2: fases autoradas dos 12 chefes (`_decks.json`) --------------------------------
+def test_all_twelve_bosses_have_two_authored_phases_with_valid_cards():
+    from agents.bestiary import load_bestiary
+    from services import cards
+    from services import enemy_decks as edk
+
+    bosses = [b for b, e in load_bestiary().items() if e.get("categoria") == "chefe"]
+    assert len(bosses) == 12
+    fases = edk._meta()["fases"]
+    for bid in bosses:
+        fs = fases[bid]
+        assert [f["ate_vitalidade_pct"] for f in fs] == [60, 30]
+        for f in fs:
+            assert f["padrao"] and f["narracao"]
+            for c in f["baralho_extra"]:
+                assert cards.get_card(c), (bid, c)
+        sig = fs[1]["assinatura"]
+        assert sig["carta"] in fs[1]["baralho_extra"] and sig["a_cada_n"] >= 2
+        assert "{nome}" in sig["telegrafo"]
+
+
+def test_authored_boss_phase_applies_from_decks_json_only_when_on(monkeypatch):
+    from services import enemy_decks as edk
+
+    boss = {
+        "id": "enemy_boss_valerius_1",
+        "archetype_id": "enemy_boss_valerius",
+        "name": "Lorde",
+        "cartas": ["bst_golpe_mestre"],
+        "max_vitalidade": 20,
+        "vitalidade": 10,
+    }
+    for flag in ("off", "shadow"):
+        monkeypatch.setenv("RPG_ENEMY_DECKS", flag)
+        edk.reload()
+        b = dict(boss)
+        out: dict = {}
+        assert not edk.apply_phases({b["id"]: b}, {"enemy": [b["id"]]}, out)
+        assert "fase_idx" not in b
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    edk.reload()
+    b = dict(boss)
+    out = {}
+    assert edk.apply_phases({b["id"]: b}, {"enemy": [b["id"]]}, out, rnd=2)
+    assert b["fase_idx"] == 1 and "inf_predador_apice_pele_de_veterano" in b["cartas"]
+    assert out["logs"] and "Lorde" in out["logs"][0] or out["logs"]

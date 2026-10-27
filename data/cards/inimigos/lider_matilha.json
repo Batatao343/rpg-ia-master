@@ -14,7 +14,7 @@
       "virtude_permitida": [],
       "efeito": {
         "kind": "buff_acerto",
-        "valor": 2
+        "valor": 1
       },
       "descricao": "O uivo chama os seus e aperta a mira de todos.",
       "oculta": true
@@ -32,8 +32,8 @@
       "virtude_permitida": [],
       "efeito": {
         "kind": "dano",
-        "categoria_arma": "pesada",
-        "dano_base": 8,
+        "categoria_arma": "marcial",
+        "dano_base": 5,
         "dano_tipo": "perfurante"
       },
       "descricao": "O alfa quebra osso antes de a matilha chegar.",

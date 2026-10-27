@@ -379,3 +379,102 @@ def test_control_profile_keeps_tactic_pattern_does_not_replace(monkeypatch):
     scene, actors, sides = _world(e)
     d = _decl(scene, actors, sides, "lobo_1", 1)
     assert not (d.acao.kind == "card" and d.acao.card_id == "bst_bote_certeiro")
+
+
+# --- Lote 2: facções (R2), curadoria do bestiário e F-1 --------------------------------
+FACCOES = (
+    "legiao_ferro",
+    "mao_sombria",
+    "filhos_chama_azul",
+    "cultistas_destilacao",
+    "renegados_ermo",
+    "osshari_brekmar",
+    "druidas_renegados",
+    "bandos_orc_saidas_baixas",
+    "clas_combate",
+    "grupos_piratas_rivais",
+)
+
+
+def _fold_name(s: str) -> str:
+    return edk._fold(s)
+
+
+def test_ten_factions_with_6_to_8_cards_and_an_exclusive_card_each():
+    pools = edk._pools()
+    assert set(FACCOES) <= set(pools["faccoes"])
+    for fac in FACCOES:
+        ids = pools["faccoes"][fac]
+        assert 6 <= len(ids) <= 8, fac
+        outras = {c for k, v in pools["familias"].items() for c in v} | {
+            c for k, v in pools["faccoes"].items() if k != fac for c in v
+        }
+        assert set(ids) - outras, f"{fac} sem carta exclusiva"
+        assert len(ids) == len(set(ids))
+        for cid in ids:
+            card = cards.get_card(cid)
+            assert card and card.get("classe") == "Inimigo" and card.get("subclasse") == fac
+
+
+def test_faction_cards_do_not_collide_with_player_card_names():
+    jogador = {
+        _fold_name(c.get("name"))
+        for c in cards._load_cards().values()
+        if c.get("classe") != "Inimigo" and not str(c.get("id", "")).startswith("bst_")
+    }
+    for fac in FACCOES:
+        for cid in edk._pools()["faccoes"][fac]:
+            assert _fold_name(cards.get_card(cid)["name"]) not in jogador, cid
+
+
+def test_bestiary_factions_get_faction_cards_when_on(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    from agents.bestiary import load_bestiary
+
+    ganhou = set()
+    for bid, entry in load_bestiary().items():
+        fac = edk._fold(entry.get("faction"))
+        if fac not in FACCOES:
+            continue
+        pool = set(edk._pools()["faccoes"][fac])
+        for seed in range(12):
+            if pool & set(edk.build_enemy_deck({**entry, "id": bid}, seed)):
+                ganhou.add(fac)
+                break
+    assert len(ganhou) >= 9
+
+
+def test_legacy_shared_card_is_curated_only_with_on(monkeypatch):
+    from agents.bestiary import load_bestiary
+
+    shared = "bst_bote_certeiro"
+    for seed in range(4):
+        use = collections.Counter()
+        for bid, entry in load_bestiary().items():
+            deck = edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
+            use.update(deck)
+        assert use[shared] <= 15, (seed, use[shared])
+    # off: o bestiário e a ficha seguem intactos
+    e = _enemy(cartas=[shared])
+    assert e["cartas"] == [shared, "bst_defesa_instintiva"]
+
+
+def test_curated_creature_keeps_an_attack(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    for i in range(1, 30):
+        deck = edk.build_enemy_deck(
+            {"id": f"lobo_{i}", "arquetipo": "predador", "cartas": ["bst_bote_certeiro"]}, 0
+        )
+        kinds = {(cards.get_card(c) or {}).get("efeito", {}).get("kind") for c in deck}
+        assert "dano" in kinds, deck
+
+
+def test_f1_inf_cards_in_bestiary_do_not_skip_the_deck(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    own = ["bst_bote_certeiro", "inf_predador_rasgo_aberto"]
+    e = _enemy(cartas=list(own))
+    assert e.get("_deck332") and len(e["cartas"]) >= len(own) + 3
+    # reconstruída sem marcador, com a ficha já montada: não soma de novo
+    stripped = json.loads(json.dumps(e))
+    stripped.pop("_deck332")
+    assert orch.ensure_combat_sheet(stripped)["cartas"] == e["cartas"]

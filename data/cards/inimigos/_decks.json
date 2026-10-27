@@ -1,5 +1,5 @@
 {
-  "_meta": "SPEC-332: padrão de intenção e assinatura por família. telegrafo = frase do Presságio 1 rodada antes. Facções: próximo lote.",
+  "_meta": "SPEC-332: padrao de intencao e assinatura por familia. telegrafo = frase do Presságio 1 rodada antes. fases = chefes por id do bestiario (so com RPG_ENEMY_DECKS=on). legadas_compartilhadas = cartas bst_ usadas por >15 criaturas (curadoria so em on). Facções: faccao_<id>.json.",
   "familias": {
     "predador": {
       "padrao": [
@@ -215,5 +215,394 @@
       ]
     }
   },
-  "faccoes": {}
+  "faccoes": {},
+  "legadas_compartilhadas": [
+    "bst_bote_certeiro"
+  ],
+  "fases": {
+    "enemy_boss_valerius": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_pele_de_veterano"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "O Lorde desembainha por inteiro: a guarda dele fecha, e a paciência acaba."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_decreto_de_ferro"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_decreto_de_ferro",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} ergue o decreto e a guarda inteira prende o fôlego."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "enemy_boss_vibora": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_marca_do_territorio"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "A Víbora some e reaparece de lado: agora ela escolhe o alvo, não o contrato."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_mordida_da_vibora"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_mordida_da_vibora",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} se enrola sobre si mesma, a língua provando o ar."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "enemy_boss_general_escorpiao": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_ferida_que_nao_fecha"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "O General arranca a armadura quebrada; o que sobra é só o ferrão."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_ferrao_do_general"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_ferrao_do_general",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} arqueia a cauda sobre as costas e mira."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "enemy_boss_arauto_nevoa": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_olhar_de_fome"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "A névoa engrossa em volta do Arauto, e as vozes dentro dela ficam mais próximas."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_mortalha_de_nevoa"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_mortalha_de_nevoa",
+          "a_cada_n": 2,
+          "telegrafo": "A névoa em volta de {nome} para de se mexer, como quem escuta."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "enemy_gigante_gelo_norte": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_pele_de_veterano"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "Trincas azuis correm pelo Titã de Gelo, e o frio que sai delas queima."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_geada_que_prende"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_geada_que_prende",
+          "a_cada_n": 2,
+          "telegrafo": "O ar em volta de {nome} racha de frio, estalo por estalo."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "enemy_aranha_de_cristal": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_rugido_que_dobra"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "Rachaduras luminosas abrem na carapaça: a Aranha fica frágil e mais rápida."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_fio_de_cristal"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_fio_de_cristal",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} vibra um fio de cristal entre as patas dianteiras."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_urso_tita": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_ferida_que_nao_fecha"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "O Urso-Titã sangra e não recua: cada ferida o deixa maior que antes."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_rugido_do_tita"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_rugido_do_tita",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} se ergue nas patas de trás, o peito cheio de ar."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_o_que_come_nas_praias": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_olhar_de_fome"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "O Que Come nas Praias recua para a água e volta com a maré inteira atrás dele."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_mare_que_engole"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_mare_que_engole",
+          "a_cada_n": 2,
+          "telegrafo": "A areia em volta de {nome} afunda em círculo, devagar."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_locomotiva_penitente": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_pele_de_veterano"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "A caldeira da Locomotiva passa do vermelho; o ferro range pedindo perdão."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_vapor_penitente"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_vapor_penitente",
+          "a_cada_n": 2,
+          "telegrafo": "A caldeira de {nome} apita, um som longo e rouco."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_mae_micelio": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_conjurador_escudo_de_cinzas"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "A Mãe do Micélio se abre ao meio: o que sai de dentro é mais velho que ela."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_esporos_da_mae"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_esporos_da_mae",
+          "a_cada_n": 2,
+          "telegrafo": "O chão em volta de {nome} tremula, coberto de fios brancos."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_leviata_caldeira": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_predador_apice_marca_do_territorio"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "O Leviatã emerge pela metade e a água da caldeira ferve em volta dele."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_caldeira_azul"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_caldeira_azul",
+          "a_cada_n": 2,
+          "telegrafo": "A água em volta de {nome} borbulha, azul e quente."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ],
+    "mon_eclipse_caminhante": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "inf_conjurador_grilhoes_de_sombra"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "A luz recua do Eclipse Caminhante, e o que ele deixa no chão não é sombra comum."
+      },
+      {
+        "ate_vitalidade_pct": 30,
+        "baralho_extra": [
+          "inf_chefe_sombra_do_eclipse"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque",
+          "enfraquecer"
+        ],
+        "assinatura": {
+          "carta": "inf_chefe_sombra_do_eclipse",
+          "a_cada_n": 2,
+          "telegrafo": "A sombra de {nome} se alonga contra a luz, esticada demais."
+        },
+        "narracao": "{nome} perde a cautela: a partir daqui cada golpe vem para matar."
+      }
+    ]
+  }
 }

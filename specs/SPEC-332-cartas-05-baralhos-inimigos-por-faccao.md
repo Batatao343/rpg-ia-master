@@ -1,6 +1,6 @@
 # SPEC-332 — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
 
-> **Status:** `in-progress` (Entrega 1 — motor + 11 famílias — pousada `off` em 27/10 após re-revisão Sol APPROVED; próximo lote: 10 facções, fases de chefe, curadoria do bestiário, F-1, calibrar lider_matilha/bruto)
+> **Status:** `in-progress` (Entrega 1 — motor + 11 famílias — pousada `off` em 27/10; Entrega 2 — 10 facções, fases dos 12 chefes, curadoria de `bst_bote_certeiro`, F-1, calibragem — na branch `spec-332`, aguardando revisão; falta só o front da SPEC-334 antes de `on`)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-329 (presságio), SPEC-330 (gramática), SPEC-283 (IA usa cartas de suporte)
@@ -52,8 +52,8 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 3. Conteúdo em 3 lotes (famílias → facções → chefes), cada lote validado + arena por família (taxa de vitória do jogador por família entre 45–85 % no nível-alvo).
 
 ## 5. Critérios de aceite
-- [~] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim; legadas: ver desvio)
-- [~] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (famílias: sim; facções: próximo lote)
+- [x] Nenhuma carta de inimigo usada por > 15 criaturas (novas: sim; `bst_bote_certeiro` (21) curada só em `on`, seeds 0-3 testadas)
+- [x] Cada família e facção com ≥ 1 carta que **nenhuma outra** tem (famílias e 10 facções; teste `test_ten_factions_...`)
 - [~] Arena por família dentro da faixa (medida; 2 células-família fora, `off` já fora em vários nichos); pytest do escopo verde
 
 ### Entrega 1 (27/10, branch spec-332) e desvios
@@ -88,6 +88,28 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
 - **Follow-up P2-6:** `known_pattern` usa `revealed_cards` (por arquétipo, acende ao 1º uso de carta), não um contador
   de conflitos por família; ligar ao `bestiary_knowledge` na SPEC-334. **Follow-up P2-7:** `prenuncio`/`costuma` ainda
   não são renderizados em `web/` — front na SPEC-334 antes de `on`.
+
+### Entrega 2 (27/10, branch spec-332) e desvios
+
+- **R2:** 10 `data/cards/inimigos/faccao_<id>.json` x 6 cartas (`inf_fac_<id>_*`, subclasse = facção): legiao_ferro,
+  mao_sombria, filhos_chama_azul, cultistas_destilacao, renegados_ermo, osshari_brekmar, druidas_renegados,
+  bandos_orc_saidas_baixas, clas_combate, grupos_piratas_rivais (as 4 restantes do bestiário — tribos_devoradores_sol,
+  bandos_nomades, colmeia_hospedeiros, mercadores_escravos_pradaria — ficam para a esteira da 336). Toda carta é
+  exclusiva da facção; nomes conferidos contra as cartas de jogador.
+- **Desvio R2:** só usam o vocabulário/efeitos já existentes (sem Fardos no baralho do jogador, sem Vigília
+  compartilhada, sem Carta de Cena): "Fumo de Destilação" é um DoT, "Muralha de Escudos" uma proteção. Mecânicas novas
+  entram quando a 330/331 as expuserem ao inimigo.
+- **R5 fases:** `fases` dos 12 chefes em `_decks.json` (por id do bestiário/`archetype_id`; o `bestiary.json` não muda,
+  logo `off` idêntico): fase 60 % (carta de apoio + padrão) e 30 % (carta-assinatura própria `inf_chefe_*` em
+  `chefes.json`, `a_cada_n: 2`, telegrafada). `chefes.json` não é pool de família (`_pools` só lê `FAMILIAS`).
+- **Curadoria:** `legadas_compartilhadas: [bst_bote_certeiro]` — em `on`, metade das criaturas (hash id+seed) troca a
+  carta por um ataque da família (`_curate_shared`). `bst_toque_gelido` (15) já cumpre "não mais que 15".
+- **F-1:** a heurística de "ficha já montada" agora exige ≥ 3 cartas dos pools (o marcador `_deck332` continua decidindo).
+- **Arena (amostra maior, 200 combates/célula):** [resultados](../docs/spec332/arena-results-2026-10-27.md), com o delta
+  `on` - `off` por célula. `bruto` estava OK (o -18 era ruído); `lider_matilha` calibrada (mordida do alfa 8 -> 5,
+  uivo 2 -> 1): L3 +3,5 / L5 -7 pp. Alvo usado: 45-85 % (decisão do coordenador); nichos fora da faixa já estavam fora no `off`.
+- **Pendente:** front de `prenuncio`/`costuma` (SPEC-334); conteúdo das 4 facções restantes e chefes nomeados (336);
+  decisão do dono sobre o alvo da arena (nichos fracos: morto_vivo, guardiao, apex L5).
 
 ## 6. Smoke real
 1. Lutar contra a Legião de Ferro: presságio de assinatura 1 rodada antes. 2. Segundo encontro com a família: padrão visível. 3. Chefe muda de fase com narração.

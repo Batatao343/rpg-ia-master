@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-332: baralho da facção grupos_piratas_rivais (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_grupos_piratas_rivais_sabre_de_abordagem",
+      "name": "Sabre de Abordagem",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "O sabre desce do mastro, junto com o resto do bando.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_grupos_piratas_rivais_faca_de_bota",
+      "name": "Faca de Bota",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Sai da bota em silêncio e entra onde dói.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_grupos_piratas_rivais_lancar_ao_conves",
+      "name": "Lançar ao Convés",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "Um ombro no peito, e o alvo cai de onde estava.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_grupos_piratas_rivais_areia_nos_olhos",
+      "name": "Areia nos Olhos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "Um punhado do chão do cais, jogado com carinho.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_grupos_piratas_rivais_salto_de_corda",
+      "name": "Salto de Corda",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Balança de uma ponta a outra e aparece onde ninguém espera.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_grupos_piratas_rivais_brado_de_abordagem",
+      "name": "Brado de Abordagem",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "grupos_piratas_rivais",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 1
+      },
+      "descricao": "O grito de abordar um navio acerta a mira de todos.",
+      "oculta": true
+    }
+  ]
+}

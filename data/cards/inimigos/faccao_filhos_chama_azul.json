@@ -1,0 +1,120 @@
+{
+  "_meta": "SPEC-332: baralho da facção filhos_chama_azul (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_filhos_chama_azul_fervor_azul",
+      "name": "Fervor Azul",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "A dor acende o fogo, e o fogo pede mais dor.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_filhos_chama_azul_chama_que_gruda",
+      "name": "Chama que Gruda",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "A chama azul não apaga com água, só com tempo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_filhos_chama_azul_sermao_da_cinza",
+      "name": "Sermão da Cinza",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "A voz fala de um fim bonito, e o alvo acredita.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_filhos_chama_azul_selo_da_chama",
+      "name": "Selo da Chama",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Um traço azul na testa avisa a todos quem deve queimar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_filhos_chama_azul_martir_ardente",
+      "name": "Mártir Ardente",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "arcano"
+      },
+      "descricao": "Avança sem guardar nada, como quem já se ofereceu.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_filhos_chama_azul_tocha_do_devoto",
+      "name": "Tocha do Devoto",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "filhos_chama_azul",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "A tocha vira arma, e o devoto nem sente a queimadura.",
+      "oculta": true
+    }
+  ]
+}

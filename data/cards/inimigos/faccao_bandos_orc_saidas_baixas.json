@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-332: baralho da facção bandos_orc_saidas_baixas (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_urro_de_guerra",
+      "name": "Urro de Guerra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "O urro rola pelo túnel e acorda a fúria de todos.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_machadada_orc",
+      "name": "Machadada Orc",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 9,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "O machado sobe devagar e desce como uma sentença.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_cabecada_de_chefe",
+      "name": "Cabeçada de Chefe",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A testa dura vem antes do aviso.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_berro_gutural",
+      "name": "Berro Gutural",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Um som de rocha rachando, vindo do fundo do peito.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_escudo_de_tabua",
+      "name": "Escudo de Tábua",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Uma tábua de caixote serve, quando a mão é forte.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_orc_saidas_baixas_desafio_de_cla",
+      "name": "Desafio de Clã",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "bandos_orc_saidas_baixas",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 2
+      },
+      "descricao": "Bate no peito e cospe no chão, chamando o primeiro valente.",
+      "oculta": true
+    }
+  ]
+}

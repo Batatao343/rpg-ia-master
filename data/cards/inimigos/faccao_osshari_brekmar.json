@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-332: baralho da facção osshari_brekmar (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_osshari_brekmar_arrastar_ao_alagado",
+      "name": "Arrastar ao Alagado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "Um puxão, e o alvo pisa onde a água já engoliu a terra.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_osshari_brekmar_mare_traicoeira",
+      "name": "Maré Traiçoeira",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 2
+      },
+      "descricao": "A onda chega por trás e leva os pés consigo.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_osshari_brekmar_lama_ate_o_joelho",
+      "name": "Lama até o Joelho",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "O barro de Brekmar não solta quem pisa nele.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_osshari_brekmar_arpao_de_mare",
+      "name": "Arpão de Maré",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O ferro sai com a corda atrás e só volta carregado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_osshari_brekmar_gancho_de_cais",
+      "name": "Gancho de Cais",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Um gancho de cais, gasto de sal, fura com a mesma vontade.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_osshari_brekmar_casco_de_alga",
+      "name": "Casco de Alga",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "osshari_brekmar",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "As algas pesadas dão um peso a mais ao corpo molhado.",
+      "oculta": true
+    }
+  ]
+}

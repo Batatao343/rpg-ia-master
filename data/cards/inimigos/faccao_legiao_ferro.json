@@ -1,0 +1,117 @@
+{
+  "_meta": "SPEC-332: baralho da facção legiao_ferro (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_legiao_ferro_muralha_de_escudos",
+      "name": "Muralha de Escudos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "descricao": "Os escudos se travam lado a lado, e a linha vira parede.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_legiao_ferro_escudada_regulamentar",
+      "name": "Escudada Regulamentar",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A borda do escudo bate primeiro, como manda o manual.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_legiao_ferro_golpe_de_esquadrao",
+      "name": "Golpe de Esquadrão",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Três espadas descem no mesmo compasso, sem pressa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_legiao_ferro_formacao_cerrada",
+      "name": "Formação Cerrada",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "taunt",
+        "valor": 3
+      },
+      "descricao": "Fecham a fileira e obrigam o inimigo a bater no ferro.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_legiao_ferro_estandarte_fincado",
+      "name": "Estandarte Fincado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "O estandarte cai no chão, e ninguém ali pensa em recuar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_legiao_ferro_voz_de_sargento",
+      "name": "Voz de Sargento",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "legiao_ferro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 1
+      },
+      "descricao": "Uma ordem de caserna, e cada lâmina acha o seu caminho.",
+      "oculta": true
+    }
+  ]
+}

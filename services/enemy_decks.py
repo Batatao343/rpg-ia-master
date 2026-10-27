@@ -23,6 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import unicodedata
 from pathlib import Path
 from typing import Any
@@ -118,7 +119,7 @@ def _pools() -> dict[str, dict[str, list[str]]]:
                 stem = path.stem
                 if stem.startswith("faccao_"):
                     facs[stem[len("faccao_") :]] = ids
-                else:
+                elif stem in FAMILIAS:  # `chefes.json` (cartas de fase) não é pool de família
                     fams[stem] = ids
         _pools_cache = {"familias": fams, "faccoes": facs}
     return _pools_cache
@@ -177,6 +178,39 @@ def family_signature(creature: dict, seed: int | str = 0) -> dict | None:
     return sigs[_h(creature.get("id"), seed, "sig") % len(sigs)]
 
 
+def _curate_shared(
+    creature: dict, deck: list[str], fam: str | None, pools: dict, seed: int | str
+) -> list[str]:
+    """Curadoria do bestiário (critério 1), só com ``on``: cartas legadas compartilhadas por
+    dezenas de criaturas (``legadas_compartilhadas`` em ``_decks.json``) ficam em metade delas
+    (hash de id+seed); na outra metade trocam por um ataque da família. O ``bestiary.json``
+    não muda, então ``off`` segue idêntico."""
+    shared = set(_meta().get("legadas_compartilhadas") or [])
+    out: list[str] = []
+    dropped = 0
+    for card_id in deck:
+        if card_id in shared and _h(creature.get("id"), seed, "curadoria", card_id) % 2 == 1:
+            dropped += 1
+        else:
+            out.append(card_id)
+    if not dropped:
+        return deck
+    if not fam:
+        return deck  # sem família para repor: mantém a carta legada
+    from services import cards
+
+    atk = sorted(
+        (
+            c
+            for c in pools["familias"].get(fam, [])
+            if c not in out
+            and ((cards.get_card(c) or {}).get("efeito") or {}).get("kind") == "dano"
+        ),
+        key=lambda c: _h(creature.get("id"), seed, "curadoria_atk", c),
+    )
+    return out + atk[:dropped]
+
+
 def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     """Baralho de conflito da criatura: próprias + 3-5 da família + 0-3 da facção.
     Determinístico por ``id`` + ``seed`` (``deck_seed`` do conflito, gravado no spawn); mantém a ordem das próprias e nunca repete."""
@@ -184,6 +218,7 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     cid = creature.get("id")
     fam = family_key(creature)
     pools = _pools()
+    deck = _curate_shared(creature, deck, fam, pools, seed)
     sig = family_signature(creature, seed)
     if fam:
         # a assinatura alternativa (a outra de `assinaturas`) só vale como assinatura
@@ -217,7 +252,10 @@ def apply_deck(actor: dict, seed: int | str | None = None) -> None:
         known = {
             c for ids in (*pools["familias"].values(), *pools["faccoes"].values()) for c in ids
         }
-        if known & set(_own_ids(actor)):  # ficha reconstruída já montada: não soma de novo
+        # F-1: o marcador `_deck332` decide; sem ele (ficha reconstruída) só conta como já
+        # montada com >= 3 cartas dos pools (a montagem soma >= 3 da família), de modo que
+        # 1-2 cartas `inf_*` curadas no bestiário não pulem a montagem.
+        if len(known & set(_own_ids(actor))) >= 3:
             actor["_deck332"] = True
             return
         actor["cartas"] = build_enemy_deck(
@@ -342,6 +380,10 @@ def rotate_index(actor: dict, rnd: int, size: int) -> int:
 def _sorted_phases(actor: dict) -> list[dict]:
     """Fases em ordem de entrada (``ate_vitalidade_pct`` decrescente)."""
     raw = _profile(actor).get("fases")
+    if not isinstance(raw, list):
+        # fases autoradas por criatura em `_decks.json` (não tocam o bestiário: `off` idêntico)
+        base = str(actor.get("archetype_id") or re.sub(r"_\d+$", "", str(actor.get("id") or "")))
+        raw = (_meta().get("fases") or {}).get(base)
     if not isinstance(raw, list):
         return []
     ok = [f for f in raw if isinstance(f, dict) and isinstance(f.get("ate_vitalidade_pct"), int)]

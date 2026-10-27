@@ -103,13 +103,14 @@ def main() -> None:
     ap.add_argument("seeds", nargs="?", type=int, default=2)
     ap.add_argument("--levels", default="3,5")
     ap.add_argument("--per-family", type=int, default=3)
+    ap.add_argument("--only", default="", help="familias separadas por virgula")
     args = ap.parse_args()
     t0 = time.time()
     fams = families()
     cat_of = {b: normalize_categoria(e) for b, e in load_bestiary().items()}
     res: dict = {}
     for fam, ids in fams.items():
-        if not ids:
+        if not ids or (args.only and fam not in args.only.split(",")):
             continue
         for level in (int(x) for x in args.levels.split(",")):
             row: dict = {}

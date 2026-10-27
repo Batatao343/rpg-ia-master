@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-332: baralho da facção mao_sombria (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_mao_sombria_contrato_selado",
+      "name": "Contrato Selado",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Um nome entra no livro, e a faca já sabe onde procurar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mao_sombria_lamina_na_penumbra",
+      "name": "Lâmina na Penumbra",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "A ponta sai do escuro e volta antes do grito.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mao_sombria_execucao_contratada",
+      "name": "Execução Contratada",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Quem foi marcado paga a conta inteira de uma vez.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mao_sombria_sumir_na_multidao",
+      "name": "Sumir na Multidão",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 2
+      },
+      "descricao": "Mistura-se aos ombros alheios e deixa de ser alguém.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mao_sombria_fuga_pelos_telhados",
+      "name": "Fuga pelos Telhados",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Um salto, uma telha solta, e o contrato fica sem rosto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mao_sombria_po_nos_olhos",
+      "name": "Pó nos Olhos",
+      "origem": "cartas-332",
+      "classe": "Inimigo",
+      "subclasse": "mao_sombria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "Um punhado de cinza fina, e o mundo some por um instante.",
+      "oculta": true
+    }
+  ]
+}
