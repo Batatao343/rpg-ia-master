@@ -535,7 +535,11 @@ def _resolve_attack_step(
     )
     atk["actor_id"] = actor_id
     atk["target_id"] = step.target_id
-    atk["card_id"] = step.card_id  # SPEC-334 R6: nome da Carta no log mecânico
+    if step.card_id:
+        from services import card_piles
+
+        if card_piles.mode() == "on":  # SPEC-334 R6: nome da Carta no log mecânico
+            atk["card_id"] = step.card_id  # (`off` mantém o ataque idêntico ao anterior)
     out["attacks"].append(atk)
     out["logs"].append(
         f"{actor.get('name', actor_id)} → {target.get('name', step.target_id)}: "
