@@ -263,3 +263,22 @@ D1 = design A (marcador no orquestrador, golden intacto). D2 = sim, R8b na mesma
 D3 = sim, Marca do Abismo vale 3 turnos efetivos. D4 = só listar as bandeiras novas (R16).
 D5 = sim, só medir os baralhos de inimigo. D6 = sem flag. D7 = sim, golden em
 `evals/protected-paths.txt` (commit próprio; publicação via `/eval-publish` se o gate pedir).
+
+## 6.1 Resultado do smoke (executor, 27/10)
+
+Feito por script em scratch chamando `orch.run_round` real (o caminho da rota), MockLLM, sem uvicorn:
+criar Devoto e entrar em conflito pela API exige o fluxo de criação/encontro; o script usa a mesma `run_round`
+(`bas_dev_voto` real, aliado de Agilidade 9 como alvo padrão, `rng` forçado). Nenhum processo deixado.
+
+- **§6.1/6.2 Provocar** (`RPG_CARD_DECK` off/on × `RPG_ENEMY_INTENT` off/on × ordem hero/enemy): em todas as 8
+  combinações exatamente 1 ataque do inimigo mira o jogador, e o resto mira o aliado.
+  Ex.: `off/off hero_first: ['e → player','e → ally',None,None]`; `off/off enemy_first: ['e → ally','e → player','e → ally',None]`.
+  Presságio off: nenhuma linha "terminou" antes da ação que usa a Provocação. Presságio on: o alvo é congelado
+  antes do tick (`on/on hero_first: ['e → ally','e → player',...]`), então "terminou" aparece no tick da rodada
+  de uso (a declaração já estava congelada); por desenho (P1-2).
+- **§6.3** presságio on: o alvo congelado da rodada seguinte é o jogador (`e → player` na rodada 2), uma vez só.
+- **§6.4 Marca** (`san_sil_fio`): log "e: ganha condição Fio sem Testemunha"; `combat_preview.preview` na rodada
+  seguinte: `tem_marca=True`, `chance_acerto_pct` 91,6 (Vantagem) contra 76,0 sem a Marca (`hero_first`, rodada 3).
+  Em `enemy_first` a Marca ainda vale na rodada 3 (o tick do inimigo vem antes do jogador).
+- **Provocar efetivo na arena (§6.1 original):** não aplicável (bot solo, sem aliado para o desvio).
+
