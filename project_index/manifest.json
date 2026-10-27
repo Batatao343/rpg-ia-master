@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "cea9977f156fee11e59ba5e67184980fedf99ea9",
+  "commit_sha": "b4ea603ea9900dca403a80d472700b1f93cd75f4",
   "edge_counts": {
-    "calls": 30412,
-    "contains": 1017,
-    "defines": 15089,
-    "imports": 2472,
-    "likely_test_for": 1730,
+    "calls": 30724,
+    "contains": 1023,
+    "defines": 15212,
+    "imports": 2498,
+    "likely_test_for": 1754,
     "route_to": 66
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1b890d89dc1c91476650e923959b738934aa52dcfc5a3b75f6510585642b10e1",
+  "graph_hash": "sha256:7c355acbcf442a8ceac8f1a0dd456af0c5d7013bb1da78e0d4a2beb7a944f9da",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -439,6 +439,7 @@
     "services/rule_engine.py",
     "services/rumor_adoption.py",
     "services/rumors.py",
+    "services/scene_cards.py",
     "services/secret_signatures.py",
     "services/shard_pricing.py",
     "services/shared_pool.py",
@@ -499,6 +500,7 @@
     "tests/spec330_equivalence.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
+    "tests/test_abyss_clock.py",
     "tests/test_account_api.py",
     "tests/test_account_auth_gotrue_local.py",
     "tests/test_account_auth_transport.py",
@@ -762,6 +764,7 @@
     "tests/test_npc_knowledge_migration.py",
     "tests/test_npc_memory.py",
     "tests/test_npc_two_phase.py",
+    "tests/test_objectives.py",
     "tests/test_observability_stack.py",
     "tests/test_oidc_identity.py",
     "tests/test_onboarding.py",
@@ -829,6 +832,9 @@
     "tests/test_runtime_profiles.py",
     "tests/test_runtime_role_local.py",
     "tests/test_s3_blob.py",
+    "tests/test_scene_cards.py",
+    "tests/test_scene_cards_extra.py",
+    "tests/test_scene_cards_node.py",
     "tests/test_schema_order.py",
     "tests/test_session_boundary_authfail.py",
     "tests/test_session_hardening.py",
@@ -1252,14 +1258,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 969,
+    "class": 973,
     "endpoint": 66,
-    "file": 1198,
-    "function": 4746,
+    "file": 1204,
+    "function": 4787,
     "method": 843,
-    "module": 1017,
-    "test": 8530
+    "module": 1023,
+    "test": 8608
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4a7097a42976601575a83e0450123d89bb25d3099043f5a0ef2f9c99b0133160"
+  "source_tree_hash": "sha256:43baa7225995728df27efcab582bd23f960757d266a9560fe73bdb89c362394f"
 }
