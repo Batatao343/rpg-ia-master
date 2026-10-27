@@ -1,6 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
-> **Veredito Lote 5 (Médico de Campo, `75452e54`):** `CHANGES_REQUIRED` (2 P1: híbridos `turno` fortes; controle de `duracao` 1 expira antes de valer, bug de motor anterior que zera Provocar em todo o catálogo; 4 P2)
+> **Veredito Lote 5 (Médico de Campo):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `72f82c23` (a 1ª rodada, em `75452e54`, deu `CHANGES_REQUIRED` com 2 P1 e 4 P2; o bugfix de motor fica na SPEC-339)
 > **Veredito Lote 4 (Corruptor):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `7a40ae9d` (a 1ª rodada, em `25b00b3f`, deu `CHANGES_REQUIRED` com 1 P1 e 4 P2)
 > **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
 > **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
@@ -11,7 +11,52 @@
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
 
-# Lote 5 — Médico de Campo (`main...75452e54`)
+# Lote 5 — re-revisão (`e81a4cdb..72f82c23`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. Os 2 P1 estão resolvidos no que cabe ao lote; o
+> bugfix de motor fica na SPEC-339. A allowlist provisória é aceitável, com uma trava (P2-5).
+
+## Conferência
+
+| ID | Situação |
+|---|---|
+| P1-1 | **Resolvido.** Os 4 híbridos passaram para `cena`, e o DoT da agulha caiu de 2 para 1 rodada. Reproduzi com 320 lutas: agulha **+6,2 pp**, cotovelo **+4,1 pp**, iguais ao JSON de confirmação. Também golpe_e_pulso +4,1 e pinça +5,9. Todos abaixo de +8 e perto dos controles de dano da subclasse (+0,3 / +5,6 / +10,0). O teste do lote passou a exigir `cena` em incomum com dano. |
+| P1-2 (lote) | **Resolvido.** Giz Vermelho ficou com `duracao: 2` e `cena`. Numa rodada real (`orch.run_round`, baralho `off`) a Marca **sobrevive** ao turno do inimigo, quando antes "terminava" antes de valer. |
+| P1-2 (motor) | Fica na SPEC-339. Entrou o lint provisório `check_controle_duracao`: recusa `taunt`/`marca` com `duracao` < 2 em Carta de onda, com teste. |
+| P2-1 | **Resolvido.** Tala Rígida e Giz Vermelho em `cena`. O teste exige `cena` em toda Carta de Fôlego 0 do lote. |
+| P2-2 | **Revertido com razão.** Não cobrar sem Carga mudava `med_bot_purga` no golden. Fica a descrição de Sal na Sombra ("haja Carga ou não") e o texto gerado sem o custo extra. Continua follow-up na SPEC-339 ou 325, junto com o golden. |
+| P2-3 | Registrado no relatório como limitação, com follow-up na 336. |
+| P2-4 | **Resolvido.** O relatório traz os controles e o efeito de `cena`, e por subclasse no padrão dá 64,2 / 63,7 / 67,1 %, abaixo do alvo de 70 %. O Ferro saiu de 73,3 %. |
+
+## A allowlist `CONTROLE_DURACAO_PENDENTES` até a SPEC-339
+
+**Aceitável.**
+- **Lista exata.** Conferi no catálogo: as Cartas de onda com `taunt`/`marca` de `duracao` < 2 são
+  exatamente as 9 da lista (6 de Provocar e 3 de Marca dos Lotes 2–3). Não falta nem sobra
+  nenhuma.
+- **Por que esperar faz sentido.** As 9 já estão na `main`. Hoje o Provocar não faz nada e a
+  Marca de `duracao` 1 só vale na mesma rodada; isso já era assim antes do lote, então a lista
+  não cria regressão. Corrigir as Cartas agora, com `duracao` 2 e `versao` 2, e depois desfazer
+  quando o motor mudar seria trabalho em dobro: com a SPEC-339, `duracao` 1 passa a valer e uma
+  `duracao` 2 viraria buff. Esperar o motor é o caminho mais barato.
+- **Condição: a lista tem de travar** (P2-5).
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P2-5 | P2 | `services/card_lint.py` (`CONTROLE_DURACAO_PENDENTES`) | Nada impede a lista de crescer nem de envelhecer. Um id novo pode entrar para escapar do lint, e um id que já foi corrigido continua isento. Também não há ligação explícita com a SPEC-339. | Teste: (a) cada id da lista existe e ainda tem `taunt`/`marca` com `duracao` < 2, para que entrada velha falhe; (b) `len(...) <= 9`, para que a lista só encolha. Comentário: "remover junto com a SPEC-339". Na SPEC-339, critério de aceite: lista vazia e lint removido ou com limite 1. |
+
+## Comandos rodados (re-revisão do Lote 5)
+
+```text
+git diff e81a4cdb..72f82c23 (14 arquivos) → lidos card_lint.py, testes, 3 JSON de Cartas, relatório
+sim.py --lote data/cards/posturas/medico_boticario.json --protocolo lote --out <scratchpad> → idêntico a sim-lote5-boticario.json
+scratchpad/sol5_ctl2.py (sementes 20–99): agulha +6,2 pp, cotovelo +4,1 pp → iguais à confirmação
+scratchpad/sol5_tick.py (run_round, baralho off): Giz Vermelho segue no inimigo depois da rodada 1
+varredura do catálogo: Cartas de onda com taunt/marca de duracao < 2 = exatamente as 9 da allowlist
+pytest -q -n 2 (7 arquivos de cartas e handoff) → exit 0; validate_content → 0/0
+```
+
+# Lote 5 — 1ª rodada (`main...75452e54`)
 
 > **Veredito:** `CHANGES_REQUIRED` (2 P1, 4 P2). Os 4 híbridos estão fortes de verdade, e há um
 > bug de motor anterior a este lote que zera Provocar e encurta a Marca com `duracao` 1.
