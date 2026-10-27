@@ -1,6 +1,6 @@
 # SPEC-337 — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
 
-> **Status:** `approved` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
+> **Status:** `in-progress` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma em código.
 > **Desbloqueia:** SPEC-338 (fuzz Schemathesis reutiliza a fixture de dois principals e o check de headers/vazamento desta spec).
