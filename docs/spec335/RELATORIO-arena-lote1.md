@@ -7,7 +7,7 @@
 saem do catálogo na sua rodada), ao nível de entrada (`level_req`), encontro padrão (`padrao`, 4 criaturas por nível), 20 sementes
 = 80 lutas por braço. Métrica, limiares e fórmulas são os de `simulate_batch` (nada mudou no evaluator).
 
-**Arena corrigida (SPEC-335 P1-3, `sim.py`)**: o braço “sem” agora NÃO tem a Carta testada (era o mesmo multiconjunto do “com”, só em outra ordem), os dois braços usam a mesma tag de semente (pareados) e o baralho entra ordenado nas pilhas. Teste: `tests/test_card_sim.py::test_bracos_diferem_so_na_carta_testada`. Os deltas abaixo são os primeiros que medem a Carta; com 80 lutas por braço, 1 luta = 1,25 pp e ±9 pp é ruído.
+**Arena corrigida (SPEC-335 P1-3, `sim.py`)**: o braço “sem” agora NÃO tem a Carta testada (antes era o mesmo multiconjunto do “com”, só em outra ordem), os dois braços usam a mesma tag de semente (pareados) e o baralho entra ordenado nas pilhas. Teste: `tests/test_card_sim.py::test_bracos_diferem_so_na_carta_testada`. Com 80 lutas por braço, 1 luta = 1,25 pp e ±9 pp é ruído.
 
 | Carta | uso na mão | delta de vitória | lutas | bandeiras |
 |---|---|---|---|---|
@@ -23,34 +23,34 @@ saem do catálogo na sua rodada), ao nível de entrada (`level_req`), encontro p
 | `arc1_cal_impacto` | 35% (24/68) | +7.5 pp | 80 | — |
 | `arc1_cal_quadrante` | 12% (7/60) | +0.0 pp | 80 | — |
 | `arc1_cal_mares` | 26% (22/83) | +0.0 pp | 80 | — |
-| `arc1_des_faisca` | 28% (24/87) | +6.2 pp | 80 | — |
-| `arc1_des_dedos` | 21% (19/91) | +7.5 pp | 80 | — |
-| `arc1_des_palma` | 28% (24/87) | +2.5 pp | 80 | — |
-| `arc1_des_corrente` | 21% (19/92) | +6.2 pp | 80 | — |
-| `arc1_des_brasa` | 0% (0/91) | +7.5 pp | 80 | uso_nao_medido |
-| `arc1_des_garganta` | 27% (24/88) | +2.5 pp | 80 | — |
-| `arc1_des_sobrecarga` | 36% (44/121) | -7.5 pp | 80 | — |
-| `arc1_des_vazao_selvagem` | 51% (63/123) | -2.5 pp | 80 | — |
-| `arc1_des_raio_livre` | 23% (13/56) | -2.5 pp | 80 | — |
-| `arc1_des_estouro_contido` | 16% (20/129) | -2.5 pp | 80 | — |
-| `arc1_des_fenda` | 28% (14/50) | -1.2 pp | 80 | — |
-| `arc1_des_caldeira_sem_fundo` | 41% (19/46) | -1.3 pp | 80 | — |
-| `arc1_imp_parafuso` | 41% (41/101) | +5.0 pp | 80 | — |
-| `arc1_imp_gambiarra` | 47% (69/146) | -10.0 pp | 80 | — |
-| `arc1_imp_carretel` | 44% (41/94) | +2.5 pp | 80 | — |
-| `arc1_imp_olho_latao` | 40% (41/102) | +2.5 pp | 80 | — |
-| `arc1_imp_mola` | 0% (0/103) | +2.5 pp | 80 | uso_nao_medido |
-| `arc1_imp_remendo_cobre` | 38% (39/103) | +0.0 pp | 80 | — |
-| `arc1_imp_bomba_estopim` | 51% (67/131) | -7.5 pp | 80 | — |
-| `arc1_imp_truque` | 45% (64/142) | -6.3 pp | 80 | — |
-| `arc1_imp_arame` | 34% (19/56) | +1.3 pp | 80 | — |
-| `arc1_imp_terceiro_dia` | 29% (15/52) | -2.5 pp | 80 | — |
-| `arc1_imp_orquestra` | 9% (5/54) | -1.3 pp | 80 | — |
-| `arc1_imp_ultima_gambiarra` | 43% (21/49) | +7.5 pp | 80 | — |
+| `arc1_des_faisca` | 26% (22/85) | -3.7 pp | 80 | — |
+| `arc1_des_dedos` | 9% (8/87) | -6.2 pp | 80 | — |
+| `arc1_des_palma` | 26% (22/85) | -1.2 pp | 80 | — |
+| `arc1_des_corrente` | 9% (8/87) | -6.2 pp | 80 | — |
+| `arc1_des_brasa` | 0% (0/87) | -6.2 pp | 80 | uso_nao_medido |
+| `arc1_des_garganta` | 25% (22/87) | -6.2 pp | 80 | — |
+| `arc1_des_sobrecarga` | 36% (44/122) | +6.2 pp | 80 | — |
+| `arc1_des_vazao_selvagem` | 46% (57/123) | +2.5 pp | 80 | — |
+| `arc1_des_raio_livre` | 39% (22/56) | +11.2 pp | 80 | dominante |
+| `arc1_des_estouro_contido` | 17% (23/136) | -2.5 pp | 80 | — |
+| `arc1_des_fenda` | 38% (20/53) | +2.5 pp | 80 | — |
+| `arc1_des_caldeira_sem_fundo` | 59% (30/51) | +3.7 pp | 80 | — |
+| `arc1_imp_parafuso` | 41% (41/100) | -7.5 pp | 80 | — |
+| `arc1_imp_gambiarra` | 56% (93/166) | +7.5 pp | 80 | — |
+| `arc1_imp_carretel` | 40% (41/102) | -8.7 pp | 80 | — |
+| `arc1_imp_olho_latao` | 41% (41/101) | -10.0 pp | 80 | — |
+| `arc1_imp_mola` | 0% (0/106) | -10.0 pp | 80 | uso_nao_medido |
+| `arc1_imp_remendo_cobre` | 38% (42/109) | -5.0 pp | 80 | — |
+| `arc1_imp_bomba_estopim` | 49% (64/131) | +3.7 pp | 80 | — |
+| `arc1_imp_truque` | 53% (87/163) | +7.5 pp | 80 | — |
+| `arc1_imp_arame` | 41% (24/59) | +7.5 pp | 80 | — |
+| `arc1_imp_terceiro_dia` | 37% (20/54) | +5.0 pp | 80 | — |
+| `arc1_imp_orquestra` | 21% (11/53) | -5.0 pp | 80 | — |
+| `arc1_imp_ultima_gambiarra` | 54% (28/52) | -5.0 pp | 80 | — |
 
-**Rodada com a arena corrigida (substitui a anterior)**: 1 Carta(s) com bandeira — `arc1_cal_folga` (dominante, uso 21%, +8.8 pp). `arc1_cal_folga` fica a +8,8 pp com 80 lutas (7 lutas de diferença): na prática ruído, mas acima do limiar do protocolo; coordenador decide entre ajustar ou aceitar.
+**Rodada com a arena corrigida (substitui a anterior)**: 2 Carta(s) com bandeira — `arc1_cal_folga` (dominante, uso 21%, +8.8 pp), `arc1_des_raio_livre` (dominante, uso 39%, +11.2 pp). Ambas são `dominante` por delta (+8,8 e +11,2 pp) com 80 lutas (7–9 lutas de diferença, perto do ruído) e eram invisíveis na arena antiga; o coordenador decide entre ajustar ou aceitar. Não mexi nas Cartas do Lote 1.
 
-Histórico (arena antiga): 0 bandeiras na arena antiga. Ajustadas até limpar (v. histórico do commit): `arc1_des_dedos`
+Histórico (arena antiga, pré-correção): 0 bandeiras na arena antiga. Ajustadas até limpar (v. histórico do commit): `arc1_des_dedos`
 (Vantagem → +2 de acerto), `arc1_des_palma` (dano 3 → 2), `arc1_des_corrente` (Fôlego livre → descartar 2, 1 de Fôlego, `cena`).
 Reescrevi o *efeito*. Atenção (P2-5): `arc1_des_palma` ganhou **Eco** (efeito principal só dano 2) e `arc1_des_faisca` ganhou **Ressoar** e passou a `livre`; Eco e Ressoar não pesam na decisão do bot, então para essas duas o **único freio é o orçamento**.
 
