@@ -545,3 +545,20 @@ def test_unrecognised_card_file_is_logged(monkeypatch, tmp_path, caplog):
     with caplog.at_level("WARNING"):
         edk._pools()
     assert "ignorado" not in caplog.text  # o repo real nao tem arquivo orfao
+
+
+def test_plan_signature_implies_previous_round_prenuncio_for_whole_bestiary(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    from agents.bestiary import load_bestiary
+
+    for bid, entry in load_bestiary().items():
+        for pct in (30, 60):
+            actor = orch.ensure_combat_sheet({**entry, "id": f"{bid}_1"})
+            actor["archetype_id"] = bid
+            actor["vitalidade"] = int(actor["max_vitalidade"] * pct / 100)
+            for r in range(2, 14):
+                p = edk.plan(actor, r)
+                if p and p["assinatura"]:
+                    assert edk.prenuncio(actor, r - 1), (bid, pct, r)
+                if pct == 30:
+                    assert not (p and p["assinatura"]), (bid, r)  # muito ferido: sem assinatura

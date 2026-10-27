@@ -113,6 +113,11 @@ Novas criaturas (só cartas e padrões para as 124 existentes). Inimigos com mã
   é alcançável; P1-3 renomeadas "Poeira do Cais" e "Corda no Passo" e o teste de nomes cobre todo o catálogo; P2: a
   troca do `bote_certeiro` entra na cota da família (sem cartas a mais) e `predador` ganhou 4 cartas (pool 12); narração
   de fase com `{nome}`, própria por chefe e uma por fase cruzada; `_pools` loga arquivo órfão.
+- **P1-4 (re-revisão):** `plan()` e `prenuncio` usam o mesmo `_badly_wounded` (vida <= 35 % ou ferimento grave/crítico):
+  muito ferido não joga nem anuncia a assinatura; teste do bestiário inteiro (30 % e 60 %).
+- **Follow-up P2-7:** assinatura já anunciada e jogada mesmo após cair abaixo de 35 % (promessa com precedência sobre
+  `plano_falhou`/`muito_ferido`) não foi feita: exige guardar a promessa no estado e mexer na precedência do perfil no
+  orquestrador; fica para a SPEC-334/336 antes de `on`.
 - **Pendente:** front de `prenuncio`/`costuma` (SPEC-334); conteúdo das 4 facções restantes e chefes nomeados (336);
   decisão do dono sobre o alvo da arena (nichos fracos: morto_vivo, guardiao, apex L5).
 

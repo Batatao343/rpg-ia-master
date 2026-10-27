@@ -342,7 +342,12 @@ def plan(actor: dict, rnd: int) -> dict | None:
         return None
     slot = pat[(max(1, rnd) - 1) % len(pat)] if pat else "ataque"
     carta = None
-    if sig and _sig_falls_on(actor, sig, rnd) and sig["carta"] in cards.enemy_card_ids(actor):
+    if (
+        sig
+        and not _badly_wounded(actor)  # mesmo helper do `prenuncio`: sem promessa, sem jogada
+        and _sig_falls_on(actor, sig, rnd)
+        and sig["carta"] in cards.enemy_card_ids(actor)
+    ):
         carta = str(sig["carta"])
     return {"slot": slot, "assinatura": carta, "rnd": rnd}
 
