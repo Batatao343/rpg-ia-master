@@ -1,5 +1,5 @@
 {
-  "commit_sha": "acb8a4db18da143806897212e66e2bcabc2d9a73",
+  "commit_sha": "b4b329f53a596b3b53adb540e876bd63ca954db9",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1176,6 +1176,17 @@
       },
       "source": "file:docs/spec335/arena_postura_medico.py",
       "target": "module:docs.spec335.arena_postura_medico",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 1
+      },
+      "source": "file:docs/spec335/arena_posturas.py",
+      "target": "module:docs.spec335.arena_posturas",
       "type": "contains"
     },
     {
@@ -40573,6 +40584,39 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 61
+      },
+      "source": "module:docs.spec335.arena_posturas",
+      "target": "symbol:docs.spec335.arena_posturas.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 55
+      },
+      "source": "module:docs.spec335.arena_posturas",
+      "target": "symbol:docs.spec335.arena_posturas.rate",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 38
+      },
+      "source": "module:docs.spec335.arena_posturas",
+      "target": "symbol:docs.spec335.arena_posturas.run_arm",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "docs/spec335/confirmar_lote5.py",
         "line": 21
       },
@@ -66567,7 +66611,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 294
+        "line": 296
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint._tokens_all",
@@ -66578,7 +66622,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 443
+        "line": 445
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint._vigente",
@@ -66611,7 +66655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 403
+        "line": 405
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -66622,7 +66666,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 387
+        "line": 389
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_controle_duracao",
@@ -66633,7 +66677,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 305
+        "line": 307
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -66644,7 +66688,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 353
+        "line": 355
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -66655,7 +66699,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 453
+        "line": 455
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_names",
@@ -66677,7 +66721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 343
+        "line": 345
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -66688,7 +66732,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 473
+        "line": 475
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -66699,7 +66743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 328
+        "line": 330
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -66743,7 +66787,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 594
+        "line": 596
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.errors",
@@ -66776,7 +66820,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 546
+        "line": 548
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_batch",
@@ -66787,7 +66831,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 517
+        "line": 519
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_card",
@@ -66798,7 +66842,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 565
+        "line": 567
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_wave",
@@ -109137,7 +109181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 96
+        "line": 115
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._lote2",
@@ -109148,7 +109192,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 130
+        "line": 149
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -109159,7 +109203,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 179
+        "line": 198
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._lote4",
@@ -109170,7 +109214,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 237
+        "line": 256
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._lote5",
@@ -109181,7 +109225,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 355
+        "line": 362
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -109192,7 +109236,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 62
+        "line": 81
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -109225,7 +109269,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 53
+        "line": 66
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_descricao_vazia",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 72
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_frase_modelo_do_gerador_antigo",
@@ -109236,7 +109291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 70
+        "line": 89
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote1_arcanista_36_cartas_12_por_subclasse",
@@ -109247,7 +109302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 87
+        "line": 106
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
@@ -109258,7 +109313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 118
+        "line": 137
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
@@ -109269,7 +109324,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 104
+        "line": 123
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
@@ -109280,7 +109335,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 138
+        "line": 157
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
@@ -109291,7 +109346,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 163
+        "line": 182
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
@@ -109302,7 +109357,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 152
+        "line": 171
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
@@ -109313,7 +109368,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 187
+        "line": 206
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
@@ -109324,7 +109379,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 214
+        "line": 233
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
@@ -109335,7 +109390,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 201
+        "line": 220
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
@@ -109346,7 +109401,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 276
+        "line": 295
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
@@ -109357,7 +109412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 245
+        "line": 264
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
@@ -109368,7 +109423,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 263
+        "line": 282
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
@@ -109379,7 +109434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 359
+        "line": 366
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_40_neutras_raridade_20_12_6_2_e_regioes",
@@ -109390,7 +109445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 427
+        "line": 434
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
@@ -109401,7 +109456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 468
+        "line": 475
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao",
@@ -109412,7 +109467,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 454
+        "line": 461
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_nao_vazam_para_nenhuma_postura_nem_para_o_baralho_inicial",
@@ -109423,7 +109478,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 376
+        "line": 383
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_origem_lore_e_um_id_real_do_codex",
@@ -109434,7 +109489,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 417
+        "line": 424
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
@@ -109445,10 +109500,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 322
+        "line": 334
       },
       "source": "module:tests.test_card_acervo_reparo",
-      "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
+      "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 53
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_pool_inteiro_sem_descricao_vazia_ou_generica",
       "type": "defines"
     },
     {
@@ -109467,7 +109533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 499
+        "line": 506
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
@@ -109478,7 +109544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 388
+        "line": 395
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_validador_recusa_origem_lore_invalida_e_neutra_sem_lore",
@@ -221171,6 +221237,50 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 81
+      },
+      "source": "symbol:docs.spec335.arena_posturas.main",
+      "target": "symbol:docs.spec335.arena_posturas.rate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 82
+      },
+      "source": "symbol:docs.spec335.arena_posturas.main",
+      "target": "symbol:docs.spec335.arena_posturas.rate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 85
+      },
+      "source": "symbol:docs.spec335.arena_posturas.main",
+      "target": "symbol:docs.spec335.arena_posturas.rate",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_posturas.py",
+        "line": 77
+      },
+      "source": "symbol:docs.spec335.arena_posturas.main",
+      "target": "symbol:docs.spec335.arena_posturas.run_arm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "docs/spec335/confirmar_lote5.py",
         "line": 90
       },
@@ -277877,7 +277987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 296
+        "line": 298
       },
       "source": "symbol:services.card_lint._tokens_all",
       "target": "symbol:services.card_effects._fold",
@@ -277888,7 +277998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 448
+        "line": 450
       },
       "source": "symbol:services.card_lint._vigente",
       "target": "symbol:services.card_effects.versao",
@@ -277921,7 +278031,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 426
+        "line": 428
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.base_value",
@@ -277932,7 +278042,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 436
+        "line": 438
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -277943,7 +278053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 408
+        "line": 410
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.keywords",
@@ -277954,7 +278064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 409
+        "line": 411
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.normalize",
@@ -277965,7 +278075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 414
+        "line": 416
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -277976,7 +278086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 418
+        "line": 420
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -277987,7 +278097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 429
+        "line": 431
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -277998,7 +278108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 438
+        "line": 440
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -278009,7 +278119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 404
+        "line": 406
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.roda",
@@ -278020,7 +278130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 391
+        "line": 393
       },
       "source": "symbol:services.card_lint.check_controle_duracao",
       "target": "symbol:services.card_effects.normalize",
@@ -278031,7 +278141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 399
+        "line": 401
       },
       "source": "symbol:services.card_lint.check_controle_duracao",
       "target": "symbol:services.card_lint.Issue",
@@ -278042,7 +278152,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 311
+        "line": 313
       },
       "source": "symbol:services.card_lint.check_escala_principal",
       "target": "symbol:services.card_effects.gatilho",
@@ -278053,7 +278163,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 306
+        "line": 308
       },
       "source": "symbol:services.card_lint.check_escala_principal",
       "target": "symbol:services.card_effects.primary_effect",
@@ -278064,7 +278174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 314
+        "line": 316
       },
       "source": "symbol:services.card_lint.check_escala_principal",
       "target": "symbol:services.card_lint.Issue",
@@ -278075,7 +278185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 357
+        "line": 359
       },
       "source": "symbol:services.card_lint.check_marca_dano",
       "target": "symbol:services.card_effects.extra_effects",
@@ -278086,7 +278196,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 356
+        "line": 358
       },
       "source": "symbol:services.card_lint.check_marca_dano",
       "target": "symbol:services.card_effects.primary_effect",
@@ -278097,7 +278207,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 364
+        "line": 366
       },
       "source": "symbol:services.card_lint.check_marca_dano",
       "target": "symbol:services.card_lint.Issue",
@@ -278108,54 +278218,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 454
+        "line": 456
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 466
-      },
-      "source": "symbol:services.card_lint.check_names",
-      "target": "symbol:services.card_effects._fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 457
-      },
-      "source": "symbol:services.card_lint.check_names",
-      "target": "symbol:services.card_effects.versao",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 462
-      },
-      "source": "symbol:services.card_lint.check_names",
-      "target": "symbol:services.card_effects.versao",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_lint.py",
-        "line": 459
-      },
-      "source": "symbol:services.card_lint.check_names",
-      "target": "symbol:services.card_lint.Issue",
       "type": "calls"
     },
     {
@@ -278166,6 +278232,39 @@
         "line": 468
       },
       "source": "symbol:services.card_lint.check_names",
+      "target": "symbol:services.card_effects._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 459
+      },
+      "source": "symbol:services.card_lint.check_names",
+      "target": "symbol:services.card_effects.versao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 464
+      },
+      "source": "symbol:services.card_lint.check_names",
+      "target": "symbol:services.card_effects.versao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 461
+      },
+      "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
       "type": "calls"
     },
@@ -278174,7 +278273,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 455
+        "line": 470
+      },
+      "source": "symbol:services.card_lint.check_names",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 457
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint._vigente",
@@ -278262,7 +278372,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 348
+        "line": 350
       },
       "source": "symbol:services.card_lint.check_reacao_folego",
       "target": "symbol:services.card_effects.custo_folego",
@@ -278273,7 +278383,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 349
+        "line": 351
       },
       "source": "symbol:services.card_lint.check_reacao_folego",
       "target": "symbol:services.card_lint.Issue",
@@ -278284,7 +278394,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 492
+        "line": 494
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -278295,7 +278405,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 500
+        "line": 502
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -278306,7 +278416,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 508
+        "line": 510
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -278317,7 +278427,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 481
+        "line": 483
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint._vigente",
@@ -278328,7 +278438,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 478
+        "line": 480
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -278339,7 +278449,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 489
+        "line": 491
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -278350,7 +278460,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 485
+        "line": 487
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.similarity",
@@ -278361,7 +278471,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 330
+        "line": 332
       },
       "source": "symbol:services.card_lint.check_revelar_publico",
       "target": "symbol:services.card_effects.normalize",
@@ -278372,7 +278482,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 336
+        "line": 338
       },
       "source": "symbol:services.card_lint.check_revelar_publico",
       "target": "symbol:services.card_lint.Issue",
@@ -278383,7 +278493,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 339
+        "line": 341
       },
       "source": "symbol:services.card_lint.check_revelar_publico",
       "target": "symbol:services.card_lint.Issue",
@@ -278504,7 +278614,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 279
+        "line": 281
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_effects._fold",
@@ -278515,7 +278625,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 281
+        "line": 283
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_effects._fold",
@@ -278537,7 +278647,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 275
+        "line": 274
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.Issue",
@@ -278548,7 +278658,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 278
+        "line": 277
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.Issue",
@@ -278570,7 +278680,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 283
+        "line": 282
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.Issue",
@@ -278581,7 +278691,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 288
+        "line": 285
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.Issue",
@@ -278603,7 +278713,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 286
+        "line": 292
+      },
+      "source": "symbol:services.card_lint.check_voice",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 288
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint._tokens_all",
@@ -278614,7 +278735,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 289
+        "line": 291
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint._tokens_all",
@@ -278636,7 +278757,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 284
+        "line": 286
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.lexico",
@@ -278647,7 +278768,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 289
+        "line": 291
       },
       "source": "symbol:services.card_lint.check_voice",
       "target": "symbol:services.card_lint.lexico",
@@ -278691,7 +278812,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 561
+        "line": 563
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_effects.materialize",
@@ -278702,7 +278823,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 558
+        "line": 560
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_lint.lint_card",
@@ -278713,7 +278834,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 525
+        "line": 527
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_effects.materialize",
@@ -278724,7 +278845,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 532
+        "line": 534
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_budget",
@@ -278735,7 +278856,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 535
+        "line": 537
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -278746,7 +278867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 540
+        "line": 542
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_controle_duracao",
@@ -278757,7 +278878,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 536
+        "line": 538
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -278768,7 +278889,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 539
+        "line": 541
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -278779,7 +278900,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 541
+        "line": 543
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_names",
@@ -278790,7 +278911,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 534
+        "line": 536
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_raridade",
@@ -278801,7 +278922,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 538
+        "line": 540
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -278812,7 +278933,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 542
+        "line": 544
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -278823,7 +278944,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 537
+        "line": 539
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -278834,7 +278955,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 527
+        "line": 529
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_schema",
@@ -278845,7 +278966,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 530
+        "line": 532
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_vocabulary",
@@ -278856,7 +278977,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 533
+        "line": 535
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_voice",
@@ -278867,7 +278988,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 582
+        "line": 584
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -278878,7 +278999,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 570
+        "line": 572
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.glossary",
@@ -278889,7 +279010,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 575
+        "line": 577
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -278900,7 +279021,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 585
+        "line": 587
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -362159,7 +362280,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 99
+        "line": 118
       },
       "source": "symbol:tests.test_card_acervo_reparo._lote2",
       "target": "symbol:services.card_lint.load_pool",
@@ -362170,7 +362291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 133
+        "line": 152
       },
       "source": "symbol:tests.test_card_acervo_reparo._lote3",
       "target": "symbol:services.card_lint.load_pool",
@@ -362181,7 +362302,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 182
+        "line": 201
       },
       "source": "symbol:tests.test_card_acervo_reparo._lote4",
       "target": "symbol:services.card_lint.load_pool",
@@ -362192,7 +362313,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 240
+        "line": 259
       },
       "source": "symbol:tests.test_card_acervo_reparo._lote5",
       "target": "symbol:services.card_lint.load_pool",
@@ -362203,7 +362324,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 356
+        "line": 363
       },
       "source": "symbol:tests.test_card_acervo_reparo._neutras",
       "target": "symbol:services.card_lint.load_pool",
@@ -362214,7 +362335,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 65
+        "line": 84
       },
       "source": "symbol:tests.test_card_acervo_reparo._onda1",
       "target": "symbol:services.card_lint.load_pool",
@@ -362269,7 +362390,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 58
+        "line": 69
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_descricao_vazia",
+      "target": "symbol:services.card_lint.check_voice",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 77
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_frase_modelo_do_gerador_antigo",
       "target": "symbol:services.card_lint.check_voice",
@@ -362280,7 +362412,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 71
+        "line": 90
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_arcanista_36_cartas_12_por_subclasse",
       "target": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -362291,7 +362423,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 92
+        "line": 111
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "target": "symbol:services.card_effects.budget_error",
@@ -362302,7 +362434,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 91
+        "line": 110
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "target": "symbol:services.card_lint.errors",
@@ -362313,7 +362445,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 91
+        "line": 110
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "target": "symbol:services.card_lint.lint_card",
@@ -362324,7 +362456,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 88
+        "line": 107
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "target": "symbol:services.card_lint.load_pool",
@@ -362335,7 +362467,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 89
+        "line": 108
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "target": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -362346,7 +362478,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 123
+        "line": 142
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_effects.budget_error",
@@ -362357,7 +362489,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 122
+        "line": 141
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.errors",
@@ -362368,7 +362500,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 122
+        "line": 141
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.lint_card",
@@ -362379,7 +362511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 119
+        "line": 138
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.load_pool",
@@ -362390,7 +362522,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 120
+        "line": 139
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:tests.test_card_acervo_reparo._lote2",
@@ -362401,7 +362533,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 105
+        "line": 124
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
       "target": "symbol:tests.test_card_acervo_reparo._lote2",
@@ -362412,7 +362544,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 139
+        "line": 158
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -362423,7 +362555,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 175
+        "line": 194
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_effects.keywords",
@@ -362434,7 +362566,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 167
+        "line": 186
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_effects.normalize",
@@ -362445,7 +362577,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 174
+        "line": 193
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -362456,7 +362588,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 166
+        "line": 185
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -362467,7 +362599,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 157
+        "line": 176
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_effects.budget_error",
@@ -362478,7 +362610,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 156
+        "line": 175
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.errors",
@@ -362489,7 +362621,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 156
+        "line": 175
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.lint_card",
@@ -362500,7 +362632,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 153
+        "line": 172
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.load_pool",
@@ -362511,7 +362643,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 154
+        "line": 173
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:tests.test_card_acervo_reparo._lote3",
@@ -362522,7 +362654,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 188
+        "line": 207
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "target": "symbol:tests.test_card_acervo_reparo._lote4",
@@ -362533,7 +362665,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 227
+        "line": 246
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.keywords",
@@ -362544,7 +362676,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 219
+        "line": 238
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.normalize",
@@ -362555,7 +362687,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 228
+        "line": 247
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -362566,7 +362698,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 231
+        "line": 250
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -362577,7 +362709,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 233
+        "line": 252
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -362588,7 +362720,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 232
+        "line": 251
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -362599,7 +362731,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 218
+        "line": 237
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:tests.test_card_acervo_reparo._lote4",
@@ -362610,7 +362742,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 208
+        "line": 227
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_effects.budget_error",
@@ -362621,7 +362753,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 206
+        "line": 225
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.errors",
@@ -362632,7 +362764,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 205
+        "line": 224
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.lint_card",
@@ -362643,7 +362775,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 202
+        "line": 221
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.load_pool",
@@ -362654,54 +362786,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 203
+        "line": 222
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:tests.test_card_acervo_reparo._lote4",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_acervo_reparo.py",
-        "line": 289
-      },
-      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
-      "target": "symbol:services.card_effects.custo_folego",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_acervo_reparo.py",
-        "line": 300
-      },
-      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
-      "target": "symbol:services.card_effects.custo_folego",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_acervo_reparo.py",
-        "line": 293
-      },
-      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
-      "target": "symbol:services.card_effects.keywords",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_acervo_reparo.py",
-        "line": 284
-      },
-      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
-      "target": "symbol:services.card_effects.normalize",
       "type": "calls"
     },
     {
@@ -362712,6 +362800,50 @@
         "line": 308
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 319
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 312
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.keywords",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 303
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 327
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.primary_effect",
       "type": "calls"
     },
@@ -362720,7 +362852,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 299
+        "line": 318
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_controle_duracao",
@@ -362731,7 +362863,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 294
+        "line": 313
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -362742,7 +362874,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 295
+        "line": 314
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -362753,7 +362885,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 297
+        "line": 316
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -362764,7 +362896,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 296
+        "line": 315
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -362775,7 +362907,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 283
+        "line": 302
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:tests.test_card_acervo_reparo._lote5",
@@ -362786,7 +362918,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 246
+        "line": 265
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "target": "symbol:tests.test_card_acervo_reparo._lote5",
@@ -362797,7 +362929,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 270
+        "line": 289
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_effects.budget_error",
@@ -362808,7 +362940,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 268
+        "line": 287
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.errors",
@@ -362819,7 +362951,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 267
+        "line": 286
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.lint_card",
@@ -362830,7 +362962,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 264
+        "line": 283
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:services.card_lint.load_pool",
@@ -362841,7 +362973,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 265
+        "line": 284
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "target": "symbol:tests.test_card_acervo_reparo._lote5",
@@ -362852,7 +362984,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 360
+        "line": 367
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_40_neutras_raridade_20_12_6_2_e_regioes",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -362863,7 +362995,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 435
+        "line": 442
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.custo_folego",
@@ -362874,7 +363006,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 444
+        "line": 451
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.custo_folego",
@@ -362885,7 +363017,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 450
+        "line": 457
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.keywords",
@@ -362896,7 +363028,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 431
+        "line": 438
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.normalize",
@@ -362907,7 +363039,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 447
+        "line": 454
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_effects.primary_effect",
@@ -362918,7 +363050,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 443
+        "line": 450
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_controle_duracao",
@@ -362929,7 +363061,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 439
+        "line": 446
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -362940,7 +363072,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 440
+        "line": 447
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -362951,7 +363083,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 442
+        "line": 449
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -362962,7 +363094,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 441
+        "line": 448
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -362973,7 +363105,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 430
+        "line": 437
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -362984,7 +363116,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 475
+        "line": 482
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -362995,7 +363127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 471
+        "line": 478
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao",
       "target": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao.estado",
@@ -363006,7 +363138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 459
+        "line": 466
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_nao_vazam_para_nenhuma_postura_nem_para_o_baralho_inicial",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -363017,7 +363149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 381
+        "line": 388
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_origem_lore_e_um_id_real_do_codex",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -363028,7 +363160,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 383
+        "line": 390
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_origem_lore_e_um_id_real_do_codex",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -363039,7 +363171,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 424
+        "line": 431
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "target": "symbol:services.card_effects.budget_error",
@@ -363050,7 +363182,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 422
+        "line": 429
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "target": "symbol:services.card_lint.errors",
@@ -363061,7 +363193,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 421
+        "line": 428
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "target": "symbol:services.card_lint.lint_card",
@@ -363072,7 +363204,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 418
+        "line": 425
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "target": "symbol:services.card_lint.load_pool",
@@ -363083,7 +363215,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 419
+        "line": 426
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -363094,9 +363226,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 323
+        "line": 335
       },
-      "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
+      "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder",
       "target": "symbol:services.card_lint.load_pool",
       "type": "calls"
     },
@@ -363105,10 +363237,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 340
+        "line": 336
       },
-      "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
+      "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 347
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder",
       "target": "symbol:services.card_lint.similarity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 60
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_pool_inteiro_sem_descricao_vazia_ou_generica",
+      "target": "symbol:services.card_lint.check_voice",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 55
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_pool_inteiro_sem_descricao_vazia_ou_generica",
+      "target": "symbol:services.card_lint.load_pool",
       "type": "calls"
     },
     {
@@ -363127,7 +363292,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 522
+        "line": 529
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "target": "symbol:services.card_effects.budget_error",
@@ -363138,7 +363303,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 523
+        "line": 530
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "target": "symbol:services.card_effects.custo_folego",
@@ -363149,7 +363314,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 515
+        "line": 522
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "target": "symbol:services.card_effects.primary_effect",
@@ -363160,7 +363325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 520
+        "line": 527
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "target": "symbol:services.card_lint.lint_card",
@@ -363171,7 +363336,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 500
+        "line": 507
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "target": "symbol:services.card_lint.load_pool",
@@ -363182,7 +363347,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 402
+        "line": 409
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_validador_recusa_origem_lore_invalida_e_neutra_sem_lore",
       "target": "symbol:tests.test_card_acervo_reparo._neutras",
@@ -580816,6 +580981,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec335/arena_posturas.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec335/arena_posturas.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:docs/spec335/confirmar_lote5.py",
       "kind": "file",
       "line": 1,
@@ -589291,6 +589463,13 @@
       "line": 1,
       "path": "docs/spec335/arena_postura_medico.py",
       "qualified_name": "docs.spec335.arena_postura_medico"
+    },
+    {
+      "id": "module:docs.spec335.arena_posturas",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec335/arena_posturas.py",
+      "qualified_name": "docs.spec335.arena_posturas"
     },
     {
       "id": "module:docs.spec335.confirmar_lote5",
@@ -601086,6 +601265,27 @@
       "line": 49,
       "path": "docs/spec335/arena_postura_medico.py",
       "qualified_name": "docs.spec335.arena_postura_medico.total"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_posturas.main",
+      "kind": "function",
+      "line": 61,
+      "path": "docs/spec335/arena_posturas.py",
+      "qualified_name": "docs.spec335.arena_posturas.main"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_posturas.rate",
+      "kind": "function",
+      "line": 55,
+      "path": "docs/spec335/arena_posturas.py",
+      "qualified_name": "docs.spec335.arena_posturas.rate"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_posturas.run_arm",
+      "kind": "function",
+      "line": 38,
+      "path": "docs/spec335/arena_posturas.py",
+      "qualified_name": "docs.spec335.arena_posturas.run_arm"
     },
     {
       "id": "symbol:docs.spec335.confirmar_lote5.controle",
@@ -620235,14 +620435,14 @@
     {
       "id": "symbol:services.card_lint._tokens_all",
       "kind": "function",
-      "line": 294,
+      "line": 296,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint._tokens_all"
     },
     {
       "id": "symbol:services.card_lint._vigente",
       "kind": "function",
-      "line": 443,
+      "line": 445,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint._vigente"
     },
@@ -620263,35 +620463,35 @@
     {
       "id": "symbol:services.card_lint.check_color_pie",
       "kind": "function",
-      "line": 403,
+      "line": 405,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_color_pie"
     },
     {
       "id": "symbol:services.card_lint.check_controle_duracao",
       "kind": "function",
-      "line": 387,
+      "line": 389,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_controle_duracao"
     },
     {
       "id": "symbol:services.card_lint.check_escala_principal",
       "kind": "function",
-      "line": 305,
+      "line": 307,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_escala_principal"
     },
     {
       "id": "symbol:services.card_lint.check_marca_dano",
       "kind": "function",
-      "line": 353,
+      "line": 355,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_marca_dano"
     },
     {
       "id": "symbol:services.card_lint.check_names",
       "kind": "function",
-      "line": 453,
+      "line": 455,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_names"
     },
@@ -620305,21 +620505,21 @@
     {
       "id": "symbol:services.card_lint.check_reacao_folego",
       "kind": "function",
-      "line": 343,
+      "line": 345,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_reacao_folego"
     },
     {
       "id": "symbol:services.card_lint.check_redundancy",
       "kind": "function",
-      "line": 473,
+      "line": 475,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_redundancy"
     },
     {
       "id": "symbol:services.card_lint.check_revelar_publico",
       "kind": "function",
-      "line": 328,
+      "line": 330,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_revelar_publico"
     },
@@ -620347,7 +620547,7 @@
     {
       "id": "symbol:services.card_lint.errors",
       "kind": "function",
-      "line": 594,
+      "line": 596,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.errors"
     },
@@ -620368,21 +620568,21 @@
     {
       "id": "symbol:services.card_lint.lint_batch",
       "kind": "function",
-      "line": 546,
+      "line": 548,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_batch"
     },
     {
       "id": "symbol:services.card_lint.lint_card",
       "kind": "function",
-      "line": 517,
+      "line": 519,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_card"
     },
     {
       "id": "symbol:services.card_lint.lint_wave",
       "kind": "function",
-      "line": 565,
+      "line": 567,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_wave"
     },
@@ -647969,42 +648169,42 @@
     {
       "id": "symbol:tests.test_card_acervo_reparo._lote2",
       "kind": "test",
-      "line": 96,
+      "line": 115,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._lote2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo._lote3",
       "kind": "test",
-      "line": 130,
+      "line": 149,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._lote3"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo._lote4",
       "kind": "test",
-      "line": 179,
+      "line": 198,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._lote4"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo._lote5",
       "kind": "test",
-      "line": 237,
+      "line": 256,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._lote5"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo._neutras",
       "kind": "test",
-      "line": 355,
+      "line": 362,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._neutras"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo._onda1",
       "kind": "test",
-      "line": 62,
+      "line": 81,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo._onda1"
     },
@@ -648023,158 +648223,172 @@
       "qualified_name": "tests.test_card_acervo_reparo.test_80_cartas_de_tiers_5_plus_sem_texto_generico"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_descricao_vazia",
+      "kind": "test",
+      "line": 66,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lint_recusa_descricao_vazia"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo.test_lint_recusa_frase_modelo_do_gerador_antigo",
       "kind": "test",
-      "line": 53,
+      "line": 72,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lint_recusa_frase_modelo_do_gerador_antigo"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote1_arcanista_36_cartas_12_por_subclasse",
       "kind": "test",
-      "line": 70,
+      "line": 89,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote1_arcanista_36_cartas_12_por_subclasse"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo",
       "kind": "test",
-      "line": 87,
+      "line": 106,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote1_passa_no_lint_contra_o_acervo"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "kind": "test",
-      "line": 118,
+      "line": 137,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada",
       "kind": "test",
-      "line": 104,
+      "line": 123,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote2_sangromante_36_cartas_12_por_subclasse_e_raridade_compensada"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "kind": "test",
-      "line": 138,
+      "line": 157,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2",
       "kind": "test",
-      "line": 163,
+      "line": 182,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_licoes_da_revisao_do_lote2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "kind": "test",
-      "line": 152,
+      "line": 171,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "kind": "test",
-      "line": 187,
+      "line": 206,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
       "kind": "test",
-      "line": 214,
+      "line": 233,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "kind": "test",
-      "line": 201,
+      "line": 220,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
       "kind": "test",
-      "line": 276,
+      "line": 295,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
       "kind": "test",
-      "line": 245,
+      "line": 264,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
       "kind": "test",
-      "line": 263,
+      "line": 282,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_40_neutras_raridade_20_12_6_2_e_regioes",
       "kind": "test",
-      "line": 359,
+      "line": 366,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_40_neutras_raridade_20_12_6_2_e_regioes"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores",
       "kind": "test",
-      "line": 427,
+      "line": 434,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_licoes_da_revisao_dos_lotes_anteriores"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao",
       "kind": "test",
-      "line": 468,
+      "line": 475,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao.estado",
       "kind": "test",
-      "line": 471,
+      "line": 478,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_neutras_entram_pelo_espolio_e_respeitam_a_regiao.estado"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_neutras_nao_vazam_para_nenhuma_postura_nem_para_o_baralho_inicial",
       "kind": "test",
-      "line": 454,
+      "line": 461,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_neutras_nao_vazam_para_nenhuma_postura_nem_para_o_baralho_inicial"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_origem_lore_e_um_id_real_do_codex",
       "kind": "test",
-      "line": 376,
+      "line": 383,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_origem_lore_e_um_id_real_do_codex"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos",
       "kind": "test",
-      "line": 417,
+      "line": 424,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_lote6_passa_no_lint_e_no_orcamento_sem_avisos"
     },
     {
-      "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
+      "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder",
       "kind": "test",
-      "line": 322,
+      "line": 334,
       "path": "tests/test_card_acervo_reparo.py",
-      "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem"
+      "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_classe_sem_placeholder"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_pool_inteiro_sem_descricao_vazia_ou_generica",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_pool_inteiro_sem_descricao_vazia_ou_generica"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_raridade_acompanha_o_patamar",
@@ -648186,14 +648400,14 @@
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1",
       "kind": "test",
-      "line": 499,
+      "line": 506,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_tronco_cartas_por_postura_sem_subclasse_nivel_1"
     },
     {
       "id": "symbol:tests.test_card_acervo_reparo.test_validador_recusa_origem_lore_invalida_e_neutra_sem_lore",
       "kind": "test",
-      "line": 388,
+      "line": 395,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_validador_recusa_origem_lore_invalida_e_neutra_sem_lore"
     },
@@ -705186,5 +705400,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:f3b52ea8f75f4bd8d9778c3bfcf36198f0bd77176dd9b177ec2b63857b2616d3"
+  "source_tree_hash": "sha256:2cc4954f701c4c60e24ed047bfd34caaf21b2350917669f4cc5f3032c0cd03ba"
 }
