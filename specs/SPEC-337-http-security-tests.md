@@ -1,6 +1,6 @@
 # SPEC-337 — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
 
-> **Status:** `in-progress` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
+> **Status:** `done` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma em código.
 > **Desbloqueia:** SPEC-338 (fuzz Schemathesis reutiliza a fixture de dois principals e o check de headers/vazamento desta spec).
@@ -212,10 +212,10 @@ O mapeamento achou três bugs pequenos (nenhum IDOR entre tenants). Esta spec os
 - [x] R17 offline: reusar a key de um turno no DELETE → 409, e a campanha continua existindo; retry do mesmo delete → 200. **Pendente (CI `audit-local`):** a variante Postgres local (`test_delete_key_reuse_conflicts_on_postgres`).
 - [x] R18: `quality` com uma geração de outra campanha → 409, sem alterar a linha (offline). Local: não semeável sem rede (teste local pula com motivo explícito).
 - [x] R19: nenhum item de `detail` no 422 tem `input`/`ctx`/`url`; `curta-XYZ` não aparece no corpo.
-- [ ] **Pendente (CI `audit-local`; stack local fora do ar no executor):** R20/R21: `scripts/audit_local_gate.py` roda `test_rls_local.py`, `test_storage_security_local.py` e `test_http_idor_local.py` sem nenhum skip; código 0 com a stack local; o job `audit-local` verde no PR.
+- [x] R20/R21: `scripts/audit_local_gate.py` roda `test_rls_local.py`, `test_storage_security_local.py` e `test_http_idor_local.py` sem nenhum skip; job `audit-local` verde no PR #57 (run 40478011913, 27/10). Causas da 1ª falha em main (run 40477243398): fixture `duo` estourava o limiter de auth por IP (20/15 min) → login 1× por principal em escopo de módulo; teste de storage esperava leitura direta do dono em `rpg-dynamic`, removida de propósito pela SPEC-224 D-B (migration 20261017120000) → GET direto do dono agora espera negação; signed URL segue 200.
 - [x] Testes existentes de sessão, CSRF e superfícies seguem verdes (Etapa 2).
-- [ ] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso).
-- [ ] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM).
+- [x] `uv run pytest` verde: suíte completa no pouso de 27/10 (6987 passed, 273 skipped, 0 failed, `-n 4`); o follow-up só tocou testes `security_local` (pulam offline) e foi validado no `audit-local`.
+- [x] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM).
 - [x] Saves antigos continuam carregando (sem mudança de persistência; a suíte cobre).
 
 ## 6. Smoke test real
