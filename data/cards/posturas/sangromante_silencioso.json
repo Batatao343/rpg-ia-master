@@ -197,7 +197,7 @@
       "patamar": "avancado",
       "raridade": "incomum",
       "custo_entropia": 1,
-      "custo_folego": 1,
+      "custo_folego": 2,
       "frequencia": "cena",
       "virtude_permitida": [
         "agilidade",
@@ -220,7 +220,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "san1_sil_ponto_cego",
@@ -232,7 +232,7 @@
       "patamar": "avancado",
       "raridade": "incomum",
       "custo_entropia": 1,
-      "custo_folego": 1,
+      "custo_folego": 2,
       "frequencia": "cena",
       "virtude_permitida": [
         "agilidade",
@@ -255,7 +255,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "san1_sil_arterial_fina",

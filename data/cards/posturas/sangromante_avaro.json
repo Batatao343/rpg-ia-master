@@ -75,7 +75,7 @@
       "patamar": "avancado",
       "raridade": "incomum",
       "custo_entropia": 1,
-      "custo_folego": 1,
+      "custo_folego": 2,
       "frequencia": "livre",
       "virtude_permitida": [
         "forca",
@@ -103,7 +103,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "san1_ava_poupar_ferida",
@@ -257,7 +257,7 @@
         {
           "kind": "dano",
           "categoria_arma": "versatil",
-          "dano_base": 4
+          "dano_base": 3
         },
         {
           "kind": "dano",
@@ -271,7 +271,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "san1_ava_penhor_de_carne",
