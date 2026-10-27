@@ -15,6 +15,7 @@ from services import conflict_orchestrator as orch
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 from services.content_validator import validate_cards
+from tests import spec330_equivalence as eq
 
 _V = {"forca": 3, "agilidade": 2, "corpo": 2, "mente": 3, "carisma": 2}
 _HERE = os.path.dirname(__file__)
@@ -85,65 +86,26 @@ def _list_form(card: dict) -> dict:
     return fx.materialize(out)
 
 
-def _run_card(card: dict) -> str:
-    """Resolve a Carta como o motor faz (por tipo) e serializa tudo que mudou."""
-    random.seed(11)  # fórmulas de dado usam o `random` global
-    cid = card["id"]
-    player = _actor(
-        "player",
-        class_name=card.get("classe") or "Devoto do Abismo",
-        known_cards=[cid],
-        prepared_cards=[cid],
-        entropy=99,
-        max_entropy=99,
-        level=20,
-    )
-    cm.apply_condition(
-        player, {"name": "Mira", "dot": 0, "duration": 9, "stat": "attack", "delta": 40}
-    )
-    enemy = _actor("e")
-    ally = _actor("ally", categoria="companheiro", transient=True)
-    actors = {"player": player, "e": enemy, "ally": ally}
-    scene = _scene(*actors)
-    tipo = card.get("tipo")
-    kind = str((card.get("efeito") or {}).get("kind"))
-    out: dict = {"logs": []}
-    if tipo == "ativa":
-        target = "player" if kind in ct._SUPPORT_EFFECTS else "e"
-        out = ct.resolve_turn(
-            scene,
-            actors,
-            ct.TurnDeclaration(
-                actor_id="player",
-                acao=ct.TurnStep(kind="card", card_id=cid, target_id=target),
-            ),
-            state={"player": player},
-            sides={"hero": ["player", "ally"], "enemy": ["e"]},
-            rng=random.Random(7),
-        )
-        out = {k: v for k, v in out.items() if k != "cards_used"}
-    elif tipo == "reacao":
-        orch._resolve_reaction_effect(
-            scene, player, "player", cards.get_card(cid), "e", actors, out, rng=random.Random(7)
-        )
-    else:
-        out["mods"] = cm.combat_modifiers(player)
-        out["passives"] = cm.player_passives(player)
-    return json.dumps([out, actors, scene], sort_keys=True, default=str, ensure_ascii=False)
+def test_equivalencia_das_308_cartas_legadas_contra_o_motor_anterior():
+    """D-3: golden gerado com o código da `main` PRÉ-330 (tests/spec330_equivalence.py)."""
+    with open(eq.GOLDEN, encoding="utf-8") as f:
+        golden = json.load(f)
+    legacy = eq.legacy_cards()
+    assert len(legacy) == len(golden) == 308
+    diffs = [cid for cid, c in sorted(legacy.items()) if eq.run_card(c) != golden[cid]]
+    assert diffs == []
 
 
-def test_equivalencia_das_308_cartas_legadas_em_forma_de_lista(monkeypatch):
+def test_equivalencia_forma_lista_igual_a_forma_legada(monkeypatch):
     catalog = cards._load_cards()
-    legacy = {cid: c for cid, c in catalog.items() if "efeitos" not in c}
-    assert len(legacy) == 308
+    with open(eq.GOLDEN, encoding="utf-8") as f:
+        golden = json.load(f)
     diffs = []
-    for cid, card in sorted(legacy.items()):
-        before = _run_card(card)
+    for cid, card in sorted(eq.legacy_cards().items()):
         monkeypatch.setitem(catalog, cid, _list_form(card))
-        after = _run_card(catalog[cid])
-        monkeypatch.setitem(catalog, cid, card)
-        if before != after:
+        if eq.run_card(catalog[cid]) != golden[cid]:
             diffs.append(cid)
+        monkeypatch.setitem(catalog, cid, card)
     assert diffs == []
 
 

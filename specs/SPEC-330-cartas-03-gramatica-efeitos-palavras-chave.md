@@ -69,7 +69,7 @@ Autoria de cartas novas (SPEC-335). Keywords de inimigo exclusivas (SPEC-332 pod
 6. `power_score`: as 308 atuais entram na faixa (calibrar pesos, não as cartas); outliers listados no hand-back.
 
 ## 5. Critérios de aceite
-- [x] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa) — forma `efeito` × forma `efeitos=[efeito]` no motor novo (§8 D-3)
+- [x] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa) ao motor anterior — golden da `main` pré-330 (§8 D-3)
 - [x] 14 palavras-chave com teste e entrada no glossário (Grupo B: glossário/validador/texto; efeito no motor depois da 328)
 - [x] Validator rejeita vocabulário fora do catálogo e carta fora do orçamento
 - [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso)
@@ -91,20 +91,22 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
 `tests/test_keywords_valoria.py`; 12 Cartas compostas de exemplo em
 `tests/fixtures/spec330_cartas_compostas.json` (fora do acervo do jogo).
 
-- **D-1 Fusão `exposto` = Rachadura (D4 do dono).** Uma condição só, exibida como
-  "Rachadura": **+25 % de dano recebido em golpe** (arredonda meio-para-cima; não
-  amplia DoT/auto-dano). O antigo efeito de `exposto` (−2 de Esquiva) deixa de existir:
-  as 20 Cartas que aplicam `exposto` passam a aplicar Rachadura (mudança de balanço
-  deliberada; `test_named_condition_exposto_vira_rachadura`).
+- **D-1 `exposto` ≠ Rachadura (correção do coordenador, 27/10).** `exposto` mantém a
+  mecânica e o nome atuais (−2 de Esquiva). **Rachadura** é condição NOVA (+25 % de
+  dano recebido em golpe, arredonda meio-para-cima, não amplia DoT/auto-dano), usada
+  só por Cartas novas/compostas. Nenhuma Carta legada muda de resultado.
 - **D-2 Representação.** Palavras-chave que são efeito viram `kind` (`rachadura`,
   `torpor`, `sangria`, `vigilia`, `marca_do_abismo`); as que são propriedade da Carta
   ficam em `palavras_chave: {sacrificio: N, interromper, exaurir, guardar, eco,
   ressoar: N, fardo, vazao}`; **Chamado** é o campo `chamado: k` do efeito (açúcar de
   `se: {entropia_min: k}`).
-- **D-3 Equivalência.** Rodar o motor anterior no teste não é viável; o teste prova
-  que a forma lista dá resultado idêntico à forma legada nas 308 Cartas (seed fixa,
-  por tipo: ativa via `resolve_turn`, reação via `_resolve_reaction_effect`, passiva
-  via `combat_modifiers`). A única mudança de resultado legado é D-1.
+- **D-3 Equivalência contra o motor anterior.** `tests/spec330_equivalence.py` resolve
+  as 308 Cartas legadas com seed fixa (ativa via `resolve_turn`, reação via
+  `_resolve_reaction_effect`, passiva/utilitária/virtude via modificadores) usando só
+  APIs pré-330; o golden `tests/fixtures/spec330_legacy_golden.json` (hash + logs por
+  Carta) foi gerado com o código da `main` pré-330 (8bd4f384) e o teste exige igualdade
+  no motor novo, na forma legada e na forma `efeitos=[efeito]`. Fora da comparação só a
+  contabilidade nova (`_cartas_rodada`) e stats novos zerados no dict de modificadores.
 - **D-4 Efeito principal.** O catálogo deriva `efeito` = primeiro efeito `ao_jogar`
   incondicional de kind legado (senão o primeiro incondicional). Ele dirige a
   rolagem/suporte; os efeitos adicionais rodam depois e **só com acerto** quando o
@@ -116,10 +118,15 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   `ao_derrubar`, `ao_entrar_carga`, `ao_pressagio_frustrado` (via Interromper).
   `ao_comprar`/`ao_descartar`/`ao_exaurir` disparam quando a 328 existir. Fila FIFO,
   profundidade máx. 3 (o 4º é descartado e registrado em `gatilhos_descartados`).
-- **D-6 Interromper × SPEC-329.** Lê presságios de `scene["pressagios"]` (ou
-  `card_effects.bind(..., pressagios=)`), espera `{kind: "attack"}` por ator, marca
-  `frustrado=True` e registra `out["pressagios_frustrados"]`. A ligação ao
-  `combat["pressagios"]` da 329 fica para o pouso conjunto (testado por evento sintético).
+- **D-6 Interromper × SPEC-329 (formato real).** Com `RPG_ENEMY_INTENT=on`, o
+  `run_round` entrega ao contexto os presságios congelados (`combat["pressagios"]`,
+  `{actor_id: [intent]}`) e o cursor de ações já consumidas. Interromper vale se o
+  presságio PENDENTE do alvo é `tipo` `ataque`/`ataque_multiplo` e o alvo caiu ou foi
+  atordoado: marca `intent["interrompido_por"]` e dispara `ao_pressagio_frustrado` na
+  hora. Quando o turno do inimigo chega, o `_frustrate` da 329 registra o frustrado em
+  `pressagios_frustrados` com `por`/`via: "interromper"` (sem disparar de novo). Presságio
+  frustrado sem Interromper dispara `ao_pressagio_frustrado` para a mira (`alvo_id`).
+  Em `off`/`shadow` Interromper não age. O formato provisório `scene["pressagios"]` saiu.
 - **D-7 Marca do Abismo.** `control: marca` (mantém a Vantagem da `marca` legada) +
   `abismo_bonus: X`, duração 3; o próximo dano direto consome: +X e +1 Entropia (com
   teto) para quem acertou. A `marca` legada não muda.

@@ -1,0 +1,2036 @@
+{
+ "antitoxina": {
+  "logs": [
+   "Usa Antitoxina (-1 Entropia)",
+   "Antitoxina: nenhuma condição para remover."
+  ],
+  "sha": "71b5c953109967548c87b78af29fe858a142025c3e365fad514e208a8e5d9e5e"
+ },
+ "arc_aterramento": {
+  "logs": [
+   "player: ganha condição Aterramento de Emergência"
+  ],
+  "sha": "df94f7a7fd3226af95079016ea0e9e80e730aab6601b019e761e71c61ae75c9b"
+ },
+ "arc_auscultar_eter": {
+  "logs": [],
+  "sha": "eb98dce097f816381ce65ac89103364dcf283dd8b112661549bc4be2b65e6b36"
+ },
+ "arc_cal_feixe": {
+  "logs": [
+   "Usa Feixe Calibrado (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "ff963ffd5409aa72168fcfb51774f01fcc65c170efb6b63107f16528c9747326"
+ },
+ "arc_cal_malha": {
+  "logs": [
+   "Usa Malha de Calibração (-2 Entropia)",
+   "player: ganha condição Malha de Calibração"
+  ],
+  "sha": "a53fc3a1b42d2db3b33b362f02d427ad5ed8acbf6eb903e9f59e6d017f02f70d"
+ },
+ "arc_cal_regulagem": {
+  "logs": [],
+  "sha": "be3d8289b351e317f84378850e3bf131d1d8a88e69cb7875aa712ed43e5db97e"
+ },
+ "arc_cal_valvula": {
+  "logs": [
+   "player: ganha condição Válvula de Segurança"
+  ],
+  "sha": "8252db7c1ad13e511a42a21c0189c2a1d70b42cc401e1392fc8768b20a66e01d"
+ },
+ "arc_cal_zero": {
+  "logs": [
+   "Usa Zero Absoluto do Cálculo (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Atordoado"
+  ],
+  "sha": "6c673664e095315856fcedb0a34dd8383d37b5f848be4647f3ec2a40dda62567"
+ },
+ "arc_calibrado_apice": {
+  "logs": [
+   "Usa Constante Impossível (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 18×1=18; Vitalidade 10 -> 0 (excedente 8); Ferimento grave em perna"
+  ],
+  "sha": "cb7ff07ad6240fa325425c9b38839411f2b07ace284c0948ad5c1512e1169edc"
+ },
+ "arc_calibrado_t5": {
+  "logs": [
+   "Usa Equação de Combate (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "65305237c4e778f75c3ec5b5fd1eac06a009e0af0474d467f358ebe301b3304e"
+ },
+ "arc_calibrado_t7": {
+  "logs": [
+   "Margem Exata: player → e: acerto (52 vs 12).",
+   "dano 15×1=15",
+   "Vitalidade 10 -> 0 (excedente 5)",
+   "Ferimento leve em perna"
+  ],
+  "sha": "3abb8681cae2f98267b86e0d1e359437ce2e9ddcf266d5b2d7f0b6ba84139f55"
+ },
+ "arc_calibrado_t8": {
+  "logs": [],
+  "sha": "e72b69471a5fa4b13a4c2c2301a5195ceb27c2b0faf3c29176108d0d23cfb624"
+ },
+ "arc_constante_cinza": {
+  "logs": [],
+  "sha": "82b0bc7aeed1424c15ff7b88bcbf94475f4805547e38df525bd97cbe84213bd2"
+ },
+ "arc_des_horizonte": {
+  "logs": [
+   "Usa Horizonte sem Isolante (-5 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "e2034646b3aa0549c9764956cabb1f9c3eb67418395bee2f93755dec984d900b"
+ },
+ "arc_des_mao_nua": {
+  "logs": [
+   "Usa Mão Nua no Éter (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "344e7ea5b95433e4cf592b8e9f4423a5441134e2412824abbf1a4c95aff4d3b0"
+ },
+ "arc_des_nervo": {
+  "logs": [],
+  "sha": "4be64ebcb72c6e6aee4ae274a957fb7b116ceb5ed107776ede4b6442da3cf610"
+ },
+ "arc_des_nervo_exposto": {
+  "logs": [
+   "Usa Nervo Descoberto (-2 Entropia)",
+   "player: ganha condição Nervo Descoberto"
+  ],
+  "sha": "fc0d0f727a813913453099559c06dc91b054acace713b0a983042338b4be6899"
+ },
+ "arc_des_sobrecarga": {
+  "logs": [
+   "Usa Sobrecarga (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "42213ce1d60b5b027a3e6bff3853b8bfc750efeeae7a86eb48127b07b0e82ff3"
+ },
+ "arc_descarga": {
+  "logs": [
+   "Usa Descarga do Instrumento (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 4×1=4; Vitalidade 10 -> 6 (excedente 0)"
+  ],
+  "sha": "0a2cca8ca60070a288000281a84bbabe72d141623ab523c6ac99231625571454"
+ },
+ "arc_descoberto_apice": {
+  "logs": [
+   "Usa Acidente Perfeito (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "0c62f5a0efdd042f22c8fc464db4049a702964ebad4bb98dce115bdc8ff33c24"
+ },
+ "arc_descoberto_t5": {
+  "logs": [
+   "Usa Falha Deliberada (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "30a56ada61390c5571c2d50f9c0b7399cae4b3182ecee9e7d8193305a22d3cc3"
+ },
+ "arc_descoberto_t7": {
+  "logs": [
+   "e: ganha condição exposto"
+  ],
+  "sha": "d11cf791d737b7f663514a0d769e4a8d07d16e140658b1b8a68f097ba6f8f4fe"
+ },
+ "arc_descoberto_t8": {
+  "logs": [],
+  "sha": "c1c6dd1dac51dd50f2cb4d06854279223e4465952576c40c7d2a6fda3f4d22e1"
+ },
+ "arc_empuxo": {
+  "logs": [
+   "Usa Empuxo Arcano (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "fa5eb6e81a3401b438eca458f8c8984fc8bbe61be3cdcb9b1b98ffde94ec6e86"
+ },
+ "arc_equacao_persistente": {
+  "logs": [],
+  "sha": "3d1cb62d1d03790dc07ca20d3ac4069775b0f819542bd71be048eb5fb1a8e93e"
+ },
+ "arc_faisca": {
+  "logs": [
+   "Usa Faísca Cinzenta",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "a78d95f453ed67aca5ff48497fda3388c0ec7023794d2944384a3130786f7060"
+ },
+ "arc_imp_bomba": {
+  "logs": [
+   "Usa Bomba de Sucata (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "4be642c1344edc7d6392fd7f0ffdc67327fb10e7ba2de57949eba774a9d3bdee"
+ },
+ "arc_imp_geringonca": {
+  "logs": [],
+  "sha": "c9f7678ebbe4c0731671f2267cf7d89c0b3ab7ef1ffc21f8777713c6f6a27cd2"
+ },
+ "arc_imp_grampo": {
+  "logs": [
+   "Usa Grampo de Éter (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Grampo de Éter"
+  ],
+  "sha": "5791aacbcf13eab0af31a1fb76d4fcb21f8b6c29833590e7709f1114a5c70b40"
+ },
+ "arc_imp_maquina": {
+  "logs": [
+   "Usa Máquina que Só Funciona Uma Vez (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "3d2ee0682e61e37f14c46d74e9d71360833f86bac5bf0311e7fe218d65e03401"
+ },
+ "arc_imp_remendo": {
+  "logs": [],
+  "sha": "edacdacf166da5db042c21f177352a80047b1d2776cef904b43b5d83ae62ec34"
+ },
+ "arc_improvisador_apice": {
+  "logs": [
+   "Usa Última Página (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "acd5490a85594e925a33e8766c5481aff20c638a018f4f96ccb46b5f927b8991"
+ },
+ "arc_improvisador_t5": {
+  "logs": [
+   "Usa Nota à Margem (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "cbe70ac161394dfa9f27fe370bda3afbdc540b33a05c3f2a5a049814101ed6b7"
+ },
+ "arc_improvisador_t7": {
+  "logs": [
+   "Versão dos Vencedores: player → e: acerto (52 vs 12).",
+   "dano 17×1=17",
+   "Vitalidade 10 -> 0 (excedente 7)",
+   "Ferimento grave em perna"
+  ],
+  "sha": "ac8012038c69096effa82f2527455f6a32be40ccc21b7a291f655294ad2c2639"
+ },
+ "arc_improvisador_t8": {
+  "logs": [],
+  "sha": "429614e6ed162ebe65d4f115c425b0413e71e6b3e507af42f00438b72ab0df7e"
+ },
+ "arc_manto": {
+  "logs": [
+   "Usa Manto de Bruma (-2 Entropia)",
+   "player se esconde (Manto de Bruma)."
+  ],
+  "sha": "4d7677d635bd993d83fe80619586c60b75e8358665e545ffa4a18019f90a20ed"
+ },
+ "arc_olho": {
+  "logs": [],
+  "sha": "69a459ec4d4dd175e92319b88ff41d0b663517f49dcb6d01a7f1305c8c02f48a"
+ },
+ "arc_ponte_curta": {
+  "logs": [],
+  "sha": "fcbeb227b3dced31962b570f28782df7bb393ff60fe670397fa0f8232f94dad9"
+ },
+ "arc_pulso_inverso": {
+  "logs": [
+   "Usa Pulso Inverso (-2 Entropia)",
+   "Pulso Inverso: nenhuma condição para remover."
+  ],
+  "sha": "cfce5c9398c81b50de0f96d01c3124649d99712a99672ebbb16dddc086fd3296"
+ },
+ "arc_raio_cinza": {
+  "logs": [
+   "Usa Raio Cinza Longitudinal (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 11×1=11; Vitalidade 10 -> 0 (excedente 1); Ferimento leve em perna"
+  ],
+  "sha": "f6fe4f51a3dbf9ea3140a10d8a96dae0483c1aafaa4e703124866c8f96fbd149"
+ },
+ "arc_refracao": {
+  "logs": [
+   "player: ganha condição Refração Cinzenta"
+  ],
+  "sha": "5770cc88700c1eff91c191af2a766780f8184a744c82651294983294e58a03ba"
+ },
+ "arc_t5_tronco": {
+  "logs": [
+   "Usa Válvula Mestra (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "96caf44faf5b16aa6073c78803a42b4a96ab4eaceea0c1720f4bc9663b74417c"
+ },
+ "arc_t6_tronco": {
+  "logs": [
+   "player: ganha condição Geometria da Fenda"
+  ],
+  "sha": "07469f3fe431d562d82e0d1eb38deea8537b2163fde21d3343eb435d93278fba"
+ },
+ "arc_t7_tronco": {
+  "logs": [],
+  "sha": "0ce69e011270db5f86b2e855dee04ff44b6e6509950e2893d860d785a9fd3387"
+ },
+ "arc_t8_tronco": {
+  "logs": [],
+  "sha": "3c7316957ea18658b96bb0b1ac151ea63ab0e90a83de2973f10cf6dac2fa467b"
+ },
+ "arc_torrente": {
+  "logs": [
+   "Usa Torrente Cinzenta (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "8288973170f162ee916096741a5f4afa2998ed37bc0c41de781fae93b36646b5"
+ },
+ "arc_vazao": {
+  "logs": [],
+  "sha": "78edde2c9a840957a9a34fa91fd56c92a3eef0075828dee0a84ee82053202479"
+ },
+ "arc_vetor_quebrado": {
+  "logs": [
+   "Usa Vetor Quebrado (-1 Entropia)",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "60bf7ffb326d65cb6d2daacd488a5925f19f64cf2792c9cb39f7b72e5b108672"
+ },
+ "bst_bafo_acido": {
+  "logs": [
+   "Usa Bafo Ácido",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "e9f6cd79536a5912ae502fc59c3671feac8daa04d6266beb368a5d5b3060d827"
+ },
+ "bst_baforada_ignea": {
+  "logs": [
+   "Usa Baforada Ígnea (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "3c7ae22e5c31abe1bc3d1cb337c59d1e59a1040ff8129736aaafca76ce3d0f18"
+ },
+ "bst_bote_certeiro": {
+  "logs": [
+   "Usa Bote Certeiro",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "089c8b08c7f60029792747ed911c5e4774547d1db944af0cecd8077968d60b15"
+ },
+ "bst_carregar_ruina": {
+  "logs": [
+   "Usa Carregar pela Ruína (-1 Entropia)",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "b2387412ac7eef01b9d9c24320d7392153bccfcf595144c6f428d8f51711ca57"
+ },
+ "bst_casca_reativa": {
+  "logs": [
+   "Casca Reativa: player → e: acerto (52 vs 12).",
+   "dano 3×1=3",
+   "Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "0a7ed12f8b1b83407fea4a7712efbba147b8ffcf0826610637f054106d6314a2"
+ },
+ "bst_coro_colmeia": {
+  "logs": [
+   "Usa Coro da Colmeia (-2 Entropia)",
+   "player: ganha condição Coro da Colmeia"
+  ],
+  "sha": "e4aadc4decbdeae379d92667c73087bd1a59513f49dac269cb8321c1019c540f"
+ },
+ "bst_defesa_instintiva": {
+  "logs": [
+   "player: ganha condição Defesa Instintiva"
+  ],
+  "sha": "fcf05c6370444578d2544031934294cfe750a16bd733c898b0c2901cd5dea3c3"
+ },
+ "bst_descarga_arcana": {
+  "logs": [
+   "Usa Descarga Arcana (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "a0c7d0057daa43ebf9d10c28d81169edc0346745b2e63bf313cf5a30552cdeb1"
+ },
+ "bst_eco_montanhas": {
+  "logs": [
+   "Usa Eco Cortante (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 7×1=7; Vitalidade 10 -> 3 (excedente 0)"
+  ],
+  "sha": "38835785e297d040bd0dcb7772434cd9d01c7a0d841bb9323078192614b963ee"
+ },
+ "bst_esporo_xylos": {
+  "logs": [
+   "Usa Nuvem Hospedeira (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Enredado"
+  ],
+  "sha": "52cb777eee0d8b288b42512f500828378e3b602e251354de7ef18e7360172e70"
+ },
+ "bst_eter_aethelgard": {
+  "logs": [
+   "Usa Vazamento de Aethelgard (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Vazamento de Aethelgard"
+  ],
+  "sha": "f1c0866564dba077ccfedf6f206e69cdc242af3c1155a6906741e015b1e03338"
+ },
+ "bst_fenda_sonica": {
+  "logs": [
+   "Usa Fenda Sônica (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 5×1=5; Vitalidade 10 -> 5 (excedente 0)"
+  ],
+  "sha": "ff4eb7c46d8e9c639786e919bf2e5c67ee996cc9ceee82f437c507971d822a0b"
+ },
+ "bst_fuga_suja": {
+  "logs": [
+   "Usa Fuga Suja",
+   "player se esconde (Fuga Suja)."
+  ],
+  "sha": "99d720d7837042ba592695b5c9f104cccb74ddddd64c774734063a1d6bb8884b"
+ },
+ "bst_fuligem_arcadia": {
+  "logs": [
+   "Usa Pulmão de Fuligem",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição cego"
+  ],
+  "sha": "a732a43107e1b2358d0614dcb304b84aae42d679eba2cd30ebb9a7aa42553fa5"
+ },
+ "bst_furia_final": {
+  "logs": [
+   "Usa Fúria Final",
+   "player: ganha condição Fúria Final"
+  ],
+  "sha": "8aed9fd5226d540948379a50dc3cf6de2f74db7f2db5648cc89d925142944024"
+ },
+ "bst_golpe_mestre": {
+  "logs": [
+   "Usa Golpe de Mestre (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 14×1=14; Vitalidade 10 -> 0 (excedente 4); Ferimento leve em perna"
+  ],
+  "sha": "ce9b8abf9bb2e3f6ff832833ec23ce0d8a5ecb7c009c16561e2edd6da1690357"
+ },
+ "bst_golpe_sombras": {
+  "logs": [
+   "Usa Golpe das Sombras",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "94b0b6a0e50264abd293b34db1c2913ffd8302e7109a317e7fe214cbcfab3fb0"
+ },
+ "bst_grito_terror": {
+  "logs": [
+   "Usa Grito de Terror",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Medo"
+  ],
+  "sha": "711e2fc84456fd051796f4d9e55501191f0b55831b2e15e00fe0c8ea20c1b464"
+ },
+ "bst_lodo_melancolia": {
+  "logs": [
+   "Usa Lodo da Melancolia",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Lodo da Melancolia"
+  ],
+  "sha": "8547e743c75784fe6506bb749ea956abec6d4876dc479f3d15b9873d04f0b67e"
+ },
+ "bst_mare_ophidia": {
+  "logs": [
+   "Usa Maré de Ophidia",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "6f0ceaf13b4b196a74ec5fbb1700d8f86ddd76b4f418224f3b37f8e0aadfb2b5"
+ },
+ "bst_mimetismo_morto": {
+  "logs": [
+   "Usa Mimetismo Morto",
+   "player se esconde (Mimetismo Morto)."
+  ],
+  "sha": "e8db50b2364ee4e1e1106f86fbfa67d7096c655aff4f7d173f27c5bfa2849d6c"
+ },
+ "bst_mordida_infecciosa": {
+  "logs": [
+   "Usa Mordida Infecciosa",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Mordida Infecciosa"
+  ],
+  "sha": "12810706b67ecfc9ae84c424b94416f39efd2a4066f0f7f0350765751a2e9105"
+ },
+ "bst_noite_skallgard": {
+  "logs": [
+   "Usa Noite no Sangue (-2 Entropia)",
+   "player: ganha condição Noite no Sangue"
+  ],
+  "sha": "adfa8dac232d8d6398b1c62e0374ccad9dc7977e1e739ca9d95417d1261c898c"
+ },
+ "bst_ordem_foco": {
+  "logs": [
+   "Usa Ordem de Foco",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Ordem de Foco"
+  ],
+  "sha": "2573dfd1ecbeb68a0b2c76df5b6d7f93f5f12b2a04673a9a1896d307d1b33f7a"
+ },
+ "bst_ordem_quebrar": {
+  "logs": [
+   "Usa Ordem: Quebrar a Linha (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "a6b69f310e1f8642607c851a6fd30fe243529f77e4d5cdf45b43e07cf55e831e"
+ },
+ "bst_osso_costa": {
+  "logs": [
+   "Usa Rosário de Ossos (-1 Entropia)",
+   "player: ganha condição Rosário de Ossos"
+  ],
+  "sha": "cc8ddeaeed5e28b82ab91fe608331ad8d1625218caec9952a142548376fdce5c"
+ },
+ "bst_pancada_esmagadora": {
+  "logs": [
+   "Usa Pancada Esmagadora (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 10×1=10; Vitalidade 10 -> 0 (excedente 0)"
+  ],
+  "sha": "9103ade5d2abf4700b538427b16ac8fe0e196e552d284afa559cb9e30b2a016c"
+ },
+ "bst_petrificar": {
+  "logs": [
+   "Usa Olhar que Endurece",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Atordoado"
+  ],
+  "sha": "192ad1f99ebaabd7e8f60fddcfa2c7696019896a3315c7e48424cf9b3f534ce8"
+ },
+ "bst_poeira_pradaria": {
+  "logs": [
+   "Usa Passo na Poeira Antiga",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "fb6f63ea455437b093012fedeca4f74e7d7c5967c9c20f0882bc2d52e395b71c"
+ },
+ "bst_postura_muralha": {
+  "logs": [
+   "Usa Postura de Muralha",
+   "player: ganha condição Postura de Muralha"
+  ],
+  "sha": "4aa033f39506565afabb2e7157388cd1132d8448604617c234cf154da487a616"
+ },
+ "bst_roubar_calor": {
+  "logs": [
+   "Usa Roubar Calor (-1 Entropia)",
+   "player: ganha condição Roubar Calor"
+  ],
+  "sha": "056d4a7d4ac42e9ccef458f12687a062832cd7cc6190e22b2e71ad53ba14486d"
+ },
+ "bst_saliva_paralisante": {
+  "logs": [
+   "Usa Saliva Paralisante (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Atordoado"
+  ],
+  "sha": "7e420c416cfb96e78796178a06c4a37e3960bb3263e2526e5faedc904f8fcfaa"
+ },
+ "bst_sangrar_alcateia": {
+  "logs": [
+   "Usa Sangrar para a Alcateia",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Sangrar para a Alcateia"
+  ],
+  "sha": "2c172291e6c75a3f5dfd34bea194cf1236c0a1af862af9d19aff4824f12b9013"
+ },
+ "bst_sino_brekmar": {
+  "logs": [
+   "Usa Sino de Dívida (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Sino de Dívida"
+  ],
+  "sha": "1a0cc11877795601cd955be1711155b56f5671e02a5514b84f2c3344096ddd0b"
+ },
+ "bst_sopro_gelido": {
+  "logs": [
+   "Usa Sopro Gélido",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Sopro Gélido"
+  ],
+  "sha": "49b75242b8dc60b632111421aa9cd2fd80e29558df99f7a86cdb65c6fd59c21e"
+ },
+ "bst_sussurro_thessavar": {
+  "logs": [
+   "Usa Sussurro de Thessavar",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Sussurro de Thessavar"
+  ],
+  "sha": "2e76941064f49209477e1cdc66dcef5eb26e6add4ac5930f7666c2ee3827466c"
+ },
+ "bst_teia": {
+  "logs": [
+   "Usa Teia Prendedora",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Enredado"
+  ],
+  "sha": "31b95b15f3c1d6efda79f3a91d864d972daf3875d73e77a230d538e128f7cc06"
+ },
+ "bst_toque_gelido": {
+  "logs": [
+   "Usa Toque Gélido da Morte",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Toque Gélido da Morte"
+  ],
+  "sha": "7ed4dfe5605fb1f1900f6a0ef2135cfcc821a44471e6efbe9f287ca4c08eacca"
+ },
+ "bst_uivo_comando": {
+  "logs": [
+   "Usa Uivo de Comando",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Uivo de Comando"
+  ],
+  "sha": "88e6764ea4286f783196f3ad1250ce136a9bda0df5b8a651ce8a1186b24f5048"
+ },
+ "bst_vidro_zhur": {
+  "logs": [
+   "Usa Estilhaço de Zhur (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "80d69a00faf914b0b11e22b230d463e4c2f365a9d9efdb3103160845a1de18c6"
+ },
+ "carne_docil": {
+  "logs": [],
+  "sha": "f2c930ea539d30c46618d0e626e325223ab9a571a2b43f73009890ee1d59a2a2"
+ },
+ "conviccao_passiva": {
+  "logs": [],
+  "sha": "0fe0afedf105d658d5305e13c587c3de409ec6077379da842b2726727aced382"
+ },
+ "cor_acido_memoria": {
+  "logs": [
+   "Usa Ácido de Memória (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Ácido de Memória"
+  ],
+  "sha": "c25cbfc308d9e23e24288e817f3886b60c3c205ea9e9b22feba89d050ec243a8"
+ },
+ "cor_adaptacao_residual": {
+  "logs": [],
+  "sha": "7a7a045e34986a2850c050ed6fc23a2fc9fb1107a246b0a0a99c238ae77d4291"
+ },
+ "cor_alm_desespero": {
+  "logs": [
+   "Usa Desespero (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Medo"
+  ],
+  "sha": "027abae727f2e75cdff2d562c613081ada9ca9d96979dcf1afac3e46d5e00cae"
+ },
+ "cor_alm_duvida": {
+  "logs": [
+   "Usa Semente da Dúvida (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição desmoralizado"
+  ],
+  "sha": "30b7544de5edf677628a41237f1a644e5f8345c336063cddda0322b9dfa9f41f"
+ },
+ "cor_alm_eco": {
+  "logs": [
+   "Usa Eco da Culpa (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Eco da Culpa"
+  ],
+  "sha": "f8ffc9a000995588956dffa30ae8c7526ecc4fdfd7e6755c5bea8be40911c700"
+ },
+ "cor_alm_erosao": {
+  "logs": [],
+  "sha": "84e0324563682ef4e6c8251fe41a919da4b0732a506236eba9eda3e011fde800"
+ },
+ "cor_alm_vazio": {
+  "logs": [
+   "Usa Sala sem Voz (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Medo"
+  ],
+  "sha": "e2116dcbf9ea0a30597bfbbd2fb8b38c48901fd44ed29f6316501c9895801ac7"
+ },
+ "cor_alma_apice": {
+  "logs": [
+   "Usa Eclipse Interior (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "5c9f2f3997121e9bb3541165534c52514234ecd8d6f491df0b7d2d3859b1ff22"
+ },
+ "cor_alma_t5": {
+  "logs": [
+   "Usa Liturgia do Desalento (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "8af14bc53c56e37e8c667fff85833a667c205619089e320ab74b12741df32c7e"
+ },
+ "cor_alma_t7": {
+  "logs": [
+   "e: ganha condição exposto"
+  ],
+  "sha": "f001f6605b1cf7d8dea5e09f4ab80deb3ba1b47b0c884c6f3e632e1de2b7afaf"
+ },
+ "cor_alma_t8": {
+  "logs": [],
+  "sha": "c8f12d5d3b204358699c6e6a7e93ccb65ab11ae1a6e2dced26f8e8ab3a8fa580"
+ },
+ "cor_bio_gangrena": {
+  "logs": [
+   "Usa Gangrena (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Gangrena"
+  ],
+  "sha": "93af48eb26b19ca4a71fd42bfb2fa2bd321fcf9af577ed6f66d26fda25083c98"
+ },
+ "cor_bio_metastase": {
+  "logs": [
+   "Usa Metástase (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Metástase"
+  ],
+  "sha": "903f839a68f6084f2d8e11d8815eba3c62ef4326b724609a51aa273791c491ef"
+ },
+ "cor_bio_micelio": {
+  "logs": [
+   "Usa Micélio de Guerra (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Micélio de Guerra"
+  ],
+  "sha": "3f05c117d9357ae29e152c99e274d401687d3a0d2737c44a03d21739ba3e983d"
+ },
+ "cor_bio_necrose": {
+  "logs": [],
+  "sha": "cde9002ad28d93c672b70eaa16afe68c80ac9a6793b2eca8108be409ff751ec0"
+ },
+ "cor_bio_raiz": {
+  "logs": [
+   "Usa Raiz sob a Pele (-4 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Enredado"
+  ],
+  "sha": "f409dedbadbad62d06d3b6c47c94ba07a8bcf997b2d35189442269b95f25540b"
+ },
+ "cor_biologia_apice": {
+  "logs": [
+   "Usa Gênese da Podridão (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 18×1=18; Vitalidade 10 -> 0 (excedente 8); Ferimento grave em perna"
+  ],
+  "sha": "010b44142dbf339cfb3ebe965a6dd948978d8460d61b3f346335992f83619dd9"
+ },
+ "cor_biologia_t5": {
+  "logs": [
+   "Usa Ecologia da Febre (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "9d410865bdc344e0b1013d81e53a8f5e6cd57a212368884401d1c4da99776c36"
+ },
+ "cor_biologia_t7": {
+  "logs": [
+   "Anticorpo Traidor: player → e: acerto (52 vs 12).",
+   "dano 15×1=15",
+   "Vitalidade 10 -> 0 (excedente 5)",
+   "Ferimento leve em perna"
+  ],
+  "sha": "db1cb4babe03d03c29d4a0b3f73a3ad45b53a38d4cbfd6723ef655b8666bc99d"
+ },
+ "cor_biologia_t8": {
+  "logs": [],
+  "sha": "db9ecba02833221904d2999c7b143d749dc695e8a89ad35a45009a32a07f0877"
+ },
+ "cor_carne_docil": {
+  "logs": [],
+  "sha": "4e76c62fd6981173c771b09f01357dc6268d38ead6d28b9523a2ec2fbf746620"
+ },
+ "cor_chao_morde": {
+  "logs": [
+   "e -> distante (pre)"
+  ],
+  "sha": "cfc61d099b8db711075ac761b69070da08ffec1c3c6b2bb62adc2cb180bb681b"
+ },
+ "cor_colapso": {
+  "logs": [
+   "Usa Colapso (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Colapso"
+  ],
+  "sha": "47e523a49d9ee097ec64e7584b87502c5a3bb720fad662e96e82964bcc325807"
+ },
+ "cor_esporos": {
+  "logs": [
+   "Usa Esporos (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Esporos"
+  ],
+  "sha": "d64dda5302fe61ef798df05b42a9987f504fd4d6a3b4357d4498b7b2887f4325"
+ },
+ "cor_farejar": {
+  "logs": [],
+  "sha": "c7b2e25fcf71233b20b7d3146b6b35d0aa1a534fafb49ba85137e2d333dbf01f"
+ },
+ "cor_fratura_util": {
+  "logs": [
+   "Usa Fratura Útil (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 7×1=7; Vitalidade 10 -> 3 (excedente 0)"
+  ],
+  "sha": "24a7488c509c3380680f24d6be5662725a124ebd5d72070f8b0c98134cf8f792"
+ },
+ "cor_ino_colapso": {
+  "logs": [
+   "Usa Colapso de Estrutura (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "cab6c3dabe658bdfb71240e260d7b9ef8db03105ca92abb995bb7402954d19b1"
+ },
+ "cor_ino_corrosao": {
+  "logs": [],
+  "sha": "b18089361e638455245c73d51570a2e86732fd42a8b891dad947edfab2ad553c"
+ },
+ "cor_ino_fadiga": {
+  "logs": [
+   "Usa Fadiga do Material (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "a7831f61a09c74cbf2e935f486cfdc3b9fb50554ddb113062ceee1b3f52edccd"
+ },
+ "cor_ino_ferrugem": {
+  "logs": [
+   "Usa Ferrugem (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição desarmado_risco"
+  ],
+  "sha": "b7d3c7eb2ddbb0085049910c24b0a8a0cb3e0c89e39e4cd88d6f353bd4d2c11d"
+ },
+ "cor_ino_geometria_ferrugem": {
+  "logs": [
+   "Usa Geometria da Ferrugem (-1 Entropia)",
+   "player: ganha condição Geometria da Ferrugem"
+  ],
+  "sha": "ebc6145dd30c5ab577111328d579900d9943ee9904667d52ac4716791a75d946"
+ },
+ "cor_inorganica_apice": {
+  "logs": [
+   "Usa Idade do Colapso (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "d1f4cdae37b0a9831b3d5f2d3acbffac0538a5d6736debd8b2963b27827e2261"
+ },
+ "cor_inorganica_t5": {
+  "logs": [
+   "Usa Catedral de Ferrugem (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "4b7839ed4859ea8665184a6200c927719a474c8840eafc5dc306a2792fb9ef0f"
+ },
+ "cor_inorganica_t7": {
+  "logs": [
+   "Fratura Mineral: player → e: acerto (52 vs 12).",
+   "dano 17×1=17",
+   "Vitalidade 10 -> 0 (excedente 7)",
+   "Ferimento grave em perna"
+  ],
+  "sha": "a8609d08e68284ff549d5a0e37fa99a302122b1c3b7d8c7155f48286846ce08e"
+ },
+ "cor_inorganica_t8": {
+  "logs": [],
+  "sha": "b11397439ab18ee72d8d14746d66164e93255473e5b39d36903eb957d12547d4"
+ },
+ "cor_ler_cicatriz": {
+  "logs": [],
+  "sha": "33da3ef7f4ea62acaab406159062f9c794c9ecf69aa2482f6eb4e1335afb1f68"
+ },
+ "cor_matriz_rejeicao": {
+  "logs": [],
+  "sha": "054515a84de60429a6695acaf0843ac3324ce56a7f9851ed9ef63aaadc1d571c"
+ },
+ "cor_membrana": {
+  "logs": [
+   "player: ganha condição Membrana Reflexa"
+  ],
+  "sha": "fac0b1ba705f9f5d488be91d75acbb3da9f96e68c6b83d18324c4b96b4a88693"
+ },
+ "cor_modelar_chave": {
+  "logs": [],
+  "sha": "e135489ba6e8543755d96812d820968a2224506f7db4863d7448114357e4cf26"
+ },
+ "cor_nome_invertido": {
+  "logs": [
+   "Usa Nome Invertido (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição desmoralizado"
+  ],
+  "sha": "40bd5eb8606e63138e37a5a29da9575074ec8cdc50fc0b97755022ca4201444d"
+ },
+ "cor_semear": {
+  "logs": [
+   "Usa Semear Praga (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Semear Praga"
+  ],
+  "sha": "9137bc276babaef47ec11e29e29ea02374df7f56172aad2250bf805eda21ca38"
+ },
+ "cor_simbiose": {
+  "logs": [],
+  "sha": "3215bdd5a208abf47a761a12c8237ed011d6d9a4f328331680aa05f6bd6b3379"
+ },
+ "cor_t5_tronco": {
+  "logs": [
+   "Usa Colheita da Ruína (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "bf0f3e8a7ede0501bc9e2584ec399258460b5e5ca2dae8b3a4270b11df48fcf5"
+ },
+ "cor_t6_tronco": {
+  "logs": [
+   "player: ganha condição Pacto de Ferrugem"
+  ],
+  "sha": "dd413823d7e7f42eed421ef94b901fca5416f0e351ab31103fd86b1b8a704038"
+ },
+ "cor_t7_tronco": {
+  "logs": [],
+  "sha": "58ccefaabe773a28b6692fbb1aa1fcbff7a31adb7c704966b1e7e0ba09e0f31b"
+ },
+ "cor_t8_tronco": {
+  "logs": [],
+  "sha": "b79f0d98505a7f44dbeba744f9c35f81ea3499e61b8d756ec146f34cd532e55a"
+ },
+ "cor_toque": {
+  "logs": [
+   "Usa Toque da Decadência",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Toque da Decadência"
+  ],
+  "sha": "83d4a97e3f9e320a26b09a3fbcca06aee2564084d886b7e17fb8ae3da825ea96"
+ },
+ "corte_sangrento": {
+  "logs": [
+   "Usa Corte Sangrento",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "b63f2133a34f931635673012c12229928c5ddc6da61489ed5bad3a925eb950ed"
+ },
+ "dev_aguentar": {
+  "logs": [],
+  "sha": "7ec5ac2e76af91a8db5d312f1f013143edb1524818c910f46a79d8c40b7b8d24"
+ },
+ "dev_carregar_caido": {
+  "logs": [],
+  "sha": "417c460944fd8d7d96e26ae7b243cfcf8501d98956ac5a5497391eff251ad12a"
+ },
+ "dev_cons_comunhao": {
+  "logs": [
+   "Usa Comunhão do Último Fôlego (-3 Entropia)",
+   "Comunhão do Último Fôlego: o alvo não está em Estado Terminal."
+  ],
+  "sha": "92a4af1968e1ee4f5bbbdfa609e42918136cbd81a000534768efbed9b94abb59"
+ },
+ "dev_cons_estigma": {
+  "logs": [],
+  "sha": "1a01eff6db5a8dd67e85bd13655aadc89339256b8968431ac8a5ace25df04985"
+ },
+ "dev_cons_liturgia": {
+  "logs": [
+   "Usa Liturgia da Espera (-3 Entropia)",
+   "player: ganha condição Liturgia da Espera"
+  ],
+  "sha": "276b5fbc4884c12cb5865877c10022a4ae42a45a2ce96de762a79661a540fadb"
+ },
+ "dev_cons_marca": {
+  "logs": [
+   "Usa Marca de Sangue Frio (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Marca de Sangue Frio"
+  ],
+  "sha": "6abc7e2225ba465faf81d433cca7b869f36860788c7a4d652cac1b22becc8499"
+ },
+ "dev_cons_relicario": {
+  "logs": [
+   "Usa Corpo-Relicário (-2 Entropia)",
+   "player: ganha condição Corpo-Relicário"
+  ],
+  "sha": "46170d75612f9f0cf7e81b873a09a3a74390369aaf0a27822915acf670d72659"
+ },
+ "dev_consagrado_apice": {
+  "logs": [
+   "Usa Consagração do Vazio (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 18×1=18; Vitalidade 10 -> 0 (excedente 8); Ferimento grave em perna"
+  ],
+  "sha": "babd3ccf5e3c3d55ed97c4516c23ba1b60649275906eed125124df83790f1908"
+ },
+ "dev_consagrado_t5": {
+  "logs": [
+   "Usa Liturgia da Cicatriz (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "4848132f7e93ef1f19e3cfe16f1d6b1bf397e9677708e644be2d82520b6b6855"
+ },
+ "dev_consagrado_t7": {
+  "logs": [
+   "Selo de Vigília: player → e: acerto (52 vs 12).",
+   "dano 15×1=15",
+   "Vitalidade 10 -> 0 (excedente 5)",
+   "Ferimento leve em perna"
+  ],
+  "sha": "7aaced5ce646c0d4feeef2d284a7697b1ebe86b64915628a40a0a22fe8617fa0"
+ },
+ "dev_consagrado_t8": {
+  "logs": [],
+  "sha": "b46a75bc880f74d22ddf328b36a1a0508a5cebd9e34ed928ac048c6f942660d8"
+ },
+ "dev_conviccao": {
+  "logs": [],
+  "sha": "b2943d9e24d2add8fdbcca44afcf4316efabb7f5ce24e140260a94f4bb457d90"
+ },
+ "dev_encaixe": {
+  "logs": [
+   "Encaixe do Golpe: player → e: acerto (52 vs 12).",
+   "dano 4×1=4",
+   "Vitalidade 10 -> 6 (excedente 0)"
+  ],
+  "sha": "07ae0baaa94ffb56a5ba4988b7e7c29e5e8f0482bda29e211890e529d747e123"
+ },
+ "dev_enl_cortejo": {
+  "logs": [
+   "Usa Cortejo dos Ausentes (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Cortejo dos Ausentes"
+  ],
+  "sha": "e868aebc4c664d8d604daefc83bec62e2694aa9de7c6059d016a2da646f18637"
+ },
+ "dev_enl_lamento": {
+  "logs": [
+   "Usa Lamento (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição desmoralizado"
+  ],
+  "sha": "9a664a70262cc6fec2748bae6ea48ada2a824aeeaf35926517a6d4bbc53ffdb1"
+ },
+ "dev_enl_luto": {
+  "logs": [
+   "Usa Peso do Luto (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "47c3e2b808d0c2b5e60d0852f9895ecca9238cd9b0a900b7dc2cc6c4a7f1b8f6"
+ },
+ "dev_enl_memoria": {
+  "logs": [],
+  "sha": "4d683c4b96bd712ab1e83f501386ee68be1a06c8ce7a5d82ca3010803f9f0162"
+ },
+ "dev_enl_testemunho": {
+  "logs": [
+   "Usa Testemunho dos Mortos (-3 Entropia)",
+   "player: ganha condição Testemunho dos Mortos"
+  ],
+  "sha": "612bebab22b70579f0f991df37ec87acec8085d5c8c261209239b944ded6f283"
+ },
+ "dev_enlutado_apice": {
+  "logs": [
+   "Usa Procissão sem Fim (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "9ee8eb35f039ae99833dbde4e1099229427bc2276f455ddc796b1908dc491bc0"
+ },
+ "dev_enlutado_t5": {
+  "logs": [
+   "Usa Réquiem de Ferro (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "49c4a578ae6245fd2e0de4dfee1128d8f6d87549a1a2985da82e07b56339bcaa"
+ },
+ "dev_enlutado_t7": {
+  "logs": [
+   "Luto Vigilante: player → e: acerto (52 vs 12).",
+   "dano 17×1=17",
+   "Vitalidade 10 -> 0 (excedente 7)",
+   "Ferimento grave em perna"
+  ],
+  "sha": "f1855592e87727198ddd1899eac4a50bd36abbd06549b1d2ba48edfbb10cf573"
+ },
+ "dev_enlutado_t8": {
+  "logs": [],
+  "sha": "8998d0ad23d0e12ab9a54d5310b72c675b4ec0cf5bf341397c6e12885e1d8a86"
+ },
+ "dev_golpe_convite": {
+  "logs": [
+   "Usa Golpe do Convite",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 4×1=4; Vitalidade 10 -> 6 (excedente 0)"
+  ],
+  "sha": "303f0f2c4b6b2ffde1485fbbf7dd6026338cc59dd41f02670d286aa4977ef44a"
+ },
+ "dev_martelo_penitente": {
+  "logs": [
+   "Usa Martelo Penitente (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "fda1639ee77f224928b3864bb763dd24719ed8ad24c5f624f92849014b7996fc"
+ },
+ "dev_muralha_viva": {
+  "logs": [
+   "Usa Muralha Viva (-2 Entropia)",
+   "player: ganha condição Muralha Viva"
+  ],
+  "sha": "ede65d062f62b152e88004566afc2126ab056d55d519259501e88c9762e0783d"
+ },
+ "dev_nome_proibido": {
+  "logs": [
+   "Usa Nome Proibido (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Medo"
+  ],
+  "sha": "2c67cdb79c90acc26ce9c12afa769a1896fe860e49cd728b33bac76a0a32715c"
+ },
+ "dev_ombro_porta": {
+  "logs": [
+   "e -> distante (pre)"
+  ],
+  "sha": "2cd916b072f64ab463cc2c996cfb7bafa73e1e8d478d96d78acf69320ee42279"
+ },
+ "dev_passo_interposto": {
+  "logs": [
+   "Usa Passo Interposto (-1 Entropia)",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "14fd2c44b63953bf39f97e83fb6a113d536b82d9ce4c1c2a973a7a24ff4e7952"
+ },
+ "dev_promessa_imovel": {
+  "logs": [],
+  "sha": "f592c11fe2b1235493a82761942d204c07c625691954591dfae926289c11135b"
+ },
+ "dev_provocacao": {
+  "logs": [
+   "Usa Provocação do Abismo (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Provocação do Abismo"
+  ],
+  "sha": "0ab828a974ee3040e63d179183e60411c9b6dbd68cdcfc08cf1badee5588ff35"
+ },
+ "dev_reflexo_bastiao": {
+  "logs": [
+   "player: ganha condição Reflexo de Bastião"
+  ],
+  "sha": "cbd5e3c8723ac1860831f317800f1889a18442703ee9e20d18bd961fbad4c9c3"
+ },
+ "dev_sentinela": {
+  "logs": [
+   "Usa Sentinela do Fim (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "446b8fdc6830d094b0a347270051f146fd739df7ae316b77f55dbf9867f44a41"
+ },
+ "dev_t5_tronco": {
+  "logs": [
+   "Usa Juramento de Cinza (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "a64dcaa323d4827d7ceecbb3de05f55b351fe4c53ab2f807b773d52f3968139d"
+ },
+ "dev_t6_tronco": {
+  "logs": [
+   "player: ganha condição Linha Inamovível"
+  ],
+  "sha": "2059864a44dab1cc20e87fbf0df6e3972880d3eb2c0dab7350f302b20460390c"
+ },
+ "dev_t7_tronco": {
+  "logs": [],
+  "sha": "3f5cb88a97696ee2f6907da3e1c0ac72969ecb67055e62ab02a7923b83813abb"
+ },
+ "dev_t8_tronco": {
+  "logs": [],
+  "sha": "9f80f83662bc2e0d27686dd296f6c24c0ad2dd926cf1adecbe0b480ba2e7d2d9"
+ },
+ "dev_vigiar_ruina": {
+  "logs": [],
+  "sha": "c8995bfeab7b8b951c938da147dde7834a519db8d50416f317563179dec3a812"
+ },
+ "dev_zel_ciume": {
+  "logs": [
+   "Usa Ciúme do Abismo (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Ciúme do Abismo"
+  ],
+  "sha": "8ccc743d4086b498741273db99f53aebf259d51c416eabb3a98385fd51a09b0d"
+ },
+ "dev_zel_interdito": {
+  "logs": [
+   "Usa Interdito Ciumento (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Interdito Ciumento"
+  ],
+  "sha": "a629d882ac7d0833eac295625edcaaf9082ed094c2572b576b16df8bc2d8a0bc"
+ },
+ "dev_zel_possessao": {
+  "logs": [
+   "Usa Não é Seu (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Não é Seu"
+  ],
+  "sha": "623d5ea70940b75acee4f4b8f16608a6143b8d31c8586d5b303ce28ea5029583"
+ },
+ "dev_zel_retorno": {
+  "logs": [
+   "Usa Todo Golpe Retorna (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 10×1=10; Vitalidade 10 -> 0 (excedente 0)"
+  ],
+  "sha": "5adbd383b5b4bdd64a052479a2061bbfbd5d801cf735e49456deea1a68f8069a"
+ },
+ "dev_zel_vigilia": {
+  "logs": [],
+  "sha": "50127ee0b59d395d4cb7a80dae9c16044bab11eef478f39a538c237c176a2784"
+ },
+ "dev_zeloso_apice": {
+  "logs": [
+   "Usa Amor que Devora (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "ab1536f831a3cf835c9e0ad1a82d65d45ade67a8e727dd2bfe74e9e6df992010"
+ },
+ "dev_zeloso_t5": {
+  "logs": [
+   "Usa Ciúme da Escuridão (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "eadba34757718791921ab1263fb277fea7695bd9e0a99fd83c9a6f06c624760b"
+ },
+ "dev_zeloso_t7": {
+  "logs": [
+   "e: ganha condição exposto"
+  ],
+  "sha": "2eb848cc2d3764c2809fee1631434712e7f91fb19fede009300cd40e005fe867"
+ },
+ "dev_zeloso_t8": {
+  "logs": [],
+  "sha": "deeca8c1769a43340afc1d84e046d00aad22b0a7ad10d550bc6407bbbedea334"
+ },
+ "empurrao_devoto": {
+  "logs": [
+   "Usa Empurrão do Abismo (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "734459d8aa2c8b1934955e1dbd05d5527ee09c392d1e8f5779b8bc5ed19aa4da"
+ },
+ "empuxo_arcano": {
+  "logs": [
+   "Usa Empuxo Arcano (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e -> distante (pre)"
+  ],
+  "sha": "de6ecb7cca7d0b2d68b63077c7f8d27aceb273088c89d81c378e38efe3d2acf0"
+ },
+ "esporos": {
+  "logs": [
+   "Usa Esporos (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Esporos"
+  ],
+  "sha": "669c6eded1f635234596934cfb0db80fa69f83cc50c821553d0383e2c75342c6"
+ },
+ "estabilizar": {
+  "logs": [
+   "Usa Estabilizar (-2 Entropia)",
+   "player recupera 0 Vitalidade com Estabilizar."
+  ],
+  "sha": "56febe06bcba9147bec87189787499a38e3c96309094df84443dc093b17c001e"
+ },
+ "faisca_cinza": {
+  "logs": [
+   "Usa Faísca Cinzenta",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 4×1=4; Vitalidade 10 -> 6 (excedente 0)"
+  ],
+  "sha": "efd273bc24f06a4698c5c2b5f7315185a8a35ad0837d69026765b86e856aef4e"
+ },
+ "farejar_praga": {
+  "logs": [],
+  "sha": "b36ab6706d04c3ff8d56a479cf64573986b93a2749dafc52998902ea993fb560"
+ },
+ "finta_sangue": {
+  "logs": [
+   "Usa Finta de Sangue (-1 Entropia)",
+   "player: ganha condição Finta de Sangue"
+  ],
+  "sha": "852f5ef5ea20b394f3a9ff8819589af3a8300c006c5658400e09e1614ab9b749"
+ },
+ "golpe_devoto": {
+  "logs": [
+   "Usa Golpe do Convite",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "b693269a584b995f176741fe7741a89fa549da6cbbc6617911ec7cbc807183bc"
+ },
+ "grito_provocador": {
+  "logs": [
+   "Usa Grito Provocador (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Grito Provocador"
+  ],
+  "sha": "1ee57a098fbbf2fa2d9aa36bf99b3b557ed614e0f66ac544c306ddc9812b1c00"
+ },
+ "hemorragia": {
+  "logs": [
+   "Usa Hemorragia (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Hemorragia"
+  ],
+  "sha": "cc51b5ceb365ad43edfbc726266db57ac90fbc73c98e2adfd41f7bbaf72e3e66"
+ },
+ "lamina_gemea": {
+  "logs": [
+   "Usa Lâmina Gêmea (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 5×1=5; Vitalidade 10 -> 5 (excedente 0)"
+  ],
+  "sha": "1e0c97c423f677c63aa41416c1e1eaa4127dab425afac07600a550afebc716c3"
+ },
+ "leitura_arcana": {
+  "logs": [],
+  "sha": "c5e3800a0d813ea0e9051e09ac3459506d455d9708e3c74f198f9271bfa8522e"
+ },
+ "manto_bruma": {
+  "logs": [
+   "Usa Manto de Bruma (-2 Entropia)",
+   "player se esconde (Manto de Bruma)."
+  ],
+  "sha": "787b5f4daf819d112febb4604a8aea0e89680ae76f884a377318a0f2458ef779"
+ },
+ "mao_firme": {
+  "logs": [],
+  "sha": "709b730cbd5f841b2f470bd2666340c02a3d0cc30e83980b5c15b3340f365154"
+ },
+ "med_antitoxina": {
+  "logs": [
+   "Usa Antitoxina (-2 Entropia)",
+   "Antitoxina: nenhuma condição para remover."
+  ],
+  "sha": "6440cb7bff1f2333360a0fdbb8f20b2e99418092566e17d483a3ca3648ac3e05"
+ },
+ "med_autopsia_campo": {
+  "logs": [],
+  "sha": "2ee662fbb17b4c846d53d90624ba69921b7fd0968da40ff58f110e90da8dac7d"
+ },
+ "med_bot_composto": {
+  "logs": [
+   "Usa Composto Estimulante (-1 Entropia)",
+   "player: ganha condição Composto Estimulante"
+  ],
+  "sha": "46860fd97f414fe898ed45bf692ef25c3f27baa1c82ac1a936b929bfa4404894"
+ },
+ "med_bot_nevoa": {
+  "logs": [
+   "Usa Névoa Antisséptica (-2 Entropia)",
+   "Névoa Antisséptica: nenhuma condição para remover."
+  ],
+  "sha": "db4955ae0786eee0939318dd9417df0fb2a2c8c25d7f186ccddde27766765d2a"
+ },
+ "med_bot_panacea": {
+  "logs": [
+   "Usa Panaceia Improvável (-4 Entropia)",
+   "player recupera 0 Vitalidade com Panaceia Improvável."
+  ],
+  "sha": "15ef83e80fa61d19d7558c593d3f2cc4886e1e0081b614020e83ae9b6ef51c38"
+ },
+ "med_bot_purga": {
+  "logs": [
+   "Usa Purga da Carga (-3 Entropia)",
+   "player purga 0 de Carga de player."
+  ],
+  "sha": "9de15139cd74c99f14b2d0caafbb11845ae99aaac3d5ae31ddf1642f82c77589"
+ },
+ "med_bot_reagente": {
+  "logs": [],
+  "sha": "213323e1ce4a1cbd22d3d1aec4a2dd0210911e769701ffc2550c248e2dab114f"
+ },
+ "med_boticario_apice": {
+  "logs": [
+   "Usa Coração de Todos (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "d87afb6b79d274d78d69bae0d0d631051b518f905c69b5c404e7cea08694320d"
+ },
+ "med_boticario_t5": {
+  "logs": [
+   "Usa Dor Compartilhada (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "62b8390a38b79aabb9fe687a6e84c6842a1f5b46edec69155012552492b4b7e7"
+ },
+ "med_boticario_t7": {
+  "logs": [
+   "e: ganha condição exposto"
+  ],
+  "sha": "07118d3ccfa0eb5cebb23229ba22d2c4cccd2009b3f0e720b59302466b91c44f"
+ },
+ "med_boticario_t8": {
+  "logs": [],
+  "sha": "2205170d93683ea3fe718b0ea6650f26b63149c890f8b95eb1dde5f5ba83994d"
+ },
+ "med_cirurgiao_ferro_apice": {
+  "logs": [
+   "Usa Milagre Imperdoável (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "d9c45613cb2ace5b3dfe165e6fb6b9500de0e250640e750a7ef5a1093ae4cdc9"
+ },
+ "med_cirurgiao_ferro_t5": {
+  "logs": [
+   "Usa Protocolo Absoluto (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "377f630da8c001a32ace3084ed7100f56b0549c6497f089be4e708591a76bd49"
+ },
+ "med_cirurgiao_ferro_t7": {
+  "logs": [
+   "Remédio ou Ruína: player → e: acerto (52 vs 12).",
+   "dano 17×1=17",
+   "Vitalidade 10 -> 0 (excedente 7)",
+   "Ferimento grave em perna"
+  ],
+  "sha": "0019d3268448a5243ad7b733c7c10d9680efa58d7dd3524bfcd4216c13b29f2d"
+ },
+ "med_cirurgiao_ferro_t8": {
+  "logs": [],
+  "sha": "61d39d3a46a8f7cd42b04ba7b615d50cea55840e71af89af3a8311cac604f7df"
+ },
+ "med_cirurgiao_trincheira_apice": {
+  "logs": [
+   "Usa Hospital de Uma Pessoa (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 18×1=18; Vitalidade 10 -> 0 (excedente 8); Ferimento grave em perna"
+  ],
+  "sha": "b1c6264a1f001b64afeeace321f1f60226b47ecdc66f276b2ebac8f90ed4e5eb"
+ },
+ "med_cirurgiao_trincheira_t5": {
+  "logs": [
+   "Usa Triagem de Guerra (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "d5bb0de52b6ff0d8811d30ff553d5eff2e27cb0ea596c4dd1d90583804a4d81c"
+ },
+ "med_cirurgiao_trincheira_t7": {
+  "logs": [
+   "Dose Necessária: player → e: acerto (52 vs 12).",
+   "dano 15×1=15",
+   "Vitalidade 10 -> 0 (excedente 5)",
+   "Ferimento leve em perna"
+  ],
+  "sha": "5d09d649cac7f8f7088c074694b4d563bb0b50d18aac2a893c42672ba48a1d04"
+ },
+ "med_cirurgiao_trincheira_t8": {
+  "logs": [],
+  "sha": "9f888d560495342a59e66ef727286f8b9cfde777ddfa7c9a50975b52bf9dbdee"
+ },
+ "med_corte_descompressao": {
+  "logs": [
+   "Usa Corte de Descompressão (-1 Entropia)",
+   "Corte de Descompressão: nenhuma condição para remover."
+  ],
+  "sha": "9d37d0e6bfb788040e146c57f38d26d76f3b9f1fb33f693ff7a13e4ad1106e6c"
+ },
+ "med_dose_choque": {
+  "logs": [
+   "player: ganha condição Dose de Choque"
+  ],
+  "sha": "e05e9f3046bec68cfdc42a98ce63eaa4581e313d359c6c6465f384fc2f0e874c"
+ },
+ "med_estabilizar": {
+  "logs": [
+   "Usa Estabilizar (-2 Entropia)",
+   "Estabilizar: o alvo não está em Estado Terminal."
+  ],
+  "sha": "18cecdfcb204fd0c85599a8e61d7bc12caa2a53980b0a2f8512877f629352997"
+ },
+ "med_fer_ancora": {
+  "logs": [
+   "Usa Âncora Protética (-2 Entropia)",
+   "player: ganha condição Âncora Protética"
+  ],
+  "sha": "0e624fe93e4dbc190f8485c2b299cc3698e6ab848d5b23ef285ced3d203ede6f"
+ },
+ "med_fer_colosso": {
+  "logs": [
+   "Usa Prótese de Colosso (-4 Entropia)",
+   "player: ganha condição Prótese de Colosso"
+  ],
+  "sha": "5fd87071cbff55380f1f4bbd625429b8bda581d3f0a8e8f77e951e5247c00a77"
+ },
+ "med_fer_protese": {
+  "logs": [
+   "Usa Prótese de Batalha (-2 Entropia)",
+   "player: ganha condição Prótese de Batalha"
+  ],
+  "sha": "10ccaaca7bd2b03e63bcc1aca450f6c7f07c790fa5a7fc549c78ec3c9a8f7aff"
+ },
+ "med_fer_solda": {
+  "logs": [],
+  "sha": "204500fc601cf0774d531d3f68a391f3c7f0cef2cce7411e810561f8d23b261c"
+ },
+ "med_fer_talas": {
+  "logs": [
+   "Usa Talas de Ferro (-1 Entropia)",
+   "player: ganha condição Talas de Ferro"
+  ],
+  "sha": "d0c77f95df51618d4198d5a9879d9e7653db91cdc61c7c379562c72f0868c3ec"
+ },
+ "med_hospital_improviso": {
+  "logs": [],
+  "sha": "3c96f3c06e7827f690f402c8aa8a7122e9688736ef1f5c68268f835b21b5db60"
+ },
+ "med_mao_firme": {
+  "logs": [],
+  "sha": "e932010eb107378875ded74243b775cfec9994f0d79e79219cc67a0690484600"
+ },
+ "med_marca_triagem": {
+  "logs": [
+   "Usa Marca de Triagem (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Marca de Triagem"
+  ],
+  "sha": "bae359d002a8248bce03fce0f5046460b2473cdd04cef4da16b78125d2f67e9e"
+ },
+ "med_placa_reflexa": {
+  "logs": [
+   "player: ganha condição Placa Reflexa"
+  ],
+  "sha": "afa9b0294ddc24bb1d85d5bd4982652124de1537fe82a665afd8b25be3f287a6"
+ },
+ "med_protocolo_retornar": {
+  "logs": [],
+  "sha": "c8fe4bb4a78a8fb3e9bd35ef3bd268cc484b27d4c1da24924165aeeb76b6c11e"
+ },
+ "med_serra_ossea": {
+  "logs": [
+   "Usa Serra Óssea (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "929219f2b112132258e37f4b4f74d0572b0369b8bc932a8f240babc3c31adaba"
+ },
+ "med_sutura": {
+  "logs": [
+   "Usa Sutura de Campo (-1 Entropia)",
+   "player recupera 0 Vitalidade com Sutura de Campo."
+  ],
+  "sha": "09e00af0eea08216bc0d089c5d42c25cc052b66dd4eddbf70c4b8d83ddd5a759"
+ },
+ "med_t5_tronco": {
+  "logs": [
+   "Usa Triagem Impossível (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "24c4388e027796053a647c4568345ead81ddf7d08c07e0503fecb1da24a8538d"
+ },
+ "med_t6_tronco": {
+  "logs": [
+   "player: ganha condição Pulso de Reserva"
+  ],
+  "sha": "ca61893eb02550a4fb4dd4a7230d11891a8b5bf3c7e499a63eaa8e0d34122cfa"
+ },
+ "med_t7_tronco": {
+  "logs": [],
+  "sha": "9236a6134024f0be452c73a2956f1715faa65acd85bdbff1d4e0adb9e92adfe6"
+ },
+ "med_t8_tronco": {
+  "logs": [],
+  "sha": "010382bfbd807973aed83788a3e153ac2272fa9c9ea612d258eac64372389a2b"
+ },
+ "med_torniquete": {
+  "logs": [
+   "Usa Torniquete (-1 Entropia)",
+   "player recupera 0 Vitalidade com Torniquete."
+  ],
+  "sha": "99d657e9bcd5354bede736fe42fc92fec9a2e00ea47a403cc08edee0e5e38662"
+ },
+ "med_tri_corredor": {
+  "logs": [
+   "Usa Corredor de Triagem (-1 Entropia)",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "a4c58e23590f31b6d9ee890bda53fc52cd67074faaadf87527801243e9389512"
+ },
+ "med_tri_intervencao": {
+  "logs": [
+   "Usa Intervenção Imediata (-2 Entropia)",
+   "player recupera 0 Vitalidade com Intervenção Imediata."
+  ],
+  "sha": "4fd39c617cf2880e3b350059d55ab9c73c905ddde26841cb6654da1769a81d1a"
+ },
+ "med_tri_reflexo": {
+  "logs": [
+   "Reflexo de Trincheira: player recupera 0 Vitalidade."
+  ],
+  "sha": "02c16c53f85ab8e271bd04cd1430d438919cc55cc4e902045fe715e92827a881"
+ },
+ "med_tri_sangue_frio": {
+  "logs": [],
+  "sha": "e6a8a3a17776600bb1f4cc75447b820bd8063fd95b98ac200282f951737de7c9"
+ },
+ "med_tri_segundo": {
+  "logs": [
+   "Usa Segundo Coração (-4 Entropia)",
+   "Segundo Coração: o alvo não está em Estado Terminal."
+  ],
+  "sha": "3e353d3a88f076333e5401b2ac5fc2f4329116218fc51af70846afb32c742d08"
+ },
+ "med_triagem": {
+  "logs": [],
+  "sha": "a9cc6012200fb3b35cf01512653788a604927dcab38d48e32333d89b20baecb5"
+ },
+ "med_ultima_hora": {
+  "logs": [
+   "Usa Última Hora (-4 Entropia)",
+   "player recupera 0 Vitalidade com Última Hora."
+  ],
+  "sha": "e237a3f48fab6ea476724deaf71a1b199773be0c082ce77d2fc7705f07039599"
+ },
+ "muralha_viva": {
+  "logs": [
+   "Usa Muralha Viva (-3 Entropia)",
+   "player: ganha condição Muralha Viva"
+  ],
+  "sha": "323d233b17636679f3f316a01b2d43636627380af06b76465ad09e660c343125"
+ },
+ "olho_arcano": {
+  "logs": [],
+  "sha": "7aea1ebc2f214ac9145c0bece8bc3bec88a5a1a8137588c51b444c15e2ee66f6"
+ },
+ "passo_leve": {
+  "logs": [],
+  "sha": "fd294422d6b0025836ca6724b8bca5e69d196a97059b79021a8f7f42a486dc50"
+ },
+ "praga_lenta": {
+  "logs": [
+   "Usa Praga Lenta (-3 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Praga Lenta"
+  ],
+  "sha": "540e742d67794490115474dcd7c80cc0089697ae6682d361cb1021b2f68f37ff"
+ },
+ "raio_cinza": {
+  "logs": [
+   "Usa Raio Cinzento (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "4e9526f1ffa992c8db7c832482581e1508bfbf54bf202fec541b7f8d1624af66"
+ },
+ "reflexo_lamina": {
+  "logs": [
+   "Reflexo da Lâmina: player → e: acerto (52 vs 12).",
+   "dano 8×1=8",
+   "Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "f7beeff970f97552f2ef134ebb618ac6e891f98a183d419dbbaa39c84e647fbd"
+ },
+ "resistir_devoto": {
+  "logs": [],
+  "sha": "4c451c78540f8353bd8c4869d6fccb2bb3ac6e600856eb2d8a8d2d75c5342f46"
+ },
+ "san_assinar_sangue": {
+  "logs": [],
+  "sha": "386e789453d89dfbc5f4eddf1af92a7c329b84e9299cd5149a446cc421b97a51"
+ },
+ "san_ava_falencia": {
+  "logs": [
+   "Usa Falência Rubra (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "0b67bdf349f76f77f52eb908f2389dc9a26541f064a7b9607cd9cc992a7bc586"
+ },
+ "san_ava_juros": {
+  "logs": [
+   "Usa Cobrança com Juros (-2 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 6×1=6; Vitalidade 10 -> 4 (excedente 0)"
+  ],
+  "sha": "3433ce01478122b0ad6e6abbcdee8daf44aa445791dca7a2791cfb174f5c3fb7"
+ },
+ "san_ava_juros_carne": {
+  "logs": [
+   "Usa Juros de Carne (-2 Entropia)",
+   "player: ganha condição Juros de Carne"
+  ],
+  "sha": "f5228eb9c72d52a80b6920c8d0240fe061eda5182258479ee06a818172edee67"
+ },
+ "san_ava_reserva": {
+  "logs": [],
+  "sha": "ae5c1c00180dd81ee313c9ffaa9c92f35af8eebab6c9db593f8cee693e9c5ed4"
+ },
+ "san_ava_sovinice": {
+  "logs": [],
+  "sha": "338703ee096263455ee821846401afd024c2db8572e7f4d53dad2fd07767cbde"
+ },
+ "san_avaro_apice": {
+  "logs": [
+   "Usa Fortuna Rubra (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "45b8a757ea75304dbe19bae5642960f281ad1ab6640cbf36695208b5dc466d2d"
+ },
+ "san_avaro_t5": {
+  "logs": [
+   "Usa Cofre de Sangue (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "6b3177296e6e732eae8eef861d08b5328d91e2df3f6448056a79f75e47196018"
+ },
+ "san_avaro_t7": {
+  "logs": [
+   "e: ganha condição exposto"
+  ],
+  "sha": "eed2368abe3951494c72aa76aeb28320370da65a59b8c8c64dfdf7bf536d0db2"
+ },
+ "san_avaro_t8": {
+  "logs": [],
+  "sha": "18a33d58bf7f2929e92a3bb5e9b1ccd8961620afb0ff07e0338cd29668c50d2e"
+ },
+ "san_conta_memorizada": {
+  "logs": [],
+  "sha": "ef27dc05dca38d0b89e7e80bb34659d4c23cf5fef59f8b7140bbcea443126692"
+ },
+ "san_corte_troca": {
+  "logs": [
+   "Usa Corte de Troca",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 3×1=3; Vitalidade 10 -> 7 (excedente 0)"
+  ],
+  "sha": "da0c6e30d1e2ed308d913f9dc056876cf219361cc7e2a0a4a61cdea0ec33191d"
+ },
+ "san_desvio_arterial": {
+  "logs": [
+   "player: ganha condição Desvio Arterial"
+  ],
+  "sha": "e4441caeaaeac1d1794796111d0a21b2405baff3160dc005a785edfdbb4b61f9"
+ },
+ "san_esquiva": {
+  "logs": [
+   "player: ganha condição Esquiva Calculada"
+  ],
+  "sha": "8721ad45af0be0dd9b5f9be0a9007dc239c40d23974efd8eb331704c5c17f6fe"
+ },
+ "san_exp_aplausos": {
+  "logs": [
+   "Usa Aplausos da Cicatriz (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Aplausos da Cicatriz"
+  ],
+  "sha": "d63fffab8ae1ae6a31b4a1f526b652c3d123d7c83c81893764bc4ba8a46dff49"
+ },
+ "san_exp_bis": {
+  "logs": [
+   "Usa Bis Sangrento (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 9×1=9; Vitalidade 10 -> 1 (excedente 0)"
+  ],
+  "sha": "c4f92d92d8c039bcc75bc300b0624e7a3be3397985a586d15bc81a560c6f58c7"
+ },
+ "san_exp_credencial": {
+  "logs": [
+   "Usa Credencial de Dor (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 8×1=8; Vitalidade 10 -> 2 (excedente 0)"
+  ],
+  "sha": "cfb2f115861415edc61a01f7656edb553195ed703b0a112527da133b96e6d66b"
+ },
+ "san_exp_espetaculo": {
+  "logs": [
+   "Usa Espetáculo (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Espetáculo"
+  ],
+  "sha": "e21b25d82f4dea551f1880d42fc7676f4a9208ddac45ac0299598ba68428f033"
+ },
+ "san_exp_plateia": {
+  "logs": [],
+  "sha": "75fb1bc5b359cbe17de6527c92a118e49f084ae738b1f2cbac7b1d7b612f653b"
+ },
+ "san_exposto_apice": {
+  "logs": [
+   "Usa Testemunho Escarlate (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 18×1=18; Vitalidade 10 -> 0 (excedente 8); Ferimento grave em perna"
+  ],
+  "sha": "5435d340ad61609562f51aade1032d43447059ca74c76619a5afc98c879c4fa0"
+ },
+ "san_exposto_t5": {
+  "logs": [
+   "Usa Palco de Cicatrizes (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 13×1=13; Vitalidade 10 -> 0 (excedente 3); Ferimento leve em perna"
+  ],
+  "sha": "93231fa2722d96c92cad23e289094fdcde2b65942bd92163a7dc8e8ab9ab2b56"
+ },
+ "san_exposto_t7": {
+  "logs": [
+   "Aplauso Cruel: player → e: acerto (52 vs 12).",
+   "dano 15×1=15",
+   "Vitalidade 10 -> 0 (excedente 5)",
+   "Ferimento leve em perna"
+  ],
+  "sha": "da1c7a5c2dafe382b9b0bc51e76d59ab04d880175f3a842b74e3fa2047277f2b"
+ },
+ "san_exposto_t8": {
+  "logs": [],
+  "sha": "a7212d9484880d0842c1ce3913d393b49efd68c69261e7fa5a63296103ad814d"
+ },
+ "san_finta": {
+  "logs": [
+   "Usa Finta de Sangue (-1 Entropia)",
+   "player: ganha condição Finta de Sangue"
+  ],
+  "sha": "e736a055a1e5fbbe7f840854dc217ad6a05ef045c73a6781cb219349a1bf6413"
+ },
+ "san_hemorragia": {
+  "logs": [
+   "Usa Hemorragia (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Hemorragia"
+  ],
+  "sha": "5dae403f1e7ec3b2c8e8bae79a215f8fd0bfa198e913ab37b5109b74e8c4b82d"
+ },
+ "san_ouvir_veias": {
+  "logs": [],
+  "sha": "7c33fea23e7b4022e11a04cf2f5b8996dbc45c1b7e560d7f1c5a0fead1b23ac8"
+ },
+ "san_pacto": {
+  "logs": [],
+  "sha": "5014ed8d526a693666bf1ae7862361e3de0ee9421312ba4c91b8b0ab313db7a1"
+ },
+ "san_passo": {
+  "logs": [],
+  "sha": "1bb0290dc58e3cb9ba16b7850c79a21c80a5642f0457138987ed989428fcc2da"
+ },
+ "san_passo_capilar": {
+  "logs": [
+   "Usa Passo Capilar (-3 Entropia)",
+   "player se afasta e fica à distância."
+  ],
+  "sha": "cdfd213b4c9b15d65e0011645ab5ec7a7ba8ef937eb6bf2dcf7e3d15484ef408"
+ },
+ "san_pulso_reserva": {
+  "logs": [],
+  "sha": "ddc56d4bbb7353ee331703d9564578723b752d188be664e2dec65aedc46c1577"
+ },
+ "san_sangria_lenta": {
+  "logs": [
+   "Usa Sangria Lenta (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Sangria Lenta"
+  ],
+  "sha": "597e32bbfdb0977d41e694450af4e2170834e3a4e7c474e3b3338d5874e8c3da"
+ },
+ "san_sil_exato": {
+  "logs": [
+   "Usa Corte Exato (-1 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 4×1=4; Vitalidade 10 -> 6 (excedente 0)"
+  ],
+  "sha": "cee916485680fa4db23bf6b050b6f6d4babc25510c1da0f21b5619d29372c53f"
+ },
+ "san_sil_fio": {
+  "logs": [
+   "Usa Fio sem Testemunha (-1 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Fio sem Testemunha"
+  ],
+  "sha": "6f4fd468706f1d32e71fadf7d6e55fcc1e2426330edbc88967a5ecbee4ab98fa"
+ },
+ "san_sil_frieza": {
+  "logs": [],
+  "sha": "57e127f9703c902a998034f5e7a0b49ad99d86b5d878c13327682605c55d9ff7"
+ },
+ "san_sil_pulso": {
+  "logs": [
+   "Usa Silêncio do Pulso (-3 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição silenciado"
+  ],
+  "sha": "3c7a0a4aa93421d9bff6b699027bad2550d3ed782af195778111bfb10276c696"
+ },
+ "san_sil_veia": {
+  "logs": [
+   "Usa Veia Justa (-2 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "e: ganha condição Veia Justa"
+  ],
+  "sha": "0401098c2f3b2f0f49ae616220577f328e8710718ca2d9d4d1ecb1b3795cc40e"
+ },
+ "san_silencioso_apice": {
+  "logs": [
+   "Usa Última Assinatura (-7 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "3fc12603df858246b1ad4f3e312c361708aa4b735542957882c35e515c8a847a"
+ },
+ "san_silencioso_t5": {
+  "logs": [
+   "Usa Corte sem Eco (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição exposto"
+  ],
+  "sha": "adbc297b5213ae9f42c1af39bf765b00923523aff7fb02a00d9b755719010154"
+ },
+ "san_silencioso_t7": {
+  "logs": [
+   "Economia Perfeita: player → e: acerto (52 vs 12).",
+   "dano 17×1=17",
+   "Vitalidade 10 -> 0 (excedente 7)",
+   "Ferimento grave em perna"
+  ],
+  "sha": "c3727223d47d873eca842a73c6211f88d287e9e2222b9ce22275a25fb0099edd"
+ },
+ "san_silencioso_t8": {
+  "logs": [],
+  "sha": "f25017d03b795d99e818b403b9bf9df4b091858786e9f100909052d63abec8fa"
+ },
+ "san_t5_tronco": {
+  "logs": [
+   "Usa Cláusula Rubra (-4 Entropia)",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "397073b4ea3b75f8c1ce7403054b99f94bb66cb1701f7accd0b8b5cb036f83aa"
+ },
+ "san_t6_tronco": {
+  "logs": [
+   "player: ganha condição Reserva de Dor"
+  ],
+  "sha": "c5b153127fd3127443361bf78b770c583c7dea10a6ba1d1d38075892f97c42f8"
+ },
+ "san_t7_tronco": {
+  "logs": [],
+  "sha": "fda13fef3d5f5679132c5c7b5d75be6ae8dd2caa3bdd68e697628038b00d358a"
+ },
+ "san_t8_tronco": {
+  "logs": [],
+  "sha": "cf5e69f41816f9f769d2befdc6caee9eb195efc5885845adfcff613d4abe871c"
+ },
+ "san_transfusao_hostil": {
+  "logs": [
+   "Usa Transfusão Hostil (-2 Entropia)",
+   "player recupera 0 Vitalidade com Transfusão Hostil."
+  ],
+  "sha": "5934568f314da4a2796fb8ed1a52087528e1d4252952f421b59c44048df4e6d9"
+ },
+ "san_troco_carmesim": {
+  "logs": [
+   "Troco Carmesim: player → e: acerto (52 vs 12).",
+   "dano 5×1=5",
+   "Vitalidade 10 -> 5 (excedente 0)"
+  ],
+  "sha": "53aac433917a83a2778b379806f3808bb92bdde64650e3dc7bda6f8d68d3fd80"
+ },
+ "san_ultimo_lance": {
+  "logs": [
+   "Usa Último Lance (-4 Entropia)",
+   "player → e: acerto (total 51 vs Esquiva 12).",
+   "dano 12×1=12; Vitalidade 10 -> 0 (excedente 2); Ferimento leve em perna"
+  ],
+  "sha": "2180502464a7373ebd1c0e445a9e3a2697857a4dd0292971f67db02cdb3d5069"
+ },
+ "simbiose": {
+  "logs": [],
+  "sha": "42433cb12dc253f4dcae42814d3f2cd2e143788f70ba7b22c6ef458d431d0dd6"
+ },
+ "sutura_rapida": {
+  "logs": [
+   "Usa Sutura Rápida (-1 Entropia)",
+   "player recupera 0 Vitalidade com Sutura Rápida."
+  ],
+  "sha": "54941bf14855bdbae0da047e65e639af66319773a21fcfbf88bb62264df7b1be"
+ },
+ "toque_corrosivo": {
+  "logs": [
+   "Usa Toque Corrosivo",
+   "player → e: acerto (total 52 vs Esquiva 12).",
+   "e: ganha condição Toque Corrosivo"
+  ],
+  "sha": "3bd8a41af11759bee77f38d7c9a26273fe753089f9bb9fb1b9cf3622876af13d"
+ },
+ "torniquete": {
+  "logs": [
+   "Usa Torniquete (-1 Entropia)",
+   "player recupera 0 Vitalidade com Torniquete."
+  ],
+  "sha": "4303fe6de050af9ddf6cac0c26ce9160653c112b0a17578e949f97f3c52b4ef3"
+ },
+ "triagem": {
+  "logs": [],
+  "sha": "3e03c3b4da9800cb17384405ba03c48faf3ef340f3659e0cd727c59e55637326"
+ },
+ "vc_agil_reflexo": {
+  "logs": [],
+  "sha": "c37efeaa99ad85a46c0cf254ebbc4dd8e208fa90622439508d78261d0a463f18"
+ },
+ "vc_corpo_rijo": {
+  "logs": [],
+  "sha": "462daec47cb73875036794c0810603b8c88f4b1a1f615946ba96d5be80460c12"
+ },
+ "vc_forca_bruta": {
+  "logs": [],
+  "sha": "0f99d17c9088568172cee7b8dd25979d73c51e37895be71426cc2a242f58bc72"
+ },
+ "vc_lingua_afiada": {
+  "logs": [],
+  "sha": "bea56f085645976741677758ad05c3bf3b06861807371a088a53214a2b423e37"
+ },
+ "vc_mente_lucida": {
+  "logs": [],
+  "sha": "f4831fb2db9938ca5f87e4ac96985ca9eb9746664a5df1eba6e2dd96cf9cd1b6"
+ }
+}

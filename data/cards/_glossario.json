@@ -1,5 +1,5 @@
 {
-  "_meta": "SPEC-330 R10: glossário das palavras-chave de Valoria (v1, 14). Fonte única para o tooltip do front e para o prompt do narrador. Nomes aprovados pelo dono em 27/10 (SPEC-327 D4); `exposto` é exibido como Rachadura (mesma condição). Mecânica em services/card_effects.py.",
+  "_meta": "SPEC-330 R10: glossário das palavras-chave de Valoria (v1, 14). Fonte única para o tooltip do front e para o prompt do narrador. Nomes aprovados pelo dono em 27/10 (SPEC-327 D4); `exposto` (−2 de Esquiva) segue distinto da Rachadura. Mecânica em services/card_effects.py.",
   "palavras_chave": {
     "rachadura": {
       "nome": "Rachadura",
