@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "5b53a849d810ecc45cd74493201140f77e46b16c",
+  "commit_sha": "64af0aa37d95c9fc38967b40817a1ab55a44da27",
   "edge_counts": {
-    "calls": 28661,
-    "contains": 984,
-    "defines": 14416,
-    "imports": 2369,
-    "likely_test_for": 1667,
+    "calls": 28791,
+    "contains": 987,
+    "defines": 14465,
+    "imports": 2380,
+    "likely_test_for": 1676,
     "route_to": 64
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:013047a2723ae5e48e89b8bdcfcff43ebd46e3df97b5a6e14c3f763c4b212aad",
+  "graph_hash": "sha256:15d793edb2009fecf5f75cd011db670542d81179c7fb15f237b6c25a02472063",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -351,6 +351,7 @@
     "services/embedding_pricing.py",
     "services/encounter_manifest.py",
     "services/encounter_preparation.py",
+    "services/enemy_intent.py",
     "services/entity_identity.py",
     "services/error_codes.py",
     "services/event_processor.py",
@@ -608,6 +609,8 @@
     "tests/test_encounter_identity_repro.py",
     "tests/test_encounter_lifecycle_reload.py",
     "tests/test_encounter_manifest.py",
+    "tests/test_enemy_intent.py",
+    "tests/test_enemy_intent_node.py",
     "tests/test_enrich_node.py",
     "tests/test_error_envelope.py",
     "tests/test_eval_dossier_leak.py",
@@ -1211,12 +1214,12 @@
     "artifact": 9,
     "class": 953,
     "endpoint": 64,
-    "file": 1155,
-    "function": 4491,
+    "file": 1158,
+    "function": 4510,
     "method": 838,
-    "module": 984,
-    "test": 8133
+    "module": 987,
+    "test": 8163
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:7ae21a6216b024e8186537a97399211702377a749589581f040b79629c333e64"
+  "source_tree_hash": "sha256:268c40d03b67430f7056a461f7186c2ba4390c743d5d13ecb51601ec80fa2738"
 }
