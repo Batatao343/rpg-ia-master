@@ -1,6 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
-> **Veredito Lote 2 (Sangromante, `b3f5e743`):** `CHANGES_REQUIRED` (3 P1, 7 P2)
+> **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
 > **Veredito Lotes 0–1 (`565b0d0b`):** `APPROVED_WITH_FOLLOWUPS` (histórico abaixo, inalterado)
 > **Revisor:** Sol (Claude Opus 5.5, spec-reviewer) · **Data:** 2026-10-27
 >
@@ -8,7 +8,70 @@
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
 
-# Lote 2 — Sangromante (`main...b3f5e743`)
+# Lote 2 — re-revisão (`00efe0e4..8364eaa7`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. Os 3 P1 foram resolvidos e os P2 aplicados. Restam
+> 2 follow-ups da arena, de responsabilidade da SPEC-336, que não bloqueiam o pouso.
+
+## Conferência dos achados
+
+| ID | Situação |
+|---|---|
+| P1-1 | **Resolvido.** A `escala` foi para um efeito extra em Juros do Primeiro e Execução da Dívida. Medido no motor: o extra escala com a Entropia (Juros: 1 → 3 → 4 com Entropia 2 → 6 → 20; Execução: 3 → 12 com Entropia 6 → 20). O lint `escala_inerte` (`services/card_lint.py`, erro no principal `dano`/`contra_ataque`) tem teste em `tests/test_card_lint.py`. |
+| P1-2 | **Resolvido.** Arterial Fina ficou sem Eco e com Sangria 5, dentro do orçamento. |
+| P1-3 | **Resolvido.** `sim.build_arms` monta o braço "sem" com a Carta fora do catálogo e `com = sem + cópias` (reserva de vagas); os dois braços usam a tag `par` (sementes pareadas) e `_fight` ordena o deck. O teste `test_bracos_diferem_so_na_carta_testada` cobre isso. O relatório do Lote 2 tirou a causa falsa e registra o histórico. Reproduzi `sim-lote1-calibrado.json` byte a byte com o `sim.py` novo. |
+| P2-1 | Resolvido: as 3 reações têm `gatilho: ao_ser_atacado`. |
+| P2-2 | Resolvido: Aplauso de Ferro virou `reacao` `contra_ataque` 3 com `ao_ser_atacado`, e o revide agora é real (`_resolve_reaction_effect`). |
+| P2-3 | Resolvido: as `descricao` de Gole Rubro e Poupar Ferida passaram a dizer o que as Cartas fazem. |
+| P2-4 | Resolvido em grande parte: os pares foram diferenciados por custo, palavra-chave ou valor. Mão Fechada e Pé de Pluma ainda têm o mesmo efeito (+2 Esquiva) e só diferem no custo; aceitável. |
+| P2-5 | Resolvido: Veia à Mostra ganhou um golpe de 3 e já vale em luta solo. O texto do `taunt` ("precisa atacar você") continua prometendo demais; isso é da 336. |
+| P2-6 | O executor corrigiu o próprio desvio: não existe legada `ativa`+`buff_esquiva` (as 7 são `reacao`). Nada a registrar. |
+| P2-7 | Resolvido: `san1_exp_selo_de_dor` / "Selo de Dor", e `_ondas.yaml` foi atualizado. |
+
+O orçamento e a raridade continuam 20/10/4/2 (testados). O golden e o snapshot da 330 seguem intactos.
+
+## (a) As bandeiras de uso do Lote 2 bloqueiam?
+
+**Não bloqueiam. São um artefato do bot.** `full_deck_decl` joga todo golpe da mão que caiba
+no Fôlego, em ordem de `dano_base`, e a taxa de uso só divide "jogada" por "na mão". Numa Postura
+de dano, o golpe mais forte de custo 1 sai quase sempre que aparece, seja qual for o poder.
+O executor mostrou isso: tirou 1–2 de dano e o uso não mudou. Quem diz se uma Carta domina é o
+**resultado**, e nenhuma das 10 tem delta acima de +8 pp (vão de −7,5 a +3,7). `em_branco` em
+Poupar Ferida também é efeito do bot, que só cura abaixo de 50 % de Vitalidade. O "> 60 % →
+nerf" da R7 da 336 fala de *pick rate* em ofertas reais (telemetria), não do uso na arena.
+**Follow-up (336):** na arena, rebaixar `dominante` por uso a aviso (ou exigir uso > 60 % **e**
+delta > 0 com amostra) e documentar no `CARTAS.md`.
+
+## (b) `arc1_des_raio_livre` a +11,2 pp passa da R8?
+
+**Não passa, e não precisa de ajuste.** A R8 da 335 fala da taxa de vitória **por Postura**
+(±10 % da linha de base), não do delta de cada Carta. Por Carta, o que vale é a bandeira
+`dominante` da 336 (delta > +8 pp), e ela disparou. Com 80 lutas, 1 luta vale 1,25 pp e +11,2 pp
+são 9 lutas, cerca de 1,4 erro-padrão. Rodei de novo com as **sementes 20–99** (320 lutas
+independentes por braço, mesmo protocolo): raio_livre deu **+6,6 pp** e folga **+0,3 pp**,
+ambas sem bandeira. Juntando com as 80 lutas do protocolo (400 por braço): raio_livre +7,5 pp,
+folga +1,5 pp. Os dois ficam abaixo de +8 pp. **Recomendação:** não mexer nas Cartas e registrar
+os números acima no `RELATORIO-arena-lote1.md`. **Follow-up (336):** quando uma bandeira de
+delta cair a menos de 2 erros-padrão do limiar, confirmar com mais sementes antes de exigir
+nerf.
+
+Observação (P2, 336): no processo do protocolo, `arc1_cal_folga` dá +8,8 pp. Isolada no meu
+script, com as mesmas sementes 0–19, deu +6,2 pp. O resultado de uma Carta depende do que rodou
+antes no mesmo processo (algum cache ou estado global entre lutas). Como o protocolo completo é
+reproduzível byte a byte, isso não invalida o lote, mas a 336 deve isolar esse estado.
+
+## Comandos rodados (re-revisão)
+
+```text
+git diff 00efe0e4..HEAD (18 arquivos) → lido: sim.py, card_lint.py, 3 posturas, relatórios, spec, testes
+scratchpad/txt.py + play.py (Juros/Execução, Entropia 2/6/20) → escala vale no extra
+sim.py --lote …/arcanista_cinzento_calibrado.json --protocolo lote --out <scratchpad> → idêntico a docs/spec335/sim-lote1-calibrado.json
+scratchpad/more.py (raio_livre e folga, sementes 0–19 e 20–99) → raio_livre +11,2 / +6,6 pp; folga +6,2 / +0,3 pp
+pytest -q (sem -n; RAM 1,1–1,9 GB livre) test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_card_sim, test_mecanica_orfa, test_handoff_names → 214 passed, exit 0
+scripts/validate_content.py → 0 erros, 2 avisos (voz pendente das ondas)
+```
+
+# Lote 2 — 1ª rodada (`main...b3f5e743`)
 
 ## Escopo
 
