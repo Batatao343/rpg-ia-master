@@ -1,0 +1,418 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "dev1_con_cinza_no_peito",
+      "name": "Cinza no Peito",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Esfrega cinza de altar no peito; o primeiro golpe bate na cinza e a carne fica para depois.",
+      "momento": "Melhor jogada quando o golpe pesado ainda não chegou e vale guardar proteção para quando ele chegar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_veu_de_incenso",
+      "name": "Véu de Incenso",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "A fumaça do incenso adensa como névoa de altar em volta do corpo e amortece o que vier nesta rodada.",
+      "momento": "Melhor jogada quando a rodada traz vários golpes e a fumaça basta para atravessá-la inteira.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_cajado_votivo",
+      "name": "Cajado Votivo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        }
+      ],
+      "palavras_chave": {
+        "guardar": true
+      },
+      "descricao": "O cajado de ferro desce sem pressa, com o peso de uma promessa; fica na mão até a hora de bater.",
+      "momento": "Melhor jogada quando a guarda já está de pé e sobra Fôlego para um golpe simples e honesto.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_uncao_curta",
+      "name": "Unção Curta",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Óleo de altar sobre a ferida velha: fecha o pior e deixa só a cicatriz.",
+      "momento": "Melhor jogada quando a Vitalidade já cobrou o preço do primeiro choque e a luta ainda vai longe.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_selo_contra_o_abismo",
+      "name": "Selo Contra o Abismo",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5
+        }
+      ],
+      "descricao": "O selo gravado no antebraço acende quando o golpe vem do Abismo e endurece a pele.",
+      "momento": "Melhor jogada quando o inimigo bate com magia ou sombra e a pele comum não bastaria.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_sofrer_dano_sobrenatural"
+    },
+    {
+      "id": "dev1_con_postura_de_oracao",
+      "name": "Postura de Oração",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "Joelhos firmes, mãos abertas: a oração dura duas rodadas e o ferro escorrega.",
+      "momento": "Melhor jogada quando o combate vai durar e uma defesa barata rende mais de uma rodada.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_marca_votiva",
+      "name": "Marca Votiva",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 2
+        }
+      ],
+      "descricao": "Risca o nome do Abismo na testa do inimigo; o próximo golpe contra ele pesa mais e rende Entropia.",
+      "momento": "Melhor jogada quando um aliado vai atacar em seguida e a marca transforma o golpe dele em ritual.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_cicatriz_votiva",
+      "name": "Cicatriz Votiva",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 3,
+          "alvo": "eu"
+        },
+        {
+          "kind": "dano",
+          "valor": 2,
+          "quando": "ao_receber_dano"
+        }
+      ],
+      "descricao": "Consagra uma cicatriz que guarda os golpes e devolve um arranhão a quem os desfere.",
+      "momento": "Melhor jogada quando o inimigo bate sempre no mesmo corpo e cada golpe dele deve custar algo.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_bencao_do_aco",
+      "name": "Bênção do Aço",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "vigilia",
+          "valor": 2,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Golpeia com o ferro ungido e guarda um pouco da bênção no corpo para depois.",
+      "momento": "Melhor jogada quando o golpe precisa sair agora e a guarda só pode ser paga com o mesmo gesto.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_hora_canonica",
+      "name": "Hora Canônica",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 2,
+          "alvo": "eu"
+        },
+        {
+          "kind": "vigilia",
+          "valor": 1,
+          "alvo": "eu",
+          "quando": "inicio_rodada"
+        }
+      ],
+      "descricao": "Reza as horas entre cinzas e ferro: a cada rodada que começa, a guarda ganha mais um verso.",
+      "momento": "Melhor jogada quando a luta promete ser longa e o ritual rende mais a cada rodada que passa.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_missa_fechada",
+      "name": "Missa Fechada",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 6,
+          "alvo": "eu"
+        },
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu"
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "quando": "ao_receber_dano"
+        }
+      ],
+      "descricao": "Celebra a missa a portas fechadas: a guarda sobe, a ferida fecha e cada golpe sofrido volta em ferro.",
+      "momento": "Melhor jogada quando a luta pesa dos dois lados e o Devoto pode virar altar para todo golpe que receber.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_con_sacramento_do_vazio",
+      "name": "Sacramento do Vazio",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "consagrado",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "corpo",
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 9
+        },
+        {
+          "kind": "vigilia",
+          "valor": 8,
+          "alvo": "eu"
+        },
+        {
+          "kind": "cura",
+          "valor": 4,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "Último sacramento diante do Abismo: o golpe cai, a guarda se fecha e a ferida do oficiante se cala.",
+      "momento": "Melhor jogada quando a luta está no limite e um único rito precisa golpear, guardar e curar de uma vez.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

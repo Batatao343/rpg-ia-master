@@ -21,9 +21,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Um ombro de fé empurra o inimigo para longe do que se jurou proteger.",
-      "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o inimigo cola e um empurrão vale mais que um golpe.",
+      "raridade": "comum"
     },
     {
       "id": "grito_provocador",
@@ -45,9 +44,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "O grito rasga o ar e todos os olhos hostis voltam-se para quem gritou.",
-      "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grito rasga a atenção dos inimigos antes que eles cheguem aos aliados.",
+      "raridade": "comum"
     },
     {
       "id": "resistir_devoto",
@@ -67,9 +65,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Quando as pernas pedem descanso, o juramento pede mais um passo.",
-      "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando as pernas pedem descanso e o juramento pede mais um passo.",
+      "raridade": "comum"
     },
     {
       "id": "finta_sangue",

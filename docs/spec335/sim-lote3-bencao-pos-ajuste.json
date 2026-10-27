@@ -1,0 +1,17 @@
+{
+ "dev1_con_bencao_do_aco": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 616,
+  "vezes_jogada": 340,
+  "taxa_uso": 0.552,
+  "vitoria_sem": 0.378,
+  "vitoria_com": 0.463,
+  "delta_pp": 8.4,
+  "lutas_por_braco": 320,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 2.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ }
+}

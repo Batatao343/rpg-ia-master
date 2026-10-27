@@ -1,0 +1,166 @@
+{
+ "dev1_zel_mao_na_frente": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 114,
+  "vezes_jogada": 52,
+  "taxa_uso": 0.456,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.85,
+  "delta_pp": 1.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 3.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "dev1_zel_dedo_apontado": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 117,
+  "vezes_jogada": 46,
+  "taxa_uso": 0.393,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.838,
+  "delta_pp": 0.0,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "dev1_zel_mao_no_peito": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 120,
+  "vezes_jogada": 52,
+  "taxa_uso": 0.433,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.825,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "dev1_zel_ciume_subito": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 117,
+  "vezes_jogada": 0,
+  "taxa_uso": 0.0,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.825,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "uso_nao_medido"
+  ]
+ },
+ "dev1_zel_anteparo_ciumento": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 117,
+  "vezes_jogada": 0,
+  "taxa_uso": 0.0,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.825,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "uso_nao_medido"
+  ]
+ },
+ "dev1_zel_olhar_fixo": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 115,
+  "vezes_jogada": 16,
+  "taxa_uso": 0.139,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.825,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "dev1_zel_zelo_em_brasa": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 117,
+  "vezes_jogada": 16,
+  "taxa_uso": 0.137,
+  "vitoria_sem": 0.838,
+  "vitoria_com": 0.825,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": []
+ },
+ "dev1_zel_ciume_aberto": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 149,
+  "vezes_jogada": 85,
+  "taxa_uso": 0.57,
+  "vitoria_sem": 0.375,
+  "vitoria_com": 0.512,
+  "delta_pp": 13.7,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "dev1_zel_ninguem_toca": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 159,
+  "vezes_jogada": 60,
+  "taxa_uso": 0.377,
+  "vitoria_sem": 0.375,
+  "vitoria_com": 0.362,
+  "delta_pp": -1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 3.0,
+  "bandeiras": []
+ },
+ "dev1_zel_ferro_antes_do_ferro": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 68,
+  "vezes_jogada": 50,
+  "taxa_uso": 0.735,
+  "vitoria_sem": 0.65,
+  "vitoria_com": 0.713,
+  "delta_pp": 6.2,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 6.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [
+   "dominante"
+  ]
+ },
+ "dev1_zel_corpo_entre": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 66,
+  "vezes_jogada": 13,
+  "taxa_uso": 0.197,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.713,
+  "delta_pp": 1.3,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 0.0,
+  "protecao_por_folego": 2.5,
+  "bandeiras": []
+ },
+ "dev1_zel_ninguem_mais": {
+  "classe": "Devoto do Abismo",
+  "vezes_na_mao": 62,
+  "vezes_jogada": 30,
+  "taxa_uso": 0.484,
+  "vitoria_sem": 0.7,
+  "vitoria_com": 0.775,
+  "delta_pp": 7.5,
+  "lutas_por_braco": 80,
+  "dano_por_folego": 4.5,
+  "protecao_por_folego": 3.0,
+  "bandeiras": []
+ }
+}

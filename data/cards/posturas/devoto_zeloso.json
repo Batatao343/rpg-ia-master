@@ -1,0 +1,418 @@
+{
+  "_meta": "Cartas promovidas pela esteira SPEC-336.",
+  "cards": [
+    {
+      "id": "dev1_zel_mao_na_frente",
+      "name": "Mão na Frente",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 3
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "A mão de ferro chega antes do golpe alheio; se derrubar quem ia atacar, o ataque morre no ar.",
+      "momento": "Melhor jogada quando o inimigo anunciou um ataque contra quem o Devoto jurou guardar.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_dedo_apontado",
+      "name": "Dedo Apontado",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "descricao": "Aponta o dedo para o ladrão de afetos e a guarda dele racha como osso velho.",
+      "momento": "Melhor jogada quando o amigo mais frágil vai ser o próximo alvo e o ladrão precisa cair rápido.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_mao_no_peito",
+      "name": "Mão no Peito",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "mover_alvo_zona",
+          "direcao": "afastar"
+        }
+      ],
+      "descricao": "Espalma a mão no peito do inimigo e o empurra para longe de quem ele cobiçava, sombra e tudo.",
+      "momento": "Melhor jogada quando o brutamontes colou em quem não aguenta o golpe e o espaço vale uma rodada.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_ciume_subito",
+      "name": "Ciúme Súbito",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        }
+      ],
+      "descricao": "O ciúme vira rosnado de sombra: quem investe contra o Devoto hesita no golpe seguinte.",
+      "momento": "Melhor jogada quando o inimigo ataca com raiva cega e o rosnado pode quebrar o ritmo dele.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_atacado"
+    },
+    {
+      "id": "dev1_zel_anteparo_ciumento",
+      "name": "Anteparo Ciumento",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_defesa",
+          "valor": 3
+        }
+      ],
+      "descricao": "Ergue o antebraço de ferro contra a flecha ou o feitiço que mira de longe e a desvia.",
+      "momento": "Melhor jogada quando o ataque vem de longe e o Devoto prefere servir de anteparo a correr até o atirador.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1,
+      "gatilho": "ao_ser_alvo_distancia"
+    },
+    {
+      "id": "dev1_zel_olhar_fixo",
+      "name": "Olhar Fixo",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "vantagem",
+          "valor": 1,
+          "alvo": "eu"
+        }
+      ],
+      "descricao": "Não desvia o olhar de quem ameaça; o próximo golpe sai com pontaria de brasa viva.",
+      "momento": "Melhor jogada quando o golpe seguinte é o que decide e a pontaria vale mais que a força.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_zelo_em_brasa",
+      "name": "Zelo em Brasa",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "buff_acerto",
+          "valor": 2,
+          "duracao": 2
+        }
+      ],
+      "descricao": "O zelo esquenta o braço como brasa: por duas rodadas os golpes encontram o que miram.",
+      "momento": "Melhor jogada quando vários golpes vêm em sequência e a pontaria precisa durar até o fim.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_ciume_aberto",
+      "name": "Ciúme Aberto",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4
+        },
+        {
+          "kind": "taunt",
+          "valor": 2
+        }
+      ],
+      "descricao": "Golpeia com ferro e grita o nome do amado; havendo mais de um inimigo, todos olham para o zeloso.",
+      "momento": "Melhor jogada quando vários inimigos cercam o grupo e um golpe seguro ainda abre a luta.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_ninguem_toca",
+      "name": "Ninguém Toca",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "avancado",
+      "raridade": "incomum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 3,
+          "alvo": "eu"
+        },
+        {
+          "kind": "dano",
+          "valor": 3,
+          "quando": "ao_aliado_sofrer"
+        }
+      ],
+      "descricao": "Cobre o corpo de cinza e, quando um aliado sangra, devolve o golpe ao inimigo mais próximo.",
+      "momento": "Melhor jogada quando o grupo está atrás do Devoto e cada ferida alheia deve custar caro ao agressor.",
+      "tier": 3,
+      "level_req": 4,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_ferro_antes_do_ferro",
+      "name": "Ferro Antes do Ferro",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "superior",
+      "raridade": "incomum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 6
+        },
+        {
+          "kind": "cura",
+          "valor": 3,
+          "alvo": "eu",
+          "quando": "ao_pressagio_frustrado"
+        }
+      ],
+      "palavras_chave": {
+        "interromper": true
+      },
+      "descricao": "Chega com o ferro antes do golpe do inimigo; se o derruba no meio do ataque, o alívio vem em fôlego.",
+      "momento": "Melhor jogada quando o inimigo mais perigoso já anunciou o ataque e abatê-lo antes vale uma cura.",
+      "tier": 4,
+      "level_req": 7,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_corpo_entre",
+      "name": "Corpo Entre",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "epico_i",
+      "raridade": "rara",
+      "custo_entropia": 3,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5,
+          "alvo": "eu"
+        },
+        {
+          "kind": "taunt",
+          "valor": 3
+        },
+        {
+          "kind": "dano",
+          "valor": 4,
+          "quando": "ao_receber_dano"
+        }
+      ],
+      "descricao": "Entra na frente de tudo: o couro endurece, os olhos hostis se voltam e cada golpe recebido volta em ferro.",
+      "momento": "Melhor jogada quando o grupo cercado precisa de um muro e o muro precisa morder quem o toca.",
+      "tier": 5,
+      "level_req": 9,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    },
+    {
+      "id": "dev1_zel_ninguem_mais",
+      "name": "Ninguém Mais",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "zeloso",
+      "patamar": "lendario",
+      "raridade": "abissal",
+      "custo_entropia": 4,
+      "custo_folego": 2,
+      "frequencia": "cena",
+      "virtude_permitida": [
+        "carisma",
+        "corpo"
+      ],
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "pesada",
+          "dano_base": 9
+        },
+        {
+          "kind": "taunt",
+          "valor": 4
+        },
+        {
+          "kind": "vigilia",
+          "valor": 6,
+          "alvo": "eu"
+        }
+      ],
+      "palavras_chave": {
+        "exaurir": true
+      },
+      "descricao": "O zelo vira fúria do Abismo: o golpe cai, os inimigos o seguem e a guarda cobre quem ficou para trás.",
+      "momento": "Melhor jogada quando o grupo está a um golpe da derrota e o Devoto precisa ser a única presa em campo.",
+      "tier": 7,
+      "level_req": 15,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

@@ -2,8 +2,9 @@ ondas:
 - onda: 1
   data: '2026-10-27'
   autor: claude-sonnet-5.5
-  revisor_voz: null
-  voz_status: pendente-dono
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
   amostra_voz:
   - arc1_cal_estilhaco
   - arc1_cal_mares
@@ -52,8 +53,9 @@ ondas:
 - onda: 1
   data: '2026-10-27'
   autor: claude-sonnet-5.5
-  revisor_voz: null
-  voz_status: pendente-dono
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
   amostra_voz:
   - san1_ava_juros_do_primeiro
   - san1_exp_plateia_cega
@@ -99,3 +101,54 @@ ondas:
   - san1_sil_silencio_cobrado
   - san1_sil_cirurgia_sem_testemunha
   - san1_sil_ultima_gota
+- onda: 1
+  data: '2026-10-27'
+  autor: claude-sonnet-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  amostra_voz:
+  - dev1_con_cinza_no_peito
+  - dev1_con_missa_fechada
+  - dev1_enl_consolo_roubado
+  - dev1_enl_cortejo_de_cinzas
+  - dev1_enl_rosto_do_morto
+  - dev1_zel_ciume_aberto
+  - dev1_zel_ninguem_mais
+  cartas:
+  - dev1_con_cinza_no_peito
+  - dev1_con_veu_de_incenso
+  - dev1_con_cajado_votivo
+  - dev1_con_uncao_curta
+  - dev1_con_selo_contra_o_abismo
+  - dev1_con_postura_de_oracao
+  - dev1_con_marca_votiva
+  - dev1_con_cicatriz_votiva
+  - dev1_con_bencao_do_aco
+  - dev1_con_hora_canonica
+  - dev1_con_missa_fechada
+  - dev1_con_sacramento_do_vazio
+  - dev1_zel_mao_na_frente
+  - dev1_zel_dedo_apontado
+  - dev1_zel_mao_no_peito
+  - dev1_zel_ciume_subito
+  - dev1_zel_anteparo_ciumento
+  - dev1_zel_olhar_fixo
+  - dev1_zel_zelo_em_brasa
+  - dev1_zel_ciume_aberto
+  - dev1_zel_ninguem_toca
+  - dev1_zel_ferro_antes_do_ferro
+  - dev1_zel_corpo_entre
+  - dev1_zel_ninguem_mais
+  - dev1_enl_braco_de_chumbo
+  - dev1_enl_pranto_lento
+  - dev1_enl_nome_repetido
+  - dev1_enl_consolo_da_lembranca
+  - dev1_enl_rosto_do_morto
+  - dev1_enl_ler_o_luto
+  - dev1_enl_nome_gravado
+  - dev1_enl_consolo_roubado
+  - dev1_enl_peso_dos_ausentes
+  - dev1_enl_luto_que_aquece
+  - dev1_enl_cortejo_de_cinzas
+  - dev1_enl_missa_dos_ausentes

@@ -124,17 +124,60 @@ def test_lote2_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
     assert not [c["id"] for c in legado if c.get("momento_placeholder")]
 
 
+# ----------------------------------------------------------------- Lote 3 (Devoto)
+def _lote3() -> list[dict]:
+    return [
+        c
+        for c in card_lint.load_pool()
+        if c.get("onda") == 1 and c.get("classe") == "Devoto do Abismo"
+    ]
+
+
+def test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2():
+    cs = _lote3()
+    assert len(cs) == 36
+    assert Counter(c["subclasse"] for c in cs) == {"consagrado": 12, "zeloso": 12, "enlutado": 12}
+    assert len({c["id"] for c in cs}) == 36
+    assert all(c["id"].startswith("dev1_") for c in cs)
+    assert Counter(c["raridade"] for c in cs) == {"comum": 20, "incomum": 10, "rara": 4, "abissal": 2}
+
+
+def test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
+    pool = card_lint.load_pool()
+    for c in _lote3():
+        others = [o for o in pool if o["id"] != c["id"]]
+        assert not card_lint.errors(card_lint.lint_card(c, others)), c["id"]
+        assert fx.budget_error(c) is None, c["id"]
+    legado = [c for c in pool if c.get("classe") == "Devoto do Abismo" and c.get("onda") is None]
+    assert len(legado) >= 55
+    assert not [c["id"] for c in legado if c.get("momento_placeholder")]
+
+
+def test_lote3_licoes_da_revisao_do_lote2():
+    """Reação com gatilho; sem `ativa`+buff_esquiva; Provocar nunca é o único ganho em solo;
+    `escala` fora do principal de dano; Eco/condição não engolidos pela mesma da Carta."""
+    for c in _lote3():
+        effs = fx.normalize(c)
+        if c["tipo"] == "reacao":
+            assert c.get("gatilho"), c["id"]
+        if c["tipo"] == "ativa":
+            assert all(e["kind"] != "buff_esquiva" for e in effs), c["id"]
+        solo = [e for e in effs if e["kind"] != "taunt"]
+        assert solo, c["id"]  # taunt sozinho não vale em luta solo
+        assert not card_lint.check_escala_principal(c), c["id"]
+        assert not fx.keywords(c).get("eco"), c["id"]  # o Lote 3 não usa Eco
+
+
 # R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
 # (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
 # ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
 POSTURAS_COM_MOMENTO_PLACEHOLDER = {
-    "Devoto do Abismo",
     "Corruptor",
     "Médico de Campo",
     "Inimigo",
     "",  # Cartas de Virtude
 }
-MAX_PLACEHOLDERS = 202  # só pode diminuir (== no teste: baixe aqui ao reescrever)
+MAX_PLACEHOLDERS = 150  # só pode diminuir (== no teste: baixe aqui ao reescrever)
 
 
 def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():

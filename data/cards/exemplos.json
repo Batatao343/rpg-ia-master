@@ -21,9 +21,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "Um golpe de convite: quem o recebe sente o Abismo acenar por trás do ombro de quem bate.",
-      "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando a luta mal começou e a fórmula simples basta para medir quanto o inimigo aguenta.",
+      "raridade": "comum"
     },
     {
       "id": "muralha_viva",
@@ -55,9 +54,8 @@
       "level_req": 4,
       "apex": false,
       "descricao": "O corpo vira parede e a fé, argamassa; nada passa por quem jurou ficar.",
-      "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
-      "raridade": "incomum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o grupo recua e o corpo do Devoto precisa virar parede por uma rodada.",
+      "raridade": "incomum"
     },
     {
       "id": "conviccao_passiva",
@@ -77,9 +75,8 @@
       "level_req": 1,
       "apex": false,
       "descricao": "A certeza do juramento endurece a pele antes de qualquer lâmina chegar.",
-      "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum",
-      "momento_placeholder": true
+      "momento": "Melhor jogada quando o juramento já está feito e a pele endurece sem pedir ação.",
+      "raridade": "comum"
     },
     {
       "id": "corte_sangrento",
