@@ -200,19 +200,24 @@ def draw(piles: dict, n: int, rng: random.Random | None = None) -> list[str]:
 
 
 def discard_hand(piles: dict) -> list[str]:
-    """Descarta a mao nao guardada. Guardadas ficam (1 transicao) e a lista zera."""
-    keep_budget = list(piles.get("guardadas") or [])
+    """Descarta a mao, poupando as `guardadas` (Guardar) e as `retidas` (compradas/geradas
+    durante a rodada), nessa ordem de prioridade. As poupadas contam dentro do limite da
+    mao (`MAO_BASE`): o excedente vai ao descarte. As duas listas zeram."""
+    budget = list(piles.get("guardadas") or []) + list(piles.get("retidas") or [])
     kept: list[str] = []
     gone: list[str] = []
     for cid in piles["mao"]:
-        if cid in keep_budget:
-            keep_budget.remove(cid)
+        if cid in budget:
+            budget.remove(cid)
             kept.append(cid)
         else:
             gone.append(cid)
+    gone += kept[MAO_BASE:]
+    kept = kept[:MAO_BASE]
     piles["mao"] = kept
     piles["descarte"] = list(piles["descarte"]) + gone
     piles["guardadas"] = []
+    piles["retidas"] = []
     return gone
 
 
@@ -220,7 +225,8 @@ def begin_round(piles: dict, rng: random.Random | None = None) -> dict:
     """Inicio de rodada do jogador (R5): descarta, compra ate `MAO_BASE`, Folego cheio."""
     discard_hand(piles)
     draw(piles, MAO_BASE - len(piles["mao"]), rng)
-    piles["folego"] = FOLEGO_BASE
+    piles["folego"] = min(FOLEGO_MAX, FOLEGO_BASE + int(piles.get("folego_bonus", 0) or 0))
+    piles["folego_bonus"] = 0
     piles["folego_emprestado"] = 0
     piles["pacto_carga"] = False
     return piles
@@ -252,11 +258,20 @@ def play_to_pile(piles: dict, card_id: str) -> str:
 # ==========================================================================
 # Efeitos de pilha (SPEC-330 R6/R7) - so com o Baralho `on`
 # ==========================================================================
+def retain(piles: dict, ids: list[str]) -> None:
+    """Cartas que chegam a mao DURANTE a resolucao (`comprar`/`gerar_carta`) ficam
+    RETIDAS: `discard_hand` as poupa e elas abrem a mao da proxima rodada."""
+    piles["retidas"] = list(piles.get("retidas") or []) + list(ids)
+
+
 def gain_folego(piles: dict, n: int) -> int:
-    """`ganhar_folego`: soma ao Folego da rodada ate `FOLEGO_MAX`. Devolve o ganho real."""
-    before = int(piles.get("folego", 0) or 0)
-    piles["folego"] = min(FOLEGO_MAX, before + max(0, int(n)))
-    return piles["folego"] - before
+    """`ganhar_folego`: bonus PENDENTE somado ao Folego cheio da PROXIMA rodada por
+    `begin_round` (a lista de jogadas ja foi fechada e paga), ate `FOLEGO_MAX`.
+    Devolve o ganho real (nunca negativo)."""
+    before = int(piles.get("folego_bonus", 0) or 0)
+    room = max(0, FOLEGO_MAX - FOLEGO_BASE)
+    piles["folego_bonus"] = max(before, min(room, before + max(0, int(n))))
+    return piles["folego_bonus"] - before
 
 
 def add_card(piles: dict, card_id: str, pilha: str = "mao") -> bool:
@@ -268,6 +283,8 @@ def add_card(piles: dict, card_id: str, pilha: str = "mao") -> bool:
         piles["compra"] = [card_id] + list(piles["compra"])
     else:
         piles[pilha] = list(piles[pilha]) + [card_id]
+    if pilha == "mao":
+        retain(piles, [card_id])
     if is_fardo(card_of(card_id)):
         piles["fardos"] = int(piles.get("fardos", 0) or 0) + 1
     return True

@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; Grupo B ligado às pilhas da SPEC-328 e follow-ups P2-4/P2-5 em 27/10, pendentes revisão e smoke real)
+> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; Grupo B ligado às pilhas da SPEC-328 e follow-ups P2-4/P2-5 em 27/10, correções da revisão Sol B-P1-1, B-P2-1..5 aplicadas (D-13), pendentes re-revisão e smoke real)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
@@ -70,7 +70,7 @@ Autoria de cartas novas (SPEC-335). Keywords de inimigo exclusivas (SPEC-332 pod
 
 ## 5. Critérios de aceite
 - [x] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa) ao motor anterior — golden da `main` pré-330 (§8 D-3)
-- [x] 14 palavras-chave com teste e entrada no glossário (Grupo B: glossário/validador/texto; efeito no motor depois da 328)
+- [x] 14 palavras-chave com teste e entrada no glossário; Grupo B com efeito no motor (pilhas da 328, `RPG_CARD_DECK=on`; Eco/Ressoar valem em qualquer modo) — falta re-revisão e smoke real
 - [x] Validator rejeita vocabulário fora do catálogo e carta fora do orçamento
 - [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso)
 
@@ -143,7 +143,7 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
 - **D-10 Grupo B no motor (substituída pela D-12).** Na 1ª passada os efeitos de pilha só
   registravam `pendente_pilhas`; continua assim fora do modo `on` (e para o inimigo, exceto
   Fardo).
-- **D-12 Grupo B sobre as pilhas (2ª passada, 27/10; só `RPG_CARD_DECK=on`).** `Ctx.piles`/
+- **D-12 Grupo B sobre as pilhas (2ª passada, 27/10; efeitos de pilha, Exaurir, Guardar e Vazão só com `RPG_CARD_DECK=on`; Eco e Ressoar em qualquer modo — D-13).** `Ctx.piles`/
   `piles_actor` são ligados em `run_round` quando `deck_mode(state) == "on"`; sem isso nada
   muda (golden das 308 igual; `shadow`/`off` seguem inertes, `pendente_pilhas` incluso).
   - **Exaurir:** `play_to_pile` manda para `exaurida` (como `cena`/`descanso_*`) e dispara o
@@ -167,8 +167,7 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   - **Efeitos de pilha:** `comprar(n)` (reembaralha + Fardo como em 328), `descartar(n,
     escolha)` — com `escolha` a política determinística (sem UI ainda) leva Fardo, depois
     Carta com Vazão, depois a mais à direita; sem `escolha`, ao acaso com o RNG persistido;
-    poupa uma cópia da Carta em jogo —, `ganhar_folego(n)` (teto `FOLEGO_MAX` = 6, decisão
-    minha p/ não haver loop), `gerar_carta`, `purgar_fardo` (mão → descarte → monte).
+    poupa uma cópia da Carta em jogo —, `ganhar_folego(n)` (bônus da próxima rodada, teto `FOLEGO_MAX` = 6 — D-13), `gerar_carta`, `purgar_fardo` (mão → descarte → monte).
     Eventos em `out["pilhas_eventos"]` (agregado pela rodada via `TURN_EVENT_KEYS`).
 - **D-11 Revisão Sol (`handoffs/SPEC-330-sol-review.md`).** Corrigidos: P1-1 (Interromper
   × ações extras, D-6), P1-2 (`ao_derrubar` por categoria, D-5), P2-1 (efeito hostil sem
@@ -177,6 +176,30 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   (D-5), P2-6 (dano extra usa o modo não-letal do golpe declarado — SPEC-325), P2-7
   (`alvo_tem`/`eu_tenho` só aceitam condição do catálogo: nomeadas, controles, `marca`,
   `sangramento` e palavras-chave). Testes em `tests/test_card_effects_review_spec330.py`.
+- **D-13 Correções da revisão Sol do Grupo B (27/10).**
+  - **B-P1-1 retenção.** `comprar` e `gerar_carta` (para a mão) durante a resolução gravam as
+    Cartas em `piles["retidas"]`; `discard_hand` poupa `guardadas` e depois `retidas`
+    (prioridade nessa ordem), e as poupadas contam dentro do limite da mão (`MAO_BASE` = 5):
+    o excedente vai ao descarte. O Fardo plantado também fica retido (pesa na próxima mão).
+    `ganhar_folego` vira `piles["folego_bonus"]` (≤ `FOLEGO_MAX` − base), somado por
+    `begin_round` ao Fôlego cheio da próxima rodada e zerado (a lista de jogadas já foi
+    paga, então não há ganho na rodada corrente). Com monte e descarte vazios `comprar` não
+    compra nem gera Fardo. Testes: `run_round` → `card_piles.begin_round` (a chamada do nó).
+  - **B-P2-1.** Seeds extra = (2, 13, 21): erro, crítico, acerto (sem Mira); o golden grava
+    `res` (resultado dos ataques) e um teste exige acerto+erro+crítico no `extra`. O golden
+    foi regerado no `8bd4f384` (worktree descartável); o harness da reação ganhou
+    `deaths`/`terminal` no `out` (o motor antigo estourava `KeyError` quando a reação matava).
+  - **B-P2-2 Eco/Ressoar independem das pilhas** (decisão do coordenador): valem com
+    `RPG_CARD_DECK` em qualquer modo (nota no glossário). Eco é inerte com 1 ação por
+    rodada; Ressoar escala por cena (testes em `off`). Só os efeitos de pilha, Exaurir,
+    Guardar e Vazão exigem `on`.
+  - **B-P2-3/4.** `descartar` ao acaso testado com `rng=random` (módulo, como o nó) e
+    round-trip JSON; Fardo do inimigo ponta a ponta via `run_round` em `on`/`shadow`/`off`.
+  - **P3.** `gain_folego` nunca devolve ganho negativo; só um inimigo (`sides["enemy"]`)
+    planta Fardo — aliado não. Registrado e adiado: `_bump` mexe na 1ª chave entre
+    `valor`/`dano_base`/`n` (fixar na autoria, SPEC-335); `descartar` é quase sem custo
+    enquanto a mão toda vai ao descarte no fim da rodada (só dispara Vazão ou tira Carta com
+    Guardar).
 - **D-11 follow-ups fechados (27/10).** P2-4: o golden (`spec330_legacy_golden.json`,
   regerado com o código pré-330 `8bd4f384` num worktree descartável) tem a seed 7 com Mira
   e `extra` com as seeds 21 e 1337 SEM Mira (erro/acerto/crítico), além de `on_attack`/

@@ -852,13 +852,18 @@ def _apply_pile(
         return False
     own = actor_id == ctx.piles_actor
     cid_eff = str(eff.get("id") or eff.get("card_id") or "")
-    if not own and not (kind == "gerar_carta" and cp.is_fardo(cp.card_of(cid_eff))):
+    if not own and not (
+        kind == "gerar_carta"
+        and cp.is_fardo(cp.card_of(cid_eff))
+        and actor_id in (ctx.sides or {}).get("enemy", [])  # aliado nao planta Fardo
+    ):
         return False
     logs = out.setdefault("logs", [])
     events = out.setdefault("pilhas_eventos", [])
     who = _name(ctx.actors_by_id.get(actor_id))
     if kind == "comprar":
         drawn = cp.draw(piles, value, _rng_of(ctx))
+        cp.retain(piles, drawn)
         logs.append(f"{who} compra {len(drawn)} Carta(s).")
         events.append({"kind": "comprar", "cartas": list(drawn), "card_id": card.get("id")})
         for cid in drawn:
@@ -878,7 +883,7 @@ def _apply_pile(
             pile_trigger(ctx, "ao_descartar", cid, actor_id, out)
     elif kind == "ganhar_folego":
         got = cp.gain_folego(piles, value)
-        logs.append(f"{who} ganha {got} de Fôlego.")
+        logs.append(f"{who} ganha {got} de Fôlego (na próxima rodada).")
         events.append({"kind": "ganhar_folego", "valor": got})
     elif kind == "gerar_carta":
         pilha = str(eff.get("pilha") or "mao")

@@ -76,14 +76,16 @@
       "grupo": "B",
       "parametro": null,
       "regra": "Se jogada depois de outra Carta da mesma Postura nesta rodada, repete o efeito principal pela metade.",
-      "sabor": "A Postura responde a si mesma."
+      "sabor": "A Postura responde a si mesma.",
+      "nota": "Não depende das pilhas (RPG_CARD_DECK): vale também com o baralho desligado."
     },
     "ressoar": {
       "nome": "Ressoar",
       "grupo": "B",
       "parametro": "valor",
       "regra": "Cada vez que é jogada nesta cena, o valor da Carta sobe N até o fim da cena.",
-      "sabor": "O sino toca mais alto a cada badalada."
+      "sabor": "O sino toca mais alto a cada badalada.",
+      "nota": "Não depende das pilhas (RPG_CARD_DECK): vale também com o baralho desligado."
     },
     "fardo": {
       "nome": "Fardo",

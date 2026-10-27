@@ -33,7 +33,7 @@ def _strip(value):
 # P2-4 (revisao Sol): alem da seed 7 (acerto garantido pela Mira), duas seeds SEM Mira
 # exercitam erro, acerto e critico; passivas disparam `on_hit`/`on_attack`; utilitarias
 # passam por `cards.use_card`. A chave `extra` guarda esses cenarios.
-EXTRA_SEEDS = (21, 1337)
+EXTRA_SEEDS = (2, 13, 21)  # erro, critico, acerto (sem Mira)
 
 
 def run_card(card: dict, seed: int = 7, mira: bool = True) -> dict:
@@ -75,7 +75,7 @@ def run_card(card: dict, seed: int = 7, mira: bool = True) -> dict:
     cs.freeze(scene)
     tipo = card.get("tipo")
     kind = str((card.get("efeito") or {}).get("kind"))
-    out: dict = {"logs": []}
+    out: dict = {"logs": [], "deaths": [], "terminal": []}
     if tipo == "ativa":
         target = "player" if kind in ct._SUPPORT_EFFECTS else "e"
         out = ct.resolve_turn(
@@ -107,7 +107,11 @@ def run_card(card: dict, seed: int = 7, mira: bool = True) -> dict:
             trig["usage"] = player.get("card_usage")
             out["gatilhos"] = trig
     blob = json.dumps(_strip([out, actors, scene]), sort_keys=True, default=str, ensure_ascii=False)
-    return {"sha": hashlib.sha256(blob.encode("utf-8")).hexdigest(), "logs": out.get("logs", [])}
+    return {
+        "sha": hashlib.sha256(blob.encode("utf-8")).hexdigest(),
+        "logs": out.get("logs", []),
+        "res": [a.get("resultado") for a in out.get("attacks") or []],
+    }
 
 
 def run_card_full(card: dict) -> dict:

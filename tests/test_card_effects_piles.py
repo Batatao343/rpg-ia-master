@@ -186,12 +186,21 @@ def test_descartar_ao_acaso_e_deterministico_pela_semente(monkeypatch):
     assert results[0] == results[1] and len(results[0]) == 2
 
 
-def test_ganhar_folego_soma_e_respeita_o_teto():
+def test_ganhar_folego_vira_bonus_pendente_somado_no_proximo_begin_round():
     s = _setup(["t_folego", "t_folego"])
     _run(s, _step("t_folego", "player"), _step("t_folego", "player"))
-    # 3 base - 1 - 1 + 2 + 2, teto FOLEGO_MAX
-    assert s[3]["_piles"]["folego"] == min(cp.FOLEGO_MAX, 3 - 1 + 2 - 1 + 2)
-    assert cp.gain_folego({"folego": cp.FOLEGO_MAX}, 5) == 0
+    piles = s[3]["_piles"]
+    assert piles["folego"] == cp.FOLEGO_BASE - 2  # nada entra na rodada que ja foi paga
+    assert piles["folego_bonus"] == 3  # 2 + 2, preso ao teto (FOLEGO_MAX - base)
+    cp.begin_round(piles)
+    assert piles["folego"] == cp.FOLEGO_MAX and piles["folego_bonus"] == 0
+    cp.begin_round(piles)
+    assert piles["folego"] == cp.FOLEGO_BASE
+
+
+def test_gain_folego_nunca_devolve_ganho_negativo():
+    assert cp.gain_folego({"folego_bonus": 99}, 2) == 0
+    assert cp.gain_folego({}, -4) == 0
 
 
 def test_gerar_carta_poe_copia_na_pilha():
@@ -479,3 +488,162 @@ def test_revelar_fora_do_perfil_legacy_nao_toca_o_bestiario(monkeypatch):
 def test_revelar_no_jogador_ou_campo_cosmetico_nao_persiste(monkeypatch):
     calls, _, _ = _reveal({"immunities": ["veneno"]}, "vitalidade", monkeypatch)
     assert calls == []
+
+
+# ------------------------------------------------------------------ B-P1-1: retencao ate a proxima mao
+def test_cartas_compradas_chegam_a_mao_da_proxima_rodada():
+    s = _setup(
+        ["t_comprar", "bas_san_golpe"],
+        compra=["bas_san_guarda", "san_esquiva", "san_finta", "bas_san_corte_raso"] * 2,
+    )
+    _run(s, _step("t_comprar", "player"))
+    piles = s[3]["_piles"]
+    assert piles["retidas"] == ["bas_san_guarda", "san_esquiva"]
+    cp.begin_round(piles)  # o que o no de combate faz logo apos run_round
+    assert piles["mao"][:2] == ["bas_san_guarda", "san_esquiva"]
+    assert len(piles["mao"]) == cp.MAO_BASE
+    assert "bas_san_guarda" not in piles["descarte"] and piles["retidas"] == []
+    assert piles["descarte"].count("t_comprar") == 1
+
+
+def test_comprar_com_monte_e_descarte_vazios_nao_gera_fardo():
+    s = _setup(["t_comprar"], compra=[])
+    s[3]["_piles"]["descarte"] = []
+    _run(s, _step("t_comprar", "player"))
+    piles = s[3]["_piles"]
+    assert piles["fardos"] == 0 and cp.FARDO_ID not in piles["mao"] + piles["compra"]
+    assert piles["retidas"] == []
+
+
+def test_gerar_carta_para_a_mao_fica_retida_para_a_proxima():
+    s = _setup(["t_gerar"], compra=["san_esquiva"] * 6)
+    _run(s, _step("t_gerar", "player"))
+    piles = s[3]["_piles"]
+    cp.begin_round(piles)
+    assert piles["mao"][0] == "bas_san_guarda" and len(piles["mao"]) == cp.MAO_BASE
+
+
+def test_excedente_do_limite_da_mao_vai_ao_descarte():
+    piles = {
+        "compra": [],
+        "mao": ["bas_san_golpe"] * 4 + ["bas_san_guarda"] * 3,
+        "descarte": [],
+        "guardadas": ["bas_san_golpe"] * 4,
+        "retidas": ["bas_san_guarda"] * 3,
+    }
+    cp.discard_hand(piles)
+    assert len(piles["mao"]) == cp.MAO_BASE
+    assert piles["mao"].count("bas_san_golpe") == 4  # Guardar tem prioridade sobre retidas
+    assert piles["descarte"] == ["bas_san_guarda"] * 2
+
+
+# ------------------------------------------------------------------ B-P2-2: Eco/Ressoar sem pilhas
+def _no_piles_run(steps_per_round):
+    player, enemy = _player(), _enemy()
+    scene = cs.new_scene()
+    for aid in ("player", "gob_1"):
+        cs.place(scene, aid)
+    cs.freeze(scene)
+    actors = {"player": player, "gob_1": enemy}
+    sides = {"hero": ["player"], "enemy": ["gob_1"]}
+    outs = []
+    for cid in steps_per_round:
+        decl = ct.TurnDeclaration(actor_id="player", acao=_step(cid))
+        outs.append(
+            orch.run_round(
+                scene,
+                actors,
+                sides,
+                {"player": player},
+                declarations={"player": decl},
+                rng=random.Random(5),
+            )
+        )
+    return scene, outs
+
+
+def test_eco_em_off_e_inerte_com_uma_acao_por_rodada(monkeypatch):
+    monkeypatch.setenv("RPG_CARD_DECK", "off")
+    _, outs = _no_piles_run(["bas_san_golpe", "t_eco"])
+    assert not any(k["keyword"] == "eco" for o in outs for k in o.get("keywords", []))
+
+
+def test_ressoar_em_off_escala_por_cena_sem_pilhas(monkeypatch):
+    monkeypatch.setenv("RPG_CARD_DECK", "off")
+    scene, outs = _no_piles_run(["t_ressoar", "t_ressoar", "t_ressoar"])
+    dmg = [o["attacks"][0]["dano_final"] for o in outs]
+    assert dmg[1] > dmg[0] and dmg[2] > dmg[1], dmg  # a regiao atingida varia por rodada
+    assert scene["ressoar"] == {"player:t_ressoar": 3}
+
+
+# ------------------------------------------------------------------ B-P2-3: descartar com RNG persistido
+def test_descartar_aleatorio_usa_rng_persistido_com_save_load(monkeypatch):
+    import json
+
+    card = copy.deepcopy(cards.get_card("t_descartar"))
+    card["efeito"]["escolha"] = False
+    monkeypatch.setitem(cards._load_cards(), "t_descartar", fx.materialize(card))
+    results = []
+    for trial in range(3):
+        s = _setup(["t_descartar", "bas_san_golpe", "bas_san_guarda", "san_esquiva"])
+        s[3]["_piles"] = json.loads(json.dumps(s[3]["_piles"]))  # save/load
+        random.seed(1000 + trial)  # o no passa o modulo `random`, que nao e `Random`
+        decl = ct.TurnDeclaration(actor_id="player", acao=_step("t_descartar", "player"))
+        out = orch.run_round(s[0], s[1], s[2], s[3], declarations={"player": decl}, rng=random)
+        piles = json.loads(json.dumps(s[3]["_piles"]))
+        results.append((list(piles["descarte"]), piles["embaralhos"]))
+        assert out["pilhas_eventos"][0]["kind"] == "descartar"
+    assert results[0] == results[1] == results[2]
+    assert results[0][1] >= 2  # o contador persistido avancou (start_piles + descartar)
+
+
+# ------------------------------------------------------------------ B-P2-4: Fardo do inimigo ponta a ponta
+def _fardo_enemy_run(mode, monkeypatch, ally=False):
+    monkeypatch.setenv("RPG_CARD_DECK", mode)
+    card = fx.materialize(
+        {
+            "id": "t_praga",
+            **_BASE,
+            "name": "Praga",
+            "efeito": {"kind": "gerar_carta", "id": cp.FARDO_ID, "pilha": "mao"},
+        }
+    )
+    monkeypatch.setitem(cards._load_cards(), "t_praga", card)
+    scene, actors, sides, state = _setup(["bas_san_golpe"], mode=mode)
+    who = "gob_1"
+    if ally:
+        actors["amigo"] = _enemy()
+        actors["amigo"]["id"] = "amigo"
+        cs.place(scene, "amigo")
+        sides["hero"].append("amigo")
+        who = "amigo"
+    actors[who]["cartas"] = ["t_praga"]
+    if mode == "off":
+        state.pop("_piles")
+    decls = {
+        "player": ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="pass")),
+        who: ct.TurnDeclaration(actor_id=who, acao=ct.TurnStep(kind="card", card_id="t_praga")),
+    }
+    out = orch.run_round(scene, actors, sides, state, declarations=decls, rng=random.Random(5))
+    return state, out
+
+
+def test_inimigo_planta_fardo_na_mao_em_on(monkeypatch):
+    state, out = _fardo_enemy_run("on", monkeypatch)
+    assert cp.FARDO_ID in state["_piles"]["mao"]
+    assert state["_piles"]["fardos"] == 1 and not out.get("pendente_pilhas")
+    cp.begin_round(state["_piles"])
+    assert cp.FARDO_ID in state["_piles"]["mao"]  # fica retido: pesa na proxima mao
+
+
+@pytest.mark.parametrize("mode", ["shadow", "off"])
+def test_inimigo_fardo_fora_do_on_vira_so_pendente(mode, monkeypatch):
+    state, out = _fardo_enemy_run(mode, monkeypatch)
+    assert out["pendente_pilhas"][0]["kind"] == "gerar_carta"
+    if mode == "shadow":
+        assert cp.FARDO_ID not in state["_piles"]["mao"]
+
+
+def test_aliado_nao_planta_fardo(monkeypatch):
+    state, out = _fardo_enemy_run("on", monkeypatch, ally=True)
+    assert cp.FARDO_ID not in state["_piles"]["mao"]

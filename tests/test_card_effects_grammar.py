@@ -483,3 +483,12 @@ def test_validador_rejeita_carta_fora_do_orcamento(tmp_path):
 
 def test_validador_acervo_real_continua_limpo():
     assert validate_cards() == []
+
+
+def test_golden_extra_cobre_acerto_erro_e_critico():
+    """B-P2-1: as seeds extra precisam de fato exercitar os três desfechos de ataque."""
+    with open(eq.GOLDEN, encoding="utf-8") as f:
+        golden = json.load(f)
+    seen = {r for g in golden.values() for e in g["extra"].values() for r in e["res"]}
+    assert {"acerto", "erro", "critico"} <= seen
+    assert len(eq.EXTRA_SEEDS) == 3
