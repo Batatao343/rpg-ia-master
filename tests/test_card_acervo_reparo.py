@@ -139,7 +139,12 @@ def test_lote3_devoto_36_cartas_12_por_subclasse_e_raridade_20_10_4_2():
     assert Counter(c["subclasse"] for c in cs) == {"consagrado": 12, "zeloso": 12, "enlutado": 12}
     assert len({c["id"] for c in cs}) == 36
     assert all(c["id"].startswith("dev1_") for c in cs)
-    assert Counter(c["raridade"] for c in cs) == {"comum": 20, "incomum": 10, "rara": 4, "abissal": 2}
+    assert Counter(c["raridade"] for c in cs) == {
+        "comum": 20,
+        "incomum": 10,
+        "rara": 4,
+        "abissal": 2,
+    }
 
 
 def test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio():
