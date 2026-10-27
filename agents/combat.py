@@ -2239,9 +2239,11 @@ def _combat_node(state: GameState):
         combat_meta["scene_allies"] = scene_tr
     combat_meta["active"] = not combat_over
     # SPEC-329 R1: congela o Presságio da PRÓXIMA rodada (a UI o mostra antes da jogada).
-    combat_meta.pop("pressagios", None)
-    combat_meta.pop("pressagios_publicos", None)
-    if _enemy_intent.active() and not combat_over and not is_simulation:
+    refused = bool(out.get("action_refused"))  # SPEC-328 R-2: recusa não rerrola o Presságio
+    if not refused:
+        combat_meta.pop("pressagios", None)
+        combat_meta.pop("pressagios_publicos", None)
+    if _enemy_intent.active() and not combat_over and not is_simulation and not refused:
         try:
             _next_round = _enemy_intent.forecast_round(scene, actors_by_id, sides, rng)
             combat_meta["pressagios"] = _next_round

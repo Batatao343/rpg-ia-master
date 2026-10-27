@@ -158,7 +158,16 @@ def test_pacto_do_abismo_cobra_entropia_e_carga_em_todas_as_posturas(cls):
     assert pacto and pacto[0]["entropia_extra"] == 2 and pacto[0]["emprestado"] == 1
     # o Pacto nao passa pelo gatilho de classe (nao gasta o teto por turno) e sempre da +1 Carga
     assert actors["player"]["abyss_charge"] >= 1
-    assert actors["player"]["entropy"] >= 3 + 2 - 5  # +2 do Pacto; golpes podem gastar/ganhar
+
+
+def test_pacto_sem_entropia_recusa_a_lista_sem_efeito():
+    golpe = "bas_san_golpe"
+    scene, actors, sides, state = _setup(entropy=1)
+    atk = ct.TurnStep(kind="attack", target_id="gob_1")
+    before = copy.deepcopy(state["_piles"])
+    out = _run(scene, actors, sides, state, _plays(_card(golpe), _card(golpe), atk, atk))
+    assert out["deck_refused"] and "Entropia insuficiente" in " ".join(out["logs"])
+    assert state["_piles"] == before and actors["player"]["abyss_charge"] == 0
 
 
 def test_pacto_nao_ocupa_o_teto_de_gatilho_de_classe():
@@ -168,7 +177,7 @@ def test_pacto_nao_ocupa_o_teto_de_gatilho_de_classe():
     assert int(actors["player"].get("_entropy_trigger_turn", 0) or 0) == 0
 
 
-def test_reembolso_pos_pacto_desfaz_entropia_e_carga(monkeypatch):
+def test_reembolso_pos_pacto_desfaz_o_delta_do_pacto(monkeypatch):
     scene, actors, sides, state = _setup(entropy=6)
     state["_piles"]["folego"] = 0  # forca o Pacto na 1a jogada
     from services import conflict_orchestrator as o

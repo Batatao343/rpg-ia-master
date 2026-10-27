@@ -268,6 +268,7 @@ def test_save_load_no_meio_do_conflito_e_mais_uma_rodada(monkeypatch, tmp_path):
     state = _start_state(monkeypatch, "on")
     state["combat_declaration"] = None
     first = combat_agent._combat_node(state)
+    assert first["combat"]["active"] is True  # R-5: conflito precisa seguir ativo
     mid = {**state, **{k: v for k, v in first.items() if k != "messages"}}
     mid["messages"] = [HumanMessage(content="Encerrar turno")]
     assert persistence.save_game_state(deepcopy(mid)) is True
@@ -281,7 +282,31 @@ def test_save_load_no_meio_do_conflito_e_mais_uma_rodada(monkeypatch, tmp_path):
     random.seed(5)
     b = combat_agent._combat_node(loaded)
     assert a["combat"]["pilhas"] == b["combat"]["pilhas"]
-    assert a["combat"]["round"] == b["combat"]["round"] == 2 or a["combat"]["active"] is False
+    assert a["combat"]["active"] and b["combat"]["active"]
+    assert a["combat"]["round"] == b["combat"]["round"] == 2
+    for key in ("vitalidade", "entropy", "abyss_charge"):
+        assert a["player"].get(key) == b["player"].get(key)
+    assert [e.get("vitalidade") for e in a["enemies"]] == [
+        e.get("vitalidade") for e in b["enemies"]
+    ]
+
+
+def test_recusa_preserva_pressagios(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    state = _state(monkeypatch)
+    state["combat_simulation"] = {"enabled": False}
+    state["combat"]["pressagios"] = {"r": [1]}
+    state["combat"]["pressagios_publicos"] = [{"x": 1}]
+
+    class _Pack:
+        world_state_block = ""
+
+    monkeypatch.setattr(combat_agent, "_narrate", lambda *a, **k: "n")
+    monkeypatch.setattr(combat_agent, "build_context_pack", lambda *a, **k: _Pack())
+    api._apply_action_options(state, _req(jogadas=_plays(state, "san_sil_exato")))
+    out = combat_agent._combat_node(state)
+    assert out["combat"]["pressagios"] == {"r": [1]}
+    assert out["combat"]["pressagios_publicos"] == [{"x": 1}]
 
 
 def test_api_action_com_jogadas_e_pilhas_na_resposta(monkeypatch):

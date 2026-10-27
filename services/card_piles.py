@@ -260,23 +260,34 @@ def _plan(
             return plan
         plan["emprestado"] = falta
         plan["entropia_extra"] = falta * PACTO_ENTROPIA_POR_FOLEGO
-    # O Pacto GANHA Entropia (nao exige); so a Entropia propria da carta precisa estar no pool.
-    if entropy_cost > entropia:
-        plan.update(ok=False, motivo=f"Entropia insuficiente ({entropia}/{entropy_cost}).")
+    # Entropia e combustivel: o Pacto GASTA 2 por Folego, alem da Entropia propria da carta.
+    total = plan["entropia_extra"] + entropy_cost
+    if total > entropia:
+        plan.update(ok=False, motivo=f"Entropia insuficiente ({entropia}/{total}).")
     return plan
 
 
-def apply_pact(piles: dict, player: dict, plan: dict) -> None:
-    """Consequencia do Pacto (todas as Posturas): +2 Entropia por Folego emprestado, pelo
-    ganho generico (clamp em `max_entropy`), e +1 Carga do Abismo na 1a vez da rodada."""
+def apply_pact(piles: dict, player: dict, plan: dict) -> bool:
+    """Consequencia do Pacto (todas as Posturas): GASTA 2 Entropia por Folego emprestado e
+    poe +1 Carga do Abismo na 1a vez da rodada. Devolve True se esta chamada pos a Carga."""
+    if not plan.get("emprestado"):
+        return False
+    player["entropy"] = max(0, int(player.get("entropy", 0) or 0) - int(plan["entropia_extra"]))
+    if piles.get("pacto_carga"):
+        return False
+    piles["pacto_carga"] = True
+    player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + 1
+    return True
+
+
+def undo_pact(piles: dict, player: dict, plan: dict, carga_added: bool) -> None:
+    """Desfaz so o delta do Pacto (R-3): Folego emprestado, Entropia gasta e a Carga posta."""
     if not plan.get("emprestado"):
         return
-    mx = int(player.get("max_entropy", 0) or 0)
-    now = int(player.get("entropy", 0) or 0) + int(plan["entropia_extra"])
-    player["entropy"] = min(mx, now) if mx > 0 else now
-    if not piles.get("pacto_carga"):
-        piles["pacto_carga"] = True
-        player["abyss_charge"] = int(player.get("abyss_charge", 0) or 0) + 1
+    player["entropy"] = int(player.get("entropy", 0) or 0) + int(plan["entropia_extra"])
+    if carga_added:
+        piles["pacto_carga"] = False
+        player["abyss_charge"] = max(0, int(player.get("abyss_charge", 0) or 0) - 1)
 
 
 def pay_cost(
@@ -421,13 +432,7 @@ def plan_plays(
             return {"ok": False, "motivo": plan["motivo"], **total}
         sim["folego"] = max(0, int(sim["folego"]) - plan["folego"])
         sim["folego_emprestado"] = int(sim["folego_emprestado"]) + plan["emprestado"]
-        entropy -= entropy_cost
-        mx = int(player.get("max_entropy", 0) or 0)
-        entropy = (
-            min(mx, entropy + plan["entropia_extra"])
-            if mx > 0
-            else entropy + plan["entropia_extra"]
-        )
+        entropy -= entropy_cost + plan["entropia_extra"]
         total["folego_total"] += cost
         total["emprestado"] += plan["emprestado"]
         total["entropia_extra"] += plan["entropia_extra"]

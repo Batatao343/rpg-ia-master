@@ -105,11 +105,7 @@ def resolve_player_plays(
         kind = str(step.kind or "pass").lower()
         card = cards.get_card(step.card_id or "") if kind == "card" else None
         cost = card_piles.step_folego(step)
-        snap = (
-            int(actor.get("entropy", 0) or 0),
-            int(actor.get("abyss_charge", 0) or 0),
-            bool(piles.get("pacto_carga")),
-        )
+        carga_added = False
         plan = {"folego": 0, "emprestado": 0, "entropia_extra": 0, "ok": True, "motivo": ""}
         if cost:
             plan = card_piles.pay_cost(
@@ -123,10 +119,10 @@ def resolve_player_plays(
                 out["logs"].append(plan["motivo"])
                 continue
         if plan["emprestado"]:
-            card_piles.apply_pact(piles, actor, plan)
+            carga_added = card_piles.apply_pact(piles, actor, plan)
             out["logs"].append(
                 f"Pacto do Abismo: você toma {plan['emprestado']} Fôlego emprestado; "
-                f"o Abismo empresta, e cobra: +{plan['entropia_extra']} Entropia e Carga."
+                f"o Abismo empresta, e cobra: -{plan['entropia_extra']} Entropia e +1 Carga."
             )
             orch._record_class_event(
                 out,
@@ -152,7 +148,7 @@ def resolve_player_plays(
                 piles["folego_emprestado"] = max(
                     0, int(piles.get("folego_emprestado", 0) or 0) - plan["emprestado"]
                 )
-                actor["entropy"], actor["abyss_charge"], piles["pacto_carga"] = snap
+                card_piles.undo_pact(piles, actor, plan, carga_added)  # só o delta do Pacto
     seen = False
     deduped: list = []
     for turn_id in out.get("resolved_turns") or []:
