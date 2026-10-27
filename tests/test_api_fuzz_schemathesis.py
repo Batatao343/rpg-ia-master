@@ -23,6 +23,7 @@ import api
 from tests.fakes.api_fuzz import (
     fuzz_operation,
     network_blocked,
+    prime_player,
 )
 from tests.fakes.two_principals import two_principals  # noqa: F401  (fixture)
 
@@ -42,6 +43,8 @@ GRAPH_RE = r"^/game/(new|prologue|combat-simulator|art/brief)$"
 # R10: allowlist do runtime fake. Fora: rotas que dependem de ``runtime.resources[0]``
 # (Postgres: operations/{id} usa resources[0].connection(); operations/{id}/cost usa
 # game_store.pool; o legacy cobre as duas), wallet/arte/compra/conta e as que o fake não atende.
+# O fake tem ``resources[0]`` que conecta mas não devolve linhas: serve ao gate de falhas de
+# equip/levelup/cards/prepare, não a rotas que leem dados dele.
 DB_ALLOWED_RE = (
     r"^/(game/(state|map|codex|codex/dossiers|history|saves|chronicle/export"
     r"|chronicle/search|equip|cards/prepare|levelup|death|action"
@@ -101,7 +104,24 @@ def legacy_seed(legacy_client):
         },
     )
     assert response.status_code == 200, response.text
-    return response.json()["game_id"]
+    game_id = response.json()["game_id"]
+    import persistence
+
+    path = persistence.save_path(game_id)
+    state = persistence.load_game_state(path)
+    state["player"] = prime_player(state["player"])
+    persistence.save_game_state(state)
+    return game_id
+
+
+@pytest.fixture
+def db_seed(two_principals):  # noqa: F811
+    """Mesma preparação do ``legacy_seed`` na campanha do perfil DB offline."""
+    stored = two_principals.store.get(two_principals.a, two_principals.game_a)
+    state = dict(stored.state)
+    state["player"] = prime_player(state["player"])
+    two_principals.store.save(two_principals.a, two_principals.game_a, stored.version, state)
+    return str(two_principals.game_a)
 
 
 # Rotas que mudam estado ou rodam o grafo: pelo menos um exemplo precisa passar da
@@ -120,6 +140,10 @@ MUST_REACH_HANDLER = {
 }
 
 
+# Rotas que precisam de ao menos um 200 (commit), não só de passar da validação.
+MUST_COMMIT = {("POST", "/game/equip"), ("POST", "/game/levelup")}
+
+
 # Respostas de gate (validação/idempotência/id), ainda antes da regra de negócio.
 GATE_CODES = {
     "400:None",
@@ -135,6 +159,8 @@ def _assert_reached(method: str, path: str, statuses) -> None:
     if (method, path) in MUST_REACH_HANDLER:
         reached = {k for k in statuses if k.split(":")[0] not in {"422"} and k not in GATE_CODES}
         assert reached, f"{method} {path} nunca passou da validação: {dict(statuses)}"
+    if (method, path) in MUST_COMMIT:
+        assert "200" in statuses, f"{method} {path} nunca chegou ao commit: {dict(statuses)}"
 
 
 def test_scope_is_locked():
@@ -190,8 +216,8 @@ def test_fuzz_legacy_graph(method, path, legacy_client):
 
 
 @pytest.mark.parametrize(("method", "path"), DB_OPS, ids=_ids(DB_OPS))
-def test_fuzz_db_offline(method, path, two_principals):  # noqa: F811
-    seed = str(two_principals.game_a)
+def test_fuzz_db_offline(method, path, two_principals, db_seed):  # noqa: F811
+    seed = db_seed
     statuses = fuzz_operation(
         _op(method, path), two_principals.client_a, max_examples=25, seed=seed
     )

@@ -84,6 +84,38 @@ VALID_CATALOG = {
 }
 
 
+# Item equipável e escolha de nível plantados na campanha semeada (``prime_player``), para
+# ``equip``/``levelup`` chegarem ao commit em vez de parar na regra de negócio.
+FUZZ_ITEM = "adaga_ferro"
+FUZZ_CHOICE_ID = "fuzz-virtude"
+
+
+def prime_player(player: dict[str, Any]) -> dict[str, Any]:
+    """Cópia do jogador com ``FUZZ_ITEM`` no inventário e uma escolha de Virtude pendente."""
+    primed = dict(player)
+    primed["inventory"] = [*(player.get("inventory") or []), {"id": FUZZ_ITEM, "qty": 1}]
+    primed["pending_choices"] = [
+        *(player.get("pending_choices") or []),
+        {"id": FUZZ_CHOICE_ID, "kind": "virtude"},
+    ]
+    return primed
+
+
+def seed_commit_fields(case: Any) -> None:
+    """Corpo válido para ``equip``/``levelup`` contra a campanha preparada por ``prime_player``."""
+    import gamedata
+
+    if not isinstance(case.body, dict):
+        return
+    if case.operation.path == "/game/equip":
+        case.body["item_id"] = FUZZ_ITEM
+        case.body.pop("unequip_slot", None)
+    elif case.operation.path == "/game/levelup":
+        case.body["choice_id"] = FUZZ_CHOICE_ID
+        case.body["virtude"] = gamedata.VIRTUDES[0]
+        case.body.pop("attr", None)
+
+
 def seed_game_id(case: Any, game_id: str) -> None:
     """R11: troca ``game_id`` (path/query/body) pelo id real da campanha semeada."""
     for bag in (case.path_parameters, case.query):
@@ -138,6 +170,7 @@ def run_case(
         if seed is not None:
             seed_game_id(case, seed)
             seed_idempotency(case, digest)
+            seed_commit_fields(case)
         if catalog:
             seed_catalog(case)
     try:
