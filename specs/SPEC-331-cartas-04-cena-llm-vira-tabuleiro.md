@@ -1,6 +1,6 @@
 # SPEC-331 — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (pousada `off` em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS + F-1..F-3; falta revisão das 24 cartas pelo dono, smoke real e arena p95 ≤ 10 rodadas)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-072, SPEC-064, SPEC-325 C (objetos), SPEC-330 (palavras-chave usadas pelas Cartas de Cena); **SPEC-328** só para R6 (objeto na mão)
