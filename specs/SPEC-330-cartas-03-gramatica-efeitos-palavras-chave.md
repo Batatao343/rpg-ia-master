@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário implementados; Grupo B no motor aguarda SPEC-328; revisão independente pendente)
+> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; falta Grupo B no motor sobre a SPEC-328, follow-ups D-11 e smoke real)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
