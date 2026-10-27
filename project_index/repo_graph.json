@@ -1,5 +1,5 @@
 {
-  "commit_sha": "19c0fed84d2a059dd2f3138624222fe96d082cf7",
+  "commit_sha": "3d79b4992b652ccb0b6109fd5c7ef20186f6226a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1154,6 +1154,28 @@
       },
       "source": "file:docs/spec332/arena_familias.py",
       "target": "module:docs.spec332.arena_familias",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 1
+      },
+      "source": "file:docs/spec335/arena_postura_medico.py",
+      "target": "module:docs.spec335.arena_postura_medico",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 1
+      },
+      "source": "file:docs/spec335/confirmar_lote5.py",
+      "target": "module:docs.spec335.confirmar_lote5",
       "type": "contains"
     },
     {
@@ -40386,6 +40408,94 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 25
+      },
+      "source": "module:docs.spec335.arena_postura_medico",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 55
+      },
+      "source": "module:docs.spec335.arena_postura_medico",
+      "target": "symbol:docs.spec335.arena_postura_medico.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 32
+      },
+      "source": "module:docs.spec335.arena_postura_medico",
+      "target": "symbol:docs.spec335.arena_postura_medico.run_arm",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 49
+      },
+      "source": "module:docs.spec335.arena_postura_medico",
+      "target": "symbol:docs.spec335.arena_postura_medico.total",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 21
+      },
+      "source": "module:docs.spec335.confirmar_lote5",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 40
+      },
+      "source": "module:docs.spec335.confirmar_lote5",
+      "target": "symbol:docs.spec335.confirmar_lote5.controle",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 74
+      },
+      "source": "module:docs.spec335.confirmar_lote5",
+      "target": "symbol:docs.spec335.confirmar_lote5.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 64
+      },
+      "source": "module:docs.spec335.confirmar_lote5",
+      "target": "symbol:docs.spec335.confirmar_lote5.rodar",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "docs/spec336/arena_folego_full.py",
         "line": 25
       },
@@ -66248,7 +66358,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 408
+        "line": 443
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint._vigente",
@@ -66281,10 +66391,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 368
+        "line": 403
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_color_pie",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 387
+      },
+      "source": "module:services.card_lint",
+      "target": "symbol:services.card_lint.check_controle_duracao",
       "type": "defines"
     },
     {
@@ -66314,7 +66435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 418
+        "line": 453
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_names",
@@ -66347,7 +66468,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 438
+        "line": 473
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -66402,7 +66523,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 558
+        "line": 594
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.errors",
@@ -66435,7 +66556,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 510
+        "line": 546
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_batch",
@@ -66446,7 +66567,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 482
+        "line": 517
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_card",
@@ -66457,7 +66578,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 529
+        "line": 565
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_wave",
@@ -108785,6 +108906,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 233
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo._lote5",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 62
       },
       "source": "module:tests.test_card_acervo_reparo",
@@ -108939,7 +109071,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 243
+        "line": 272
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 241
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 259
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 318
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
@@ -110692,6 +110857,28 @@
       },
       "source": "module:tests.test_card_lint",
       "target": "symbol:tests.test_card_lint.test_content_validator_runs_card_lint_for_wave_cards",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 438
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 452
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola",
       "type": "defines"
     },
     {
@@ -136054,7 +136241,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 128
+        "line": 94
+      },
+      "source": "module:tests.test_http_idor_local",
+      "target": "symbol:tests.test_http_idor_local.game_a",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_http_idor_local.py",
+        "line": 134
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
@@ -136065,7 +136263,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 106
+        "line": 112
       },
       "source": "module:tests.test_http_idor_local",
       "target": "symbol:tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local",
@@ -220302,6 +220500,116 @@
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 80
+      },
+      "source": "symbol:docs.spec335.arena_postura_medico.main",
+      "target": "symbol:docs.spec335.arena_postura_medico.run_arm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 82
+      },
+      "source": "symbol:docs.spec335.arena_postura_medico.main",
+      "target": "symbol:docs.spec335.arena_postura_medico.run_arm",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 86
+      },
+      "source": "symbol:docs.spec335.arena_postura_medico.main",
+      "target": "symbol:docs.spec335.arena_postura_medico.total",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 87
+      },
+      "source": "symbol:docs.spec335.arena_postura_medico.main",
+      "target": "symbol:docs.spec335.arena_postura_medico.total",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/arena_postura_medico.py",
+        "line": 68
+      },
+      "source": "symbol:docs.spec335.arena_postura_medico.main",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 90
+      },
+      "source": "symbol:docs.spec335.confirmar_lote5.main",
+      "target": "symbol:docs.spec335.confirmar_lote5.controle",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 83
+      },
+      "source": "symbol:docs.spec335.confirmar_lote5.main",
+      "target": "symbol:docs.spec335.confirmar_lote5.rodar",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 91
+      },
+      "source": "symbol:docs.spec335.confirmar_lote5.main",
+      "target": "symbol:docs.spec335.confirmar_lote5.rodar",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 75
+      },
+      "source": "symbol:docs.spec335.confirmar_lote5.main",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec335/confirmar_lote5.py",
+        "line": 65
+      },
+      "source": "symbol:docs.spec335.confirmar_lote5.rodar",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "docs/spec336/arena_folego_full.py",
         "line": 74
       },
@@ -256130,7 +256438,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/audit_local_gate.py",
-        "line": 111
+        "line": 117
       },
       "source": "symbol:scripts.audit_local_gate.main",
       "target": "symbol:scripts.audit_local_gate._skipped_security_tests",
@@ -276865,7 +277173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 413
+        "line": 448
       },
       "source": "symbol:services.card_lint._vigente",
       "target": "symbol:services.card_effects.versao",
@@ -276898,7 +277206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 391
+        "line": 426
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.base_value",
@@ -276909,7 +277217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 401
+        "line": 436
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -276920,7 +277228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 373
+        "line": 408
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.keywords",
@@ -276931,7 +277239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 374
+        "line": 409
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.normalize",
@@ -276942,7 +277250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 379
+        "line": 414
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276953,7 +277261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 383
+        "line": 418
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276964,7 +277272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 394
+        "line": 429
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276975,7 +277283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 403
+        "line": 438
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276986,10 +277294,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 369
+        "line": 404
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.roda",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 391
+      },
+      "source": "symbol:services.card_lint.check_controle_duracao",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 399
+      },
+      "source": "symbol:services.card_lint.check_controle_duracao",
+      "target": "symbol:services.card_lint.Issue",
       "type": "calls"
     },
     {
@@ -277063,7 +277393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 419
+        "line": 454
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -277074,7 +277404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 431
+        "line": 466
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -277085,7 +277415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 422
+        "line": 457
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -277096,7 +277426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 427
+        "line": 462
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -277107,7 +277437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 424
+        "line": 459
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -277118,7 +277448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 433
+        "line": 468
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -277129,7 +277459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 420
+        "line": 455
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint._vigente",
@@ -277239,7 +277569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 457
+        "line": 492
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277250,7 +277580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 465
+        "line": 500
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277261,7 +277591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 473
+        "line": 508
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277272,7 +277602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 446
+        "line": 481
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint._vigente",
@@ -277283,7 +277613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 443
+        "line": 478
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -277294,7 +277624,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 454
+        "line": 489
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -277305,7 +277635,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 450
+        "line": 485
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.similarity",
@@ -277646,7 +277976,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 525
+        "line": 561
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_effects.materialize",
@@ -277657,7 +277987,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 522
+        "line": 558
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_lint.lint_card",
@@ -277668,7 +277998,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 490
+        "line": 525
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_effects.materialize",
@@ -277679,7 +278009,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 497
+        "line": 532
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_budget",
@@ -277690,7 +278020,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 500
+        "line": 535
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -277701,7 +278031,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 501
+        "line": 540
+      },
+      "source": "symbol:services.card_lint.lint_card",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 536
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -277712,7 +278053,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 504
+        "line": 539
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_marca_dano",
@@ -277723,7 +278064,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 505
+        "line": 541
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_names",
@@ -277734,7 +278075,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 499
+        "line": 534
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_raridade",
@@ -277745,7 +278086,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 503
+        "line": 538
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_reacao_folego",
@@ -277756,7 +278097,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 506
+        "line": 542
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -277767,7 +278108,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 502
+        "line": 537
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_revelar_publico",
@@ -277778,7 +278119,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 492
+        "line": 527
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_schema",
@@ -277789,7 +278130,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 495
+        "line": 530
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_vocabulary",
@@ -277800,7 +278141,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 498
+        "line": 533
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_voice",
@@ -277811,7 +278152,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 546
+        "line": 582
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -277822,7 +278163,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 534
+        "line": 570
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.glossary",
@@ -277833,7 +278174,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 539
+        "line": 575
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -277844,7 +278185,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 549
+        "line": 585
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -361048,6 +361389,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 236
+      },
+      "source": "symbol:tests.test_card_acervo_reparo._lote5",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 65
       },
       "source": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -361499,7 +361851,194 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 244
+        "line": 285
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 296
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 289
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.keywords",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 280
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 304
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.primary_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 295
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 290
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 291
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 293
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 292
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 279
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:tests.test_card_acervo_reparo._lote5",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 242
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "target": "symbol:tests.test_card_acervo_reparo._lote5",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 266
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 264
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.errors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 263
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.lint_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 260
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 261
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:tests.test_card_acervo_reparo._lote5",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 319
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.load_pool",
@@ -361510,7 +362049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 261
+        "line": 336
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.similarity",
@@ -366739,6 +367278,138 @@
       },
       "source": "symbol:tests.test_card_lint.test_content_validator_runs_card_lint_for_wave_cards",
       "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 441
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 443
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 445
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 447
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 449
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 440
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 442
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 444
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 446
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 448
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 459
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola",
+      "target": "symbol:services.card_lint.check_controle_duracao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 455
+      },
+      "source": "symbol:tests.test_card_lint.test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola",
+      "target": "symbol:services.card_lint.load_pool",
       "type": "calls"
     },
     {
@@ -417456,7 +418127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 79
+        "line": 81
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -417467,7 +418138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 76
+        "line": 75
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.fakes.local_auth.create_confirmed_user",
@@ -417478,7 +418149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 99
+        "line": 89
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.fakes.local_auth.delete_confirmed_user",
@@ -417489,7 +418160,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 77
+        "line": 76
       },
       "source": "symbol:tests.test_http_idor_local.duo",
       "target": "symbol:tests.test_http_idor_local._login",
@@ -417500,9 +418171,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 81
+        "line": 101
       },
-      "source": "symbol:tests.test_http_idor_local.duo",
+      "source": "symbol:tests.test_http_idor_local.game_a",
       "target": "symbol:tests.test_http_idor_local._new_game",
       "type": "calls"
     },
@@ -417511,7 +418182,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_http_idor_local.py",
-        "line": 147
+        "line": 153
       },
       "source": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
       "target": "symbol:tests.test_http_idor_local._new_game",
@@ -578690,6 +579361,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec335/arena_postura_medico.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec335/arena_postura_medico.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/spec335/confirmar_lote5.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec335/confirmar_lote5.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:docs/spec336/arena_folego_full.py",
       "kind": "file",
       "line": 1,
@@ -587116,6 +587801,20 @@
       "line": 1,
       "path": "docs/spec332/arena_familias.py",
       "qualified_name": "docs.spec332.arena_familias"
+    },
+    {
+      "id": "module:docs.spec335.arena_postura_medico",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec335/arena_postura_medico.py",
+      "qualified_name": "docs.spec335.arena_postura_medico"
+    },
+    {
+      "id": "module:docs.spec335.confirmar_lote5",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec335/confirmar_lote5.py",
+      "qualified_name": "docs.spec335.confirmar_lote5"
     },
     {
       "id": "module:docs.spec336.arena_folego_full",
@@ -598834,6 +599533,48 @@
       "line": 54,
       "path": "docs/spec332/arena_familias.py",
       "qualified_name": "docs.spec332.arena_familias.pick"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_postura_medico.main",
+      "kind": "function",
+      "line": 55,
+      "path": "docs/spec335/arena_postura_medico.py",
+      "qualified_name": "docs.spec335.arena_postura_medico.main"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_postura_medico.run_arm",
+      "kind": "function",
+      "line": 32,
+      "path": "docs/spec335/arena_postura_medico.py",
+      "qualified_name": "docs.spec335.arena_postura_medico.run_arm"
+    },
+    {
+      "id": "symbol:docs.spec335.arena_postura_medico.total",
+      "kind": "function",
+      "line": 49,
+      "path": "docs/spec335/arena_postura_medico.py",
+      "qualified_name": "docs.spec335.arena_postura_medico.total"
+    },
+    {
+      "id": "symbol:docs.spec335.confirmar_lote5.controle",
+      "kind": "function",
+      "line": 40,
+      "path": "docs/spec335/confirmar_lote5.py",
+      "qualified_name": "docs.spec335.confirmar_lote5.controle"
+    },
+    {
+      "id": "symbol:docs.spec335.confirmar_lote5.main",
+      "kind": "function",
+      "line": 74,
+      "path": "docs/spec335/confirmar_lote5.py",
+      "qualified_name": "docs.spec335.confirmar_lote5.main"
+    },
+    {
+      "id": "symbol:docs.spec335.confirmar_lote5.rodar",
+      "kind": "function",
+      "line": 64,
+      "path": "docs/spec335/confirmar_lote5.py",
+      "qualified_name": "docs.spec335.confirmar_lote5.rodar"
     },
     {
       "id": "symbol:docs.spec336.arena_folego_full.main",
@@ -617913,7 +618654,7 @@
     {
       "id": "symbol:services.card_lint._vigente",
       "kind": "function",
-      "line": 408,
+      "line": 443,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint._vigente"
     },
@@ -617934,9 +618675,16 @@
     {
       "id": "symbol:services.card_lint.check_color_pie",
       "kind": "function",
-      "line": 368,
+      "line": 403,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_color_pie"
+    },
+    {
+      "id": "symbol:services.card_lint.check_controle_duracao",
+      "kind": "function",
+      "line": 387,
+      "path": "services/card_lint.py",
+      "qualified_name": "services.card_lint.check_controle_duracao"
     },
     {
       "id": "symbol:services.card_lint.check_escala_principal",
@@ -617955,7 +618703,7 @@
     {
       "id": "symbol:services.card_lint.check_names",
       "kind": "function",
-      "line": 418,
+      "line": 453,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_names"
     },
@@ -617976,7 +618724,7 @@
     {
       "id": "symbol:services.card_lint.check_redundancy",
       "kind": "function",
-      "line": 438,
+      "line": 473,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_redundancy"
     },
@@ -618011,7 +618759,7 @@
     {
       "id": "symbol:services.card_lint.errors",
       "kind": "function",
-      "line": 558,
+      "line": 594,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.errors"
     },
@@ -618032,21 +618780,21 @@
     {
       "id": "symbol:services.card_lint.lint_batch",
       "kind": "function",
-      "line": 510,
+      "line": 546,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_batch"
     },
     {
       "id": "symbol:services.card_lint.lint_card",
       "kind": "function",
-      "line": 482,
+      "line": 517,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_card"
     },
     {
       "id": "symbol:services.card_lint.lint_wave",
       "kind": "function",
-      "line": 529,
+      "line": 565,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_wave"
     },
@@ -645631,6 +646379,13 @@
       "qualified_name": "tests.test_card_acervo_reparo._lote4"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo._lote5",
+      "kind": "test",
+      "line": 233,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo._lote5"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo._onda1",
       "kind": "test",
       "line": 62,
@@ -645729,9 +646484,30 @@
       "qualified_name": "tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores",
+      "kind": "test",
+      "line": 272,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote5_licoes_da_revisao_dos_lotes_anteriores"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "kind": "test",
+      "line": 241,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote5_medico_36_cartas_12_por_subclasse_e_raridade_20_10_4_2"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "kind": "test",
+      "line": 259,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote5_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "kind": "test",
-      "line": 243,
+      "line": 318,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem"
     },
@@ -646735,6 +647511,20 @@
       "line": 174,
       "path": "tests/test_card_lint.py",
       "qualified_name": "tests.test_card_lint.test_content_validator_runs_card_lint_for_wave_cards"
+    },
+    {
+      "id": "symbol:tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda",
+      "kind": "test",
+      "line": 438,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_controle_com_duracao_1_e_recusado_em_carta_de_onda"
+    },
+    {
+      "id": "symbol:tests.test_card_lint.test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola",
+      "kind": "test",
+      "line": 452,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola"
     },
     {
       "id": "symbol:tests.test_card_lint.test_duplicate_detected_by_signature_and_momento",
@@ -662228,16 +663018,23 @@
       "qualified_name": "tests.test_http_idor_local.duo"
     },
     {
+      "id": "symbol:tests.test_http_idor_local.game_a",
+      "kind": "test",
+      "line": 94,
+      "path": "tests/test_http_idor_local.py",
+      "qualified_name": "tests.test_http_idor_local.game_a"
+    },
+    {
       "id": "symbol:tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres",
       "kind": "test",
-      "line": 128,
+      "line": 134,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local.test_delete_key_reuse_conflicts_on_postgres"
     },
     {
       "id": "symbol:tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local",
       "kind": "test",
-      "line": 106,
+      "line": 112,
       "path": "tests/test_http_idor_local.py",
       "qualified_name": "tests.test_http_idor_local.test_principal_b_cannot_touch_game_a_local"
     },
@@ -702584,5 +703381,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:1c9164885c563b4898840ecfe51beda3b823a87222c399c8add7db3bcde28b6b"
+  "source_tree_hash": "sha256:f7c7db4d72bd00189b0e9c1f4d0d76f0ab4195c35402482b46a341ea3773d756"
 }

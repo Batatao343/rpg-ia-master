@@ -1,11 +1,11 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "19c0fed84d2a059dd2f3138624222fe96d082cf7",
+  "commit_sha": "3d79b4992b652ccb0b6109fd5c7ef20186f6226a",
   "edge_counts": {
-    "calls": 31608,
-    "contains": 1033,
-    "defines": 15500,
-    "imports": 2536,
+    "calls": 31651,
+    "contains": 1035,
+    "defines": 15514,
+    "imports": 2538,
     "likely_test_for": 1782,
     "route_to": 68
   },
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:1874f84b975029f4338b720e4ca2a05f4af799c6f6806d84cdc6c0af5077cada",
+  "graph_hash": "sha256:5d3b079dc5c4aacd7d6344ea2b51875b775d0d92d6544e63750370c884b6b977",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -94,6 +94,8 @@
     "docs/spec318/npc_two_phase_bench.py",
     "docs/spec328/arena_deck.py",
     "docs/spec332/arena_familias.py",
+    "docs/spec335/arena_postura_medico.py",
+    "docs/spec335/confirmar_lote5.py",
     "docs/spec336/arena_folego_full.py",
     "encounter_budget.py",
     "evals/__init__.py",
@@ -1273,12 +1275,12 @@
     "artifact": 9,
     "class": 976,
     "endpoint": 68,
-    "file": 1217,
-    "function": 4885,
+    "file": 1219,
+    "function": 4892,
     "method": 843,
-    "module": 1033,
-    "test": 8795
+    "module": 1035,
+    "test": 8802
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:1c9164885c563b4898840ecfe51beda3b823a87222c399c8add7db3bcde28b6b"
+  "source_tree_hash": "sha256:f7c7db4d72bd00189b0e9c1f4d0d76f0ab4195c35402482b46a341ea3773d756"
 }
