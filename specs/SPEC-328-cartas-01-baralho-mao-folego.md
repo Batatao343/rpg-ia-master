@@ -1,6 +1,6 @@
 # SPEC-328 — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
 
-> **Status:** `in-progress` (aprovada pelo dono 2026-10-27; implementação pronta atrás de `RPG_CARD_DECK=off`, falta revisão independente e calibração da arena)
+> **Status:** `in-progress` (pousada `off` em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; antes de `on`: calibração do Fôlego com bot que jogue o baralho inteiro, R-4, UI SPEC-334)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327 (visão: combate de cartas de Valoria)
 > **Depende de:** SPEC-063, SPEC-065, SPEC-067, SPEC-209, SPEC-325 (todas `done`)
