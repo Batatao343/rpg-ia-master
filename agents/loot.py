@@ -176,15 +176,16 @@ def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = 
         )
         from services.narrative_sink import narrate_text
 
-        # SPEC-319: tokens ao vivo so com sink (stream SSE); senao e o invoke de sempre.
+        # SPEC-319 (27/10): loot nao streama. A prosa e curta (1-2 frases) e o texto final passa
+        # por `_validated_narrative`/voz/ledger depois do stream, o que virava `replace` (tail)
+        # no staging; a narracao sai inteira pelo canal antecipado da SPEC-316.
         res = narrate_text(
             llm,
             [
                 SystemMessage(content=instruction),
                 HumanMessage(content=context),
             ],
-            # loot ja aplicado: `_validated_narrative` descarta a prosa livre inteira
-            stream=not (canonical_summary and canonical_summary.get("loot_obtido")),
+            stream=False,
         )
         text = getattr(res, "content", "") or ""
         if isinstance(text, list):  # Gemini pode devolver parts (smoke 2026-07-05)

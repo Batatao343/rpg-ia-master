@@ -291,3 +291,8 @@ Staging, DeepSeek (Groq como 2º), teto **US$ 0,25**:
   dono → **`done`**.
 - 27/10 (pós-`done`) — nas 2 sessões de `lean` (29 turnos) houve 3 `sse.token_replace` reason `tail` (10 %);
   somado às sessões ON do A/B (0/29), 3/58 = 5,2 % — no limite da meta < 5 %. Investigar os casos `tail`.
+- 27/10 — Causa dos `tail`: 2 de 3 eram rota **loot** — o texto final passa por `_validated_narrative`
+  (`narrative_or_fallback`), voz do protagonista e ledger depois do stream, então o mostrado divergia no meio.
+  Correção: `agents/loot.py` chama `narrate_text(..., stream=False)` sempre (prosa de 1–2 frases, ~1,5–2,3 s; sai
+  inteira pelo canal antecipado da 316). Teste `test_loot_narration_never_streams_tokens`. O 3º (storyteller,
+  final menor que o mostrado: corte do guard final não previsto pelo `risk`) fica em observação (1/58).

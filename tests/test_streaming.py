@@ -740,3 +740,24 @@ def test_npc_route_tokens_do_not_replace(client, monkeypatch):
     narr = [d for e, d in events if e == "narrative"]
     assert any(d.get("live") for d in narr)
     assert not any(d.get("replace") for d in narr)
+
+
+@pytest.mark.parametrize(
+    "summary", [None, {"loot_obtido": []}], ids=["sem_resumo", "resumo_sem_loot"]
+)
+def test_loot_narration_never_streams_tokens(monkeypatch, summary):
+    """SPEC-319 (27/10): o texto final do loot e reescrito depois do stream (`tail` no staging)."""
+    from langchain_core.messages import AIMessage
+
+    from agents import loot
+    from services import narrative_sink
+
+    seen = []
+
+    def _fake(llm, messages, *, state=None, stream=True):
+        seen.append(stream)
+        return AIMessage(content="A poeira assenta sobre o balcão.")
+
+    monkeypatch.setattr(narrative_sink, "narrate_text", _fake)
+    loot._narrate("contexto", "texto mecanico", summary)
+    assert seen == [False]
