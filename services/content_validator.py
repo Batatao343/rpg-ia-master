@@ -647,6 +647,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
     Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
     usam schema opaco de propósito."""
     from services import card_effects as fx
+    from services import card_lint
     from services.cards import DANO_BASE_ARMA, valid_class_mechanics
 
     CARD_EFFECT_KINDS = fx.all_kinds()  # SPEC-330: legados + gramática nova
@@ -703,10 +704,8 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
     active_signatures: dict[tuple, tuple[str, str]] = {}
     seen_ids: dict[str, str] = {}
     late_cards: list[dict] = []
-    for fn in sorted(os.listdir(cards_dir)):
-        if not fn.endswith(".json"):
-            continue
-        path = os.path.join(cards_dir, fn)
+    wave_cards: list[dict] = []
+    for path in card_lint.iter_card_files(cards_dir):  # recursivo; ignora `_*` (rascunhos)
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
@@ -719,6 +718,8 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
                 for msg in fx.validate_card(c):
                     findings.append(Finding("cards", "error", path, c.get("id", ""), msg))
+            if c.get("onda") is not None:
+                wave_cards.append(c)  # SPEC-336: lint pleno (voz, color pie, duplicata, onda)
             if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328"):
                 if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
                     budget = fx.budget_error(fx.materialize(c))
@@ -821,6 +822,18 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
                     findings.append(
                         Finding("cards", "error", path, cid, "Ápice sem freio mecânico explícito")
                     )
+    if wave_cards:
+        pool = card_lint.load_pool(cards_dir)
+        ids = {c["id"] for c in wave_cards}
+        for card in wave_cards:
+            others = [o for o in pool if o["id"] not in ids or o["id"] < card["id"]]
+            for issue in card_lint.lint_card(card, others):
+                if issue.level == "error" and issue.code not in ("vocabulario", "orcamento"):
+                    findings.append(
+                        Finding("cards", "error", cards_dir, card["id"], f"{issue.code}: {issue.message}")
+                    )
+        for issue in card_lint.lint_wave(wave_cards):
+            findings.append(Finding("cards", "error", cards_dir, "onda", issue.message))
     if late_cards:
         trunks = [card for card in late_cards if not card.get("subclasse")]
         branch = [card for card in late_cards if card.get("subclasse") and not card.get("apex")]

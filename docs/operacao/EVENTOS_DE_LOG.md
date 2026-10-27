@@ -52,6 +52,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `campaign.replan` | `deferred`, `outcome`, `reason` |
 | `campaign.world_replan_trigger` | `cause` |
 | `campaign_manager.fallback` | — |
+| `card_draft.fallback` | — |
 | `character.ai_failed` | `error` |
 | `client.error` | `beacon_request_id`, `build`, `client`, `code`, `error_name`, `kind`, `request_id`, `route`, `stack`, `ts` |
 | `client_latency` | `ack_ms`, `action_ref`, `first_phase_ms`, `outcome`, `state_ms`, `transport`, `ttfmc_ms`, `ttlt_ms` |

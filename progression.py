@@ -388,6 +388,10 @@ def apply_choice(
             known = list(p.get("known_cards") or [])
             if card_id in known:
                 return player, f"Carta '{card_id}' já está no Acervo."
+            from services import card_telemetry
+
+            card_telemetry.offered(eligible_cards(player), picked=card_id)  # SPEC-336 R6
+            card_telemetry.picked(card_id)
             p["known_cards"] = known + [card_id]
         elif evolve_card_id:
             fake = {"player": p}

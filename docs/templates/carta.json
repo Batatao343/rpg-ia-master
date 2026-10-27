@@ -1,0 +1,31 @@
+{
+  "_meta": "SPEC-336 R1: template de Carta nova. Copie o objeto de `cards` para um lote em data/cards/_rascunhos/ e rode a esteira (docs/guias/CARTAS.md). Campos com ? sao opcionais.",
+  "cards": [
+    {
+      "id": "med_exemplo_trama",
+      "name": "Trama de Cinza",
+      "tipo": "ativa",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "boticario",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "livre",
+      "virtude_permitida": ["mente"],
+      "efeitos": [
+        {"kind": "cura", "valor": 3, "alvo": "aliados"},
+        {"kind": "torpor", "valor": 1, "quando": "ao_jogar", "se": {"alvo_tem": "sangrando"}}
+      ],
+      "palavras_chave": {"guardar": true},
+      "descricao": "Cinza de fornalha fecha a ferida e pesa no braço de quem a abriu.",
+      "momento": "Melhor jogada quando um aliado sangra e o inimigo ainda tem a iniciativa.",
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

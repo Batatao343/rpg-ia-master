@@ -1,6 +1,6 @@
 # SPEC-336 — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (implementada na branch spec-336, 27/10; aguarda revisão independente Sol; smoke real com chave é do dono — custo SMART)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-330 (gramática + `power_score` + `render_card_text`), SPEC-090/285 (arena/simulação de combate)
@@ -37,14 +37,14 @@ Objetivo: uma **esteira** reprodutível — rascunho → lint → simulação �
 - **R4** — `scripts/cards/sim.py --lote <arquivo>`: injeta as cartas do lote em baralhos de teste da Postura e roda N conflitos de arena determinísticos por encontro-padrão; relata por carta: **taxa de uso quando na mão**, **delta de vitória com/sem a carta**, dano/proteção por Fôlego. Marca "carta em branco" (uso < 5 %) e "dominante" (uso > 60 % ou delta > +8 pp).
 
 **Curadoria e promoção**
-- **R5** — `scripts/cards/promote.py`: move do rascunho para o pool só cartas com lint verde e sim sem bandeira, registra em `data/cards/_ondas.yaml` (`onda, data, autor, revisor_voz`). Revisão de voz do dono é o último passo [D? — o dono quer revisar todas ou só amostra de 20 %?].
+- **R5** — `scripts/cards/promote.py`: move do rascunho para o pool só cartas com lint verde e sim sem bandeira, registra em `data/cards/_ondas.yaml` (`onda, data, autor, revisor_voz`). Revisão de voz do dono é o último passo [D✓ decidido 27/10: amostra de 20 %, sorteada de forma determinística pelo `promote.py` e registrada em `_ondas.yaml`].
 
 **Telemetria em jogo real**
 - **R6** — Eventos `card_offered`, `card_picked`, `card_played`, `card_exhausted` no trace (SPEC-251) e no `playtest/`; `scripts/cards/metrics.py` gera tabela por carta (pick rate, play rate, vitória) a partir de playtests e do staging.
 - **R7** — Regra de corte/ajuste por onda: cartas com pick rate < 5 % em ≥ 200 ofertas → reescrever ou cortar; > 60 % → nerf. Mudança sempre por nova versão da carta (`versao`), nunca edição silenciosa — saves guardam id, motor lê versão vigente.
 
 **Metas**
-- **R8** — Cadência proposta [D?]: **1 onda por mês**, ≥ +60 cartas de jogador e +20 de inimigo por onda, cortes permitidos. Meta de 12 meses: ~1 200 cartas de jogador. Painel simples `docs/cartas/PAINEL.md` gerado (contagem por Postura/raridade/tier/kind/palavra-chave).
+- **R8** — Cadência [D✓ aprovada 27/10]: **1 onda por mês**, ≥ +60 cartas de jogador e +20 de inimigo por onda, cortes permitidos. Meta de 12 meses: ~1 200 cartas de jogador. Painel simples `docs/cartas/PAINEL.md` gerado (contagem por Postura/raridade/tier/kind/palavra-chave).
 - **R9** — Expansão do léxico: no máximo **2 palavras-chave novas por onda**, cada uma com ≥ 6 cartas na mesma onda (evita keyword com 2 cartas — armadilha citada na pesquisa).
 
 ### Fora de escopo
@@ -62,9 +62,9 @@ Geração de arte por carta (pode reaproveitar SPEC-326 depois). Editor visual d
 4. Primeira onda real = SPEC-335.
 
 ## 5. Critérios de aceite
-- [ ] Esteira roda ponta a ponta num lote de 10 cartas sintéticas
-- [ ] CI falha em carta duplicada/fora do orçamento
-- [ ] `docs/guias/CARTAS.md` publicado; `uv run pytest` verde
+- [x] Esteira roda ponta a ponta num lote de 10 cartas sintéticas (`tests/test_card_sim.py::test_pipeline_end_to_end_ten_cards`)
+- [x] CI falha em carta duplicada/fora do orçamento (`validate_content.py` → `validate_cards` roda `card_lint` para toda carta com `onda`; orçamento já valia)
+- [x] `docs/guias/CARTAS.md` publicado; testes do escopo verdes (suíte completa = coordenador no pouso)
 
 ## 6. Smoke real
 `draft.py` com chave real gera 12 cartas do Médico de Campo `boticario`; lint corta ≥ 1; sim roda; 1 carta promovida e jogada num conflito real.
@@ -72,3 +72,28 @@ Geração de arte por carta (pode reaproveitar SPEC-326 depois). Editor visual d
 ## 7. Riscos
 - LLM tende a cartas parecidas: o prompt recebe as existentes + lint de redundância + "gerar 2× e cortar".
 - Custo LLM do rascunho: SMART, offline, sob demanda (não roda no jogo).
+
+## 8. Implementação (27/10) e desvios
+
+Entregue: `services/card_lint.py` (fonte única do lint e do CI), `services/card_telemetry.py`,
+`scripts/cards/{draft,lint,sim,promote,metrics,painel}.py`, `data/cards/{_roda_posturas.json,_lexico_valoria.txt}`,
+`docs/guias/CARTAS.md`, `docs/templates/carta.json`, `docs/cartas/PAINEL.md` (gerado). Testes:
+`tests/test_card_{lint,sim,draft}.py`.
+
+Desvios / decisões de implementação:
+- **Escopo do lint no CI:** só Cartas com campo `onda` (as novas) passam por voz/color pie/duplicata/nome; o acervo legado
+  (323 cartas) não tem `momento` nem passa nessas regras e continua sob as regras antigas (gramática + orçamento). Ao
+  reparar o legado (SPEC-335 R5) o campo `onda` pode ser adotado por lote.
+- **Léxico de voz:** `_lexico_valoria.txt` tem `[proibidos]` (erro) e `[valoria]` (sabor; ausência = aviso). "Termos fora do
+  glossário de lore" virou lista de proibidos, porque um vocabulário positivo fechado de todas as palavras é inviável.
+- **Similaridade do `momento`:** Jaccard lexical por padrão (offline, reprodutível); `card_lint.similarity(embed=fn)` aceita os
+  embeddings do RAG para a esteira com chave.
+- **Loader (`services/cards.py`):** agora recursivo, ignora pastas `_*` (rascunhos) e, para ids repetidos, vale a de maior
+  `versao` (R7). `content_validator.validate_cards` também percorre recursivo.
+- **`sim.py`:** delta de vitória só vira bandeira com >= 40 lutas por braço (abaixo é ruído); reação/passiva = `uso_nao_medido`
+  (o motor joga, o bot não declara). Dano/proteção por Fôlego é estático (números base da carta).
+- **Telemetria (R6):** `cards.card_offered|picked|played|exhausted` via `log_event` (catálogo regenerado). `offered/picked`
+  saem em `progression.apply_choice` (escolha de Carta de nível); `played/exhausted` em `card_deck_round` (jogada real e reação).
+  O `playtest/` já conta eventos por nome (`set_event_sink`). **Follow-up:** a coluna de vitória do `metrics.py` precisa de um
+  evento de fim de conflito por partida; hoje aceita um `--resultados` externo.
+- **Arena Fôlego 2 × 3 com baralho completo:** `docs/spec336/arena-folego-completo-2026-10-27.md`.

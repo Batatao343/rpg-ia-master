@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 
-from services import card_piles, cards
+from services import card_piles, card_telemetry, cards
 from services import conflict_turn as ct
 
 logger = logging.getLogger("rpg.conflict")
@@ -142,6 +142,7 @@ def resolve_player_plays(
             )
             if used:
                 dest = card_piles.play_to_pile(piles, str(step.card_id))
+                card_telemetry.played(str(step.card_id), dest)  # SPEC-336 R6
                 if dest == "exaurida":  # SPEC-330 R6: gatilho ao_exaurir da propria Carta
                     from services import card_effects as fx
 
@@ -220,4 +221,5 @@ def reaction_commit(state, reactor, card) -> None:
         return
     piles = state["_piles"]
     card_piles.pay(piles, reactor, card, allow_pact=False)
-    card_piles.play_to_pile(piles, str(card.get("id")))
+    destino = card_piles.play_to_pile(piles, str(card.get("id")))
+    card_telemetry.played(str(card.get("id")), destino)  # SPEC-336 R6

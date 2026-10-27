@@ -1,0 +1,50 @@
+{
+  "_meta": "SPEC-336 R1/R3: roda das Posturas (color pie de Valoria), versao legivel por maquina. Primario/secundario orientam o rascunho (prompt); 'nunca' vira ERRO no lint. Fonte humana: docs/guias/CARTAS.md e SPEC-335. Limites: kind -> maximo do valor/dano_base; kind_alvo: kind -> alvos proibidos.",
+  "posturas": {
+    "Devoto do Abismo": {
+      "primario": ["vigilia", "taunt", "dano ao ser atingido", "Entropia por dor"],
+      "secundario": ["interromper", "cura propria pequena"],
+      "nunca": "comprar muitas cartas, Esconder",
+      "nunca_kinds": ["esconder"],
+      "nunca_palavras_chave": [],
+      "limites_kind": {"comprar": 1},
+      "kind_alvo_proibido": {}
+    },
+    "Sangromante": {
+      "primario": ["sacrificio", "sangria", "eco", "dano alto barato"],
+      "secundario": ["ressoar", "roubo de Vitalidade"],
+      "nunca": "Vigilia grande, cura de aliado",
+      "nunca_kinds": ["reduzir_carga_aliado"],
+      "nunca_palavras_chave": [],
+      "limites_kind": {"vigilia": 3},
+      "kind_alvo_proibido": {"cura": ["aliados"]}
+    },
+    "Corruptor": {
+      "primario": ["rachadura", "torpor", "fardo no inimigo", "decadencia por dominio"],
+      "secundario": ["marca_do_abismo", "controle de zona"],
+      "nunca": "cura, protecao a aliado",
+      "nunca_kinds": ["cura", "estabilizar"],
+      "nunca_palavras_chave": [],
+      "limites_kind": {},
+      "kind_alvo_proibido": {"protecao": ["aliados"], "vigilia": ["aliados"]}
+    },
+    "Arcanista Cinzento": {
+      "primario": ["chamado", "comprar", "descartar", "vazao", "dano em area"],
+      "secundario": ["ressoar", "guardar"],
+      "nunca": "Sacrificio, provocar",
+      "nunca_kinds": ["taunt"],
+      "nunca_palavras_chave": ["sacrificio"],
+      "limites_kind": {},
+      "kind_alvo_proibido": {}
+    },
+    "Médico de Campo": {
+      "primario": ["cura", "purga_condicao", "guardar", "reduzir_carga_aliado"],
+      "secundario": ["torpor", "estabilizar", "comprar"],
+      "nunca": "dano alto, Rachadura",
+      "nunca_kinds": ["rachadura"],
+      "nunca_palavras_chave": [],
+      "limites_kind": {"dano": 6},
+      "kind_alvo_proibido": {}
+    }
+  }
+}

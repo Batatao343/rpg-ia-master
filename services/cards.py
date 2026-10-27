@@ -8,7 +8,6 @@ Result dict {"ok": bool, "error": Optional[str], "log": str}.
 """
 
 import copy
-import glob
 import json
 import os
 from typing import Dict, List, Optional
@@ -144,12 +143,22 @@ _ALL_COUNTERS = (
 _CARDS: dict[str, dict] | None = None
 
 
+def _card_files() -> list[str]:
+    """JSONs de Cartas em ``data/cards/`` (recursivo; pastas ``_*`` — rascunhos — ficam fora)."""
+    base = os.path.join(gamedata.DATA_DIR, "cards")
+    out: list[str] = []
+    for root, dirs, files in os.walk(base):
+        dirs[:] = sorted(d for d in dirs if not d.startswith("_"))
+        out += [os.path.join(root, fn) for fn in sorted(files) if fn.endswith(".json")]
+    return sorted(out)
+
+
 def _load_cards() -> dict[str, dict]:
     global _CARDS
     if _CARDS is not None:
         return _CARDS
     out: dict[str, dict] = {}
-    for path in sorted(glob.glob(os.path.join(gamedata.DATA_DIR, "cards", "*.json"))):
+    for path in _card_files():
         try:
             with open(path, encoding="utf-8") as f:
                 data = json.load(f)
@@ -161,7 +170,10 @@ def _load_cards() -> dict[str, dict]:
                 # para todo consumidor legado; `efeito` existente fica intacto.
                 from services import card_effects
 
-                out[c["id"]] = card_effects.materialize(c)
+                prev = out.get(c["id"])
+                # SPEC-336 R7: a versão vigente é a de maior `versao` (saves guardam só o id).
+                if prev is None or int(c.get("versao", 1) or 1) >= int(prev.get("versao", 1) or 1):
+                    out[c["id"]] = card_effects.materialize(c)
     _CARDS = out
     return out
 

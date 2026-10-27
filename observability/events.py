@@ -58,6 +58,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "campaign.replan": ("deferred", "outcome", "reason"),
     "campaign.world_replan_trigger": ("cause",),
     "campaign_manager.fallback": (),
+    "card_draft.fallback": (),
     "character.ai_failed": ("error",),
     "client.error": (
         "beacon_request_id",

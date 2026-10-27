@@ -1,0 +1,219 @@
+"""SPEC-336 R3: lint determinístico das Cartas (fonte única com o content_validator)."""
+
+import copy
+import json
+import os
+
+import pytest
+
+from services import card_effects as fx
+from services import card_lint
+
+BASE = {
+    "id": "med_teste_trama",
+    "name": "Trama de Cinza",
+    "tipo": "ativa",
+    "origem": "onda-1",
+    "classe": "Médico de Campo",
+    "subclasse": "boticario",
+    "patamar": "inicial",
+    "raridade": "comum",
+    "custo_entropia": 1,
+    "frequencia": "livre",
+    "virtude_permitida": ["mente"],
+    "efeitos": [{"kind": "cura", "valor": 3}],
+    "descricao": "Cinza de fornalha fecha a ferida sob o céu sujo de Valoria.",
+    "momento": "Melhor jogada quando um aliado sangra e o inimigo tem a iniciativa.",
+    "tier": 1,
+    "level_req": 1,
+    "apex": False,
+    "onda": 1,
+    "versao": 1,
+}
+
+
+def card(**over):
+    c = copy.deepcopy(BASE)
+    c.update(over)
+    return c
+
+
+def codes(issues, level="error"):
+    return {i.code for i in issues if i.level == level}
+
+
+def test_clean_card_is_green():
+    assert card_lint.errors(card_lint.lint_card(card(), [])) == []
+
+
+def test_template_is_valid():
+    with open(os.path.join("docs", "templates", "carta.json"), encoding="utf-8") as f:
+        batch = [fx.materialize(c) for c in json.load(f)["cards"]]
+    res = card_lint.lint_batch(batch, [])
+    assert all(not card_lint.errors(v) for v in res.values()), res
+
+
+def test_missing_momento_is_error_unless_legacy():
+    c = card()
+    del c["momento"]
+    assert "momento" in codes(card_lint.lint_card(c, []))
+    assert "momento" not in codes(card_lint.lint_card(c, [], exigir_momento=False))
+
+
+def test_duplicate_detected_by_signature_and_momento():
+    other = card(id="med_outra", name="Outra Trama")
+    dup = card(
+        id="med_copia",
+        name="Cópia Fiel",
+        momento="Melhor jogada quando aliado sangra e inimigo tem iniciativa.",
+    )
+    issues = card_lint.lint_card(dup, [other])
+    assert "redundancia" in codes(issues)
+    assert any("med_outra" in i.message for i in issues)
+
+
+def test_same_signature_distinct_momento_only_warns():
+    other = card(id="med_outra", name="Outra Trama")
+    distinct = card(
+        id="med_distinta",
+        name="Fio de Sombra",
+        momento="Melhor jogada logo após o Pacto, com o Fôlego quase vazio e a mão cheia de Fardos.",
+    )
+    issues = card_lint.lint_card(distinct, [other])
+    assert "redundancia" not in codes(issues)
+    assert "redundancia" in codes(issues, "warn")
+
+
+def test_color_pie_violation_is_error():
+    c = card(classe="Corruptor", efeitos=[{"kind": "cura", "valor": 3}])
+    assert "color_pie" in codes(card_lint.lint_card(c, []))
+    medico = card(efeitos=[{"kind": "rachadura", "valor": 2}])
+    assert "color_pie" in codes(card_lint.lint_card(medico, []))
+    arc = card(classe="Arcanista Cinzento", palavras_chave={"sacrificio": 1})
+    assert "color_pie" in codes(card_lint.lint_card(arc, []))
+
+
+def test_color_pie_target_and_limit_rules():
+    c = card(classe="Sangromante", efeitos=[{"kind": "cura", "valor": 2, "alvo": "aliados"}])
+    assert "color_pie" in codes(card_lint.lint_card(c, []))
+    big = card(classe="Sangromante", efeitos=[{"kind": "vigilia", "valor": 6}])
+    assert "color_pie" in codes(card_lint.lint_card(big, []))
+
+
+def test_number_in_description_is_error():
+    c = card(descricao="Cura 3 de vida com cinza.")
+    assert "voz" in codes(card_lint.lint_card(c, []))
+
+
+def test_voice_rules_name_length_size_and_lexicon():
+    assert "voz" in codes(card_lint.lint_card(card(name="Trama De Cinza Do Velho Médico"), []))
+    assert "voz" in codes(card_lint.lint_card(card(descricao="x" * 141), []))
+    assert "voz" in codes(card_lint.lint_card(card(descricao="Um buff de cinza no braço."), []))
+    assert "voz" in codes(card_lint.lint_card(card(momento="Quando o boss aparece."), []))
+
+
+def test_repeated_name_is_error():
+    other = card(
+        id="med_outra", momento="Quando o Pacto cobra a Carga e a mão está vazia de golpes."
+    )
+    c = card(
+        id="med_nova",
+        name="trama de cinza",
+        momento="Quando o torpor acaba e o inimigo recua da zona.",
+    )
+    assert "nome" in codes(card_lint.lint_card(c, [other]))
+
+
+def test_out_of_budget_is_error():
+    c = card(efeitos=[{"kind": "cura", "valor": 30}])
+    assert "orcamento" in codes(card_lint.lint_card(c, []))
+
+
+def test_vocabulary_outside_glossary_is_error():
+    c = card(efeitos=[{"kind": "cura_milagrosa", "valor": 3}])
+    assert "vocabulario" in codes(card_lint.lint_card(c, []))
+    kw = card(palavras_chave={"furia": True})
+    assert "vocabulario" in codes(card_lint.lint_card(kw, []))
+
+
+def test_version_bump_replaces_instead_of_colliding():
+    v1 = card()
+    assert "nome" in codes(card_lint.lint_card(card(), [v1]))
+    assert "nome" not in codes(card_lint.lint_card(card(versao=2), [v1]))
+
+
+def test_batch_catches_duplicates_inside_the_batch():
+    a = card(id="med_a", name="Fio Um")
+    b = card(id="med_b", name="Fio Dois")
+    res = card_lint.lint_batch([a, b], [])
+    assert not card_lint.errors(res["med_a"])
+    assert "redundancia" in codes(res["med_b"])
+
+
+def test_wave_rule_max_two_new_keywords(monkeypatch):
+    fake = {"k1": {"onda": 7}, "k2": {"onda": 7}, "k3": {"onda": 7}}
+    monkeypatch.setattr(fx, "glossary", lambda: fake)
+    monkeypatch.setattr(fx, "card_keyword_ids", lambda c: ["k1"])
+    issues = card_lint.lint_wave([card(id=f"c{i}", onda=7) for i in range(6)])
+    assert any("3 palavras-chave novas" in i.message for i in issues)
+
+
+def test_wave_rule_needs_six_cards(monkeypatch):
+    monkeypatch.setattr(fx, "glossary", lambda: {"k1": {"onda": 7}})
+    monkeypatch.setattr(fx, "card_keyword_ids", lambda c: ["k1"])
+    assert card_lint.lint_wave([card(id=f"c{i}", onda=7) for i in range(5)])
+    assert not card_lint.lint_wave([card(id=f"c{i}", onda=7) for i in range(6)])
+
+
+def test_similarity_with_embedding_backend():
+    v = {"a": [1.0, 0.0], "b": [1.0, 0.1], "c": [0.0, 1.0]}
+    assert card_lint.similarity("a", "b", embed=v.get) > 0.99
+    assert card_lint.similarity("a", "c", embed=v.get) == 0.0
+
+
+def test_content_validator_runs_card_lint_for_wave_cards(tmp_path):
+    from services.content_validator import validate_cards
+
+    cdir = tmp_path / "cards"
+    (cdir / "posturas").mkdir(parents=True)
+    (cdir / "_rascunhos").mkdir()
+    good = card(id="med_ok")
+    bad = card(id="med_ruim", name="Outra Trama", descricao="Cura 3 pontos de vida.")
+    (cdir / "posturas" / "medico.json").write_text(
+        json.dumps({"cards": [good, bad]}), encoding="utf-8"
+    )
+    # rascunho nunca é validado nem entra no pool
+    (cdir / "_rascunhos" / "x.json").write_text(
+        json.dumps({"cards": [card(id="med_rasc", descricao="9")]}), encoding="utf-8"
+    )
+    msgs = [(f.entity_id, f.message) for f in validate_cards(str(cdir)) if f.severity == "error"]
+    assert any(eid == "med_ruim" and "voz" in m for eid, m in msgs)
+    assert not any(eid in ("med_ok", "med_rasc") for eid, _ in msgs)
+
+
+def test_loader_ignores_drafts_and_reads_highest_version(tmp_path, monkeypatch):
+    from services import cards
+
+    monkeypatch.setattr(cards.gamedata, "DATA_DIR", str(tmp_path))
+    cdir = tmp_path / "cards"
+    (cdir / "_rascunhos").mkdir(parents=True)
+    (cdir / "posturas").mkdir()
+    v1 = card(id="med_v", descricao="Antiga.")
+    v2 = card(id="med_v", descricao="Nova.", versao=2)
+    (cdir / "posturas" / "a.json").write_text(json.dumps({"cards": [v2, v1]}), encoding="utf-8")
+    (cdir / "_rascunhos" / "r.json").write_text(
+        json.dumps({"cards": [card(id="med_r")]}), encoding="utf-8"
+    )
+    cards.reload_cards()
+    try:
+        assert cards.get_card("med_v")["descricao"] == "Nova."
+        assert cards.get_card("med_r") is None
+    finally:
+        cards.reload_cards()
+
+
+@pytest.mark.parametrize(
+    "fn", ["lint.py", "sim.py", "draft.py", "promote.py", "metrics.py", "painel.py"]
+)
+def test_cli_scripts_exist(fn):
+    assert os.path.isfile(os.path.join("scripts", "cards", fn))

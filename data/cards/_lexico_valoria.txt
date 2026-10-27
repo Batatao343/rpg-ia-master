@@ -1,0 +1,55 @@
+# SPEC-336 R3 - lexico de voz das Cartas de Valoria.
+# [proibidos]: termos que o lint recusa em nome/descricao/momento (anglicismos e jargao de sistema).
+# [valoria]: vocabulario de sabor preferido (entra no prompt do rascunho; descricao sem nenhum
+# destes termos gera AVISO, nunca erro).
+[proibidos]
+mana
+buff
+debuff
+crit
+critico
+stun
+cooldown
+tank
+heal
+healer
+hp
+dps
+spell
+level
+nerf
+combo
+loot
+boss
+mob
+aggro
+dodge
+dash
+shield
+slash
+fireball
+cast
+rush
+[valoria]
+abismo
+cinza
+ferro
+sangue
+eter
+nevoa
+sombra
+cicatriz
+pacto
+ruina
+brasa
+osso
+lamina
+veneno
+silencio
+vigilia
+trincheira
+bisturi
+reliquia
+cinzas
+pulso
+fenda
