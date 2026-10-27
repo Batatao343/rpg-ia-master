@@ -179,12 +179,12 @@ def parse_condition(text: str, source: str = "") -> dict:
 
 # SPEC-232 (R1/R4): efeito mecânico das condições nomeadas usadas pelos dados.
 # Valores modestos e simétricos (jogador e inimigo sofrem igual) — [BALANCEAR].
-# SPEC-330 (D4 do dono, 27/10): `exposto` e `rachadura` são a MESMA condição,
-# exibida como Rachadura (+25 % de dano recebido em golpe; glossário único em
-# data/cards/_glossario.json). Torpor/Vigília/Sangria são as palavras-chave novas.
+# SPEC-330: Rachadura/Torpor/Vigília/Sangria são palavras-chave NOVAS (glossário em
+# data/cards/_glossario.json). `exposto` segue distinto (−2 de Esquiva): as Cartas
+# legadas não mudam de resultado.
 _RACHADURA = {"name": "Rachadura", "keyword": "rachadura", "stat": "dano_recebido_pct", "delta": 25}
 NAMED_CONDITIONS: dict[str, dict] = {
-    "exposto": dict(_RACHADURA),
+    "exposto": {"stat": "ac", "delta": -2},
     "rachadura": dict(_RACHADURA),
     "torpor": {"name": "Torpor", "keyword": "torpor", "stat": "dano_causado_pct", "delta": -25},
     "vigilia": {

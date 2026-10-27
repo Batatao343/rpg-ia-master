@@ -117,6 +117,17 @@ KEYWORDS = KEYWORDS_GRUPO_A + KEYWORDS_GRUPO_B  # as 14 de Valoria (v1)
 
 REVELAR_CAMPOS = frozenset({"resistencias", "cartas", "vitalidade", "intencao"})
 
+# Listas de evento que o turno (`conflict_turn`) devolve e a rodada agrega.
+TURN_EVENT_KEYS = (
+    "keywords",
+    "gatilhos",
+    "gatilhos_descartados",
+    "pendente_pilhas",
+    "revelacoes",
+    "extra_hits",
+    "class_mechanics",
+)
+
 MAX_DEPTH = 3  # R11: profundidade máxima da fila de gatilhos
 
 # Rachadura/Torpor: ±25 % de dano (R5).
@@ -222,7 +233,10 @@ class Ctx:
     actors_by_id: dict
     sides: dict | None = None
     rng: object = None
+    # SPEC-329: presságios congelados da rodada (`actor_id -> [intent]`) e o cursor de
+    # quantas ações de cada inimigo já foram consumidas. Só com RPG_ENEMY_INTENT=on.
     pressagios: dict | None = None
+    intent_cursor: dict | None = None
     queue: deque = field(default_factory=deque)
     depth: int = 0
     draining: bool = False
@@ -232,12 +246,18 @@ class Ctx:
 _CTX: contextvars.ContextVar[Ctx | None] = contextvars.ContextVar("card_effects_ctx", default=None)
 
 
-def bind(scene, actors_by_id, sides=None, *, rng=None, pressagios=None):
-    """Liga o contexto da rodada (``run_round``). Devolve o token p/ ``unbind``."""
-    if pressagios is None and isinstance(scene, dict):
-        pressagios = scene.get("pressagios")
+def bind(scene, actors_by_id, sides=None, *, rng=None, pressagios=None, intent_cursor=None):
+    """Liga o contexto da rodada (``run_round``). Devolve o token p/ ``unbind``.
+    ``pressagios``/``intent_cursor`` são os de ``run_round`` (SPEC-329)."""
     return _CTX.set(
-        Ctx(scene=scene, actors_by_id=actors_by_id, sides=sides, rng=rng, pressagios=pressagios)
+        Ctx(
+            scene=scene,
+            actors_by_id=actors_by_id,
+            sides=sides,
+            rng=rng,
+            pressagios=pressagios,
+            intent_cursor=intent_cursor,
+        )
     )
 
 
@@ -290,8 +310,6 @@ def is_down(actor: dict | None) -> bool:
 def has_condition(actor: dict | None, name: str) -> bool:
     want = _fold(name)
     aliases = {want}
-    if want in ("exposto", "rachadura"):
-        aliases |= {"exposto", "rachadura"}
     control = {"atordoado": "stun", "enredado": "root", "medo": "fear", "silenciado": "silence"}
     for c in (actor or {}).get("active_conditions", []) or []:
         if _fold(c.get("name")) in aliases or _fold(c.get("keyword")) in aliases:
@@ -817,36 +835,35 @@ def resolve_card(ctx: Ctx, card: dict, actor_id: str, target_id: str | None, out
 # --------------------------------------------------------------------------
 # Interromper (SPEC-329)
 # --------------------------------------------------------------------------
-def _attack_intent(intent) -> bool:
-    if intent is None:
-        return False
-    if isinstance(intent, list):
-        return any(_attack_intent(i) for i in intent)
-    if not isinstance(intent, dict):
-        return False
-    kind = _fold(intent.get("kind") or intent.get("tipo") or "")
-    return kind in ("attack", "ataque", "card", "carta", "dano", "") and not intent.get("frustrado")
+ATTACK_INTENT_TIPOS = frozenset({"ataque", "ataque_multiplo"})
+
+
+def pending_intent(ctx: Ctx, actor_id: str) -> dict | None:
+    """Próximo presságio AINDA NÃO executado do ator nesta rodada (SPEC-329:
+    ``combat["pressagios"]`` congelado + cursor de ``run_round``)."""
+    lst = (ctx.pressagios or {}).get(actor_id) or []
+    i = int((ctx.intent_cursor or {}).get(actor_id, 0) or 0)
+    return lst[i] if i < len(lst) and isinstance(lst[i], dict) else None
 
 
 def interrupt(ctx: Ctx, actor_id: str, target_id: str, out: dict) -> bool:
-    """**Interromper**: se o alvo tem presságio de ataque e caiu/foi atordoado,
-    o presságio conta como FRUSTRADO e dispara ``ao_pressagio_frustrado``."""
-    intents = ctx.pressagios or {}
-    intent = intents.get(target_id)
+    """**Interromper**: se o alvo tem presságio de ataque pendente e caiu/foi
+    atordoado, o presságio conta como frustrado POR este ator: marca
+    ``interrompido_por`` (o ``run_round`` registra o frustrado com ``via``) e dispara
+    ``ao_pressagio_frustrado`` agora."""
+    intent = pending_intent(ctx, target_id)
     target = ctx.actors_by_id.get(target_id)
-    if not _attack_intent(intent) or not is_down(target):
+    if (
+        intent is None
+        or intent.get("tipo") not in ATTACK_INTENT_TIPOS
+        or intent.get("interrompido_por")
+        or not is_down(target)
+    ):
         return False
-    for item in intent if isinstance(intent, list) else [intent]:
-        if isinstance(item, dict):
-            item["frustrado"] = True
-            item["frustrado_por"] = actor_id
-    out.setdefault("pressagios_frustrados", []).append(
-        {"actor_id": target_id, "by": actor_id, "via": "interromper"}
-    )
+    intent["interrompido_por"] = actor_id
     out.setdefault("keywords", []).append(
         {"keyword": "interromper", "actor_id": actor_id, "target_id": target_id}
     )
-    out.setdefault("logs", []).append(f"O golpe de {_name(target)} morre no ar.")
     fire("ao_pressagio_frustrado", sujeito_id=actor_id, alvo_id=target_id, out=out, ctx=ctx)
     return True
 
@@ -990,9 +1007,6 @@ def card_keyword_ids(card: dict) -> list[str]:
             found.append(kind)
         if eff.get("chamado") is not None and "chamado" not in found:
             found.append("chamado")
-        if kind == "aplicar_condicao" and _fold(eff.get("condicao")) == "exposto":
-            if "rachadura" not in found:
-                found.append("rachadura")
     for key in keywords(card):
         if key in CARD_KEYWORDS and key not in found:
             found.append(key)
@@ -1035,7 +1049,7 @@ _GATILHO_LABEL = {
 }
 _ALVO_LABEL = {"eu": "em você", "inimigos": "em todos os inimigos", "aliados": "nos aliados"}
 _CONDICAO_LABEL = {
-    "exposto": "**Rachadura**",
+    "exposto": "Exposto",
     "amedrontado": "Medo",
     "atordoado": "Atordoado",
     "enraizado": "Enredado",
@@ -1104,8 +1118,6 @@ def _effect_text(eff: dict) -> str:
     if kind == "aplicar_condicao":
         cond = _fold(eff.get("condicao"))
         label = _CONDICAO_LABEL.get(cond) or str(eff.get("condicao") or "uma condição")
-        if cond == "exposto":
-            return f"Aplica {label} {max(1, dur)}"
         return f"Aplica {label}{por}"
     if kind == "purga_condicao":
         return "Remove uma condição nociva"
@@ -1183,8 +1195,6 @@ def _cond_text(se: dict) -> str:
 
 def _cond_name(arg) -> str:
     key = _fold(arg)
-    if key in ("exposto", "rachadura"):
-        return "**Rachadura**"
     if key in glossary():
         return f"**{glossary()[key]['nome']}**"
     return _CONDICAO_LABEL.get(key, str(arg))

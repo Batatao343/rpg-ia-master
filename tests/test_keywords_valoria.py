@@ -103,14 +103,16 @@ def test_rachadura_amplia_golpe_em_25_por_cento_e_nao_o_dot():
     assert _hit(e, 4, bypass_armor=True) == 4  # DoT/auto-dano não amplia
 
 
-def test_exposto_e_rachadura_sao_a_mesma_condicao():
+def test_exposto_segue_distinto_da_rachadura():
+    """Correção do coordenador (27/10): `exposto` mantém −2 de Esquiva; Rachadura
+    é condição NOVA, só de Cartas novas/compostas."""
     cond = cm.parse_condition("exposto")
-    assert cond["name"] == "Rachadura" and cond["stat"] == "dano_recebido_pct"
+    assert cond.get("stat") == "ac" and cond.get("delta") == -2
+    assert cm.parse_condition("rachadura")["stat"] == "dano_recebido_pct"
     e = _fresh_enemy()
     cm.apply_condition(e, dict(cond, duration=2))
-    cm.apply_condition(e, fx.rachadura_condition(3))
-    assert len([c for c in e["active_conditions"] if c["name"] == "Rachadura"]) == 1
-    assert fx.has_condition(e, "exposto") and fx.has_condition(e, "rachadura")
+    assert fx.has_condition(e, "exposto") and not fx.has_condition(e, "rachadura")
+    assert _hit(e, 4) == 4
 
 
 def test_rachadura_mais_golpe_numero_do_log_bate_com_o_texto(examples):
@@ -189,34 +191,112 @@ def test_marca_do_abismo_bonus_entropia_e_consumo(examples):
     assert not fx.has_condition(e, "marca")  # consumida
 
 
-def test_interromper_frustra_presagio_e_dispara_gatilho(examples):
+_GATILHO_FRUSTRADO = {
+    "owner_id": "player",
+    "card_id": "ex330_muralha_vigilante",
+    "efeito": {"kind": "vigilia", "valor": 2, "quando": "ao_pressagio_frustrado"},
+}
+
+
+def _intent(tipo="ataque"):
+    # Formato real da SPEC-329 (`enemy_intent.forecast_round`).
+    return {"actor_id": "e", "idx": 0, "tipo": tipo, "alvo_id": "player", "carta_id": None}
+
+
+def _interrupt_with(pressagios, cursor):
     player = _player(["ex330_golpe_interruptor"], entropy=5)
     e = _fresh_enemy()
     scene = _scene("player", "e")
+    scene["gatilhos_armados"] = [dict(_GATILHO_FRUSTRADO)]
     actors = {"player": player, "e": e}
-    pressagios = {"e": {"kind": "attack", "target_id": "player"}}
-    scene["gatilhos_armados"] = [
-        {
-            "owner_id": "player",
-            "card_id": "ex330_muralha_vigilante",
-            "efeito": {"kind": "vigilia", "valor": 2, "quando": "ao_pressagio_frustrado"},
-        }
-    ]
-    token = fx.bind(scene, actors, {"hero": ["player"], "enemy": ["e"]}, pressagios=pressagios)
+    token = fx.bind(
+        scene,
+        actors,
+        {"hero": ["player"], "enemy": ["e"]},
+        pressagios=pressagios,
+        intent_cursor=cursor,
+    )
     try:
         out = _play(player, e, "ex330_golpe_interruptor", scene=scene)
     finally:
         fx.unbind(token)
+    return player, e, out
+
+
+def test_interromper_marca_presagio_pendente_e_dispara_gatilho(examples):
+    pressagios = {"e": [_intent()]}
+    player, e, out = _interrupt_with(pressagios, {})
     assert cm.has_control(e, "stun")
-    assert out["pressagios_frustrados"] == [{"actor_id": "e", "by": "player", "via": "interromper"}]
-    assert pressagios["e"]["frustrado"] is True
-    assert cm.combat_modifiers(player)["vigilia"] == 2  # gatilho rodou
+    assert pressagios["e"][0]["interrompido_por"] == "player"
+    assert {"keyword": "interromper", "actor_id": "player", "target_id": "e"} in out["keywords"]
+    assert cm.combat_modifiers(player)["vigilia"] == 2  # gatilho rodou na hora
 
 
-def test_interromper_sem_presagio_nao_frustra(examples):
+@pytest.mark.parametrize(
+    "pressagios, cursor",
+    [
+        ({"e": [_intent()]}, {"e": 1}),  # o inimigo já agiu nesta rodada
+        ({"e": [_intent("defesa")]}, {}),  # presságio não é de ataque
+        ({}, {}),  # sem presságio (flag off/shadow)
+    ],
+)
+def test_interromper_sem_presagio_de_ataque_pendente_nao_conta(examples, pressagios, cursor):
+    player, _e, out = _interrupt_with(pressagios, cursor)
+    assert not any(k["keyword"] == "interromper" for k in out.get("keywords", []))
+    assert (
+        "vigilia" not in cm.combat_modifiers(player) or not cm.combat_modifiers(player)["vigilia"]
+    )
+
+
+def test_interromper_no_run_round_com_presagio_real(examples, monkeypatch):
+    """Ponta a ponta com RPG_ENEMY_INTENT=on: o herói age primeiro, atordoa o
+    inimigo que anunciou ataque; a rodada registra o frustrado com `via`."""
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
     player = _player(["ex330_golpe_interruptor"], entropy=5)
-    out = _play(player, _fresh_enemy(), "ex330_golpe_interruptor")
-    assert not out.get("pressagios_frustrados")
+    e = _fresh_enemy()
+    scene = _scene("player", "e")
+    scene["gatilhos_armados"] = [dict(_GATILHO_FRUSTRADO)]
+    out = orch.run_round(
+        scene,
+        {"player": player, "e": e},
+        {"hero": ["player"], "enemy": ["e"]},
+        {"player": player},
+        declarations={
+            "player": {
+                "actor_id": "player",
+                "acao": {"kind": "card", "card_id": "ex330_golpe_interruptor", "target_id": "e"},
+            }
+        },
+        pressagios={"e": [_intent()]},
+        initiator="heroes",
+        rng=random.Random(3),
+    )
+    # (o Atordoado de 1 rodada já expirou no turno perdido do inimigo)
+    assert any("atordoado e perde o turno" in log for log in out["logs"])
+    frustrated = out["pressagios_frustrados"]
+    assert frustrated[0]["actor_id"] == "e"
+    assert frustrated[0]["via"] == "interromper" and frustrated[0]["por"] == "player"
+    assert [g["gatilho"] for g in out["gatilhos"]].count("ao_pressagio_frustrado") == 1
+
+
+def test_presagio_frustrado_sem_interromper_dispara_para_a_mira(examples, monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    player = _player([])
+    e = _fresh_enemy()
+    cm.apply_condition(e, {"name": "Atordoado", "dot": 0, "duration": 1, "control": "stun"})
+    scene = _scene("player", "e")
+    scene["gatilhos_armados"] = [dict(_GATILHO_FRUSTRADO)]
+    out = orch.run_round(
+        scene,
+        {"player": player, "e": e},
+        {"hero": ["player"], "enemy": ["e"]},
+        {"player": player},
+        declarations={"player": {"actor_id": "player"}},
+        pressagios={"e": [_intent()]},
+        rng=random.Random(3),
+    )
+    assert out["pressagios_frustrados"][0].get("via") is None
+    assert any(g["gatilho"] == "ao_pressagio_frustrado" for g in out["gatilhos"])
 
 
 def test_sacrificio_paga_vitalidade_antes_dos_efeitos(examples):

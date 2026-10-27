@@ -159,7 +159,7 @@ def test_condicoes_fechadas():
     cm.apply_condition(player, fx.torpor_condition(1))
     fx.record_play(player, {"id": "a", "tipo": "ativa", "classe": "Corruptor"}, "e")
     ok = {
-        "alvo_tem": "exposto",
+        "alvo_tem": "rachadura",
         "eu_tenho": "torpor",
         "entropia_min": 5,
         "vitalidade_max_pct": 25,
@@ -387,7 +387,7 @@ def test_texto_nunca_mente_sobre_o_numero():
         if eff.get("kind") == "dano" and eff.get("dano_base") is not None:
             assert f"Causa {eff['dano_base']} de dano" in text, card["id"]
         if eff.get("condicao") == "exposto":
-            assert "**Rachadura**" in text, card["id"]
+            assert "Exposto" in text and "Rachadura" not in text, card["id"]
 
 
 def test_texto_das_cartas_compostas():

@@ -1441,6 +1441,10 @@ def _resolve_actor_turn(
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
     if sub.get("enemy_fallbacks"):
         out.setdefault("enemy_fallbacks", []).extend(sub["enemy_fallbacks"])
+    # SPEC-330: eventos estruturados do intérprete de efeitos produzidos no turno.
+    for key in fx.TURN_EVENT_KEYS:
+        if sub.get(key):
+            out.setdefault(key, []).extend(sub[key])
     if sub.get("enemy_support_cards"):
         out.setdefault("enemy_support_cards", []).extend(sub["enemy_support_cards"])
         for ev in sub["enemy_support_cards"]:
@@ -2073,9 +2077,17 @@ def _run_round(
     def _frustrate(actor_id: str, intent: dict, motivo: str) -> None:
         # R4/R5: presságio que ficou impossível (gancho da keyword "Interromper", SPEC-330).
         a = actors_by_id.get(actor_id) or {}
-        out.setdefault("pressagios_frustrados", []).append(
-            {"actor_id": actor_id, "tipo": intent["tipo"], "motivo": motivo}
-        )
+        entry = {"actor_id": actor_id, "tipo": intent["tipo"], "motivo": motivo}
+        if intent.get("interrompido_por"):
+            # SPEC-330 Interromper: o gatilho já rodou na hora da Carta.
+            entry["por"] = intent["interrompido_por"]
+            entry["via"] = "interromper"
+        out.setdefault("pressagios_frustrados", []).append(entry)
+        if not intent.get("interrompido_por") and intent.get("alvo_id") in actors_by_id:
+            # SPEC-330 R3: quem era a mira do presságio frustrado reage.
+            fx.fire(
+                "ao_pressagio_frustrado", sujeito_id=intent["alvo_id"], alvo_id=actor_id, out=out
+            )
         out["logs"].append(ei.frustrated_line(intent, actors_by_id))
         from services import mechanics_trace as _mt
 
@@ -2129,6 +2141,10 @@ def _run_round(
     ctx = fx.current()
     if ctx is not None:
         ctx.rng = rng
+        if intent_mode == "on" and frozen is not None:
+            # SPEC-330 Interromper lê o presságio pendente (não em `shadow`).
+            ctx.pressagios = frozen
+            ctx.intent_cursor = intent_cursor
     for a in actors_by_id.values():
         if a.get("_cartas_rodada"):
             fx.reset_round(a)

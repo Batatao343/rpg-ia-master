@@ -472,13 +472,11 @@ def test_combat_node_rejects_dead_or_self_target_for_offensive_card():
 
 
 # ---------------------------------------------------------------- condições nomeadas
-def test_named_condition_exposto_vira_rachadura():
-    # SPEC-330 (D4 do dono): `exposto` é a Rachadura — +25 % de dano recebido
-    # em golpe (antes era −2 de Esquiva).
+def test_named_condition_exposto_lowers_esquiva():
     target = _mk("e")
-    base = cm.combat_modifiers(target)["dano_recebido_pct"]
+    base = cm.combat_modifiers(target)["ac"]
     cm.apply_condition(target, cm.parse_condition("exposto"))
-    assert cm.combat_modifiers(target)["dano_recebido_pct"] == base + 25
+    assert cm.combat_modifiers(target)["ac"] < base
 
 
 # ---------------------------------------------------------------- R10 (BUG-02-13)
