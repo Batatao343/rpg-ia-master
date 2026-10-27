@@ -155,8 +155,6 @@ async def _http_exception_handler(request: Request, exc: StarletteHTTPException)
 @app.exception_handler(RequestValidationError)
 async def _validation_exception_handler(request: Request, exc: RequestValidationError):
     """SPEC-241 R3: 422 com o corpo padrao + request_id; o log leva so os ``loc`` (sem valores)."""
-    from fastapi.encoders import jsonable_encoder
-
     request.state.error_code = "validation_failed"
     errors = exc.errors()
     _log_event(
@@ -168,7 +166,16 @@ async def _validation_exception_handler(request: Request, exc: RequestValidation
         error_count=len(errors),
     )
     rid = _current_request_id()
-    body: dict[str, Any] = {"detail": jsonable_encoder(errors), "code": "validation_failed"}
+    body: dict[str, Any] = {"detail": [
+            # SPEC-337 R19: nunca devolve ``input``/``ctx``/``url`` (eco de senha/segredo).
+            {
+                "type": e.get("type"),
+                "loc": list(e.get("loc", ())),
+                "msg": str(e.get("msg", "")),
+            }
+            for e in errors
+        ],
+        "code": "validation_failed"}
     if rid:
         body["request_id"] = rid
     return JSONResponse(body, status_code=422, headers={"X-Request-ID": rid} if rid else None)
@@ -4743,6 +4750,7 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
             repository.set_quality(
                 current_principal(),
                 uuid.UUID(generation_id),
+                game_id=uuid.UUID(str(state["game_id"])),
                 approved=req.approved,
             )
         except (ValueError, Conflict) as exc:
@@ -7029,10 +7037,22 @@ def delete_save_endpoint(game_id: str, request: Request):
         runtime = get_runtime()
         principal = current_principal()
         receipt_fn = getattr(runtime.turn_coordinator, "receipt", None)
-        prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+        digest = hashlib.sha256(f"delete:{game_uuid}".encode()).hexdigest()
+        # SPEC-337 R17: recibo validado por kind+hash (o delete grava game_id=None de propósito).
+        prior = (
+            _validated_receipt(
+                runtime.turn_coordinator,
+                principal,
+                operation_id,
+                game_id=None,
+                kind="delete",
+                request_hash=digest,
+            )
+            if callable(receipt_fn)
+            else None
+        )
         if prior:
             return prior
-        digest = hashlib.sha256(f"delete:{game_uuid}".encode()).hexdigest()
         try:
             claim = runtime.turn_coordinator.claim(
                 principal,
@@ -7049,7 +7069,18 @@ def delete_save_endpoint(game_id: str, request: Request):
                 receipt={"ok": True},
             )
         except Conflict as exc:
-            prior = receipt_fn(principal, operation_id) if callable(receipt_fn) else None
+            prior = (
+                _validated_receipt(
+                    runtime.turn_coordinator,
+                    principal,
+                    operation_id,
+                    game_id=None,
+                    kind="delete",
+                    request_hash=digest,
+                )
+                if callable(receipt_fn)
+                else None
+            )
             if prior:
                 _op_replayed("delete", operation_id)
                 return prior

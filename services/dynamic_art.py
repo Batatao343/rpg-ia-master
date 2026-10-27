@@ -123,12 +123,20 @@ class DynamicArtRepository:
                     raise Conflict("geração não está disponível para execução")
         return False
 
-    def set_quality(self, principal: Principal, generation_id: UUID, *, approved: bool) -> None:
+    def set_quality(
+        self, principal: Principal, generation_id: UUID, *, game_id: UUID, approved: bool
+    ) -> None:
         with admin_connection(self.pool) as connection, connection.transaction():
             result = connection.execute(
                 """update app.art_generations set status=%s,updated_at=now()
-                where generation_id=%s and owner_id=%s and status in ('ready','rejected_quality')""",
-                ("ready" if approved else "rejected_quality", generation_id, principal.user_id),
+                where generation_id=%s and owner_id=%s and game_id=%s
+                and status in ('ready','rejected_quality')""",
+                (
+                    "ready" if approved else "rejected_quality",
+                    generation_id,
+                    principal.user_id,
+                    game_id,
+                ),
             )
             if result.rowcount != 1:
                 raise Conflict("geração não está pronta para avaliação")

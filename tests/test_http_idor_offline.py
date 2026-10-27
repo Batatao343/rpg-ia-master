@@ -108,14 +108,14 @@ class _FakeArtRepo:
     def __init__(self, *_a, **_k):
         pass
 
-    def set_quality(self, principal, generation_id, *, game_id=None, approved):
+    def set_quality(self, principal, generation_id, *, game_id, approved):
         from infrastructure.contracts import Conflict
 
         row = self.rows.get(generation_id)
         if (
             not row
             or row["owner"] != principal.user_id
-            or (game_id is not None and row["game_id"] != game_id)
+            or row["game_id"] != game_id
         ):
             raise Conflict("quality_not_available")
         row["status"] = "ready" if approved else "rejected_quality"
@@ -155,13 +155,13 @@ _ROUTES = [
     ("POST", "/game/equip", {"unequip_slot": "weapon", "game_id": "{g}"}),
     ("POST", "/game/cards/prepare", {"game_id": "{g}", "card_ids": []}),
     ("POST", "/game/levelup", {"choice_id": "x", "game_id": "{g}"}),
-    ("POST", "/game/death", {"game_id": "{g}"}),
+    ("POST", "/game/death", {"choice": "accept", "game_id": "{g}"}),
     ("POST", "/game/chronicle/search", {"query": "teste", "game_id": "{g}"}),
     ("DELETE", "/game/save/{g}", None),
-    ("GET", "/game/{g}/audit-export", None),
+    ("POST", "/game/{g}/audit-export", {}),
     ("GET", f"/game/{{g}}/operations/{_OP}", None),
     ("GET", f"/game/{{g}}/operations/{_OP}/cost", None),
-    ("POST", "/game/{g}/art/quote", {"kind": "scene"}),
+    ("POST", "/game/{g}/art/quote", {"image_type": "scene"}),
     ("GET", f"/game/{{g}}/art/{_ART_GEN}", None),
     ("POST", f"/game/{{g}}/art/{_ART_GEN}/quality", {"approved": True}),
 ]
@@ -186,6 +186,11 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     gid = str(tp.game_a)
     monkeypatch.setattr("services.dynamic_art.DynamicArtRepository", _EmptyArtRepo)
     monkeypatch.setattr(tp.runtime, "resources", (object(),))
+    from infrastructure.request_context import current_principal
+
+    monkeypatch.setattr(
+        "api._image_finance", lambda: (tp.runtime, current_principal(), object())
+    )
     url = path.replace("{g}", gid)
     payload = (
         None
@@ -196,7 +201,7 @@ def test_principal_b_cannot_touch_game_a(two_principals, monkeypatch, method, pa
     before = _a_state(tp).version
     kwargs = {"json": payload} if payload is not None else {}
     response = tp.client_b.request(method, url, headers=headers, **kwargs)
-    assert response.status_code in {400, 403, 404, 409, 422}, (
+    assert response.status_code in {400, 403, 404, 409}, (
         f"{method} {path}: {response.status_code} {response.text[:200]}"
     )
     assert tp.seed_name not in response.text
