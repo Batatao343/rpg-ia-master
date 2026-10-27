@@ -93,6 +93,32 @@ jobs:
       - run: npm run build
         working-directory: web
 
+  api-fuzz:
+    # SPEC-338: fuzz da API (Schemathesis in-process, legacy + DB offline); bloqueante.
+    needs: scope
+    if: github.event_name != 'schedule' && needs.scope.outputs.docs_only != 'true'
+    runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: uv sync --extra anthropic --group fuzz
+      - name: pip-audit (grupo fuzz)
+        run: |
+          uv export --only-group fuzz --no-hashes --no-emit-project --format requirements-txt -o "$RUNNER_TEMP/fuzz-requirements.txt"
+          uvx --from pip-audit==2.10.1 pip-audit -r "$RUNNER_TEMP/fuzz-requirements.txt" --progress-spinner off
+      - run: RPG_API_FUZZ_REQUIRED=1 uv run pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider --tb=short --junitxml=api-fuzz-junit.xml 2>&1 | tee api-fuzz.log; exit "${PIPESTATUS[0]}"
+        shell: bash
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: failure()
+        with:
+          name: api-fuzz-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            api-fuzz-junit.xml
+            api-fuzz.log
+          if-no-files-found: ignore
+          retention-days: 7
+
   secret-scan:
     # SPEC-225 R5: gitleaks no diff do PR/push e, semanalmente, no histórico completo.
     runs-on: ubuntu-24.04  # pin: ubuntu-latest migra de imagem sem aviso

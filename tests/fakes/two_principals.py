@@ -19,6 +19,7 @@ from infrastructure.contracts import Conflict, NotFound, Principal, Unauthorized
 from infrastructure.local_adapters import (
     FileGameStore,
     InProcessTurnCoordinator,
+    JsonRuntimeCatalogStore,
     MemoryRateLimiter,
 )
 from services.auth_sessions import CsrfSigner
@@ -41,6 +42,16 @@ class FakeIdentity:
         if token == "b":
             return self.b
         raise Unauthorized("token inválido")
+
+    # SPEC-338: o fuzz de /auth/* passa da validação e chega ao provedor; o fake nega tudo.
+    def login(self, email, password, captcha_token=None):
+        raise Unauthorized("credenciais inválidas")
+
+    def signup(self, email, password, captcha_token=None):
+        raise Unauthorized("cadastro indisponível")
+
+    def logout(self, token):
+        return None
 
 
 class FakeTurnCoordinator(InProcessTurnCoordinator):
@@ -147,6 +158,7 @@ def two_principals(monkeypatch, tmp_path) -> TwoPrincipals:
         resources=(),
         memory_store=None,
         blob_store=object(),
+        runtime_catalog=JsonRuntimeCatalogStore(tmp_path / "runtime_catalog.json"),
     )
     monkeypatch.setenv("RPG_RUNTIME_PROFILE", "local")
     monkeypatch.setattr("infrastructure.runtime.get_runtime", lambda: runtime)
