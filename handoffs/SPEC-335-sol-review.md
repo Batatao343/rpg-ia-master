@@ -1,5 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
+> **Veredito Lote 5 (Médico de Campo, `75452e54`):** `CHANGES_REQUIRED` (2 P1: híbridos `turno` fortes; controle de `duracao` 1 expira antes de valer, bug de motor anterior que zera Provocar em todo o catálogo; 4 P2)
 > **Veredito Lote 4 (Corruptor):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `7a40ae9d` (a 1ª rodada, em `25b00b3f`, deu `CHANGES_REQUIRED` com 1 P1 e 4 P2)
 > **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
 > **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
@@ -9,6 +10,118 @@
 > Nota de nome: o coordenador pediu `handoffs/SPEC-335-sol-review-lote2.md`, mas esse nome
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
+
+# Lote 5 — Médico de Campo (`main...75452e54`)
+
+> **Veredito:** `CHANGES_REQUIRED` (2 P1, 4 P2). Os 4 híbridos estão fortes de verdade, e há um
+> bug de motor anterior a este lote que zera Provocar e encurta a Marca com `duracao` 1.
+
+## Escopo
+
+Commit `75452e54`, sobre a `main` com os Lotes 1–4. Entram as 3
+`data/cards/posturas/medico_{boticario,cirurgiao_ferro,cirurgiao_trincheira}.json` (36
+`med1_*`), os 4 legados com `momento`, `_ondas.yaml`, `docs/spec335/` (relatório, 2 scripts e 5
+JSON), a spec e `tests/test_card_acervo_reparo.py`. Nada em `evals/`, `services/` ou `sim.py`.
+
+## Checagens de sempre
+
+- **Legadas e golden: OK.** Em `exemplos`, `exemplos_extra`, `medico` e `tiers_5_plus` mudaram 52
+  Cartas, só em `momento`/`momento_placeholder`. Golden e snapshot da 330 passam.
+- **Motor real, as 36 Cartas** (`ct.resolve_turn`, jogador com Carga 3 e Entropia 10):
+  - A cura, a Proteção, a Vigília e os buffs (Defesa, Acerto, Dano) vão para o próprio Médico em
+    luta solo; `protecao`/`purga` com `alvo: aliados` incluem o próprio Médico (`_allies`).
+  - Torpor, Cego, Enredado, Exposto, Desarme, DoT e empurrão chegam ao inimigo. Num principal de
+    suporte, o Torpor extra cai no 1º oponente, sem rolagem.
+  - `reduzir_carga_aliado` tira Carga do próprio Médico.
+  - As 3 reações têm `gatilho` válido e efeito com ramo em `_resolve_reaction_effect`.
+  - A regra nova de "uma condição de stat por Carta" se cumpre.
+  - **Exceção: Giz Vermelho (P1-2).**
+- **Raridade e nomes: OK** (20/10/4/2). Lint sem aviso; nenhum nome nem id colide nos 676 objetos
+  nomeados.
+- **Voz:** `aprovada`, com a `nota_voz` "sem leitura". `validate_content` dá 0/0.
+- **Arena reproduzível:** rodei de novo `--protocolo lote` em `medico_cirurgiao_ferro.json`, e o
+  JSON saiu idêntico.
+- **Testes:** os 7 arquivos do escopo passaram com `-n 2` (exit 0).
+
+## Os 5 pontos do coordenador
+
+**1. Fôlego 0 em 11 comuns: aceitável com `cena`, frágil com `turno`.** A R6 da 328 já dá
+Fôlego 0 a Carta sem dano, e com `cena` é uma jogada grátis por cena, limitada pela vaga na mão.
+O problema é que **a Entropia não pesa**: com custo de Entropia 2 em vez de 1, os híbridos dão
+exatamente o mesmo delta (golpe_e_pulso +15,0 = +15,0; agulha +16,6 = +16,6), porque o jogador
+ganha Entropia ao sofrer dano. Com isso, Fôlego 0 + `turno` vira efeito grátis **todo turno**:
+- `fer_tala_rigida`: +2 de Defesa renovada, 90 % de uso;
+- `bot_giz_vermelho`: Marca, 87 % de uso.
+
+Passar as duas para `cena` ou Fôlego 1 (P2-1). As outras 9 ficam como estão.
+
+**2. Os híbridos são fortes de verdade, não efeito do braço base.** Comparei com controles de mesma
+subclasse e mesmo custo, com 320 lutas por braço:
+
+| Carta | Delta | Controle (mesma subclasse) | Sobra acima do controle |
+|---|---|---|---|
+| `tri_golpe_e_pulso` (dano 3 leve) | +15,0 | dano 3 leve: +5,6 | **+9,4** |
+| `bot_agulha_envenenada` (dano 3 leve) | +16,6 | dano 3 leve: +0,3 | **+16,3** |
+| `fer_cotovelo_de_aco` (dano 4 marcial) | +20,0 | dano 4, do executor: +10,0 | **+10,0** |
+| `fer_pinca_de_aco` (dano 4 marcial) | +17,5 | dano 4, do executor: +10,0 | **+7,5** |
+
+O que pesa é a frequência `turno`, a mesma alavanca da Bênção do Aço no Lote 3. Com `cena`:
+golpe_e_pulso **+4,1**, cotovelo **+4,1**, pinça **+5,9**, agulha **+9,1**. Custo de Entropia 2
+não muda nada. Ver P1-1.
+
+**3. Os 74,6 % só no padrão: risco moderado, e é o subclasse Ferro (73,3 %) que preocupa, não a
+linha "todas".** A linha que mistura as subclasses não é um baralho real de jogador. O Ferro é a
+subclasse de `cotovelo` e `pinca`, as duas mais fortes; passá-las para `cena` deve tirar o Ferro
+da borda. Refazer `arena_postura_medico.py` depois do P1-1 e registrar os números. Sugiro alvo
+≤ 70 % no padrão por subclasse, com o jogador real tendo uma só.
+
+**4. A ordem no `full_deck` distorce a arena da Postura, mas não o delta por Carta.** Dentro do
+mesmo tier, `pool.sort(-tier, id)` escolhe **pela ordem alfabética do id**, não pela qualidade:
+`med1_…` vem antes de `med_…` e depois de legadas como `antitoxina`/`estabilizar`, e as comuns
+ocupam 2 vagas.
+- Em L5 "todas", o baralho "depois" tem 13 `med1` + 2 legadas + 9 básicas; 44 Cartas ficam fora.
+- O "antes × depois" da Postura mede então "o lote preenche o baralho", não "o melhor baralho".
+- No protocolo por Carta (`build_arms`, `com = sem + Carta`) a ordem não importa.
+
+Follow-up na 336 (P2-3): ordenar por poder do orçamento, ou por amostra com semente, em vez do
+id. Isso vale também para os Lotes 1–4.
+
+**5. `reduzir_carga_aliado` cobra 2 de Entropia mesmo sem Carga.**
+`cm.reduce_ally_abyss(cost=2)` debita antes de olhar a Carga, e o custo não aparece no texto
+gerado. Confirmado: `sal_na_sombra` (Entropia 0 na Carta) leva de 10 para 8; o Elixir custa 5 + 2.
+Como a Entropia quase não pesa (ponto 1), o impacto é pequeno. Mas o texto mente sobre o custo e,
+sem Carga, a Carta gasta à toa. P2-2.
+
+## Achados
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P1-1 | P1 | `medico_cirurgiao_trincheira.json` (`golpe_e_pulso`), `medico_boticario.json` (`agulha_envenenada`), `medico_cirurgiao_ferro.json` (`cotovelo_de_aco`, `pinca_de_aco`) | Os 4 híbridos `turno` ficam 7,5 a 16,3 pp **acima** do controle de dano da mesma subclasse e do mesmo custo (tabela no ponto 2). É poder da Carta, não braço base fino. Contraria o precedente da Bênção do Aço (Lote 3), que passou de `turno` para `cena`. | `frequencia: cena` nos 4, medido: +4,1 / +9,1 / +4,1 / +5,9 pp. Agulha ainda fica em +9,1: tirar 1 rodada do DoT ou 1 de dano. Depois, rodar de novo `confirmar_lote5.py` e `arena_postura_medico.py`. |
+| P1-2 | P1 (motor, anterior ao lote) | `services/conflict_orchestrator.py:240-268` (`_tick_conditions_v4`) e `:2416`; afeta `med1_bot_giz_vermelho` | **Controle com `duracao` 1 aplicado pelo jogador expira no início do turno do inimigo, antes de valer.** `marca` e `taunt` têm `control`, então não são "stat puro" e são descontados no tick do **começo** do turno de quem os carrega. Numa rodada real (`orch.run_round`, baralho `off`), Giz Vermelho, Livro de Dívidas e Ciúme Aberto mostram "ganha condição X" e logo "X terminou" antes de o inimigo agir. **Provocar com `duracao` 1 nunca vale**: some antes de o inimigo escolher o alvo. São as 21 Cartas de `taunt` do catálogo, todas com `duracao` 1, incluindo a básica `bas_dev_voto`. **A Marca com `duracao` 1 não chega ao turno seguinte do jogador**; com o baralho `on` ainda vale para jogadas da mesma rodada e para aliados que agem antes do inimigo. São 26 Cartas. Isso corrige o que escrevi nos Lotes 3 e 4: Provocar não "só vale com aliados", não vale nunca. Cego, que é stat puro, funciona. | Neste lote: `duracao: 2` em Giz Vermelho (como `arc1_imp_parafuso`) ou passá-la para `cena`. Bugfix de motor, em spec própria ligada à 330/232: controle aplicado por um oponente não pode ser descontado no 1º tick do portador. Uma forma é marcar `aplicado_em` e pular o primeiro tick, como `_expire_stat_conditions` já faz com `present_at_start`. Teste com `run_round`. Até lá, o lint deveria recusar `taunt`/`marca` com `duracao` < 2 em Carta de onda. |
+| P2-1 | P2 | `medico_cirurgiao_ferro.json` (`tala_rigida`), `medico_boticario.json` (`giz_vermelho`) | Fôlego 0 + `turno` + Entropia barata dá efeito grátis todo turno (ponto 1). | `cena` ou Fôlego 1. Na 336, lint: Fôlego 0 só com `cena` ou mais raro. |
+| P2-2 | P2 | `combat_mechanics.py:850-863`; `card_effects` (texto gerado) | `reduzir_carga_aliado` cobra 2 de Entropia sem Carga a tirar, e o texto gerado não mostra o custo extra (ponto 5). | No motor, não cobrar quando `abyss_charge == 0`, conferindo se não mexe em legada ou golden. No texto, "(custa 2 de Entropia)". 325/336. |
+| P2-3 | P2 | `scripts/cards/sim.py:93` (`full_deck`) | No mesmo tier, a escolha do baralho completo segue a ordem alfabética do id; a arena da Postura não mede o melhor baralho (ponto 4). | 336: ordenar por poder ou por amostra com semente; registrar a limitação nos relatórios da Postura. |
+| P2-4 | P2 | `docs/spec335/RELATORIO-arena-lote5.md` | O relatório diz "Entropia paga" e "braço base fino" como freio e explicação. Os dois foram refutados acima (Entropia 2 = 1; o controle de dano 3 sobe só +0,3/+5,6). | Atualizar o relatório junto com o P1-1. |
+
+## Pendências
+
+- P1-1, a parte de Carta do P1-2, P2-1 e P2-4: executor, nesta branch.
+- O bugfix de motor do P1-2 (controle com `duracao` 1): spec nova, coordenador. Pega Lotes 1–5 e
+  legado. Até lá, as Cartas de Provocar continuam sem efeito.
+- P2-2 e P2-3: 325/336.
+
+## Comandos rodados (Lote 5)
+
+```text
+scratchpad/sol3_cmp.py (main × HEAD, 4 legados) → 52 Cartas, só momento/momento_placeholder
+scratchpad/sol5_play.py (36 med1_* por ct.resolve_turn, Carga 3) → efeitos conferem; sal_na_sombra Entropia 10→8
+scratchpad/sol5_tick.py (orch.run_round, baralho off: giz_vermelho, livro_de_dividas, ciume_aberto, po_nos_olhos) → marca/taunt "terminou" antes de o inimigo agir; cego vale
+contagem de taunt/marca por duracao no catálogo → taunt d1: 15 legado + 6 onda; marca d1: 22 legado + 4 onda
+scratchpad/sol5_ctl.py + sol5_ctl2.py (sementes 20–99, 320 lutas por braço) → controles dano 3 leve: +5,6 (trincheira) / +0,3 (boticário); cena: golpe_e_pulso +4,1, agulha +9,1, cotovelo +4,1, pinça +5,9; Entropia 2 = sem mudança
+full_deck do Médico (L1/L5, todas/ferro) → L5 todas: 9 básicas + 13 med1 + 2 legado; 44 fora
+sim.py --lote data/cards/posturas/medico_cirurgiao_ferro.json --protocolo lote --out <scratchpad> → idêntico
+pytest -q -n 2 (7 arquivos de cartas e handoff) → exit 0; validate_content → 0/0; lint → só "id já existe"
+```
 
 # Lote 4 — re-revisão (`fb2c2d42..7a40ae9d`)
 
