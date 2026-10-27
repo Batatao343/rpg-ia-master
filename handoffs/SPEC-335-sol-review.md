@@ -1,5 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
+> **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
 > **Veredito Lote 2 (Sangromante):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `8364eaa7` (a 1ª rodada, em `b3f5e743`, deu `CHANGES_REQUIRED` com 3 P1 e 7 P2)
 > **Veredito Lotes 0–1 (`565b0d0b`):** `APPROVED_WITH_FOLLOWUPS` (histórico abaixo, inalterado)
 > **Revisor:** Sol (Claude Opus 5.5, spec-reviewer) · **Data:** 2026-10-27
@@ -7,6 +8,105 @@
 > Nota de nome: o coordenador pediu `handoffs/SPEC-335-sol-review-lote2.md`, mas esse nome
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
+
+# Lote 3 — Devoto do Abismo (`main...8874f777`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. Não há P0 nem P1; ficam 4 P2 de texto/semântica.
+> A Bênção do Aço não precisa de ajuste: a parte do delta que passa do limiar vem da arena,
+> não do poder da Carta (ver abaixo).
+
+## Escopo
+
+Commit `8874f777`, sobre a `main` com os Lotes 1–2 já pousados. Entram as 3
+`data/cards/posturas/devoto_{consagrado,enlutado,zeloso}.json` (36 `dev1_*`), os 4 arquivos
+legados com `momento`, `_ondas.yaml`, `docs/spec335/` (relatório, script e 6 JSON), a spec e os
+testes `test_card_acervo_reparo` e `test_mecanica_orfa`. Nada em `evals/`, `services/` ou
+`sim.py`.
+
+## Conferido
+
+- **Legadas e golden da 330: OK.** Comparei `main` e HEAD Carta a Carta em `exemplos`,
+  `exemplos_extra`, `devoto` e `tiers_5_plus`. Mudaram 52 Cartas, e só em
+  `momento`/`momento_placeholder`; ids e ordem são os mesmos. Golden e snapshot passam.
+- **Motor real, as 36 Cartas.** Joguei cada uma por `ct.resolve_turn`: as de suporte em si
+  mesmo, as hostis no inimigo, com Mira +40. Tudo faz o que o texto gerado diz:
+  - Vigília acumula e Proteção, Defesa e Acerto valem pelas rodadas indicadas.
+  - Rachadura, Torpor, Marca do Abismo e o DoT aparecem no alvo; Medo vem de `amedrontado`
+    (controle `fear`, −2 de acerto).
+  - `revelar resistencias` funciona, e Interromper arma.
+  - Os gatilhos `ao_receber_dano`, `inicio_rodada` (disparado em
+    `conflict_orchestrator.py:2320`), `ao_derrubar`, `ao_aliado_sofrer` e
+    `ao_pressagio_frustrado` armam em `gatilhos_armados`.
+  - A cura com `alvo_tem: desmoralizado` de Consolo Roubado cura (Vit 6 → 9), porque o
+    principal aplica a condição antes de o extra ser checado.
+  - A `escala por condicoes_alvo` de Peso dos Ausentes está num efeito **extra**, então vale.
+  - Não há Eco, e não há `escala` no efeito principal.
+  - As 4 reações têm `gatilho` válido (`ao_ser_atacado`, `ao_ser_alvo_distancia`,
+    `ao_sofrer_dano_sobrenatural`), e os efeitos delas (`protecao`, `buff_defesa`,
+    `aplicar_condicao`) têm ramo em `_resolve_reaction_effect`.
+  - **Nenhum efeito inerte.**
+- **Provocar:** as 3 Cartas com `taunt` (Ciúme Aberto, Corpo Entre, Ninguém Mais) têm outro
+  efeito que vale em luta solo. Ver P2-1 e P2-2.
+- **Orçamento e raridade: OK.** 20/10/4/2, testado. O lint das 3 subclasses não dá nenhum
+  aviso além de "id já existe" (nenhum par redundante). Nenhum nome nem id colide nos 604
+  objetos nomeados de `data/cards/**`.
+- **Voz:** as 3 ondas trazem `revisor_voz: dono`, `voz_status: aprovada` e `nota_voz:
+  "aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)"`.
+  `validate_content` dá 0 erros e 0 avisos.
+- **Arena reproduzível:** rodei de novo `--protocolo lote` em `devoto_zeloso.json`, e o JSON
+  saiu idêntico a `sim-lote3-zeloso.json`.
+
+## Bênção do Aço a +8,4 pp: precisa de ajuste?
+
+**Não.** Rodei sementes independentes (100–199, 400 lutas por braço) e duas variantes:
+
+| Versão | Sementes | Lutas por braço | Delta |
+|---|---|---|---|
+| atual | 20–99 (relatório) | 320 | +8,4 pp |
+| atual | 100–199 | 400 | +10,2 pp |
+| dano 4 → 3 | 0–99 | 400 | +8,8 pp |
+| Vigília 2 → 1 | 100–199 | 400 | +9,2 pp |
+
+Juntando as rodadas da versão atual, o delta fica em ~+9,4 pp, só ~1,4 pp acima do limiar de
++8, dentro de 1 erro-padrão. Cortar dano ou Vigília quase não mexe no número. O que pesa é a
+Carta **existir** no baralho de nível 4: o braço "sem" fica fino porque o protocolo tira todas
+as irmãs do lote, e por isso vence só 33–38 %. A irmã Ciúme Aberto, também com dano 4 (o
+Provocar dela não vale sozinho), dá +7,2 pp. Um nerf não tiraria a bandeira sem descaracterizar
+a Carta. **Recomendação:** aceitar e registrar os números acima no relatório. Follow-up da 336:
+medir o delta por **substituição** (trocar uma básica de mesmo custo pela Carta) em vez de
+acréscimo, ou montar o braço base com as irmãs, para não superestimar Cartas de nível ≥ 4.
+
+## Achados
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P2-1 | P2 | `devoto_zeloso.json` (`ciume_aberto`, `ninguem_mais`) | As `descricao` prometem Provocar em grupo ("havendo mais de um inimigo, todos olham para o zeloso"; "os inimigos o seguem"). O `taunt` só pega o alvo atingido e só faz diferença quando o inimigo tem **outro** alvo, ou seja, quando o jogador tem aliados (`_taunt_target`, 50 % × multiplicador). | Reescrever para o alvo único ("o inimigo atingido tende a te escolher"). O texto gerado do `taunt` ("precisa atacar você") continua pendente na 336, como no P2-5 do Lote 2. |
+| P2-2 | P2 | `devoto_zeloso.json` (`corpo_entre`) | O efeito principal é suporte (Proteção em si), então o `taunt` extra cai em `_targets_for` → `opp[:1]`, o **primeiro** oponente. Com vários inimigos o jogador não escolhe quem provoca, e a `descricao` fala em "os olhos hostis" no plural. | Aceitar e ajustar o texto ("o inimigo mais próximo se volta"), ou pôr o `taunt` como principal com a Proteção de extra (aí o jogador mira, mas precisa acertar). |
+| P2-3 | P2 | `devoto_zeloso.json` (`ferro_antes_do_ferro`) | A `descricao` diz "o alívio vem em fôlego", mas o gatilho é `cura` 3 de Vitalidade. | Trocar para "vem em sangue estancado" ou usar `ganhar_folego` (aí rodar o orçamento de novo). |
+| P2-4 | P2 | `devoto_enlutado.json` (`pranto_lento`, `cortejo_de_cinzas`) | `dano_tipo: abissal` no `dot` é só cosmético: `_apply_attack_card_effect` monta a condição sem `damage_type`, e `tick_conditions` ignora resistência. O texto gerado ("dano abissal por rodada") sugere que o tipo conta. | Nada no lote. Registrar na 330/336: ou o DoT passa a levar o tipo, ou o texto omite o tipo. |
+
+Observação, sem achado: Véu de Incenso (Proteção 4, 0 de Fôlego, `turno`, 1 de Entropia) tem
+93 % de uso e +2,8 pp com 320 lutas. Está dentro do orçamento, mas vale olhar na telemetria
+real, porque o 0 de Fôlego por turno é raro no acervo.
+
+## Pendências
+
+- P2-1 a P2-3: executor, nesta branch ou no Lote 4 (só texto, sem mudar mecânica).
+- P2-4, o texto do `taunt` e o delta por substituição na arena: SPEC-336 (e 330, no caso do
+  DoT tipado).
+
+## Comandos rodados (Lote 3)
+
+```text
+scratchpad/sol3_cmp.py (main × HEAD, 4 legados) → 52 Cartas, só momento/momento_placeholder
+scratchpad/sol3_play.py (36 Cartas por ct.resolve_turn + render_card_text) → sem efeito inerte
+scratchpad/sol3_names.py (604 objetos nomeados em data/cards/**) → 0 colisões
+scripts/cards/lint.py data/cards/posturas/devoto_{consagrado,enlutado,zeloso}.json → só "id já existe"
+sim.py --lote data/cards/posturas/devoto_zeloso.json --protocolo lote --out <scratchpad> → idêntico a sim-lote3-zeloso.json
+scratchpad/sol3_more.py (Bênção: atual s100–199; dano3 s0–99; vigilia1 s100–199; 400 lutas) → +10,2 / +8,8 / +9,2 pp
+pytest -q -n 2 test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_card_sim, test_mecanica_orfa, test_handoff_names → exit 0 (~224 testes)
+scripts/validate_content.py → 0 erros, 0 avisos
+```
 
 # Lote 2 — re-revisão (`00efe0e4..8364eaa7`)
 
