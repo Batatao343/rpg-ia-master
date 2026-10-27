@@ -143,3 +143,29 @@ def test_prompt_lista_alvos_validos(on):
     ctx = {"location": "Skallgard", "enemies": [{"id": "bandido_1"}], "allies": ["ana"]}
     text = prep._scene_cards_prompt(ctx)
     assert "ana" in text and "bandido_1" in text and "zona criada" in text
+
+
+def test_validador_so_aceita_kinds_aplicaveis_pelo_ambiente():
+    card = {
+        "id": "x",
+        "nome": "X",
+        "pressagio": "p",
+        "sabor": "s",
+        "quando": "fim_rodada",
+        "efeitos": [{"kind": "revelar"}],
+    }
+    errs = sc.validate_catalog({"cartas": [card]})
+    assert any("nao e aplicavel" in e for e in errs)
+
+
+def test_registro_temporario_lru_nao_apaga_outra_partida():
+    cards.reload_cards()
+    cap = cards._TEMP_CAP
+    cards.register_temp_card({"id": "cena_A_0"})  # partida A
+    for i in range(cap + 10):  # partida B intercalada acima do limite
+        cards.register_temp_card({"id": f"cena_B_{i}"})
+        assert cards.get_card("cena_A_0")  # A segue em uso: sobrevive
+    assert cards.get_card("cena_B_0") is None  # a menos recente saiu
+    assert cards.get_card(f"cena_B_{cap + 9}")
+    assert len(cards._TEMP_CARDS) <= cap
+    cards.reload_cards()

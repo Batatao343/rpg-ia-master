@@ -10,6 +10,7 @@ Result dict {"ok": bool, "error": Optional[str], "log": str}.
 import copy
 import json
 import os
+from collections import OrderedDict
 from typing import Dict, List, Optional
 
 import gamedata
@@ -187,18 +188,27 @@ def all_cards() -> dict[str, dict]:
     return _load_cards()
 
 
-_TEMP_CARDS: dict[str, dict] = {}  # SPEC-331 R6: cartas de objeto de cena (nunca no catalogo)
+# SPEC-331 R6: cartas de objeto de cena (nunca no catalogo). LRU: o teto descarta a MENOS
+# recente, nunca tudo (outra partida no meio do request nao perde a carta).
+_TEMP_CARDS: OrderedDict[str, dict] = OrderedDict()
 _TEMP_CAP = 64
 
 
 def register_temp_card(card: dict) -> None:
-    if len(_TEMP_CARDS) >= _TEMP_CAP and card["id"] not in _TEMP_CARDS:
-        _TEMP_CARDS.clear()  # efemeras e reconstruidas a cada sync: o teto so evita vazamento
     _TEMP_CARDS[card["id"]] = card
+    _TEMP_CARDS.move_to_end(card["id"])
+    while len(_TEMP_CARDS) > _TEMP_CAP:
+        _TEMP_CARDS.popitem(last=False)
 
 
 def get_card(card_id: str) -> dict | None:
-    return _load_cards().get(card_id) or _TEMP_CARDS.get(card_id)
+    card = _load_cards().get(card_id)
+    if card is not None:
+        return card
+    temp = _TEMP_CARDS.get(card_id)
+    if temp is not None:
+        _TEMP_CARDS.move_to_end(card_id)
+    return temp
 
 
 def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict | None:

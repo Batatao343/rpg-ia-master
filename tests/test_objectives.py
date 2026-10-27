@@ -171,3 +171,23 @@ def test_outcome_do_no_de_combate_segue_o_objetivo():
     assert _encounter_outcome(**kw) == "defeat"
     assert _encounter_outcome(**kw, objective_result="cumprido") == "victory"
     assert _encounter_outcome(**{**kw, "enemies": []}, objective_result="falhou") == "defeat"
+
+
+def test_objetivo_falho_com_inimigo_derrubado_nao_vira_vitoria():
+    # P2-1: sem a correção, um derrubado + objetivo falho daria victory/loot
+    scene, actors, ctx = _setup({"tipo": "interromper_ritual", "alvo": "e", "n": 2})
+    actors["x2"] = _actor("x2")
+    actors["x2"]["dead"] = True
+    ctx.sides["enemy"] = ["e", "x2"]
+    assert sc.check_objective(ctx, 2) == "O ritual se completa."
+    assert scene["objetivo_resultado"] == "falhou"
+    from agents.combat import _encounter_outcome
+
+    out = _encounter_outcome(
+        player={"conscious": True},
+        enemies=[{"status": "morto", "dead": True}],
+        hero_fled=False,
+        player_dead=False,
+        objective_result=scene["objetivo_resultado"],
+    )
+    assert out == "defeat"

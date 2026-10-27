@@ -44,6 +44,9 @@ MOMENTOS = ("inicio_rodada", "fim_rodada", "a_cada_n_rodadas")
 ESCOPOS = ("todos", "herois", "inimigos")
 FILTROS = ("visivel", "zona_inicial")
 ACOES = ("carga", "deslocar", "objeto_cai")
+AMBIENT_KINDS = frozenset(
+    {"rachadura", "torpor", "sangria", "vigilia", "marca_do_abismo", "dano", "aplicar_condicao"}
+)
 AMBIENTE = "ambiente"  # fonte neutra do dano de cena (P2-2)
 TEMP_PREFIX = "cena_"
 
@@ -113,6 +116,8 @@ def validate_catalog(data: dict) -> list[str]:
             errs.append(f"{where}: sem efeitos nem acoes")
         for i, eff in enumerate(efeitos):
             errs += fx.validate_effect(eff, f"{where} efeitos[{i}]")
+            if eff.get("kind") not in AMBIENT_KINDS:  # so o que _apply_ambient aplica
+                errs.append(f"{where}: kind {eff.get('kind')!r} nao e aplicavel pelo ambiente")
             if eff.get("kind") == "aplicar_condicao":
                 from combat_mechanics import NAMED_CONDITIONS
 
