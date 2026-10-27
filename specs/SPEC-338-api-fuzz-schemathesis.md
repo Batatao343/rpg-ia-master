@@ -191,7 +191,7 @@ O `api.app.openapi()` funciona independentemente de `openapi_url` (FastAPI gera 
 - [ ] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_harness.py tests/test_workflows_contract.py tests/test_spec192_vercel_packaging.py -q` verde (R6, R15, R17, R19, R12 allowlist).
 - [ ] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider -q` verde nos dois perfis, em ≤ 5 min locais (R9, R10, R18).
 - [ ] O default `uv run pytest` não executa nenhum `api_fuzz` (R3) e não fica mais lento de forma mensurável: coleta sem gerar OpenAPI (R5).
-- [ ] Job `api-fuzz` verde num PR real, com o pip-audit do grupo verde e a duração anotada (≤ 15 min; meta ≤ 10).
+- [x] Job `api-fuzz` verde num PR real (PR #58, run 40479756309): pip-audit do grupo verde, job inteiro em 37 s.
 - [ ] Todo achado da Etapa 3 tem teste de regressão determinístico + correção, ou está registrado no hand-back como bloqueio.
 - [ ] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso).
 - [ ] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM). Saves antigos sem impacto.
@@ -241,3 +241,4 @@ Registradas pelo coordenador em 27/10 (o dono autorizou "escreva as specs e depo
   - Legacy: `RPG_SESSION_SECRET` setado na fixture, senão `/auth/*` responde 503 `server_misconfigured` por desenho.
   - Fake DB (`tests/fakes/two_principals.py`): ganhou `runtime_catalog` (JsonRuntimeCatalogStore) e `login/signup/logout` no `FakeIdentity` (negam tudo). `GET /game/{game_id}/operations/{operation_id}/cost` saiu da allowlist (usa `game_store.pool`, Postgres).
   - Resultado: 69 itens (legacy fast/graph + 18 DB offline), zero 500 real de produto (os 500 iniciais eram lacunas do fake), ~20 s locais, duas rodadas seguidas verdes (R16). Job no CI ainda não rodado.
+- 2026-10-27 · smoke §6: PR #58 (draft): `api-fuzz` verde em 37 s com pip-audit do grupo. Prova de bloqueio: PR #59 (descartável, já fechado, branch apagada) com `raise RuntimeError` em `GET /data/options`: `api-fuzz` vermelho (run 40479792711) apontando `test_fuzz_legacy_fast[GET /data/options]: 500 inesperado`. `deterministic-evals` falha nos dois PRs em `project_index check` (índice só é regenerado no pouso; não é desta spec).
