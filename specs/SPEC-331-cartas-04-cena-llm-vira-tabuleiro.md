@@ -66,3 +66,14 @@ Cartas de Cena criadas pela LLM (proibido — só catálogo). Mapa visual de zon
 ## 7. Riscos
 - LLM escolher Carta de Cena incoerente com a prosa: filtro por região/tags + sabor no prompt.
 - Relógio pune build defensiva: calibrar R0 na arena.
+
+## 8. Notas de implementação (executor, 2026-10-27)
+
+- **Flag** `RPG_SCENE_CARDS=off|shadow|on` (padrão `off`, fora de `combat_flags.CAPS`). Com `off`: schema, prompt e rodada idênticos (`PreparedScene` só vira `PreparedSceneWithCards` com shadow/on).
+- **Catálogo** `data/combat/cartas_de_cena.json` (24, voz de Valoria, revisão do dono pendente) com campos `quando` (+`n`/`desde`/`uma_vez`), `escopo` (todos|herois|inimigos), `filtro` (visivel|zona_inicial), `efeitos` (gramática SPEC-330 + `aplicar_condicao` nomeada) e `acoes` cena-específicas fechadas (`entropia`, `deslocar`, `objeto_cai`).
+- **Desvio D-331-1:** *Sinos de Nova Arcádia* dá Vigília 2 aos heróis a cada 3 rodadas em vez de reforço da guarda (reforços foram descartados pelo dono na SPEC-325 D).
+- **Desvio D-331-2:** o teto de 12 rodadas é `scene_cards.clock_hard_stop`: na rodada 12 os hostis `fled` ("recuam diante do Abismo") e `combat_should_end` fecha; só com `on`.
+- **Desvio D-331-3:** a LLM só escolhe Cartas/Objetivo no caminho que já chama a preparação (`_wants_prepared_scene`); encontros sem preparação seguem sem Cartas de Cena.
+- **R5:** `out["objetivo"]={tipo,resultado}` + `scene["objetivo_resultado"]`; `_encounter_outcome` mapeia cumprido→`victory`, falhou→`defeat`. Espólio (SPEC-333) lê `objetivo_resultado`.
+- **R6:** `scene_cards.sync_hand` (só `on` + `RPG_CARD_DECK=on`) injeta no catálogo em memória cartas `cena_<obj>_<hash>` (Exaurir, Fôlego 1, `frequencia: cena`) para `damage`/`apply_condition`; sai da mão ao sair da zona e nunca entra em compra/descarte.
+- **Presságio de cena:** `combat["pressagios_cena"]` = lista pública `{id,nome,pressagio,quando,rodada}` da próxima rodada (SPEC-334 consome).

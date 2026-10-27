@@ -365,6 +365,25 @@ class PreparedScene(BaseModel):
     objectives: list[str] = Field(default_factory=list, description="até 2, curtos")
 
 
+class PreparedObjective(BaseModel):
+    """SPEC-331 R4: objetivo do catálogo fechado (tipo + alvo/n opcionais)."""
+
+    model_config = ConfigDict(extra="ignore")
+    tipo: str = Field("derrotar_todos", description="um tipo do catálogo de objetivos")
+    alvo: str | None = Field(None, description="id de zona, objeto, aliado ou inimigo")
+    n: int | None = Field(None, description="rodadas (sobreviver/interromper_ritual)")
+
+
+class PreparedSceneWithCards(PreparedScene):
+    """SPEC-331: só usada com `RPG_SCENE_CARDS` shadow/on - com `off` o schema que o
+    provider vê é o `PreparedScene` de sempre (byte a byte)."""
+
+    cartas_de_cena: list[str] = Field(
+        default_factory=list, description="0 a 2 ids do catálogo de Cartas de Cena oferecido"
+    )
+    objetivo: PreparedObjective | None = Field(None, description="objetivo da cena (opcional)")
+
+
 _PREP_TIMEOUT_DEFAULT = 12.0
 _MAX_ZONES, _MAX_OBJECTS, _MAX_EVENTS, _MAX_TEXT = 3, 2, 1, 120
 
@@ -428,11 +447,12 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
     resultado inválido, `FallbackLLM` ou erro → cena simplificada de segurança
     (R9). GUARD obrigatório. O fallback ENTRE providers é do `RoutedLLM`/`ROUTES`
     (llm_setup) — aqui só se garante que, esgotada a cadeia, nada trava."""
+    from services import scene_cards as _sc
+
+    schema = PreparedSceneWithCards if _sc.enabled() else PreparedScene
     try:
         result = _invoke_with_deadline(
-            lambda: llm.with_structured_output(PreparedScene).invoke(
-                _prep_prompt(narrative_context)
-            )
+            lambda: llm.with_structured_output(schema).invoke(_prep_prompt(narrative_context))
         )
         if isinstance(result, PreparedScene):
             scene = _trim_prepared(_drop_none_params(result.model_dump()))
@@ -444,6 +464,16 @@ def prepare_encounter(narrative_context: dict, llm) -> dict:
             )
             if validate_preparation(scene)["ok"]:
                 scene.pop("_normalization_errors", None)
+                if isinstance(result, PreparedSceneWithCards):  # SPEC-331 R2/R4
+                    scene.pop("cartas_de_cena", None)  # só o saneado do catálogo entra
+                    scene.pop("objetivo", None)
+                    _sc.attach(
+                        scene,
+                        result.cartas_de_cena,
+                        result.objetivo,
+                        narrative_context.get("location"),
+                        allies=narrative_context.get("allies"),
+                    )
                 return scene
     except Exception:
         pass
@@ -487,6 +517,25 @@ def _invoke_with_deadline(call):
         pool.shutdown(wait=False, cancel_futures=True)
 
 
+def _scene_cards_prompt(ctx: dict) -> str:
+    """SPEC-331 R8: só ids/nome/sabor elegíveis (máx. 12) - nenhum número de efeito.
+    Com a flag `off` devolve "" (prompt idêntico ao de antes)."""
+    from services import scene_cards as _sc
+
+    if not _sc.enabled():
+        return ""
+    options = _sc.prompt_options(ctx.get("location"))
+    sep = chr(10)
+    lines = [sep + "Objetivo opcional (objetivo.tipo SÓ de: " + ", ".join(_sc.OBJETIVOS) + ")."]
+    if options:
+        lines.append(
+            "cartas_de_cena: 0-2 ids SÓ desta lista (ou vazio se nenhuma combina):"
+            + sep
+            + sep.join(f"- {o['id']}: {o['nome']} - {o['sabor']}" for o in options)
+        )
+    return sep.join(lines)
+
+
 def _prep_prompt(ctx: dict) -> str:
     """Prompt COMPACTO (SPEC-232 R10): só nomes/ids — nunca o dict cru do contexto
     (fichas inteiras de inimigo estouravam tokens e latência)."""
@@ -506,6 +555,7 @@ def _prep_prompt(ctx: dict) -> str:
         f"effect.kind SÓ de: {', '.join(sorted(cs.EFFECT_KINDS))}. "
         "potency SÓ de: fraco, moderado, forte, devastador (nunca números).\n"
         f"params.target (obrigatório em damage/apply_condition/reposition) SÓ de: {', '.join(ids)}."
+        + _scene_cards_prompt(ctx)
     )
 
 

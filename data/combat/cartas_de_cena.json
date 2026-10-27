@@ -1,0 +1,552 @@
+{
+  "_meta": "SPEC-331: Cartas de Cena (ambiente). Catálogo fechado: a LLM só escolhe ids; os efeitos usam a gramática da SPEC-330 e as ações cena-específicas de services/scene_cards.py. Texto na voz de Valoria; revisão do dono pendente.",
+  "cartas": [
+    {
+      "id": "nevoa_cinza_do_ermo",
+      "nome": "Névoa Cinza do Ermo",
+      "regioes": [
+        "skallgard",
+        "montanhas_afiadas"
+      ],
+      "tags": [],
+      "quando": "fim_rodada",
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A névoa cinza do Ermo desce sobre o campo; quem estiver à vista vai perder o contorno das coisas.",
+      "sabor": "No Ermo o frio é o Abismo drenando calor; a névoa que sobe dele apaga os contornos de quem se expõe."
+    },
+    {
+      "id": "chao_da_fornalha",
+      "nome": "Chão da Fornalha",
+      "regioes": [
+        "nova_arcadia"
+      ],
+      "tags": [
+        "industrial",
+        "forja",
+        "fuligem"
+      ],
+      "quando": "fim_rodada",
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "zona_inicial",
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O piso estala e a brasa sobe pelas frestas; a zona quente vai cobrar sangue de quem ficar nela.",
+      "sabor": "O calor das Fundições sobe pelas frestas do piso e cozinha quem não sai da boca do forno."
+    },
+    {
+      "id": "sinos_de_nova_arcadia",
+      "nome": "Sinos de Nova Arcádia",
+      "regioes": [
+        "nova_arcadia"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "herois",
+      "efeitos": [
+        {
+          "kind": "vigilia",
+          "valor": 2
+        }
+      ],
+      "acoes": [],
+      "pressagio": "Os sinos de Nova Arcádia começam a bater; a guarda vai chegar para quem está sob a lei.",
+      "sabor": "Quando os sinos do Código de Ferro tocam, a Legião fecha fileiras; quem luta ao abrigo da lei sente o aço se interpor."
+    },
+    {
+      "id": "mare_baixa_de_brekmar",
+      "nome": "Maré Baixa de Brekmar",
+      "regioes": [
+        "brekmar",
+        "costa_negra",
+        "aethelgard"
+      ],
+      "tags": [],
+      "quando": "inicio_rodada",
+      "desde": 4,
+      "uma_vez": true,
+      "escopo": "todos",
+      "filtro": "zona_inicial",
+      "efeitos": [],
+      "acoes": [
+        {
+          "tipo": "deslocar",
+          "direcao": "afastar"
+        }
+      ],
+      "pressagio": "A maré recua; o chão onde vocês se agarram vai abrir uma vala entre os combatentes.",
+      "sabor": "A maré baixa descobre o lodo e os caranguejos; o chão firme de ontem vira vala, e a vala separa os homens."
+    },
+    {
+      "id": "vigilia_dos_druidas_cinzentos",
+      "nome": "Vigília dos Druidas Cinzentos",
+      "regioes": [
+        "pantano_melancolia",
+        "floresta_sussurros"
+      ],
+      "tags": [],
+      "quando": "fim_rodada",
+      "desde": 1,
+      "escopo": "todos",
+      "efeitos": [],
+      "acoes": [
+        {
+          "tipo": "entropia",
+          "n": 1
+        }
+      ],
+      "pressagio": "Os Druidas Cinzentos velam em silêncio; o Abismo vai se aproximar de todos no fim da rodada.",
+      "sabor": "Os Druidas marcam as poças e as clareiras; sob o olhar deles o Abismo vem mais perto e mais barato."
+    },
+    {
+      "id": "telhado_que_cede",
+      "nome": "Telhado que Cede",
+      "regioes": [],
+      "tags": [
+        "urbano",
+        "taverna",
+        "abrigo",
+        "masmorra",
+        "ruínas",
+        "cidade"
+      ],
+      "quando": "inicio_rodada",
+      "desde": 3,
+      "uma_vez": true,
+      "escopo": "inimigos",
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 2
+        }
+      ],
+      "acoes": [
+        {
+          "tipo": "objeto_cai"
+        }
+      ],
+      "pressagio": "Uma viga range no alto; algo da cena vai desabar sobre os adversários.",
+      "sabor": "Vigas velhas, pregos de ferro ruim: um bom empurrão e o teto cobra de quem estiver embaixo."
+    },
+    {
+      "id": "toque_de_recolher_da_legiao",
+      "nome": "Toque de Recolher da Legião",
+      "regioes": [
+        "nova_arcadia"
+      ],
+      "tags": [
+        "cidade",
+        "urbano",
+        "favela"
+      ],
+      "quando": "inicio_rodada",
+      "desde": 4,
+      "uma_vez": true,
+      "escopo": "todos",
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "Ao longe a corneta da Legião anuncia o toque de recolher; a coragem de todos vai esfriar.",
+      "sabor": "Quando a corneta do toque de recolher soa, os portões dos anéis fecham e ninguém quer estar na rua com ferro na mão."
+    },
+    {
+      "id": "geada_do_abismo",
+      "nome": "Geada do Abismo",
+      "regioes": [
+        "skallgard"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 2,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O ar racha de frio; a geada do Abismo vai morder quem estiver à vista.",
+      "sabor": "Em Skallgard o frio não é clima: é o Abismo roubando calor, e ele rouba primeiro de quem se descuida."
+    },
+    {
+      "id": "noite_de_seis_meses",
+      "nome": "Noite de Seis Meses",
+      "regioes": [
+        "skallgard"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "todos",
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A noite sem fim se adensa; a escuridão vai deixar todos mais lentos.",
+      "sabor": "A noite polar dura meio ano e ensina os clãs a lutar de ouvido; quem depende dos olhos paga caro."
+    },
+    {
+      "id": "eco_da_boca",
+      "nome": "Eco da Boca",
+      "regioes": [
+        "montanhas_afiadas"
+      ],
+      "tags": [
+        "caverna",
+        "montanha"
+      ],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "todos",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "Um sino que ninguém forjou ressoa na pedra; o som vai quebrar o ânimo de quem o ouvir.",
+      "sabor": "Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem."
+    },
+    {
+      "id": "forja_profunda_em_brasa",
+      "nome": "Forja Profunda em Brasa",
+      "regioes": [
+        "montanhas_afiadas"
+      ],
+      "tags": [
+        "forja",
+        "masmorra"
+      ],
+      "quando": "fim_rodada",
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "zona_inicial",
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "As brasas da Forja sobem do chão; a zona quente vai queimar quem ficar nela.",
+      "sabor": "A Forja Profunda nunca esfriou; salamandras e brasas fazem do chão um inimigo a mais."
+    },
+    {
+      "id": "nevoa_da_melancolia",
+      "nome": "Névoa da Melancolia",
+      "regioes": [
+        "pantano_melancolia"
+      ],
+      "tags": [],
+      "quando": "fim_rodada",
+      "desde": 2,
+      "escopo": "todos",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A névoa da Melancolia engrossa; a tristeza dela vai pesar no ânimo de todos.",
+      "sabor": "A névoa do pântano é Éter tornado visível; em bolsões densos a tristeza vira esmagadora de uma vez."
+    },
+    {
+      "id": "brejo_traicoeiro",
+      "nome": "Brejo Traiçoeiro",
+      "regioes": [
+        "pantano_melancolia"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 2,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "zona_inicial",
+      "efeitos": [
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A lama borbulha onde vocês pisam; quem ficar parado na zona inicial vai afundar.",
+      "sabor": "Sob a superfície oleosa algo se move; quem fica parado demais na lama é puxado para baixo."
+    },
+    {
+      "id": "escuridao_de_thessavar",
+      "nome": "Escuridão de Thessavar",
+      "regioes": [
+        "floresta_sussurros"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 2,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A luz some entre as árvores de Thessavar; quem estiver à vista vai perder a noção do que o cerca.",
+      "sabor": "Em Thessavar a luz some com a profundidade e o silêncio alterna com ruídos que não pertencem à floresta."
+    },
+    {
+      "id": "olhar_dos_lobos_errados",
+      "nome": "Olhar dos Lobos Errados",
+      "regioes": [
+        "floresta_sussurros"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "herois",
+      "efeitos": [
+        {
+          "kind": "marca_do_abismo",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "Olhos demais na orla da mata; alguma coisa vai escolher um de vocês.",
+      "sabor": "Lobos que gerações no Éter tornaram levemente errados: olham como quem escolhe, não como quem caça."
+    },
+    {
+      "id": "esporos_de_xylos",
+      "nome": "Esporos de Xylos",
+      "regioes": [
+        "selva_xylos"
+      ],
+      "tags": [],
+      "quando": "fim_rodada",
+      "desde": 2,
+      "escopo": "todos",
+      "efeitos": [
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "Esporos pálidos flutuam entre vocês; nas feridas abertas vai florescer algo.",
+      "sabor": "Em Xylos tudo cresce depressa, inclusive o que se agarra à pele e floresce em ferida aberta."
+    },
+    {
+      "id": "chuva_acida_de_xylos",
+      "nome": "Chuva Ácida de Xylos",
+      "regioes": [
+        "selva_xylos"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "armadura_comprometida",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O céu da Selva escurece de verde; a chuva ácida vai roer o que protege cada um.",
+      "sabor": "A chuva da Selva corrói couro e cota de malha; a armadura é a primeira a pagar."
+    },
+    {
+      "id": "vento_de_vidro_de_zhur",
+      "nome": "Vento de Vidro de Zhur",
+      "regioes": [
+        "deserto_zhur"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 2,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "dano",
+          "valor": 1,
+          "dano_tipo": "cortante"
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O vento de Zhur sopra cristais; quem estiver exposto vai ser cortado.",
+      "sabor": "No Mar de Vidro o vento carrega estilhaços do que já foi areia; corta onde não há onde se esconder."
+    },
+    {
+      "id": "sol_devorador",
+      "nome": "Sol Devorador",
+      "regioes": [
+        "deserto_zhur"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O sol de Zhur fica a pino; o calor vai tirar o fôlego de quem estiver exposto.",
+      "sabor": "O sol de Zhur devora quem ainda está de pé; o corpo cansa antes do braço."
+    },
+    {
+      "id": "ossadas_que_cantam",
+      "nome": "Ossadas que Cantam",
+      "regioes": [
+        "costa_negra"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "todos",
+      "efeitos": [],
+      "acoes": [
+        {
+          "tipo": "entropia",
+          "n": 1
+        }
+      ],
+      "pressagio": "O vento começa a cantar nas ossadas; o canto vai puxar o Abismo para perto de todos.",
+      "sabor": "O vento entra pelas costelas dos leviatãs e canta; quem escuta demais cede ao Abismo."
+    },
+    {
+      "id": "afogados_de_aethelgard",
+      "nome": "Afogados de Aethelgard",
+      "regioes": [
+        "aethelgard"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "herois",
+      "efeitos": [
+        {
+          "kind": "rachadura",
+          "valor": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "A água do lago se agita; algo submerso vai agarrar um dos vivos.",
+      "sabor": "Das ruínas submersas sobem mãos que não têm dono; elas agarram o que lhes lembra o ar."
+    },
+    {
+      "id": "vulcao_de_cores_erradas",
+      "nome": "Vulcão de Cores Erradas",
+      "regioes": [
+        "ophidia"
+      ],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 2,
+      "desde": 1,
+      "escopo": "todos",
+      "filtro": "visivel",
+      "efeitos": [
+        {
+          "kind": "dano",
+          "valor": 1,
+          "dano_tipo": "igneo"
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O vulcão solta uma fumaça de cor errada; as cinzas vão queimar quem estiver à vista.",
+      "sabor": "Os vulcões de Ophidia fumegam cores que não existem; as cinzas queimam sem terem sido fogo."
+    },
+    {
+      "id": "espectros_da_pradaria",
+      "nome": "Espectros da Pradaria",
+      "regioes": [
+        "pradaria_ruinas"
+      ],
+      "tags": [
+        "ruínas",
+        "espectros"
+      ],
+      "quando": "a_cada_n_rodadas",
+      "n": 3,
+      "desde": 1,
+      "escopo": "herois",
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        }
+      ],
+      "acoes": [],
+      "pressagio": "O ar das ruínas esfria; um espectro vai tocar o ânimo de algum de vocês.",
+      "sabor": "Nas ruínas da Pradaria o Éter guarda o que as pessoas foram; os espectros só pedem que alguém lembre."
+    },
+    {
+      "id": "tempestade_de_eter",
+      "nome": "Tempestade de Éter",
+      "regioes": [],
+      "tags": [],
+      "quando": "a_cada_n_rodadas",
+      "n": 4,
+      "desde": 1,
+      "escopo": "todos",
+      "efeitos": [],
+      "acoes": [
+        {
+          "tipo": "entropia",
+          "n": 1
+        }
+      ],
+      "pressagio": "O céu se enche de Éter; a tempestade vai aproximar o Abismo de todos.",
+      "sabor": "Quando o Éter condensa em tempestade, até o fôlego de quem não reza ao Abismo fica mais perto dele."
+    }
+  ]
+}

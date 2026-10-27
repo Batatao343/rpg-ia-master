@@ -2082,6 +2082,14 @@ def _run_round(
     if stalemate_events:
         out["stalemate_events"] = stalemate_events
         out["logs"].extend(ev["log"] for ev in stalemate_events)
+    # SPEC-331: Cartas de Cena (início de rodada) + Relógio do Abismo. `off` = nada.
+    from services import scene_cards as _sc
+
+    _scene_rnd = cs.tactical_round(scene)
+    _scene_ctx = fx.current() if _sc.enabled() else None
+    if _scene_ctx is not None:
+        _sc.tick(_scene_ctx, _scene_rnd, "inicio_rodada", out)
+        _sc.abyss_clock(_scene_ctx, _scene_rnd, out)
     # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
     # decisão tardia sem mudar nada; `on` executa o presságio congelado (R4).
     from services import enemy_intent as ei
@@ -2312,6 +2320,10 @@ def _run_round(
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         _expire_stat_conditions(actor, present_at_start, out)
 
+    if _scene_ctx is not None:  # SPEC-331: fim de rodada da cena, antes do terminal
+        _sc.tick(_scene_ctx, _scene_rnd, "fim_rodada", out)
+        _sc.clock_hard_stop(_scene_ctx, _scene_rnd, out)
+
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
     _resolve_last_stands(scene, actors_by_id, sides, out, rng)
 
@@ -2339,4 +2351,13 @@ def _run_round(
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]
     out["reason"] = end["reason"]
+    if _scene_ctx is not None and not out["player_dead"]:  # SPEC-331 R5: desfecho do Objetivo
+        _why = _sc.check_objective(_scene_ctx, _scene_rnd)
+        if _why:
+            out["ended"], out["reason"] = True, _why
+            out["objetivo"] = {
+                "tipo": (scene.get("objetivo") or {}).get("tipo"),
+                "resultado": scene.get("objetivo_resultado"),
+            }
+            out["logs"].append(_why)
     return out

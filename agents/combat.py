@@ -34,6 +34,7 @@ from services import discovery as disc
 from services import encounter_preparation as prep
 from services import enemy_intent as _enemy_intent
 from services import graph_resolver as gr
+from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
 from services.context_builder import build_context_pack
 from state import GameState
@@ -940,6 +941,7 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
         "location": loc,
         "enemies": enemies,
         "npcs": [],
+        "allies": [str(a.get("id") or a.get("name")) for a in allies],  # SPEC-331 (proteger)
         "encounter_level": encounter_level,
         "narrative": "",
     }
@@ -1609,12 +1611,21 @@ def _narrate(
 # SPEC-203 — desfecho do encontro
 # ==========================================================================
 def _encounter_outcome(
-    *, player: dict, enemies: list[dict], hero_fled: bool, player_dead: bool
+    *,
+    player: dict,
+    enemies: list[dict],
+    hero_fled: bool,
+    player_dead: bool,
+    objective_result: str | None = None,
 ) -> str:
     if player_dead:
         return "death"
     if hero_fled:
         return "fled"
+    if objective_result == "cumprido":  # SPEC-331 R5: desfecho próprio do Objetivo
+        return "victory"
+    if objective_result == "falhou":
+        return "defeat"
     remaining = [
         e
         for e in enemies
@@ -1771,6 +1782,9 @@ def _combat_node(state: GameState):
             combat_meta["pilhas"] = card_piles.start_piles(
                 player, zlib.crc32(conflict_instance_id.encode("utf-8"))
             )
+            _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
+        if _scene_cards.enabled():  # SPEC-331 R3: presságio de cena da rodada 1
+            combat_meta["pressagios_cena"] = _scene_cards.forecast(scene, 1)
         # SPEC-203 R1/R5: manifesto congelado no spawn → fase `entering`.
         combat_meta = em.safe_transition(combat_meta, "entering")
         combat_meta["encounter"] = em.build_manifest(
@@ -2252,6 +2266,13 @@ def _combat_node(state: GameState):
             )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")
+    if _scene_cards.enabled():  # SPEC-331 R3: o que dispara na PRÓXIMA rodada
+        if combat_over:
+            combat_meta.pop("pressagios_cena", None)
+        elif not refused:
+            combat_meta["pressagios_cena"] = _scene_cards.forecast(
+                scene, cs.tactical_round(scene) + 1
+            )
     if isinstance(combat_meta.get("pilhas"), dict):  # SPEC-328: pilhas vivem só no conflito
         if combat_over:
             combat_meta.pop("pilhas", None)
@@ -2259,6 +2280,7 @@ def _combat_node(state: GameState):
             from services import card_piles
 
             card_piles.begin_round(combat_meta["pilhas"])  # mão da PRÓXIMA rodada já visível
+            _scene_cards.sync_hand(scene, combat_meta["pilhas"], _PLAYER_ID)  # SPEC-331 R6
     combat_meta["initiative"] = list(out.get("initiative") or [])
     combat_meta["last_player_action"] = last_player_action
     combat_meta["last_reactions"] = list(out.get("reactions") or [])
@@ -2274,7 +2296,11 @@ def _combat_node(state: GameState):
         combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
         _outcome = _encounter_outcome(
-            player=player, enemies=enemies, hero_fled=hero_fled, player_dead=player_dead
+            player=player,
+            enemies=enemies,
+            hero_fled=hero_fled,
+            player_dead=player_dead,
+            objective_result=scene.get("objetivo_resultado"),
         )
         combat_meta = _finish_encounter(
             combat_meta,
