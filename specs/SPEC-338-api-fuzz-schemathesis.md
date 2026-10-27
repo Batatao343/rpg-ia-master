@@ -1,6 +1,6 @@
 # SPEC-338 — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
 
-> **Status:** `in-progress` (critério do job `api-fuzz` verde no CI pendente; aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
+> **Status:** `done` (job `api-fuzz` verde no PR #58, run 40481808707; bloqueio provado no PR #59; revisão Sol APPROVED_WITH_FOLLOWUPS em handoffs/SPEC-338-sol-review.md; aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-337 (`done`). Usa a fixture `two_principals`, o `FakeTurnCoordinator` e os helpers `assert_security_headers`/`forbidden_leak` de `tests/fakes/two_principals.py`.
 > **Desbloqueia:** —
@@ -186,15 +186,15 @@ O `api.app.openapi()` funciona independentemente de `openapi_url` (FastAPI gera 
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 registrada no Histórico: versão do Schemathesis, caminho A/B/C, APIs confirmadas.
-- [ ] `git diff --exit-code requirements.txt` limpo depois de `uv lock` + reexport; `schemathesis`/`hypothesis` ausentes do `requirements.txt` (R1).
-- [ ] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_harness.py tests/test_workflows_contract.py tests/test_spec192_vercel_packaging.py -q` verde (R6, R15, R17, R19, R12 allowlist).
-- [ ] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider -q` verde nos dois perfis, em ≤ 5 min locais (R9, R10, R18).
-- [ ] O default `uv run pytest` não executa nenhum `api_fuzz` (R3) e não fica mais lento de forma mensurável: coleta sem gerar OpenAPI (R5).
+- [x] Etapa 0 registrada no Histórico: versão do Schemathesis, caminho A/B/C, APIs confirmadas.
+- [x] `git diff --exit-code requirements.txt` limpo depois de `uv lock` + reexport; `schemathesis`/`hypothesis` ausentes do `requirements.txt` (R1).
+- [x] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_harness.py tests/test_workflows_contract.py tests/test_spec192_vercel_packaging.py -q` verde (R6, R15, R17, R19, R12 allowlist).
+- [x] `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider -q` verde nos dois perfis, em ≤ 5 min locais (R9, R10, R18).
+- [x] O default `uv run pytest` não executa nenhum `api_fuzz` (R3) e não fica mais lento de forma mensurável: coleta sem gerar OpenAPI (R5).
 - [x] Job `api-fuzz` verde num PR real (PR #58, run 40479756309): pip-audit do grupo verde, job inteiro em 37 s.
-- [ ] Todo achado da Etapa 3 tem teste de regressão determinístico + correção, ou está registrado no hand-back como bloqueio.
-- [ ] `uv run pytest` verde (suíte completa offline, só o coordenador, no pouso).
-- [ ] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM). Saves antigos sem impacto.
+- [x] Todo achado da Etapa 3 tem teste de regressão determinístico + correção, ou está registrado no hand-back como bloqueio.
+- [x] `uv run pytest` verde (suíte completa offline no pouso de 27/10; ver Histórico).
+- [x] Sem `with_structured_output` novo (N/A ao guard de FallbackLLM). Saves antigos sem impacto.
 
 ## 6. Smoke test real
 
@@ -252,3 +252,4 @@ Registradas pelo coordenador em 27/10 (o dono autorizou "escreva as specs e depo
   - Prova de alcance (`_assert_reached`, status por operação; chave `status:code` separa o 400 do gate do 400 de regra de negócio): cada rota de escrita e de grafo tem ao menos uma resposta fora dos gates (200, 409 `no_pending_death`, 400 `equip_rejected`/`levelup_rejected`/`prepare_rejected`, 404 `save_not_found`). Ex. DB: action 200:5, cards/prepare 200:13, DELETE save 200:1; legacy: /game/new 200:3, /game/prologue 200:3, /game/combat-simulator 200:2.
   - Duas rodadas seguidas: 69 passed, ~21 s cada.
 - 2026-10-27 · o CI (Linux) acusou `/game/new` e `/game/prologue` sem exemplo semeado (5 de 5 em 422): a fração por crc32 não garantia nenhum exemplo semeado em 5 casos. O semeio agora alterna por chamada (`fuzz_operation` passa `seeded = n % 2 == 0`), então o resultado independe do que o Hypothesis gerar. Duas rodadas locais: 69 passed (~22 s).
+- 2026-10-27 · pouso (coordenador). Re-revisão Sol APPROVED_WITH_FOLLOWUPS (commit 0ff94f50). Follow-ups P2 opcionais, não bloqueantes: semear `item_id` do inventário e XP suficiente para `equip`/`levelup` chegarem ao commit; comentário do `DB_ALLOWED_RE` explicitando que o fake tem `resources[0]` sem linhas.
