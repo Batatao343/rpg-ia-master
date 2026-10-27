@@ -1,5 +1,5 @@
 {
-  "commit_sha": "c7bac0b5e3a6ef5a78db932881b582c6ec825b5d",
+  "commit_sha": "c31f64c9afd8f8d136acbf5cba944e74f1964dc0",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -66248,7 +66248,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 363
+        "line": 408
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint._vigente",
@@ -66281,7 +66281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 323
+        "line": 368
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -66303,7 +66303,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 373
+        "line": 353
+      },
+      "source": "module:services.card_lint",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 418
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_names",
@@ -66325,10 +66336,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 393
+        "line": 343
+      },
+      "source": "module:services.card_lint",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 438
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.check_redundancy",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 328
+      },
+      "source": "module:services.card_lint",
+      "target": "symbol:services.card_lint.check_revelar_publico",
       "type": "defines"
     },
     {
@@ -66369,7 +66402,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 510
+        "line": 558
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.errors",
@@ -66402,7 +66435,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 462
+        "line": 510
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_batch",
@@ -66413,7 +66446,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 437
+        "line": 482
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_card",
@@ -66424,7 +66457,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 481
+        "line": 529
       },
       "source": "module:services.card_lint",
       "target": "symbol:services.card_lint.lint_wave",
@@ -108741,6 +108774,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 177
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo._lote4",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 62
       },
       "source": "module:tests.test_card_acervo_reparo",
@@ -108862,7 +108906,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 188
+        "line": 183
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 210
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 197
+      },
+      "source": "module:tests.test_card_acervo_reparo",
+      "target": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 243
       },
       "source": "module:tests.test_card_acervo_reparo",
       "target": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
@@ -110732,10 +110809,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_lint.py",
+        "line": 422
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
         "line": 115
       },
       "source": "module:tests.test_card_lint",
       "target": "symbol:tests.test_card_lint.test_repeated_name_is_error",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 408
+      },
+      "source": "module:tests.test_card_lint",
+      "target": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
       "type": "defines"
     },
     {
@@ -276766,7 +276865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 368
+        "line": 413
       },
       "source": "symbol:services.card_lint._vigente",
       "target": "symbol:services.card_effects.versao",
@@ -276799,7 +276898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 346
+        "line": 391
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.base_value",
@@ -276810,7 +276909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 356
+        "line": 401
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -276821,7 +276920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 328
+        "line": 373
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.keywords",
@@ -276832,7 +276931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 329
+        "line": 374
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_effects.normalize",
@@ -276843,7 +276942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 334
+        "line": 379
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276854,7 +276953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 338
+        "line": 383
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276865,7 +276964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 349
+        "line": 394
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276876,7 +276975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 358
+        "line": 403
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.Issue",
@@ -276887,7 +276986,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 324
+        "line": 369
       },
       "source": "symbol:services.card_lint.check_color_pie",
       "target": "symbol:services.card_lint.roda",
@@ -276931,7 +277030,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 374
+        "line": 357
+      },
+      "source": "symbol:services.card_lint.check_marca_dano",
+      "target": "symbol:services.card_effects.extra_effects",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 356
+      },
+      "source": "symbol:services.card_lint.check_marca_dano",
+      "target": "symbol:services.card_effects.primary_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 364
+      },
+      "source": "symbol:services.card_lint.check_marca_dano",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 419
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -276942,7 +277074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 386
+        "line": 431
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects._fold",
@@ -276953,7 +277085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 377
+        "line": 422
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -276964,7 +277096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 382
+        "line": 427
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_effects.versao",
@@ -276975,7 +277107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 379
+        "line": 424
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -276986,7 +277118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 388
+        "line": 433
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint.Issue",
@@ -276997,7 +277129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 375
+        "line": 420
       },
       "source": "symbol:services.card_lint.check_names",
       "target": "symbol:services.card_lint._vigente",
@@ -277085,7 +277217,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 412
+        "line": 348
+      },
+      "source": "symbol:services.card_lint.check_reacao_folego",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 349
+      },
+      "source": "symbol:services.card_lint.check_reacao_folego",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 457
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277096,7 +277250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 420
+        "line": 465
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277107,7 +277261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 428
+        "line": 473
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.Issue",
@@ -277118,7 +277272,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 401
+        "line": 446
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint._vigente",
@@ -277129,7 +277283,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 398
+        "line": 443
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -277140,7 +277294,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 409
+        "line": 454
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.signature",
@@ -277151,10 +277305,43 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 405
+        "line": 450
       },
       "source": "symbol:services.card_lint.check_redundancy",
       "target": "symbol:services.card_lint.similarity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 330
+      },
+      "source": "symbol:services.card_lint.check_revelar_publico",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 336
+      },
+      "source": "symbol:services.card_lint.check_revelar_publico",
+      "target": "symbol:services.card_lint.Issue",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 339
+      },
+      "source": "symbol:services.card_lint.check_revelar_publico",
+      "target": "symbol:services.card_lint.Issue",
       "type": "calls"
     },
     {
@@ -277459,7 +277646,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 477
+        "line": 525
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_effects.materialize",
@@ -277470,7 +277657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 474
+        "line": 522
       },
       "source": "symbol:services.card_lint.lint_batch",
       "target": "symbol:services.card_lint.lint_card",
@@ -277481,7 +277668,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 445
+        "line": 490
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_effects.materialize",
@@ -277492,7 +277679,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 452
+        "line": 497
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_budget",
@@ -277503,7 +277690,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 455
+        "line": 500
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_color_pie",
@@ -277514,7 +277701,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 456
+        "line": 501
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_escala_principal",
@@ -277525,7 +277712,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 457
+        "line": 504
+      },
+      "source": "symbol:services.card_lint.lint_card",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 505
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_names",
@@ -277536,7 +277734,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 454
+        "line": 499
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_raridade",
@@ -277547,7 +277745,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 458
+        "line": 503
+      },
+      "source": "symbol:services.card_lint.lint_card",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 506
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_redundancy",
@@ -277558,7 +277767,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 447
+        "line": 502
+      },
+      "source": "symbol:services.card_lint.lint_card",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_lint.py",
+        "line": 492
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_schema",
@@ -277569,7 +277789,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 450
+        "line": 495
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_vocabulary",
@@ -277580,7 +277800,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 453
+        "line": 498
       },
       "source": "symbol:services.card_lint.lint_card",
       "target": "symbol:services.card_lint.check_voice",
@@ -277591,7 +277811,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 498
+        "line": 546
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.card_keyword_ids",
@@ -277602,7 +277822,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 486
+        "line": 534
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_effects.glossary",
@@ -277613,7 +277833,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 491
+        "line": 539
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -277624,7 +277844,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_lint.py",
-        "line": 501
+        "line": 549
       },
       "source": "symbol:services.card_lint.lint_wave",
       "target": "symbol:services.card_lint.Issue",
@@ -360817,6 +361037,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
+        "line": 179
+      },
+      "source": "symbol:tests.test_card_acervo_reparo._lote4",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
         "line": 65
       },
       "source": "symbol:tests.test_card_acervo_reparo._onda1",
@@ -361125,7 +361356,150 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 189
+        "line": 184
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "target": "symbol:tests.test_card_acervo_reparo._lote4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 223
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.keywords",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 215
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 224
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_escala_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 227
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 229
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 228
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 214
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "target": "symbol:tests.test_card_acervo_reparo._lote4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 204
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 202
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.errors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.lint_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 198
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:services.card_lint.load_pool",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 199
+      },
+      "source": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "target": "symbol:tests.test_card_acervo_reparo._lote4",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_acervo_reparo.py",
+        "line": 244
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.load_pool",
@@ -361136,7 +361510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_acervo_reparo.py",
-        "line": 206
+        "line": 261
       },
       "source": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "target": "symbol:services.card_lint.similarity",
@@ -366713,6 +367087,83 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_lint.py",
+        "line": 433
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 435
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:services.card_lint.check_marca_dano",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 426
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 428
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:services.card_lint.check_reacao_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 425
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 432
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 434
+      },
+      "source": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
         "line": 124
       },
       "source": "symbol:tests.test_card_lint.test_repeated_name_is_error",
@@ -366750,6 +367201,72 @@
       },
       "source": "symbol:tests.test_card_lint.test_repeated_name_is_error",
       "target": "symbol:tests.test_card_lint.codes",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 413
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 416
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 419
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:services.card_lint.check_revelar_publico",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 410
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 415
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:tests.test_card_lint.card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_lint.py",
+        "line": 418
+      },
+      "source": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "target": "symbol:tests.test_card_lint.card",
       "type": "calls"
     },
     {
@@ -617396,7 +617913,7 @@
     {
       "id": "symbol:services.card_lint._vigente",
       "kind": "function",
-      "line": 363,
+      "line": 408,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint._vigente"
     },
@@ -617417,7 +617934,7 @@
     {
       "id": "symbol:services.card_lint.check_color_pie",
       "kind": "function",
-      "line": 323,
+      "line": 368,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_color_pie"
     },
@@ -617429,9 +617946,16 @@
       "qualified_name": "services.card_lint.check_escala_principal"
     },
     {
+      "id": "symbol:services.card_lint.check_marca_dano",
+      "kind": "function",
+      "line": 353,
+      "path": "services/card_lint.py",
+      "qualified_name": "services.card_lint.check_marca_dano"
+    },
+    {
       "id": "symbol:services.card_lint.check_names",
       "kind": "function",
-      "line": 373,
+      "line": 418,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_names"
     },
@@ -617443,11 +617967,25 @@
       "qualified_name": "services.card_lint.check_raridade"
     },
     {
+      "id": "symbol:services.card_lint.check_reacao_folego",
+      "kind": "function",
+      "line": 343,
+      "path": "services/card_lint.py",
+      "qualified_name": "services.card_lint.check_reacao_folego"
+    },
+    {
       "id": "symbol:services.card_lint.check_redundancy",
       "kind": "function",
-      "line": 393,
+      "line": 438,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.check_redundancy"
+    },
+    {
+      "id": "symbol:services.card_lint.check_revelar_publico",
+      "kind": "function",
+      "line": 328,
+      "path": "services/card_lint.py",
+      "qualified_name": "services.card_lint.check_revelar_publico"
     },
     {
       "id": "symbol:services.card_lint.check_schema",
@@ -617473,7 +618011,7 @@
     {
       "id": "symbol:services.card_lint.errors",
       "kind": "function",
-      "line": 510,
+      "line": 558,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.errors"
     },
@@ -617494,21 +618032,21 @@
     {
       "id": "symbol:services.card_lint.lint_batch",
       "kind": "function",
-      "line": 462,
+      "line": 510,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_batch"
     },
     {
       "id": "symbol:services.card_lint.lint_card",
       "kind": "function",
-      "line": 437,
+      "line": 482,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_card"
     },
     {
       "id": "symbol:services.card_lint.lint_wave",
       "kind": "function",
-      "line": 481,
+      "line": 529,
       "path": "services/card_lint.py",
       "qualified_name": "services.card_lint.lint_wave"
     },
@@ -645086,6 +645624,13 @@
       "qualified_name": "tests.test_card_acervo_reparo._lote3"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo._lote4",
+      "kind": "test",
+      "line": 177,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo._lote4"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo._onda1",
       "kind": "test",
       "line": 62,
@@ -645163,9 +645708,30 @@
       "qualified_name": "tests.test_card_acervo_reparo.test_lote3_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
     },
     {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2",
+      "kind": "test",
+      "line": 183,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote4_corruptor_36_cartas_12_por_subclasse_e_raridade_20_10_4_2"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores",
+      "kind": "test",
+      "line": 210,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote4_licoes_da_revisao_dos_lotes_anteriores"
+    },
+    {
+      "id": "symbol:tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio",
+      "kind": "test",
+      "line": 197,
+      "path": "tests/test_card_acervo_reparo.py",
+      "qualified_name": "tests.test_card_acervo_reparo.test_lote4_passa_no_lint_e_no_orcamento_e_legado_tem_momento_proprio"
+    },
+    {
       "id": "symbol:tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem",
       "kind": "test",
-      "line": 188,
+      "line": 243,
       "path": "tests/test_card_acervo_reparo.py",
       "qualified_name": "tests.test_card_acervo_reparo.test_momento_distinto_por_postura_com_excecoes_que_so_encolhem"
     },
@@ -646241,11 +646807,25 @@
       "qualified_name": "tests.test_card_lint.test_promote_refuses_existing_id"
     },
     {
+      "id": "symbol:tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida",
+      "kind": "test",
+      "line": 422,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida"
+    },
+    {
       "id": "symbol:tests.test_card_lint.test_repeated_name_is_error",
       "kind": "test",
       "line": 115,
       "path": "tests/test_card_lint.py",
       "qualified_name": "tests.test_card_lint.test_repeated_name_is_error"
+    },
+    {
+      "id": "symbol:tests.test_card_lint.test_revelar_de_campo_publico_e_recusado",
+      "kind": "test",
+      "line": 408,
+      "path": "tests/test_card_lint.py",
+      "qualified_name": "tests.test_card_lint.test_revelar_de_campo_publico_e_recusado"
     },
     {
       "id": "symbol:tests.test_card_lint.test_same_signature_distinct_momento_only_warns",
@@ -702004,5 +702584,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:6943fd105cec7b4b237be78f8ca0c05ba0c990518c7f8598e95229e0c30f8590"
+  "source_tree_hash": "sha256:1c9164885c563b4898840ecfe51beda3b823a87222c399c8add7db3bcde28b6b"
 }
