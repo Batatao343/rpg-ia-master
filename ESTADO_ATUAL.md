@@ -44,7 +44,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
-- 2026-10-27 · SPEC-338 `approved` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
+- 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
 - 2026-10-27 · SPEC-337 `done` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
 - 2026-10-27 · SPEC-336 `approved` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
 - 2026-10-27 · SPEC-335 `approved` — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
@@ -74,7 +74,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 <!-- onda:inserir-aqui -->
-- 27/10: donos das abertas — 327–336 sessão `-69`, 337–338 sessão `-91`; suíte completa 1 por vez (avisar).
+- 27/10: 327–336 sessão `-69`; suíte completa 1 por vez (avisar). 337–338 `done`: testes HTTP de segurança + RLS no `audit-local`; fuzz Schemathesis no job `api-fuzz` (bloqueante).
 - 27/10 cartas: 329, 328, 330A pousadas `off`. Antes de `on`: calibrar Fôlego (arena 42→73 %), dono revisa `pressagio_sinais.json` e `basicas.json`.
 
 
