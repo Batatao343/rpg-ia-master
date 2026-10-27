@@ -27,6 +27,7 @@ Regras: executor **não** roda a camada 2; comando > 2 min vai para background c
 - Teste que grava em diretório fixo precisa de `tmp_path`/monkeypatch (o
   `conftest.py` já isola saves, memória, cache de runtime e `saves_playtest/`).
 - Markers `infra_local`/`security_local`/`browser_local`/`chaos_local` pulam sem a
+- Fuzz da API (SPEC-338, `api_fuzz`, fora do default): `uv sync --group fuzz` e `bash scripts/dev/py.sh -m pytest tests/test_api_fuzz_schemathesis.py -m api_fuzz -p no:cacheprovider` (~20 s; `RPG_API_FUZZ_MAX_EXAMPLES=5` para iterar). Job `api-fuzz` do CI é bloqueante.
   stack local; com stack, rode-os **sem** `-n` (compartilham Postgres/porta).
 - `tests/test_project_index.py` acusa "stale" com arquivo **rastreado** editado e
   não commitado; arquivo não rastreado não conta mais.

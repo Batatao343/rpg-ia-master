@@ -52,6 +52,9 @@ dev = [
     "pytest-xdist>=3.8.0",
     "ruff>=0.9",
 ]
+fuzz = [
+    "schemathesis>=4.32,<5",
+]
 
 [tool.ruff]
 target-version = "py313"
@@ -88,12 +91,13 @@ testpaths = ["tests"]
 # Fase 11 / Fase 5: testes com LLM real ficam FORA da suíte offline default —
 # rodar com: uv run pytest -m llm_contract -v -s   (contratos de shape)
 #            uv run pytest -m llm_playtest -v -s    (campanhas curtas por perfil)
-addopts = "-q -m \"not llm_contract and not llm_playtest\""
+addopts = "-q -m \"not llm_contract and not llm_playtest and not api_fuzz\""
 # pytest-timeout: nenhum teste pendura a suíte (workspace #5). Paralelo é opt-in:
 # `pytest -n auto` (camada 2 / CI) — ver docs/guias/TESTES.md.
 timeout = 300
 markers = [
     "llm_contract: contrato contra provider LLM real (gasta quota; requer GOOGLE_API_KEY)",
+    "api_fuzz: fuzz de API com Schemathesis in-process (job api-fuzz; requer --group fuzz)",
     "llm_playtest: campanha curta de playtest por perfil no LLM real (gasta quota; requer GROQ ou GOOGLE key)",
     "infra_local: integração opt-in com Postgres/Auth/Storage/pgvector locais",
     "security_local: testes opt-in de RLS, CSRF, ownership e secrets locais",

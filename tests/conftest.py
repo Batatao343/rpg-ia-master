@@ -203,3 +203,11 @@ def _force_request_rls(monkeypatch):
             if hasattr(cls, name):
                 monkeypatch.setattr(cls, name, scoped(getattr(cls, name)))
     yield
+
+
+def pytest_ignore_collect(collection_path, config):
+    """SPEC-338 R5: o módulo de fuzz gera o OpenAPI no import; só coleta com ``-m api_fuzz``."""
+    if collection_path.name != "test_api_fuzz_schemathesis.py":
+        return None
+    expr = config.option.markexpr or ""
+    return "not api_fuzz" in expr or "api_fuzz" not in expr

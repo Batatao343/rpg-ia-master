@@ -1,6 +1,6 @@
 # SPEC-338 — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
 
-> **Status:** `approved` (aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
+> **Status:** `in-progress` (critério do job `api-fuzz` verde no CI pendente; aprovada em 2026-10-27 pelo dono: "escreva as specs e depois implemente"; as 6 decisões do discovery de 27/10 são definitivas, ver §8)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** SPEC-337 (`done`). Usa a fixture `two_principals`, o `FakeTurnCoordinator` e os helpers `assert_security_headers`/`forbidden_leak` de `tests/fakes/two_principals.py`.
 > **Desbloqueia:** —
@@ -234,3 +234,10 @@ Registradas pelo coordenador em 27/10 (o dono autorizou "escreva as specs e depo
   - `RPG_API_FUZZ_REQUIRED` contra skip silencioso no CI;
   - schema por fixture para não pesar a coleta default;
   - `requirements.txt` imutável como trava de lock.
+- 2026-10-27 · implementação (spec-executor). Spike: Schemathesis 4.32.5 (hypothesis 6.170.12), **caminho B**: `from_dict(api.app.openapi())` + `TestClient` próprio com `case.as_transport_kwargs(base_url=…)`; `requirements.txt` idêntico, `uv.lock` só com adições. Desvios:
+  - `schemathesis.pytest.from_fixture(...).parametrize()` **ignora** os filtros `exclude/include` do schema da fixture e gera um item único. Trocado por `pytest.mark.parametrize` sobre `(método, caminho)` calculado no import do módulo, com `@given(operation.as_strategy())` + `settings` por operação (`tests/fakes/api_fuzz.py::fuzz_operation`). Como o OpenAPI é gerado no import, `tests/conftest.py::pytest_ignore_collect` só coleta o módulo com `-m api_fuzz` (R5).
+  - Helpers em `tests/fakes/api_fuzz.py` (R15/R17 importam de lá); `hypothesis` é importado de forma preguiçosa, então os testes offline rodam sem o grupo.
+  - R11: o id semeado é aplicado em ~1/3 dos exemplos (crc32 do conteúdo do case, determinístico) em vez de hook de mapeamento.
+  - Legacy: `RPG_SESSION_SECRET` setado na fixture, senão `/auth/*` responde 503 `server_misconfigured` por desenho.
+  - Fake DB (`tests/fakes/two_principals.py`): ganhou `runtime_catalog` (JsonRuntimeCatalogStore) e `login/signup/logout` no `FakeIdentity` (negam tudo). `GET /game/{game_id}/operations/{operation_id}/cost` saiu da allowlist (usa `game_store.pool`, Postgres).
+  - Resultado: 69 itens (legacy fast/graph + 18 DB offline), zero 500 real de produto (os 500 iniciais eram lacunas do fake), ~20 s locais, duas rodadas seguidas verdes (R16). Job no CI ainda não rodado.
