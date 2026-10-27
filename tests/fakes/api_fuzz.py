@@ -10,7 +10,9 @@ from __future__ import annotations
 import contextlib
 import os
 import socket
+import uuid
 import zlib
+from collections import Counter
 from collections.abc import Iterator
 from typing import Any
 
@@ -69,6 +71,18 @@ def check_response(response: Any, path: str, *, headers: bool = True, hsts: bool
     assert leaks == [], f"{path}: vazamento {leaks} em {response.text[:200]!r}"
 
 
+# Rotas de escrita cujo corpo carrega ``action_id`` (gate de idempotência por perfil).
+ACTION_ID_PATHS = frozenset(
+    {"/game/equip", "/game/levelup", "/game/death", "/game/cards/prepare", "/game/action"}
+)
+# Valores válidos do catálogo (os mesmos do ``two_principals``) para passar do validador Pydantic.
+VALID_CATALOG = {
+    "race": "Humano",
+    "class_name": "Devoto do Abismo",
+    "region": "Nova Arcádia",
+}
+
+
 def seed_game_id(case: Any, game_id: str) -> None:
     """R11: troca ``game_id`` (path/query/body) pelo id real da campanha semeada."""
     for bag in (case.path_parameters, case.query):
@@ -78,20 +92,63 @@ def seed_game_id(case: Any, game_id: str) -> None:
         case.body["game_id"] = game_id
 
 
-def run_case(case: Any, client: Any, *, seed: str | None = None) -> Any | None:
+def seed_idempotency(case: Any, digest: int) -> None:
+    """P1-1: ``action_id`` (body) e ``Idempotency-Key`` (header) com UUID determinístico."""
+    key = str(uuid.uuid5(uuid.NAMESPACE_URL, f"api-fuzz/{digest}"))
+    if isinstance(case.body, dict) and (
+        case.operation.path in ACTION_ID_PATHS or "action_id" in case.body
+    ):
+        case.body["action_id"] = key
+    if case.method.upper() == "DELETE":
+        case.headers = {**(case.headers or {}), "Idempotency-Key": key}
+
+
+def seed_catalog(case: Any) -> None:
+    """P1-2: ``race``/``class_name``/``region``/``enemy_id`` válidos nas rotas de grafo."""
+    import gamedata
+
+    if not isinstance(case.body, dict):
+        return
+    for key, value in VALID_CATALOG.items():
+        if key in case.body:
+            case.body[key] = value
+    if "enemy_id" in case.body:
+        case.body["enemy_id"] = next(iter(gamedata.BESTIARY))
+    if "level" in case.body and case.operation.path == "/game/combat-simulator":
+        case.body["level"] = 1
+
+
+def run_case(
+    case: Any, client: Any, *, seed: str | None = None, catalog: bool = False
+) -> Any | None:
     """Executa um case no ``TestClient``; ``None`` = rejeitado pelo próprio cliente.
 
-    Em ~1/3 dos exemplos (decisão determinística pelo conteúdo) o ``game_id`` é o semeado.
+    Em ~1/3 dos exemplos (decisão determinística pelo conteúdo) o case é semeado com o
+    ``game_id`` real, ``action_id``/``Idempotency-Key`` e, nas rotas de grafo, o catálogo.
     """
-    if seed is not None:
-        digest = zlib.crc32(repr((case.path_parameters, case.query, case.body)).encode())
-        if digest % 3 == 0:
+    digest = zlib.crc32(repr((case.path_parameters, case.query, case.body)).encode())
+    if digest % 3 == 0:
+        if seed is not None:
             seed_game_id(case, seed)
+            seed_idempotency(case, digest)
+        if catalog:
+            seed_catalog(case)
     try:
         kwargs = case.as_transport_kwargs(base_url="http://testserver")
         return client.request(**kwargs)
     except CLIENT_SIDE_ERRORS:
         return None
+
+
+def _status_key(response: Any) -> str:
+    """``200`` ou ``400:<code>``: separa o 400 do gate do 400 de regra de negócio."""
+    if response.status_code < 400:
+        return str(response.status_code)
+    try:
+        code = response.json().get("code")
+    except (ValueError, AttributeError):
+        code = None
+    return f"{response.status_code}:{code}"
 
 
 def fuzz_settings(max_examples: int) -> Any:
@@ -106,7 +163,11 @@ def fuzz_settings(max_examples: int) -> Any:
         derandomize=True,
         database=None,
         deadline=None,
-        suppress_health_check=list(HealthCheck),
+        suppress_health_check=[
+            HealthCheck.function_scoped_fixture,
+            HealthCheck.too_slow,
+            HealthCheck.filter_too_much,
+        ],
     )
 
 
@@ -116,16 +177,23 @@ def fuzz_operation(
     *,
     max_examples: int,
     seed: str | None = None,
+    catalog: bool = False,
     headers: bool = True,
-) -> None:
-    """Fuzza uma operação (``APIOperation``); levanta ``AssertionError`` no primeiro achado."""
+) -> Counter[str]:
+    """Fuzza uma operação (``APIOperation``); levanta ``AssertionError`` no primeiro achado.
+
+    Devolve a contagem de status por resposta (prova de que o fuzz passou da validação).
+    """
     from hypothesis import given
+
+    statuses: Counter[str] = Counter()
 
     @given(case=operation.as_strategy())
     @fuzz_settings(max_examples)
     def probe(case: Any) -> None:
-        response = run_case(case, client, seed=seed)
+        response = run_case(case, client, seed=seed, catalog=catalog)
         if response is not None:
+            statuses[_status_key(response)] += 1
             try:
                 check_response(response, operation.path, headers=headers)
             except AssertionError as exc:
@@ -134,6 +202,7 @@ def fuzz_operation(
                 ) from None
 
     probe()
+    return statuses
 
 
 def fuzz_failures(

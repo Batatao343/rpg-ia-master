@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -69,7 +70,10 @@ def test_check_response_flags_leak():
 
 
 def test_harness_flags_injected_500():
-    schemathesis = pytest.importorskip("schemathesis")
+    if os.getenv("RPG_API_FUZZ_REQUIRED") == "1":
+        import schemathesis  # no CI a ausência do pacote é erro, nunca skip
+    else:
+        schemathesis = pytest.importorskip("schemathesis")
     mini = FastAPI()
 
     @mini.get("/boom")
@@ -100,6 +104,8 @@ def test_api_fuzz_job_contract():
     assert "--group fuzz" in commands
     assert "--only-group fuzz" in commands and "pip-audit" in commands
     assert "-m api_fuzz" in commands
+    # P1-3: o harness (R15) roda no CI com o pacote obrigatório.
+    assert "RPG_API_FUZZ_REQUIRED=1 uv run pytest tests/test_api_fuzz_harness.py" in commands
     assert "-n auto" not in commands and " -n " not in commands
     uploads = [s for s in steps if str(s.get("uses", "")).startswith("actions/upload-artifact")]
     assert uploads and all(s.get("if") == "failure()" for s in uploads)

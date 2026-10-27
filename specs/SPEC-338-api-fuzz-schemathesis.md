@@ -240,5 +240,14 @@ Registradas pelo coordenador em 27/10 (o dono autorizou "escreva as specs e depo
   - R11: o id semeado é aplicado em ~1/3 dos exemplos (crc32 do conteúdo do case, determinístico) em vez de hook de mapeamento.
   - Legacy: `RPG_SESSION_SECRET` setado na fixture, senão `/auth/*` responde 503 `server_misconfigured` por desenho.
   - Fake DB (`tests/fakes/two_principals.py`): ganhou `runtime_catalog` (JsonRuntimeCatalogStore) e `login/signup/logout` no `FakeIdentity` (negam tudo). `GET /game/{game_id}/operations/{operation_id}/cost` saiu da allowlist (usa `game_store.pool`, Postgres).
-  - Resultado: 69 itens (legacy fast/graph + 18 DB offline), zero 500 real de produto (os 500 iniciais eram lacunas do fake), ~20 s locais, duas rodadas seguidas verdes (R16). Job no CI ainda não rodado.
+  - Resultado: 69 itens (legacy fast/graph + 19 DB offline, ver correção abaixo), zero 500 real de produto (os 500 iniciais eram lacunas do fake), ~20 s locais, duas rodadas seguidas verdes (R16). Job no CI ainda não rodado.
 - 2026-10-27 · smoke §6: PR #58 (draft): `api-fuzz` verde em 37 s com pip-audit do grupo. Prova de bloqueio: PR #59 (descartável, já fechado, branch apagada) com `raise RuntimeError` em `GET /data/options`: `api-fuzz` vermelho (run 40479792711) apontando `test_fuzz_legacy_fast[GET /data/options]: 500 inesperado`. `deterministic-evals` falha nos dois PRs em `project_index check` (índice só é regenerado no pouso; não é desta spec).
+- 2026-10-27 · correções da revisão Sol (CHANGES_REQUIRED):
+  - P1-1: na fração crc32, além do `game_id`, semeia `action_id` (rotas de escrita) e o header `Idempotency-Key` (DELETE) com `uuid5` determinístico.
+  - P1-2: nas rotas de grafo semeia `race`/`class_name`/`region`/`enemy_id` válidos (`catalog=True`).
+  - P1-3: o job `api-fuzz` roda também `tests/test_api_fuzz_harness.py` com `RPG_API_FUZZ_REQUIRED=1` (o R15 passa a executar no CI); `test_api_fuzz_job_contract` cobre o passo.
+  - P1-4: `GET /game/{game_id}/operations/{operation_id}` saiu da allowlist DB (usa `resources[0].connection()`); o DB-offline tem 19 itens, não 18.
+  - O seed deixou aparecer lacunas do fake, e nenhuma é bug de produto. `equip`/`levelup`/`cards/prepare` chamam o gate de falhas via `resources[0]` (Postgres) e `/game/action`/mutações chamam `turn_coordinator.commit_game`. O fake ganhou `commit_game` (sobre o `FileGameStore`) e um `resources[0]` que não devolve linhas.
+  - P2: `test_scope_is_locked` trava as 8 exclusões e a allowlist DB; o legacy semeia campanha real; `suppress_health_check` só com os 3 do R16.
+  - Prova de alcance (`_assert_reached`, status por operação; chave `status:code` separa o 400 do gate do 400 de regra de negócio): cada rota de escrita e de grafo tem ao menos uma resposta fora dos gates (200, 409 `no_pending_death`, 400 `equip_rejected`/`levelup_rejected`/`prepare_rejected`, 404 `save_not_found`). Ex. DB: action 200:5, cards/prepare 200:13, DELETE save 200:1; legacy: /game/new 200:3, /game/prologue 200:3, /game/combat-simulator 200:2.
+  - Duas rodadas seguidas: 69 passed, ~21 s cada.

@@ -78,6 +78,14 @@ class FakeTurnCoordinator(InProcessTurnCoordinator):
             return None  # operação falhada: o Postgres só devolve recibo 'completed'
         return value
 
+    def commit_game(self, principal, claim, state, *, receipt, **_kwargs):
+        """SPEC-338: commit do turno/mutação sobre o ``FileGameStore`` (sem eventos nem custo)."""
+        self.calls.append(("commit_game", claim.game_id))
+        payload = {k: v for k, v in state.items() if k != "_storage_version"}
+        stored = self._store.save(principal, claim.game_id, claim.base_version, payload)
+        value = self.complete(claim, committed_version=stored.version, receipt=receipt)
+        return stored.version, value
+
     def commit_delete(self, principal, claim, game_id, *, receipt):
         self.calls.append(("commit_delete", game_id))
         if claim.game_id is not None:
@@ -89,6 +97,25 @@ class FakeTurnCoordinator(InProcessTurnCoordinator):
             row = self._claims[claim.operation_id]
             self._claims[claim.operation_id] = (row[0], row[1], row[2], persisted)
         return persisted
+
+
+class _NoRowsConnection:
+    """Conexão fake do gate de falhas pendentes: nenhuma operação falhada no Postgres."""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_exc):
+        return False
+
+    def execute(self, *_a, **_k):
+        return self
+
+    def fetchone(self):
+        return None
+
+    def fetchall(self):
+        return []
 
 
 @dataclass
@@ -155,7 +182,7 @@ def two_principals(monkeypatch, tmp_path) -> TwoPrincipals:
         rate_limiter=MemoryRateLimiter(),
         game_store=store,
         turn_coordinator=coordinator,
-        resources=(),
+        resources=(SimpleNamespace(connection=_NoRowsConnection),),
         memory_store=None,
         blob_store=object(),
         runtime_catalog=JsonRuntimeCatalogStore(tmp_path / "runtime_catalog.json"),
