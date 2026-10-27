@@ -1544,7 +1544,12 @@ def versao(card: dict | None) -> int:
 
 def raridade(card: dict) -> str:
     cfg = budget_config()
-    return str(cfg["raridade_por_patamar"].get(str(card.get("patamar") or ""), "comum"))
+    base = str(cfg["raridade_por_patamar"].get(str(card.get("patamar") or ""), "comum"))
+    # SPEC-335 P2-4: `abissal` declarada vale a faixa `abissal` (hoje = `epica`); o Ápice
+    # e o restante seguem o patamar, então o orçamento das legadas não muda.
+    if base == "epica" and card.get("raridade") == "abissal" and "abissal" in cfg["faixas"]:
+        return "abissal"
+    return base
 
 
 def custo_folego(card: dict) -> int:

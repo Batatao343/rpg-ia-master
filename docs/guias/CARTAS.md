@@ -20,6 +20,31 @@ no máximo **2 palavras-chave novas**, cada uma com >= 6 cartas na mesma onda (m
 palavra no glossário com `"onda": N`). Revisão de voz do dono: **amostra de 20 %** (o
 `promote.py` sorteia e registra em `_ondas.yaml`).
 
+### Protocolo de arena de lote (`sim.py --protocolo lote`)
+
+Fixado pelo coordenador, **igual para todos os lotes** (o executor do lote não o muda): cada
+Carta **isolada** (as outras do lote saem do catálogo na rodada dela), ao nível de entrada
+(`level_req`), encontro padrão, **20 sementes**. É só um preset dos parâmetros existentes de
+`simulate_batch`; métrica, limiares (`em_branco` < 5 %, `dominante` > 60 % ou > +8 pp com >= 40
+lutas) e fórmulas não mudam. Rode `sim.py --lote <arquivo> --protocolo lote --out <relatorio.json>`,
+**versione o relatório e o comando** em `docs/spec<NNN>/` e trate toda bandeira reescrevendo ou
+cortando a Carta; **não** mova poder para efeitos que a arena não mede (área, Chamado, Rachadura,
+Torpor, Eco…): se a arena não mede, registre como limitação no relatório. `promote.py` sem
+`--sim-report` roda este protocolo.
+
+### Voz pendente
+
+`promote.py --revisor-voz <identificador>` só vale para quem **revisou**. Sem revisão ainda:
+`--voz-pendente` grava `revisor_voz: null` + `voz_status: pendente-dono` em `_ondas.yaml` e o
+`validate_content` emite AVISO com a amostra e as Cartas. Texto livre ("dono (depois)") é recusado.
+
+### Raridade e `momento`
+
+`card_lint.check_raridade` (Cartas de onda): comum <= 1 efeito e <= 1 palavra-chave; incomum <= 2;
+abissal exige Exaurir e custo explícito; `raridade` coerente com o `patamar`. `momento_placeholder:
+true` marca `momento` de modelo (acervo legado das Posturas sem lote); o teste
+`test_card_acervo_reparo` só deixa essa lista **encolher**.
+
 ## Roda das Posturas (color pie de Valoria)
 
 | Postura | Primário | Secundário | Nunca (vira ERRO no lint) |

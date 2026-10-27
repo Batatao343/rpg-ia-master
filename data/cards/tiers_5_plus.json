@@ -32,7 +32,8 @@
       "descricao": "Jura sobre cinzas de altar, e o golpe cobra a dívida em carne alheia.",
       "contrapartida": "O juramento cobra Entropia alta e só se repete a cada turno.",
       "momento": "Melhor jogada quando o alvo mais ferido está ao alcance e a Entropia já pesa nas costas.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "dev_t6_tronco",
@@ -63,7 +64,8 @@
       "descricao": "Uma linha riscada no chão: dali o inimigo não passa, nem de pé.",
       "contrapartida": "A linha se traça uma vez por turno e custa Entropia pesada.",
       "momento": "Melhor jogada quando o inimigo anuncia o golpe mais pesado da rodada e a guarda comum não basta.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "dev_t7_tronco",
@@ -94,7 +96,8 @@
       "descricao": "A vigília do Convite desperta e o campo todo pende para o lado de quem não dorme.",
       "contrapartida": "A vigília desperta uma vez por cena e esvazia a Entropia de quem a jurou.",
       "momento": "Melhor jogada quando a cena é uma só e a luta inteira depende de começar com o campo a favor.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_t8_tronco",
@@ -125,7 +128,8 @@
       "descricao": "O coração vira muralha e a muralha vira promessa de ficar de pé.",
       "contrapartida": "O coração só vira muralha uma vez por cena, ao preço de Entropia no limite.",
       "momento": "Melhor jogada quando a travessia exige aguentar um cerco inteiro sem recuar um passo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_consagrado_t5",
@@ -157,7 +161,8 @@
       "descricao": "A liturgia traça a cicatriz no ar, e o inimigo a recebe na pele.",
       "contrapartida": "A liturgia pede Entropia alta e silêncio até o turno seguinte.",
       "momento": "Melhor jogada quando um alvo marcado pelo Abismo está exposto e a fé pode fechar a conta.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "dev_consagrado_t7",
@@ -188,7 +193,8 @@
       "descricao": "O selo se fecha de repente, e o golpe volta por onde veio.",
       "contrapartida": "O selo só se fecha uma vez por cena, e a Entropia paga a tinta.",
       "momento": "Melhor jogada quando o inimigo mais forte ataca primeiro e o troco precisa doer na mesma batida.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_consagrado_t8",
@@ -220,7 +226,8 @@
       "descricao": "O próprio corpo é altar, e o inimigo que o toca sente o chão ceder.",
       "contrapartida": "O altar se arma uma vez por cena, com a Entropia levada ao limite.",
       "momento": "Melhor jogada quando o grupo cerca um único inimigo e o altar deixa o alvo desprotegido.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_consagrado_apice",
@@ -252,7 +259,8 @@
       "descricao": "O vazio responde ao nome do juramento e devolve um golpe do tamanho da fé.",
       "contrapartida": "Pede Entropia alta e um descanso longo; a Carga do Abismo fica no corpo.",
       "momento": "Melhor jogada quando a luta decisiva chegou e não haverá outra cena para guardar força.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_zeloso_t5",
@@ -283,7 +291,8 @@
       "descricao": "O ciúme da escuridão cresce atrás de quem protege e revida em dobro.",
       "contrapartida": "O ciúme custa Entropia alta e só desperta de novo no próximo turno.",
       "momento": "Melhor jogada quando um aliado frágil está atrás e o inimigo vai escolher o caminho mais curto até ele.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "dev_zeloso_t7",
@@ -315,7 +324,8 @@
       "descricao": "Entre o golpe e o aliado, o corpo do zeloso se interpõe e o ferro cede.",
       "contrapartida": "Interpor-se custa Entropia alta e só cabe uma vez por cena.",
       "momento": "Melhor jogada quando o golpe mortal vai cair sobre um aliado que não pode ser perdido.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_zeloso_t8",
@@ -347,7 +357,8 @@
       "descricao": "Ninguém além do zeloso pode tocar o que ele jurou guardar.",
       "contrapartida": "A promessa vem com Entropia no limite e só se renova na cena seguinte.",
       "momento": "Melhor jogada quando o aliado mais valioso está cercado e o zeloso precisa ser a única presa.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_zeloso_apice",
@@ -378,7 +389,8 @@
       "descricao": "O amor devora o medo, e o medo devora o inimigo que ousou chegar perto.",
       "contrapartida": "Pede Entropia alta, descanso longo, e a Carga do Abismo não se vai.",
       "momento": "Melhor jogada quando o grupo está a um golpe da derrota e o zeloso é a última linha de defesa.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_enlutado_t5",
@@ -410,7 +422,8 @@
       "descricao": "O réquiem de ferro bate no peito do inimigo até ele lembrar de seus mortos.",
       "contrapartida": "O canto exige Entropia alta e descansa um turno inteiro.",
       "momento": "Melhor jogada quando uma baixa recente deixou o inimigo vulnerável e o luto vira vantagem.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "dev_enlutado_t7",
@@ -442,7 +455,8 @@
       "descricao": "O luto vigia a porta; quem tenta entrar paga o preço das almas perdidas.",
       "contrapartida": "O luto vigia uma vez por cena, e a Entropia paga o turno de guarda.",
       "momento": "Melhor jogada quando o conflito já cobrou uma vida e o enlutado precisa fazer o inimigo pagar de volta.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_enlutado_t8",
@@ -473,7 +487,8 @@
       "descricao": "O nome dos perdidos vira escudo e punho para quem os carrega.",
       "contrapartida": "Os nomes pesam: Entropia no limite e uma só invocação por cena.",
       "momento": "Melhor jogada quando o grupo já perdeu gente e a memória dos mortos pode virar o jogo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "dev_enlutado_apice",
@@ -505,7 +520,8 @@
       "descricao": "A procissão não tem fim: cada passo traz mais um nome para o ferro.",
       "contrapartida": "A procissão pede Entropia alta, um descanso longo, e deixa a Carga.",
       "momento": "Melhor jogada quando o campo está cheio de caídos e a procissão pode fechar a luta de uma vez.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_t5_tronco",
@@ -537,7 +553,8 @@
       "descricao": "Uma cláusula escrita em sangue: o golpe só vale se o contrato for cumprido.",
       "contrapartida": "A cláusula se paga em Entropia alta e só se assina de novo no próximo turno.",
       "momento": "Melhor jogada quando a vida já está baixa e o contrato de sangue ainda rende ao seu favor.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "san_t6_tronco",
@@ -568,7 +585,8 @@
       "descricao": "A dor guardada na reserva abre a porta no momento certo.",
       "contrapartida": "A dor guardada custa Entropia pesada e libera uma vez por turno.",
       "momento": "Melhor jogada quando o golpe mais forte do inimigo se aproxima e a dor guardada pode amortecê-lo.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "san_t7_tronco",
@@ -599,7 +617,8 @@
       "descricao": "O preço é pago antes, e o sangue cobra com juros depois.",
       "contrapartida": "O preço adiantado vale uma vez por cena e esvazia a Entropia.",
       "momento": "Melhor jogada quando a cena será curta e o sangue pode ser gasto agora sem medo da dívida.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_t8_tronco",
@@ -630,7 +649,8 @@
       "descricao": "A última moeda de sangue compra o que ouro nenhum compraria.",
       "contrapartida": "A moeda é única por cena, e a Entropia vai ao limite para cunhá-la.",
       "momento": "Melhor jogada quando a rota exige um sacrifício final e o sangue ainda cobre a conta.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_exposto_t5",
@@ -662,7 +682,8 @@
       "descricao": "O palco das cicatrizes exibe a dor como espetáculo, e o inimigo hesita ao ver.",
       "contrapartida": "O espetáculo pede Entropia alta e um intervalo de um turno.",
       "momento": "Melhor jogada quando há plateia hostil por perto e a dor exposta pode virar arma.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "san_exposto_t7",
@@ -693,7 +714,8 @@
       "descricao": "O aplauso cruel responde a cada golpe recebido com outro, mais fundo.",
       "contrapartida": "O aplauso soa uma vez por cena, e a Entropia paga o ingresso.",
       "momento": "Melhor jogada quando o inimigo escolhe bater primeiro e a plateia espera o troco.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_exposto_t8",
@@ -725,7 +747,8 @@
       "descricao": "A dor em evidência deixa o inimigo cego pelo medo de olhar.",
       "contrapartida": "A dor só se exibe assim uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando um inimigo teimoso resiste e a dor exibida pode quebrar a vontade dele.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_exposto_apice",
@@ -757,7 +780,8 @@
       "descricao": "O testemunho escarlate é lido em voz alta, e ninguém sai da sala igual.",
       "contrapartida": "O testemunho exige Entropia alta e um descanso longo; a Carga do Abismo ouve.",
       "momento": "Melhor jogada quando todos os olhos estão nele e o testemunho pode virar a mesa de uma vez.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_avaro_t5",
@@ -788,7 +812,8 @@
       "descricao": "O cofre de sangue guarda cada gota para o dia em que a dívida vence.",
       "contrapartida": "O cofre abre uma vez por turno e cobra Entropia alta pela chave.",
       "momento": "Melhor jogada quando o inimigo acumulou dano contra o grupo e é hora de cobrar com juros.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "san_avaro_t7",
@@ -820,7 +845,8 @@
       "descricao": "O juro composto faz cada golpe sofrido valer mais para quem o devolve.",
       "contrapartida": "O juro só rende uma vez por cena, ao custo de Entropia alta.",
       "momento": "Melhor jogada quando o avaro já levou muitos golpes e o juro precisa ser cobrado.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_avaro_t8",
@@ -852,7 +878,8 @@
       "descricao": "A cobrança final nunca perdoa: o que foi devido é tomado, com sobra.",
       "contrapartida": "A cobrança vem uma vez por cena e consome a Entropia até o limite.",
       "momento": "Melhor jogada quando o alvo é o devedor mais antigo da luta e a conta chegou ao fim.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_avaro_apice",
@@ -883,7 +910,8 @@
       "descricao": "A fortuna rubra é um tesouro que só existe enquanto alguém sangra por ele.",
       "contrapartida": "Fortuna cara: Entropia alta, descanso longo, e a Carga fica de garantia.",
       "momento": "Melhor jogada quando todo o sangue gasto na luta precisa virar lucro em um único golpe.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_silencioso_t5",
@@ -915,7 +943,8 @@
       "descricao": "O corte sem eco entra e sai sem que o ar perceba.",
       "contrapartida": "O corte pede Entropia alta e depois um turno de quietude.",
       "momento": "Melhor jogada quando o alvo está distraído e o corte pode ser dado sem chamar a luta.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "san_silencioso_t7",
@@ -947,7 +976,8 @@
       "descricao": "A economia perfeita gasta só o necessário e devolve o resto em golpe.",
       "contrapartida": "A economia só rende uma vez por cena, e a Entropia é a moeda.",
       "momento": "Melhor jogada quando cada gota de sangue conta e o golpe precisa render o dobro com custo mínimo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_silencioso_t8",
@@ -978,7 +1008,8 @@
       "descricao": "A dívida invisível cresce no escuro e chega no momento exato.",
       "contrapartida": "A dívida invisível cobra uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando o inimigo nem sabe que está devendo e o silêncio ainda protege o plano.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "san_silencioso_apice",
@@ -1010,7 +1041,8 @@
       "descricao": "A última assinatura é feita sem tinta, e o contrato se cumpre sem testemunhas.",
       "contrapartida": "A assinatura final pede Entropia alta e descanso longo; a Carga assina junto.",
       "momento": "Melhor jogada quando o alvo é um só e o golpe final precisa chegar sem aviso.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_t5_tronco",
@@ -1042,7 +1074,8 @@
       "descricao": "A colheita da ruína corta o que o tempo já apodreceu.",
       "contrapartida": "A colheita custa Entropia alta e só se repete a cada turno.",
       "momento": "Melhor jogada quando o alvo já está fraco e a ruína pode ser colhida de uma vez.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "cor_t6_tronco",
@@ -1073,7 +1106,8 @@
       "descricao": "O pacto de ferrugem endurece o corpo enquanto corrói o que o toca.",
       "contrapartida": "A ferrugem do pacto cobra Entropia pesada e se renova uma vez por turno.",
       "momento": "Melhor jogada quando o golpe vem e o corruptor quer que o atacante pague com a própria arma.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "cor_t7_tronco",
@@ -1104,7 +1138,8 @@
       "descricao": "O jardim decomposto floresce em torno do corruptor e a podridão vira vantagem.",
       "contrapartida": "O jardim floresce uma vez por cena, adubado com Entropia alta.",
       "momento": "Melhor jogada quando o campo está apertado e a podridão do jardim pode cercar os inimigos.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_t8_tronco",
@@ -1135,7 +1170,8 @@
       "descricao": "A entropia compartilhada divide o fardo entre todos, de bom grado ou à força.",
       "contrapartida": "Dividir o fardo custa Entropia no limite, uma vez por cena.",
       "momento": "Melhor jogada quando a Entropia do grupo está desigual e o corruptor pode redistribuí-la.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_biologia_t5",
@@ -1167,7 +1203,8 @@
       "descricao": "A ecologia da febre faz do corpo do inimigo um viveiro de pragas.",
       "contrapartida": "A febre pede Entropia alta e leva um turno para voltar.",
       "momento": "Melhor jogada quando o alvo é carne e osso e a febre pode se espalhar até os vizinhos.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "cor_biologia_t7",
@@ -1198,7 +1235,8 @@
       "descricao": "O anticorpo trai o corpo que o carrega e volta-se contra o hospedeiro.",
       "contrapartida": "O anticorpo só trai uma vez por cena, e a Entropia paga a traição.",
       "momento": "Melhor jogada quando o inimigo está cheio de pragas e o troco precisa vir de dentro.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_biologia_t8",
@@ -1230,7 +1268,8 @@
       "descricao": "A carne muda em estações: primavera de pus, outono de osso.",
       "contrapartida": "A estação muda uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando o corpo do alvo já está doente e a estação pode empurrá-lo ao limite.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_biologia_apice",
@@ -1262,7 +1301,8 @@
       "descricao": "A gênese da podridão é a primeira doença, a que dá nome às outras.",
       "contrapartida": "A gênese exige Entropia alta e descanso longo; a Carga do Abismo cresce junto.",
       "momento": "Melhor jogada quando o grupo inimigo é grande e a gênese pode contaminar todos de uma vez.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_alma_t5",
@@ -1293,7 +1333,8 @@
       "descricao": "A liturgia do desalento sussurra ao inimigo que não vale a pena continuar.",
       "contrapartida": "O sussurro custa Entropia alta e precisa de um turno para recuperar o fôlego.",
       "momento": "Melhor jogada quando a vontade do alvo já fraqueja e o sussurro pode quebrá-la de vez.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "cor_alma_t7",
@@ -1325,7 +1366,8 @@
       "descricao": "A vontade oca não tem mais o que defender, e o inimigo sente o vazio.",
       "contrapartida": "O vazio abre uma vez por cena e gasta Entropia alta.",
       "momento": "Melhor jogada quando o inimigo mais confiante precisa duvidar de si antes de atacar.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_alma_t8",
@@ -1357,7 +1399,8 @@
       "descricao": "O coro da renúncia canta no fundo da cabeça de quem ainda resiste.",
       "contrapartida": "O coro canta uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando várias mentes inimigas se mantêm firmes e o coro pode dobrá-las juntas.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_alma_apice",
@@ -1388,7 +1431,8 @@
       "descricao": "O eclipse interior apaga a luz de dentro, e o inimigo só vê o escuro de si mesmo.",
       "contrapartida": "O eclipse pede Entropia alta, descanso longo, e a Carga fica no escuro.",
       "momento": "Melhor jogada quando um chefe de vontade forte domina o campo e precisa ser calado por dentro.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_inorganica_t5",
@@ -1420,7 +1464,8 @@
       "descricao": "A catedral de ferrugem se ergue no metal do inimigo e o consome pelas juntas.",
       "contrapartida": "A ferrugem trabalha por um turno e cobra Entropia alta.",
       "momento": "Melhor jogada quando o alvo veste ferro pesado e a ferrugem pode abrir as juntas da armadura.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "cor_inorganica_t7",
@@ -1452,7 +1497,8 @@
       "descricao": "A fratura mineral corre pela pedra e pelo osso até encontrar o ponto fraco.",
       "contrapartida": "A fratura corre uma vez por cena e custa Entropia alta.",
       "momento": "Melhor jogada quando o terreno é de pedra e a fratura pode atingir quem estiver apoiado nela.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_inorganica_t8",
@@ -1483,7 +1529,8 @@
       "descricao": "O pó dos impérios é tudo o que sobra de quem achou que duraria para sempre.",
       "contrapartida": "O pó se levanta uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando o inimigo confia na própria fortaleza e o pó pode desfazê-la.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "cor_inorganica_apice",
@@ -1515,7 +1562,8 @@
       "descricao": "A idade do colapso chega para tudo o que foi construído, e não pede licença.",
       "contrapartida": "O colapso pede Entropia alta e descanso longo; a Carga permanece como cinza.",
       "momento": "Melhor jogada quando o campo inteiro é feito de pedra e ferro e o colapso pode derrubar tudo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "arc_t5_tronco",
@@ -2052,7 +2100,8 @@
       "descricao": "A triagem impossível escolhe quem fica de pé e paga o preço da escolha.",
       "contrapartida": "A escolha custa Entropia alta e se repete só no turno seguinte.",
       "momento": "Melhor jogada quando o grupo está ferido demais para salvar todos e alguém precisa decidir.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "med_t6_tronco",
@@ -2083,7 +2132,8 @@
       "descricao": "O pulso de reserva guarda o último fio de vida para quando a mão faltar.",
       "contrapartida": "A reserva pesa em Entropia e só abre uma vez por turno.",
       "momento": "Melhor jogada quando um aliado vai cair no próximo golpe e a reserva pode segurá-lo.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "med_t7_tronco",
@@ -2114,7 +2164,8 @@
       "descricao": "O protocolo da última luz acende uma chama que o inimigo não consegue apagar.",
       "contrapartida": "A luz acende uma vez por cena e queima Entropia alta.",
       "momento": "Melhor jogada quando o grupo está encurralado e a última luz pode empurrar a escuridão.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_t8_tronco",
@@ -2145,7 +2196,8 @@
       "descricao": "O juramento de retorno traz de volta quem prometeu voltar.",
       "contrapartida": "O retorno vale uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando um aliado caiu e ainda há tempo de chamá-lo de volta.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_trincheira_t5",
@@ -2177,7 +2229,8 @@
       "descricao": "A triagem de guerra corta o que não tem salvação e remenda o que tem.",
       "contrapartida": "A triagem custa Entropia alta e leva um turno para ser refeita.",
       "momento": "Melhor jogada quando a linha de frente sangra e cada segundo decide quem se levanta.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_trincheira_t7",
@@ -2208,7 +2261,8 @@
       "descricao": "A dose necessária é a que o paciente aguenta e nem uma gota a mais.",
       "contrapartida": "A dose só se mede uma vez por cena, e a Entropia a paga.",
       "momento": "Melhor jogada quando o aliado está no limite e a dose exata pode mantê-lo de pé.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_trincheira_t8",
@@ -2240,7 +2294,8 @@
       "descricao": "O corte limpo é feito sem dúvida: a lâmina sabe onde a morte começa.",
       "contrapartida": "O corte limpo vale uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando o alvo está exposto e um único corte pode resolver o que o tempo não resolveria.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_trincheira_apice",
@@ -2272,7 +2327,8 @@
       "descricao": "Um hospital cabe numa só pessoa quando a guerra não deixa tempo de construir outro.",
       "contrapartida": "O hospital exige Entropia alta e descanso longo; a Carga do Abismo permanece.",
       "momento": "Melhor jogada quando a retaguarda desabou e o campo inteiro precisa de socorro de uma vez.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_boticario_t5",
@@ -2303,7 +2359,8 @@
       "descricao": "A dor compartilhada divide o peso entre quem a sente e quem a causou.",
       "contrapartida": "Repartir a dor custa Entropia alta, e só se repete no turno seguinte.",
       "momento": "Melhor jogada quando um aliado sofre mais que os outros e a dor pode ser repartida.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "med_boticario_t7",
@@ -2335,7 +2392,8 @@
       "descricao": "O pulso solidário bate por todos e puxa a vida do chão.",
       "contrapartida": "O pulso bate por todos uma vez por cena, ao preço de Entropia alta.",
       "momento": "Melhor jogada quando todos estão feridos e o boticário quer cuidar do grupo inteiro.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_boticario_t8",
@@ -2367,7 +2425,8 @@
       "descricao": "O luto clínico é a calma de quem já viu demais e ainda tem a mão firme.",
       "contrapartida": "O luto clínico pesa na Entropia, no limite, e vale uma vez por cena.",
       "momento": "Melhor jogada quando uma baixa abalou o grupo e o boticário precisa seguir adiante mesmo assim.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_boticario_apice",
@@ -2398,7 +2457,8 @@
       "descricao": "O coração de todos bate no peito de um só, e quem o ouve se levanta.",
       "contrapartida": "O coração de todos pede Entropia alta, descanso longo, e a Carga fica.",
       "momento": "Melhor jogada quando a luta já foi perdida uma vez e o grupo precisa se levantar de novo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_ferro_t5",
@@ -2430,7 +2490,8 @@
       "descricao": "O protocolo absoluto não admite exceção, e a ferida obedece.",
       "contrapartida": "O protocolo exige Entropia alta e silêncio de um turno depois.",
       "momento": "Melhor jogada quando a ferida é grave e só um procedimento estrito impede o pior.",
-      "raridade": "rara"
+      "raridade": "rara",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_ferro_t7",
@@ -2462,7 +2523,8 @@
       "descricao": "Remédio ou ruína: a dose decide o que o corpo vai se tornar.",
       "contrapartida": "A aposta só se faz uma vez por cena, e a Entropia é a fiança.",
       "momento": "Melhor jogada quando o aliado está em estado grave e a aposta pode salvá-lo ou perdê-lo.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_ferro_t8",
@@ -2493,7 +2555,8 @@
       "descricao": "A cirurgia de fé opera a alma antes do corpo e o corpo agradece.",
       "contrapartida": "A cirurgia opera uma vez por cena, com a Entropia no limite.",
       "momento": "Melhor jogada quando o grupo perdeu a esperança e a fé do cirurgião pode restituí-la.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     },
     {
       "id": "med_cirurgiao_ferro_apice",
@@ -2525,7 +2588,8 @@
       "descricao": "O milagre imperdoável devolve a vida e cobra a conta em memória.",
       "contrapartida": "O milagre custa Entropia alta e descanso longo; a Carga cobra a sua parte.",
       "momento": "Melhor jogada quando a morte já bateu à porta e ninguém mais sabe o que fazer.",
-      "raridade": "abissal"
+      "raridade": "abissal",
+      "momento_placeholder": true
     }
   ]
 }

@@ -274,3 +274,67 @@ def test_metrics_excludes_auto_source():
     ]
     t = metrics.aggregate(lines)
     assert "x" not in t and t["y"]["escolhas"] == 1
+
+
+def test_promote_voz_pendente_so_com_bandeira_e_sem_texto_livre(tmp_path):
+    promote = _load("promote")
+    for falso in ("dono (amostra de 20%, revisão posterior)", "pendente", "depois", "a revisar"):
+        assert not promote.revisor_valido(falso), falso
+    assert promote.revisor_valido("dono") and promote.revisor_valido("guilherme")
+    lote = tmp_path / "l.json"
+    lote.write_text(json.dumps({"cards": [_card(1)]}), encoding="utf-8")
+    cdir = tmp_path / "cards"
+    cdir.mkdir()
+    sim = {"med_lote_1": {"bandeiras": []}}
+    texto = promote.promote(
+        str(lote), sim, onda=1, autor="t", revisor_voz="dono (depois)", cards_dir=str(cdir)
+    )
+    assert texto.get("erro") and not texto["promovidas"]
+    ambos = promote.promote(
+        str(lote),
+        sim,
+        onda=1,
+        autor="t",
+        revisor_voz="dono",
+        voz_pendente=True,
+        cards_dir=str(cdir),
+    )
+    assert ambos.get("erro")
+    ok = promote.promote(str(lote), sim, onda=1, autor="t", voz_pendente=True, cards_dir=str(cdir))
+    assert ok["promovidas"] == ["med_lote_1"]
+    onda = promote.load_ondas(str(cdir))[0]
+    assert onda["revisor_voz"] is None and onda["voz_status"] == "pendente-dono"
+
+
+def test_validate_content_avisa_onda_com_voz_pendente(tmp_path):
+    import yaml
+
+    from services.content_validator import validate_cards
+
+    cdir = tmp_path / "cards"
+    cdir.mkdir()
+    (cdir / "_ondas.yaml").write_text(
+        yaml.safe_dump(
+            {
+                "ondas": [
+                    {
+                        "onda": 9,
+                        "revisor_voz": None,
+                        "voz_status": "pendente-dono",
+                        "amostra_voz": ["x_1"],
+                        "cartas": ["x_1", "x_2"],
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    avisos = [f for f in validate_cards(str(cdir)) if f.severity == "warning"]
+    assert any("voz pendente" in f.message and "x_2" in f.message for f in avisos)
+
+
+def test_protocolo_lote_e_preset_dos_parametros_existentes():
+    sim = _load("sim")
+    assert sim.PROTOCOLO_LOTE == {"categories": ["padrao"], "per_cat": 4, "seeds": 20}
+    assert sim.LIMIAR_BRANCA == 0.05 and sim.LIMIAR_DOMINANTE_USO == 0.60
+    assert sim.LIMIAR_DOMINANTE_DELTA_PP == 8.0 and sim.MIN_LUTAS_DELTA == 40

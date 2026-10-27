@@ -337,9 +337,7 @@ def test_loader_traversal_matches_lint_and_keeps_323_legacy_cards():
     assert set(cards.all_cards()) == ids
     pool = card_lint.load_pool()
     # ondas (SPEC-335+) e baralhos de família (`inf_`, SPEC-332) crescem; o legado fica fixo
-    legado = {
-        c["id"] for c in pool if c.get("onda") is None and not c["id"].startswith("inf_")
-    }
+    legado = {c["id"] for c in pool if c.get("onda") is None and not c["id"].startswith("inf_")}
     assert len(legado) == 323
     assert {c["id"] for c in pool if c.get("onda") is not None} <= ids
 

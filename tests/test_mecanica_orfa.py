@@ -414,6 +414,15 @@ def _active_test(kind: str) -> Callable[[], None]:
                 kind, "ally", prep=lambda p, e, a, s: a.update(abyss_charge=4)
             )
             assert ally["abyss_charge"] < 4
+        elif kind == "vigilia":  # SPEC-335 P2-2: Carta real, pelo caminho de Carta
+            player, *_ = _play_active(kind, "player")
+            assert cm.combat_modifiers(player)["vigilia"] > 0
+        elif kind == "revelar":
+            _p, enemy, _a, _s, out = _play_active(kind, "e")
+            assert out.get("revelacoes") and enemy.get("_revelado")
+        elif kind == "mover_alvo_zona":
+            _p, _e, _a, scene, _o = _play_active(kind, "e")
+            assert scene["positions"]["e"]["distance_state"] != "proximo"
         else:
             raise AssertionError(kind)
 
@@ -792,6 +801,9 @@ for _k in (
     "esconder",
     "purga_condicao",
     "reduzir_carga_aliado",
+    "vigilia",
+    "revelar",
+    "mover_alvo_zona",
 ):
     EFFECT_TESTS[f"card:ativa:{_k}"] = _active_test(_k)
 for _k in (
@@ -847,16 +859,9 @@ EFFECT_TESTS["card:utilitaria:utilitaria"] = _utility_test
 EFFECT_TESTS["card:utilitaria:perception"] = _utility_test
 
 
-# SPEC-335: kinds da gramática da SPEC-330 que agora aparecem como efeito principal de
-# Cartas ativas do acervo. Cada um reaproveita o teste de efeito da própria 330.
-def _vigilia_test() -> None:
-    from services import card_effects as fx
-
-    actor = orch.ensure_combat_sheet({"id": "p", "name": "p"}, is_player=True)
-    fx.add_vigilia(actor, 2, "teste")
-    assert cm.combat_modifiers(actor)["vigilia"] == 2
-
-
+# SPEC-335: kinds da gramática da SPEC-330 que agora são efeito principal de Cartas ativas do
+# acervo. vigilia/revelar/mover_alvo_zona rodam por `_play_active` (Carta real, acima);
+# comprar/descartar reaproveitam os testes de pilhas da 330.
 def _reuse_test(module: str, name: str) -> Callable[[], None]:
     def run():
         import importlib
@@ -876,11 +881,6 @@ def _reuse_test(module: str, name: str) -> Callable[[], None]:
     return run
 
 
-EFFECT_TESTS["card:ativa:vigilia"] = _vigilia_test
-for _k in ("revelar", "mover_alvo_zona"):
-    EFFECT_TESTS[f"card:ativa:{_k}"] = _reuse_test(
-        "test_card_effects_grammar", "test_mover_alvo_zona_e_revelar"
-    )
 EFFECT_TESTS["card:ativa:comprar"] = _reuse_test(
     "test_card_effects_piles", "test_comprar_traz_cartas_do_monte_para_a_mao"
 )

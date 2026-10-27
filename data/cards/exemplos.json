@@ -22,7 +22,8 @@
       "apex": false,
       "descricao": "Um golpe de convite: quem o recebe sente o Abismo acenar por trás do ombro de quem bate.",
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "muralha_viva",
@@ -55,7 +56,8 @@
       "apex": false,
       "descricao": "O corpo vira parede e a fé, argamassa; nada passa por quem jurou ficar.",
       "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "conviccao_passiva",
@@ -76,7 +78,8 @@
       "apex": false,
       "descricao": "A certeza do juramento endurece a pele antes de qualquer lâmina chegar.",
       "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "corte_sangrento",
@@ -100,7 +103,8 @@
       "apex": false,
       "descricao": "A lâmina abre o caminho e o sangue paga a passagem.",
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "hemorragia",
@@ -124,7 +128,8 @@
       "apex": false,
       "descricao": "O corte não fecha; o ferro lembra da carne por muito tempo.",
       "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "reflexo_lamina",
@@ -148,7 +153,8 @@
       "apex": false,
       "descricao": "O aço de quem ataca encontra o aço que já esperava por ele.",
       "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "toque_corrosivo",
@@ -172,7 +178,8 @@
       "apex": false,
       "descricao": "Um dedo de ferrugem viva roe o couro e depois a carne.",
       "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "praga_lenta",
@@ -196,7 +203,8 @@
       "apex": false,
       "descricao": "A podridão entra devagar e não pede licença para ficar.",
       "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "simbiose",
@@ -217,7 +225,8 @@
       "apex": false,
       "descricao": "O nariz aprende a ler a decomposição como outros leem mapas.",
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "raio_cinza",
@@ -307,7 +316,8 @@
       "apex": false,
       "descricao": "Agulha, fio e pressa: a ferida fecha antes que a dor tenha opinião.",
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "estabilizar",
@@ -330,7 +340,8 @@
       "apex": false,
       "descricao": "Mãos firmes seguram o último fio de vida até o sangue lembrar o caminho.",
       "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "mao_firme",
@@ -351,7 +362,8 @@
       "apex": false,
       "descricao": "Nem o tremor da guerra desvia a mão que já viu coisa pior.",
       "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "vc_forca_bruta",
@@ -371,7 +383,8 @@
       },
       "descricao": "A força que o sangue guarda cresce a cada degrau que a Virtude sobe.",
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o dano precisa acompanhá-lo, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "vc_mente_lucida",
@@ -391,7 +404,8 @@
       },
       "descricao": "A mente limpa a névoa e enxerga o que o resto da vila só pressente.",
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o olhar acompanha, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "vc_corpo_rijo",
@@ -411,7 +425,8 @@
       },
       "descricao": "O corpo aprende a aguentar o que antes o quebraria.",
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e o corpo aguenta mais, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "vc_agil_reflexo",
@@ -431,7 +446,8 @@
       },
       "descricao": "Os reflexos chegam um fôlego antes do perigo.",
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a pressa acompanha, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "vc_lingua_afiada",
@@ -451,7 +467,8 @@
       },
       "descricao": "A palavra certa corta mais fundo que o ferro e deixa menos sangue.",
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a palavra pesa mais, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     }
   ]
 }

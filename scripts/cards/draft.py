@@ -34,8 +34,8 @@ RARIDADES_PADRAO = ("comum", "incomum", "rara")
 _PATAMAR_POR_RARIDADE = {
     "comum": "inicial",
     "incomum": "avancado",
-    "rara": "superior",
-    "abissal": "epico_i",
+    "rara": "epico_i",
+    "abissal": "lendario",
 }
 
 

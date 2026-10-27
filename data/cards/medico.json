@@ -23,7 +23,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_torniquete",
@@ -47,7 +48,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o golpe seguinte do inimigo ameaça derrubar alguém do grupo, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_estabilizar",
@@ -71,7 +73,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_mao_firme",
@@ -93,7 +96,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_triagem",
@@ -115,7 +119,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_antitoxina",
@@ -138,7 +143,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_ultima_hora",
@@ -162,7 +168,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando a rodada deu respiro e a Vitalidade perdida pode voltar, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_tri_reflexo",
@@ -187,7 +194,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_tri_intervencao",
@@ -245,7 +253,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_tri_sangue_frio",
@@ -267,7 +276,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_bot_composto",
@@ -291,7 +301,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_bot_purga",
@@ -349,7 +360,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a Carga do Abismo de um aliado ameaça passar do limite, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_bot_reagente",
@@ -371,7 +383,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o grupo depende de cura constante e cada cura precisa render mais, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_fer_talas",
@@ -395,7 +408,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_fer_protese",
@@ -453,7 +467,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_fer_solda",
@@ -475,7 +490,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a defesa decide quem fica de pé e o reforço entra barato, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_tri_corredor",
@@ -500,7 +516,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_tri_segundo",
@@ -525,7 +542,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando um aliado caiu em Estado Terminal e a próxima rodada pode ser a última, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_bot_nevoa",
@@ -550,7 +568,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_bot_panacea",
@@ -575,7 +594,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_fer_ancora",
@@ -600,7 +620,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando um aliado frágil vai ser alvo e a proteção o cobre, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_fer_colosso",
@@ -625,7 +646,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando a luta é longa e o dano a mais se paga a cada golpe, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_placa_reflexa",
@@ -651,7 +673,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo anuncia um golpe pesado e a guarda precisa estar de pé antes dele, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_dose_choque",
@@ -677,7 +700,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a ordem de ação decide a rodada e agir primeiro vale mais que golpear forte, e a janela de reação está aberta, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_autopsia_campo",
@@ -702,7 +726,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_hospital_improviso",
@@ -727,7 +752,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_corte_descompressao",
@@ -752,7 +778,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o grupo foi atingido por veneno ou medo e limpar a condição vale uma rodada, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "med_marca_triagem",
@@ -777,7 +804,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_serra_ossea",
@@ -803,7 +831,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "med_protocolo_retornar",
@@ -826,7 +855,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a cura acompanha, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     }
   ]
 }

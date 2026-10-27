@@ -7,7 +7,9 @@ Só entram Cartas com lint verde (contra o pool e o próprio lote) E simulação
 bandeira (`em_branco`/`dominante`). A revisão de voz do dono é por AMOSTRA de 20 %
 (decisão D8): o script sorteia a amostra (determinística pela onda), a imprime e a
 registra em `data/cards/_ondas.yaml` junto com `onda, data, autor, revisor_voz`.
-`--revisor-voz` é obrigatório (use `--dry-run` para só ver o que passaria).
+`--revisor-voz <identificador>` é obrigatório e só vale para quem REVISOU; sem revisão,
+`--voz-pendente` grava `revisor_voz: null` + `voz_status: pendente-dono` (o `validate_content`
+avisa). `--dry-run` só mostra o que passaria. Sem `--sim-report` roda o protocolo de lote.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 import sys
 
 import yaml
@@ -88,13 +91,24 @@ def evaluate(
     return ok, recusadas
 
 
+_REVISOR_REAL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{1,39}$")
+_REVISOR_FALSO = ("pendente", "posterior", "amostra", "depois", "tbd", "todo", "null", "none")
+
+
+def revisor_valido(nome: str | None) -> bool:
+    """Revisor real = um identificador (``dono``, ``guilherme``), nunca texto livre nem promessa."""
+    nome = (nome or "").strip()
+    return bool(_REVISOR_REAL.match(nome)) and not any(f in nome.lower() for f in _REVISOR_FALSO)
+
+
 def promote(
     lote_path: str,
     sim_report: dict,
     *,
     onda: int,
     autor: str,
-    revisor_voz: str,
+    revisor_voz: str | None = None,
+    voz_pendente: bool = False,
     cards_dir: str = CARDS_DIR,
     dry_run: bool = False,
     data: str | None = None,
@@ -111,8 +125,16 @@ def promote(
     result = {"promovidas": ids, "recusadas": recusadas, "amostra_voz": amostra}
     if dry_run or not ok:
         return result
-    if not revisor_voz or revisor_voz.strip().lower() == "pendente":
-        result["erro"] = "revisor_voz obrigatório: a revisão de voz é o último passo"
+    # P1-1 (Sol): ninguém é registrado como revisor sem ter revisado. Sem revisor real, só com a
+    # bandeira explícita `voz_pendente`: grava `revisor_voz: null` + `voz_status: pendente-dono`.
+    if voz_pendente and revisor_voz:
+        result["erro"] = "voz_pendente e revisor_voz são excludentes"
+    elif not voz_pendente and not revisor_valido(revisor_voz):
+        result["erro"] = (
+            "revisor_voz precisa ser um revisor real (identificador, sem texto livre); "
+            "sem revisão ainda, use --voz-pendente"
+        )
+    if result.get("erro"):
         result["promovidas"] = []
         return result
     by_file: dict[str, list[dict]] = {}
@@ -139,7 +161,8 @@ def promote(
             "onda": onda,
             "data": data or dt.date.today().isoformat(),
             "autor": autor,
-            "revisor_voz": revisor_voz,
+            "revisor_voz": None if voz_pendente else revisor_voz.strip(),
+            "voz_status": "pendente-dono" if voz_pendente else "aprovada",
             "amostra_voz": amostra,
             "cartas": ids,
         }
@@ -155,6 +178,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--onda", type=int, required=True)
     ap.add_argument("--autor", default="claude")
     ap.add_argument("--revisor-voz", default="")
+    ap.add_argument(
+        "--voz-pendente",
+        action="store_true",
+        help="promove sem revisão de voz: grava revisor_voz null e voz_status pendente-dono",
+    )
     ap.add_argument("--sim-report", help="JSON de `sim.py --json`; sem ele roda a simulação")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
@@ -165,15 +193,14 @@ def main(argv: list[str] | None = None) -> int:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import sim
 
-        sim_report = sim.simulate_batch(
-            card_lint.load_batch(args.lote), [1, 3, 5], ["padrao"], 4, [0, 1, 2, 3]
-        )
+        sim_report = sim.simulate_protocolo_lote(card_lint.load_batch(args.lote))
     res = promote(
         args.lote,
         sim_report,
         onda=args.onda,
         autor=args.autor,
-        revisor_voz=args.revisor_voz,
+        revisor_voz=args.revisor_voz or None,
+        voz_pendente=args.voz_pendente,
         dry_run=args.dry_run,
     )
     print(json.dumps(res, ensure_ascii=False, indent=1))

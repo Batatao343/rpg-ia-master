@@ -18,16 +18,11 @@
       ],
       "efeitos": [
         {
-          "kind": "dano",
-          "categoria_arma": "leve",
-          "dano_base": 2
-        },
-        {
           "kind": "marca",
-          "duracao": 1
+          "duracao": 2
         }
       ],
-      "descricao": "O parafuso ricocheteia e deixa o alvo marcado para o próximo golpe.",
+      "descricao": "O parafuso ricocheteia e deixa o alvo marcado para os próximos golpes.",
       "momento": "Melhor jogada quando um aliado vai agir logo depois e precisa de um alvo mais fácil de acertar.",
       "tier": 1,
       "level_req": 1,
@@ -42,8 +37,8 @@
       "origem": "onda-1",
       "classe": "Arcanista Cinzento",
       "subclasse": "improvisador",
-      "patamar": "inicial",
-      "raridade": "comum",
+      "patamar": "avancado",
+      "raridade": "incomum",
       "custo_entropia": 0,
       "custo_folego": 1,
       "frequencia": "turno",
@@ -59,16 +54,12 @@
         {
           "kind": "ganhar_folego",
           "valor": 1
-        },
-        {
-          "kind": "descartar",
-          "valor": 1
         }
       ],
       "descricao": "Um fio puxado de onde não devia dá fôlego, ao custo de algo solto.",
-      "momento": "Melhor jogada quando a mão tem uma carta de dois de Fôlego e falta exatamente um para jogá-la.",
-      "tier": 1,
-      "level_req": 1,
+      "momento": "Melhor jogada quando o conjurador vai apanhar e quer couro novo sem gastar o fôlego da rodada.",
+      "tier": 3,
+      "level_req": 4,
       "apex": false,
       "onda": 1,
       "versao": 1

@@ -28,7 +28,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_finta",
@@ -52,7 +53,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o alvo é escorregadio e a mira precisa de ajuda, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_esquiva",
@@ -77,7 +79,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo ataca com força e esquivar é mais barato que aguentar, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_pacto",
@@ -99,7 +102,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_passo",
@@ -121,7 +125,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_hemorragia",
@@ -146,7 +151,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ultimo_lance",
@@ -175,7 +181,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo já sangra e um golpe a mais fecha a conta, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_exp_espetaculo",
@@ -202,7 +209,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_exp_credencial",
@@ -271,7 +279,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_exp_plateia",
@@ -293,7 +302,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ava_reserva",
@@ -315,7 +325,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ava_juros",
@@ -383,7 +394,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ava_sovinice",
@@ -405,7 +417,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sil_exato",
@@ -433,7 +446,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sil_veia",
@@ -498,7 +512,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sil_frieza",
@@ -520,7 +535,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo ataca com força e esquivar é mais barato que aguentar, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_exp_aplausos",
@@ -545,7 +561,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo escolhe a presa mais fraca e o provocador a rouba, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_exp_bis",
@@ -570,7 +587,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ava_juros_carne",
@@ -595,7 +613,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a próxima rodada reúne os golpes mais fortes e o reforço multiplica o que já está na mão, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ava_falencia",
@@ -621,7 +640,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo já sangra e um golpe a mais fecha a conta, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sil_fio",
@@ -646,7 +666,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o grupo vai atacar em sequência e a marca faz todos acertarem mais, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sil_pulso",
@@ -672,7 +693,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o alvo domina a luta e uma condição o tira do ritmo, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_desvio_arterial",
@@ -698,7 +720,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o golpe anunciado é perigoso demais para tomar de frente, e a janela de reação está aberta, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_troco_carmesim",
@@ -724,7 +747,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando o inimigo ataca e o troco pode vir na mesma batida, e a janela de reação está aberta, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_ouvir_veias",
@@ -749,7 +773,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando a travessia exige olhos atentos e o perigo ainda não se mostrou, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_assinar_sangue",
@@ -774,7 +799,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a travessia trava num obstáculo que só o ofício resolve, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_sangria_lenta",
@@ -800,7 +826,8 @@
       "level_req": 1,
       "apex": false,
       "momento": "Melhor jogada quando o alvo é resistente demais para um golpe só e o desgaste compensa, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "san_transfusao_hostil",
@@ -825,7 +852,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_passo_capilar",
@@ -850,7 +878,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando a linha do aliado está bloqueada e mover o alvo a libera, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_conta_memorizada",
@@ -873,7 +902,8 @@
       "level_req": 4,
       "apex": false,
       "momento": "Melhor jogada quando a ordem de ação decide a rodada e agir primeiro vale mais que golpear forte, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     },
     {
       "id": "san_pulso_reserva",
@@ -896,7 +926,8 @@
       "level_req": 7,
       "apex": false,
       "momento": "Melhor jogada quando o Estágio da Virtude já subiu e a esquiva acompanha, e o efeito já está armado, com a luta em andamento.",
-      "raridade": "incomum"
+      "raridade": "incomum",
+      "momento_placeholder": true
     }
   ]
 }

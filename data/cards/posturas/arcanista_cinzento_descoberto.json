@@ -12,7 +12,7 @@
       "raridade": "comum",
       "custo_entropia": 1,
       "custo_folego": 1,
-      "frequencia": "cena",
+      "frequencia": "livre",
       "virtude_permitida": [
         "mente"
       ],
@@ -21,20 +21,18 @@
           "kind": "dano",
           "categoria_arma": "leve",
           "dano_base": 2
-        },
-        {
-          "kind": "dano",
-          "valor": 1,
-          "chamado": 2
         }
       ],
       "descricao": "Sai da ponta dos dedos sem pedir licença ao instrumento.",
-      "momento": "Melhor jogada quando a Entropia passou do primeiro degrau e um golpe barato ganha dente.",
+      "momento": "Melhor jogada quando a mesma faísca vai se repetir na cena e cada estalo deve pesar mais que o anterior.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "palavras_chave": {
+        "ressoar": 1
+      }
     },
     {
       "id": "arc1_des_dedos",
@@ -53,17 +51,13 @@
       ],
       "efeitos": [
         {
-          "kind": "vantagem",
-          "duracao": 1
-        },
-        {
-          "kind": "protecao",
+          "kind": "buff_acerto",
           "valor": 2,
-          "alvo": "eu"
+          "duracao": 1
         }
       ],
-      "descricao": "Sem luva nem isolante, a mão sente o alvo antes de tocá-lo.",
-      "momento": "Melhor jogada quando o golpe pesado está na mão e a Vantagem faz ele acertar.",
+      "descricao": "Sem luva nem isolante, a mão sente o alvo antes de tocá-lo e corrige a mira.",
+      "momento": "Melhor jogada quando o golpe pesado está na mão e a mira precisa de um empurrão antes dele.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
@@ -90,24 +84,18 @@
           "kind": "dano",
           "categoria_arma": "leve",
           "dano_base": 2
-        },
-        {
-          "kind": "dano",
-          "valor": 0,
-          "escala": {
-            "por": "entropia",
-            "fator": 0.5,
-            "max": 2
-          }
         }
       ],
-      "descricao": "A palma aberta devolve ao alvo tudo o que o éter acumulou.",
-      "momento": "Melhor jogada quando a Entropia está alta e cada ponto dela pode virar dano no mesmo golpe.",
+      "descricao": "A palma aberta devolve ao alvo o que a corrente acabou de ouvir.",
+      "momento": "Melhor jogada quando a carta anterior já foi do Arcanista e o estalo pode ecoar sozinho.",
       "tier": 1,
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 1,
+      "palavras_chave": {
+        "eco": true
+      }
     },
     {
       "id": "arc1_des_corrente",
@@ -127,16 +115,12 @@
       "efeitos": [
         {
           "kind": "descartar",
-          "valor": 1,
+          "valor": 2,
           "escolha": true
-        },
-        {
-          "kind": "comprar",
-          "valor": 1
         }
       ],
-      "descricao": "A corrente solta o elo gasto e puxa outro da escuridão.",
-      "momento": "Melhor jogada quando uma carta morta atrapalha a mão e o baralho ainda guarda a resposta.",
+      "descricao": "A corrente solta dois elos gastos de uma vez e a caldeira esfria por onde dá.",
+      "momento": "Melhor jogada quando a mão está cheia de cartas mortas e o descarte pode acordar uma Vazão.",
       "tier": 1,
       "level_req": 1,
       "apex": false,

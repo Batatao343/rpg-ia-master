@@ -38,6 +38,15 @@ MIN_CARTAS_POR_PALAVRA_NOVA = 6  # R9
 
 # SPEC-335 R5: frases-modelo do gerador antigo (scripts/gen_tiers_5_plus.py); proibidas.
 GENERICAS = ("converte_risco_acumulado", "decisao_mecanica_de_fim_de_campanha")
+GENERICAS_CONTRAPARTIDA = ("consome_entropia_e_respeita_a_frequencia",)
+
+# SPEC-335 R3: raridade = complexidade. Patamares aceitos por raridade.
+PATAMARES_DA_RARIDADE = {
+    "comum": frozenset({"inicial"}),
+    "incomum": frozenset({"avancado", "superior"}),
+    "rara": frozenset({"epico_i", "epico_ii"}),
+    "abissal": frozenset({"lendario", "mitico", "apice"}),
+}
 
 _STOP = frozenset(
     "a o as os um uma de do da dos das em no na nos nas e ou que se por para com sem ao aos "
@@ -209,6 +218,39 @@ def check_budget(card: dict) -> list[Issue]:
     return [Issue("error", "orcamento", msg)] if msg else []
 
 
+def check_raridade(card: dict) -> list[Issue]:
+    """R3: comum <= 1 efeito e <= 1 palavra-chave; incomum <= 2; abissal com Exaurir e custo
+    explícito; ``raridade`` coerente com o ``patamar``. Só Cartas de onda (``onda``): o acervo
+    legado foi rotulado por patamar, sem reescrita mecânica."""
+    rar = card.get("raridade")
+    if card.get("onda") is None or not rar:
+        return []
+    out: list[Issue] = []
+    patamar = card.get("patamar")
+    if patamar not in PATAMARES_DA_RARIDADE.get(rar, frozenset()):
+        out.append(
+            Issue("error", "raridade", f"raridade {rar!r} incoerente com o patamar {patamar!r}")
+        )
+    n_efeitos = len(fx.normalize(card))
+    n_kws = len(fx.keywords(card))
+    if rar == "comum" and (n_efeitos > 1 or n_kws > 1):
+        msg = f"comum com {n_efeitos} efeitos e {n_kws} palavras-chave (máx. 1 e 1)"
+        out.append(Issue("error", "raridade", msg))
+    if rar == "incomum" and (n_efeitos > 2 or n_kws > 2):
+        msg = f"incomum com {n_efeitos} efeitos e {n_kws} palavras-chave (máx. 2)"
+        out.append(Issue("error", "raridade", msg))
+    if rar == "abissal":
+        kws = fx.keywords(card)
+        custo = (
+            int(card.get("custo_entropia", 0) or 0) > 0
+            or bool(kws.get("sacrificio"))
+            or bool((card.get("mecanica_classe") or {}).get("auto_dano"))
+        )
+        if not kws.get("exaurir") or not custo:
+            out.append(Issue("error", "raridade", "abissal exige Exaurir e custo explícito"))
+    return out
+
+
 def check_voice(card: dict) -> list[Issue]:
     out: list[Issue] = []
     name = str(card.get("name") or "")
@@ -225,6 +267,9 @@ def check_voice(card: dict) -> list[Issue]:
         out.append(Issue("error", "voz", "número na descrição (o número vem do texto gerado)"))
     if any(frase in fx._fold(desc) for frase in GENERICAS):
         out.append(Issue("error", "voz", "descrição genérica (frase-modelo, sem sabor próprio)"))
+    contra = fx._fold(card.get("contrapartida"))
+    if any(frase in contra for frase in GENERICAS_CONTRAPARTIDA):
+        out.append(Issue("error", "voz", "contrapartida genérica (frase-modelo)"))
     banned = set(lexico()["proibidos"])
     for field in ("name", "descricao", "momento"):
         hit = sorted(_tokens_all(str(card.get(field) or "")) & banned)
@@ -371,6 +416,7 @@ def lint_card(
     if not any(i.code == "vocabulario" for i in issues):
         issues += check_budget(card)
     issues += check_voice(card)
+    issues += check_raridade(card)
     issues += check_color_pie(card)
     issues += check_names(card, others)
     issues += check_redundancy(card, others, embed)

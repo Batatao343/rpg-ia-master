@@ -752,7 +752,13 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             last_version[cid0] = max(ver, last_version.get(cid0, 0))
             if c.get("onda") is not None:
                 wave_cards.append(c)  # SPEC-336: lint pleno (voz, color pie, duplicata, onda)
-            if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328", "cartas-332"):
+            if c.get("origem") not in (
+                "conflito-14",
+                "conflito-15",
+                "tiers-5-plus",
+                "cartas-328",
+                "cartas-332",
+            ):
                 if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
                     budget = fx.budget_error(fx.materialize(c))
                     if budget:
@@ -872,6 +878,26 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
                     )
         for issue in card_lint.lint_wave(wave_cards):
             findings.append(Finding("cards", "error", cards_dir, "onda", issue.message))
+    # SPEC-335 P1-1: onda promovida sem revisão de voz do dono vira AVISO (nunca atestado falso)
+    ondas_file = os.path.join(cards_dir, "_ondas.yaml")
+    if os.path.isfile(ondas_file):
+        import yaml
+
+        with open(ondas_file, encoding="utf-8") as f:
+            ondas = (yaml.safe_load(f) or {}).get("ondas") or []
+        for onda in ondas:
+            if onda.get("voz_status", "aprovada") != "aprovada" or not onda.get("revisor_voz"):
+                ids = ", ".join(onda.get("cartas") or [])
+                findings.append(
+                    Finding(
+                        "cards",
+                        "warning",
+                        ondas_file,
+                        f"onda-{onda.get('onda')}",
+                        f"voz pendente do dono (amostra: {', '.join(onda.get('amostra_voz') or [])})"
+                        f"; cartas: {ids}",
+                    )
+                )
     if late_cards:
         trunks = [card for card in late_cards if not card.get("subclasse")]
         branch = [card for card in late_cards if card.get("subclasse") and not card.get("apex")]

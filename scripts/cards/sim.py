@@ -357,9 +357,44 @@ def simulate_batch(batch: list[dict], levels, categories, per_cat, seeds) -> dic
     return report
 
 
+# Protocolo de lote (fixado pelo coordenador/SPEC-336, igual para todos os lotes): cada Carta
+# ISOLADA (as outras do lote saem do catálogo na sua rodada), ao nível de entrada
+# (`level_req`), encontro padrão, 20 sementes. É só um preset dos parâmetros acima: métrica,
+# limiares e fórmulas são os mesmos de `simulate_batch`.
+PROTOCOLO_LOTE = {"categories": ["padrao"], "per_cat": 4, "seeds": 20}
+
+
+def simulate_protocolo_lote(batch: list[dict]) -> dict:
+    ids = {c["id"] for c in batch}
+    report: dict[str, dict] = {}
+    base = cards._load_cards()
+    for card in batch:
+        saved = {i: base.pop(i) for i in ids - {card["id"]} if i in base}
+        try:
+            level = max(int(card.get("level_req", 1) or 1), 1)
+            report.update(
+                simulate_batch(
+                    [card],
+                    [level],
+                    PROTOCOLO_LOTE["categories"],
+                    PROTOCOLO_LOTE["per_cat"],
+                    list(range(PROTOCOLO_LOTE["seeds"])),
+                )
+            )
+        finally:
+            base.update(saved)
+    return report
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--lote", required=True)
+    ap.add_argument(
+        "--protocolo",
+        choices=["lote"],
+        help="preset: cada Carta isolada, ao level_req, 20 sementes, encontro padrão",
+    )
+    ap.add_argument("--out", help="grava o relatório JSON neste arquivo")
     ap.add_argument("--levels", default="1,3,5")
     ap.add_argument("--categories", default="padrao")
     ap.add_argument("--per-cat", type=int, default=4)
@@ -369,13 +404,20 @@ def main(argv: list[str] | None = None) -> int:
     from services import card_lint
 
     batch = card_lint.load_batch(args.lote)
-    report = simulate_batch(
-        batch,
-        [int(x) for x in args.levels.split(",")],
-        args.categories.split(","),
-        args.per_cat,
-        list(range(args.seeds)),
-    )
+    if args.protocolo == "lote":
+        report = simulate_protocolo_lote(batch)
+    else:
+        report = simulate_batch(
+            batch,
+            [int(x) for x in args.levels.split(",")],
+            args.categories.split(","),
+            args.per_cat,
+            list(range(args.seeds)),
+        )
+    if args.out:
+        with open(args.out, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(report, f, ensure_ascii=False, indent=1)
+            f.write("\n")
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=1))
     else:

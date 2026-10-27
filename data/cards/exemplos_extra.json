@@ -22,7 +22,8 @@
       "apex": false,
       "descricao": "Um ombro de fé empurra o inimigo para longe do que se jurou proteger.",
       "momento": "Melhor jogada quando o inimigo cola em quem não deve e o espaço vale mais que o dano, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "grito_provocador",
@@ -45,7 +46,8 @@
       "apex": false,
       "descricao": "O grito rasga o ar e todos os olhos hostis voltam-se para quem gritou.",
       "momento": "Melhor jogada quando um aliado frágil está exposto e a atenção do inimigo precisa mudar de dono, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "resistir_devoto",
@@ -66,7 +68,8 @@
       "apex": false,
       "descricao": "Quando as pernas pedem descanso, o juramento pede mais um passo.",
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "finta_sangue",
@@ -89,7 +92,8 @@
       "apex": false,
       "descricao": "O corpo promete um golpe e entrega outro, sempre a um fio do alvo.",
       "momento": "Melhor jogada quando o alvo é escorregadio e a mira precisa de ajuda, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "lamina_gemea",
@@ -113,7 +117,8 @@
       "apex": false,
       "descricao": "Duas lâminas cantam a mesma cantiga, uma meia batida depois da outra.",
       "momento": "Melhor jogada quando o alvo está ao alcance e vale abrir a luta com dano direto, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "passo_leve",
@@ -134,7 +139,8 @@
       "apex": false,
       "descricao": "Quem sangrou muito aprende a pisar sem acordar o chão.",
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "esporos",
@@ -158,7 +164,8 @@
       "apex": false,
       "descricao": "Uma nuvem fina de esporos pousa no couro e começa a trabalhar.",
       "momento": "Melhor jogada quando a luta vai durar e o dano contínuo trabalha enquanto a mão faz outra coisa, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "carne_docil",
@@ -179,7 +186,8 @@
       "apex": false,
       "descricao": "A carne alheia amolece diante de quem fala a língua da podridão.",
       "momento": "Melhor jogada quando o alvo já sofre de dano contínuo e o reforço faz o desgaste correr mais rápido, e o efeito já está armado, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "farejar_praga",
@@ -200,7 +208,8 @@
       "apex": false,
       "descricao": "O ar carrega o recado da doença muito antes dos sintomas.",
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "faisca_cinza",
@@ -290,7 +299,8 @@
       "apex": false,
       "descricao": "Couro, nó e a certeza de que a vida ainda cabe num pulso apertado.",
       "momento": "Melhor jogada quando um aliado cai abaixo da metade da Vitalidade e a mão tem fôlego, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "antitoxina",
@@ -312,7 +322,8 @@
       "apex": false,
       "descricao": "Um gole de cinza e ervas tira da corrente o que ela não devia ter.",
       "momento": "Melhor jogada quando uma condição nociva prende um aliado e a rodada pede libertá-lo, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     },
     {
       "id": "triagem",
@@ -333,7 +344,8 @@
       "apex": false,
       "descricao": "Um olhar frio separa quem ainda tem tempo de quem já não tem.",
       "momento": "Melhor jogada quando a cena pede habilidade fora do combate e a Carta resolve o problema sem violência, no começo do conflito.",
-      "raridade": "comum"
+      "raridade": "comum",
+      "momento_placeholder": true
     }
   ]
 }

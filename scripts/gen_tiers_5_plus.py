@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -115,6 +116,9 @@ def _effect(kind: str, value: int, index: int) -> dict:
     if kind == "aplicar_condicao":
         effect["condicao"] = "exposto"
     return effect
+
+
+KEEP_FIELDS = ("descricao", "contrapartida", "raridade", "momento", "momento_placeholder")
 
 
 def _card(
@@ -261,10 +265,18 @@ def main() -> None:
     CLASSES_PATH.write_text(
         json.dumps(classes, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    output = {"schema_version": 1, "source": "tiers-5-plus", "cards": build_cards(classes)}
-    (CARDS_DIR / "tiers_5_plus.json").write_text(
-        json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    cards = build_cards(classes)
+    out_path = CARDS_DIR / "tiers_5_plus.json"
+    # SPEC-335 P2-3: o texto das 80 foi reescrito à mão (descricao/contrapartida/raridade/
+    # momento). Sem `--force`, o gerador só preenche o que falta e preserva o que existe.
+    if out_path.exists() and "--force" not in sys.argv:
+        old = {c["id"]: c for c in json.loads(out_path.read_text(encoding="utf-8"))["cards"]}
+        for card in cards:
+            for key in KEEP_FIELDS:
+                if key in old.get(card["id"], {}):
+                    card[key] = old[card["id"]][key]
+    output = {"schema_version": 1, "source": "tiers-5-plus", "cards": cards}
+    out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

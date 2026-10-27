@@ -20,10 +20,6 @@
         {
           "kind": "revelar",
           "campo": "intencao"
-        },
-        {
-          "kind": "comprar",
-          "valor": 1
         }
       ],
       "descricao": "O mostrador treme e confessa o que o inimigo ainda esconde.",
@@ -163,8 +159,8 @@
       "origem": "onda-1",
       "classe": "Arcanista Cinzento",
       "subclasse": "calibrado",
-      "patamar": "inicial",
-      "raridade": "comum",
+      "patamar": "avancado",
+      "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
       "frequencia": "cena",
@@ -185,8 +181,8 @@
       ],
       "descricao": "A lente racha ao meio e cada caco carrega um fio de luz cinza.",
       "momento": "Melhor jogada quando três inimigos se agrupam e um único estalo pode tocar todos.",
-      "tier": 1,
-      "level_req": 1,
+      "tier": 3,
+      "level_req": 4,
       "apex": false,
       "onda": 1,
       "versao": 1

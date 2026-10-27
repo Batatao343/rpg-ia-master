@@ -1,5 +1,5 @@
 {
-  "_meta": "SPEC-330 R9: orçamento de poder das Cartas. power_score = soma(poder dos efeitos) - custos (Entropia, Sacrifício, frequência, Exaurir, Fardo). A faixa vale por (raridade, custo de Fôlego). Calibrado para as 308 Cartas de 27/10: ajuste PESOS e FAIXAS, não as Cartas. Lido por services/card_effects.py e pela SPEC-336.",
+  "_meta": "SPEC-330 R9: orçamento de poder das Cartas. power_score = soma(poder dos efeitos) - custos (Entropia, Sacrifício, frequência, Exaurir, Fardo). A faixa vale por (raridade, custo de Fôlego). Calibrado para as 308 Cartas de 27/10: ajuste PESOS e FAIXAS, não as Cartas. Lido por services/card_effects.py e pela SPEC-336. SPEC-335: faixa `abissal` (rotulo de raridade, carta lendario/mitico) = a da `epica`; mudar o poder e nova `versao`.",
   "raridade_por_patamar": {
     "inicial": "comum",
     "avancado": "incomum",
@@ -179,6 +179,24 @@
       "3": [
         -6,
         13
+      ]
+    },
+    "abissal": {
+      "0": [
+        -1,
+        32
+      ],
+      "1": [
+        -1,
+        32
+      ],
+      "2": [
+        -1,
+        32
+      ],
+      "3": [
+        -1,
+        32
       ]
     }
   }

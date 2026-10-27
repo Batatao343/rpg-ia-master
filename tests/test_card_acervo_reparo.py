@@ -77,8 +77,8 @@ def test_lote1_arcanista_36_cartas_12_por_subclasse():
     }
     assert len({c["id"] for c in cs}) == 36
     assert Counter(c["raridade"] for c in cs) == {
-        "comum": 18,
-        "incomum": 11,
+        "comum": 16,
+        "incomum": 13,
         "rara": 5,
         "abissal": 2,
     }
@@ -92,10 +92,35 @@ def test_lote1_passa_no_lint_contra_o_acervo():
         assert fx.budget_error(c) is None, c["id"]
 
 
-def test_lote1_momentos_distintos_na_postura():
-    momentos = [
-        c["momento"]
-        for c in card_lint.load_pool()
-        if c.get("classe") == "Arcanista Cinzento" and c.get("momento")
-    ]
-    assert len(momentos) == len(set(momentos))
+# R4: `momento` distinto por Postura. As Posturas abaixo ainda têm `momento` de MODELO
+# (`momento_placeholder: true`), reescrito no lote de cada uma. A lista só pode ENCOLHER:
+# ao entregar o lote de uma Postura, tire-a daqui (o teste passa a exigir 0 duplicata).
+POSTURAS_COM_MOMENTO_PLACEHOLDER = {
+    "Devoto do Abismo",
+    "Sangromante",
+    "Corruptor",
+    "Médico de Campo",
+    "Inimigo",
+    "",  # Cartas de Virtude
+}
+MAX_PLACEHOLDERS = 255  # só pode diminuir
+
+
+def test_momento_distinto_por_postura_com_excecoes_que_so_encolhem():
+    pool = [c for c in card_lint.load_pool() if c.get("momento")]
+    placeholders = [c for c in pool if c.get("momento_placeholder")]
+    assert len(placeholders) <= MAX_PLACEHOLDERS
+    assert {c.get("classe") for c in placeholders} <= POSTURAS_COM_MOMENTO_PLACEHOLDER
+    por_postura: dict = {}
+    for c in pool:
+        if c.get("momento_placeholder") or str(c["id"]).startswith(("inf_", "bas_")):
+            continue
+        por_postura.setdefault(c.get("classe"), []).append(c)
+    for postura, cs in por_postura.items():
+        if postura in POSTURAS_COM_MOMENTO_PLACEHOLDER:
+            continue
+        momentos = [c["momento"] for c in cs]
+        assert len(momentos) == len(set(momentos)), postura
+        for i, a in enumerate(momentos):
+            for b in momentos[i + 1 :]:
+                assert card_lint.similarity(a, b) < card_lint.LIMIAR_MOMENTO, (postura, a, b)

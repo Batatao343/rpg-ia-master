@@ -2,7 +2,8 @@ ondas:
 - onda: 1
   data: '2026-10-27'
   autor: claude-sonnet-5.5
-  revisor_voz: dono (amostra de 20%, revisão posterior)
+  revisor_voz: null
+  voz_status: pendente-dono
   amostra_voz:
   - arc1_cal_estilhaco
   - arc1_cal_mares
