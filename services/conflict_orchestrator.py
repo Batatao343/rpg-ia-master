@@ -231,13 +231,18 @@ def _mark_fresh_conditions(
     actors_by_id: dict[str, dict],
     current_actor_id: str | None,
     sides: dict[str, list[str]] | None = None,
+    *,
+    taunt_frozen_acted: set[str] | None = None,
 ) -> int:
     """SPEC-339: depois de um passo da rodada, marca (`_pula_tick`) a condição NOVA (ou
     renovada) que outro ator pôs em Y, para o 1º tick/expiração de Y não a consumir antes de
     valer. Controle de leitura tardia: Y != ator do turno, ou Y é o ator do turno e a fonte é
     outra (reação). Stat defensivo (R8b): só dentro do turno de outro ator e só se for
-    debuff (ou buff dado por aliado do mesmo lado). `stun` e DoT nunca recebem marcador."""
+    debuff (ou buff dado por aliado do mesmo lado). `stun` e DoT nunca recebem marcador.
+    `taunt_frozen_acted` (presságio `on`): o `taunt` é lido no congelamento, ANTES do tick; quem já
+    agiu nesta rodada será lido no congelamento do fim dela, então não precisa pular o tick."""
     marked = 0
+    team = set((sides or {}).get("hero", [])) | set((sides or {}).get("ally", []))
     for aid, actor in actors_by_id.items():
         prev = before.get(aid, [])
         for c in actor.get("active_conditions") or []:
@@ -252,15 +257,13 @@ def _mark_fresh_conditions(
                     continue
                 if aid == current_actor_id and str(c.get("source_actor_id") or "") == aid:
                     continue
+                if ctl == "taunt" and taunt_frozen_acted is not None and aid in taunt_frozen_acted:
+                    continue
             elif _is_stat_only(c):
                 if current_actor_id is None or aid == current_actor_id:
                     continue
                 if not _is_defensive_debuff(c):
-                    same_side = any(
-                        aid in ids and current_actor_id in ids
-                        for s, ids in (sides or {}).items()
-                        if s in ("hero", "ally")
-                    )
+                    same_side = aid in team and current_actor_id in team
                     if not (
                         same_side
                         and c.get("stat") in ("ac", "protection")
@@ -2269,6 +2272,9 @@ def _run_round(
         out["logs"].append(refusal)
         out["action_refused"] = True
         return out
+    for _a in actors_by_id.values():  # SPEC-339: sobra de refresh fora de combate não vale marcador
+        for _c in _a.get("active_conditions") or []:
+            _c.pop("_renovada", None)
     cs.advance_tactical_state(scene)
     stalemate_events = _stalemate_guard(scene, actors_by_id, sides)
     if stalemate_events:
@@ -2460,6 +2466,9 @@ def _run_round(
     denied: set[str] = set()
     acted: set[str] = set()
 
+    def _tf_acted() -> set[str] | None:
+        return acted if (intent_mode == "on" and frozen is not None) else None
+
     for actor_id in seq:
         actor = actors_by_id.get(actor_id)
         _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
@@ -2475,7 +2484,9 @@ def _run_round(
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-            _mark_fresh_conditions(_cond_before, actors_by_id, actor_id, sides)
+            _mark_fresh_conditions(
+                _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
+            )
             continue
         acted.add(actor_id)
         if actor is None or not _can_act(actor):
@@ -2518,7 +2529,9 @@ def _run_round(
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-        _mark_fresh_conditions(_cond_before, actors_by_id, actor_id, sides)
+        _mark_fresh_conditions(
+            _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
+        )
         _expire_stat_conditions(actor, present_at_start, out)
 
     _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
@@ -2528,7 +2541,7 @@ def _run_round(
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
     _resolve_last_stands(scene, actors_by_id, sides, out, rng)
-    _mark_fresh_conditions(_cond_before, actors_by_id, None, sides)
+    _mark_fresh_conditions(_cond_before, actors_by_id, None, sides, taunt_frozen_acted=_tf_acted())
 
     # Estabilização do Estado Terminal disparado nesta rodada (07, R6=A).
     resolve_terminals(actors_by_id, sides, out, scene=scene, rng=rng)

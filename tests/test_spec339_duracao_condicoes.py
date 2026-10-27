@@ -79,6 +79,8 @@ def _run(kind: str, applier: str, ordem: str, rounds: int = _TWO_ROUNDS_PLUS, mo
         nome = _cond(kind, applier)["name"]
         present = any(c.get("name") == nome for c in actor.get("active_conditions") or [])
         seen.append((state["rnd"], actor_id, present))
+        if present:
+            out["logs"].append(f"VIU:{actor_id}")
         if actor_id == applier and not state["applied"]:
             state["applied"] = True
             out["logs"].append(cm.apply_condition(actors_by_id[carrier], _cond(kind, applier)))
@@ -114,9 +116,10 @@ def test_controle_tardio_d1_vale_no_proximo_turno_do_portador(kind, applier, ord
     carrier, seen, logs, _ = _run(kind, applier, ordem, monkeypatch=monkeypatch)
     # o portador atravessa exatamente 1 turno próprio com a condição ativa
     assert sum(p for _, p in _vistas(seen, carrier)) == 1, seen
-    # a condição não some com "terminou" antes de o portador agir: o 1º aviso vem depois
-    first_seen = next(i for i, (_, a, p) in enumerate(seen) if a == carrier and p)
-    assert first_seen >= 0 and not any(f"{carrier}: {kind} terminou" in ln for ln in logs[:1])
+    # a condição não some com "terminou" antes de o portador agir: o aviso vem DEPOIS do turno
+    viu = logs.index(f"VIU:{carrier}")
+    fim = [i for i, ln in enumerate(logs) if "terminou" in ln and kind in ln.lower()]
+    assert all(i > viu for i in fim), logs
 
 
 def _alvo_no_turno_do_aplicador(kind, applier, ordem, monkeypatch):
@@ -532,23 +535,89 @@ def test_reacao_aplica_taunt_no_turno_do_inimigo_vale_no_turno_seguinte():
     assert a["active_conditions"] and not out["logs"]
 
 
-@pytest.mark.parametrize("ordem", ["hero_first"])
-def test_presagio_on_congela_alvo_provocado_na_rodada_seguinte(ordem, monkeypatch):
+@pytest.mark.parametrize("ordem", ORDENS)
+def test_presagio_on_taunt_d1_afeta_exatamente_uma_declaracao(ordem, monkeypatch):
+    """R9/P1-2: com presságio `on`, Provocação d=1 vale para UMA declaração congelada, nas duas ordens."""
     from services import enemy_intent as ei
 
     monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    monkeypatch.setattr(ei, "_fork_rng", lambda rng: _Rng0(0))  # chance forçada, sem semente
     actors, scene, sides = _cena_devoto()
+    frozen = None
+    alvos = []
+    for rnd in range(1, 5):
+        decl = _voto() if rnd == 1 else ct.TurnDeclaration(actor_id="player")
+        out = orch.run_round(
+            scene,
+            actors,
+            sides,
+            {"player": actors["player"]},
+            declarations={"player": decl},
+            initiator=ORDENS[ordem],
+            rng=_Rng0(rnd),
+            pressagios=frozen,
+        )
+        ataque = next((x for x in out["logs"] if x.startswith("e → ")), None)
+        alvos.append(ataque.split(":")[0] if ataque else None)
+        frozen = ei.forecast_round(scene, actors, sides, _Rng0(rnd))
+    assert sum(a == "e → player" for a in alvos) == 1, alvos
+
+
+def test_buff_de_companheiro_vale_quando_o_inimigo_ataca():
+    """P1-1/R8b: Proteção dada pelo companheiro ao jogador (hero e ally = um time) não expira
+    no fim do turno do jogador, antes de o inimigo agir."""
+    actors, scene, sides = _cena_devoto()
+    vistas = []
+
+    def fake_turn(scene_, actor, actor_id, abid, sides_, decl, s, out, rng):
+        if actor_id == "ally" and not vistas:
+            cm.apply_condition(
+                abid["player"],
+                {"name": "Escudo", "dot": 0, "duration": 1, "stat": "protection", "delta": 2},
+            )
+        if actor_id == "e":
+            vistas.append(
+                any(c.get("name") == "Escudo" for c in abid["player"]["active_conditions"])
+            )
+
+    import pytest as _p
+
+    mp = _p.MonkeyPatch()
+    mp.setattr(orch, "_resolve_actor_turn", fake_turn)
+    try:
+        # ally (agilidade 9) age antes do jogador; heroes primeiro
+        orch.run_round(
+            scene, actors, sides, None,
+            declarations={"player": ct.TurnDeclaration(actor_id="player")},
+            initiator="heroes", rng=_Rng0(1),
+        )  # fmt: skip
+    finally:
+        mp.undo()
+    assert vistas == [True], vistas
+
+
+def test_refresh_mais_fraco_nao_ganha_marcador():
+    a = _actor("a")
+    c3 = dict(_cond("taunt", "b"), duration=3)
+    cm.apply_condition(a, c3)
+    cm.apply_condition(a, _cond("taunt", "b"))  # d=1 < restante 3
+    assert "_renovada" not in a["active_conditions"][0]
+    assert a["active_conditions"][0]["duration"] == 3
+
+
+def test_renovada_nao_vaza_de_fora_de_combate():
+    actors, scene, sides = _cena_devoto()
+    cm.apply_condition(actors["e"], _cond("fear", "player"))
+    cm.apply_condition(actors["e"], _cond("fear", "player"))  # refresh fora de combate
+    assert actors["e"]["active_conditions"][0].get("_renovada")
     orch.run_round(
-        scene,
-        actors,
-        sides,
-        {"player": actors["player"]},
-        declarations={"player": _voto()},
-        initiator=ORDENS[ordem],
-        rng=_Rng0(1),
+        scene, actors, sides, None,
+        declarations={"player": ct.TurnDeclaration(actor_id="player")},
+        initiator="heroes", rng=_Rng0(1),
+    )  # fmt: skip
+    assert all(
+        "_renovada" not in c and "_pula_tick" not in c for c in actors["e"]["active_conditions"]
     )
-    frozen = ei.forecast_round(scene, actors, sides, _Rng0(3))
-    assert frozen["e"][0]["alvo_id"] == "player", frozen
 
 
 def test_carta_bas_dev_voto_continua_sem_duracao_explicita():

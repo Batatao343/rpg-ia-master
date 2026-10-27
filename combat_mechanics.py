@@ -521,9 +521,10 @@ def apply_condition(entity: dict, cond: dict) -> str:
     conds = entity.setdefault("active_conditions", [])
     for c in conds:
         if c.get("name", "").lower() == cond.get("name", "").lower():
+            reinicia = cond.get("duration", 0) >= c.get("duration", 0)
             c["duration"] = max(c.get("duration", 0), cond.get("duration", 0))
             c["dot"] = max(c.get("dot", 0), cond.get("dot", 0))
-            if cond.get("control") or cond.get("stat"):
+            if reinicia and (cond.get("control") or cond.get("stat")):
                 # SPEC-339: o orquestrador distingue "renovada agora" de "já estava" (R1).
                 c["_renovada"] = True
             return f"{entity.get('name', 'Alvo')}: condição {cond['name']} renovada"

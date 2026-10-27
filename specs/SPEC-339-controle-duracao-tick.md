@@ -226,6 +226,7 @@ Arquivos de Postura com `taunt`/`marca` (para o R15, levantados por `Grep`): `po
 - **Passos marcados:** tick de cena (início/fim da rodada), turno de cada ator (inclui reações e a via do baralho), ação extra e Última Ação. Restrito a `_run_round`.
 - **Viés de ordem do `full_deck`:** corrigido em `scripts/cards/sim.py` (hash estável no desempate de tier). Resultados anteriores da 335 não são comparáveis; ver `docs/spec339/RELATORIO-arena.md`.
 - **Smoke §6.1** (taxa "Provocar efetivo" na arena) não se aplica: o bot de arena joga solo. Prova por teste de motor com aliado (`test_taunt_d1_do_jogador_redireciona_proximo_turno_inimigo`). §6.2–6.4 (API local) não rodados pelo executor.
+- **Revisão Sol (CHANGES_REQUIRED) corrigida:** P1-1 `hero ∪ ally` como um time no R8b; P1-2 com presságio `on` o `taunt` é lido no congelamento (antes do tick), então quem já agiu na rodada não recebe marcador (exatamente 1 declaração afetada nas duas ordens); P2-1 `_renovada` só se a nova duração >= restante; P2-2 `_run_round` limpa `_renovada` no início; P2-3 testes mais fortes. P2-4 (controle autoaplicado sem `source_actor_id` é marcado como reação) fica registrado: se surgir Carta que se aplica controle, exigir `source_actor_id` no caminho de aplicação.
 
 ## 6. Smoke test real
 
