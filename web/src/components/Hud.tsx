@@ -453,7 +453,7 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
   return (
     <div className="combatblock" ref={ref}>
       <h3 className="hud__label">
-        Combate {c.round ? <span className="muted">· Round {c.round}</span> : null}
+        Combate{c.round ? <span className="muted"> · Rodada {c.round}</span> : null}
       </h3>
 
       <WoundTrack wounds={c.wounds} />

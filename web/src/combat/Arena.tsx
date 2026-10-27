@@ -21,13 +21,30 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
   for (const enemy of combat.enemies) {
     const p = pos.get(enemy.id);
     out.push({
-      id: enemy.id, name: labels.get(enemy.id) || enemy.name, role: "enemy",
+      id: enemy.id, name: enemy.name, role: "enemy",
       vit: enemy.vitalidade, max: enemy.max_vitalidade, esquiva: enemy.esquiva, protecao: enemy.protecao,
       conditions: enemy.conditions,
       intel: [...enemy.revealed_cards.map((c) => c.name), ...enemy.revealed_resistances],
       concealment: p?.concealment, posture: p?.posture,
       engagedNames: p?.engaged_names ?? [], zoneId: p?.zone_id ?? "",
     });
+  }
+  // SPEC-342 B-3: homônimos precisam de nomes distintos (o log e o presságio usam "Bandido 1/2").
+  const enemies = out.filter((p) => p.role === "enemy");
+  for (const e of enemies) {
+    const label = labels.get(e.id);
+    const clash = enemies.filter((o) => (labels.get(o.id) || o.name) === (label || e.name)).length > 1;
+    e.name = clash ? e.name : label || e.name;
+  }
+  const seen = new Map<string, number>();
+  for (const e of enemies) {
+    const n = (seen.get(e.name) ?? 0) + 1;
+    seen.set(e.name, n);
+  }
+  for (const [name, total] of seen) {
+    if (total < 2) continue;
+    let i = 0;
+    for (const e of enemies) if (e.name === name) e.name = `${name} ${++i}`;
   }
   const known = new Set(out.map((p) => p.id));
   for (const [id, p] of pos) {

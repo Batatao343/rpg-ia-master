@@ -375,4 +375,18 @@ Não há structured output novo. O smoke confere que os campos reais chegam ao f
 
 ## 9. Notas de implementação
 
-(vazio — o executor registra aqui os desvios; o coordenador, a conferência dos prints.)
+**Adições do coordenador (achados do navegador, 27/10)** — implementadas com teste:
+- **R27 (B-1)** o chip de ganhos (`.outcome-toast`) fica contido na coluna do chat no desktop (`position: absolute` em `.ws-chat`); `outcome-toast.spec.ts` confere a contenção a 1440.
+- **R28 (B-3)** inimigos homônimos ganham nomes distintos na Arena ("Bandido 1/2": usa `enemy.name`, e numera se ainda empatar); presságio sem prefixo redundante; "Jogar em Bandido 2".
+- **R29 (B-4)** cabeçalho do HUD de combate: "Combate · Rodada N" (era "Round", sem espaço). Vale também com as flags `off` (texto visível; baseline R24 segue dentro de 1%).
+- **R30 (B-6)** desktop (≥ 641 px): a mão quebra em grade e mostra todas as cartas; o trilho rolável fica só no celular.
+- **R31 (B-13c)** celular: Espólio/Forja sem moldura dupla.
+- **B-8a (não alterado):** "Aguentar" (`tipo: utilitaria`, `descanso_curto`) entra na mão porque `utilitaria` é tipo de baralho por design (`cards._DECK_TIPOS`, SPEC-328). Mudar isso é decisão de regra/autoria, fora do front: fica para outra spec.
+
+**Desvios do executor**
+- `test_second_card_kill_becomes_down` (integração com o orquestrador) não foi escrito: cobri R1.3 com testes unitários de `_mark_nonlethal` (todas as jogadas attack/card marcadas, off intocado) e o caminho do nó segue coberto por `test_spec325_nonlethal.py`.
+- R24: baseline cobre fora de combate e em combate a 360/390/1440; o "desfecho" não foi capturado.
+- Texto enviado: backend não depende de "Encerrar turno" (conferido em `api.py`, `agents/`, MockLLM); nenhuma compatibilidade extra foi necessária. `Encerro a rodada:` é só marginália.
+- Mobile 390: a barra de envio sticky cobre parte da base das cartas no 1º paint (a carta está inteira no viewport, mas a barra a sobrepõe); ver `docs/spec342/on-390-combate.png`.
+- Smoke real (§6) NÃO executado pelo executor.
+

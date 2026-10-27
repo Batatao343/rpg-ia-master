@@ -23,6 +23,12 @@ for (const width of [360, 390, 1440]) {
     const toast = (await page.locator(".outcome-toast").boundingBox())!;
     const composer = (await page.locator("form.ws-composer").boundingBox())!;
     expect(toast.y + toast.height, "toast acima do compositor").toBeLessThanOrEqual(composer.y + 0.5);
+    // SPEC-342 B-1: o chip fica contido na coluna do chat (não cobre o painel de contexto)
+    const col = await page.locator(".ws-chat").first().boundingBox();
+    if (col && width >= 1200) {
+      expect(toast.x).toBeGreaterThanOrEqual(col.x - 0.5);
+      expect(toast.x + toast.width).toBeLessThanOrEqual(col.x + col.width + 0.5);
+    }
     // a prosa do chat não carrega o número
     await expect(page.getByText(/\+50 XP/)).toHaveCount(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

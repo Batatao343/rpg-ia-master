@@ -139,7 +139,7 @@ export function omenView(p: PressagioView | null, name: string): OmenView {
   }
   const num = p.valor_estimado !== null ? `~${p.valor_estimado}` : p.faixa ? `${p.faixa[0]}–${p.faixa[1]}` : null;
   const icon = (OMEN_ICON as Record<string, IconName>)[p.tipo] ?? "dark";
-  const spoken = `${name}: ${p.sinal}${p.carta_nome ? ` — ${p.carta_nome}` : ""}${num ? ` (${num})` : ""}`;
+  const spoken = `${p.sinal.startsWith(name) ? "" : `${name}: `}${p.sinal}${p.carta_nome ? ` — ${p.carta_nome}` : ""}${num ? ` (${num})` : ""}`;
   return { icon, text: p.sinal, num, card: p.carta_nome, veiled: false, spoken };
 }
 

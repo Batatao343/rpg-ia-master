@@ -393,3 +393,14 @@ details.scene-strip { display: block; }
 .tab.is-combat.has-loot:not(.has-fight)::after { content: ""; position: absolute; top: 5px; right: 8px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 .mtabbar__btn.has-loot { position: relative; }
 .mtabbar__btn.has-loot::after { content: ""; position: absolute; top: 6px; right: 28%; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+/* SPEC-342 B-1 — o chip de ganhos fica contido na coluna do chat (antes: centrado no viewport, cobria o Espolio) */
+.ws-root:not(.ws-root--mobile) .ws-chat { position: relative; }
+.ws-root:not(.ws-root--mobile) .ws-chat .outcome-toast { position: absolute; max-width: calc(100% - 1rem); bottom: calc(var(--composer-h, 5rem) + 0.5rem); }
+
+/* SPEC-342 B-6 — desktop: a mao inteira a vista (sem trilho cortado); no celular segue o trilho rolavel */
+@media (min-width: 641px) {
+  .deck-hand__rail { grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); grid-auto-columns: auto; overflow-x: visible; }
+}
+/* SPEC-342 B-13c — no celular o painel ja e a superficie: sem moldura dupla no Espolio/Forja */
+.ws-root--mobile .espolio, .ws-root--mobile .forja { border: 0; background: transparent; padding-inline: 0; }

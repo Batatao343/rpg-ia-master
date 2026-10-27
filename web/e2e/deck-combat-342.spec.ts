@@ -305,3 +305,31 @@ test.describe("baralho 342 desktop", () => {
     await expect(page.getByRole("heading", { level: 3, name: "Forja do Baralho" })).toBeVisible();
   });
 });
+
+test.describe("baralho 342 achados do navegador", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test("B-3 homonymous enemies get distinct names", async ({ page, backend }) => {
+    const state = armDeck(backend, { enemies: [["e1", "Bandido 1"], ["e2", "Bandido 2"]] });
+    (state.combat as unknown as Record<string, unknown>).encounter_view = { participants: [
+      { participant_id: "e1", species_label: "Bandido" }, { participant_id: "e2", species_label: "Bandido" }] };
+    await openCombat(page);
+    await page.locator(".deck-card[data-card='golpe']").click();
+    await expect(page.getByRole("button", { name: /Alvo: Bandido 1/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Alvo: Bandido 2/ })).toBeVisible();
+    await page.getByRole("button", { name: /Alvo: Bandido 2/ }).click();
+    await expect(page.locator("[data-play-confirm]")).toHaveText("Jogar em Bandido 2");
+  });
+
+  test("B-4 header says Rodada; B-6 whole hand visible on desktop", async ({ page, backend }) => {
+    armDeck(backend);
+    await openCombat(page);
+    await expect(page.locator(".combatblock .hud__label")).toContainText(/Combate · Rodada 1/);
+    const clipped = await page.evaluate(() => {
+      const rail = document.querySelector(".deck-hand__rail")!;
+      const box = rail.getBoundingClientRect();
+      return Array.from(rail.children).filter((c) => { const r = c.getBoundingClientRect(); return r.right > box.right + 1 || r.left < box.left - 1; }).length;
+    });
+    expect(clipped).toBe(0);
+  });
+});
