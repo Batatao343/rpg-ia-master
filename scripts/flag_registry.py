@@ -40,7 +40,12 @@ def _is_product_source(rel: str) -> bool:
 
 def scan_sources(root: Path = ROOT) -> dict[str, set[str]]:
     out = subprocess.run(
-        ["git", "ls-files", "-z"], cwd=root, capture_output=True, text=True, check=True, encoding="utf-8"
+        ["git", "ls-files", "-z"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=True,
+        encoding="utf-8",
     ).stdout.split(chr(0))
     files = [f for f in out if f and (_is_product_source(f) or f in EXTRA_SOURCES)]
     found: dict[str, set[str]] = {}
@@ -120,7 +125,9 @@ def validate(registry: dict[str, dict], found: dict[str, set[str]], today: dt.da
 
 def check(root: Path = ROOT, today: dt.date | None = None) -> int:
     root = Path(root)
-    errs = validate(load(root / "config" / "flags.yaml"), scan_sources(root), today or dt.date.today())
+    errs = validate(
+        load(root / "config" / "flags.yaml"), scan_sources(root), today or dt.date.today()
+    )
     for e in errs:
         print(e, file=sys.stderr)
     return 1 if errs else 0
