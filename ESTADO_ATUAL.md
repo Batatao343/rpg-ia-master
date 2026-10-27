@@ -75,7 +75,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: 327–336 sessão `-69`; suíte completa 1 por vez (avisar). 337–338 `done` (segurança HTTP; fuzz `api-fuzz`).
-- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329, 330, 331, 332 lotes 1–2, 333, 334, 335 lotes 0–3 (voz aprovada em bloco pelo dono), 336 (`sim.py` corrigido). Falta: 335 lotes 4–6, e2e/smoke real antes de `on`. Dono revisa voz: `pressagio_sinais.json`, `basicas.json`, `cartas_de_cena.json`, amostra `_ondas.yaml`.
+- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329–334, 335 lotes 0–4, 336. Voz aprovada em bloco pelo dono (27/10, sem leitura). Falta: 335 lotes 5–6, e2e/smoke real antes de `on`.
 
 
 ## Como rodar
