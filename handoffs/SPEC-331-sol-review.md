@@ -1,7 +1,7 @@
 # SPEC-331 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / papel Sol · **Data:** 2026-10-27 · **Commit revisado:** `fc514f4a`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `83321ca9`; a revisão inicial de `fc514f4a` foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus / papel Sol · **Data:** 2026-10-27 · **Commits revisados:** `fc514f4a` (inicial), `83321ca9` (correções)
 
 ## Escopo
 
@@ -48,17 +48,38 @@ Conferido e OK:
 
 ## Correções aplicadas
 
-Nenhuma ainda (revisão inicial).
+Re-revisão do delta `d005545d..83321ca9` (1 commit, 11 arquivos):
+
+| ID | Status | Verificação |
+|---|---|---|
+| P1-1 | **resolvido** | `sync_hand` passou a rodar no início do nó (`agents/combat.py:1968`), antes de `_parse_turn_declaration` (l. 2023). O CLASSIFY aceita `cena_*` presentes na mão (`scene_cards.in_hand`, l. 1232/1249). As temporárias moram num registro à parte, `cards._TEMP_CARDS` (`register_temp_card`): `get_card` consulta esse registro, mas `all_cards`/`cards_for_class` não. Assim não vazam para outras partidas, porque só se resolve um id que já está na própria mão (o id é um hash do objeto e da interação); não vazam entre processos, porque nada é persistido; e voltam depois de um reload só via `sync_hand`. Teste de nó com `reload_cards()` ("processo novo"). |
+| P1-2 | **resolvido (D-331-4)** | O Relógio e a ação de cena `carga` dão **+1 Carga do Abismo** e disparam `ao_entrar_carga`, como `_entropy_event` já faz. Só recebe quem tem `abyss_charge` (jogador; inimigos não têm), e a Entropia não muda. As 3 cartas foram migradas e o validador aceita só `carga`. Spec R7 e §9 atualizadas. |
+| P1-3 | **resolvido** | `api._combat_block` expõe `pressagios_cena` e `objetivo` (`tipo`, `alvo_nome`, `n`, `rodada`, `resultado`; sem números de efeito) só com `active()`. Com `off`, as chaves não aparecem (testado). |
+| P2-1 | **resolvido** | `objetivo_resultado == "falhou"` faz `victory=False`, ou seja, sem `next="loot"` e sem `loot_ref`, e o desfecho é `defeat`. O XP por queda continua, como antes. |
+| P2-2 | **resolvido** | `_apply_ambient`: fonte neutra (`on_damage(..., None)`, `by="ambiente"`, `dealt_pct=0`, sem consumir Marca). Cobre todos os `kind` usados no catálogo. |
+| P2-3 | **resolvido** | Com `shadow`, nada é gravado: nem `cena_estado` (o `tick` lê uma cópia) nem `pressagios_cena` (a gravação no nó agora exige `active()`). |
+| P2-4 | **resolvido** | Ver P1-1 (registro à parte, teto de 64). |
+| P2-5 | **resolvido** | Round-trip de save/load com os campos novos e o presságio; teste de nó para objetivo cumprido e falho; teste de byte-identidade do prompt `off` contra o texto literal. |
+| P2-6 | **resolvido** | O prompt lista os alvos por tipo de objetivo (ids de aliados, ids de inimigos, zona/objeto criados na resposta). Só aparece com `shadow`/`on`. |
+| P2-7 | **resolvido** | `forecast` inclui o redisparo da carta mais forte a partir da rodada 5 (`quando: "relogio"`) e não grava nada na cena. |
+
+`off` continua byte-idêntico: o prompt é comparado ao texto literal; `sync_hand`, `forecast`, a view da API e `check_objective` retornam antes de mexer em qualquer coisa; o save não ganha chaves novas.
 
 ## Pendências
 
-- O dono precisa decidir P1-2 (efeito do Relógio) antes de `RPG_SCENE_CARDS=on` no staging.
-- O dono ainda precisa revisar os 24 nomes do catálogo (critério de aceite, já previsto na spec).
-- Smoke real §6 e p95 de rodadas na arena: ainda não executados.
+Follow-ups (não bloqueiam; a flag padrão é `off`):
+- **F-1 (P2, teste):** `test_objetivo_falho_vira_defeat_sem_loot` usa inimigos com 500 de Vitalidade, então ninguém cai e `next != "loot"` passaria mesmo sem a correção. Acrescentar o caso "falhou com um inimigo derrubado".
+- **F-2 (P2, concorrência):** quando `register_temp_card` passa do teto de 64, ele limpa o registro inteiro. Num processo hospedado com muitas partidas simultâneas, a limpeza feita por uma partida pode cair entre o `sync_hand` (l. 1968) e o `get_card` de outra, no mesmo request. É raro (exige mais de 64 temporárias distintas ao mesmo tempo); a correção é trocar por um LRU sem limpeza total.
+- **F-3 (P2):** o validador do catálogo aceita qualquer `kind` da SPEC-330, mas `_apply_ambient` só aplica 6. Um `kind` novo seria ignorado em silêncio. Restringir o validador a esses 6 e a `aplicar_condicao`.
+- **F-4 (nota de design):** a Carga do Relógio é do jogador e sobrevive ao fim do conflito, como a Carga dos gatilhos de classe. Confirmar na calibração da arena (R0 e p95 ≤ 10 rodadas).
+- O dono ainda precisa revisar os 24 nomes do catálogo; smoke real §6 e p95 da arena seguem pendentes.
 
 ## Comandos rodados
 
 ```text
+# re-revisão (83321ca9)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_scene_cards.py tests/test_scene_cards_extra.py tests/test_scene_cards_node.py tests/test_objectives.py tests/test_abyss_clock.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_error_envelope.py tests/test_card_piles.py tests/test_conflito_preparacao.py tests/test_enemy_intent_node.py tests/test_spec275_stalemate.py tests/test_encounter_lifecycle_reload.py → 135 passed (rc=0)
+# revisão inicial (fc514f4a)
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_scene_cards.py tests/test_objectives.py tests/test_abyss_clock.py tests/test_log_event_registry.py tests/test_no_silent_except.py tests/test_error_envelope.py → 52 passed (rc=0)
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_card_piles.py tests/test_conflito_preparacao.py tests/test_enemy_intent.py tests/test_enemy_intent_node.py tests/test_spec275_stalemate.py → 78 passed (rc=0)
 script ad hoc (scratchpad): eligible() nos 35 locais → mín. 2, máx. 5, zero vazios; validate_catalog → []
