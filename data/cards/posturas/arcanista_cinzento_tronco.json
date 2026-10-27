@@ -71,8 +71,8 @@
       "tipo": "ativa",
       "origem": "onda-1",
       "classe": "Arcanista Cinzento",
-      "patamar": "inicial",
-      "raridade": "comum",
+      "patamar": "avancado",
+      "raridade": "incomum",
       "custo_entropia": 2,
       "custo_folego": 1,
       "frequencia": "cena",
@@ -81,17 +81,22 @@
       ],
       "efeitos": [
         {
+          "kind": "protecao",
+          "valor": 2,
+          "alvo": "eu"
+        },
+        {
           "kind": "comprar",
           "valor": 1
         }
       ],
-      "descricao": "Cada lance já estava no caderno de cinza: o Arcanista vira a página e a carta certa aparece.",
-      "momento": "Melhor jogada quando a mão está cheia de jogadas fracas e uma carta nova pode ser a que salva a rodada.",
-      "tier": 1,
-      "level_req": 1,
+      "descricao": "Cada lance já estava no caderno de cinza: o traçado no chão segura o golpe e a carta certa aparece.",
+      "momento": "Melhor jogada quando a mão está cheia de jogadas fracas e um anteparo barato compra a carta que salva a rodada.",
+      "tier": 3,
+      "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "arc1_tro_contrassinal",

@@ -507,7 +507,14 @@ def test_tronco_cartas_por_postura_sem_subclasse_nivel_1():
         "Médico de Campo": 3,
     }
     for c in cs:
-        assert not c.get("subclasse") and c["level_req"] == 1 and c["raridade"] == "comum"
+        assert not c.get("subclasse")
+        if (
+            c["id"] == "arc1_tro_lance_calculado"
+        ):  # pilha pura não vale no baralho off: incomum, nível 4
+            assert c["raridade"] == "incomum" and c["level_req"] == 4
+            assert fx.primary_effect(c)["kind"] == "protecao"
+        else:
+            assert c["level_req"] == 1 and c["raridade"] == "comum"
         assert c.get("onda") == 1 and c["tipo"] == "ativa"
         others = [o for o in pool if o["id"] != c["id"]]
         issues = card_lint.lint_card(c, others)
