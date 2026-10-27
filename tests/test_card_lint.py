@@ -435,25 +435,10 @@ def test_reacao_de_onda_exige_folego_e_marca_nao_e_consumida():
     assert not card_lint.check_marca_dano(bom)
 
 
-def test_controle_com_duracao_1_e_recusado_em_carta_de_onda():
-    """SPEC-335 (Sol Lote 5, P1-2, provisório): taunt/marca com duracao 1 expiram antes de valer."""
-    ruim = card(onda=1, efeitos=[{"kind": "marca", "valor": 2}])
-    assert any(i.code == "controle_duracao" for i in card_lint.check_controle_duracao(ruim))
-    taunt = card(onda=1, efeitos=[{"kind": "taunt", "valor": 2, "duracao": 1}])
-    assert card_lint.check_controle_duracao(taunt)
-    bom = card(onda=1, efeitos=[{"kind": "marca", "valor": 2, "duracao": 2}])
-    assert not card_lint.check_controle_duracao(bom)
-    legado = card(onda=None, efeitos=[{"kind": "taunt", "valor": 2}])  # sem `onda`: fora do lint
-    assert not card_lint.check_controle_duracao(legado)
-    pendente = card(id="san1_exp_veia_a_mostra", onda=1, efeitos=[{"kind": "taunt", "valor": 2}])
-    assert not card_lint.check_controle_duracao(pendente)
-
-
-def test_controle_duracao_pendentes_so_encolhe_e_cada_id_ainda_viola():
-    """SPEC-335 (Sol Lote 5, P2-5): a lista provisória não pode virar anistia permanente."""
-    assert len(card_lint.CONTROLE_DURACAO_PENDENTES) <= 9
-    por_id = {c["id"]: c for c in card_lint.load_pool()}
-    for cid in sorted(card_lint.CONTROLE_DURACAO_PENDENTES):
-        assert cid in por_id, f"{cid} não existe mais: tire da lista"
-        sem_lista = dict(por_id[cid], id=cid + "__sem_lista")
-        assert card_lint.check_controle_duracao(sem_lista), f"{cid} já não viola: tire da lista"
+def test_carta_de_onda_taunt_d1_passa_no_lint():
+    """SPEC-339: o motor valida `duracao` 1 de controle; o lint provisório da 335 foi removido."""
+    assert not hasattr(card_lint, "check_controle_duracao")
+    assert not hasattr(card_lint, "CONTROLE_DURACAO_PENDENTES")
+    for kind in ("taunt", "marca"):
+        c = card(onda=1, efeitos=[{"kind": kind, "valor": 2, "duracao": 1}])
+        assert not [i for i in card_lint.lint_card(c) if i.code == "controle_duracao"]

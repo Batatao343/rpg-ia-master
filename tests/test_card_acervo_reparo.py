@@ -315,7 +315,6 @@ def test_lote5_licoes_da_revisao_dos_lotes_anteriores():
         assert not card_lint.check_revelar_publico(c), c["id"]
         assert not card_lint.check_reacao_folego(c), c["id"]
         assert all(e.get("kind") != "mover_alvo_zona" for e in effs), c["id"]
-        assert not card_lint.check_controle_duracao(c), c["id"]
         if fx.custo_folego(c) == 0:  # Fôlego 0 só com `cena` (efeito grátis a cada turno é demais)
             assert c["frequencia"] == "cena", c["id"]
         if c["raridade"] == "incomum" and "dano" in kinds:  # híbrido de golpe: `cena`, não `turno`
@@ -447,7 +446,6 @@ def test_lote6_licoes_da_revisao_dos_lotes_anteriores():
         assert not card_lint.check_marca_dano(c), c["id"]
         assert not card_lint.check_revelar_publico(c), c["id"]
         assert not card_lint.check_reacao_folego(c), c["id"]
-        assert not card_lint.check_controle_duracao(c), c["id"]
         if fx.custo_folego(c) == 0:
             assert c["frequencia"] == "cena", c["id"]
         assert sum(1 for k in kinds if k in nomeadas) <= 1, c["id"]

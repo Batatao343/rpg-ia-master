@@ -367,41 +367,6 @@ def check_marca_dano(card: dict) -> list[Issue]:
     return []
 
 
-# SPEC-335 (revisão Sol do Lote 5), provisório: controle com `duracao` 1 aplicado pelo jogador
-# expira no tick do início do turno do inimigo, antes de valer (bug de motor, spec própria).
-# Até lá, Carta de onda não pode ter `taunt`/`marca` com duracao < 2. Ids dos Lotes 1-4 já na
-# `main` que violam: decisão do coordenador (lista abaixo; remover quando o motor for corrigido).
-CONTROLE_DURACAO_PENDENTES = frozenset(
-    {
-        "dev1_zel_ciume_aberto",
-        "dev1_zel_corpo_entre",
-        "dev1_zel_ninguem_mais",
-        "san1_ava_livro_de_dividas",
-        "san1_exp_veia_a_mostra",
-        "san1_exp_plateia_cega",
-        "san1_exp_teatro_de_facas",
-        "san1_sil_marca_de_unha",
-        "san1_sil_cirurgia_sem_testemunha",
-    }
-)
-
-
-def check_controle_duracao(card: dict) -> list[Issue]:
-    if card.get("onda") is None or card.get("id") in CONTROLE_DURACAO_PENDENTES:
-        return []
-    out: list[Issue] = []
-    for eff in fx.normalize(card):
-        if eff.get("kind") not in ("taunt", "marca"):
-            continue
-        dur = int(eff.get("duracao", eff.get("duration", 1)) or 1)
-        if dur < 2:
-            msg = (
-                f"`{eff['kind']}` com duracao {dur} expira antes de valer (motor): use duracao >= 2"
-            )
-            out.append(Issue("error", "controle_duracao", msg))
-    return out
-
-
 def check_color_pie(card: dict) -> list[Issue]:
     rule = roda().get(str(card.get("classe") or ""))
     if not rule:
@@ -539,7 +504,6 @@ def lint_card(
     issues += check_revelar_publico(card)
     issues += check_reacao_folego(card)
     issues += check_marca_dano(card)
-    issues += check_controle_duracao(card)
     issues += check_names(card, others)
     issues += check_redundancy(card, others, embed)
     return issues
