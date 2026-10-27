@@ -237,6 +237,9 @@ class Ctx:
     # quantas ações de cada inimigo já foram consumidas. Só com RPG_ENEMY_INTENT=on.
     pressagios: dict | None = None
     intent_cursor: dict | None = None
+    # SPEC-325: modo não-letal do golpe declarado pelo ator do turno corrente.
+    nonlethal: str = ""
+    nonlethal_actor: str | None = None
     queue: deque = field(default_factory=deque)
     depth: int = 0
     draining: bool = False
@@ -307,10 +310,42 @@ def is_down(actor: dict | None) -> bool:
     )
 
 
+_CONTROL_BY_NAME = {
+    "atordoado": "stun",
+    "dominado": "stun",
+    "enredado": "root",
+    "enraizado": "root",
+    "medo": "fear",
+    "amedrontado": "fear",
+    "silenciado": "silence",
+}
+
+
+def known_condition_names() -> frozenset:
+    """Catálogo fechado do argumento de ``alvo_tem``/``eu_tenho`` (R2/R4): condições
+    nomeadas, controles, ``marca``/``sangramento`` e as palavras-chave de efeito."""
+    import combat_mechanics as cm
+
+    return frozenset(
+        {_fold(n) for n in cm.NAMED_CONDITIONS}
+        | set(_CONTROL_BY_NAME)
+        | {"marca", "sangramento"}
+        | set(KEYWORD_KINDS)
+    )
+
+
+def has_fallen(actor: dict | None) -> bool:
+    """CAIU de verdade (R3 `ao_derrubar`, Interromper): morto, Estado Terminal,
+    incapacitado, fugiu ou Última Ação pendente. Atordoar NÃO é cair."""
+    if not actor:
+        return True
+    return (not _alive(actor)) or bool(actor.get("last_stand_pending"))
+
+
 def has_condition(actor: dict | None, name: str) -> bool:
     want = _fold(name)
     aliases = {want}
-    control = {"atordoado": "stun", "enredado": "root", "medo": "fear", "silenciado": "silence"}
+    control = _CONTROL_BY_NAME
     for c in (actor or {}).get("active_conditions", []) or []:
         if _fold(c.get("name")) in aliases or _fold(c.get("keyword")) in aliases:
             return True
@@ -618,9 +653,11 @@ def _targets_for(eff: dict, ctx: Ctx, actor_id: str, target_id: str | None) -> l
         return _opponents(ctx, actor_id)
     if alvo == "aliados":
         return _allies(ctx, actor_id)
-    if target_id and target_id in ctx.actors_by_id:
-        return [target_id]
     opp = _opponents(ctx, actor_id)
+    if target_id and target_id in opp:
+        return [target_id]
+    # Hostil sem alvo explícito numa Carta de suporte (alvo = si/aliado) nunca
+    # cai no conjurador nem no aliado: vai para o 1º oponente.
     return opp[:1]
 
 
@@ -717,7 +754,16 @@ def _apply_on(ctx, eff, actor, actor_id, target, tid, out, card) -> None:
         # Mesmo desfecho de um golpe: Lacaio cai, full-flow arma a Última Ação.
         from services import conflict_orchestrator as orch
 
-        orch._check_terminal(target, tid, _ensure_turn_out(out), damage_applied=True, by=actor_id)
+        nonlethal = ctx.nonlethal if ctx.nonlethal_actor == actor_id else ""
+        orch._check_terminal(
+            target,
+            tid,
+            _ensure_turn_out(out),
+            damage_applied=True,
+            nonlethal=nonlethal,
+            by=actor_id,
+        )
+        on_damage(ctx, tid, actor_id, int(dres.get("dano_final", 0) or 0), out)
     elif kind in ct._SUPPORT_EFFECTS:
         step = ct.TurnStep(kind="card", card_id=card.get("id"), target_id=tid)
         ct._resolve_support_card(
@@ -853,19 +899,36 @@ def interrupt(ctx: Ctx, actor_id: str, target_id: str, out: dict) -> bool:
     ``ao_pressagio_frustrado`` agora."""
     intent = pending_intent(ctx, target_id)
     target = ctx.actors_by_id.get(target_id)
-    if (
-        intent is None
-        or intent.get("tipo") not in ATTACK_INTENT_TIPOS
-        or intent.get("interrompido_por")
-        or not is_down(target)
-    ):
+    if intent is None or intent.get("tipo") not in ATTACK_INTENT_TIPOS:
         return False
+    if intent.get("interrompido_por"):
+        return False
+    if not has_fallen(target):
+        # Atordoar só nega a 1ª ação da rodada (SPEC-295: controle no meio da
+        # rodada vale para a próxima); ação extra pendente segue de pé.
+        stunned = is_down(target)
+        first = int((ctx.intent_cursor or {}).get(target_id, 0) or 0) == 0
+        if not (stunned and first):
+            return False
     intent["interrompido_por"] = actor_id
     out.setdefault("keywords", []).append(
         {"keyword": "interromper", "actor_id": actor_id, "target_id": target_id}
     )
     fire("ao_pressagio_frustrado", sujeito_id=actor_id, alvo_id=target_id, out=out, ctx=ctx)
     return True
+
+
+def on_damage(ctx: Ctx, victim_id: str, source_id: str | None, amount: int, out: dict) -> None:
+    """Dano real em ``victim_id``: ``ao_receber_dano`` para a vítima e
+    ``ao_aliado_sofrer`` para os aliados dela. Fontes: golpe (``_hit_events``), efeito
+    extra, dano disparado por gatilho e DoT. Disparo aninhado ganha profundidade +1
+    (o teto 3 da fila corta laços)."""
+    if amount <= 0 or victim_id not in ctx.actors_by_id:
+        return
+    fire("ao_receber_dano", sujeito_id=victim_id, alvo_id=source_id, out=out, ctx=ctx, valor=amount)
+    for ally_id in _allies(ctx, victim_id):
+        if ally_id != victim_id:
+            fire("ao_aliado_sofrer", sujeito_id=ally_id, alvo_id=victim_id, out=out, ctx=ctx)
 
 
 # --------------------------------------------------------------------------
@@ -1402,6 +1465,8 @@ def _validate_se(se, where: str) -> list[str]:
             isinstance(arg, str) and arg.strip()
         ):
             errs.append(f"{where}: {key} exige texto")
+        elif kind == "cond" and _fold(arg) not in known_condition_names():
+            errs.append(f"{where}: {key} {arg!r} fora do catálogo de condições")
     return errs
 
 

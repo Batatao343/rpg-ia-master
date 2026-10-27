@@ -202,6 +202,7 @@ def _apply_dot_v4(target: dict, dot: int, dtype: str, out: dict, rng=None) -> No
         rng=rng,
     )
     out["logs"] += result["log"]
+    return int(result.get("dano_final", 0) or 0)
 
 
 def _is_stat_only(condition: dict) -> bool:
@@ -246,9 +247,10 @@ def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
         dot = int(c.get("dot", 0) or 0)
         if dot > 0:
             damage_applied = True
-            _apply_dot_v4(
+            dealt = _apply_dot_v4(
                 actor, dot, str(c.get("damage_type") or c.get("source") or "cortante"), out, rng=rng
             )
+            _fx_damage(actor, dealt, out)  # SPEC-330 R3: DoT também é dano recebido
             out["logs"].append(
                 f"{_name(actor)} sofre {dot} de {c.get('name', 'condição')} "
                 f"(Vit {actor.get('vitalidade', 0)})."
@@ -1073,6 +1075,16 @@ def _entropy_event(player: dict, event: dict, out: dict) -> None:
         _fire_for(player, "ao_entrar_carga", out)
 
 
+def _fx_damage(actor: dict, amount: int, out: dict) -> None:
+    """SPEC-330: dano fora de golpe (DoT) → `ao_receber_dano`/`ao_aliado_sofrer`."""
+    ctx = fx.current()
+    if ctx is None:
+        return
+    actor_id = next((aid for aid, a in ctx.actors_by_id.items() if a is actor), None)
+    if actor_id is not None:
+        fx.on_damage(ctx, actor_id, None, amount, out)
+
+
 def _fire_for(actor: dict, gatilho: str, out: dict, *, alvo_id: str | None = None) -> None:
     """SPEC-330: dispara `gatilho` para o ator (id achado no contexto da rodada)."""
     ctx = fx.current()
@@ -1435,7 +1447,22 @@ def _resolve_actor_turn(
         _resolve_tactical_action(scene, actor, actor_id, actors_by_id, sides, acao, out, rng)
         return
 
-    sub = ct.resolve_turn(scene, actors_by_id, decl, state=state, rng=rng, sides=sides)
+    # SPEC-330: queda medida ANTES do turno (P1-2) e modo não-letal do golpe
+    # declarado visível ao dano extra das Cartas (P2-6).
+    fallen_before = {aid for aid, a in actors_by_id.items() if fx.has_fallen(a)}
+    fx_ctx = fx.current()
+    if fx_ctx is not None:
+        fx_ctx.nonlethal_actor = actor_id
+        fx_ctx.nonlethal = (
+            _nonlethal_mode(decl, acao, actor_id, acao.target_id, sides)
+            if acao is not None and acao.target_id
+            else ""
+        )
+    try:
+        sub = ct.resolve_turn(scene, actors_by_id, decl, state=state, rng=rng, sides=sides)
+    finally:
+        if fx_ctx is not None:
+            fx_ctx.nonlethal, fx_ctx.nonlethal_actor = "", None
     out["logs"] += [l for l in sub.get("logs", []) if l]
     out.setdefault("attacks", []).extend(sub.get("attacks", []))
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
@@ -1518,15 +1545,9 @@ def _resolve_actor_turn(
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
         nl_mode = _nonlethal_mode(decl, acao, actor_id, tid, sides)
-        was_down = fx.is_down(tgt)
         _check_terminal(tgt, tid, out, damage_applied=True, nonlethal=nl_mode, by=actor_id)
-        # SPEC-330 R3: gatilhos de dano/derrubada (no-op sem ouvintes armados).
-        fx.fire("ao_receber_dano", sujeito_id=tid, alvo_id=actor_id, out=out, valor=amount)
-        for ally_id in _same_side_ids(tid, sides):
-            if ally_id != tid:
-                fx.fire("ao_aliado_sofrer", sujeito_id=ally_id, alvo_id=tid, out=out)
-        if not was_down and fx.is_down(tgt):
-            fx.fire("ao_derrubar", sujeito_id=actor_id, alvo_id=tid, out=out)
+        if fx_ctx is not None:  # SPEC-330 R3 (no-op sem ouvintes armados)
+            fx.on_damage(fx_ctx, tid, actor_id, amount, out)
         if (
             nl_mode
             and not tgt.get("dead")
@@ -1561,6 +1582,13 @@ def _resolve_actor_turn(
                         label="Contra-ataque",
                         damage_override=pe.get("value"),
                     )
+
+    # SPEC-330 R3 `ao_derrubar`: quem caiu NESTE turno (golpe, efeito extra ou
+    # gatilho), comparado com o estado anterior ao turno. Atordoar não conta.
+    if fx_ctx is not None:
+        for aid in sorted(actors_by_id):
+            if aid != actor_id and aid not in fallen_before and fx.has_fallen(actors_by_id[aid]):
+                fx.fire("ao_derrubar", sujeito_id=actor_id, alvo_id=aid, out=out)
 
 
 def _nonlethal_mode(decl, acao, actor_id: str, target_id: str, sides: dict) -> str:
@@ -2112,6 +2140,10 @@ def _run_round(
             return decl_late
         if intent is None or actor.get("_forced_attack"):
             return late()
+        if intent.get("interrompido_por"):
+            # SPEC-330 Interromper: presságio frustrado não se cumpre (nunca nos dois).
+            _frustrate(actor_id, intent, "interrompido")
+            return ct.TurnDeclaration(actor_id=actor_id)
         if ei.still_possible(intent, actors_by_id, scene):
             if intent["tipo"] == "render-se":
                 actor["surrendered"] = True
@@ -2224,6 +2256,10 @@ def _run_round(
             # Ação extra: só se a 1ª não foi negada e o ator segue de pé. Stun
             # aplicado no meio da rodada vale para a próxima, como para todos.
             if actor is None or not _can_act(actor) or actor_id in denied:
+                if intent_mode == "on" and frozen is not None and actor_id not in denied:
+                    _it = _next_intent(actor_id)
+                    if _it is not None and _it.get("interrompido_por"):
+                        _frustrate(actor_id, _it, "incapaz")  # SPEC-330 Interromper
                 continue
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)

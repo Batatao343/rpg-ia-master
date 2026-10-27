@@ -244,17 +244,10 @@ def test_fila_fifo_com_profundidade_maxima_3():
         },
     ]
 
-    real_apply = fx._apply_on
-
-    def apply_and_echo(ctx_, eff, actor, actor_id, target, tid, out, card):
-        real_apply(ctx_, eff, actor, actor_id, target, tid, out, card)
-        fx.fire("ao_receber_dano", sujeito_id=tid, alvo_id=actor_id, out=out, ctx=ctx_)
-
+    player["vitalidade"] = player["max_vitalidade"] = 99
     out: dict = {"logs": []}
-    import unittest.mock as um
-
-    with um.patch.object(fx, "_apply_on", apply_and_echo):
-        fx.fire("ao_receber_dano", sujeito_id="e", alvo_id="player", out=out, ctx=ctx)
+    # Sem patch: o dano vindo de gatilho dispara `ao_receber_dano` de verdade (P2-3).
+    fx.fire("ao_receber_dano", sujeito_id="e", alvo_id="player", out=out, ctx=ctx)
     depths = [g["profundidade"] for g in out["gatilhos"]]
     assert depths == [1, 2, 3]  # FIFO, e→player→e, e o 4º é descartado
     assert [g["sujeito_id"] for g in out["gatilhos"]] == ["e", "player", "e"]

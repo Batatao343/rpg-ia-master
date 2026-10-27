@@ -113,20 +113,25 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
   principal é ataque. Kinds novos hostis rolam ataque (como `aplicar_condicao`);
   `vigilia`/`copiar_ultima`/pilhas resolvem como suporte (alvo próprio).
 - **D-5 Gatilhos.** Efeito com `quando` ≠ `ao_jogar` arma em `scene["gatilhos_armados"]`
-  ao jogar (até o fim do conflito); passivas com gatilho ficam sempre armadas.
-  Ligados: `inicio_rodada`, `fim_rodada`, `ao_receber_dano`, `ao_aliado_sofrer`,
-  `ao_derrubar`, `ao_entrar_carga`, `ao_pressagio_frustrado` (via Interromper).
-  `ao_comprar`/`ao_descartar`/`ao_exaurir` disparam quando a 328 existir. Fila FIFO,
-  profundidade máx. 3 (o 4º é descartado e registrado em `gatilhos_descartados`).
+  ao jogar (até o fim do conflito, inclusive se o ataque errar); passivas com gatilho
+  ficam sempre armadas. Ligados: `inicio_rodada`, `fim_rodada`, `ao_receber_dano` e
+  `ao_aliado_sofrer` (fontes: golpe, efeito extra `dano`, dano disparado por gatilho e
+  DoT/Sangria; só dano > 0), `ao_derrubar` (alvo que CAIU neste turno — morte, Estado
+  Terminal, incapacitado, Última Ação — comparado com o estado antes do turno; atordoar
+  não conta), `ao_entrar_carga` e `ao_pressagio_frustrado`. `ao_comprar`/`ao_descartar`/
+  `ao_exaurir` disparam quando a 328 existir. Fila FIFO, profundidade máx. 3: dano de
+  gatilho que re-dispara `ao_receber_dano` sobe a profundidade; o 4º é descartado e
+  registrado em `gatilhos_descartados`.
 - **D-6 Interromper × SPEC-329 (formato real).** Com `RPG_ENEMY_INTENT=on`, o
   `run_round` entrega ao contexto os presságios congelados (`combat["pressagios"]`,
   `{actor_id: [intent]}`) e o cursor de ações já consumidas. Interromper vale se o
-  presságio PENDENTE do alvo é `tipo` `ataque`/`ataque_multiplo` e o alvo caiu ou foi
-  atordoado: marca `intent["interrompido_por"]` e dispara `ao_pressagio_frustrado` na
-  hora. Quando o turno do inimigo chega, o `_frustrate` da 329 registra o frustrado em
-  `pressagios_frustrados` com `por`/`via: "interromper"` (sem disparar de novo). Presságio
-  frustrado sem Interromper dispara `ao_pressagio_frustrado` para a mira (`alvo_id`).
-  Em `off`/`shadow` Interromper não age. O formato provisório `scene["pressagios"]` saiu.
+  presságio PENDENTE do alvo é `ataque`/`ataque_multiplo` e: o alvo CAIU (conta sempre),
+  ou foi atordoado ANTES da 1ª ação da rodada (cursor 0). Atordoar depois da 1ª ação não
+  nega a ação extra de Chefe (SPEC-295) e não é Interromper. Marca
+  `intent["interrompido_por"]` e dispara `ao_pressagio_frustrado` na hora; o `_frustrate`
+  registra o frustrado com `por`/`via: "interromper"` (sem disparar de novo), e presságio
+  interrompido nunca é executado nem entra em `pressagios_cumpridos`. Presságio frustrado
+  sem Interromper dispara o gatilho para a mira (`alvo_id`). Inerte em `off`/`shadow`.
 - **D-7 Marca do Abismo.** `control: marca` (mantém a Vantagem da `marca` legada) +
   `abismo_bonus: X`, duração 3; o próximo dano direto consome: +X e +1 Entropia (com
   teto) para quem acertou. A `marca` legada não muda.
@@ -138,3 +143,15 @@ validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligaç
 - **D-10 Grupo B no motor.** `comprar`/`descartar`/`ganhar_folego`/`gerar_carta`/
   `purgar_fardo` só registram `out["pendente_pilhas"]`; Exaurir/Guardar/Eco/Ressoar/
   Fardo/Vazão não têm efeito no motor até a 328 (follow-up).
+- **D-11 Revisão Sol (`handoffs/SPEC-330-sol-review.md`).** Corrigidos: P1-1 (Interromper
+  × ações extras, D-6), P1-2 (`ao_derrubar` por categoria, D-5), P2-1 (efeito hostil sem
+  `alvo` em Carta de suporte vai ao 1º oponente, nunca ao conjurador/aliado), P2-2 (teste
+  do caminho de erro: extras não rodam, gatilhos armam, `record_play` registra), P2-3
+  (D-5), P2-6 (dano extra usa o modo não-letal do golpe declarado — SPEC-325), P2-7
+  (`alvo_tem`/`eu_tenho` só aceitam condição do catálogo: nomeadas, controles, `marca`,
+  `sangramento` e palavras-chave). Testes em `tests/test_card_effects_review_spec330.py`.
+- **Follow-ups registrados.** P2-4: o golden de equivalência usa uma seed com acerto
+  garantido; para passivas/utilitárias/virtudes compara só modificadores (gatilhos
+  `on_hit`/`on_attack`, erro e crítico não exercitados — o diff não toca esses ramos).
+  P2-5: `revelar` grava `_revelado` na ficha e registra `out["revelacoes"]`, mas ainda não
+  persiste no `bestiary_knowledge` (ligar na SPEC-332/335).
