@@ -101,6 +101,19 @@ def test_forecast_has_no_side_effects():
     assert rng.getstate() == state  # rng real intacto
 
 
+def test_forecast_taunt_does_not_touch_the_taunter():
+    scene, actors, sides = _world({"lobo": _enemy("lobo")})
+    actors["lobo"]["active_conditions"] = [
+        {"name": "Provocado", "control": "taunt", "source_actor_id": "player", "duration": 2}
+    ]
+    actors["player"]["_last_class_mechanics"] = []
+    before = copy.deepcopy(actors)
+    for seed in range(12):  # cobre tanto o sorteio que provoca quanto o que não provoca
+        ei.forecast_round(scene, actors, sides, random.Random(seed))
+        assert actors == before
+    assert actors["player"]["_last_class_mechanics"] == []
+
+
 def test_forecast_skips_stunned_enemy():
     scene, actors, sides = _world({"lobo": _enemy("lobo")})
     actors["lobo"]["active_conditions"] = [{"name": "Atordoado", "control": "stun", "duration": 1}]
@@ -314,3 +327,31 @@ def test_on_without_saved_pressagios_computes_at_round_start(monkeypatch):
         rng=random.Random(2),
     )
     assert out["pressagios_cumpridos"]
+
+
+def test_frustrated_incapaz_when_enemy_dies_mid_round(monkeypatch):
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    found = None
+    for seed in range(60):
+        scene, actors, sides = _world({"a": _enemy("a"), "b": _enemy("b")})
+        actors["b"]["vitalidade"] = 1
+        frozen = ei.forecast_round(scene, actors, sides, random.Random(seed))
+        decl = ct.TurnDeclaration(actor_id="player", acao=ct.TurnStep(kind="attack", target_id="b"))
+        out = orch.run_round(
+            scene,
+            actors,
+            sides,
+            {"player": actors["player"]},
+            declarations={"player": decl},
+            rng=random.Random(seed),
+            pressagios=frozen,
+        )
+        if any(f["motivo"] == "incapaz" for f in out.get("pressagios_frustrados", [])):
+            found = out
+            break
+    assert found is not None, "nenhuma seed matou b antes de agir"
+    assert found["pressagios_frustrados"][0]["actor_id"] == "b"
+    logs = found["logs"]
+    death = next(i for i, ln in enumerate(logs) if ln == "B é derrotado.")
+    line = next(i for i, ln in enumerate(logs) if "morreu no ar" in ln or "já não é" in ln)
+    assert death < line  # a linha de frustração vem depois da morte

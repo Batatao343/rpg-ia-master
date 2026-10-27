@@ -174,8 +174,12 @@ def forecast_round(
             continue
         intents: list[dict] = []
         for idx in range(1 + orch.extra_actions(real)):
-            sandbox = dict(actors_by_id)
-            sandbox[aid] = dict(real)  # enemy_declaration faz pop/set na ficha
+            # Cópia rasa de TODOS os atores: enemy_declaration faz pop/set no inimigo e a
+            # Provocação grava `_last_class_mechanics` no provocador (lista copiada também).
+            sandbox = {k: dict(v) for k, v in actors_by_id.items()}
+            for fic in sandbox.values():
+                if isinstance(fic.get("_last_class_mechanics"), list):
+                    fic["_last_class_mechanics"] = list(fic["_last_class_mechanics"])
             # run_round zera o uso "por turno" das Cartas do inimigo antes de agir.
             sandbox[aid]["enemy_card_usage"] = copy.deepcopy(real.get("enemy_card_usage") or {})
             cards_mod.reset_enemy_card_usage(sandbox[aid], "turno")

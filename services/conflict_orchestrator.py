@@ -2045,6 +2045,7 @@ def run_round(
             out.setdefault("pressagios_cumpridos", []).append(
                 {"actor_id": actor_id, "tipo": intent["tipo"], "alvo_id": intent.get("alvo_id")}
             )
+            out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
             return ct.TurnDeclaration(**intent["declaration"])
         _frustrate(actor_id, intent, "impossivel")
         return late()
