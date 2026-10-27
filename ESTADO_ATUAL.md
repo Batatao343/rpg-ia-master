@@ -8,15 +8,15 @@
 
 ## Estado em 10 linhas
 
-- staging = `0640bff` (27/10; preset: `lean`, stream `on`, hedge `0`) (3 smokes verdes). Mundo vivo 296–315 `done` (297 fecha na 1ª promoção do pool).
-- **`done` (26/10):** 320–324 frontend (conferidos em 390/1440 no staging), 325 mecânicas (A não-letal/resistência, B fuga, C objetos/ordens `on`; D reforços **descartada pelo dono**), 326 arte dinâmica fiel a Valoria (`on` no staging).
-- **Latência — A/B OFF×ON 27/10 (60 turnos, [doc](docs/spec316/staging-measure-2026-10-27.md)):** 1ª narração p50 8,2–11,4 s → 2,6 s; **turno inteiro sem ganho** (~10 s). **316, 317, 319 `done`** (317: Groq e rota NPC determinística medidos e não promovidos; R11 retirado). 318 falta só "NPC novo −2 s" (A/B dedicado rodando); loot sem tokens ao vivo (`e944446`).
-- Staging: preset versionado `scripts/staging/staging_flags.json`; `wt.sh drop` agora remove a junção do node_modules.
-- Regras de máquina: e2e só `--workers=1` um arquivo por vez; nunca `uv run` direto em worktree; checar RAM (memória).
+- staging = `0640bff` (preset: `lean`, stream `on`, hedge `0`; smokes verdes). Mundo vivo 296–315 `done` (297: 1ª promoção do pool).
+- 320–326 `done` (26/10). 327–338: outra sessão.
+- **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). 316/317/319 `done`; 318 falta "NPC novo −2 s" (A/B rodando); loot sem tokens ao vivo.
+- Staging: preset versionado `scripts/staging/staging_flags.json`.
+- Máquina: e2e `--workers=1`; sem `uv run` em worktree; checar RAM (CLAUDE.md).
 
 ## Próximos 3 passos
 
-1. Turno inteiro: input só libera no `state` (~10 s p50, igual ao OFF) — investigar o que segura o `state` após a narração (arquivista/commit no mesmo request) (cold start do Vercel fica para quando o dono pagar a Vercel).
+1. Turno inteiro (~10 s até o `state`, igual ao OFF): investigar arquivista/commit após a narração. Cold start do Vercel: quando o dono pagar a Vercel.
 2. 318: A/B de NPC novo (`RPG_NPC_TWO_PHASE`); deploy da main no staging (fix do loot); bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente); 319 P2-1 medir `replace` no combate.
 3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
@@ -30,7 +30,7 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | Conta no staging (R-01) | criar/entrar em https://rpg-ia-master-staging.vercel.app e confirmar o e-mail | "confirmei e loguei" → fechar R-01 no risk register + checklist |
 | SPEC-222 compra de teste | criar conta Stripe (modo teste) e colar `STRIPE_SECRET_KEY=sk_test_…` + webhook secret no `.env.staging` | "colei a Stripe" → env no staging, compra de teste, `purchase_token IS NULL`, fechar 222 (exceto domínio) |
 | SPEC-222/197 domínio de produção | comprar domínio e apontar DNS para a Vercel | "comprei o domínio X" → URLs legais, CORS/cookies, checklist |
-| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release; ao pagar a Vercel → spec de infra do cold start (19–59 s: dieta do bundle 319 MB, Fluid, aquecimento; adiada pelo dono 27/10) |
+| SPEC-197 | contas pagas (Vercel/Supabase Pro), Stripe live, go/no-go ([lista](docs/spec197/decision-request.md)) | "go do beta" → checklist `--env production` e release; Vercel paga → spec de cold start (19–59 s; bundle, Fluid, aquecimento) |
 | SPEC-198 | Play Console (taxa), package ID, service account | "criei o Play Console" → `applicationId`, upload interno, licença real |
 | Logs externos (Axiom) | criar conta Axiom e colar o token no `.env.staging` | "faz o Axiom" → envio direto do app, retenção ~30 d |
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
@@ -38,9 +38,9 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
-## Decisões recentes (≤ 2 dias)
+## Decisões recentes (≤ 1 dia)
 
-Gerado por `uv run python scripts/spec_index.py recent --days 2 --write ESTADO_ATUAL.md`
+Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_ATUAL.md`
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
@@ -67,8 +67,6 @@ Gerado por `uv run python scripts/spec_index.py recent --days 2 --write ESTADO_A
 - 2026-10-26 · SPEC-322 `done` — Front: tokens de cor, contraste, raio, ícones e tipografia
 - 2026-10-26 · SPEC-321 `done` — Front: casca mobile, alvos de toque e safe-area
 - 2026-10-26 · SPEC-320 `done` — Front: espera do turno, typewriter e banner de erro
-- 2026-10-25 · SPEC-315 `done` — Rumores adotados pelo motor (a LLM inventa o conteúdo; o motor decide se é verdade e o materializa)
-- 2026-10-25 · SPEC-314 `done` — Fações do mundo sob a regra de ouro (o NPC não entrega o plano secreto)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
