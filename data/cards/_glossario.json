@@ -1,0 +1,103 @@
+{
+  "_meta": "SPEC-330 R10: glossário das palavras-chave de Valoria (v1, 14). Fonte única para o tooltip do front e para o prompt do narrador. Nomes aprovados pelo dono em 27/10 (SPEC-327 D4); `exposto` é exibido como Rachadura (mesma condição). Mecânica em services/card_effects.py.",
+  "palavras_chave": {
+    "rachadura": {
+      "nome": "Rachadura",
+      "grupo": "A",
+      "parametro": "rodadas",
+      "regra": "O alvo recebe +25% de dano de golpes por N rodadas (arredonda para cima a partir de meio). Não amplia dano contínuo.",
+      "sabor": "O ferro cede onde o Abismo tocou primeiro."
+    },
+    "torpor": {
+      "nome": "Torpor",
+      "grupo": "A",
+      "parametro": "rodadas",
+      "regra": "O alvo causa -25% de dano por N rodadas.",
+      "sabor": "O braço pesa como se a névoa morasse nele."
+    },
+    "sangria": {
+      "nome": "Sangria",
+      "grupo": "A",
+      "parametro": "dano",
+      "regra": "O alvo sofre N de dano no início do seu turno; o valor cai 1 por rodada até sumir. Ignora armadura.",
+      "sabor": "Não é a ferida que mata, é o tempo que ela tem."
+    },
+    "vigilia": {
+      "nome": "Vigília",
+      "grupo": "A",
+      "parametro": "protecao",
+      "regra": "Proteção N que não se dissipa no fim da rodada: acumula e só some quando absorve dano.",
+      "sabor": "Quem vigia não dorme, nem quando a luta acaba."
+    },
+    "marca_do_abismo": {
+      "nome": "Marca do Abismo",
+      "grupo": "A",
+      "parametro": "dano",
+      "regra": "Ataques contra o alvo têm Vantagem. O próximo dano que ele sofrer ganha +X, e quem acertar ganha +1 Entropia. A Marca se consome nesse golpe.",
+      "sabor": "O Abismo aponta, e alguém sempre obedece."
+    },
+    "interromper": {
+      "nome": "Interromper",
+      "grupo": "A",
+      "parametro": null,
+      "regra": "Se o alvo anunciou um ataque (presságio) e esta Carta o derruba ou atordoa, o presságio é frustrado e dispara os efeitos de 'ao frustrar um presságio'.",
+      "sabor": "O golpe morre no ar."
+    },
+    "sacrificio": {
+      "nome": "Sacrifício",
+      "grupo": "A",
+      "parametro": "vitalidade",
+      "regra": "Custo adicional: pague N de Vitalidade antes de os efeitos resolverem. Conta como auto-dano para a sua Postura.",
+      "sabor": "O sangue paga adiantado."
+    },
+    "chamado": {
+      "nome": "Chamado",
+      "grupo": "A",
+      "parametro": "entropia",
+      "regra": "O efeito marcado só acontece se sua Entropia for K ou mais. A Carta fica melhor perto do Abismo.",
+      "sabor": "Quanto mais fundo, mais nítida a voz."
+    },
+    "exaurir": {
+      "nome": "Exaurir",
+      "grupo": "B",
+      "parametro": null,
+      "regra": "Depois de jogada, a Carta sai do baralho até o fim do conflito.",
+      "sabor": "Há gestos que só se fazem uma vez por noite."
+    },
+    "guardar": {
+      "nome": "Guardar",
+      "grupo": "B",
+      "parametro": null,
+      "regra": "A Carta não é descartada no fim da rodada: fica na mão.",
+      "sabor": "Segura o golpe até a hora certa."
+    },
+    "eco": {
+      "nome": "Eco",
+      "grupo": "B",
+      "parametro": null,
+      "regra": "Se jogada depois de outra Carta da mesma Postura nesta rodada, repete o efeito principal pela metade.",
+      "sabor": "A Postura responde a si mesma."
+    },
+    "ressoar": {
+      "nome": "Ressoar",
+      "grupo": "B",
+      "parametro": "valor",
+      "regra": "Cada vez que é jogada nesta cena, o valor da Carta sobe N até o fim da cena.",
+      "sabor": "O sino toca mais alto a cada badalada."
+    },
+    "fardo": {
+      "nome": "Fardo",
+      "grupo": "B",
+      "parametro": null,
+      "regra": "Carta-maldição que entra no baralho por efeito de inimigo ou do Abismo. É injogável ou ruim; só sai com Purgar.",
+      "sabor": "O Abismo não rouba: ele empresta e cobra."
+    },
+    "vazao": {
+      "nome": "Vazão",
+      "grupo": "B",
+      "parametro": null,
+      "regra": "Se for descartada sem ser jogada, ativa o efeito menor marcado 'ao ser descartada'.",
+      "sabor": "A caldeira esfria por onde dá."
+    }
+  }
+}

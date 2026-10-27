@@ -17,6 +17,7 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, model_validator
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (dados, condições, Entropia)
+from services import card_effects as fx
 from services import combat_flags, death_flow
 from services import conflict_damage as cd
 from services import conflict_scene as cs
@@ -251,6 +252,10 @@ _SUPPORT_EFFECTS = {
     "buff_dano",
     "reduzir_carga_aliado",
 }
+# SPEC-330: kinds novos resolvidos pelo intérprete (`services/card_effects.py`).
+# Hostis rolam ataque como `aplicar_condicao`; os de si mesmo resolvem como suporte.
+_ATTACK_EFFECTS |= set(fx.HOSTILE_KINDS)
+_SUPPORT_EFFECTS |= set(fx.SELF_KINDS)
 
 
 def _damage_from(card: dict | None, actor: dict, step) -> tuple:
@@ -476,8 +481,18 @@ def _resolve_attack_step(
                         },
                     }
                 )
+                # SPEC-330 R11: custos adicionais (Sacrifício) antes dos efeitos.
+                fx.pay_costs(fx._ctx_for(scene, actors_by_id, sides, rng), card, actor_id, out)
         if card is not None and effect_kind in _SUPPORT_EFFECTS:
-            _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
+            fx_ctx = fx._ctx_for(scene, actors_by_id, sides, rng)
+            if effect_kind in fx.NEW_KINDS:
+                fx.apply_effect(
+                    fx_ctx, card.get("efeito") or {}, actor_id, step.target_id, out, card=card
+                )
+            else:
+                _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
+            fx.resolve_extras(fx_ctx, card, actor_id, step.target_id or actor_id, out)
+            fx.record_play(actor, card, step.target_id)
             return
 
     reason = _invalid_target_reason(
@@ -547,12 +562,14 @@ def _resolve_attack_step(
             dmg_base += sum(
                 int(pe.get("value", 0) or 0) for pe in on_hit if pe.get("kind") == "dano"
             )
+            dmg_base += fx.consume_marca_abismo(actor, target, out)  # SPEC-330
             dres = cd.resolve_damage_and_wounds(
                 target,
                 damage_base=dmg_base,
                 damage_type=dtype,
                 crit_mult=atk["efeito_principal_multiplicador"],
                 directed_region=directed_region,
+                dealt_pct=fx.damage_pct(actor, "dealt"),
                 rng=rng,
             )
             atk["regiao"] = dres["regiao"]
@@ -561,8 +578,22 @@ def _resolve_attack_step(
                 atk["resistance_hit"] = dres["resistance_hit"]  # SPEC-325 R8
             out["logs"].append("; ".join(dres["log"]))
             _check_death(target, step.target_id, out)
+        elif effect_kind in fx.NEW_KINDS:
+            fx.apply_effect(
+                fx._ctx_for(scene, actors_by_id, sides, rng),
+                effect,
+                actor_id,
+                step.target_id,
+                out,
+                card=card,
+            )
         else:
             _apply_attack_card_effect(scene, actor, actor_id, target, step.target_id, card, out)
+        if card is not None:
+            # SPEC-330 R11: efeitos adicionais na ordem da lista (exigem acerto).
+            fx.resolve_extras(
+                fx._ctx_for(scene, actors_by_id, sides, rng), card, actor_id, step.target_id, out
+            )
         for pe in on_hit:
             if pe.get("kind") == "aplicar_condicao":
                 cond = cm.parse_condition(
@@ -570,6 +601,11 @@ def _resolve_attack_step(
                 )
                 cond["duration"] = max(1, int(pe.get("duration", 1) or 1))
                 out["logs"].append(cm.apply_condition(target, cond))
+
+    if card is not None:
+        if not atk["acerto"]:
+            fx.arm(fx._ctx_for(scene, actors_by_id, sides, rng), card, actor_id)
+        fx.record_play(actor, card, step.target_id)
 
     # atacar oculto: revela DEPOIS da resolução (R11)
     if scene.get("positions", {}).get(actor_id):

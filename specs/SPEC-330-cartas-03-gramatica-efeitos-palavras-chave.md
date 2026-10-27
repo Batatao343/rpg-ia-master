@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `approved` (dono, 2026-10-27)
+> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário implementados; Grupo B no motor aguarda SPEC-328; revisão independente pendente)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
@@ -69,10 +69,10 @@ Autoria de cartas novas (SPEC-335). Keywords de inimigo exclusivas (SPEC-332 pod
 6. `power_score`: as 308 atuais entram na faixa (calibrar pesos, não as cartas); outliers listados no hand-back.
 
 ## 5. Critérios de aceite
-- [ ] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa)
-- [ ] 14 palavras-chave com teste e entrada no glossário
-- [ ] Validator rejeita vocabulário fora do catálogo e carta fora do orçamento
-- [ ] `uv run pytest` verde
+- [x] Equivalência: 308 cartas legadas com resultado idêntico (seed fixa) — forma `efeito` × forma `efeitos=[efeito]` no motor novo (§8 D-3)
+- [x] 14 palavras-chave com teste e entrada no glossário (Grupo B: glossário/validador/texto; efeito no motor depois da 328)
+- [x] Validator rejeita vocabulário fora do catálogo e carta fora do orçamento
+- [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso)
 
 ## 6. Smoke real
 1. Combo Eco (2 cartas da Postura) narrado com coerência. 2. Rachadura + golpe: número no log bate com o texto da carta.
@@ -81,3 +81,53 @@ Autoria de cartas novas (SPEC-335). Keywords de inimigo exclusivas (SPEC-332 pod
 - Explosão combinatória: fila com profundidade máxima e efeitos fechados.
 - MockLLM não exercita: tudo é Python; LLM só narra.
 - Nomes das palavras-chave são do dono — lista em §2 é proposta.
+
+## 8. Implementação (2026-10-27) — decisões e desvios
+
+Entregue em `services/card_effects.py` (intérprete, gatilhos, texto, orçamento,
+validação), `data/cards/_glossario.json`, `data/cards/_orcamento.json`; ligações em
+`conflict_turn`, `conflict_orchestrator`, `conflict_damage`, `combat_mechanics`,
+`cards` e `content_validator`. Testes: `tests/test_card_effects_grammar.py`,
+`tests/test_keywords_valoria.py`; 12 Cartas compostas de exemplo em
+`tests/fixtures/spec330_cartas_compostas.json` (fora do acervo do jogo).
+
+- **D-1 Fusão `exposto` = Rachadura (D4 do dono).** Uma condição só, exibida como
+  "Rachadura": **+25 % de dano recebido em golpe** (arredonda meio-para-cima; não
+  amplia DoT/auto-dano). O antigo efeito de `exposto` (−2 de Esquiva) deixa de existir:
+  as 20 Cartas que aplicam `exposto` passam a aplicar Rachadura (mudança de balanço
+  deliberada; `test_named_condition_exposto_vira_rachadura`).
+- **D-2 Representação.** Palavras-chave que são efeito viram `kind` (`rachadura`,
+  `torpor`, `sangria`, `vigilia`, `marca_do_abismo`); as que são propriedade da Carta
+  ficam em `palavras_chave: {sacrificio: N, interromper, exaurir, guardar, eco,
+  ressoar: N, fardo, vazao}`; **Chamado** é o campo `chamado: k` do efeito (açúcar de
+  `se: {entropia_min: k}`).
+- **D-3 Equivalência.** Rodar o motor anterior no teste não é viável; o teste prova
+  que a forma lista dá resultado idêntico à forma legada nas 308 Cartas (seed fixa,
+  por tipo: ativa via `resolve_turn`, reação via `_resolve_reaction_effect`, passiva
+  via `combat_modifiers`). A única mudança de resultado legado é D-1.
+- **D-4 Efeito principal.** O catálogo deriva `efeito` = primeiro efeito `ao_jogar`
+  incondicional de kind legado (senão o primeiro incondicional). Ele dirige a
+  rolagem/suporte; os efeitos adicionais rodam depois e **só com acerto** quando o
+  principal é ataque. Kinds novos hostis rolam ataque (como `aplicar_condicao`);
+  `vigilia`/`copiar_ultima`/pilhas resolvem como suporte (alvo próprio).
+- **D-5 Gatilhos.** Efeito com `quando` ≠ `ao_jogar` arma em `scene["gatilhos_armados"]`
+  ao jogar (até o fim do conflito); passivas com gatilho ficam sempre armadas.
+  Ligados: `inicio_rodada`, `fim_rodada`, `ao_receber_dano`, `ao_aliado_sofrer`,
+  `ao_derrubar`, `ao_entrar_carga`, `ao_pressagio_frustrado` (via Interromper).
+  `ao_comprar`/`ao_descartar`/`ao_exaurir` disparam quando a 328 existir. Fila FIFO,
+  profundidade máx. 3 (o 4º é descartado e registrado em `gatilhos_descartados`).
+- **D-6 Interromper × SPEC-329.** Lê presságios de `scene["pressagios"]` (ou
+  `card_effects.bind(..., pressagios=)`), espera `{kind: "attack"}` por ator, marca
+  `frustrado=True` e registra `out["pressagios_frustrados"]`. A ligação ao
+  `combat["pressagios"]` da 329 fica para o pouso conjunto (testado por evento sintético).
+- **D-7 Marca do Abismo.** `control: marca` (mantém a Vantagem da `marca` legada) +
+  `abismo_bonus: X`, duração 3; o próximo dano direto consome: +X e +1 Entropia (com
+  teto) para quem acertou. A `marca` legada não muda.
+- **D-8 Vigília.** Stat `vigilia` (fora da Proteção somada), `persistente`, acumula;
+  absorve depois de armadura/Proteção e só some ao zerar.
+- **D-9 Orçamento.** `custo_folego` = campo explícito ou regra da 328 R6; raridade por
+  `patamar`. Faixas calibradas nas 308 (pesos/faixas, não as Cartas); utilitária e
+  virtude isentas.
+- **D-10 Grupo B no motor.** `comprar`/`descartar`/`ganhar_folego`/`gerar_carta`/
+  `purgar_fardo` só registram `out["pendente_pilhas"]`; Exaurir/Guardar/Eco/Ressoar/
+  Fardo/Vazão não têm efeito no motor até a 328 (follow-up).

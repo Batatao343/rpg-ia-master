@@ -29,6 +29,7 @@ import combat_mechanics as cm  # helpers que SOBREVIVEM (condições, Entropia/C
 import gamedata
 from observability.telemetry import log_event as _log_event
 from services import abyss_events, combat_flags, death_flow
+from services import card_effects as fx
 from services import conflict_scene as cs
 from services import conflict_turn as ct
 from services import reactions as rx
@@ -219,6 +220,9 @@ def _expire_stat_conditions(actor: dict, present_at_start: list, out: dict) -> N
     vale exatamente para este turno."""
     survivors: list[dict] = []
     for c in actor.get("active_conditions", []) or []:
+        if c.get("persistente"):  # SPEC-330 Vigília: só some quando consumida
+            survivors.append(c)
+            continue
         if _is_stat_only(c) and any(c is p for p in present_at_start):
             c["duration"] = int(c.get("duration", 0) or 0) - 1
             if c["duration"] <= 0:
@@ -249,6 +253,8 @@ def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
                 f"{_name(actor)} sofre {dot} de {c.get('name', 'condição')} "
                 f"(Vit {actor.get('vitalidade', 0)})."
             )
+            if c.get("decai"):  # SPEC-330 Sangria: decai 1 por rodada
+                c["dot"] = max(0, dot - int(c.get("decai") or 0))
         c["duration"] = int(c.get("duration", 0)) - 1
         if c["duration"] > 0:
             survivors.append(c)
@@ -1027,12 +1033,14 @@ def _basic_attack(
             dmg += cm.early_game_damage_bonus(int(attacker.get("level", 1) or 1))
         # SPEC-232 R1/R2: `damage` de condições/passivas estáticas do atacante.
         dmg += int(cm.combat_modifiers(attacker).get("damage", 0) or 0)
+        dmg += fx.consume_marca_abismo(attacker, target, out)  # SPEC-330
         dres = resolve_damage_and_wounds(
             target,
             damage_base=max(0, dmg),
             damage_type=damage_type,
             crit_mult=atk["efeito_principal_multiplicador"],
             directed_region=None,
+            dealt_pct=fx.damage_pct(attacker, "dealt"),
             rng=rng,
         )
         atk["regiao"] = dres["regiao"]
@@ -1061,6 +1069,18 @@ def _entropy_event(player: dict, event: dict, out: dict) -> None:
             entropy_delta=after[0] - before[0],
             charge_delta=after[1] - before[1],
         )
+    if after[1] > before[1]:
+        _fire_for(player, "ao_entrar_carga", out)
+
+
+def _fire_for(actor: dict, gatilho: str, out: dict, *, alvo_id: str | None = None) -> None:
+    """SPEC-330: dispara `gatilho` para o ator (id achado no contexto da rodada)."""
+    ctx = fx.current()
+    if ctx is None:
+        return
+    actor_id = next((aid for aid, a in ctx.actors_by_id.items() if a is actor), None)
+    if actor_id is not None:
+        fx.fire(gatilho, sujeito_id=actor_id, alvo_id=alvo_id, out=out)
 
 
 def _post_hit(target: dict, target_id: str, out: dict, *, amount: int = 0) -> None:
@@ -1494,7 +1514,15 @@ def _resolve_actor_turn(
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
         nl_mode = _nonlethal_mode(decl, acao, actor_id, tid, sides)
+        was_down = fx.is_down(tgt)
         _check_terminal(tgt, tid, out, damage_applied=True, nonlethal=nl_mode, by=actor_id)
+        # SPEC-330 R3: gatilhos de dano/derrubada (no-op sem ouvintes armados).
+        fx.fire("ao_receber_dano", sujeito_id=tid, alvo_id=actor_id, out=out, valor=amount)
+        for ally_id in _same_side_ids(tid, sides):
+            if ally_id != tid:
+                fx.fire("ao_aliado_sofrer", sujeito_id=ally_id, alvo_id=tid, out=out)
+        if not was_down and fx.is_down(tgt):
+            fx.fire("ao_derrubar", sujeito_id=actor_id, alvo_id=tid, out=out)
         if (
             nl_mode
             and not tgt.get("dead")
@@ -1942,6 +1970,22 @@ def run_round(
     actors_by_id: dict[str, dict],
     sides: dict[str, list[str]],
     state: dict | None = None,
+    **kwargs,
+) -> dict:
+    """Resolve uma RODADA inteira (ver `_run_round`). SPEC-330: liga o contexto
+    do intérprete de efeitos (gatilhos, fila anti-loop) durante a rodada."""
+    token = fx.bind(scene, actors_by_id, sides, rng=kwargs.get("rng"))
+    try:
+        return _run_round(scene, actors_by_id, sides, state, **kwargs)
+    finally:
+        fx.unbind(token)
+
+
+def _run_round(
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    state: dict | None = None,
     *,
     declarations: dict | None = None,
     prepared_abyss: list[dict] | None = None,
@@ -2082,6 +2126,15 @@ def run_round(
         enemy = actors_by_id.get(enemy_id)
         if enemy is not None:
             cards.reset_enemy_card_usage(enemy, "turno")
+    ctx = fx.current()
+    if ctx is not None:
+        ctx.rng = rng
+    for a in actors_by_id.values():
+        if a.get("_cartas_rodada"):
+            fx.reset_round(a)
+    for aid in sorted(actors_by_id):
+        if _alive(actors_by_id[aid]):
+            fx.fire("inicio_rodada", sujeito_id=aid, out=out)
 
     # Mecânica de classe do jogador no início da rodada (SOBREVIVE).
     if player is not None:
@@ -2220,6 +2273,10 @@ def run_round(
         _maybe_abyss(
             scene, player, actors_by_id, prepared_abyss, out, scene_state=scene_state, rng=rng
         )
+
+    for aid in sorted(actors_by_id):
+        if _alive(actors_by_id[aid]):
+            fx.fire("fim_rodada", sujeito_id=aid, out=out)
 
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]

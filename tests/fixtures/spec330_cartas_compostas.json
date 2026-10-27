@@ -1,0 +1,207 @@
+{
+  "_meta": "SPEC-330: Cartas compostas de exemplo (gramática nova). Só para testes: NÃO entram no acervo do jogo (a autoria é da SPEC-335).",
+  "cards": [
+    {
+      "id": "ex330_golpe_rachador",
+      "name": "Golpe que Racha",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["forca"],
+      "efeitos": [
+        {"kind": "dano", "categoria_arma": "marcial", "dano_base": 4},
+        {"kind": "rachadura", "valor": 2}
+      ],
+      "descricao": "O primeiro golpe abre caminho; o segundo entra fundo.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_nevoa_pesada",
+      "name": "Névoa Pesada",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["mente"],
+      "efeitos": [{"kind": "torpor", "valor": 2}],
+      "descricao": "A cinza assenta nos ombros do inimigo.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_corte_sangria",
+      "name": "Corte de Sangria",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["agilidade"],
+      "efeitos": [
+        {"kind": "dano", "categoria_arma": "leve", "dano_base": 3},
+        {"kind": "sangria", "valor": 3}
+      ],
+      "descricao": "Um talho fino que não fecha.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_muralha_vigilante",
+      "name": "Muralha que Vigia",
+      "tipo": "ativa",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeitos": [{"kind": "vigilia", "valor": 3}],
+      "descricao": "A fé não dorme entre os golpes.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_dedo_do_abismo",
+      "name": "Dedo do Abismo",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["mente"],
+      "efeitos": [{"kind": "marca_do_abismo", "valor": 3}],
+      "descricao": "Aponta, e o Abismo lembra do nome.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_golpe_interruptor",
+      "name": "Golpe no Fôlego",
+      "tipo": "ativa",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 2,
+      "frequencia": "cena",
+      "virtude_permitida": ["forca"],
+      "efeitos": [{"kind": "aplicar_condicao", "condicao": "atordoado", "duracao": 1}],
+      "palavras_chave": {"interromper": true},
+      "descricao": "Acerta onde o ar entra; o grito morre na garganta.",
+      "tier": 3,
+      "level_req": 5
+    },
+    {
+      "id": "ex330_preco_de_sangue",
+      "name": "Preço de Sangue",
+      "tipo": "ativa",
+      "classe": "Sangromante",
+      "subclasse": "",
+      "patamar": "avancado",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": ["forca"],
+      "efeitos": [{"kind": "dano", "categoria_arma": "pesada", "dano_base": 8}],
+      "palavras_chave": {"sacrificio": 2},
+      "descricao": "O sangue paga adiantado e cobra com juros.",
+      "tier": 3,
+      "level_req": 5
+    },
+    {
+      "id": "ex330_chamado_da_fenda",
+      "name": "Chamado da Fenda",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["mente"],
+      "efeitos": [
+        {"kind": "dano", "categoria_arma": "marcial", "dano_base": 4},
+        {"kind": "dano", "valor": 3, "chamado": 4}
+      ],
+      "descricao": "Perto da fenda, a mão pesa mais.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_lamina_da_ruina",
+      "name": "Lâmina da Ruína",
+      "tipo": "ativa",
+      "classe": "Corruptor",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["forca"],
+      "efeitos": [
+        {"kind": "dano", "categoria_arma": "leve", "dano_base": 3},
+        {"kind": "dano", "valor": 2, "se": {"alvo_tem": "rachadura"}}
+      ],
+      "descricao": "Procura a fresta que outro abriu.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_eco_da_postura",
+      "name": "Eco Cinzento",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 1,
+      "frequencia": "turno",
+      "virtude_permitida": ["mente"],
+      "efeitos": [
+        {"kind": "dano", "categoria_arma": "leve", "dano_base": 3},
+        {"kind": "dano", "valor": 2, "se": {"ultima_carta_postura": "Arcanista Cinzento"}}
+      ],
+      "palavras_chave": {"eco": true},
+      "descricao": "O éter repete o que acabou de ouvir.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_vigia_paciente",
+      "name": "Vigia Paciente",
+      "tipo": "passiva",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "livre",
+      "virtude_permitida": [],
+      "efeitos": [{"kind": "vigilia", "valor": 1, "quando": "inicio_rodada"}],
+      "descricao": "Antes de cada golpe, um curativo já pronto.",
+      "tier": 1,
+      "level_req": 1
+    },
+    {
+      "id": "ex330_valvula_fria",
+      "name": "Válvula Fria",
+      "tipo": "ativa",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": ["mente"],
+      "efeitos": [
+        {"kind": "comprar", "valor": 1},
+        {"kind": "ganhar_folego", "valor": 1, "quando": "ao_descartar"}
+      ],
+      "palavras_chave": {"vazao": true, "exaurir": true},
+      "descricao": "Abre a válvula antes que a caldeira estoure.",
+      "tier": 1,
+      "level_req": 1
+    }
+  ]
+}

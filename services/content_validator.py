@@ -646,7 +646,10 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
     arma, patamar/frequência/tipo válidos, e Ruptura/Evolução completas nas
     Cartas centrais. Só valida as autorais — os exemplos do motor (conflito-02)
     usam schema opaco de propósito."""
-    from services.cards import CARD_EFFECT_KINDS, DANO_BASE_ARMA, valid_class_mechanics
+    from services import card_effects as fx
+    from services.cards import DANO_BASE_ARMA, valid_class_mechanics
+
+    CARD_EFFECT_KINDS = fx.all_kinds()  # SPEC-330: legados + gramática nova
 
     findings: list[Finding] = []
     if not os.path.isdir(cards_dir):
@@ -711,9 +714,21 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
             findings.append(Finding("cards", "error", path, "", str(exc)))
             continue
         for c in data.get("cards") or []:
+            # SPEC-330 R2/R9: gramática (efeitos/quando/se/palavras-chave) e
+            # orçamento valem para TODA Carta que usa a gramática nova.
+            if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
+                for msg in fx.validate_card(c):
+                    findings.append(Finding("cards", "error", path, c.get("id", ""), msg))
             if c.get("origem") not in ("conflito-14", "conflito-15", "tiers-5-plus", "cartas-328"):
+                if c.get("efeitos") is not None or c.get("palavras_chave") is not None:
+                    budget = fx.budget_error(fx.materialize(c))
+                    if budget:
+                        findings.append(Finding("cards", "error", path, c.get("id", ""), budget))
                 continue
             cid = c.get("id", "")
+            budget = fx.budget_error(fx.materialize(c))
+            if budget:
+                findings.append(Finding("cards", "error", path, cid, budget))
             if cid in seen_ids:
                 findings.append(
                     Finding(
@@ -735,7 +750,7 @@ def validate_cards(cards_dir: str = os.path.join("data", "cards")) -> list[Findi
                 findings.append(
                     Finding("cards", "error", path, cid, f"tipo inválido: {c.get('tipo')!r}")
                 )
-            _kind_ok(c.get("efeito") or {}, path, cid, "efeito")
+            _kind_ok(c.get("efeito") or fx.primary_effect(c) or {}, path, cid, "efeito")
             if not valid_class_mechanics(c.get("mecanica_classe")):
                 findings.append(
                     Finding(

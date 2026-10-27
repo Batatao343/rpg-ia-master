@@ -157,7 +157,11 @@ def _load_cards() -> dict[str, dict]:
             continue
         for c in data.get("cards") or []:
             if isinstance(c, dict) and c.get("id"):
-                out[c["id"]] = c
+                # SPEC-330 R1: Carta só com `efeitos` ganha `efeito` (principal)
+                # para todo consumidor legado; `efeito` existente fica intacto.
+                from services import card_effects
+
+                out[c["id"]] = card_effects.materialize(c)
     _CARDS = out
     return out
 
@@ -187,8 +191,15 @@ def effective_card(player: dict, card_id: str, *, ruptura: bool = False) -> dict
     caminho = str((player.get("evolved_cards") or {}).get(card_id, "")).upper()
     if caminho in ("A", "B"):
         evo = (card.get("evolucao") or {}).get(f"caminho_{caminho.lower()}") or {}
-        if evo.get("efeito"):
+        if evo.get("efeitos"):
+            from services import card_effects
+
+            card["efeitos"] = copy.deepcopy(evo["efeitos"])
+            card.pop("efeito", None)
+            card = card_effects.materialize(card)
+        elif evo.get("efeito"):
             card["efeito"] = copy.deepcopy(evo["efeito"])
+            card.pop("efeitos", None)
         if evo.get("ruptura"):
             card["_ruptura_evoluida"] = copy.deepcopy(evo["ruptura"])
     if ruptura:

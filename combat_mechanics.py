@@ -171,7 +171,7 @@ def parse_condition(text: str, source: str = "") -> dict:
         # SPEC-232: condições nomeadas das Cartas (`aplicar_condicao.condicao`)
         # ganham efeito mecânico de um catálogo FECHADO — nome sem entrada aqui
         # é órfão e o teste anti-órfão v2 (tests/test_mecanica_orfa.py) falha.
-        named = NAMED_CONDITIONS.get(re.sub(r"\s+", "_", low))
+        named = NAMED_CONDITIONS.get(re.sub(r"\s+", "_", _fold(low)))
         if named and "stat" not in cond and not dot:
             cond.update(named)
     return cond
@@ -179,8 +179,22 @@ def parse_condition(text: str, source: str = "") -> dict:
 
 # SPEC-232 (R1/R4): efeito mecânico das condições nomeadas usadas pelos dados.
 # Valores modestos e simétricos (jogador e inimigo sofrem igual) — [BALANCEAR].
+# SPEC-330 (D4 do dono, 27/10): `exposto` e `rachadura` são a MESMA condição,
+# exibida como Rachadura (+25 % de dano recebido em golpe; glossário único em
+# data/cards/_glossario.json). Torpor/Vigília/Sangria são as palavras-chave novas.
+_RACHADURA = {"name": "Rachadura", "keyword": "rachadura", "stat": "dano_recebido_pct", "delta": 25}
 NAMED_CONDITIONS: dict[str, dict] = {
-    "exposto": {"stat": "ac", "delta": -2},
+    "exposto": dict(_RACHADURA),
+    "rachadura": dict(_RACHADURA),
+    "torpor": {"name": "Torpor", "keyword": "torpor", "stat": "dano_causado_pct", "delta": -25},
+    "vigilia": {
+        "name": "Vigília",
+        "keyword": "vigilia",
+        "stat": "vigilia",
+        "delta": 1,
+        "persistente": True,
+    },
+    "sangria": {"name": "Sangria", "keyword": "sangria", "dot": 2, "decai": 1},
     "cego": {"stat": "advantage", "delta": -1},
     "enfraquecido": {"stat": "damage", "delta": -2},
     "desmoralizado": {"stat": "attack", "delta": -1},
@@ -384,6 +398,10 @@ MODIFIER_STATS = (
     "heal",
     "vitality",
     "social",
+    # SPEC-330: Rachadura (+% recebido), Torpor (−% causado), Vigília (persistente).
+    "dano_recebido_pct",
+    "dano_causado_pct",
+    "vigilia",
 )
 
 

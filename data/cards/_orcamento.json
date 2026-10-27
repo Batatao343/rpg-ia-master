@@ -1,0 +1,185 @@
+{
+  "_meta": "SPEC-330 R9: orçamento de poder das Cartas. power_score = soma(poder dos efeitos) - custos (Entropia, Sacrifício, frequência, Exaurir, Fardo). A faixa vale por (raridade, custo de Fôlego). Calibrado para as 308 Cartas de 27/10: ajuste PESOS e FAIXAS, não as Cartas. Lido por services/card_effects.py e pela SPEC-336.",
+  "raridade_por_patamar": {
+    "inicial": "comum",
+    "avancado": "incomum",
+    "superior": "incomum",
+    "epico_i": "rara",
+    "epico_ii": "rara",
+    "lendario": "epica",
+    "mitico": "epica",
+    "apice": "apice"
+  },
+  "tipos_isentos": [
+    "utilitaria",
+    "virtude"
+  ],
+  "pesos": {
+    "kind": {
+      "dano": 1.0,
+      "contra_ataque": 0.8,
+      "dot": 0.6,
+      "rachadura": 1.5,
+      "torpor": 1.5,
+      "protecao": 0.8,
+      "cura": 1.0,
+      "vigilia": 1.0,
+      "reduzir_carga_aliado": 1.5,
+      "marca_do_abismo": 2.0,
+      "vantagem": 1.5,
+      "buff_defesa": 0.8,
+      "perception": 0.5,
+      "taunt": 2.0,
+      "marca": 2.0,
+      "empurrao": 2.0,
+      "reposicionar": 1.5,
+      "esconder": 2.5,
+      "estabilizar": 4.0,
+      "purga_condicao": 2.5,
+      "utilitaria": 1.0,
+      "comprar": 2.0,
+      "descartar": 0.5,
+      "ganhar_folego": 2.5,
+      "gerar_carta": 2.0,
+      "purgar_fardo": 2.0,
+      "copiar_ultima": 3.0,
+      "mover_alvo_zona": 1.5,
+      "revelar": 1.0,
+      "_buff": 0.7,
+      "_estagio": 1.5,
+      "_flat": 2.0
+    },
+    "condicao": {
+      "exposto": 1.5,
+      "rachadura": 1.5,
+      "torpor": 1.5,
+      "amedrontado": 2.0,
+      "atordoado": 4.0,
+      "enraizado": 2.0,
+      "desmoralizado": 1.0,
+      "cego": 2.0,
+      "desarmado_risco": 1.5,
+      "silenciado": 2.5,
+      "_default": 1.5
+    },
+    "multiplicador": {
+      "area": 2.0,
+      "condicional": 0.7,
+      "gatilho": 0.8,
+      "escala": 0.5,
+      "passiva": 2.0
+    },
+    "palavra_chave": {
+      "ressoar": 1.0,
+      "interromper": 1.0,
+      "eco": 1.5,
+      "guardar": 0.5,
+      "vazao": 0.5
+    },
+    "custo": {
+      "entropia": 0.5,
+      "sacrificio": 0.8,
+      "exaurir": 1.5,
+      "fardo": 3.0,
+      "frequencia": {
+        "livre": 0.0,
+        "turno": 0.5,
+        "cena": 1.5,
+        "descanso_curto": 2.5,
+        "descanso_longo": 4.0
+      }
+    }
+  },
+  "faixas": {
+    "comum": {
+      "0": [
+        0,
+        7
+      ],
+      "1": [
+        -2,
+        9
+      ],
+      "2": [
+        4,
+        13
+      ],
+      "3": [
+        4,
+        13
+      ]
+    },
+    "incomum": {
+      "0": [
+        -3,
+        16
+      ],
+      "1": [
+        -3,
+        16
+      ],
+      "2": [
+        -3,
+        16
+      ],
+      "3": [
+        -3,
+        10
+      ]
+    },
+    "rara": {
+      "0": [
+        -1,
+        31
+      ],
+      "1": [
+        -1,
+        31
+      ],
+      "2": [
+        -1,
+        31
+      ],
+      "3": [
+        -1,
+        31
+      ]
+    },
+    "epica": {
+      "0": [
+        -1,
+        32
+      ],
+      "1": [
+        -1,
+        32
+      ],
+      "2": [
+        -1,
+        32
+      ],
+      "3": [
+        -1,
+        32
+      ]
+    },
+    "apice": {
+      "0": [
+        -6,
+        13
+      ],
+      "1": [
+        -6,
+        13
+      ],
+      "2": [
+        -6,
+        13
+      ],
+      "3": [
+        -6,
+        13
+      ]
+    }
+  }
+}

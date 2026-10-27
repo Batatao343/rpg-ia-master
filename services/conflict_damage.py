@@ -208,9 +208,14 @@ def _resolve_damage_and_wounds(
     use_shield: bool = False,
     defensavel: bool = True,
     bypass_armor: bool = False,
+    dealt_pct: int = 0,
     rng=None,
 ) -> dict:
     """Resolve o dano na ORDEM FIXA (R8). Retorna a matemática completa (R9).
+
+    SPEC-330: `dealt_pct` (Torpor do atacante) e a Rachadura do alvo
+    (`dano_recebido_pct`, só em golpe — nunca em DoT/`bypass_armor`) ajustam o
+    dano logo após o Crítico; Vigília absorve depois da Proteção.
 
     SPEC-232 R7: `bypass_armor=True` (DoT, clima, auto-dano) ignora armadura,
     escudo E Proteção de condição — Integridade fica intacta. `defensavel`
@@ -224,6 +229,14 @@ def _resolve_damage_and_wounds(
     # (1) dano + multiplicador de Crítico
     dano = int(damage_base) * int(crit_mult)
     log.append(f"dano {damage_base}×{crit_mult}={dano}")
+
+    # (1b) SPEC-330: Rachadura (alvo) / Torpor (atacante) em ±%.
+    from services import card_effects as fx
+
+    pct = int(dealt_pct or 0) + (0 if bypass_armor else fx.damage_pct(target, "taken"))
+    if pct and dano > 0:
+        dano = fx.apply_pct(dano, pct)
+        log.append(f"Rachadura/Torpor {pct:+d}% -> {dano}")
 
     # (2) Imunidade / Resistência / Vulnerabilidade
     if not ignore_resistance and dtype in (target.get("immunities") or []):
@@ -297,6 +310,14 @@ def _resolve_damage_and_wounds(
         dano -= absorbed
         protegido = True
         log.append(f"Proteção (efeito) -{absorbed} -> {dano}")
+
+    # (4b) SPEC-330: Vigília — Proteção que persiste até ser consumida.
+    if not bypass_armor and dano > 0:
+        absorbed_vig = fx.absorb_vigilia(target, dano)
+        if absorbed_vig:
+            dano -= absorbed_vig
+            protegido = True
+            log.append(f"Vigília -{absorbed_vig} -> {dano}")
 
     atravessou = dano > 0
 
