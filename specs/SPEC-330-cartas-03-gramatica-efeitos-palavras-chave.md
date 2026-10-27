@@ -1,6 +1,6 @@
 # SPEC-330 — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
 
-> **Status:** `in-progress` (Grupo A + intérprete + texto + orçamento + glossário pousados em 27/10 após re-revisão Sol APPROVED_WITH_FOLLOWUPS; Grupo B ligado às pilhas da SPEC-328 e follow-ups P2-4/P2-5 em 27/10, correções da revisão Sol B-P1-1, B-P2-1..5 aplicadas (D-13), pendentes re-revisão e smoke real)
+> **Status:** `in-progress` (Grupo A e Grupo B pousados `off` em 27/10 após re-revisões Sol APPROVED; falta smoke real §6 e follow-ups D-13 — escolha do descartar na UI (333), `_bump` (335), Fardo por evento do Abismo)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (`comprar`/`descartar`/`Guardar`/`Exaurir` precisam das pilhas). As palavras-chave sem pilha (R5 grupo A) podem pousar antes.
