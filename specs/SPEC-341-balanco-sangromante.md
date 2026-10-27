@@ -1,6 +1,6 @@
 # SPEC-341 — Balanço de poder das Cartas pós-SPEC-339 (Sangromante avaro/silencioso, dominantes novas, controles de duração)
 
-> **Status:** `draft`
+> **Status:** `approved`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-339 (`done`: tick de duração corrigido, viés de ordem do `full_deck` removido), SPEC-335 (Lotes 0–6 na `main`, `off`), SPEC-336 (esteira: lint, `versao`, `_ondas.yaml`), SPEC-330 (golden das 308 legadas).
@@ -343,3 +343,5 @@ Se 1–3 falharem: **não** reajustar com essas sementes (R3). Parar e devolver 
 - **D6 — `san_exp_espetaculo` (legada):** **recomendação: não mexer nesta spec.** Confirmar com as sementes 20–99. Se for real, abrir uma spec própria, com o protocolo de golden R11 da SPEC-339, porque a causa provável é `auto_dano` × mecânica de classe e não a Carta.
 - **D7 — Giz Vermelho e Dívida Gravada de `duracao` 2 para 1 (`versao` 2):** **recomendação: sim.** O 2 foi contorno de um bug que a 339 corrigiu. Com o motor certo, Giz subiu para +7,5 pp, perto do limiar de 8. Os 9 ex-pendentes ficam em 1, e `arc1_imp_parafuso`/`arame` (`duracao` 2 por desenho, Lote 1) não mudam.
 - **D8 — Teste de artefato (R18)** que lê os JSON da arena e trava as `versoes` alteradas? **Recomendação: sim, só com o escopo das Cartas desta spec.** Ele usa os limites existentes (45–75 % e o piso do exposto desta spec) e falha se alguém mudar essas Cartas sem refazer a arena. Custo: a esteira da 336 precisa refazer a arena ao mexer nelas, o que é desejável.
+
+**Decisões do dono (27/10, "aprovo!!"):** todas as recomendações D1–D8.
