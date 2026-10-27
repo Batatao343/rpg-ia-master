@@ -75,7 +75,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: 327–336 sessão `-69`; suíte completa 1 por vez (avisar). 337–338 `done` (segurança HTTP; fuzz `api-fuzz`).
-- 27/10 cartas: pousadas `off` 328 (Fôlego 2, `RPG_FOLEGO_BASE`), 329, 330 A+B, 331, 334, 336. Em execução: 335, 332, 333. Dono revisa voz: `pressagio_sinais.json`, `basicas.json`, `cartas_de_cena.json`. CI do origin vermelho (`deck_off` sem pt-BR) até o próximo push.
+- 27/10 cartas: pousadas `off` 328 (Fôlego 2), 329, 330, 331, 332 lote 1, 333, 334, 335 lotes 0–1, 336. Falta: 335 lotes 2–6, 332 lote 2, e2e/smoke real antes de `on`. Dono revisa voz: `pressagio_sinais.json`, `basicas.json`, `cartas_de_cena.json`, amostra `_ondas.yaml`.
 
 
 ## Como rodar
