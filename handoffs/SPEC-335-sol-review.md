@@ -1,5 +1,6 @@
 # SPEC-335 — revisão sol (review)
 
+> **Veredito Lote 6 + R6 (`3e59ef20`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 5 P2; meta "≥ 520" da spec com a conta errada: a base correta dá 483, entregue 499)
 > **Veredito Lote 5 (Médico de Campo):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `72f82c23` (a 1ª rodada, em `75452e54`, deu `CHANGES_REQUIRED` com 2 P1 e 4 P2; o bugfix de motor fica na SPEC-339)
 > **Veredito Lote 4 (Corruptor):** `APPROVED_WITH_FOLLOWUPS` na re-revisão de `7a40ae9d` (a 1ª rodada, em `25b00b3f`, deu `CHANGES_REQUIRED` com 1 P1 e 4 P2)
 > **Veredito Lote 3 (Devoto, `8874f777`):** `APPROVED_WITH_FOLLOWUPS` (0 P0/P1; 4 P2)
@@ -10,6 +11,114 @@
 > Nota de nome: o coordenador pediu `handoffs/SPEC-335-sol-review-lote2.md`, mas esse nome
 > reprova `scripts/check_handoff_names.py` / `tests/test_handoff_names.py` (o padrão é
 > `SPEC-NNN[-papel]-tipo.md`, sem sufixo). Por isso a revisão do Lote 2 entrou neste arquivo.
+
+# Lote 6 + R6 (`main...3e59ef20`)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`. Não há P0 nem P1; ficam 5 P2. A meta "≥ 520" da
+> spec está com a conta errada (P2-1).
+
+## Escopo
+
+Commit `3e59ef20`, sobre a `main` com os Lotes 1–5. Entram `data/cards/valoria_neutras.json` (40
+`neu1_*`), os 5 `posturas/*_tronco.json` (16 `*_tro_*`), `_ondas.yaml`, `services/card_rewards.py`,
+`services/content_validator.py`, os testes `test_card_variety`, `test_card_acervo_reparo` e
+`test_card_rewards`, e `docs/spec335/` (relatório, 3 scripts e 4 JSON). Nada em `evals/`.
+
+## Os 6 pontos do coordenador
+
+**1. `roll_rewards` com `region_id`: não muda nada no `off` e mantém o determinismo.**
+- **`off`:** `RPG_CARD_REWARDS` vale `off` por padrão e não está no preset do staging. Nesse modo,
+  o gancho (`card_rewards.py:188`) devolve antes de rolar.
+- **Alcance da mudança:** só acrescenta uma string ao `set` `region_ids`, que é lido **apenas** por
+  pertencimento em `_pools` (`regiao in region_ids`). Os pools são `sorted` e o RNG é
+  `Random(f"{seed}:espolio")`, então não há ordem de hash nem aleatoriedade nova.
+- **Quem é afetado:** só Cartas com `regiao`, ou seja, as neutras. As de `status_e_maldicoes` têm
+  `regiao` de corpo (`cabeca`/`torso`), que nunca é `region_id`, e `_eligible` já exclui status.
+- **Com `on`:** o espólio passa a ter um pool `neutra` não vazio. É o efeito pretendido do lote, e a
+  mesma semente com o mesmo estado continua dando o mesmo espólio.
+
+**2. As neutras não vazam: OK.**
+- `cards_for_class(Postura)` só aceita `classe` igual à Postura ou vazia, e as neutras têm
+  `classe: Neutra`.
+- `progression.eligible_cards` e a criação usam `cards_for_class(class_name)`.
+- `test_card_variety` e `test_card_acervo_reparo` provam que nenhum `neu1_` aparece no Acervo nem no
+  baralho inicial.
+- Exceção teórica: `cards_for_class("")` devolve tudo, neutras incluídas. Só um teste de cena usa
+  isso, e nenhum jogador tem `class_name` vazio (P2-5).
+
+**3. As 16 de tronco não mudam o caminho automático do `off`.**
+- Rodei `character_creator._resolve_starting_cards` nos níveis 1 e 2, com e sem as `*_tro_` no
+  catálogo, para as 5 Posturas. O Acervo inicial (6), as Preparadas e as Virtudes saem
+  **idênticos**. As canônicas `conflito-14` vêm primeiro e já enchem as 6 vagas.
+- O que muda no `off` é só a **escolha**: elas aparecem como opção no assistente e entram em
+  `eligible_cards` nos níveis 1–2. É conteúdo novo à escolha do jogador, como nos Lotes 1–5.
+- Os testes de progressão e de `cards_prepare` passam.
+- Ressalva: `arc1_tro_lance_calculado` só faz `comprar 1`, que não faz nada com o baralho `off`
+  (vira `pendente_pilhas`). Uma Carta de tronco de nível 1 que o jogador de hoje pode escolher e
+  não faz nada (P2-3).
+
+**4. O R6 não está afrouxado nos números, mas a definição precisa ficar explícita na spec.**
+- O teste é **mais estrito** que a spec em um eixo: conta por **subclasse** (15 combinações), não
+  pela Postura inteira. Exclui básicas, Ápice, Virtude, status e neutras, e tem um teste que obriga
+  as faixas a cobrirem todo `level_req`. Os números ≥ 10 / ≥ 4 / ≥ 3 não mudaram.
+- Em outro eixo ele é **cumulativo** (`level_req ≤ nível`), enquanto a spec diz "por tier".
+- Medi a leitura por faixa, contando só as Cartas novas de cada faixa: **119 de 135 casos
+  falhariam** (por exemplo Devoto/consagrado: 1 Carta nova no nível 12, 0 no 20). Com 12 Cartas
+  por subclasse, essa leitura é inatingível, então a cumulativa é a única viável. Mas ela esconde
+  que os tiers altos quase não ganham Carta.
+- Pior caso da leitura cumulativa: 13 Cartas, 7 kinds, **3** palavras-chave, no limite.
+- Ver P2-2.
+
+**5. A meta "≥ 520" está errada; a entrega está certa.** A spec soma "308 + 180 + 40", mas as 308
+legadas (o conjunto de `legacy_cards()`) incluem **40 Cartas de inimigo e 5 de Virtude**, que não
+são Acervo de jogador. Recontei no catálogo:
+
+| Conta | Total |
+|---|---|
+| Base correta: legadas de Postura | 263 |
+| Meta com a base correta: 263 + 180 + 40 | **483** |
+| Entregue: 263 + 196 (180 + 16 de tronco) + 40 neutras | **499** (459 de Postura + 40) |
+| Os 448 do executor: só baralho (ativa, reação, utilitária) | 408 + 40 = 448 |
+
+Os 448 deixam de fora as **51 passivas**, que também são Acervo (aprendidas, não vão para o
+baralho). A meta da spec tem de ser corrigida (P2-1).
+
+**6. Checagens de sempre: OK.**
+- Neutras com raridade 20/12/6/2 (R3 do lote de 40 = 20/12/6/2) e onda `aprovada` com a nota "sem
+  leitura"; tronco também `aprovada`.
+- Nenhum nome nem id colide nos 732 objetos nomeados (40 neutras e 16 de tronco conferidos).
+- `validate_content` dá 0/0 e recusa `origem_lore` fora do codex, com teste.
+- Joguei as 56 Cartas no motor (`ct.resolve_turn`): todas aplicam o que o texto diz, com a
+  ressalva de `lance_calculado` no `off`.
+- A arena do tronco (`confirmar_tronco_lote6.py`), rodada de novo, saiu **idêntica** ao JSON.
+- O teste de equivalência das 308 legadas e o snapshot da 330 passam (sem mudança em Carta
+  legada).
+
+## Achados
+
+| ID | Sev. | Arquivo | Problema | Correção |
+|---|---|---|---|---|
+| P2-1 | P2 | `specs/SPEC-335…md` §5 | A meta "≥ 520 (308 + 180 + 40 − cortes)" usa uma base 308 que contém 40 Cartas de inimigo e 5 de Virtude. | Trocar por "Acervo de jogador ≥ 483 (263 legadas de Postura + 180 + 40 − cortes)" e marcar como cumprido: 499, incluindo 51 passivas e 16 de tronco. Registrar também a conta "só baralho" (448) para não haver ambiguidade. |
+| P2-2 | P2 | `specs/SPEC-335…md` R6; `tests/test_card_variety.py` | A spec diz "por tier"; o teste mede a oferta **cumulativa**. Escolha defensável e mais estrita por subclasse, mas não está na spec e esconde tiers altos vazios (0–1 Carta nova por subclasse do nível 12 em diante). | Escrever na R6 "oferta cumulativa por faixa de nível, por subclasse". Acrescentar um piso por faixa (por exemplo, cada faixa a partir do 4 traz ≥ 1 Carta nova por subclasse) só se a 336/onda 2 assumir isso. Registrar o vazio dos tiers altos como insumo da onda 2. |
+| P2-3 | P2 | `data/cards/posturas/arcanista_cinzento_tronco.json` (`arc1_tro_lance_calculado`) | Carta de tronco de nível 1 que só faz `comprar 1`, um efeito de pilha que não faz nada com o baralho `off` (o jogo de hoje). Já estava disponível no assistente e em `eligible_cards`. As duas do Lote 1 com o mesmo problema (`arc1_cal_compasso`, `arc1_des_corrente`) foram aceitas antes, mas eram de subclasse. | Dar um efeito que valha no `off`, junto do `comprar`, ou esconder Cartas só de pilha do Acervo enquanto o baralho estiver `off`. 336/328: lint de aviso para Carta cujo único efeito é de pilha. |
+| P2-4 | P2 | spec R2 | A R2 pede neutras "por espólio, loja e quest", mas só o espólio existe (registrado pelo executor). Com `RPG_CARD_REWARDS=off` em produção e staging, **as 40 neutras não aparecem em jogo nenhum hoje**. | Deixar claro na spec. Ligar o espólio fica com a 333 ou o dono; loja e quest, numa spec futura. |
+| P2-5 | P2 | `services/cards.py:287` (`cards_for_class("")`) | Com `class_name` vazio, devolve todas as Cartas, neutras incluídas. Hoje não há caminho de jogador que chegue aí. | Excluir `classe: Neutra` também nesse caminho, ou documentar. 336. |
+
+## Comandos rodados (Lote 6 + R6)
+
+```text
+git diff main...3e59ef20 (21 arquivos) → card_rewards.py, content_validator.py, test_card_variety.py, spec lidos
+grep region_ids/regiao em card_rewards.py → só pertencimento; pools sorted; RNG com semente; off devolve antes
+character_creator._resolve_starting_cards (5 Posturas, nível 1/2, com/sem *_tro_) → idêntico
+contagem do catálogo → legado: 263 de Postura, 40 inimigo, 5 virtude (= 308); onda: 196 de Postura + 40 neutras; Postura 459 (51 passivas)
+R6 por faixa não cumulativa → 119/135 falhariam; cumulativa: pior caso (13, 7, 3)
+scratchpad/sol6_play.py (40 neu1_ + 16 *_tro_ por ct.resolve_turn) → só lance_calculado (comprar) sem efeito no off
+confirmar_tronco_lote6.py --out <scratchpad> → idêntico a sim-lote6-tronco.json
+nomes/ids (732 objetos) → 0 colisões; raridade das neutras 20/12/6/2
+pytest -q -n 2 test_card_variety, test_card_rewards, test_card_acervo_reparo, test_card_effects_grammar, test_card_lint, test_card_sim, test_mecanica_orfa, test_handoff_names, test_card_piles, test_scene_cards_extra → exit 0
+pytest -q -n 2 test_cards_prepare_api, test_progression_20, test_progression_v4 → exit 0
+scripts/validate_content.py → 0 erros, 0 avisos
+```
 
 # Lote 5 — re-revisão (`e81a4cdb..72f82c23`)
 
