@@ -55,7 +55,7 @@ ondas:
   autor: claude-sonnet-5.5
   revisor_voz: dono
   voz_status: aprovada
-  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura). Olho no Pulso v2 entraram depois da aprovação em bloco, cobertas pela autorização geral do dono de 27/10
   amostra_voz:
   - san1_ava_juros_do_primeiro
   - san1_exp_plateia_cega
@@ -157,7 +157,7 @@ ondas:
   autor: claude-sonnet-5.5
   revisor_voz: dono
   voz_status: aprovada
-  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura)
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura). Gancho de Ferro, Medir a Fadiga e Olho no Pulso v2 entraram depois da aprovação em bloco, cobertas pela autorização geral do dono de 27/10
   amostra_voz:
   - cor1_bio_pele_podre
   - cor1_bio_colheita_podre
