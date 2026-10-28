@@ -187,14 +187,18 @@ def test_family_icons_only_use_existing_web_icons():
 
 
 # --- view -------------------------------------------------------------------------------
-def test_view_exposes_marker_with_flag_off_and_no_curated_art(monkeypatch):  # SPEC-354 R6 (era: sem chave)
+def test_view_exposes_marker_with_flag_off_and_no_curated_art(
+    monkeypatch,
+):  # SPEC-354 R6 (era: sem chave)
     import api
     from tests.test_api_jogadas import _state
 
     monkeypatch.setenv("RPG_CARD_DECK", "on")
     monkeypatch.delenv("RPG_CREATURE_ART", raising=False)
     block = api._combat_block(_state(monkeypatch))
-    assert block["enemies"] and all(e["retrato"]["estado"] in ("marcador", "pronto") for e in block["enemies"])
+    assert block["enemies"] and all(
+        e["retrato"]["estado"] in ("marcador", "pronto") for e in block["enemies"]
+    )
 
 
 def test_view_exposes_marker_with_flag_on(monkeypatch):

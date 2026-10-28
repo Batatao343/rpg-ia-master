@@ -31,7 +31,10 @@ def test_view_keeps_round_board_after_conflict_ends(monkeypatch):
         "player": {"name": "Haldor"},
         "enemies": [],
         "combat": {
-            "active": False, "phase": "ended", "last_round_board": board, "last_mech_log": ["Fuga"],
+            "active": False,
+            "phase": "ended",
+            "last_round_board": board,
+            "last_mech_log": ["Fuga"],
             "result": {"outcome": "fled", "xp_event_ref": "rc-1", "result_event_id": "res-1"},
         },
         "last_turn_outcome": {"receipt_id": "rc-1", "turn": 1},

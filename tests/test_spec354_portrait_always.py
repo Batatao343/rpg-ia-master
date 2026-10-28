@@ -28,7 +28,9 @@ def test_portrait_for_has_no_offer_with_flag_off(monkeypatch):
 
 def test_curated_family_art_is_ready(monkeypatch):
     monkeypatch.setenv("RPG_CREATURE_ART", "off")
-    monkeypatch.setattr(ca, "_curated", lambda kind, key: "/fam.webp" if kind == "creature_family" else None)
+    monkeypatch.setattr(
+        ca, "_curated", lambda kind, key: "/fam.webp" if kind == "creature_family" else None
+    )
     out = ca.portrait_for({"id": "enemy_x_1", "name": "X", "arquetipo": "bruto"}, None, game_id="g")
     assert out["estado"] == "pronto" and out["src"] == "/fam.webp"
 
@@ -49,6 +51,8 @@ def test_enemy_portrait_never_passes_registry_or_price(monkeypatch):
         return real(enemy, manifest, **kw)
 
     monkeypatch.setattr(ca, "portrait_for", spy)
-    out = api._enemy_portrait({"game_id": "g"}, {}, {"id": "enemy_x_1", "name": "X", "arquetipo": "bruto"})
+    out = api._enemy_portrait(
+        {"game_id": "g"}, {}, {"id": "enemy_x_1", "name": "X", "arquetipo": "bruto"}
+    )
     assert out["gerar"] is None
     assert seen.get("registry") is None and seen.get("quote_price") is None

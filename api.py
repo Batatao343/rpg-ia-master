@@ -3184,7 +3184,9 @@ def _combat_block(state: dict) -> dict[str, Any]:
     # SPEC-353 R54 + SPEC-354 R4.1 (um só caminho): com o Baralho `on`, o registro da rodada vale durante o conflito
     # (há `pilhas`) e, depois dele, só no turno de término (`_combat_result`), não até o próximo conflito.
     _final_board = (
-        not meta.get("active") and bool(meta.get("last_round_board")) and bool(_combat_result(state))
+        not meta.get("active")
+        and bool(meta.get("last_round_board"))
+        and bool(_combat_result(state))
     )
     if _piles.mode() == "on" and (isinstance(meta.get("pilhas"), dict) or _final_board):
         view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6

@@ -5,7 +5,9 @@ from __future__ import annotations
 import api
 from tests.test_api_jogadas import _state
 
-BOARD = [{"ator_id": "player", "ator_nome": "Ayla", "lado": "heroi", "resultado": "acerto", "dano": 5}]
+BOARD = [
+    {"ator_id": "player", "ator_nome": "Ayla", "lado": "heroi", "resultado": "acerto", "dano": 5}
+]
 
 
 def _ended(monkeypatch, mode="on"):
@@ -39,5 +41,8 @@ def test_active_combat_without_piles_has_no_board(monkeypatch):
 
 def test_next_turn_after_the_end_has_no_board(monkeypatch):
     state = _ended(monkeypatch)
-    state["last_turn_outcome"] = {"receipt_id": "rc-2", "turn": 2}  # outro turno: o resultado já não é o do término
+    state["last_turn_outcome"] = {
+        "receipt_id": "rc-2",
+        "turn": 2,
+    }  # outro turno: o resultado já não é o do término
     assert "registro_rodada" not in api._combat_block(state)
