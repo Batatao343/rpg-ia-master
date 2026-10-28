@@ -2643,6 +2643,57 @@ def _run_round(
         _mt.record_step("pressagio_frustrado", actor=actor_id, reason=motivo, card_id=None)
         logger.info("pressagio_frustrado actor=%s motivo=%s name=%s", actor_id, motivo, _name(a))
 
+    def _taunt_same_round(actor_id: str, actor: dict, intent: dict) -> dict:
+        """SPEC-355 R2: Provocação aplicada NESTA rodada desvia a intenção de ataque congelada
+        (uma declaração por aplicação). Sem desvio possível devolve a declaração como está."""
+        decl = intent["declaration"]
+        if intent["tipo"] not in ("ataque", "ataque_multiplo"):
+            return decl
+        if not any(
+            n.get("victim_id") == actor_id and n.get("control") == "taunt"
+            for n in out.get("condicoes_novas") or []
+        ):
+            return decl
+        orig = intent.get("alvo_id")
+        candidates = [t for t in _opposing_ids(actor_id, sides) if _alive(actors_by_id.get(t))]
+        taunts = [c for c in actor.get("active_conditions") or [] if c.get("control") == "taunt"]
+        sources = {
+            str(c.get("source_actor_id") or "")
+            for c in taunts
+            if str(c.get("source_actor_id") or "") in candidates
+        }
+        if not sources or sources == {str(orig)}:
+            return decl  # sem fonte válida, ou o alvo já é o provocador: não rola
+        new = _taunt_target(actor, candidates, actors_by_id, rng, scene)
+        survivors = []
+        for c in actor.get("active_conditions") or []:
+            if c.get("control") == "taunt" and str(c.get("source_actor_id") or "") in sources:
+                c["duration"] = int(c.get("duration", 0) or 0) - 1
+                if c["duration"] <= 0:
+                    out["logs"].append(f"{_name(actor)}: {c.get('name', 'Provocação')} terminou.")
+                    continue
+            survivors.append(c)
+        actor["active_conditions"] = survivors
+        if not new or new == orig:
+            return decl
+
+        def swap(node):
+            if isinstance(node, dict):
+                return {
+                    k: (new if k == "target_id" and v == orig else swap(v)) for k, v in node.items()
+                }
+            if isinstance(node, list):
+                return [swap(v) for v in node]
+            return node
+
+        out.setdefault("pressagios_desviados", []).append(
+            {"actor_id": actor_id, "alvo_original": orig, "alvo_novo": new, "por": new}
+        )
+        out["logs"].append(
+            f"{_name(actor)}, provocado por {_name(actors_by_id[new])}, muda de alvo."
+        )
+        return swap(decl)
+
     def _enemy_decl(actor_id: str, actor: dict):
         def late():
             return enemy_declaration(
@@ -2672,7 +2723,7 @@ def _run_round(
                 {"actor_id": actor_id, "tipo": intent["tipo"], "alvo_id": intent.get("alvo_id")}
             )
             out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
-            return ct.TurnDeclaration(**intent["declaration"])
+            return ct.TurnDeclaration(**_taunt_same_round(actor_id, actor, intent))
         _frustrate(actor_id, intent, "impossivel")
         return late()
 
