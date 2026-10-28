@@ -347,3 +347,5 @@ Se 1–3 falharem: **não** reajustar com essas sementes (R3). Parar e devolver 
 **Decisões do dono (27/10, "aprovo!!"):** todas as recomendações D1–D8.
 
 **Execução (27/10):** Etapas 0–3 feitas; avaro fechou (74,6 %), silencioso parou em 76,2 % com o pacote R11 (só 2 Cartas de onda no baralho L5). Confirmação 20–99 do pacote final **não** rodada (R3); testes de arena em `xfail(strict)`. Detalhes e opções em `docs/spec341/RELATORIO.md`. `culpa_antiga` e `san_exp_espetaculo` não se confirmaram (ruído, 20–99).
+
+**D4-bis (dono, 27/10, opção A):** aceitar Sangromante silencioso ≈ 76 % como exceção registrada, sem 2º passo e sem tocar legadas. Números do ajuste (sementes 0–19, padrão): silencioso 76,2 %, Sangromante/todas 75,4 %, avaro 74,6 %, exposto 70,4 %. Confirmação 20–99 (uma vez, R3): avaro **75,2 %** (> 75, **sem reajuste**, devolvido ao dono), silencioso 76,6 %, todas 75,6 %, exposto 71,7 %, Corruptor/alma 50,7 %, Médico/boticário 63,0 %.

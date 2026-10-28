@@ -210,10 +210,16 @@ def _load(nome: str) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# D4-bis (dono, 27/10): silencioso (76,2 %) e o agregado Sangromante/todas (75,4 %) aceitos como
+# exceção registrada nas sementes 0–19. O teto global de 75 % NÃO muda para as demais subclasses.
+EXCECAO_ACEITA = {"silencioso": 0.762, "todas": 0.754}
+
+
 def _checar_faixa(arte: dict, *, held_out: bool):
     sang = arte["posturas"]["Sangromante"]
     for sub in ("avaro", "silencioso", "todas"):
-        assert sang[sub]["padrao"] <= 0.75, (sub, sang[sub]["padrao"])
+        teto = 0.75 if held_out else max(0.75, EXCECAO_ACEITA.get(sub, 0.75))
+        assert sang[sub]["padrao"] <= teto, (sub, sang[sub]["padrao"])
     assert sang["exposto"]["padrao"] >= 0.65, sang["exposto"]["padrao"]
     if not held_out:
         assert sang["exposto"]["padrao"] >= 0.704 - 0.05
@@ -221,15 +227,12 @@ def _checar_faixa(arte: dict, *, held_out: bool):
         assert v["total"] >= 0.45, (sub, v["total"])
 
 
-@pytest.mark.xfail(
-    strict=True, reason="SPEC-341 R11 não fechou o silencioso; aguarda decisão do dono"
-)
 def test_arena_final_dentro_da_faixa():
     _checar_faixa(_load("arena-final.json"), held_out=False)
 
 
 @pytest.mark.xfail(
-    strict=True, reason="SPEC-341 R11 não fechou o silencioso; aguarda decisão do dono"
+    strict=True, reason="confirmação 20–99: avaro 75,2 % > 75 %; aguarda decisão do dono"
 )
 def test_arena_confirmacao_dentro_da_faixa():
     arte = _load("arena-confirmacao.json")
@@ -245,7 +248,10 @@ def test_arena_confirmacao_dentro_da_faixa():
         "arena-final.json",
         pytest.param(
             "arena-confirmacao.json",
-            marks=pytest.mark.xfail(strict=True, reason="confirmação 20–99 pendente (R3/R11)"),
+            marks=pytest.mark.xfail(
+                strict=True,
+                reason="confirmação 20–99: avaro 75,2 % > 75 %; aguarda decisão do dono",
+            ),
         ),
     ],
 )

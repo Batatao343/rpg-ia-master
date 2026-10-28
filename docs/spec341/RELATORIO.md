@@ -63,3 +63,15 @@ O silencioso não fecha ≤ 75,0 % com ≤ 3 Cartas × 1 passo: só 2 Cartas de 
 2º passo em `san1_sil_corte_sem_aviso` (75,4 %, ainda no limite) e/ou nerfar legada (`san_troco_carmesim`,
 `san_sil_veia`; protocolo R11 da 339 + golden), (b) aceitar silencioso ~76 % (D1 alternativa). Depois disso: rodar
 `posturas --seeds 20:100` e `cartas --seeds 20:100` uma vez (R3) e remover os `xfail` dos testes de arena.
+
+## Confirmação 20–99 (uma vez, pacote final; `arena-confirmacao.json`) — D4-bis
+| subclasse | padrão | total |
+|---|---|---|
+| Sangromante todas | 75,6 | 62,2 |
+| exposto | 71,7 | 60,1 |
+| **avaro** | **75,2** (> 75,0) | 62,7 |
+| silencioso (exceção D4-bis) | 76,6 | 62,7 |
+| Corruptor/alma | 50,7 | 41,2 |
+| Médico/boticário | 63,0 | 56,1 |
+Cartas (delta 20–99): `corte_sem_aviso` +9,1 pp, uso 52 % → **`dominante`** (nova bandeira real, pós-Fôlego 2); `cobranca_adiada` +4,1; `juros` −2,8; `ponto_cego` +3,1; Giz −2,8; Dívida −3,1/+2,2; `culpa_antiga` +1,6 (ruído).
+Parado conforme instrução: avaro 0,2 pp acima do teto na held-out, sem reajuste.
