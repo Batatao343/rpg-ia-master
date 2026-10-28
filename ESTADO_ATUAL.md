@@ -12,7 +12,7 @@
 - Épico cartas 327–345 (sessão `-69`), atrás de flag `off`.
 - **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`**.
 - Flags: registro `config/flags.yaml` (340); preset do staging `scripts/staging/staging_flags.json`.
-- Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md).
+- Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md)
 
 ## Próximos 3 passos
 
@@ -77,7 +77,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`..
-- 27/10 cartas: 328–336 `off`; 339 `done`; 342/345 pousadas (falta smoke LLM); 341 em revisão (exceções do dono).
+- 27/10 cartas: 328–336 `off`; 339 `done`; 342/345 pousadas (falta smoke LLM); 341 em revisão (exceções do dono)
 
 
 ## Como rodar
