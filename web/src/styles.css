@@ -1005,10 +1005,10 @@ select {
 .wound-track__vitality { display: flex; justify-content: space-between; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .wound-track__bar { height: 7px; overflow: hidden; border-radius: var(--r-pill); background: var(--bg-deep); }
 .wound-track__bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--danger), var(--danger-bright)); }
-.wound-track__severities { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; }
+.wound-track__severities { display: grid; grid-template-columns: repeat(3, max-content); justify-content: space-between; gap: 0.35rem; }
 .wound-severity__label { display: block; margin-bottom: 0.22rem; color: var(--faint); font-size: 0.8rem; text-transform: uppercase; }
-.wound-severity__slots { display: flex; flex-wrap: wrap; gap: 0.2rem; }
-.wound-severity__slots span { min-width: 1.3rem; min-height: 1.3rem; display: grid; place-items: center; padding: 0.1rem 0.25rem; border: 1px dashed var(--line); border-radius: var(--r-sm); color: var(--faint); font-size: 0.75rem; }
+.wound-severity__slots { display: flex; flex-wrap: nowrap; gap: 0.2rem; }
+.wound-severity__slots span { min-width: 1.1rem; min-height: 1.3rem; display: grid; place-items: center; padding: 0.1rem 0.2rem; border: 1px dashed var(--line); border-radius: var(--r-sm); color: var(--faint); font-size: 0.75rem; }
 .wound-severity__slots span.is-filled { border-style: solid; border-color: var(--danger); background: var(--danger-dim); color: var(--ink); }
 .scene-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.4rem; }
 .scene-zone { padding: 0.5rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface-2); }
@@ -1045,6 +1045,11 @@ select {
 .onboard__head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
 .onboard__title { margin: 0; font-family: var(--display); color: var(--accent); }
 .onboard__list { margin: 0.4rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; color: var(--muted); }
+.onboard--compact > summary { cursor: pointer; list-style: none; min-height: 44px; display: flex; align-items: center; }
+.onboard--compact > summary::-webkit-details-marker { display: none; }
+.onboard--compact > summary::after { content: "▾"; margin-left: auto; color: var(--muted); }
+.onboard--compact[open] > summary::after { content: "▴"; }
+.onboard__dismiss { display: flex; justify-content: flex-end; }
 .onboard__tip { margin: 0.45rem 0 0; color: var(--faint); font-size: 0.82rem; }
 
 /* R7 — passe mobile (390px): 1 coluna, input fixo embaixo, zero overflow-x */
@@ -1232,6 +1237,8 @@ select {
 .tchip__top { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--ink); font-size: 0.82rem; }
 .tchip__bar { display: block; height: 4px; border-radius: var(--r-sm); background: var(--bg-deep); overflow: hidden; }
 .tchip__bar > span { display: block; height: 100%; background: var(--danger); }
+.tchip__bar.is-spent { outline: 1px dashed var(--line); outline-offset: -1px; }
+.tchip__vit.is-spent { color: var(--ink-soft); font-style: italic; }
 .tchip--player .tchip__bar > span, .tchip--ally .tchip__bar > span { background: var(--accent); }
 .tchip__meta { font-size: 0.75rem; color: var(--muted); }
 .tchip__tags { display: flex; flex-wrap: wrap; gap: 0.25rem; }

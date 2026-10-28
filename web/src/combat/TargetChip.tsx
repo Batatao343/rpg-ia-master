@@ -27,13 +27,14 @@ export function TargetChip({ p, aim, onPick, omen }: {
   omen?: OmenView;
 }) {
   const pct = p.vit != null && p.max ? Math.max(0, Math.min(100, Math.round((p.vit / p.max) * 100))) : null;
+  const spent = p.role === "enemy" && p.vit === 0 && (p.max ?? 0) > 0; // SPEC-345 R1: de pé, sem Vitalidade
   const body = (
     <>
       <span className="tchip__top">
         <strong>{p.name}</strong>
-        {p.vit != null && p.max != null && <span className="tchip__vit">{`${p.vit}/${p.max}`}</span>}
+        {p.vit != null && p.max != null && <span className={`tchip__vit${spent ? " is-spent" : ""}`}>{spent ? "sem Vitalidade" : `${p.vit}/${p.max}`}</span>}
       </span>
-      {pct !== null && <span className="tchip__bar" aria-hidden="true" data-effect="hit.feedback" data-pct={pct}><span style={{ transform: `scaleX(${pct / 100})` }} /></span>}
+      {pct !== null && <span className={`tchip__bar${spent ? " is-spent" : ""}`} aria-hidden="true" data-effect="hit.feedback" data-pct={pct}><span style={{ transform: `scaleX(${pct / 100})` }} /></span>}
       <span className="tchip__meta">
         {p.role === "enemy" && (p.esquiva != null ? `Esquiva ${p.esquiva}` : "Esquiva ?")}
         {p.role === "enemy" && p.protecao != null ? ` · Proteção ${p.protecao}` : ""}
@@ -58,7 +59,8 @@ export function TargetChip({ p, aim, onPick, omen }: {
   if (!aim) return <div className={cls} data-participant={p.id}>{body}</div>;
   const effectState = aim.valid ? "valid" : "invalid";
   const label = (aim.valid
-    ? `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
+    ? spent ? `Alvo: ${p.name}, sem Vitalidade — o próximo golpe fere`
+      : `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
     : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`) + (omen ? `. Presságio: ${omen.spoken}` : "");
   return (
     <button type="button" className={cls} data-target={p.id} data-aim-safe aria-label={label}

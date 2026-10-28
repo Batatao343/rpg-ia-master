@@ -5,7 +5,7 @@ import { isNativeApp, isAndroidClient } from "./native/platform";
 import { playAdapter } from "./purchases";
 import { installNativeLifecycle } from "./native/lifecycle";
 import { decideBack } from "./native/backPolicy";
-import { offChatSurface, returnToChat } from "./workspace/mobileSurface";
+import { isMobileViewport, offChatSurface, returnToChat } from "./workspace/mobileSurface";
 import { safeStorage } from "./safeStorage";
 import { preparePending, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
@@ -354,7 +354,9 @@ export function App() {
     if (!r.combat_simulation?.enabled && r.simulated && !simNoticed.current) {
       simNoticed.current = true;
       setBanner({
-        msg: "Modo simulado: história fictícia para testar a interface. Adicione GOOGLE_API_KEY no .env para a IA real.",
+        msg: isMobileViewport(window.innerWidth)
+          ? "Modo simulado: história fictícia (sem IA real)."
+          : "Modo simulado: história fictícia para testar a interface. Adicione GOOGLE_API_KEY no .env para a IA real.",
         kind: "warn",
       });
     } else if (!r.simulated && looksDegraded(r.message)) {

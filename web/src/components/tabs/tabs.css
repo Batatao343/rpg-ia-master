@@ -1,10 +1,11 @@
 /* SPEC-209: abas Combate (deck) e Personagem. Só tokens (SPEC-208); transform/opacity apenas. */
 .deck { display: flex; flex-direction: column; gap: 0.8rem; min-width: 0; }
-.deck__head { position: sticky; top: 0; z-index: 2; display: grid; gap: 0.3rem; padding: 0.4rem 0; background: var(--bg); }
+.deck__head { position: sticky; top: 0; z-index: 2; display: grid; gap: 0.3rem; padding: 0.4rem 0; background: var(--surface); }
 .deck__head .hud__label { margin: 0; }
 .deck__head .hud__label > span { margin-left: 0.45em; } /* flex colapsa o espaço entre rótulo e contagem */
 .deck__sync, .char-sync { color: var(--ink-soft); font-size: 0.75rem; text-transform: none; letter-spacing: 0; }
 .deck__msg { margin: 0; min-height: 1.1em; color: var(--ink-soft); font-size: 0.78rem; }
+.deck__msg:empty { min-height: 0; }
 .deck__note { margin: 0; color: var(--muted); font-size: 0.78rem; }
 .deck__levelup { justify-self: start; min-height: 44px; padding: 0.4rem 0.8rem; border: 1px solid var(--accent); border-radius: var(--r-sharp); background: var(--state-selected); color: var(--ink); cursor: pointer; }
 .deck__filters { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }

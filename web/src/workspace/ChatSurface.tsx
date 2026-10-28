@@ -98,7 +98,7 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
             {data?.companion_feedback?.map((line) => <li key={line}>{line}</li>)}
           </ul>
         )}
-        {showOnboard && gameId && <OnboardingHint gameId={gameId} />}
+        {showOnboard && gameId && <OnboardingHint gameId={gameId} compact={mobile} />}
         <StoryLog entries={log} thinking={thinking} active={active}
           initialScroll={initialScroll}
           onScrollPosition={onStoryScroll}

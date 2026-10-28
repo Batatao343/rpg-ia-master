@@ -177,15 +177,15 @@
   border-top: 1px solid var(--line); background: oklch(0.13 0.012 250 / 0.96);
 }
 .mtabbar__btn {
-  position: relative; flex: 1 1 0; min-width: 44px; overflow: hidden; text-overflow: ellipsis; min-height: 48px; padding: 0 0.15rem;
+  position: relative; flex: 1 1 0; min-width: 44px; overflow: visible; min-height: 48px; padding: 0 0.1rem;
   display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem;
   border: 0; border-top: 2px solid transparent; background: transparent; color: var(--muted);
-  font: inherit; font-size: 0.8rem; letter-spacing: 0.01em; white-space: nowrap; cursor: pointer;
+  font: inherit; font-size: clamp(0.68rem, 3.2vw, 0.8rem); letter-spacing: 0; white-space: nowrap; cursor: pointer;
 }
 .mtabbar__btn[aria-current="page"] { color: var(--accent); border-top-color: var(--accent); background: var(--accent-glow); }
 .mtabbar__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
 .mtabbar__btn.has-fight:not([aria-current="page"]) { color: var(--danger-text); }
-.mtabbar__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger-bright); }
+.mtabbar__dot { position: absolute; top: 0.45rem; right: 0.2rem; width: 6px; height: 6px; border-radius: 50%; background: var(--danger-bright); }
 
 .ws-composer.is-offsurface { display: none; }
 .ws-chat__combat { flex: none; min-height: 44px; margin: 0.4rem 0.7rem; }
