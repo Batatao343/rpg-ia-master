@@ -1260,7 +1260,7 @@ button.tchip { cursor: pointer; }
 .combat-card[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 .combat-card__name { font: 0.92rem var(--label); text-transform: uppercase; letter-spacing: 0.04em; }
 .combat-card__desc { color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
-.combat-card__rupture[aria-disabled="true"] { opacity: 0.45; cursor: default; }
+.combat-card__rupture[aria-disabled="true"] { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: not-allowed; }
 .card-detail { min-height: 5.6rem; padding: 0.5rem 0.7rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface-2); font-size: 0.78rem; color: var(--muted); }
 .card-detail p { margin: 0 0 0.2rem; }
 .card-detail__hint { font-style: italic; color: var(--faint); }

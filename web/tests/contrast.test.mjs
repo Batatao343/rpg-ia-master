@@ -52,7 +52,7 @@ test("SPEC-345 P3-1: nenhum estado desabilitado usa opacity < 1 (exceto a face d
   const bad = [];
   for (const f of ["../src/styles.css", "../src/workspace.css"]) {
     readFileSync(new URL(f, import.meta.url), "utf8").split("\n").forEach((line, i) => {
-      if (/(:disabled|\[aria-disabled)/.test(line) && /opacity:\s*0?\.\d/.test(line) && !/\.combat-card/.test(line)) bad.push(`${f}:${i + 1}`);
+      if (/(:disabled|\[aria-disabled)/.test(line) && /opacity:\s*0?\.\d/.test(line) && !/\.combat-card\[aria-disabled/.test(line)) bad.push(`${f}:${i + 1}`);
     });
   }
   assert.deepEqual(bad, []);
