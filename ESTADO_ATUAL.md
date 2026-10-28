@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-27
+# ESTADO_ATUAL — 2026-10-28
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -8,8 +8,8 @@
 
 ## Estado em 10 linhas
 
-- staging = `0e01677` (`lean`, stream `on`, hedge `0`; smokes verdes). 296–315 e 320–326 `done`.
-- Épico cartas 327–345 (`-69`), flags `off`.
+- staging = `fae9a4e` (cartas `off`; 3 smokes verdes 28/10). 296–326 `done` exceto épico de cartas.
+- Épico cartas 327–352 (`-69`), flags `off`; combate por cartas sem LLM nas rodadas (346).
 - **Latência** (316–319 `done`, [A/B](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 → 2,6 s; turno inteiro ~10 s.
 - Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md)
@@ -22,8 +22,7 @@
 
 ## Bloqueios no dono
 
-Só o que exige **ação externa** do dono (autorizações internas já foram dadas em 19/10).
-Coluna "quando ele disser" = o que o coordenador executa na hora.
+Só ação externa do dono; "quando ele disser" = o que o coordenador executa na hora.
 
 | Item | Ação do dono | Quando ele disser… |
 |---|---|---|
@@ -41,10 +40,16 @@ Coluna "quando ele disser" = o que o coordenador executa na hora.
 
 ## Decisões recentes (≤ 1 dia)
 
-Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_ATUAL.md`
-(roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
+Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-28 · SPEC-352 `draft` — retrato-inimigo-pago
+- 2026-10-28 · SPEC-346 `in-progress` — Combate de cartas sem LLM por rodada, desfecho narrado pela IA e correções do smoke real (spawn, router, loot)
+- 2026-10-27 · SPEC-351 `draft` — abertura-arco-tramas
+- 2026-10-27 · SPEC-350 `draft` — mundo-povoado-tramas
+- 2026-10-27 · SPEC-349 `draft` — bestiario-valoria-esteira
+- 2026-10-27 · SPEC-348 `draft` — lore-coerencia-valoria
+- 2026-10-27 · SPEC-347 `draft` — cartas-smoke-layout
 - 2026-10-27 · SPEC-345 `in-progress` — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
 - 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
 - 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
@@ -76,28 +81,21 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
-- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`..
-- 27/10 cartas: 328–336 `off`; 339/341 `done`; 342/345 pousadas; falta smoke LLM (staging)
+- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
+- 28/10 cartas: 339/341 `done`; 342/345/346 pousadas; 347 (tabuleiro) e 352 (retrato pago) em curso; smoke LLM real ao fim.
 
 
 ## Como rodar
 
-- Python 3.13 via `uv` (o `python` global do Windows é 3.14 — errado). `uv` fica em
-  `%APPDATA%\Python\Python314\Scripts`; no Git Bash: `export PATH="$APPDATA/Python/Python314/Scripts:$PATH"`.
-- Sempre `PYTHONUTF8=1` (evita `UnicodeEncodeError: 'charmap'`); rode Python a partir
-  da raiz do repo (ou `bash scripts/dev/py.sh …`, que faz as duas coisas).
-- `uv sync --all-extras` · `uv run pytest -q` (offline, MockLLM) ·
-  `uv run uvicorn api:app --port 8000` · `cd web && npm run build`.
-- Suíte em camadas e paralelismo: `docs/guias/TESTES.md`.
-- Worktree por spec: `/spec-new` (ver `CLAUDE.md` § Fluxo de spec).
-- `.env` com `override=True`. Detalhes: `docs/historico/ESTADO_ATUAL-ate-2026-10-19.md`, `.env.example`.
+- Python 3.13 via `uv` (global é 3.14). Git Bash: `export PATH="$APPDATA/Python/Python314/Scripts:$PATH"`; sempre `PYTHONUTF8=1` (ou `bash scripts/dev/py.sh …`).
+- `uv sync --all-extras` · `uv run pytest -q` · `uv run uvicorn api:app --port 8000` · `cd web && npm run build`. Camadas: `docs/guias/TESTES.md`.
 
 ## Limitações conhecidas
 
 - Perfil `legacy` serializa por processo e não tem login (por design; hosted é fail-closed).
 - Cloud de produção não certificada (SPEC-104 on hold); só staging.
-- `saves/` local mistura fixtures históricas e campanhas reais — limpeza só com seleção humana.
-- Free tiers (Groq/Gemini) não sustentam playtest real longo; long-runs são opt-in.
+- `saves/` local mistura fixtures e campanhas reais (limpeza só com o dono).
+- Long-runs são opt-in (free tiers não sustentam).
 - `post_response` do arquivista não compensa no Vercel (SPEC-213): staging fica `inline`.
 - Aviso de descontinuação do FAISS via `langchain-community` (migração exige spec).
 - Flake conhecido: `WinError 5` no `os.replace` sob OneDrive (há retry).
