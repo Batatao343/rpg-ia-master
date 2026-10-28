@@ -550,3 +550,7 @@ limpos, o coordenador avalia ligar `RPG_SHARED_POOL` **só no staging**, porque 
 chegar ao mundo compartilhado. Produção fica `off`. **Dependências de execução:** a Etapa 0 só começa depois de
 a SPEC-350 expor a interface (§3.4) ou de o coordenador mandar seguir com o fallback. E4 é certificado
 depois do pouso da SPEC-348.
+**Interface real da 350 (aprovada):** `plot_doors(region_id, state=, postura=)`, `cast_npc_row(...)` e
+`public_thread_brief(thread_id)` em `services/plot_threads.py`, com o catálogo em `data/world/plot_threads.json`.
+O adaptador `_population_api()` mapeia para esses nomes. Nova Arcádia tem 7 tramas, entre elas `tr_na_po_de_sonho`,
+que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve cair nela ou justificar por que não caiu.
