@@ -46,6 +46,8 @@ def msg_forget_gold(gold: int) -> str:
 
 def msg_purge_gold(gold: int) -> str:
     return f"Faltam {gold} de ouro para o tratamento."
+
+
 RARE_MATERIAL_RARITIES = frozenset({"raro", "rara", "rare", "epico", "lendario"})
 _DECK_TIPOS = cards._DECK_TIPOS
 _TEMPLE_TAGS = frozenset({"templo", "santuario", "curandeiro", "hospicio"})
@@ -626,6 +628,7 @@ def public_forge(state: dict) -> dict | None:
         and can_sharpen_card(cards.get_card(cid) or {})
         and not (player.get("afiadas") or {}).get(cid)
     )
+
     # SPEC-347 R7.1: por que cada via está fechada (None = aberta). `permitido=false` fecha todas com `motivo`.
     def _why(open_: bool, *reasons: tuple[bool, str]) -> str | None:
         if not allowed:

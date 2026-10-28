@@ -260,7 +260,12 @@ _EFFECT_TEXT = {
     "buff_acerto": "Acerto",
     "buff_dano": "Dano",
 }
-_RESULT_KEY = {"erro": "erro", "acerto": "acerto", "critico": "critico", "supercritico": "supercritico"}
+_RESULT_KEY = {
+    "erro": "erro",
+    "acerto": "acerto",
+    "critico": "critico",
+    "supercritico": "supercritico",
+}
 
 
 def _effect_text(card: dict) -> str:
@@ -297,12 +302,18 @@ def round_board(
         card = cards.get_card(str(atk.get("card_id") or "")) if atk.get("card_id") else None
         hit = bool(atk.get("acerto"))
         return {
-            "ator_id": actor_id, "ator_nome": names.get(actor_id, "Alguém"), "lado": side(actor_id),
-            "carta_id": card["id"] if card else None, "carta_nome": card["name"] if card else None,
-            "alvo_id": target_id, "alvo_nome": names.get(target_id, "Alguém"),
+            "ator_id": actor_id,
+            "ator_nome": names.get(actor_id, "Alguém"),
+            "lado": side(actor_id),
+            "carta_id": card["id"] if card else None,
+            "carta_nome": card["name"] if card else None,
+            "alvo_id": target_id,
+            "alvo_nome": names.get(target_id, "Alguém"),
             "origem": "reacao" if reaction else "turno",
             "rotulo": atk.get("fora_de_turno") if reaction else None,
-            "resultado": _RESULT_KEY.get(str(atk.get("resultado")), "erro" if not hit else "acerto"),
+            "resultado": _RESULT_KEY.get(
+                str(atk.get("resultado")), "erro" if not hit else "acerto"
+            ),
             "dano": int(atk["dano_final"]) if hit and atk.get("dano_final") is not None else None,
             "efeito": None,
         }
@@ -311,10 +322,18 @@ def round_board(
         actor_id = str(use.get("actor_id"))
         card = use.get("card") or cards.get_card(str(use.get("card_id") or "")) or {}
         return {
-            "ator_id": actor_id, "ator_nome": names.get(actor_id, "Alguém"), "lado": side(actor_id),
-            "carta_id": use.get("card_id"), "carta_nome": card.get("name"),
-            "alvo_id": None, "alvo_nome": None, "origem": "turno", "rotulo": None,
-            "resultado": "efeito", "dano": None, "efeito": _effect_text(card),
+            "ator_id": actor_id,
+            "ator_nome": names.get(actor_id, "Alguém"),
+            "lado": side(actor_id),
+            "carta_id": use.get("card_id"),
+            "carta_nome": card.get("name"),
+            "alvo_id": None,
+            "alvo_nome": None,
+            "origem": "turno",
+            "rotulo": None,
+            "resultado": "efeito",
+            "dano": None,
+            "efeito": _effect_text(card),
         }
 
     entries: list[dict[str, Any]] = []
@@ -333,16 +352,26 @@ def round_board(
         taken: set[int] = set()
         for use in used[c0:c1]:
             match = next(
-                (i for i, atk in span_attacks
-                 if i not in taken and not atk.get("fora_de_turno")
-                 and str(atk.get("card_id")) == str(use.get("card_id"))), None)
+                (
+                    i
+                    for i, atk in span_attacks
+                    if i not in taken
+                    and not atk.get("fora_de_turno")
+                    and str(atk.get("card_id")) == str(use.get("card_id"))
+                ),
+                None,
+            )
             if match is not None:
                 taken.add(match)
                 entries.append(attack_entry(attacks[match], reaction=False))
             else:
                 entries.append(card_entry(use))
         for i, atk in span_attacks:
-            if i not in taken and not atk.get("fora_de_turno") and str(atk.get("card_id")) not in own_card_ids:
+            if (
+                i not in taken
+                and not atk.get("fora_de_turno")
+                and str(atk.get("card_id")) not in own_card_ids
+            ):
                 entries.append(attack_entry(atk, reaction=False))
     for i, atk in enumerate(attacks):  # fora de qualquer turno (Última Ação etc.)
         if i not in covered:
