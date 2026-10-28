@@ -78,11 +78,16 @@ def test_registry_src_reads_thumb_key_and_never_returns_raw_key():
     assert pending is False
     # sem signer: nada (a key crua jamais sai)
     assert ca._registry_src(reg, "tipo:enemy_goblin", game_id="g1") == (None, False)
-    # o formato antigo (variants.thumbnail.url) não é mais lido
-    old = cp.SnapshotRegistry(
-        {"tipo:x": {"status": "ready", "variants": {"thumbnail": {"url": "/u.webp"}}}}
+    # formato real do job (lista de variantes só com `key`, sem `url`): nunca vira src
+    job_shape = cp.SnapshotRegistry(
+        {
+            "tipo:x": {
+                "status": "ready",
+                "variants": [{"variant": "thumb", "key": "users/a/b/x.webp"}],
+            }
+        }
     )
-    assert ca._registry_src(old, "tipo:x", game_id="g1", sign=_sign) == (None, False)
+    assert ca._registry_src(job_shape, "tipo:x", game_id="g1", sign=_sign) == (None, False)
 
 
 def test_effective_status_dead_generation():

@@ -4853,9 +4853,7 @@ def _monster_quote_inputs(state: dict, req: ArtQuoteRequest, runtime) -> tuple[A
     key = _art.portrait_key(enemy, manifest, game_id=game_id, npc_entity_id=npc_entity_id)
     if _art.curated_covers_key(enemy, key):
         raise HTTPException(409, "creature_portrait_curated")  # D-352-6: a curada vence
-    existing = _portrait_store(runtime).get_many(
-        [key], game_id=game_id, npc_known=[key]
-    )
+    existing = _portrait_store(runtime).get_many([key], game_id=game_id, npc_known=[key])
     if key in existing:
         raise HTTPException(409, "creature_portrait_exists")
     important, _why = _art.is_important(enemy, manifest)
