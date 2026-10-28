@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "c37c972df209d6705cb96e5a78ea5e4a2c783886",
+  "commit_sha": "95aa0781c8aa82beff802acf2d27acfae0513cb0",
   "edge_counts": {
-    "calls": 32127,
-    "contains": 1052,
-    "defines": 15730,
-    "imports": 2577,
-    "likely_test_for": 1813,
+    "calls": 32510,
+    "contains": 1066,
+    "defines": 15928,
+    "imports": 2614,
+    "likely_test_for": 1846,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:c5b18ff2ec73f4a3ba2f53dfc7f71a94125fcff52251dde1869701259a593395",
+  "graph_hash": "sha256:e849c60f6bea3cf185417930ed611c85ae81ec0b48b698ce442f4156d9fecbac",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -102,6 +102,8 @@
     "docs/spec336/arena_folego_full.py",
     "docs/spec339/arena_spec339.py",
     "docs/spec341/arena_spec341.py",
+    "docs/spec346/arena_spec346.py",
+    "docs/spec346/diag_groq_router.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -448,6 +450,7 @@
     "services/reputation.py",
     "services/restore_effects.py",
     "services/retention.py",
+    "services/round_log.py",
     "services/rule_engine.py",
     "services/rumor_adoption.py",
     "services/rumors.py",
@@ -490,6 +493,7 @@
     "tests/fakes/local_portrait.py",
     "tests/fakes/local_pricing.py",
     "tests/fakes/two_principals.py",
+    "tests/fixtures/spec346_smoke.py",
     "tests/prompt_capture.py",
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
@@ -1058,6 +1062,16 @@
     "tests/test_spec345_combat_view.py",
     "tests/test_spec345_mech_log.py",
     "tests/test_spec345_player_text.py",
+    "tests/test_spec346_board_no_llm.py",
+    "tests/test_spec346_loot_once.py",
+    "tests/test_spec346_mech_log.py",
+    "tests/test_spec346_outcome.py",
+    "tests/test_spec346_provider_error_code.py",
+    "tests/test_spec346_router_fallback.py",
+    "tests/test_spec346_saves.py",
+    "tests/test_spec346_spawn_count_narration.py",
+    "tests/test_spec346_spawn_hint.py",
+    "tests/test_spec346_vigilia.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1298,14 +1312,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 981,
+    "class": 993,
     "endpoint": 68,
-    "file": 1244,
-    "function": 4934,
+    "file": 1258,
+    "function": 4974,
     "method": 843,
-    "module": 1052,
-    "test": 8971
+    "module": 1066,
+    "test": 9117
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:778d1e38ceab54af48f9be8b95731bed7fdbcd13f81bc97347f5e7842c3013df"
+  "source_tree_hash": "sha256:8ae8093d43914fee2579e59e6e6e11d16da76fc0b246e6bee4b835f3d390f05e"
 }
