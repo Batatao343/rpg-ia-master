@@ -334,6 +334,9 @@ class PostgresGameStore:
 
     def delete(self, principal: Principal, game_id: UUID) -> bool:
         with self.pool.connection() as connection, connection.transaction():
+            from services.creature_portraits import purge_game_portraits
+
+            purge_game_portraits(connection, principal.user_id, game_id)  # SPEC-352 R14
             result = connection.execute(
                 "delete from app.games where id=%s and owner_id=%s",
                 (game_id, principal.user_id),

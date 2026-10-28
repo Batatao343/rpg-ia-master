@@ -42,6 +42,7 @@ def run_recovery_batch(runtime, max_items: int, *, rows: list[dict] | None = Non
     if rows is None:
         rows = claim_pending(pool, max_items)
     lifecycle = PostgresAccountLifecycle(pool, runtime.identity_verifier, runtime.blob_store)
+    lifecycle.shared_blobs = getattr(runtime, "shared_blob_store", None)  # SPEC-352
     with pool.connection() as db, db.transaction():
         purged = db.execute("""delete from app.rate_limit_buckets
             where bucket_key like 'auth:%' and updated_at < now() - interval '24 hours'""").rowcount
@@ -123,8 +124,11 @@ def main() -> int:
             if not rows:
                 parser.error("no existing deletion request for owner")
             lifecycle = PostgresAccountLifecycle(
-                runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store
+                runtime.game_store.pool,
+                runtime.identity_verifier,
+                runtime.blob_store,
             )
+            lifecycle.shared_blobs = getattr(runtime, "shared_blob_store", None)  # SPEC-352
             status = lifecycle.finish(args.owner)
             print(json.dumps({"owner_id": str(args.owner), "status": status}, sort_keys=True))
             return 0 if status == "deleted" else 2

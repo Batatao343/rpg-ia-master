@@ -22,7 +22,11 @@ class SupabaseBlobStore:
         bucket: str = "rpg-dynamic",
         timeout: float = 15.0,
         pool=None,
+        shared: bool = False,
     ) -> None:
+        # SPEC-352: `shared=True` = bucket do registro compartilhado (so `shared/creatures/...`,
+        # sem dono: a imagem sobrevive a exclusao de conta de quem pagou).
+        self.shared = shared
         self.base_url = base_url.rstrip("/")
         self._key = service_key
         self.bucket = bucket
@@ -61,6 +65,10 @@ class SupabaseBlobStore:
             pass
 
     def put(self, key, payload, metadata: BlobMetadata) -> BlobRef:
+        if self.shared:
+            if not key.startswith("shared/creatures/") or ".." in key.split("/"):
+                raise Unauthorized("invalid_shared_blob_key")
+            return self._put(key, payload, metadata)
         if not key.startswith(f"users/{metadata.owner_id}/") or not self._account_active(
             metadata.owner_id
         ):

@@ -686,6 +686,7 @@ class InfrastructureRuntime:
     shared_pool: object | None = (
         None  # SPEC-297: SharedPoolStore (JSON no legacy; Postgres nos demais)
     )
+    shared_blob_store: BlobStore | None = None  # SPEC-352: retratos compartilhados (fora de users/)
 
 
 def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureRuntime:
@@ -700,6 +701,7 @@ def build_legacy_runtime(config: RuntimeConfig | None = None) -> InfrastructureR
             lambda: Path(os.getenv("RPG_RUNTIME_CACHE_DIR", "data/runtime"))
         ),
         blob_store=FileBlobStore(root / "blobs"),
+        shared_blob_store=FileBlobStore(root / "shared"),
         turn_coordinator=InProcessTurnCoordinator(),
         job_queue=InlineJobQueue(),
         rate_limiter=MemoryRateLimiter(),
@@ -774,6 +776,12 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
                 config.supabase_service_role_key,
                 pool=pool,
             )
+            shared_blob_store: BlobStore = SupabaseBlobStore(
+                config.supabase_url,
+                config.supabase_service_role_key,
+                bucket="rpg-shared-art",
+                shared=True,
+            )
         elif config.blob_store == "s3":
             try:
                 import boto3
@@ -792,6 +800,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
                 ),
                 bucket,
             )
+            shared_blob_store = blob_store  # mesmo bucket, prefixo `shared/` (R10)
         else:
             raise ValueError(f"BlobStore não suportado: {config.blob_store}")
         stage = "identity"
@@ -852,6 +861,7 @@ def build_database_runtime(config: RuntimeConfig) -> InfrastructureRuntime:
             runtime_catalog=PostgresRuntimeCatalogStore(pool),
             shared_pool=PostgresSharedPoolStore(pool),
             blob_store=blob_store,
+            shared_blob_store=shared_blob_store,
             turn_coordinator=PostgresTurnCoordinator(pool),
             job_queue=PostgresJobQueue(pool),
             rate_limiter=PostgresRateLimiter(pool),

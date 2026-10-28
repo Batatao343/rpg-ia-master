@@ -610,6 +610,9 @@ class PostgresTurnCoordinator:
                     (game_id, principal.user_id),
                 ).fetchall()
             ]
+            from services.creature_portraits import purge_game_portraits
+
+            purge_game_portraits(connection, principal.user_id, game_id)  # SPEC-352 R14
             deleted = connection.execute(
                 "delete from app.games where id=%s and owner_id=%s",
                 (game_id, principal.user_id),

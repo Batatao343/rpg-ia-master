@@ -58,6 +58,18 @@ def object_key(
     )
 
 
+def shared_object_key(*, portrait_key: str, asset_id: UUID, variant: str, sha256: str) -> str:
+    """SPEC-352 R10: chave do registro compartilhado, FORA de `users/{owner}/`.
+
+    Usa um hash da `portrait_key` (nao expoe o `game_id` de `unico:{game}`)."""
+    import hashlib
+
+    if variant not in VARIANTS:
+        raise ValueError("variante invalida")
+    digest = hashlib.sha256(portrait_key.encode()).hexdigest()[:12]
+    return f"shared/creatures/{digest}/{asset_id}.{variant}.{sha256[:12]}.webp"
+
+
 def process_image(payload: bytes) -> list[ProcessedAsset]:
     if not payload or len(payload) > MAX_SOURCE_BYTES:
         raise ValueError("imagem vazia ou grande demais")

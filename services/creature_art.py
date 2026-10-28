@@ -13,6 +13,7 @@ from __future__ import annotations
 import os
 import re
 import unicodedata
+from collections.abc import Callable
 from typing import Any, Literal, Protocol, TypedDict
 
 from services import enemy_decks, visual_catalog
@@ -52,6 +53,9 @@ class CreaturePortrait(TypedDict):
 
 class PortraitRegistry(Protocol):
     def get(self, portrait_key: str) -> dict[str, Any] | None: ...
+
+
+SignFn = Callable[[str, str], "str | None"]  # (store, object_key) -> URL assinada
 
 
 class EmptyRegistry:
@@ -160,14 +164,24 @@ def variant_url(variants: Any) -> str | None:
     return None
 
 
-def _registry_src(registry: PortraitRegistry, key: str, *, game_id: str) -> tuple[str | None, bool]:
-    """(src, pending). Visibilidade: `game` só para o jogo de origem; `shared` para todos."""
+def _registry_src(
+    registry: PortraitRegistry, key: str, *, game_id: str, sign: SignFn | None = None
+) -> tuple[str | None, bool]:
+    """(src, pending). Visibilidade: `game` so para o jogo de origem; `shared` para todos.
+
+    SPEC-352 F3: a linha guarda OBJECT KEYS (`object_keys.thumb`), nunca URL. O `src` vem de `sign`
+    (URL assinada); sem `sign` ou sem a variante, nao ha imagem - a key crua jamais sai daqui."""
     row = registry.get(key)
     if not row:
         return None, False
     if row.get("visibility") == "game" and row.get("origin_game_id") != game_id:
         return None, False
     if row.get("status") == "ready":
+        thumb = (row.get("object_keys") or {}).get("thumb")
+        signer = sign or getattr(registry, "sign", None)
+        if thumb and signer is not None:
+            return signer(str(row.get("store") or "shared"), str(thumb)), False
+        # linha com URL pronta (formato da 347: variantes com `url`); a key crua nunca vira src
         return variant_url(row.get("variants")), False
     return None, row.get("status") == "pending"
 
@@ -180,6 +194,7 @@ def portrait_for(
     registry: PortraitRegistry | None = None,
     npc_entity_id: str | None = None,
     quote_price: int | None = None,
+    sign: SignFn | None = None,
 ) -> CreaturePortrait:
     """Ordem: (a) arte própria do importante -> (b) curada da criatura -> (c) registro do tipo ->
     (d) curada da família -> (e) marcador. `gerar` só com a flag `on`, preço conhecido (hosted) e sem
@@ -197,11 +212,11 @@ def portrait_for(
         if key.startswith("npc:"):
             own_src = _curated("npc", key[4:])
         if own_src is None:
-            own_src, pending = _registry_src(registry, key, game_id=game_id)
+            own_src, pending = _registry_src(registry, key, game_id=game_id, sign=sign)
     curated_creature = _curated("creature", bid) or (
         _curated("creature", f"bst:{pool_id}") if pool_id else None
     )
-    type_src, type_pending = _registry_src(registry, _type_key(enemy), game_id=game_id)
+    type_src, type_pending = _registry_src(registry, _type_key(enemy), game_id=game_id, sign=sign)
     src = own_src or curated_creature or type_src or _curated("creature_family", family)
     if not important:
         pending = pending or (type_pending and not (curated_creature or type_src))
@@ -229,4 +244,17 @@ def has_curated_art(enemy: dict[str, Any]) -> bool:
     bid = normalize_bestiary_id(enemy)
     return bool(
         (bid and _curated("creature", bid)) or _curated("creature_family", family_of(enemy))
+    )
+
+
+def curated_covers_key(enemy: dict[str, Any], key: str) -> bool:
+    """SPEC-352 R5/D-352-6: ha arte curada que ja resolve essa chave (entao nao se oferece geracao)."""
+    if key.startswith("npc:"):
+        return _curated("npc", key[4:]) is not None
+    if not key.startswith("tipo:"):
+        return False
+    bid = normalize_bestiary_id(enemy)
+    pool_id = str(enemy.get("pool_entry_id") or "")
+    return bool(
+        (bid and _curated("creature", bid)) or (pool_id and _curated("creature", f"bst:{pool_id}"))
     )

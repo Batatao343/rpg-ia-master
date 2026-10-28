@@ -99,12 +99,37 @@ def build_handlers():
                 usage_sink=lambda model, usage: repository.record_usage(
                     generation_id, model=model, usage=usage
                 ),
+                shared_blob_store=getattr(runtime, "shared_blob_store", None),
             )
             repository.complete(
                 generation_id,
                 asset_id=UUID(str(payload["asset_id"])),
                 result=result,
             )
+            if result.get("shared_copy_failed"):
+                # SPEC-352 R8: ja pago e pronto (privado); o job idempotente promove depois.
+                try:
+                    from infrastructure.contracts import JobRequest
+
+                    runtime.job_queue.enqueue(
+                        JobRequest(
+                            "copy_creature_portrait",
+                            f"copy-portrait:{generation_id}",
+                            {
+                                "portrait_key": str(generation["subject_id"]),
+                                "owner_id": str(owner_id),
+                                "game_id": str(game_id),
+                                "asset_id": str(payload["asset_id"]),
+                            },
+                            owner_id=owner_id,
+                            game_id=game_id,
+                            max_attempts=8,
+                        )
+                    )
+                except Exception as exc:
+                    from observability.telemetry import log_fallback
+
+                    log_fallback("creature_portrait", "copy_enqueue_failed", exc)
             return result
         except Exception as exc:
             from observability.telemetry import log_event
@@ -191,7 +216,29 @@ def build_handlers():
 
         return purge_game_blobs_job(pool, runtime.blob_store, payload)
 
+    def copy_creature_portrait(payload: dict) -> dict:
+        from services.creature_portraits import PostgresPortraitRegistry
+        from workers.dynamic_art_jobs import copy_creature_portrait_job
+
+        if getattr(runtime, "shared_blob_store", None) is None:
+            raise RuntimeError("store compartilhado indisponivel")
+        return copy_creature_portrait_job(
+            PostgresPortraitRegistry(pool),
+            runtime.blob_store,
+            runtime.shared_blob_store,
+            payload,
+        )
+
+    def purge_shared_art(payload: dict) -> dict:
+        from workers.blob_purge_jobs import purge_shared_art_job
+
+        if getattr(runtime, "shared_blob_store", None) is None:
+            raise RuntimeError("store compartilhado indisponivel")
+        return purge_shared_art_job(runtime.shared_blob_store, payload)
+
     return {
+        "purge_shared_art": purge_shared_art,
+        "copy_creature_portrait": copy_creature_portrait,
         "purge_blobs": purge_blobs,
         "generate_dynamic_art": generate,
         "embed_memory": embed,

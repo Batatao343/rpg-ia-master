@@ -21,7 +21,8 @@ from services.art_brief import (
     render_image_prompt,
 )
 from services.art_similarity import dhash64, dhash64_mirrored, hamming
-from services.asset_pipeline import object_key, process_image
+from services.asset_pipeline import object_key, process_image, shared_object_key
+from services.creature_portraits import key_hash
 from services.usage_metering import safe_provider_usage
 
 # Conjunto curado de referências canônicas. Fica em ``data/`` (incluído no bundle do worker);
@@ -149,6 +150,43 @@ def canon_similarity(
     return {"similar_to_canon": flagged, "canon_min_hamming": closest}
 
 
+def copy_variant_to_shared(
+    shared_blob_store,
+    *,
+    portrait_key: str,
+    asset_id: UUID,
+    variant,
+    owner_id: UUID,
+    game_id: UUID,
+) -> dict:
+    """SPEC-352 R10: grava UMA variante no store compartilhado. Idempotente: se o objeto de mesma chave
+    (que embute o sha) ja existe com o mesmo conteudo, conta como feito (retry do job de copia)."""
+    key = shared_object_key(
+        portrait_key=portrait_key,
+        asset_id=asset_id,
+        variant=variant.variant,
+        sha256=variant.sha256,
+    )
+    meta = BlobMetadata(
+        owner_id,
+        game_id,
+        variant.mime_type,
+        variant.sha256,
+        "creature_portrait",
+        len(variant.payload),
+    )
+    try:
+        shared_blob_store.put(key, BytesIO(variant.payload), meta)
+    except Exception:
+        existing = shared_blob_store.open(key)  # ja existe? (re-put com upsert desligado)
+        try:
+            if hashlib.sha256(existing.read()).hexdigest() != variant.sha256:
+                raise
+        finally:
+            existing.close()
+    return {"variant": variant.variant, "key": key, "sha256": variant.sha256}
+
+
 def generate_dynamic_art_job(
     *,
     generator: ImageGenerator,
@@ -160,6 +198,7 @@ def generate_dynamic_art_job(
     usage_sink: Callable[[str, dict], None] | None = None,
     admission: Callable[[], dict] | None = None,
     approved_portrait_key: Callable[[], str | None] | None = None,
+    shared_blob_store=None,
 ) -> dict:
     if admission is None:
         from infrastructure.contracts import Conflict
@@ -193,6 +232,9 @@ def generate_dynamic_art_job(
         log_event("art", "canon_similarity_failed", level="warning", error_type=type(exc).__name__)
     variants = process_image(generated.payload)
     refs = []
+    is_monster = generation["subject_type"] == "monster"
+    shared_variants: list[dict] = []
+    shared_ok = is_monster and shared_blob_store is not None
     for variant in variants:
         key = object_key(
             owner_id=owner_id,
@@ -200,7 +242,10 @@ def generate_dynamic_art_job(
             asset_kind="epic"
             if generation["subject_type"] == "scene"
             else generation["subject_type"],
-            entity_id=generation["subject_id"],
+            # `portrait_key` tem ':' e pode passar de 80 chars (unico:{game}:...): hash curto.
+            entity_id=key_hash(generation["subject_id"])
+            if is_monster
+            else generation["subject_id"],
             asset_id=asset_id,
             variant=variant.variant,
             sha256=variant.sha256,
@@ -220,7 +265,29 @@ def generate_dynamic_art_job(
             )
         )
         refs[-1] = (refs[-1], variant)
+        if shared_ok:
+            try:
+                shared_variants.append(
+                    copy_variant_to_shared(
+                        shared_blob_store,
+                        portrait_key=str(generation["subject_id"]),
+                        asset_id=asset_id,
+                        variant=variant,
+                        owner_id=owner_id,
+                        game_id=game_id,
+                    )
+                )
+            except Exception as exc:  # R8: a copia compartilhada nunca derruba uma geracao paga
+                shared_ok = False
+                log_event(
+                    "art", "shared_copy_failed", level="warning", error_type=type(exc).__name__
+                )
     return {
+        **(
+            {"shared_variants": shared_variants}
+            if is_monster and shared_ok and len(shared_variants) == len(variants)
+            else ({"shared_copy_failed": True} if is_monster else {})
+        ),
         "status": "ready",
         "asset_id": str(asset_id),
         "variants": [
@@ -241,4 +308,47 @@ def generate_dynamic_art_job(
         "model": generated.model,
         "usage": safe_usage,
         **similarity,
+    }
+
+
+def copy_creature_portrait_job(registry, blob_store, shared_blob_store, payload: dict) -> dict:
+    """SPEC-352 R8: promove um retrato `ready` com `store='private'` para o store compartilhado.
+
+    Idempotente (reexecutar depois de sucesso devolve `already_shared`; objetos ja copiados valem)."""
+    from types import SimpleNamespace
+
+    from infrastructure.db_roles import admin_connection
+
+    portrait_key = str(payload["portrait_key"])
+    with admin_connection(registry.pool) as connection:
+        row = connection.execute(
+            "select * from app.creature_portraits where portrait_key=%s", (portrait_key,)
+        ).fetchone()
+    if not row or row["status"] != "ready":
+        return {"status": "skipped"}
+    if row["store"] == "shared":
+        return {"status": "already_shared"}
+    owner_id, game_id = UUID(str(payload["owner_id"])), UUID(str(payload["game_id"]))
+    asset_id = UUID(str(payload["asset_id"]))
+    keys: dict[str, str] = {}
+    for name, private_key in dict(row["object_keys"]).items():
+        data = blob_store.open(private_key).read()
+        variant = SimpleNamespace(
+            variant=name,
+            payload=data,
+            sha256=hashlib.sha256(data).hexdigest(),
+            mime_type="image/webp",
+        )
+        keys[name] = copy_variant_to_shared(
+            shared_blob_store,
+            portrait_key=portrait_key,
+            asset_id=asset_id,
+            variant=variant,
+            owner_id=owner_id,
+            game_id=game_id,
+        )["key"]
+    return {
+        "status": "promoted"
+        if registry.promote_store(portrait_key=portrait_key, object_keys=keys)
+        else "not_promoted"
     }

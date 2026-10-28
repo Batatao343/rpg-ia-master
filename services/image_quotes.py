@@ -111,6 +111,48 @@ class ImageQuoteRepository:
             ).fetchone()
             return dict(row)
 
+    def peek_ceiling(self, image_type: str = "monster") -> int | None:
+        """SPEC-352 R11: teto (credits_milli) da cotacao, SO LEITURA (nao grava cotacao).
+
+        `None` sem perfil de preco valido/expirado, ou sem tabela de preco da imagem."""
+        from services.art_brief import load_art_profile
+
+        profile_art = load_art_profile()
+        fmt = {"scene": "epic_scene", "monster": "creature_portrait"}.get(image_type, "portrait")
+        now = self.at or datetime.now(UTC)
+        try:
+            require_image_prices(str(profile_art.get("model")), now)
+            with admin_connection(self.pool) as connection:
+                profile = connection.execute(
+                    "select * from app.image_price_profiles where profile_id=%s",
+                    (
+                        os.getenv(
+                            "RPG_IMAGE_PRICE_PROFILE_SCENE"
+                            if image_type == "scene"
+                            else "RPG_IMAGE_PRICE_PROFILE_PORTRAIT",
+                            os.getenv("RPG_IMAGE_PRICE_PROFILE", ""),
+                        ),
+                    ),
+                ).fetchone()
+                if (
+                    not profile
+                    or profile["model"] != profile_art.get("model")
+                    or profile["size"] != profile_art["formats"][fmt]["size"]
+                    or profile["expires_at"] <= now
+                ):
+                    return None
+                version = connection.execute(
+                    "select * from app.pricing_versions where version_id=%s",
+                    (profile["pricing_version_id"],),
+                ).fetchone()
+                return int(
+                    quote_attempt_ceiling(
+                        profile["max_provider_usd"], version_from_record(version), at=now
+                    )
+                )
+        except PricingUnavailable:
+            return None
+
     def get(self, principal: Principal, game_id: UUID, quote_id: UUID, *, connection=None) -> dict:
         if connection is None:
             with admin_connection(self.pool) as connection:
@@ -172,6 +214,26 @@ class ImageQuoteRepository:
         if quote["expires_at"] <= now or quote["timeline_epoch"] != epoch:
             raise Conflict("quote expirado ou de outra linha temporal")
         generation_id = uuid5(NAMESPACE_URL, f"image-quote:{quote_id}")
+        if quote["image_type"] == "monster":
+            # SPEC-352 R6/R7: o PK de `creature_portraits` decide quem paga. O claim vem ANTES da
+            # reserva: se a chave ja esta pending/ready, levanta e a transacao inteira reverte
+            # (sem reserva, sem debito).
+            from services.creature_portraits import (
+                PostgresPortraitRegistry,
+                pool_entry_for,
+                scope_for,
+            )
+
+            portrait_key = str(quote["trigger"]["subject_id"])
+            PostgresPortraitRegistry.claim(
+                connection,
+                portrait_key=portrait_key,
+                scope=scope_for(portrait_key),
+                pool_entry_id=pool_entry_for(portrait_key),
+                origin_owner_id=principal.user_id,
+                origin_game_id=game_id,
+                generation_id=generation_id,
+            )
         # The operation exists before the canonical wallet reservation checks ownership.
         connection.execute(
             """insert into app.operations (id,owner_id,game_id,kind,status,request_sha256,finished_at)
@@ -326,6 +388,7 @@ class ImageQuoteRepository:
                 "updated_at=now() where generation_id=%s",
                 (generation_id,),
             )
+            self._portrait_failed(connection, row, "deferred_timeout")
             return True
 
     def hold_or_release(self, generation_id: UUID) -> None:
@@ -372,4 +435,15 @@ class ImageQuoteRepository:
             connection.execute(
                 "update app.art_generations set status='failed',error_code=%s where generation_id=%s",
                 (code, generation_id),
+            )
+            self._portrait_failed(connection, row, code)
+
+    @staticmethod
+    def _portrait_failed(connection, generation: dict, code: str) -> None:
+        """SPEC-352 R8: a falha libera a chave do registro (o dinheiro segue a politica da 326)."""
+        if generation.get("subject_type") == "monster":
+            from services.creature_portraits import PostgresPortraitRegistry
+
+            PostgresPortraitRegistry.mark_failed(
+                connection, generation_id=generation["generation_id"], error_code=code
             )

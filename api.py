@@ -33,6 +33,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from observability.telemetry import log_event as _log_event
+from observability.telemetry import log_fallback
 
 # Adiciona raiz ao path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -1188,8 +1189,11 @@ def account_delete(body: DeleteAccountRequest, request: Request):
     if principal.issuer != "deletion-retry":
         _require_recent(request, principal.user_id)
     lifecycle = PostgresAccountLifecycle(
-        runtime.game_store.pool, runtime.identity_verifier, runtime.blob_store
+        runtime.game_store.pool,
+        runtime.identity_verifier,
+        runtime.blob_store,
     )
+    lifecycle.shared_blobs = getattr(runtime, "shared_blob_store", None)  # SPEC-352
     if principal.issuer != "deletion-retry":
         lifecycle.begin(principal.user_id)
     try:
@@ -1934,9 +1938,11 @@ class ArtConfirmRequest(BaseModel):
 
 class ArtQuoteRequest(BaseModel):
     model_config = {"extra": "forbid"}
-    image_type: Literal["player", "npc", "scene"] = "player"
+    image_type: Literal["player", "npc", "scene", "monster"] = "player"
     offer_id: uuid.UUID | None = None
     reformulation: bool = False
+    # SPEC-352: id da instancia do inimigo no conflito atual. A chave do retrato NUNCA vem do cliente.
+    enemy_id: str | None = Field(default=None, min_length=1, max_length=128)
 
 
 class ArtQualityRequest(BaseModel):
@@ -2825,27 +2831,127 @@ def _chase_live_for_api(chase: object) -> bool:
     )
 
 
-def _enemy_portrait(state: dict, meta: dict, enemy: dict) -> dict[str, Any] | None:
-    """SPEC-347 R13.7: `retrato` por inimigo — só com `RPG_CREATURE_ART=on` ou com arte curada. Sem LLM,
-    sem vazar ficha secreta: só id/nome/família. Geração (cotação) ainda não oferecida (`gerar` = null)."""
+_PORTRAIT_PRICE_CACHE: dict[str, Any] = {"at": 0.0, "value": None}
+_PORTRAIT_SIGN_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
+
+
+def _creature_art_live() -> bool:
+    """SPEC-352: registro + oferta paga só com a flag `on`, perfil com banco e arte dinâmica ligada."""
     from services import creature_art as _art
+
+    return (
+        _art.mode() == "on"
+        and _database_profile()
+        and os.getenv("RPG_DYNAMIC_ART_ENABLED", "0").strip().lower() in {"1", "true", "yes"}
+    )
+
+
+def _portrait_price_estilhas() -> int | None:
+    """R11: teto da cotação em Estilhas INTEIRAS (arredonda p/ cima), só leitura, cache de 60 s."""
+    now = time.monotonic()
+    if now - float(_PORTRAIT_PRICE_CACHE["at"]) < 60:
+        return _PORTRAIT_PRICE_CACHE["value"]
+    value: int | None = None
+    try:
+        from infrastructure.runtime import get_runtime
+        from services.image_quotes import ImageQuoteRepository
+
+        milli = ImageQuoteRepository(get_runtime().resources[0]).peek_ceiling("monster")
+        value = -(-int(milli) // 1000) if milli else None
+    except Exception as exc:
+        log_fallback("creature_portrait", "price_peek_failed", exc)
+    _PORTRAIT_PRICE_CACHE.update(at=now, value=value)
+    return value
+
+
+def _portrait_sign(store: str, key: str) -> str | None:
+    """R11: URL assinada (1 h) do thumb, cache de 50 min por object key. Nunca devolve a key crua."""
+    cache_key = (store, key)
+    now = time.monotonic()
+    hit = _PORTRAIT_SIGN_CACHE.get(cache_key)
+    if hit and now - hit[0] < 50 * 60:
+        return hit[1]
+    try:
+        from infrastructure.runtime import get_runtime
+
+        runtime = get_runtime()
+        blobs = runtime.shared_blob_store if store == "shared" else runtime.blob_store
+        url = blobs.signed_url(key, 3600)
+    except Exception as exc:
+        log_fallback("creature_portrait", "sign_failed", exc)
+        return None
+    if len(_PORTRAIT_SIGN_CACHE) > 512:
+        _PORTRAIT_SIGN_CACHE.clear()
+    _PORTRAIT_SIGN_CACHE[cache_key] = (now, url)
+    return url
+
+
+def _portrait_store(runtime: Any = None):
+    """Registro de retratos (`app.creature_portraits`); leitura só pelo dono `PostgresPortraitRegistry`."""
+    from infrastructure.runtime import get_runtime
+    from services.creature_portraits import PostgresPortraitRegistry
+
+    return PostgresPortraitRegistry((runtime or get_runtime()).resources[0])
+
+
+def _portrait_manifest_ctx(state: dict, meta: dict) -> tuple[dict | None, str | None]:
     from services import encounter_manifest as _em
 
-    if _art.mode() != "on" and not _art.has_curated_art(enemy):
-        return None
     manifest = meta.get("encounter") if _em.is_valid_manifest(meta.get("encounter")) else None
     npc_entity_id = None
     ref = str((manifest or {}).get("target_ref") or "")
     if ref.startswith("npc:"):
-        npc_entity_id = (
-            str(((state.get("npcs") or {}).get(ref[4:]) or {}).get("entity_id") or "") or None
+        npc = (state.get("npcs") or {}).get(ref[4:]) or {}
+        npc_entity_id = str(npc.get("entity_id") or "") or None
+    return manifest, npc_entity_id
+
+
+def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
+    """R11: UMA leitura do registro por resposta (nunca uma por inimigo). `None` fora do perfil com banco."""
+    if not _creature_art_live():
+        return None
+    from services import creature_art as _art
+    from services.creature_portraits import SnapshotRegistry
+
+    game_id = str(state.get("game_id") or "")
+    manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
+    keys: list[str] = []
+    known: list[str] = []
+    for enemy in enemies:
+        keys.append(
+            _art.portrait_key(enemy, manifest, game_id=game_id, npc_entity_id=npc_entity_id)
         )
+        keys.append(_art._type_key(enemy))
+    if npc_entity_id:
+        known.append(f"npc:{npc_entity_id}")  # o NPC está em cena: já é conhecido do jogador
+    try:
+        rows = _portrait_store().get_many(keys, game_id=game_id, npc_known=known)
+    except Exception as exc:
+        log_fallback("creature_portrait", "registry_read_failed", exc)
+        return None
+    return SnapshotRegistry(rows, sign=_portrait_sign)
+
+
+def _enemy_portrait(
+    state: dict, meta: dict, enemy: dict, registry: Any = None
+) -> dict[str, Any] | None:
+    """SPEC-347 R13.7: `retrato` por inimigo — só com `RPG_CREATURE_ART=on` ou com arte curada. Sem LLM,
+    sem vazar ficha secreta: só id/nome/família. SPEC-352: com o registro (perfil com banco) a view
+    mostra o retrato compartilhado e, se elegível, `gerar` (preço = teto da cotação)."""
+    from services import creature_art as _art
+
+    if _art.mode() != "on" and not _art.has_curated_art(enemy):
+        return None
+    manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
     return dict(
         _art.portrait_for(
             enemy,
             manifest,
             game_id=str(state.get("game_id") or ""),
             npc_entity_id=npc_entity_id,
+            registry=registry,
+            quote_price=_portrait_price_estilhas() if registry is not None else None,
+            sign=_portrait_sign if registry is not None else None,
         )
     )
 
@@ -2940,6 +3046,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
         )
 
     enemy_views = []
+    portrait_registry = _portrait_registry(state, meta, alive)  # 1 query por resposta (SPEC-352)
     for enemy in alive:
         public = knowledge.public_panel(enemy)
         revealed_cards = []
@@ -2970,7 +3077,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
                 ],
             }
         )
-        portrait = _enemy_portrait(state, meta, enemy)
+        portrait = _enemy_portrait(state, meta, enemy, portrait_registry)
         if portrait is not None:
             enemy_views[-1]["retrato"] = portrait
 
@@ -4721,6 +4828,50 @@ def _offer_brief_for_quote(state: dict, image_type: str, trigger, brief: dict, p
     return build_epic_art_brief(state, {})
 
 
+def _monster_quote_inputs(state: dict, req: ArtQuoteRequest, runtime) -> tuple[Any, dict]:
+    """SPEC-352 R5: (gatilho, brief) de um retrato de inimigo. A chave é recalculada AQUI, no servidor."""
+    from services import creature_art as _art
+    from services.art_brief import build_creature_art_brief
+    from services.art_triggers import ArtGenerationRequest
+
+    meta = state.get("combat") or {}
+    enemy = next(
+        (
+            e
+            for e in (state.get("enemies") or [])
+            if isinstance(e, dict)
+            and str(e.get("id") or e.get("name")) == req.enemy_id
+            and not e.get("dead")
+            and e.get("status", "ativo") not in ("morto", "fugiu", "rendido", "incapacitado")
+        ),
+        None,
+    )
+    if enemy is None or not meta.get("active"):
+        raise HTTPException(422, "enemy_not_in_conflict")
+    game_id = str(state.get("game_id") or "")
+    manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
+    key = _art.portrait_key(enemy, manifest, game_id=game_id, npc_entity_id=npc_entity_id)
+    if _art.curated_covers_key(enemy, key):
+        raise HTTPException(409, "creature_portrait_curated")  # D-352-6: a curada vence
+    existing = _portrait_store(runtime).get_many(
+        [key], game_id=game_id, npc_known=[key]
+    )
+    if key in existing:
+        raise HTTPException(409, "creature_portrait_exists")
+    important, _why = _art.is_important(enemy, manifest)
+    npc = None
+    if key.startswith("npc:"):
+        ref = str((manifest or {}).get("target_ref") or "")
+        npc = (state.get("npcs") or {}).get(ref[4:])
+    request_key = str(uuid.uuid4())
+    # `trigger_instance_id` leva a tentativa: a unicidade por jogo (326) não bloqueia refazer depois de
+    # uma falha. O árbitro da cobrança única é `creature_portraits` (PK), não o ledger.
+    trigger = ArtGenerationRequest(
+        "creature_portrait", f"{key}|{request_key}", "monster", key, None, request_key
+    )
+    return trigger, dict(build_creature_art_brief(enemy, important=important, npc=npc))
+
+
 @app.post("/game/{game_id}/art/quote")
 def create_image_quote(game_id: str, req: ArtQuoteRequest):
     from infrastructure.contracts import Conflict
@@ -4729,12 +4880,23 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
     from services.image_quotes import public_quote
     from services.shard_pricing import PricingUnavailable
 
+    if req.image_type == "monster":
+        from services import creature_art as _art
+
+        if _art.mode() != "on":
+            raise HTTPException(404, "creature_art_disabled")
+        if req.offer_id or req.reformulation or not req.enemy_id:
+            raise HTTPException(422, "monster_quote_invalid")
+    elif req.enemy_id is not None:
+        raise HTTPException(422, "enemy_id_only_monster")
     runtime, principal, repository = _image_finance()
     state = load_game_state(_resolve_save_file(game_id))
     if not state:
         raise HTTPException(404, "Jogo não encontrado.")
     _validate_image_request(state, req.reformulation, req.image_type)
-    if req.image_type == "player":
+    if req.image_type == "monster":
+        trigger, brief = _monster_quote_inputs(state, req, runtime)
+    elif req.image_type == "player":
         if req.offer_id:
             raise HTTPException(422, "player_offer_not_required")
         if req.reformulation:
@@ -4768,7 +4930,7 @@ def create_image_quote(game_id: str, req: ArtQuoteRequest):
         trigger = ArtGenerationRequest(**offer["trigger"])
         brief = offer["brief"]
     profile = load_json_data("dynamic_art_profiles.json") or {}
-    if req.image_type != "player":
+    if req.image_type not in ("player", "monster"):
         brief = _offer_brief_for_quote(state, req.image_type, trigger, brief, profile)
     try:
         quote = repository.issue(
@@ -4793,6 +4955,7 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
     from infrastructure.contracts import Conflict
     from infrastructure.wallet import InsufficientShards, WalletConflict
     from services.art_triggers import ArtGenerationRequest, reserve_request
+    from services.creature_portraits import CreaturePortraitTaken
     from services.shard_pricing import PricingUnavailable
     from services.turn_effects import effect_scope
     from services.turn_execution import operation_scope
@@ -4821,6 +4984,16 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
             }
         _guard_image_effect()
         _validate_image_request(state, quote["reformulation"], quote["image_type"])
+        if quote["image_type"] == "monster":
+            # SPEC-352 R6: checagem rápida ANTES de qualquer reserva. O árbitro final é o `claim`
+            # dentro da transação de confirmação (PK de creature_portraits).
+
+            portrait_key = str(quote["trigger"]["subject_id"])
+            taken = _portrait_store(runtime).get_many(
+                [portrait_key], game_id=game_id, npc_known=[portrait_key]
+            )
+            if portrait_key in taken:
+                raise HTTPException(409, "creature_portrait_in_progress")
         claim, request_hash, receipt = _begin_state_mutation(
             state,
             action_id=req.action_id,
@@ -4873,6 +5046,9 @@ def confirm_player_art(game_id: str, req: ArtConfirmRequest):
         raise HTTPException(402, "image_insufficient_shards") from None
     except PricingUnavailable:
         raise HTTPException(503, "image_pricing_unavailable") from None
+    except CreaturePortraitTaken:
+        _fail_operation(claim, "creature_portrait_in_progress")
+        raise HTTPException(409, "creature_portrait_in_progress") from None
     except (Conflict, WalletConflict):
         _fail_operation(claim, "image_quote_conflict")
         raise HTTPException(409, "image_quote_conflict") from None
@@ -4979,6 +5155,13 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
             model=str(profile.get("model")),
             profile_version=str(profile.get("profile_version")),
         )
+        try:
+            owned = repository.get(current_principal(), uuid.UUID(generation_id))
+        except ValueError:
+            owned = None
+        if owned and owned.get("subject_type") == "monster":
+            # SPEC-352 R15/D-352-11: um jogador não derruba a arte que outros veem (moderação = operador).
+            raise HTTPException(422, "quality_not_applicable")
         try:
             repository.set_quality(
                 current_principal(),

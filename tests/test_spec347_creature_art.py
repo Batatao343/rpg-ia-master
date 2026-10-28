@@ -22,6 +22,9 @@ class Reg:
     def get(self, key):
         return self.rows.get(key)
 
+    def sign(self, store, key):  # SPEC-352 F3: o teste usa a "key" como URL
+        return key
+
 
 def _ready(key, *, visibility="shared", origin="g0", url="/x.webp"):
     return {
@@ -29,7 +32,8 @@ def _ready(key, *, visibility="shared", origin="g0", url="/x.webp"):
             "status": "ready",
             "visibility": visibility,
             "origin_game_id": origin,
-            "variants": {"thumbnail": {"url": url}},
+            "store": "shared",
+            "object_keys": {"thumb": url},
         }
     }
 

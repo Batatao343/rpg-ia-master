@@ -92,3 +92,37 @@ def purge_game_blobs_job(pool, blob_store, payload: dict) -> dict:
     if failed:
         raise RuntimeError("blob_purge_incomplete")  # retried by the queue
     return {"status": "purged", "deleted": len(keys)}
+
+
+SHARED_KIND = "purge_shared_art"
+
+
+def enqueue_shared_art_purge(connection, owner_id: UUID, object_keys: list[str]) -> None:
+    """SPEC-352 R14: objetos compartilhados de retratos `game` de um jogo apagado."""
+    import hashlib
+
+    keys = sorted({key for key in object_keys if _in_prefix(key, "shared/creatures/")})
+    if not keys:
+        return
+    digest = hashlib.sha256("\n".join(keys).encode()).hexdigest()[:32]
+    connection.execute(
+        """insert into app.jobs (id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
+           values (%s,%s,null,%s,%s,'queued',%s,%s)
+           on conflict (kind,dedupe_key) do nothing""",
+        (
+            uuid4(),
+            owner_id,
+            SHARED_KIND,
+            f"shared:{digest}",
+            Jsonb({"object_keys": keys}),
+            MAX_ATTEMPTS,
+        ),
+    )
+
+
+def purge_shared_art_job(shared_blob_store, payload: dict) -> dict:
+    keys = [k for k in payload.get("object_keys") or [] if _in_prefix(k, "shared/creatures/")]
+    failed = [k for k in keys if not _deleted_or_absent(shared_blob_store, k)]
+    if failed:
+        raise RuntimeError("shared_art_purge_incomplete")
+    return {"status": "purged", "deleted": len(keys)}

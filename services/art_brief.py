@@ -239,6 +239,63 @@ def build_npc_art_brief(state: Mapping[str, Any], npc_id: str) -> ArtBrief:
     }
 
 
+def _bestiary_description(bestiary_id: str) -> tuple[str, str]:
+    """(nome, descricao) do bestiario curado; vazio se a criatura nao esta no bestiario."""
+    from gamedata import BESTIARY
+
+    entry = (BESTIARY or {}).get(bestiary_id) or {}
+    return (
+        sanitize_visual_text(entry.get("name"), limit=80),
+        sanitize_visual_text(entry.get("description") or entry.get("appearance"), limit=300),
+    )
+
+
+def build_creature_art_brief(
+    enemy: Mapping[str, Any], *, important: bool, npc: Mapping[str, Any] | None = None
+) -> ArtBrief:
+    """SPEC-352 R9: retrato de criatura. Nunca texto livre do jogador nem referencia ao heroi.
+
+    Generico: so nome e descricao do bestiario (ou do pool, quando `pool_entry_id`).
+    Importante: tambem nome e aparencia do individuo (instancia ou NPC), sem secret/hidden."""
+    from services.discovery import normalize_bestiary_id
+    from services.encounter_manifest import species_label_for
+
+    profile = load_art_profile()
+    bestiary_id = normalize_bestiary_id(dict(enemy))
+    species_name, description = _bestiary_description(bestiary_id) if bestiary_id else ("", "")
+    if not description and enemy.get("pool_entry_id"):
+        description = sanitize_visual_text(enemy.get("description"), limit=300)
+    species = species_name or sanitize_visual_text(species_label_for(dict(enemy)), limit=80)
+    subject = species or sanitize_visual_text(enemy.get("name"), limit=80) or "creature"
+    looks = description
+    exclusions = _exclusions(profile)
+    if important:
+        source = npc or enemy
+        individual = sanitize_visual_text((npc or {}).get("name") or enemy.get("name"), limit=80)
+        if individual and individual.lower() != subject.lower():
+            subject = f"{individual} ({subject})" if species else individual
+        own = sanitize_visual_text(
+            source.get("appearance") or (enemy.get("appearance") if npc else ""), limit=300
+        )
+        looks = ". ".join(part for part in (description, own) if part)
+        exclusions = _exclusions(profile, "no secret unrevealed traits")
+    return {
+        "subject": subject[:200],
+        "canon": list(profile["global_style"]),
+        "player_description": looks,
+        "composition": list(profile["creature_composition"]),
+        "exclusions": exclusions,
+        "reference_asset_ids": [],
+        "profile_version": profile["profile_version"],
+        "size": profile["formats"]["creature_portrait"]["size"],
+        "race_line": "a creature or foe of Valoria, depicted as its own species",
+        "class_line": "",
+        "scene": "",
+        "quality": _quality(profile, "creature_portrait"),
+        "is_npc": True,
+    }
+
+
 def _boss_of(state: Mapping[str, Any]) -> Mapping[str, Any] | None:
     return next(
         (

@@ -4,8 +4,15 @@
   "model": "gpt-image-2-2026-04-21",
   "formats": {
     "portrait": {"size": "1024x1536", "quality": "medium"},
-    "epic_scene": {"size": "1536x1024", "quality": "medium"}
+    "epic_scene": {"size": "1536x1024", "quality": "medium"},
+    "creature_portrait": {"size": "1024x1536", "quality": "medium"}
   },
+  "creature_composition": [
+    "the subject is a creature or foe of Valoria, drawn as itself, not as a human hero",
+    "single subject centred in frame, whole body readable, grounded in a small lived-in setting",
+    "menacing but not gory; no blood pools, no exposed viscera",
+    "anatomy coherent for the species described; no duplicated limbs or heads unless the species has them"
+  ],
   "canon_similarity_min_hamming": 14,
   "global_style": [
     "intricate etched illustration, dense fine-line crosshatching and stippled ink texture under muted wash colour, like a hand-engraved plate",

@@ -364,8 +364,9 @@ def _present_tables(db, tables) -> tuple[str, ...]:
 
 
 class PostgresAccountLifecycle:
-    def __init__(self, pool, identity, blobs, payments=None) -> None:
+    def __init__(self, pool, identity, blobs, payments=None, *, shared_blobs=None) -> None:
         self.pool, self.identity, self.blobs, self.payments = pool, identity, blobs, payments
+        self.shared_blobs = shared_blobs  # SPEC-352: store dos retratos compartilhados
 
     def _payments(self):
         if self.payments is not None:
@@ -400,6 +401,13 @@ class PostgresAccountLifecycle:
                     from app.shared_pool where origin_owner_id=%s""",
                     (principal.user_id,),
                 ).fetchall()
+            if db.execute("select to_regclass('app.creature_portraits') as r").fetchone()["r"]:
+                # SPEC-352 R14: retratos de criatura encomendados (so chave/escopo/status/datas).
+                from services.creature_portraits import PostgresPortraitRegistry
+
+                data["creature_portraits"] = PostgresPortraitRegistry.export_rows(
+                    db, principal.user_id
+                )
             data["payment_financial_events"] = db.execute(
                 """select f.financial_id,f.order_id,f.kind,
                 f.amount_cents,f.currency,f.outcome,f.created_at from app.payment_financial_events f
@@ -548,10 +556,24 @@ class PostgresAccountLifecycle:
                 from infrastructure.postgres_shared_pool import PostgresSharedPoolStore
 
                 PostgresSharedPoolStore.erase_owner(db, owner)
+            shared_keys: list[str] = []
+            if db.execute("select to_regclass('app.creature_portraits') as r").fetchone()["r"]:
+                # SPEC-352 R14: apaga as linhas do jogo/pendentes/privadas e desvincula as promovidas.
+                from services.creature_portraits import PostgresPortraitRegistry
+
+                shared_keys = PostgresPortraitRegistry.erase_owner(db, owner)
             # A retained financial row contains opaque IDs/numbers, no private prompt/data.
             db.execute(
                 "update app.payment_orders set checkout_url=null where owner_id=%s", (owner,)
             )
+        if self.shared_blobs is not None:
+            for key in shared_keys:  # best-effort: o objeto compartilhado de um jogo apagado
+                try:
+                    self.shared_blobs.delete(key)
+                except Exception as exc:
+                    from observability.telemetry import log_fallback
+
+                    log_fallback("creature_portrait", "shared_delete_failed", exc)
         self.identity.delete_user(owner)
         if not (checkouts_closed and blobs_deleted):
             return "deleting"

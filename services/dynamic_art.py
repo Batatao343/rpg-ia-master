@@ -272,6 +272,8 @@ class DynamicArtRepository:
                 usage_json=%s,updated_at=now() where generation_id=%s""",
                 (display_asset_id, Jsonb(safe_usage), generation_id),
             )
+            if generation["subject_type"] == "monster":
+                self._mark_portrait_ready(connection, generation_id, variants, result)
             if generation.get("image_quote_id"):
                 from infrastructure.wallet import PostgresWallet, WalletConflict
                 from services.shard_pricing import PricingUnavailable
@@ -321,6 +323,44 @@ class DynamicArtRepository:
                 where generation_id=%s and status='generating'""",
                 ("failed_retryable" if retryable else "failed", error_code[:100], generation_id),
             )
+            if not retryable:
+                subject = connection.execute(
+                    "select subject_type from app.art_generations where generation_id=%s",
+                    (generation_id,),
+                ).fetchone()
+                if subject and subject["subject_type"] == "monster":
+                    from services.creature_portraits import PostgresPortraitRegistry
+
+                    PostgresPortraitRegistry.mark_failed(
+                        connection, generation_id=generation_id, error_code=error_code
+                    )
+
+    @staticmethod
+    def _mark_portrait_ready(
+        connection, generation_id: UUID, variants: list[dict], result: dict[str, Any]
+    ) -> None:
+        """SPEC-352 R8: registro compartilhado na MESMA transacao da liquidacao.
+
+        Copia compartilhada feita -> `shared`; falhou -> `private` (o job `copy_creature_portrait`
+        promove depois). A geracao nunca falha por causa da copia: o jogador ja pagou."""
+        from services.creature_portraits import PostgresPortraitRegistry
+
+        shared = {row["variant"]: row for row in result.get("shared_variants") or []}
+        if "thumb" in shared:
+            keys = {name: row["key"] for name, row in shared.items()}
+            digests = {name: row["sha256"] for name, row in shared.items()}
+            store = "shared"
+        else:
+            keys = {row["variant"]: row["key"] for row in variants}
+            digests = {row["variant"]: row["sha256"] for row in variants}
+            store = "private"
+        PostgresPortraitRegistry.mark_ready(
+            connection,
+            generation_id=generation_id,
+            store=store,  # type: ignore[arg-type]
+            object_keys=keys,
+            sha256=digests,
+        )
 
     def approved_portrait_key(self, owner_id: UUID, game_id: UUID) -> str | None:
         """SPEC-326 R10: blob key da variante ``full`` do último retrato ``ready`` (aprovado)."""
