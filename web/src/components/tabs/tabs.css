@@ -1,6 +1,8 @@
 /* SPEC-209: abas Combate (deck) e Personagem. Só tokens (SPEC-208); transform/opacity apenas. */
 .deck { display: flex; flex-direction: column; gap: 0.8rem; min-width: 0; }
-.deck__head { position: sticky; top: 0; z-index: 2; display: grid; gap: 0.3rem; padding: 0.4rem 0; background: var(--surface); }
+/* SPEC-345 R7.4: o cabeçalho cobre o recuo do painel (cartas não aparecem acima dele) e tem borda inferior, p/ o título do Acervo não colidir. */
+.deck__head { position: sticky; top: 0; z-index: 2; display: grid; gap: 0.3rem; margin-top: -1.1rem; padding: 1.1rem 0 0.5rem; background: var(--surface); border-bottom: 1px solid var(--line-soft); }
+@media (max-width: 480px) { .deck__head { margin-top: -0.85rem; padding-top: 0.85rem; } }
 .deck__head .hud__label { margin: 0; }
 .deck__head .hud__label > span { margin-left: 0.45em; } /* flex colapsa o espaço entre rótulo e contagem */
 .deck__sync, .char-sync { color: var(--ink-soft); font-size: 0.75rem; text-transform: none; letter-spacing: 0; }

@@ -80,6 +80,7 @@ O objetivo é que nenhuma superfície do jogador mostre texto interno (ids, rót
   - R7.1 — `.deck__head` usa o mesmo fundo do painel que o contém (token de superfície do `.ws-panel`, nunca `var(--bg)`);
   - R7.2 — `.deck__msg` vazio ocupa altura 0 (`:empty { min-height: 0 }`), mas continua montado com `aria-live="polite"` (`CombatDeckTab.tsx:93-94`);
   - R7.3 — o sticky continua funcionando (o cabeçalho cobre as cartas ao rolar, com o fundo do painel).
+- **R7.4 (pedido do coordenador, 27/10) — Faixa da Preparação sobre o título do Acervo.** Nos prints da 342 (`on-1440-forja`, `on-390-espolio`) o `.deck__head` sticky mostrava cartas rolando acima dele (recuo do painel) e colava no título "Acervo". O cabeçalho passa a cobrir o recuo do painel (`margin-top` negativo = padding do `.tabpanel`, 1.1rem; 0.85rem a ≤ 480 px), com `padding-bottom` 0.5rem e borda inferior. Teste: `preparacao_sem_faixa` (e2e).
 - **R8 — Tab bar a 360 px.** Com 6 superfícies a 360×800:
   - R8.1 — nenhum botão tem texto transbordando (`scrollWidth <= clientWidth`) e os retângulos dos rótulos não se sobrepõem (folga ≥ 2 px);
   - R8.2 — o ponto de luta (`.mtabbar__dot`) fica inteiro dentro do botão e visível (não cortado por `overflow`). Ele passa a ser posicionado em absoluto (canto superior direito do rótulo), sem empurrar o texto;
@@ -289,5 +290,7 @@ A prosa do LLM real passa pela mesma substituição do loot (R4.4) e pela mesma 
   *Recomendação:* o coordenador avisa a sessão da 342 sobre R32 e a ordem de pouso.
 - **D8 — Item 10 (2d6) só registrado.** As 4 cartas de `data/cards/exemplos.json` (`golpe_devoto` é carta inicial do Devoto) rolam `2d6` de verdade pela via legada (`services/conflict_turn.py:276-278`). O texto é fiel. Trocar por `dano_base` muda o balanço (média 7 contra os 3–5 das cartas novas) e afeta a arena por Postura (339/341). *Recomendação:* spec própria de balanço ou incluir na SPEC-341, com o dono decidindo o número. Não mudar nada nesta spec.
 - **D9 — Sem flag nova.** É correção nos dois modos. O texto e o layout não pedem rollout gradual, e o registro de flags da SPEC-340 não muda. *Recomendação:* aceitar.
+
+**Desvios da execução:** (a) R10.2: o botão Dispensar fica dentro do `<details>` (primeira linha do corpo), não no `summary` (botão interativo dentro de summary é frágil); (b) R8.3: altura mínima de toque medida = 44 px (o `.play .mtabbar__btn` já impõe 44; 48 nunca valeu em runtime); (c) teste SSR `deck_msg_montado_vazio` não escrito (CombatDeckTab pesado para SSR), coberto pelo e2e `preparacao_sem_faixa`.
 
 **Nota do coordenador (27/10):** D7 ajustada — a SPEC-342 pousa primeiro (já em revisão); a 345 faz rebase sobre ela, absorve o item 9b (`.btn:disabled`/Forja, ex-R32 sugerida) e regrava a linha de base R24 da 342 quando suas correções mudarem o caminho `off`.
