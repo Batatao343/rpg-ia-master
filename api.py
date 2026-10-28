@@ -1996,6 +1996,14 @@ class EspolioRequest(BaseModel):
     action_id: str | None = Field(default=None, max_length=36)
 
 
+class LojaCartasRequest(BaseModel):
+    """SPEC-357 R9: compra 1 Carta neutra da prateleira do mercador do local."""
+
+    game_id: str | None = None
+    card_id: str = Field(max_length=80)
+    action_id: str | None = Field(default=None, max_length=36)
+
+
 class ForjaRequest(BaseModel):
     """SPEC-333 R4/R5/R8: ações de forja fora de combate (validação 100% Python)."""
 
@@ -2421,6 +2429,11 @@ def _card_reward_blocks(state: dict) -> dict[str, Any]:
     forge = card_rewards.public_forge(state)
     if forge is not None:
         out["forja"] = forge
+    from services import card_shop  # SPEC-357: Técnicas à venda (mesma flag; D1)
+
+    shop = card_shop.public_shop(state)
+    if shop is not None:
+        out["loja_cartas"] = shop
     return out
 
 
@@ -7452,6 +7465,20 @@ def game_espolio(req: EspolioRequest):
         req.model_dump(mode="json", exclude={"action_id"}),
         lambda state: card_rewards.accept(state, req.card_id or None),
         "espolio_rejected",
+    )
+
+
+@app.post("/game/loja-cartas")
+def game_loja_cartas(req: LojaCartasRequest):
+    """SPEC-357 R7/R9: compra uma Carta neutra do mercador (preço e prateleira em Python)."""
+    from services import card_shop
+
+    return _card_reward_mutation(
+        req.game_id,
+        req.action_id,
+        req.model_dump(mode="json", exclude={"action_id"}),
+        lambda state: card_shop.buy(state, req.card_id),
+        "loja_cartas_rejected",
     )
 
 

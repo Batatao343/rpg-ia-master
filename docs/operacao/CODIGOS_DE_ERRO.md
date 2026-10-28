@@ -75,6 +75,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `levelup_rejected` | Regra de progressão recusou a escolha. |
 | `lifecycle_unavailable` | Ciclo de conta indisponível no perfil. |
 | `link_invalid_or_expired` | Link de e-mail inválido ou expirado. |
+| `loja_cartas_rejected` | O mercador não pôde vender essa Carta (regra da loja de Cartas). |
 | `monster_quote_invalid` | Pedido de retrato inválido. |
 | `new_purchases_disabled` | Novas compras desligadas. |
 | `no_pending_death` | Não há queda pendente para resolver. |

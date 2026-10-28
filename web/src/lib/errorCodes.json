@@ -68,6 +68,7 @@
   "levelup_rejected",
   "lifecycle_unavailable",
   "link_invalid_or_expired",
+  "loja_cartas_rejected",
   "monster_quote_invalid",
   "new_purchases_disabled",
   "no_pending_death",

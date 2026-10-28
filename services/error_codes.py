@@ -81,6 +81,7 @@ CODE_DOCS: dict[str, str] = {
     "levelup_rejected": "Regra de progressão recusou a escolha.",
     "espolio_rejected": "Regra do espólio de Cartas recusou a escolha.",
     "forja_rejected": "Regra da Forja do baralho recusou a ação.",
+    "loja_cartas_rejected": "O mercador não pôde vender essa Carta (regra da loja de Cartas).",
     "card_rewards_off": "Espólio/Forja de Cartas desligados neste ambiente (409).",
     "invalid_request": "Parâmetros de consulta inválidos.",
     "chronicle_query_invalid": "Busca da crônica inválida.",

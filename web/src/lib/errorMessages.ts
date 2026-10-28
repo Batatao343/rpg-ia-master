@@ -74,6 +74,7 @@ export const MESSAGES: Record<string, string> = {
   levelup_rejected: "Escolha recusada.", invalid_request: "Parâmetros inválidos.",
   espolio_rejected: "Não foi possível escolher essa Carta do espólio.",
   forja_rejected: "A Forja não pôde fazer isso agora.",
+  loja_cartas_rejected: "O mercador não pôde vender essa Carta agora.",
   card_rewards_off: "O espólio e a Forja de Cartas estão desligados neste ambiente.",
   chronicle_query_invalid: "Busca inválida.", onboarding_unavailable: "O conteúdo de introdução está indisponível.",
   // arte
