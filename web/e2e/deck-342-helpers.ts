@@ -78,3 +78,15 @@ export async function openCombat(page: Page) {
 
 export const actions = (b: DeterministicBackend) => b.requests.filter((r) => r.path.startsWith("/game/action"));
 export const panel = (page: Page) => page.locator("#ws-panel-combate, [aria-label='Combate'][role='region']").first();
+
+/** SPEC-347 R14: n entradas de registro da rodada (heroi acerta, inimigo reage, efeito...). */
+export function roundLog(n: number) {
+  const base = { ator_id: "player", ator_nome: "Ayla", lado: "heroi", carta_id: "golpe", carta_nome: "Golpe do Véu", alvo_id: "e1", alvo_nome: "Saqueador", origem: "turno", rotulo: null, resultado: "acerto", dano: 5, efeito: null };
+  const kinds = [
+    base,
+    { ...base, ator_id: "e1", ator_nome: "Saqueador", lado: "inimigo", carta_id: null, carta_nome: null, alvo_id: "player", alvo_nome: "Ayla", origem: "reacao", rotulo: "Contra-ataque", resultado: "erro", dano: null },
+    { ...base, carta_id: "folego", carta_nome: "Fôlego Fundo", alvo_id: null, alvo_nome: null, resultado: "efeito", dano: null, efeito: "+2 Proteção" },
+    { ...base, ator_id: "e2", ator_nome: "Bandoleiro", lado: "inimigo", carta_nome: "Talho", alvo_id: "player", alvo_nome: "Ayla", resultado: "critico", dano: 7 },
+  ];
+  return Array.from({ length: n }, (_, i) => kinds[i % kinds.length]);
+}

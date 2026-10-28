@@ -1,12 +1,12 @@
 // SPEC-347 Etapa 2/3 (1440): Arena compacta, tooltip fora dos controles, desfecho no topo. Sem rolar antes de medir.
 import { test, expect } from "./fixtures";
-import { actions, armDeck, openCombat, panel } from "./deck-342-helpers";
+import { actions, armDeck, openCombat, panel, roundLog } from "./deck-342-helpers";
 import { measure } from "./spec347-helpers";
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
 test("arena_tres_zonas_1440: chips legíveis e a 1ª carta inteira no painel sem rolar", async ({ page, backend }) => {
-  const state = armDeck(backend, { zones: ["Veio de Calcário", "Boca do Abismo"], intent: true, scene: true });
+  const state = armDeck(backend, { zones: ["Veio de Calcário", "Boca do Abismo"], intent: true, scene: true, roundLog: roundLog(4) });
   state.combat.enemies[0].conditions = [{ name: "Sangramento", duration: 2 }, { name: "Rachadura", duration: 1 }] as never;
   state.combat.enemies[1].conditions = [{ name: "Medo", duration: 1 }, { name: "Atordoado", duration: 1 }] as never;
   await openCombat(page);
@@ -109,4 +109,19 @@ test("desfecho_abre_no_topo_1440: Continuar visível e livre depois de rolar o p
   await page.waitForTimeout(300);
   const b = await measure(next);
   expect(b.free && b.inView, JSON.stringify(b)).toBe(true);
+});
+
+test("registro_acima_da_arena_1440: todas as entradas, ordem DOM e a 1ª carta ainda inteira", async ({ page, backend }) => {
+  armDeck(backend, { roundLog: roundLog(4) });
+  await openCombat(page);
+  const board = page.locator("[data-roundboard]");
+  await expect(board.locator(".roundboard__row")).toHaveCount(4);
+  await expect(board.locator('[data-origem="reacao"]')).toContainText("Contra-ataque");
+  const above = await page.evaluate(() => {
+    const b = document.querySelector("[data-roundboard]")!, a = document.querySelector(".arena")!;
+    return !!(b.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+  expect(above).toBe(true);
+  expect(await panel(page).evaluate((el) => el.scrollTop)).toBe(0);
+  expect((await measure(page.locator(".deck-card").first())).inView).toBe(true);
 });

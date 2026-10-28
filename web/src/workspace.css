@@ -440,3 +440,27 @@ details.scene-strip { display: block; }
   .arena--compact .arena__zones { grid-template-columns: 1fr; }
   .arena--compact .arena__members { grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
 }
+
+/* SPEC-347 R14 — registro da rodada (entre a faixa de cena e a Arena) */
+.roundboard { display: grid; gap: 0.35rem; padding: 0.5rem; border: 1px solid var(--line-soft); border-radius: var(--r-sm); background: var(--surface-2); min-width: 0; }
+.roundboard__title { margin: 0; }
+.roundboard__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.3rem; }
+.roundboard__row { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; min-width: 0; font-size: 0.85rem; }
+.roundboard__row--inimigo .roundboard__who { color: var(--muted); }
+.roundboard__who { display: inline-flex; align-items: center; gap: 0.25rem; color: var(--ink); }
+.roundboard__card { padding: 0.1rem 0.45rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); color: var(--ink); white-space: nowrap; }
+.roundboard__card[data-reacao] { border-style: dashed; color: var(--accent); }
+.roundboard__arrow { color: var(--faint); }
+.roundboard__to { color: var(--ink); }
+.roundboard__chip { margin-left: auto; padding: 0.05rem 0.5rem; border-radius: var(--r-sm); border: 1px solid var(--line-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.roundboard__chip--hit { color: var(--ink); }
+.roundboard__chip--crit { color: var(--accent); border-color: var(--accent); }
+.roundboard__chip--miss { color: var(--muted); }
+.roundboard__chip--fx { color: var(--ink); border-style: dashed; }
+.roundboard__more summary { cursor: pointer; min-height: 2.2rem; display: flex; align-items: center; color: var(--muted); font-size: 0.85rem; }
+@media (pointer: coarse) { .roundboard__more summary { min-height: 44px; } }
+@media (min-width: 641px) {
+  .roundboard__list { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); column-gap: 0.75rem; }
+  .roundboard__row { font-size: 0.8rem; }
+  .roundboard { padding: 0.4rem 0.5rem; }
+}

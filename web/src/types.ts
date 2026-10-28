@@ -384,6 +384,8 @@ export interface CombatBlock {
   pilhas?: PilesView;
   /** SPEC-334 R6: linhas do log mecânico da última rodada (só com pilhas). */
   mech_log?: string[];
+  /** SPEC-347 R14: registro estruturado da rodada (só Baralho on). */
+  registro_rodada?: RoundLogEntry[];
   /** SPEC-329: só com `RPG_ENEMY_INTENT=on`. */
   pressagios_publicos?: PressagioView[];
   /** SPEC-331/342: só com `RPG_SCENE_CARDS=on`. */
@@ -1177,3 +1179,13 @@ export interface SceneObjectiveView { tipo: "sobreviver_n_rodadas" | "proteger" 
 export interface SceneCardsView { cartas: { id: string; nome: string; sabor: string }[]; relogio: { desde: number; teto: number; rodada: number; ativo: boolean } }
 /** SPEC-342 R8: presságio pronto para exibir no chip do inimigo. */
 export interface OmenView { icon: import("./design/icons").IconName; text: string; num: string | null; card: string | null; veiled: boolean; spoken: string }
+
+/** SPEC-347 R14: uma jogada da rodada resolvida (carta ou ataque), na ordem dos turnos. */
+export interface RoundLogEntry {
+  ator_id: string; ator_nome: string; lado: "heroi" | "inimigo" | "aliado";
+  carta_id: string | null; carta_nome: string | null;
+  alvo_id: string | null; alvo_nome: string | null;
+  origem: "turno" | "reacao"; rotulo: string | null;
+  resultado: "acerto" | "erro" | "critico" | "supercritico" | "efeito";
+  dano: number | null; efeito: string | null;
+}

@@ -84,3 +84,22 @@ test('cardrewards_choices_levam_o_motivo', async () => {
   assert.equal(temple.why, null); assert.equal(temple.enabled, true);
   assert.deepEqual(purgeChoices(forja).map((c) => c.why), ['sem médico', 'sem templo']);
 });
+
+test('roundboard_vazio_nada_e_celular_4_mais_details', async () => {
+  const { RoundBoard } = await load('../src/components/combat/RoundBoard.tsx');
+  assert.equal(html(h(RoundBoard, { entries: [], round: 2, compact: false })), '');
+  assert.equal(html(h(RoundBoard, { entries: undefined, round: 2, compact: true })), '');
+  const e = (i) => ({ ator_id: i % 2 ? 'e1' : 'player', ator_nome: i % 2 ? 'Saqueador' : 'Ayla', lado: i % 2 ? 'inimigo' : 'heroi', carta_id: 'x', carta_nome: `Carta ${i}`,
+    alvo_id: 't', alvo_nome: 'Alvo', origem: i === 5 ? 'reacao' : 'turno', rotulo: i === 5 ? 'Contra-ataque' : null, resultado: 'acerto', dano: 3, efeito: null });
+  const entries = [0, 1, 2, 3, 4, 5].map(e);
+  const mobile = html(h(RoundBoard, { entries, round: 3, compact: true }));
+  const outer = mobile.split('<details')[0];
+  assert.equal((outer.match(/roundboard__row /g) || []).length, 4);
+  assert.match(mobile, /Ver a rodada inteira \(6\)/);
+  assert.match(mobile, /Rodada resolvida: 6 jogadas\./);
+  assert.match(mobile, /Contra-ataque/);
+  const desktop = html(h(RoundBoard, { entries, round: 3, compact: false }));
+  assert.equal((desktop.match(/roundboard__row /g) || []).length, 6);
+  assert.doesNotMatch(desktop, /<details/);
+  assert.match(desktop, /O que se jogou na rodada 2/);
+});

@@ -1,6 +1,6 @@
 // SPEC-347 Etapa 1: sobreposições e quebras a 390 px / 1440 (mira, barra de envio, presságio). Sem rolar antes de medir.
 import { test, expect } from "./fixtures";
-import { armDeck, openCombat } from "./deck-342-helpers";
+import { armDeck, openCombat, roundLog } from "./deck-342-helpers";
 import { measure, isFreeAndVisible } from "./spec347-helpers";
 
 async function armAndAim(page: import("@playwright/test").Page, touch: boolean, enemies: number) {
@@ -118,5 +118,16 @@ test.describe("390 etapa 3", () => {
     await page.waitForTimeout(300);
     const b = await measure(next);
     expect(isFreeAndVisible(b), JSON.stringify(b)).toBe(true);
+  });
+
+  test("registro_acima_da_arena_390: 4 recentes + 'Ver a rodada inteira (6)'", async ({ page, backend }) => {
+    armDeck(backend, { roundLog: roundLog(6) });
+    await openCombat(page);
+    const board = page.locator("[data-roundboard]");
+    await expect(board.locator(".roundboard__list").first().locator(".roundboard__row")).toHaveCount(4);
+    await expect(board.locator("summary")).toHaveText("Ver a rodada inteira (6)");
+    expect((await measure(board.locator("summary"))).h).toBeGreaterThanOrEqual(43.5);
+    const above = await page.evaluate(() => !!(document.querySelector("[data-roundboard]")!.compareDocumentPosition(document.querySelector(".arena")!) & Node.DOCUMENT_POSITION_FOLLOWING));
+    expect(above).toBe(true);
   });
 });

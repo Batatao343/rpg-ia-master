@@ -9,6 +9,7 @@ import { Hand } from "./Hand";
 import { MechLog } from "./MechLog";
 import { PlayQueue } from "./PlayQueue";
 import { PreviewChip, type PreviewState } from "./PreviewChip";
+import { RoundBoard } from "./RoundBoard";
 import { SceneStrip } from "./SceneStrip";
 
 const isTyping = (el: EventTarget | null) => {
@@ -166,6 +167,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   return (
     <div className="deck-combat" ref={rootRef} data-aim-safe data-omens={omens ? "on" : undefined} data-armed={armedCard ? "" : undefined}>
       <SceneStrip round={combat.round} cena={combat.cena} objetivo={combat.objetivo} pressagios={combat.pressagios_cena} />
+      <RoundBoard entries={combat.registro_rodada} round={combat.round} compact={touch} />
       {arena(omens)}
       <Hand piles={piles} glossary={glossary} reasons={reasons} armedIndex={armed?.index ?? null} busy={busy} onPlay={play}
         head={<FolegoPips piles={piles} state={fol} />} onStuck={onStuck} />

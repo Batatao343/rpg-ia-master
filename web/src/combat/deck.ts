@@ -1,4 +1,4 @@
-import type { Glossary, GlossaryEntry, HandCard, OmenView, PilesView, PlayStep, PreviewResult, PressagioView, SceneCardsView, SceneObjectiveView } from "../types";
+import type { Glossary, GlossaryEntry, HandCard, OmenView, PilesView, PlayStep, PreviewResult, PressagioView, RoundLogEntry, SceneCardsView, SceneObjectiveView } from "../types";
 import type { IconName } from "../design/icons";
 
 /** SPEC-334: lógica PURA da mão/fila do Baralho de Conflito (sem React; o motor revalida tudo). */
@@ -176,4 +176,20 @@ export function cardTargets(card: HandCard, known: string[] | undefined, enemyId
   if (card.alvo === "si") return [];
   if (known) return known;
   return card.alvo === "aliado" ? friendIds : enemyIds;
+}
+
+/** SPEC-347 R14.3: uma linha do registro da rodada, só texto/tom (a marcação mora em `RoundBoard`). */
+export function roundLogView(e: RoundLogEntry): { who: string; card: string; to: string; chip: string; tone: "hit" | "miss" | "crit" | "fx" } {
+  const crit = e.resultado === "critico" || e.resultado === "supercritico";
+  const dmg = e.dano != null ? ` · −${e.dano}` : "";
+  const chip = e.resultado === "efeito" ? (e.efeito ?? "Efeito")
+    : e.resultado === "erro" ? "Erro"
+      : `${crit ? "Crítico" : "Acerto"}${dmg}`;
+  return {
+    who: e.ator_nome,
+    card: e.rotulo ?? e.carta_nome ?? "Ataque",
+    to: e.alvo_nome ?? "",
+    chip,
+    tone: e.resultado === "efeito" ? "fx" : e.resultado === "erro" ? "miss" : crit ? "crit" : "hit",
+  };
 }
