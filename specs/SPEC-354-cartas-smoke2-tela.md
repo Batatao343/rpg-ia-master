@@ -260,17 +260,17 @@ Web: `cd web && npm test` (`node --test`) e `npm run test:e2e -- <spec> --worker
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R12 com teste nomeado verde (`node --test`, Playwright `--workers=1`, pytest do escopo).
-- [ ] `reabrir_save_real_1440` e `reabrir_save_real_390` **vermelhos antes** e verdes depois, com fixture de save real e o vermelho (valores) registrado na §9, junto da causa real (H1/H2 confirmada ou outra).
-- [ ] Medição por `elementFromPoint` sem rolar antes, a 390 e a 1440 (R2.4, R3.4, R4.5, R7.3).
-- [ ] A 1440, com `RoundBoard` (6 entradas) e 2 inimigos, a 1ª carta da mão fica inteira à vista com `scrollTop === 0` (R3.4).
-- [ ] Nenhum id cru em `.ws-combat` (R9.3). Marcador de família sem a flag (R6.3).
-- [ ] Alvos ≥ 44 px em `pointer: coarse`, inclusive a 1440 com `coarse` afirmado no teste (R8, R12).
-- [ ] Linha de base win32 da 342 verde; regerada só se R10 permitir, em commit próprio, com diffs em `docs/spec354/baseline-diff/` conferidos pelo revisor.
-- [ ] Só tokens da 322: `deck-tokens-342.test.mjs` (estendido se houver CSS em `styles.css`) e `npm run lint` verdes (R11).
-- [ ] `npm run build` e `npm test` verdes. `uv run pytest` verde (suíte completa: coordenador, no pouso).
-- [ ] Saves antigos carregam: `registro_rodada` sem `tipo` renderiza; view sem `retrato`/`registro_rodada` não quebra.
-- [ ] Prints "depois" em `docs/spec354/depois/` (Etapa 7).
+- [x] R1–R12 com teste nomeado verde (`node --test`, Playwright `--workers=1`, pytest do escopo).
+- [x] `reabrir_save_real_1440` e `reabrir_save_real_390` **vermelhos antes** e verdes depois, com fixture de save real e o vermelho (valores) registrado na §9, junto da causa real (H1/H2 confirmada ou outra).
+- [x] Medição por `elementFromPoint` sem rolar antes, a 390 e a 1440 (R2.4, R3.4, R4.5, R7.3).
+- [x] A 1440, com `RoundBoard` (6 entradas) e 2 inimigos, a 1ª carta da mão fica inteira à vista com `scrollTop === 0` (R3.4).
+- [x] Nenhum id cru em `.ws-combat` (R9.3). Marcador de família sem a flag (R6.3).
+- [x] Alvos ≥ 44 px em `pointer: coarse`, inclusive a 1440 com `coarse` afirmado no teste (R8, R12).
+- [x] Linha de base win32 da 342 verde; regerada só se R10 permitir, em commit próprio, com diffs em `docs/spec354/baseline-diff/` conferidos pelo revisor.
+- [x] Só tokens da 322: `deck-tokens-342.test.mjs` (estendido se houver CSS em `styles.css`) e `npm run lint` verdes (R11).
+- [x] `npm run build` e `npm test` verdes. ``uv run pytest` do escopo verde (suíte completa: coordenador, no pouso).
+- [x] Saves antigos carregam: `registro_rodada` sem `tipo` renderiza; view sem `retrato`/`registro_rodada` não quebra.
+- [x] Prints "depois" em `docs/spec354/depois/` (Etapa 7).
 - [ ] Smoke real (§6) executado e registrado.
 
 ## 6. Smoke test com LLM real
