@@ -135,11 +135,8 @@ def test_mensagem_interna_mantem_ledger(monkeypatch):
     )
     internal = out["messages"][0].content
     assert "[SISTEMA] +7 de ouro" in internal  # R5.5
-    assert (
-        "Brutamontes tomba." in internal
-        and "Mortos:" not in internal
-        and "Espólio:" not in internal
-    )
+    # SPEC-346 R18: o resumo canônico fica com o combate; o loot só anexa o espólio.
+    assert "Mortos:" not in internal and "Espólio:" not in internal
     shown = player_facing_message({"messages": out["messages"]})
     assert "[SISTEMA]" not in shown and "+7 de ouro" in shown
 

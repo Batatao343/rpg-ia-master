@@ -580,6 +580,11 @@ def _resolve_attack_step(
             )
             atk["regiao"] = dres["regiao"]
             atk["dano_final"] = int(dres.get("dano_final", 0) or 0)
+            if (dres.get("wound") or {}).get("categoria"):  # SPEC-346 R4: o registro cita o Ferimento
+                atk["ferimento"] = {
+                    "categoria": dres["wound"]["categoria"],
+                    "regiao": dres["wound"].get("regiao") or dres.get("regiao"),
+                }
             if dres.get("resistance_hit") and combat_flags.mode("reveal_resist") != "off":
                 atk["resistance_hit"] = dres["resistance_hit"]  # SPEC-325 R8
             out["logs"].append("; ".join(dres["log"]))

@@ -61,6 +61,39 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
     return checked
 
 
+CORPSE_ALREADY_LOOTED = "Você revira o corpo de novo; o que havia de valor já está com você."
+_CORPSE_RE = re.compile(r"\b(?:corpos?|cadaver(?:es)?|restos|bolsos?)\b")
+
+
+def _corpse_search(state: dict, combat: dict, world: dict, text: str) -> str:
+    """SPEC-346 R20/R21: "claimed" = revistar o corpo de um encontro com espólio já reclamado
+    (mesmo local); senão o rótulo de espécie do corpo citado; "" = busca no ambiente."""
+    from services import encounter_manifest as em
+
+    folded = em._fold(text)
+    manifest = combat.get("encounter") if isinstance(combat, dict) else None
+    labels = (
+        [
+            str(p.get("species_label") or "")
+            for p in (manifest or {}).get("participants") or []
+            if p.get("species_label")
+        ]
+        if em.is_valid_manifest(manifest)
+        else []
+    )
+    mentions_label = any(em._fold(label) in folded for label in labels if label)
+    if not (_CORPSE_RE.search(folded) or mentions_label):
+        return ""
+    result = combat.get("result") or {}
+    if (
+        combat.get("phase") == "ended"
+        and result.get("loot_claimed")
+        and str(result.get("location_id") or "") == str(world.get("current_location_id") or "")
+    ):
+        return "claimed"
+    return labels[0] if labels and _CORPSE_RE.search(folded) else ""
+
+
 _QTY_HINT_RE = re.compile(
     r"\d|\b(?:dois|duas|tres|quatro|cinco|seis|sete|oito|nove|dez|onze|doze|treze|catorze|quatorze|quinze|"
     r"dezesseis|dezessete|dezoito|dezenove|vinte|trinta|quarenta|cinquenta|sessenta|setenta|oitenta|noventa|"
@@ -235,7 +268,7 @@ def _price_reasons_context(state: dict, mode: str, item_id: str | None) -> str:
 def _player_facing_message(prose: str, system: str) -> str:
     """Monta a mensagem sem tocar no ledger mecânico de sistema."""
     visible = prose_guard.normalize_protagonist_voice(str(prose or "").strip())
-    return f"{visible}\n\n{system}"
+    return f"{visible}\n\n{system}" if visible else system
 
 
 def _rumor_cache_find(state, player: dict, world: dict, loc: dict, text: str) -> dict | None:
@@ -462,6 +495,15 @@ def loot_node(state: GameState):
         return rumor_find
     region_id = loc.get("region_id", "default")
     combat = state.get("combat") or {}
+    # SPEC-346 R20: revistar o corpo de um encontro cujo espólio já foi reclamado não rerrola.
+    corpse = _corpse_search(state, combat, world, text)
+    if corpse == "claimed" and not conflict_summary:
+        _log_event("loot", "corpse_already_looted", level="info")
+        return {
+            "messages": [AIMessage(content=CORPSE_ALREADY_LOOTED)],
+            "loot_source": None,
+            "archive_due": False,
+        }
     loot_ctx = conflict_summary_service.loot_context(
         conflict_summary,
         region_id=region_id,
@@ -513,13 +555,23 @@ def loot_node(state: GameState):
         if conflict_summary
         else ""
     )
-    msg = _narrate(
-        f"FATOS CANÔNICOS DO CONFLITO: {canonical_context}\n"
-        f"O jogador vasculha {loc.get('name', 'o local')} "
-        f"(nível mecânico {danger}) e encontra EXATAMENTE: {achado}.",
-        "Você vasculha os escombros; o resultado exato está no registro do motor.",
-        conflict_summary or None,
-    )
+    if conflict_summary:
+        # SPEC-346 R18: pós-vitória o desfecho já foi narrado pelo combate; o loot só anexa o
+        # espólio exato (sem LLM e sem repetir o resumo canônico).
+        msg = ""
+    else:
+        subject = (
+            f"o corpo de {corpse}"
+            if corpse and corpse not in ("claimed", "")
+            else loc.get("name", "o local")
+        )
+        msg = _narrate(
+            f"FATOS CANÔNICOS DO CONFLITO: {canonical_context}\n"
+            f"Você vasculha {subject} "
+            f"(nível mecânico {danger}) e encontra EXATAMENTE: {achado}.",
+            "Você vasculha os escombros; o resultado exato está no registro do motor.",
+            None,
+        )
     result = {
         "player": player,
         "world": world,
@@ -529,6 +581,15 @@ def loot_node(state: GameState):
     }
     if conflict_summary:
         result["conflict_summary"] = conflict_summary
+        ended = dict(combat)
+        if ended.get("result"):  # SPEC-346 R19: o espólio do encontro é reclamado uma vez só
+            ended["result"] = {
+                **ended["result"],
+                "loot_claimed": True,
+                "loot_turn": int(world.get("turn_count", 0) or 0),
+                "location_id": str(world.get("current_location_id") or ""),
+            }
+            result["combat"] = ended
     elif not unique_events:
         result.update(_low(world))  # SPEC-318 R5: achado comum, sem unico
     _bl = record_gain(state.get("turn_baseline"), "gold", int(roll["gold"]), "loot")  # SPEC-226 R10

@@ -71,11 +71,40 @@ def capture_baseline(state: dict) -> dict:
     }
 
 
-def _last_ai_text(state: dict) -> str:
+def _legacy_last_text(state: dict) -> str:
     for message in reversed(state.get("messages") or []):
         if getattr(message, "type", "") != "human" and getattr(message, "content", ""):
             return str(message.content)
     return ""
+
+
+def _turn_ai_text(state: dict) -> str:
+    """SPEC-346 R17: texto do turno = junção, na ordem, das `AIMessage` não vazias depois da
+    ÚLTIMA `HumanMessage` (cada uma sem tags internas, idênticas deduplicadas, \n\n).
+
+    Um nó que emite 2 mensagens no mesmo turno (combate + loot pós-vitória) não perde a
+    primeira. Turno com uma só `AIMessage` (ou nenhuma) fica byte a byte como antes."""
+    messages = list(state.get("messages") or [])
+    start = 0
+    for i, message in enumerate(messages):
+        if getattr(message, "type", "") == "human":
+            start = i + 1
+    ai = [
+        str(m.content)
+        for m in messages[start:]
+        if getattr(m, "type", "") == "ai" and str(getattr(m, "content", "") or "").strip()
+    ]
+    if len(ai) <= 1:
+        return _legacy_last_text(state)
+    parts: list[str] = []
+    for text in ai:
+        cleaned = strip_system_tags(text)
+        if cleaned and cleaned not in parts:
+            parts.append(cleaned)
+    return "\n\n".join(parts)
+
+
+_last_ai_text = _turn_ai_text  # alias: `playtest/runner.py` tem a sua própria cópia
 
 
 EMPTY_NARRATION_TEXT = "O momento passa; o registro do turno guarda o resultado."

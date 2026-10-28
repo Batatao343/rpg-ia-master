@@ -100,12 +100,13 @@ def test_loot_enriquece_summary_antes_da_narracao_e_rejeita_extra(monkeypatch):
     )
 
     assert out["conflict_summary"]["loot_obtido"] == [{"kind": "gold", "amount": 7}]
-    # O prompt já recebeu o resultado aplicado, não o summary pré-loot.
-    assert "Espólio: 7 ouro." in llm.human_context
+    # SPEC-346 R18: pós-vitória o loot NÃO chama LLM (nada a alucinar) nem repete o resumo
+    # canônico — o desfecho já foi narrado pelo combate; o loot só anexa o espólio exato.
+    assert llm.human_context == ""
     rendered = out["messages"][0].content
     assert "Espada Solar" not in rendered
     assert "9999" not in rendered
-    assert "Brutamontes tomba." in rendered
+    assert "Brutamontes tomba." not in rendered
     assert "Espólio:" not in rendered
     assert "[SISTEMA] +7 de ouro" in rendered
 

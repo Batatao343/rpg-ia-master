@@ -62,18 +62,30 @@ problemas. O dono decidiu, além de corrigir tudo, **mudar o modelo do combate c
     (`agents/combat.py:1763-1835`);
   - emite **uma** narração de entrada: história, a última prosa livre antes do tabuleiro (R30 vale aqui);
   - **não resolve rodada.** `combat.round == 0`, sem `run_round`, sem parser de jogada (`:1239`).
-  - Iniciativa: quem abriu o conflito age primeiro na rodada 1, pelo mecanismo atual
-    (`roll_initiative_by_side(initiator=…)`, `services/conflict_resolution.py:134-150`). O iniciador fica
-    gravado em `combat_meta`.
+  - Iniciativa (D4 revisada pelo dono, 27/10): quem age primeiro na rodada 1 vem do **contexto da cena**,
+    por sinal determinístico que já existe, e fica gravado em `combat_meta["initiator"]` (+
+    `initiator_reason`):
+    - emboscada contra o jogador (`world.encounter_surprise == "enemy"`, SPEC-296/storyteller) → inimigos
+      primeiro, inclusive sobre a proteção de herói novo (`_early_game_reaction_initiator`);
+    - o jogador iniciou o ataque (`combat_origin == "player_provoked"`, hostilidade explícita do router) ou
+      emboscou (`encounter_surprise == "player"`) → jogador primeiro;
+    - sem sinal claro → `None`: regra de iniciativa atual do motor (dados + proteção de herói novo).
+    - Exceção "vigília que anula a surpresa": **não implementada** — nenhuma carta/condição existente anula
+      surpresa mecanicamente (ver hand-back; candidatas listadas para o dono escolher).
 - **R2 — Rodada sem LLM.** Em turno com combate ativo e declaração estruturada (`combat_declaration` com
   `jogadas`), o grafo inteiro faz **zero** chamadas a `get_llm(...).invoke/stream`. Isso inclui router,
   combate, loot, campaign_manager e arquivista. A Cicatriz obrigatória usa o caminho determinístico
   (`services/death_flow.py:336`, `_fallback_scar`) em vez do SMART de `agents/combat.py:2171-2173`.
-- **R3 — Texto livre com tabuleiro aberto.** Sem declaração estruturada, nenhuma LLM é chamada:
-  - casou `FLEE_RE` (`services/chase.py`): a fuga segue como hoje (determinística);
-  - senão: recusa determinística, sem consumir rodada e sem rerrolar presságio. Usa o mesmo caminho de
-    `action_refused` (`agents/combat.py:2294`). Mensagem: "No tabuleiro, escolha suas Cartas na mão — ou
-    declare fuga." Evento `combat.freetext_refused`.
+- **R3 — Sem texto livre com tabuleiro aberto (D5 revisada pelo dono, 27/10).** Sem declaração
+  estruturada **nunca** há LLM nem rodada, e **nem a fuga por texto** vale (`FLEE_RE` e a viagem lida pelo
+  router não bastam):
+  - recusa determinística, sem consumir rodada, sem rerrolar presságio e sem deixar o combate expirar
+    (`idle_turns = 0`). Mensagem: "No tabuleiro, escolha suas Cartas na mão — ou use o botão Fugir. O texto
+    livre espera o fim do conflito." Evento `combat.freetext_refused`;
+  - a fuga é uma **ação estruturada**: `ActionRequest.action_kind = "flee"` (já existe, SPEC-325) vira
+    `combat_declaration.acao.kind == "flee"`; o motor rola a trilha da perseguição (`_attempt_flee`, dado do
+    motor, determinístico por semente) e diz se escapou. O front (SPEC-347) mostra o botão "Fugir" e esconde
+    o input de texto durante o conflito `on`.
 - **R4 — Registro da rodada (mensagem do turno).** A `AIMessage` da rodada é o registro: uma frase curta por
   evento, nesta ordem:
   - jogadas do herói e dos aliados (inclui reações);
@@ -611,15 +623,17 @@ trechos do histórico (sem segredos).
   corrigindo só os itens 1 e 9.
 - **D-dono-5** — Itens 8 e 10 mantidos (o 10 só registro). Retrato do inimigo vai para a SPEC-347.
 
-### Recomendações do autor (valem como aprovadas salvo veto do dono na revisão)
+- **D-dono-6 (D4 revisada, 27/10)** — A abertura entrega a mão **sem rodada grátis**, mas quem age primeiro
+  vem do contexto da cena: emboscada contra o jogador → inimigos primeiro; o jogador iniciou o ataque →
+  jogador primeiro; sem surpresa clara → regra de iniciativa atual do motor. Sinal determinístico já
+  existente (`encounter_surprise`, `combat_origin`); sinal ambíguo cai no neutro. Exceção de "vigília":
+  só com carta/condição que já anule surpresa mecanicamente (hoje nenhuma; ver hand-back).
+- **D-dono-7 (D5 revisada, 27/10)** — Com o tabuleiro aberto **não existe texto livre, nem fuga por texto**.
+  A fuga é o botão "Fugir" (ação estruturada `flee`), que rola o dado no motor e resolve se escapa. O input
+  de texto fica desabilitado/escondido durante o conflito `on` (SPEC-347 no front; o contrato da API é desta
+  spec).
 
-- **D4 — A abertura não resolve rodada (R1).** É a leitura literal de "dali em diante é só toque" e tira o
-  parser LLM da abertura. Custo: a rodada grátis do iniciador some. Ela fica compensada pela iniciativa
-  garantida na rodada 1. Se a arena sair de 45–85 %, o executor para e o dono escolhe entre (a) aceitar,
-  (b) dar ao iniciador uma Carta extra na mão inicial, ou (c) resolver um ataque básico determinístico na
-  abertura.
-- **D5 — Texto livre com tabuleiro aberto é recusado, salvo fuga (R3).** A alternativa (mapear "ataco X" para
-  o ataque básico por regex) reabre a ambiguidade que o tabuleiro resolve.
+### Recomendações do autor (valem como aprovadas salvo veto do dono na revisão)
 - **D6 — Composição do turno por junção das `AIMessage` do turno (R17),** em vez de o combate não emitir e
   passar a prosa ao loot por campo transitório. A junção é genérica, não exige campo novo no `GameState` e
   preserva o stream (o final estende o mostrado).

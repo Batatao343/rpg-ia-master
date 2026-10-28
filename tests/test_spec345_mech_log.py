@@ -84,6 +84,10 @@ def test_integra_no_no_de_combate_com_aliado(monkeypatch):
     monkeypatch.setattr(orch, "run_round", fake_round)
     monkeypatch.setattr(combat_agent, "_narrate", lambda *a, **k: "Narração.")
     state["messages"] = [HumanMessage(content="ataco")]
+    state["combat_declaration"] = {  # SPEC-346 D5: só ação estruturada no tabuleiro `on`
+        "actor_id": "player",
+        "acao": {"kind": "attack", "target_id": target},
+    }
     out = combat_agent._combat_node(state)
     log = out["combat"]["last_mech_log"]
     assert log and log[0].startswith("Mestre Aldric")

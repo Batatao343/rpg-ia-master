@@ -141,8 +141,55 @@ _PROTAGONIST_THIRD_PERSON = re.compile(
 
 
 def normalize_protagonist_voice(text: str) -> str:
-    """Converte somente o sujeito fechado do protagonista para segunda pessoa."""
-    return _PROTAGONIST_THIRD_PERSON.sub("Você", str(text or ""))
+    """Converte somente o sujeito fechado do protagonista para segunda pessoa.
+
+    SPEC-346 R22: "Você" só no início de frase (início do texto ou depois de `.!?`/quebra);
+    no meio da frase, "você"."""
+    value = str(text or "")
+
+    def _repl(match: re.Match[str]) -> str:
+        before = value[: match.start()]
+        starts_sentence = not before.strip() or bool(re.search(r"[.!?:]\s*$|\n\s*$", before))
+        return "Você" if starts_sentence else "você"
+
+    return _PROTAGONIST_THIRD_PERSON.sub(_repl, value)
+
+
+# --- SPEC-346 R13: pós-filtro de números/aritmética no resumo final do combate ----------
+_NUM_WORDS = (
+    "um|uma|dois|duas|tr[eê]s|quatro|cinco|seis|sete|oito|nove|dez|onze|doze|treze|catorze|"
+    "quatorze|quinze|dezesseis|dezessete|dezoito|dezenove|vinte"
+)
+_N = rf"(?:\d+|{_NUM_WORDS})"
+_STRIP_PARENS = re.compile(r"\s*\([^()]*(?:\d|→|->)[^()]*\)")
+_STRIP_VS = re.compile(
+    rf"(?:\b\w+\s+de\s+)?\b{_N}\s+(?:contra|vs\.?)\s+(?:a\s+)?(?:esquiva\s+(?:de\s+)?)?{_N}\b",
+    re.IGNORECASE,
+)
+_STRIP_UNITS = re.compile(
+    rf"\b{_N}\s+(?:pontos?\s+)?(?:de\s+)?(?:vitalidade|vigor|dano|f[ôo]lego|esquiva|prote[cç][aã]o)s?\b",
+    re.IGNORECASE,
+)
+
+
+def strip_mechanic_numbers(text: str) -> tuple[str, int]:
+    """Remove aritmética que escapou da prosa: parênteses com dígitos/setas, "N contra M" e
+    "N (pontos de) vitalidade/vigor/dano/fôlego/esquiva/proteção". Normaliza U+00AD/U+2011.
+
+    Devolve ``(texto, remoções)``; sem espaço duplo nem pontuação órfã."""
+    value = str(text or "").replace("­", "").replace("‑", "-")
+    removed = 0
+    for rx in (_STRIP_PARENS, _STRIP_VS, _STRIP_UNITS):
+        value, n = rx.subn("", value)
+        removed += n
+    if removed:
+        value = re.sub(r"[ \t]{2,}", " ", value)
+        value = re.sub(r"\s+([,.;!?])", r"\1", value)
+        value = re.sub(r"([,;])(\s*[,;])+", r"\1", value)
+        value = re.sub(r"[,;]\s*([.!?])", r"\1", value)
+        value = re.sub(r"\s+\n", "\n", value)
+        value = re.sub(r"([.!?])\s*\.", r"\1", value)
+    return value.strip(), removed
 
 
 _PLAYER_GOLD_PATTERNS = (

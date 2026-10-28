@@ -202,6 +202,11 @@ def _node_state(monkeypatch, *, wound=None, ended=False):
 
     monkeypatch.setattr(combat_agent, "_narrate", lambda *a, **k: "Narração.")
     state["messages"] = [HumanMessage(content="ataco")]
+    # SPEC-346 D5: com o tabuleiro `on` só entra ação estruturada (texto livre é recusado).
+    state["combat_declaration"] = {
+        "actor_id": "player",
+        "acao": {"kind": "attack", "target_id": state["enemies"][0]["id"]},
+    }
     return combat_agent, state
 
 

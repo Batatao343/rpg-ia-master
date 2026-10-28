@@ -7,6 +7,13 @@ from hashlib import sha256
 
 def message_kind(state: dict) -> str:
     route = str(state.get("last_routed_intent") or state.get("next") or "").lower()
+    if route in ("loot", "loot_agent"):
+        # SPEC-346 R18: o espólio do encontro anexado à vitória é o mesmo turno de COMBATE.
+        combat = state.get("combat") or {}
+        turn = int((state.get("world") or {}).get("turn_count", 0) or 0)
+        result = combat.get("result") or {}
+        if result.get("loot_claimed") and int(result.get("loot_turn", -1)) == turn:
+            return "COMBAT"
     return {
         "combat_agent": "COMBAT",
         "combat": "COMBAT",

@@ -350,7 +350,12 @@ def generate_scar(participant: dict, llm, *, context: dict | None = None) -> dic
     Anexa em `participant['scars']`, limpa `scar_pending`. Jogador não pode recusar."""
     scar: dict | None = None
     try:
-        result = llm.with_structured_output(ScarModel).invoke(_scar_prompt(participant, context))
+        # SPEC-346 R2: ``llm=None`` = caminho determinístico (rodada `on` sem LLM).
+        result = (
+            llm.with_structured_output(ScarModel).invoke(_scar_prompt(participant, context))
+            if llm is not None
+            else None
+        )
         if isinstance(result, ScarModel):
             fer = participant.get("ferimentos") or {}
             regiao = next(

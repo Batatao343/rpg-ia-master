@@ -82,14 +82,17 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.companion_order_refused` | `verb` |
 | `combat.companion_orders_shadow` | `verb` |
 | `combat.enemy_knowledge_failed` | — |
+| `combat.freetext_refused` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
 | `combat.narrate_failed` | `error` |
+| `combat.narration_numbers_stripped` | `count` |
 | `combat.nonlethal` | `target` |
 | `combat.nonlethal_shadow` | `target` |
 | `combat.object_invalid_fallback` | — |
 | `combat.object_refused` | — |
 | `combat.object_used` | — |
 | `combat.objects_shadow` | `action` |
+| `combat.outcome_narration_failed` | `error`, `outcome` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |
 | `combat.prep_timeout` | `timeout_s` |
@@ -193,6 +196,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `llm.mock_selected` | `profile`, `reason` |
 | `llm.routes_invalid` | `error_type` |
 | `logging.config_invalid_level` | `fallback` |
+| `loot.corpse_already_looted` | — |
 | `loot.fallback` | — |
 | `loot.narrate_failed` | `error` |
 | `loot.price_reasons_failed` | `error` |

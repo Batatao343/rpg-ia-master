@@ -1253,6 +1253,11 @@ def _basic_attack(
         )
         atk["regiao"] = dres["regiao"]
         atk["dano_final"] = int(dres.get("dano_final", 0) or 0)
+        if (dres.get("wound") or {}).get("categoria"):  # SPEC-346 R4
+            atk["ferimento"] = {
+                "categoria": dres["wound"]["categoria"],
+                "regiao": dres["wound"].get("regiao") or dres.get("regiao"),
+            }
         if dres.get("resistance_hit") and combat_flags.mode("reveal_resist") != "off":
             atk["resistance_hit"] = dres["resistance_hit"]  # SPEC-325 R8
         out["logs"] += dres["log"]
@@ -2325,8 +2330,10 @@ def _run_round(
     _scene_ctx = fx.current() if _sc.enabled() else None
     if _scene_ctx is not None:
         _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
+        _scene_mark = len(out["logs"])
         _sc.tick(_scene_ctx, _scene_rnd, "inicio_rodada", out)
         _sc.abyss_clock(_scene_ctx, _scene_rnd, out)
+        out.setdefault("scene_logs", []).extend(out["logs"][_scene_mark:])  # SPEC-346 R4
         _mark_fresh_conditions(_cond_before, actors_by_id, None, sides)
     # SPEC-332: fase de chefe (so `on`) ANTES do presságio; troca de fase invalida o congelado.
     phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
@@ -2574,8 +2581,10 @@ def _run_round(
 
     _cond_before = _snapshot_conditions(actors_by_id)  # SPEC-339
     if _scene_ctx is not None:  # SPEC-331: fim de rodada da cena, antes do terminal
+        _scene_mark = len(out["logs"])
         _sc.tick(_scene_ctx, _scene_rnd, "fim_rodada", out)
         _sc.clock_hard_stop(_scene_ctx, _scene_rnd, out)
+        out.setdefault("scene_logs", []).extend(out["logs"][_scene_mark:])  # SPEC-346 R4
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
     _resolve_last_stands(scene, actors_by_id, sides, out, rng)

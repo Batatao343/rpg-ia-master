@@ -843,6 +843,7 @@ def _spawn_v4_enemies(
                     groups = grounded or [
                         (_display_enemy_name(target_hint), em.hint_count(target_hint))
                     ]
+                meta["requested_total"] = sum(int(c) for _n, c in groups)  # SPEC-346 R29
                 for name, count in groups:
                     template = _grounded_template(name, mechanical_context, encounter_level, state)
                     enemies += _instances(template, count, next_instance_by_template, _deck_seed)
@@ -1503,13 +1504,11 @@ def _killer_identity(active: list) -> tuple[str, str]:
 
 
 def _narrate_fall(player: dict, logs: list[str], killer: str = "") -> str:
+    """SPEC-346 R16: texto determinístico da queda (sem bullets de log cru) + a Roda do Abismo."""
+    from services import round_log
+
     quem = f" diante de {killer}" if killer else ""
-    golpes = "\n".join(f"• {l}" for l in logs[-4:]) if logs else ""
-    return (
-        f"⚔️ {golpes}\n\n☠️ Você tomba{quem}. A escuridão te engole — mas a "
-        f"Roda do Abismo ainda não decidiu. Voltar ao último respiro seguro, "
-        f"ou aceitar o fim aqui?"
-    ).strip()
+    return f"Você tomba{quem}. {round_log.WHEEL_TEXT}"
 
 
 def _faction_withhold_clause(manifest, factions, intel) -> str:
@@ -1607,6 +1606,8 @@ def _narrate(
     aberturas: list[str] | None = None,
     manifest: dict | None = None,
     withhold: str = "",
+    fecho_override: str | None = None,
+    fallback_text: str | None = None,
 ) -> str:
     from services import prose_guard
 
@@ -1637,6 +1638,8 @@ def _narrate(
         if victory
         else "Termine com tensão e uma deixa para a próxima ação do jogador."
     )
+    if fecho_override:  # SPEC-346 R16: queda do herói não é "tensão para a próxima ação"
+        fecho = fecho_override
     sys = SystemMessage(
         content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
@@ -1680,9 +1683,204 @@ def _narrate(
             prose_guard.log_species_drift(drift, where="combate")
     except Exception as e:
         _log_event("combat", "narrate_failed", level="warning", error=type(e).__name__)
+    if fallback_text is not None:  # SPEC-346 R15/R16: legível, sem bullets de log cru
+        return fallback_text
     prefix = (spawned_flavor + "\n\n") if spawned_flavor else ""
     suffix = "\n\nVitória! O campo silencia." if victory else "\n\nO que você faz?"
     return f"⚔️ {prefix}" + "\n".join(f"• {l}" for l in logs if l) + suffix
+
+
+# ==========================================================================
+# SPEC-346 — tabuleiro sem LLM por rodada: entrada, recusa de texto livre e desfecho narrado
+# ==========================================================================
+BOARD_FREETEXT_REFUSAL = (
+    "No tabuleiro, escolha suas Cartas na mão — ou use o botão Fugir. "
+    "O texto livre espera o fim do conflito."
+)
+
+
+def _fast_text(
+    system: SystemMessage,
+    human: str,
+    *,
+    manifest: dict | None = None,
+    where: str,
+    on_fail=None,
+    stream: bool = True,
+) -> str | None:
+    """Uma chamada FAST de prosa com o guard de FallbackLLM. ``None`` = use o texto
+    determinístico (LLM indisponível, erro, resposta vazia ou espécie trocada)."""
+    from services import prose_guard
+
+    try:
+        llm = get_llm(temperature=0.6, tier=ModelTier.FAST)
+        if getattr(llm, "is_fallback", False):
+            raise RuntimeError("fallback")
+        from services.narrative_sink import narrate_text
+
+        res = narrate_text(llm, [system, HumanMessage(content=human)], stream=stream)
+        text = getattr(res, "content", "") or ""
+        if isinstance(text, list):
+            text = " ".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in text)
+        text = str(text).strip()
+        if not text:
+            return None
+        drift = prose_guard.species_drift(text, manifest) if manifest else []
+        if drift:
+            prose_guard.log_species_drift(drift, where=where)
+            return None
+        return text
+    except Exception as e:
+        if on_fail is not None:
+            on_fail(type(e).__name__)
+        return None
+
+
+def _opening_initiator(world: dict, origin: str) -> tuple[str | None, str]:
+    """D4 (SPEC-346): quem age primeiro na rodada 1, pelo contexto da cena.
+
+    Emboscada contra o jogador -> inimigos; o jogador iniciou o ataque (ou emboscou) -> jogador;
+    sem sinal claro -> ``None`` (regra de iniciativa atual do motor)."""
+    surprise = (world or {}).get("encounter_surprise")
+    if surprise == "enemy":
+        return "enemy", "ambush"
+    if surprise == "player":
+        return "heroes", "player_ambush"
+    if origin == "player_provoked":
+        return "heroes", "player_attack"
+    return None, "neutral"
+
+
+def _species_count_clause(enemies: list[dict], *, more_requested: bool) -> str:
+    """R29: o narrador sabe exatamente quantos lutam."""
+    from services import encounter_manifest as em
+
+    counts: dict[str, int] = {}
+    for e in enemies:
+        label = em.species_label_for(e) or str(e.get("name") or "inimigo")
+        counts[label] = counts.get(label, 0) + 1
+    listed = ", ".join(f"{n} {label}" for label, n in counts.items()) or "nenhum"
+    clause = f"Lutam contra você exatamente: {listed}."
+    if more_requested:
+        clause += " Os demais recuam e não entram na luta."
+    return clause
+
+
+def _narrate_entrance(
+    player: dict,
+    enemies: list[dict],
+    spawned_flavor: str | None,
+    intent: str,
+    world_ctx: str,
+    *,
+    manifest: dict | None,
+    withhold: str,
+    aberturas: list[str] | None,
+    more_requested: bool,
+) -> str:
+    """R1: a história abre o tabuleiro. Uma narração de entrada, sem resolver rodada."""
+    from services import prose_guard
+
+    deterministic = spawned_flavor or "Os inimigos avançam. O tabuleiro está aberto."
+    system = SystemMessage(
+        content=f"""
+    <role>Narrador de Combate — Dark Fantasy</role>
+    Narre em 1 parágrafo curto COMO O CONFRONTO COMEÇA. Ainda não há golpes resolvidos:
+    não descreva dano, ferimento nem desfecho. Termine com os inimigos prontos, em tensão.
+    {("ENTRADA: " + spawned_flavor) if spawned_flavor else ""}
+    {_species_count_clause(enemies, more_requested=more_requested)}
+    Ação do jogador: {wrap_player_input(intent)}
+    {world_ctx}
+    {PLAYER_INPUT_RULE}
+    {withhold}{prose_guard.openings_clause(aberturas or [])}
+    """
+    )
+    text = _fast_text(
+        system,
+        wrap_player_input(intent or "O confronto começa."),
+        manifest=manifest,
+        where="combate",
+        on_fail=lambda err: _log_event("combat", "narrate_failed", level="warning", error=err),
+    )
+    return text or deterministic
+
+
+_OUTCOME_FECHO = {
+    "victory": "O combate foi VENCIDO — encerre com o respiro da vitória.",
+    "surrendered_enemy": "Os inimigos se renderam — encerre com o respiro da trégua.",
+    "fled": "O herói ESCAPOU — descreva a fuga e o rastro que se perde.",
+    "death": (
+        "O herói TOMBA neste golpe — narre a queda, SEM declarar a morte definitiva "
+        "(a Roda do Abismo decide depois)."
+    ),
+    "defeat": "O herói foi derrotado e perde os sentidos — narre a queda sem declarar a morte.",
+    "incapacitated": "O herói perde os sentidos — narre a queda sem declarar a morte.",
+    "expired": "Os inimigos perdem o rastro e o confronto se desfaz.",
+}
+
+
+def _narrate_outcome(
+    outcome: str,
+    conflict_sum: dict,
+    player: dict,
+    enemies: list[dict],
+    last_out: dict,
+    intent: str,
+    world_ctx: str,
+    *,
+    manifest: dict | None,
+    withhold: str = "",
+) -> str:
+    """R11-R15: a ÚNICA chamada de IA do combate `on`. Fatos em linguagem, sem números;
+    pós-filtro de números; não contradiz o motor; fallback determinístico legível."""
+    from services import prose_guard, round_log
+
+    label = "incapacitated" if (player.get("post_combat_state") == "inconsciente") else outcome
+    if outcome == "defeat" and label != "incapacitated":
+        label = "defeat"
+    facts = round_log.outcome_facts(
+        label,
+        conflict_sum,
+        player,
+        enemies,
+        last_out,
+        decisive_cards=round_log.decisive_cards(last_out),
+    )
+    system = SystemMessage(
+        content=f"""
+    <role>Narrador de Combate — Dark Fantasy</role>
+    Narre o FIM deste conflito em 1 parágrafo curto (3 a 5 frases), em segunda pessoa, usando
+    APENAS os fatos abaixo. NÃO escreva números, dados, pontos de vida nem aritmética. Não invente
+    mortes, golpes nem resultados fora dos fatos.
+    Glossário: Vitalidade = vigor e resistência do corpo; Fôlego = energia para jogar Cartas
+    (nunca é dano). Ferimentos são localizados e permanentes.
+    <fatos>
+    {chr(10).join(facts)}
+    </fatos>
+    Ação do jogador: {wrap_player_input(intent)}
+    {world_ctx}
+    {PLAYER_INPUT_RULE}
+    {withhold}
+    {_OUTCOME_FECHO.get(label, _OUTCOME_FECHO["victory"])}
+    """
+    )
+    text = _fast_text(
+        system,
+        wrap_player_input(intent or "O conflito termina."),
+        manifest=manifest,
+        where="combate",
+        on_fail=lambda err: _log_event(
+            "combat", "outcome_narration_failed", level="warning", error=err, outcome=label
+        ),
+        stream=False,  # o texto final = registro + resumo: o ao vivo não seria prefixo
+    )
+    if text:
+        text, removed = prose_guard.strip_mechanic_numbers(text)
+        if removed:
+            _log_event("combat", "narration_numbers_stripped", level="info", count=removed)
+        if text and summ.validate_narrative_text(conflict_sum, text)["ok"]:
+            return text
+    return round_log.deterministic_outcome_text(label, conflict_sum, player)
 
 
 # ==========================================================================
@@ -1801,6 +1999,26 @@ def _combat_node(state: GameState):
     scene = combat_meta.get("scene")
     spawned_flavor = None
 
+    # ---- SPEC-346 R3/D5: com o tabuleiro aberto (`on`) NÃO existe texto livre, nem fuga por texto ----
+    if (
+        not is_start
+        and scene
+        and combat_meta.get("active")
+        and not is_simulation
+        and _deck_mode_now() == "on"
+        and state.get("combat_declaration") is None
+    ):
+        _log_event("combat", "freetext_refused", level="info")
+        return {
+            "messages": [AIMessage(content=BOARD_FREETEXT_REFUSAL)],
+            "combat": {**dict(state.get("combat") or {}), "idle_turns": 0},
+            "next": None,
+            "archive_due": False,
+            "combat_declaration": None,
+            "combat_flee_attempt": False,
+            "combat_flee_destination": None,
+        }
+
     # ---- Preparação (1x): identifica inimigos + monta cena jogável + congela ----
     # Um encontro pode chegar aqui já com `enemies` preenchido (router, save v4,
     # testes/e2e). Nesse caso preservamos os combatentes e apenas construímos a
@@ -1808,6 +2026,9 @@ def _combat_node(state: GameState):
     from services import encounter_manifest as em
 
     spawn_meta: dict = {}
+    # SPEC-346 R1: com o Baralho `on` a história ABRE o tabuleiro: entrada narrada, mão
+    # distribuída, nenhuma rodada resolvida.
+    opening_board = bool(is_start and _deck_mode_now() == "on" and not is_simulation)
     if is_start or not scene:
         import party as party_mod
 
@@ -1970,6 +2191,26 @@ def _combat_node(state: GameState):
     sides = {"hero": [_PLAYER_ID], "ally": ally_ids, "enemy": [e["id"] for e in active]}
 
     intent = _last_human_text(messages)
+    if opening_board:
+        return _board_opening_result(
+            state,
+            messages,
+            player=player,
+            enemies=enemies,
+            allies=allies,
+            party=party,
+            scene=scene,
+            combat_meta=combat_meta,
+            combat_target=combat_target,
+            actors_by_id=actors_by_id,
+            sides=sides,
+            spawn_meta=spawn_meta,
+            spawned_flavor=spawned_flavor,
+            status_logs=status_logs,
+            intent=intent,
+            bestiary_knowledge=bestiary_knowledge,
+            bk_changed=bk_changed,
+        )
     declaration = state.get("combat_declaration")  # harness passa estruturado
     if declaration is not None and not isinstance(declaration, TurnDeclaration):
         declaration = TurnDeclaration(**declaration)
@@ -2018,6 +2259,9 @@ def _combat_node(state: GameState):
 
     hero_fled = False
     logs: list[str] = []
+    flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
+    order_logs: list[str] = []
+    weather_logs: list[str] = []
     world_out = None
     world = state.get("world") or {}
     from world_utils import DARK_COMBAT_PENALTY, light_level, weather_effects
@@ -2037,6 +2281,9 @@ def _combat_node(state: GameState):
     initiator = _early_game_reaction_initiator(
         state, player, initiator, combat_round=int(combat_meta.get("round", 1) or 1)
     )
+    locked = combat_meta.get("initiator") if int(combat_meta.get("round", 0) or 0) == 1 else None
+    if locked in ("enemy", "heroes"):  # SPEC-346 D4: a cena decidiu quem age primeiro
+        initiator = locked
     if "encounter_surprise" in world:
         world_out = dict(world)
         world_out.pop("encounter_surprise", None)
@@ -2067,6 +2314,7 @@ def _combat_node(state: GameState):
         _publish_sacrifice_offer(state, party, chase_state, hero_fled=hero_fled, logs=flee_logs)
         combat_meta["chase"] = chase_state
         logs += weather_logs + logs_pre_flee + flee_logs
+        flee_lines = list(logs_pre_flee) + list(flee_logs)
     elif flee_requested:
         chase_state = {
             **dict(combat_meta.get("chase") or {}),
@@ -2217,7 +2465,10 @@ def _combat_node(state: GameState):
         _advance_reinforcements(scene, enemies, actors_by_id, sides, combat_meta, logs)
     for sid in out.get("scars_pending", []):
         if sid == _PLAYER_ID and death_flow.check_scar_required(player):
-            llm = get_llm(temperature=0.6, tier=ModelTier.SMART)
+            # SPEC-346 R2/D11: no `on` a rodada não chama LLM; a Cicatriz é a determinística.
+            llm = (
+                None if _deck_mode_now() == "on" else get_llm(temperature=0.6, tier=ModelTier.SMART)
+            )
             death_flow.generate_scar(player, llm)
 
     dead = [e for e in enemies if e.get("dead") or e.get("status") == "morto"]
@@ -2280,9 +2531,72 @@ def _combat_node(state: GameState):
 
     aberturas = prose_guard.ultimas_aberturas(messages)
     loc = state.get("world", {}).get("current_location", "")
-    if player_dead:
+    board_on = _deck_mode_now() == "on" and not is_simulation  # SPEC-346: `on` não narra rodada
+    outcome_now = (
+        _encounter_outcome(
+            player=player,
+            enemies=enemies,
+            hero_fled=hero_fled,
+            player_dead=player_dead,
+            objective_result=scene.get("objetivo_resultado"),
+        )
+        if combat_over
+        else None
+    )
+    # ---- Resumo canônico do conflito (conflito-12): antes da narração (o fallback o usa) ----
+    conflict_sum = None
+    if combat_over:
+        participants = [player] + enemies + allies
+        conflict_sum = summ.build_summary(
+            participants,
+            scene=scene,
+            extras={
+                "turn": turn,
+                "conflict_id": combat_meta.get("instance_id"),
+                # Player saves historically do not persist ``id``. Carry both
+                # the canonical role and the runtime display identity so the
+                # summary cannot downgrade a recoverable fall into death.
+                "downed_ids": (_downed_identity_tokens(player) if player_dead else []),
+            },
+        )
+    narrative = ""
+    if board_on:
+        pass  # compõe o REGISTRO depois que `status_logs` fecha (SPEC-346 R4/R5)
+    elif player_dead and not is_simulation:
+        # SPEC-346 R16: a queda é narrada pelo `_narrate` (fecho de queda) e fecha com a Roda.
+        from services import round_log
+
         killer = _killer_identity(active)[0]
-        narrative = _narrate_fall(player, logs, killer)
+        world_pack = build_context_pack(
+            state,
+            query=f"{loc} {intent}",
+            purpose="combat_narration",
+            token_budget=1200,
+            include_lore=False,
+        )
+        narrative = _narrate(
+            player,
+            enemies,
+            logs,
+            spawned_flavor,
+            intent,
+            False,
+            world_pack.world_state_block
+            + "\n"
+            + _ambient_for_combat(state.get("world") or {}, player)
+            + _perceived_for_combat(state),
+            aberturas,
+            manifest=combat_meta.get("encounter"),
+            withhold=_faction_withhold_clause(
+                combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
+            ),
+            fecho_override=_OUTCOME_FECHO["death"],
+            fallback_text=_narrate_fall(player, logs, killer),
+        )
+        if round_log.WHEEL_TEXT not in narrative:
+            narrative = narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
+    elif player_dead:
+        narrative = _narrate_fall(player, logs, _killer_identity(active)[0])
     elif is_simulation:
         suffix = "\n\nVitória no laboratório." if victory else "\n\nEscolha a próxima ação."
         narrative = "⚔️ " + "\n".join(f"• {line}" for line in logs if line) + suffix
@@ -2311,25 +2625,16 @@ def _combat_node(state: GameState):
                 combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
             ),
         )
-    # ---- Resumo canônico do conflito (conflito-12) na saída ----
-    conflict_sum = None
-    if combat_over:
-        participants = [player] + enemies + allies
-        conflict_sum = summ.build_summary(
-            participants,
-            scene=scene,
-            extras={
-                "turn": turn,
-                "conflict_id": combat_meta.get("instance_id"),
-                # Player saves historically do not persist ``id``. Carry both
-                # the canonical role and the runtime display identity so the
-                # summary cannot downgrade a recoverable fall into death.
-                "downed_ids": (_downed_identity_tokens(player) if player_dead else []),
-            },
-        )
+    if combat_over and not board_on:
         narrative = summ.narrative_or_fallback(conflict_sum, narrative, player_facing=True)
-    narrative = prose_guard.sanitize_meta_preamble(narrative)
-    prose_guard.log_if_repeats(narrative, aberturas[0] if aberturas else "", where="combate")
+        if player_dead:  # SPEC-346 R11: a Roda do Abismo fecha a queda, mesmo no fallback
+            from services import round_log
+
+            if round_log.WHEEL_TEXT not in narrative:
+                narrative = narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
+    if not board_on:
+        narrative = prose_guard.sanitize_meta_preamble(narrative)
+        prose_guard.log_if_repeats(narrative, aberturas[0] if aberturas else "", where="combate")
 
     # ---- Montagem do resultado (contrato preservado) ----
     # SPEC-231 R4: o snapshot de aliados transitórios carrega as fichas PÓS-rodada.
@@ -2392,7 +2697,23 @@ def _combat_node(state: GameState):
     )  # SPEC-334 R6 (só deck on)
     if status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
         combat_meta["last_mech_log"] = list(combat_meta.get("last_mech_log") or []) + status_logs
-        narrative = narrative.rstrip() + "\n\n" + " ".join(status_logs)
+        # SPEC-346 R5: as linhas de status vão ao REGISTRO/mech_log, nunca coladas à prosa.
+    if board_on:
+        narrative = _compose_board_narrative(
+            state,
+            out,
+            actors_by_id,
+            status_logs,
+            extra_lines=weather_logs + order_logs + flee_lines,
+            combat_over=combat_over,
+            outcome=outcome_now,
+            conflict_sum=conflict_sum,
+            player=player,
+            enemies=enemies,
+            player_dead=player_dead,
+            intent=intent,
+            manifest=combat_meta.get("encounter"),
+        )
     combat_meta["last_tactics"] = list(out.get("tactics") or [])
     if combat_over:
         from services import cards
@@ -2419,13 +2740,7 @@ def _combat_node(state: GameState):
         combat_meta["scene"] = None
         combat_meta.pop("scene_allies", None)
         # SPEC-203 R5/R7: resolving → ended + snapshot do desfecho.
-        _outcome = _encounter_outcome(
-            player=player,
-            enemies=enemies,
-            hero_fled=hero_fled,
-            player_dead=player_dead,
-            objective_result=scene.get("objetivo_resultado"),
-        )
+        _outcome = outcome_now
         combat_meta = _finish_encounter(
             combat_meta,
             enemies,
@@ -2600,6 +2915,163 @@ def _combat_node(state: GameState):
         result["combat_flee_destination"] = None
     result["player_reaction_card_id"] = None
 
+    return result
+
+
+def _compose_board_narrative(
+    state: dict,
+    out: dict,
+    actors_by_id: dict,
+    status_logs: list[str],
+    *,
+    extra_lines: list[str],
+    combat_over: bool,
+    outcome: str | None,
+    conflict_sum: dict | None,
+    player: dict,
+    enemies: list[dict],
+    player_dead: bool,
+    intent: str,
+    manifest: dict | None,
+) -> str:
+    """SPEC-346 R4/R11: mensagem do turno `on` = registro da rodada; no fim do conflito,
+    registro + (linha em branco) + o ÚNICO resumo da IA (+ a Roda do Abismo na queda)."""
+    from services import prose_guard, round_log
+
+    registry = round_log.round_registry(out, actors_by_id, status_logs, extra_lines=extra_lines)
+    body = "\n".join(registry) or "O combate segue."
+    if not combat_over:
+        return body
+    loc = (state.get("world") or {}).get("current_location", "")
+    pack = build_context_pack(
+        state,
+        query=f"{loc} {intent}",
+        purpose="combat_narration",
+        token_budget=1200,
+        include_lore=False,
+    )
+    summary = _narrate_outcome(
+        outcome or "victory",
+        conflict_sum or {},
+        player,
+        enemies,
+        out,
+        intent,
+        pack.world_state_block
+        + "\n"
+        + _ambient_for_combat(state.get("world") or {}, player)
+        + _perceived_for_combat(state),
+        manifest=manifest,
+        withhold=_faction_withhold_clause(
+            manifest, state.get("factions"), state.get("faction_intel")
+        ),
+    )
+    summary = prose_guard.sanitize_meta_preamble(summary)
+    if player_dead:
+        summary = summary.rstrip() + "\n\n" + round_log.WHEEL_TEXT
+    return f"{body}\n\n{summary}"
+
+
+def _board_opening_result(
+    state: dict,
+    messages: list,
+    *,
+    player: dict,
+    enemies: list[dict],
+    allies: list[dict],
+    party: list,
+    scene: dict,
+    combat_meta: dict,
+    combat_target,
+    actors_by_id: dict,
+    sides: dict,
+    spawn_meta: dict,
+    spawned_flavor: str | None,
+    status_logs: list[str],
+    intent: str,
+    bestiary_knowledge: dict,
+    bk_changed: bool,
+) -> dict:
+    """SPEC-346 R1: a história abre o tabuleiro. Entrada narrada + mão distribuída; NENHUMA
+    rodada resolvida (`round == 0`). Quem age primeiro vem da cena (D4)."""
+    from services import encounter_manifest as em
+    from services import prose_guard
+
+    world = state.get("world") or {}
+    initiator, why = _opening_initiator(world, str(combat_meta.get("origin") or ""))
+    combat_meta["initiator"] = initiator
+    combat_meta["initiator_reason"] = why
+    # Presságio da rodada 1 já visível junto com a mão (a UI o mostra antes da jogada).
+    if _enemy_intent.active():
+        try:
+            from services import enemy_decks as _enemy_decks
+
+            first = cs.tactical_round(scene) + 1
+            forecast = _enemy_intent.forecast_round(
+                scene,
+                actors_by_id,
+                sides,
+                random,
+                scene_state=({"_rodada_decisao": first} if _enemy_decks.active() else None),
+            )
+            combat_meta["pressagios"] = forecast
+            combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
+                forecast, actors_by_id, first
+            )
+        except Exception:  # cosmético: nunca derruba a abertura
+            _log_event("combat", "pressagio_forecast_failed", level="warning")
+    if status_logs:
+        combat_meta["last_mech_log"] = list(status_logs)
+    loc = world.get("current_location", "")
+    pack = build_context_pack(
+        state,
+        query=f"{loc} {intent}",
+        purpose="combat_narration",
+        token_budget=1200,
+        include_lore=False,
+    )
+    more = bool(spawn_meta.get("cut_ids")) or int(spawn_meta.get("requested_total", 0) or 0) > len(
+        enemies
+    )
+    narrative = _narrate_entrance(
+        player,
+        enemies,
+        spawned_flavor,
+        intent,
+        pack.world_state_block
+        + "\n"
+        + _ambient_for_combat(world, player)
+        + _perceived_for_combat(state),
+        manifest=combat_meta.get("encounter"),
+        withhold=_faction_withhold_clause(
+            combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")
+        ),
+        aberturas=prose_guard.ultimas_aberturas(messages),
+        more_requested=more,
+    )
+    narrative = prose_guard.sanitize_meta_preamble(narrative)
+    combat_meta = em.safe_transition(combat_meta, "active")
+    combat_meta["idle_turns"] = 0
+    result = {
+        "messages": [AIMessage(content=narrative)],
+        "player": player,
+        "enemies": enemies,
+        "combat": combat_meta,
+        "combat_target": combat_target,
+        "next": None,
+        "archive_due": False,
+        "party": _merge_formal_party(party, allies),
+        "combat_declaration": None,
+        "combat_origin_hint": None,
+        "combat_encounter_hint": None,
+        "combat_target_ref": None,
+        "player_reaction_card_id": None,
+    }
+    if state.get("combat_flee_attempt"):
+        result["combat_flee_attempt"] = False
+        result["combat_flee_destination"] = None
+    if bk_changed:
+        result["bestiary_knowledge"] = bestiary_knowledge
     return result
 
 

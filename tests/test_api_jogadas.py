@@ -91,7 +91,7 @@ def test_carta_fora_da_mao_rejeitada_com_motivo_e_sem_gastar(monkeypatch):
     assert out["player"]["entropy"] == entropy
 
 
-def test_uma_narracao_por_rodada_com_varias_jogadas(monkeypatch):
+def test_rodada_com_varias_jogadas_nao_chama_llm_nem_narrate(monkeypatch):
     state = _state(monkeypatch)
     state["combat_simulation"] = {"enabled": False}
     calls = []
@@ -110,8 +110,10 @@ def test_uma_narracao_por_rodada_com_varias_jogadas(monkeypatch):
     monkeypatch.setattr(combat_agent, "get_llm", forbidden)
     monkeypatch.setattr(combat_agent, "build_context_pack", lambda *a, **k: _Pack())
     api._apply_action_options(state, _req(jogadas=_plays(state, GOLPE, GUARDA, GOLPE)))
-    combat_agent._combat_node(state)
-    assert len(calls) == 1
+    out = combat_agent._combat_node(state)
+    # SPEC-346 R2/D-dono-1: com o Baralho `on` a rodada NÃO narra por LLM; a mensagem é o registro.
+    assert calls == []
+    assert out["messages"][0].content.strip()
 
 
 # ------------------------------------------------------------------ parser (R15)
