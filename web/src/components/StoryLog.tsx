@@ -14,6 +14,8 @@ import { Icon } from "../design/icons";
 /** Distância (px) do fim considerada "no fim" para o auto-scroll (SPEC-204 R7). */
 const BOTTOM_SLACK = 48;
 
+function position_initial_atBottom(initial?: { scrollTop: number | null; atBottom: boolean }) { return initial?.atBottom ?? true; }
+
 /** Memoizado (SPEC-204): trocar aba/modo/ratio re-renderiza o Workspace, não a narrativa. */
 export const StoryLog = memo(function StoryLog({ entries, thinking, active = true, initialScroll, onScrollPosition, offers, onOffer, offersDisabled }: {
   entries: LogEntry[];
@@ -32,6 +34,10 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
   const position = useRef({ top: initialScroll?.scrollTop ?? null, atBottom: initialScroll?.atBottom ?? true });
   const lastEntryId = useRef<number | null>(null);
   const lastGesture = useRef(0);
+  // SPEC-354 R1.2: "preso ao fim" — enquanto verdadeiro, qualquer mudança de tamanho (imagem, fonte, toast, troca de
+  // layout) refaz `scrollTop = scrollHeight`. Termina no 1º gesto do jogador que o afasta do fim.
+  const syncedHeight = useRef(-1); // altura do conteúdo na última vez que NÓS rolamos até o fim
+  const stuck = useRef(position_initial_atBottom(initialScroll));
   const markGesture = () => { lastGesture.current = Date.now(); };
   // M09 (SPEC-208): nenhuma entrada anima — nem histórico/reload nem o bloco novo (o typewriter e o
   // cursor já mostram o que chega). A fade do bloco novo foi medida e REJEITADA: sob CPU 4x somava ~1
@@ -41,7 +47,9 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
   useLayoutEffect(() => {
     const s = storyRef.current;
     if (!s || !active) return;
+    stuck.current = position.current.atBottom || position.current.top == null;
     s.scrollTop = position.current.atBottom || position.current.top == null ? s.scrollHeight : position.current.top;
+    syncedHeight.current = s.scrollHeight;
   }, [active]);
 
   // Auto-scroll só quando o jogador já está no fim ou acabou de agir.
@@ -52,15 +60,35 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
     lastEntryId.current = last?.id ?? null;
     if (!s || !active) return;
     if (position.current.atBottom || ownNew) {
+      stuck.current = true;
       s.scrollTop = s.scrollHeight;
+      syncedHeight.current = s.scrollHeight;
       position.current = { top: s.scrollTop, atBottom: true };
     }
   }, [entries, thinking, active]);
+
+  useEffect(() => {
+    const s = storyRef.current;
+    const log = s?.querySelector(".log");
+    if (!s || !log || !active || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => {
+      if (!stuck.current || s.clientHeight === 0) return;
+      s.scrollTop = s.scrollHeight;
+      syncedHeight.current = s.scrollHeight;
+      position.current = { top: s.scrollTop, atBottom: true };
+    });
+    ro.observe(log); ro.observe(s);
+    return () => ro.disconnect();
+  }, [active]);
 
   function onScroll() {
     const s = storyRef.current;
     if (!s || !active || s.clientHeight === 0) return;
     const atBottom = s.scrollHeight - s.scrollTop - s.clientHeight <= BOTTOM_SLACK;
+    // Rolagem sem gesto (a nossa, ou crescimento de conteúdo) nunca solta o modo preso; só o jogador solta.
+    if (Date.now() - lastGesture.current < 1000) stuck.current = atBottom;
+    else if (stuck.current && s.scrollHeight !== syncedHeight.current) return; // o conteúdo cresceu: não foi o jogador
+    else stuck.current = atBottom;
     position.current = { top: s.scrollTop, atBottom };
     onScrollPosition?.(s.scrollTop, atBottom, Date.now() - lastGesture.current < 1000);
   }
@@ -124,7 +152,7 @@ function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReve
   const html = useMemo(() => mdLite(entry.text), [entry.text]);
   const plain = useMemo(() => htmlToPlain(html), [html]);
   const effects = useEffectsEnabled();
-  const { displayedText, reveal, revealing } = useTypewriter(plain, entry.streaming, entry.onTypewriterDone, { effects, follow: entry.live === true });
+  const { displayedText, reveal, revealing } = useTypewriter(plain, entry.streaming === true, entry.onTypewriterDone, { effects, follow: entry.live === true });
   useEffect(() => {
     registerReveal(entry.id, revealing ? reveal : null);
     return () => registerReveal(entry.id, null);

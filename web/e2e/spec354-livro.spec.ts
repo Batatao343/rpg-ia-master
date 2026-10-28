@@ -58,7 +58,7 @@ async function bookGeometry(page: Page) {
 }
 
 test.describe("reabrir save real 1440", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
+  test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "no-preference" }); // o jogador real roda com movimento ligado (P1-1)
   test("reabrir_save_real_1440", async ({ page, backend }) => {
     await loadSave(page, backend);
     await reopen(page);
@@ -70,7 +70,7 @@ test.describe("reabrir save real 1440", () => {
 });
 
 test.describe("reabrir save real 390", () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: "no-preference" });
   test("reabrir_save_real_390", async ({ page, backend }) => {
     await loadSave(page, backend);
     await reopen(page);
@@ -84,23 +84,43 @@ test.describe("reabrir save real 390", () => {
   });
 });
 
-test.describe("regra SPEC-204 R7", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
-  test("subir_e_receber_narracao_nao_puxa", async ({ page, backend }) => {
+for (const [motion, rm] of [["movimento_ligado", "no-preference"], ["movimento_reduzido", "reduce"]] as const) {
+  test.describe(`regra SPEC-204 R7 ${motion}`, () => {
+    test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: rm });
+    test(`subir_e_receber_narracao_nao_puxa_${motion}`, async ({ page, backend }) => {
+      await loadSave(page, backend);
+      await reopen(page);
+      const story = page.locator("section.story");
+      // a ação do jogador puxa para o fim; a resposta fica retida no servidor da fixture
+      backend.delayStream();
+      await page.locator("#composer").fill("Examino o sino");
+      await page.getByRole("button", { name: "Agir" }).click();
+      await expect(page.locator("article.msg--player").last()).toContainText("Examino o sino");
+      await story.hover();
+      await page.mouse.wheel(0, -1500); // gesto: o jogador sobe para reler
+      await page.waitForTimeout(400);
+      const before = await story.evaluate((s) => s.scrollTop);
+      expect(before).toBeGreaterThan(0);
+      expect(await story.evaluate((s) => s.scrollHeight - s.scrollTop - s.clientHeight)).toBeGreaterThan(200);
+      backend.releaseStream();
+      await expect(page.locator("article.msg").last()).toContainText("O mundo responde a: Examino o sino");
+      await page.waitForTimeout(600);
+      expect(await story.evaluate((s) => s.scrollTop)).toBe(before);
+    });
+  });
+}
+
+test.describe("toast encolhe o Livro", () => {
+  test.use({ viewport: { width: 1440, height: 900 }, reducedMotion: "no-preference" });
+  test("ultima_linha_visivel_com_toast", async ({ page, backend }) => {
     await loadSave(page, backend);
     await reopen(page);
-    const story = page.locator("section.story");
-    await story.hover();
-    await page.mouse.wheel(0, -1500);
-    await page.waitForTimeout(400);
-    const before = await story.evaluate((s) => s.scrollTop);
-    expect(before).toBeGreaterThan(0);
-    // narração nova chega sem ação do jogador (ex.: resposta tardia); a posição de leitura é preservada
-    await page.evaluate(() => {
-      const log = document.querySelector("section.story .log")!;
-      const art = document.createElement("article"); art.className = "msg msg--story"; art.textContent = "Nova narração tardia."; log.appendChild(art);
-    });
-    await page.waitForTimeout(300);
-    expect(await story.evaluate((s) => s.scrollTop)).toBe(before);
+    await page.locator("#composer").fill("vitória");
+    await page.getByRole("button", { name: "Agir" }).click();
+    await expect(page.locator(".outcome-chip").first()).toBeVisible();
+    await page.waitForTimeout(500);
+    const g = await bookGeometry(page);
+    expect(g.gap, JSON.stringify(g)).toBeLessThanOrEqual(48);
+    expect(g.lastVisible).toBe(true);
   });
 });

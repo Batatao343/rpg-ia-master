@@ -16,18 +16,35 @@ export function prefersReduced(): boolean {
     && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function subscribe(onChange: () => void) {
+// SPEC-354 P1-1: UMA assinatura compartilhada no DOM. Com N componentes (um por entrada do Livro) cada um
+// registrava os próprios listeners; um único `visibilitychange` enfileirava N re-renders no mesmo evento e, com
+// mais de 50 entradas, o React acusava "Maximum update depth exceeded".
+const listeners = new Set<() => void>();
+let teardown: (() => void) | null = null;
+
+function notifyAll() { listeners.forEach((fn) => fn()); }
+
+function attachDom(): () => void {
   if (typeof window === "undefined") return () => {};
   const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-  mq?.addEventListener?.("change", onChange);
-  document.addEventListener("visibilitychange", onChange);
+  mq?.addEventListener?.("change", notifyAll);
+  document.addEventListener("visibilitychange", notifyAll);
   // R10: desligar em outra aba (localStorage) vale aqui sem recarregar — reaplica a marca no <html>.
-  const onStorage = (e: StorageEvent) => { if (e.key === null || e.key === "rpg.effects") applyKillSwitch(); onChange(); };
+  const onStorage = (e: StorageEvent) => { if (e.key === null || e.key === "rpg.effects") applyKillSwitch(); notifyAll(); };
   window.addEventListener("storage", onStorage);
   return () => {
-    mq?.removeEventListener?.("change", onChange);
-    document.removeEventListener("visibilitychange", onChange);
+    mq?.removeEventListener?.("change", notifyAll);
+    document.removeEventListener("visibilitychange", notifyAll);
     window.removeEventListener("storage", onStorage);
+  };
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  if (listeners.size === 1) teardown = attachDom();
+  return () => {
+    listeners.delete(onChange);
+    if (listeners.size === 0) { teardown?.(); teardown = null; }
   };
 }
 
