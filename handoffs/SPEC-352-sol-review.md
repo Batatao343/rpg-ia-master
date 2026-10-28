@@ -1,7 +1,7 @@
 # SPEC-352 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (rodada 2; rodada 1 = `CHANGES_REQUIRED`)
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-28 · **Commit revisado:** `71f06511` (r1) → `af9e2715` (r2)
+> **Veredito:** `APPROVED` (rodada 3 final; todos os achados fechados — pendências abaixo são do pouso/staging, não de código; r1 = `CHANGES_REQUIRED`, r2 = `APPROVED_WITH_FOLLOWUPS`)
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-28 · **Commit revisado:** `71f06511` (r1) → `af9e2715` (r2) → `81753e6c` (r3, rebased na main)
 
 ## Escopo
 
@@ -35,20 +35,22 @@ cópia idempotente (`already_shared`/conteúdo igual), exportação sem object k
 
 ## Correções aplicadas
 
-| Achado | Commit | Verificação (rodada 2) |
+| Achado | Commit | Verificação (rodadas 2–3) |
 |---|---|---|
 | P0-1 | `053dc4cc` | `claim` virou comandos separados: `insert … on conflict do nothing` → `select … for update` → `select` da geração (snapshot novo) → `update`/`CreaturePortraitTaken`. `race352.py` (tx1 = claim + geração sem commit prévio; tx2 bloqueada; commit tx1) agora dá `['won','taken']`, linha com a geração de tx1, `version=1`. Teste novo `test_concurrent_claim_two_connections_real_confirm_flow` reproduz exatamente esse fluxo. Como o claim precede `wallet.reserve` na mesma transação, o perdedor reverte sem reserva (coberto por `test_second_confirm_same_key_is_taken_without_reservation_or_debit`). Fechado. |
 | P1-1 | `a7b774e6`, `af9e2715` | `enqueue_copy_job` roda dentro de `_mark_portrait_ready`, na transação de `complete` (dedupe `copy-portrait:{generation_id}`, `on conflict do nothing`). Varredor `sweep_private_portraits` no cron de jobs reenfileira `ready`+`private` com > 30 min; idempotente por hora (dedupe `…:sweep:{YYYYMMDDHH}`), e o job de cópia é idempotente (`already_shared`/`skipped`). Testes `_db` novos verdes. Fechado. |
 | P2-1 | `465fef04` | `_registry_src`: linha `private` de outro jogo → sem `src`, `pending=True`. Fechado. |
 | P2-2 | `af9e2715` | `erase_owner` apaga `pool` não promovida (devolve keys compartilhadas); teste `_db`. Fechado. |
 | P2-3 | `af9e2715` | teste do caminho s3 do store compartilhado. Fechado. |
+| P2-4 | `81753e6c` | `delete_game` apaga também `store='private'` e `status='pending'` do jogo; teste `test_delete_game_also_drops_private_and_pending_rows` (a compartilhada pronta permanece). Fechado. |
+| P2-5 | `81753e6c` | `test_two_real_confirms_concurrently_one_reservation_one_job`: dois `repo.confirm` completos em duas conexões → `["taken","won"]`, 1 reserva, 1 job, saldo do perdedor intacto (1000 milli, 0 reservado). Fechado. |
+| Rebase | `81753e6c` | Conflito em `api.py` `_portrait_manifest_ctx`/`_enemy_portrait` resolvido pelo lado da 352. Comparado com `main:api.py:2796-2817`: a lógica da 347 (gate `mode()=="on"` ou `has_curated_art` → marcador/arte curada, manifest válido, `npc_entity_id` do `target_ref`, `portrait_for`) está preservada e só ganhou `registry`/`quote_price`/`sign`; `view["registro_rodada"]` intacto (`api.py:3132`). Nada da 347 perdido. |
 
 ## Pendências
 
-- **P2-4 (novo, follow-up):** `services/creature_portraits.py` `delete_game` só apaga `visibility='game'`. Uma linha `shared`/`pool` `ready`+`private` de um jogo apagado perde a geração e o job (FK `on delete cascade` em `art_generations`/`jobs`), o varredor não a vê (join com `art_generations`) e a P2-1 a esconde de todos: a chave fica travada para sempre. Correção sugerida: `delete_game` apagar também `store='private'` do jogo. Raro (cópia falhou + jogo apagado antes do varredor).
-- **P2-5 (follow-up):** o teste de corrida prova o claim com duas conexões; não há teste com dois `repo.confirm` completos concorrentes (1 reserva/1 job). A garantia vem da ordem claim→reserve na mesma transação; aceitável.
 - Smoke real §6 no staging e prints 390/1440 (declarados na spec).
 - Ownership de `app.creature_portraits` em `project_index/state_ownership.yaml` (coordenador, no pouso).
+
 ## Comandos rodados
 
 ```text
@@ -58,4 +60,9 @@ bash scripts/dev/py.sh <scratchpad>/race352.py (claim + insert de geração em t
 # rodada 2 (af9e2715)
 bash scripts/dev/py.sh <scratchpad>/race352.py → results ['won','taken'], linha com a geração de tx1, version=1
 RPG_TEST_DATABASE_URL=…55322… bash scripts/dev/py.sh -m pytest -p no:cacheprovider -rs (mesmos 5 arquivos) → 126 passed, 0 skipped
+# rodada 3 (81753e6c, rebased na main; hashes das rodadas 1-2 acima são pré-rebase: 053dc4cc=506e20ca, a7b774e6=a3de2114, 465fef04=88441a45, af9e2715=4813ff12)
+bash scripts/dev/py.sh <scratchpad>/race352.py → results ['won','taken'], version=1
+RPG_TEST_DATABASE_URL=…55322… bash scripts/dev/py.sh -m pytest -p no:cacheprovider -rs tests/test_spec347_{creature_art,forge_reasons,initiative_view,mech_log,round_board}.py tests/test_spec352_creature_{portraits,quote_api,portraits_db}.py tests/test_image_quotes_local.py → 167 passed, 0 skipped
+bash scripts/dev/py.sh -m ruff check services/creature_portraits.py → All checks passed
+RPG_E2E_PORT=5071 npx playwright test e2e/spec352-retrato-pago e2e/spec347-{retrato,desktop,mobile,board-only} --workers=1 → 37 passed (1.4m)  [5061 é porta bloqueada pelo Chromium (ERR_UNSAFE_PORT, SIP); não use]
 ```
