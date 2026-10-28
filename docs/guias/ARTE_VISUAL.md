@@ -54,3 +54,18 @@ atual tem arte aprovada para todas as raças e classes, então o placeholder nã
 
 NPCs de runtime e entidades ainda sem retrato usam monograma CSS determinístico
 com nome/papel. Isso é deliberado: nunca se empresta o rosto de outro NPC.
+
+## Arte do bestiário (SPEC-347 R13.2)
+
+Retratos de criatura entram pelo catálogo curado (`data/visual_assets.json`), com dois `subject_type`:
+`creature` (id do bestiário, ex. `enemy_goblin`; criatura do pool: `bst:{pool_entry_id}`) e `creature_family`
+(família de `services/enemy_decks.FAMILIAS`, ex. `bruto`). Solte as imagens numa pasta no formato
+
+```
+<pasta>/criaturas/enemy_goblin.png      # nome do arquivo = id do bestiário (pool: bst_{id}.png)
+<pasta>/familias/bruto.png              # nome do arquivo = família
+```
+
+e rode `bash scripts/dev/py.sh scripts/import_bestiary_art.py <pasta>`. O script falha se o id não existir em
+`data/bestiary.json`/`FAMILIAS`, gera as variantes WebP em `web/public/art/bestiario/`, grava o `sha256` e é
+idempotente (reimportar o mesmo arquivo não muda nada). O tabuleiro usa a arte sozinho; sem arte, mostra o ícone da família.

@@ -873,6 +873,12 @@ RPG_SESSION_SECRET:
   default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (session secret)"
+RPG_CREATURE_ART:
+  kind: release
+  default: "off"
+  spec: SPEC-347
+  expires: 2027-01-25
+  note: "retrato de inimigo no tabuleiro: oferta de geração paga pelo jogador"
 RPG_SHARED_POOL:
   kind: release
   default: "off"

@@ -27,6 +27,7 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
       intel: [...enemy.revealed_cards.map((c) => c.name), ...enemy.revealed_resistances],
       concealment: p?.concealment, posture: p?.posture,
       engagedNames: p?.engaged_names ?? [], zoneId: p?.zone_id ?? "",
+      ...(enemy.retrato ? { retrato: enemy.retrato } : {}),
     });
   }
   // SPEC-342 B-3: homônimos precisam de nomes distintos (o log e o presságio usam "Bandido 1/2").
@@ -61,7 +62,7 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
 }
 
 /** SPEC-205 R11: arena por zonas com participantes clicáveis (evolução de SceneZones). */
-export function Arena({ combat, party, aim, onPick, omens, compact }: {
+export function Arena({ combat, party, aim, onPick, omens, compact, onGenerate, genDisabled }: {
   combat: CombatBlock;
   party: PartyMember[];
   /** id → marca de validade, só durante a mira. */
@@ -71,6 +72,9 @@ export function Arena({ combat, party, aim, onPick, omens, compact }: {
   omens?: Record<string, OmenView>;
   /** SPEC-347 R4: só o modo Baralho. Zonas vazias saem da grade e viram uma linha. */
   compact?: boolean;
+  /** SPEC-347 R13.6: oferta "Gerar retrato" (só chega do modo Baralho; sem isto o chip não mostra o botão). */
+  onGenerate?: (enemyId: string) => void;
+  genDisabled?: boolean;
 }) {
   const people = buildParticipants(combat, party);
   const zones = combat.scene.zones;
@@ -109,7 +113,7 @@ export function Arena({ combat, party, aim, onPick, omens, compact }: {
             <div className="arena__members">
               {g.members.map((p) => (
                 <TargetChip key={p.id} p={p} aim={aim ? (aim[p.id] ?? { valid: false }) : undefined}
-                  onPick={onPick} omen={omens?.[p.id]} />
+                  onPick={onPick} omen={omens?.[p.id]} onGenerate={onGenerate} genDisabled={genDisabled} />
               ))}
             </div>
           </article>

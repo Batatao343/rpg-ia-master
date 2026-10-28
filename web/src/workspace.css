@@ -475,3 +475,16 @@ details.scene-strip { display: block; }
 @media (pointer: coarse) {
   .play-queue__flee, .play-queue__confirm button { min-height: 44px; min-width: 44px; }
 }
+
+/* SPEC-347 R13 — retrato do inimigo (tamanho fixo: 56 px no celular, 72 px no desktop) */
+.tchip--portrait { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.55rem; align-items: start; }
+.tchip--portrait > :not(.tchip__portrait) { grid-column: 2; }
+.tchip__portrait { grid-column: 1; grid-row: 1 / span 6; position: relative; inline-size: 56px; block-size: 56px; aspect-ratio: 1; border-radius: var(--r-sm); overflow: hidden; background: var(--surface-2); border: 1px solid var(--line-soft); display: grid; place-items: center; }
+.tchip__portrait img { inline-size: 100%; block-size: 100%; object-fit: cover; display: block; }
+.tchip__portrait-icon { color: var(--muted); inline-size: 60%; block-size: 60%; display: grid; place-items: center; }
+.tchip__portrait-icon svg { inline-size: 100%; block-size: 100%; }
+.tchip__portrait-badge { position: absolute; inset-inline: 0; bottom: 0; padding: 0.05rem 0.2rem; background: var(--bg-deep); color: var(--ink); font-size: 0.65rem; font-style: normal; text-align: center; }
+.tchip__gen, .tchip__gen-confirm { grid-column: 1 / -1; margin-top: 0.3rem; }
+.tchip__gen-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
+@media (min-width: 641px) { .tchip__portrait { inline-size: 72px; block-size: 72px; } }
+@media (pointer: coarse) { .tchip__gen, .tchip__gen-confirm button { min-height: 44px; min-width: 44px; } }

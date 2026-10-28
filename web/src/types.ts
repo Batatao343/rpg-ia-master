@@ -276,6 +276,8 @@ export interface EnemyView {
   conditions: Condition[];
   revealed_cards: Array<{ id: string; name: string }>;
   revealed_resistances: string[];
+  /** SPEC-347 R13: retrato (só com a flag `on` ou arte curada). */
+  retrato?: CreaturePortrait;
 }
 
 export interface CardView {
@@ -1188,4 +1190,15 @@ export interface RoundLogEntry {
   origem: "turno" | "reacao"; rotulo: string | null;
   resultado: "acerto" | "erro" | "critico" | "supercritico" | "efeito";
   dano: number | null; efeito: string | null;
+}
+
+/** SPEC-347 R13: retrato do inimigo no tabuleiro (só com `RPG_CREATURE_ART=on` ou arte curada). */
+export interface CreaturePortrait {
+  estado: "pronto" | "gerando" | "marcador";
+  src: string | null;
+  familia: string;
+  icone: string;
+  alt: string;
+  proprio: boolean;
+  gerar: { preco_estilhas: number; escopo: "tipo" | "unico" } | null;
 }

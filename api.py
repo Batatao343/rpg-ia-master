@@ -2793,6 +2793,29 @@ def _chase_live_for_api(chase: object) -> bool:
     )
 
 
+def _enemy_portrait(state: dict, meta: dict, enemy: dict) -> dict[str, Any] | None:
+    """SPEC-347 R13.7: `retrato` por inimigo — só com `RPG_CREATURE_ART=on` ou com arte curada. Sem LLM,
+    sem vazar ficha secreta: só id/nome/família. Geração (cotação) ainda não oferecida (`gerar` = null)."""
+    from services import creature_art as _art
+    from services import encounter_manifest as _em
+
+    if _art.mode() != "on" and not _art.has_curated_art(enemy):
+        return None
+    manifest = meta.get("encounter") if _em.is_valid_manifest(meta.get("encounter")) else None
+    npc_entity_id = None
+    ref = str((manifest or {}).get("target_ref") or "")
+    if ref.startswith("npc:"):
+        npc_entity_id = str(((state.get("npcs") or {}).get(ref[4:]) or {}).get("entity_id") or "") or None
+    return dict(
+        _art.portrait_for(
+            enemy,
+            manifest,
+            game_id=str(state.get("game_id") or ""),
+            npc_entity_id=npc_entity_id,
+        )
+    )
+
+
 def _combat_block(state: dict) -> dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
@@ -2892,6 +2915,9 @@ def _combat_block(state: dict) -> dict[str, Any]:
                 ],
             }
         )
+        portrait = _enemy_portrait(state, meta, enemy)
+        if portrait is not None:
+            enemy_views[-1]["retrato"] = portrait
 
     chase = meta.get("chase") or {}
     chase_view = (

@@ -129,3 +129,40 @@ test('playqueue_fugir_botao_e_motivo', async () => {
   const closed = html(h(PlayQueue, { ...base, onFlee() {}, fleeReason: 'Sem saída.' }));
   assert.match(closed, /Sem saída\./);
 });
+
+const portraitBase = { id: 'b1', name: 'Goblin', role: 'enemy', vit: 3, max: 6, conditions: [], intel: [], engagedNames: [] };
+const portrait = (over) => ({ estado: 'marcador', src: null, familia: 'bruto', icone: 'combat', alt: 'Retrato de Goblin', proprio: false, gerar: null, ...over });
+
+test('targetchip_retrato_estados_e_sem_retrato_igual_a_hoje', async () => {
+  const { TargetChip } = await load('../src/combat/TargetChip.tsx');
+  const plain = html(h(TargetChip, { p: portraitBase, aim: undefined, onPick() {} }));
+  assert.doesNotMatch(plain, /tchip__portrait|tchip--portrait/);
+  const img = html(h(TargetChip, { p: { ...portraitBase, retrato: portrait({ estado: 'pronto', src: '/art/x.webp' }) }, aim: undefined, onPick() {} }));
+  assert.match(img, /data-portrait="pronto"/);
+  assert.match(img, /<img src="\/art\/x\.webp" alt="Retrato de Goblin" loading="lazy" decoding="async"/);
+  const marker = html(h(TargetChip, { p: { ...portraitBase, retrato: portrait() }, aim: undefined, onPick() {} }));
+  assert.match(marker, /data-portrait="marcador"/);
+  assert.match(marker, /tchip__portrait-icon" aria-hidden="true"/);
+  assert.doesNotMatch(marker, /<img/);
+  const gen = html(h(TargetChip, { p: { ...portraitBase, retrato: portrait({ estado: 'gerando', src: '/art/t.webp' }) }, aim: undefined, onPick() {} }));
+  assert.match(gen, /Gerando retrato…/);
+});
+
+test('targetchip_oferta_gerar_so_com_onGenerate_e_gerar', async () => {
+  const { TargetChip } = await load('../src/combat/TargetChip.tsx');
+  const r = portrait({ gerar: { preco_estilhas: 40, escopo: 'tipo' } });
+  const withBtn = html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: undefined, onPick() {}, onGenerate() {} }));
+  assert.match(withBtn, /Gerar retrato \(40 Estilhas\)/);
+  assert.doesNotMatch(html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: undefined, onPick() {} })), /Gerar retrato/);
+  assert.doesNotMatch(html(h(TargetChip, { p: { ...portraitBase, retrato: portrait() }, aim: undefined, onPick() {}, onGenerate() {} })), /Gerar retrato/);
+  // durante a mira o chip é um <button>: nada interativo aninhado
+  assert.doesNotMatch(html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: { valid: true }, onPick() {}, onGenerate() {} })), /Gerar retrato/);
+});
+
+test('family_icon_so_usa_icones_existentes', async () => {
+  const { FAMILY_ICON } = await load('../src/combat/familyIcon.ts');
+  const { readFileSync } = await import('node:fs');
+  const icons = readFileSync(fileURLToPath(new URL('../src/design/icons.tsx', import.meta.url)), 'utf8');
+  for (const icon of new Set(Object.values(FAMILY_ICON))) assert.ok(icons.includes(`"${icon}":`), icon);
+  assert.equal(FAMILY_ICON.abissal, 'abyss');
+});
