@@ -337,7 +337,11 @@ class DynamicArtRepository:
 
     @staticmethod
     def _mark_portrait_ready(
-        connection, generation: dict, generation_id: UUID, variants: list[dict], result: dict[str, Any]
+        connection,
+        generation: dict,
+        generation_id: UUID,
+        variants: list[dict],
+        result: dict[str, Any],
     ) -> None:
         """SPEC-352 R8: registro compartilhado na MESMA transacao da liquidacao.
 
