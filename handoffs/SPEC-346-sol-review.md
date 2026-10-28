@@ -1,7 +1,7 @@
 # SPEC-346 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após a re-verificação; 1ª rodada em `3951602f`: `CHANGES_REQUIRED`)
-> **Revisor:** Opus / Sol · **Data:** 2026-10-28 · **Commits revisados:** `3951602f` (1ª rodada) e `bc97cdd0` (re-verificação, branch `spec-346`)
+> **Veredito:** `APPROVED` (final, passe em `8c0b0904`; 1ª rodada `3951602f`: `CHANGES_REQUIRED`; 2ª `bc97cdd0`: `APPROVED_WITH_FOLLOWUPS`)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-28 · **Commits revisados:** `3951602f`, `bc97cdd0`, `8c0b0904` (branch `spec-346`)
 
 ## Escopo
 
@@ -172,4 +172,68 @@ bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 4 tests/test_spec346_*.p
 sonda vigília nível 3, rodada 1 → com vigília None, sem vigília "enemy" (P1-1 fechado)
 sonda router (15 frases, CLASSIFY esgotado) → 5 falsos positivos novos (P2-5), 2 falsos negativos ("ataco o lobo", "sem pensar ataco…")
 sonda _no_digits → '\x01' no texto (P2-4)
+```
+
+## Passe final (8c0b0904)
+
+Revisei `git diff 4a40b489..8c0b0904`, que tem 5 commits: `9e2e2110`, `1390e70e`, `8f7f0ac2`, `ac893ecb` e `8c0b0904`.
+
+| Item | Estado | Evidência |
+|---|---|---|
+| P2-4 `_no_digits` | **Fechado** | Sonda: `"Alvo 3 , ok."` vira `"Alvo, ok."` e `"Você tomba .  Fim 2"` vira `"Você tomba. Fim"`. Sem `\x01`. |
+| P2-5 router | **Fechado** | As 5 frases da bateria anterior agora vão para STORY. Das 5 novas, 3 vão para STORY ("lobo da minha própria raiva", "boneco de palha do treino", "apunhalo o mapa… para marcar a rota"). Ainda viram COMBAT 2 frases forçadas que citam uma criatura real do bestiário: "Ataco o goblin assado com garfo e faca" e "Enfrento o bandido no tribunal com provas". Ficam como risco residual P3-10, só no modo degradado. |
+| P3-6 negação | Fechado em parte | O `sem` saiu da lista de negação. "sem pensar ataco o saqueador" ainda vai para STORY, agora porque `saqueador` não está no bestiário, nem em cena, nem no manifesto. Isso é falso negativo, o lado seguro (STORY). |
+| P3-7 skips | Fechado | O id inexistente agora faz o teste falhar em vez de pular (`assert template`). Zero skips. |
+| P3-8 oráculo | Fechado | Novo oráculo com o herói jogando Cartas (golpe, cura `bas_med_pressao`, guarda) + Reação (`san_esquiva`, `san_troco_carmesim`) em 12 seeds. Ele confere `ganho = cura − dano + excedente` e exige que a cura e a Carta tenham sido jogadas. A cura de apoio de aliado também tem linha (`out["heals"]` → `mech_log` "… · cura · N Vitalidade"). |
+| P3-9 exclusão do golden | **Fechado, aprovado** | Ver abaixo. |
+
+### Integridade de eval: exclusão restrita do golden da 330 (`8f7f0ac2`, `8c0b0904`)
+
+`_BOOKKEEPING` voltou a ter só `_cartas_rodada`. A exclusão da SPEC-346 agora vale **só nos caminhos
+exatos**, via `strip_record_paths(out)`:
+- `out["ticks"]`, `out["scene_logs"]` e `out["heals"]`;
+- `out["attacks"][i]["ferimento"]`.
+
+O resto do `out`, `actors` e `scene` entra inteiro no hash.
+
+Testes que travam a exclusão:
+- `test_strip_record_paths_e_exato`: `out["outro"]["ticks"]` continua no hash.
+- `test_chaves_de_registro_da_346_nao_vazam_para_actors_nem_scene`: roda as 308 Cartas × 4 seeds e falha
+  se alguma dessas chaves aparecer em `actors`/`scene`.
+
+O fixture protegido continua intocado.
+
+**`heals` é só registro?** Sim. Conferi os 4 pontos que escrevem a chave:
+- `_resolve_reaction_effect`, `conflict_orchestrator.py:1098`;
+- apoio tático, `:1579`;
+- agregação, `:1686`;
+- `_resolve_support_card`, `conflict_turn.py:647`.
+
+Em todos, a mecânica é aplicada **antes**, em `target["vitalidade"]` (que fica em `actors`, hasheado), e a
+mesma quantia vai para `out["logs"]` ("recupera N Vitalidade…", também hasheado). `heals` é só uma cópia
+`{actor_id, card, amount}`.
+
+Uma regressão de cura muda a Vitalidade do ator e o log, logo muda o hash. Nada mecânico fica escondido.
+**Exclusão aprovada.**
+
+### Achados residuais (follow-up, não bloqueiam)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-10 | P3 | `agents/router.py:320-364` | O fallback de hostilidade ainda abre combate quando o objeto contém uma criatura do bestiário num contexto não violento ("goblin assado com garfo e faca", "bandido no tribunal"). Só acontece com o CLASSIFY esgotado e frase forçada. | Opcional: lista de contextos não violentos (`tribunal`, `assad*`, `prato`…), ou aceitar o risco. |
+| P3-11 | P3 | `agents/router.py:294` (`_NON_COMBAT_CONTEXT_RE`) | Falso negativo: "Ataco o guarda para abrir caminho" vai para STORY, porque `para abr*` é lido como contexto não violento e isso é checado antes de tudo. O lado é seguro. | Aplicar o contexto não violento só quando o alvo não for NPC/criatura presente. |
+
+### Veredito final (substitui o anterior)
+
+**`APPROVED`.** Todos os P1/P2 estão fechados. A exclusão do golden ficou restrita aos caminhos exatos e
+foi aprovada por esta revisão independente. Os P3-10/P3-11 são follow-ups opcionais do modo degradado.
+
+Continuam abertos, fora desta revisão: o smoke real do §6 e a suíte completa (coordenador).
+
+### Comandos do passe final
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n auto -rs tests/test_spec346_*.py tests/test_card_effects_grammar.py tests/test_card_acervo_reparo.py tests/test_spec341_balanco.py tests/test_api_jogadas.py tests/test_review_high_integration.py tests/test_spec345_mech_log.py tests/test_spec345_player_text.py tests/test_wound_status_cards.py tests/test_log_event_registry.py tests/test_fase64.py → 401 passed, 0 skipped in 56 s
+sonda router (15 frases, CLASSIFY esgotado) → 10/10 negativos anteriores + 3/5 novos em STORY; 2 frases forçadas com criatura real em COMBAT (P3-10); 2 falsos negativos seguros (P3-6, P3-11)
+sonda _no_digits → sem \x01 (P2-4 fechado) · sonda vigília nível 3 → None / "enemy" (P1-1 segue fechado)
 ```
