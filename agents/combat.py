@@ -2289,6 +2289,10 @@ def _combat_node(state: GameState):
         enemy["_env_attack_mod"] = weather_attack + enemy_light_attack
     surprise = world.get("encounter_surprise")
     initiator = "heroes" if surprise == "player" else ("enemy" if surprise == "enemy" else None)
+    if int(combat_meta.get("round", 0) or 0) == 1 and "initiator_reason" in combat_meta:
+        # SPEC-346 D4: a abertura já decidiu pela cena (inclusive "anulada pela vigília" = None);
+        # a surpresa crua do mundo não vale de novo.
+        initiator = combat_meta.get("initiator")
     initiator = _early_game_reaction_initiator(
         state, player, initiator, combat_round=int(combat_meta.get("round", 1) or 1)
     )

@@ -26,4 +26,5 @@ Leitura:
 - **Emboscada em toda luta:** a queda média é de 2 a 7 pontos. **Corruptor (42,7 %) e Arcanista Cinzento
   (39,2 %) saem da faixa** neste pior caso. Não é o cenário real (emboscada é minoria: só o encontro de
   viagem que o jogador não percebeu), mas é o dado para o dono decidir se a emboscada deve ter alguma
-  contrapartida (por exemplo, a carta/condição de "vigília" que anula a surpresa, ainda não existente).
+  contrapartida. A "Vigília Ciumenta" (`dev_zel_vigilia`) já anula a emboscada (opção a do coordenador);
+  o pior caso acima ignora essa exceção e foi aceito.

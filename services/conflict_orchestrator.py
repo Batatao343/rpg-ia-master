@@ -1968,6 +1968,7 @@ def _resolve_last_stands(
             target_id = _nearest_target(actor_id, opposing, actors_by_id)
         out["logs"].append(f"{_name(actor)} executa sua Última Ação.")
         if target_id is not None:
+            _n_attacks = len(out.get("attacks") or [])
             _basic_attack(
                 scene,
                 actor,
@@ -1979,7 +1980,9 @@ def _resolve_last_stands(
                 label="Última Ação",
                 advantage=1,
             )
-            if out.get("attacks"):  # SPEC-346 R9: o mech_log rotula e diz se o alvo foi o declarado
+            if (
+                len(out.get("attacks") or []) > _n_attacks
+            ):  # SPEC-346 R9: o mech_log rotula e diz se o alvo foi o declarado
                 out["attacks"][-1]["label"] = "Última Ação"
                 out["attacks"][-1]["alvo_declarado"] = target_id == preferred
         else:
@@ -2587,7 +2590,13 @@ def _run_round(
         out.setdefault("scene_logs", []).extend(out["logs"][_scene_mark:])  # SPEC-346 R4
 
     # Última Ação acontece fora da ordem, exatamente uma vez, ANTES do terminal.
-    _resolve_last_stands(scene, actors_by_id, sides, out, rng)
+    _declared = {}
+    if player_id and player_decl is not None:  # SPEC-346 R9: alvo DECLARADO, mesmo se caiu antes
+        for _step in reversed(player_decl.plays()):
+            if _step.target_id in sides.get("enemy", []):
+                _declared[player_id] = _step.target_id
+                break
+    _resolve_last_stands(scene, actors_by_id, sides, out, rng, preferred_targets=_declared)
     _mark_fresh_conditions(_cond_before, actors_by_id, None, sides, taunt_frozen_acted=_tf_acted())
 
     # Estabilização do Estado Terminal disparado nesta rodada (07, R6=A).

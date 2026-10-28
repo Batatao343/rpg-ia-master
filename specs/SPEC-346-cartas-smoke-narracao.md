@@ -70,8 +70,9 @@ problemas. O dono decidiu, além de corrigir tudo, **mudar o modelo do combate c
     - o jogador iniciou o ataque (`combat_origin == "player_provoked"`, hostilidade explícita do router) ou
       emboscou (`encounter_surprise == "player"`) → jogador primeiro;
     - sem sinal claro → `None`: regra de iniciativa atual do motor (dados + proteção de herói novo).
-    - Exceção "vigília que anula a surpresa": **não implementada** — nenhuma carta/condição existente anula
-      surpresa mecanicamente (ver hand-back; candidatas listadas para o dono escolher).
+    - Exceção "vigília" (decisão do coordenador, opção a): com `dev_zel_vigilia` ("Vigília Ciumenta") no
+      baralho/preparadas a emboscada é anulada e vale a regra de iniciativa atual. A abertura grava o motivo
+      (`initiator_reason`) e a rodada 1 obedece a ele, ignorando o `encounter_surprise` cru do mundo.
 - **R2 — Rodada sem LLM.** Em turno com combate ativo e declaração estruturada (`combat_declaration` com
   `jogadas`), o grafo inteiro faz **zero** chamadas a `get_llm(...).invoke/stream`. Isso inclui router,
   combate, loot, campaign_manager e arquivista. A Cicatriz obrigatória usa o caminho determinístico
@@ -135,7 +136,8 @@ problemas. O dono decidiu, além de corrigir tudo, **mudar o modelo do combate c
 - **R11 — Um resumo da IA no fim (`on`).** No turno em que o conflito termina, há **uma** chamada FAST de
   resumo. Desfechos cobertos: `victory`, `fled`, `death`, `defeat`, `surrendered_enemy`, incapacitação do
   herói (`post_combat_state == "inconsciente"`) e `expired`. É a **única** chamada de LLM do turno
-  (fora o loot, que em pós-vitória fica sem LLM, R18).
+  (fora o loot, que em pós-vitória fica sem LLM, R18). "Única" vale para o **combate**: o arquivista do
+  mesmo turno (que recebe o `conflict_summary` pendente) pode ter a sua própria chamada, como já tinha antes.
   - A mensagem do turno é: registro da última rodada (R4) + linha em branco + resumo.
   - Na morte, o resumo é seguido pelo texto fixo da Roda do Abismo: "A escuridão te engole — mas a Roda do
     Abismo ainda não decidiu. Voltar ao último respiro seguro, ou aceitar o fim aqui?". É o texto de hoje
@@ -636,7 +638,9 @@ trechos do histórico (sem segredos).
 ### Recomendações do autor (valem como aprovadas salvo veto do dono na revisão)
 - **D6 — Composição do turno por junção das `AIMessage` do turno (R17),** em vez de o combate não emitir e
   passar a prosa ao loot por campo transitório. A junção é genérica, não exige campo novo no `GameState` e
-  preserva o stream (o final estende o mostrado).
+  preserva o stream no turno de um nó só. Exceção conhecida: storyteller→combate (encontro de viagem) —
+  `narrate_text` reseta o canal antes da entrada, então o final (história + entrada) substitui o mostrado
+  (`replace`). Funciona; a SPEC-347 pode evitar o "pisca" emitindo o separador como delta.
 - **D7 — O pós-filtro remove trechos (R13) em vez de descartar o resumo inteiro.** Descartar por qualquer
   número mataria resumos bons por um "dois saqueadores". A lista é fechada a substantivos de mecânica.
 - **D8 — Item 8 por coerência narrativa, sem mudar a contagem de spawn (R29).** Aumentar o spawn para N

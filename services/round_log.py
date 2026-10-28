@@ -315,7 +315,16 @@ def outcome_facts(
                 )
                 break
     text = "\n".join(facts)
-    return [re.sub(r"\d+", "", f) for f in facts] if re.search(r"\d", text) else facts
+    return [_no_digits(f) for f in facts] if re.search(r"\d", text) else facts
+
+
+def _no_digits(text: str) -> str:
+    """Tira números junto com o espaço que os precede; sem espaço duplo nem vírgula órfã."""
+    value = re.sub(r"\s*\d+", "", text)
+    value = re.sub(r"[ 	]{2,}", " ", value)
+    value = re.sub(r"\s+([,.;!?])", r"", value)
+    value = re.sub(r",\s*,", ",", value)
+    return value.strip()
 
 
 def decisive_cards(last_out: dict, limit: int = 2) -> list[str]:
@@ -351,7 +360,7 @@ def deterministic_outcome_text(outcome: str, conflict_summary: dict, player: dic
     if wounds and outcome != "fled":
         parts.append("Você carrega " + ", ".join(wounds[:3]) + ".")
     text = " ".join(parts)
-    return re.sub(r"\d+", "", text)
+    return _no_digits(text)
 
 
 WHEEL_TEXT = (

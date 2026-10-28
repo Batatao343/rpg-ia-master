@@ -89,6 +89,8 @@ def _corpse_search(state: dict, combat: dict, world: dict, text: str) -> str:
         combat.get("phase") == "ended"
         and result.get("loot_claimed")
         and str(result.get("location_id") or "") == str(world.get("current_location_id") or "")
+        # o turno da própria vitória ainda reclama o espólio; só os turnos seguintes bloqueiam
+        and int(result.get("loot_turn", 0) or 0) < int(world.get("turn_count", 0) or 0)
     ):
         return "claimed"
     return labels[0] if labels and _CORPSE_RE.search(folded) else ""
@@ -497,7 +499,7 @@ def loot_node(state: GameState):
     combat = state.get("combat") or {}
     # SPEC-346 R20: revistar o corpo de um encontro cujo espólio já foi reclamado não rerrola.
     corpse = _corpse_search(state, combat, world, text)
-    if corpse == "claimed" and not conflict_summary:
+    if corpse == "claimed":
         _log_event("loot", "corpse_already_looted", level="info")
         return {
             "messages": [AIMessage(content=CORPSE_ALREADY_LOOTED)],

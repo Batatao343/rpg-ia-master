@@ -124,3 +124,12 @@ def test_environment_context_has_location_and_you(monkeypatch):
 )
 def test_protagonist_voice_case(raw, expected):
     assert prose_guard.normalize_protagonist_voice(raw) == expected
+
+
+def test_residual_conflict_summary_next_turn_does_not_reroll(monkeypatch):
+    """P2-3: arquivista não limpou o resumo; 'revisto o corpo' no turno seguinte não rerrola."""
+    state = _state("Revisto o corpo", combat=CLAIMED)
+    state["conflict_summary"] = {"mortos": ["Criatura do Poço"]}
+    out = loot.loot_node(state)
+    assert out["messages"][0].content == loot.CORPSE_ALREADY_LOOTED
+    assert "player" not in out

@@ -202,11 +202,39 @@ def test_mech_log_accounts_for_hero_vitality(seed, monkeypatch):
         initiator="enemy",
         rng=random.Random(seed),
     )
+    import re
+
+    # R10 sobre as LINHAS do mech_log (o que o jogador lê), não sobre out["attacks"]
+    lines = preview.mech_log(out["attacks"], [hero, boss], out["ticks"])
     lines_total = sum(
-        int(a["dano_final"])
-        for a in out["attacks"]
-        if a.get("target_id") == "player" and a.get("acerto") and a.get("dano_final") is not None
-    ) + sum(int(t["dano_final"]) for t in out["ticks"] if t["actor_id"] == "player")
+        int(m.group(1)) for ln in lines if "→ Você" in ln and (m := re.search(r"(\d+) dano$", ln))
+    )
     drop = vit_before - hero["vitalidade"]
     excess = sum(int(r.get("excedente", 0) or 0) for r in results)
     assert lines_total == drop + excess, (seed, lines_total, drop, excess)
+
+
+def test_last_stand_uses_declared_target_even_if_hero_fell_before_acting():
+    """P2-1: emboscada derruba o herói antes de agir; a Última Ação mira o alvo DECLARADO."""
+    hero, a, b, sides = _last_stand_setup()
+    out = {"logs": [], "attacks": [], "terminal": ["player"], "deaths": []}
+    orch._resolve_last_stands(
+        _scene("player", "a", "b"),
+        {"player": hero, "a": a, "b": b},
+        sides,
+        out,
+        _HighRng(),
+        preferred_targets={"player": "b"},
+    )
+    assert out["attacks"][-1]["target_id"] == "b"
+
+
+def test_last_stand_label_only_when_attack_was_added(monkeypatch):
+    hero, a, b, sides = _last_stand_setup()
+    prior = {"actor_id": "a", "target_id": "player", "label": None}
+    out = {"logs": [], "attacks": [prior], "terminal": ["player"], "deaths": []}
+    monkeypatch.setattr(orch, "_basic_attack", lambda *args, **k: None)  # nada acrescentado
+    orch._resolve_last_stands(
+        _scene("player", "a", "b"), {"player": hero, "a": a, "b": b}, sides, out, _HighRng()
+    )
+    assert "label" in prior and prior["label"] is None and "alvo_declarado" not in prior

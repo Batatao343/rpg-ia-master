@@ -307,51 +307,79 @@ def _last_ai_text(messages) -> str:
     return ""
 
 
-def _hostility_signal(state, folded: str) -> bool:
-    """Ameaca narrada na ultima fala da IA, NPC em cena citado ou criatura do bestiario."""
-    if _THREAT_NARRATED_RE.search(_fold_text(_last_ai_text(state.get("messages") or []))):
-        return True
+_HOSTILE_1P_RE = re.compile(
+    r"\b(?:ataco|golpeio|apunhalo|esfaqueio|enfrento|atiro\s+(?:em|contra)|"
+    r"disparo\s+(?:em|contra)|invisto\s+(?:contra|sobre))\s+(?P<obj>[^.,;!?]+)"
+)
+_OBJ_CUT_RE = re.compile(r"\b(?:e|com|que|para|pra|ate|enquanto|pois|mas)\b")
+_POSSESSIVE_RE = re.compile(r"^(?:o\s+|a\s+)?(?:meu|minha|meus|minhas|seu|sua|nosso|nossa)\b")
+_CREATURE_WORDS = ("criatura", "inimigo", "vulto", "monstro", "besta", "figura", "hostil")
+_THREAT_WORDS_RE = re.compile(r"\b(?:ameac\w*|hostil\w*|ataq\w*|emboscad\w*|sac[ao]u?|rosn\w*)\b")
+
+
+def _hostility_target(state, folded: str, obj: str) -> str | None:
+    """Alvo presente na cena para o objeto do verbo hostil, ou ``None`` (na dúvida, STORY).
+
+    Presente = NPC em cena citado, criatura do bestiário/da lista de inimigos citada, ou
+    substantivo que a última narração da IA (com ameaça) acabou de apresentar. Genérico
+    ("a criatura hostil") só vale com ameaça + criatura na última narração."""
     from services import encounter_manifest as em
     from services import npc_layers
 
+    obj = _OBJ_CUT_RE.split(obj.strip())[0].strip()
+    if not obj or _POSSESSIVE_RE.match(obj):
+        return None
+    core = em.hint_core(obj)
+    tokens = set(em.name_tokens(core))
+    ai = _fold_text(_last_ai_text(state.get("messages") or []))
+    threat = bool(_THREAT_WORDS_RE.search(ai))
+    if not tokens:  # alvo genérico
+        if threat and any(w in ai for w in _CREATURE_WORDS):
+            return "Inimigos"
+        return None
     npcs = state.get("npcs") or {}
     for name in npc_layers.npcs_in_scene(state):
-        if name in npcs and _fold_text(name) in folded:
-            return True
-    wanted = set(em.name_tokens(folded))
-    for bid, entry in em._bestiary().items():
-        tokens = set(em.name_tokens(entry.get("name", "") or bid))
-        if tokens and tokens <= wanted:
-            return True
-    return False
+        if name in npcs and _fold_text(name) in obj:
+            return core
+    wanted = tokens
+    for _bid, entry in em._bestiary().items():
+        names = set(em.name_tokens(entry.get("name", "") or _bid))
+        if names and names <= wanted:
+            return core
+    for enemy in state.get("enemies") or []:
+        names = set(em.name_tokens(str(enemy.get("name") or "")))
+        if names and names <= wanted:
+            return core
+    if threat and tokens & set(em.name_tokens(ai)):
+        return core
+    return None
 
 
 def _hostility_fallback(state, last_human: str, world: dict, _resumed, resume_explore: bool):
-    """SPEC-346 R26: CLASSIFY esgotado + hostilidade explicita + sinal de alvo -> COMBAT.
+    """SPEC-346 R26: CLASSIFY esgotado + verbo hostil em 1ª pessoa no presente + alvo presente.
 
-    Devolve ``None`` (segue STORY) sem verbo hostil, com negacao ou sem nenhum sinal de alvo.
-    """
+    Devolve ``None`` (segue STORY) sem verbo, com negação, particípio/narração ("fui atacado"),
+    objeto que não é entidade da cena ("a mesa", "meu medo", "a subida") ou na dúvida."""
     folded = _fold_text(last_human)
-    matches = list(_EXPLICIT_HOSTILITY_RE.finditer(folded))
-    if not matches:
-        return None
-    if all(_NEGATION_BEFORE_RE.search(folded[: m.start()]) for m in matches):
-        return None
-    try:
-        if not _hostility_signal(state, folded):
+    chosen = None
+    for m in _HOSTILE_1P_RE.finditer(folded):
+        if _NEGATION_BEFORE_RE.search(folded[: m.start()]):
+            continue
+        try:
+            chosen = _hostility_target(state, folded, m.group("obj"))
+        except Exception as exc:  # silent-ok: sem alvo o fluxo segue STORY
+            _log_event(
+                "router", "hostility_signal_failed", level="warning", error=type(exc).__name__
+            )
             return None
-    except Exception as exc:  # silent-ok: sem sinal o fluxo segue STORY
-        _log_event("router", "hostility_signal_failed", level="warning", error=type(exc).__name__)
+        if chosen:
+            break
+    if not chosen:
         return None
-    from services import encounter_manifest as em
-
-    phrase = re.split(r"[.,;!?]|\be\b", last_human[matches[-1].end() :])[0]
-    core = em.hint_core(phrase)
-    target = core if core and not em.is_generic_hint(core) else "Inimigos"
     decision = RouterDecision(
         route=RouteType.COMBAT,
         loot_context=None,
-        target=target,
+        target=chosen,
         reasoning="hostility_fallback",
         confidence=0.5,
     )
