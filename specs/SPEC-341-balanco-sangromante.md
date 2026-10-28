@@ -1,6 +1,6 @@
 # SPEC-341 — Balanço de poder das Cartas pós-SPEC-339 (Sangromante avaro/silencioso, dominantes novas, controles de duração)
 
-> **Status:** `in-progress`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-339 (`done`: tick de duração corrigido, viés de ordem do `full_deck` removido), SPEC-335 (Lotes 0–6 na `main`, `off`), SPEC-336 (esteira: lint, `versao`, `_ondas.yaml`), SPEC-330 (golden das 308 legadas).
@@ -349,3 +349,5 @@ Se 1–3 falharem: **não** reajustar com essas sementes (R3). Parar e devolver 
 **Execução (27/10):** Etapas 0–3 feitas; avaro fechou (74,6 %), silencioso parou em 76,2 % com o pacote R11 (só 2 Cartas de onda no baralho L5). Confirmação 20–99 do pacote final **não** rodada (R3); testes de arena em `xfail(strict)`. Detalhes e opções em `docs/spec341/RELATORIO.md`. `culpa_antiga` e `san_exp_espetaculo` não se confirmaram (ruído, 20–99).
 
 **D4-bis (dono, 27/10, opção A):** aceitar Sangromante silencioso ≈ 76 % como exceção registrada, sem 2º passo e sem tocar legadas. Números do ajuste (sementes 0–19, padrão): silencioso 76,2 %, Sangromante/todas 75,4 %, avaro 74,6 %, exposto 70,4 %. Confirmação 20–99 (uma vez, R3): avaro **75,2 %** (> 75, **sem reajuste**, devolvido ao dono), silencioso 76,6 %, todas 75,6 %, exposto 71,7 %, Corruptor/alma 50,7 %, Médico/boticário 63,0 %.
+
+**D4-ter (dono, 27/10, opção A de novo):** aceitar na held-out 20–99 (padrão) avaro 75,2 %, silencioso 76,6 % e Sangromante/todas 75,6 % como exceções registradas (testes citam esses valores; teto global 75 % intacto para o resto). Item para a próxima onda de balanço: `san1_sil_corte_sem_aviso` ficou `dominante` na held-out (+9,1 pp, uso 52 %), já no máximo de 1 passo (R11).

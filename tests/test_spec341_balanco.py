@@ -215,10 +215,15 @@ def _load(nome: str) -> dict:
 EXCECAO_ACEITA = {"silencioso": 0.762, "todas": 0.754}
 
 
+# D4-ter (dono, 27/10): na held-out 20–99, avaro 75,2 %, silencioso 76,6 % e todas 75,6 % aceitos.
+EXCECAO_HELD_OUT = {"avaro": 0.752, "silencioso": 0.766, "todas": 0.756}
+
+
 def _checar_faixa(arte: dict, *, held_out: bool):
     sang = arte["posturas"]["Sangromante"]
     for sub in ("avaro", "silencioso", "todas"):
-        teto = 0.75 if held_out else max(0.75, EXCECAO_ACEITA.get(sub, 0.75))
+        aceita = EXCECAO_HELD_OUT if held_out else EXCECAO_ACEITA
+        teto = max(0.75, aceita.get(sub, 0.75))
         assert sang[sub]["padrao"] <= teto, (sub, sang[sub]["padrao"])
     assert sang["exposto"]["padrao"] >= 0.65, sang["exposto"]["padrao"]
     if not held_out:
@@ -231,9 +236,6 @@ def test_arena_final_dentro_da_faixa():
     _checar_faixa(_load("arena-final.json"), held_out=False)
 
 
-@pytest.mark.xfail(
-    strict=True, reason="confirmação 20–99: avaro 75,2 % > 75 %; aguarda decisão do dono"
-)
 def test_arena_confirmacao_dentro_da_faixa():
     arte = _load("arena-confirmacao.json")
     _checar_faixa(arte, held_out=True)
