@@ -62,6 +62,11 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
           })}
         </ol>
       )}
+      {queue.length > 0 && (
+        <button type="button" className="btn btn--ghost btn--sm play-queue__clear play-queue__clear--inline" disabled={busy} onClick={onClear}>
+          Desfazer fila
+        </button>
+      )}
       {spare && <p className="play-queue__spare" role="note">{SPARE_NOTE}</p>}
     </section>
     <div className="play-queue__end" data-aim-safe>
@@ -74,12 +79,18 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
         <button type="button" className="btn btn--primary play-queue__submit" data-end-turn
           aria-disabled={busy || queue.length === 0 ? "true" : undefined}
           aria-keyshortcuts="Enter" title="Encerrar a rodada (Enter)"
+          aria-label={queue.length > 0 ? `Encerrar a rodada, ${queue.length} ${queue.length === 1 ? "carta" : "cartas"}` : undefined}
           onClick={() => { if (!busy && queue.length) onEnd(); }}>
           <span>Encerrar a rodada</span>
-          {queue.length > 0 && <small className="play-queue__count">{queue.length} {queue.length === 1 ? "carta" : "cartas"}</small>}
+          {queue.length > 0 && (
+            <>
+              <small className="play-queue__count">{queue.length} {queue.length === 1 ? "carta" : "cartas"}</small>
+              <small className="play-queue__badge" aria-hidden="true">{queue.length}</small>
+            </>
+          )}
         </button>
         {queue.length > 0 && (
-          <button type="button" className="btn btn--ghost btn--sm play-queue__clear" disabled={busy} aria-keyshortcuts="Escape" onClick={onClear}>
+          <button type="button" className="btn btn--ghost btn--sm play-queue__clear play-queue__clear--bar" disabled={busy} aria-keyshortcuts="Escape" onClick={onClear}>
             {touch ? "Desfazer fila" : "Desfazer (Esc)"}
           </button>
         )}

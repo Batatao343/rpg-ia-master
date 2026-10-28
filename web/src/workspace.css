@@ -415,6 +415,23 @@ details.scene-strip { display: block; }
   .aimbar { scroll-margin-block-end: calc(var(--tabbar-h) + 5rem); }
   .play-queue__end { flex-wrap: nowrap; min-height: 44px; padding: 0.25rem 0; background: var(--surface-2); }
   .play-queue__submit { flex-direction: row; gap: 0.4rem; flex: 1 1 auto; min-height: 44px; padding: 0.2rem 0.6rem; }
+  /* SPEC-347 R1.4 / R2.1 / R2.2 — celular */
+  .deck-combat[data-armed] .play-queue__end { position: static; }
+  .play-queue__clear--bar, .play-queue__count { display: none; }
+  .play-queue__badge { display: inline-block; margin-left: 0.4rem; padding: 0 0.45rem; border-radius: var(--r-sm); background: var(--bg-deep); color: var(--ink); font-variant-numeric: tabular-nums; }
   .deck-hand__piles { box-sizing: border-box; max-width: 100%; min-width: 0; margin-left: 0; }
   .deck-hand__counts { white-space: normal; }
+}
+
+/* SPEC-347 */
+.play-queue__clear--inline, .play-queue__badge { display: none; }
+.play-queue__end .actionchip, .play-queue__end .btn, .play-queue__submit span { white-space: nowrap; }
+.tchip__omen-num { white-space: nowrap; }
+.tchip__vit { white-space: nowrap; }
+.aimbar__actions { flex-basis: 100%; display: flex; align-items: center; gap: 0.6rem; }
+.aimbar__actions [data-play-confirm] { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aimbar__actions .aimbar__cancel { margin-left: auto; white-space: nowrap; }
+@media (max-width: 640px) {
+  .play-queue__clear--inline { display: inline-flex; align-self: flex-start; min-height: 44px; }
+  .play-queue__badge { display: inline-block; }
 }

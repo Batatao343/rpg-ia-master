@@ -113,6 +113,8 @@ export class DeterministicBackend {
   private refreshGate: Deferred | null = null;
   private unauthorizedSeen = 0;
   artPolls = 0;
+  /** SPEC-347: atraso da prévia determinística (a mira muda de altura quando ela chega). */
+  previewDelayMs = 0;
 
   constructor() {
     const a = gameState("game-a", "Ayla");
@@ -419,6 +421,7 @@ export class DeterministicBackend {
     if (path === "/data/cards/glossario") return this.json(route, { palavras_chave: {
       sangria: { nome: "Sangria", regra: "Causa 1 de dano por rodada durante 3 rodadas." },
       rachadura: { nome: "Rachadura", regra: "+25% de dano recebido por 2 rodadas." } } });
+    if (path === "/game/combat/preview" && this.previewDelayMs) await new Promise((r) => setTimeout(r, this.previewDelayMs));
     if (path === "/game/combat/preview") return this.json(route, {
       chance_acerto_pct: 62, chance_critico_pct: 8, dano_min: 3, dano_max: 6, ferimento_provavel: null,
       efeitos_extra: ["Sangramento"], pressagio_frustrado: false });

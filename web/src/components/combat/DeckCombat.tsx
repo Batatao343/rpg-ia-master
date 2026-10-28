@@ -104,7 +104,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   // SPEC-345 R14: a mira aparece visível no 1º paint (sem rolar), acima da barra de envio fixa.
   useEffect(() => {
     if (armedCard) rootRef.current?.querySelector<HTMLElement>(".aimbar")?.scrollIntoView?.({ block: "nearest" });
-  }, [armed?.index, armed?.targetId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [armed?.index, armed?.targetId, preview.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function disarm() {
     onDisarm();
@@ -160,9 +160,11 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     return () => document.removeEventListener("keydown", onKey, true);
   });
 
+  // SPEC-347 R1.1: com o alvo fixado, a linha da prévia ocupa espaço desde o 1º render (sem esperar o efeito).
+  const shownPreview: PreviewState = previewKey && preview.status === "idle" ? { status: "pending" } : preview;
   const rules = armedCard && touch ? keywordRules(armedCard.texto ?? "", glossary) : [];
   return (
-    <div className="deck-combat" ref={rootRef} data-aim-safe data-omens={omens ? "on" : undefined}>
+    <div className="deck-combat" ref={rootRef} data-aim-safe data-omens={omens ? "on" : undefined} data-armed={armedCard ? "" : undefined}>
       <SceneStrip round={combat.round} cena={combat.cena} objetivo={combat.objetivo} pressagios={combat.pressagios_cena} />
       {arena(omens)}
       <Hand piles={piles} glossary={glossary} reasons={reasons} armedIndex={armed?.index ?? null} busy={busy} onPlay={play}
@@ -173,11 +175,14 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
             <span>Mirando {armedCard.name}: escolha o alvo na arena.</span>
           ) : (
             <>
-              <PreviewChip state={preview} />
-              <button type="button" className="btn btn--primary btn--sm" data-play-confirm
-                onClick={() => add(armedCard, armed?.targetId)}>
-                {armed?.targetId ? `Jogar em ${nameOf(armed.targetId) ?? "alvo"}` : "Jogar"}
-              </button>
+              <PreviewChip state={shownPreview} />
+              <div className="aimbar__actions">
+                <button type="button" className="btn btn--primary btn--sm" data-play-confirm
+                  onClick={() => add(armedCard, armed?.targetId)}>
+                  {armed?.targetId ? `Jogar em ${nameOf(armed.targetId) ?? "alvo"}` : "Jogar"}
+                </button>
+                <button type="button" className="aimbar__cancel" onClick={disarm}>{touch ? "Cancelar" : "Cancelar (Esc)"}</button>
+              </div>
               {needsTarget && armedTargets.length > 1 && (
                 <button type="button" className="actionchip" data-other-target onClick={onClearTarget}>Outro alvo</button>
               )}
@@ -192,7 +197,9 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
               })}
             </div>
           )}
-          <button type="button" className="aimbar__cancel" onClick={disarm}>{touch ? "Cancelar" : "Cancelar (Esc)"}</button>
+          {needsTarget && !armed?.targetId && (
+            <button type="button" className="aimbar__cancel" onClick={disarm}>{touch ? "Cancelar" : "Cancelar (Esc)"}</button>
+          )}
         </div>
       ) : maneuverAim}
       <PlayQueue queue={queue} selected={selected} nameOf={nameOf} busy={busy} touch={touch}
