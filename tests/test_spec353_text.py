@@ -119,3 +119,30 @@ def test_mech_log_shows_absorbed():
         "absorvido": 1,
     }
     assert "acerto · Proteção −1 · 5 dano" in cpv.mech_log([atk], [])[0]
+
+
+@pytest.mark.parametrize("dtype", ["cortante", "perfurante", "impactante"])
+@pytest.mark.parametrize("prot", [1, 3, 20])
+@pytest.mark.parametrize("seed", range(5))
+def test_preview_after_defense_equals_engine(dtype, prot, seed):
+    """R21: dano_*_apos_defesa == dano real do motor (mesmo pipeline) com armadura publica."""
+    from services import conflict_damage as cd
+
+    target = {
+        "id": "t",
+        "armor": {"protecao": prot, "integridade_atual": 4, "integridade_max": 4, "reducoes_max": 2},
+        "active_conditions": [],
+    }
+    base = 7
+    after = cpv._after_public_defense(target, dtype, base)
+    real = _actor("t", corpo=5, categoria="padrao")
+    real["armor"] = dict(target["armor"])
+    res = cd.resolve_damage_and_wounds(
+        real, damage_base=base, damage_type=dtype, crit_mult=1, rng=random.Random(seed)
+    )
+    assert after == res["dano_final"]
+
+
+def test_preview_arcane_vs_armor_is_unknown():
+    target = {"armor": {"protecao": 5, "integridade_atual": 3}, "active_conditions": []}
+    assert cpv._after_public_defense(target, "arcano", 7) is None

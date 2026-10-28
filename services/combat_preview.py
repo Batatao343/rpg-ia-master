@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import copy
 import itertools
+import random
 from typing import Any
 
 import combat_mechanics as cm
@@ -81,6 +82,40 @@ def effective_damage_base(
     if mods:
         partes.append(f"{mods:+d} de bônus")
     return total, dtype, partes
+
+
+def _after_public_defense(target: dict, dtype: str, raw: int) -> int | None:
+    """Dano que sobra depois da defesa PÚBLICA do alvo (armadura visível + condições visíveis),
+    rodando o próprio ``resolve_damage_and_wounds`` numa cópia sem nada oculto (resistências,
+    imunidades, ``resist_tipos``, escudo). ``None`` = sem defesa pública conhecida."""
+    from services import conflict_damage as cd
+
+    armor = target.get("armor") or {}
+    cond_prot = int(cm.combat_modifiers(target).get("protection", 0) or 0)
+    if not armor and not cond_prot:
+        return None
+    if dtype not in gamedata.DANO_FISICO and not cond_prot:
+        return None  # `resist_tipos` da armadura é oculto: não dá para saber se absorve
+    public_armor = {
+        k: armor[k]
+        for k in ("protecao", "integridade_atual", "integridade_max", "reducoes_max")
+        if k in armor
+    }
+    if public_armor and int(armor.get("integridade_atual", 1) or 0) <= 0:
+        public_armor["comprometida"] = True
+    ghost = {
+        "id": "preview",
+        "vitalidade": 10**6,
+        "max_vitalidade": 10**6,
+        "virtudes": {"corpo": 5},
+        "ferimentos": {"leve": [], "grave": [], "critico": []},
+        "active_conditions": copy.deepcopy(target.get("active_conditions") or []),
+        "armor": public_armor,
+    }
+    res = cd.resolve_damage_and_wounds(
+        ghost, damage_base=raw, damage_type=dtype, crit_mult=1, rng=random.Random(0)
+    )
+    return int(res.get("dano_final", raw) or 0)
 
 
 def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
@@ -168,14 +203,13 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     ]
     kws = fx.keywords(card) if card else {}
     frustra = bool(pressagios) and bool(kws.get("interromper") or (direct and dano_max >= vit))
-    # SPEC-353 R19: a Proteção PÚBLICA do alvo (armadura visível + condição visível); nada oculto.
-    defesa = None
+    # SPEC-353 R19: a Proteção PÚBLICA, calculada pelo MESMO pipeline de dano do motor.
+    after_min = after_max = defesa = None
     if direct:
-        panel = bk.public_panel(target)
-        armor_prot = panel.get("protecao")
-        cond_prot = int(cm.combat_modifiers(target).get("protection", 0) or 0)
-        if armor_prot is not None or cond_prot:
-            defesa = max(0, int(armor_prot or 0) + cond_prot)
+        after_min = _after_public_defense(target, dtype, dano_min)
+        after_max = _after_public_defense(target, dtype, dano_max)
+        if after_min is not None:
+            defesa = max(0, dano_min - after_min)
     result = {
         "chance_acerto_pct": round(p_hit * 100, 1),
         "chance_critico_pct": round((dist["critico"] + dist["supercritico"]) * 100, 1),
@@ -187,9 +221,9 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
         "aproximado": aproximado,
         "defesa_conhecida": defesa,
     }
-    if defesa is not None:
-        result["dano_min_apos_defesa"] = max(0, dano_min - defesa)
-        result["dano_max_apos_defesa"] = max(0, dano_max - defesa)
+    if defesa is not None and after_min is not None and after_max is not None:
+        result["dano_min_apos_defesa"] = after_min
+        result["dano_max_apos_defesa"] = after_max
     return result
 
 
