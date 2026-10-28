@@ -11,6 +11,11 @@ por Fôlego. Marca ``em_branco`` (uso < 5 %) e ``dominante`` (uso > 60 % ou delt
 O bot é o de baralho completo (``full_deck_decl``): cura quando < 50 % de Vitalidade,
 defesa quando < 75 %, depois os golpes de maior dano, enquanto houver Fôlego (sem
 tomar emprestado no Pacto). Reaproveita a arena da SPEC-285 e a do baralho (SPEC-328).
+
+SPEC-358: ``--protocolo lote-v2`` (``protocolo="v2"``) mede o delta por SUBSTITUIÇÃO (a Carta
+contra uma referência sintética de mesmo custo/tier/faixa de orçamento, no mesmo baralho) e
+rebaixa o uso do bot a AVISO; só ``dominante`` pelo delta vira bandeira. Mesmos limiares do
+v1, que segue o default e byte-idêntico.
 """
 
 from __future__ import annotations
@@ -331,7 +336,13 @@ def build_arms(card: dict, level: int, subclass: str) -> tuple[list[str], list[s
     return sem, sem + [cid] * copies
 
 
-def simulate_batch(batch: list[dict], levels, categories, per_cat, seeds) -> dict:
+def simulate_batch(
+    batch: list[dict], levels, categories, per_cat, seeds, *, protocolo: str = "v1"
+) -> dict:
+    if protocolo not in ("v1", "v2"):
+        raise ValueError(f"protocolo inválido: {protocolo!r} (use 'v1' ou 'v2')")
+    if protocolo == "v2":
+        return _simulate_batch_v2(batch, levels, categories, per_cat, seeds)
     encs = encounters(levels, categories, per_cat)
     report: dict[str, dict] = {}
     with injected(batch):
@@ -384,14 +395,186 @@ def simulate_batch(batch: list[dict], levels, categories, per_cat, seeds) -> dic
     return report
 
 
+# --------------------------------------------------------------------------
+# SPEC-358: protocolo lote-v2 (delta por substituição, uso como aviso)
+# --------------------------------------------------------------------------
+_REF_TIPOS_SEM = {"reacao", "passiva", "virtude", "utilitaria"}
+
+
+def _card_kind_of(card: dict) -> str:
+    return str((fx.materialize(card).get("efeito") or {}).get("kind") or "")
+
+
+def referencia(card: dict) -> dict | None:
+    """Carta sintética de mesmo custo/tier/faixa que ``card`` (R7), ou ``None``."""
+    if card.get("tipo") in _REF_TIPOS_SEM:
+        return None
+    kind = _card_kind_of(card)
+    if kind in ct._ATTACK_EFFECTS:
+        familia = "ataque"
+    elif kind == "cura":
+        familia = "cura"
+    elif kind in _DEFENSE_KINDS or kind in ct._SUPPORT_EFFECTS:
+        familia = "defesa"  # inclui "outro suporte" (limitação D3)
+    else:
+        return None
+    ref = {
+        "id": f"{card['id']}~ref",
+        "name": f"{card.get('name', card['id'])} (ref)",
+        "tipo": "ativa",
+        "origem": card.get("origem", "ref-358"),
+        "classe": card.get("classe"),
+        "subclasse": card.get("subclasse"),
+        "patamar": card.get("patamar"),
+        "raridade": card.get("raridade"),
+        "tier": card.get("tier", 1),
+        "level_req": card.get("level_req", 1),
+        "frequencia": card.get("frequencia", "livre"),
+        "custo_entropia": card.get("custo_entropia", 0),
+        "custo_folego": fx.custo_folego(card),
+        "virtude_permitida": list(card.get("virtude_permitida") or []),
+        "descricao": "Referência sintética (SPEC-358).",
+        "momento": "Referência sintética (SPEC-358).",
+        "apex": False,
+        "onda": 0,
+        "versao": 1,
+    }
+    arma = None
+    if familia == "ataque":
+        arma = (fx.primary_effect(card) or {}).get("categoria_arma")
+
+    def efeito(x: int) -> dict:
+        if familia == "ataque":
+            e = {"kind": "dano", "dano_base": x}
+            if arma:
+                e["categoria_arma"] = arma
+            return e
+        return {"kind": "cura" if familia == "cura" else "protecao", "valor": x}
+
+    band = fx.budget_band(dict(ref, efeitos=[efeito(1)]))
+    if band is None:
+        return None
+    mid = (band[0] + band[1]) / 2
+    best = None
+    for x in range(1, 41):
+        score = fx.power_score(dict(ref, efeitos=[efeito(x)]))
+        if not band[0] <= score <= band[1]:
+            continue
+        dist = abs(score - mid)
+        if best is None or dist < best[0]:  # empate: vale o menor X (varre crescente)
+            best = (dist, x)
+    if best is None:
+        return None
+    return fx.materialize(dict(ref, efeitos=[efeito(best[1])]))
+
+
+def build_arms_v2(
+    card: dict, level: int, subclass: str
+) -> tuple[list[str], list[str], list[str] | None, dict | None]:
+    """``(base, com, ref_deck|None, ref_card|None)``; ``base``/``com`` como ``build_arms``.
+    Referência que não ocupa a mesma posição no baralho ordenado (R9) é descartada
+    (``ref_card == {"fora_de_posicao": True}``)."""
+    base, com = build_arms(card, level, subclass)
+    ref = referencia(card)
+    if ref is None:
+        return base, com, None, None
+    copies = len(com) - len(base)
+    ref_deck = base + [ref["id"]] * copies
+    if sorted(com).index(card["id"]) != sorted(ref_deck).index(ref["id"]):
+        return base, com, None, {"fora_de_posicao": True}
+    return base, com, ref_deck, ref
+
+
+def _simulate_batch_v2(batch, levels, categories, per_cat, seeds) -> dict:
+    encs = encounters(levels, categories, per_cat)
+    report: dict[str, dict] = {}
+    with injected(batch):
+        for card in batch:
+            cid = card["id"]
+            cls = card.get("classe")
+            level = max(int(card.get("level_req", 1) or 1), 1)
+            subclass = str(card.get("subclasse") or "")
+            my_levels = [lv for lv in levels if lv >= level] or [max(levels)]
+            my_encs = [e for e in encs if e[2] in my_levels]
+            base, com, ref_deck, ref = build_arms_v2(card, max(my_levels), subclass)
+            fora = bool(ref and ref.get("fora_de_posicao"))
+            seen: dict = {}
+            # Três braços PAREADOS: mesma tag, mesmos encontros e sementes.
+            w0, f0 = batch_fights(cls, base, "par", my_encs, seeds)
+            w1, f1 = batch_fights(cls, com, "par", my_encs, seeds, seen)
+            wr = fr = 0
+            if ref_deck is not None:
+                with injected([ref]):
+                    wr, fr = batch_fights(cls, ref_deck, "par", my_encs, seeds)
+            na_mao, jogada = seen.get(cid, [0, 0])
+            uso = (jogada / na_mao) if na_mao else 0.0
+            delta_rem = round(((w1 / f1) - (w0 / f0)) * 100, 1) if f0 and f1 else 0.0
+            if ref_deck is not None and fr and f1:
+                delta, delta_base = round(((w1 / f1) - (wr / fr)) * 100, 1), "substituicao"
+            else:
+                delta, delta_base = delta_rem, "remocao"
+            avisos: list[str] = []
+            jogavel = card.get("tipo") not in ("reacao", "passiva", "virtude") and (
+                _kind(cid) in ct._ATTACK_EFFECTS or _kind(cid) in ct._SUPPORT_EFFECTS
+            )
+            if not jogavel:
+                avisos.append("uso_nao_medido")
+            elif na_mao < AMOSTRA_MINIMA_MAO:
+                avisos.append("amostra_insuficiente")
+            else:
+                if uso < LIMIAR_BRANCA:
+                    avisos.append("uso_baixo")
+                if uso > LIMIAR_DOMINANTE_USO:
+                    avisos.append("uso_alto")
+            if ref_deck is None:
+                avisos.append("sem_referencia")
+                if fora:
+                    avisos.append("referencia_fora_de_posicao")
+            flags = (
+                ["dominante"] if f1 >= MIN_LUTAS_DELTA and delta > LIMIAR_DOMINANTE_DELTA_PP else []
+            )
+            info = None
+            if ref_deck is not None:
+                band = fx.budget_band(ref)
+                info = {
+                    "id": ref["id"],
+                    "efeito": fx.primary_effect(ref),
+                    "power_score": fx.power_score(ref),
+                    "faixa": [band[0], band[1]] if band else None,
+                }
+            report[cid] = {
+                "protocolo": "lote-v2",
+                "classe": cls,
+                "vezes_na_mao": na_mao,
+                "vezes_jogada": jogada,
+                "taxa_uso": round(uso, 3),
+                "vitoria_sem": round(w0 / f0, 3) if f0 else 0.0,
+                "vitoria_ref": round(wr / fr, 3) if fr else None,
+                "vitoria_com": round(w1 / f1, 3) if f1 else 0.0,
+                "delta_pp": delta,
+                "delta_base": delta_base,
+                "delta_pp_remocao": delta_rem,
+                "lutas_por_braco": f1,
+                "referencia": info,
+                **per_folego(card),
+                "bandeiras": flags,
+                "avisos": avisos,
+            }
+    return report
+
+
 # Protocolo de lote (fixado pelo coordenador/SPEC-336, igual para todos os lotes): cada Carta
 # ISOLADA (as outras do lote saem do catálogo na sua rodada), ao nível de entrada
 # (`level_req`), encontro padrão, 20 sementes. É só um preset dos parâmetros acima: métrica,
 # limiares e fórmulas são os mesmos de `simulate_batch`.
 PROTOCOLO_LOTE = {"categories": ["padrao"], "per_cat": 4, "seeds": 20}
+# SPEC-358: mesmas categorias/criaturas/sementes e limiares; muda o delta (substituição) e o uso (aviso).
+PROTOCOLO_LOTE_V2 = {**PROTOCOLO_LOTE, "versao": 2, "delta": "substituicao", "uso": "aviso"}
 
 
-def simulate_protocolo_lote(batch: list[dict]) -> dict:
+def simulate_protocolo_lote(batch: list[dict], *, protocolo: str = "v1") -> dict:
+    if protocolo not in ("v1", "v2"):
+        raise ValueError(f"protocolo inválido: {protocolo!r} (use 'v1' ou 'v2')")
     ids = {c["id"] for c in batch}
     report: dict[str, dict] = {}
     base = cards._load_cards()
@@ -406,6 +589,7 @@ def simulate_protocolo_lote(batch: list[dict]) -> dict:
                     PROTOCOLO_LOTE["categories"],
                     PROTOCOLO_LOTE["per_cat"],
                     list(range(PROTOCOLO_LOTE["seeds"])),
+                    protocolo=protocolo,
                 )
             )
         finally:
@@ -418,7 +602,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--lote", required=True)
     ap.add_argument(
         "--protocolo",
-        choices=["lote"],
+        choices=["lote", "lote-v2"],
         help="preset: cada Carta isolada, ao level_req, 20 sementes, encontro padrão",
     )
     ap.add_argument("--out", help="grava o relatório JSON neste arquivo")
@@ -433,6 +617,8 @@ def main(argv: list[str] | None = None) -> int:
     batch = card_lint.load_batch(args.lote)
     if args.protocolo == "lote":
         report = simulate_protocolo_lote(batch)
+    elif args.protocolo == "lote-v2":
+        report = simulate_protocolo_lote(batch, protocolo="v2")
     else:
         report = simulate_batch(
             batch,
@@ -447,6 +633,15 @@ def main(argv: list[str] | None = None) -> int:
             f.write("\n")
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=1))
+    elif args.protocolo == "lote-v2":
+        for cid, r in report.items():
+            ref = (r.get("referencia") or {}).get("id", "-")
+            print(
+                f"{cid}: uso {r['taxa_uso']:.0%} ({r['vezes_jogada']}/{r['vezes_na_mao']}) "
+                f"delta {r['delta_pp']:+.1f}pp ({r['delta_base']}) ref {ref} "
+                f"dano/F {r['dano_por_folego']} prot/F {r['protecao_por_folego']} "
+                f"{','.join(r['bandeiras'])} avisos:{','.join(r['avisos'])}"
+            )
     else:
         for cid, r in report.items():
             print(

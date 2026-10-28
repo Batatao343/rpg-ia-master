@@ -176,6 +176,12 @@ def main(argv: list[str] | None = None) -> int:
         help="promove sem revisão de voz: grava revisor_voz null e voz_status pendente-dono",
     )
     ap.add_argument("--sim-report", help="JSON de `sim.py --json`; sem ele roda a simulação")
+    ap.add_argument(
+        "--protocolo",
+        choices=["lote", "lote-v2"],
+        default="lote",
+        help="protocolo da simulação quando não há --sim-report (SPEC-358; default v1)",
+    )
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
     if args.sim_report:
@@ -185,7 +191,12 @@ def main(argv: list[str] | None = None) -> int:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         import sim
 
-        sim_report = sim.simulate_protocolo_lote(card_lint.load_batch(args.lote))
+        if args.protocolo == "lote-v2":
+            sim_report = sim.simulate_protocolo_lote(
+                card_lint.load_batch(args.lote), protocolo="v2"
+            )
+        else:
+            sim_report = sim.simulate_protocolo_lote(card_lint.load_batch(args.lote))
     res = promote(
         args.lote,
         sim_report,
