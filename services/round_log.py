@@ -578,6 +578,8 @@ def final_blow_sentence(last_out: dict | None, names: dict[str, str]) -> str:
         if blow.get("kind") == "dano_continuo":
             cond = str(blow.get("condition") or "dano contínuo")
             return f"O {cond} termina o serviço: {target} tomba."
+        if by == "player" and blow.get("kind") == "reacao":  # SPEC-355 R4
+            return f"Sua reação termina o serviço: {target} tomba."
         if by == "player":
             return f"Seu golpe termina o serviço: {target} tomba."
         who = names.get(by)

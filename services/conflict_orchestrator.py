@@ -308,11 +308,12 @@ def _mark_fresh_conditions(
                     continue
                 if not _is_defensive_debuff(c):
                     same_side = aid in team and current_actor_id in team
-                    if not (
-                        same_side
-                        and c.get("stat") in ("ac", "protection")
-                        and int(c.get("delta", 0) or 0) > 0
-                    ):
+                    positive_def = (
+                        c.get("stat") in ("ac", "protection") and int(c.get("delta", 0) or 0) > 0
+                    )
+                    # SPEC-355 R1: buff que o reagente pôs EM SI na Reação (tag do chamador)
+                    own_reaction = positive_def and str(c.get("source_actor_id") or "") == aid
+                    if not ((same_side and positive_def) or own_reaction):
                         continue
             else:
                 continue
@@ -1114,8 +1115,40 @@ def _open_reaction_window(
             _deck.reaction_commit(state, reactor, card)  # SPEC-328 R12 (no-op sem baralho)
         # Proteção limitada ao próximo ataque; não deixa Guarda persistente.
         cs.grant_tactical_modifier(scene, "protected", rid, rid)
+        _conds_before = list(reactor.get("active_conditions") or [])
+        _falls_before = _fall_state(actors_by_id, out)
         _resolve_reaction_effect(scene, reactor, rid, card, attacker_id, actors_by_id, out, rng=rng)
+        _tag_self_buffs(reactor, rid, _conds_before)  # SPEC-355 R1 (fora do golden)
+        for tid, after in _fall_state(actors_by_id, out).items():  # SPEC-355 R4
+            if after != _falls_before.get(tid) and any(after):
+                _record_final_blow(out, tid, by=rid, cause="reacao", card_id=str(card.get("id")))
     out.setdefault("reactions", []).extend(rx.resolve_chain(chain))
+
+
+def _fall_state(actors_by_id: dict[str, dict], out: dict) -> dict[str, tuple[bool, bool, bool]]:
+    """(morto, terminal, incapacitado) de cada ator: base do golpe final por Reação (SPEC-355 R4)."""
+    deaths, terminal = set(out.get("deaths") or []), set(out.get("terminal") or [])
+    return {
+        aid: (aid in deaths, aid in terminal, bool(actor.get("incapacitated")))
+        for aid, actor in actors_by_id.items()
+    }
+
+
+def _tag_self_buffs(reactor: dict, reactor_id: str, before: list[dict]) -> None:
+    """SPEC-355 R1: buff defensivo (ac/protection > 0) que o reagente pôs EM SI na Reação ganha
+    `source_actor_id`, para `_mark_fresh_conditions` o fazer valer até o próximo ataque. A marca
+    nasce AQUI (chamador), nunca dentro de `_resolve_reaction_effect` (caminho do golden)."""
+    for c in reactor.get("active_conditions") or []:
+        if c.get("persistente") or c.get("source_actor_id"):
+            continue
+        fresh = bool(c.get("_renovada")) or not any(c is p for p in before)
+        if (
+            fresh
+            and _is_stat_only(c)
+            and c.get("stat") in ("ac", "protection")
+            and int(c.get("delta", 0) or 0) > 0
+        ):
+            c["source_actor_id"] = reactor_id
 
 
 def _resolve_reaction_effect(
@@ -1541,13 +1574,20 @@ def _check_terminal(
         _record_final_blow(out, target_id, by=by, cause=cause)
 
 
-def _record_final_blow(out: dict, target_id: str, *, by: str = "", cause: str = "") -> None:
+def _record_final_blow(
+    out: dict,
+    target_id: str,
+    *,
+    by: str = "",
+    cause: str = "",
+    card_id: str | None = None,
+) -> None:
     """Registro de autoria da queda (só para o resumo/registro; nunca afeta o motor)."""
     blow: dict = {
         "target_id": target_id,
         "kind": cause or ("ataque" if by else "dano_continuo"),
         "by_actor_id": by or None,
-        "card_id": None,
+        "card_id": card_id,
         "condition": None,
     }
     if blow["kind"] == "ataque":
