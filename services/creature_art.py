@@ -139,6 +139,27 @@ def _curated(subject_type: str, subject_id: str) -> str | None:
     return _src(visual_catalog.visual_for(subject_type, subject_id)) if subject_id else None
 
 
+_VARIANT_ORDER = ("thumb", "thumbnail", "full", "display")
+
+
+def variant_url(variants: Any) -> str | None:
+    """URL servível da melhor variante de uma linha do registro. Aceita o formato REAL do job
+    (`workers/dynamic_art_jobs.py`: lista de `{variant: "thumb"|"full", key, ...}`) e o dict
+    `{thumb|thumbnail|full|display: {url}}`. O job só grava `key` (objeto no storage): quem converte a chave em URL
+    é a SPEC-352; até lá uma linha sem `url` não resolve imagem (cai no marcador, nunca num caminho inventado)."""
+    if isinstance(variants, list):
+        by_name = {str(v.get("variant")): v for v in variants if isinstance(v, dict)}
+    elif isinstance(variants, dict):
+        by_name = {str(k): v for k, v in variants.items() if isinstance(v, dict)}
+    else:
+        return None
+    for name in _VARIANT_ORDER:
+        url = (by_name.get(name) or {}).get("url")
+        if url:
+            return str(url)
+    return None
+
+
 def _registry_src(registry: PortraitRegistry, key: str, *, game_id: str) -> tuple[str | None, bool]:
     """(src, pending). Visibilidade: `game` só para o jogo de origem; `shared` para todos."""
     row = registry.get(key)
@@ -147,8 +168,7 @@ def _registry_src(registry: PortraitRegistry, key: str, *, game_id: str) -> tupl
     if row.get("visibility") == "game" and row.get("origin_game_id") != game_id:
         return None, False
     if row.get("status") == "ready":
-        variants = row.get("variants") or {}
-        return (variants.get("thumbnail") or {}).get("url") or variants.get("url"), False
+        return variant_url(row.get("variants")), False
     return None, row.get("status") == "pending"
 
 

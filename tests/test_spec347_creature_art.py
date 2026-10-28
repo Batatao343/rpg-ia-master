@@ -203,3 +203,50 @@ def test_view_exposes_marker_with_flag_on(monkeypatch):
     retrato = block["enemies"][0]["retrato"]
     assert retrato["estado"] == "marcador" and retrato["alt"].startswith("Retrato de ")
     assert set(retrato) == {"estado", "src", "familia", "icone", "alt", "proprio", "gerar"}
+
+
+# --- formato real do registro (SPEC-347 P2-1) ---------------------------------------------
+def _job_variants(with_url):
+    """Mesmo formato que `workers/dynamic_art_jobs.generate_dynamic_art_job` devolve em `variants`."""
+    rows = [
+        {
+            "key": "shared/creatures/x/a.full.abc.webp",
+            "sha256": "f",
+            "bytes": 10,
+            "variant": "full",
+            "mime_type": "image/webp",
+            "width": 1536,
+            "height": 1536,
+        },
+        {
+            "key": "shared/creatures/x/a.thumb.abc.webp",
+            "sha256": "t",
+            "bytes": 5,
+            "variant": "thumb",
+            "mime_type": "image/webp",
+            "width": 384,
+            "height": 384,
+        },
+    ]
+    if with_url:
+        rows[0]["url"], rows[1]["url"] = "/m/full.webp", "/m/thumb.webp"
+    return rows
+
+
+def test_variant_url_reads_the_real_job_format():
+    assert ca.variant_url(_job_variants(True)) == "/m/thumb.webp"  # thumb antes de full
+    assert (
+        ca.variant_url(_job_variants(False)) is None
+    )  # só `key`: a 352 converte; nunca inventa caminho
+    assert ca.variant_url({"full": {"url": "/f"}, "thumb": {"url": "/t"}}) == "/t"
+    assert ca.variant_url(None) is None
+
+
+def test_registry_row_in_real_job_format_resolves_or_falls_back_to_marker():
+    row = lambda v: {
+        "tipo:enemy_goblin": {"status": "ready", "visibility": "shared", "variants": v}
+    }  # noqa: E731
+    ok = ca.portrait_for(_goblin(), None, game_id="g", registry=Reg(row(_job_variants(True))))
+    assert ok["estado"] == "pronto" and ok["src"] == "/m/thumb.webp"
+    no_url = ca.portrait_for(_goblin(), None, game_id="g", registry=Reg(row(_job_variants(False))))
+    assert no_url["estado"] == "marcador" and no_url["src"] is None
