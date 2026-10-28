@@ -121,3 +121,33 @@ def test_deck_off_has_no_last_round_log(monkeypatch):
     meta: dict = {}
     cpv.store_mech_log(meta, {"attacks": [], "cards_used": []}, ACTORS)
     assert "last_round_log" not in meta and "last_mech_log" not in meta
+
+
+def test_passive_counter_attack_comes_after_the_blow_that_caused_it():
+    """Contra-ataque passivo (depois de levar o golpe): o golpe do inimigo vem antes do revide (P2-4)."""
+    out = {
+        "attacks": [
+            _atk("enemy_1", "player", card_id=None),
+            _atk("player", "enemy_1", fora_de_turno="Contra-ataque"),
+        ],
+        "cards_used": [],
+        "turn_spans": [{"actor_id": "enemy_1", "attacks": [0, 2], "cards": [0, 0]}],
+    }
+    log = cpv.round_log(out, ACTORS, {"enemy_1"})
+    assert [(e["ator_id"], e["origem"]) for e in log] == [
+        ("enemy_1", "turno"),
+        ("player", "reacao"),
+    ]
+
+
+def test_reaction_window_attack_still_precedes_the_actors_blow():
+    out = {
+        "attacks": [
+            _atk("enemy_1", "player", fora_de_turno="Contra-ataque"),
+            _atk("player", "enemy_1"),
+        ],
+        "cards_used": [],
+        "turn_spans": [{"actor_id": "player", "attacks": [0, 2], "cards": [0, 0]}],
+    }
+    log = cpv.round_log(out, ACTORS, {"enemy_1"})
+    assert [e["ator_id"] for e in log] == ["enemy_1", "player"]

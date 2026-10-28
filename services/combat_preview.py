@@ -345,34 +345,37 @@ def round_board(
         c0, c1 = span["cards"]
         span_attacks = [(i, attacks[i]) for i in range(a0, min(a1, len(attacks)))]
         covered.update(i for i, _ in span_attacks)
-        own_card_ids = {str(u.get("card_id")) for u in used[c0:c1]}
-        for _, atk in span_attacks:  # reações da janela abrem antes do golpe de quem age
-            if atk.get("fora_de_turno"):
-                entries.append(attack_entry(atk, reaction=True))
-        taken: set[int] = set()
-        for use in used[c0:c1]:
-            match = next(
+        span_cards = list(range(c0, min(c1, len(used))))
+        matched: dict[int, int] = {}  # índice do ataque -> índice da carta que o causou
+        for j in span_cards:
+            m = next(
                 (
                     i
                     for i, atk in span_attacks
-                    if i not in taken
+                    if i not in matched
                     and not atk.get("fora_de_turno")
-                    and str(atk.get("card_id")) == str(use.get("card_id"))
+                    and str(atk.get("card_id")) == str(used[j].get("card_id"))
                 ),
                 None,
             )
-            if match is not None:
-                taken.add(match)
-                entries.append(attack_entry(attacks[match], reaction=False))
-            else:
-                entries.append(card_entry(use))
+            if m is not None:
+                matched[m] = j
+        done_cards: set[int] = set(matched.values())
+        emitted: set[int] = set()
+        # Ordem cronológica = ordem dos índices de `out["attacks"]`: a reação da janela (antes do golpe) vem
+        # antes e o contra-ataque passivo/Última Ação (depois de levar o golpe) vem depois do golpe que o causou.
         for i, atk in span_attacks:
-            if (
-                i not in taken
-                and not atk.get("fora_de_turno")
-                and str(atk.get("card_id")) not in own_card_ids
-            ):
+            if i in matched:
+                for j in span_cards:  # efeitos sem ataque anteriores a esta carta
+                    if j < matched[i] and j not in done_cards and j not in emitted:
+                        emitted.add(j)
+                        entries.append(card_entry(used[j]))
                 entries.append(attack_entry(atk, reaction=False))
+            else:
+                entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))
+        for j in span_cards:
+            if j not in done_cards and j not in emitted:
+                entries.append(card_entry(used[j]))
     for i, atk in enumerate(attacks):  # fora de qualquer turno (Última Ação etc.)
         if i not in covered:
             entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))

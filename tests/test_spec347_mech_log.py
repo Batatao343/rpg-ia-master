@@ -71,8 +71,12 @@ def test_basic_attack_outside_a_round_stays_unannotated():
     from services import conflict_scene as cs
 
     scene = cs.new_scene()
-    a = orch.ensure_combat_sheet({"id": "a", "name": "A", "virtudes": {"forca": 3, "agilidade": 2, "corpo": 2}})
-    b = orch.ensure_combat_sheet({"id": "b", "name": "B", "virtudes": {"forca": 1, "agilidade": 1, "corpo": 2}})
+    a = orch.ensure_combat_sheet(
+        {"id": "a", "name": "A", "virtudes": {"forca": 3, "agilidade": 2, "corpo": 2}}
+    )
+    b = orch.ensure_combat_sheet(
+        {"id": "b", "name": "B", "virtudes": {"forca": 1, "agilidade": 1, "corpo": 2}}
+    )
     for i in ("a", "b"):
         cs.place(scene, i)
     out: dict = {"logs": []}
