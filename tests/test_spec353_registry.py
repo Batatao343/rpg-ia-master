@@ -355,3 +355,55 @@ def test_record_flags_never_land_on_actors():
     blob = json.dumps([hero, boss], default=str)
     assert "_sem_vit_avisado" not in blob and "_taunt_resisted" not in blob
     assert len([x for x in out.get("sem_vitalidade", []) if x["actor_id"] == "boss"]) <= 1
+
+
+def _taunted_boss():
+    boss = _actor("boss", corpo=3, categoria="padrao")
+    boss["active_conditions"] = [
+        {
+            "name": "Provocado",
+            "dot": 0,
+            "duration": 9,
+            "control": "taunt",
+            "source_actor_id": "player",
+        }
+    ]
+    return boss
+
+
+def test_taunt_resist_survives_the_round_with_intent_on_and_does_not_leak(monkeypatch):
+    """P3-7: com presságio `on` a rolagem do congelamento mora na cena e a linha sai na rodada
+    seguinte; cena nova não herda nada; o ator fica limpo."""
+    import json
+
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    found = None
+    for seed in range(40):
+        hero = _actor("player", corpo=5, is_player=True)
+        boss = _taunted_boss()
+        scene = _scene("player", "boss")
+        actors = {"player": hero, "boss": boss}
+        for _ in range(3):
+            out = orch.run_round(
+                scene, actors, SIDES, declarations={}, initiator="heroes", rng=random.Random(seed)
+            )
+            hero["vitalidade"] = hero["max_vitalidade"]
+            if any(m["kind"] == "special:taunt_resisted" for m in out["class_mechanics"]):
+                found = (scene, out, actors)
+                break
+        if found:
+            break
+    assert found, "nenhuma seed produziu 'resiste à Provocação' com o presságio on"
+    scene, out, actors = found
+    reg = round_log.round_registry(out, {"player": actors["player"], "boss": actors["boss"]})
+    assert "Boss resiste à Provocação." in reg
+    assert "boss" not in scene.get("taunt_resistidos", [])  # consumido ao agir
+    assert "_taunt_resisted" not in json.dumps(actors, default=str)
+    assert not _scene("player", "boss").get("taunt_resistidos")  # cena nova: zerada
+
+
+def test_public_panel_exposes_armor_reducoes_max():
+    from services import bestiary_knowledge as bk
+
+    panel = bk.public_panel({"armor": {"protecao": 2, "integridade_atual": 3, "reducoes_max": 2}})
+    assert panel["reducoes_max"] == 2 and "resist_tipos" not in panel

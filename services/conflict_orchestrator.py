@@ -19,7 +19,6 @@ determinístico e ZERO LLM em resolução:
 O jogador chega com a `TurnDeclaration` já montada (parse CLASSIFY no nó).
 """
 
-import contextvars
 import copy
 import json
 import logging
@@ -229,7 +228,11 @@ def _snapshot_conditions(actors_by_id: dict[str, dict]) -> dict[str, list[dict]]
 
 
 def _note_turn_records(
-    before: dict[str, list[dict]], actors_by_id: dict[str, dict], actor_id: str, out: dict
+    before: dict[str, list[dict]],
+    actors_by_id: dict[str, dict],
+    actor_id: str,
+    out: dict,
+    scene: dict | None = None,
 ) -> None:
     """SPEC-353 R51/R27: registro de view. Quem pôs cada condição nova (``condicoes_novas``) e
     quem chegou a 0 de Vitalidade ainda de pé (``sem_vitalidade``). Nunca muda mecânica."""
@@ -253,8 +256,8 @@ def _note_turn_records(
                         "control": c.get("control"),
                     }
                 )
-        if aid == actor_id and _actor_key(actor) in _taunt_resisted_ids():
-            _taunt_resisted_ids().remove(_actor_key(actor))
+        if aid == actor_id and _actor_key(actor) in _taunt_resisted_ids(scene):
+            _taunt_resisted_ids(scene).remove(_actor_key(actor))
             _record_class_event(out, "special:taunt_resisted", actor_id=aid)
         if (
             not actor.get("is_player")
@@ -418,17 +421,13 @@ def _nearest_target(
     return alive[0]
 
 
-_TAUNT_RESISTED: contextvars.ContextVar[list | None] = contextvars.ContextVar(
-    "taunt_resisted", default=None
-)
-
-
-def _taunt_resisted_ids() -> list:
-    """Lista efêmera (por contexto) de quem resistiu à Provocação; nunca vai para ator/save."""
-    lst = _TAUNT_RESISTED.get()
-    if lst is None:
-        lst = []
-        _TAUNT_RESISTED.set(lst)
+def _taunt_resisted_ids(scene: dict | None) -> list:
+    """Quem resistiu à Provocação, guardado na CENA (``combat_meta["scene"]``): sobrevive do
+    congelamento do presságio (fim de uma rodada) ao turno do inimigo (rodada seguinte), some com a
+    cena ao abrir conflito novo e nunca vai para o ator."""
+    if not isinstance(scene, dict):
+        return []
+    lst = scene.setdefault("taunt_resistidos", [])
     del lst[:-32]
     return lst
 
@@ -438,7 +437,11 @@ def _actor_key(actor: dict) -> str:
 
 
 def _taunt_target(
-    actor: dict, candidates: list[str], actors_by_id: dict[str, dict], rng
+    actor: dict,
+    candidates: list[str],
+    actors_by_id: dict[str, dict],
+    rng,
+    scene: dict | None = None,
 ) -> str | None:
     """Resolve Provocação fechada: a condição vive no provocado e aponta a fonte.
 
@@ -463,7 +466,7 @@ def _taunt_target(
                 }
             )
             return source_id
-        _taunt_resisted_ids().append(_actor_key(actor))  # SPEC-353 R39a: efêmero, fora do save
+        _taunt_resisted_ids(scene).append(_actor_key(actor))  # SPEC-353 R39a
     return None
 
 
@@ -651,7 +654,7 @@ def enemy_declaration(
         else canonical["_enemy_target"]
     )
     taunted_target = _taunt_target(
-        actor, _opposing_ids(actor_id, sides), actors_by_id, rng or random.Random()
+        actor, _opposing_ids(actor_id, sides), actors_by_id, rng or random.Random(), scene
     )
     if taunted_target is not None:
         target = taunted_target
@@ -2752,7 +2755,7 @@ def _run_round(
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-            _note_turn_records(_cond_before, actors_by_id, actor_id, out)
+            _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
             _mark_fresh_conditions(
                 _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
             )
@@ -2800,7 +2803,7 @@ def _run_round(
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
-        _note_turn_records(_cond_before, actors_by_id, actor_id, out)
+        _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
         _mark_fresh_conditions(
             _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
         )

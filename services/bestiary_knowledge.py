@@ -55,6 +55,8 @@ def public_panel(enemy: dict) -> dict:
         panel.setdefault("protecao", armor.get("protecao"))
         panel.setdefault("integridade_atual", armor.get("integridade_atual"))
         panel.setdefault("integridade_max", armor.get("integridade_max"))
+        if armor.get("reducoes_max") is not None:  # SPEC-353 P3-6: coerente com a prévia
+            panel.setdefault("reducoes_max", armor.get("reducoes_max"))
     return panel
 
 
