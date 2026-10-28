@@ -307,7 +307,7 @@ Custo de máquina: cada `posturas` com as sementes 20–99 é cerca de 4× a rod
 - [x] R14–R16: inventário fechado verde; os 9 + Giz + Dívida valem no `run_round` real nas duas ordens; Giz e Dívida em `duracao` 1, com delta ≤ +8 pp nas duas faixas; Médico/boticário entre 45 e 75 %.
 - [x] R17/R18: relatório completo; testes de artefato verdes.
 - [x] Revisão Sol `APPROVED_WITH_FOLLOWUPS` (`handoffs/SPEC-341-sol-review.md`), follow-ups P2-1..P2-7 tratados.
-- [ ] `uv run pytest` verde (suíte completa, 1× no pouso, pelo coordenador).
+- [x] `uv run pytest` verde (suíte completa, 1× no pouso, pelo coordenador).
 - [x] Saves antigos carregam: saves guardam só ids e o motor lê a maior `versao`.
 - [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
 
