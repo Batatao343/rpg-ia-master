@@ -129,3 +129,11 @@ como `APPROVED` sem nova rodada de revisão se a correção seguir a proposta ac
 - R2-P2-1: Valerius passa "a primeira década de governo" rastreando Daruun.
 - R2-P2-2: `art_coroa_pressao_rei_anao` fora do estoque da Forja dos Clãs e do loot épico; `test_spec298_economia_keeper` e `test_fase62` injetam a Coroa por monkeypatch para exercitar as regras de raro/único.
 - Reindex da lore refeito (Jina); testes focados 991 passed.
+
+## Fechamento (coordenador, 28/10)
+
+R2-P1-1 foi aplicado conforme a proposta do revisor (commit `042732c6`): Livro aberto quando o Monte da Perdição
+voltou a fumegar, Malagor e o Dia Sem Sombra perto do Ano 60, guerra terminando no 67. Também entraram R2-P2
+(Valerius) e a saída da Coroa da loja e do loot. Os testes focados passam (`test_spec348_*`: 68), o lint dá 0
+erro, `lore_reanchor --check` não acha âncora quebrada e o reindex de lore foi refeito. Pela cláusula do
+revisor (linha 124): **APPROVED**.

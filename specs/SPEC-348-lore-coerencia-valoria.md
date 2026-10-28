@@ -1,6 +1,6 @@
 # SPEC-348 — Coerência da lore de Valoria: aplicar as decisões de 27/10 e escrever as expansões aprovadas
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** decisões do dono em [`docs/lore/decisoes-2026-10-27.md`](../docs/lore/decisoes-2026-10-27.md)
 > (fonte de verdade, não reabrir) sobre a revisão
