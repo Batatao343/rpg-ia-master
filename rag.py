@@ -37,6 +37,7 @@ from langchain_core.embeddings import Embeddings
 
 from observability.telemetry import log_event as _log_event
 from services.memory_provenance import format_memory_fact, make_memory_fact
+from datetime import UTC
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
@@ -309,6 +310,32 @@ def _estimated_embedding_usage(values: list[str]) -> dict[str, int]:
     return {"input_tokens": -(-chars // 2), "units_estimated": 1}
 
 
+_MAX_BACKOFF_SECONDS = 60.0
+
+
+def _parse_retry_after(value: str | None) -> float | None:
+    """Retry-After em segundos ou data HTTP -> segundos (>= 0), ou None se ilegível."""
+    if not value:
+        return None
+    try:
+        return max(0.0, float(value))
+    except ValueError:
+        pass
+    from email.utils import parsedate_to_datetime
+
+    try:
+        when = parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        return None
+    if when.tzinfo is None:
+        from datetime import timezone
+
+        when = when.replace(tzinfo=UTC)
+    from datetime import datetime, timezone
+
+    return max(0.0, (when - datetime.now(UTC)).total_seconds())
+
+
 class _JinaEmbeddingsHTTPX(Embeddings):
     """Cliente Jina pequeno, síncrono e com limite de rede explícito.
 
@@ -325,9 +352,11 @@ class _JinaEmbeddingsHTTPX(Embeddings):
         model_name: str,
         timeout_seconds: float = 30.0,
         max_attempts: int = 2,
+        backoff_seconds: float = 0.0,
         client: httpx.Client | None = None,
     ) -> None:
         self.model_name = model_name
+        self.backoff_seconds = max(0.0, float(backoff_seconds))
         self.max_attempts = max(1, int(max_attempts))
         self._client = client or httpx.Client(
             headers={
@@ -356,6 +385,16 @@ class _JinaEmbeddingsHTTPX(Embeddings):
             cost_basis="exact" if outcome == "success" else "unknown",
         )
 
+    def _sleep_before_retry(self, attempt: int, response: httpx.Response | None) -> None:
+        """SPEC-356: backoff exponencial (teto 60 s) honrando Retry-After. Base 0 = não dorme."""
+        if self.backoff_seconds <= 0:
+            return
+        delay = self.backoff_seconds * (2**attempt)
+        retry_after = _parse_retry_after(response.headers.get("Retry-After")) if response else None
+        if retry_after is not None:
+            delay = retry_after
+        time.sleep(min(delay, _MAX_BACKOFF_SECONDS))
+
     def _embed(self, values: list[str]) -> list[list[float]]:
         last_error: Exception | None = None
         for attempt in range(self.max_attempts):
@@ -376,6 +415,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                         request=response.request,
                         response=response,
                     )
+                    self._sleep_before_retry(attempt, response)
                     continue
                 if response.status_code >= 400:
                     _emit_embedding_attempt("jina", self.model_name, "http_error")
@@ -419,6 +459,7 @@ class _JinaEmbeddingsHTTPX(Embeddings):
                 last_error = exc
                 if attempt + 1 >= self.max_attempts:
                     raise
+                self._sleep_before_retry(attempt, None)
         if last_error is not None:
             raise last_error
         raise RuntimeError("Jina não executou nenhuma tentativa")
@@ -441,6 +482,7 @@ def _build_jina():
         model_name="jina-embeddings-v3",
         timeout_seconds=timeout_seconds,
         max_attempts=max_attempts,
+        backoff_seconds=float(os.getenv("EMBEDDING_BACKOFF_SECONDS", "0")),
     )
 
 
@@ -1747,6 +1789,9 @@ if __name__ == "__main__":
     from observability.logging_setup import configure_logging
 
     configure_logging()
+    # SPEC-356: o reindex em lote tolera 429 (backoff + mais tentativas); runtime segue 0.
+    os.environ.setdefault("EMBEDDING_BACKOFF_SECONDS", "2")
+    os.environ.setdefault("EMBEDDING_MAX_ATTEMPTS", "6")
     for _stream in (sys.stdout, sys.stderr):
         try:
             _stream.reconfigure(encoding="utf-8")

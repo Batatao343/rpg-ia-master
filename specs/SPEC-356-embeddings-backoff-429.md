@@ -1,68 +1,53 @@
 # SPEC-356 — embeddings-backoff-429
 
-> **Status:** `draft`
+> **Status:** `in-review`
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
-> **Depende de:** <specs anteriores que precisam estar `done`>
-> **Desbloqueia:** <specs/features que dependem desta>
+> **Depende de:** SPEC-039 (embeddings-provider)
+> **Desbloqueia:** reindex global confiável com Jina
 
 ---
 
 ## 1. Contexto & Objetivo
 
-Por que esta spec existe. Qual problema resolve. 2-4 parágrafos no máximo.
-Referência ao princípio de arquitetura relevante (ver `ROADMAP.md` § Princípios).
+`rag._JinaEmbeddingsHTTPX._embed` refazia a chamada na hora em status transitório
+(429/5xx), sem backoff nem `Retry-After`. O reindex global (`python rag.py`) morreu com
+`429 Too Many Requests` da Jina em 28/10. Em runtime (turno do jogo) não se pode dormir.
 
 ## 2. Requisitos
 
-Numerados, testáveis. Cada requisito deve poder virar assert.
-
-- **R1** — ...
-- **R2** — ...
+- **R1** — Com `backoff_seconds > 0`, antes de cada nova tentativa (429/5xx/erro de rede) dorme
+  `base * 2**tentativa`, limitado a 60 s.
+- **R2** — Se a resposta traz `Retry-After` (segundos ou data HTTP), ele substitui o atraso
+  exponencial (também limitado a 60 s).
+- **R3** — `backoff_seconds == 0` (padrão, runtime) nunca chama `time.sleep`.
+- **R4** — `EMBEDDING_BACKOFF_SECONDS` (padrão 0) alimenta `_build_jina`. O CLI `python rag.py`
+  faz `setdefault` de `EMBEDDING_BACKOFF_SECONDS=2` e `EMBEDDING_MAX_ATTEMPTS=6`.
 
 ### Fora de escopo
 
-Lista explícita do que esta spec NÃO cobre (anti-scope-creep).
+openai/ollama/gemini: usam clientes langchain com retry próprio; não há loop caseiro para
+corrigir. `EMBEDDING_*` não são `RPG_*`, logo não entram em `config/flags.yaml`.
 
 ## 3. Design técnico
 
-Detalhe suficiente para uma sessão futura de IA implementar **sem reler o roadmap**:
+`rag.py`: `_parse_retry_after`, `_MAX_BACKOFF_SECONDS`, parâmetro `backoff_seconds` e método
+`_sleep_before_retry` em `_JinaEmbeddingsHTTPX`; env lido em `_build_jina`; defaults no `__main__`.
 
-- **Arquivos novos** — caminho + responsabilidade
-- **Arquivos alterados** — o que muda em cada um
-- **Schemas** — Pydantic/TypedDict completos (campos, tipos, defaults)
-- **Assinaturas** — funções públicas com tipos
-- **Formatos de dados** — JSON/frontmatter com exemplo real (usar IDs canônicos do projeto, não inventados)
+## 4. Plano
 
-## 4. Plano passo a passo
-
-Etapas ordenadas e testáveis. **Testes primeiro** (TDD): cada etapa nomeia os
-testes a escrever ANTES do código e o que cada um asserta.
-
-### Etapa N — <nome>
-
-1. **Testes** (`tests/test_<...>.py`): `test_x` asserta ...; `test_y` asserta ...
-2. **Implementação:** ...
-3. **Verificação:** `uv run pytest` verde.
+Testes em `tests/test_embeddings_provider.py` (httpx MockTransport, `time.sleep` monkeypatchado):
+Retry-After em segundos e em data HTTP, backoff exponencial com teto, base 0 não dorme, env.
 
 ## 5. Critérios de aceite
 
-Checklist objetivo. A spec só vira `done` com todos marcados.
-
-- [ ] ...
-- [ ] `uv run pytest` verde (suíte completa offline)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (try/except ou isinstance)
-- [ ] Saves antigos continuam carregando
+- [x] Testes novos + `tests/test_embeddings_provider.py` verdes (25)
+- [x] Runtime (base 0) não dorme
+- [ ] Revisão independente
 
 ## 6. Smoke test com LLM real
 
-Checklist manual curto (3-5 requests, dentro da quota Gemini de 20/dia/modelo).
-MockLLM esconde bugs de mapeamento de campo — este passo é obrigatório antes de `done`.
-
-1. ...
-2. ...
+N/A (sem LLM); reindex real com Jina fica ao coordenador/dono.
 
 ## 7. Riscos & compatibilidade
 
-- Compatibilidade com saves antigos: ...
-- Comportamento no MockLLM / FallbackLLM: ...
-- Impacto em quota/latência: ...
+Sem mudança de índice/pin. Runtime inalterado (base 0). Reindex pode levar até ~60 s por espera.

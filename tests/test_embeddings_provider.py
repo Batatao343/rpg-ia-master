@@ -8,6 +8,7 @@ fake. Ver specs/SPEC-039-embeddings-provider.md.
 import hashlib
 import json
 import os
+from datetime import UTC
 
 import httpx
 import pytest
@@ -306,3 +307,128 @@ def test_index_with_other_model_is_disabled(tmp_path, monkeypatch):
         json.dumps({"provider": "jina", "model": "outro-modelo"}), encoding="utf-8"
     )
     assert rag._embeddings_for_index(str(tmp_path)) is None
+
+
+# --- SPEC-356: backoff + Retry-After em 429/5xx ---------------------------------
+
+
+def _ok(request):
+    return httpx.Response(
+        200, request=request, json={"data": [{"index": 0, "embedding": [0.1, 0.2]}]}
+    )
+
+
+def test_jina_429_honra_retry_after_e_depois_200(monkeypatch):
+    sleeps: list[float] = []
+    monkeypatch.setattr(rag.time, "sleep", sleeps.append)
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return httpx.Response(429, request=request, headers={"Retry-After": "7"})
+        return _ok(request)
+
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="k",
+        model_name="m",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_attempts=3,
+        backoff_seconds=2.0,
+    )
+    assert emb.embed_query("x") == [0.1, 0.2]
+    assert calls == 2
+    assert sleeps == [7.0]
+
+
+def test_jina_backoff_exponencial_com_teto(monkeypatch):
+    sleeps: list[float] = []
+    monkeypatch.setattr(rag.time, "sleep", sleeps.append)
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls <= 3:
+            return httpx.Response(429, request=request, headers={"Retry-After": "9999"})
+        return _ok(request)
+
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="k",
+        model_name="m",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_attempts=5,
+        backoff_seconds=2.0,
+    )
+    emb.embed_query("x")
+    assert sleeps == [60.0, 60.0, 60.0]
+
+    sleeps.clear()
+    calls = 0
+
+    def handler2(request):
+        nonlocal calls
+        calls += 1
+        return httpx.Response(503, request=request) if calls <= 3 else _ok(request)
+
+    emb._client = httpx.Client(transport=httpx.MockTransport(handler2))
+    emb.embed_query("x")
+    assert sleeps == [2.0, 4.0, 8.0]
+
+
+def test_jina_retry_after_data_http(monkeypatch):
+    from datetime import datetime, timedelta, timezone
+    from email.utils import format_datetime
+
+    sleeps: list[float] = []
+    monkeypatch.setattr(rag.time, "sleep", sleeps.append)
+    when = format_datetime(datetime.now(UTC) + timedelta(seconds=30), usegmt=True)
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return httpx.Response(429, request=request, headers={"Retry-After": when})
+        return _ok(request)
+
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="k",
+        model_name="m",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_attempts=2,
+        backoff_seconds=1.0,
+    )
+    emb.embed_query("x")
+    assert len(sleeps) == 1 and 20 < sleeps[0] <= 31
+
+
+def test_jina_runtime_base_zero_nao_dorme(monkeypatch):
+    sleeps: list[float] = []
+    monkeypatch.setattr(rag.time, "sleep", sleeps.append)
+    calls = 0
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            return httpx.Response(429, request=request, headers={"Retry-After": "30"})
+        return _ok(request)
+
+    emb = rag._JinaEmbeddingsHTTPX(
+        api_key="k",
+        model_name="m",
+        client=httpx.Client(transport=httpx.MockTransport(handler)),
+        max_attempts=2,
+    )
+    assert emb.embed_query("x") == [0.1, 0.2]
+    assert sleeps == []
+
+
+def test_build_jina_le_backoff_do_env(monkeypatch):
+    monkeypatch.setenv("JINA_API_KEY", "k")
+    monkeypatch.delenv("EMBEDDING_BACKOFF_SECONDS", raising=False)
+    assert rag._build_jina().backoff_seconds == 0.0
+    monkeypatch.setenv("EMBEDDING_BACKOFF_SECONDS", "2")
+    assert rag._build_jina().backoff_seconds == 2.0
