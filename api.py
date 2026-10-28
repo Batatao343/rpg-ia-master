@@ -2806,9 +2806,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
     ]
 
     gone_ids = {  # SPEC-345 R2/R3: quem saiu do combate sai da view (estado intacto)
-        str(e.get("id") or e.get("name"))
-        for e in enemies
-        if isinstance(e, dict) and e not in alive
+        str(e.get("id") or e.get("name")) for e in enemies if isinstance(e, dict) and e not in alive
     }
 
     def _conds(entity):
