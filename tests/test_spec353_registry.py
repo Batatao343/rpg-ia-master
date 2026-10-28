@@ -214,3 +214,108 @@ def test_final_blow_attack_recorded_with_card():
             assert blows[0]["kind"] == "ataque" and blows[0]["by_actor_id"] == "player"
             return
     raise AssertionError("nenhum golpe final registrado em 40 seeds")
+
+
+@pytest.mark.parametrize("card_id", ["san_corte_troca", "bas_san_corte_raso"])
+@pytest.mark.parametrize("seed", range(20))
+def test_r14_exact_sum_with_self_harm(seed, card_id, monkeypatch):
+    """R14: custo da linha == Vitalidade realmente perdida pelo custo; conta total fecha exata."""
+    from services import conflict_damage as cd
+
+    hero = _actor("player", corpo=5, is_player=True)
+    hero["class_name"] = "Sangromante"
+    hero["prepared_cards"] = [card_id]
+    boss = _actor("boss", corpo=3, categoria="padrao")
+    boss["dano_base_arma"] = 4
+    excess: list[int] = []
+    real = cd.resolve_damage_and_wounds
+
+    def spy(target, **kw):
+        res = real(target, **kw)
+        if target is hero:
+            excess.append(int(res.get("excedente", 0) or 0))
+        return res
+
+    monkeypatch.setattr(orch, "resolve_damage_and_wounds", spy)
+    monkeypatch.setattr(ct.cd, "resolve_damage_and_wounds", spy)
+    decl = ct.TurnDeclaration(
+        actor_id="player", acao=ct.TurnStep(kind="card", card_id=card_id, target_id="boss")
+    )
+    before = hero["vitalidade"]
+    out = orch.run_round(
+        _scene("player", "boss"),
+        {"player": hero, "boss": boss},
+        SIDES,
+        declarations={"player": decl},
+        initiator="enemy",
+        state={"player": hero},
+        rng=random.Random(seed),
+    )
+    harm = next(m for m in out["class_mechanics"] if m["kind"] == "self_harm")
+    paid = -harm["vitality_delta"]
+    lines = preview.mech_log(out["attacks"], [hero, boss], out["ticks"], out=out)
+    line_cost = [int(m.group(1)) for ln in lines if (m := re.search(r"custo · (\d+) Vitalidade$", ln))]
+    assert line_cost == [harm["amount"]] and paid == harm["amount"]
+    hits = sum(
+        int(m.group(1)) for ln in lines if "→ Você" in ln and (m := re.search(r"(\d+) dano$", ln))
+    )
+    drop = before - hero["vitalidade"]
+    assert drop == paid + hits - sum(excess), (seed, drop, paid, hits, excess)
+
+
+def test_taunt_resist_line_and_applied_line():
+    resisted = held = 0
+    for seed in range(30):
+        hero = _actor("player", corpo=5, is_player=True)
+        boss = _actor("boss", corpo=3, categoria="padrao")
+        boss["active_conditions"] = [
+            {
+                "name": "Provocado",
+                "dot": 0,
+                "duration": 3,
+                "control": "taunt",
+                "source_actor_id": "player",
+            }
+        ]
+        out = orch.run_round(
+            _scene("player", "boss"),
+            {"player": hero, "boss": boss},
+            SIDES,
+            declarations={},
+            initiator="enemy",
+            rng=random.Random(seed),
+        )
+        reg = round_log.round_registry(out, {"player": hero, "boss": boss})
+        if any(m["kind"] == "special:taunt_resisted" for m in out["class_mechanics"]):
+            resisted += 1
+            assert "Boss resiste à Provocação." in reg
+        else:
+            held += 1
+    assert resisted and held  # a Provocação é probabilística (50 %): os dois desfechos aparecem
+
+
+def test_taunt_applied_line():
+    out = {
+        "attacks": [],
+        "condicoes_novas": [
+            {"victim_id": "boss", "condition": "Provocado", "source_id": "player", "control": "taunt"}
+        ],
+    }
+    reg = round_log.round_registry(out, {"player": {"name": "H", "is_player": True}, "boss": {"name": "Criatura"}})
+    assert reg == ["Criatura está provocado: a próxima intenção dele mira você (com chance)."]
+
+
+def test_condition_from_reaction_has_unknown_source():
+    actor = {"id": "boss", "name": "B", "active_conditions": []}
+    before = {"boss": []}
+    actor["active_conditions"].append({"name": "Sangramento", "dot": 1, "duration": 2})
+    out = {"reactions": [{"x": 1}]}
+    orch._note_turn_records(before, {"boss": actor}, "boss", out)
+    assert out["condicoes_novas"][0]["source_id"] is None
+    # sem reação na janela, a fonte é o autor do turno
+    out2: dict = {}
+    other = {"id": "t", "name": "T", "active_conditions": []}
+    b2 = {"t": []}
+    other["active_conditions"].append({"name": "Sangramento", "dot": 1, "duration": 2})
+    orch._note_turn_records(b2, {"t": other}, "player", out2)
+    assert out2["condicoes_novas"][0]["source_id"] == "player"

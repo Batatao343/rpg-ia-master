@@ -2133,9 +2133,7 @@ def _combat_node(state: GameState):
             for a in party_mod.scene_allies(state, excluded=enemy_refs)
         ]
         # SPEC-353 R22: o aliado de cena tem nome já na rodada 0; R54: conflito novo limpa o registro
-        combat_meta["scene_allies"] = party_mod.scene_allies(state, excluded=enemy_refs)
-        for _stale in ("last_round_board", "last_mech_log", "fontes_condicao"):
-            combat_meta.pop(_stale, None)
+        opening_allies = party_mod.scene_allies(state, excluded=enemy_refs)
         scene = _prepare_scene(state, enemies, player, allies)
         _sync_enemy_knowledge(enemies, load_persisted=True)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
@@ -2158,6 +2156,9 @@ def _combat_node(state: GameState):
             "origin": materialize(combat_meta, state.get("combat_origin_hint")),
             "instance_id": conflict_instance_id,
             "encounter_level": scene.get("encounter_level", 1),
+            # SPEC-353 R22: nome do aliado de cena já na rodada 0. R54/R51: o dict novo também
+            # zera last_round_board/last_mech_log/fontes_condicao do conflito anterior.
+            "scene_allies": opening_allies,
         }
         # SPEC-328 R5/R16: Baralho de Conflito (semente derivada do conflito → replay).
         from services import card_piles
@@ -2795,6 +2796,9 @@ def _combat_node(state: GameState):
         out["fuga"] = flee_roll
     fontes = combat_meta.setdefault("fontes_condicao", {})  # SPEC-353 R51
     for novo in out.get("condicoes_novas") or []:
+        if not novo.get("source_id"):
+            fontes.get(novo["victim_id"], {}).pop(novo["condition"], None)  # fonte desconhecida
+            continue
         fontes.setdefault(novo["victim_id"], {})[novo["condition"]] = novo["source_id"]
     _preview.store_mech_log(
         combat_meta,

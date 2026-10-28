@@ -232,15 +232,28 @@ def _note_turn_records(
 ) -> None:
     """SPEC-353 R51/R27: registro de view. Quem pôs cada condição nova (``condicoes_novas``) e
     quem chegou a 0 de Vitalidade ainda de pé (``sem_vitalidade``). Nunca muda mecânica."""
+    seen = len(out.get("reactions") or [])
+    reacted = seen > int(out.get("_reactions_noted", 0) or 0)
+    out["_reactions_noted"] = seen
     for aid, actor in actors_by_id.items():
         prev = before.get(aid, [])
         for c in actor.get("active_conditions") or []:
             if c.get("persistente") or c.get("name") is None:
                 continue
             if bool(c.get("_renovada")) or not any(c is p for p in prev):
+                source = c.get("source_actor_id") or actor_id
+                if reacted and aid == actor_id and not c.get("source_actor_id"):
+                    source = None  # pode ter vindo de uma Reação: fonte DESCONHECIDA, nunca errada
                 out.setdefault("condicoes_novas", []).append(
-                    {"victim_id": aid, "condition": str(c["name"]), "source_id": actor_id}
+                    {
+                        "victim_id": aid,
+                        "condition": str(c["name"]),
+                        "source_id": source,
+                        "control": c.get("control"),
+                    }
                 )
+        if actor.pop("_taunt_resisted", False):
+            _record_class_event(out, "special:taunt_resisted", actor_id=aid)
         if (
             not actor.get("is_player")
             and int(actor.get("vitalidade", actor.get("hp", 1)) or 0) <= 0
@@ -430,6 +443,7 @@ def _taunt_target(
                 }
             )
             return source_id
+        actor["_taunt_resisted"] = True  # SPEC-353 R39a: a rolagem falhou; o registro avisa
     return None
 
 

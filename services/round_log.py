@@ -281,6 +281,17 @@ def round_registry(
             event_lines.append(f"{who} joga {card.get('name')}" + (f": {sabor}." if sabor else "."))
 
     dot_lines: list[str] = []
+    for novo in out.get("condicoes_novas") or []:  # SPEC-353 R39a: a Provocação diz o que faz
+        if novo.get("control") == "taunt":
+            src = names.get(str(novo.get("source_id")), "alguém")
+            alvo = "você" if src == "Você" else src
+            dot_lines.append(
+                f"{names.get(str(novo.get('victim_id')), 'Alguém')} está provocado: "
+                f"a próxima intenção dele mira {alvo} (com chance)."
+            )
+    for m in out.get("class_mechanics") or []:
+        if m.get("kind") == "special:taunt_resisted":
+            dot_lines.append(f"{names.get(str(m.get('actor_id')), 'Alguém')} resiste à Provocação.")
     for line in out.get("logs") or []:
         if _is_human_line(str(line)):
             human = _voce(str(line), hero_name)
