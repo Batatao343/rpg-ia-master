@@ -1,7 +1,7 @@
 # SPEC-347 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Sol (Claude Opus, spec-reviewer) · **Data:** 2026-10-28 · **Commit revisado:** `dcb4505a`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão 28/10 sobre `ef94d286`, rebaseada na `main` com a SPEC-346 pousada; 1ª rodada `CHANGES_REQUIRED` em `dcb4505a`)
+> **Revisor:** Sol (Claude Opus, spec-reviewer) · **Data:** 2026-10-28 · **Commits revisados:** `dcb4505a` (1ª) e `ef94d286` (re-revisão)
 
 ## Escopo
 
@@ -64,16 +64,31 @@ Nenhuma mudança em `evals/`.
 
 ## Correções aplicadas
 
-Nenhuma até o momento. Para virar `APPROVED`: P1-1 e P2-1 corrigidos nesta spec. P1-2 entra no
-pouso, por quem pousar por último. P2-2 a P2-5 de preferência nesta spec, porque são baratos.
+Re-revisão sobre `ef94d286` (commits `3e3a4460`..`ef94d286`, já rebaseados sobre a 346):
+
+| Achado | Commit | Conferido |
+|---|---|---|
+| P1-1 | `3e3a4460` | O importador grava em `web/public/art/v1/bestiario/` com `thumbnail` ≤ 120 KB e `display` ≤ 768 px ≤ 300 KB (a qualidade desce até caber). `validate_visual_assets` aceita `creature` (ids de `data/bestiary.json` + `bst:[a-z0-9_-]+`) e `creature_family` (`FAMILIAS`). O teste roda o validador numa **cópia do catálogo real** depois da importação e dá zero findings. `test_visual_assets` está verde. **Resolvido.** |
+| P1-2 | `4c7198dc` | `mech_log` mostra a "Última Ação" da 346 (`label`) e o rótulo `fora_de_turno` da 347 no ramo `else`, sem conflito. `store_mech_log` passa `ticks`/`heals`. O registro da 347 foi renomeado para `round_board` (`meta["last_round_board"]` → `registro_rodada`, separado do `services/round_log.py` da 346) e inclui ticks de DoT (rótulo "Dano contínuo") e curas. Testes da 346 (10 arquivos) e da 347 verdes juntos. **Resolvido.** |
+| P2-1 | `9cfd7e7b` | `creature_art.variant_url` aceita a lista real do job (`variant` = `thumb` ou `full`) e o dict. Sem `url`, cai no marcador e nunca inventa caminho. O teste usa o formato do job. A conversão `key`→URL é da 352. **Resolvido.** |
+| P2-2 | `0da60fde` | O resultado só vale depois que `data` muda. Envio que falha mostra "A fuga não chegou ao mestre. Tente de novo." (`role=alert`), sem resultado inferido. E2e `fugir_falha_no_envio_…` verde. **Resolvido.** |
+| P2-3 | `9765f4dc` | `focusComposerTarget` + `onFocusCombat={() => openTab("combate")}` (`Workspace.tsx:361`). E2e `rascunho_volta_apos_conflito` verde. O R18.3 só tem teste node da função; a fiação é 1 linha e o e2e do rascunho cobre o travamento. **Aceitável.** |
+| P2-4 | `a9efdc08` | Entradas na ordem de índice de `out["attacks"]`. Testes verdes para contra-ataque passivo depois do golpe e janela de reação antes dele. **Resolvido.** |
+| P2-5 | `3e3a4460` | `--force` para trocar sha; entrada curada à mão recusada sem ele; `bst_` validado; tudo codificado antes de escrever, com rollback dos WebP escritos se algo falhar. **Resolvido.** |
+| P2-6 | `fd31e916` | `1440-retratos.png` agora é próprio: marcador da família (Saqueador) + imagem (Bandoleiro). **Resolvido.** |
+| P2-7 | `fd31e916` | Desvios R15.2/R15.3 registrados na §9; smoke real com o coordenador. **Registrado.** A §9 ainda diz que o P1-2 "fica para quando a 346 pousar", mas já foi feito em `4c7198dc`: nota defasada, o coordenador ajusta no pouso. |
+| Alvos | `9765f4dc` | Os e2e da 347 agora exigem ≥ 44 px (antes 43,5) e passam. |
+| R11 | `9765f4dc` | `resetBookScroll` extraído e testado (`spec347-logic`), preservando o rascunho. Sem e2e (aceito). |
+
+Golden 330: `test_card_effects_grammar.py` verde, sem diff contra a `main` em `tests/test_card_effects_grammar.py`, `tests/data/`, `evals/` e nos snapshots da baseline 342. Caminho `off`: `deck-342-baseline.spec.ts` (win32) verde sem regerar.
 
 ## Pendências
 
-- F-1 (coordenador, pouso): reconciliar a 346 e a 347 conforme P1-2 e rodar os testes das duas juntos.
-- F-2 (347 ou spec de front): teste unitário de `handleContinueSave` → `setChatSession(gid, {scrollTop:null, atBottom:true})`.
-  R11 fica sem e2e, porque não há rota web para reproduzir (aceito).
+- F-1: FEITO em `4c7198dc`. Pendente só a nota defasada na §9 da spec.
+- F-2: FEITO (`resetBookScroll` testado).
 - F-3 (coordenador): se quiser a prova pixel do `off` de R5.3/R5.4, colocar `order` na fixture da baseline 342 e regerar em commit próprio.
-- F-4 (SPEC-352): o formato da linha do registro precisa casar com a saída do pipeline (ver P2-1). Fiação de `onGenerate`.
+- F-4 (SPEC-352): converter `key`→URL na linha do registro e ligar `onGenerate`.
+- F-5 (coordenador): smoke real (§6) da 347 antes de `done`.
 
 ## Comandos rodados
 
@@ -84,3 +99,13 @@ node --test tests/spec347-components.test.mjs tests/spec347-logic.test.mjs tests
 RPG_E2E_PORT=5041 npx playwright test e2e/deck-342-baseline.spec.ts e2e/spec347-mobile.spec.ts --workers=1 → 16 passed
 RPG_E2E_PORT=5041 npx playwright test e2e/spec347-board-only.spec.ts e2e/spec347-desktop.spec.ts e2e/spec347-retrato.spec.ts --workers=1 → 17 passed
 ```
+
+Re-revisão (`ef94d286`):
+
+```text
+bash scripts/dev/py.sh -m pytest -q -n 2 (golden 330, flags, import_bestiary_art, visual_assets, 5× spec347, 342, card_rewards, forge, 345 mech_log, 339, 341, round_multi_play, combat_preview, morte_aliados, 10× spec346) → 588 passed, 4 skipped (exit 0)
+node --test spec347-components, spec347-logic, deck-queue, deck-tokens-342 → 25/25 pass
+RPG_E2E_PORT=5041 npx playwright test deck-342-baseline, spec347-{mobile,board-only,desktop,retrato}, deck-combat-342 --workers=1 → 72 passed
+```
+
+Observação: o coordenador pediu `-n auto`, mas mantive `-n 2` por regra do CLAUDE.md (subagente nunca usa `-n auto`).
