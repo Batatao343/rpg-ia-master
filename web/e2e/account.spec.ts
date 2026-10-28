@@ -50,7 +50,8 @@ for (const width of [390, 1440]) {
     await expect(cost).toHaveAttribute("aria-expanded", "false");
     await page.getByPlaceholder(/O que você faz/).fill("Examino o sino");
     await page.getByRole("button", { name: "Agir" }).click();
-    await expect(page.getByRole("button", { name: /Estimativa de custo técnico: US\$ 0,000041550/ })).toBeVisible();
+    // A entrada 0 (histórico) já tem esse custo técnico + débito; o turno novo é a que NÃO tem débito no nome.
+    await expect(page.getByRole("button", { name: /^Custo deste turno\. Estimativa de custo técnico: US\$ 0,000041550$/ })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     // SPEC-321 R2: na partida, Conta (com saldo) e Sair ficam no menu ⋯ (celular) ou na topbar (desktop).
     if (width < 900) await page.getByRole("button", { name: "Menu", exact: true }).click();
