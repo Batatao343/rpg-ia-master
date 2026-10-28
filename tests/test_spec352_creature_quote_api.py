@@ -144,7 +144,9 @@ def test_quality_monster_422(monkeypatch):
     import services.dynamic_art as da
 
     monkeypatch.setattr(api, "_database_profile", lambda: True)
-    monkeypatch.setattr(api, "load_game_state", lambda _p: {"game_id": "g"})
+    monkeypatch.setattr(
+        api, "load_game_state", lambda _p: {"game_id": "0a1b2c3d-0000-4000-8000-000000000001"}
+    )
     monkeypatch.setattr(api, "_resolve_save_file", lambda g: g)
     monkeypatch.setattr(rt, "get_runtime", lambda: SimpleNamespace(resources=(object(),)))
     monkeypatch.setattr(rc, "current_principal", lambda: SimpleNamespace(user_id="u"))
@@ -153,11 +155,10 @@ def test_quality_monster_422(monkeypatch):
         def __init__(self, *_a, **_k):
             pass
 
-        def get(self, *_a):
-            return {"subject_type": "monster"}
-
         def set_quality(self, *_a, **_k):
-            raise AssertionError("não deve avaliar")
+            from infrastructure.contracts import Conflict
+
+            raise Conflict("quality_not_applicable")
 
     monkeypatch.setattr(da, "DynamicArtRepository", Repo)
     with pytest.raises(HTTPException) as exc:

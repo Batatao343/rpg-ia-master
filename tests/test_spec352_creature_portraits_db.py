@@ -815,3 +815,15 @@ def test_two_real_confirms_concurrently_one_reservation_one_job():
             admin.execute("delete from app.image_price_profiles where profile_id=%s", (profile_id,))
             admin.execute("delete from app.pricing_versions where version_id=%s", (version_id,))
         admin.close()
+
+
+def test_set_quality_refuses_monster_generation(pc):
+    """R15: o dono do pagamento também não avalia (derrubar) a arte compartilhada."""
+    generation = confirm(pc, issue_monster(pc))
+    pc.db.execute(
+        "update app.art_generations set status='ready' where generation_id=%s",
+        (generation["generation_id"],),
+    )
+    repo = DynamicArtRepository(pc.pool, model="", profile_version="")
+    with pytest.raises(Conflict, match="quality_not_applicable"):
+        repo.set_quality(pc.owner, generation["generation_id"], game_id=pc.game_id, approved=False)

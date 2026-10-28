@@ -130,7 +130,7 @@ class DynamicArtRepository:
             result = connection.execute(
                 """update app.art_generations set status=%s,updated_at=now()
                 where generation_id=%s and owner_id=%s and game_id=%s
-                and status in ('ready','rejected_quality')""",
+                and status in ('ready','rejected_quality') and subject_type <> 'monster'""",
                 (
                     "ready" if approved else "rejected_quality",
                     generation_id,
@@ -139,6 +139,14 @@ class DynamicArtRepository:
                 ),
             )
             if result.rowcount != 1:
+                kind = connection.execute(
+                    "select subject_type from app.art_generations where generation_id=%s "
+                    "and owner_id=%s and game_id=%s",
+                    (generation_id, principal.user_id, game_id),
+                ).fetchone()
+                if kind and kind["subject_type"] == "monster":
+                    # SPEC-352 R15/D-352-11: jogador nao derruba a arte que outros veem (so o operador)
+                    raise Conflict("quality_not_applicable")
                 raise Conflict("geração não está pronta para avaliação")
 
     @staticmethod

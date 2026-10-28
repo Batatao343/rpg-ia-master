@@ -5154,13 +5154,6 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
             profile_version=str(profile.get("profile_version")),
         )
         try:
-            owned = repository.get(current_principal(), uuid.UUID(generation_id))
-        except ValueError:
-            owned = None
-        if owned and owned.get("subject_type") == "monster":
-            # SPEC-352 R15/D-352-11: um jogador não derruba a arte que outros veem (moderação = operador).
-            raise HTTPException(422, "quality_not_applicable")
-        try:
             repository.set_quality(
                 current_principal(),
                 uuid.UUID(generation_id),
@@ -5168,6 +5161,10 @@ def dynamic_art_quality(game_id: str, generation_id: str, req: ArtQualityRequest
                 approved=req.approved,
             )
         except (ValueError, Conflict) as exc:
+            if (
+                str(exc) == "quality_not_applicable"
+            ):  # SPEC-352 R15: retrato compartilhado é do operador
+                raise HTTPException(422, "quality_not_applicable") from exc
             raise HTTPException(
                 status_code=409, detail="Arte não disponível para avaliação."
             ) from exc

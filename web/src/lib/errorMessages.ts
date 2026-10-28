@@ -85,6 +85,11 @@ export const MESSAGES: Record<string, string> = {
   image_generation_disabled: "A geração de imagens está desligada.", image_pricing_unavailable: "O preço da imagem está indisponível.",
   image_quotes_unavailable: "As cotações de imagem estão indisponíveis.", image_quote_conflict: "A cotação mudou. Peça uma nova.",
   image_insufficient_shards: "Saldo de Estilhas insuficiente.",
+  creature_art_disabled: "O retrato de criaturas está desligado.", monster_quote_invalid: "Pedido de retrato inválido.",
+  enemy_id_only_monster: "Pedido de retrato inválido.", enemy_not_in_conflict: "Esse inimigo não está mais no combate.",
+  creature_portrait_curated: "Este retrato já existe no bestiário.", creature_portrait_exists: "Este retrato já existe ou está sendo gerado.",
+  creature_portrait_in_progress: "Outro jogador já está gerando este retrato. Ele aparece em breve, sem custo.",
+  quality_not_applicable: "Este retrato é compartilhado e não pode ser avaliado.",
   // voz
   speech_disabled: "Entrada de voz indisponível nesta sessão. Continue digitando.",
   speech_insufficient_balance: "Saldo insuficiente para transcrever. Continue digitando.",

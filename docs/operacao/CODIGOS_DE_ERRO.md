@@ -27,6 +27,10 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `captcha_unavailable` | Provedor de captcha indisponível. |
 | `card_rewards_off` | Espólio/Forja de Cartas desligados neste ambiente (409). |
 | `chronicle_query_invalid` | Busca da crônica inválida. |
+| `creature_art_disabled` | Retrato de criatura desligado. |
+| `creature_portrait_curated` | Este retrato já existe no bestiário. |
+| `creature_portrait_exists` | Este retrato já existe ou está sendo gerado. |
+| `creature_portrait_in_progress` | Outro jogador já está gerando este retrato. |
 | `credentials_invalid` | E-mail/senha incorretos. |
 | `cron_not_configured` | Segredo do cron ausente (fail closed). |
 | `cron_task_failed` | Tarefa de cron falhou. |
@@ -34,6 +38,8 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `death_pending` | Queda pendente: resolver a tela de morte antes. |
 | `deck_off` | Jogadas em lista sem o Baralho de Conflito ativo (409). |
 | `email_not_confirmed` | E-mail ainda não confirmado. |
+| `enemy_id_only_monster` | enemy_id só vale para retrato de criatura. |
+| `enemy_not_in_conflict` | Inimigo fora do conflito atual. |
 | `equip_rejected` | Regra de inventário recusou o equipamento. |
 | `equip_request_invalid` | Pedido de equipar/desequipar incompleto. |
 | `espolio_rejected` | Regra do espólio de Cartas recusou a escolha. |
@@ -69,6 +75,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `levelup_rejected` | Regra de progressão recusou a escolha. |
 | `lifecycle_unavailable` | Ciclo de conta indisponível no perfil. |
 | `link_invalid_or_expired` | Link de e-mail inválido ou expirado. |
+| `monster_quote_invalid` | Pedido de retrato inválido. |
 | `new_purchases_disabled` | Novas compras desligadas. |
 | `no_pending_death` | Não há queda pendente para resolver. |
 | `no_restore_point` | Morte sem ponto de retorno válido. |
@@ -88,6 +95,7 @@ Toda resposta de erro traz `{"detail", "code", "request_id"}`. `code` é estáve
 | `prepare_rejected` | Regra de Cartas recusou a preparação. |
 | `preview_invalid` | Prévia de jogada com carta/alvo inválido ou não ofensivo (409). |
 | `preview_no_combat` | Prévia de jogada sem conflito em andamento (409). |
+| `quality_not_applicable` | Retrato compartilhado não é avaliado por jogador. |
 | `rate_limited` | Limite de requisições por IP/owner excedido (429). |
 | `recent_session_required` | Operação sensível exige prova recente de senha. |
 | `reformulation_only_player` | Reformulação só para jogador. |

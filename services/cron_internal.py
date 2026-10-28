@@ -186,7 +186,9 @@ def cron_jobs(request: Request):
 
             sweep_private_portraits(_runtime().game_store.pool)
         except Exception as exc:
-            item_failed("jobs", "creature_portrait", "sweep", exc)
+            from observability.telemetry import log_fallback
+
+            log_fallback("cron_jobs", "creature_portrait_sweep_failed", exc)
         from workers.drain import drain_jobs
 
         return drain_jobs(
