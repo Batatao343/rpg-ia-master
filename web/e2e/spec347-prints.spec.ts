@@ -4,7 +4,8 @@ import { armDeck, openCombat, roundLog } from "./deck-342-helpers";
 
 test.skip(!process.env.RPG_SPEC347_PRINTS, "prints sob demanda (RPG_SPEC347_PRINTS=1)");
 const OUT = "../docs/spec347/depois";
-const PIXEL = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+const ART = "data:image/svg+xml;utf8," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72"><rect width="72" height="72" fill="#3b1d1d"/><circle cx="36" cy="30" r="14" fill="#a8483a"/><rect x="14" y="48" width="44" height="18" rx="6" fill="#6b2f2a"/></svg>');
 
 test.describe("390", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
@@ -36,11 +37,10 @@ test.describe("1440", () => {
     const state = armDeck(backend, { zones: ["Veio de Calcário", "Boca do Abismo"], roundLog: roundLog(4) });
     const common = { familia: "bruto", icone: "combat", proprio: false, gerar: null };
     (state.combat.enemies[0] as unknown as Record<string, unknown>).retrato = { ...common, estado: "marcador", src: null, alt: "Retrato de Saqueador" };
-    (state.combat.enemies[1] as unknown as Record<string, unknown>).retrato = { ...common, estado: "pronto", src: PIXEL, alt: "Retrato de Bandoleiro" };
+    (state.combat.enemies[1] as unknown as Record<string, unknown>).retrato = { ...common, estado: "pronto", src: ART, alt: "Retrato de Bandoleiro" };
     await openCombat(page);
     await page.screenshot({ path: `${OUT}/1440-inicio-3-zonas.png` });
     await page.screenshot({ path: `${OUT}/1440-registro.png` });
-    await page.screenshot({ path: `${OUT}/1440-retratos.png` });
   });
 
   test("1440-pos-combate", async ({ page, backend }) => {
@@ -95,5 +95,19 @@ test.describe("390 pos-combate", () => {
     await expect(page.locator(".combat-outcome__continue")).toBeVisible();
     await page.waitForTimeout(300);
     await page.screenshot({ path: `${OUT}/390-pos-combate.png` });
+  });
+});
+
+test.describe("1440 retratos", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test("1440-retratos", async ({ page, backend }) => {
+    const state = armDeck(backend);
+    const common = { familia: "bruto", icone: "combat", proprio: false, gerar: null };
+    (state.combat.enemies[0] as unknown as Record<string, unknown>).retrato = { ...common, estado: "marcador", src: null, alt: "Retrato de Saqueador" };
+    (state.combat.enemies[1] as unknown as Record<string, unknown>).retrato = { ...common, estado: "pronto", src: ART, alt: "Retrato de Bandoleiro" };
+    await openCombat(page);
+    await expect(page.locator('[data-portrait="pronto"] img')).toBeVisible();
+    await page.locator(".arena").screenshot({ path: `${OUT}/1440-retratos.png` });
   });
 });
