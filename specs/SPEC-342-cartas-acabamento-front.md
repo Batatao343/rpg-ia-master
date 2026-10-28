@@ -1,6 +1,6 @@
 # SPEC-342 — Cartas: acabamento do front do combate por cartas (destrava as flags)
 
-> **Status:** `approved` (dono, 27/10: "destrave isso"; as escolhas abertas estão em §8 com a recomendação adotada)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke §6 em staging antes de ligar as flags)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-321, 322, 323, 324 (`done`: toque, tokens, voz, headings/atalhos); SPEC-328, 329, 331, 333, 334 (`in-progress`, pousadas atrás de flag `off`). Esta spec fecha as pendências de front da 334 (§5 "Conferido em 390/1440", R1 faixa da 331, R7 medição) e a lacuna de UI da 331 (P1-3 já expõe dados que o front ignora).
