@@ -1095,6 +1095,9 @@ def _resolve_reaction_effect(
             int(reactor.get("max_vitalidade", before) or before), before + heal
         )
         gamedata.sync_legacy_hp_aliases(reactor)
+        out.setdefault("heals", []).append(  # SPEC-346 R10
+            {"actor_id": reactor_id, "card": name, "amount": reactor["vitalidade"] - before}
+        )
         out["logs"].append(
             f"{name}: {_name(reactor)} recupera {reactor['vitalidade'] - before} Vitalidade."
         )
@@ -1677,6 +1680,8 @@ def _resolve_actor_turn(
     out["logs"] += [l for l in sub.get("logs", []) if l]
     out.setdefault("attacks", []).extend(sub.get("attacks", []))
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))
+    if sub.get("heals"):  # SPEC-346 R10
+        out.setdefault("heals", []).extend(sub["heals"])
     if sub.get("enemy_fallbacks"):
         out.setdefault("enemy_fallbacks", []).extend(sub["enemy_fallbacks"])
     # SPEC-330: eventos estruturados do intérprete de efeitos produzidos no turno.

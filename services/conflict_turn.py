@@ -644,6 +644,13 @@ def _resolve_support_card(scene, actor, actor_id, actors_by_id, step, card, out)
         import gamedata
 
         gamedata.sync_legacy_hp_aliases(target)
+        out.setdefault("heals", []).append(  # SPEC-346 R10: a cura também fecha a conta
+            {
+                "actor_id": step.target_id if step.target_id in actors_by_id else actor_id,
+                "card": name,
+                "amount": target["vitalidade"] - before,
+            }
+        )
         out["logs"].append(
             f"{target.get('name', step.target_id or actor_id)} recupera "
             f"{target['vitalidade'] - before} Vitalidade com {name}."

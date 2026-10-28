@@ -174,7 +174,12 @@ _RESULT_LABEL = {
 }
 
 
-def mech_log(attacks: list[dict], actors: list[dict], ticks: list[dict] | None = None) -> list[str]:
+def mech_log(
+    attacks: list[dict],
+    actors: list[dict],
+    ticks: list[dict] | None = None,
+    heals: list[dict] | None = None,
+) -> list[str]:
     """R6: uma linha por ataque da rodada, só com números que o motor já resolveu.
     Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``.
 
@@ -219,6 +224,9 @@ def mech_log(attacks: list[dict], actors: list[dict], ticks: list[dict] | None =
         lines.append(
             f"{tick.get('condition')} → {victim} · dano contínuo · {int(tick.get('dano_final', 0))} dano"
         )
+    for heal in heals or []:  # R10: cura/ganho de Vitalidade tem linha própria
+        who = names.get(str(heal.get("actor_id")), str(heal.get("actor_id") or "Alguém"))
+        lines.append(f"{heal.get('card')} → {who} · cura · {int(heal.get('amount', 0))} Vitalidade")
     return lines
 
 
@@ -228,4 +236,6 @@ def store_mech_log(meta: dict, out: dict, actors: list[dict]) -> None:
 
     if card_piles.mode() != "on" or out.get("action_refused"):
         return
-    meta["last_mech_log"] = mech_log(out.get("attacks") or [], actors, out.get("ticks") or [])
+    meta["last_mech_log"] = mech_log(
+        out.get("attacks") or [], actors, out.get("ticks") or [], out.get("heals") or []
+    )
