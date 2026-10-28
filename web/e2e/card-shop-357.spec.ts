@@ -41,6 +41,7 @@ test("loja_cartas_painel_e_compra: 3 ofertas, bloqueio visível e POST com card_
   await expect(panel.locator("article.combat-card")).toHaveCount(3);
   await expect(panel.locator("[data-loja-buy='neu1_br_b']")).toBeDisabled();
   await expect(panel.locator("[data-loja-buy='neu1_br_b']")).toHaveText("Faltam 15 de ouro.");
+  await expect(panel.locator("[data-loja-price='neu1_br_b']")).toContainText("45 de ouro"); // preço visível com botão bloqueado
   await expect(panel.locator("[data-loja-buy='neu1_ge_c']")).toBeDisabled();
   const buy = panel.locator("[data-loja-buy='neu1_br_a']");
   await expect(buy).toHaveText("Comprar por 40 de ouro");
@@ -62,6 +63,10 @@ test.describe("mobile 390", () => {
     backend.states.get("game-a")!.player_stats.loja_cartas = loja() as never;
     await open(page);
     await expect(page.getByRole("region", { name: "Técnicas à venda" })).toBeVisible();
+    for (const btn of await page.locator("[data-loja-buy]").all()) {
+      await btn.scrollIntoViewIfNeeded();
+      expect((await btn.boundingBox())!.height).toBeGreaterThanOrEqual(44); // alvo de toque (SPEC-321)
+    }
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
   });

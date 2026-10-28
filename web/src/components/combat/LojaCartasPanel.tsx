@@ -48,7 +48,9 @@ export function LojaCartasPanel({ loja, busy, onBuy }: Props) {
                 <p className="espolio__cost">Fôlego {card.custo_folego}{card.custo_entropia ? ` · Entropia ${card.custo_entropia}` : ""}</p>
                 {card.texto && <p className="espolio__rules"><RuleText texto={card.texto} glossary={glossary} /></p>}
                 {card.descricao && <p className="espolio__flavor">{card.descricao}</p>}
-                {!card.conhecida && <p className="loja__price">{DESTINO_LABEL[card.destino] ?? card.destino}</p>}
+                <p className="loja__price" data-loja-price={card.id}>
+                  {card.preco} de ouro{!card.conhecida && ` · ${DESTINO_LABEL[card.destino] ?? card.destino}`}
+                </p>
                 <button className="btn btn--primary" type="button" disabled={locked || !st.enabled}
                   data-loja-buy={card.id} onClick={() => buy(card.id)}>
                   {st.label}
