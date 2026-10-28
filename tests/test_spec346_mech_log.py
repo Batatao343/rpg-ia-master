@@ -340,3 +340,29 @@ def test_mech_log_accounts_when_hero_plays_cards_heal_and_reaction(seed, reactio
     assert gained == heal - dmg + excess, (seed, reaction, out["logs"], dmg, heal, gained, excess)
     assert heal > 0, "a Carta de cura precisa ter sido jogada"
     assert out["cards_used"], "o herói precisa ter jogado Carta"
+
+
+def test_mech_log_accounts_for_ally_support_heal():
+    """R10: a cura por ação de apoio de aliado também tem linha e fecha com a Vitalidade real."""
+    hero = _actor("player", corpo=3, is_player=True)
+    hero["vitalidade"] = hero["max_vitalidade"] - 5
+    ally = _actor("medico", corpo=3, categoria="padrao")
+    ally["tactical_archetype"] = "suporte"
+    foe = _actor("boss", corpo=3, categoria="padrao")
+    sides = {"hero": ["player"], "ally": ["medico"], "enemy": ["boss"]}
+    out = {"logs": [], "attacks": []}
+    before = hero["vitalidade"]
+    orch._resolve_tactical_action(
+        _scene("player", "medico", "boss"),
+        ally,
+        "medico",
+        {"player": hero, "medico": ally, "boss": foe},
+        sides,
+        ct.TurnStep(kind="maneuver", maneuver="support", target_id="player"),
+        out,
+        random.Random(1),
+    )
+    gained = hero["vitalidade"] - before
+    assert gained == 2
+    lines = preview.mech_log([], [hero, ally, foe], [], out["heals"])
+    assert lines == [f"Apoio → Você · cura · {gained} Vitalidade"]

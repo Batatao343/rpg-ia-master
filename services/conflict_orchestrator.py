@@ -1576,6 +1576,9 @@ def _resolve_tactical_action(
                 gamedata.sync_legacy_hp_aliases(target)
                 restored = target["vitalidade"] - before
                 ok = restored > 0
+                out.setdefault("heals", []).append(  # SPEC-346 R10: a cura de apoio fecha a conta
+                    {"actor_id": target_id, "card": "Apoio", "amount": restored}
+                )
                 detail = f"{_name(actor)} recupera {restored} Vitalidade de {_name(target)}."
             else:
                 ok = cs.grant_tactical_modifier(scene, "attack_advantage", target_id, actor_id)
