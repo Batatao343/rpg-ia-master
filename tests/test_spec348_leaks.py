@@ -15,8 +15,8 @@ from services.content_validator import NPC_SECRET_LABELS
 from services.secret_signatures import SECRET_SIGNATURES
 from tests.spec348_helpers import (
     codex_docs,
-    docs_containing,
     doc,
+    docs_containing,
     fold,
     hidden_docs,
     load_json,
@@ -118,12 +118,12 @@ def test_seed_gists_and_bestiary_have_no_leak_phrases():
     bad = []
     for sid, seed in seeds.items():
         gist = fold(seed.get("gist", ""))
-        for group, phrases in LEAK_PHRASES.items():
+        for _group, phrases in LEAK_PHRASES.items():
             bad += [(sid, ph) for ph in phrases if ph in gist]
     bestiary = load_json("data/bestiary.json")
     for eid, enemy in bestiary.items():
         desc = fold(enemy.get("description", ""))
-        for group, phrases in LEAK_PHRASES.items():
+        for _group, phrases in LEAK_PHRASES.items():
             bad += [(eid, ph) for ph in phrases if ph in desc]
     assert not bad, bad
 

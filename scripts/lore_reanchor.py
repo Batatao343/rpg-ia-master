@@ -130,14 +130,14 @@ def reanchor(base: str) -> tuple[list[str], int]:
                             break
             if na is None:
                 errors += 1
-                report.append(f"ERRO  {rel}: {fname}:{a} -> {REMOVIDA}")
+                report.append(f"ERRO  {rel}: {fname}:{a} -> {REMOVIDA}")  # noqa: B023
                 return m.group(0)
             if nb is not None and nb < na:
                 nb = na
             new_ref = f"{m.group('pre')}{fname}:{na}" + (f"-{nb}" if b is not None else "")
             state = IGUAL if (sa == IGUAL and sb == IGUAL) else ALTERADA
             if new_ref != m.group(0) or state != IGUAL:
-                report.append(f"{state:15s} {rel}: {m.group(0)} -> {new_ref}")
+                report.append(f"{state:15s} {rel}: {m.group(0)} -> {new_ref}")  # noqa: B023
             return new_ref
 
         new_text = ANCHOR_RE.sub(repl, text)

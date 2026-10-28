@@ -43,7 +43,7 @@ def test_anchor_keyword_in_line_where_declared():
             if isinstance(node, dict):
                 if "lore_keyword" in node:
                     refs = node.get("lore_refs") or [node.get("lore_ref")]
-                    pairs.append((rel, node["lore_keyword"], [r for r in refs if r]))
+                    pairs.append((rel, node["lore_keyword"], [r for r in refs if r]))  # noqa: B023
                 for v in node.values():
                     walk(v)
             elif isinstance(node, list):

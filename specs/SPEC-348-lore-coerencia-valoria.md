@@ -1,6 +1,6 @@
 # SPEC-348 — Coerência da lore de Valoria: aplicar as decisões de 27/10 e escrever as expansões aprovadas
 
-> **Status:** `approved`
+> **Status:** `in-review`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** decisões do dono em [`docs/lore/decisoes-2026-10-27.md`](../docs/lore/decisoes-2026-10-27.md)
 > (fonte de verdade, não reabrir) sobre a revisão
@@ -359,7 +359,7 @@ novo segue o tom (§1) e não usa os termos `[proibidos]` de `data/cards/_lexico
 | `scripts/build_rumor_seeds.py` | `EXPECTED_LORE` 40 → 48 (R46) |
 | `data/codex_overrides.yaml` | `art_testamento_real_no_barril: {visibility: hidden}` (R38) |
 | `data/graph/edges.json` | R31, R33, R48, E-04 (§3.3) |
-| `data/graph/entities_extra.json` | `posturas` (doc curado); nada para NPC gerado (o migrate registra) |
+| `data/graph/entities_extra.json` | sem mudança (desvio: `world_story` não é tipo registrável; `story_posturas` dispensa entidade) |
 | `data/world/rumor_seed_overrides.json` | R43, R44; overrides das 8 sementes novas (`fonte_label`, `gist`, `secret_id`, `public_names`) |
 | `data/world/rumor_seeds.json` | regenerado (`build_rumor_seeds.py`) |
 | `data/world/festivals.json`, `data/world/calendar.json` | R15, R45 |
@@ -375,7 +375,7 @@ novo segue o tom (§1) e não usa os termos `[proibidos]` de `data/cards/_lexico
 
 | Arquivo | Responsabilidade |
 |---|---|
-| `data/codex/world_story/posturas.md` | R47 (`id: posturas`, `curated: true`, público) |
+| `data/codex/world_story/story_posturas.md` | R47 (`id: story_posturas` — desvio: o prefixo `story_` isenta o doc de entidade em `test_fase25`; `curated: true`, público) |
 | `data/codex/locations/pm_cripta_afogada.md` | R32 (curado, público; segredo de Saelwen fica no NPC) |
 | `data/codex/locations/pr_solvhen.md` | E-16 parte pública (curado); a verdade fica em `secrets.txt` |
 | `data/codex/locations/ma_forja_profunda.md` | E-24 parte pública (curado); a verdade fica em `secrets.txt` |
@@ -773,5 +773,16 @@ cada uma tem um default que o executor segue se o dono não disser nada antes do
 
 ## 9. Registro de execução
 
-(preenchido pelo executor: linha de base do migrate, contagens de visibilidade antes e depois, números
-de R8, ordem da Coroa, AVISOs do lint, relatório do `lore_reanchor.py`, resultado do smoke)
+Pipeline de regeneração usado (e documentado no `AUTORIA.md`): `migrate_lore_nova.py` + `gen_world_living_npcs.py` + `validate_content.py` + `lore_reanchor.py --base <commit anterior>` (1× por etapa, nunca repetir com a mesma base).
+
+- **Linha de base (R1):** `migrate` sozinho derrubava as 36 entradas `mundo_vivo` de `entities.json`/`edges.json` (são recolocadas por `gen_world_living_npcs.py`). Com o gerador depois do migrate, diferença de conteúdo = 0 (só CRLF do Windows, normalizado no `git add`). Nada manual se perdeu.
+- **Sondas (Etapa 0):** o povo de Ophidia não tem nome na lore (só "Yuan-Ti" no rumor) -> "os de Ophidia". Landships: padrão `LS-PFC-n` (Durrak saiu da 7); a que falta é a `LS-PFC-9` (oculto). Ids de NPC = `npc_` + slug do trecho antes do "—" (sem "—" entra o título todo; por isso `ILSA — A REMENDEIRA` -> `npc_ilsa`). Lint aceita doc curado com o mesmo id de `entities_extra`.
+- **Codex antes -> depois:** 699 -> 745 docs; chunks 2239 -> 2389 (public 2017->2102, hidden 135->165, secret 87->122).
+- **R8 números conferidos:** `npcs.txt` 22 ("vinte anos seguintes": ok; servos agora "constam como mortos"), 53/Magda (15 anos, 44-29 atrás), 72 Vane (18 anos; "não simbióticos"), `secrets.txt` 26/30 (18 anos, caixa há 15), `factions.txt` Mão Sombria (15) e Corvos (acordo de 30 anos saiu do público), `faction_perspectives:9` Ress (15 anos, ok), `rumors:226` (avó há 30), `daily_life:79` Benedita (primeiros casos "dois anos atrás" -> "casos deixaram de ser raros há dois anos", para não colidir com a cadeia da Praga).
+- **Coroa de Pressão (E-08 × E-24):** reforjada na Forja Profunda (depois da queda do Reino) -> embarcou na LS-PFC-9 -> perdida no gelo na guerra contra os dragões (casa com a linha da Landship perdida em `timeline_completa`).
+- **Desvios:** (1) `story_posturas` no lugar de `posturas` e sem entrada em `entities_extra` (`test_fase25` exige entidade para doc não-`story_`). (2) `test_fase25`: as duas asserções passaram a usar `entities.json ∪ entities_extra.json`, como o lint (Fluxo A do AUTORIA). (3) Ophidia ficava a LESTE na Era 3/6 da timeline, a OESTE em `locations`/`creatures`: timeline corrigida para oeste; o mar leste só invade o lago de Aethelgard. (4) Benedita não tem facção de origem (sem `member_of`); só `located_in`. (5) `year_review` do calendário passou a `aprovado`. (6) Etapas 2 e 3 foram editadas e commitadas juntas. (7) A lore diz "Lista de Fornalha" também no `locations.txt` (Jardins). (8) `lingote_aco_vorr` com `lore_ref` `items.txt:26-28` (a linha de "Liga de Vorr (Aço Azulado)"; "Aço de Vorr" não existe literal).
+- **Compat. de saves (§7):** a quest de entrega guarda `item_id` na instância (`anchor`), então quest aberta com `minerio_ferro` continua resolvendo; não foi preciso aceitar os dois itens.
+- **Pendências fora do escopo:** `data/world_map.json` `lore_seed` do Farol ainda diz "suprime ... a cada cem anos" (vazamento no mapa; spec do mapa). `ma_forja_profunda`, `pr_solvhen`, `pm_cripta_afogada` ganharam doc, mas o nome do nó "Salão do Jarl" segue.
+- **R5/R52:** `validate_content.py` 0 ERRO / 0 AVISO; `build_rumor_seeds.py --check` verde; 48 sementes lore (16/18/14), fração de falsos dentro de [0,20; 0,35].
+- **Reindex (R55) e smoke §6: MODEL_HANDOFF_REQUIRED.** `rag.py` falhou na chave de embedding do checkout principal: `402 RESOURCE_EXHAUSTED — prepayment credits are depleted` (1ª tentativa teve também SSL EOF). Nenhum índice FAISS foi alterado. O coordenador precisa repor créditos do Gemini e rodar `bash scripts/dev/py.sh rag.py` e o smoke da §6 (RAG público x `LEAK_PHRASES`, `secret_rusher` real, Médico de Campo). R55 e o smoke seguem desmarcados.
+- **Testes:** `pytest tests/test_spec348_*.py tests/test_spec31[23]*.py tests/test_spec30[367]*.py tests/test_spec297*.py tests/test_spec306*.py tests/test_fase2*.py tests/test_fase3*.py tests/test_fase44.py tests/test_fase7*.py` = 890 passed, 13 skipped; spec348 isolado = 66 passed. `ruff` limpo nos arquivos novos.
