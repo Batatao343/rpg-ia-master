@@ -78,3 +78,16 @@ state:
       - faction.membership_count_le_2
       - faction.influence_bounded
       - faction.progress_le_99_outside_tick
+  creature_portraits:
+    canonical_domain: shared_art
+    intended_writers:
+      - services/creature_portraits.py
+    important_readers:
+      - api.py
+      - services/creature_art.py
+    invariants:
+      - portraits.one_row_per_key_pk
+      - portraits.ready_is_immutable
+      - portraits.ready_has_thumb_object_and_store
+      - portraits.ownerless_only_when_ready_or_retired
+      - portraits.single_charge_per_key
