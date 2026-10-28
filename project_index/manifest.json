@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "1126c313e9ba96d3edbbe0976f2ad13768a03ee0",
+  "commit_sha": "347e2cbc31e44d9c85b159a92aa612d660f28ed1",
   "edge_counts": {
-    "calls": 33001,
-    "contains": 1084,
-    "defines": 16157,
-    "imports": 2663,
-    "likely_test_for": 1889,
+    "calls": 33304,
+    "contains": 1089,
+    "defines": 16314,
+    "imports": 2694,
+    "likely_test_for": 1914,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:ad17f6758aaff3e712925ed62a7556d7b201584583a0f6a3d7eb88899f8e94c8",
+  "graph_hash": "sha256:8856a3bfe4453ac4d93dcd54868a6bb04c797e9da2f9793552ddced582ade9e2",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -272,6 +272,7 @@
     "scripts/release/__init__.py",
     "scripts/release/checklist.py",
     "scripts/restore_local.py",
+    "scripts/retire_creature_portrait.py",
     "scripts/run_llm_contract_gate.py",
     "scripts/seed_google_play_skus.py",
     "scripts/smoke_local_profile.py",
@@ -368,6 +369,7 @@
     "services/context_sources.py",
     "services/continuity.py",
     "services/creature_art.py",
+    "services/creature_portraits.py",
     "services/cron_internal.py",
     "services/daily_spend_cap.py",
     "services/death_flow.py",
@@ -1082,6 +1084,9 @@
     "tests/test_spec347_initiative_view.py",
     "tests/test_spec347_mech_log.py",
     "tests/test_spec347_round_board.py",
+    "tests/test_spec352_creature_portraits.py",
+    "tests/test_spec352_creature_portraits_db.py",
+    "tests/test_spec352_creature_quote_api.py",
     "tests/test_spec353_agent.py",
     "tests/test_spec353_attribution.py",
     "tests/test_spec353_golden_guard.py",
@@ -1170,6 +1175,7 @@
     "web/e2e/spec347-mobile.spec.ts",
     "web/e2e/spec347-prints.spec.ts",
     "web/e2e/spec347-retrato.spec.ts",
+    "web/e2e/spec352-retrato-pago.spec.ts",
     "web/e2e/support-code.spec.ts",
     "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
@@ -1276,6 +1282,7 @@
     "web/src/lib/authErrors.ts",
     "web/src/lib/clientErrors.ts",
     "web/src/lib/errorMessages.ts",
+    "web/src/lib/portraitOrder.ts",
     "web/src/lib/turnLatency.ts",
     "web/src/main.tsx",
     "web/src/native/appVersion.ts",
@@ -1338,14 +1345,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1003,
+    "class": 1013,
     "endpoint": 68,
-    "file": 1284,
-    "function": 5046,
-    "method": 847,
-    "module": 1084,
-    "test": 9260
+    "file": 1291,
+    "function": 5074,
+    "method": 863,
+    "module": 1089,
+    "test": 9363
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:2105d3c89ba610999eeb84734c45b4655ad881969c3373904ff9f205edec44f6"
+  "source_tree_hash": "sha256:1e7b05cd1022fb2f9b1c96d5e6ce70ad1d6482d9f59ec1e2918f8570d82e825d"
 }
