@@ -61,7 +61,9 @@ def test_preview_nao_altera_estado_e_nao_vaza_defesa(monkeypatch):
         "dano_min_apos_defesa",
         "dano_max_apos_defesa",
     }
-    assert out["defesa_conhecida"] == out["dano_min"] and out["dano_min_apos_defesa"] == 0  # Proteção 9 absorve tudo
+    assert (
+        out["defesa_conhecida"] == out["dano_min"] and out["dano_min_apos_defesa"] == 0
+    )  # Proteção 9 absorve tudo
 
 
 @pytest.mark.parametrize(

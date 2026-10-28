@@ -140,9 +140,7 @@ def _outcome(monkeypatch, delay: float, budget: float):
     events = []
     monkeypatch.setattr(combat_agent, "_OUTCOME_BUDGET_S", budget)
     monkeypatch.setattr(combat_agent, "get_llm", lambda **_k: _SlowLLM(delay))
-    monkeypatch.setattr(
-        combat_agent, "_log_event", lambda *a, **k: events.append((a[0], a[1]))
-    )
+    monkeypatch.setattr(combat_agent, "_log_event", lambda *a, **k: events.append((a[0], a[1])))
     start = time.monotonic()
     text = combat_agent._narrate_outcome(
         "victory",

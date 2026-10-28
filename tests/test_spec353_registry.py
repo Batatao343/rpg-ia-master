@@ -166,10 +166,17 @@ def test_facts_have_actor_target_result_and_no_digits():
     hero = {"name": "Haldor", "vitalidade": 5, "max_vitalidade": 10}
     enemy = {"id": "c1", "name": "Criatura", "status": "ativo"}
     last_out = {
-        "attacks": [{"actor_id": "player", "target_id": "c1", "acerto": False, "resultado": "erro"}],
+        "attacks": [
+            {"actor_id": "player", "target_id": "c1", "acerto": False, "resultado": "erro"}
+        ],
         "ticks": [{"actor_id": "c1", "condition": "Sangramento", "dano_final": 3}],
         "final_blows": [
-            {"target_id": "c1", "kind": "dano_continuo", "by_actor_id": None, "condition": "Sangramento"}
+            {
+                "target_id": "c1",
+                "kind": "dano_continuo",
+                "by_actor_id": None,
+                "condition": "Sangramento",
+            }
         ],
     }
     facts = round_log.outcome_facts("victory", {}, hero, [enemy], last_out)
@@ -197,7 +204,8 @@ def test_final_blow_attack_recorded_with_card():
     hero = _actor("player", corpo=5, is_player=True)
     foe = _actor("boss", corpo=0, categoria="lacaio", vitalidade=0)
     decl = ct.TurnDeclaration(
-        actor_id="player", acao=ct.TurnStep(kind="attack", target_id="boss", params={"dano_base": 9})
+        actor_id="player",
+        acao=ct.TurnStep(kind="attack", target_id="boss", params={"dano_base": 9}),
     )
     for seed in range(40):
         foe2 = dict(foe, ferimentos={"leve": [], "grave": [], "critico": []}, dead=False)
@@ -254,7 +262,9 @@ def test_r14_exact_sum_with_self_harm(seed, card_id, monkeypatch):
     harm = next(m for m in out["class_mechanics"] if m["kind"] == "self_harm")
     paid = -harm["vitality_delta"]
     lines = preview.mech_log(out["attacks"], [hero, boss], out["ticks"], out=out)
-    line_cost = [int(m.group(1)) for ln in lines if (m := re.search(r"custo · (\d+) Vitalidade$", ln))]
+    line_cost = [
+        int(m.group(1)) for ln in lines if (m := re.search(r"custo · (\d+) Vitalidade$", ln))
+    ]
     assert line_cost == [harm["amount"]] and paid == harm["amount"]
     hits = sum(
         int(m.group(1)) for ln in lines if "→ Você" in ln and (m := re.search(r"(\d+) dano$", ln))
@@ -298,10 +308,17 @@ def test_taunt_applied_line():
     out = {
         "attacks": [],
         "condicoes_novas": [
-            {"victim_id": "boss", "condition": "Provocado", "source_id": "player", "control": "taunt"}
+            {
+                "victim_id": "boss",
+                "condition": "Provocado",
+                "source_id": "player",
+                "control": "taunt",
+            }
         ],
     }
-    reg = round_log.round_registry(out, {"player": {"name": "H", "is_player": True}, "boss": {"name": "Criatura"}})
+    reg = round_log.round_registry(
+        out, {"player": {"name": "H", "is_player": True}, "boss": {"name": "Criatura"}}
+    )
     assert reg == ["Criatura está provocado: a próxima intenção dele mira você (com chance)."]
 
 

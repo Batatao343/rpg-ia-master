@@ -18,8 +18,15 @@ def _on(monkeypatch):
 
 
 def _ally():
-    return {"id": "npc_ketil", "name": "Ketil", "is_ally": True, "transient": True,
-            "vitalidade": 8, "max_vitalidade": 8, "virtudes": {"corpo": 2}}
+    return {
+        "id": "npc_ketil",
+        "name": "Ketil",
+        "is_ally": True,
+        "transient": True,
+        "vitalidade": 8,
+        "max_vitalidade": 8,
+        "virtudes": {"corpo": 2},
+    }
 
 
 def test_opening_sets_scene_allies(monkeypatch):

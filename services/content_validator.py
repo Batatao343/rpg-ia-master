@@ -1020,7 +1020,9 @@ def validate_bestiary(
             continue
         for raw in cre.get("cartas") or []:
             card_id = raw.get("id") if isinstance(raw, dict) else raw
-            dtype = str(((_cards.get_card(str(card_id)) or {}).get("efeito") or {}).get("dano_tipo"))
+            dtype = str(
+                ((_cards.get_card(str(card_id)) or {}).get("efeito") or {}).get("dano_tipo")
+            )
             if dtype in _edk._CASTER_DAMAGE and (cid, str(card_id)) not in authored_ok:
                 findings.append(
                     Finding(

@@ -396,7 +396,9 @@ def _fold_text(value: str) -> str:
 
 _BODY = r"(?:torso|cabeca|braco|perna|peito|costelas|ombro|flanco|ventre|pescoco|coxa)"
 _HIT_ON_HERO_RE = re.compile(
-    r"\b(?:teu|tua|seu|sua|seus|suas)\s+" + _BODY + r"|\bte\s+(?:atinge|acerta|rasga|encontra|fere|alcanca)"
+    r"\b(?:teu|tua|seu|sua|seus|suas)\s+"
+    + _BODY
+    + r"|\bte\s+(?:atinge|acerta|rasga|encontra|fere|alcanca)"
     r"|\bem\s+voce\b|\bem\s+ti\b"
 )
 _MISS_RE = re.compile(

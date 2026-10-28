@@ -1437,9 +1437,7 @@ def _apply_player_card_mechanics(player: dict, used: dict, player_id: str, out: 
             ferimento=_new_wound_note(player, wounds_before),
         )
         _entropy_event(player, {"kind": "on_self_harm", "amount": self_harm}, out)
-        _check_terminal(
-            player, player_id, out, damage_applied=True, cause="auto_dano", record=True
-        )
+        _check_terminal(player, player_id, out, damage_applied=True, cause="auto_dano", record=True)
 
     decay_kind = mechanics.get("decadencia")
     if decay_kind:

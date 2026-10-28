@@ -9,7 +9,9 @@ import pytest
 from services import card_piles, cards
 from services import scene_cards as sc
 
-ID_RE = re.compile(r"\b(cena|bas|dev|san|cor|arc|vig|bst|inf|mon|npc|enemy|fallback|sus)_[a-z0-9_]+\b")
+ID_RE = re.compile(
+    r"\b(cena|bas|dev|san|cor|arc|vig|bst|inf|mon|npc|enemy|fallback|sus)_[a-z0-9_]+\b"
+)
 
 
 def _obj_card() -> dict:

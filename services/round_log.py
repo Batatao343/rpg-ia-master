@@ -129,9 +129,7 @@ def _result_phrase(atk: dict) -> str:
     parts = [f"{head} — {int(dano)} de dano"]
     fer = atk.get("ferimento") or {}
     if fer.get("categoria"):
-        parts.append(
-            f"ferimento {_cat_pt(fer['categoria'])} {_region_phrase(fer.get('regiao'))}"
-        )
+        parts.append(f"ferimento {_cat_pt(fer['categoria'])} {_region_phrase(fer.get('regiao'))}")
     return ", ".join(parts)
 
 
@@ -254,7 +252,9 @@ def round_registry(
             if atk.get("label") != "Última Ação":
                 event_lines.append(_attack_line(atk, names, actors_by_id))
         elif kind == "tick":
-            victim = names.get(str(payload.get("actor_id")), str(payload.get("actor_id") or "Alguém"))
+            victim = names.get(
+                str(payload.get("actor_id")), str(payload.get("actor_id") or "Alguém")
+            )
             event_lines.append(
                 f"{payload.get('condition')} corrói {victim}: "
                 f"{int(payload.get('dano_final', 0))} de dano contínuo."
@@ -266,7 +266,9 @@ def round_registry(
             line = f"{who} {verbo} {int(payload.get('amount', 0))} de Vitalidade por {card.get('name', 'uma Carta')}"
             note = payload.get("ferimento") or {}
             if note.get("categoria"):
-                line += f", ferimento {_cat_pt(note['categoria'])} {_region_phrase(note.get('regiao'))}"
+                line += (
+                    f", ferimento {_cat_pt(note['categoria'])} {_region_phrase(note.get('regiao'))}"
+                )
             event_lines.append(line + ".")
         else:  # "card": Carta de apoio sem ataque (cura, proteção...) — uma frase com o sabor
             used = payload
@@ -376,7 +378,9 @@ _OUTCOME_PT = {
 }
 
 
-def _fact_names(player: dict, enemies: list[dict], extra: dict[str, str] | None = None) -> dict[str, str]:
+def _fact_names(
+    player: dict, enemies: list[dict], extra: dict[str, str] | None = None
+) -> dict[str, str]:
     names = {"player": "Você"}
     for e in enemies or []:
         for key in (e.get("id"), e.get("name")):

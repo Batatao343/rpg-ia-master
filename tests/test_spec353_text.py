@@ -27,7 +27,11 @@ def test_effective_damage_equals_preview_and_engine(card_id):
     hit = None
     for seed in range(60):
         h = {**hero, "prepared_cards": [card_id], "card_usage": {}}
-        b = dict(boss, vitalidade=boss["max_vitalidade"], ferimentos={"leve": [], "grave": [], "critico": []})
+        b = dict(
+            boss,
+            vitalidade=boss["max_vitalidade"],
+            ferimentos={"leve": [], "grave": [], "critico": []},
+        )
         out = orch.run_round(
             _scene("player", "boss"),
             {"player": h, "boss": b},
@@ -130,7 +134,12 @@ def test_preview_after_defense_equals_engine(dtype, prot, seed):
 
     target = {
         "id": "t",
-        "armor": {"protecao": prot, "integridade_atual": 4, "integridade_max": 4, "reducoes_max": 2},
+        "armor": {
+            "protecao": prot,
+            "integridade_atual": 4,
+            "integridade_max": 4,
+            "reducoes_max": 2,
+        },
         "active_conditions": [],
     }
     base = 7

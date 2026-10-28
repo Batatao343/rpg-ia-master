@@ -53,7 +53,12 @@ LAST_OUT_K4 = {
     ],
     "ticks": [{"actor_id": "e1", "condition": "Sangramento", "dano_final": 1}],
     "final_blows": [
-        {"target_id": "e1", "kind": "dano_continuo", "by_actor_id": None, "condition": "Sangramento"}
+        {
+            "target_id": "e1",
+            "kind": "dano_continuo",
+            "by_actor_id": None,
+            "condition": "Sangramento",
+        }
     ],
 }
 LAST_OUT_R6 = {

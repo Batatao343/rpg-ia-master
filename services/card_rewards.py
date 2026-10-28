@@ -582,7 +582,8 @@ def public_pending(player: dict) -> dict | None:
         "origem": pending.get("origem"),
         "recusa_ouro": int(pending.get("recusa_ouro", REFUSE_GOLD) or 0),
         "ofertas": [
-            {**card_view(cid, player), "conhecida": cid in known} for cid in pending.get("ofertas") or []
+            {**card_view(cid, player), "conhecida": cid in known}
+            for cid in pending.get("ofertas") or []
         ],
     }
 

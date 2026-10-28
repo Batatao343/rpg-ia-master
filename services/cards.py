@@ -789,7 +789,11 @@ def use_ruptura(state: dict, card_id: str) -> dict:
     if not card:
         return {"ok": False, "error": "Essa Carta não existe mais.", "log": ""}
     if not card.get("ruptura"):
-        return {"ok": False, "error": f"{card.get('name', 'Essa Carta')} não tem Ruptura.", "log": ""}
+        return {
+            "ok": False,
+            "error": f"{card.get('name', 'Essa Carta')} não tem Ruptura.",
+            "log": "",
+        }
 
     # paga o custo/frequência como uso normal (cobra a Entropia ANTES da Carga nova)
     res = use_card(state, card_id)
