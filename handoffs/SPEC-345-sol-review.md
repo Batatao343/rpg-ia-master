@@ -1,7 +1,7 @@
 # SPEC-345 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (re-review de `27f2720c`: 9 de 9 achados fechados; falta 1 achado novo, R-1, pequeno; ver § Re-review)
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `6f24a7aa` (1ª) · `27f2720c` (re-review)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, `56cd5793`): todos os P1/P2 e o R-1 estão fechados; resta 1 P3 de 1 linha (F-1, botão Ruptura), não bloqueante. Ver § Re-review final.
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `6f24a7aa` (1ª) · `27f2720c` (re-review) · `56cd5793` (final)
 
 ## Escopo
 
@@ -106,4 +106,32 @@ node --test tests/spec345-components.test.mjs tests/contrast.test.mjs → 10/10 
 RPG_E2E_PORT=4988 npx playwright test spec345-layout spec345-mobile390 deck-342-baseline --workers=1 → 15 passed, 1 skipped (prints opt-in); porta liberada
 npm run typecheck → limpo · npm run lint → 0 erros, 1 warning pré-existente
 py.sh -c strip_system_tags("A estrada. [RESULTADO] +5\nVoce segue.") → 'A estrada.Voce segue.'  [R-1]
+```
+
+## Re-review final (2026-10-27, `9031452f..56cd5793`)
+
+| Item | Status | Evidência |
+|---|---|---|
+| R-1 | **fechado** | `turn_outcome.py:83-93`: padrão ancorado para a linha inteira (consome a quebra) + `_RECEIPT_TAIL` para o meio da linha (não consome a quebra), juntos em `remove_receipts`. `"A estrada. [RESULTADO] +5\nVoce segue."` → `"A estrada.\nVoce segue."`. `narrative_sink.py:20,166` usa a mesma função. O teste `test_stream_e_final_iguais_com_recibo_no_meio` prova a paridade entre stream e texto final. |
+| P3-1 | **fechado, com 1 resto** | Os 7 controles citados e `.actionchip[aria-disabled]`/`.play-queue__submit[aria-disabled]` agora usam o padrão do 9b: `opacity: 1`, `--bg-deep`, `--muted` e borda tracejada. `contrast.test.mjs` varre os dois CSS. A face `.combat-card[aria-disabled]` (`styles.css:1260`) segue com 0,5, o que aceito porque o motivo vem escrito. O resto está em F-1. |
+| P3-2 | **retirado (contestação aceita)** | Errei: `--tabbar-h` é definido em `workspace.css:216` (`calc(48px + env(safe-area-inset-bottom))` no mobile). O meu grep estava truncado por `head -3`. O e2e `tabbar_h_definido_no_mobile` mede ≥ 48 px. |
+| P3-3 | **mantido como nota** | Prints da API sem o texto de espólio e sem "sem Vitalidade". Já está coberto por teste e é o roteiro do smoke real do §6, que é do coordenador. Não é pendência de código. |
+| P3-4 | **retirado (contestação aceita)** | A conta crua só sai no ramo `elif is_simulation:` (`agents/combat.py:2238-2240`, "Vitória no laboratório"). O jogo real passa por `_narrate`. É superfície de dev, fora do texto ao jogador. |
+| P3-5 | **fechado** | A diretiva sem uso saiu de `useTypewriter.ts`. `npm run lint` ficou sem problemas. |
+
+### Follow-up restante (P3, não bloqueia; correção de 1 linha)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| F-1 | P3 | `web/src/styles.css:1263` + `web/tests/contrast.test.mjs` (filtro `!/\.combat-card/`) | `.combat-card__rupture[aria-disabled="true"] { opacity: 0.45 }` continua com a opacidade antiga. É um botão vivo (`CardHand.tsx:75-78`, "Ruptura" quando não está pronta ou durante `busy`). O filtro do teste exclui qualquer linha com `.combat-card`, então pega também o `__rupture`, quando só a face da carta deveria ficar de fora. | Trocar pelo padrão do 9b (`opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line)`) e estreitar o filtro do teste para `/\.combat-card\[aria-disabled/`. |
+
+Pendências fora do código, com o coordenador: smoke com LLM real (§6), R12 (perf 3×), suíte completa no pouso, marcação da §5 e do 316 F-1.
+
+### Comandos (final)
+
+```text
+py.sh -m pytest -q -n 2 (11 arquivos: spec345 ×3, xp_outside_prose, pre_matrix, turn_delivery, turn_outcome_endpoints, stream_structured, spec319_shadow_replay, streaming, review_high_integration) → 162 passed, 0 falhas
+node --test tests/spec345-components.test.mjs tests/contrast.test.mjs → 11/11 pass
+RPG_E2E_PORT=4988 npx playwright test spec345-layout spec345-mobile390 deck-342-baseline --workers=1 → 16 passed, 1 skipped (prints opt-in); nada escutando na 4988 depois
+npm run lint → limpo
 ```
