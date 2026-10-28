@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "27085938438ec6658c7c781859b9127755c4eb50",
+  "commit_sha": "1c50e401b33b3cbcecf1119942633c4482f4906c",
   "edge_counts": {
-    "calls": 32734,
-    "contains": 1074,
-    "defines": 16030,
-    "imports": 2634,
-    "likely_test_for": 1861,
+    "calls": 33001,
+    "contains": 1084,
+    "defines": 16157,
+    "imports": 2663,
+    "likely_test_for": 1889,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:194f44865fc537adb777a57c707e0740cf1cd930b6c266e746d9f38997248eb7",
+  "graph_hash": "sha256:d2b1195072661134fd93f793aedae21f8eb45d237ac35e18fc7c86cabf38d297",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -338,6 +338,7 @@
     "services/card_rewards.py",
     "services/card_status.py",
     "services/card_telemetry.py",
+    "services/card_text.py",
     "services/cards.py",
     "services/chase.py",
     "services/checkpoints.py",
@@ -496,6 +497,7 @@
     "tests/fakes/local_pricing.py",
     "tests/fakes/two_principals.py",
     "tests/fixtures/spec346_smoke.py",
+    "tests/fixtures/spec353_smoke.py",
     "tests/prompt_capture.py",
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
@@ -1080,6 +1082,14 @@
     "tests/test_spec347_initiative_view.py",
     "tests/test_spec347_mech_log.py",
     "tests/test_spec347_round_board.py",
+    "tests/test_spec353_agent.py",
+    "tests/test_spec353_attribution.py",
+    "tests/test_spec353_golden_guard.py",
+    "tests/test_spec353_misc.py",
+    "tests/test_spec353_registry.py",
+    "tests/test_spec353_scene_card.py",
+    "tests/test_spec353_spawn_count.py",
+    "tests/test_spec353_text.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1328,14 +1338,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 999,
+    "class": 1003,
     "endpoint": 68,
-    "file": 1274,
-    "function": 5007,
-    "method": 845,
-    "module": 1074,
-    "test": 9178
+    "file": 1284,
+    "function": 5046,
+    "method": 847,
+    "module": 1084,
+    "test": 9260
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:4a83fe6318b51cb3d125d8ef8ecbe280f6b9cd5f6169bdd48e0a6b65af846fed"
+  "source_tree_hash": "sha256:53d44984c87bd90e189fc7ad13b83ef42497df8441085dc6b3555ddb87374a47"
 }
