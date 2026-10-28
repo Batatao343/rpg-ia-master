@@ -240,8 +240,58 @@ def shares_identity(requested: str, resolved: str) -> bool:
     return bool(set(name_tokens(requested)) & set(name_tokens(resolved)))
 
 
+_CORE_ARTICLES = {"o", "a", "os", "as", "um", "uma", "uns", "umas"}
+_CORE_LOCATIVES = {"na", "no", "nas", "nos", "em", "pela", "pelo", "perto", "longe", "ate"}
+_CORE_QUALIFIER_PREFIXES = (
+    "primeir",
+    "segund",
+    "ultim",
+    "proxim",
+    "ferid",
+    "esquerd",
+    "direit",
+    "frente",
+    "maior",
+    "menor",
+    "minha",
+    "meu",
+    "minhas",
+    "meus",
+    "surg",
+    "aparec",
+    "vier",
+    "viram",
+    "estiv",
+)
+_CORE_QUALIFIER_WORDS = {"mais", "tras", "perto", "longe", "la", "ali", "aqui", "logo"}
+
+
+def hint_core(text: str) -> str:
+    """SPEC-346 R23: nucleo da dica de alvo ("o bandido mais proximo" -> "bandido").
+
+    Tira oracao relativa ("que ..."), locativo final ("na/no/em ..."), qualificadores de
+    posicao/ordem e verbos de surgimento. Devolve minusculo, sem artigos.
+    """
+    words = [w for w in re.split(r"[\s,;:.!?()\"']+", str(text or "")) if w]
+    kept: list[str] = []
+    for word in words:
+        folded = _fold(word)
+        if folded == "que" or folded in _CORE_LOCATIVES:
+            break  # oracao relativa / locativo final: descarta o resto
+        if folded in _CORE_ARTICLES or folded in _CORE_QUALIFIER_WORDS:
+            continue
+        if folded.startswith(_CORE_QUALIFIER_PREFIXES):
+            continue
+        kept.append(word.casefold())
+    while kept and _fold(kept[-1]) in {"de", "da", "do", "das", "dos", "e", "com"}:
+        kept.pop()
+    while kept and _fold(kept[0]) in {"de", "da", "do", "das", "dos", "e", "com"}:
+        kept.pop(0)
+    return " ".join(kept)
+
+
 def is_generic_hint(text: str) -> bool:
-    return not name_tokens(text)
+    return not name_tokens(hint_core(text))
 
 
 # ---------------------------------------------------------------------------

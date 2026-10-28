@@ -111,6 +111,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.scene_objective_resolved` | `ok`, `tipo` |
 | `combat.spawn_failed` | `error` |
 | `combat.spawn_fallback` | — |
+| `combat.spawn_from_narration` | — |
 | `combat.spawn_identity_mismatch` | — |
 | `combat.spawn_scanner_discarded` | — |
 | `combat.started` | `enemies` |
@@ -294,6 +295,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `router.deterministic_npc_failed` | `error` |
 | `router.deterministic_shadow` | `agree`, `decided_by` |
 | `router.failed` | `error` |
+| `router.hostility_signal_failed` | `error` |
 | `router.orphan_combat_expired` | — |
 | `router.travel_in_combat_flee` | — |
 | `rpg.cron` | `consecutive_failures`, `duration_s`, `outcome`, `task` |

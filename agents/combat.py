@@ -635,6 +635,36 @@ def _bounded_enemy_groups(scan: EncounterScanner) -> list[tuple[str, int]]:
     return bounded
 
 
+def _display_enemy_name(hint: str) -> str:
+    """SPEC-346 R24: nucleo da dica com so a inicial maiuscula e no maximo 3 palavras."""
+    from services import encounter_manifest as em
+
+    words = (em.hint_core(hint) or "inimigo").split()[:3]
+    return " ".join(words).capitalize()
+
+
+def _bestiary_name_from_narration(messages: list) -> str | None:
+    """SPEC-346 R25: id do bestiario cujo nome (todos os tokens) aparece na ultima narracao da IA.
+
+    Deterministico: o nome mais especifico (mais tokens) vence; empate -> menor id."""
+    from services import encounter_manifest as em
+
+    text = ""
+    for m in reversed(messages or []):
+        if getattr(m, "type", "") == "ai":
+            text = str(getattr(m, "content", "") or "")
+            break
+    wanted = set(em.name_tokens(text))
+    best: tuple[int, str] | None = None
+    for bid, entry in em._bestiary().items():
+        tokens = set(em.name_tokens(entry.get("name", "") or bid))
+        if tokens and tokens <= wanted:
+            cand = (-len(tokens), str(bid))
+            if best is None or cand < best:
+                best = cand
+    return best[1] if best else None
+
+
 def _grounded_template(
     name: str, context: str, encounter_level: int, state: dict | None = None
 ) -> dict:
@@ -662,10 +692,12 @@ def _grounded_template(
     _log_event("combat", "spawn_identity_mismatch", level="warning")
     from agents.bestiary import _slug, materialize_enemy_concept
 
+    # SPEC-346 R24: o nome materializado e o nucleo da dica (<= 3 palavras), nunca a frase.
+    display = _display_enemy_name(name)
     return materialize_enemy_concept(
         {
-            "name": name,
-            "id": f"fallback_{_slug(name)}",
+            "name": display,
+            "id": f"fallback_{_slug(display)}",
             "description": "Criatura materializada pela trava de identidade.",
             "categoria": template.get("categoria") or "padrao",
             "arquetipo": template.get("arquetipo") or "bruto",
@@ -808,7 +840,9 @@ def _spawn_v4_enemies(
                     grounded = [(n, c) for n, c in groups if em.shares_identity(target_hint, n)]
                     if len(grounded) != len(groups):
                         _log_event("combat", "spawn_scanner_discarded", level="warning")
-                    groups = grounded or [(str(target_hint).strip(), em.hint_count(target_hint))]
+                    groups = grounded or [
+                        (_display_enemy_name(target_hint), em.hint_count(target_hint))
+                    ]
                 for name, count in groups:
                     template = _grounded_template(name, mechanical_context, encounter_level, state)
                     enemies += _instances(template, count, next_instance_by_template, _deck_seed)
@@ -816,6 +850,20 @@ def _spawn_v4_enemies(
                     meta.update(source="scanner", target_ref=str(target_hint or ""))
         except Exception as e:
             _log_event("combat", "spawn_failed", level="warning", error=type(e).__name__)
+
+    if not enemies:
+        # SPEC-346 R25: scanner indisponivel -> especie citada na ultima narracao.
+        bid = _bestiary_name_from_narration(messages)
+        if bid:
+            from agents.bestiary import template_by_id
+
+            template = template_by_id(bid, encounter_level=encounter_level)
+            if template:
+                count = 1 if em.is_generic_hint(target_hint) else em.hint_count(target_hint)
+                enemies = _instances(template, count, next_instance_by_template, _deck_seed)
+                protected.add(bid)
+                meta.update(source="narration_bestiary", target_ref=bid)
+                _log_event("combat", "spawn_from_narration", level="info")
 
     if not enemies:
         enemies = [

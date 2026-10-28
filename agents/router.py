@@ -289,6 +289,77 @@ class RouterDecision(BaseModel):
         return optional_entity_ref(value)
 
 
+_NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|sem)\b(?:\s+\w+){0,2}\s*$")
+
+
+def _fold_text(text: str) -> str:
+    """Minusculo sem acento (mesmo comprimento para texto latino precomposto)."""
+    import unicodedata
+
+    base = unicodedata.normalize("NFKD", str(text or "").casefold())
+    return "".join(ch for ch in base if not unicodedata.combining(ch))
+
+
+def _last_ai_text(messages) -> str:
+    for m in reversed(messages or []):
+        if getattr(m, "type", "") == "ai":
+            return str(getattr(m, "content", "") or "")
+    return ""
+
+
+def _hostility_signal(state, folded: str) -> bool:
+    """Ameaca narrada na ultima fala da IA, NPC em cena citado ou criatura do bestiario."""
+    if _THREAT_NARRATED_RE.search(_fold_text(_last_ai_text(state.get("messages") or []))):
+        return True
+    from services import encounter_manifest as em
+    from services import npc_layers
+
+    npcs = state.get("npcs") or {}
+    for name in npc_layers.npcs_in_scene(state):
+        if name in npcs and _fold_text(name) in folded:
+            return True
+    wanted = set(em.name_tokens(folded))
+    for bid, entry in em._bestiary().items():
+        tokens = set(em.name_tokens(entry.get("name", "") or bid))
+        if tokens and tokens <= wanted:
+            return True
+    return False
+
+
+def _hostility_fallback(state, last_human: str, world: dict, _resumed, resume_explore: bool):
+    """SPEC-346 R26: CLASSIFY esgotado + hostilidade explicita + sinal de alvo -> COMBAT.
+
+    Devolve ``None`` (segue STORY) sem verbo hostil, com negacao ou sem nenhum sinal de alvo.
+    """
+    folded = _fold_text(last_human)
+    matches = list(_EXPLICIT_HOSTILITY_RE.finditer(folded))
+    if not matches:
+        return None
+    if all(_NEGATION_BEFORE_RE.search(folded[: m.start()]) for m in matches):
+        return None
+    try:
+        if not _hostility_signal(state, folded):
+            return None
+    except Exception as exc:  # silent-ok: sem sinal o fluxo segue STORY
+        _log_event("router", "hostility_signal_failed", level="warning", error=type(exc).__name__)
+        return None
+    from services import encounter_manifest as em
+
+    phrase = re.split(r"[.,;!?]|\be\b", last_human[matches[-1].end() :])[0]
+    core = em.hint_core(phrase)
+    target = core if core and not em.is_generic_hint(core) else "Inimigos"
+    decision = RouterDecision(
+        route=RouteType.COMBAT,
+        loot_context=None,
+        target=target,
+        reasoning="hostility_fallback",
+        confidence=0.5,
+    )
+    payload = _finalize(state, last_human, world, decision, _resumed, resume_explore)
+    payload["interlocutor_reason"] = "classify_fallback"
+    return payload
+
+
 def dm_router_node(state: GameState):
     messages = state.get("messages", [])
     if not messages:
@@ -550,6 +621,9 @@ def _classify(
         )
     except Exception as e:
         _log_event("router", "failed", level="error", error=type(e).__name__)
+        hostile = _hostility_fallback(state, last_human, world, _resumed, resume_explore)
+        if hostile is not None:
+            return _tag(hostile, "hostility_fallback", "invoke_exception")
         return _tag(
             _resumed(
                 {
@@ -564,6 +638,9 @@ def _classify(
     # Sem API key (FallbackLLM) o invoke devolve um AIMessage, não um
     # RouterDecision. Nesse caso seguimos para o storyteller (modo degradado).
     if not isinstance(decision, RouterDecision):
+        hostile = _hostility_fallback(state, last_human, world, _resumed, resume_explore)
+        if hostile is not None:
+            return _tag(hostile, "hostility_fallback", "not_router_decision")
         return _tag(
             _resumed(
                 {
