@@ -1,7 +1,7 @@
 # SPEC-354 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-10-28 · **Commit revisado:** `0e8fd841`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão; 1ª rodada: `CHANGES_REQUIRED` em `0e8fd841`)
+> **Revisor:** Opus 5.5 / papel Sol · **Data:** 2026-10-28 · **Commit revisado:** `0e8fd841` (1ª) → `495e36ee` (re-revisão, rebase sobre a SPEC-353)
 
 ## Escopo
 
@@ -47,9 +47,33 @@ Sem achado em: guard de structured output (nenhuma chamada LLM nova), valor do L
 
 ## Correções aplicadas
 
-(nenhuma ainda — a preencher pelo executor, commit por item)
+Re-revisão em `495e36ee` (commits `375e07e4..495e36ee`, depois do rebase sobre a SPEC-353):
+
+| Achado | Commit | Conferido |
+|---|---|---|
+| P1-1 | `375e07e4` | **Resolvido.** A causa real: `useTypewriter(plain, entry.streaming, …)` recebia `undefined` nas entradas do histórico, e o default `enabled = true` fazia **toda** entrada reaberta ser redigitada com o movimento ligado. Somado a isso, cada entrada assinava os próprios listeners em `useEffectsEnabled`, o que dava o "Maximum update depth". Correções: `entry.streaming === true` (`StoryLog.tsx:155`), uma assinatura compartilhada em `design/motion.ts` e a R1.2 (modo preso ao fim, `ResizeObserver` em `.log`/`.story`, solta só com gesto, `StoryLog.tsx:37-94`). `reabrir_save_real_1440/390` rodam com `no-preference`. Com movimento ligado + `SPEC354_COMBAT=1` + `SPEC354_SLOW=1`: 1440 `24288/24768` (gap 0) e 390 `30394/30885` (gap 0), sem erro de console. |
+| P1-2 | `9917595e` | **Resolvido.** O R3.4 e o `arena_tres_zonas_1440` agora medem com retrato marcador nos 2 inimigos. O retrato passa a ocupar 3 linhas, e as tags e o presságio usam a largura toda (`workspace.css:523-526`, só `var(--…)`). Os dois verdes, também com movimento ligado. |
+| P1-3 | `375e07e4` | **Resolvido.** `subir_e_receber_narracao_nao_puxa_{movimento_ligado,movimento_reduzido}` usa a narração real do backend da fixture (`delayStream`/`releaseStream`), um gesto de roda durante a espera e `scrollTop` inalterado depois que a narração chega. |
+| P2-1 | `58032dcc` | **Resolvido.** Um caminho só em `api.py` (`_final_board` = inativo + `last_round_board` + `_combat_result(state)`), junto com a R54 da 353. O `test_spec353_misc.py::test_view_keeps_round_board_after_conflict_ends` ganhou `result`/recibo e o caso "turno seguinte sem registro". **Desvio a registrar:** a R54 da 353 dizia "quando `last_round_board` existe, com ou sem pilhas". Agora vale só no turno de término e no reload antes de "Continuar". O front já filtrava por `combatResult`, então ninguém perde nada visível, mas o texto da 353 R54 e a §9 da 354 devem registrar isso. |
+| P2-2 | `031ecb59` | Resolvido: o `scrollIntoViewIfNeeded` saiu, e "Continuar" é medido sem rolar, verde a 390 e a 1440. |
+| P2-3 | `375e07e4` | Resolvido: o `ResizeObserver` no `.story` segura o encolhimento pelo toast. Teste `ultima_linha_visivel_com_toast` (gap ≤ 48, última `.msg` visível). |
+| P2-4 | `031ecb59` | Resolvido: só a última entrada do Livro, e só se for narração pronta (`Workspace.tsx:168-171`). |
+| P2-5 | `031ecb59` | Resolvido: no ramo de inimigo, `displayName` roda sem `party`/`npcs` (`Arena.tsx:17,31`). Teste SSR novo. |
+| P2-6 | `031ecb59` | Resolvido: "N jogadas e M efeitos". |
+| P2-7 | `031ecb59`/`495e36ee` | Parcial. Os 8 prints estão em `depois/`. A R6.3 tem o teste com `_enemy_portrait` sem `registry`/`quote_price` (o `Boom` nunca é passado, então é guarda de assinatura, suficiente). O `retrato_marcador_sem_flag` mora em `spec354-prints.spec.ts`, que fica em `skip` sem `RPG_SPEC354_PRINTS`. A cobertura de gate vem do R3.4 e do 347 com marcador. O smoke real (§6) segue pendente. |
+| extra | `031ecb59` | `fora_de_combate` (motivo novo da 353 R37, `services/combat_targeting.py:115`) entrou em `InvalidReason`/`REASON_TEXT` com teste `spec354-reason.test.mjs`. OK. |
+
 
 ## Pendências
+
+Follow-ups da re-revisão (nenhum bloqueia o pouso; os dois primeiros antes do `done`):
+
+- **F-1 (P2, executor/coordenador): a §9 da spec está desatualizada.** Ainda diz "R1 — NÃO reproduzido; nenhuma correção feita" e "Não feito: R1.2…", enquanto os critérios da §5 estão marcados (inclusive "vermelho registrado na §9 + causa real"). Atualizar a §9 com: o vermelho (1440 `4475/21738`, 390 `3788/30885`, com movimento ligado), a causa real (redigitação do histórico + assinatura por entrada), R3.3 com o retrato em 3 linhas, o desvio da 353 R54 e o R6.3.
+- **F-2 (coordenador):** smoke real (§6). O critério segue `[ ]`.
+- **F-3 (P2):** com `SPEC354_COMBAT=1`, os testes R7/toast de `spec354-livro` caem por timeout no `#composer`, que fica travado no Baralho. É limitação da sonda opcional, não do produto. Pular esses testes quando a variável estiver ligada.
+- **F-4 (nit):** `position_initial_atBottom` (`StoryLog.tsx:17`) em snake_case. Renomear ou embutir.
+
+Da 1ª rodada:
 
 - P1-1/P1-3 reabrem a Etapa 1 (R1.1 vermelho com movimento ligado → R1.2). O "Maximum update depth exceeded" já existe na `main`: se a causa sair do escopo do Livro, abrir follow-up próprio.
 - Contrato `tipo`/`efeito` com a SPEC-353: o front aceita a ausência. Nada a fazer aqui.
@@ -65,4 +89,14 @@ playwright --project=mobile-390 -g M05 → 1 passed
 playwright spec354-livro com reducedMotion "no-preference" (config temporária no scratchpad), branch → 3 failed (gap 16806 / 6519–26609; Maximum update depth)
 idem na main 1b769c9f (worktree temporário, removido) → mesmos vermelhos: o defeito é anterior à branch
 sonda R3.4 com retrato marcador nos 2 inimigos (cópia no scratchpad) → 1ª carta y 835 h 117, inView false
+```
+
+Re-revisão (`495e36ee`):
+
+```text
+py.sh -m pytest (spec354_final_round_view, spec354_portrait_always, spec347_creature_art, spec353_misc, api_jogadas, spec345_combat_view, spec342_scene_view, combat_targeting, encounter_manifest, conflito16_frontend) -n 2 → 118 passed
+node --test tests/*.test.mjs → 274 pass, 0 fail ; npm run lint → rc 0 ; npm run build → ok
+playwright --project=chromium --workers=1 spec354-{desktop,mobile,pos-combate,livro} spec347-{desktop,retrato,mobile,board-only} combat-outcome deck-342-baseline livro → 53 passed (baseline 342 sem regerar)
+playwright com reducedMotion "no-preference" (config temporária no scratchpad): spec354-{desktop,mobile,pos-combate,livro} livro spec347-desktop combat-outcome → 25 passed
+idem, só spec354-livro com SPEC354_COMBAT=1 SPEC354_SLOW=1 → reabrir 1440/390 verdes (gap 0); 3 testes R7/toast caem por timeout no #composer travado em combate (F-3)
 ```
