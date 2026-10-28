@@ -67,5 +67,5 @@ Retratos de criatura entram pelo catálogo curado (`data/visual_assets.json`), c
 ```
 
 e rode `bash scripts/dev/py.sh scripts/import_bestiary_art.py <pasta>`. O script falha se o id não existir em
-`data/bestiary.json`/`FAMILIAS`, gera as variantes WebP em `web/public/art/bestiario/`, grava o `sha256` e é
+`data/bestiary.json`/`FAMILIAS`, gera `thumbnail`+`display` (dentro dos tetos do validador) em `web/public/art/v1/bestiario/`, grava o `sha256` (trocar a arte de um id exige `--force`; tudo é validado antes de escrever) e é
 idempotente (reimportar o mesmo arquivo não muda nada). O tabuleiro usa a arte sozinho; sem arte, mostra o ícone da família.

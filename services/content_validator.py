@@ -1165,7 +1165,19 @@ def validate_visual_assets(
     npc_ids = {eid for eid, row in entities.items() if row.get("type") == "npc"}
     race_ids = {row["id"] for row in origins.get("races", [])}
     class_ids = set(classes)
-    canonical = {"race": race_ids, "class": class_ids, "location": locations, "npc": npc_ids}
+    # SPEC-347 R13.2: arte do bestiário (`creature` = id de data/bestiary.json ou `bst:{pool}`; `creature_family`).
+    from services.enemy_decks import FAMILIAS
+
+    with open(os.path.join("data", "bestiary.json"), encoding="utf-8") as handle:
+        bestiary_ids = set(json.load(handle))
+    canonical = {
+        "race": race_ids,
+        "class": class_ids,
+        "location": locations,
+        "npc": npc_ids,
+        "creature": bestiary_ids,
+        "creature_family": set(FAMILIAS),
+    }
 
     asset_ids: set[str] = set()
     subjects: set[tuple[str, str]] = set()
@@ -1179,7 +1191,8 @@ def validate_visual_assets(
                 Finding("visual_assets", "error", catalog_path, aid, "asset_id vazio ou duplicado")
             )
         asset_ids.add(aid)
-        if kind not in canonical or sid not in canonical.get(kind, set()):
+        pool_creature = kind == "creature" and re.fullmatch(r"bst:[a-z0-9][a-z0-9_-]*", sid)
+        if kind not in canonical or (sid not in canonical.get(kind, set()) and not pool_creature):
             findings.append(
                 Finding(
                     "visual_assets",
