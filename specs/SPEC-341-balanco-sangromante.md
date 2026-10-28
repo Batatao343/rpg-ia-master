@@ -1,6 +1,6 @@
 # SPEC-341 — Balanço de poder das Cartas pós-SPEC-339 (Sangromante avaro/silencioso, dominantes novas, controles de duração)
 
-> **Status:** `approved`
+> **Status:** `in-progress`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-339 (`done`: tick de duração corrigido, viés de ordem do `full_deck` removido), SPEC-335 (Lotes 0–6 na `main`, `off`), SPEC-336 (esteira: lint, `versao`, `_ondas.yaml`), SPEC-330 (golden das 308 legadas).

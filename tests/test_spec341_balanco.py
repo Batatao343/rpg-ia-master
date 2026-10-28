@@ -242,19 +242,7 @@ def test_arena_confirmacao_dentro_da_faixa():
         assert 0.45 <= padrao <= 0.75, (cls, sub, padrao)
 
 
-@pytest.mark.parametrize(
-    "nome",
-    [
-        "arena-final.json",
-        pytest.param(
-            "arena-confirmacao.json",
-            marks=pytest.mark.xfail(
-                strict=True,
-                reason="confirmação 20–99: avaro 75,2 % > 75 %; aguarda decisão do dono",
-            ),
-        ),
-    ],
-)
+@pytest.mark.parametrize("nome", ["arena-final.json", "arena-confirmacao.json"])
 def test_arena_versoes_batem_com_catalogo(nome):
     arte = _load(nome)
     assert arte["versoes"], "versoes das Cartas alteradas ausentes"
