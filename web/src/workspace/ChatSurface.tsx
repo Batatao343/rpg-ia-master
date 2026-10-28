@@ -128,7 +128,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   onRetry?: () => void;
   /** SPEC-347 R18: com o tabuleiro do Baralho aberto não há texto livre (o rascunho guardado volta depois). */
   deckLocked?: boolean;
-}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false }, inputRef) {
+  /** SPEC-347 R18.3: com o tabuleiro aberto, o atalho de foco do composer leva ao painel de Combate. */
+  onFocusCombat?: () => void;
+}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false, onFocusCombat }, inputRef) {
   const gameId = data?.game_id;
   const formRef = useRef<HTMLFormElement>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -187,7 +189,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
       <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
         onRetry={() => onRetry?.()}
-        onFocusInput={() => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
+        onFocusInput={() => { if (deckLocked) { onFocusCombat?.(); return; } if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
       <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
         onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
       {deckLocked ? (

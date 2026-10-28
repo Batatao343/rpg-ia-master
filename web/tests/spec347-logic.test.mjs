@@ -39,3 +39,11 @@ test('type_label_cobre_todos_os_tipos_do_baralho', async () => {
   }
   assert.equal(TYPE_LABEL.utilitaria, 'Utilitária');
 });
+
+test('resetBookScroll_zera_a_rolagem_guardada_e_preserva_o_rascunho', async () => {
+  const { setChatSession, getChatSession, resetBookScroll } = await load('../src/workspace/chatSessionStore.ts');
+  setChatSession('g1', { draft: 'oi', scrollTop: 120, atBottom: false });
+  resetBookScroll('g1');
+  assert.deepEqual(getChatSession('g1'), { draft: 'oi', scrollTop: null, atBottom: true });
+  assert.doesNotThrow(() => resetBookScroll(null));
+});

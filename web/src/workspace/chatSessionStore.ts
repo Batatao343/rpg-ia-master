@@ -18,5 +18,10 @@ export function setChatSession(gameId: string | null | undefined, patch: Partial
   sessions.set(gameId, { ...getChatSession(gameId), ...patch });
 }
 
+/** SPEC-347 R11.2: reabrir um save abre o Livro no fim (a memória de rolagem serve à troca de superfície). */
+export function resetBookScroll(gameId: string | null | undefined): void {
+  setChatSession(gameId, { scrollTop: null, atBottom: true });
+}
+
 export function forgetChatSession(gameId: string): void { sessions.delete(gameId); }
 export function forgetAllChatSessions(): void { sessions.clear(); }

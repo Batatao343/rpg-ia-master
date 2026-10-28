@@ -358,7 +358,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onOpenLevelUp={props.onOpenLevelUp}
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel} />
         </div>
-        <Composer ref={composerRef} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas}
+        <Composer ref={composerRef} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas} onFocusCombat={() => openTab("combate")}
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}
           turn={turn} onRetry={onRetryTurn} />
       </div>

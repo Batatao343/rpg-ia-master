@@ -47,10 +47,10 @@ test.describe("fuga 390", () => {
       const b = await measure(page.locator(sel));
       expect(b.lines, sel).toBe(1);
       expect(b.clipped, `${sel} cortado`).toBe(false);
-      expect(b.h, sel).toBeGreaterThanOrEqual(43.5);
+      expect(b.h, sel).toBeGreaterThanOrEqual(44);
       expect(b.x + b.w, sel).toBeLessThanOrEqual(barBox!.x + barBox!.width + 0.5);
     }
-    expect((await measure(page.locator("[data-flee]"))).w).toBeGreaterThanOrEqual(43.5);
+    expect((await measure(page.locator("[data-flee]"))).w).toBeGreaterThanOrEqual(44);
   });
 });
 
@@ -116,5 +116,26 @@ test.describe("fuga com erro 1440", () => {
     await page.locator("[data-flee]").click();
     await expect(page.locator("[data-flee-error]")).toHaveText("A fuga não chegou ao mestre. Tente de novo.");
     await expect(page.locator("[data-flee-result]")).toHaveCount(0);
+  });
+});
+
+test.describe("rascunho 1440", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test("rascunho_volta_apos_conflito: o texto digitado antes some com o tabuleiro e volta ao fim", async ({ page, backend }) => {
+    backend.armCombat("game-a", [["e1", "Saqueador"], ["e2", "Bandoleiro"]]);
+    await page.goto("/");
+    await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+    await page.getByRole("button", { name: /^Ayla/ }).click();
+    await page.locator("#composer").fill("vou ao porto");
+    // o conflito passa a ter tabuleiro (pilhas) na próxima resposta do servidor
+    backend.combatHits = true;
+    armDeck(backend);
+    await page.locator("[data-basic='guardar']").click();
+    await expect(page.locator("#composer")).toHaveCount(0);
+    await expect(page.getByRole("note").filter({ hasText: "Na luta, você age pelas cartas do tabuleiro." })).toBeVisible();
+    backend.combatHits = false;
+    await page.locator("[data-flee]").click();
+    await expect(page.locator("#composer")).toHaveValue("vou ao porto");
   });
 });

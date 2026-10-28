@@ -51,7 +51,7 @@ test.describe("390", () => {
       const b = await measure(page.locator(sel));
       expect(b.lines, sel).toBe(1);
       expect(b.clipped, `${sel} cortado`).toBe(false);
-      expect(b.h, sel).toBeGreaterThanOrEqual(43.5);
+      expect(b.h, sel).toBeGreaterThanOrEqual(44);
       expect(b.x + b.w, sel).toBeLessThanOrEqual(barBox!.x + barBox!.width + 0.5);
     }
     const label = await page.locator("[data-end-turn] span").first().boundingBox();
@@ -61,7 +61,7 @@ test.describe("390", () => {
     await expect(page.locator(".play-queue__clear--bar")).toBeHidden();
     const clear = await measure(page.locator(".play-queue__clear--inline"));
     expect(clear.lines).toBe(1);
-    expect(clear.h).toBeGreaterThanOrEqual(43.5);
+    expect(clear.h).toBeGreaterThanOrEqual(44);
   });
 
   test("pressagio_faixa_inteira: '3–6' numa linha", async ({ page, backend }) => {
@@ -81,7 +81,7 @@ test.describe("390", () => {
     await expect(page.locator(".preview-chip[data-preview='ok']")).toBeVisible();
     for (const sel of ["[data-play-confirm]", ".aimbar__cancel", "[data-other-target]"]) {
       const b = await measure(page.locator(sel));
-      expect(b.h, sel).toBeGreaterThanOrEqual(43.5);
+      expect(b.h, sel).toBeGreaterThanOrEqual(44);
     }
   });
 });
@@ -127,7 +127,7 @@ test.describe("390 etapa 3", () => {
     const board = page.locator("[data-roundboard]");
     await expect(board.locator(".roundboard__list").first().locator(".roundboard__row")).toHaveCount(4);
     await expect(board.locator("summary")).toHaveText("Ver a rodada inteira (6)");
-    expect((await measure(board.locator("summary"))).h).toBeGreaterThanOrEqual(43.5);
+    expect((await measure(board.locator("summary"))).h).toBeGreaterThanOrEqual(44);
     const above = await page.evaluate(() => !!(document.querySelector("[data-roundboard]")!.compareDocumentPosition(document.querySelector(".arena")!) & Node.DOCUMENT_POSITION_FOLLOWING));
     expect(above).toBe(true);
   });
