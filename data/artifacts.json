@@ -355,8 +355,8 @@
   "lingote_aco_vorr": {
     "name": "Lingote de Aço de Vorr",
     "type": "material",
-    "rarity": "raro",
-    "value_gold": 60,
+    "rarity": "incomum",
+    "value_gold": 10,
     "description": "Liga azulada da Fornalha de Vorr. Mantém o fio em temperaturas que estilhaçam aço comum, e os clãs tecnológicos de Skallgard não ensinam como se faz.",
     "stackable": true,
     "economy_tags": [

@@ -20,7 +20,7 @@ Aparência: Mulher de meia-idade, mãos manchadas de verde-cinza até o pulso, c
 
 Personalidade: Prática, seca, sem remorso que se mostre. Aprendeu a Destilação com Corvane e o deixou; nunca explica por quê. Diz, sem drama, que não existe outro jeito de trabalhar com o Abismo além de trabalhar junto.
 
-O que ensina: A Postura do Corruptor: não lutar contra o Abismo, acompanhá-lo. Apodrecer mais depressa também é cura quando o que apodrece é o que doía. Cada receita custa a quem a usa um pouco de si, e ela diz quanto antes de vender.
+O que ensina: A Postura do Corruptor: não lutar contra o Abismo, acompanhá-lo. Apodrecer mais depressa também é cura quando o que apodrece é o que doía. Cada receita custa a quem a usa um pouco de si, e ela diz quanto antes de vender. Nunca promete que a cura dure: só que o mal sai primeiro.
 
 Quem a despreza: Os Druidas do Ciclo Cinzento, que contêm o Abismo e chamam isso de cuidado.
 

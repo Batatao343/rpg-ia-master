@@ -777,13 +777,6 @@
     "visibility": "public"
   },
   {
-    "id": "e_mairen_membro_cultistas_destilacao",
-    "source": "npc_mairen_das_margens",
-    "type": "member_of",
-    "target": "cultistas_destilacao",
-    "visibility": "public"
-  },
-  {
     "id": "e_mairen_em_aethelgard",
     "source": "npc_mairen_das_margens",
     "type": "located_in",

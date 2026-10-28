@@ -109,7 +109,7 @@ def test_no_stale_phrases_in_lore_nova():
         assert "governante de brekmar" not in fold(lore_text(name)), name
     npcs = fold(lore_text("npcs.txt"))
     assert "dois unicos sobreviventes de infeccao" not in npcs
-    assert "nao simbioticos" in npcs
+    assert "nao simbiotico" in npcs
     assert "nao e doenca natural" not in secrets
     era5 = next(ln for ln in timeline.splitlines() if ln.startswith("ERA 5"))
     era6 = next(ln for ln in timeline.splitlines() if ln.startswith("ERA 6"))
@@ -148,8 +148,8 @@ def test_calendar_year_base_and_protocol_explained():
     assert cal["constants"]["YEAR_BASE"] == 112
     assert cal["year_review"] == "aprovado"
     era7 = " ".join(d["text"] for d in public_docs() if d["id"].startswith("timeline_e7"))
-    assert "protocolo dos anoes" in era7 and "ano 112" in era7
-    assert "ano 67" in era7 and "no 68" in era7
+    assert "livro do protocolo dos anoes" in era7 and "ano 112" in era7
+    assert "termina no 67" in era7 and "fundacao e no 68" in era7 and "sessenta e seis anos" in _public_text()
 
 
 # ---------------------------------------------------------------- mundo (R22-R28)
@@ -186,7 +186,6 @@ def test_kahen_title_arbitro():
     npc = doc("npc_kahen")
     assert "arbitro de brekmar" in npc["text"]
     assert "governante de brekmar" not in _public_text()
-    assert "o arbitro de brekmar" in _public_text(None) or "arbitro de brekmar" in _public_text()
 
 
 def test_elaryin_official_version_public_real_cause_hidden():
@@ -226,17 +225,19 @@ def test_graph_new_leads_and_located_in():
 
 
 def test_cidades_keep_living_leader_when_aerwen_dies():
-    leaders = [
-        e["source"]
-        for e in _edges()
-        if e["type"] == "leads" and e["target"] == "cidades_estado_sobreviventes_vaelorn_solvhen"
-    ]
-    assert "npc_lady_aerwen" in leaders and "npc_keeper_morvan" in leaders
     from services import npc_world
 
-    living = [n for n in leaders if n != "npc_lady_aerwen"]
+    fac = "cidades_estado_sobreviventes_vaelorn_solvhen"
+    leaders = {n: f for n, f in npc_world.leaders().items() if f == fac}
+    assert {"npc_lady_aerwen", "npc_keeper_morvan"} <= set(leaders)
+    sim = {"npcs": {}}
+    state = {"world_projection": {"entities": {"npc_lady_aerwen": {"alive": False}}}}
+    living = [n for n in leaders if not npc_world._is_dead(state, n, {}, sim)]
     assert living == ["npc_keeper_morvan"]
-    assert hasattr(npc_world, "leaders")
+    # a morte tambem vale pelo estado da simulacao
+    sim = {"npcs": {"npc_lady_aerwen": {"dead": True}}}
+    living = [n for n in leaders if not npc_world._is_dead({}, n, {}, sim)]
+    assert living == ["npc_keeper_morvan"]
 
 
 def test_quebrados_faction_public_without_diary():
@@ -258,6 +259,22 @@ def test_delivery_route_uses_vorr_ingot():
     assert "review" not in route and route["lore_keyword"] == "Vorr"
     art = load_json("data/artifacts.json")
     assert art["lingote_aco_vorr"]["type"] == "material"
+
+
+def test_vorr_route_is_fulfillable_and_profitable():
+    cfg = load_json("data/world/lore_quests.json")
+    route = next(r for r in cfg["delivery_routes"] if r["id"] == "minerio_skallgard_brekmar")
+    world = {loc["id"]: loc for loc in load_json("data/world_map.json")["locations"]}
+    sellers = [
+        m
+        for m in load_json("data/merchants.json").values()
+        if route["item_id"] in m["base_stock"]
+        and world[m["location_id"]].get("region_id") == route["origin_region"]
+    ]
+    assert sellers, "nenhum mercador da regiao de origem vende o item da rota"
+    value = load_json("data/artifacts.json")[route["item_id"]]["value_gold"]
+    cost = route["qty"] * value * min(m["price_mult"] for m in sellers)
+    assert cost <= max(cfg["rewards"]["entregar_material"]), cost
 
 
 # ---------------------------------------------------------------- expansões (R50-R51)
@@ -292,7 +309,7 @@ def test_each_expansion_has_canonical_text(eid, vis, phrases):
 
 def test_public_sides_of_expansions():
     pub = _public_text()
-    assert "quase pelo estaleiro" in pub or "o casco \"toma a sua\"" in pub.replace("“", '"') or "toma a sua" in pub
+    assert "o casco \"toma a sua\"" in pub
     assert "as bigornas estao quentes" in doc("ma_forja_profunda")["text"]
     assert "ninguem diz quem as alimenta" in doc("ma_forja_profunda")["text"]
     assert "quieto demais" in doc("pr_solvhen")["text"]
@@ -338,7 +355,6 @@ def test_posturas_doc_curated_public_and_complete():
 def test_posturas_masters_are_graph_npcs():
     ents = load_json("data/graph/entities.json")
     edges = _edges()
-    old_enemy = 0
     for _name, (_verb, master, _enemy) in POSTURAS.items():
         assert ents[master]["type"] == "npc"
         mine = [e for e in edges if e["source"] == master]
@@ -346,10 +362,10 @@ def test_posturas_masters_are_graph_npcs():
         for e in mine:
             assert e["target"] in _entity_ids(), (master, e["target"])
             assert e["type"] != "enemy_of"
-    assert old_enemy == 0
+    assert not [e for e in edges if e["id"].startswith(("e_hrefna", "e_oriel", "e_mairen", "e_hask", "e_benedita")) and e["type"] == "enemy_of"]
     # só Benedita e Hrefna não têm facção própria de origem obrigatória? ambas conferidas acima
     members = [e for e in edges if e["type"] == "member_of" and e["source"] in {m[1] for m in POSTURAS.values()}]
-    assert len(members) >= 4
+    assert len(members) == 3  # Hrefna, Oriel, Hask; Mairen saiu do culto e Benedita nao tem faccao
 
 
 def test_posturas_no_mechanics_no_forbidden_terms():
