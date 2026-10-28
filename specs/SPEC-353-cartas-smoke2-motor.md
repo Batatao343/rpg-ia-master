@@ -587,3 +587,11 @@ turnos no total. Registrar em `docs/spec353/smoke-final.md` (trechos, sem segred
 - Nenhum teste da 346 fixava "herói primeiro" (D1 não quebrou expected algum). Golden da 330 e `tests/spec330_equivalence.py` sem diff (`test_golden_files_have_no_diff_against_main`).
 
 **Arena de não-regressão** (série, seeds 20:100): as 5 Posturas idênticas à base (0,0 pp) com o D6 revertido; detalhe em `docs/spec353/arena.md`.
+
+**Correções da revisão Sol (CHANGES_REQUIRED, 28/10).**
+- P1-1: `cards._in_scene_hand` lê `state["_piles"]` (formato do `round_state`) além de `combat.pilhas`; teste ponta a ponta via `orch.run_round` e contrato da mão nas 5 Posturas com ids reais.
+- P2-2: `dano_*_apos_defesa` agora vem do próprio `resolve_damage_and_wounds` rodando numa cópia só com a defesa pública (armadura visível, condições visíveis); armadura com dano não físico sem condição de Proteção = `None` (o `resist_tipos` é oculto). Oráculo prévia x motor em 45 casos. Nota: `reducoes_max` da armadura passa a ser tratado como público.
+- P2-3: os 3 parágrafos verbatim do smoke estão em `tests/fixtures/spec353_smoke.py` e passam por `authorship(last_out)` -> V1/V3/V2.
+- P3-3: **R28 fica só com a frase base.** Nenhum campo público revela o Corpo do inimigo (`public_panel` não tem `virtudes` e o conhecimento revelado só guarda Cartas e resistências), então "faltam N Ferimentos Críticos" não pode aparecer sem vazar ficha. O gate no código permanece para quando existir revelação de Corpo.
+- P3-4: `_sem_vit_avisado`/`_taunt_resisted` saíram do ator. "Sem Vitalidade" é filtrado no agente por `combat_meta["sem_vitalidade_avisados"]`; a resistência à Provocação usa lista efêmera por contexto no orquestrador.
+- P3-1/2/5: ferimento em pt-BR na entrada `custo`; frase de reconciliação sem flexionar a espécie ("Só dois do bando avançam…"); teste de agente com dica genérica + scanner + frase.

@@ -43,3 +43,27 @@ def test_new_conflict_clears_last_round_board(monkeypatch):
     meta = res["combat"]
     assert not meta.get("last_round_board") and not meta.get("fontes_condicao")
     assert "velho" not in (meta.get("last_mech_log") or [])
+
+
+def test_generic_hint_spawns_scanner_species_and_reconciles_count(monkeypatch):
+    from tests.test_encounter_identity_repro import _bestiary_factory
+
+    _install_llm(
+        monkeypatch,
+        scan=_scan(("Bandido", 2)),
+        narration="Três bandidos surgem da névoa e cercam você.",
+    )
+    monkeypatch.setattr(combat, "generate_new_enemy", _bestiary_factory)
+    events: list = []
+    real = combat._log_event
+    monkeypatch.setattr(combat, "_log_event", lambda *a, **k: (events.append(a[:2]), real(*a, **k)))
+    state = _start_state(hint="a criatura além das estacas")
+    res = combat._combat_node(state)
+    names = [e["name"] for e in res["enemies"]]
+    assert names and all("Além" not in n and "Estacas" not in n for n in names), names
+    assert any("Bandido" in n for n in names)
+    assert ("combat", "spawn_scanner_discarded") not in events
+    text = res["messages"][0].content
+    active = len([e for e in res["enemies"] if e.get("status") == "ativo"])
+    assert active == 2
+    assert "Só dois do bando avançam" in text and ("combat", "entrance_count_reconciled") in events
