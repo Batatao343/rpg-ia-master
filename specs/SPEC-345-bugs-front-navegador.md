@@ -1,6 +1,6 @@
 # SPEC-345 — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
 
-> **Status:** `approved` (bugfix; o dono mandou destravar em 27/10 — decisões do autor em §8, revogáveis pelo dono)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS, F-1 corrigido em 5f4dff39; falta o smoke com LLM real §6)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Depende de:** nenhuma em aberto (SPEC-199/203/293/316/320–324 `done`; o `mech_log` vem da SPEC-334, já no `main` atrás da flag)
 > **Desbloqueia:** linha de base `off` da SPEC-342 (R24) e o smoke "cartas on" antes de ligar as flags
