@@ -488,3 +488,9 @@ details.scene-strip { display: block; }
 .tchip__gen-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
 @media (min-width: 641px) { .tchip__portrait { inline-size: 72px; block-size: 72px; } }
 @media (pointer: coarse) { .tchip__gen, .tchip__gen-confirm button { min-height: 44px; min-width: 44px; } }
+@media (max-width: 640px) {
+  /* SPEC-347 R2/R19: três ações cabem em 366 px sem cortar o rótulo */
+  .play-queue__end { gap: 0.35rem; }
+  .play-queue__end .btn, .play-queue__end .actionchip { letter-spacing: 0; font-size: 0.75rem; padding-inline: 0.4rem; }
+  .play-queue__submit { min-width: 0; }
+}

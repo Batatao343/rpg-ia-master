@@ -497,4 +497,27 @@ O mesmo roteiro do smoke de origem: API local legacy, DeepSeek, preset com `RPG_
 
 ## 9. Notas de implementação
 
-(vazio: o executor registra aqui desvios, o resultado do oráculo R5.1 e o vermelho de R11.1)
+Executor (Sonnet, 27-28/10). Status NÃO alterado (segue `approved`); revisão Sol pendente.
+
+**Entregue (com teste):** Etapa 1 (R1–R3, R17 parcial), Etapa 2 (R4, R5), Etapa 3 (R6–R10, R12), Etapa 4 (R14), Etapa 4b (R18–R20) e, da Etapa 5, só o núcleo determinístico de R13 (ver abaixo).
+
+**Oráculo R5.1:** `test_order_matches_resolved_turns` ficou **verde** (18 casos, 3 iniciadores × 6 seeds): a leitura de D-347-1 se confirma, nenhum ajuste em `agents/combat.py:2337`.
+
+**R11 (Livro reaberto):** a hipótese **não foi reproduzida** pela UI web: não existe rota "play → saves" na mesma aba (Conta volta para `play`; "Nova jornada" abre `create`; só o botão nativo do Capacitor leva a `saves`), então o teste vermelho de R11.1 não pôde ser escrito. A correção defensiva de R11.2 (`setChatSession(gid, {scrollTop: null, atBottom: true})` em `handleContinueSave`) está aplicada, **sem teste e2e** (registrar como risco; teste real exige o fluxo nativo).
+
+**R15 (linha de base 342):** a fixture de `deck-342-baseline.spec.ts` não tem `order` na combate, então a linha de iniciativa e o chip "0 ·" **não aparecem** nos snapshots: eles continuam verdes (win32, `maxDiffPixelRatio` 0,01) depois de R5.3/R5.4 e **não houve regeração nem commit de snapshots** (sem diffs em `docs/spec347/baseline-diff/`). A cobertura do `off` fica em `spec347-desktop.spec.ts::off_iniciativa_honesta` + SSR do `Hud`/`Arena`. Se o revisor quiser a prova pixel a pixel, é preciso adicionar `order` à fixture da baseline e regerar (decisão do coordenador). Também foi atualizado `deck-combat-342.spec.ts` ("B-4": o cabeçalho do HUD no Baralho agora é só "Combate", R5.4) e `deck-queue.test.mjs` ("42,5 %" → "43 %", R10).
+
+**Anotações de backend (aditivas, só view):**
+- `_basic_attack` grava `atk["fora_de_turno"] = label` **somente quando `out` tem `resolved_turns`** (dentro de uma rodada real). Sem essa guarda o golden de 308 cartas da SPEC-330 (`test_card_effects_grammar::test_equivalencia_…`) mudava de hash nas cartas de reação.
+- `_resolve_actor_turn` virou um wrapper fino sobre `_resolve_actor_turn_inner` (corpo intocado) que grava `out["turn_spans"]`; turno negado grava `negado: true` (`_note_denied_span`). Menos linhas tocadas = rebase mais fácil com a 346.
+- `store_mech_log(meta, out, actors, enemy_ids=None)` ganhou o 4º parâmetro; `agents/combat.py` passa `{ids dos inimigos}` (1 linha; a 346 também mexe neste arquivo).
+- `api.py`: `registro_rodada` na view (só com `last_round_log`), `_enemy_portrait` + `retrato` por inimigo. Dependências da 346: nenhuma no código; o registro estruturado aqui é o `turn_spans`/`round_log` (D-347-9: a 346 pode consumi-lo; ela tem o seu `services/round_log.py` — há duplicidade de nome/propósito a reconciliar no pouso).
+
+**Contrato de "Fugir" (R19.3):** a spec da 346 **não define** uma ação estruturada `fugir`: ela só mantém a fuga por texto (`FLEE_RE`). O front usa o contrato que já existe na API (`ActionRequest.action_kind = "flee"`) com `input_text = "Tento fugir."` e sem `jogadas`. Se a 346 criar outro campo, trocar em `CombateTab.tsx::doFlee`. O resultado vem de `combat.active`/`combat.round`: ao fim do combate com `fleeRound` setado → "Você escapou."; combate ativo e rodada +1 → "Não escapou: …" (sem ler `chase.escaped`, que a view só traz durante a perseguição).
+
+**Etapa 5 (R13) — parcial, ATRÁS de `RPG_CREATURE_ART` (registrada em `config/flags.yaml`):**
+- feito: `services/creature_art.py` (`is_important`, `portrait_key`, `portrait_for` com catálogo → registro → marcador, `FAMILY_ICON`, visibilidade game/shared, sem import de provider), `retrato` na view, `scripts/import_bestiary_art.py` (idempotente, valida ids) + doc em `ARTE_VISUAL.md`, `web/public/art/bestiario/`, `familyIcon.ts`, `Portrait` no `TargetChip` (56/72 px, marcador, `gerando`) e a oferta "Gerar retrato" (botão + confirmação inline) **sem fiação** (`onGenerate` não é passado por `CombateTab`).
+- **NÃO feito:** cotação/confirmação `monster` (R13.6) em `api.py`, copia para `shared_object_key`, migration `app.creature_portraits` + registro hosted (`PortraitRegistry` só tem o `EmptyRegistry`), ramo `monster` no worker, `gerar` sempre `null` na view, testes de cobrança/concorrência (R13.10). O motivo foi orçamento/risco: isso toca carteira, Postgres e worker, e exige o banco de teste dos testes de arte. Estado seguro: com a flag `off` nada muda; com `on` aparece só o marcador/arte curada e nenhuma oferta.
+- `portrait_for` para importante sem registro mostra a arte do tipo (`proprio: false`), conforme R13.3.
+
+**Outros desvios/decisões:** "Rodada N" do `RoundBoard` mostra `round − 1` (rodada já resolvida; assume que `combat.round` já avançou). Zonas vazias só saem da grade no Baralho (`compact`). "Desfazer fila" existe em duas cópias (barra/fila) e o CSS mostra uma só. Rótulos da barra a 390 px usam fonte 0,75 rem (três ações em 366 px; o `clipped` do helper de medição pega corte de texto). O registro da rodada usa `RoundBoard` próprio sem retratos miniatura (selo de ícone para o herói). `spec347-prints.spec.ts` gera `docs/spec347/depois/` (7 prints; faltam `1440-tooltip-espolio`, `1440-forja`, `390-pos-combate`). Smoke real (§6) **não executado** (sem staging/chave nesta rodada).

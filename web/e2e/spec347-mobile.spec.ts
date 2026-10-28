@@ -50,6 +50,7 @@ test.describe("390", () => {
     for (const sel of ["[data-spare]", "[data-end-turn]"]) {
       const b = await measure(page.locator(sel));
       expect(b.lines, sel).toBe(1);
+      expect(b.clipped, `${sel} cortado`).toBe(false);
       expect(b.h, sel).toBeGreaterThanOrEqual(43.5);
       expect(b.x + b.w, sel).toBeLessThanOrEqual(barBox!.x + barBox!.width + 0.5);
     }

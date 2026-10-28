@@ -1,7 +1,7 @@
 // SPEC-347: medição "visível e livre" SEM rolar antes (elementFromPoint + caixa dentro do viewport e do painel).
 import type { Locator } from "@playwright/test";
 
-export interface FreeBox { x: number; y: number; w: number; h: number; free: boolean; inView: boolean; lines: number }
+export interface FreeBox { x: number; y: number; w: number; h: number; free: boolean; inView: boolean; lines: number; clipped: boolean }
 
 export async function measure(loc: Locator): Promise<FreeBox> {
   return loc.evaluate((el) => {
@@ -25,6 +25,7 @@ export async function measure(loc: Locator): Promise<FreeBox> {
       free: !!hit && (el === hit || el.contains(hit)),
       inView: r.left >= 0 && r.top >= 0 && r.right <= window.innerWidth && r.bottom <= window.innerHeight && inPanel,
       lines,
+      clipped: el.scrollWidth > el.clientWidth + 1 || Array.from(el.querySelectorAll("span, small")).some((c) => { const q = c.getBoundingClientRect(); return q.width > 0 && (q.right > r.right + 0.5 || q.left < r.left - 0.5); }),
     };
   });
 }
