@@ -319,3 +319,39 @@ def test_condition_from_reaction_has_unknown_source():
     other["active_conditions"].append({"name": "Sangramento", "dot": 1, "duration": 2})
     orch._note_turn_records(b2, {"t": other}, "player", out2)
     assert out2["condicoes_novas"][0]["source_id"] == "player"
+
+
+def test_custo_board_entry_uses_ptbr_wound():
+    out = {
+        "attacks": [],
+        "class_mechanics": [
+            {
+                "kind": "self_harm",
+                "actor_id": "player",
+                "card_id": "san_corte_troca",
+                "amount": 3,
+                "ferimento": {"categoria": "critico", "regiao": "torso"},
+            }
+        ],
+    }
+    board = preview.round_board(out, [{"id": "player", "name": "H", "is_player": True}], set())
+    assert board[0]["efeito"] == "−3 Vitalidade, ferimento crítico no torso"
+
+
+def test_record_flags_never_land_on_actors():
+    """P3-4: nada de marca de registro no ator (vai para o save) e a linha 'sem Vitalidade' sai 1×."""
+    import json
+
+    boss = _actor("boss", corpo=3, categoria="elite", vitalidade=0)
+    hero = _actor("player", corpo=5, is_player=True)
+    out = orch.run_round(
+        _scene("player", "boss"),
+        {"player": hero, "boss": boss},
+        SIDES,
+        declarations={},
+        initiator="heroes",
+        rng=random.Random(1),
+    )
+    blob = json.dumps([hero, boss], default=str)
+    assert "_sem_vit_avisado" not in blob and "_taunt_resisted" not in blob
+    assert len([x for x in out.get("sem_vitalidade", []) if x["actor_id"] == "boss"]) <= 1

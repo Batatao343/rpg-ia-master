@@ -480,16 +480,11 @@ def count_drift(text: str, manifest: dict | None) -> list[dict]:
 
 
 def reconcile_count_sentence(flags: list[dict]) -> str:
-    """Frase determinística que corrige a contagem: "Só dois Bandidos avançam contra você..."."""
+    """Frase determinística que corrige a contagem, sem flexionar o nome da espécie (plural e
+    gênero do bestiário são irregulares): "Só dois do bando avançam contra você; ..."."""
     if not flags:
         return ""
-    parts = []
-    for f in flags:
-        n = int(f["active"])
-        word = _NUM_BY_VALUE.get(n, str(n))
-        label = str(f["species"])
-        if n == 1:
-            parts.append(f"Só {word} {label} avança")
-        else:
-            parts.append(f"Só {word} {label}s avançam")
-    return " ".join(p + " contra você; o resto some na sombra." for p in parts[:1])
+    n = int(flags[0]["active"])
+    word = _NUM_BY_VALUE.get(n, str(n))
+    verb = "avança" if n == 1 else "avançam"
+    return f"Só {word} do bando {verb} contra você; o resto some na sombra."

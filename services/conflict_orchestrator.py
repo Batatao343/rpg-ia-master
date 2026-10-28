@@ -19,6 +19,7 @@ determinístico e ZERO LLM em resolução:
 O jogador chega com a `TurnDeclaration` já montada (parse CLASSIFY no nó).
 """
 
+import contextvars
 import copy
 import json
 import logging
@@ -252,7 +253,8 @@ def _note_turn_records(
                         "control": c.get("control"),
                     }
                 )
-        if actor.pop("_taunt_resisted", False):
+        if aid == actor_id and _actor_key(actor) in _taunt_resisted_ids():
+            _taunt_resisted_ids().remove(_actor_key(actor))
             _record_class_event(out, "special:taunt_resisted", actor_id=aid)
         if (
             not actor.get("is_player")
@@ -260,9 +262,8 @@ def _note_turn_records(
             and not actor.get("dead")
             and not actor.get("incapacitated")
             and actor.get("status", "ativo") == "ativo"
-            and not actor.get("_sem_vit_avisado")
-        ):
-            actor["_sem_vit_avisado"] = True
+            and not any(x["actor_id"] == aid for x in out.get("sem_vitalidade") or [])
+        ):  # o agente filtra os já avisados (combat_meta), sem marca no ator
             out.setdefault("sem_vitalidade", []).append({"actor_id": aid})
 
 
@@ -417,6 +418,25 @@ def _nearest_target(
     return alive[0]
 
 
+_TAUNT_RESISTED: contextvars.ContextVar[list | None] = contextvars.ContextVar(
+    "taunt_resisted", default=None
+)
+
+
+def _taunt_resisted_ids() -> list:
+    """Lista efêmera (por contexto) de quem resistiu à Provocação; nunca vai para ator/save."""
+    lst = _TAUNT_RESISTED.get()
+    if lst is None:
+        lst = []
+        _TAUNT_RESISTED.set(lst)
+    del lst[:-32]
+    return lst
+
+
+def _actor_key(actor: dict) -> str:
+    return str(actor.get("id") or ("player" if actor.get("is_player") else actor.get("name")))
+
+
 def _taunt_target(
     actor: dict, candidates: list[str], actors_by_id: dict[str, dict], rng
 ) -> str | None:
@@ -443,7 +463,7 @@ def _taunt_target(
                 }
             )
             return source_id
-        actor["_taunt_resisted"] = True  # SPEC-353 R39a: a rolagem falhou; o registro avisa
+        _taunt_resisted_ids().append(_actor_key(actor))  # SPEC-353 R39a: efêmero, fora do save
     return None
 
 

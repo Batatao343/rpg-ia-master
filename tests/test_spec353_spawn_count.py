@@ -45,4 +45,4 @@ def test_count_drift_ok_when_equal_or_smaller():
 def test_count_drift_sentence_is_deterministic():
     flags = prose_guard.count_drift("três bandidos avançam", _manifest(2))
     sentence = prose_guard.reconcile_count_sentence(flags)
-    assert sentence == "Só dois Bandidos avançam contra você; o resto some na sombra."
+    assert sentence == "Só dois do bando avançam contra você; o resto some na sombra."

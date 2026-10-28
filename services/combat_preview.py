@@ -572,7 +572,12 @@ def round_board(
         note = m.get("ferimento") or {}
         efeito = f"−{amount} Vitalidade"
         if note.get("categoria"):
-            efeito += f", ferimento {note['categoria']}"
+            from services import round_log as _rl
+
+            efeito += (
+                f", ferimento {_rl._cat_pt(note['categoria'])} "
+                f"{_rl._region_phrase(note.get('regiao'))}"
+            )
         return {
             "tipo": "custo",
             "ator_id": actor_id,

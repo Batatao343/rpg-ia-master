@@ -2794,6 +2794,13 @@ def _combat_node(state: GameState):
 
     if flee_roll:
         out["fuga"] = flee_roll
+    avisados = set(combat_meta.get("sem_vitalidade_avisados") or [])  # SPEC-353 R27: 1× por inimigo
+    out["sem_vitalidade"] = [
+        x for x in out.get("sem_vitalidade") or [] if x["actor_id"] not in avisados
+    ]
+    combat_meta["sem_vitalidade_avisados"] = sorted(
+        avisados | {x["actor_id"] for x in out["sem_vitalidade"]}
+    )
     fontes = combat_meta.setdefault("fontes_condicao", {})  # SPEC-353 R51
     for novo in out.get("condicoes_novas") or []:
         if not novo.get("source_id"):
