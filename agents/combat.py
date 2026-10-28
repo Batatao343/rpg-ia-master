@@ -1836,8 +1836,6 @@ def _narrate_outcome(
     from services import prose_guard, round_log
 
     label = "incapacitated" if (player.get("post_combat_state") == "inconsciente") else outcome
-    if outcome == "defeat" and label != "incapacitated":
-        label = "defeat"
     facts = round_log.outcome_facts(
         label,
         conflict_sum,

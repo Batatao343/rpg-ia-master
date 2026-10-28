@@ -649,3 +649,26 @@ trechos do histórico (sem segredos).
   da carta que escolheu.
 - **D11 — Cicatriz determinística no `on` (R2).** A Cicatriz gerada por LLM no meio da rodada quebraria o
   "zero LLM". O resumo final pode citá-la pelo nome.
+
+## 9. Registro de implementação (executor, 27/10)
+
+Desvios e escolhas que o revisor deve conhecer:
+
+- **Abertura só com `COMBAT START`** (R1): o atalho do tabuleiro vale quando o router abre o conflito
+  (`is_start`). Encontro que chega ao nó com `enemies` já preenchidos e sem a marca (testes, e2e, saves)
+  segue o caminho de antes e resolve rodada por declaração estruturada.
+- **R3/D5 sem texto, nem fuga**: a recusa também zera `combat_flee_attempt` (viagem lida pelo router).
+  A fuga é `ActionRequest.action_kind="flee"` (contrato que já existia); o nome da ação na API é `flee`.
+- **R9 (Última Ação)** vale em todos os modos (não só `on`); **R8 (dupla)** idem — afeta só o texto do
+  `mech_log`, que só é gravado com o baralho `on`.
+- **R16**: `_narrate_fall` agora devolve só a frase de queda + a Roda; a prosa da queda `off` sai do
+  `_narrate` (com `fecho_override`), com o texto R15 como fallback.
+- **R18** vale nos dois modos (`on` e `off`): o loot pós-vitória nunca chama LLM.
+- **Etapa 0**: o 400 do Groq não reproduziu em 4 requests (intermitente); correção por H1 (§4).
+- **Testes antigos atualizados** (expected mudou por decisão do dono, não por conveniência):
+  `test_api_jogadas` (rodada `on` não narra), `test_spec345_mech_log`/`test_wound_status_cards`
+  (texto livre é recusado: agora declaram ação estruturada), `test_review_high_integration`/
+  `test_spec345_player_text` (loot pós-vitória sem LLM e sem repetir o resumo canônico).
+- **Exceção "vigília" (D4 revisada)** não implementada: nenhuma carta/condição existente anula surpresa.
+- **Front (`web/`) não foi tocado**: esconder o input de texto e o botão "Fugir" ficam com a SPEC-347.
+- **Arena**: ver `docs/spec346/arena.md`.

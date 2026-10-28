@@ -230,12 +230,19 @@ def test_status_lines_go_to_registry_not_appended(monkeypatch):
 def _no_llm(monkeypatch):
     import importlib
 
-    names = (
+    names = (  # todo módulo que importa `get_llm`: o grafo inteiro, não só o combate
         "agents.combat",
         "agents.router",
         "agents.loot",
         "agents.campaign_manager",
         "agents.archivist",
+        "agents.bestiary",
+        "agents.librarian",
+        "agents.npc",
+        "agents.storyteller",
+        "agents.world_simulator",
+        "services.chronicle_compression",
+        "services.shared_pool",
         "services.encounter_preparation",
         "services.death_flow",
     )
