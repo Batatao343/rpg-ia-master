@@ -6,7 +6,6 @@ aliases: []
 tags:
 - Arauto_da_Névoa
 - Entidade
-- Aprendiz
 - Errante
 visibility: public
 related_entities: []

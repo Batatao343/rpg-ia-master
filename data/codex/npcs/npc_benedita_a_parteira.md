@@ -22,6 +22,6 @@ Personalidade: Não cobra em dinheiro: cobra em favores, comida ou promessas que
 
 O que ensina: A Postura do Médico de Campo: negar o Abismo à força de mão. Nada de destino: a Praga é doença, e doença se lava, se corta e se costura antes de se rezar. Ensina a quem aparece à porta sem ser chamado.
 
-Quem a despreza: A Guilda dos Corvos, que vende os marcados em vez de tratá-los.
+Quem a despreza: A Guilda dos Corvos, que conta como carga quem ela ainda tentaria salvar.
 
 Para o narrador: Mestra do Médico de Campo e contato natural para quem foge da Legião ferido. Não pergunta o nome antes de abrir a bolsa.

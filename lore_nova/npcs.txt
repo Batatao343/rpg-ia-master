@@ -69,7 +69,7 @@ Serviço real: Cura qualquer coisa — facadas, estágios iniciais da Praga de F
 
 Obsessão declarada: Criar o "Humano Perfeito", imune à névoa. Compra partes de corpos de monstros para experimentos.
 
-O que não diz: Foi expulso da corte por "experimentos não éticos" — estudou por dezoito anos os dois únicos sobreviventes não simbióticos de infecção por fungo de Xylos sem morte, e é um dos dois: a prova está no próprio sangue, e ele a usa. Cada paciente que trata fornece amostras. Está na quarta geração de um agente que pode criar resistência à Praga de Ferro. Em ratos.
+O que não diz: Foi expulso da corte por "experimentos não éticos" — estudou por dezoito anos o outro sobrevivente não simbiótico de infecção por fungo de Xylos sem morte, e o próprio sangue, porque é o segundo dos dois. Cada paciente que trata fornece amostras. Está na quarta geração de um agente que pode criar resistência à Praga de Ferro. Em ratos.
 
 Relação com a Guilda dos Corvos: Acordo de trinta anos. Corpos com a "marca" (formação específica de mineralização nas veias do pescoço que indica resposta imune parcial) vão para ele, não para o crematório. Bônus pago. Ninguém faz perguntas.
 
@@ -95,7 +95,7 @@ Segredo: Causa real da morte — overdose de Pó de Fada, que o Anel de Ferro ve
 ---
 
 [CATEGORIA: NPC]
-[TAGS: Arauto_da_Névoa, Entidade, Aprendiz, Errante]
+[TAGS: Arauto_da_Névoa, Entidade, Errante]
 
 O ARAUTO DA NÉVOA
 Papel: Entidade errante que aparece antes de colapsos
@@ -547,7 +547,9 @@ Aparência: Tecnológica jovem para o cargo, pálida pela vida subterrânea, olh
 
 Personalidade: Tensa, vigilante, carregando um peso que não pode dividir. Levava uma vida normal de engenheira até ser escolhida para a Câmara; agora não consegue mais ver a aurora sem ler nela uma contagem regressiva.
 
-O que sabe: A Rede Carmesim está acelerando mais rápido do que Astrin admite até para si mesma. Nehla mede os números todo dia. Calculou uma estimativa de quando o Farol pode não ser suficiente — e a estimativa a apavora. Está proibida de falar.
+Sobre o que mede: Mede o céu todo dia e está proibida de falar do que mede.
+
+Segredo: A Rede Carmesim está acelerando mais rápido do que Astrin admite até para si mesma. Nehla mede os números todo dia. Calculou uma estimativa de quando o Farol pode não ser suficiente — e a estimativa a apavora.
 
 Segredo: Nehla começou a registrar os números num diário escondido, fora dos registros oficiais, porque não confia que a verdade sobreviva ao sigilo dos clãs. Se algo lhe acontecer, o diário é a única prova do que está vindo.
 
@@ -1357,7 +1359,9 @@ Aparência: Elfa idosa (rara — sobreviveu à ampulheta tempo incomum, por meio
 
 Personalidade: Brilhante, ambiciosa, cuidadosa. Joga o jogo do Anel Dourado há décadas — a única maga que Valerius tolera perto do poder, porque é útil demais e cuidadosa demais para ameaçar. Mantém os Jardins Suspensos, supervisiona a magia registrada, e sabe mais do que admite.
 
-O que sabe: Sylvenne entende o que o Código de Ferro proíbe e por quê. Suspeita do pacto de Valerius (sente o Éter de Daruun nele). Conhece a Casa dos Espelhos, os Jardins, os segredos mágicos do Anel Dourado. Conhecimento que ela protege e barganha com extremo cuidado.
+O que sabe: Sylvenne entende o que o Código de Ferro proíbe e por quê. Suspeita do que Valerius fez para não envelhecer. Conhece a Casa dos Espelhos, os Jardins, os segredos mágicos do Anel Dourado. Conhecimento que ela protege e barganha com extremo cuidado.
+
+Segredo: Sente em Valerius um Éter que não é de homem, e não ousa dar nome a ele.
 
 Para o narrador: Sylvenne é fonte de lore mágico do alto escalão e jogadora política perigosa. Pode ser aliada calculista ou obstáculo sutil. Sabe segredos sobre Valerius e a magia da cidade. Nunca age sem cálculo — usar Sylvenne é ser usado por ela. A face refinada e mortal do poder mágico em Nova Arcádia.
 
@@ -2399,7 +2403,7 @@ Personalidade: Não cobra em dinheiro: cobra em favores, comida ou promessas que
 
 O que ensina: A Postura do Médico de Campo: negar o Abismo à força de mão. Nada de destino: a Praga é doença, e doença se lava, se corta e se costura antes de se rezar. Ensina a quem aparece à porta sem ser chamado.
 
-Quem a despreza: A Guilda dos Corvos, que vende os marcados em vez de tratá-los.
+Quem a despreza: A Guilda dos Corvos, que conta como carga quem ela ainda tentaria salvar.
 
 Segredo: Benedita guarda o caderno de uma médica de campo da guerra, com os primeiros sintomas da Ferrugem do Sangue anotados dia a dia. Sabe que a marca no pescoço não é fim, é resposta, e por isso não perdoa os Corvos pelo que fazem com os marcados.
 

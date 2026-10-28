@@ -197,7 +197,7 @@
       "deadline_rule": "ceil(periods/PERIODS_PER_DAY)+ESCORT_SLACK",
       "reward_rule": "by_distance",
       "proof": "mechanical",
-      "lore_refs": ["lore_nova/npcs.txt:936-936", "lore_nova/npcs.txt:1057-1057"],
+      "lore_refs": ["lore_nova/npcs.txt:938-938", "lore_nova/npcs.txt:1059-1059"],
       "lore_keyword": "escolta",
       "action_vocab": ["escolt", "acompanh", "guard", "proteg", "segu"],
       "combat_counts": false,

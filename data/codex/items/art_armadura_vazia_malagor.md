@@ -15,6 +15,6 @@ related_entities:
 
 Tipo: Artefato único / prisão de dragão
 Origem: A armadura que contém o dragão-rei Malagor, nas masmorras do Palácio. Ainda quente.
-Uso: Contém a consciência e a fome infinita de Malagor. Valerius a visita; o Código surgiu daí.
+Uso: Contém a consciência e a fome infinita de Malagor. Ninguém entra na cela sem a ordem de Valerius.
 Valor/Raridade: Inestimável e intocável.
 Perigo: Conversar com Malagor é ouvir o argumento sedutor de que tudo deveria acabar.

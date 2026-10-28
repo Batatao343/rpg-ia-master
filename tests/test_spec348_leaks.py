@@ -38,7 +38,12 @@ LEAK_PHRASES: dict[str, list[str]] = {
         "herdeiro ao trono",
         "herdeiro de ostmar",
     ],
-    "corpos": ["vao para o doutor silas vane", "nao vao ao crematorio"],
+    "corpos": [
+        "vao para o doutor silas vane",
+        "nao vao ao crematorio",
+        "vende os marcados",
+        "entrega os marcados",
+    ],
     "farol": [
         "suprime o despertar",
         "suprimir a rede carmesim",
@@ -53,6 +58,7 @@ LEAK_PHRASES: dict[str, list[str]] = {
         "quando o farol falhara",
         "resto da liturgia",
         "sobrou da liturgia",
+        "farol pode nao ser suficiente",
     ],
     "arauto": [
         "mesma pessoa, dois residuos",
@@ -102,6 +108,8 @@ def test_public_codex_has_no_leak_phrases():
             f = fold(para)
             if "armadura de malagor" in f and "pacto" in f:
                 offenders.setdefault(d["id"], []).append("pacto:armadura+pacto")
+            if "daruun" in f and "pacto" in f and "valerius" in f:
+                offenders.setdefault(d["id"], []).append("pacto:daruun+pacto")
     assert not offenders, offenders
 
 
@@ -120,6 +128,10 @@ def test_seed_gists_and_bestiary_have_no_leak_phrases():
         gist = fold(seed.get("gist", ""))
         for _group, phrases in LEAK_PHRASES.items():
             bad += [(sid, ph) for ph in phrases if ph in gist]
+    for loc in load_json("data/world_map.json")["locations"]:
+        seed = fold(loc.get("lore_seed", ""))
+        for _group, phrases in LEAK_PHRASES.items():
+            bad += [(loc["id"], ph) for ph in phrases if ph in seed]
     bestiary = load_json("data/bestiary.json")
     for eid, enemy in bestiary.items():
         desc = fold(enemy.get("description", ""))
@@ -135,6 +147,7 @@ _TOUCHED_NPCS = [
     "npc_o_eco_do_aprendiz",
     "npc_doutor_silas_vane",
     "npc_grum",
+    "npc_nehla_ouvido_de_aurora",
 ]
 _EXTRA_SECRET_LABELS = {"papel real", "natureza", "o que sabe", "o que revela", "o carrinho"}
 

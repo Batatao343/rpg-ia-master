@@ -37,7 +37,7 @@ A Inundação Humana e o Colapso
 Os humanos chegaram na Era 5 em números que tornavam qualquer cálculo anterior irrelevante. As cidades-estado Élficas — já enfraquecidas, já competindo entre si, já com população corroída pelo Éter ao longo de eras — cederam pela matemática simples de dez humanos para cada Elfo. Não houve batalha decisiva. Houve inevitabilidade. Os Elfos recuaram para regiões que os humanos ainda não queriam, mantendo vilas onde antes havia cidades.
 
 A Guerra do Céu Vermelho e o Presente
-Elaryin — general Élfico que havia dedicado a vida a estudar os registros das guerras anteriores — foi o único que conseguiu unir todas as raças contra Malagor. A coalizão venceu. Elaryin morreu três anos depois, num quarto alugado no Anel Dourado (bebeu até morrer, diz a versão oficial), com doze pessoas no funeral. A história oficial o menciona em uma linha.
+Elaryin — general Élfico que havia dedicado a vida a estudar os registros das guerras anteriores — foi o único que conseguiu unir todas as raças contra Malagor. A coalizão venceu. Elaryin morreu três anos depois da fundação de Nova Arcádia, num quarto alugado no Anel Dourado (bebeu até morrer, diz a versão oficial), com doze pessoas no funeral. A história oficial o menciona em uma linha.
 
 O que restou dos Elfos após a guerra são as vilas nas ruínas — comunidades pequenas que cultivam beleza dentro da destruição que não conseguiram reparar. Em Nova Arcádia existe uma presença Élfica considerável, atraída pela variedade sensorial que só uma grande cidade oferece. Em Skallgard, poucos: o frio para uma raça que sente tudo com intensidade corporal é punição constante.
 

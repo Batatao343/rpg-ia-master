@@ -20,7 +20,7 @@ curated: true
 
 # AS CINCO POSTURAS DIANTE DO ABISMO
 
-Em Valoria ninguém escolhe se vai tratar com o Abismo. Escolhe-se como. Cinco tradições sobreviveram à Guerra do Céu Vermelho, e cada uma tem lugar, mestre, inimigo e uma frase que os de fora repetem sem entender. Ninguém as chama de classes. Chamam de Posturas, porque o que importa é como o corpo fica quando a escuridão se aproxima.
+Em Valoria ninguém escolhe se vai tratar com o Abismo. Escolhe-se como. Cinco tradições sobreviveram à Guerra do Céu Vermelho, e cada uma tem lugar, mestre, inimigo e uma frase que os de fora repetem sem entender. Ninguém as chama de escolas. Chamam de Posturas, porque o que importa é como o corpo fica quando a escuridão se aproxima.
 
 Todas pagam. O mundo sente esse pagamento de duas maneiras que ninguém mede com instrumento e todo mundo reconhece: a Entropia, que é o que se acumula em quem fica perto demais e se paga em perda (do corpo, do juízo, do que se amava), e a Carga do Abismo, que é o peso que o Abismo deixa em quem trabalhou com ele e que um dia cobra de volta, de uma vez. Quem aprendeu uma Postura aprendeu também a carregar as duas, e a perceber a hora de largar.
 
@@ -42,7 +42,7 @@ Herdeiro dos Druidas do Ciclo Cinzento e do que sobrou de Aethelgard. O Arcanist
 
 ## O Médico de Campo — nega
 
-Descende dos primeiros médicos da Ferrugem do Sangue, os que costuravam soldados banhados no sangue de Malagor e se recusaram a chamar aquilo de destino. O Médico de Campo mantém vivo o que o Abismo quer levar, à força de mão. Benedita, a Parteira, no Anel de Lama, ensina a quem aparece à porta sem ser chamado. A Guilda dos Corvos a despreza: vende os marcados em vez de tratá-los. Rumor de origem: a parteira do Anel de Lama ensina a costurar quem a Praga quer.
+Descende dos primeiros médicos da Ferrugem do Sangue, os que costuravam soldados banhados no sangue de Malagor e se recusaram a chamar aquilo de destino. O Médico de Campo mantém vivo o que o Abismo quer levar, à força de mão. Benedita, a Parteira, no Anel de Lama, ensina a quem aparece à porta sem ser chamado. A Guilda dos Corvos a despreza: Benedita trata quem os Corvos já contaram como carga. Rumor de origem: a parteira do Anel de Lama ensina a costurar quem a Praga quer.
 
 ## O que as cinco têm em comum
 
