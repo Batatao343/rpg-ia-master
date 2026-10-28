@@ -146,6 +146,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
       } else if (event.key === "Enter" && !(event.target as HTMLElement | null)?.closest?.("button, summary, a, [role=button], [role=tab], [tabindex]")) {
         if (queue.length) { event.preventDefault(); end(); }
       } else if (event.key === "Escape") {
+        if (maneuverAim) return; // mira de manobra ativa: o Esc é só dela (useTargeting); a fila fica
         if (armed) { event.preventDefault(); event.stopPropagation(); disarm(); }
         else if (queue.length) { event.preventDefault(); event.stopPropagation(); setQueue([]); setSelected(null); onAnnounce("Fila desfeita."); }
       }

@@ -388,5 +388,10 @@ Não há structured output novo. O smoke confere que os campos reais chegam ao f
 - R24: baseline cobre fora de combate e em combate a 360/390/1440; o "desfecho" não foi capturado.
 - Texto enviado: backend não depende de "Encerrar turno" (conferido em `api.py`, `agents/`, MockLLM); nenhuma compatibilidade extra foi necessária. `Encerro a rodada:` é só marginália.
 - Mobile 390: a barra de envio sticky cobre parte da base das cartas no 1º paint (a carta está inteira no viewport, mas a barra a sobrepõe); ver `docs/spec342/on-390-combate.png`.
-- Smoke real (§6) NÃO executado pelo executor.
+- Smoke real (§6) NÃO executado pelo executor (exige staging/provider real; fica com o coordenador antes do `done`).
+
+**Correções da revisão Sol (P1-1, P2-1..P2-7)**
+- P1-1: `deck-342-baseline.spec.ts` só roda em win32 (snapshots `*-chromium-win32.png`). **R24 é prova local (win32), não gate de CI Linux.** A frase da §7 ("a comparação roda no CI") vale como prova local no ambiente do executor/coordenador.
+- P2-1: no celular a faixa de cena é 1 linha (truncada), a barra de envio é compacta (1 linha, fundo `--surface-2`); teste com `elementFromPoint` prova que a 1ª carta e a instrução de mira não ficam cobertas. P2-2: Esc com mira de manobra só cancela a mira (fila mantida). P2-3: `gap` no rótulo do HUD + teste de distância medida. P2-4: botões da barra de mira medidos ≥ 44 px. P2-5: integração com o nó real (2ª jogada letal + "Sem matar" → incapacitado; sem declarar → morto) e relógio de cena comparado ao `run_round`. P2-6: "Pilhas" dentro da borda a 390.
+- P2-7: desfecho no baseline R24 não capturado (pendência registrada).
 

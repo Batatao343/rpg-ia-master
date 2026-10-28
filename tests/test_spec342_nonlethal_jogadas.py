@@ -60,3 +60,70 @@ def test_wrapped_player_input_still_marks_nonlethal(monkeypatch):
     old = _decl()
     cbt._mark_nonlethal(old, "Encerrar turno: Guardar, Golpe. Sem matar.")
     assert old.jogadas[1].params["nao_letal"] is True
+
+
+# --- P2-5: integracao com o no real (Baralho + 2 jogadas) -------------------------------
+def _deck_state(monkeypatch, plays, intent):
+    import random
+
+    from langchain_core.messages import HumanMessage
+
+    import api
+    from services import card_piles as cp
+    from tests.test_api_jogadas import GUARDA, _req, _state
+
+    monkeypatch.setenv("RPG_COMBAT_NONLETHAL", "on")
+    monkeypatch.setattr(cp, "FOLEGO_BASE", 3)
+    state = _state(monkeypatch)
+    state["messages"] = [HumanMessage(content=intent)]
+    for e in state["enemies"]:
+        e["vitalidade"] = e["hp"] = 1
+        e["max_vitalidade"] = e["max_hp"] = 1
+        e["esquiva"] = 0
+        e["categoria"] = "lacaio"
+        e["defense"] = 0
+    eid = state["enemies"][0]["id"]
+    steps = [
+        api.PlayStepRequest(card_id=c, target_id="player" if c == GUARDA else eid) for c in plays
+    ]
+    api._apply_action_options(state, _req(jogadas=steps))
+    random.seed(3)
+    return state, eid
+
+
+def test_second_card_kill_becomes_down(monkeypatch):
+    from tests.test_api_jogadas import GOLPE, GUARDA
+
+    seen = {}
+    real = cbt._finish_encounter
+
+    def spy(meta, enemies, outcome, *, loot):
+        seen["enemies"] = enemies
+        return real(meta, enemies, outcome, loot=loot)
+
+    monkeypatch.setattr(cbt, "_finish_encounter", spy)
+    monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
+    state, eid = _deck_state(
+        monkeypatch, [GUARDA, GOLPE], "Encerro a rodada: Guarda, Golpe. Sem matar."
+    )
+    cbt._combat_node(state)
+    e = next(x for x in seen["enemies"] if x["id"] == eid)
+    assert e.get("incapacitated") and not e.get("dead"), e.get("status")
+
+
+def test_second_card_kill_without_declaration_kills(monkeypatch):
+    from tests.test_api_jogadas import GOLPE, GUARDA
+
+    seen = {}
+    real = cbt._finish_encounter
+
+    def spy(meta, enemies, outcome, *, loot):
+        seen["enemies"] = enemies
+        return real(meta, enemies, outcome, loot=loot)
+
+    monkeypatch.setattr(cbt, "_finish_encounter", spy)
+    monkeypatch.setattr(cbt, "_narrate", lambda *a, **k: "Fim.")
+    state, eid = _deck_state(monkeypatch, [GUARDA, GOLPE], "Encerro a rodada: Guarda, Golpe.")
+    cbt._combat_node(state)
+    e = next(x for x in seen["enemies"] if x["id"] == eid)
+    assert e.get("dead") and not e.get("incapacitated")

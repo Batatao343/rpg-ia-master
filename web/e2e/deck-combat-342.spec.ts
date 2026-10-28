@@ -180,6 +180,41 @@ test.describe("baralho 342 mobile 390", () => {
     await expect(page.locator(".deck-card").first()).toBeInViewport({ ratio: 1 });
   });
 
+  test("sticky bar does not cover the first card nor the aim instruction", async ({ page, backend }) => {
+    armDeck(backend);
+    await openCombat(page);
+    const covered = await page.evaluate(() => {
+      const c = document.querySelector(".deck-card")!.getBoundingClientRect();
+      const el = document.elementFromPoint(c.left + c.width / 2, c.bottom - 6);
+      return !el?.closest(".deck-card");
+    });
+    expect(covered, "base da 1ª carta coberta").toBe(false);
+    await page.locator(".deck-card[data-card='golpe']").tap();
+    await page.locator("[data-deck-aim]").evaluate((el) => el.scrollIntoView({ block: "center" }));
+    const aimCovered = await page.evaluate(() => {
+      const r = document.querySelector("[data-deck-aim] span")!.getBoundingClientRect();
+      const el = document.elementFromPoint(r.left + 4, r.top + r.height / 2);
+      return !el?.closest("[data-deck-aim]");
+    });
+    expect(aimCovered, "instrução de mira coberta").toBe(false);
+    const barH = (await page.locator(".play-queue__end").boundingBox())!.height;
+    expect(barH).toBeLessThanOrEqual(64);
+  });
+
+  test("Esc with maneuver aim keeps the queue", async ({ page, backend }) => {
+    armDeck(backend);
+    await openCombat(page);
+    await card(page, "folego").tap();
+    await page.locator("[data-play-confirm]").tap();
+    await expect(page.locator(".play-queue__item")).toHaveCount(1);
+    await page.locator(".ws-combat__fold summary").tap();
+    await page.locator("[data-basic='attack']").tap();
+    await expect(page.locator(".aimbar")).toHaveCount(1);
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".aimbar")).toHaveCount(0);
+    await expect(page.locator(".play-queue__item")).toHaveCount(1);
+  });
+
   test("end bar sticky 390", async ({ page, backend }) => {
     armDeck(backend);
     await openCombat(page);
@@ -191,8 +226,13 @@ test.describe("baralho 342 mobile 390", () => {
   test("coarse targets >= 44", async ({ page, backend }) => {
     armDeck(backend);
     await openCombat(page);
-    await card(page, "golpe").click();
-    await page.getByRole("button", { name: /Alvo: Saqueador/ }).click();
+    await card(page, "golpe").tap();
+    await page.getByRole("button", { name: /Alvo: Saqueador/ }).tap();
+    const bar = await page.evaluate(() => Array.from(document.querySelectorAll(".aimbar[data-deck-aim] button")).map((el) => {
+      const r = el.getBoundingClientRect(); return { n: el.textContent, w: r.width, h: r.height };
+    }));
+    expect(bar.length).toBeGreaterThanOrEqual(2);
+    expect(bar.filter((b) => b.w < 43.5 || b.h < 43.5)).toEqual([]);
     await page.locator("[data-play-confirm]").click();
     await page.locator(".play-queue__item").first().click();
     const small = await page.evaluate(() => {
@@ -325,6 +365,14 @@ test.describe("baralho 342 achados do navegador", () => {
     armDeck(backend);
     await openCombat(page);
     await expect(page.locator(".combatblock .hud__label")).toContainText(/Combate · Rodada 1/);
+    // o espaço tem de aparecer na tela (item flex descarta o espaço do textContent)
+    const gap = await page.evaluate(() => {
+      const label = document.querySelector(".combatblock .hud__label")!;
+      const range = document.createRange();
+      range.selectNodeContents(label.firstChild!);
+      return label.querySelector("span")!.getBoundingClientRect().left - range.getBoundingClientRect().right;
+    });
+    expect(gap).toBeGreaterThanOrEqual(2);
     const clipped = await page.evaluate(() => {
       const rail = document.querySelector(".deck-hand__rail")!;
       const box = rail.getBoundingClientRect();

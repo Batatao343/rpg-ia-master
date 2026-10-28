@@ -37,6 +37,8 @@ async function openGame(page: Page) {
   if (await tab.count()) await tab.click();
 }
 
+test.skip(process.platform !== "win32", "linha de base R24 gerada em win32 antes da Etapa 1; prova local (não roda no CI Linux)");
+
 for (const [width, height] of [[360, 740], [390, 844], [1440, 900]] as const) {
   test.describe(`baseline off @${width}`, () => {
     test.use({ viewport: { width, height } });

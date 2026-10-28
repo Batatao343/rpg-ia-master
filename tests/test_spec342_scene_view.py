@@ -32,7 +32,12 @@ def test_cena_lists_only_public_fields(monkeypatch):
 
 def test_relogio_matches_engine_round(monkeypatch):
     monkeypatch.setenv("RPG_SCENE_CARDS", "on")
-    assert _view(_meta(4, []))["cena"]["relogio"] == {"desde": 5, "teto": 12, "rodada": 4, "ativo": False}
+    assert _view(_meta(4, []))["cena"]["relogio"] == {
+        "desde": 5,
+        "teto": 12,
+        "rodada": 4,
+        "ativo": False,
+    }
     assert _view(_meta(5, []))["cena"]["relogio"]["ativo"] is True
 
 
@@ -45,3 +50,20 @@ def test_cena_relogio_present_without_cards(monkeypatch):
 def test_public_scene_none_without_scene(monkeypatch):
     monkeypatch.setenv("RPG_SCENE_CARDS", "on")
     assert sc.public_scene(None) is None
+
+
+def test_relogio_view_follows_real_engine_rounds(monkeypatch):
+    """P2-5: roda o motor (`run_round`) e confere que `ativo` vira True exatamente na rodada em que
+    `out["abyss_clock"]` aparece."""
+    from tests.test_abyss_clock import _arena, _round
+
+    monkeypatch.setenv("RPG_SCENE_CARDS", "on")
+    scene, actors, sides = _arena()
+    for r in range(1, 8):
+        out = _round(scene, actors, sides, r)
+        rel = sc.public_scene(scene)["relogio"]
+        assert rel["rodada"] == scene["tactical_state"]["round"]
+        assert rel["ativo"] == ("abyss_clock" in out), (r, rel)
+        if out["ended"]:
+            break
+    assert rel["ativo"] is True
