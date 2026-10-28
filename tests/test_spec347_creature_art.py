@@ -243,9 +243,9 @@ def test_variant_url_reads_the_real_job_format():
 
 
 def test_registry_row_in_real_job_format_resolves_or_falls_back_to_marker():
-    row = lambda v: {
-        "tipo:enemy_goblin": {"status": "ready", "visibility": "shared", "variants": v}
-    }  # noqa: E731
+    def row(v):
+        return {"tipo:enemy_goblin": {"status": "ready", "visibility": "shared", "variants": v}}
+
     ok = ca.portrait_for(_goblin(), None, game_id="g", registry=Reg(row(_job_variants(True))))
     assert ok["estado"] == "pronto" and ok["src"] == "/m/thumb.webp"
     no_url = ca.portrait_for(_goblin(), None, game_id="g", registry=Reg(row(_job_variants(False))))
