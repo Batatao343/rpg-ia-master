@@ -98,6 +98,11 @@ export function ForjaPanel({ forja, cards, busy, onForge }: Props) {
               </button>
             ))}
           </div>
+          {(!forja.permitido || !forja.afiar.material) && (
+            <p className="forja__hint" data-forja-reason>
+              {!forja.permitido ? (forja.motivo || "Agora não é seguro mexer no Baralho.") : "Indisponível: falta um material raro."}
+            </p>
+          )}
         </div>
       )}
       {forja.cicatrizes.length > 0 && (

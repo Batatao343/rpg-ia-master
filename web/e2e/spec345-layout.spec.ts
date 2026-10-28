@@ -108,3 +108,28 @@ test.describe("desktop 1440x900", () => {
     if (await hint.count()) expect(await hint.first().evaluate((el) => el.tagName)).toBe("ASIDE");
   });
 });
+
+// Prints "depois" (opt-in): RPG_SPEC345_PRINTS=1. Nomes iguais aos de docs/spec345/prints/ (fixture backend, sem API real).
+test.describe("prints depois (360x800)", () => {
+  test.skip(!process.env.RPG_SPEC345_PRINTS, "opt-in");
+  test.use({ viewport: { width: 360, height: 800 }, hasTouch: true, isMobile: true });
+  const dir = "../docs/spec345/prints/depois/";
+
+  test("prints", async ({ page, backend }) => {
+    backend.states.get("game-a")!.world.turn_count = 1;
+    await openGame(page);
+    await page.screenshot({ path: `${dir}off-360_06-jogo.png` });
+    const state = backend.armCombat("game-a", [["e1", "Bandido 1"], ["e2", "Bandido 2"]]);
+    state.combat.enemies[0].vitalidade = 0;
+    state.combat.wounds.slots = { leve: 4, grave: 2, critico: 2 };
+    state.current_location = "Nova Arcádia"; state.world.location = "Nova Arcádia";
+    await page.reload();
+    await page.getByRole("button", { name: /^Ayla/ }).click();
+    await expect(page.locator(".ws-mhead .ws-stat--fight")).toBeVisible();
+    await page.screenshot({ path: `${dir}on-360_07-conflito-inicio.png` });
+    await tabBar(page).getByRole("button", { name: "Combate", exact: true }).click();
+    await page.screenshot({ path: `${dir}off-360_08-conflito-painel-mobile.png` });
+    await page.locator(".wound-track").first().scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${dir}on-360_19-r3-pos.png` });
+  });
+});
