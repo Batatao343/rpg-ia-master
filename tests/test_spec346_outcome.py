@@ -378,3 +378,8 @@ def test_stream_final_extends_shown():
 
 def test_summary_text_helper_still_ok():
     assert "tomba" in summ.player_summary_text({"mortos": ["Goblin"]})
+
+
+def test_no_digits_leaves_clean_punctuation():
+    assert round_log._no_digits("Alvo 3 , ok.") == "Alvo, ok."
+    assert round_log._no_digits("Goblin 2 e Goblin 3 caem.") == "Goblin e Goblin caem."

@@ -322,7 +322,7 @@ def _no_digits(text: str) -> str:
     """Tira números junto com o espaço que os precede; sem espaço duplo nem vírgula órfã."""
     value = re.sub(r"\s*\d+", "", text)
     value = re.sub(r"[ 	]{2,}", " ", value)
-    value = re.sub(r"\s+([,.;!?])", r"", value)
+    value = re.sub(r"\s+([,.;!?])", r"\1", value)
     value = re.sub(r",\s*,", ",", value)
     return value.strip()
 
