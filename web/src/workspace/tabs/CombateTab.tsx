@@ -243,7 +243,12 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const fleeAction = basics.find((a) => a.kind === "flee");
   const fleeReason = fleeAction?.invalid_reason ? REASON_TEXT[fleeAction.invalid_reason] : null;
   const [fleeRound, setFleeRound] = useState<number | null>(null);
-  const fleeResult = fleeRound === null ? null
+  // SPEC-347 P2-2: o resultado só vale depois que o servidor RESPONDEU (`data` mudou). Envio que falha/é recusado
+  // não muda `data`: a faixa mostra o erro e nenhum resultado é inferido na rodada seguinte.
+  const [fleeSentData, setFleeSentData] = useState<unknown>(null);
+  const [fleeFailed, setFleeFailed] = useState(false);
+  const fleeAnswered = fleeRound !== null && data !== fleeSentData;
+  const fleeResult = fleeRound === null || !fleeAnswered ? null
     : !fighting ? "Você escapou."
       : combat && combat.round === fleeRound + 1 ? "Não escapou: o inimigo ainda está no seu encalço." : null;
   const wasFighting = useRef(fighting);
@@ -252,8 +257,16 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     if ((fighting && !wasFighting.current) || (fighting && fleeRound !== null && (combat?.round ?? 0) > fleeRound + 1)) setFleeRound(null);
     wasFighting.current = fighting;
   }, [fighting, combat?.round, fleeRound]);
+  const wasBusy = useRef(busy);
+  useEffect(() => {
+    if (wasBusy.current && !busy && fleeRound !== null && data === fleeSentData) {
+      setFleeRound(null); setFleeFailed(true); // a espera acabou sem resposta nova: o envio falhou
+    }
+    wasBusy.current = busy;
+  }, [busy, data, fleeRound, fleeSentData]);
   const doFlee = () => {
     if (!targeting.beginDirect()) return;
+    setFleeSentData(data); setFleeFailed(false);
     setFleeRound(combat?.round ?? 0);
     onAction("Tento fugir.", { action_kind: "flee", reaction_card_id: reactionCardId });
   };
@@ -264,6 +277,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   return (
     <div className="ws-combat" ref={rootRef}>
       <p className="sr-only" aria-live="polite">{announce}</p>
+      {fleeFailed && <p className="ws-combat__flee-result" role="alert" data-flee-error>A fuga não chegou ao mestre. Tente de novo.</p>}
       {fleeResult && <p className="ws-combat__flee-result" role="status" data-flee-result>{fleeResult}</p>}
       {combatResult && shouldShowResult(combatResult, dismissed) && (
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}

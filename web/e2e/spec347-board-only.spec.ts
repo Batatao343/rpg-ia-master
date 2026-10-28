@@ -103,3 +103,18 @@ test.describe("fuga 1440", () => {
     await expect(page.locator("[data-flee-result]")).toHaveText("Não escapou: o inimigo ainda está no seu encalço.");
   });
 });
+
+test.describe("fuga com erro 1440", () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+
+  test("fugir_falha_no_envio_mostra_erro_e_nao_infere_resultado", async ({ page, backend }) => {
+    backend.expectedConsole.push(/Failed to load resource|net::ERR|failed/i);
+    backend.unexpectedAllowed.push(/game\/action/, /game\/.*stream/);
+    armDeck(backend);
+    await openCombat(page);
+    backend.failNextTurn = true;
+    await page.locator("[data-flee]").click();
+    await expect(page.locator("[data-flee-error]")).toHaveText("A fuga não chegou ao mestre. Tente de novo.");
+    await expect(page.locator("[data-flee-result]")).toHaveCount(0);
+  });
+});
