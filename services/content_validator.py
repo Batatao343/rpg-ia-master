@@ -1642,6 +1642,135 @@ def validate_faction_membership(path: str | None = None) -> list[Finding]:
     return [Finding("faction_membership", "error", path, "", p) for p in problems]
 
 
+PLOT_THREADS_PATH = os.path.join("data", "world", "plot_threads.json")  # SPEC-350
+
+
+def _default_leak_phrases() -> list[str]:
+    """INTEGRAÇÃO SPEC-348: `LEAK_PHRASES` vive em `tests/test_spec348_leaks.py` (só na
+    branch da 348 até pousar). Import com fallback: ausente -> lista vazia (a checagem
+    R16b fica inerte, não quebra). Quando a 348 pousar, mover para dado/serviço."""
+    try:
+        from tests.test_spec348_leaks import LEAK_PHRASES  # type: ignore[import-not-found]
+    except Exception:
+        return []
+    out: list[str] = []
+    for phrases in LEAK_PHRASES.values():
+        out.extend(_norm(p) for p in phrases)
+    return out
+
+
+def _build_plot_refs(data: dict, leak_phrases: list[str] | None):
+    """PlotRefs com os ids/nomes reais do repo (leitura fresca do disco)."""
+    from services import card_lint
+    from services.plot_threads_lint import PlotRefs
+    from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
+
+    ents = _merged_entities(GRAPH_DIR)
+    npc_ids = {k for k, v in ents.items() if isinstance(v, dict) and v.get("type") == "npc"}
+    edges = _read_graph_json(GRAPH_DIR, "edges.json", []) or []
+    leaders = {e.get("source") for e in edges if isinstance(e, dict) and e.get("type") == "leads"}
+    world_map = _read_json_file(os.path.join("data", "world_map.json"), {}) or {}
+    locs = {loc.get("id") for loc in world_map.get("locations", []) if isinstance(loc, dict)}
+    factions = set(_read_json_file(os.path.join("data", "factions.json"), {}) or {})
+    seeds = (_read_json_file(os.path.join("data", "world", "rumor_seeds.json"), {}) or {}).get(
+        "seeds", {}
+    )
+    quests = _read_json_file(os.path.join("data", "world", "lore_quests.json"), {}) or {}
+    routes = {r.get("id") for r in quests.get("delivery_routes", []) if isinstance(r, dict)}
+    agendas = _read_json_file(os.path.join("data", "world", "npc_agendas.json"), {}) or {}
+    origins = _read_json_file(os.path.join("data", "origins.json"), {}) or {}
+    classes = _read_json_file(os.path.join("data", "classes.json"), {}) or {}
+    owners: dict[str, set[str]] = {}
+    names: dict[str, list[str]] = {}
+
+    def own(eid: str, *labels: object) -> None:
+        for lab in labels:
+            if lab:
+                owners.setdefault(_norm(lab), set()).add(eid)
+
+    for eid, ent in ents.items():
+        if isinstance(ent, dict):
+            labels = [ent.get("name"), *(ent.get("aliases") or [])]
+            own(eid, *labels)
+            names[eid] = [str(x) for x in labels if x]
+    for fname in ("bestiary.json", "artifacts.json"):
+        for eid, ent in (_read_json_file(os.path.join("data", fname), {}) or {}).items():
+            if isinstance(ent, dict):
+                own(f"{fname}:{eid}", ent.get("name"))
+    doc_vis: dict[str, str] = {}
+    secret_text: dict[str, str] = {}
+    public_text: dict[str, str] = {}
+    secret_docs = {
+        str(v.get("segredo_doc_id"))
+        for v in (data.get("cast") or {}).values()
+        if isinstance(v, dict) and v.get("segredo_doc_id")
+    }
+    new_ids = {
+        k
+        for k, v in (data.get("cast") or {}).items()
+        if isinstance(v, dict) and v.get("fonte") == "spec350"
+    }
+    for _path, fm, body in _parse_codex(CODEX_DIR):
+        did = str(fm.get("id") or "")
+        doc_vis[did] = str(fm.get("visibility") or "")
+        if did in secret_docs:
+            secret_text[did] = body
+        if did in new_ids and fm.get("visibility") == "public":
+            public_text[did] = body
+    return PlotRefs(
+        npc_ids=npc_ids,
+        leader_ids={x for x in leaders if x},
+        location_ids={x for x in locs if x},
+        faction_ids=factions,
+        rumor_ids=set(seeds),
+        route_ids={x for x in routes if x},
+        secret_ids=set(SECRET_SIGNATURES)
+        | {k for k in SECRET_ENTITY_IDS if not str(k).startswith("_")},
+        archetypes=set(agendas.get("archetypes", {})),
+        region_ids={r.get("id") for r in origins.get("regions", []) if isinstance(r, dict)},
+        posturas=set(classes),
+        banned_words=set(card_lint.lexico()["proibidos"]),
+        secret_signatures=SECRET_SIGNATURES,
+        leak_phrases=_default_leak_phrases() if leak_phrases is None else leak_phrases,
+        secret_doc_visibility=doc_vis,
+        secret_doc_text=secret_text,
+        public_doc_text=public_text,
+        name_owners=owners,
+        npc_names=names,
+        role_radicals=[
+            _norm(r[0]) for r in agendas.get("role_radicals", []) if isinstance(r, list) and r
+        ],
+    )
+
+
+def validate_plot_threads(
+    path: str | None = None, leak_phrases: list[str] | None = None
+) -> list[Finding]:
+    """SPEC-350 R15-R17: catálogo de tramas vs ids reais, tamanhos, vazamento e unicidade."""
+    from services.plot_threads_lint import lint_plot_threads
+
+    path = path or PLOT_THREADS_PATH
+    data = _read_json_file(path, None)
+    if data is None:
+        return [Finding("plot_threads", "error", path, "", "arquivo ausente ou inválido")]
+    try:
+        from services import plot_threads
+
+        plot_threads.parse_catalog(data)
+    except Exception as exc:
+        return [Finding("plot_threads", "error", path, "", f"schema inválido: {exc}")]
+    refs = _build_plot_refs(data, leak_phrases)
+    return [Finding("plot_threads", "error", path, "", p) for p in lint_plot_threads(data, refs)]
+
+
+def plot_signature(sheet, thread_index: dict, radicals=()):
+    """R17b (re-export de `plot_threads_lint.plot_signature`; aceita ficha crua ou CastSheet)."""
+    from services.plot_threads_lint import plot_signature as _sig
+
+    raw = sheet.model_dump() if hasattr(sheet, "model_dump") else sheet
+    return _sig(raw, thread_index, radicals)
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1668,6 +1797,7 @@ def validate_all(
         findings.extend(validate_law_codes())
 
         findings.extend(validate_faction_membership())
+        findings.extend(validate_plot_threads())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

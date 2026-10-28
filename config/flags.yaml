@@ -680,6 +680,12 @@ RPG_PLAYTEST_TURN_TIMEOUT_SECONDS:
   default: "120"
   spec: SPEC-274
   note: "só teste/CI/desenvolvimento (playtest turn timeout seconds)"
+RPG_PLOT_THREADS:
+  kind: release
+  default: "off"
+  spec: SPEC-350
+  expires: 2027-01-25
+  note: "tramas do mundo (portas, ficha de elenco)"
 RPG_PLAY_ACCEPT_TEST_PURCHASES:
   kind: dev
   default: null

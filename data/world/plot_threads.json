@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "waves": [
+    {"order": 1, "regions": ["nova_arcadia"], "status": "in_progress", "spec": "SPEC-350"},
+    {"order": 2, "regions": ["pantano_melancolia", "brekmar"], "status": "pending"}
+  ],
+  "threads": [],
+  "cast": {},
+  "excluded": {}
+}

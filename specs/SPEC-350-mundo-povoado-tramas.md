@@ -743,6 +743,29 @@ Registrar provider/modelo, latência e qualquer campo trocado pela LLM na §9.
 (vazio — preenchido pelo executor: divergências da Etapa 0, resposta do dono na Etapa 3, contagens do
 reindex, resultado do smoke)
 
+**Etapas 1 e 2 (executor Sonnet, 28/10, branch `spec-350`; Etapa 0 e 4+ pendentes):**
+
+- Entregue: `services/plot_threads.py` (modelos §3.3 + API §3.4: `mode`, `catalog`, `threads_for_region`,
+  `thread`, `cast_sheet`, `sheet_for_row`, `region_cast`, `plot_doors`, `cast_npc_row`,
+  `public_thread_brief`, `stake_line`), `services/plot_threads_lint.py` (lint puro com `PlotRefs`),
+  `validate_plot_threads`/`plot_signature` em `content_validator.py` (ligado em `validate_all`),
+  `data/world/plot_threads.json` vazio (onda 1 `in_progress`), flag `RPG_PLOT_THREADS` (default `off`)
+  registrada já aqui (o gate de flags exige quando o código lê a variável; antecipa parte da Etapa 5).
+- Desvio: o lint puro mora em `plot_threads_lint.py` (como `faction_membership_lint.py`); `content_validator`
+  só monta `PlotRefs` com os dados reais. Modelos sem limites de tamanho (o lint os cobre, para o catálogo
+  não virar vazio por um texto longo demais em runtime).
+- Desvio: `sheet_for_row` ganhou fallback "nome de 1 palavra que prefixa exatamente 1 nome do elenco"
+  (ex.: "Bors" -> Bors Martelo-partido), pois `entities.json` não tem alias "Bors"; alternativa é
+  acrescentar o alias no grafo na Etapa 4.
+- `plot_doors` devolve `[]` com `RPG_PLOT_THREADS=off` (R28).
+- **Integração SPEC-348 pendente:** `LEAK_PHRASES` vive em `tests/test_spec348_leaks.py` (só na branch
+  da 348). `content_validator._default_leak_phrases()` tenta importá-lo e cai em lista vazia (R16b inerte
+  até a 348 pousar). `validate_plot_threads(path, leak_phrases=...)` aceita a lista direta. Quando a 348
+  pousar: confirmar o import, ou mover `LEAK_PHRASES` para dado (`data/`/serviço) e apontar o lint para lá;
+  na Etapa 4 `test_repo_lint_has_no_plot_errors` deve afirmar `_default_leak_phrases()` não vazio.
+- Pendente de dados reais: `secret_ids` aceitos = chaves de `SECRET_SIGNATURES` + `data/secret_entities.json`;
+  segredos novos da 348 (testamento, Lista de Fornalha...) precisarão estar em um deles ou o lint reprova.
+
 ### Respostas do coordenador (27/10, autorizado pelo dono a decidir)
 
 - **D1/D2:** aprovados o mapa da §3.6 e os 12 NPCs da §3.7, com um acréscimo obrigatório: a **7ª trama
