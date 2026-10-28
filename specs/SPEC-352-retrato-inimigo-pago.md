@@ -1,6 +1,6 @@
 # SPEC-352 — Retrato de inimigo pago pelo jogador, com registro compartilhado
 
-> **Status:** `approved` (o dono decidiu em 27/10 e deu autonomia até 08:30 de 28/10; decisões em §8)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED; falta aplicar a migration e o smoke real §6 no staging, pelo coordenador)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Depende de:** **SPEC-347 pousada na `main`** (bloqueante: o núcleo determinístico `services/creature_art.py`, o `retrato` na view, o catálogo `creature`/`creature_family`, `scripts/import_bestiary_art.py`, a flag `RPG_CREATURE_ART` e o `PortraitOffer` sem fiação do `TargetChip` só existem na branch `spec-347`). SPEC-326 (`done`, fluxo pago de arte: cotação, reserva, débito, worker). SPEC-297 (pool compartilhado, regra de HOLD). SPEC-222 (exclusão de conta). SPEC-340 (registro de flags).
 > **Desbloqueia:** retrato de inimigo gerado de verdade no tabuleiro; spec futura de provedor aberto com LoRA de Valoria (D-347-J).
