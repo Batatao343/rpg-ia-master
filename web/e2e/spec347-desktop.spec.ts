@@ -1,6 +1,6 @@
 // SPEC-347 Etapa 2/3 (1440): Arena compacta, tooltip fora dos controles, desfecho no topo. Sem rolar antes de medir.
 import { test, expect } from "./fixtures";
-import { armDeck, openCombat, panel } from "./deck-342-helpers";
+import { actions, armDeck, openCombat, panel } from "./deck-342-helpers";
 import { measure } from "./spec347-helpers";
 
 test.use({ viewport: { width: 1440, height: 900 } });
@@ -44,4 +44,69 @@ test("off_iniciativa_honesta: sem 'Rodada N · iniciativa' nem '0 ·' com o Bara
   expect(body).not.toMatch(/iniciativa:/);
   expect(body).not.toMatch(/\b0 · (Heróis|Inimigos)/);
   await expect(page.locator(".initiative")).toHaveCount(0);
+});
+
+test("tooltip_nao_cobre_botao: o tooltip do Espólio abre acima e não intersecta os botões da carta", async ({ page, backend }) => {
+  const state = backend.states.get("game-a")!;
+  state.player_stats.espolio_pendente = { id: "esp1", origem: "vitoria", recusa_ouro: 5, ofertas: [
+    { id: "c1", name: "Estocada", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "Causa 2. **Sangria** 1.", descricao: "", conhecida: false },
+    { id: "c2", name: "Aparar", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "**Rachadura** no alvo.", descricao: "", conhecida: false },
+    { id: "c3", name: "Corte", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "Causa 3. **Sangria** 2.", descricao: "", conhecida: false },
+  ] } as never;
+  await page.goto("/");
+  await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: /Combate/ }).click();
+  const card = page.locator("article.combat-card.espolio__card").nth(2);
+  await expect(card).toBeVisible();
+  await card.locator(".kw").first().hover();
+  const tip = page.locator("[role=tooltip]");
+  await expect(tip).toBeVisible();
+  const overlap = await card.evaluate((el) => {
+    const t = document.querySelector("[role=tooltip]")!.getBoundingClientRect();
+    return Array.from(el.querySelectorAll("button")).filter((b) => {
+      const r = b.getBoundingClientRect();
+      return r.left < t.right && r.right > t.left && r.top < t.bottom && r.bottom > t.top;
+    }).length;
+  });
+  expect(overlap).toBe(0);
+});
+
+test("forja_via_fechada_mostra_motivo: aria-disabled, motivo visível e nenhum request", async ({ page, backend }) => {
+  const state = backend.states.get("game-a")!;
+  state.player_stats.forja = {
+    permitido: true, motivo: "", baralho_min: 3,
+    baralho: [{ id: "golpe", name: "Golpe do Véu", copias: 1, esquecivel: true, bloqueio: null }],
+    esquecer: { descanso: false, templo: false, ouro: 30, motivos: { descanso: "Só dá para esquecer uma Carta depois de um descanso longo.", templo: "Só um templo ou curandeiro ajuda a esquecer uma Carta." } },
+    afiar: { material: null, afiaveis: [], afiadas: [] },
+    purgar: { medico: false, templo: false, ouro: 20, motivos: { medico: "Não há um Médico de Campo com você.", templo: "Só um templo ou curandeiro trata uma Cicatriz." } }, cicatrizes: [],
+  } as never;
+  await page.goto("/");
+  await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+  await page.getByRole("button", { name: /^Ayla/ }).click();
+  await page.getByRole("tab", { name: /Combate/ }).click();
+  await page.locator("[data-forja-row='golpe']").click();
+  const rest = page.locator("[data-forja-forget='golpe:descanso']");
+  await expect(rest).toHaveAttribute("aria-disabled", "true");
+  await expect(page.locator("[data-forja-why]")).toContainText("Esquecer (descanso): Só dá para esquecer uma Carta depois de um descanso longo.");
+  await expect(rest).toHaveAttribute("aria-describedby", "forja-why-forget");
+  await rest.dispatchEvent("click"); // aria-disabled: o clique não faz nada
+  await expect(page.locator("[data-forja-confirm]")).toHaveCount(0);
+  expect(actions(backend)).toHaveLength(0);
+});
+
+test("desfecho_abre_no_topo_1440: Continuar visível e livre depois de rolar o painel até o fim", async ({ page, backend }) => {
+  backend.unexpectedAllowed.push(/combat\/preview/); // a prévia é abortada ao enfileirar (esperado)
+  armDeck(backend, { enemies: [["e1", "Saqueador"]] });
+  await openCombat(page);
+  await page.keyboard.press("1");
+  await page.locator("[data-play-confirm]").press("Enter");
+  await expect(page.locator(".play-queue__item")).toHaveCount(1);
+  await panel(page).evaluate((el) => { el.scrollTop = el.scrollHeight; });
+  await page.locator("[data-end-turn]").dispatchEvent("click"); // sem rolar: dispatchEvent não move a página
+  const next = page.locator(".combat-outcome__continue");
+  await expect(next).toBeVisible();
+  await page.waitForTimeout(300);
+  const b = await measure(next);
+  expect(b.free && b.inView, JSON.stringify(b)).toBe(true);
 });

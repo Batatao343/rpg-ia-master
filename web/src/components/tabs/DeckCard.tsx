@@ -5,8 +5,8 @@ const FREQ_LABEL: Record<string, string> = {
   livre: "livre", turno: "1× turno", cena: "1× cena",
   descanso_curto: "1× descanso curto", descanso_longo: "1× descanso longo",
 };
-const TYPE_LABEL: Record<string, string> = {
-  ativa: "Ação", reacao: "Reação", passiva: "Passiva", virtude: "Virtude",
+export const TYPE_LABEL: Record<string, string> = {
+  ativa: "Ação", reacao: "Reação", utilitaria: "Utilitária", passiva: "Passiva", virtude: "Virtude",
 };
 const TYPE_ICON: Record<string, IconName> = { ativa: "card-active", reacao: "card-reaction", passiva: "card-passive", virtude: "card-virtue" };
 

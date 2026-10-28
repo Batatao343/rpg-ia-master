@@ -84,3 +84,39 @@ test.describe("390", () => {
     }
   });
 });
+
+test.describe("390 etapa 3", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("has_loot_mobile: o botão Combate da barra avisa o espólio e limpa ao abrir", async ({ page, backend }) => {
+    const state = backend.states.get("game-a")!;
+    state.player_stats.espolio_pendente = { id: "esp1", origem: "vitoria", recusa_ouro: 5, ofertas: [
+      { id: "c1", name: "Estocada", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "**Sangria** 1.", descricao: "", conhecida: false },
+    ] } as never;
+    await page.goto("/");
+    await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+    await page.getByRole("button", { name: /^Ayla/ }).click();
+    const btn = page.locator(".mtabbar__btn", { hasText: "Combate" });
+    await expect(btn).toHaveClass(/has-loot/);
+    await expect(btn).toHaveAccessibleName(/ — espólio à espera$/);
+    await btn.click();
+    await expect(btn).not.toHaveClass(/has-loot/);
+  });
+
+  test("desfecho_abre_no_topo_390: Continuar visível e livre depois de rolar o painel até o fim", async ({ page, backend }) => {
+    backend.unexpectedAllowed.push(/combat\/preview/);
+    armDeck(backend, { enemies: [["e1", "Saqueador"]] });
+    await openCombat(page);
+    await page.locator('.deck-card[data-card="golpe"]').dispatchEvent("click");
+    await page.locator("[data-play-confirm]").dispatchEvent("click");
+    await expect(page.locator(".play-queue__item")).toHaveCount(1);
+    await page.locator(".ws-panel, #ws-panel-combate").first().evaluate((el) => { el.scrollTop = el.scrollHeight; });
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.locator("[data-end-turn]").dispatchEvent("click");
+    const next = page.locator(".combat-outcome__continue");
+    await expect(next).toBeVisible();
+    await page.waitForTimeout(300);
+    const b = await measure(next);
+    expect(isFreeAndVisible(b), JSON.stringify(b)).toBe(true);
+  });
+});

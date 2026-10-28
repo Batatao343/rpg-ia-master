@@ -31,6 +31,21 @@ RARITY_WEIGHTS = (("comum", 70), ("incomum", 25), ("rara", 5))
 BOSS_RARITY_WEIGHTS = (("comum", 60), ("incomum", 25), ("rara", 10), ("abissal", 5))
 FORGET_GOLD = 25  # Esquecer no templo: por ouro, sem limite
 PURGE_GOLD = 40  # Purgar uma Cicatriz no templo / com Medico de Campo
+
+# SPEC-347 R7: textos únicos — `forget()`/`purge()` e `forge_view`/`public_forge` usam as mesmas constantes.
+MSG_FORGET_NO_REST = "Só dá para esquecer uma Carta depois de um descanso longo."
+MSG_FORGET_NOT_TEMPLE = "Só um templo ou curandeiro ajuda a esquecer uma Carta."
+MSG_PURGE_NOT_TEMPLE = "Só um templo ou curandeiro trata uma Cicatriz."
+MSG_PURGE_NO_MEDIC = "Não há um Médico de Campo com você."
+MSG_DECK_MIN = "O Baralho já está no mínimo: não há o que afinar nas básicas."
+
+
+def msg_forget_gold(gold: int) -> str:
+    return f"Faltam {gold} de ouro para a oferenda."
+
+
+def msg_purge_gold(gold: int) -> str:
+    return f"Faltam {gold} de ouro para o tratamento."
 RARE_MATERIAL_RARITIES = frozenset({"raro", "rara", "rare", "epico", "lendario"})
 _DECK_TIPOS = cards._DECK_TIPOS
 _TEMPLE_TAGS = frozenset({"templo", "santuario", "curandeiro", "hospicio"})
@@ -379,17 +394,17 @@ def forget(state: dict, card_id: str, via: str) -> dict:
         for c in ids
     }
     if card_id in basics and len(deck) <= cards.DECK_MIN:
-        return _fail("O Baralho já está no mínimo: não há o que afinar nas básicas.")
+        return _fail(MSG_DECK_MIN)
     gold = 0
     if via == "descanso":
         if int(player.get("forja_esquecer", 0) or 0) < 1:
-            return _fail("Só dá para esquecer uma Carta depois de um descanso longo.")
+            return _fail(MSG_FORGET_NO_REST)
     elif via == "templo":
         if not at_temple(state):
-            return _fail("Só um templo ou curandeiro ajuda a esquecer uma Carta.")
+            return _fail(MSG_FORGET_NOT_TEMPLE)
         gold = FORGET_GOLD
         if int(player.get("gold", 0) or 0) < gold:
-            return _fail(f"Faltam {gold} de ouro para a oferenda.")
+            return _fail(msg_forget_gold(gold))
     else:
         return _fail("Via de esquecimento inválida.")
     if via == "descanso":
@@ -509,14 +524,14 @@ def purge_curse(state: dict, scar_id: str, via: str) -> dict:
         return _fail("Essa Cicatriz não pesa no seu Baralho.")
     if via == "templo":
         if not at_temple(state):
-            return _fail("Só um templo ou curandeiro trata uma Cicatriz.")
+            return _fail(MSG_PURGE_NOT_TEMPLE)
     elif via == "medico":
         if not _medic_available(state):
-            return _fail("Não há um Médico de Campo com você.")
+            return _fail(MSG_PURGE_NO_MEDIC)
     else:
         return _fail("Via de tratamento inválida.")
     if int(player.get("gold", 0) or 0) < PURGE_GOLD:
-        return _fail(f"Faltam {PURGE_GOLD} de ouro para o tratamento.")
+        return _fail(msg_purge_gold(PURGE_GOLD))
     player["gold"] = int(player.get("gold", 0) or 0) - PURGE_GOLD
     rows.remove(row)
     player["cicatriz_cartas"] = rows
@@ -611,15 +626,41 @@ def public_forge(state: dict) -> dict | None:
         and can_sharpen_card(cards.get_card(cid) or {})
         and not (player.get("afiadas") or {}).get(cid)
     )
+    # SPEC-347 R7.1: por que cada via está fechada (None = aberta). `permitido=false` fecha todas com `motivo`.
+    def _why(open_: bool, *reasons: tuple[bool, str]) -> str | None:
+        if not allowed:
+            return reason or None
+        if open_:
+            return None
+        return next((msg for bad, msg in reasons if bad), None)
+
+    has_rest = int(player.get("forja_esquecer", 0) or 0) > 0
+    medic = _medic_available(state)
+    deck_at_min = len(player.get("deck") or []) <= cards.DECK_MIN
+    basics = {
+        c
+        for ids in cards.basicas_for_class(str(player.get("class_name", ""))).values()
+        for c in ids
+    }
+    for row in baralho:
+        row["bloqueio"] = MSG_DECK_MIN if row["id"] in basics and deck_at_min else None
     return {
         "permitido": allowed,
         "motivo": reason,
         "baralho": baralho,
         "baralho_min": cards.DECK_MIN,
         "esquecer": {
-            "descanso": int(player.get("forja_esquecer", 0) or 0) > 0,
+            "descanso": has_rest,
             "templo": temple and gold >= FORGET_GOLD,
             "ouro": FORGET_GOLD,
+            "motivos": {
+                "descanso": _why(has_rest, (True, MSG_FORGET_NO_REST)),
+                "templo": _why(
+                    temple and gold >= FORGET_GOLD,
+                    (not temple, MSG_FORGET_NOT_TEMPLE),
+                    (True, msg_forget_gold(FORGET_GOLD)),
+                ),
+            },
         },
         "afiar": {
             "material": sharpen_material(player),
@@ -629,7 +670,19 @@ def public_forge(state: dict) -> dict | None:
         "cicatrizes": curses,
         "purgar": {
             "templo": temple and gold >= PURGE_GOLD,
-            "medico": _medic_available(state) and gold >= PURGE_GOLD,
+            "medico": medic and gold >= PURGE_GOLD,
             "ouro": PURGE_GOLD,
+            "motivos": {
+                "medico": _why(
+                    medic and gold >= PURGE_GOLD,
+                    (not medic, MSG_PURGE_NO_MEDIC),
+                    (True, msg_purge_gold(PURGE_GOLD)),
+                ),
+                "templo": _why(
+                    temple and gold >= PURGE_GOLD,
+                    (not temple, MSG_PURGE_NOT_TEMPLE),
+                    (True, msg_purge_gold(PURGE_GOLD)),
+                ),
+            },
         },
     }

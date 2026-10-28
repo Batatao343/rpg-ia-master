@@ -14,7 +14,8 @@ function Keyword({ text, regra }: { text: string; regra: string }) {
     if (e.pointerType !== "mouse") return;
     const r = e.currentTarget.getBoundingClientRect();
     const left = Math.max(MARGIN, Math.min(r.left, window.innerWidth - TIP_W - MARGIN));
-    const above = r.bottom + 96 > window.innerHeight;
+    // SPEC-347 R6: abre ACIMA da palavra sempre que couber (embaixo costuma estar o botão da carta).
+    const above = r.top - 96 >= MARGIN || r.bottom + 96 > window.innerHeight;
     setPos({ left, top: above ? r.top - 4 : r.bottom + 4, above });
   };
   return (

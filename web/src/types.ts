@@ -115,12 +115,12 @@ export interface EspolioPendente {
 export interface ForjaView {
   permitido: boolean;
   motivo: string;
-  baralho: Array<{ id: string; name: string; copias: number; esquecivel: boolean }>;
+  baralho: Array<{ id: string; name: string; copias: number; esquecivel: boolean; bloqueio?: string | null }>;
   baralho_min: number;
-  esquecer: { descanso: boolean; templo: boolean; ouro: number };
+  esquecer: { descanso: boolean; templo: boolean; ouro: number; motivos?: { descanso: string | null; templo: string | null } };
   afiar: { material: string | null; afiaveis: string[]; afiadas: string[] };
   cicatrizes: Array<{ scar_id: string; card_id: string; name: string }>;
-  purgar: { templo: boolean; medico: boolean; ouro: number };
+  purgar: { templo: boolean; medico: boolean; ouro: number; motivos?: { medico: string | null; templo: string | null } };
 }
 
 /** Cicatriz permanente (morte rica). O dado não tem turno de origem — nunca exibido. */

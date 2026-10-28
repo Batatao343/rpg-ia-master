@@ -62,3 +62,25 @@ test('hud_rodada_uma_vez_e_sem_zero', async () => {
   const withArena = html(h(CombatTab, { c, hitKey: 0, party: [], arena: true, deck: true }));
   assert.doesNotMatch(withArena, /class="initiative"/);
 });
+
+test('forja_via_fechada_aria_disabled_e_motivo', async () => {
+  const { ForjaPanel } = await load('../src/components/combat/ForjaPanel.tsx');
+  const forja = { permitido: true, motivo: '', baralho_min: 3,
+    baralho: [{ id: 'golpe', name: 'Golpe', copias: 1, esquecivel: true, bloqueio: null }],
+    esquecer: { descanso: false, templo: false, ouro: 25, motivos: { descanso: 'Só dá para esquecer uma Carta depois de um descanso longo.', templo: 'Só um templo ou curandeiro ajuda a esquecer uma Carta.' } },
+    afiar: { material: null, afiaveis: [], afiadas: [] }, cicatrizes: [], purgar: { medico: false, templo: false, ouro: 40 } };
+  // a linha só abre a barra depois do clique; o SSR cobre a ausência de ruído quando nada está selecionado
+  const out = html(h(ForjaPanel, { forja, cards: [], busy: false, onForge() {} }));
+  assert.doesNotMatch(out, /forja-why-forget/);
+  assert.match(out, /data-forja-row="golpe"/);
+});
+
+test('cardrewards_choices_levam_o_motivo', async () => {
+  const { forgetChoices, purgeChoices } = await load('../src/cardRewards.ts');
+  const forja = { permitido: true, esquecer: { descanso: false, templo: true, ouro: 25, motivos: { descanso: 'sem descanso', templo: null } },
+    purgar: { medico: false, templo: false, ouro: 40, motivos: { medico: 'sem médico', templo: 'sem templo' } } };
+  const [rest, temple] = forgetChoices(forja);
+  assert.equal(rest.why, 'sem descanso'); assert.equal(rest.enabled, false);
+  assert.equal(temple.why, null); assert.equal(temple.enabled, true);
+  assert.deepEqual(purgeChoices(forja).map((c) => c.why), ['sem médico', 'sem templo']);
+});

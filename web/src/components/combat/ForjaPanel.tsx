@@ -11,6 +11,17 @@ interface Props {
 
 interface Pending { origin: string; text: string; request: Parameters<RewardSender>[0] }
 
+/** SPEC-347 R7.3: uma linha com o motivo de cada via fechada (a da linha selecionada, se houver, vale sozinha). */
+function WhyLine({ id, bloqueio, items }: { id: string; bloqueio?: string | null; items: Array<{ label: string; enabled: boolean; why?: string | null }> }) {
+  const closed = items.filter((c) => !c.enabled && c.why);
+  if (!bloqueio && !closed.length) return null;
+  return (
+    <p className="forja__why forja__why--vias" id={id} data-forja-why>
+      {bloqueio ?? closed.map((c) => `${c.label.replace(/ \(\d+ de ouro\)$/, "")}: ${c.why}`).join(" ")}
+    </p>
+  );
+}
+
 /** SPEC-333 R4/R5/R8 + SPEC-342 R12.3/R17: a Forja do baralho, fora de encontro. O servidor diz o que está permitido
  *  (`forja.permitido`, `esquecer.*`, `purgar.*`). A linha é selecionável e UMA barra de ações abaixo da lista age sobre a
  *  selecionada. Tudo que tira carta ou custa ouro pede um 2º passo inline (sem modal): Confirmar · Cancelar · Esc. */
@@ -69,19 +80,27 @@ export function ForjaPanel({ forja, cards, busy, onForge }: Props) {
         ))}
       </ul>
       {row && row.esquecivel && (
-        <div className="forja__bar" role="group" aria-label={`Ações para ${row.name}`}>
-          {forget.map((choice) => (
-            <button key={choice.via} className="btn btn--ghost btn--sm" type="button"
-              disabled={locked || !choice.enabled} data-forja-forget={`${row.id}:${choice.via}`} data-forja-origin={`forget:${choice.via}`}
-              onClick={() => setConfirm({
-                origin: `forget:${choice.via}`,
-                text: choice.via === "templo" ? `${row.name} sai do Baralho no templo: ${choice.label}.` : `${row.name} sai do Baralho (segue no Acervo).`,
-                request: { kind: "forja", acao: "esquecer", card_id: row.id, via: choice.via },
-              })}>
-              {choice.label}
-            </button>
-          ))}
-        </div>
+        <>
+          <div className="forja__bar" role="group" aria-label={`Ações para ${row.name}`}>
+            {forget.map((choice) => (
+              <button key={choice.via} className="btn btn--ghost btn--sm" type="button"
+                disabled={locked} aria-disabled={!choice.enabled || row.bloqueio ? "true" : undefined}
+                aria-describedby={!choice.enabled || row.bloqueio ? "forja-why-forget" : undefined}
+                data-forja-forget={`${row.id}:${choice.via}`} data-forja-origin={`forget:${choice.via}`}
+                onClick={() => {
+                  if (!choice.enabled || row.bloqueio) return; // via fechada: o motivo está logo abaixo (SPEC-347 R7.3)
+                  setConfirm({
+                    origin: `forget:${choice.via}`,
+                    text: choice.via === "templo" ? `${row.name} sai do Baralho no templo: ${choice.label}.` : `${row.name} sai do Baralho (segue no Acervo).`,
+                    request: { kind: "forja", acao: "esquecer", card_id: row.id, via: choice.via },
+                  });
+                }}>
+                {choice.label}
+              </button>
+            ))}
+          </div>
+          <WhyLine id="forja-why-forget" bloqueio={row.bloqueio} items={forget} />
+        </>
       )}
       {forja.afiar.afiaveis.length > 0 && (
         <div className="forja__sharpen">
@@ -119,19 +138,27 @@ export function ForjaPanel({ forja, cards, busy, onForge }: Props) {
             ))}
           </ul>
           {scar && (
-            <div className="forja__bar" role="group" aria-label={`Ações para ${scar.name}`}>
-              {purge.map((choice) => (
-                <button key={choice.via} className="btn btn--ghost btn--sm" type="button"
-                  disabled={locked || !choice.enabled} data-forja-purge={`${scar.scar_id}:${choice.via}`} data-forja-origin={`purge:${choice.via}`}
-                  onClick={() => setConfirm({
-                    origin: `purge:${choice.via}`,
-                    text: `Purgar ${scar.name}: ${choice.label}.`,
-                    request: { kind: "forja", acao: "purgar", scar_id: scar.scar_id, via: choice.via },
-                  })}>
-                  {choice.label}
-                </button>
-              ))}
-            </div>
+            <>
+              <div className="forja__bar" role="group" aria-label={`Ações para ${scar.name}`}>
+                {purge.map((choice) => (
+                  <button key={choice.via} className="btn btn--ghost btn--sm" type="button"
+                    disabled={locked} aria-disabled={!choice.enabled ? "true" : undefined}
+                    aria-describedby={!choice.enabled ? "forja-why-purge" : undefined}
+                    data-forja-purge={`${scar.scar_id}:${choice.via}`} data-forja-origin={`purge:${choice.via}`}
+                    onClick={() => {
+                      if (!choice.enabled) return;
+                      setConfirm({
+                        origin: `purge:${choice.via}`,
+                        text: `Purgar ${scar.name}: ${choice.label}.`,
+                        request: { kind: "forja", acao: "purgar", scar_id: scar.scar_id, via: choice.via },
+                      });
+                    }}>
+                    {choice.label}
+                  </button>
+                ))}
+              </div>
+              <WhyLine id="forja-why-purge" items={purge} />
+            </>
           )}
         </div>
       )}

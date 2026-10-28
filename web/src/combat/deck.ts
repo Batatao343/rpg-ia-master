@@ -98,7 +98,11 @@ export function keywordRules(texto: string, glossary: Glossary): string[] {
   return ruleSegments(texto, glossary).filter((s) => s.tip).map((s) => `${s.tip!.nome}: ${s.tip!.regra}`);
 }
 
-const fmtPct = (n: number) => `${Number.isInteger(n) ? n : n.toFixed(1).replace(".", ",")} %`;
+/** SPEC-347 R10: percentual inteiro; só 0 e 100 são exatos — o que não é certo nunca mostra "0 %"/"100 %". */
+export function fmtPct(n: number): string {
+  const v = n <= 0 ? 0 : n >= 100 ? 100 : Math.min(99, Math.max(1, Math.round(n)));
+  return `${v} %`;
+}
 
 /** SPEC-342 R7.1: a chance (número em destaque) separada do resto da linha da prévia. */
 export function previewParts(p: PreviewResult): { chance: string; rest: string } {

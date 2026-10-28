@@ -9,7 +9,7 @@ import { isMobileViewport, offChatSurface, returnToChat } from "./workspace/mobi
 import { safeStorage } from "./safeStorage";
 import { preparePending, loadPending, clearPending, clearPendingIfOwn, clearOwner as clearPendingOwner, shouldClearPending, type PendingOperation } from "./pendingOperation";
 import { clearWorkspaceOwner } from "./workspace/workspaceStorage";
-import { forgetAllChatSessions } from "./workspace/chatSessionStore";
+import { forgetAllChatSessions, setChatSession } from "./workspace/chatSessionStore";
 import { looksDegraded, speakerFromHistory } from "./lib";
 import type { ActionOptions, CombatSimulatorPayload, GameResponse, CreatePayload, LogEntry, SaveSummary } from "./types";
 import { Banner, type BannerState } from "./components/Banner";
@@ -753,6 +753,8 @@ export function App() {
       if (session.current !== generation) return;
       gameId.current = gid;
       safeStorage.set(LS_KEY, gid);
+      // SPEC-347 R11.2: a memória de rolagem serve à troca de superfície, não a reabrir o save — o Livro abre no fim.
+      setChatSession(gid, { scrollTop: null, atBottom: true });
       setScreen("play"); setLog([]); setData(r);
       const saved = loadPending(owner.current, gid);
       setPending(saved);

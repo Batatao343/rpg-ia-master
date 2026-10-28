@@ -228,6 +228,17 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     return () => document.removeEventListener("keydown", onKey);
   });
 
+  // SPEC-347 R8: o painel guarda a rolagem por aba; o desfecho entra no topo e precisa vir à vista (uma vez por resultado).
+  const outcomeId = combatResult && shouldShowResult(combatResult, dismissed) ? combatResult.result_event_id : null;
+  const scrolledFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!outcomeId || scrolledFor.current === outcomeId) return;
+    const root = rootRef.current;
+    if (!root || root.closest("[hidden]") || root.offsetParent === null) return; // painel oculto: espera
+    scrolledFor.current = outcomeId;
+    root.querySelector<HTMLElement>(".combat-outcome")?.scrollIntoView?.({ block: "start" });
+  }, [outcomeId]);
+
   const detailCard = cards.find((c) => c.id === (detailId ?? aimingCard?.id)) ?? null;
   const locked = busy || state.phase === "submitting";
 
