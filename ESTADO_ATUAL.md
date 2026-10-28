@@ -18,7 +18,7 @@
 
 1. Turno inteiro (~10 s até o `state`): investigar arquivista/commit após a narração.
 2. 319 P2-1 medir `replace` no combate.
-3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
+3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
 
@@ -45,7 +45,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
-- 2026-10-27 · SPEC-345 `draft` — bugs-front-navegador
+- 2026-10-27 · SPEC-345 `in-progress` — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
 - 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
 - 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
 - 2026-10-27 · SPEC-342 `in-progress` — Cartas: acabamento do front do combate por cartas (destrava as flags)
@@ -77,7 +77,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`..
-- 27/10 cartas: 328–336 `off`; 339 `done`; 342 pousada (smoke staging pendente); 341 com dono (silencioso 76 %); 345 em execução.
+- 27/10 cartas: 328–336 `off`; 339 `done`; 342/345 pousadas (falta smoke LLM); 341 em revisão (exceções do dono).
 
 
 ## Como rodar
