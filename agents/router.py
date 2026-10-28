@@ -293,8 +293,19 @@ _NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|jamais)\b(?:\s+\w+){0,2}\s*$")
 # contexto que não é combate ("numa partida de dados", "para arrombá-la"): na dúvida, STORY
 _NON_COMBAT_CONTEXT_RE = re.compile(
     r"\b(?:numa?|em\s+uma?)\s+(?:partida|jogo|disputa|aposta|competicao|concurso|queda\s+de\s+braco)\b"
-    r"|\bde\s+dados\b|\bpara\s+(?:arromb|abrir|quebr|derrub|acend|cort|desbloque)\w*"
+    r"|\bde\s+dados\b"
 )
+# SPEC-355 R5(c): "para abrir/arrombar/..." deixou de bloquear em bloco. O objeto do verbo hostil é
+# cortado antes do "para": "golpeio a porta para abrir caminho" segue STORY (porta não é alvo) e
+# "ataco o guarda para abrir caminho" vira COMBAT (guarda narrado). Contexto de jogo bloqueia sempre.
+# SPEC-355 R5(b): substantivos humanos (tokens singularizados) que valem como presença se a
+# narração recente os pôs em cena.
+_HUMAN_NOUNS = frozenset(
+    {
+        "guarda", "sentinela", "soldado", "saqueador", "salteador", "bandido", "ladrao",
+        "mercenario", "capanga", "cultista", "cacador", "assassino", "pirata", "contrabandista",
+    }
+)  # fmt: skip
 
 
 def _fold_text(text: str) -> str:
@@ -303,6 +314,19 @@ def _fold_text(text: str) -> str:
 
     base = unicodedata.normalize("NFKD", str(text or "").casefold())
     return "".join(ch for ch in base if not unicodedata.combining(ch))
+
+
+def _recent_ai_tokens(messages, n: int = 2) -> set[str]:
+    """Tokens (sem acento, singularizados) das ``n`` últimas falas da IA: o que está em cena."""
+    from services import encounter_manifest as em
+
+    texts: list[str] = []
+    for m in reversed(messages or []):
+        if getattr(m, "type", "") == "ai":
+            texts.append(str(getattr(m, "content", "") or ""))
+            if len(texts) >= n:
+                break
+    return set(em.name_tokens(" ".join(texts)))
 
 
 def _last_ai_text(messages) -> str:
@@ -347,10 +371,14 @@ def _hostility_target(state, folded: str, obj: str) -> str | None:
         if name in npcs and _fold_text(name) in obj:
             return core
     wanted = tokens
+    recent = _recent_ai_tokens(state.get("messages") or [])
     for _bid, entry in em._bestiary().items():
         names = set(em.name_tokens(entry.get("name", "") or _bid))
-        if names and names <= wanted:
+        # SPEC-355 R5(a): criatura do bestiário só conta se a narração recente a citou
+        if names and names <= wanted and names & recent:
             return core
+    if _HUMAN_NOUNS & wanted & recent:  # SPEC-355 R5(b)
+        return core
     for enemy in state.get("enemies") or []:
         names = set(em.name_tokens(str(enemy.get("name") or "")))
         if names and names <= wanted:

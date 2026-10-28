@@ -7,7 +7,7 @@ import agents.router as router
 from llm_setup import FallbackLLM
 
 NARRACAO = AIMessage(
-    content="Tres vultos armados saem da sombra e bloqueiam a estrada, rosnando ameacas."
+    content="Tres vultos armados, um deles bandido, saem da sombra e bloqueiam a estrada, rosnando ameacas."  # SPEC-355 R5: bandido narrado
 )
 
 
@@ -65,7 +65,7 @@ def test_invoke_exception_branch_same_rule(monkeypatch):
 
 def test_bestiary_name_in_text_is_a_signal():
     payload = router.dm_router_node(
-        _state("ataco o goblin", ai=AIMessage(content="O vento sopra."))
+        _state("ataco o goblin", ai=AIMessage(content="Um goblin espreita entre as pedras."))
     )
     assert payload["next"] == "combat_agent"
 
@@ -79,7 +79,7 @@ def test_off_path_unchanged():
 
 
 _AMEACA = AIMessage(
-    content="Dois bandidos armados bloqueiam a ponte, a tempestade ronca e uma ameaça paira."
+    content="Dois bandidos armados e um goblin bloqueiam a ponte, a tempestade ronca e uma ameaça paira."  # SPEC-355 R5: goblin narrado
 )
 
 HOSTILE = [
