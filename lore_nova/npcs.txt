@@ -247,6 +247,8 @@ Como interpretar: Solvhara é gentil. Genuinamente. Não quer fazer mal — quer
 
 Voz: Suave, baixa, compreensiva. Nunca olha diretamente para quem fala. Fala como quem entende tudo que dói.
 
+Segredo: Tem hoje um lugar que é só dela: Solvhen. Sustenta o sonho da cidade com a mesma paciência com que se senta ao lado de quem chora, e ninguém lá percebe que o conforto tem dona.
+
 ---
 
 [CATEGORIA: NPC_DEMÔNIO]
@@ -288,7 +290,7 @@ Estado: Ativo
 
 Natureza: A compulsão de consumir o outro completamente. Não produz desejo — produz dependência que parece amor até que um dos dois desaparece dentro do outro. Lyss não quer prazer. Quer o consumo total, a dissolução de um ser dentro de outro. Opera a Casa das Marés em Brekmar como sistema de consumo lento: torna tudo fora dela progressivamente menos satisfatório.
 
-Como interpretar: Lyss é sedutora não no sentido óbvio, mas no sentido de que oferece exatamente o que cada pessoa quer sentir. Adapta-se. Para quem quer ser desejado, deseja. Para quem quer ser entendido, entende. O perigo é que o que ela oferece é real o suficiente para criar dependência e falso o suficiente para nunca saciar. Atualmente em xadrez velado com Kahen, governante de Brekmar, que é imune à mecânica dela por ser Cinzéu que não sente prazer físico.
+Como interpretar: Lyss é sedutora não no sentido óbvio, mas no sentido de que oferece exatamente o que cada pessoa quer sentir. Adapta-se. Para quem quer ser desejado, deseja. Para quem quer ser entendido, entende. O perigo é que o que ela oferece é real o suficiente para criar dependência e falso o suficiente para nunca saciar. Atualmente em xadrez velado com Kahen, o Árbitro de Brekmar, que é imune à mecânica dela por ser Cinzéu que não sente prazer físico.
 
 Voz: Envolvente, atenta, focada inteiramente em quem fala — como se nada mais no mundo existisse. Levemente transparente quando vista de perto.
 
@@ -971,6 +973,8 @@ O que enfrenta: Vaelorn é cercada por nômades hostis, saqueadores de túmulos 
 
 Para o narrador: Aerwen é empregadora nobre e fonte de lore élfico. Dá missões de defesa, recuperação de relíquias e diplomacia com os nômades. Sua urgência mortal (a ampulheta) dá peso emocional a tudo que pede. Justa, mas disposta a usar quem precisar para proteger seu povo.
 
+Segredo: A Ampulheta de Vaelorn não mede o tempo dela: mede o que resta da cidade. Aerwen troca os próprios anos para virar a areia, grão a grão, e já gastou mais do que a ampulheta élfica lhe deixaria. Procura em silêncio quem assuma Vaelorn depois dela. Illyan não aceita, porque já não separa a cidade da visão; Morvan é a resposta óbvia, e errada, porque escolheu não acordar ninguém (ver Solvhen).
+
 ---
 
 [CATEGORIA: NPC]
@@ -1002,6 +1006,8 @@ Personalidade: Profundamente contemplativo, melancólico, lento para agir e impo
 O que sabe: O arquivo de Solvhen contém séculos de observação Cinzéu — sobre o Abismo, sobre as raças, sobre os eventos que outros esqueceram. Morvan é a porta para esse conhecimento, mas extraí-lo exige paciência que poucos forasteiros têm. Ele não será apressado.
 
 Para o narrador: Morvan é fonte de lore filosófico e histórico profundo, e exemplo do ritmo Cinzéu. Testa a paciência dos jogadores. Recompensa a contemplação, frustra a pressa. Pode revelar verdades que ninguém mais guarda — para quem souber esperar e perguntar certo.
+
+Segredo: Solvhen é um sonho coletivo, sustentado por Solvhara, a Tristeza. Morvan sabe e escolheu não acordar ninguém: contempla há anos uma cidade que não lembra de ontem, porque acordar é a única coisa que os Cinzéus de lá não aguentariam sentir de uma vez.
 
 ---
 
@@ -1110,6 +1116,8 @@ O que faz: Caça gente pela Pradaria — viajantes, moradores de vilas isoladas,
 
 Para o narrador: Groth é antagonista que os jogadores vão querer derrotar — vilão claro num mundo de cinzas. Captura aliados, ameaça vilas, alimenta os mercados de escravos das duas grandes cidades. Derrotá-lo liberta pessoas e fere as redes da Mão Sombria e dos sindicatos. Afável até o fim, o que o torna mais detestável.
 
+Segredo: Groth guarda o recibo de venda de Kahen, e é por isso que os Mercadores de Escravos nunca entram em Brekmar. Nunca o usou. Prefere saber que pode.
+
 
 #########################################################
 NPCS POR LOCAL: O PÂNTANO DA MELANCOLIA
@@ -1147,6 +1155,8 @@ História: Foi uma das melhores druidas de Gresh até ficar tempo demais numa co
 O que faz: Lidera os Druidas-Renegados, sabota as estacas de medição, guia vítimas para a névoa densa, cultiva os Tumores do Pântano como jardins. Não é maligna no sentido comum — genuinamente acredita que o pântano oferece misericórdia, e quer compartilhá-la.
 
 Para o narrador: A Que Afundou é antagonista trágica e perturbadora — a face sedutora da rendição. Suas palavras carregam o efeito psicológico do pântano: ouvir demais é começar a concordar. Espelho sombrio de Gresh. Pode ser combatida ou, mais perigosamente, ouvida.
+
+Segredo: Os afogados da Cripta dos Afogados são druidas do Ciclo Cinzento que ela afundou, um a um, oferecendo-lhes o descanso. Não são os de Aethelgard. Ela volta à cripta nas noites de maré alta e fala com cada um pelo nome que tinham antes.
 
 ---
 
@@ -1889,7 +1899,7 @@ Para o narrador: O Eco do Aprendiz é gancho para a verdade sobre Aethelgard e p
 #########################################################
 NPCS POR LOCAL: BREKMAR (PORTO SEM LEI, COSTA OESTE)
 #########################################################
-Governada por KAHEN (já em entrada principal acima) e habitada por LYSS (demônio, em npcs). Caldeirão de facções: três sindicatos, grupos piratas rivais, contrabandistas. Liberdade total, consequências pessoais.
+Arbitrada por KAHEN (já em entrada principal acima) e habitada por LYSS (demônio, em npcs). Caldeirão de facções: três sindicatos, grupos piratas rivais, contrabandistas. Liberdade total, consequências pessoais.
 
 ---
 
@@ -1935,6 +1945,8 @@ Personalidade: Calculista, ambiciosa, impiedosa nos negócios e cordial na super
 O que controla: Boa parte do comércio "legítimo-ilegítimo" de Brekmar — rotas, mercadorias, contratos no Poço das Dívidas. Tem exército particular, contatos em Nova Arcádia (a Mão Sombria), e ambições de monopólio. Negocia com Kahen quando precisa e conspira contra os rivais constantemente.
 
 Para o narrador: A Senhora das Balanças é uma das três potências comerciais de Brekmar — empregadora, rival, ou alvo. Representa o poder econômico organizado no caos do porto. Suas guerras com os outros sindicatos podem envolver os personagens. Conecta Brekmar às redes comerciais (e criminosas) de Valoria. Cordial, mortal, sempre calculando.
+
+Segredo: Sabe o que Kahen sente com força, e sabe de quem é o recibo. Vende a informação em pedaços, a quem pagar, sem nunca entregar o todo.
 
 ---
 
@@ -2005,11 +2017,11 @@ VÉU-DE-SANGUE — O TENENTE SANGRINOMANTE DE KAHEN
 Papel: O mais leal e poderoso dos guardas sangrinomantes de Kahen
 Aparência: Cinzéu de pele escura, veias brancas, marcas de sangrinomancia nos braços (como Kahen). Correntes funcionais terminando em ganchos e lâminas. Imóvel até agir, e quando age, é rápido e mortal.
 
-Personalidade: Leal a Kahen por convicção e dívida — Kahen o libertou da escravidão e ensinou a sangrinomancia. Frio, eficiente, devotado. É a mão direita de Kahen, executando o que o governante decide. Compartilha a frieza Cinzéu e a praticidade incomum que Kahen cultiva nos seus.
+Personalidade: Leal a Kahen por convicção e dívida — Kahen o libertou da escravidão e ensinou a sangrinomancia. Frio, eficiente, devotado. É a mão direita de Kahen, executando o que o Árbitro decide. Compartilha a frieza Cinzéu e a praticidade incomum que Kahen cultiva nos seus.
 
 O que faz: Controla o próprio sangue como arma e comanda os outros guardas sangrinomantes. Mantém a ordem que sustenta Brekmar sob Kahen. Foi provavelmente quem ajudou (ou executou) o golpe contra as guardas de Lyss. Sabe os planos de Kahen no xadrez contra a demônia da Casa das Marés.
 
-Para o narrador: Véu-de-Sangue é o braço executor de Kahen — obstáculo mortal ou contato com o governante. Conecta-se ao xadrez velado entre Kahen e Lyss. Leal até a morte, perigoso até para aliados. Para chegar a Kahen, ou para entender o jogo dele com Lyss, passa-se por Véu-de-Sangue. A sangrinomancia em forma de devoção.
+Para o narrador: Véu-de-Sangue é o braço executor de Kahen — obstáculo mortal ou contato com o Árbitro. Conecta-se ao xadrez velado entre Kahen e Lyss. Leal até a morte, perigoso até para aliados. Para chegar a Kahen, ou para entender o jogo dele com Lyss, passa-se por Véu-de-Sangue. A sangrinomancia em forma de devoção.
 
 ---
 
@@ -2130,7 +2142,7 @@ Personalidade: Profundamente contemplativo, paciente, o contraponto à praticida
 
 O que sabe: Os planos de longo prazo de Kahen, incluindo o xadrez com Lyss. As implicações filosóficas e estratégicas que Kahen às vezes não tem tempo de considerar. É a memória e a consciência estratégica do governo de Brekmar.
 
-Para o narrador: Frio-Calculado é o acesso à mente estratégica do governo de Kahen — fonte sobre planos de longo prazo e o conflito com Lyss. Contraponto contemplativo a Kahen e a Véu-de-Sangue (o executor). Para entender o que Kahen planeja, fala-se com Frio-Calculado — se ele permitir.
+Para o narrador: Frio-Calculado é o acesso à mente estratégica do arbítrio de Kahen — fonte sobre planos de longo prazo e o conflito com Lyss. Contraponto contemplativo a Kahen e a Véu-de-Sangue (o executor). Para entender o que Kahen planeja, fala-se com Frio-Calculado — se ele permitir.
 
 ---
 
@@ -2276,3 +2288,170 @@ Personalidade: Brilhante, teimoso, condenado pela própria convicção. Reuniu t
 O que representa: A atração fatal de Ophidia — sempre há alguém convencido de que será diferente. O Cartógrafo é o próximo da longa lista. Pode recrutar os personagens, pedir escolta, comprar informação de Névoa ou da Que Voltou Uma Vez. Sua expedição é quase certamente uma sentença.
 
 Para o narrador: O Cartógrafo é o gancho ativo para Ophidia — uma expedição se formando agora. Pode envolver os personagens como tripulação, escolta ou investigadores. Sua certeza é trágica e contagiante. Seguir com ele é arriscar o destino de todos que tentaram. Não seguir é vê-lo partir e nunca voltar — ou voltar diferente. Ophidia, sempre, cobra.
+
+
+---
+
+#########################################################
+NPCS POR LOCAL: SKALLGARD — MESTRES DAS POSTURAS
+#########################################################
+
+[CATEGORIA: NPC]
+[TAGS: Hrefna_da_Vigília, Skallgard, Farol, Devoto_do_Abismo]
+
+HREFNA DA VIGÍLIA — A QUE ESPERA SER ESCOLHIDA
+Papel: Nascida do Gelo que vela ao pé do Farol da Chama Negra há décadas, e ensina o caminho do Devoto do Abismo a quem aguenta o frio de ficar
+Aparência: Mulher alta, rosto de cera, lábios partidos e sempre entreabertos, como quem acabou de falar com o vento. Manto de pele de alce, nenhum fogo à vista. A neve não gruda nela.
+
+Personalidade: Paciente de um jeito que cansa a quem a observa. Não pede nada e não oferece nada. Responde a quem pergunta pelo Farol com outra pergunta: "O que você veio entregar?" Os clãs tecnológicos a toleram porque nunca atrapalhou uma medição; os caçadores levam-lhe comida e fingem que é costume.
+
+O que ensina: A Postura do Devoto do Abismo: amar o que não se pode conter. Ficar de mão aberta quando a escuridão toca, sem pedir e sem recuar. Quem passa um inverno inteiro ao pé da torre volta calmo demais, e os Nascidos do Gelo respeitam essa calma e a evitam.
+
+Quem a despreza: Os Clãs Tecnológicos, que querem o Farol medido, e não amado.
+
+Segredo: Hrefna espera ser escolhida. Quando o guardião atual cair, outro andarilho virá, e ela sabe que o Farol nunca chamou ninguém que o esperasse. Vela assim mesmo, porque a vigília é a única coisa dela que o Abismo ainda não pediu.
+
+Para o narrador: Mestra do Devoto do Abismo e porta de entrada para o pé do Farol. Dá abrigo, uma pergunta de cada vez, e nunca uma resposta que sirva de mapa.
+
+---
+
+#########################################################
+NPCS POR LOCAL: BREKMAR — MESTRES DAS POSTURAS
+#########################################################
+
+[CATEGORIA: NPC]
+[TAGS: Oriel_Talho_Fundo, Brekmar, Sangrinomancia, Sangromante]
+
+ORIEL TALHO-FUNDO — O QUE ENSINA A QUEM PAGA
+Papel: Sangrinomante a serviço de Kahen que dá aulas, pagas adiantado, a quem quer aprender a negociar o Éter em sangue
+Aparência: Humano magro, mangas dobradas até o cotovelo para que se leiam os braços: cada cicatriz tem uma data, e ele sabe de cor o que cada uma custou.
+
+Personalidade: Cordial como um agiota, preciso como um cirurgião. Nunca diz "magia": diz "conta". Cobra por aula, por corte e pelo silêncio depois.
+
+O que ensina: A Postura do Sangromante: tratar o Abismo como credor. O Éter se paga em sangue, e quem sabe quanto, de quem e quando pode negociar o prazo. Ensina a contar antes de cortar.
+
+Quem o despreza: A Legião de Ferro, para quem magia não registrada vai à fogueira, e que queima quem aprende o que ele ensina.
+
+Segredo: Oriel sente tudo; não é Cinzéu, e é por isso que Kahen o quis. Um mestre que sabe o preço de cada corte decide quanto cada aluno chega a aprender, e Brekmar nunca ganha um segundo Kahen.
+
+Para o narrador: Mestre do Sangromante. Aceita aluno que pague e que aguente ser recusado na terceira aula.
+
+---
+
+#########################################################
+NPCS POR LOCAL: AETHELGARD — MESTRES DAS POSTURAS
+#########################################################
+
+[CATEGORIA: NPC]
+[TAGS: Mairen_das_Margens, Aethelgard, Destilação, Corruptor]
+
+MAIREN DAS MARGENS — A QUE APRENDEU E SAIU
+Papel: Destiladora que trabalha as margens do lago de Aethelgard, vende remédios que curam apodrecendo mais depressa e ensina o ofício do Corruptor a quem sabe pedir
+Aparência: Mulher de meia-idade, mãos manchadas de verde-cinza até o pulso, cheiro de maçã passada. Fala com os olhos nas próprias mãos, como quem confere se ainda estão ali.
+
+Personalidade: Prática, seca, sem remorso que se mostre. Aprendeu a Destilação com Corvane e o deixou; nunca explica por quê. Diz, sem drama, que não existe outro jeito de trabalhar com o Abismo além de trabalhar junto.
+
+O que ensina: A Postura do Corruptor: não lutar contra o Abismo, acompanhá-lo. Apodrecer mais depressa também é cura quando o que apodrece é o que doía. Cada receita custa a quem a usa um pouco de si, e ela diz quanto antes de vender.
+
+Quem a despreza: Os Druidas do Ciclo Cinzento, que contêm o Abismo e chamam isso de cuidado.
+
+Segredo: Saiu de Corvane no dia em que ele lhe pediu o primeiro nome de uma lista de voluntários. Ela deu o nome dela, para ver se ele hesitava. Não hesitou.
+
+Para o narrador: Mestra do Corruptor. Cobra em favor, nunca em ouro, e sempre diz o preço antes.
+
+---
+
+#########################################################
+NPCS POR LOCAL: O PÂNTANO DA MELANCOLIA — MESTRES DAS POSTURAS
+#########################################################
+
+[CATEGORIA: NPC]
+[TAGS: Hask_o_Musgo, Pântano, Druida, Arcanista_Cinzento]
+
+HASK, O MUSGO — O DRUIDA QUE GUARDA
+Papel: Druida cinzento do Pântano que guarda instrumentos de Aethelgard num poço seco e ensina a Postura do Arcanista Cinzento a quem cuida do que apodrece
+Aparência: Homem velho com musgo vivo crescendo nos antebraços e na nuca, que ele poda toda manhã com uma faca de cozinha. Fala baixo, para não acordar o que está dormindo debaixo dele.
+
+Personalidade: Rabugento, meticuloso, de uma ternura que só aparece diante de plantas e de instrumentos quebrados. Chama o pântano de "o paciente".
+
+O que ensina: A Postura do Arcanista Cinzento: manipular o Abismo como quem poda. Não se conserta o que apodrece; escolhe-se o que cortar para o resto aguentar. Ensina a segurar o Éter sem apertar.
+
+Quem o despreza: Os Druidas-Renegados de Saelwen, que chamam a poda de crueldade e a rendição de misericórdia.
+
+Segredo: Um dos instrumentos de Aethelgard que ele guarda ainda funciona. Recusou entregá-lo duas vezes aos Cultistas da Destilação, e na segunda vez não foi só com palavras.
+
+Para o narrador: Mestre do Arcanista Cinzento e fonte do que sobrou de Aethelgard. Só abre o poço a quem trouxe algo para podar.
+
+---
+
+#########################################################
+NPCS POR LOCAL: NOVA ARCÁDIA — ADIÇÕES
+#########################################################
+
+[CATEGORIA: NPC]
+[TAGS: Benedita, Anel_de_Lama, Parteira, Médico_de_Campo]
+
+BENEDITA, A PARTEIRA — A QUE COSTURA ANTES DE PERGUNTAR
+Papel: Parteira e curandeira do Anel de Lama, que ensina a costurar quem a Praga quer
+Aparência: Mulher de mãos largas e unhas curtas. Bolsa de couro desgastado, tesoura fervida em Raiz-Forte, fios de tripa seca. Cheira a sangue, a suor de esforço e, no fundo, a um medo que aprendeu a reconhecer.
+
+Personalidade: Não cobra em dinheiro: cobra em favores, comida ou promessas que sabe que não serão cumpridas, e aceita assim mesmo. Faz as contas no fim de cada dia e as guarda, porque não há para quem contar.
+
+O que ensina: A Postura do Médico de Campo: negar o Abismo à força de mão. Nada de destino: a Praga é doença, e doença se lava, se corta e se costura antes de se rezar. Ensina a quem aparece à porta sem ser chamado.
+
+Quem a despreza: A Guilda dos Corvos, que vende os marcados em vez de tratá-los.
+
+Segredo: Benedita guarda o caderno de uma médica de campo da guerra, com os primeiros sintomas da Ferrugem do Sangue anotados dia a dia. Sabe que a marca no pescoço não é fim, é resposta, e por isso não perdoa os Corvos pelo que fazem com os marcados.
+
+Para o narrador: Mestra do Médico de Campo e contato natural para quem foge da Legião ferido. Não pergunta o nome antes de abrir a bolsa.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Ilsa, Anel_de_Lama, Remendeira, Canal]
+
+ILSA — A REMENDEIRA
+Papel: Remendeira de redes dos pescadores do canal, no Anel de Lama
+Aparência: Mulher de trinta e poucos anos, mãos de calo duro, uma canção sem letra sempre entre os dentes. Trabalha sentada na soleira de casa, agulha de osso e fio de tripa, e vê quem passa sem levantar os olhos.
+
+Personalidade: Quieta, teimosa, boa de contas. Pagou a dívida do pai remendando e não deve favor a ninguém. Desconfia de quem é gentil sem motivo.
+
+O que faz: Remenda redes do canal por uns trocados e um prato quente. Os pescadores a defendem, e ela não sabe por que a defendem tanto.
+
+Segredo: Ilsa é a herdeira do último Rei da Colina Cinza e não sabe. Só Magda sabe, por memória perfeita. A Legião procura "um documento" sem saber o que é; a Mão Sombria protege Ilsa sem lhe contar. Proteger Ilsa e destruir o testamento no barril de Grum são a mesma escolha.
+
+Para o narrador: Âncora de cena no Anel de Lama. Ninguém a persegue e ninguém lhe deve nada: é só alguém em volta de quem as coisas certas sempre acontecem a tempo.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Bertil, Setor_Leste, Crematório, Guilda_dos_Corvos]
+
+BERTIL — O VELHO DO CREMATÓRIO
+Papel: Velho coveiro que mantém o forno do crematório dos Corvos, no Setor Leste de Nova Arcádia
+Aparência: Homem muito velho e muito encolhido, camisa de saco, mãos que tremem menos do que deveriam. Varre as cinzas do forno de manhã e de tarde e conversa com a vassoura.
+
+Personalidade: Educado de um modo antigo, o de quando se servia à mesa. Evita olhar para a Legião. Chama todo mundo de "senhor" e "senhora", sem ironia.
+
+O que faz: Cuida do forno e do livro de entradas dos Corvos, e dorme ali mesmo. Quem o paga por uma noite de conversa ouve nomes de gente que ninguém mais lembra.
+
+Segredo: Foi servo do palácio no décimo ano de governo e consta como morto nos registros da casa. Viu Valerius descer às masmorras na noite do Código e falar com a armadura. Não sabe de Daruun, e nunca contou, porque ninguém perguntou do jeito certo.
+
+Para o narrador: Testemunha sem saber que é. Não é combate nem missão: é um velho que precisa de companhia para falar.
+
+---
+
+[CATEGORIA: NPC]
+[TAGS: Sennar, Filhos_da_Chama_Azul, Culto, Pregador]
+
+SENNAR, O PREGADOR DA CICATRIZ
+Papel: Pregador dos Filhos da Chama Azul nos becos do Anel de Lama e do Anel de Ferro
+Aparência: Homem de cinquenta e muitos anos, postura de soldado. Uma cicatriz de lâmina da Legião corta o pescoço do queixo à clavícula, e ele a mostra quando prega, abrindo o colarinho.
+
+Personalidade: Calmo. Nunca grita. Fala devagar e deixa o silêncio terminar a frase. Prega que o fogo é o único processo honesto, e não há quem o contradiga na hora, porque ele já disse a resposta antes da pergunta.
+
+O que faz: Prega ao cair da noite, recebe os que querem o Batismo de Fogo e reconhece, antes de eles saberem, os que não vão aguentar.
+
+Segredo: Foi legionário, treinado pelo comandante Ress, e ainda consta alistado nos rolos da Legião: nunca deu baixa. Prega o fogo porque viu as sombras se desconectarem quando era menino, e nunca aceitou que o mundo continuasse igual depois.
+
+Para o narrador: Rosto da Chama Azul. Quem o confronta com a cicatriz ouve uma história diferente a cada vez, e todas são verdadeiras.

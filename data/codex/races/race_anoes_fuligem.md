@@ -14,7 +14,7 @@ visibility: public
 # OS ANÕES DA FULIGEM
 
 Ordem de surgimento: 2ª raça
-Status atual: Nômades em 12 Landships autônomas, sem território fixo
+Status atual: Nômades em Landships autônomas (doze no Protocolo, onze em navegação), sem território fixo
 
 HISTÓRIA
 
@@ -52,7 +52,7 @@ Plano de contingência construído décadas antes do Rei Subterrâneo despertar 
 
 Cada Landship é autônoma — toma suas próprias decisões operacionais, define suas próprias rotas baseadas em necessidade de recursos. A comunicação entre elas acontece por sistema de pombos-correio. Não há hierarquia entre as doze: há o conjunto de protocolos que todas seguem, e esse conjunto é o governo.
 
-Não há como fabricar mais Landships — o processo exigia infraestrutura do Reino perdido. Se uma for destruída, não há reposição. Isso não é mencionado em conversas. É simplesmente sabido.
+Doze constam no Protocolo; onze navegam. A que falta consta nos livros como "em manutenção prolongada", porque o Protocolo tem procedimento para tudo, menos para registrar uma perda. Não há como fabricar mais Landships — o processo exigia infraestrutura do Reino perdido, e não há reposição. Isso não é mencionado em conversas. É simplesmente sabido.
 
 COMO É VIVER DENTRO
 Bunker gigante cruzado com metalúrgica. Iluminação artificial calibrada para produtividade, não conforto. Ventilação calculada para manter o ar respirável sob carga máxima de trabalho. Cada espaço tem função definida e dimensão otimizada para essa função — nenhum centímetro desperdiçado. Barulho constante de máquinas, caldeiras e metal trabalhado.

@@ -37,12 +37,11 @@
       "id": "minerio_skallgard_brekmar",
       "origin_region": "skallgard",
       "to": "brekmar",
-      "item_id": "minerio_ferro",
+      "item_id": "lingote_aco_vorr",
       "qty": 3,
       "patron_tags": ["mercador", "ferr", "minei", "sindicat"],
-      "lore_ref": "lore_nova/factions.txt:245-245",
-      "lore_keyword": "rotas",
-      "review": "dono"
+      "lore_ref": "lore_nova/items.txt:26-28",
+      "lore_keyword": "Vorr"
     }
   ]
 }

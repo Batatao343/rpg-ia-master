@@ -25,3 +25,5 @@ Skallgard: Cidade fundada pelos humanos do norte. Dividida em clãs por função
 Fortaleza de Vorr: Antiga construção dos Gigantes. Degraus na cintura de um humano, portas de 20 metros. "Estátuas" são aventureiros congelados pelo Sopro de Vorr — anomalia de Vorrnak. Ainda conscientes.
 
 Farol da Chama Negra: Construído pelos Gigantes. Emite anti-luz, e a aurora do norte muda de ritmo ao redor dele. Tem um guardião que nunca fala e que ninguém alcança. Para quê serve o Farol, ninguém sabe.
+
+Salão do Juramento: Uma noite por ano, sob o Farol, os clãs de combate e os tecnológicos renovam ali a trégua do Fogo Alto. O assento central está vazio desde que o último árbitro morreu, um Gigante, e quem se senta nele vira alvo dos dois lados. O Juramento é feito diante da cadeira vazia.

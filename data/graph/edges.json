@@ -705,5 +705,131 @@
     "type": "located_in",
     "target": "brekmar",
     "visibility": "public"
+  },
+  {
+    "id": "e_morvan_lidera_cidades",
+    "source": "npc_keeper_morvan",
+    "type": "leads",
+    "target": "cidades_estado_sobreviventes_vaelorn_solvhen",
+    "visibility": "public"
+  },
+  {
+    "id": "e_morvan_em_solvhen",
+    "source": "npc_keeper_morvan",
+    "type": "located_in",
+    "target": "pr_solvhen",
+    "visibility": "public"
+  },
+  {
+    "id": "e_mae_corva_lidera_corvos",
+    "source": "npc_mae_corva",
+    "type": "leads",
+    "target": "guilda_corvos",
+    "visibility": "public"
+  },
+  {
+    "id": "e_sennar_lidera_chama_azul",
+    "source": "npc_sennar_o_pregador_da_cicatriz",
+    "type": "leads",
+    "target": "filhos_chama_azul",
+    "visibility": "public"
+  },
+  {
+    "id": "e_sennar_membro_legiao",
+    "source": "npc_sennar_o_pregador_da_cicatriz",
+    "type": "member_of",
+    "target": "legiao_ferro",
+    "visibility": "hidden"
+  },
+  {
+    "id": "e_sennar_em_arcadia",
+    "source": "npc_sennar_o_pregador_da_cicatriz",
+    "type": "located_in",
+    "target": "nova_arcadia",
+    "visibility": "public"
+  },
+  {
+    "id": "e_hrefna_membro_cultos_despertar",
+    "source": "npc_hrefna_da_vigilia",
+    "type": "member_of",
+    "target": "cultos_despertar_dispersos",
+    "visibility": "public"
+  },
+  {
+    "id": "e_hrefna_em_skallgard",
+    "source": "npc_hrefna_da_vigilia",
+    "type": "located_in",
+    "target": "skallgard",
+    "visibility": "public"
+  },
+  {
+    "id": "e_oriel_membro_poder_kahen",
+    "source": "npc_oriel_talho_fundo",
+    "type": "member_of",
+    "target": "poder_kahen",
+    "visibility": "public"
+  },
+  {
+    "id": "e_oriel_em_brekmar",
+    "source": "npc_oriel_talho_fundo",
+    "type": "located_in",
+    "target": "brekmar",
+    "visibility": "public"
+  },
+  {
+    "id": "e_mairen_membro_cultistas_destilacao",
+    "source": "npc_mairen_das_margens",
+    "type": "member_of",
+    "target": "cultistas_destilacao",
+    "visibility": "public"
+  },
+  {
+    "id": "e_mairen_em_aethelgard",
+    "source": "npc_mairen_das_margens",
+    "type": "located_in",
+    "target": "aethelgard",
+    "visibility": "public"
+  },
+  {
+    "id": "e_hask_membro_druidas_ciclo_cinzento",
+    "source": "npc_hask_o_musgo",
+    "type": "member_of",
+    "target": "druidas_ciclo_cinzento",
+    "visibility": "public"
+  },
+  {
+    "id": "e_hask_em_pantano",
+    "source": "npc_hask_o_musgo",
+    "type": "located_in",
+    "target": "pantano_melancolia",
+    "visibility": "public"
+  },
+  {
+    "id": "e_benedita_em_arcadia",
+    "source": "npc_benedita_a_parteira",
+    "type": "located_in",
+    "target": "nova_arcadia",
+    "visibility": "public"
+  },
+  {
+    "id": "e_ilsa_em_arcadia",
+    "source": "npc_ilsa",
+    "type": "located_in",
+    "target": "nova_arcadia",
+    "visibility": "public"
+  },
+  {
+    "id": "e_bertil_membro_corvos",
+    "source": "npc_bertil",
+    "type": "member_of",
+    "target": "guilda_corvos",
+    "visibility": "public"
+  },
+  {
+    "id": "e_bertil_em_arcadia",
+    "source": "npc_bertil",
+    "type": "located_in",
+    "target": "nova_arcadia",
+    "visibility": "public"
   }
 ]

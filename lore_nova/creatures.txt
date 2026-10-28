@@ -1409,7 +1409,7 @@ No fundo de uma câmara específica arde, impossivelmente, uma chama sob a água
 #########################################################
 LOCAL: BREKMAR E A COSTA OESTE — O PORTO SEM LEI
 #########################################################
-Bioma: porto pirata governado por Kahen, costa rochosa, mar aberto a oeste com Ophidia no horizonte. Caldeirão de facções: três sindicatos de comércio com exércitos particulares, grupos piratas rivais, contrabandistas. Liberdade total — consequências pessoais. O Ossário do Leviatã como zona sagrada. Algo sob as docas se alimenta dos corpos das praias.
+Bioma: porto pirata onde Kahen é o Árbitro, costa rochosa, mar aberto a oeste com Ophidia no horizonte. Caldeirão de facções: três sindicatos de comércio com exércitos particulares, grupos piratas rivais, contrabandistas. Liberdade total — consequências pessoais. O Ossário do Leviatã como zona sagrada. Algo sob as docas se alimenta dos corpos das praias.
 
 ===== HUMANOIDE HOSTIL (facções) =====
 

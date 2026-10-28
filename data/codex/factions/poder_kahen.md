@@ -18,7 +18,7 @@ related_entities:
 Papel declarado: Não há governo formal em Brekmar — Kahen "apenas mantém a ordem"
 Papel real: A única força que impede o porto sem lei de se autodestruir, sustentada por sangrinomancia e equilíbrio frágil
 
-Origem: Kahen, um Cinzéu sangrinomante, estabeleceu-se como governante de Brekmar não por exército, mas por ser perigoso e inteligente demais para ser desafiado — tanto que até a demônia Lyss o respeita.
+Origem: Kahen, um Cinzéu sangrinomante, tornou-se o Árbitro de Brekmar não por exército, mas por ser perigoso e inteligente demais para ser desafiado — tanto que até a demônia Lyss o respeita. "Governante" é palavra de quem vem de fora; em Brekmar, quem a usa na frente dele é olhado de lado.
 
 Estrutura: Kahen comanda através de poucos sangrinomantes leais. Véu-de-Sangue é seu tenente executor; Frio-Calculado, seu conselheiro Cinzéu contemplativo, é o freio reflexivo de sua praticidade.
 

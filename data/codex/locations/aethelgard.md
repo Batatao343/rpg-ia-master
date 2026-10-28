@@ -13,8 +13,8 @@ visibility: public
 
 # AS RUÍNAS SUBMERSAS DE AETHELGARD
 
-Localização: Centro-leste do continente — num lago formado pelo colapso da cidade
-Origem: Destruída pelo aprendiz que desativou todos os cristais de contenção em uma noite. Aethelgard implodiu de dentro para fora — o solo cedeu, as estruturas afundaram, e a cratera que ficou encheu com as chuvas dos anos seguintes. O que havia sido a cidade mais magicamente poderosa de Valoria tornou-se um lago.
+Localização: Centro-leste do continente — num lago de cratera, hoje salobro, a que o mar leste chegou por uma garganta aberta na erupção da Era 6
+Origem: Destruída pelo aprendiz que desativou todos os cristais de contenção em uma noite. Aethelgard implodiu de dentro para fora — o solo cedeu, as estruturas afundaram, e a água do lago de cratera onde a cidade se erguia subiu sobre o que restou. Muito depois, na erupção da Era 6, o mar leste invadiu o lago: o que era água parada tornou-se salobra, e uma garganta se abriu para o mar. O que havia sido a cidade mais magicamente poderosa de Valoria tornou-se um lago.
 
 O LAGO
 O lago de Aethelgard não tem nome oficial — os locais o chamam de O Lago, como se não houvesse outro. É grande o suficiente para que a outra margem seja visível mas distante, e fundo o suficiente para que as ruínas nas profundezas estejam além do alcance de mergulhadores sem equipamento específico.
@@ -22,7 +22,7 @@ O lago de Aethelgard não tem nome oficial — os locais o chamam de O Lago, com
 A água varia por região do lago. Nas bordas e nas partes rasas, é cristalina — tão clara que estruturas submersas são visíveis do barco, pedra trabalhada e arcos que ainda se sustentam iluminados pela luz que chega do alto. Nas regiões mais profundas, especialmente acima do coração de Aethelgard onde Oghma fica, a água é escura — não turva, mas escura, como se a luz simplesmente não penetrasse além de certo ponto. O Éter concentrado que Oghma acumulou altera a refração da luz. Mergulhadores que chegaram perto descrevem uma sensação de pressão não física — não a pressão da profundidade, mas algo que empurra de dentro para fora.
 
 A VIDA DO LAGO
-O lago produziu flora e fauna que não existem em nenhum outro lugar — resultado de décadas de vida aquática se desenvolvendo em água com concentração anormal de Éter.
+O lago produziu flora e fauna que não existem em nenhum outro lugar — resultado de eras de vida aquática se desenvolvendo em água com concentração anormal de Éter.
 
 Plantas que crescem verticalmente das ruínas submersas em direção à luz, com folhas que bioluminescam levemente à noite e que, quando tocadas, produzem descarga de Éter que perturba a magia do tocador por horas. Peixes com olhos grandes adaptados ao escuro das profundezas que têm escamas que refletem o Éter em padrões — pescadores que os capturam nas bordas relatam que olhar para os padrões por tempo suficiente induz visões. Criaturas que patrulham as profundezas sem que nenhum estudioso tenha conseguido classificá-las — que chegaram pelo lago das regiões ao redor e que o Éter de Aethelgard transformou em algo diferente do que eram.
 
@@ -41,7 +41,7 @@ O Éter concentrado nas paredes produz efeito sobre quem tem sensibilidade mági
 Morvath — o demônio da Decadência — visita as ruínas regularmente. Encontrá-lo aqui não é improvável para quem desce suficientemente fundo. Ele não ataca. Observa. E às vezes comenta, em língua que não deveria mais ser falada, sobre o quanto as coisas poderiam ter durado mais se certas escolhas fossem diferentes.
 
 O QUE HÁ LÁ DENTRO
-Oghma — a câmara de refinamento de Éter no coração das ruínas, nas profundezas escuras onde a luz não chega. Ainda intacta. O cristal que armazena Éter puro não se dissolve em água — décadas de imersão não afetaram o que está guardado ali. A maior concentração de energia mágica que existe em Valoria, preservada no fundo de um lago, acessível apenas a quem conseguir chegar até lá e souber o que fazer com o que encontrar.
+Oghma — a câmara de refinamento de Éter no coração das ruínas, nas profundezas escuras onde a luz não chega. Ainda intacta. O cristal que armazena Éter puro não se dissolve em água — eras de imersão não afetaram o que está guardado ali. A maior concentração de energia mágica que existe em Valoria, preservada no fundo de um lago, acessível apenas a quem conseguir chegar até lá e souber o que fazer com o que encontrar.
 
 O Amuleto de Oghma nas câmaras internas — o artefato que o conselho usava para regular a Destilação, que contém o conhecimento completo do processo. Encontrá-lo seria encontrar instruções para o que Daruun ensinou ao conselho, preservadas em objeto físico.
 

@@ -52,7 +52,7 @@ Andarilhos da Pradaria
 Grupos nômades que habitam as pradarias centrais entre as ruínas das antigas cidades-estado. Competem e coexistem com os Vrel Saqueadores — há grupos mistos de humanos e Vrel, há grupos que se atacam mutuamente, há grupos que ignoram uns aos outros por território. Vivem de caça, saque e comércio oportunista. Cada bando tem sua própria hierarquia e visão de mundo construída a partir de quem encontraram e como foram tratados.
 
 Piratas
-Operam no mesmo mar que os Osshari da costa oeste. Alguns em conflito, alguns em aliança, alguns em territórios separados que raramente se cruzam. Têm base em Brekmar — a cidade portuária sem lei governada por Kahen. Cultura construída em torno de reputação, força e capacidade de navegar em mares onde Leviatãs e Orrakh adormecido são riscos reais.
+Operam no mesmo mar que os Osshari da costa oeste. Alguns em conflito, alguns em aliança, alguns em territórios separados que raramente se cruzam. Têm base em Brekmar — a cidade portuária sem lei onde Kahen é o Árbitro. Cultura construída em torno de reputação, força e capacidade de navegar em mares onde Leviatãs e Orrakh adormecido são riscos reais.
 
 Populações Urbanas (Nova Arcádia e cidades)
 A maioria dos humanos. Vidas curtas e brutais nos anéis mais baixos, vidas longas e parasitárias nos anéis mais altos. A fé nos deuses morreu — agora a fé é no dinheiro ou na sobrevivência. Cosmopolitas por necessidade: em Nova Arcádia convivem com Elfos, Cinzéus, Vrel e ocasionalmente Anões. A distinção que importa não é raça — é classe social. Um Elfo rico é mais bem tratado que um humano pobre. Isso é o que os humanos urbanos entendem por igualdade.

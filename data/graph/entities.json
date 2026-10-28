@@ -262,6 +262,20 @@
     "visibility": "public",
     "components": {}
   },
+  "quebrados": {
+    "id": "quebrados",
+    "type": "faction",
+    "name": "Os Quebrados",
+    "aliases": [],
+    "tags": [
+      "quebrados",
+      "elfos",
+      "anel_dourado",
+      "clandestinos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
   "clas_combate": {
     "id": "clas_combate",
     "type": "faction",
@@ -2515,6 +2529,118 @@
       "humano",
       "cartografo",
       "condenado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_hrefna_da_vigilia": {
+    "id": "npc_hrefna_da_vigilia",
+    "type": "npc",
+    "name": "Hrefna da Vigília",
+    "aliases": [],
+    "tags": [
+      "hrefna_da_vigilia",
+      "skallgard",
+      "farol",
+      "devoto_do_abismo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_oriel_talho_fundo": {
+    "id": "npc_oriel_talho_fundo",
+    "type": "npc",
+    "name": "Oriel Talho-fundo",
+    "aliases": [],
+    "tags": [
+      "oriel_talho_fundo",
+      "brekmar",
+      "sangrinomancia",
+      "sangromante"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_mairen_das_margens": {
+    "id": "npc_mairen_das_margens",
+    "type": "npc",
+    "name": "Mairen das Margens",
+    "aliases": [],
+    "tags": [
+      "mairen_das_margens",
+      "aethelgard",
+      "destilacao",
+      "corruptor"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_hask_o_musgo": {
+    "id": "npc_hask_o_musgo",
+    "type": "npc",
+    "name": "Hask, o Musgo",
+    "aliases": [],
+    "tags": [
+      "hask_o_musgo",
+      "pantano",
+      "druida",
+      "arcanista_cinzento"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_benedita_a_parteira": {
+    "id": "npc_benedita_a_parteira",
+    "type": "npc",
+    "name": "Benedita, a Parteira",
+    "aliases": [],
+    "tags": [
+      "benedita",
+      "anel_de_lama",
+      "parteira",
+      "medico_de_campo"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_ilsa": {
+    "id": "npc_ilsa",
+    "type": "npc",
+    "name": "Ilsa",
+    "aliases": [],
+    "tags": [
+      "ilsa",
+      "anel_de_lama",
+      "remendeira",
+      "canal"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_bertil": {
+    "id": "npc_bertil",
+    "type": "npc",
+    "name": "Bertil",
+    "aliases": [],
+    "tags": [
+      "bertil",
+      "setor_leste",
+      "crematorio",
+      "guilda_dos_corvos"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "npc_sennar_o_pregador_da_cicatriz": {
+    "id": "npc_sennar_o_pregador_da_cicatriz",
+    "type": "npc",
+    "name": "Sennar, o Pregador da Cicatriz",
+    "aliases": [],
+    "tags": [
+      "sennar",
+      "filhos_da_chama_azul",
+      "culto",
+      "pregador"
     ],
     "visibility": "public",
     "components": {}

@@ -126,6 +126,8 @@ O que querem: Reforma, não revolução — ainda. Condições melhores, fim dos
 
 Obstáculos: Fehk (a Covardia) trabalha contra eles, fazendo cada operário encontrar razões para não agir. A Legião (Thrace) os vigia. Os Encapuzados da Fornalha são rivais ideológicos. Mãe Corva os apoia discretamente.
 
+Três lados: Nos dias de greve, quando as fornalhas esfriam, os operários juram que o Aço de Sangue "lembra" os que morreram forjando, e os Martelos Partidos fazem disso a denúncia. Os Encapuzados da Fornalha fazem disso o altar: é exatamente o que adoram. Bors, Kald e o comandante Thrace disputam o mesmo ferro, cada um por um motivo que os outros dois acham insuportável.
+
 Potencial: Se Bors for martirizado, a reforma pode virar revolta. A Resistência é o estopim possível de uma convulsão no Anel de Ferro.
 
 ---
@@ -144,6 +146,23 @@ Liderança: Pardal, adolescente ágil e desconfiada, ferozmente leal aos seus.
 O que fazem: Roubo, espionagem, batedores para quem pagar. Trabalham para a Mão Sombria como olhos, mas guardam os próprios segredos. Conhecem a cidade de cima como ninguém de baixo — rotas, esconderijos, encontros secretos, movimentos da Legião.
 
 Relações: Devem lealdade a Mãe Corva (que criou muitos), trabalham para a Mão Sombria, e veem tudo do Anel Dourado ao de Lama. Mobilidade e informação são seu poder.
+
+---
+
+[CATEGORIA: FACÇÃO]
+[TAGS: Quebrados, Elfos, Anel_Dourado, Clandestinos]
+
+OS QUEBRADOS
+Papel declarado: Não existem como grupo. São os elfos de estimação das casas do Anel Dourado, exibidos em jantares como prova de gosto e de riqueza
+Papel real: Rede clandestina de Elfos (os humanos os chamam de Elfos de Cristal) que se encontram nos cômodos dos criados, onde os donos não olham
+
+Origem: Nasceram da pele que racha. O Éter Sujo de Nova Arcádia envelhece um Elfo mais depressa do que um século deveria, e quem o sente sabe o nome de quem sente igual. Passaram a se achar, casa por casa, pelo hábito de escrever em código.
+
+O que fazem: Trocam bilhetes, dívidas e cuidados. Compram, uns dos outros, o Pó de Fada que o Anel de Ferro vende sob licença, porque é a única coisa que alivia e é também o que os mata. Dizem que sabem quem estava no quarto alugado onde Elaryin morreu.
+
+Liderança: Não há. Decidem em silêncio, pela casa que ficou vazia, e quem sai de uma casa sem voltar já fez a escolha por todos.
+
+Ponto fraco: Cada um deles tem um dono, e cada dono tem uma lista. Se um Quebrado fala, a casa inteira sabe de onde veio.
 
 
 #########################################################
@@ -168,6 +187,8 @@ A jogada atual: Sob orientação de Vehkr e do conselheiro Vrel Vess-que-Aconsel
 Ressentimento central: Morrem pelo sistema que os tecnológicos controlam sentados nos túneis aquecidos. A desproporção de mortes é visível na Parede.
 
 Ponto fraco: Dependem da Fornalha de Vorr (armas) e do Ventre (calor), ambos controlados pelos tecnológicos. A independência exige resolver isso — daí o interesse em Brekmar.
+
+O Juramento do Fogo Alto: Uma noite por ano, sob o Farol, os dois clãs renovam a trégua no Salão do Juramento. O assento central está vazio desde que o último árbitro morreu, um Gigante que ficou em Skallgard quando os outros migraram, e o Juramento é feito diante dele assim mesmo. Quem se senta ali vira alvo dos dois lados.
 
 ---
 
@@ -221,7 +242,7 @@ O PODER DE KAHEN
 Papel declarado: Não há governo formal em Brekmar — Kahen "apenas mantém a ordem"
 Papel real: A única força que impede o porto sem lei de se autodestruir, sustentada por sangrinomancia e equilíbrio frágil
 
-Origem: Kahen, um Cinzéu sangrinomante, estabeleceu-se como governante de Brekmar não por exército, mas por ser perigoso e inteligente demais para ser desafiado — tanto que até a demônia Lyss o respeita.
+Origem: Kahen, um Cinzéu sangrinomante, tornou-se o Árbitro de Brekmar não por exército, mas por ser perigoso e inteligente demais para ser desafiado — tanto que até a demônia Lyss o respeita. "Governante" é palavra de quem vem de fora; em Brekmar, quem a usa na frente dele é olhado de lado.
 
 Estrutura: Kahen comanda através de poucos sangrinomantes leais. Véu-de-Sangue é seu tenente executor; Frio-Calculado, seu conselheiro Cinzéu contemplativo, é o freio reflexivo de sua praticidade.
 
@@ -478,7 +499,7 @@ Papel real: Uma civilização-colmeia que não dá nomes individuais, defendendo
 
 Origem: Humanos infectados pelo parasita Xylos que abraçaram a simbiose, formando cidades nas copas da selva. A mente-colmeia partilha percepção entre todos.
 
-"Liderança": Não há líder — há os mais conectados. O Que Ouve Mais Longe é o ancião mais sintonizado, consultado por ouvir mais. As decisões são consenso de escuta, não de poder.
+"Liderança": Não há líder — há os mais conectados. O Que Ouve Mais Longe é o ancião mais sintonizado, consultado por ouvir mais. As decisões são consenso de escuta, não de poder. Para quem vem de fora, "lidera" quer dizer "é o consultado": é por isso que os forasteiros o chamam de líder e a colmeia não se ofende.
 
 Como agem: Defendem o território com coordenação total (a colmeia move todos como um). Sentem mentira e intenção pela sintonização. Avaliam forasteiros antes de acolher ou repelir. O Que Pergunta (jovem curioso) e o Tecelão de Esporo (mercador) são as pontes raras com o exterior.
 
@@ -528,7 +549,7 @@ O que fazem: Buscam o Amuleto da Destilação e os Cristais de Memória, captura
 
 A ameaça: Se recuperarem a Destilação completa, criam magos capazes de repetir a catástrofe de Aethelgard em escala maior. O Conselheiro que Ainda Destila (Valdren) usaria o conhecimento de volta se pudesse sair.
 
-O obstáculo: Aelwin, o Último Conselheiro, guardião da entrada seca, dedica a vida a impedir que qualquer um — especialmente os Cultistas — recupere o poder de Aethelgard. O Eco do Aprendiz guarda a verdade sobre por que a cidade teve de morrer.
+O obstáculo: Aelwin, o Último Conselheiro, guardião da entrada seca, dedica a vida a impedir que qualquer um — especialmente os Cultistas — recupere o poder de Aethelgard. O Eco do Aprendiz guarda a cena da noite em que a cidade caiu.
 
 
 #########################################################

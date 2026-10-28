@@ -199,7 +199,7 @@ def test_year_monotonic_and_year_base():
     years = [wc.date_at(cal, d)["year"] for d in range(1, 700)]
     assert years == sorted(years) and years[0] == 112
     assert years[-1] >= 112 + 4
-    assert wc.constants()["YEAR_BASE"] == 112 and wc._cfg().get("year_review") == "dono"
+    assert wc.constants()["YEAR_BASE"] == 112 and wc._cfg().get("year_review") == "aprovado"
     assert {wc.season_at(cal, d)["year"] for d in range(1, 140)} <= {1, 2}  # ano interno
 
 

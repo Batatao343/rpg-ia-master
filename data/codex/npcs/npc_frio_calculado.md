@@ -21,4 +21,4 @@ Personalidade: Profundamente contemplativo, paciente, o contraponto à praticida
 
 O que sabe: Os planos de longo prazo de Kahen, incluindo o xadrez com Lyss. As implicações filosóficas e estratégicas que Kahen às vezes não tem tempo de considerar. É a memória e a consciência estratégica do governo de Brekmar.
 
-Para o narrador: Frio-Calculado é o acesso à mente estratégica do governo de Kahen — fonte sobre planos de longo prazo e o conflito com Lyss. Contraponto contemplativo a Kahen e a Véu-de-Sangue (o executor). Para entender o que Kahen planeja, fala-se com Frio-Calculado — se ele permitir.
+Para o narrador: Frio-Calculado é o acesso à mente estratégica do arbítrio de Kahen — fonte sobre planos de longo prazo e o conflito com Lyss. Contraponto contemplativo a Kahen e a Véu-de-Sangue (o executor). Para entender o que Kahen planeja, fala-se com Frio-Calculado — se ele permitir.

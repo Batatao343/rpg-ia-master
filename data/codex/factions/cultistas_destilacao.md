@@ -26,4 +26,4 @@ O que fazem: Buscam o Amuleto da Destilação e os Cristais de Memória, captura
 
 A ameaça: Se recuperarem a Destilação completa, criam magos capazes de repetir a catástrofe de Aethelgard em escala maior. O Conselheiro que Ainda Destila (Valdren) usaria o conhecimento de volta se pudesse sair.
 
-O obstáculo: Aelwin, o Último Conselheiro, guardião da entrada seca, dedica a vida a impedir que qualquer um — especialmente os Cultistas — recupere o poder de Aethelgard. O Eco do Aprendiz guarda a verdade sobre por que a cidade teve de morrer.
+O obstáculo: Aelwin, o Último Conselheiro, guardião da entrada seca, dedica a vida a impedir que qualquer um — especialmente os Cultistas — recupere o poder de Aethelgard. O Eco do Aprendiz guarda a cena da noite em que a cidade caiu.

@@ -126,8 +126,16 @@ def test_entities_ids_unicos_e_validos():
         assert ent["visibility"] in {"public", "hidden", "secret"}
 
 
+def _entities_com_extras():
+    """entities.json (gerado) ∪ entities_extra.json (curado, Fluxo A do AUTORIA.md)."""
+    return {
+        **_load_json(GRAPH_DIR, "entities_extra.json"),
+        **_load_json(GRAPH_DIR, "entities.json"),
+    }
+
+
 def test_edges_referenciam_entidades_existentes():
-    entities = _load_json(GRAPH_DIR, "entities.json")
+    entities = _entities_com_extras()
     edges = _load_json(GRAPH_DIR, "edges.json")
     relation_types = _load_json(GRAPH_DIR, "relation_types.json")
     assert len(edges) > 0
@@ -246,7 +254,7 @@ def _todos_arquivos_codex():
 
 def test_codex_frontmatter_valido():
     """Todo .md do Codex parseia, tem campos obrigatórios e id rastreável."""
-    entities = _load_json(GRAPH_DIR, "entities.json")
+    entities = _entities_com_extras()
     arquivos = list(_todos_arquivos_codex())
     assert len(arquivos) > 100  # migração completa, não amostra
 

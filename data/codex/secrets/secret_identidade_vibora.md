@@ -17,7 +17,7 @@ Não metaforicamente, não espiritualmente — literalmente. A mulher idosa e en
 
 A história: Magda era de fato Sacerdotisa de alto nível antes da guerra — não de qualquer divindade, mas de um culto ao "Conhecimento Quieto", dedicado a observar e registrar sem intervir. A guerra destruiu o culto e revelou o problema fundamental da filosofia: observação sem poder é impotência quando as coisas desmoronam.
 
-Ela levou quinze anos pós-guerra construindo a Mão Sombria de baixo para cima, usando o que sua formação de sacerdotisa lhe deu: memória perfeita, capacidade de ler pessoas, e décadas de prática em ser invisível.
+Ela levou quinze anos pós-guerra, entre quarenta e quatro e vinte e nove anos atrás, construindo a Mão Sombria de baixo para cima, usando o que sua formação de sacerdotisa lhe deu: memória perfeita, capacidade de ler pessoas, e décadas de prática em ser invisível.
 
 A "loucura" e os "delírios" são performáticos. As "profecias em línguas mortas" que ela recita durante os delírios são comunicados codificados para células da Mão Sombria que sabem ouvi-los.
 

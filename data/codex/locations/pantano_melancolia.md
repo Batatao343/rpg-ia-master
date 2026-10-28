@@ -34,3 +34,6 @@ O CHÁ E O ESPÓLIO
 O chá dos Druidas é produzido com plantas do pântano e atenua os sintomas da Praga de Ferro — não cura, mas retarda. É o único tratamento acessível para quem não pode pagar os serviços do Doutor Vane. Os Druidas vendem nas bordas do pântano e em Nova Arcádia.
 
 O espólio da batalha final está nas profundezas — armaduras, armas, artefatos de todas as raças da coalizão que lutaram aqui, itens que ninguém foi buscar porque o pântano cresceu em cima de tudo antes que pudessem ser recuperados. Camadas de lama cobrindo décadas de equipamento de guerra. Para quem está disposto a entrar no pântano com proteção adequada e sair antes que o efeito psicológico se torne permanente, há riqueza real nas profundezas. Os Druidas não vão buscar — dizem que perturbar os mortos-vivos que guardam o espólio é irresponsável. Não dizem que é impossível.
+
+A CRIPTA DOS AFOGADOS
+Nas profundezas, meio submersa, fica uma cripta que os Druidas contornam sem comentar. Os afogados de lá não são os de Aethelgard e não gostam de visitas: não vagam, esperam, e o que os mantém ali parece ter sido feito, não acontecido. Quem os afundou, e por quê, nenhum registro público conta.

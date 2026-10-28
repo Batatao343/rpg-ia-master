@@ -19,7 +19,7 @@ Papel real: Uma civilização-colmeia que não dá nomes individuais, defendendo
 
 Origem: Humanos infectados pelo parasita Xylos que abraçaram a simbiose, formando cidades nas copas da selva. A mente-colmeia partilha percepção entre todos.
 
-"Liderança": Não há líder — há os mais conectados. O Que Ouve Mais Longe é o ancião mais sintonizado, consultado por ouvir mais. As decisões são consenso de escuta, não de poder.
+"Liderança": Não há líder — há os mais conectados. O Que Ouve Mais Longe é o ancião mais sintonizado, consultado por ouvir mais. As decisões são consenso de escuta, não de poder. Para quem vem de fora, "lidera" quer dizer "é o consultado": é por isso que os forasteiros o chamam de líder e a colmeia não se ofende.
 
 Como agem: Defendem o território com coordenação total (a colmeia move todos como um). Sentem mentira e intenção pela sintonização. Avaliam forasteiros antes de acolher ou repelir. O Que Pergunta (jovem curioso) e o Tecelão de Esporo (mercador) são as pontes raras com o exterior.
 

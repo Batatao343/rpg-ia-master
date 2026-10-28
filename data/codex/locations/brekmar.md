@@ -21,12 +21,12 @@ Terra firme na costa rochosa da costa oeste, com docas que avançam para o mar e
 
 A costa cheira a sal e peixe e alcatrão de navio e algo mais doce que as docas mais antigas acumularam de décadas de comerciar tudo que passa por aqui. À noite, a cidade é iluminada por lanternas de óleo em quantidades que a tornam visível do mar a distância considerável — sinal de que há porto, sinal de que há negócio, sinal de que há pessoas que ficaram acordadas esperando pelo que você traz.
 
-KAHEN E O NÃO-GOVERNO
-Brekmar não tem governo no sentido formal. Tem Kahen.
+KAHEN, O ÁRBITRO DE BREKMAR
+Brekmar não tem governo no sentido formal. Tem um Árbitro: Kahen.
 
 O Cinzéu ex-escravo que ascendeu pela sangrinomancia opera de um navio ancorado permanentemente nas docas centrais — não o maior navio do porto, não o mais ostensivo, mas o que está sempre lá enquanto outros chegam e partem. Kahen não dorme em terra. A razão que dá quando perguntado é que em terra há muitas variáveis que não consegue controlar. A razão que não dá é que num navio tem rotas de saída em todas as direções.
 
-Sua relação com a cidade não é de governante para súditos — é de árbitro de última instância para uma população que resolveu a maioria das coisas antes de chegar a ele. Quando dois capitães têm disputa que nenhum consegue resolver e que está perturbando o porto, vão ao navio. Quando alguém fez algo que a cidade inteira considerou atravessado demais para ignorar, vai ao navio. As decisões de Kahen são finais — não porque há Legião para enforçá-las, mas porque Kahen é sangrinomante poderoso o suficiente para que contestar suas decisões seja exercício de otimismo.
+Sua relação com a cidade não é a que um governante teria com súditos — é de árbitro de última instância para uma população que resolveu a maioria das coisas antes de chegar a ele. Quando dois capitães têm disputa que nenhum consegue resolver e que está perturbando o porto, vão ao navio. Quando alguém fez algo que a cidade inteira considerou atravessado demais para ignorar, vai ao navio. As decisões de Kahen são finais — não porque há Legião para enforçá-las, mas porque Kahen é sangrinomante poderoso o suficiente para que contestar suas decisões seja exercício de otimismo.
 
 Ele ouve antes de falar. Sempre. O silêncio antes de uma resposta de Kahen é a parte mais intimidante de qualquer conversa com ele — não por hesitação, mas porque quem está na frente dele sabe que quando ele abre a boca já decidiu.
 
@@ -43,6 +43,9 @@ Principalmente humanos — piratas, mercadores, artesãos que servem ao porto, p
 Nenhuma raça tem bairro exclusivo. A cidade cresceu ao redor de quem chegou primeiro em cada ponto, e quem chegou primeiro era qualquer um. Um Cinzéu e um humano podem ter construído as casas ao lado um do outro décadas atrás e os descendentes de ambos ainda moram lá, sem que isso seja considerado incomum por ninguém.
 
 A estratificação que existe não é por raça — é por reputação marítima e por dinheiro, que em Brekmar são frequentemente a mesma coisa.
+
+O ESTALEIRO DAS ALMAS
+Nas docas do norte, Durrak constrói navios com osso de leviatã na quilha, e quem embarca neles tem um jeito de falar do lançamento: dizem que o casco "toma a sua". Ninguém explica a frase. Os navios do Estaleiro são os mais rápidos do porto e os que mais voltam com a tripulação menor do que saiu. Os marinheiros velhos preferem a terra. Os endividados não têm essa escolha, e é entre eles que o Estaleiro sempre encontra tripulação.
 
 O QUE SE COMERCIALIZA
 Brekmar é o hub de tudo que não pode passar por Nova Arcádia. O Código de Ferro proíbe uma quantidade significativa de coisas que pessoas querem comprar — e Brekmar existe como ponto de acesso a todas elas, com o benefício adicional de que está suficientemente distante de Nova Arcádia para que a Legião não possa chegar de forma prática.

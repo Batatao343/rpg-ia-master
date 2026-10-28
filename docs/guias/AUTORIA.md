@@ -7,6 +7,7 @@ O conteúdo autoral vive em três camadas, cada uma com regras próprias de edi�
 | Fonte do lore | `lore_nova/*.txt` | você (formato `[CATEGORIA:]`) | é a FONTE — sempre |
 | Codex gerado | `data/codex/**/*.md` | `scripts/migrate_lore_nova.py` | **NÃO** (regenerado) |
 | Curadoria | `data/codex_overrides.yaml`, arquivos `curated: true`, `data/graph/entities_extra.json`, `edges.json`, `relation_types.json`, `components.json` | você | **SIM** |
+| Canônico de segunda camada | `data/codex/npcs/mundo_vivo/` (36 NPCs regionais, gerados por `scripts/gen_world_living_npcs.py` e mantidos com `curated: true`) | você | **SIM** — `lore_nova/` deixa de ser a "fonte única" para NPCs: estes vivem só aqui |
 
 Validação em toda ponta: `uv run python scripts/validate_content.py` (lint 7.1)
 roda também como teste (`tests/test_fase71.py::test_repo_content_sem_erros`) e
@@ -62,6 +63,8 @@ npc_valerius:
 
 ```bash
 uv run python scripts/migrate_lore_nova.py   # regenera data/codex/ + entities.json
+uv run python scripts/gen_world_living_npcs.py # recoloca os NPCs de mundo_vivo em entities.json/edges.json
+uv run python scripts/lore_reanchor.py --base <commit>  # reaponta as âncoras `arquivo.txt:N` dos dados de mundo
 uv run python scripts/validate_content.py    # lint — 0 ERROs antes de seguir
 uv run python rag.py                          # reindexa FAISS (gate de lint embutido)
 uv run pytest -q                              # suíte offline (inclui gate de conteúdo)

@@ -15,7 +15,7 @@ O Despertar no Mundo Vazio
 Os Elfos foram a primeira raça racional a existir — simplesmente se viram existindo num mundo que não os esperava. Não houve transição, não houve infância coletiva. Acordaram adultos, sem memória anterior, num mundo habitado por demônios e criaturas primordiais que não tinham interesse em coexistência. O mundo que encontraram não era hostil por escolha — era simplesmente indiferente à sua existência, o que é uma forma diferente de ser perigoso.
 
 A Caça de Urath
-Antes que pudessem construir qualquer coisa, encontraram Urath — o demônio do Orgulho, que existia antes deles e havia esperado algo que valesse dominar. Os Elfos eram novos, conscientes, capazes de sofrer de formas que criaturas sem razão não conseguiam. Para Urath, eram a presa perfeita. Séculos de fuga e guerra constante — não uma rebelião heroica, mas uma sobrevivência exausta. O que os Elfos construíram nesse período foram coisas pequenas e temporárias, destruídas antes de ficarem grandes o suficiente para importar. A única vitória veio do desespero: lançar uma lua sobre Urath, criar o Deserto de Zhur, selar o demônio sob o Mar de Vidro. Funcionou parcialmente. A prole de Urath sobreviveu.
+Antes que pudessem construir qualquer coisa, encontraram Urath — o demônio do Orgulho, que existia antes deles e havia esperado algo que valesse dominar. Os Elfos eram novos, conscientes, capazes de sofrer de formas que criaturas sem razão não conseguiam. Para Urath, eram a presa perfeita. Séculos de fuga e guerra constante — não uma rebelião heroica, mas uma sobrevivência exausta. O que os Elfos construíram nesse período foram coisas pequenas e temporárias, destruídas antes de ficarem grandes o suficiente para importar. A única vitória veio do desespero: lançar uma lua sobre Urath, criar o Deserto de Zhur, selar o demônio sob o Mar de Vidro. A lua foi movida com magia, por destilação em massa, e milhares de Elfos foram queimados para movê-la. Funcionou parcialmente. A prole de Urath sobreviveu.
 
 A Idade das Cidades-Estado
 Com Urath selado, os Elfos finalmente puderam construir. As cidades-estado que surgiram eram pequenas mas densas em cultura — paredes esculpidas, artes têxteis, arquitetura que priorizava superfície e textura. Eram também violentamente competitivas entre si, em paz instável que qualquer provocação rompia. Os Elfos nunca aprenderam a cooperar em escala grande — suas cidades eram ilhas de beleza cercadas de desconfiança mútua.
@@ -30,7 +30,7 @@ A Inundação Humana e o Colapso
 Os humanos chegaram na Era 5 em números que tornavam qualquer cálculo anterior irrelevante. As cidades-estado Élficas — já enfraquecidas, já competindo entre si, já com população corroída pelo Éter ao longo de eras — cederam pela matemática simples de dez humanos para cada Elfo. Não houve batalha decisiva. Houve inevitabilidade. Os Elfos recuaram para regiões que os humanos ainda não queriam, mantendo vilas onde antes havia cidades.
 
 A Guerra do Céu Vermelho e o Presente
-Elaryin — general Élfico que havia dedicado a vida a estudar os registros das guerras anteriores — foi o único que conseguiu unir todas as raças contra Malagor. A coalizão venceu. Elaryin morreu três anos depois de overdose de Pó de Fada num quarto alugado no Anel Dourado, com doze pessoas no funeral. A história oficial o menciona em uma linha.
+Elaryin — general Élfico que havia dedicado a vida a estudar os registros das guerras anteriores — foi o único que conseguiu unir todas as raças contra Malagor. A coalizão venceu. Elaryin morreu três anos depois, num quarto alugado no Anel Dourado (bebeu até morrer, diz a versão oficial), com doze pessoas no funeral. A história oficial o menciona em uma linha.
 
 O que restou dos Elfos após a guerra são as vilas nas ruínas — comunidades pequenas que cultivam beleza dentro da destruição que não conseguiram reparar. Em Nova Arcádia existe uma presença Élfica considerável, atraída pela variedade sensorial que só uma grande cidade oferece. Em Skallgard, poucos: o frio para uma raça que sente tudo com intensidade corporal é punição constante.
 
@@ -85,7 +85,7 @@ Osshari — Admiração sincera, baseada em mal-entendido. Os Elfos veem nos Oss
 
 OS ANÕES DA FULIGEM
 Ordem de surgimento: 2ª raça
-Status atual: Nômades em 12 Landships autônomas, sem território fixo
+Status atual: Nômades em Landships autônomas (doze no Protocolo, onze em navegação), sem território fixo
 
 HISTÓRIA
 
@@ -123,7 +123,7 @@ Plano de contingência construído décadas antes do Rei Subterrâneo despertar 
 
 Cada Landship é autônoma — toma suas próprias decisões operacionais, define suas próprias rotas baseadas em necessidade de recursos. A comunicação entre elas acontece por sistema de pombos-correio. Não há hierarquia entre as doze: há o conjunto de protocolos que todas seguem, e esse conjunto é o governo.
 
-Não há como fabricar mais Landships — o processo exigia infraestrutura do Reino perdido. Se uma for destruída, não há reposição. Isso não é mencionado em conversas. É simplesmente sabido.
+Doze constam no Protocolo; onze navegam. A que falta consta nos livros como "em manutenção prolongada", porque o Protocolo tem procedimento para tudo, menos para registrar uma perda. Não há como fabricar mais Landships — o processo exigia infraestrutura do Reino perdido, e não há reposição. Isso não é mencionado em conversas. É simplesmente sabido.
 
 COMO É VIVER DENTRO
 Bunker gigante cruzado com metalúrgica. Iluminação artificial calibrada para produtividade, não conforto. Ventilação calculada para manter o ar respirável sob carga máxima de trabalho. Cada espaço tem função definida e dimensão otimizada para essa função — nenhum centímetro desperdiçado. Barulho constante de máquinas, caldeiras e metal trabalhado.
@@ -350,7 +350,7 @@ Andarilhos da Pradaria
 Grupos nômades que habitam as pradarias centrais entre as ruínas das antigas cidades-estado. Competem e coexistem com os Vrel Saqueadores — há grupos mistos de humanos e Vrel, há grupos que se atacam mutuamente, há grupos que ignoram uns aos outros por território. Vivem de caça, saque e comércio oportunista. Cada bando tem sua própria hierarquia e visão de mundo construída a partir de quem encontraram e como foram tratados.
 
 Piratas
-Operam no mesmo mar que os Osshari da costa oeste. Alguns em conflito, alguns em aliança, alguns em territórios separados que raramente se cruzam. Têm base em Brekmar — a cidade portuária sem lei governada por Kahen. Cultura construída em torno de reputação, força e capacidade de navegar em mares onde Leviatãs e Orrakh adormecido são riscos reais.
+Operam no mesmo mar que os Osshari da costa oeste. Alguns em conflito, alguns em aliança, alguns em territórios separados que raramente se cruzam. Têm base em Brekmar — a cidade portuária sem lei onde Kahen é o Árbitro. Cultura construída em torno de reputação, força e capacidade de navegar em mares onde Leviatãs e Orrakh adormecido são riscos reais.
 
 Populações Urbanas (Nova Arcádia e cidades)
 A maioria dos humanos. Vidas curtas e brutais nos anéis mais baixos, vidas longas e parasitárias nos anéis mais altos. A fé nos deuses morreu — agora a fé é no dinheiro ou na sobrevivência. Cosmopolitas por necessidade: em Nova Arcádia convivem com Elfos, Cinzéus, Vrel e ocasionalmente Anões. A distinção que importa não é raça — é classe social. Um Elfo rico é mais bem tratado que um humano pobre. Isso é o que os humanos urbanos entendem por igualdade.

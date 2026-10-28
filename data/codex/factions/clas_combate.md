@@ -29,3 +29,5 @@ A jogada atual: Sob orientação de Vehkr e do conselheiro Vrel Vess-que-Aconsel
 Ressentimento central: Morrem pelo sistema que os tecnológicos controlam sentados nos túneis aquecidos. A desproporção de mortes é visível na Parede.
 
 Ponto fraco: Dependem da Fornalha de Vorr (armas) e do Ventre (calor), ambos controlados pelos tecnológicos. A independência exige resolver isso — daí o interesse em Brekmar.
+
+O Juramento do Fogo Alto: Uma noite por ano, sob o Farol, os dois clãs renovam a trégua no Salão do Juramento. O assento central está vazio desde que o último árbitro morreu, um Gigante que ficou em Skallgard quando os outros migraram, e o Juramento é feito diante dele assim mesmo. Quem se senta ali vira alvo dos dois lados.

@@ -24,4 +24,6 @@ O que querem: Reforma, não revolução — ainda. Condições melhores, fim dos
 
 Obstáculos: Fehk (a Covardia) trabalha contra eles, fazendo cada operário encontrar razões para não agir. A Legião (Thrace) os vigia. Os Encapuzados da Fornalha são rivais ideológicos. Mãe Corva os apoia discretamente.
 
+Três lados: Nos dias de greve, quando as fornalhas esfriam, os operários juram que o Aço de Sangue "lembra" os que morreram forjando, e os Martelos Partidos fazem disso a denúncia. Os Encapuzados da Fornalha fazem disso o altar: é exatamente o que adoram. Bors, Kald e o comandante Thrace disputam o mesmo ferro, cada um por um motivo que os outros dois acham insuportável.
+
 Potencial: Se Bors for martirizado, a reforma pode virar revolta. A Resistência é o estopim possível de uma convulsão no Anel de Ferro.

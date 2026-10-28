@@ -3,7 +3,7 @@
   "constants": {"MONTH_DAYS": 20, "WEEK_DAYS": 5, "YEAR_BASE": 112, "ERA": 7,
                 "FIRST_TURN_MIN": 4, "FIRST_TURN_MAX": 8,
                 "PASS_EXTRA_PERIODS": 2, "FESTIVAL_HERALD_DAYS": 2},
-  "year_review": "dono",
+  "year_review": "aprovado",
   "months": [
     {"id": "morrakh",  "name": "Morrakh",  "of": "de Morrakh",  "climate": "transicao", "season": "primavera", "lore_ref": "timeline_completa.txt:348"},
     {"id": "vaelith",  "name": "Vaelith",  "of": "de Vaelith",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:344"},
