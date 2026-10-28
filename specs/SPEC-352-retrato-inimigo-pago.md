@@ -329,22 +329,22 @@ Subagente: só os testes do escopo, `-n 2` no máximo. Os testes `_db` exigem `R
 
 ## 5. Critérios de aceite
 
-- [ ] SPEC-347 pousada antes do início (Etapa 0).
+- [ ] SPEC-347 pousada antes do início (Etapa 0). (branch empilhada em `spec-347`; rebase na `main` é do coordenador)
 - [ ] Ownership de `app.creature_portraits` entregue no hand-back e integrado pelo coordenador em `project_index/state_ownership.yaml` no pouso.
-- [ ] Migration idempotente; `rpg_api` sem escrita; linha `ready` imutável; fence de conta excluída (testes `_db` **executados**, não `skip`).
-- [ ] Nenhuma geração sem cotação confirmada (teste); chave calculada só no servidor (teste).
-- [ ] Concorrência: duas confirmações na mesma chave → 1 débito, 1 job, 409 para a outra, saldo intacto (teste `_db` executado).
-- [ ] Política de falha da 326 preservada (pré-ticket libera; pós-ticket `uncertain`) e a chave volta a aceitar cotação (testes).
-- [ ] Imagem copiada para `shared/creatures/` fora de `users/{owner}/`; quando a cópia falha, a geração fica pronta e o job de cópia promove depois (testes).
-- [ ] Outro jogo vê `pronto` sem `gerar` e sem débito; HOLD, rejeitada e `unico:{game}` não vazam (testes).
-- [ ] Arte curada vence e corta a oferta (teste).
-- [ ] Exclusão de conta, exportação e exclusão de jogo tratam o registro (testes).
-- [ ] Bug F3 corrigido com teste de regressão.
-- [ ] Sem import de provider nos módulos novos (teste); worker usa a porta `ImageGenerator`.
-- [ ] Front: confirmação única com o preço mostrado; cotação maior abre o diálogo; 409 sem cobrança (SSR + Playwright 390/1440).
-- [ ] `RPG_CREATURE_ART` (já em `config/flags.yaml`, 347) com `spec: SPEC-352` acrescentado à nota; gate de flags verde.
+- [x] Migration idempotente; `rpg_api` sem escrita; linha `ready` imutável; fence de conta excluída (testes `_db` **executados**, não `skip`).
+- [x] Nenhuma geração sem cotação confirmada (teste); chave calculada só no servidor (teste).
+- [x] Concorrência: duas confirmações na mesma chave → 1 débito, 1 job, 409 para a outra, saldo intacto (teste `_db` executado).
+- [x] Política de falha da 326 preservada (pré-ticket libera; pós-ticket `uncertain`) e a chave volta a aceitar cotação (testes).
+- [x] Imagem copiada para `shared/creatures/` fora de `users/{owner}/`; quando a cópia falha, a geração fica pronta e o job de cópia promove depois (testes).
+- [x] Outro jogo vê `pronto` sem `gerar` e sem débito; HOLD, rejeitada e `unico:{game}` não vazam (testes).
+- [x] Arte curada vence e corta a oferta (teste).
+- [x] Exclusão de conta, exportação e exclusão de jogo tratam o registro (testes).
+- [x] Bug F3 corrigido com teste de regressão.
+- [x] Sem import de provider nos módulos novos (teste); worker usa a porta `ImageGenerator`.
+- [x] Front: confirmação única com o preço mostrado; cotação maior abre o diálogo; 409 sem cobrança (SSR + Playwright 390/1440).
+- [x] `RPG_CREATURE_ART` (já em `config/flags.yaml`, 347) com `spec: SPEC-352` acrescentado à nota; gate de flags verde.
 - [ ] `uv run pytest` verde (suíte completa offline, no pouso, pelo coordenador).
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo; teste de import garante que não há `get_llm` em `creature_portraits.py`).
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo; teste de import garante que não há `get_llm` em `creature_portraits.py`).
 - [ ] Saves antigos continuam carregando (o estado só ganha linhas novas no `art_generation_ledger`, com o formato de hoje).
 - [ ] Smoke real de §6 executado no staging, com evidência em `docs/spec352/smoke-AAAA-MM-DD.md`.
 
@@ -391,3 +391,25 @@ Pré-requisitos: staging com a migration aplicada pelo coordenador, `RPG_CREATUR
 - **D-352-11 — Sem avaliação de qualidade por jogador para `monster`.** A moderação é do operador (R13), para um jogador não derrubar a arte que outros veem.
 
 **O que o dono ainda precisa decidir:** nada bloqueia a implementação. Antes do smoke de §6, o coordenador precisa aplicar a migration no staging e confirmar com o dono o teto de 3 gerações reais.
+
+## 9. Implementação — decisões e desvios (executor, 28/10, dono em autonomia)
+
+Branch `spec-352` sobre `spec-347`. Status segue `approved` (revisão independente pendente).
+
+- **D-352-12 — `trigger_instance_id` leva a tentativa** (`{portrait_key}|{request_key}`; `subject_id` = a chave). Motivo: a unicidade
+  `art_generations(game,epoch,trigger_kind,trigger_instance_id,profile_version)` [F9] impediria o MESMO jogo de recotar depois de uma
+  falha (D-352-10). O árbitro da cobrança única é só `creature_portraits` (PK), não o ledger; o dedupe do ledger vira por tentativa.
+- **D-352-13 — `erase_owner` APAGA** as linhas `pending`/`failed`/`ready+private` do dono (em vez de marcar `failed`): o CHECK
+  `creature_portraits_owner_required` (R1b) proíbe linha viva sem dono, e o blob privado some junto. Efeito igual (chave livre).
+  As `ready` compartilhadas são desvinculadas; as `visibility='game'` apagadas (objetos compartilhados saem por job).
+- **D-352-14 — dois jobs novos**: `copy_creature_portrait` (R8, idempotente; enfileirado só quando a cópia falhou) e `purge_shared_art`
+  (R14: objetos compartilhados das linhas `game` ao apagar jogo/conta; a exclusão de conta apaga direto via `shared_blobs`, best-effort).
+- **Desvio da 347 (tests):** `tests/test_spec347_creature_art.py` mudou a forma das linhas do registro de teste para
+  `object_keys.thumb` + `Reg.sign` (correção do bug F3; a forma `variants.thumbnail.url` nunca existiu num registro real).
+- `PortraitRegistry` (Protocol) ganhou `sign` opcional; `portrait_for(..., sign=)`. Sem `sign`, linha `ready` não dá `src`.
+- `RPG_CREATURE_ART` em `config/flags.yaml`: só a nota cita a SPEC-352 (o campo `spec:` segue `SPEC-347`, é escalar).
+- `_public_art_refs` (resposta de `/art/confirm`) NÃO lista `monster` (a chave `unico:{game}` não vai ao cliente).
+- Preço exibido = `ceil(teto/1000)` Estilhas inteiras; o front só confirma direto se `BigInt(credits_milli) <= preço*1000`.
+- Não feito aqui: smoke real §6 (staging, custo real) e prints a 390/1440 (a asserção de tamanho mínimo do botão está no e2e).
+- Local: a migration foi aplicada ao Postgres local (55322) para os testes `_db`; o teste `test_account_lifecycle_worker_local.py` já
+  falhava ali por `DuplicateTable` (reaplica migrations já presentes) — pré-existente, fora do escopo.
