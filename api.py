@@ -2805,7 +2805,9 @@ def _enemy_portrait(state: dict, meta: dict, enemy: dict) -> dict[str, Any] | No
     npc_entity_id = None
     ref = str((manifest or {}).get("target_ref") or "")
     if ref.startswith("npc:"):
-        npc_entity_id = str(((state.get("npcs") or {}).get(ref[4:]) or {}).get("entity_id") or "") or None
+        npc_entity_id = (
+            str(((state.get("npcs") or {}).get(ref[4:]) or {}).get("entity_id") or "") or None
+        )
     return dict(
         _art.portrait_for(
             enemy,

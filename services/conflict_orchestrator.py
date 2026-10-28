@@ -1227,7 +1227,9 @@ def _basic_attack(
     )
     atk["actor_id"] = attacker_id
     atk["target_id"] = target_id
-    if "resolved_turns" in out:  # SPEC-347 R5.2: só dentro de uma rodada real (golden da 330 fica intacto)
+    if (
+        "resolved_turns" in out
+    ):  # SPEC-347 R5.2: só dentro de uma rodada real (golden da 330 fica intacto)
         atk["fora_de_turno"] = label  # anotação de view (rótulo no log mecânico)
     out.setdefault("attacks", []).append(atk)
     out["logs"].append(
