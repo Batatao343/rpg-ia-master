@@ -9,9 +9,9 @@
 ## Estado em 10 linhas
 
 - staging = `0e01677` (`lean`, stream `on`, hedge `0`; smokes verdes). 296–315 e 320–326 `done`.
-- Épico cartas 327–345 (sessão `-69`), atrás de flag `off`.
-- **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`**.
-- Flags: registro `config/flags.yaml` (340); preset do staging `scripts/staging/staging_flags.json`.
+- Épico cartas 327–345 (`-69`), flags `off`.
+- **Latência** (316–319 `done`, [A/B](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 → 2,6 s; turno inteiro ~10 s.
+- Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md)
 
 ## Próximos 3 passos
@@ -49,7 +49,7 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 - 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
 - 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
 - 2026-10-27 · SPEC-342 `in-progress` — Cartas: acabamento do front do combate por cartas (destrava as flags)
-- 2026-10-27 · SPEC-341 `draft` — balanco-sangromante
+- 2026-10-27 · SPEC-341 `done` — Balanço de poder das Cartas pós-SPEC-339 (Sangromante avaro/silencioso, dominantes novas, controles de duração)
 - 2026-10-27 · SPEC-340 `done` — Registro de feature flags com validade
 - 2026-10-27 · SPEC-339 `done` — Controle aplicado por oponente expira antes de valer (tick de duração)
 - 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
@@ -77,7 +77,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`..
-- 27/10 cartas: 328–336 `off`; 339 `done`; 342/345 pousadas (falta smoke LLM); 341 em revisão (exceções do dono)
+- 27/10 cartas: 328–336 `off`; 339/341 `done`; 342/345 pousadas; falta smoke LLM (staging)
 
 
 ## Como rodar
