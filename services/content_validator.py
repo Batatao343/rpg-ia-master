@@ -1646,17 +1646,17 @@ PLOT_THREADS_PATH = os.path.join("data", "world", "plot_threads.json")  # SPEC-3
 
 
 def _default_leak_phrases() -> list[str]:
-    """INTEGRAÇÃO SPEC-348: `LEAK_PHRASES` vive em `tests/test_spec348_leaks.py` (só na
-    branch da 348 até pousar). Import com fallback: ausente -> lista vazia (a checagem
-    R16b fica inerte, não quebra). Quando a 348 pousar, mover para dado/serviço."""
-    try:
-        from tests.test_spec348_leaks import LEAK_PHRASES  # type: ignore[import-not-found]
-    except Exception:
-        return []
-    out: list[str] = []
-    for phrases in LEAK_PHRASES.values():
-        out.extend(_norm(p) for p in phrases)
-    return out
+    """SPEC-348/350: frases de vazamento vêm de `data/world/leak_phrases.json`."""
+    from services.leak_phrases import all_phrases
+
+    return all_phrases()
+
+
+def _leak_groups() -> dict[str, list[str]]:
+    """Grupos de `leak_phrases.json` também valem como `secret_ids` de trama."""
+    from services.leak_phrases import leak_phrases
+
+    return leak_phrases()
 
 
 def _build_plot_refs(data: dict, leak_phrases: list[str] | None):
@@ -1725,12 +1725,13 @@ def _build_plot_refs(data: dict, leak_phrases: list[str] | None):
         rumor_ids=set(seeds),
         route_ids={x for x in routes if x},
         secret_ids=set(SECRET_SIGNATURES)
-        | {k for k in SECRET_ENTITY_IDS if not str(k).startswith("_")},
+        | {k for k in SECRET_ENTITY_IDS if not str(k).startswith("_")}
+        | set(_leak_groups()),
         archetypes=set(agendas.get("archetypes", {})),
         region_ids={r.get("id") for r in origins.get("regions", []) if isinstance(r, dict)},
         posturas=set(classes),
         banned_words=set(card_lint.lexico()["proibidos"]),
-        secret_signatures=SECRET_SIGNATURES,
+        secret_signatures={**_leak_groups(), **SECRET_SIGNATURES},
         leak_phrases=_default_leak_phrases() if leak_phrases is None else leak_phrases,
         secret_doc_visibility=doc_vis,
         secret_doc_text=secret_text,

@@ -1,0 +1,49 @@
+{
+  "_doc": "SPEC-348/350: frases (sem acento, minusculas) que nao podem aparecer em campo publico. Grupos 'arauto' e 'pacto' acrescentam SECRET_SIGNATURES em services/leak_phrases.py.",
+  "vibora": [
+    "magda e a vibora",
+    "a vibora (velha magda)",
+    "(a vibora)",
+    "lider da mao sombria",
+    "magda/a vibora",
+    "escritorio da mao sombria"
+  ],
+  "barril": [
+    "testamento real",
+    "testamento do antigo rei",
+    "herdeiro ao trono",
+    "herdeiro de ostmar"
+  ],
+  "corpos": [
+    "vao para o doutor silas vane",
+    "nao vao ao crematorio",
+    "vende os marcados",
+    "entrega os marcados"
+  ],
+  "farol": [
+    "suprime o despertar",
+    "suprimir a rede carmesim",
+    "contem a rede carmesim",
+    "a cada cem anos",
+    "ciclo de 100 anos",
+    "ciclo de cem anos",
+    "mata o guardiao anterior",
+    "matou o anterior",
+    "o abismo cobra vida",
+    "se a chama se apagar",
+    "quando o farol falhara",
+    "resto da liturgia",
+    "sobrou da liturgia",
+    "farol pode nao ser suficiente"
+  ],
+  "arauto": [
+    "mesma pessoa, dois residuos",
+    "para impedir algo pior"
+  ],
+  "pacto": [],
+  "praga": [
+    "caixa de amostras",
+    "criada em laboratorio",
+    "cepa atual"
+  ]
+}

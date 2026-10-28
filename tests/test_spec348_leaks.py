@@ -12,6 +12,7 @@ import re
 import pytest
 
 from services.content_validator import NPC_SECRET_LABELS
+from services.leak_phrases import leak_phrases
 from services.secret_signatures import SECRET_SIGNATURES
 from tests.spec348_helpers import (
     codex_docs,
@@ -23,51 +24,7 @@ from tests.spec348_helpers import (
     public_docs,
 )
 
-LEAK_PHRASES: dict[str, list[str]] = {
-    "vibora": [
-        "magda e a vibora",
-        "a vibora (velha magda)",
-        "(a vibora)",
-        "lider da mao sombria",
-        "magda/a vibora",
-        "escritorio da mao sombria",
-    ],
-    "barril": [
-        "testamento real",
-        "testamento do antigo rei",
-        "herdeiro ao trono",
-        "herdeiro de ostmar",
-    ],
-    "corpos": [
-        "vao para o doutor silas vane",
-        "nao vao ao crematorio",
-        "vende os marcados",
-        "entrega os marcados",
-    ],
-    "farol": [
-        "suprime o despertar",
-        "suprimir a rede carmesim",
-        "contem a rede carmesim",
-        "a cada cem anos",
-        "ciclo de 100 anos",
-        "ciclo de cem anos",
-        "mata o guardiao anterior",
-        "matou o anterior",
-        "o abismo cobra vida",
-        "se a chama se apagar",
-        "quando o farol falhara",
-        "resto da liturgia",
-        "sobrou da liturgia",
-        "farol pode nao ser suficiente",
-    ],
-    "arauto": [
-        "mesma pessoa, dois residuos",
-        "para impedir algo pior",
-        *[fold(s) for s in SECRET_SIGNATURES["arauto_identidade"]],
-    ],
-    "pacto": [fold(s) for s in SECRET_SIGNATURES["pacto_valerius"]],
-    "praga": ["caixa de amostras", "criada em laboratorio", "cepa atual"],
-}
+LEAK_PHRASES: dict[str, list[str]] = leak_phrases()  # SPEC-350: dado em data/world/leak_phrases.json
 
 # Fatos que precisam seguir existindo em doc oculto (R54): tuplas = termos no MESMO doc.
 HIDDEN_FACTS: dict[str, list[tuple[str, ...]]] = {
