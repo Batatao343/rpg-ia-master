@@ -55,7 +55,7 @@ ondas:
   autor: claude-sonnet-5.5
   revisor_voz: dono
   voz_status: aprovada
-  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura). Olho no Pulso v2 entraram depois da aprovação em bloco, cobertas pela autorização geral do dono de 27/10
+  nota_voz: aprovação geral do dono em 27/10, sem leitura da amostra (não atesta leitura). Olho no Pulso v2 entraram depois da aprovação em bloco, cobertas pela autorização geral do dono de 27/10. Juros do Primeiro v2, descrição corrigida na SPEC-341 (a Carta passou a custar Fôlego 2), mesma autorização
   amostra_voz:
   - san1_ava_juros_do_primeiro
   - san1_exp_plateia_cega

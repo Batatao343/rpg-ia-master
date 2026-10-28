@@ -115,7 +115,7 @@ def _cena(card: dict):
         virtudes=dict(_V, agilidade=1),
     )
     ally = _actor("ally", categoria="companheiro", transient=True, virtudes=dict(_V, agilidade=9))
-    e1 = _actor("e1", virtudes=dict(_V, agilidade=1))
+    e1 = _actor("e1", virtudes=dict(_V, agilidade=1), max_vitalidade=90, vitalidade=90)
     e2 = _actor("e2", virtudes=dict(_V, agilidade=1))
     actors = {"player": player, "ally": ally, "e1": e1, "e2": e2}
     scene = cs.new_scene()
@@ -136,6 +136,15 @@ def test_controle_d1_de_onda_vale_no_turno_seguinte(cid, ordem, monkeypatch):
     alvo_decl = "player" if card["efeitos"][0].get("alvo") == "eu" else "e1"
     visto: list[tuple[int, str, bool]] = []
     original = orch._resolve_actor_turn
+    vantagens: list[int] = []  # Vantagem de cada ataque real do jogador (rodadas 2 e 3)
+    resolve_original = ct.resolve_attack
+
+    def spy_attack(attacker, target, **kw):
+        if attacker is actors["player"] and target is actors["e1"]:
+            vantagens.append(int(kw.get("advantage", 0)))
+        return resolve_original(attacker, target, **kw)
+
+    monkeypatch.setattr(ct, "resolve_attack", spy_attack)
 
     def spy(scene_, actor, actor_id, actors_by_id, sides_, decl, st, out, rng):
         alvo = actors_by_id["e1"]
@@ -153,7 +162,12 @@ def test_controle_d1_de_onda_vale_no_turno_seguinte(cid, ordem, monkeypatch):
                 acao=ct.TurnStep(kind="card", card_id=cid, target_id=alvo_decl),
             )
             if rnd == 1
-            else ct.TurnDeclaration(actor_id="player")
+            else ct.TurnDeclaration(
+                actor_id="player",
+                acao=ct.TurnStep(kind="attack", target_id="e1")
+                if kind == "marca" and rnd in (2, 3)
+                else None,
+            )
         )
         out = orch.run_round(
             scene,
@@ -174,6 +188,10 @@ def test_controle_d1_de_onda_vale_no_turno_seguinte(cid, ordem, monkeypatch):
     else:
         # a Marca é lida no ALVO no turno do APLICADOR: cobre exatamente o próximo ataque
         assert sum(p for _, a, p in visto if a == "player") == 1, visto
+        # e o ataque REAL do jogador na rodada seguinte tem a Vantagem da Marca; o seguinte não
+        # vantagens[0] é o teste de acerto da própria Carta (rodada 1); [1] e [2] são os ataques reais
+        assert len(vantagens) >= 3, vantagens
+        assert vantagens[1] == vantagens[2] + 1, vantagens
 
 
 # --------------------------------------------------------------------------

@@ -1,0 +1,53 @@
+{
+ "seeds": [
+  0,
+  20
+ ],
+ "versoes": {
+  "med1_bot_giz_vermelho": 2,
+  "neu1_ka_divida_gravada": 2
+ },
+ "cartas": {
+  "med1_bot_giz_vermelho": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 142,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.528,
+   "vitoria_sem": 0.738,
+   "vitoria_com": 0.775,
+   "delta_pp": 3.7,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  },
+  "neu1_ka_divida_gravada": {
+   "devoto": {
+    "classe": "Devoto do Abismo",
+    "vezes_na_mao": 125,
+    "vezes_jogada": 24,
+    "taxa_uso": 0.192,
+    "vitoria_sem": 0.812,
+    "vitoria_com": 0.8,
+    "delta_pp": -1.2,
+    "lutas_por_braco": 80,
+    "dano_por_folego": 0.0,
+    "protecao_por_folego": 0.0,
+    "bandeiras": []
+   },
+   "arcanista": {
+    "classe": "Arcanista Cinzento",
+    "vezes_na_mao": 92,
+    "vezes_jogada": 29,
+    "taxa_uso": 0.315,
+    "vitoria_sem": 0.85,
+    "vitoria_com": 0.812,
+    "delta_pp": -3.7,
+    "lutas_por_braco": 80,
+    "dano_por_folego": 0.0,
+    "protecao_por_folego": 0.0,
+    "bandeiras": []
+   }
+  }
+ }
+}

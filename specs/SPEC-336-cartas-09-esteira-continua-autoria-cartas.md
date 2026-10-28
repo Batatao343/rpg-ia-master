@@ -97,3 +97,4 @@ Desvios / decisões de implementação:
   O `playtest/` já conta eventos por nome (`set_event_sink`). **Follow-up:** a coluna de vitória do `metrics.py` precisa de um
   evento de fim de conflito por partida; hoje aceita um `--resultados` externo.
 - **Arena Fôlego 2 × 3 com baralho completo:** `docs/spec336/arena-folego-completo-2026-10-27.md`.
+- **Follow-ups de balanço vindos da SPEC-341 (próxima onda):** (1) `san1_sil_corte_sem_aviso` v2 ficou `dominante` na held-out 20–99 (+9,1 pp, uso 52 %; dono aceitou em 27/10, já no máximo de 1 passo) — rever com a arena nova; (2) avaro 75,2 % e silencioso 76,6 % aceitos como exceções, reavaliar se algo mudar; (3) voz de `juros_do_primeiro` ajustada na 341, mantenha `nota_voz` na amostra da onda.

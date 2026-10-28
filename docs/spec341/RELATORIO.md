@@ -1,8 +1,9 @@
-# SPEC-341 — Relatório (parcial: pacote R11 NÃO fechou o silencioso)
+# SPEC-341 — Relatório final (D4-bis/D4-ter)
 
-Estado: pacote mínimo aplicado e medido nas sementes 0–19; **a confirmação 20–99 (R3) não foi rodada**
-porque o R9 falha nas sementes de ajuste (silencioso 76,2 % > 75,0 %) e o R11 manda parar e devolver.
-`sim.py`, `arena_posturas.py`, `_orcamento.json`, `test_card_sim.py`, legadas e golden: sem diff.
+Estado: pacote R11 aplicado (2 Cartas por subclasse, 1 passo cada) e medido nas sementes 0–19; confirmação 20–99 rodada
+**uma vez** depois do pacote (R3), sem reajuste. Silencioso (0–19 e 20–99), avaro (20–99) e Sangromante/todas foram
+**aceitos pelo dono como exceções registradas** (D4-bis e D4-ter). `sim.py`, `arena_posturas.py`, `_orcamento.json`,
+`test_card_sim.py`, legadas e golden: sem diff.
 
 ## R6 — baseline da 339 reproduzido
 Sangromante (todas/exposto/avaro/silencioso), Corruptor/alma e Médico/boticário: células **idênticas**
@@ -58,13 +59,7 @@ Devoto, Arcanista e demais subclasses: células idênticas à 339.
 real nas duas ordens (taunt: 1 turno do portador e 1 ataque ao jogador; marca: cobre só o próximo ataque do aplicador).
 `arc1_imp_parafuso`/`arame` ficam em 2 (desenho).
 
-## Pendências / decisão do dono
-O silencioso não fecha ≤ 75,0 % com ≤ 3 Cartas × 1 passo: só 2 Cartas de onda estão no baralho L5. Opções: (a) liberar
-2º passo em `san1_sil_corte_sem_aviso` (75,4 %, ainda no limite) e/ou nerfar legada (`san_troco_carmesim`,
-`san_sil_veia`; protocolo R11 da 339 + golden), (b) aceitar silencioso ~76 % (D1 alternativa). Depois disso: rodar
-`posturas --seeds 20:100` e `cartas --seeds 20:100` uma vez (R3) e remover os `xfail` dos testes de arena.
-
-## Confirmação 20–99 (uma vez, pacote final; `arena-confirmacao.json`) — D4-bis
+## Confirmação 20–99 (uma vez, pacote final; `arena-confirmacao.json`)
 | subclasse | padrão | total |
 |---|---|---|
 | Sangromante todas | 75,6 | 62,2 |
@@ -74,4 +69,14 @@ O silencioso não fecha ≤ 75,0 % com ≤ 3 Cartas × 1 passo: só 2 Cartas de 
 | Corruptor/alma | 50,7 | 41,2 |
 | Médico/boticário | 63,0 | 56,1 |
 Cartas (delta 20–99): `corte_sem_aviso` +9,1 pp, uso 52 % → **`dominante`** (nova bandeira real, pós-Fôlego 2); `cobranca_adiada` +4,1; `juros` −2,8; `ponto_cego` +3,1; Giz −2,8; Dívida −3,1/+2,2; `culpa_antiga` +1,6 (ruído).
-Parado conforme instrução: avaro 0,2 pp acima do teto na held-out, sem reajuste.
+Sem reajuste: avaro ficou 0,2 pp acima do teto na held-out.
+
+## D4-ter e follow-ups
+- **D4-bis (dono, opção A):** silencioso ≈ 76 % (0–19: 76,2 %) e todas 75,4 % aceitos; sem 2º passo, sem tocar legadas.
+- **D4-ter (dono, opção A):** na held-out aceitos avaro 75,2 %, silencioso 76,6 % e todas 75,6 %. Os testes citam esses valores
+  (`EXCECAO_ACEITA`, `EXCECAO_HELD_OUT`); o teto global de 75 % vale para o resto.
+- **`san1_sil_corte_sem_aviso` dominante na held-out (+9,1 pp):** visto e aceito pelo dono; item na SPEC-336 (próxima onda).
+- **Giz/Dívida 0–19:** `cartas-giz-divida-sementes0-19.json` (Giz +3,7; Dívida −1,2/−3,7).
+- **Leitura (info):** Giz com `duracao` 2 e 1 deu vitórias idênticas no bot solo; a duração da Marca quase não move a taxa aqui.
+- **Desvios:** sem subcomando `report` (relatório à mão); `arena-confirmacao.json` junta `posturas` e `cartas`; `sim.py` congelado
+  segue sem relatar bandeira por subclasse.

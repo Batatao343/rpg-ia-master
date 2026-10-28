@@ -296,20 +296,20 @@ Custo de máquina: cada `posturas` com as sementes 20–99 é cerca de 4× a rod
 
 ## 5. Critérios de aceite
 
-- [ ] R1/R2: diff vazio em `sim.py`, `arena_posturas.py`, `_orcamento.json`, `tests/test_card_sim.py`, nos JSON legados e no golden; `test_card_effects_grammar` verde.
-- [ ] R3: `arena-confirmacao.json` gerado uma vez, depois do commit do pacote (o histórico prova).
-- [ ] R6: baseline da 339 reproduzido célula a célula.
-- [ ] R7: `atribuicao.json` e a tabela no relatório.
-- [ ] R9: avaro, silencioso e Sangromante/todas ≤ 75,0 % na leitura padrão, nas sementes 0–19 **e** 20–99.
-- [ ] R10: exposto ≥ 65,0 % (queda ≤ 5 pp nas 0–19) nas duas faixas; nenhuma subclasse do Sangromante < 45 % no total; Posturas sem Carta alterada idênticas à 339.
-- [ ] R11: ≤ 3 Cartas por subclasse, 1 passo cada, só alavancas do R4, `versao` + 1, lint e orçamento limpos.
-- [ ] R12/R13: veredito das 2 dominantes registrado (ruído, aceita ou nerf conforme D5); `san_exp_espetaculo` intocada e, se confirmada, com proposta escrita.
-- [ ] R14–R16: inventário fechado verde; os 9 + Giz + Dívida valem no `run_round` real nas duas ordens; Giz e Dívida em `duracao` 1, com delta ≤ +8 pp nas duas faixas; Médico/boticário entre 45 e 75 %.
-- [ ] R17/R18: relatório completo; testes de artefato verdes.
-- [ ] Revisão Sol `APPROVED`.
+- [x] R1/R2: diff vazio em `sim.py`, `arena_posturas.py`, `_orcamento.json`, `tests/test_card_sim.py`, nos JSON legados e no golden; `test_card_effects_grammar` verde.
+- [x] R3: `arena-confirmacao.json` gerado uma vez, depois do commit do pacote (o histórico prova).
+- [x] R6: baseline da 339 reproduzido célula a célula.
+- [x] R7: `atribuicao.json` e a tabela no relatório.
+- [x] R9: avaro, silencioso e Sangromante/todas ≤ 75,0 % na leitura padrão, nas sementes 0–19 **e** 20–99. *Cumprido com as exceções D4-bis/D4-ter (silencioso, avaro na held-out, todas).*
+- [x] R10: exposto ≥ 65,0 % (queda ≤ 5 pp nas 0–19) nas duas faixas; nenhuma subclasse do Sangromante < 45 % no total; Posturas sem Carta alterada idênticas à 339.
+- [x] R11: ≤ 3 Cartas por subclasse, 1 passo cada, só alavancas do R4, `versao` + 1, lint e orçamento limpos.
+- [x] R12/R13: veredito das 2 dominantes registrado (ruído, aceita ou nerf conforme D5); `san_exp_espetaculo` intocada e, se confirmada, com proposta escrita.
+- [x] R14–R16: inventário fechado verde; os 9 + Giz + Dívida valem no `run_round` real nas duas ordens; Giz e Dívida em `duracao` 1, com delta ≤ +8 pp nas duas faixas; Médico/boticário entre 45 e 75 %.
+- [x] R17/R18: relatório completo; testes de artefato verdes.
+- [x] Revisão Sol `APPROVED_WITH_FOLLOWUPS` (`handoffs/SPEC-341-sol-review.md`), follow-ups P2-1..P2-7 tratados.
 - [ ] `uv run pytest` verde (suíte completa, 1× no pouso, pelo coordenador).
-- [ ] Saves antigos carregam: saves guardam só ids e o motor lê a maior `versao`.
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
+- [x] Saves antigos carregam: saves guardam só ids e o motor lê a maior `versao`.
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
 
 ## 6. Smoke test real
 
@@ -346,8 +346,12 @@ Se 1–3 falharem: **não** reajustar com essas sementes (R3). Parar e devolver 
 
 **Decisões do dono (27/10, "aprovo!!"):** todas as recomendações D1–D8.
 
-**Execução (27/10):** Etapas 0–3 feitas; avaro fechou (74,6 %), silencioso parou em 76,2 % com o pacote R11 (só 2 Cartas de onda no baralho L5). Confirmação 20–99 do pacote final **não** rodada (R3); testes de arena em `xfail(strict)`. Detalhes e opções em `docs/spec341/RELATORIO.md`. `culpa_antiga` e `san_exp_espetaculo` não se confirmaram (ruído, 20–99).
+**Execução (27/10):** Etapas 0–3 feitas; avaro fechou (74,6 %), silencioso parou em 76,2 % com o pacote R11 (só 2 Cartas de onda no baralho L5). Confirmação 20–99 do pacote final rodada uma vez depois (R3); testes de arena sem `xfail` (exceções D4-bis/D4-ter explícitas). Detalhes e opções em `docs/spec341/RELATORIO.md`. `culpa_antiga` e `san_exp_espetaculo` não se confirmaram (ruído, 20–99).
 
 **D4-bis (dono, 27/10, opção A):** aceitar Sangromante silencioso ≈ 76 % como exceção registrada, sem 2º passo e sem tocar legadas. Números do ajuste (sementes 0–19, padrão): silencioso 76,2 %, Sangromante/todas 75,4 %, avaro 74,6 %, exposto 70,4 %. Confirmação 20–99 (uma vez, R3): avaro **75,2 %** (> 75, **sem reajuste**, devolvido ao dono), silencioso 76,6 %, todas 75,6 %, exposto 71,7 %, Corruptor/alma 50,7 %, Médico/boticário 63,0 %.
 
 **D4-ter (dono, 27/10, opção A de novo):** aceitar na held-out 20–99 (padrão) avaro 75,2 %, silencioso 76,6 % e Sangromante/todas 75,6 % como exceções registradas (testes citam esses valores; teto global 75 % intacto para o resto). Item para a próxima onda de balanço: `san1_sil_corte_sem_aviso` ficou `dominante` na held-out (+9,1 pp, uso 52 %), já no máximo de 1 passo (R11).
+
+**Aceite do `corte_sem_aviso` dominante (dono, 27/10, opção A):** o dono viu a bandeira `dominante` de `san1_sil_corte_sem_aviso` v2 na held-out (+9,1 pp, uso 52 %) junto com o D4-ter e aceitou. Item registrado no backlog da SPEC-336 (próxima onda de balanço; a Carta já está no máximo de 1 passo).
+
+**Desvios registrados (revisão Sol):** (P2-4) o teste de `marca` usa o mesmo proxy da 339 (presença da condição no alvo no turno do aplicador), reforçado com um ataque real do jogador na rodada seguinte; (P2-7) o subcomando `report` do §3.1 não existe, o `RELATORIO.md` foi escrito à mão e `arena-confirmacao.json` junta a saída de `posturas` e de `cartas`; `sim.py` segue congelado e não ganhou o relato de bandeira por subclasse. Deltas de Giz/Dívida (0–19) em `docs/spec341/cartas-giz-divida-sementes0-19.json`.
