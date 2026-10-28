@@ -1,14 +1,15 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "../../design/icons";
 import type { QueuedPlay } from "../../combat/deck";
 
 export const SPARE_NOTE = "Nesta rodada, golpes derrubam sem matar.";
+export const FLEE_CONFIRM = "Fugir agora? A fila desta rodada é descartada.";
 export const QUEUE_EMPTY = "Escolha cartas da mão. Elas esperam aqui e só valem quando você encerrar a rodada.";
 
 /** SPEC-334 R5/R8 + SPEC-342 R1.2/R7: fila local (sem request) reordenável e cancelável. A barra de envio leva
  *  "Sem matar" (quando existe), "Encerrar a rodada" (única ação primária da aba) e "Desfazer". Enter encerra e Esc
  *  desfaz — ligados pelo contêiner. */
-export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onRemove, onClear, onEnd, touch, spareAvailable = false, spare = false, onSpare, firstCardFocus }: {
+export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onRemove, onClear, onEnd, touch, spareAvailable = false, spare = false, onSpare, firstCardFocus, onFlee, fleeReason }: {
   queue: QueuedPlay[];
   selected: string | null;
   nameOf: (id: string) => string | undefined;
@@ -24,7 +25,16 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
   onSpare?: () => void;
   /** R15.3: fila esvaziou → foco na 1ª carta da mão. */
   firstCardFocus?: () => void;
+  /** SPEC-347 R19: "Fugir" na barra de envio (só o modo Baralho passa isto). Com fila, pede confirmação inline. */
+  onFlee?: () => void;
+  /** Motivo do servidor quando a fuga não vale (`invalid_reason`): o botão fica `aria-disabled` e o mostra. */
+  fleeReason?: string | null;
 }) {
+  const [confirmFlee, setConfirmFlee] = useState(false);
+  const fleeRef = useRef<HTMLButtonElement>(null);
+  const confirmRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (confirmFlee) confirmRef.current?.querySelector<HTMLElement>("[data-flee-go]")?.focus(); }, [confirmFlee]);
+  const closeFlee = () => { setConfirmFlee(false); window.setTimeout(() => fleeRef.current?.focus(), 0); };
   const listRef = useRef<HTMLOListElement>(null);
   // R15.3: remover move o foco para o item seguinte, o anterior, ou a 1ª carta da mão.
   function remove(uid: string, i: number) {
@@ -76,6 +86,14 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
             Sem matar
           </button>
         )}
+        {onFlee && (
+          <button type="button" ref={fleeRef} className="btn btn--ghost btn--sm play-queue__flee" data-flee
+            aria-disabled={busy || fleeReason ? "true" : undefined} title={fleeReason ?? undefined}
+            aria-describedby={fleeReason ? "play-queue-flee-why" : undefined}
+            onClick={() => { if (busy || fleeReason) return; if (queue.length > 0) setConfirmFlee(true); else onFlee(); }}>
+            <Icon name="exit" /> Fugir
+          </button>
+        )}
         <button type="button" className="btn btn--primary play-queue__submit" data-end-turn
           aria-disabled={busy || queue.length === 0 ? "true" : undefined}
           aria-keyshortcuts="Enter" title="Encerrar a rodada (Enter)"
@@ -95,6 +113,16 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
           </button>
         )}
     </div>
+    {onFlee && fleeReason && <p className="play-queue__spare" id="play-queue-flee-why" role="note">{fleeReason}</p>}
+    {onFlee && confirmFlee && (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Esc desfaz a confirmação inline (equivalente de teclado de "Ficar")
+      <div className="play-queue__confirm" role="group" aria-label="Confirmar fuga" data-flee-confirm ref={confirmRef}
+        onKeyDown={(e) => { if (e.key === "Escape") { e.stopPropagation(); e.preventDefault(); closeFlee(); } }}>
+        <span>{FLEE_CONFIRM}</span>
+        <button type="button" className="btn btn--primary btn--sm" data-flee-go onClick={() => { setConfirmFlee(false); onFlee(); }}>Fugir</button>
+        <button type="button" className="btn btn--ghost btn--sm" data-flee-stay onClick={closeFlee}>Ficar</button>
+      </div>
+    )}
     </>
   );
 }

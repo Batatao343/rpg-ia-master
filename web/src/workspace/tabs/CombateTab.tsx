@@ -239,12 +239,32 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     root.querySelector<HTMLElement>(".combat-outcome")?.scrollIntoView?.({ block: "start" });
   }, [outcomeId]);
 
+  // SPEC-347 R19: "Fugir" do tabuleiro. Só envia a ação estruturada (o motor rola); o resultado vem do servidor.
+  const fleeAction = basics.find((a) => a.kind === "flee");
+  const fleeReason = fleeAction?.invalid_reason ? REASON_TEXT[fleeAction.invalid_reason] : null;
+  const [fleeRound, setFleeRound] = useState<number | null>(null);
+  const fleeResult = fleeRound === null ? null
+    : !fighting ? "Você escapou."
+      : combat && combat.round === fleeRound + 1 ? "Não escapou: o inimigo ainda está no seu encalço." : null;
+  const wasFighting = useRef(fighting);
+  useEffect(() => {
+    // um conflito NOVO apaga o resultado da fuga anterior; passar da rodada seguinte também
+    if ((fighting && !wasFighting.current) || (fighting && fleeRound !== null && (combat?.round ?? 0) > fleeRound + 1)) setFleeRound(null);
+    wasFighting.current = fighting;
+  }, [fighting, combat?.round, fleeRound]);
+  const doFlee = () => {
+    if (!targeting.beginDirect()) return;
+    setFleeRound(combat?.round ?? 0);
+    onAction("Tento fugir.", { action_kind: "flee", reaction_card_id: reactionCardId });
+  };
+
   const detailCard = cards.find((c) => c.id === (detailId ?? aimingCard?.id)) ?? null;
   const locked = busy || state.phase === "submitting";
 
   return (
     <div className="ws-combat" ref={rootRef}>
       <p className="sr-only" aria-live="polite">{announce}</p>
+      {fleeResult && <p className="ws-combat__flee-result" role="status" data-flee-result>{fleeResult}</p>}
       {combatResult && shouldShowResult(combatResult, dismissed) && (
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
           onContinue={() => dismissResult(combatResult.result_event_id)} />
@@ -271,6 +291,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
                   <button type="button" className="aimbar__cancel" onClick={() => targeting.cancel()}>{touch ? "Cancelar" : "Cancelar (Esc)"}</button>
                 </div>
               ) : undefined}
+              onFlee={fleeAction ? doFlee : undefined} fleeReason={fleeReason}
               onEnd={(text, jogadas) => {
                 if (targeting.beginDirect()) { onAction(text, { jogadas, reaction_card_id: reactionCardId }); setSpare(false); }
               }} />
@@ -297,7 +318,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
           <ReactionPrompt cards={cards} selected={reactionCardId} disabled={busy} onSelect={onReaction} />
           <ManeuverFold deck={deckMode} stuck={stuck} round={combat.round}>
           <div className="actionchips ws-combat__maneuvers" role="group" aria-label="Manobras táticas" data-aim-safe>
-            {basics.map((action) => {
+            {basics.filter((action) => !(deckMode && action.kind === "flee")).map((action) => {
               const key = basicKey(action);
               const plan = planBasic(action, locked);
               const reason = plan.reason ? REASON_TEXT[plan.reason] : undefined;

@@ -21,7 +21,7 @@ let uidSeq = 0;
 /** SPEC-334 + SPEC-342: o combate do Baralho (atrás da flag: só existe quando `combat.pilhas` chega).
  *  Faixa de cena → Arena (único seletor de alvo, vem em `arena`) → mão → [mira → prévia → jogar] → fila → "Encerrar a rodada".
  *  A carta armada vive no contêiner (`armed`), porque a Arena marca os alvos válidos; a fila é local. */
-export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd, onAnnounce, arena, maneuverAim, friendIds, armed, onArm, onDisarm, onClearTarget, spareAvailable, spare, onSpare, onStuck }: {
+export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd, onAnnounce, arena, maneuverAim, friendIds, armed, onArm, onDisarm, onClearTarget, spareAvailable, spare, onSpare, onStuck, onFlee, fleeReason }: {
   combat: CombatBlock;
   gameId: string | null;
   entropy: number | null;
@@ -43,6 +43,9 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   spare: boolean;
   onSpare: () => void;
   onStuck?: (stuck: boolean) => void;
+  /** SPEC-347 R19: ação estruturada de fuga (o contêiner envia; o motor rola). */
+  onFlee?: () => void;
+  fleeReason?: string | null;
 }) {
   const piles = combat.pilhas!;
   const glossary = useGlossary();
@@ -151,6 +154,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
       } else if (event.key === "Enter" && !(event.target as HTMLElement | null)?.closest?.("button, summary, a, [role=button], [role=tab], [tabindex]")) {
         if (queue.length) { event.preventDefault(); end(); }
       } else if (event.key === "Escape") {
+        if ((event.target as HTMLElement | null)?.closest?.("[data-flee-confirm]")) return; // SPEC-347 R19.2: o Esc é da confirmação de fuga
         if (maneuverAim) return; // mira de manobra ativa: o Esc é só dela (useTargeting); a fila fica
         if (armed) { event.preventDefault(); event.stopPropagation(); disarm(); }
         else if (queue.length) { event.preventDefault(); event.stopPropagation(); setQueue([]); setSelected(null); onAnnounce("Fila desfeita."); }
@@ -208,7 +212,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
         onSelect={setSelected} onMove={(uid, d) => setQueue((q) => move(q, uid, d))}
         onRemove={(uid) => { setQueue((q) => remove(q, uid)); setSelected(null); }}
         onClear={() => { setQueue([]); setSelected(null); }} onEnd={end}
-        spareAvailable={spareAvailable} spare={spare} onSpare={onSpare}
+        spareAvailable={spareAvailable} spare={spare} onSpare={onSpare} onFlee={onFlee} fleeReason={fleeReason}
         firstCardFocus={() => rootRef.current?.querySelector<HTMLElement>(".deck-card")?.focus()} />
       <MechLog lines={combat.mech_log ?? []} round={combat.round} />
     </div>

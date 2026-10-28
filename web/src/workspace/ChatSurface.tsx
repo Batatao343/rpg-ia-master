@@ -126,7 +126,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
   /** SPEC-320: espera do turno (fases, estágio, último erro) e "Tentar de novo". */
   turn?: TurnWait;
   onRetry?: () => void;
-}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry }, inputRef) {
+  /** SPEC-347 R18: com o tabuleiro do Baralho aberto não há texto livre (o rascunho guardado volta depois). */
+  deckLocked?: boolean;
+}>(function Composer({ data, busy, blocked, reactionCardId, onAction, offSurface = false, turn = IDLE_TURN, onRetry, deckLocked = false }, inputRef) {
   const gameId = data?.game_id;
   const formRef = useRef<HTMLFormElement>(null);
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -188,6 +190,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
         onFocusInput={() => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
       <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
         onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
+      {deckLocked ? (
+        <p className="composer-locked" role="note">Na luta, você age pelas cartas do tabuleiro.</p>
+      ) : (
       <div className="actionbar__composer">
       <textarea
         ref={setAreaRef}
@@ -232,6 +237,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
         {fighting ? "Lutar" : "Agir"}
       </Pressable>
       </div>
+      )}
       {simulation && fighting && !blocked && (
         <p className="composer-hint">Texto livre executa um ataque básico; use os controles para ações precisas.</p>
       )}

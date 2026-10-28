@@ -64,7 +64,7 @@ test('prévia e presságio: texto curto, só o lado do jogador', async () => {
   const p = { chance_acerto_pct: 55, chance_critico_pct: 10, dano_min: 4, dano_max: 7, ferimento_provavel: null, efeitos_extra: ['Sangramento'], pressagio_frustrado: false };
   assert.equal(d.previewLine(p), '55 % · 4–7 de dano · pode Sangrar');
   assert.equal(d.previewLine({ ...p, chance_acerto_pct: 42.5, dano_min: 3, dano_max: 3, efeitos_extra: [], pressagio_frustrado: true }),
-    '42,5 % · 3 de dano · frustra o presságio');
+    '43 % · 3 de dano · frustra o presságio');
   const pr = { actor_id: 'e1', tipo: 'ataque', alvo_id: 'player', valor_estimado: null, faixa: [3, 6], carta_nome: null, sinal: 'ergue a lâmina' };
   assert.equal(d.pressagioLine(pr, () => 'Lobo'), 'Lobo: ergue a lâmina (3–6)');
   assert.equal(d.pressagioLine({ ...pr, faixa: null }, () => undefined), 'Inimigo: ergue a lâmina');

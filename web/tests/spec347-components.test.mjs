@@ -103,3 +103,29 @@ test('roundboard_vazio_nada_e_celular_4_mais_details', async () => {
   assert.doesNotMatch(desktop, /<details/);
   assert.match(desktop, /O que se jogou na rodada 2/);
 });
+
+test('composer_deckLocked_sem_textarea_e_sem_a_prop_igual_a_hoje', async () => {
+  const { Composer } = await load('../src/workspace/ChatSurface.tsx');
+  const data = { game_id: 'g1', combat: { active: true, pilhas: {} }, world: {}, player_stats: {} };
+  const props = { data, busy: false, blocked: false, onAction() {} };
+  const locked = html(h(Composer, { ...props, deckLocked: true }));
+  assert.doesNotMatch(locked, /<textarea/);
+  assert.doesNotMatch(locked, />Lutar</);
+  assert.match(locked, /role="note"[^>]*>Na luta, você age pelas cartas do tabuleiro\./);
+  const plain = html(h(Composer, props));
+  assert.match(plain, /<textarea/);
+  assert.match(plain, /placeholder="O inimigo avança\. O que você faz\?"/);
+  assert.match(plain, />Lutar</);
+  assert.equal(plain, html(h(Composer, { ...props, deckLocked: false })));
+});
+
+test('playqueue_fugir_botao_e_motivo', async () => {
+  const { PlayQueue } = await load('../src/components/combat/PlayQueue.tsx');
+  const base = { queue: [], selected: null, nameOf: () => 'X', busy: false, onSelect() {}, onMove() {}, onRemove() {}, onClear() {}, onEnd() {}, touch: true };
+  assert.doesNotMatch(html(h(PlayQueue, base)), /data-flee/);
+  const on = html(h(PlayQueue, { ...base, onFlee() {} }));
+  assert.match(on, /data-flee/);
+  assert.doesNotMatch(on, /aria-disabled="true"[^>]*data-flee|data-flee[^>]*aria-disabled="true"/);
+  const closed = html(h(PlayQueue, { ...base, onFlee() {}, fleeReason: 'Sem saída.' }));
+  assert.match(closed, /Sem saída\./);
+});

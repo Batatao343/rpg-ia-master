@@ -464,3 +464,14 @@ details.scene-strip { display: block; }
   .roundboard__row { font-size: 0.8rem; }
   .roundboard { padding: 0.4rem 0.5rem; }
 }
+
+/* SPEC-347 R18/R19 — sem texto livre no tabuleiro e "Fugir" */
+.composer-locked { margin: 0; padding: 0.5rem 0.75rem; color: var(--muted); font-size: 0.9rem; border: 1px dashed var(--line-soft); border-radius: var(--r-sm); }
+.play-queue__flee { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+.play-queue__flee[aria-disabled="true"] { color: var(--muted); border-style: dashed; cursor: default; }
+.play-queue__confirm { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; padding: 0.4rem 0.6rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); font-size: 0.88rem; }
+.play-queue__confirm span { flex: 1 1 14rem; }
+.ws-combat__flee-result { margin: 0; padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); color: var(--ink); font-size: 0.9rem; }
+@media (pointer: coarse) {
+  .play-queue__flee, .play-queue__confirm button { min-height: 44px; min-width: 44px; }
+}
