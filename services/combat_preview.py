@@ -177,10 +177,11 @@ _RESULT_LABEL = {
 def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
     """R6: uma linha por ataque da rodada, só com números que o motor já resolveu.
     Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``."""
-    names = {
-        str(a.get("id") or ("player" if a.get("is_player") else "")): a.get("name") or "?"
-        for a in actors
-    }
+    names: dict[str, str] = {}
+    for a in actors:  # SPEC-345 R6: indexa por id OU nome (aliado de cena pode não ter id)
+        key = str(a.get("id") or a.get("name") or ("player" if a.get("is_player") else ""))
+        if key and a.get("name"):
+            names[key] = str(a["name"])
     names["player"] = "Você"
     lines: list[str] = []
     for atk in attacks:
@@ -188,13 +189,13 @@ def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
         dice = "3d10" if len(atk.get("dice_rolled") or []) == 3 else "2d10"
         mod = int(atk.get("virtude", 0) or 0) + int(atk.get("modificador", 0) or 0)
         card = cards.get_card(str(atk.get("card_id") or "")) if atk.get("card_id") else None
-        who = names.get(str(atk.get("actor_id")), "?")
+        who = names.get(str(atk.get("actor_id")), "Alguém")
         what = f" · {card['name']}" if card else ""
         tail = _RESULT_LABEL.get(str(atk.get("resultado")), str(atk.get("resultado")))
         if atk.get("acerto") and atk.get("dano_final") is not None:
             tail += f" · {int(atk['dano_final'])} dano"
         lines.append(
-            f"{who}{what} → {names.get(str(atk.get('target_id')), '?')} · {dice} "
+            f"{who}{what} → {names.get(str(atk.get('target_id')), 'Alguém')} · {dice} "
             f"{' + '.join(str(k) for k in kept)} {mod:+d} = {atk.get('total')} "
             f"vs {atk.get('esquiva_alvo')} · {tail}"
         )

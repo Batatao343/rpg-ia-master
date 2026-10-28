@@ -78,12 +78,32 @@ def _last_ai_text(state: dict) -> str:
     return ""
 
 
-_RECEIPT = re.compile(r"[ \t]*\[RESULTADO\][^\r\n]*")
+EMPTY_NARRATION_TEXT = "O momento passa; o registro do turno guarda o resultado."
+
+_RECEIPT_LINE = re.compile(r"^[ \t]*\[RESULTADO\][^\r\n]*\r?\n?", re.MULTILINE)
+_SYSTEM_PREFIX = re.compile(r"^([ \t]*)\[SISTEMA\][ \t]*", re.MULTILINE)
+_BLANKS = re.compile(r"\n{3,}")
+
+
+def strip_system_tags(text: str) -> str:
+    """SPEC-345 R5: tira tags internas do texto do jogador (idempotente).
+
+    Remove a linha inteira de `[RESULTADO] ...` e só o prefixo `[SISTEMA]`
+    (mantendo o conteúdo). Se a limpeza esvazia um texto não vazio, devolve a
+    frase neutra, nunca `""` nem a tag.
+    """
+    original = str(text or "")
+    cleaned = _RECEIPT_LINE.sub("", original)
+    cleaned = _SYSTEM_PREFIX.sub(r"\1", cleaned)
+    cleaned = _BLANKS.sub("\n\n", cleaned).strip()
+    if not cleaned and original.strip():
+        return EMPTY_NARRATION_TEXT
+    return cleaned
 
 
 def strip_receipt(text: str) -> str:
-    """SPEC-199 R7: remove blocos legados `[RESULTADO] ...` (saves pré-SPEC-199)."""
-    return _RECEIPT.sub("", str(text or "")).strip()
+    """SPEC-199 R7 (+345 R5): remove blocos legados `[RESULTADO] ...` e `[SISTEMA]`."""
+    return strip_system_tags(text)
 
 
 def render_player_message(narrative: str, outcome: dict) -> str:
@@ -96,7 +116,7 @@ def render_player_message(narrative: str, outcome: dict) -> str:
     text = str(narrative or "").strip()
     # Reserved receipt blocks are untrusted input, even when emitted by a model.
     # Replace each marker's line; retain unrelated prose on following lines.
-    text = strip_receipt(text)
+    text = strip_system_tags(text)
     if gains:
         text = _NEGATIVE_REWARD.sub("", text).strip()
     if outcome.get("items_gained"):
@@ -207,5 +227,5 @@ def player_facing_message(state: dict) -> str:
         return str(action["message"])
     outcome = state.get("last_turn_outcome") or {}
     if outcome.get("player_message"):
-        return strip_receipt(str(outcome["player_message"]))
-    return _last_ai_text(state)
+        return strip_system_tags(str(outcome["player_message"]))
+    return strip_system_tags(_last_ai_text(state))

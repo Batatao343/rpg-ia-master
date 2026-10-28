@@ -2805,6 +2805,12 @@ def _combat_block(state: dict) -> dict[str, Any]:
         and e.get("status", "ativo") not in ("morto", "fugiu", "rendido", "incapacitado")
     ]
 
+    gone_ids = {  # SPEC-345 R2/R3: quem saiu do combate sai da view (estado intacto)
+        str(e.get("id") or e.get("name"))
+        for e in enemies
+        if isinstance(e, dict) and e not in alive
+    }
+
     def _conds(entity):
         return [
             {"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
@@ -2836,10 +2842,12 @@ def _combat_block(state: dict) -> dict[str, Any]:
         if isinstance(z, dict)
     ]
     for participant_id, pos in (scene.get("positions") or {}).items():
-        if not isinstance(pos, dict):
+        if not isinstance(pos, dict) or str(participant_id) in gone_ids:
             continue
         posture = pos.get("postura") or {}
-        engaged = [str(value) for value in (pos.get("engaged_with") or [])]
+        engaged = [
+            str(value) for value in (pos.get("engaged_with") or []) if str(value) not in gone_ids
+        ]
         scene_view["positions"].append(
             {
                 "participant_id": str(participant_id),
@@ -2965,7 +2973,11 @@ def _combat_block(state: dict) -> dict[str, Any]:
         "reactions": meta.get("last_reactions", []),
     }
     if _enemy_intent.active() and meta.get("pressagios_publicos"):
-        view["pressagios_publicos"] = list(meta["pressagios_publicos"])  # SPEC-329 R2/R3
+        view["pressagios_publicos"] = [  # SPEC-329 R2/R3 + SPEC-345 R3
+            line
+            for line in meta["pressagios_publicos"]
+            if not (isinstance(line, dict) and str(line.get("actor_id")) in gone_ids)
+        ]
     from services import scene_cards as _scene_cards
 
     if _scene_cards.active():  # SPEC-331 R3/R4: presságio de cena + objetivo público

@@ -105,7 +105,8 @@ def test_loot_enriquece_summary_antes_da_narracao_e_rejeita_extra(monkeypatch):
     rendered = out["messages"][0].content
     assert "Espada Solar" not in rendered
     assert "9999" not in rendered
-    assert "Espólio: 7 ouro." in rendered
+    assert "Brutamontes tomba." in rendered
+    assert "Espólio:" not in rendered
     assert "[SISTEMA] +7 de ouro" in rendered
 
 

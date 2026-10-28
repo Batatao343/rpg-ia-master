@@ -318,6 +318,34 @@ def canonical_summary_text(summary: dict) -> str:
     return " ".join(clauses) or "O conflito terminou sem mudança permanente registrada."
 
 
+_PLAYER_CLAUSES = (
+    ("mortos", "tomba", "tombam"),
+    ("caidos", "cai", "caem"),
+    ("rendidos", "se rende", "se rendem"),
+    ("capturados", "é capturado", "são capturados"),
+    ("fugitivos", "foge", "fogem"),
+    ("inconscientes", "perde os sentidos", "perdem os sentidos"),
+)
+
+
+def _join_names(names: list[str]) -> str:
+    return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} e {names[-1]}"
+
+
+def player_summary_text(summary: dict) -> str:
+    """SPEC-345 R4: resumo em voz de jogador (sem rótulos, ids nem espólio)."""
+    clauses: list[str] = []
+    for field, singular, plural in _PLAYER_CLAUSES:
+        names = [str(v) for v in summary.get(field) or [] if str(v).strip()]
+        if names:
+            clauses.append(f"{_join_names(names)} {singular if len(names) == 1 else plural}.")
+    if clauses:
+        return " ".join(clauses)
+    from services.turn_outcome import EMPTY_NARRATION_TEXT
+
+    return EMPTY_NARRATION_TEXT
+
+
 def validate_narrative_text(summary: dict, text: str) -> dict:
     """Barreira conservadora contra reversões explícitas na prosa livre.
 
@@ -348,9 +376,9 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
     return {"ok": not violations, "violations": violations}
 
 
-def narrative_or_fallback(summary: dict, proposed_text: str) -> str:
+def narrative_or_fallback(summary: dict, proposed_text: str, *, player_facing: bool = False) -> str:
     """Retém prosa consistente; em contradição usa somente fatos canônicos."""
     check = validate_narrative_text(summary, proposed_text)
     if check["ok"]:
         return str(proposed_text or "").strip()
-    return canonical_summary_text(summary)
+    return player_summary_text(summary) if player_facing else canonical_summary_text(summary)

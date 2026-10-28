@@ -93,8 +93,16 @@ def history_page(state: dict, *, cursor: str | None = None, limit: int = 50) -> 
         for row in entries
     ]
     end = offset + max(1, min(100, limit))
+    from services.turn_outcome import strip_system_tags
+
+    page = [
+        {**row, "text": strip_system_tags(row["text"])}
+        if row.get("role") == "narrator" and isinstance(row.get("text"), str)
+        else row
+        for row in entries[offset:end]
+    ]
     return {
-        "entries": entries[offset:end],
+        "entries": page,
         "next_cursor": f"{epoch}:{end}" if end < len(entries) else None,
         "epoch": epoch,
         "partial_history": partial,

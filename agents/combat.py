@@ -2279,7 +2279,7 @@ def _combat_node(state: GameState):
                 "downed_ids": (_downed_identity_tokens(player) if player_dead else []),
             },
         )
-        narrative = summ.narrative_or_fallback(conflict_sum, narrative)
+        narrative = summ.narrative_or_fallback(conflict_sum, narrative, player_facing=True)
     narrative = prose_guard.sanitize_meta_preamble(narrative)
     prose_guard.log_if_repeats(narrative, aberturas[0] if aberturas else "", where="combate")
 
@@ -2339,7 +2339,7 @@ def _combat_node(state: GameState):
     combat_meta["last_reactions"] = list(out.get("reactions") or [])
     from services import combat_preview as _preview
 
-    _preview.store_mech_log(combat_meta, out, [player, *enemies])  # SPEC-334 R6 (só deck on)
+    _preview.store_mech_log(combat_meta, out, [player, *enemies, *allies])  # SPEC-334 R6 (só deck on)
     if status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
         combat_meta["last_mech_log"] = list(combat_meta.get("last_mech_log") or []) + status_logs
         narrative = narrative.rstrip() + "\n\n" + " ".join(status_logs)

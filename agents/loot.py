@@ -51,11 +51,13 @@ def _validated_narrative(canonical_summary: dict, proposed_text: str) -> str:
     sistema.
     """
     proposed = str(proposed_text or "").strip()
-    checked = conflict_summary_service.narrative_or_fallback(canonical_summary, proposed)
+    checked = conflict_summary_service.narrative_or_fallback(
+        canonical_summary, proposed, player_facing=True
+    )
     if checked != proposed:
         return checked
     if canonical_summary.get("loot_obtido"):
-        return conflict_summary_service.canonical_summary_text(canonical_summary)
+        return conflict_summary_service.player_summary_text(canonical_summary)
     return checked
 
 
