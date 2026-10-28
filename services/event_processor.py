@@ -447,6 +447,7 @@ def process_pending_events(state: dict) -> dict:
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
+    card_notices: list[dict] = []  # SPEC-357 R12: anexados DEPOIS do bloco de reputação
     card_quest_ids: list[str] = []  # SPEC-357 R12: quests de lore com tecnica prometida
     faction_setbacks: list[tuple[str, int]] = []  # SPEC-305 R13: (faction_id, pontos)
     killed_targets: list = []  # SPEC-230 R4
@@ -704,10 +705,7 @@ def process_pending_events(state: dict) -> dict:
                     continue
                 cname = (cards.get_card(got) or {}).get("name", got)
                 quests = [{**q, "reward_card": got} if q.get("id") == cq_id else q for q in quests]
-                notices = list(
-                    updates.get("reputation_notices", state.get("reputation_notices")) or []
-                )
-                notices.append(
+                card_notices.append(
                     {
                         "kind": "carta",
                         "subject_id": got,
@@ -715,7 +713,6 @@ def process_pending_events(state: dict) -> dict:
                         "turn": turn,
                     }
                 )
-                updates["reputation_notices"] = notices[-16:]
         # SPEC-226 R10: cada conclusão é um ganho individual (XP e ouro).
         from services.turn_outcome import record_gain
 
@@ -837,6 +834,9 @@ def process_pending_events(state: dict) -> dict:
                 continue
             notices.append({"kind": "faction", "subject_id": fid, "text": text, "turn": turn})
         updates["reputation_notices"] = notices[-16:]
+    if card_notices:  # depois de `process_deeds`, que devolve a lista inteira de avisos
+        notices = list(updates.get("reputation_notices", state.get("reputation_notices")) or [])
+        updates["reputation_notices"] = (notices + card_notices)[-16:]
     if chronicle_changed:
         updates["chronicle"] = chronicle
     if quests_changed:

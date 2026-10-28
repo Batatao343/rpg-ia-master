@@ -167,3 +167,13 @@ def test_off_writes_nothing(monkeypatch):
     monkeypatch.setenv("RPG_CARD_REWARDS", "off")
     out = process_pending_events(_state(_quest()))
     assert out["player"]["known_cards"] == []
+
+
+def test_notice_kept_with_origin_faction():
+    """P1-1: a reputacao devolve a lista de avisos inteira; o aviso da Carta nao pode sumir."""
+    q = _quest(location="brekmar")
+    q["origin_faction_id"] = "poder_kahen"
+    out = process_pending_events(_state(q))
+    assert out["player"]["known_cards"]
+    notes = [n for n in out.get("reputation_notices") or [] if n["kind"] == "carta"]
+    assert len(notes) == 1 and notes[0]["subject_id"] in out["player"]["known_cards"]
