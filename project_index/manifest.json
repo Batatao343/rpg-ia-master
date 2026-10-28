@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "dbfcb1922b51d809d139072e2044485d9674e9e6",
+  "commit_sha": "44fd2aa9abe0b9b6511202c5792a863eee065c36",
   "edge_counts": {
-    "calls": 32074,
-    "contains": 1050,
-    "defines": 15702,
-    "imports": 2571,
-    "likely_test_for": 1808,
+    "calls": 32127,
+    "contains": 1052,
+    "defines": 15730,
+    "imports": 2577,
+    "likely_test_for": 1813,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:b167f3310de6b2064bd05e5fe3ec875a6a01f284a3ace2e89eadf4fd6156f16a",
+  "graph_hash": "sha256:bdc0062679cb309d8052d3486118a80ee1292b429eba4727c1123716188575b3",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -101,6 +101,7 @@
     "docs/spec335/confirmar_tronco_lote6.py",
     "docs/spec336/arena_folego_full.py",
     "docs/spec339/arena_spec339.py",
+    "docs/spec341/arena_spec341.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -1049,6 +1050,7 @@
     "tests/test_spec325_reinforcements.py",
     "tests/test_spec325_resist.py",
     "tests/test_spec339_duracao_condicoes.py",
+    "tests/test_spec341_balanco.py",
     "tests/test_spec342_nonlethal_jogadas.py",
     "tests/test_spec342_scene_view.py",
     "tests/test_spec343_security.py",
@@ -1296,14 +1298,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 980,
+    "class": 981,
     "endpoint": 68,
-    "file": 1242,
-    "function": 4923,
+    "file": 1244,
+    "function": 4934,
     "method": 843,
-    "module": 1050,
-    "test": 8955
+    "module": 1052,
+    "test": 8971
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:2219b5fc2649d6ae3eae3f56f0962a8fe31312e4e9381e4c69e576b4fc2929a0"
+  "source_tree_hash": "sha256:778d1e38ceab54af48f9be8b95731bed7fdbcd13f81bc97347f5e7842c3013df"
 }
