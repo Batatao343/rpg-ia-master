@@ -126,4 +126,4 @@ def test_object_card_end_to_end_via_run_round(monkeypatch):
     )
     mine = [a for a in out["attacks"] if a["actor_id"] == "player"]
     assert mine and mine[0]["card_id"] == card["id"], out["logs"]
-    assert not any("não pôde ser jogada" in str(l) for l in out["logs"])
+    assert not any("não pôde ser jogada" in str(log) for log in out["logs"])
