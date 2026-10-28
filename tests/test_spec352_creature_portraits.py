@@ -416,3 +416,48 @@ def test_no_provider_import():
         assert "openai_images" not in text and "get_llm" not in text
     brief_src = (ROOT / "services/art_brief.py").read_text(encoding="utf-8")
     assert "openai_images" not in brief_src
+
+
+# --- revisão Sol -------------------------------------------------------------------------------
+def test_private_store_row_only_serves_origin_game():
+    """P2-1: objeto ainda em users/{owner}/ nunca vira URL para outro jogo (fica 'gerando', sem oferta)."""
+    reg = cp.SnapshotRegistry(
+        _ready("tipo:enemy_goblin", origin="g0", store="private", thumb="users/o/x.webp"),
+        sign=_sign,
+    )
+    assert ca._registry_src(reg, "tipo:enemy_goblin", game_id="g1") == (None, True)
+    src, pending = ca._registry_src(reg, "tipo:enemy_goblin", game_id="g0")
+    assert pending is False and src.startswith("https://signed.example/private/")
+
+
+def test_s3_shared_store_copy_and_sign_path():
+    """P2-3: no perfil s3 o store compartilhado é o mesmo bucket com prefixo `shared/creatures/`."""
+    import hashlib
+    from types import SimpleNamespace
+
+    from infrastructure.s3_blob import S3BlobStore
+    from tests.test_s3_blob import FakeS3
+
+    client = FakeS3()
+    store = S3BlobStore(client, "private")
+    payload = b"webp"
+    variant = SimpleNamespace(
+        variant="thumb",
+        payload=payload,
+        sha256=hashlib.sha256(payload).hexdigest(),
+        mime_type="image/webp",
+    )
+    out = art_jobs.copy_variant_to_shared(
+        store,
+        portrait_key="tipo:x",
+        asset_id=uuid4(),
+        variant=variant,
+        owner_id=uuid4(),
+        game_id=uuid4(),
+    )
+    assert out["key"].startswith("shared/creatures/") and ("private", out["key"]) in client.objects
+    assert store.signed_url(out["key"], 600).startswith(
+        "https://s3.example/private/shared/creatures/"
+    )
+    runtime_src = (ROOT / "infrastructure/runtime.py").read_text(encoding="utf-8")
+    assert "shared_blob_store = blob_store" in runtime_src

@@ -582,7 +582,8 @@ def test_concurrent_claim_two_connections_real_confirm_flow():
         thread.join(30)
         assert results == ["won", "taken"]
         row = admin.execute(
-            "select generation_id, version from app.creature_portraits where portrait_key=%s", (key,)
+            "select generation_id, version from app.creature_portraits where portrait_key=%s",
+            (key,),
         ).fetchone()
         assert row["generation_id"] == gens[0] and row["version"] == 1
     finally:
@@ -592,3 +593,53 @@ def test_concurrent_claim_two_connections_real_confirm_flow():
         admin.execute("delete from app.art_generations where generation_id = any(%s)", (gens,))
         admin.execute("delete from app.games where id = any(%s)", (games,))
         admin.close()
+
+
+# --- revisão Sol ------------------------------------------------------------------------------
+def test_copy_job_is_enqueued_in_the_same_transaction_as_complete(pc, tmp_path_factory):
+    """P1-1: cópia falhou -> `ready/private` + job de cópia já na fila, sem janela de perda."""
+    generation = confirm(pc, issue_monster(pc))
+    run_monster(pc, generation, lease(pc, generation), tmp_path_factory.mktemp("q1"), shared=False)
+    assert row_of(pc)["store"] == "private"
+    job = pc.db.execute(
+        "select payload,status from app.jobs where kind='copy_creature_portrait' and dedupe_key=%s",
+        (f"copy-portrait:{generation['generation_id']}",),
+    ).fetchone()
+    assert job and job["status"] == "queued" and job["payload"]["portrait_key"] == pc.key
+
+
+def test_sweeper_requeues_old_private_rows(pc):
+    from services.creature_portraits import sweep_private_portraits
+
+    generation = confirm(pc, issue_monster(pc))
+    pc.db.execute(
+        """update app.creature_portraits set status='ready',store='private',
+        object_keys='{"thumb":"users/x/y.webp"}'::jsonb,updated_at=now()-interval '2 hours'
+        where portrait_key=%s""",
+        (pc.key,),
+    )
+    assert sweep_private_portraits(pc.pool)["private_requeued"] >= 1
+    assert pc.db.execute(
+        "select 1 from app.jobs where kind='copy_creature_portrait' and dedupe_key like %s",
+        (f"copy-portrait:{generation['generation_id']}:sweep:%",),
+    ).fetchone()
+
+
+def test_erase_owner_drops_unpromoted_pool_rows_and_frees_key(pc):
+    held = _pool_entry(pc, "held")
+    promoted = _pool_entry(pc, "promoted")
+    k_held, k_promoted = f"tipo:bst:{held}", f"tipo:bst:{promoted}"
+    _insert_ready(
+        pc,
+        k_held,
+        visibility="pool",
+        origin_game=pc.game_id,
+        pool_entry=held,
+        thumb="shared/creatures/ab/h.webp",
+    )
+    _insert_ready(pc, k_promoted, visibility="pool", origin_game=pc.game_id, pool_entry=promoted)
+    keys = PostgresPortraitRegistry.erase_owner(pc.db, pc.owner.user_id)
+    assert "shared/creatures/ab/h.webp" in keys
+    assert row_of(pc, k_held) is None  # chave livre para nova cotação
+    kept = row_of(pc, k_promoted)
+    assert kept["status"] == "ready" and kept["origin_owner_id"] is None

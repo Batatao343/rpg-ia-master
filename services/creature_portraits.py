@@ -302,7 +302,10 @@ class PostgresPortraitRegistry:
             str(v)
             for row in db.execute(
                 """delete from app.creature_portraits where origin_owner_id=%s and (
-                     visibility='game' or status in ('pending','failed') or store='private')
+                     visibility='game' or status in ('pending','failed') or store='private'
+                     or (visibility='pool' and not exists (
+                           select 1 from app.shared_pool sp
+                           where sp.entry_id=pool_entry_id and sp.status='promoted')))
                 returning object_keys, store, status""",
                 (owner,),
             ).fetchall()
@@ -356,3 +359,61 @@ def purge_game_portraits(connection, owner_id: UUID, game_id: UUID) -> None:
         from workers.blob_purge_jobs import enqueue_shared_art_purge
 
         enqueue_shared_art_purge(connection, owner_id, keys)
+
+
+def enqueue_copy_job(
+    connection,
+    *,
+    portrait_key: str,
+    generation_id: UUID,
+    owner_id: UUID,
+    game_id: UUID,
+    dedupe_suffix: str = "",
+) -> None:
+    """P1-1: job idempotente `copy_creature_portrait` NA transacao do chamador (sem janela de perda)."""
+    from uuid import NAMESPACE_URL, uuid4, uuid5
+
+    asset_id = uuid5(NAMESPACE_URL, f"art-asset:{generation_id}")  # mesmo id do `_confirm`
+    connection.execute(
+        """insert into app.jobs (id,owner_id,game_id,kind,dedupe_key,status,payload,max_attempts)
+           values (%s,%s,%s,'copy_creature_portrait',%s,'queued',%s,8)
+           on conflict (kind,dedupe_key) do nothing""",
+        (
+            uuid4(),
+            owner_id,
+            game_id,
+            f"copy-portrait:{generation_id}{dedupe_suffix}",
+            Jsonb(
+                {
+                    "portrait_key": portrait_key,
+                    "owner_id": str(owner_id),
+                    "game_id": str(game_id),
+                    "asset_id": str(asset_id),
+                }
+            ),
+        ),
+    )
+
+
+def sweep_private_portraits(pool, *, min_age_minutes: int = 30, limit: int = 50) -> dict[str, int]:
+    """P1-1: reenfileira `ready` + `store='private'` antigos (job perdido/morto). Idempotente por hora."""
+    with admin_connection(pool) as connection, connection.transaction():
+        rows = connection.execute(
+            """select p.portrait_key, p.generation_id, g.owner_id, g.game_id
+            from app.creature_portraits p join app.art_generations g on g.generation_id=p.generation_id
+            where p.status='ready' and p.store='private'
+              and p.updated_at < now() - make_interval(mins => %s)
+            order by p.updated_at limit %s""",
+            (min_age_minutes, limit),
+        ).fetchall()
+        hour = connection.execute("select to_char(now(),'YYYYMMDDHH24') as h").fetchone()["h"]
+        for row in rows:
+            enqueue_copy_job(
+                connection,
+                portrait_key=row["portrait_key"],
+                generation_id=row["generation_id"],
+                owner_id=row["owner_id"],
+                game_id=row["game_id"],
+                dedupe_suffix=f":sweep:{hour}",
+            )
+    return {"private_requeued": len(rows)}
