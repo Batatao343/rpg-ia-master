@@ -321,3 +321,22 @@ def test_api_flee_button_builds_structured_flee_declaration(monkeypatch):
     state = _state(monkeypatch)
     api._apply_action_options(state, _req(action_kind="flee"))
     assert state["combat_declaration"]["acao"]["kind"] == "flee"
+
+
+def test_refused_play_shows_the_reason_in_the_registry(monkeypatch):
+    """Carta fora da mão: nada é gasto e a mensagem diz por quê (não 'O combate segue')."""
+    state, res = _open(monkeypatch)
+    nxt = _after_open(state, res)
+    eid = nxt["enemies"][0]["id"]
+    nxt["messages"] = [*nxt["messages"], HumanMessage(content="Jogo")]
+    nxt["combat_declaration"] = {
+        "actor_id": "player",
+        "acao": {"kind": "card", "card_id": "carta_que_nao_existe", "target_id": eid},
+        "jogadas": [{"kind": "card", "card_id": "carta_que_nao_existe", "target_id": eid}],
+    }
+    before = copy.deepcopy(nxt["combat"]["pilhas"])
+    out = combat._combat_node(nxt)
+    assert out["combat"]["round"] == 0
+    assert out["combat"]["pilhas"] == before
+    assert "O combate segue" not in out["messages"][0].content
+    assert out["messages"][0].content.strip()

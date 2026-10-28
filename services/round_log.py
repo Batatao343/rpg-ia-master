@@ -31,6 +31,15 @@ _HUMAN_LINE_RES = tuple(
         r" está atordoado e perde o turno\.$",
         r"^O Abismo se aproxima\.$",
         r"desaba sobre a cena\.$",
+        # recusas e avisos do motor (já em português claro)
+        r"Carta de suporte recusada\.$",
+        r"^Alvo de suporte ",
+        r"^Ataque sem alvo válido\.$",
+        r"já está fora do conflito\.$",
+        r"ataque recusado\.$",
+        r"não pode mirar direto\.$",
+        r"^Pacto do Abismo:",
+        r"não está na sua mão|não está preparada|Fôlego insuficiente",
     )
 )
 
