@@ -181,6 +181,12 @@ def cron_jobs(request: Request):
     authorize(request)
 
     def task():
+        try:  # SPEC-352 P1-1: varredor de retratos `ready`+`private` esquecidos (best-effort)
+            from services.creature_portraits import sweep_private_portraits
+
+            sweep_private_portraits(_runtime().game_store.pool)
+        except Exception as exc:
+            item_failed("jobs", "creature_portrait", "sweep", exc)
         from workers.drain import drain_jobs
 
         return drain_jobs(

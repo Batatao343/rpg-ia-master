@@ -106,30 +106,6 @@ def build_handlers():
                 asset_id=UUID(str(payload["asset_id"])),
                 result=result,
             )
-            if result.get("shared_copy_failed"):
-                # SPEC-352 R8: ja pago e pronto (privado); o job idempotente promove depois.
-                try:
-                    from infrastructure.contracts import JobRequest
-
-                    runtime.job_queue.enqueue(
-                        JobRequest(
-                            "copy_creature_portrait",
-                            f"copy-portrait:{generation_id}",
-                            {
-                                "portrait_key": str(generation["subject_id"]),
-                                "owner_id": str(owner_id),
-                                "game_id": str(game_id),
-                                "asset_id": str(payload["asset_id"]),
-                            },
-                            owner_id=owner_id,
-                            game_id=game_id,
-                            max_attempts=8,
-                        )
-                    )
-                except Exception as exc:
-                    from observability.telemetry import log_fallback
-
-                    log_fallback("creature_portrait", "copy_enqueue_failed", exc)
             return result
         except Exception as exc:
             from observability.telemetry import log_event

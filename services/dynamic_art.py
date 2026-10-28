@@ -273,7 +273,7 @@ class DynamicArtRepository:
                 (display_asset_id, Jsonb(safe_usage), generation_id),
             )
             if generation["subject_type"] == "monster":
-                self._mark_portrait_ready(connection, generation_id, variants, result)
+                self._mark_portrait_ready(connection, generation, generation_id, variants, result)
             if generation.get("image_quote_id"):
                 from infrastructure.wallet import PostgresWallet, WalletConflict
                 from services.shard_pricing import PricingUnavailable
@@ -337,13 +337,13 @@ class DynamicArtRepository:
 
     @staticmethod
     def _mark_portrait_ready(
-        connection, generation_id: UUID, variants: list[dict], result: dict[str, Any]
+        connection, generation: dict, generation_id: UUID, variants: list[dict], result: dict[str, Any]
     ) -> None:
         """SPEC-352 R8: registro compartilhado na MESMA transacao da liquidacao.
 
         Copia compartilhada feita -> `shared`; falhou -> `private` (o job `copy_creature_portrait`
         promove depois). A geracao nunca falha por causa da copia: o jogador ja pagou."""
-        from services.creature_portraits import PostgresPortraitRegistry
+        from services.creature_portraits import PostgresPortraitRegistry, enqueue_copy_job
 
         shared = {row["variant"]: row for row in result.get("shared_variants") or []}
         if "thumb" in shared:
@@ -361,6 +361,14 @@ class DynamicArtRepository:
             object_keys=keys,
             sha256=digests,
         )
+        if store == "private":  # P1-1: o job de copia nasce NA mesma transacao da liquidacao
+            enqueue_copy_job(
+                connection,
+                portrait_key=str(generation["subject_id"]),
+                generation_id=generation_id,
+                owner_id=generation["owner_id"],
+                game_id=generation["game_id"],
+            )
 
     def approved_portrait_key(self, owner_id: UUID, game_id: UUID) -> str | None:
         """SPEC-326 R10: blob key da variante ``full`` do último retrato ``ready`` (aprovado)."""
