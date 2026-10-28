@@ -304,7 +304,7 @@ export interface CardView {
 }
 
 export type InvalidReason = "not_prepared" | "spent_frequency" | "no_entropy" | "cooldown" |
-  "no_valid_target" | "target_dead" | "target_hidden" | "out_of_zone" | "not_your_turn" | "combat_inactive";
+  "no_valid_target" | "target_dead" | "target_hidden" | "out_of_zone" | "not_your_turn" | "combat_inactive" | "fora_de_combate";
 
 export interface BasicActionView {
   kind: "attack" | "maneuver" | "pass" | "flee";

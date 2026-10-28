@@ -55,7 +55,7 @@ export function RoundBoard({ entries, round, title }: { entries: RoundLogEntry[]
           {effects.length > 0 && <ol className="roundboard__list roundboard__list--efeitos">{effects.map((e, i) => <EffectRow key={i} e={e} />)}</ol>}
         </details>
       )}
-      <p className="sr-only" role="status" aria-live="polite">{`Rodada resolvida: ${entries.length} ${entries.length === 1 ? "jogada" : "jogadas"}.`}</p>
+      <p className="sr-only" role="status" aria-live="polite">{`Rodada resolvida: ${plays.length} ${plays.length === 1 ? "jogada" : "jogadas"}${effects.length ? ` e ${effects.length} ${effects.length === 1 ? "efeito" : "efeitos"}` : ""}.`}</p>
     </section>
   );
 }

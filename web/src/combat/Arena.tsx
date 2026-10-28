@@ -13,6 +13,8 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[], npc
   // SPEC-354 R9: nunca um id cru ("npc_ketil") como nome — grupo, NPC conhecido, rótulo da espécie, id humanizado.
   const ctx = { party, npcs, labels };
   const nm = (raw: string | null | undefined, id: string) => displayName(raw, id, ctx);
+  // P2-5: inimigo nunca casa com membro do grupo (um "enemy_lobo_1" não vira o aliado "Lobo Cinzento").
+  const nmEnemy = (raw: string | null | undefined, id: string) => displayName(raw, id, { ...ctx, party: undefined, npcs: undefined });
   const engaged = (names: string[] | undefined) => (names ?? []).map((n) => nm(n, n));
   const out: Array<Participant & { zoneId: string }> = [];
   const player = pos.get("player");
@@ -26,7 +28,7 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[], npc
   for (const enemy of combat.enemies) {
     const p = pos.get(enemy.id);
     out.push({
-      id: enemy.id, name: nm(enemy.name, enemy.id), role: "enemy",
+      id: enemy.id, name: nmEnemy(enemy.name, enemy.id), role: "enemy",
       vit: enemy.vitalidade, max: enemy.max_vitalidade, esquiva: enemy.esquiva, protecao: enemy.protecao,
       conditions: enemy.conditions,
       intel: [...enemy.revealed_cards.map((c) => c.name), ...enemy.revealed_resistances],

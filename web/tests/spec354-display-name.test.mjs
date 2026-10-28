@@ -33,3 +33,11 @@ test('prefere_nome_de_npc_e_do_grupo_conhecidos', async () => {
   assert.equal(displayName('npc_mirela', 'npc_mirela', { party: [{ name: 'Mirela' }] }), 'Mirela');
   assert.equal(displayName('enemy_x_1', 'enemy_x_1', { labels: new Map([['enemy_x_1', 'Bandido']]) }), 'Bandido');
 });
+
+test('inimigo_com_nome_cru_nao_vira_aliado_do_grupo', async () => {
+  const { buildParticipants } = await load('../src/combat/Arena.tsx');
+  const combat = { enemies: [{ id: 'enemy_lobo_1', name: 'enemy_lobo_1', vitalidade: 5, max_vitalidade: 5, esquiva: 1, protecao: 0, conditions: [], revealed_cards: [], revealed_resistances: [] }],
+    scene: { zones: [], positions: [] }, wounds: { vitality: 10, max_vitality: 10 }, player_conditions: [], encounter_view: {} };
+  const out = buildParticipants(combat, [{ name: 'Lobo Cinzento' }], []);
+  assert.equal(out.find((p) => p.id === 'enemy_lobo_1').name, 'Lobo 1');
+});

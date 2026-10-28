@@ -13,6 +13,7 @@ export const REASON_TEXT: Record<InvalidReason, string> = {
   out_of_zone: "Alvo fora de alcance",
   not_your_turn: "Não é a sua vez",
   combat_inactive: "Sem combate ativo",
+  fora_de_combate: "Ofício de estrada, não de lâmina: não serve na luta",
 };
 
 export const BASIC_LABEL: Record<string, string> = {

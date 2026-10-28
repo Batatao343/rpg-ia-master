@@ -15,6 +15,8 @@ def _ended(monkeypatch, mode="on"):
     meta["active"] = False
     meta["phase"] = "ended"
     meta["last_round_board"] = list(BOARD)
+    meta["result"] = {"outcome": "victory", "xp_event_ref": "rc-1", "result_event_id": "res-1"}
+    state["last_turn_outcome"] = {"receipt_id": "rc-1", "turn": 1}
     return state
 
 
@@ -32,4 +34,10 @@ def test_active_combat_without_piles_has_no_board(monkeypatch):
     state = _ended(monkeypatch)
     state["combat"]["active"] = True
     state["combat"]["phase"] = "player"
+    assert "registro_rodada" not in api._combat_block(state)
+
+
+def test_next_turn_after_the_end_has_no_board(monkeypatch):
+    state = _ended(monkeypatch)
+    state["last_turn_outcome"] = {"receipt_id": "rc-2", "turn": 2}  # outro turno: o resultado já não é o do término
     assert "registro_rodada" not in api._combat_block(state)

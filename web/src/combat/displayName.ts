@@ -19,7 +19,7 @@ export function humanizeId(id: string): string {
   return words.join(" ") || id;
 }
 
-interface Ctx { party?: PartyMember[]; npcs?: GameResponse["npcs"]; labels?: Map<string, string> }
+export interface Ctx { party?: PartyMember[]; npcs?: GameResponse["npcs"]; labels?: Map<string, string> }
 
 /** Nome exibível: `raw` quando é um nome de verdade; senão o grupo, os NPCs conhecidos, o rótulo da espécie e,
  *  por fim, o id humanizado. */

@@ -54,3 +54,9 @@ test('sem_efeitos_nao_ha_lista_e_entrada_antiga_renderiza', async () => {
   assert.match(out, /Golpe/);
   assert.match(html(h(RoundBoard, { entries: [base], round: 2, title: 'O que se jogou na rodada final' })), /O que se jogou na rodada final/);
 });
+
+test('leitor_de_tela_separa_jogadas_de_efeitos', async () => {
+  const { RoundBoard } = await load('../src/components/combat/RoundBoard.tsx');
+  const out = html(h(RoundBoard, { entries: [base, base, dot], round: 3 }));
+  assert.match(out, /Rodada resolvida: 2 jogadas e 1 efeito\./);
+});

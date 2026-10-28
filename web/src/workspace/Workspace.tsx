@@ -167,8 +167,10 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
   }, [fighting]);
   const streamingNow = log.some((entry) => entry.streaming);
   // SPEC-354 R4.3: a última narração terminada (o desfecho do conflito) para o painel de Combate encerrado.
-  const lastNarrationEntry = [...log].reverse().find((e) => e.role === "narrator" && !e.streaming && e.text.trim());
-  const lastNarration = lastNarrationEntry?.text.replace(/[*_#>`]/g, "").trim();
+  // P2-4: só a ÚLTIMA entrada do Livro, e só se for narração pronta — em fluxo (ou ainda sem resposta) não mostra a anterior.
+  const lastEntry = log[log.length - 1];
+  const lastNarration = lastEntry && lastEntry.role === "narrator" && !lastEntry.streaming && lastEntry.text.trim()
+    ? lastEntry.text.replace(/[*_#>`]/g, "").trim() : undefined;
   useEffect(() => {
     if (!awaitingNarration || !shouldAutoOpenCombat(false, true, !thinking && !streamingNow)) return;
     let second = 0;

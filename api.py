@@ -3192,7 +3192,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
         _piles.mode() == "on"
         and meta.get("last_round_board")
         and not meta.get("active")
-        and (meta.get("phase") == "ended" or _combat_result(state))
+        and _combat_result(state)  # só no turno de término (e no reload antes de "Continuar")
     ):
         # SPEC-354 R4.1 (D-354-4): o conflito acabou (pilhas apagadas) — o registro da rodada final
         # continua visível no painel de Combate; some quando o próximo conflito começar (meta novo).

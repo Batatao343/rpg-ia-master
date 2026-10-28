@@ -33,7 +33,6 @@ for (const [label, viewport, touch] of [["1440", { width: 1440, height: 900 }, f
       const read = page.getByRole("button", { name: "Ler na Crônica" });
       if (touch) expect((await measure(read)).h).toBeGreaterThanOrEqual(43.5);
       const cont = page.getByRole("button", { name: "Continuar" });
-      await cont.scrollIntoViewIfNeeded();
       const c = await measure(cont);
       expect(c.free && c.inView, JSON.stringify(c)).toBe(true);
       await read.dispatchEvent("click");
