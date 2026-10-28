@@ -289,7 +289,12 @@ class RouterDecision(BaseModel):
         return optional_entity_ref(value)
 
 
-_NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|sem)\b(?:\s+\w+){0,2}\s*$")
+_NEGATION_BEFORE_RE = re.compile(r"\b(?:nao|nunca|jamais)\b(?:\s+\w+){0,2}\s*$")
+# contexto que não é combate ("numa partida de dados", "para arrombá-la"): na dúvida, STORY
+_NON_COMBAT_CONTEXT_RE = re.compile(
+    r"\b(?:numa?|em\s+uma?)\s+(?:partida|jogo|disputa|aposta|competicao|concurso|queda\s+de\s+braco)\b"
+    r"|\bde\s+dados\b|\bpara\s+(?:arromb|abrir|quebr|derrub|acend|cort|desbloque)\w*"
+)
 
 
 def _fold_text(text: str) -> str:
@@ -350,8 +355,12 @@ def _hostility_target(state, folded: str, obj: str) -> str | None:
         names = set(em.name_tokens(str(enemy.get("name") or "")))
         if names and names <= wanted:
             return core
-    if threat and tokens & set(em.name_tokens(ai)):
-        return core
+    manifest = (state.get("combat") or {}).get("encounter")
+    if em.is_valid_manifest(manifest):  # criaturas do manifesto do encontro
+        for part in manifest.get("participants") or []:
+            names = set(em.name_tokens(str(part.get("species_label") or part.get("name") or "")))
+            if names and names <= wanted:
+                return core
     return None
 
 
@@ -361,6 +370,8 @@ def _hostility_fallback(state, last_human: str, world: dict, _resumed, resume_ex
     Devolve ``None`` (segue STORY) sem verbo, com negação, particípio/narração ("fui atacado"),
     objeto que não é entidade da cena ("a mesa", "meu medo", "a subida") ou na dúvida."""
     folded = _fold_text(last_human)
+    if _NON_COMBAT_CONTEXT_RE.search(folded):
+        return None
     chosen = None
     for m in _HOSTILE_1P_RE.finditer(folded):
         if _NEGATION_BEFORE_RE.search(folded[: m.start()]):

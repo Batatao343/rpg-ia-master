@@ -79,10 +79,13 @@ def test_off_path_unchanged():
 
 
 _AMEACA = AIMessage(
-    content="Dois bandidos armados bloqueiam a ponte e o guarda Brunna rosna uma ameaça."
+    content="Dois bandidos armados bloqueiam a ponte, a tempestade ronca e uma ameaça paira."
 )
 
 HOSTILE = [
+    "Sem pensar, ataco o bandido",
+    "Sem pensar ataco o bandido",
+    "Ataco o goblin",
     "Ataco o bandido mais próximo",
     "Saco a espada e ataco o bandido da esquerda",
     "Golpeio o bandido com o punho",
@@ -91,6 +94,12 @@ HOSTILE = [
     "Atiro contra o bandido",
 ]
 NOT_HOSTILE = [
+    "Golpeio a porta para arrombá-la",
+    "Enfrento a tempestade a pé",
+    "Enfrento o goblin numa partida de dados",
+    "Ataco o muro com a picareta para abrir passagem",
+    "Enfrento o capitão numa disputa de bebida",
+    "Golpeio a tempestade de areia com o manto",
     "Enfrento meu medo e atravesso a ponte",
     "Disparo pela porta rumo à praça",
     "Golpeio a mesa com o punho e exijo o preço justo",
