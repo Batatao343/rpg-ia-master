@@ -19,7 +19,7 @@ import sys
 
 GOLDEN = os.path.join(os.path.dirname(__file__), "fixtures", "spec330_legacy_golden.json")
 _V = {"forca": 3, "agilidade": 2, "corpo": 2, "mente": 3, "carisma": 2}
-_BOOKKEEPING = {"_cartas_rodada"}
+_BOOKKEEPING = {"_cartas_rodada", "ferimento", "ticks", "scene_logs"}  # SPEC-346: só registro
 
 
 def _strip(value):
