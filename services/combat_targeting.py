@@ -110,6 +110,8 @@ def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
         return TargetingResult([], gate)
     player = state.get("player") or {}
     card = cards.get_card(card_id) or {}
+    if card.get("tipo") == "utilitaria":  # SPEC-353 R37: sem efeito no conflito
+        return TargetingResult([], "fora_de_combate")
     prepared = set(player.get("prepared_cards") or [])
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
     if card_id not in prepared and card_id not in virtude_ids:

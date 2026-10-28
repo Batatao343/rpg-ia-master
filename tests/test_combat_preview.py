@@ -56,7 +56,12 @@ def test_preview_nao_altera_estado_e_nao_vaza_defesa(monkeypatch):
         "efeitos_extra",
         "aproximado",
         "pressagio_frustrado",
+        # SPEC-353 R19: a Proteção PÚBLICA (armadura visível) vira dado; o bruto não muda.
+        "defesa_conhecida",
+        "dano_min_apos_defesa",
+        "dano_max_apos_defesa",
     }
+    assert out["defesa_conhecida"] == 9 and out["dano_min_apos_defesa"] == 0
 
 
 @pytest.mark.parametrize(

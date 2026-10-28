@@ -2490,7 +2490,7 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
     o contador já interpretado, mas o motor ainda revalida no uso.
     """
     import combat_mechanics as cm
-    from services import cards
+    from services import card_text, cards
 
     prepared = set(player.get("prepared_cards") or [])
     evolved = player.get("evolved_cards") or {}
@@ -2542,6 +2542,7 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
                 "rupture_ready": bool(ready and kind == "ativa" and card.get("ruptura")),
                 "trigger": card.get("gatilho", ""),
                 "evolved": evolved.get(cid),
+                "texto": card_text.effective_rule_text(player, card),  # SPEC-353 R18
             }
         )
     return out
@@ -3040,7 +3041,7 @@ def _combat_block(state: dict) -> dict[str, Any]:
 
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
-        view["pilhas"] = _piles.public_view(meta["pilhas"])
+        view["pilhas"] = _piles.public_view(meta["pilhas"], player)
     if _piles.mode() == "on" and (
         isinstance(meta.get("pilhas"), dict) or meta.get("last_round_board")
     ):

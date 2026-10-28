@@ -56,6 +56,33 @@ def _uses_formula(card: dict | None, actor: dict) -> bool:
     return bool(ef.get("formula") or actor.get("attack_formula"))
 
 
+def effective_damage_base(
+    player: dict, card: dict | None, target: dict | None = None
+) -> tuple[int, str, list[str]]:
+    """SPEC-353 R18: o dano-base EFETIVO de uma jogada (Carta + herói iniciante + modificadores),
+    a MESMA conta da prévia e do motor. Devolve ``(base, tipo, partes)``; ``partes`` explica a
+    origem em linguagem ("3 da Carta", "+2 de herói iniciante", "+2 de bônus"). Sem defesa do alvo."""
+    step = ct.TurnStep(kind="card" if card else "attack", card_id=(card or {}).get("id"))
+    if _uses_formula(card, player):
+        base, dtype = ct._damage_from(
+            card and {**card, "efeito": {**(card.get("efeito") or {}), "formula": None}},
+            {k: v for k, v in player.items() if k != "attack_formula"},
+            step,
+        )
+    else:
+        base, dtype = ct._damage_from(card, player, step)  # MESMO caminho do motor
+    carta = base
+    early = cm.early_game_damage_bonus(int(player.get("level", 1) or 1))
+    mods = int(cm.combat_modifiers(player).get("damage", 0)) + cm.damage_type_bonus(player, dtype)
+    total = max(0, base + early + mods)
+    partes = [f"{carta} da Carta"]
+    if early:
+        partes.append(f"{early:+d} de herói iniciante")
+    if mods:
+        partes.append(f"{mods:+d} de bônus")
+    return total, dtype, partes
+
+
 def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     """Preview de ``card_id`` (ou ataque básico se ``None``) contra ``target_id``.
 
@@ -114,20 +141,7 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     if direct:
         if _uses_formula(card, player):
             aproximado = True  # `_damage_from` rolaria dados; o preview usa o dano-base padrão
-            base, dtype = ct._damage_from(
-                card and {**card, "efeito": {**(card.get("efeito") or {}), "formula": None}},
-                {k: v for k, v in player.items() if k != "attack_formula"},
-                step,
-            )
-        else:
-            base, dtype = ct._damage_from(card, player, step)  # MESMO caminho do motor
-        base += cm.early_game_damage_bonus(int(player.get("level", 1) or 1))
-        base = max(
-            0,
-            base
-            + int(cm.combat_modifiers(player).get("damage", 0))
-            + cm.damage_type_bonus(player, dtype),
-        )
+        base, dtype, _partes = effective_damage_base(player, card)  # SPEC-353 R18: uma conta só
         base += fx.consume_marca_abismo(player, target, None)  # cópias; a Marca é pública
         pct = fx.damage_pct(player, "dealt") + fx.damage_pct(target, "taken")
 
@@ -154,7 +168,15 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
     ]
     kws = fx.keywords(card) if card else {}
     frustra = bool(pressagios) and bool(kws.get("interromper") or (direct and dano_max >= vit))
-    return {
+    # SPEC-353 R19: a Proteção PÚBLICA do alvo (armadura visível + condição visível); nada oculto.
+    defesa = None
+    if direct:
+        panel = bk.public_panel(target)
+        armor_prot = panel.get("protecao")
+        cond_prot = int(cm.combat_modifiers(target).get("protection", 0) or 0)
+        if armor_prot is not None or cond_prot:
+            defesa = max(0, int(armor_prot or 0) + cond_prot)
+    result = {
         "chance_acerto_pct": round(p_hit * 100, 1),
         "chance_critico_pct": round((dist["critico"] + dist["supercritico"]) * 100, 1),
         "dano_min": dano_min,
@@ -163,7 +185,12 @@ def preview(state: dict, card_id: str | None, target_id: str | None) -> dict:
         "efeitos_extra": efeitos,
         "pressagio_frustrado": frustra,
         "aproximado": aproximado,
+        "defesa_conhecida": defesa,
     }
+    if defesa is not None:
+        result["dano_min_apos_defesa"] = max(0, dano_min - defesa)
+        result["dano_max_apos_defesa"] = max(0, dano_max - defesa)
+    return result
 
 
 _RESULT_LABEL = {

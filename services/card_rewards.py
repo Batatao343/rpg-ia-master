@@ -555,8 +555,8 @@ def purge_curse(state: dict, scar_id: str, via: str) -> dict:
 # ==========================================================================
 # Visao publica (API) - so quando ha o que mostrar
 # ==========================================================================
-def card_view(card_id: str) -> dict:
-    from services import card_effects as fx
+def card_view(card_id: str, player: dict | None = None) -> dict:
+    from services import card_text
 
     card = cards.get_card(card_id) or {}
     return {
@@ -567,7 +567,7 @@ def card_view(card_id: str) -> dict:
         "raridade": rarity_of(card),
         "custo_folego": cards.custo_folego(card),
         "custo_entropia": int(card.get("custo_entropia", 0) or 0),
-        "texto": fx.render_card_text(card),
+        "texto": card_text.effective_rule_text(player, card),  # SPEC-353 R18
         "descricao": card.get("descricao", ""),
     }
 
@@ -582,7 +582,7 @@ def public_pending(player: dict) -> dict | None:
         "origem": pending.get("origem"),
         "recusa_ouro": int(pending.get("recusa_ouro", REFUSE_GOLD) or 0),
         "ofertas": [
-            {**card_view(cid), "conhecida": cid in known} for cid in pending.get("ofertas") or []
+            {**card_view(cid, player), "conhecida": cid in known} for cid in pending.get("ofertas") or []
         ],
     }
 

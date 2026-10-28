@@ -626,11 +626,13 @@ def _target_kind(card: dict) -> str:
     return "aliado" if kind in _ALLY_KINDS else "si"
 
 
-def _rule_text(card: dict) -> str:
-    return fx.render_card_text(card)
+def _rule_text(card: dict, player: dict | None = None) -> str:
+    from services import card_text
+
+    return card_text.effective_rule_text(player, card, in_combat=True)
 
 
-def public_view(piles: dict | None) -> dict | None:
+def public_view(piles: dict | None, player: dict | None = None) -> dict | None:
     if not isinstance(piles, dict):
         return None
     hand = []
@@ -646,7 +648,7 @@ def public_view(piles: dict | None) -> dict | None:
                 "custo_entropia": int(card.get("custo_entropia", 0) or 0),
                 "jogavel": not fardo,
                 "alvo": _target_kind(card),  # SPEC-334: o front decide se pede alvo/prévia
-                "texto": _rule_text(card),  # SPEC-334 R2: texto gerado, sem LLM
+                "texto": _rule_text(card, player),  # SPEC-334 R2: texto gerado, sem LLM
                 "palavras_chave": sorted(fx.keywords(card)),
             }
         )
