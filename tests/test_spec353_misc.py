@@ -74,14 +74,15 @@ def test_deck_mode_slots_invariant(monkeypatch, mode):
         assert view is None
 
 
-# --- D6 revertido: utilitaria continua no baralho (arena: Medico +2,7 pp com ela fora) ---
-def test_utility_cards_stay_in_the_draw_pile(monkeypatch):
+# --- SPEC-355 R11 reexecuta o D6 da 353 (com recalibracao): utilitaria sai da compra do conflito ---
+def test_utility_cards_stay_out_of_the_draw_pile(monkeypatch):
     monkeypatch.setenv("RPG_CARD_DECK", "on")
     util = next(c["id"] for c in cards.all_cards().values() if c.get("tipo") == "utilitaria")
     player = _player(["bas_dev_golpe"] * 12 + [util])
     piles = card_piles.start_piles(player, 7)
     everything = piles["compra"] + piles["mao"] + piles["descarte"] + piles["exaurida"]
-    assert util in everything
+    assert util not in everything and util in piles["fora_do_conflito"]
+    assert util in player["deck"]
 
 
 # --- R34 / R36 texto ---

@@ -284,6 +284,13 @@ def _apply_afiada(card: dict) -> dict:
     return card
 
 
+# SPEC-355 R12: Cartas de EXEMPLO (fixture dos testes do motor, formula 2d6 pela via legada) ficam no
+# catálogo (`all_cards`/`get_card`: golden e saves antigos), mas fora do pool jogável.
+EXEMPLO_FORA_DO_POOL: frozenset[str] = frozenset(
+    {"golpe_devoto", "corte_sangrento", "praga_lenta", "raio_cinza"}
+)
+
+
 def is_neutral(card: dict | None) -> bool:
     """Carta neutra: sem Postura (`classe` vazia/'Neutra'/None) ou `neutra: true` (SPEC-355 R7)."""
     if not card:
@@ -300,6 +307,8 @@ def cards_for_class(class_name: str, subclass: str = "") -> list[dict]:
     for c in _load_cards().values():
         if c.get("tipo") == "virtude" or c.get("basica"):
             continue  # basicas (SPEC-328) vivem no baralho, nunca no Acervo/progressao
+        if c.get("id") in EXEMPLO_FORA_DO_POOL:
+            continue
         if c.get("tipo") in STATUS_TIPOS or c.get("origem") == "cartas-333":
             continue  # SPEC-333: status/maldicao/Sussurro entram so por regra, nunca por escolha
         if class_name == "":

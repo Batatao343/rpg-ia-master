@@ -171,16 +171,21 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
     deck_ids = list(player.get("deck") or []) or _starting_deck_ids(player)  # sem mutar a ficha
     live: list[str] = []
     out: list[str] = []
+    off: list[str] = []
     for cid in deck_ids:
-        # SPEC-353 D6 REVERTIDO: tirar utilitárias da compra deu Médico de Campo +2,7 pp na arena
-        # (fora de ±2 pp); fica como a SPEC-328 decidiu, com texto claro (R37).
-        (out if _locked_for_scene(player, cid) else live).append(cid)
+        # SPEC-355 R11: utilitária (efeito fora do conflito) fica no baralho mas nunca é comprada,
+        # embaralhada nem descartada no conflito; vai para `fora_do_conflito`.
+        if (cards.get_card(cid) or {}).get("tipo") == "utilitaria":
+            off.append(cid)
+        else:
+            (out if _locked_for_scene(player, cid) else live).append(cid)
     piles: dict[str, Any] = {
         "compra": live,
         "mao": [],
         "descarte": [],
         "exaurida": out,
         "guardadas": [],
+        "fora_do_conflito": off,
         "folego": FOLEGO_BASE,
         "folego_emprestado": 0,
         "seed": int(seed),
