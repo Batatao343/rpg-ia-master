@@ -21,7 +21,7 @@ BESTIARY = ROOT / "data" / "bestiary.json"
 WORLD_MAP = ROOT / "data" / "world_map.json"
 OVERRIDES = ROOT / "data" / "world" / "rumor_seed_overrides.json"
 OUT = ROOT / "data" / "world" / "rumor_seeds.json"
-EXPECTED_LORE = 40
+EXPECTED_LORE = 48
 AVISTAMENTO_TYPES = ("Minion", "Standard", "Elite")
 OVERRIDE_FIELDS = (
     "truth",

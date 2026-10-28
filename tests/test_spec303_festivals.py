@@ -40,7 +40,7 @@ def test_catalog_valid():
     lore = pathlib.Path("lore_nova")
     covered = set()
     for f in cat:
-        assert f["review"] == "dono" and f["month"] in {m["id"] for m in wc.months()}
+        assert f["review"] == "aprovado" and f["month"] in {m["id"] for m in wc.months()}
         assert 1 <= f["day_of_month"] <= 20 and f["duration_days"] >= 1
         assert f["label"] and f["lore_refs"]
         for lid in f["location_ids"]:

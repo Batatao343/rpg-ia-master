@@ -31,3 +31,11 @@ Um batedor que diz ter chegado mais perto do Farol do que qualquer um vivo jura 
 
 Os Números Não Batem
 Uma jovem engenheira que serviu na Câmara do Sinal antes de pedir transferência conta, baixinho, que há dois cadernos de registro, não um. "O que a gente entrega para a mestra Astrin tem um número. Mas a leitora-chefe escreve outro número num caderno que ela esconde. Eu vi uma vez, por acaso. Os dois números medem a mesma coisa — quão rápido aquela coisa vermelha lá embaixo está acordando. E o número escondido é muito, muito pior que o oficial. A gente está sendo enganado sobre quanto tempo resta. Todos nós."
+
+---
+
+## [FONTE: Um caçador que leva comida à torre e finge que é costume]
+[TAGS: Skallgard, Farol da Chama Negra, confiabilidade: alta]
+
+Os que Velam no Gelo Pedem para Ser Escolhidos
+Um caçador de Skallgard conta que há gente que sobe ao Farol e fica, inverno após inverno, sem fogo e sem pedir nada, e que quem pergunta o que fazem ali recebe uma pergunta de volta. "Eles esperam ser escolhidos. Não sei por quem. Ficam assim mesmo, ano após ano, e nenhum deles foi escolhido ainda." Os clãs tecnológicos preferem que o caçador não repita isso perto dos aparelhos.

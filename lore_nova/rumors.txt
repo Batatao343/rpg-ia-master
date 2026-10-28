@@ -250,7 +250,7 @@ Frequentadores curiosos notam que Grum nunca vende o barril no canto esquerdo do
 [FONTE: Mercadores que comerciam na borda do arquipélago, nunca entram]
 
 Ophidia Está Criando um Veneno Que Mata Apenas Humanos
-Mercadores de borda que negociam com emissários de Ophidia relatam encomendas crescentes de material orgânico específico de humanos: sangue de tipo raro, cabelos, ossos jovens. "Eles não querem ouro nem especiarias. Querem amostras. Catalogadas por região." A teoria mais popular é que os Yuan-Ti estão mapeando variações biológicas humanas para um propósito que ninguém quer nomear.
+Mercadores de borda que negociam com emissários de Ophidia relatam encomendas crescentes de material orgânico específico de humanos: sangue de tipo raro, cabelos, ossos jovens. "Eles não querem ouro nem especiarias. Querem amostras. Catalogadas por região." A teoria mais popular é que os de Ophidia estão mapeando variações biológicas humanas para um propósito que ninguém quer nomear.
 
 ---
 
@@ -361,3 +361,76 @@ Uma mergulhadora experiente que desce nas ruínas há anos conta algo que a tiro
 
 A Maior Carcaça Ainda Respira
 Isto, raro entre rumores, é dito igual por gente que nunca se falou: coletores de âmbar de diferentes gerações, todos juram a mesma coisa sobre o Trono, a maior carcaça do Cemitério. "Ela respira. Em ciclos, de uma em uma seis horas mais ou menos. Você sente — um puxão no peito, como se o ar fosse sugado, e depois solto. A coisa morreu há eras e não terminou de morrer. Os Osshari não deixam ninguém entrar, e graças seja, porque o que quer que ainda respire ali dentro depois de todo esse tempo não devia ser acordado. Tem leviatã que vira cemitério. E tem um que virou trono, e ainda tá tentando levantar."
+
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Nova Arcádia, Guilda dos Corvos, confiabilidade: baixa]
+[FONTE: Um coveiro novo que não quis dar o nome]
+
+Um Morto Ainda Varre o Crematório
+Um coveiro recém-contratado jura que o forno do Setor Leste é varrido todo dia por um velho que ele já viu na lista dos mortos da casa de Valerius, anos atrás, quando copiava nomes para o livro de entradas. "O mesmo rosto. O mesmo jeito de segurar a vassoura. Chamei de 'senhor', ele me respondeu 'senhor' de volta, e me ofereceu água." O coveiro não voltou a perguntar. Os Corvos dizem que o velho é só parecido com alguém.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Nova Arcádia, Anel de Lama, confiabilidade: média]
+[FONTE: Uma vendedora de sopa que escuta o pregador toda noite]
+
+O Pregador Tem a Cicatriz da Legião
+Todo mundo no Anel de Lama conhece o pregador da Chama Azul que abre o colarinho para mostrar o pescoço. Uma vendedora de sopa que o ouve há anos diz que a cicatriz não é de briga de rua: "É corte de lâmina de quartel, do tipo que eles dão em quem sai sem pedir. E ele fala 'em formação' quando acha que ninguém está ouvindo." Ninguém quis conferir. Quem confere nesse bairro costuma deixar de ter o que conferir.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Pradaria das Ruínas, confiabilidade: média]
+[FONTE: Um liberto que atravessou a Pradaria a pé]
+
+O Árbitro de Brekmar Tem um Número Gravado
+Um liberto que passou a vida em mãos de mercadores jura ter visto, de passagem, o Cinzéu que dizem mandar em Brekmar, de costas, sob as correntes: um número, gravado fundo, do formato que os bandos da Pradaria usam em mercadoria. Fala baixo ao contar. "Não vou dizer de quem era o bando. Digo que o número está lá, e que ele sabe que está." Ninguém em Brekmar repete a história em voz alta.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Skallgard, Farol da Chama Negra, confiabilidade: alta]
+[FONTE: Um caçador que leva comida à torre e finge que é costume]
+
+Os que Velam no Gelo Pedem para Ser Escolhidos
+Um caçador de Skallgard conta que há gente que sobe ao Farol e fica, inverno após inverno, sem fogo e sem pedir nada, e que quem pergunta o que fazem ali recebe uma pergunta de volta. "Eles esperam ser escolhidos. Não sei por quem. Ficam assim mesmo, ano após ano, e nenhum deles foi escolhido ainda." Os clãs tecnológicos preferem que o caçador não repita isso perto dos aparelhos.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Brekmar, confiabilidade: alta]
+[FONTE: Um capitão que já pagou a aula]
+
+Em Brekmar se Paga o Éter em Sangue, e a Legião Queima Quem Aprende
+Um capitão de Brekmar diz que há quem ensine, no porto, a pagar o Éter com sangue em vez de pagar com o corpo inteiro: "Contam antes de cortar. Cobram adiantado, e ensinam menos do que sabem." Em Nova Arcádia, completa ele, a Legião queima quem aprende o mesmo ofício, e nem sempre pergunta primeiro o que foi aprendido. Ele ainda tem as cicatrizes e uma tabela de datas.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Aethelgard, confiabilidade: baixa]
+[FONTE: Um pescador das margens do lago]
+
+Há Quem Cure Apodrecendo Mais Depressa
+Um pescador das margens do lago de Aethelgard jura que há uma mulher nas margens que cura febre fazendo a carne apodrecer mais depressa, para o mal sair junto com o que apodreceu. "Funciona. Vi um homem sair da cama." Os druidas de fora dizem que é conversa de pescador, e que o homem morreu na semana seguinte. O pescador diz que não foi a febre.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Pântano da Melancolia, confiabilidade: média]
+[FONTE: Um caçador de espólio que perdeu a metade do equipamento no poço errado]
+
+Os Druidas Cinzentos Guardam o que Sobrou de Aethelgard
+Um caçador de espólio do Pântano garante que um dos druidas cinzentos mais velhos guarda, no fundo de um poço seco, peças de instrumento que não são do pântano nem de lugar nenhum que ele conheça: cristais menores, aros de metal, uma coisa de vidro que "zumbe quando alguém mente". Já tentaram comprar. Já tentaram roubar. O druida, diz o caçador, não grita: poda.
+
+---
+
+[CATEGORIA: RUMOR]
+[TAGS: Nova Arcádia, Anel de Lama, confiabilidade: alta]
+[FONTE: Uma mulher que pariu duas vezes na casa dela]
+
+A Parteira do Anel de Lama Ensina a Costurar Quem a Praga Quer
+A parteira do Anel de Lama não cobra em dinheiro, e uma mulher que pariu duas vezes na casa dela diz que ela também ensina. "A Praga é doença, e doença se lava e se corta e se costura antes de se rezar. Ela diz isso e entrega a agulha." Quem aparece à porta sem ser chamado é recebido; quem chega com a Legião atrás é recebido também, e a Legião só entra depois que a bolsa de couro fecha.

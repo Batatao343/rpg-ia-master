@@ -23,3 +23,11 @@ Exploradores que sobreviveram às ruínas submersas de Aethelgard descrevem zumb
 
 A Cidade Sonha que Ainda Está Viva
 Uma mergulhadora experiente que desce nas ruínas há anos conta algo que a tirou da água por um mês: "Tem um ponto, bem fundo, onde se você olha a cidade do ângulo certo, por um instante ela parece inteira. Iluminada. Viva. Como era antes. E você ouve — não com os ouvidos, com os ossos — alguma coisa lá embaixo respirando devagar. Os velhos dizem que é uma das criaturas do fundo que 'sonha' a cidade viva. E o pior é que dá vontade de ficar. De nadar pra dentro do sonho. Subi com os pulmões gritando porque uma parte de mim queria ficar lá embaixo, na Aethelgard que não existe mais. Tive que me obrigar."
+
+---
+
+## [FONTE: Um pescador das margens do lago]
+[TAGS: Aethelgard, confiabilidade: baixa]
+
+Há Quem Cure Apodrecendo Mais Depressa
+Um pescador das margens do lago de Aethelgard jura que há uma mulher nas margens que cura febre fazendo a carne apodrecer mais depressa, para o mal sair junto com o que apodreceu. "Funciona. Vi um homem sair da cama." Os druidas de fora dizem que é conversa de pescador, e que o homem morreu na semana seguinte. O pescador diz que não foi a febre.

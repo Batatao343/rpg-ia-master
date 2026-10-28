@@ -387,3 +387,79 @@ def test_new_texts_no_forbidden_lexicon():
     new = _new_docs_text()
     assert len(new) > 8000  # pegou os docs novos
     assert not _has_forbidden(new), _has_forbidden(new)
+
+
+# ---------------------------------------------------------------- dados de mundo (R43-R46)
+
+NEW_RUMOR_SEEDS = {
+    "rumor_um_morto_ainda_varre_o_crematorio": ("baixa", True),
+    "rumor_o_pregador_tem_a_cicatriz_da_legiao": ("media", True),
+    "rumor_o_arbitro_de_brekmar_tem_um_numero_gravado": ("media", True),
+    "rumor_os_que_velam_no_gelo_pedem_para_ser_escolhidos": ("alta", True),
+    "rumor_em_brekmar_se_paga_o_eter_em_sangue_e_a_legiao_queima_quem_aprende": ("alta", True),
+    "rumor_ha_quem_cure_apodrecendo_mais_depressa": ("baixa", False),
+    "rumor_os_druidas_cinzentos_guardam_o_que_sobrou_de_aethelgard": ("media", True),
+    "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer": ("alta", True),
+}
+
+
+def _lore_seeds() -> dict:
+    seeds = load_json("data/world/rumor_seeds.json")["seeds"]
+    return {k: v for k, v in seeds.items() if v["family"] == "lore"}
+
+
+def test_guardian_rumor_true():
+    seed = _lore_seeds()["rumor_o_guardiao_do_farol_era_um_de_nos"]
+    assert seed["truth"] is True and seed["secret_id"] == "farol_chama_negra"
+
+
+def test_false_ratio_in_range():
+    lore = {k: v for k, v in _lore_seeds().items() if not v.get("disabled")}
+    assert len(lore) == 48
+    ratio = sum(1 for s in lore.values() if not s["truth"]) / len(lore)
+    assert 0.20 <= ratio <= 0.35, ratio
+
+
+def test_ophidia_seed_west_and_no_yuan_ti():
+    seed = _lore_seeds()["rumor_ophidia_esta_criando_um_veneno_que_mata_apenas_humanos"]
+    assert "oeste" in fold(seed["gist"]) and "sul" not in fold(seed["gist"])
+    assert "yuan-ti" not in fold(lore_text("rumors.txt"))
+    assert "yuan-ti" not in _public_text()
+
+
+def test_festivals_named_and_approved():
+    fest = {f["id"]: f for f in load_json("data/world/festivals.json")["festivals"]}
+    assert len(fest) == 14 and all(f["review"] == "aprovado" for f in fest.values())
+    ceu = fest["fim_do_ceu_vermelho"]
+    assert ceu["name"] == "Véspera do Céu Vermelho" and ceu["label"] == "em vigília"
+    daily = lore_text("daily_life.txt").splitlines()
+    start = next(i for i, ln in enumerate(daily) if ln.startswith("Como Valoria Conta o Tempo"))
+    for f in fest.values():
+        assert len(f["lore_refs"]) == 1
+        name, _, line = f["lore_refs"][0].partition(":")
+        assert name == "daily_life.txt" and int(line) - 1 > start, f["id"]
+        assert fold(f["name"].split(" ", 1)[1]) in fold(daily[int(line) - 1]), f["id"]
+    section = fold(" ".join(daily[start:]))
+    for needle in ("sete meses", "dragao", "cinco dias", "so ali", "noite do silencio", "vigilia"):
+        assert needle in section, needle
+
+
+def test_new_rumor_seeds_enabled_with_regions():
+    seeds = _lore_seeds()
+    for sid, (conf, truth) in NEW_RUMOR_SEEDS.items():
+        s = seeds[sid]
+        assert s["regions"] and not s.get("disabled"), sid
+        assert s["confiabilidade"] == conf and s["truth"] is truth, sid
+        assert s["source"].startswith("lore_nova/rumors.txt:")
+    assert seeds["rumor_um_morto_ainda_varre_o_crematorio"]["secret_id"] == "pacto_valerius"
+
+
+def test_rumor_seeds_generator_check_is_green():
+    import subprocess
+    import sys
+
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/build_rumor_seeds.py"), "--check"],
+        capture_output=True, cwd=ROOT,
+    )
+    assert proc.returncode == 0, proc.stdout

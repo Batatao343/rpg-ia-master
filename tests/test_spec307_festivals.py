@@ -47,7 +47,7 @@ def test_catalog_month_day_valid():
     for f in wc.festivals_catalog():
         assert f["month"] in ids and 1 <= f["day_of_month"] <= 20 and f["duration_days"] >= 1
         assert "season" not in f and "day_in_season" not in f
-        assert f["review"] == "dono"
+        assert f["review"] == "aprovado"
 
 
 def test_each_festival_keeps_303_season():

@@ -23,3 +23,11 @@ Um marinheiro veterano que largou um bom contrato conta o porquê: "O navio era 
 
 A Dona da Casa Não Tem Rosto de Verdade
 Uma mulher que perdeu tudo para a Casa das Marés sussurra sobre quem a administra: "A Senhora que recebe a gente — tente lembrar o rosto dela depois. Não consegue. Ninguém consegue. Eu fui dezenas de vezes e juro que nunca vi a cara dela, mesmo olhando direto. É como se os olhos escorregassem. Acho que ela não tem rosto porque não é gente. Acho que é a Casa olhando pra gente através de uma forma de mulher. E quando você percebe isso, já é tarde, já não consegue mais sair. Eu ainda sonho com o cheiro de lá. Todo dia."
+
+---
+
+## [FONTE: Um capitão que já pagou a aula]
+[TAGS: Brekmar, confiabilidade: alta]
+
+Em Brekmar se Paga o Éter em Sangue, e a Legião Queima Quem Aprende
+Um capitão de Brekmar diz que há quem ensine, no porto, a pagar o Éter com sangue em vez de pagar com o corpo inteiro: "Contam antes de cortar. Cobram adiantado, e ensinam menos do que sabem." Em Nova Arcádia, completa ele, a Legião queima quem aprende o mesmo ofício, e nem sempre pergunta primeiro o que foi aprendido. Ele ainda tem as cicatrizes e uma tabela de datas.

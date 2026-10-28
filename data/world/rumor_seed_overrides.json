@@ -130,7 +130,7 @@
     },
     "rumor_ophidia_esta_criando_um_veneno_que_mata_apenas_humanos": {
       "fonte_label": "mercadores da borda do arquipélago",
-      "gist": "o arquipélago do sul prepara um veneno que só mata humanos"
+      "gist": "as ilhas do oeste preparam um veneno que só mata humanos"
     },
     "rumor_valerius_e_o_arauto_da_nevoa_sao_o_mesmo_ser": {
       "fonte_label": "monges de um culto louco",
@@ -147,7 +147,8 @@
       "fonte_label": "um batedor bêbado",
       "gist": "o guardião do farol era um de nós",
       "quest_eligible": false,
-      "secret_id": "farol_chama_negra"
+      "secret_id": "farol_chama_negra",
+      "truth": true
     },
     "rumor_os_numeros_nao_batem": {
       "fonte_label": "uma técnica desertora",
@@ -199,6 +200,43 @@
     "rumor_avist_mon_os_que_voltaram_e_nao_eram_eles": {
       "creature_label": "os que voltaram",
       "creature_article": ""
+    },
+    "rumor_um_morto_ainda_varre_o_crematorio": {
+      "fonte_label": "um coveiro novo",
+      "gist": "um velho que consta como morto varre o forno do crematório",
+      "truth": true,
+      "quest_eligible": false,
+      "secret_id": "pacto_valerius",
+      "entities": []
+    },
+    "rumor_o_pregador_tem_a_cicatriz_da_legiao": {
+      "fonte_label": "uma vendedora de sopa",
+      "gist": "o pregador da Chama Azul tem no pescoço uma cicatriz de quartel da Legião"
+    },
+    "rumor_o_arbitro_de_brekmar_tem_um_numero_gravado": {
+      "fonte_label": "um liberto da Pradaria",
+      "gist": "o Cinzéu que arbitra o porto leva um número gravado nas costas",
+      "quest_eligible": false
+    },
+    "rumor_os_que_velam_no_gelo_pedem_para_ser_escolhidos": {
+      "fonte_label": "um caçador de Skallgard",
+      "gist": "os que velam ao pé da torre esperam ser escolhidos por algo"
+    },
+    "rumor_em_brekmar_se_paga_o_eter_em_sangue_e_a_legiao_queima_quem_aprende": {
+      "fonte_label": "um capitão de Brekmar",
+      "gist": "no porto se ensina a pagar o Éter em sangue, e a Legião queima quem aprende"
+    },
+    "rumor_ha_quem_cure_apodrecendo_mais_depressa": {
+      "fonte_label": "um pescador do lago",
+      "gist": "há quem cure febre fazendo a carne apodrecer mais depressa"
+    },
+    "rumor_os_druidas_cinzentos_guardam_o_que_sobrou_de_aethelgard": {
+      "fonte_label": "um caçador de espólio",
+      "gist": "um druida velho guarda num poço seco peças do que foi Aethelgard"
+    },
+    "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer": {
+      "fonte_label": "uma mulher que pariu em casa dela",
+      "gist": "a parteira do Anel de Lama ensina a costurar quem a Praga quer"
     }
   }
 }

@@ -159,3 +159,27 @@ Durante audiências públicas, Valerius às vezes chama peticionários pelo apel
 
 Algumas Dívidas São Fabricadas
 Trabalhadores do Anel de Ferro com longos anos de serviço relatam um padrão: quando um trabalhador qualificado demais começa a fazer perguntas ou liderar outros, sua dívida subitamente aumenta por "taxas administrativas". O sistema de dívida não é apenas consequência da pobreza — é ferramenta de controle ativo. "Não é que as pessoas não paguem. É que o número nunca diminui, independente do quanto pagam."
+
+---
+
+## [FONTE: Um coveiro novo que não quis dar o nome]
+[TAGS: Nova Arcádia, Guilda dos Corvos, confiabilidade: baixa]
+
+Um Morto Ainda Varre o Crematório
+Um coveiro recém-contratado jura que o forno do Setor Leste é varrido todo dia por um velho que ele já viu na lista dos mortos da casa de Valerius, anos atrás, quando copiava nomes para o livro de entradas. "O mesmo rosto. O mesmo jeito de segurar a vassoura. Chamei de 'senhor', ele me respondeu 'senhor' de volta, e me ofereceu água." O coveiro não voltou a perguntar. Os Corvos dizem que o velho é só parecido com alguém.
+
+---
+
+## [FONTE: Uma vendedora de sopa que escuta o pregador toda noite]
+[TAGS: Nova Arcádia, Anel de Lama, confiabilidade: média]
+
+O Pregador Tem a Cicatriz da Legião
+Todo mundo no Anel de Lama conhece o pregador da Chama Azul que abre o colarinho para mostrar o pescoço. Uma vendedora de sopa que o ouve há anos diz que a cicatriz não é de briga de rua: "É corte de lâmina de quartel, do tipo que eles dão em quem sai sem pedir. E ele fala 'em formação' quando acha que ninguém está ouvindo." Ninguém quis conferir. Quem confere nesse bairro costuma deixar de ter o que conferir.
+
+---
+
+## [FONTE: Uma mulher que pariu duas vezes na casa dela]
+[TAGS: Nova Arcádia, Anel de Lama, confiabilidade: alta]
+
+A Parteira do Anel de Lama Ensina a Costurar Quem a Praga Quer
+A parteira do Anel de Lama não cobra em dinheiro, e uma mulher que pariu duas vezes na casa dela diz que ela também ensina. "A Praga é doença, e doença se lava e se corta e se costura antes de se rezar. Ela diz isso e entrega a agulha." Quem aparece à porta sem ser chamado é recebido; quem chega com a Legião atrás é recebido também, e a Legião só entra depois que a bolsa de couro fecha.

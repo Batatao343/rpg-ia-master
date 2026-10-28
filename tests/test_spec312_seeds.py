@@ -26,9 +26,9 @@ def _lore() -> dict:
     return {k: v for k, v in _seeds().items() if v["family"] == "lore"}
 
 
-def test_forty_lore_seeds_with_source_line():
+def test_forty_eight_lore_seeds_with_source_line():
     lore = _lore()
-    assert len(lore) == 40
+    assert len(lore) == 48
     lines = (ROOT / "lore_nova/rumors.txt").read_text(encoding="utf-8").split("\n")
     for seed in lore.values():
         path, _, n = seed["source"].rpartition(":")
@@ -36,9 +36,9 @@ def test_forty_lore_seeds_with_source_line():
         assert lines[int(n) - 1].startswith("[CATEGORIA: RUMOR]")
 
 
-def test_confiabilidade_distribution_13_15_12():
+def test_confiabilidade_distribution_16_18_14():
     counts = Counter(s["confiabilidade"] for s in _lore().values())
-    assert (counts["alta"], counts["media"], counts["baixa"]) == (13, 15, 12)
+    assert (counts["alta"], counts["media"], counts["baixa"]) == (16, 18, 14)
 
 
 def test_regions_locations_entities_exist():

@@ -657,7 +657,7 @@
       "title": "Ophidia Está Criando um Veneno Que Mata Apenas Humanos",
       "fonte": "Mercadores que comerciam na borda do arquipélago, nunca entram",
       "fonte_label": "mercadores da borda do arquipélago",
-      "gist": "o arquipélago do sul prepara um veneno que só mata humanos",
+      "gist": "as ilhas do oeste preparam um veneno que só mata humanos",
       "regions": [
         "ophidia"
       ],
@@ -737,7 +737,7 @@
       "public_names": [],
       "labels": {},
       "confiabilidade": "baixa",
-      "truth": false,
+      "truth": true,
       "quest_eligible": false,
       "review": "dono",
       "secret_id": "farol_chama_negra"
@@ -948,6 +948,182 @@
       "subject": "lugar",
       "entities": [
         "cn_o_trono"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_um_morto_ainda_varre_o_crematorio": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:368",
+      "title": "Um Morto Ainda Varre o Crematório",
+      "fonte": "Um coveiro novo que não quis dar o nome",
+      "fonte_label": "um coveiro novo",
+      "gist": "um velho que consta como morto varre o forno do crematório",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "nova_arcadia",
+      "subject": "faccao",
+      "entities": [],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": true,
+      "quest_eligible": false,
+      "review": "dono",
+      "secret_id": "pacto_valerius"
+    },
+    "rumor_o_pregador_tem_a_cicatriz_da_legiao": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:377",
+      "title": "O Pregador Tem a Cicatriz da Legião",
+      "fonte": "Uma vendedora de sopa que escuta o pregador toda noite",
+      "fonte_label": "uma vendedora de sopa",
+      "gist": "o pregador da Chama Azul tem no pescoço uma cicatriz de quartel da Legião",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_lama"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_o_arbitro_de_brekmar_tem_um_numero_gravado": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:386",
+      "title": "O Árbitro de Brekmar Tem um Número Gravado",
+      "fonte": "Um liberto que atravessou a Pradaria a pé",
+      "fonte_label": "um liberto da Pradaria",
+      "gist": "o Cinzéu que arbitra o porto leva um número gravado nas costas",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "location_id": "pradaria_ruinas",
+      "subject": "lugar",
+      "entities": [
+        "pradaria_ruinas"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": false,
+      "review": "dono"
+    },
+    "rumor_os_que_velam_no_gelo_pedem_para_ser_escolhidos": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:395",
+      "title": "Os que Velam no Gelo Pedem para Ser Escolhidos",
+      "fonte": "Um caçador que leva comida à torre e finge que é costume",
+      "fonte_label": "um caçador de Skallgard",
+      "gist": "os que velam ao pé da torre esperam ser escolhidos por algo",
+      "regions": [
+        "skallgard"
+      ],
+      "location_id": "sk_farol_chama_negra",
+      "subject": "faccao",
+      "entities": [
+        "clas_tecnologicos",
+        "sk_farol_chama_negra"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_em_brekmar_se_paga_o_eter_em_sangue_e_a_legiao_queima_quem_aprende": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:404",
+      "title": "Em Brekmar se Paga o Éter em Sangue, e a Legião Queima Quem Aprende",
+      "fonte": "Um capitão que já pagou a aula",
+      "fonte_label": "um capitão de Brekmar",
+      "gist": "no porto se ensina a pagar o Éter em sangue, e a Legião queima quem aprende",
+      "regions": [
+        "brekmar"
+      ],
+      "location_id": "brekmar",
+      "subject": "lugar",
+      "entities": [
+        "brekmar"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "alta",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_ha_quem_cure_apodrecendo_mais_depressa": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:413",
+      "title": "Há Quem Cure Apodrecendo Mais Depressa",
+      "fonte": "Um pescador das margens do lago",
+      "fonte_label": "um pescador do lago",
+      "gist": "há quem cure febre fazendo a carne apodrecer mais depressa",
+      "regions": [
+        "aethelgard"
+      ],
+      "location_id": "aethelgard",
+      "subject": "lugar",
+      "entities": [
+        "aethelgard"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "baixa",
+      "truth": false,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_os_druidas_cinzentos_guardam_o_que_sobrou_de_aethelgard": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:422",
+      "title": "Os Druidas Cinzentos Guardam o que Sobrou de Aethelgard",
+      "fonte": "Um caçador de espólio que perdeu a metade do equipamento no poço errado",
+      "fonte_label": "um caçador de espólio",
+      "gist": "um druida velho guarda num poço seco peças do que foi Aethelgard",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "location_id": "pantano_melancolia",
+      "subject": "lugar",
+      "entities": [
+        "pantano_melancolia"
+      ],
+      "public_names": [],
+      "labels": {},
+      "confiabilidade": "media",
+      "truth": true,
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer": {
+      "family": "lore",
+      "source": "lore_nova/rumors.txt:431",
+      "title": "A Parteira do Anel de Lama Ensina a Costurar Quem a Praga Quer",
+      "fonte": "Uma mulher que pariu duas vezes na casa dela",
+      "fonte_label": "uma mulher que pariu em casa dela",
+      "gist": "a parteira do Anel de Lama ensina a costurar quem a Praga quer",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "location_id": "na_anel_lama",
+      "subject": "lugar",
+      "entities": [
+        "na_anel_lama"
       ],
       "public_names": [],
       "labels": {},
