@@ -2255,6 +2255,7 @@ def _format_response_raw(state: dict, *, cue_action_key: str | None = None) -> G
             # são a projeção pública do que já está no save (sem inventar turno).
             "can_reorganize": _can_reorganize_view(state),
             "prepared_slots": _prepared_slots(player),
+            **({"baralho": _deck_view(player)} if _deck_view(player) else {}),
             "scars": _scars_view(player),
             "subclass": str(player.get("subclass") or ""),
             "virtue_cards": _virtue_cards_view(player),
@@ -2424,10 +2425,38 @@ def _can_reorganize_view(state: dict) -> dict[str, Any]:
     return {"allowed": bool(allowed), "reason": reason}
 
 
+def _deck_mode_on(player: dict) -> bool:
+    from services import card_piles
+
+    return card_piles.mode() == "on" and bool(player.get("deck"))
+
+
 def _prepared_slots(player: dict) -> int:
     from services import cards
 
+    if _deck_mode_on(player):  # SPEC-353 R31: com o Baralho `on` o teto que vale é o do Baralho
+        return int(cards.DECK_MAX)
     return int(cards.prepare_slots_for_level(player.get("level", 1)))
+
+
+def _deck_view(player: dict) -> dict[str, int] | None:
+    """SPEC-353 R31: a API diz qual modelo vale (Baralho 12-24 em vez da Preparação por nível)."""
+    from services import cards
+
+    if not _deck_mode_on(player):
+        return None
+    deck = [str(c) for c in player.get("deck") or []]
+    basics = {
+        cid
+        for ids in cards.basicas_for_class(str(player.get("class_name", ""))).values()
+        for cid in ids
+    }
+    return {
+        "total": len(deck),
+        "minimo": int(cards.DECK_MIN),
+        "maximo": int(cards.DECK_MAX),
+        "do_acervo": sum(1 for c in deck if c not in basics),
+    }
 
 
 def _virtue_cards_view(player: dict) -> list[dict[str, Any]]:
@@ -2493,6 +2522,8 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
     from services import card_text, cards
 
     prepared = set(player.get("prepared_cards") or [])
+    if _deck_mode_on(player):  # SPEC-353 R31: "preparada" = "está no baralho"
+        prepared = set(player.get("deck") or [])
     evolved = player.get("evolved_cards") or {}
     entropy = int(player.get("entropy", 0) or 0)
     out = []

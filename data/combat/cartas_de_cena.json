@@ -221,8 +221,7 @@
         "montanhas_afiadas"
       ],
       "tags": [
-        "caverna",
-        "montanha"
+        "caverna"
       ],
       "quando": "a_cada_n_rodadas",
       "n": 3,

@@ -82,6 +82,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.companion_order_refused` | `verb` |
 | `combat.companion_orders_shadow` | `verb` |
 | `combat.enemy_knowledge_failed` | — |
+| `combat.entrance_count_reconciled` | `species` |
 | `combat.fast_text_failed` | `error`, `where` |
 | `combat.freetext_refused` | — |
 | `combat.mechanics` | `step_count`, `steps`, `truncated` |
@@ -93,6 +94,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.object_refused` | — |
 | `combat.object_used` | — |
 | `combat.objects_shadow` | `action` |
+| `combat.outcome_attribution_rejected` | `codes` |
+| `combat.outcome_narration_budget_exceeded` | `elapsed_ms` |
 | `combat.outcome_narration_failed` | `error`, `outcome` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |

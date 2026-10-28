@@ -1007,6 +1007,27 @@ def validate_bestiary(
             except Exception:
                 continue
 
+    # SPEC-353 R38a: Carta de dano arcano/abissal/elemental em criatura só-melee sem estilo conjurador
+    from services import cards as _cards
+    from services import enemy_decks as _edk
+
+    for cid, cre in best.items():
+        if not _edk._is_melee_only(cre):
+            continue
+        for raw in cre.get("cartas") or []:
+            card_id = raw.get("id") if isinstance(raw, dict) else raw
+            dtype = str(((_cards.get_card(str(card_id)) or {}).get("efeito") or {}).get("dano_tipo"))
+            if dtype in _edk._CASTER_DAMAGE:
+                findings.append(
+                    Finding(
+                        "bestiary",
+                        "warning",
+                        bestiary_path,
+                        cid,
+                        f"Carta {card_id} ({dtype}) em criatura só corpo a corpo sem estilo conjurador",
+                    )
+                )
+
     volume_signatures: dict[tuple, str] = {}
     for cid, cre in best.items():
         p = bestiary_path

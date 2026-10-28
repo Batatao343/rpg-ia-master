@@ -171,7 +171,11 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
     deck_ids = list(player.get("deck") or []) or _starting_deck_ids(player)  # sem mutar a ficha
     live: list[str] = []
     out: list[str] = []
+    benched: list[str] = []
     for cid in deck_ids:
+        if (cards.get_card(cid) or {}).get("tipo") == "utilitaria":
+            benched.append(cid)  # SPEC-353 D6: utilitária não é comprada no conflito
+            continue
         (out if _locked_for_scene(player, cid) else live).append(cid)
     piles: dict[str, Any] = {
         "compra": live,
@@ -185,6 +189,7 @@ def start_piles(player: dict, seed: int, rng: random.Random | None = None) -> di
         "embaralhos": 0,
         "fardos": 0,
         "pacto_carga": False,
+        **({"fora_de_combate": benched} if benched else {}),
     }
     _rng(piles, rng).shuffle(piles["compra"])
     draw(piles, MAO_BASE, rng)

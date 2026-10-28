@@ -340,6 +340,26 @@ def _low(world: dict) -> dict:
     return {"archive_low": _turn_of(world)} if latency_flags.archive_low_wanted() else {}
 
 
+_RARITY_PT = {
+    "incomum": "item incomum",
+    "uncommon": "item incomum",
+    "raro": "item raro",
+    "rare": "item raro",
+    "epico": "item épico",
+    "épico": "item épico",
+    "epic": "item épico",
+    "lendario": "item lendário",
+    "lendário": "item lendário",
+    "legendary": "item lendário",
+}
+
+
+def _rarity_phrase(rarity: object) -> str:
+    """SPEC-353 R35: raridade em palavra, e só quando não é `comum` ("Corda, item incomum")."""
+    word = _RARITY_PT.get(str(rarity or "").strip().casefold())
+    return f", {word}," if word else ""
+
+
 def loot_node(state: GameState):
     player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
@@ -532,7 +552,7 @@ def loot_node(state: GameState):
         from inventory import add_item, is_unique, item_display, make_entry
 
         player["inventory"] = add_item(player["inventory"], roll["item_id"], 1)
-        achado = f"{item_display(make_entry(roll['item_id']))} ({roll['rarity']}) e {achado}"
+        achado = f"{item_display(make_entry(roll['item_id']))}{_rarity_phrase(roll['rarity'])} e {achado}"
         if is_unique(roll["item_id"]):  # Fase 6.2: achou um único — fato do mundo
             unique_events.append(economy.claim_event(roll["item_id"], "player"))
 

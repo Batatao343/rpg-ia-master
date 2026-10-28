@@ -206,6 +206,26 @@ def _is_attack(card_id: str) -> bool:
     return ((cards.get_card(card_id) or {}).get("efeito") or {}).get("kind") == "dano"
 
 
+_CASTER_ARCHETYPES = {"conjurador", "mistico", "místico", "abissal"}
+_CASTER_DAMAGE = {"arcano", "abissal", "elemental"}
+
+
+def _is_melee_only(creature: dict) -> bool:
+    """SPEC-353 R38a: criatura sem estilo conjurador e só com ataques corpo a corpo."""
+    if _fold(creature.get("arquetipo")) in {_fold(a) for a in _CASTER_ARCHETYPES}:
+        return False
+    attacks = [a for a in (creature.get("attacks") or []) if isinstance(a, dict)]
+    return bool(attacks) and all(str(a.get("type") or "melee") == "melee" for a in attacks)
+
+
+def _fits_creature(creature: dict, card_id: str) -> bool:
+    """Carta de família/facção de dano arcano/abissal/elemental não entra em criatura só-melee."""
+    from services import cards
+
+    dtype = str(((cards.get_card(card_id) or {}).get("efeito") or {}).get("dano_tipo") or "")
+    return not (dtype in _CASTER_DAMAGE and _is_melee_only(creature))
+
+
 def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     """Baralho de conflito da criatura: próprias + 3-5 da família + 0-3 da facção.
     Determinístico por ``id`` + ``seed`` (``deck_seed`` do conflito, gravado no spawn); mantém a ordem das próprias e nunca repete."""
@@ -220,7 +240,11 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
     if fam:
         # a assinatura alternativa (a outra de `assinaturas`) só vale como assinatura
         alt = {str(s["carta"]) for s in _signature_configs(creature)}
-        pool = [c for c in pools["familias"].get(fam, []) if c not in deck and c not in alt]
+        pool = [
+            c
+            for c in pools["familias"].get(fam, [])
+            if c not in deck and c not in alt and _fits_creature(creature, c)
+        ]
         want = 3 + _h(cid, seed, "fam") % 3  # 3..5
         picked: list[str] = []
         if sig and sig["carta"] not in deck:
@@ -235,7 +259,7 @@ def build_enemy_deck(creature: dict, seed: int | str = 0) -> list[str]:
         deck += picked
     fac = _fold(creature.get("faction"))
     if fac and pools["faccoes"].get(fac):
-        pool = [c for c in pools["faccoes"][fac] if c not in deck]
+        pool = [c for c in pools["faccoes"][fac] if c not in deck and _fits_creature(creature, c)]
         want = _h(cid, seed, "fac") % 4  # 0..3
         deck += sorted(pool, key=lambda c: _h(cid, seed, "fac", c))[:want]
     return deck
