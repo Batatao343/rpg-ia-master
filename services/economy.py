@@ -280,6 +280,15 @@ def price_factors(
     return out
 
 
+def local_buy_mult(state: dict, merchant: dict | None) -> float:
+    """SPEC-357 R6: produto dos fatores LOCAIS de compra (sem o fator de oferta do item),
+    na mesma ordem de multiplicação de `price()`."""
+    mult = 1.0
+    for factor in _local_factors(state, "buy", merchant):
+        mult *= factor["mult"]
+    return mult
+
+
 def price(item_id: str, *, mode: str, state: dict, merchant: dict | None = None) -> int:
     """Preço final determinístico. mode: 'buy' (jogador compra) | 'sell' (vende)."""
     p = float(base_price(item_id))

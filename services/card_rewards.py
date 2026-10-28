@@ -288,6 +288,68 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     return "acervo"
 
 
+add_to_deck = _add_to_deck  # SPEC-357: alias público (loja/missão não importam privado)
+
+
+def grant_for_quest(state: dict, player: dict, quest: dict, turn: int) -> str | None:
+    """SPEC-357 R12: tecnica prometida (`reward_card_planned`) entregue na conclusao da quest de
+    lore. Deterministico por `quest_id`; sorteia a raridade pelos pesos do rotulo e a Carta neutra
+    elegivel nao conhecida, preferindo a regiao da quest e caindo nas gerais. `on` grava no
+    `player`; `shadow` so mede; `off`/sem promessa/pool vazio -> None."""
+    m = mode()
+    if m == "off" or not quest.get("reward_card_planned"):
+        return None
+    from services import lore_quests
+
+    weights_cfg = (lore_quests.cfg().get("card_rewards") or {}).get(
+        str(quest.get("reward_card_label") or "")
+    ) or {}
+    if not weights_cfg:
+        return None
+    region = ""
+    lid = str(quest.get("location_id") or "")
+    if lid:
+        region = str((gamedata.get_location(lid) or {}).get("region_id") or "")
+    region = region or str(quest.get("region_id") or "")
+    known = set(player.get("known_cards") or [])
+    by_rarity: dict[str, tuple[list[str], list[str]]] = {}
+    for cid, c in sorted(cards.all_cards().items()):
+        if cid in known or not cards.is_neutral(c) or c.get("regiao_exclusiva"):
+            continue
+        if not _eligible(c, player, boss=False):
+            continue
+        rar = rarity_of(c)
+        if rar not in weights_cfg:
+            continue
+        regional, gerais = by_rarity.setdefault(rar, ([], []))
+        if c.get("regiao"):
+            if region and str(c["regiao"]) == region:
+                regional.append(cid)
+        else:
+            gerais.append(cid)
+    rng = random.Random(f"{quest.get('id', '')}:missao")
+    order = sorted(weights_cfg, key=lambda r: -int(weights_cfg[r]))
+    first = _weighted(rng, tuple((r, int(weights_cfg[r])) for r in order), set(order))
+    chosen: str | None = None
+    for rar in [first] + [r for r in order if r != first]:
+        regional, gerais = by_rarity.get(rar, ([], []))
+        pool = regional or gerais
+        if pool:
+            chosen = pool[rng.randrange(len(pool))]
+            break
+    if chosen is None:
+        return None
+    if m == "shadow":
+        with card_telemetry.source_scope("auto"):
+            card_telemetry.offered([chosen])
+        return None
+    with card_telemetry.source_scope("missao"):
+        card_telemetry.offered([chosen], picked=chosen)
+        card_telemetry.picked(chosen)
+    _add_to_deck(player, chosen)
+    return chosen
+
+
 @_requires_on
 def accept(state: dict, card_id: str | None) -> dict:
     """R1: escolhe 1 das ofertas (`card_id`) ou recusa (`None`/""): recusar paga ouro."""

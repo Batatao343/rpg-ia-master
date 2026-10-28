@@ -133,7 +133,7 @@ RPG_CARD_REWARDS:
   default: "off"
   spec: SPEC-333
   expires: 2027-01-25
-  note: "espólio de cartas"
+  note: "espólio, loja e missões de cartas"
 RPG_CHASE_ABANDON:
   kind: release
   default: "shadow"

@@ -1,0 +1,14 @@
+{
+  "_doc": "SPEC-357: loja de Cartas neutras. Precos [BALANCEAR]. regioes = campo `regiao` da Carta; gerais = Cartas sem `regiao`. `excluir` aceita id exato ou prefixo terminado em `_`.",
+  "preco_raridade": {"comum": 45, "incomum": 110, "rara": 260},
+  "preco_por_tier": 10,
+  "prateleira": 3,
+  "mercadores": {
+    "ferreiro_skallgard": {"regioes": ["skallgard"], "gerais": false},
+    "mercado_anel_dourado": {"regioes": ["nova_arcadia"], "gerais": true},
+    "boticario_anel_ferro": {"regioes": ["nova_arcadia"], "gerais": false},
+    "quinquilharias_brekmar": {"regioes": ["brekmar"], "gerais": true, "excluir": ["neu1_ka_"]},
+    "curandeira_pantano": {"regioes": [], "gerais": true},
+    "armeiro_vaelorn": {"regioes": [], "gerais": true}
+  }
+}
