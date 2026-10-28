@@ -213,7 +213,9 @@ def mech_log(
                 head += " (alvo declarado)"
         else:
             what = f" · {card['name']}" if card else ""
-            if atk.get("fora_de_turno"):  # SPEC-347 R5.2: reação/oportunidade/contra-ataque ganham rótulo
+            if atk.get(
+                "fora_de_turno"
+            ):  # SPEC-347 R5.2: reação/oportunidade/contra-ataque ganham rótulo
                 what = f" · {atk['fora_de_turno']}"
             head = f"{who}{what} → {target}"
         lines.append(
@@ -333,14 +335,46 @@ def round_board(
             "rotulo": None,
             "resultado": "efeito",
             "dano": None,
-            "efeito": _effect_text(card),
+            "efeito": heal_note(use) or _effect_text(card),
         }
 
     entries: list[dict[str, Any]] = []
     covered: set[int] = set()
+    # SPEC-346 R7/R10: ticks de DoT (início do turno de quem sofre) e curas viram entradas `efeito`.
+    ticks = list(out.get("ticks") or [])
+    heals = list(out.get("heals") or [])
+
+    def tick_entry(tick: dict) -> dict[str, Any]:
+        actor_id = str(tick.get("actor_id"))
+        return {
+            "ator_id": actor_id,
+            "ator_nome": names.get(actor_id, "Alguém"),
+            "lado": side(actor_id),
+            "carta_id": None,
+            "carta_nome": str(tick.get("condition") or "Condição"),
+            "alvo_id": None,
+            "alvo_nome": None,
+            "origem": "turno",
+            "rotulo": "Dano contínuo",
+            "resultado": "efeito",
+            "dano": int(tick.get("dano_final", 0) or 0),
+            "efeito": f"−{int(tick.get('dano_final', 0) or 0)} Vitalidade",
+        }
+
+    def heal_note(use: dict) -> str | None:
+        for h in heals:
+            if str(h.get("actor_id")) == str(use.get("actor_id")) and h.get("card") == (
+                use.get("card") or {}
+            ).get("name"):
+                return f"+{int(h.get('amount', 0) or 0)} Vitalidade"
+        return None
+
     for span in out.get("turn_spans") or []:
         if span.get("negado"):
             continue
+        for tick in [t for t in ticks if str(t.get("actor_id")) == str(span.get("actor_id"))]:
+            ticks.remove(tick)
+            entries.append(tick_entry(tick))
         a0, a1 = span["attacks"]
         c0, c1 = span["cards"]
         span_attacks = [(i, attacks[i]) for i in range(a0, min(a1, len(attacks)))]
@@ -379,4 +413,6 @@ def round_board(
     for i, atk in enumerate(attacks):  # fora de qualquer turno (Última Ação etc.)
         if i not in covered:
             entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))
+    for tick in ticks:  # DoT de quem não teve turno resolvido na rodada
+        entries.append(tick_entry(tick))
     return entries

@@ -166,3 +166,12 @@ test('family_icon_so_usa_icones_existentes', async () => {
   for (const icon of new Set(Object.values(FAMILY_ICON))) assert.ok(icons.includes(`"${icon}":`), icon);
   assert.equal(FAMILY_ICON.abissal, 'abyss');
 });
+
+test('atalho_de_foco_com_tabuleiro_leva_ao_combate_e_sem_ele_ao_composer', async () => {
+  const { focusComposerTarget } = await load('../src/workspace/ChatSurface.tsx');
+  const calls = [];
+  focusComposerTarget(true, () => calls.push('input'), () => calls.push('combat'))();
+  focusComposerTarget(false, () => calls.push('input'), () => calls.push('combat'))();
+  assert.deepEqual(calls, ['combat', 'input']);
+  assert.doesNotThrow(() => focusComposerTarget(true, () => {})());
+});

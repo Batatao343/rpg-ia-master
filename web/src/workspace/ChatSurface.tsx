@@ -113,6 +113,12 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
   );
 }
 
+/** SPEC-347 R18.3: para onde vai o atalho de foco do composer — com o tabuleiro aberto não há textarea, então o foco
+ *  vai ao painel de Combate. */
+export function focusComposerTarget(deckLocked: boolean, focusInput: () => void, focusCombat?: () => void): () => void {
+  return deckLocked ? () => focusCombat?.() : focusInput;
+}
+
 /** Composer: sempre visível em todos os modos (R6: Esc no contexto devolve o foco aqui).
  *  O rascunho vive em memória por game_id (R7/R8, §8 P3 — nunca em disco). */
 export const Composer = forwardRef<HTMLTextAreaElement, {
@@ -189,7 +195,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, {
       <TurnStatus key={turn.seq} phases={turn.ledger.phases} current={turn.ledger.current}
         elapsedMs={turn.gotChunk ? 0 : elapsed} stage={turn.stage} lastError={turn.error}
         onRetry={() => onRetry?.()}
-        onFocusInput={() => { if (deckLocked) { onFocusCombat?.(); return; } if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }} />
+        onFocusInput={() => focusComposerTarget(deckLocked, () => { if (inputRef && typeof inputRef !== "function") inputRef.current?.focus(); }, onFocusCombat)()} />
       <ContextSuggestions data={data} disabled={blocked || busy || offSurface || fighting || gameOver || deathPending || simulation}
         onPick={(text) => { setInput(text); areaRef.current?.focus(); }} />
       {deckLocked ? (

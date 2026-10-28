@@ -42,7 +42,7 @@ def test_order_follows_turn_spans_and_reaction_is_marked():
         "cards_used": [],
         "turn_spans": [{"actor_id": "player", "attacks": [0, 2], "cards": [0, 0]}],
     }
-    log = cpv.round_log(out, ACTORS, {"enemy_1"})
+    log = cpv.round_board(out, ACTORS, {"enemy_1"})
     assert [e["ator_id"] for e in log] == ["enemy_1", "player"]
     assert (
         log[0]["origem"] == "reacao"
@@ -60,7 +60,7 @@ def test_defense_card_without_attack_appears():
         "cards_used": [{"actor_id": "player", "card_id": "guarda", "card": card}],
         "turn_spans": [{"actor_id": "player", "attacks": [0, 0], "cards": [0, 1]}],
     }
-    [entry] = cpv.round_log(out, ACTORS, {"enemy_1"})
+    [entry] = cpv.round_board(out, ACTORS, {"enemy_1"})
     assert (
         entry["resultado"] == "efeito"
         and entry["efeito"] == "+2 Proteção"
@@ -74,7 +74,7 @@ def test_denied_turn_generates_no_entry():
         "cards_used": [],
         "turn_spans": [{"actor_id": "enemy_1", "attacks": [0, 0], "cards": [0, 0], "negado": True}],
     }
-    assert cpv.round_log(out, ACTORS, {"enemy_1"}) == []
+    assert cpv.round_board(out, ACTORS, {"enemy_1"}) == []
 
 
 def test_order_matches_resolved_turns_in_real_round():
@@ -112,15 +112,15 @@ def test_order_matches_resolved_turns_in_real_round():
     out = orch.run_round(scene, actors, sides, {}, declarations=decl, rng=random.Random(5))
     spans = out["turn_spans"]
     assert [s["actor_id"] for s in spans] == out["resolved_turns"]
-    log = cpv.round_log(out, [player, enemy], {"enemy_1"})
+    log = cpv.round_board(out, [player, enemy], {"enemy_1"})
     assert log and log[0]["ator_id"] in out["resolved_turns"]
 
 
-def test_deck_off_has_no_last_round_log(monkeypatch):
+def test_deck_off_has_no_last_round_board(monkeypatch):
     monkeypatch.setenv("RPG_CARD_DECK", "off")
     meta: dict = {}
     cpv.store_mech_log(meta, {"attacks": [], "cards_used": []}, ACTORS)
-    assert "last_round_log" not in meta and "last_mech_log" not in meta
+    assert "last_round_board" not in meta and "last_mech_log" not in meta
 
 
 def test_passive_counter_attack_comes_after_the_blow_that_caused_it():
@@ -133,7 +133,7 @@ def test_passive_counter_attack_comes_after_the_blow_that_caused_it():
         "cards_used": [],
         "turn_spans": [{"actor_id": "enemy_1", "attacks": [0, 2], "cards": [0, 0]}],
     }
-    log = cpv.round_log(out, ACTORS, {"enemy_1"})
+    log = cpv.round_board(out, ACTORS, {"enemy_1"})
     assert [(e["ator_id"], e["origem"]) for e in log] == [
         ("enemy_1", "turno"),
         ("player", "reacao"),
@@ -149,5 +149,50 @@ def test_reaction_window_attack_still_precedes_the_actors_blow():
         "cards_used": [],
         "turn_spans": [{"actor_id": "player", "attacks": [0, 2], "cards": [0, 0]}],
     }
-    log = cpv.round_log(out, ACTORS, {"enemy_1"})
+    log = cpv.round_board(out, ACTORS, {"enemy_1"})
     assert [e["ator_id"] for e in log] == ["enemy_1", "player"]
+
+
+def test_dot_ticks_and_heals_enter_the_board():
+    """SPEC-346 R7/R10 (P1-2): o DoT vira entrada `efeito` no turno de quem sofre; a cura mostra o valor real."""
+    heal_card = {"id": "bencao", "name": "Bênção Curta", "efeito": {"kind": "cura", "valor": 3}}
+    out = {
+        "attacks": [],
+        "cards_used": [{"actor_id": "player", "card_id": "bencao", "card": heal_card}],
+        "heals": [{"actor_id": "player", "card": "Bênção Curta", "amount": 2}],
+        "ticks": [{"actor_id": "enemy_1", "condition": "Sangramento", "dano_final": 2}],
+        "turn_spans": [
+            {"actor_id": "enemy_1", "attacks": [0, 0], "cards": [0, 0]},
+            {"actor_id": "player", "attacks": [0, 0], "cards": [0, 1]},
+        ],
+    }
+    log = cpv.round_board(out, ACTORS, {"enemy_1"})
+    assert [e["ator_id"] for e in log] == ["enemy_1", "player"]
+    assert (
+        log[0]["rotulo"] == "Dano contínuo"
+        and log[0]["efeito"] == "−2 Vitalidade"
+        and log[0]["lado"] == "inimigo"
+    )
+    assert log[1]["efeito"] == "+2 Vitalidade"
+
+
+def test_mech_log_label_and_last_stand_coexist():
+    atk = {
+        "actor_id": "enemy_1",
+        "target_id": "player",
+        "dice_rolled": [3, 4],
+        "dice_kept": [3, 4],
+        "virtude": 0,
+        "modificador": 0,
+        "total": 7,
+        "esquiva_alvo": 5,
+        "resultado": "acerto",
+        "acerto": True,
+        "dano_final": 2,
+    }
+    last = cpv.mech_log([{**atk, "label": "Última Ação", "fora_de_turno": "Última Ação"}], ACTORS)[
+        0
+    ]
+    assert last.startswith("Última Ação: Saqueador → Você")  # a forma da 346 vale
+    counter = cpv.mech_log([{**atk, "fora_de_turno": "Contra-ataque"}], ACTORS)[0]
+    assert counter.startswith("Saqueador · Contra-ataque → Você")
