@@ -20,6 +20,7 @@ from gamedata import CLASS_THEMES, load_json_data
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services.chronicle import default_chapter_title
+from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
 
 ATTITUDES = ("hostil", "neutro", "aliado")
 # attitude → initial_relationship (0..10) — determinístico, nunca LLM
@@ -193,15 +194,20 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
             "7. `arc_title`: 3-6 palavras, evocativo.\n"
             "8. `attitude` de cada NPC: EXATAMENTE uma palavra — hostil, neutro ou "
             "aliado.\n"
-            "9. Seja conciso: clímax em 1-2 frases; cada beat em 1-2 frases."
+            "9. Seja conciso: clímax em 1-2 frases; cada beat em 1-2 frases.\n"
+            f"10. {PLAYER_INPUT_RULE}"
         )
     )
+    # SPEC-351 R6/P6: nome e descrição livre entram delimitados como DADO.
+    raw_backstory = (char_input.get("backstory") or "").strip()
     backstory = (
-        char_input.get("backstory") or ""
-    ).strip() or "(nenhuma — crie um início coerente e genérico da região para esta classe)"
+        wrap_player_input(raw_backstory)
+        if raw_backstory
+        else "(nenhuma — crie um início coerente e genérico da região para esta classe)"
+    )
     human_msg = HumanMessage(
         content=(
-            f"Nome: {char_input.get('name', 'Herói')}\n"
+            f"Nome: {wrap_player_input(char_input.get('name', 'Herói'))}\n"
             f"Raça: {char_input.get('race', '')}\n"
             f"Classe: {char_input.get('class_name', '')}\n"
             f"Nível: {char_input.get('level', 1)}\n"

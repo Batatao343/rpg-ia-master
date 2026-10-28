@@ -554,3 +554,31 @@ depois do pouso da SPEC-348.
 `public_thread_brief(thread_id)` em `services/plot_threads.py`, com o catálogo em `data/world/plot_threads.json`.
 O adaptador `_population_api()` mapeia para esses nomes. Nova Arcádia tem 7 tramas, entre elas `tr_na_po_de_sonho`,
 que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve cair nela ou justificar por que não caiu.
+
+## 9. Registro de execução (executor)
+
+### 28/10 — Etapa 0 parcial, Etapa 1 e correções de segurança sem schema novo
+
+- **Oráculo E1–E7 congelado:** commit `816bb5795fa6f1bed407761978a34a576d130b5f`;
+  `git hash-object playtest/opening_checks.py` = `5713a694c773d33b29337e692550cfeeb4462a48`
+  (testes: `tests/test_spec351_checks.py`, 17 casos). Qualquer mudança posterior no arquivo exige
+  aprovação do dono registrada aqui. Semânticas fixadas: E2 aceita `plot_npc_id` vazio só com menu
+  sem NPC; E7 no template exige 0 pessoal; E3 só roda no `run_all` se houver documento do pool;
+  E4 compara shingles de 6 palavras (sem acento) com corpo dos docs Codex `hidden`/`secret`.
+- **Segurança (independente do schema novo):** (a) `wrap_player_input` em nome e descrição livre do
+  prólogo + `PLAYER_INPUT_RULE` como regra 10 do sistema (`services/prologue.py`; P6/R6), com testes
+  (incl. corpus de injeção); (b) `services/prologue_token.py` (`sign_scenario`/`verify_scenario`,
+  HMAC sobre JSON canônico + dono + instante; sem `RPG_SESSION_SECRET` ≥ 32 → `""`/`False`).
+  **Pendente:** ligar o token ao `/game/prologue` e `/game/new` (`api.py`) — depende do payload
+  `personal_npc`/`thread_refs`/`plot_npc_id` das Etapas 3–5.
+- **Etapa 0 (sondas):** `starting_world`/`start_location_for_region` e `services/world_pressures`
+  (`region_of`, `region_primary_location`) confirmados; `npc_world.home_of/leaders/graph_entity`
+  existem como na spec. `state_ownership.yaml` não lista `campaign_plan`/`npcs`: ownership
+  confirmado só pelo código (`prologue` escreve só via `scenario_to_state_seed` no `/game/new`;
+  `campaign_manager` é o único a replanejar). `services/plot_threads.py` e `data/world/plot_threads.json`
+  (SPEC-350) ainda NÃO existem neste worktree: o adaptador `_population_api()` fica para depois.
+- **Cobertura do fallback por região** (NPCs `public`, não líderes, com casa resolvida em local da
+  região; menu usa até 4): aethelgard 3, brekmar 3, costa_negra 3, deserto_zhur 3,
+  floresta_sussurros 3, montanhas_afiadas 3, nova_arcadia 3, ophidia 3, pantano_melancolia 3,
+  pradaria_ruinas 3, selva_xylos 3, skallgard 3 (todas as 12 regiões têm ≥ 3; falta filtrar
+  `secret_entities` no menu, que só afeta NPCs sem casa). 125 NPCs seguem sem casa (P11).
