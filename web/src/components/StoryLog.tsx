@@ -14,7 +14,7 @@ import { Icon } from "../design/icons";
 /** Distância (px) do fim considerada "no fim" para o auto-scroll (SPEC-204 R7). */
 const BOTTOM_SLACK = 48;
 
-function position_initial_atBottom(initial?: { scrollTop: number | null; atBottom: boolean }) { return initial?.atBottom ?? true; }
+function initialAtBottom(initial?: { scrollTop: number | null; atBottom: boolean }) { return initial?.atBottom ?? true; }
 
 /** Memoizado (SPEC-204): trocar aba/modo/ratio re-renderiza o Workspace, não a narrativa. */
 export const StoryLog = memo(function StoryLog({ entries, thinking, active = true, initialScroll, onScrollPosition, offers, onOffer, offersDisabled }: {
@@ -37,7 +37,7 @@ export const StoryLog = memo(function StoryLog({ entries, thinking, active = tru
   // SPEC-354 R1.2: "preso ao fim" — enquanto verdadeiro, qualquer mudança de tamanho (imagem, fonte, toast, troca de
   // layout) refaz `scrollTop = scrollHeight`. Termina no 1º gesto do jogador que o afasta do fim.
   const syncedHeight = useRef(-1); // altura do conteúdo na última vez que NÓS rolamos até o fim
-  const stuck = useRef(position_initial_atBottom(initialScroll));
+  const stuck = useRef(initialAtBottom(initialScroll));
   const markGesture = () => { lastGesture.current = Date.now(); };
   // M09 (SPEC-208): nenhuma entrada anima — nem histórico/reload nem o bloco novo (o typewriter e o
   // cursor já mostram o que chega). A fade do bloco novo foi medida e REJEITADA: sob CPU 4x somava ~1
