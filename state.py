@@ -534,6 +534,11 @@ class CompanionSoul(TypedDict, total=False):
     lore_origin_key: str  # npc_key de origem ou "engine"
     lore_ref: str  # primeiro lore_refs do tipo (auditoria)
     reward_gold_planned: int  # ouro materializado na criação
+    # --- SPEC-357: técnica (Carta neutra) como prêmio da quest de lore (INTERNOS, exceto o nome)
+    reward_card_planned: bool  # prometida na criação (só com RPG_CARD_REWARDS=on)
+    reward_card_label: str  # rótulo de ouro que define os pesos de raridade (justa/generosa)
+    reward_card: str  # id da Carta entregue na conclusão; a API expõe só `reward_card_name`
+    region_id: str  # região da quest (prioridade no sorteio da técnica)
     outcome: (
         str  # "" | "confirmado" | "desmentido" | "inconclusivo" (investigar_rumor, após concluir)
     )
