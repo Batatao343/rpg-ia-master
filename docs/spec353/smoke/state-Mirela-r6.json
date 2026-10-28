@@ -1,0 +1,995 @@
+{
+  "timeline_epoch": 0,
+  "portrait_generation_id": null,
+  "game_id": "59c4a8da-338d-4c87-9c57-ac3d241cfd0c",
+  "message": "Minotauro Esqueleto ataca Você: erra.\nSangramento corrói Você: 1 de dano contínuo.\nO Abismo se aproxima.\nMinotauro Esqueleto cumpre o que o presságio anunciava.\nMirela: Sangramento terminou.\nMinotauro Esqueleto: ganha condição desmoralizado\nMirela: ganha condição desmoralizado\nVocê executa a Última Ação em Minotauro Esqueleto: acerto crítico — 20 de dano, ferimento critico na região perna.\nTempestade de Éter: Quando o Éter condensa em tempestade, até o fôlego de quem não reza ao Abismo fica mais perto dele.\nMirela sente o Abismo mais perto (+1 Carga).\nEco da Boca: Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem.\n\nA adaga de ferro escapa de sua mão enquanto o Couro Encharcado cede sob o peso do seu corpo exausto — o Corte de Troca não encontra alvo, e é o próprio chão que o recebe. O Minotauro Esqueleto cambaleia à beira do colapso, seu último golpe cortando apenas o ar vazio, enquanto o sangue que escorre de você mancha a terra fria do amanhecer. Seus ferimentos — o torso rasgado, a perna cedendo, o fio de sangue na cabeça — pesam mais que qualquer inimigo, e a consciência se esvai devagar entre as nuvens rasgadas. Você tomba, e o silêncio do campo de batalha se fecha sobre você.\n\nA escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao último respiro seguro, ou aceitar o fim aqui?",
+  "message_type": "STORY",
+  "speaker": {
+    "kind": "narrator",
+    "id": "narrator",
+    "name": "Narrador",
+    "reason": "classify_story"
+  },
+  "player_stats": {
+    "name": "Mirela",
+    "class_name": "Sangromante",
+    "race": "Humano",
+    "vitalidade": 0,
+    "max_vitalidade": 18,
+    "ferimentos": {
+      "leve": [
+        {
+          "categoria": "leve",
+          "regiao": "cabeca",
+          "suprimida": false,
+          "aplicado": true
+        }
+      ],
+      "grave": [],
+      "critico": [
+        {
+          "categoria": "critico",
+          "regiao": "torso",
+          "suprimida": false,
+          "aplicado": true
+        },
+        {
+          "categoria": "critico",
+          "regiao": "perna",
+          "suprimida": false,
+          "aplicado": true
+        }
+      ]
+    },
+    "dead": true,
+    "estado_terminal": false,
+    "hp": 0,
+    "max_hp": 18,
+    "entropy": 14,
+    "max_entropy": 16,
+    "abyss_charge": 9,
+    "abyss_tier": "severo",
+    "defense": 14,
+    "gold": 50,
+    "level": 1,
+    "xp": 100,
+    "cards": [
+      {
+        "id": "san_corte_troca",
+        "name": "Corte de Troca",
+        "type": "ativa",
+        "description": "Um talho rápido; o preço do sangue já está embutido.",
+        "effect_kind": "dano",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "san_finta",
+        "name": "Finta de Sangue",
+        "type": "ativa",
+        "description": "Oferece o pulso, retira a garganta — engana lendo o próprio corte.",
+        "effect_kind": "buff_acerto",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 1,
+        "base_cost": 1,
+        "frequency": "turno",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "san_esquiva",
+        "name": "Esquiva Calculada",
+        "type": "reacao",
+        "description": "Cede o couro que pode perder para salvar o que não pode.",
+        "effect_kind": "buff_esquiva",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 1,
+        "base_cost": 1,
+        "frequency": "turno",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "ao_ser_atacado",
+        "evolved": null
+      },
+      {
+        "id": "san_pacto",
+        "name": "Pacto Rápido",
+        "type": "passiva",
+        "description": "A dor recente afia o gesto seguinte — cada gota cobrada rende juros.",
+        "effect_kind": "buff_dano",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "san_passo",
+        "name": "Passo Leve",
+        "type": "utilitaria",
+        "description": "Anda como quem não quer dever passagem.",
+        "effect_kind": "utilitaria",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": false,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "descanso_curto",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "corte_sangrento",
+        "name": "Corte Sangrento",
+        "type": "ativa",
+        "description": "A lâmina abre o caminho e o sangue paga a passagem.",
+        "effect_kind": "dano",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": false,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      }
+    ],
+    "can_reorganize": {
+      "allowed": true,
+      "reason": ""
+    },
+    "prepared_slots": 4,
+    "scars": [],
+    "subclass": "",
+    "virtue_cards": [
+      {
+        "card_id": "vc_forca_bruta",
+        "name": "Força Bruta",
+        "type": "virtude",
+        "description": "A força que o sangue guarda cresce a cada degrau que a Virtude sobe.",
+        "virtude": "forca",
+        "mastery": 0,
+        "effective_stage": 0
+      },
+      {
+        "card_id": "vc_mente_lucida",
+        "name": "Mente Lúcida",
+        "type": "virtude",
+        "description": "A mente limpa a névoa e enxerga o que o resto da vila só pressente.",
+        "virtude": "mente",
+        "mastery": 0,
+        "effective_stage": 0
+      }
+    ],
+    "evolvable_card_ids": [],
+    "virtudes": {
+      "mente": 1,
+      "agilidade": 4,
+      "forca": 1,
+      "carisma": 2,
+      "corpo": 3
+    },
+    "xp_next_level": 300,
+    "pending_choices": [],
+    "level_up": {},
+    "forja": {
+      "permitido": true,
+      "motivo": "",
+      "baralho": [
+        {
+          "id": "san_corte_troca",
+          "name": "Corte de Troca",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "bas_san_corte_raso",
+          "name": "Corte Raso",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": "O Baralho já está no mínimo: não há o que afinar nas básicas."
+        },
+        {
+          "id": "bas_san_guarda",
+          "name": "Couro Encharcado",
+          "copias": 4,
+          "esquecivel": true,
+          "bloqueio": "O Baralho já está no mínimo: não há o que afinar nas básicas."
+        },
+        {
+          "id": "san_esquiva",
+          "name": "Esquiva Calculada",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "san_finta",
+          "name": "Finta de Sangue",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "bas_san_golpe",
+          "name": "Talho de Sangue Ralo",
+          "copias": 4,
+          "esquecivel": true,
+          "bloqueio": "O Baralho já está no mínimo: não há o que afinar nas básicas."
+        }
+      ],
+      "baralho_min": 12,
+      "esquecer": {
+        "descanso": false,
+        "templo": false,
+        "ouro": 25,
+        "motivos": {
+          "descanso": "Só dá para esquecer uma Carta depois de um descanso longo.",
+          "templo": "Só um templo ou curandeiro ajuda a esquecer uma Carta."
+        }
+      },
+      "afiar": {
+        "material": null,
+        "afiaveis": [
+          "san_corte_troca",
+          "san_esquiva",
+          "san_finta"
+        ],
+        "afiadas": []
+      },
+      "cicatrizes": [],
+      "purgar": {
+        "templo": false,
+        "medico": false,
+        "ouro": 40,
+        "motivos": {
+          "medico": "Não há um Médico de Campo com você.",
+          "templo": "Só um templo ou curandeiro trata uma Cicatriz."
+        }
+      }
+    }
+  },
+  "inventory": [
+    {
+      "id": "adaga_ferro",
+      "name": "Adaga de Ferro",
+      "qty": 1,
+      "type": "weapon",
+      "equipped": true,
+      "slot": "weapon",
+      "unique": false
+    },
+    {
+      "id": "pocao_cura",
+      "name": "Poção de Cura Menor",
+      "qty": 2,
+      "type": "consumable",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Cantil de couro rachado com água ferro-rosa — água de nascente mineral das Montanhas Afiadas, que deixa gosto de sangue na boca mas fecha feridas mais rápido",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Faca de sangria de obsidiana lascada, presente de iniciação, envolta em tiras de pano que já foram brancas",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Mapa de Vel-Tharn riscado em pergaminho de pele de cabra, com rotas marcadas em tinta ferrosa que escurece onde o caminho é perigoso",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Ampola de vidro soprado contendo sangue coagulado de um refugiado-bandido — reagente e lembrete",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Pequeno sino de bronze surrado, usado para marcar presença em cavernas ecoantes e afastar o que escuta",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Botas de escalada com cravos de ferro, gastas nas bordas, remendadas com tendão de animal",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Punhal de arremesso escondido na bainha da bota, lâmina manchada de ferrugem e algo mais escuro",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Talismã de osso entalhado com o símbolo de um pico partido — proteção dos guias cinzéus contra o que sobe de baixo",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Kit de Viajante",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    }
+  ],
+  "current_location": "Montanhas Afiadas",
+  "narrative_summary": "Mirela caiu nas Montanhas Afiadas após um combate brutal contra um Minotauro Esqueleto, que agora cambaleia à beira do colapso. Seus ferimentos se acumulam: torso rasgado, perna gravemente ferida e um corte na cabeça; o Corte de Troca falhou, a adaga de ferro escapou de sua mão e o corpo exausto tombou sobre a terra fria. O Abismo se aproxima a cada respiração — a Carga cresce, a Tempestade de Éter paira e um eco de sino ressoa na pedra, desmanchando a coragem. A consciência se esvai: resta decidir entre voltar ao último respiro seguro ou aceitar o fim ali. Mortos: Criatura da Fenda. Caídos: Mirela. Inconscientes: Mirela.",
+  "last_turn_log": [
+    {
+      "type": "ai",
+      "data": {
+        "content": "Você joga Corte Raso em Minotauro Esqueleto: Abre o próprio pulso para afiar o golpe; o Abismo cobra, mas paga em pressa. Acerta — 8 de dano.\nVocê joga Talho de Sangue Ralo em Minotauro Esqueleto: Um talho limpo, sem pressa; o sangue alheio ainda está quente na lâmina. Acerta — 7 de dano, ferimento leve na região torso.\nMinotauro Esqueleto joga Fome dos Mortos: Os mortos não comem, mas o vazio por dentro pede.\nToque Gélido da Morte corrói Você: 3 de dano contínuo.\nSangramento corrói Você: 1 de dano contínuo.\nSangramento corrói Minotauro Esqueleto: 1 de dano contínuo.\nMirela: Toque Gélido da Morte terminou.\nMirela: Sangramento terminou.\nPacto do Abismo: você toma 1 Fôlego emprestado; o Abismo empresta, e cobra: -2 Entropia e +1 Carga.\nMirela: desmoralizado terminou.\nMinotauro Esqueleto: Sangramento terminou.\nMinotauro Esqueleto cumpre o que o presságio anunciava.\nMinotauro Esqueleto: ganha condição Fome dos Mortos\nMinotauro Esqueleto: desmoralizado terminou.\nTempestade de Éter: Quando o Éter condensa em tempestade, até o fôlego de quem não reza ao Abismo fica mais perto dele.\nMirela sente o Abismo mais perto (+1 Carga).\nO ferimento abre espaço no Baralho: Dor Surda.\nO ferimento abre espaço no Baralho: Sangue nos Olhos.\nO Abismo sussurra: uma Carta nova se oferece ao seu Baralho.\nMirela: ganha condição Cego",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "Encerro a rodada: Sussurro Faminto.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Você joga Sussurro Faminto em Minotauro Esqueleto: A voz do Abismo empresta o golpe e cobra o silêncio depois. Erra.\nMinotauro Esqueleto ataca Você: acerta — 4 de dano, ferimento grave na região perna.\nO Abismo se aproxima.\nMirela: Cego terminou.\nMinotauro Esqueleto cumpre o que o presságio anunciava.\nMinotauro Esqueleto: Fome dos Mortos terminou.\nTempestade de Éter: Quando o Éter condensa em tempestade, até o fôlego de quem não reza ao Abismo fica mais perto dele.\nMirela sente o Abismo mais perto (+1 Carga).\nO ferimento abre espaço no Baralho: Membro Falho.\nMembro Falho: o corpo cobra 1 de Fôlego nesta rodada.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "Encerro a rodada: Corte de Troca, Couro Encharcado.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Minotauro Esqueleto ataca Você: erra.\nSangramento corrói Você: 1 de dano contínuo.\nO Abismo se aproxima.\nMinotauro Esqueleto cumpre o que o presságio anunciava.\nMirela: Sangramento terminou.\nMinotauro Esqueleto: ganha condição desmoralizado\nMirela: ganha condição desmoralizado\nVocê executa a Última Ação em Minotauro Esqueleto: acerto crítico — 20 de dano, ferimento critico na região perna.\nTempestade de Éter: Quando o Éter condensa em tempestade, até o fôlego de quem não reza ao Abismo fica mais perto dele.\nMirela sente o Abismo mais perto (+1 Carga).\nEco da Boca: Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem.\n\nA adaga de ferro escapa de sua mão enquanto o Couro Encharcado cede sob o peso do seu corpo exausto — o Corte de Troca não encontra alvo, e é o próprio chão que o recebe. O Minotauro Esqueleto cambaleia à beira do colapso, seu último golpe cortando apenas o ar vazio, enquanto o sangue que escorre de você mancha a terra fria do amanhecer. Seus ferimentos — o torso rasgado, a perna cedendo, o fio de sangue na cabeça — pesam mais que qualquer inimigo, e a consciência se esvai devagar entre as nuvens rasgadas. Você tomba, e o silêncio do campo de batalha se fecha sobre você.\n\nA escuridão te engole — mas a Roda do Abismo ainda não decidiu. Voltar ao último respiro seguro, ou aceitar o fim aqui?",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    }
+  ],
+  "simulated": false,
+  "world": {
+    "location": "Montanhas Afiadas",
+    "location_id": "montanhas_afiadas",
+    "day": 1,
+    "period": "Amanhecer",
+    "visited": [
+      "montanhas_afiadas"
+    ],
+    "danger": 3,
+    "weather": "Nuvens rasgadas",
+    "weather_global": {},
+    "light": {
+      "dark": false,
+      "lit": true,
+      "label": "claro"
+    },
+    "turn_count": 8,
+    "controlled": {},
+    "danger_overrides": {},
+    "map_overlays": {
+      "control_changes": [],
+      "threats": [],
+      "looming_threat": ""
+    },
+    "blocked_routes": [],
+    "interiors": {
+      "here": [],
+      "exit_to": null
+    },
+    "location_state": "",
+    "season": {
+      "id": "outono",
+      "label": "Outono"
+    },
+    "date": {
+      "label": "17º dia de Orrakh, Sino de Bronze — Ano 112 da Era 7",
+      "day_of_month": 17,
+      "month": "Orrakh",
+      "month_id": "orrakh",
+      "weekday": "Sino de Bronze",
+      "year": 112,
+      "climate": "transicao",
+      "season_chip": ""
+    },
+    "news": []
+  },
+  "quest": {
+    "main": {
+      "objective": "Investigue os acontecimentos em Montanhas Afiadas. Arco atual: Sangue nas Profundezas da Montanha.",
+      "objective_source": "campaign",
+      "objective_quest_id": "",
+      "climax": "",
+      "current_step": 0,
+      "total": 5,
+      "arc_title": "Sangue nas Profundezas da Montanha",
+      "beats": [
+        {
+          "description": "Etapa 1",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 2",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 3",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 4",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 5",
+          "status": "pending"
+        }
+      ]
+    },
+    "side": [],
+    "markers": []
+  },
+  "combat": {
+    "active": false,
+    "round": 6,
+    "phase": "ended",
+    "outcome": "death",
+    "encounter_id": "59c4a8da-338d-4c87-9c57-ac3d241cfd0c:0:1",
+    "encounter_view": {
+      "encounter_id": "59c4a8da-338d-4c87-9c57-ac3d241cfd0c:0:1",
+      "origin": "player_provoked",
+      "participants": [
+        {
+          "participant_id": "enemy_criatura_da_fenda_1",
+          "species_label": "Criatura da Fenda",
+          "categoria": "padrao",
+          "role": "hostile",
+          "presence": "present",
+          "status": "morto"
+        },
+        {
+          "participant_id": "enemy_minotauro_esqueleto_2",
+          "species_label": "Minotauro Esqueleto",
+          "categoria": "elite",
+          "role": "hostile",
+          "presence": "arrived",
+          "status": "ativo"
+        }
+      ]
+    },
+    "order": [
+      {
+        "name": "Inimigos",
+        "side": "enemy",
+        "init": 0
+      },
+      {
+        "name": "Heróis",
+        "side": "hero",
+        "init": 0
+      }
+    ],
+    "initiative": [
+      "enemy",
+      "heroes"
+    ],
+    "enemies": [],
+    "cards": [
+      {
+        "id": "san_corte_troca",
+        "name": "Corte de Troca",
+        "type": "ativa",
+        "description": "Um talho rápido; o preço do sangue já está embutido.",
+        "effect_kind": "dano",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive"
+      },
+      {
+        "id": "san_finta",
+        "name": "Finta de Sangue",
+        "type": "ativa",
+        "description": "Oferece o pulso, retira a garganta — engana lendo o próprio corte.",
+        "effect_kind": "buff_acerto",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 1,
+        "base_cost": 1,
+        "frequency": "turno",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive"
+      },
+      {
+        "id": "san_esquiva",
+        "name": "Esquiva Calculada",
+        "type": "reacao",
+        "description": "Cede o couro que pode perder para salvar o que não pode.",
+        "effect_kind": "buff_esquiva",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 1,
+        "base_cost": 1,
+        "frequency": "turno",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "ao_ser_atacado",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive"
+      },
+      {
+        "id": "san_pacto",
+        "name": "Pacto Rápido",
+        "type": "passiva",
+        "description": "A dor recente afia o gesto seguinte — cada gota cobrada rende juros.",
+        "effect_kind": "buff_dano",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive"
+      }
+    ],
+    "basic_actions": [
+      {
+        "kind": "attack",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "engajar",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "desengajar",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "guardar",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "esconder",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "procurar",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "pass",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      },
+      {
+        "kind": "flee",
+        "valid_targets": [],
+        "invalid_reason": "combat_inactive",
+        "cost": 0
+      }
+    ],
+    "scene": {
+      "zones": [],
+      "positions": []
+    },
+    "wounds": {
+      "vitality": 0,
+      "max_vitality": 18,
+      "slots": {
+        "leve": 4,
+        "grave": 2,
+        "critico": 2
+      },
+      "by_severity": {
+        "leve": [
+          {
+            "categoria": "leve",
+            "regiao": "cabeca",
+            "suprimida": false,
+            "aplicado": true
+          }
+        ],
+        "grave": [],
+        "critico": [
+          {
+            "categoria": "critico",
+            "regiao": "torso",
+            "suprimida": false,
+            "aplicado": true
+          },
+          {
+            "categoria": "critico",
+            "regiao": "perna",
+            "suprimida": false,
+            "aplicado": true
+          }
+        ]
+      }
+    },
+    "chase": {},
+    "player_conditions": [
+      {
+        "name": "desmoralizado",
+        "dot": 0,
+        "duration": 1
+      }
+    ],
+    "cooldowns": {},
+    "suggestions": [],
+    "last_player_action": {
+      "kind": "card",
+      "card_id": "san_corte_troca",
+      "item_id": null,
+      "target_id": "enemy_minotauro_esqueleto_2",
+      "maneuver": null,
+      "direction": null,
+      "region": "perna",
+      "result": "hit",
+      "attempted": false,
+      "flee_destination_id": null,
+      "chase_track": null,
+      "plays": [
+        {
+          "kind": "card",
+          "card_id": "san_corte_troca",
+          "target_id": "enemy_minotauro_esqueleto_2"
+        },
+        {
+          "kind": "card",
+          "card_id": "bas_san_guarda",
+          "target_id": "player"
+        }
+      ]
+    },
+    "reactions": [],
+    "pressagios_cena": [],
+    "nonlethal_available": true
+  },
+  "npcs": [
+    {
+      "name": "Gorik",
+      "role": "negociador",
+      "location": "Montanhas Afiadas",
+      "home_location_id": "montanhas_afiadas",
+      "attitude_label": "neutro",
+      "recent_changes": [],
+      "knowledge_source": "met",
+      "in_scene": true,
+      "status": "",
+      "revealed_traits": [],
+      "last_memory": ""
+    },
+    {
+      "name": "Kraz",
+      "role": "agressor",
+      "location": "Montanhas Afiadas",
+      "home_location_id": "montanhas_afiadas",
+      "attitude_label": "desconfiado",
+      "recent_changes": [],
+      "knowledge_source": "met",
+      "in_scene": true,
+      "status": "",
+      "revealed_traits": [],
+      "last_memory": ""
+    }
+  ],
+  "art_offers": [],
+  "art_generations": [],
+  "chronicle": [
+    {
+      "chapter_id": "d8c555e1176356eabfe3770c318780f1",
+      "title": "Sangue nas Profundezas da Montanha",
+      "started_turn": 0,
+      "location": "Montanhas Afiadas",
+      "entries": [
+        {
+          "text": "O herói caiu; seu destino ainda aguarda uma escolha. Mirela tombou em combate diante de Minotauro Esqueleto.",
+          "turn": 8,
+          "kind": "milestone",
+          "event_id": "d4f3c483ae274973982b779b7d6b3ca8",
+          "entry_id": "dd1a2cb7278852a3beffbac08b5884d1"
+        },
+        {
+          "text": "Mortos: Criatura da Fenda. Caídos: Mirela. Inconscientes: Mirela.",
+          "turn": 8,
+          "kind": "conflict",
+          "entry_id": "0fecfe9ebfbd52378df0b1729111406e"
+        }
+      ],
+      "digest": null,
+      "entry_count": 2
+    }
+  ],
+  "factions": [],
+  "reputation_notices": [],
+  "companion_feedback": [],
+  "party": [],
+  "death_pending": true,
+  "game_over": false,
+  "death": {
+    "pending": true,
+    "last_action": {
+      "kind": "card",
+      "card_id": "san_corte_troca",
+      "item_id": null,
+      "target_id": "enemy_minotauro_esqueleto_2",
+      "maneuver": null,
+      "direction": null,
+      "region": "perna",
+      "result": "hit",
+      "attempted": false,
+      "flee_destination_id": null,
+      "chase_track": null,
+      "plays": [
+        {
+          "kind": "card",
+          "card_id": "san_corte_troca",
+          "target_id": "enemy_minotauro_esqueleto_2"
+        },
+        {
+          "kind": "card",
+          "card_id": "bas_san_guarda",
+          "target_id": "player"
+        }
+      ]
+    },
+    "last_action_label": "Corte de Troca",
+    "entered_terminal": true,
+    "stabilization": "sem aliado próximo e capaz",
+    "stabilization_attempts": 0,
+    "killer": "Minotauro Esqueleto",
+    "will_restore_turn": 1,
+    "will_lose_turns": 7,
+    "retained": [
+      "histórico de mortes",
+      "contagem de ações da sessão"
+    ],
+    "reverted": [
+      "mundo",
+      "inventário",
+      "posição e memória após o checkpoint"
+    ]
+  },
+  "continuity": {
+    "session_action_count": 7,
+    "timeline_epoch": 0,
+    "last_checkpoint_turn": 1,
+    "checkpoint_deferred": false,
+    "synthetic_from_turn": null,
+    "death_history": [],
+    "canonical_turn": 8
+  },
+  "combat_simulation": {},
+  "turn_outcome": {
+    "receipt_id": "875e4225c6319cd556f6",
+    "turn": 8,
+    "xp_delta": 0,
+    "level_delta": 0,
+    "level_after": 1,
+    "gold_delta": 0,
+    "items_gained": [],
+    "quests_completed": [],
+    "source": "none"
+  },
+  "combat_result": {
+    "encounter_id": "59c4a8da-338d-4c87-9c57-ac3d241cfd0c:0:1",
+    "outcome": "death",
+    "participants": [
+      {
+        "participant_id": "enemy_criatura_da_fenda_1",
+        "species_label": "Criatura da Fenda",
+        "final_status": "morto"
+      },
+      {
+        "participant_id": "enemy_minotauro_esqueleto_2",
+        "species_label": "Minotauro Esqueleto",
+        "final_status": "ativo"
+      }
+    ],
+    "xp_event_ref": "875e4225c6319cd556f6",
+    "loot_ref": null,
+    "ended_round": 6,
+    "result_event_id": "46a7c57e95982072"
+  },
+  "projections": {
+    "canonical_version": 7,
+    "summary": {
+      "status": "completed",
+      "projected_version": 7
+    },
+    "memory": {
+      "status": "completed",
+      "projected_version": 7
+    },
+    "chronicle": {
+      "status": "completed",
+      "projected_version": 7
+    }
+  },
+  "visual": {
+    "scene": {
+      "location_id": "montanhas_afiadas",
+      "location_name": "Montanhas Afiadas",
+      "scope": "exact",
+      "asset": {
+        "asset_id": "VAL-ANCHOR-LOC-MONTANHAS_AFIADAS-001",
+        "subject_type": "location",
+        "subject_id": "montanhas_afiadas",
+        "title": "Montanhas Afiadas",
+        "alt": "Arte de Montanhas Afiadas",
+        "placeholder_color": "#241d1a",
+        "variants": {
+          "thumbnail": {
+            "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.thumb.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 59814,
+            "sha256": "e40bafc31859a3909a2a3b02905b546bd83cf81992492b559fbc8e3870959114"
+          },
+          "display": {
+            "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 257738,
+            "sha256": "020362ea03318ed4f3cfb80ba09f0d3a64bbb0d663da69683ea3d47742da9bb9"
+          }
+        }
+      }
+    },
+    "cue": null
+  }
+}

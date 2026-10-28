@@ -1,0 +1,1439 @@
+{
+  "timeline_epoch": 0,
+  "portrait_generation_id": null,
+  "game_id": "4cfbea16-02e1-4cad-9d69-847364f56702",
+  "message": "Você joga Golpe do Penitente em Anão-Eco: O ferro cai onde a fé já rachou; quem reza assim não pede perdão ao golpe. Acerto crítico — 14 de dano, ferimento leve na região braço.\nAnão-Eco ataca Você: acerta — 3 de dano, ferimento critico na região torso.\nToque Gélido da Morte corrói Você: 3 de dano contínuo.\nSangramento corrói Você: 1 de dano contínuo.\nSangramento corrói Anão-Eco: 1 de dano contínuo.\nHaldor: Toque Gélido da Morte terminou.\nHaldor: Sangramento terminou.\nCarta 'cena_sino_rachado_fb2eb42a' não está preparada.\nAnão-Eco: Sangramento terminou.\nAnão-Eco cumpre o que o presságio anunciava.\nAnão-Eco: ganha condição desmoralizado\nHaldor: ganha condição desmoralizado\nEco da Boca: Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem.\nO ferimento abre espaço no Baralho: Sangue nos Olhos.\nHaldor: ganha condição Cego",
+  "message_type": "STORY",
+  "speaker": {
+    "kind": "narrator",
+    "id": "narrator",
+    "name": "Narrador",
+    "reason": "classify_story"
+  },
+  "player_stats": {
+    "name": "Haldor",
+    "class_name": "Devoto do Abismo",
+    "race": "Humano",
+    "vitalidade": 0,
+    "max_vitalidade": 18,
+    "ferimentos": {
+      "leve": [
+        {
+          "categoria": "leve",
+          "regiao": "braco",
+          "suprimida": false,
+          "aplicado": true
+        }
+      ],
+      "grave": [],
+      "critico": [
+        {
+          "categoria": "critico",
+          "regiao": "torso",
+          "suprimida": false,
+          "aplicado": true
+        }
+      ]
+    },
+    "dead": false,
+    "estado_terminal": false,
+    "hp": 0,
+    "max_hp": 18,
+    "entropy": 14,
+    "max_entropy": 14,
+    "abyss_charge": 1,
+    "abyss_tier": "leve",
+    "defense": 16,
+    "gold": 97,
+    "level": 1,
+    "xp": 100,
+    "cards": [
+      {
+        "id": "dev_golpe_convite",
+        "name": "Golpe do Convite",
+        "type": "ativa",
+        "description": "Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer.",
+        "effect_kind": "dano",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "dev_muralha_viva",
+        "name": "Muralha Viva",
+        "type": "ativa",
+        "description": "Planta os pés e vira anteparo de carne para os que estão atrás.",
+        "effect_kind": "protecao",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 2,
+        "base_cost": 2,
+        "frequency": "cena",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "dev_conviccao",
+        "name": "Convicção",
+        "type": "passiva",
+        "description": "Quem não teme o Abismo não recua um passo — a guarda nunca abre por susto.",
+        "effect_kind": "buff_defesa",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "dev_aguentar",
+        "name": "Aguentar",
+        "type": "utilitaria",
+        "description": "O corpo aprende a hospedar sofrimento.",
+        "effect_kind": "utilitaria",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "descanso_curto",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "dev_ombro_porta",
+        "name": "Ombro na Porta",
+        "type": "reacao",
+        "description": "Recebe a investida de lado e devolve o invasor para a zona anterior.",
+        "effect_kind": "empurrao",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": false,
+        "cost": 1,
+        "base_cost": 1,
+        "frequency": "cena",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "ao_inimigo_engajar",
+        "evolved": null
+      },
+      {
+        "id": "dev_vigiar_ruina",
+        "name": "Vigiar a Ruína",
+        "type": "utilitaria",
+        "description": "Lê nas paredes os sinais de que algo tentou entrar durante a noite.",
+        "effect_kind": "perception",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": false,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "descanso_curto",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      },
+      {
+        "id": "neu1_er_aguardente_de_liquen",
+        "name": "Aguardente de Líquen",
+        "type": "ativa",
+        "description": "Destilado de líquen sob a neve, servido nos túneis quentes: aquece o peito como brasa e fecha o corte por dentro.",
+        "effect_kind": "cura",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 2,
+        "base_cost": 2,
+        "frequency": "cena",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null
+      }
+    ],
+    "can_reorganize": {
+      "allowed": false,
+      "reason": "Não é possível reorganizar as Cartas em combate."
+    },
+    "prepared_slots": 4,
+    "scars": [],
+    "subclass": "",
+    "virtue_cards": [
+      {
+        "card_id": "vc_forca_bruta",
+        "name": "Força Bruta",
+        "type": "virtude",
+        "description": "A força que o sangue guarda cresce a cada degrau que a Virtude sobe.",
+        "virtude": "forca",
+        "mastery": 0,
+        "effective_stage": 0
+      },
+      {
+        "card_id": "vc_mente_lucida",
+        "name": "Mente Lúcida",
+        "type": "virtude",
+        "description": "A mente limpa a névoa e enxerga o que o resto da vila só pressente.",
+        "virtude": "mente",
+        "mastery": 0,
+        "effective_stage": 0
+      }
+    ],
+    "evolvable_card_ids": [],
+    "virtudes": {
+      "mente": 1,
+      "agilidade": 1,
+      "forca": 4,
+      "carisma": 2,
+      "corpo": 3
+    },
+    "xp_next_level": 300,
+    "pending_choices": [],
+    "level_up": {},
+    "forja": {
+      "permitido": false,
+      "motivo": "Não é possível reorganizar as Cartas em combate.",
+      "baralho": [
+        {
+          "id": "neu1_er_aguardente_de_liquen",
+          "name": "Aguardente de Líquen",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "dev_aguentar",
+          "name": "Aguentar",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "dev_golpe_convite",
+          "name": "Golpe do Convite",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "bas_dev_golpe",
+          "name": "Golpe do Penitente",
+          "copias": 4,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "dev_muralha_viva",
+          "name": "Muralha Viva",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "bas_dev_guarda",
+          "name": "Postura de Cinza",
+          "copias": 4,
+          "esquecivel": true,
+          "bloqueio": null
+        },
+        {
+          "id": "bas_dev_voto",
+          "name": "Voto Sussurrado",
+          "copias": 1,
+          "esquecivel": true,
+          "bloqueio": null
+        }
+      ],
+      "baralho_min": 12,
+      "esquecer": {
+        "descanso": true,
+        "templo": false,
+        "ouro": 25,
+        "motivos": {
+          "descanso": "Não é possível reorganizar as Cartas em combate.",
+          "templo": "Não é possível reorganizar as Cartas em combate."
+        }
+      },
+      "afiar": {
+        "material": null,
+        "afiaveis": [
+          "dev_golpe_convite",
+          "dev_muralha_viva",
+          "dev_ombro_porta",
+          "dev_vigiar_ruina",
+          "neu1_er_aguardente_de_liquen"
+        ],
+        "afiadas": []
+      },
+      "cicatrizes": [],
+      "purgar": {
+        "templo": false,
+        "medico": false,
+        "ouro": 40,
+        "motivos": {
+          "medico": "Não é possível reorganizar as Cartas em combate.",
+          "templo": "Não é possível reorganizar as Cartas em combate."
+        }
+      }
+    }
+  },
+  "inventory": [
+    {
+      "id": "espada_gasta",
+      "name": "Espada Gasta",
+      "qty": 1,
+      "type": "weapon",
+      "equipped": true,
+      "slot": "weapon",
+      "unique": false
+    },
+    {
+      "id": "escudo_amassado",
+      "name": "Escudo Amassado",
+      "qty": 1,
+      "type": "armor",
+      "equipped": true,
+      "slot": "armor",
+      "unique": false
+    },
+    {
+      "id": "pocao_cura",
+      "name": "Poção de Cura Menor",
+      "qty": 2,
+      "type": "consumable",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Cajado de Osso de Foca — esculpido com runas de maré, absorve o calor do corpo e nunca congela",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Lâmina de Gelo Serrilhado — faca de caça feita de gelo permanentemente solidificado, quebra e é refeita a cada lua nova",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Manto de Pele de Urso-Polar com Capuz de Vrel — interior costurado com fios de memória, esquenta mesmo quando molhado",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Cantil de Ferro Batido — água do degelo, guardada em silêncio ritual antes de cada descida ao abismo",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Amuleto de Dente de Baleia — presente de um Vrel, sussurra nomes de coisas afogadas quando segurado contra a pele",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Frasco de Sal Negro — colhido nas margens salgadas do Fiorde, usado em oferendas ao Abismo",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Botas de Couro Cru com Cravos de Osso — silenciosas na neve, firmes no gelo",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Corda de Tendão Trançado — 15 metros, resistente ao frio extremo, com nós de contagem",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "item_desconhecido",
+      "name": "Kit de Viajante",
+      "qty": 1,
+      "type": "desconhecido",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "corda",
+      "name": "Corda de Cânhamo (15m)",
+      "qty": 1,
+      "type": "material",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    },
+    {
+      "id": "moeda_ouro",
+      "name": "Moeda de Ouro",
+      "qty": 1,
+      "type": "currency",
+      "equipped": false,
+      "slot": null,
+      "unique": false
+    }
+  ],
+  "current_location": "A Boca",
+  "narrative_summary": "Haldor deixou o acampamento do clã Hrafn no Ermo Branco e viajou dois períodos até as Montanhas Afiadas, subindo por degraus de pedra e fendas perigosas, guiando-se pelo som na escuridão sem tocha. Numa reentrância abrigada do vento, encontrou e recolheu 33 moedas de ouro de cunhagem antiga, espalhadas junto a tecido apodrecido. Ao chegar a um acampamento do clã nas montanhas, ouviu a fogueira baixa e a voz de uma anciã, que estendeu o braço na direção de uma abertura nas estacas de osso — entregando-lhe uma tarefa que ele ainda não aceitou formalmente. O Renegado permaneceu inconsciente no Ermo Branco; Ketil ficou atordoado.",
+  "last_turn_log": [
+    {
+      "type": "ai",
+      "data": {
+        "content": "Você joga Golpe do Convite em Anão-Eco: Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer. Erra.\nVocê joga Golpe do Penitente em Anão-Eco: O ferro cai onde a fé já rachou; quem reza assim não pede perdão ao golpe. Acerta — 6 de dano.\nAnão-Eco ataca Você com Toque Gélido da Morte: acerta.\nToque Gélido da Morte corrói Você: 3 de dano contínuo.\nAnão-Eco cumpre o que o presságio anunciava.\nHaldor: ganha condição Toque Gélido da Morte\nAnão-Eco: ganha condição Defesa Instintiva",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "Tento fugir.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Anão-Eco ataca Você com Abraço da Cova: acerto crítico — 16 de dano, ferimento leve na região braço.\nToque Gélido da Morte corrói Você: 3 de dano contínuo.\nAnão-Eco cumpre o que o presságio anunciava.\nAnão-Eco: Defesa Instintiva terminou.\nHaldor: ganha condição desorientado\nHaldor tenta fugir, mas os inimigos o alcançam.\nO ferimento abre espaço no Baralho: Dor Surda.",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    },
+    {
+      "type": "human",
+      "data": {
+        "content": "Encerro a rodada: Golpe do Penitente, Derrubar (Sino Rachado).",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "human",
+        "name": null,
+        "id": null
+      }
+    },
+    {
+      "type": "ai",
+      "data": {
+        "content": "Você joga Golpe do Penitente em Anão-Eco: O ferro cai onde a fé já rachou; quem reza assim não pede perdão ao golpe. Acerto crítico — 14 de dano, ferimento leve na região braço.\nAnão-Eco ataca Você: acerta — 3 de dano, ferimento critico na região torso.\nToque Gélido da Morte corrói Você: 3 de dano contínuo.\nSangramento corrói Você: 1 de dano contínuo.\nSangramento corrói Anão-Eco: 1 de dano contínuo.\nHaldor: Toque Gélido da Morte terminou.\nHaldor: Sangramento terminou.\nCarta 'cena_sino_rachado_fb2eb42a' não está preparada.\nAnão-Eco: Sangramento terminou.\nAnão-Eco cumpre o que o presságio anunciava.\nAnão-Eco: ganha condição desmoralizado\nHaldor: ganha condição desmoralizado\nEco da Boca: Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem.\nO ferimento abre espaço no Baralho: Sangue nos Olhos.\nHaldor: ganha condição Cego",
+        "additional_kwargs": {},
+        "response_metadata": {},
+        "type": "ai",
+        "name": null,
+        "id": null,
+        "tool_calls": [],
+        "invalid_tool_calls": [],
+        "usage_metadata": null
+      }
+    }
+  ],
+  "simulated": false,
+  "world": {
+    "location": "A Boca",
+    "location_id": "ma_boca",
+    "day": 2,
+    "period": "Amanhecer",
+    "visited": [
+      "skallgard",
+      "montanhas_afiadas",
+      "ma_boca"
+    ],
+    "danger": 4,
+    "weather": "Noite Sem Estrelas",
+    "weather_global": {
+      "id": "noite_sem_estrelas",
+      "periods_left": 2
+    },
+    "light": {
+      "dark": true,
+      "lit": false,
+      "label": "escuridão"
+    },
+    "turn_count": 10,
+    "controlled": {},
+    "danger_overrides": {},
+    "map_overlays": {
+      "control_changes": [],
+      "threats": [],
+      "looming_threat": ""
+    },
+    "blocked_routes": [],
+    "interiors": {
+      "here": [
+        {
+          "id": "ma_forja_profunda",
+          "name": "Forja Profunda",
+          "danger": 3,
+          "tags": [
+            "masmorra",
+            "abrigo",
+            "forja"
+          ]
+        }
+      ],
+      "exit_to": null
+    },
+    "location_state": "",
+    "season": {
+      "id": "outono",
+      "label": "Outono"
+    },
+    "date": {
+      "label": "17º dia de Orrakh, Sino de Bronze — Ano 112 da Era 7",
+      "day_of_month": 17,
+      "month": "Orrakh",
+      "month_id": "orrakh",
+      "weekday": "Sino de Bronze",
+      "year": 112,
+      "climate": "transicao",
+      "season_chip": ""
+    },
+    "news": []
+  },
+  "quest": {
+    "main": {
+      "objective": "Investigue os acontecimentos em A Boca. Arco atual: O Abismo Escolhe Primeiro.",
+      "objective_source": "campaign",
+      "objective_quest_id": "",
+      "climax": "",
+      "current_step": 0,
+      "total": 5,
+      "arc_title": "O Abismo Escolhe Primeiro",
+      "beats": [
+        {
+          "description": "Etapa 1",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 2",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 3",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 4",
+          "status": "pending"
+        },
+        {
+          "description": "Etapa 5",
+          "status": "pending"
+        }
+      ]
+    },
+    "side": [],
+    "markers": []
+  },
+  "combat": {
+    "active": true,
+    "round": 3,
+    "phase": "active",
+    "outcome": null,
+    "encounter_id": "4cfbea16-02e1-4cad-9d69-847364f56702:0:6",
+    "encounter_view": {
+      "encounter_id": "4cfbea16-02e1-4cad-9d69-847364f56702:0:6",
+      "origin": "travel_encounter",
+      "participants": [
+        {
+          "participant_id": "mon_anao_eco_1",
+          "species_label": "Anão-Eco",
+          "categoria": "elite",
+          "role": "hostile",
+          "presence": "present",
+          "status": "ativo"
+        }
+      ]
+    },
+    "order": [
+      {
+        "name": "Heróis",
+        "side": "hero",
+        "init": 0
+      },
+      {
+        "name": "Inimigos",
+        "side": "enemy",
+        "init": 0
+      }
+    ],
+    "initiative": [
+      "heroes",
+      "enemy"
+    ],
+    "enemies": [
+      {
+        "id": "mon_anao_eco_1",
+        "name": "Anão-Eco",
+        "vitalidade": 0,
+        "max_vitalidade": 16,
+        "hp": 0,
+        "max_hp": 16,
+        "esquiva": 11,
+        "protecao": null,
+        "integridade_atual": null,
+        "integridade_max": null,
+        "recursos_visiveis": {},
+        "conditions": [
+          {
+            "name": "desmoralizado",
+            "dot": 0,
+            "duration": 1
+          }
+        ],
+        "revealed_cards": [
+          {
+            "id": "bst_toque_gelido",
+            "name": "Toque Gélido da Morte"
+          },
+          {
+            "id": "bst_defesa_instintiva",
+            "name": "Defesa Instintiva"
+          },
+          {
+            "id": "inf_morto_vivo_implacavel_abraco_da_cova",
+            "name": "Abraço da Cova"
+          }
+        ],
+        "revealed_resistances": []
+      }
+    ],
+    "cards": [
+      {
+        "id": "dev_golpe_convite",
+        "name": "Golpe do Convite",
+        "type": "ativa",
+        "description": "Abre a guarda de propósito: o aço convida o inimigo a se aproximar do que ele deveria temer.",
+        "effect_kind": "dano",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [
+          "mon_anao_eco_1"
+        ],
+        "invalid_reason": null
+      },
+      {
+        "id": "dev_muralha_viva",
+        "name": "Muralha Viva",
+        "type": "ativa",
+        "description": "Planta os pés e vira anteparo de carne para os que estão atrás.",
+        "effect_kind": "protecao",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 2,
+        "base_cost": 2,
+        "frequency": "cena",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [
+          "player"
+        ],
+        "invalid_reason": null
+      },
+      {
+        "id": "dev_conviccao",
+        "name": "Convicção",
+        "type": "passiva",
+        "description": "Quem não teme o Abismo não recua um passo — a guarda nunca abre por susto.",
+        "effect_kind": "buff_defesa",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "livre",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": null
+      },
+      {
+        "id": "dev_aguentar",
+        "name": "Aguentar",
+        "type": "utilitaria",
+        "description": "O corpo aprende a hospedar sofrimento.",
+        "effect_kind": "utilitaria",
+        "target_kind": "enemy",
+        "subclass": "",
+        "prepared": true,
+        "cost": 0,
+        "base_cost": 0,
+        "frequency": "descanso_curto",
+        "spent": false,
+        "ready": false,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [],
+        "invalid_reason": null
+      },
+      {
+        "id": "neu1_er_aguardente_de_liquen",
+        "name": "Aguardente de Líquen",
+        "type": "ativa",
+        "description": "Destilado de líquen sob a neve, servido nos túneis quentes: aquece o peito como brasa e fecha o corte por dentro.",
+        "effect_kind": "cura",
+        "target_kind": "self",
+        "subclass": "",
+        "prepared": true,
+        "cost": 2,
+        "base_cost": 2,
+        "frequency": "cena",
+        "spent": false,
+        "ready": true,
+        "has_rupture": false,
+        "rupture_ready": false,
+        "trigger": "",
+        "evolved": null,
+        "valid_targets": [
+          "player"
+        ],
+        "invalid_reason": null
+      }
+    ],
+    "basic_actions": [
+      {
+        "kind": "attack",
+        "valid_targets": [
+          "mon_anao_eco_1"
+        ],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "engajar",
+        "valid_targets": [
+          "mon_anao_eco_1"
+        ],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "desengajar",
+        "valid_targets": [],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "guardar",
+        "valid_targets": [],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "esconder",
+        "valid_targets": [],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "maneuver",
+        "maneuver": "procurar",
+        "valid_targets": [
+          "mon_anao_eco_1"
+        ],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "pass",
+        "valid_targets": [],
+        "invalid_reason": null,
+        "cost": 0
+      },
+      {
+        "kind": "flee",
+        "valid_targets": [],
+        "invalid_reason": null,
+        "cost": 0
+      }
+    ],
+    "scene": {
+      "zones": [
+        {
+          "id": "boca_entrada",
+          "name": "Entrada da Boca",
+          "connections": [
+            "boca_fundo"
+          ]
+        },
+        {
+          "id": "boca_fundo",
+          "name": "Fundo da Boca",
+          "connections": [
+            "boca_entrada"
+          ]
+        }
+      ],
+      "positions": [
+        {
+          "participant_id": "player",
+          "participant_name": "Haldor",
+          "zone_id": "boca_entrada",
+          "distance": "proximo",
+          "posture": "neutro",
+          "concealment": "visivel",
+          "engaged_with": [
+            "mon_anao_eco_1"
+          ],
+          "engaged_names": [
+            "Anão-Eco"
+          ]
+        },
+        {
+          "participant_id": "mon_anao_eco_1",
+          "participant_name": "Anão-Eco",
+          "zone_id": "boca_entrada",
+          "distance": "proximo",
+          "posture": "neutro",
+          "concealment": "visivel",
+          "engaged_with": [
+            "player"
+          ],
+          "engaged_names": [
+            "Haldor"
+          ]
+        }
+      ]
+    },
+    "wounds": {
+      "vitality": 0,
+      "max_vitality": 18,
+      "slots": {
+        "leve": 4,
+        "grave": 2,
+        "critico": 2
+      },
+      "by_severity": {
+        "leve": [
+          {
+            "categoria": "leve",
+            "regiao": "braco",
+            "suprimida": false,
+            "aplicado": true
+          }
+        ],
+        "grave": [],
+        "critico": [
+          {
+            "categoria": "critico",
+            "regiao": "torso",
+            "suprimida": false,
+            "aplicado": true
+          }
+        ]
+      }
+    },
+    "chase": {
+      "track": "alcancado",
+      "steps": [
+        "pressionado",
+        "afastado",
+        "quase_livre",
+        "escapou"
+      ],
+      "escaped": false,
+      "caught": true,
+      "pursuers": [
+        "mon_anao_eco_1"
+      ],
+      "last_roll": {
+        "total": 7,
+        "difficulty": 11,
+        "sucesso": false,
+        "advantage": 0
+      }
+    },
+    "player_conditions": [
+      {
+        "name": "desorientado",
+        "dot": 0,
+        "duration": 1
+      },
+      {
+        "name": "Sangramento",
+        "dot": 1,
+        "duration": 1
+      },
+      {
+        "name": "desmoralizado",
+        "dot": 0,
+        "duration": 1
+      },
+      {
+        "name": "Cego",
+        "dot": 0,
+        "duration": 1
+      }
+    ],
+    "cooldowns": {},
+    "suggestions": [
+      "Aguardente de Líquen",
+      "Golpe do Convite",
+      "Golpe do Penitente",
+      "Beber Poção de Cura Menor",
+      "Fugir"
+    ],
+    "last_player_action": {
+      "kind": "card",
+      "card_id": "bas_dev_golpe",
+      "item_id": null,
+      "target_id": "mon_anao_eco_1",
+      "maneuver": null,
+      "direction": null,
+      "region": "braco",
+      "result": "hit",
+      "attempted": true,
+      "flee_destination_id": null,
+      "chase_track": null,
+      "plays": [
+        {
+          "kind": "card",
+          "card_id": "bas_dev_golpe",
+          "target_id": "mon_anao_eco_1"
+        },
+        {
+          "kind": "card",
+          "card_id": "cena_sino_rachado_fb2eb42a",
+          "target_id": "mon_anao_eco_1"
+        }
+      ]
+    },
+    "reactions": [],
+    "pressagios_publicos": [
+      {
+        "actor_id": "mon_anao_eco_1",
+        "tipo": "defesa",
+        "alvo_id": "mon_anao_eco_1",
+        "valor_estimado": null,
+        "faixa": null,
+        "carta_nome": null,
+        "sinal": "Anão-Eco se encolhe sobre si, pelo eriçado, e espera."
+      }
+    ],
+    "pressagios_cena": [],
+    "cena": {
+      "cartas": [
+        {
+          "id": "eco_da_boca",
+          "nome": "Eco da Boca",
+          "sabor": "Nas profundezas há um som de sino que não vem de sino algum; ele ressoa na pedra e desmancha a coragem."
+        }
+      ],
+      "relogio": {
+        "desde": 5,
+        "teto": 12,
+        "rodada": 3,
+        "ativo": false
+      }
+    },
+    "pilhas": {
+      "mao": [
+        {
+          "id": "sts_sangue_olhos",
+          "name": "Sangue nos Olhos",
+          "tipo": "status",
+          "custo_folego": 0,
+          "custo_entropia": 0,
+          "jogavel": false,
+          "alvo": "si",
+          "texto": "**Fardo**. Ao ser comprada: Cego por 1 rodada(s).",
+          "palavras_chave": [
+            "fardo"
+          ]
+        },
+        {
+          "id": "bas_dev_guarda",
+          "name": "Postura de Cinza",
+          "tipo": "ativa",
+          "custo_folego": 1,
+          "custo_entropia": 0,
+          "jogavel": true,
+          "alvo": "aliado",
+          "texto": "Concede 2 de Proteção.",
+          "palavras_chave": []
+        },
+        {
+          "id": "bas_dev_golpe",
+          "name": "Golpe do Penitente",
+          "tipo": "ativa",
+          "custo_folego": 1,
+          "custo_entropia": 0,
+          "jogavel": true,
+          "alvo": "inimigo",
+          "texto": "Causa 3 de dano.",
+          "palavras_chave": []
+        },
+        {
+          "id": "neu1_er_aguardente_de_liquen",
+          "name": "Aguardente de Líquen",
+          "tipo": "ativa",
+          "custo_folego": 0,
+          "custo_entropia": 2,
+          "jogavel": true,
+          "alvo": "aliado",
+          "texto": "Recupera 3 de Vitalidade em você.",
+          "palavras_chave": []
+        },
+        {
+          "id": "bas_dev_guarda",
+          "name": "Postura de Cinza",
+          "tipo": "ativa",
+          "custo_folego": 1,
+          "custo_entropia": 0,
+          "jogavel": true,
+          "alvo": "aliado",
+          "texto": "Concede 2 de Proteção.",
+          "palavras_chave": []
+        },
+        {
+          "id": "cena_sino_rachado_fb2eb42a",
+          "name": "Derrubar (Sino Rachado)",
+          "tipo": "ativa",
+          "custo_folego": 1,
+          "custo_entropia": 0,
+          "jogavel": true,
+          "alvo": "inimigo",
+          "texto": "**Exaurir**. Causa 15 de dano impactante.",
+          "palavras_chave": [
+            "exaurir"
+          ]
+        }
+      ],
+      "listas": {
+        "compra": [
+          {
+            "id": "dev_aguentar",
+            "name": "Aguentar"
+          },
+          {
+            "id": "fardo_estilhaco",
+            "name": "Estilhaço de Cinza"
+          },
+          {
+            "id": "dev_golpe_convite",
+            "name": "Golpe do Convite"
+          },
+          {
+            "id": "bas_dev_golpe",
+            "name": "Golpe do Penitente"
+          },
+          {
+            "id": "bas_dev_golpe",
+            "name": "Golpe do Penitente"
+          },
+          {
+            "id": "bas_dev_guarda",
+            "name": "Postura de Cinza"
+          }
+        ],
+        "descarte": [
+          {
+            "id": "bas_dev_golpe",
+            "name": "Golpe do Penitente"
+          },
+          {
+            "id": "dev_muralha_viva",
+            "name": "Muralha Viva"
+          },
+          {
+            "id": "bas_dev_guarda",
+            "name": "Postura de Cinza"
+          },
+          {
+            "id": "bas_dev_voto",
+            "name": "Voto Sussurrado"
+          }
+        ],
+        "exaurida": [
+          {
+            "id": "sts_dor_surda",
+            "name": "Dor Surda"
+          }
+        ]
+      },
+      "compra": 6,
+      "descarte": 4,
+      "exaurida": 1,
+      "folego": 2,
+      "folego_max": 2,
+      "folego_bonus_pendente": 0,
+      "folego_emprestado": 0,
+      "pacto_max": 2
+    },
+    "mech_log": [
+      "Você · Golpe do Penitente → Anão-Eco · 2d10 3 + 3 +3 = 9 vs 11 · crítico (dupla de 3) · 14 dano",
+      "Anão-Eco → Você · 2d10 5 + 8 +4 = 17 vs 12 · acerto · 3 dano",
+      "Toque Gélido da Morte → Você · dano contínuo · 3 dano",
+      "Sangramento → Você · dano contínuo · 1 dano",
+      "Sangramento → Anão-Eco · dano contínuo · 1 dano",
+      "O ferimento abre espaço no Baralho: Sangue nos Olhos.",
+      "Haldor: ganha condição Cego"
+    ],
+    "registro_rodada": [
+      {
+        "ator_id": "player",
+        "ator_nome": "Você",
+        "lado": "heroi",
+        "carta_id": null,
+        "carta_nome": "Toque Gélido da Morte",
+        "alvo_id": null,
+        "alvo_nome": null,
+        "origem": "turno",
+        "rotulo": "Dano contínuo",
+        "resultado": "efeito",
+        "dano": 3,
+        "efeito": "−3 Vitalidade"
+      },
+      {
+        "ator_id": "player",
+        "ator_nome": "Você",
+        "lado": "heroi",
+        "carta_id": null,
+        "carta_nome": "Sangramento",
+        "alvo_id": null,
+        "alvo_nome": null,
+        "origem": "turno",
+        "rotulo": "Dano contínuo",
+        "resultado": "efeito",
+        "dano": 1,
+        "efeito": "−1 Vitalidade"
+      },
+      {
+        "ator_id": "player",
+        "ator_nome": "Você",
+        "lado": "heroi",
+        "carta_id": "bas_dev_golpe",
+        "carta_nome": "Golpe do Penitente",
+        "alvo_id": "mon_anao_eco_1",
+        "alvo_nome": "Anão-Eco",
+        "origem": "turno",
+        "rotulo": null,
+        "resultado": "critico",
+        "dano": 14,
+        "efeito": null
+      },
+      {
+        "ator_id": "mon_anao_eco_1",
+        "ator_nome": "Anão-Eco",
+        "lado": "inimigo",
+        "carta_id": null,
+        "carta_nome": "Sangramento",
+        "alvo_id": null,
+        "alvo_nome": null,
+        "origem": "turno",
+        "rotulo": "Dano contínuo",
+        "resultado": "efeito",
+        "dano": 1,
+        "efeito": "−1 Vitalidade"
+      },
+      {
+        "ator_id": "mon_anao_eco_1",
+        "ator_nome": "Anão-Eco",
+        "lado": "inimigo",
+        "carta_id": null,
+        "carta_nome": null,
+        "alvo_id": "player",
+        "alvo_nome": "Você",
+        "origem": "turno",
+        "rotulo": null,
+        "resultado": "acerto",
+        "dano": 3,
+        "efeito": null
+      }
+    ],
+    "nonlethal_available": true
+  },
+  "npcs": [
+    {
+      "name": "Sigrun",
+      "role": "anciã do clã Hrafn, que testa teu valor",
+      "location": "Skallgard",
+      "home_location_id": "skallgard",
+      "attitude_label": "neutro",
+      "recent_changes": [],
+      "knowledge_source": "met",
+      "in_scene": false,
+      "status": "",
+      "revealed_traits": [],
+      "last_memory": ""
+    },
+    {
+      "name": "Ketil",
+      "role": "jovem guerreiro do clã que você protege",
+      "location": "Skallgard",
+      "home_location_id": "skallgard",
+      "attitude_label": "amistoso",
+      "recent_changes": [],
+      "knowledge_source": "met",
+      "in_scene": false,
+      "status": "",
+      "revealed_traits": [],
+      "last_memory": ""
+    },
+    {
+      "name": "Anciã do clã Hrafn",
+      "role": "Anciã e guardiã dos ritos do clã Hrafn, clã das Montanhas Afiadas",
+      "location": "Montanhas Afiadas",
+      "home_location_id": "montanhas_afiadas",
+      "attitude_label": "neutro",
+      "recent_changes": [],
+      "knowledge_source": "met",
+      "in_scene": false,
+      "status": "ativo",
+      "revealed_traits": [],
+      "last_memory": ""
+    }
+  ],
+  "art_offers": [],
+  "art_generations": [],
+  "chronicle": [
+    {
+      "chapter_id": "f7417ce50aa852099f43413b4eaf5b26",
+      "title": "O Abismo Escolhe Primeiro",
+      "started_turn": 0,
+      "location": "Skallgard",
+      "entries": [
+        {
+          "text": "Na noite em que o céu esqueceu as estrelas, um forasteiro ficou só na brecha de ossos do clã Hrafn, e a neve ao seu redor derreteu sem fogo. Dizem que o Abismo o chamou pelo nome — e que ele não recuou.",
+          "turn": 1,
+          "kind": "prose",
+          "entry_id": "179b008f7afc5b16a4910d7c529e5870"
+        },
+        {
+          "text": "Mortos: Bandido. Inconscientes: Renegado. Espólio: 14 ouro, 1x corda.",
+          "turn": 4,
+          "kind": "conflict",
+          "entry_id": "13372082dcbf593081a8dd31f5e5d097"
+        },
+        {
+          "text": "Nas Montanhas Afiadas, onde os degraus não foram talhados para pés humanos, Haldor subiu sem luz e sem guia, ouvindo o eco mentir entre as paredes. E foi no escuro que a montanha lhe pagou o primeiro tributo: ouro antigo, cunhado por reis que já não têm nome, dormindo entre cascalho e tecido podre — como se o Ermo Branco cobrasse pedágio até dos mortos.",
+          "turn": 6,
+          "kind": "prose",
+          "entry_id": "60984fe114ed5f129961af11337ffb78"
+        }
+      ],
+      "digest": null,
+      "entry_count": 3
+    }
+  ],
+  "factions": [],
+  "reputation_notices": [],
+  "companion_feedback": [],
+  "party": [],
+  "death_pending": false,
+  "game_over": false,
+  "death": {
+    "pending": false,
+    "last_action": {
+      "kind": "card",
+      "card_id": "bas_dev_golpe",
+      "item_id": null,
+      "target_id": "mon_anao_eco_1",
+      "maneuver": null,
+      "direction": null,
+      "region": "braco",
+      "result": "hit",
+      "attempted": true,
+      "flee_destination_id": null,
+      "chase_track": null,
+      "plays": [
+        {
+          "kind": "card",
+          "card_id": "bas_dev_golpe",
+          "target_id": "mon_anao_eco_1"
+        },
+        {
+          "kind": "card",
+          "card_id": "cena_sino_rachado_fb2eb42a",
+          "target_id": "mon_anao_eco_1"
+        }
+      ]
+    },
+    "last_action_label": "Golpe do Penitente",
+    "entered_terminal": false,
+    "stabilization": "",
+    "stabilization_attempts": 0,
+    "killer": "",
+    "will_restore_turn": 1,
+    "will_lose_turns": 9,
+    "retained": [
+      "histórico de mortes",
+      "contagem de ações da sessão"
+    ],
+    "reverted": [
+      "mundo",
+      "inventário",
+      "posição e memória após o checkpoint"
+    ]
+  },
+  "continuity": {
+    "session_action_count": 9,
+    "timeline_epoch": 0,
+    "last_checkpoint_turn": 1,
+    "checkpoint_deferred": false,
+    "synthetic_from_turn": null,
+    "death_history": [],
+    "canonical_turn": 10
+  },
+  "combat_simulation": {},
+  "turn_outcome": {
+    "receipt_id": "f28c6ddd98bca2aa6079",
+    "turn": 10,
+    "xp_delta": 0,
+    "level_delta": 0,
+    "level_after": 1,
+    "gold_delta": 0,
+    "items_gained": [],
+    "quests_completed": [],
+    "source": "none"
+  },
+  "combat_result": {},
+  "projections": {
+    "canonical_version": 9,
+    "summary": {
+      "status": "completed",
+      "projected_version": 9
+    },
+    "memory": {
+      "status": "completed",
+      "projected_version": 9
+    },
+    "chronicle": {
+      "status": "completed",
+      "projected_version": 9
+    }
+  },
+  "visual": {
+    "scene": {
+      "location_id": "ma_boca",
+      "location_name": "A Boca",
+      "scope": "regional",
+      "asset": {
+        "asset_id": "VAL-ANCHOR-LOC-MONTANHAS_AFIADAS-001",
+        "subject_type": "location",
+        "subject_id": "montanhas_afiadas",
+        "title": "Montanhas Afiadas",
+        "alt": "Arte de Montanhas Afiadas",
+        "placeholder_color": "#241d1a",
+        "variants": {
+          "thumbnail": {
+            "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.thumb.webp",
+            "width": 640,
+            "height": 360,
+            "bytes": 59814,
+            "sha256": "e40bafc31859a3909a2a3b02905b546bd83cf81992492b559fbc8e3870959114"
+          },
+          "display": {
+            "url": "/art/v1/location/montanhas-afiadas.f5b5ca251e61.webp",
+            "width": 1280,
+            "height": 720,
+            "bytes": 257738,
+            "sha256": "020362ea03318ed4f3cfb80ba09f0d3a64bbb0d663da69683ea3d47742da9bb9"
+          }
+        }
+      }
+    },
+    "cue": null
+  }
+}
