@@ -331,6 +331,17 @@ def _tick_conditions_v4(actor: dict, out: dict, rng=None) -> bool:
                 actor, dot, str(c.get("damage_type") or c.get("source") or "cortante"), out, rng=rng
             )
             _fx_damage(actor, dealt, out)  # SPEC-330 R3: DoT também é dano recebido
+            out.setdefault("ticks", []).append(  # SPEC-346 R7: o tick tem registro próprio
+                {
+                    "actor_id": str(
+                        actor.get("id") or ("player" if actor.get("is_player") else _name(actor))
+                    ),
+                    "condition": str(c.get("name") or "condição"),
+                    "damage_type": str(c.get("damage_type") or c.get("source") or "cortante"),
+                    "dano_final": int(dealt or 0),
+                    "vitalidade_depois": int(actor.get("vitalidade", 0) or 0),
+                }
+            )
             out["logs"].append(
                 f"{_name(actor)} sofre {dot} de {c.get('name', 'condição')} "
                 f"(Vit {actor.get('vitalidade', 0)})."
@@ -1905,8 +1916,26 @@ def resolve_terminals(
             out.setdefault("scars_pending", []).append(actor_id)
 
 
+def _declared_target(actor_id: str, actor: dict, out: dict, opposing: list[str]) -> str | None:
+    """SPEC-346 R9: alvo hostil declarado na rodada. Inimigo: alvo do presságio cumprido; senão
+    (e para o herói) o `target_id` do ultimo ataque do ator contra o lado oposto."""
+    if not actor.get("is_player"):
+        for p in reversed(out.get("pressagios_cumpridos") or []):
+            if p.get("actor_id") == actor_id and p.get("alvo_id") in opposing:
+                return p["alvo_id"]
+    for atk in reversed(out.get("attacks") or []):
+        if atk.get("actor_id") == actor_id and atk.get("target_id") in opposing:
+            return atk["target_id"]
+    return None
+
+
 def _resolve_last_stands(
-    scene: dict, actors_by_id: dict[str, dict], sides: dict[str, list[str]], out: dict, rng
+    scene: dict,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    out: dict,
+    rng,
+    preferred_targets: dict[str, str] | None = None,
 ) -> None:
     """Executa cada Última Ação pendente uma única vez, antes do terminal.
 
@@ -1922,11 +1951,16 @@ def _resolve_last_stands(
         actor = actors_by_id.get(actor_id)
         if actor is None or actor.get("last_stand_resolved") or not actor.get("last_stand_pending"):
             continue
-        target_id = _nearest_target(
-            actor_id,
-            _opposing_ids(actor_id, sides),
-            actors_by_id,
+        opposing = _opposing_ids(actor_id, sides)
+        target_id = None
+        # SPEC-346 R9: a Última Ação mira o alvo declarado (ultimo ataque / presságio), se vivo.
+        preferred = (preferred_targets or {}).get(actor_id) or _declared_target(
+            actor_id, actor, out, opposing
         )
+        if preferred in opposing and _alive(actors_by_id.get(preferred)):
+            target_id = preferred
+        if target_id is None:
+            target_id = _nearest_target(actor_id, opposing, actors_by_id)
         out["logs"].append(f"{_name(actor)} executa sua Última Ação.")
         if target_id is not None:
             _basic_attack(
@@ -1940,6 +1974,9 @@ def _resolve_last_stands(
                 label="Última Ação",
                 advantage=1,
             )
+            if out.get("attacks"):  # SPEC-346 R9: o mech_log rotula e diz se o alvo foi o declarado
+                out["attacks"][-1]["label"] = "Última Ação"
+                out["attacks"][-1]["alvo_declarado"] = target_id == preferred
         else:
             out["logs"].append(f"{_name(actor)} não encontra alvo para a Última Ação.")
         death_flow.enter_terminal_state(actor)
@@ -2236,6 +2273,7 @@ def _run_round(
         "terminal": [],
         "abyss": [],
         "attacks": [],
+        "ticks": [],
         "reactions": [],
         "last_stands": [],
         "stabilizations": [],

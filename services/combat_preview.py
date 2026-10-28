@@ -174,14 +174,19 @@ _RESULT_LABEL = {
 }
 
 
-def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
+def mech_log(attacks: list[dict], actors: list[dict], ticks: list[dict] | None = None) -> list[str]:
     """R6: uma linha por ataque da rodada, só com números que o motor já resolveu.
-    Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``."""
+    Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``.
+
+    SPEC-346: crítico diz a dupla que o causou (R8), a Última Ação diz o alvo (R9) e cada tick
+    de DoT tem linha própria (R7)."""
     names: dict[str, str] = {}
     for a in actors:  # SPEC-345 R6: indexa por id OU nome (aliado de cena pode não ter id)
         key = str(a.get("id") or a.get("name") or ("player" if a.get("is_player") else ""))
         if key and a.get("name"):
             names[key] = str(a["name"])
+        if a.get("is_player"):
+            names[key] = "Você"
     names["player"] = "Você"
     lines: list[str] = []
     for atk in attacks:
@@ -190,14 +195,29 @@ def mech_log(attacks: list[dict], actors: list[dict]) -> list[str]:
         mod = int(atk.get("virtude", 0) or 0) + int(atk.get("modificador", 0) or 0)
         card = cards.get_card(str(atk.get("card_id") or "")) if atk.get("card_id") else None
         who = names.get(str(atk.get("actor_id")), "Alguém")
-        what = f" · {card['name']}" if card else ""
+        target = names.get(str(atk.get("target_id")), "Alguém")
         tail = _RESULT_LABEL.get(str(atk.get("resultado")), str(atk.get("resultado")))
+        if atk.get("resultado") in ("critico", "supercritico") and len(kept) >= 2:
+            if kept[0] == kept[1]:  # R8: a regra de dupla manda, mesmo abaixo da Esquiva
+                tail += f" (dupla de {kept[0]})"
         if atk.get("acerto") and atk.get("dano_final") is not None:
             tail += f" · {int(atk['dano_final'])} dano"
+        if atk.get("label") == "Última Ação":
+            head = f"Última Ação: {who} → {target}"
+            if atk.get("alvo_declarado"):
+                head += " (alvo declarado)"
+        else:
+            what = f" · {card['name']}" if card else ""
+            head = f"{who}{what} → {target}"
         lines.append(
-            f"{who}{what} → {names.get(str(atk.get('target_id')), 'Alguém')} · {dice} "
+            f"{head} · {dice} "
             f"{' + '.join(str(k) for k in kept)} {mod:+d} = {atk.get('total')} "
             f"vs {atk.get('esquiva_alvo')} · {tail}"
+        )
+    for tick in ticks or []:  # R7: o DoT também fecha a conta (inclusive com 0 de dano)
+        victim = names.get(str(tick.get("actor_id")), str(tick.get("actor_id") or "Alguém"))
+        lines.append(
+            f"{tick.get('condition')} → {victim} · dano contínuo · {int(tick.get('dano_final', 0))} dano"
         )
     return lines
 
@@ -208,4 +228,4 @@ def store_mech_log(meta: dict, out: dict, actors: list[dict]) -> None:
 
     if card_piles.mode() != "on" or out.get("action_refused"):
         return
-    meta["last_mech_log"] = mech_log(out.get("attacks") or [], actors)
+    meta["last_mech_log"] = mech_log(out.get("attacks") or [], actors, out.get("ticks") or [])
