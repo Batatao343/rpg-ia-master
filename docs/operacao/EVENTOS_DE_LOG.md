@@ -185,7 +185,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `librarian.match_found` | `existing_id` |
 | `librarian.no_candidate` | — |
 | `librarian.no_match` | — |
-| `llm.attempt` | `attempt_index`, `cost_basis`, `error_type`, `fell_back`, `http_status`, `latency_ms`, `model`, `node`, `outcome`, `provider`, `structured_failure_code`, `tier` |
+| `llm.attempt` | `attempt_index`, `cost_basis`, `error_type`, `fell_back`, `http_status`, `latency_ms`, `model`, `node`, `outcome`, `provider`, `provider_error_code`, `structured_failure_code`, `tier` |
 | `llm.exhausted` | `attempts`, `node`, `tier` |
 | `llm.fallback_llm_selected` | `profile`, `reason` |
 | `llm.hedge` | `hedge_ms`, `hedge_won`, `hedged`, `node`, `tier` |

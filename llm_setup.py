@@ -123,6 +123,7 @@ class LLMAttemptEvent:
     error_type: str | None = (
         None  # SPEC-248: classe da excecao (``error`` pode ter texto do provider)
     )
+    provider_error_code: str | None = None  # SPEC-346 R27: ``error.code`` do corpo JSON (ident)
 
 
 _IDENT_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_.:]{0,60}$")
@@ -138,6 +139,28 @@ def _http_status(exc: BaseException) -> int:
     return 0
 
 
+def _provider_error_code(exc: BaseException) -> str | None:
+    """SPEC-346 R27: ``error.code`` do corpo JSON do provider, so se for um identificador.
+
+    Nunca devolve a mensagem livre (pode conter trecho do prompt).
+    """
+    try:
+        body = getattr(exc, "body", None)
+        if not isinstance(body, dict):
+            resp = getattr(exc, "response", None)
+            if resp is not None and hasattr(resp, "json"):
+                body = resp.json()
+        if not isinstance(body, dict):
+            return None
+        err = body.get("error", body)
+        code = err.get("code") if isinstance(err, dict) else None
+        if isinstance(code, str) and _IDENT_RE.match(code):
+            return code
+    except Exception:  # silent-ok: diagnostico nunca derruba o turno
+        return None
+    return None
+
+
 def _log_attempt(
     provider: str,
     model: str,
@@ -151,6 +174,7 @@ def _log_attempt(
     http_status: int = 0,
     structured_failure_code: str | None = None,
     usage: dict | None = None,
+    provider_error_code: str | None = None,
 ) -> None:
     """SPEC-248 R1: uma linha ``llm.attempt`` por candidato tentado (sem prompt, sem texto de erro)."""
     try:
@@ -174,6 +198,7 @@ def _log_attempt(
             http_status=int(http_status or 0),
             error_type=error_type,
             structured_failure_code=structured_failure_code,
+            provider_error_code=provider_error_code,
             latency_ms=int(latency_ms),
             fell_back=bool(fell_back),
             cost_basis="usage" if usage else "none",
@@ -334,6 +359,8 @@ _OPENAI_COMPAT_PROVIDERS = {
 # Total de gerações permitidas quando a rede respondeu, mas o parser Pydantic
 # não recebeu uma tool call válida. Não se aplica a HTTP/quota/timeout.
 STRUCTURED_SEMANTIC_MAX_ATTEMPTS = 3
+# SPEC-346 R28: codigos de 400 do provider que significam "a geracao saiu invalida".
+_PROVIDER_GENERATION_FAILURES = frozenset({"tool_use_failed", "json_validate_failed"})
 
 # Stack default (R11 + achados do smoke real 2026-07-06). 1º = preferido; resto =
 # fallback em ordem. Overridable por env sem editar código (RPG_ROUTES).
@@ -643,6 +670,7 @@ def _emit_attempt_telemetry(event: LLMAttemptEvent) -> None:
         http_status=event.http_status,
         structured_failure_code=event.structured_failure_code,
         usage=event.usage,
+        provider_error_code=event.provider_error_code,
     )
     for hook in (_ATTEMPT_TELEMETRY_HOOK, _SCOPED_ATTEMPT_HOOK.get()):
         if hook is None:
@@ -1037,6 +1065,14 @@ class RoutedLLM:
                 except Exception as e:
                     latency_ms = int((time.perf_counter() - t0) * 1000)
                     errors.append(f"{provider}:{model} invoke:{type(e).__name__}")
+                    perr = _provider_error_code(e)
+                    # SPEC-346 R28: 400 `tool_use_failed` = geracao invalida (semantica),
+                    # nao transporte: 1 regeneracao no mesmo candidato.
+                    semantic_gen_failure = (
+                        structured_contract is not None
+                        and _http_status(e) == 400
+                        and perr in _PROVIDER_GENERATION_FAILURES
+                    )
                     _emit_attempt_telemetry(
                         LLMAttemptEvent(
                             provider=provider,
@@ -1049,11 +1085,17 @@ class RoutedLLM:
                             error=type(e).__name__,
                             http_status=_http_status(e),
                             structured=structured_contract is not None,
-                            structured_failure_code="transport",
+                            structured_failure_code=(
+                                "provider_tool_use_failed" if semantic_gen_failure else "transport"
+                            ),
                             usage=_usage_snapshot(e),
+                            provider_error_code=perr,
                         )
                     )
                     attempt_index += 1
+                    if semantic_gen_failure and semantic_attempt == 0:
+                        last_failure_code = "provider_tool_use_failed"
+                        continue
                     _open_circuit_if_permanent(provider, model, e)
                     break
                 usage_snapshot = _usage_snapshot(result)
@@ -1483,6 +1525,7 @@ class RoutedLLM:
                     error=str(e) if chunks else type(e).__name__,
                     error_type=type(e).__name__,
                     http_status=_http_status(e),
+                    provider_error_code=_provider_error_code(e),
                     structured=structured,
                     usage=usage,
                 )

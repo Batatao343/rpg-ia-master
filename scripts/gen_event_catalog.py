@@ -83,6 +83,7 @@ OVERRIDES: dict[str, tuple[str, ...]] = {
         "node",
         "outcome",
         "provider",
+        "provider_error_code",
         "structured_failure_code",
         "tier",
     ),

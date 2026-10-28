@@ -384,7 +384,13 @@ completa é do coordenador, no pouso.
      - **H1** `tool_use_failed` (o gpt-oss gerou a chamada de ferramenta fora do formato);
      - **H2** parâmetro rejeitado;
      - **H3** schema rejeitado.
-   - Resultado: _(preencher)_.
+   - Resultado (executor, 27/10, 4 requests Groq): **não reproduzido** com prompt curto — 4/4 sucesso
+     (`COMBAT`) via `function_calling`, sem 400. Logo o 400 do smoke é **intermitente** e compatível com
+     H1 (`tool_use_failed`: gpt-oss gera a chamada fora do formato; H2/H3 descartadas, pois o mesmo
+     schema/parâmetros passam). Correção aplicada conforme H1 (R28): 400 com `error.code` em
+     {`tool_use_failed`, `json_validate_failed`} vira falha semântica
+     (`provider_tool_use_failed`) com **1** regeneração no mesmo candidato. A causa exata do 400 original
+     segue sem registro (o corpo não era logado); `provider_error_code` (R27) confirmará no smoke §6.
 
 ### Etapa 1 — Router com fallback de hostilidade (R26, R28)
 
