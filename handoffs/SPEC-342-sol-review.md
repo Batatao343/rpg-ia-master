@@ -1,7 +1,7 @@
 # SPEC-342 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1 de CI, correção de 1 linha; o resto são P2 que podem virar follow-up)
-> **Revisor:** Sol (Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `60b2277f`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (re-revisão de `81410f1e`: P1-1 e P2-1..P2-6 fechados; P2-7, smoke §6, fica com o coordenador antes do `on`). Revisão inicial em `60b2277f`: `CHANGES_REQUIRED`.
+> **Revisor:** Sol (Opus, spec-reviewer) · **Data:** 2026-10-27 · **Commits revisados:** `60b2277f` (inicial), `81410f1e` (correções)
 
 ## Escopo
 
@@ -51,7 +51,17 @@ Fora do diff: a faixa escura "PREPARAÇÃO 2/—" sobrepõe "ACERVO (2)" e as ca
 
 ## Correções aplicadas
 
-Nenhuma até aqui. O revisor não edita código.
+Todas no commit `81410f1e`, conferidas na re-revisão:
+
+- **P1-1 — fechado.** `deck-342-baseline.spec.ts:40` tem `test.skip(process.platform !== "win32", …)`, e §9 registra que R24 é prova local (win32). O baseline continua verde em win32, inclusive depois do `gap` do HUD (dentro de 1 %).
+- **P2-1 — fechado.** No celular, a faixa de cena virou 1 linha, a barra ficou compacta (≤ 64 px, fundo `--surface-2`, token existente) e a 1ª carta aparece inteira e descoberta (`on-390-combate.png`). Há um teste novo com `elementFromPoint`.
+  - Resíduo P3, sem bloqueio: (a) na mira a 390, a linha "Mirando …" ainda fica sob a barra no 1º paint (`on-390-mira.png`). O teste rola a `aimbar` para o centro antes de medir. A Arena destaca os alvos e o foco vai para o 1º alvo, então a pista existe. (b) A 390, os itens do `summary` da cena ficam truncados em ~4 letras ("NÉV…", "RESISTA…"). Dá para abrir no `details`, mas talvez valha mostrar só a rodada e o relógio no celular.
+- **P2-2 — fechado.** O handler do deck sai sem agir com `maneuverAim` ativo (`DeckCombat.tsx:149`). O e2e "Esc with maneuver aim keeps the queue" passa.
+- **P2-3 — fechado.** Há `gap: 0.4em` em `.combatblock .hud__label`, e o e2e mede ≥ 2 px de distância na tela.
+- **P2-4 — fechado.** Os botões da barra de mira agora são medidos (≥ 44 px).
+- **P2-5 — fechado.** Há integração pelo nó real com o Baralho: com a 2ª jogada letal, "Sem matar" deixa o inimigo `incapacitated` e, sem a frase, `dead`. O relógio é comparado com `run_round` rodada a rodada (`ativo` ⇔ `out["abyss_clock"]`).
+- **P2-6 — fechado.** "Pilhas" fica dentro da borda a 390.
+- **P2-7 — aberto, com o coordenador.** O smoke §6 roda em staging antes de `on`. O desfecho do baseline segue como pendência registrada.
 
 ## Pendências
 
@@ -68,4 +78,13 @@ node --test tests/deck*.test.mjs → 24/24 pass (deck-342-logic 7, deck-componen
 RPG_E2E_PORT=4988 npx playwright test deck-342-baseline deck-combat-342 combat-gesture outcome-toast --workers=1 --project=chromium → 60 passed (win32)
 npm run typecheck && npm run typecheck:e2e → 0 erros
 npm run lint → 0 erros, 1 warning pré-existente (src/hooks/useTypewriter.ts:65); css-lint/contrast 13/13
+```
+
+Re-revisão (`81410f1e`):
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec342_nonlethal_jogadas.py tests/test_spec342_scene_view.py tests/test_spec325_nonlethal.py tests/test_scene_cards_node.py tests/test_api_jogadas.py tests/test_abyss_clock.py → 67 passed
+RPG_E2E_PORT=4988 npx playwright test deck-342-baseline deck-combat-342 combat-gesture --workers=1 --project=chromium → 59 passed (win32)
+node --test tests/deck*.test.mjs tests/css-lint.test.mjs tests/contrast.test.mjs → 37/37 pass
+npm run typecheck:e2e → 0 erros
 ```
