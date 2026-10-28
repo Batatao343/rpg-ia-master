@@ -110,6 +110,14 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     if (armedCard) rootRef.current?.querySelector<HTMLElement>(".aimbar")?.scrollIntoView?.({ block: "nearest" });
   }, [armed?.index, armed?.targetId, preview.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // SPEC-354 R2.1: no celular, a cauda da fila ("Desfazer fila"/nota de "Sem matar") sobe acima da barra fixa.
+  useEffect(() => {
+    if (armed || !queue.length || !window.matchMedia?.("(max-width: 640px)").matches) return;
+    const root = rootRef.current;
+    if (!root || root.closest("[hidden]") || root.offsetParent === null) return;
+    root.querySelector<HTMLElement>("[data-queue-tail]")?.scrollIntoView?.({ block: "nearest" });
+  }, [queue.length, spare]); // eslint-disable-line react-hooks/exhaustive-deps
+
   function disarm() {
     onDisarm();
     trigger.current?.focus();
@@ -136,7 +144,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     setQueue((q) => enqueue(q, card, targetId, `p${++uidSeq}`));
     onDisarm();
     onAnnounce(`${card.name} vai na fila, em ${n}º.`);
-    trigger.current?.focus();
+    trigger.current?.focus({ preventScroll: true }); // SPEC-354 R2.2: o foco não desfaz a rolagem da cauda da fila
   }
 
   const end = () => { if (!busy && queue.length) onEnd(endText(queue, spare), toJogadas(queue)); };

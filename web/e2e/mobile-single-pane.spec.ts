@@ -281,7 +281,7 @@ test("M05 combat_own_screen_and_outcome_in_chat", async ({ page, backend }) => {
   await expect(outcome).toBeVisible();
   await expect(outcome.getByRole("heading", { name: "Vitória" })).toBeVisible();
   await go(page, "Crônica");
-  await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Narrativa" }).getByText("O último saqueador cai; o combate termina.")).toBeVisible();
   await expect(page.getByRole("region", { name: "Narrativa" }).getByText(/XP/)).toHaveCount(0);
   await noOverflow(page);
 });

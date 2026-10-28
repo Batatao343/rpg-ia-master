@@ -1190,6 +1190,8 @@ export interface RoundLogEntry {
   origem: "turno" | "reacao"; rotulo: string | null;
   resultado: "acerto" | "erro" | "critico" | "supercritico" | "efeito";
   dano: number | null; efeito: string | null;
+  /** SPEC-354 R5.2 (contrato com a SPEC-353): ausente nos saves/respostas antigos — o front infere. */
+  tipo?: "jogada" | "dano_continuo" | "queda" | "pressagio";
 }
 
 /** SPEC-347 R13: retrato do inimigo no tabuleiro (só com `RPG_CREATURE_ART=on` ou arte curada). */

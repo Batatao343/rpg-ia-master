@@ -1,32 +1,37 @@
 import type { KeyboardEvent } from "react";
-import type { CombatBlock, EncounterView, OmenView, PartyMember } from "../types";
+import type { CombatBlock, EncounterView, GameResponse, OmenView, PartyMember } from "../types";
+import { displayName } from "./displayName";
 import { ChaseTrack } from "../components/SceneZones";
 import { TargetChip, type AimMark, type Participant } from "./TargetChip";
 
 const normName = (value: string) => value.trim().toLowerCase();
 
-export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Array<Participant & { zoneId: string }> {
+export function buildParticipants(combat: CombatBlock, party: PartyMember[], npcs?: GameResponse["npcs"]): Array<Participant & { zoneId: string }> {
   const view = combat.encounter_view as Partial<EncounterView> | undefined;
   const labels = new Map((view?.participants ?? []).map((p) => [p.participant_id, p.species_label]));
   const pos = new Map(combat.scene.positions.map((p) => [p.participant_id, p]));
+  // SPEC-354 R9: nunca um id cru ("npc_ketil") como nome — grupo, NPC conhecido, rótulo da espécie, id humanizado.
+  const ctx = { party, npcs, labels };
+  const nm = (raw: string | null | undefined, id: string) => displayName(raw, id, ctx);
+  const engaged = (names: string[] | undefined) => (names ?? []).map((n) => nm(n, n));
   const out: Array<Participant & { zoneId: string }> = [];
   const player = pos.get("player");
   out.push({
-    id: "player", name: player?.participant_name || "Você", role: "player",
+    id: "player", name: player?.participant_name ? nm(player.participant_name, "player") : "Você", role: "player",
     vit: combat.wounds.vitality, max: combat.wounds.max_vitality,
     conditions: combat.player_conditions, intel: [],
     concealment: player?.concealment, posture: player?.posture,
-    engagedNames: player?.engaged_names ?? [], zoneId: player?.zone_id ?? "",
+    engagedNames: engaged(player?.engaged_names), zoneId: player?.zone_id ?? "",
   });
   for (const enemy of combat.enemies) {
     const p = pos.get(enemy.id);
     out.push({
-      id: enemy.id, name: enemy.name, role: "enemy",
+      id: enemy.id, name: nm(enemy.name, enemy.id), role: "enemy",
       vit: enemy.vitalidade, max: enemy.max_vitalidade, esquiva: enemy.esquiva, protecao: enemy.protecao,
       conditions: enemy.conditions,
       intel: [...enemy.revealed_cards.map((c) => c.name), ...enemy.revealed_resistances],
       concealment: p?.concealment, posture: p?.posture,
-      engagedNames: p?.engaged_names ?? [], zoneId: p?.zone_id ?? "",
+      engagedNames: engaged(p?.engaged_names), zoneId: p?.zone_id ?? "",
       ...(enemy.retrato ? { retrato: enemy.retrato } : {}),
     });
   }
@@ -52,19 +57,21 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
     if (known.has(id)) continue;
     const member = party.find((m) => normName(m.name) === normName(p.participant_name));
     out.push({
-      id, name: p.participant_name, role: "ally",
+      id, name: nm(p.participant_name, id), role: "ally",
       vit: member?.vitalidade, max: member?.max_vitalidade,
       conditions: [], intel: [], concealment: p.concealment, posture: p.posture,
-      engagedNames: p.engaged_names, zoneId: p.zone_id,
+      engagedNames: engaged(p.engaged_names), zoneId: p.zone_id,
     });
   }
   return out;
 }
 
 /** SPEC-205 R11: arena por zonas com participantes clicáveis (evolução de SceneZones). */
-export function Arena({ combat, party, aim, onPick, omens, compact, onGenerate, genDisabled }: {
+export function Arena({ combat, party, npcs, aim, onPick, omens, compact, onGenerate, genDisabled }: {
   combat: CombatBlock;
   party: PartyMember[];
+  /** SPEC-354 R9: NPCs conhecidos (nome exibível de aliado que só chega como id). */
+  npcs?: GameResponse["npcs"];
   /** id → marca de validade, só durante a mira. */
   aim?: Record<string, AimMark>;
   onPick: (id: string) => void;
@@ -76,7 +83,7 @@ export function Arena({ combat, party, aim, onPick, omens, compact, onGenerate, 
   onGenerate?: (enemyId: string) => void;
   genDisabled?: boolean;
 }) {
-  const people = buildParticipants(combat, party);
+  const people = buildParticipants(combat, party, npcs);
   const zones = combat.scene.zones;
   const known = new Set(zones.map((z) => z.id));
   const loose = people.filter((p) => !known.has(p.zoneId));

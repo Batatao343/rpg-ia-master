@@ -166,6 +166,9 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fighting]);
   const streamingNow = log.some((entry) => entry.streaming);
+  // SPEC-354 R4.3: a última narração terminada (o desfecho do conflito) para o painel de Combate encerrado.
+  const lastNarrationEntry = [...log].reverse().find((e) => e.role === "narrator" && !e.streaming && e.text.trim());
+  const lastNarration = lastNarrationEntry?.text.replace(/[*_#>`]/g, "").trim();
   useEffect(() => {
     if (!awaitingNarration || !shouldAutoOpenCombat(false, true, !thinking && !streamingNow)) return;
     let second = 0;
@@ -340,7 +343,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
         <ChatSurface data={data} log={log} thinking={thinking}
           busy={busy} blocked={blocked} active={chatVisible} onAction={onAction}
           mobile={mobile} onOpenCombat={() => openTab("combate")}
-          onQuoteOffer={props.onQuoteOffer} offersDisabled={props.offersDisabled} />
+          onQuoteOffer={props.onQuoteOffer} offersDisabled={props.offersDisabled}
+          combatVisible={contextVisible && state.tab === "combate"} />
         {mode === "split" && (
           // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/no-noninteractive-tabindex -- separador redimensionável (window splitter) focável com setas, padrão WAI-ARIA
           <div className="ws-sep" role="separator" aria-orientation="vertical" tabIndex={0}
@@ -358,7 +362,8 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
             onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} onOpenLevelUp={props.onOpenLevelUp}
-            dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel} />
+            dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel}
+            lastNarration={lastNarration} onShowChat={showChat} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas} onFocusCombat={() => openTab("combate")}
           reactionCardId={reactionCardId} onAction={onAction} offSurface={mobile && surface !== "chat"}

@@ -99,8 +99,9 @@ test('roundboard_vazio_nada_e_celular_4_mais_details', async () => {
   assert.match(mobile, /Rodada resolvida: 6 jogadas\./);
   assert.match(mobile, /Contra-ataque/);
   const desktop = html(h(RoundBoard, { entries, round: 3, compact: false }));
-  assert.equal((desktop.match(/roundboard__row /g) || []).length, 6);
-  assert.doesNotMatch(desktop, /<details/);
+  // SPEC-354 D-354-2: o desktop também mostra as 4 últimas jogadas + "Ver a rodada inteira (N)".
+  assert.equal((desktop.split('<details')[0].match(/roundboard__row /g) || []).length, 4);
+  assert.match(desktop, /Ver a rodada inteira \(6\)/);
   assert.match(desktop, /O que se jogou na rodada 2/);
 });
 

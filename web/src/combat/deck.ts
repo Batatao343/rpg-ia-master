@@ -178,13 +178,22 @@ export function cardTargets(card: HandCard, known: string[] | undefined, enemyId
   return card.alvo === "aliado" ? friendIds : enemyIds;
 }
 
-/** SPEC-347 R14.3: uma linha do registro da rodada, só texto/tom (a marcação mora em `RoundBoard`). */
+export type RoundEntryKind = "jogada" | "dano_continuo" | "queda" | "pressagio";
+
+/** SPEC-354 R5.2: o `tipo` da API; sem ele, o formato de hoje é inferido (DoT = rótulo "Dano contínuo" sem carta). */
+export function roundEntryKind(e: RoundLogEntry): RoundEntryKind {
+  if (e.tipo) return e.tipo;
+  return e.rotulo === "Dano contínuo" && e.carta_id === null && e.resultado === "efeito" ? "dano_continuo" : "jogada";
+}
+
+/** SPEC-347 R14.3 / SPEC-354 R5: uma linha do registro da rodada, só texto/tom (a marcação mora em `RoundBoard`). */
 export function roundLogView(e: RoundLogEntry): { who: string; card: string; to: string; chip: string; tone: "hit" | "miss" | "crit" | "fx" } {
   const crit = e.resultado === "critico" || e.resultado === "supercritico";
   const dmg = e.dano != null ? ` · −${e.dano}` : "";
+  const hit = e.dano != null ? `${crit ? "Crítico" : "Acerto"}${dmg}` : `${crit ? "Crítico" : "Acerto"} · ${e.efeito ?? "sem dano"}`;
   const chip = e.resultado === "efeito" ? (e.efeito ?? "Efeito")
     : e.resultado === "erro" ? "Erro"
-      : `${crit ? "Crítico" : "Acerto"}${dmg}`;
+      : hit;
   return {
     who: e.ator_nome,
     card: e.rotulo ?? e.carta_nome ?? "Ataque",
@@ -192,4 +201,14 @@ export function roundLogView(e: RoundLogEntry): { who: string; card: string; to:
     chip,
     tone: e.resultado === "efeito" ? "fx" : e.resultado === "erro" ? "miss" : crit ? "crit" : "hit",
   };
+}
+
+/** SPEC-354 R5.3: texto literal da linha de "Efeitos da rodada". `who` = quem sofre/cai/cumpre (já com `displayName`). */
+export function effectLine(e: RoundLogEntry, who: string, isPlayer: boolean): string {
+  const kind = roundEntryKind(e);
+  if (kind === "queda") return `${who} cai (${e.efeito ?? "abatido"})`;
+  if (kind === "pressagio") return `Presságio cumprido: ${e.efeito ?? e.carta_nome ?? who}`;
+  const cond = e.carta_nome ?? e.efeito ?? "dano contínuo";
+  const n = e.dano != null ? ` · −${e.dano} Vitalidade` : (e.efeito ? ` · ${e.efeito}` : "");
+  return `${isPlayer ? "Você" : who} sofre ${cond}${n}`;
 }

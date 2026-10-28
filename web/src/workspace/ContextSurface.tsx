@@ -51,6 +51,9 @@ export interface ContextSurfaceProps {
   onOpenLevelUp?: () => void;
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
+  /** SPEC-354 R4.3: última narração do Livro + atalho para a Crônica (painel de Combate encerrado). */
+  lastNarration?: string;
+  onShowChat?: () => void;
   /** SPEC-321 R6: cotação de retrato/imagens encomendadas, dentro de Personagem. */
   artPanel?: ReactNode;
 }
@@ -122,7 +125,8 @@ function renderTab(id: ContextTab, props: ContextSurfaceProps): ReactNode {
       return <CombateTab data={data} busy={busy} blocked={blocked} hitKey={hitKey} ended={props.combatEnded} touch={!!props.mobile}
         reactionCardId={props.reactionCardId} onReaction={props.onReaction} onAction={props.onAction}
         onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} onOpenLevelUp={props.onOpenLevelUp}
-        dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} />;
+        dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult}
+        lastNarration={props.lastNarration} onShowChat={props.onShowChat} />;
     case "bestiario":
       return <BestiarioTab gameId={data?.game_id} turnCount={data?.world.turn_count} open={open}
         unavailable={simulation ? LAB_EMPTY : undefined} />;

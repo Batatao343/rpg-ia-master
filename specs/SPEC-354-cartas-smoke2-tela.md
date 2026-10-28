@@ -1,6 +1,6 @@
 # SPEC-354 — Cartas: a tela do combate depois do 2º smoke real (Livro reaberto, barra fixa, dobra, registro, retrato, toasts e nomes)
 
-> **Status:** `approved` (dono em autonomia até 08:30 de 28/10; decisões em §8)
+> **Status:** `in-progress` (dono em autonomia até 08:30 de 28/10; decisões em §8)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-347 (`in-progress`, código na `main`: `RoundBoard`/`round_board`, retrato, `resetBookScroll`, regra de medição) · SPEC-342 (linha de base `off` win32) · SPEC-322 (tokens) · SPEC-346 (`round_board` com DoT e curas, já na `main`).
@@ -322,4 +322,12 @@ O mesmo roteiro do 2º smoke: API local legacy, DeepSeek, preset com `RPG_CARD_D
 
 ## 9. Notas de implementação
 
-(vazio — o executor registra aqui o vermelho de R1.1, a causa real do item 1, o diagnóstico de R4.1, o que R3.3 precisou e qualquer regeração da baseline.)
+**Executor (28/10, Sonnet), o que ficou feito e o que não.**
+
+- **R1 (Livro reabre no prólogo) — NÃO reproduzido; nenhuma correção feita (D-354-B).** `web/e2e/spec354-livro.spec.ts` + `fixtures/spec354/save-real.json` (gravação de `/game/saves`, `/game/state`, `/game/history` de um save real local, Batatof, 51 entradas; o save do smoke, Haldor, não existe nesta máquina). Reabre pela lista de saves (`page.goto("/")` → clique) a 1440 e a 390 (aba Crônica), com 4 imagens de cena de 300 ms, combate ativo na montagem (`SPEC354_COMBAT=1`), API lenta 700 ms e CPU 4× (`SPEC354_SLOW=1`): sempre `gap` 0 (ex.: scrollTop 24347 de 24768; 390: 30397 de 30885). H1 e H2 não se confirmaram nesse ambiente. Os testes ficam como regressão (verdes). Falta o save real do smoke (ou o `GET /game/history` dele) para reproduzir.
+- **R2:** `data-queue-tail` + `scrollIntoView({block:"nearest"})` da cauda da fila só no celular/sem carta armada, `focus({preventScroll:true})`, `scroll-padding`. Teste `fila_cheia_sem_sobreposicao_390` a 390×480 (celular baixo; a 844 a fixture não estoura a barra): vermelho sem o fix, verde com.
+- **R3/R5:** `RoundBoard` em uma coluna, 4 últimas jogadas + "Ver a rodada inteira (N)" (desktop também; o SSR da 347 foi ajustado), "Efeitos da rodada" (até 2 + resto no details), `roundEntryKind` infere `tipo`, chip "Acerto · sem dano". R3.3 precisou só do **(c)**: `minmax(12rem)` nos chips (a (a) e a (b) não foram necessárias): a 1ª carta fica em y 747–864 de 900. **Desvio:** `arena_tres_zonas_1440` (347) passou de ≥224 px para ≥192 px por causa do 12rem.
+- **R4:** `_combat_block` devolve `registro_rodada` sem pilhas quando o conflito acabou (`last_round_board` sobrevive ao fim; as pilhas é que são apagadas; `tests/test_spec354_final_round_view.py`). Painel: "O desfecho" (última narração, `line-clamp` 6, "Ler na Crônica") e "A última rodada". Testes `combat-outcome` e `M05` (strict mode: o texto agora aparece também no painel) foram escopados à região "Narrativa".
+- **R6:** `_enemy_portrait` sem o portão da flag (rebase com a 352: não houve conflito, 352 não pousou até aqui). `test_spec347_creature_art.py` atualizado (antes afirmava "sem chave `retrato`"). O e2e `retrato_marcador_sem_flag` não foi escrito: o `TargetChip` não mudou (a 347 já cobre marcador/imagem no front) e a mudança é só de view (pytest).
+- **R7:** `OutcomeToast` agora no fluxo (desktop), entre o Livro e o composer; `suppress` com `combat_result` e Combate à vista. **R8:** já passava (`cabecalho_44_coarse_1440` é regressão; sem mudança de CSS). **R9:** `displayName` (+ aplicado em Arena, RoundBoard, `nameOf`); tipos de `PartyMember`/`NpcView` não têm id, então o casamento é por nome humanizado.
+- **Não feito:** R1.2 (sem reprodução), `subir_e_receber_narracao_nao_puxa` é fraco (injeta DOM, não passa pelo React); `spec354-prints` e o smoke real (§6); R1.3 de verdade. Baseline 342: verde, sem regeração.

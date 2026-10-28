@@ -36,7 +36,7 @@ for (const width of [390, 1440]) {
     // (R10) e a narração no chat — alterna para o chat para conferir a narração.
     if (width < 900) await phoneSurface(page, "Crônica");
     // O chat recebe só a narração; nenhum número de XP no balão.
-    await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Narrativa" }).getByText("O último saqueador cai; o combate termina.")).toBeVisible();
     await expect(page.locator(".story-log, .storylog, [class*=story]").getByText(/XP/)).toHaveCount(0);
 
     await page.locator("form.actionbar textarea").first().fill("rascunho preservado");

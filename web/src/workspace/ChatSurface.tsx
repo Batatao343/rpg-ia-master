@@ -16,7 +16,7 @@ import { Icon } from "../design/icons";
 import { ContextSuggestions } from "../components/ContextSuggestions";
 
 /** SPEC-204: superfície do chat — arte de cena, atalhos de lugar e a narrativa. */
-export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat, onQuoteOffer, offersDisabled }: {
+export function ChatSurface({ data, log, thinking, busy, blocked, active, onAction, mobile = false, onOpenCombat, onQuoteOffer, offersDisabled, combatVisible = false }: {
   data: GameResponse | null;
   log: LogEntry[];
   thinking: boolean;
@@ -30,6 +30,8 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
   /** SPEC-321 R6: cotação de cena/NPC como chip na narração mais recente. */
   onQuoteOffer?: (offer: NonNullable<GameResponse["art_offers"]>[number]) => void;
   offersDisabled?: boolean;
+  /** SPEC-354 R7.1: o painel de Combate está à vista (o desfecho já lista os ganhos — sem toast duplicado). */
+  combatVisible?: boolean;
 }) {
   const gameId = data?.game_id;
   const fighting = !!data?.combat?.active;
@@ -91,8 +93,6 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
       <div className="narrative-stage">
         <SceneArtwork scene={data?.visual?.scene} collapsed={artCollapsed}
           onToggle={mobile ? () => setOverride({ key: sceneKey, closed: !artCollapsed }) : undefined} />
-        {/* SPEC-199: chip mecânico do turno (aria-live, sem role="status"). */}
-        <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null} />
         {(data?.companion_feedback?.length ?? 0) > 0 && (
           <ul className="companion-feedback" aria-live="polite">
             {data?.companion_feedback?.map((line) => <li key={line}>{line}</li>)}
@@ -103,6 +103,9 @@ export function ChatSurface({ data, log, thinking, busy, blocked, active, onActi
           initialScroll={initialScroll}
           onScrollPosition={onStoryScroll}
           offers={simulation || data?.game_over ? undefined : data?.art_offers} onOffer={stableOffer} offersDisabled={offersDisabled} />
+        {/* SPEC-199 / SPEC-354 R7: chip mecânico do turno, NO FLUXO depois do Livro (desktop); sem `combat_result` à vista. */}
+        <OutcomeToast outcome={data?.turn_outcome?.receipt_id ? (data.turn_outcome as TurnOutcome) : null}
+          suppress={combatVisible && !!(data?.combat_result as { result_event_id?: string } | undefined)?.result_event_id} />
       </div>
       {mobile && fighting && !blocked && onOpenCombat && (
         <button type="button" className="btn btn--primary ws-chat__combat" onClick={onOpenCombat}>

@@ -73,11 +73,11 @@ export function PlayQueue({ queue, selected, nameOf, busy, onSelect, onMove, onR
         </ol>
       )}
       {queue.length > 0 && (
-        <button type="button" className="btn btn--ghost btn--sm play-queue__clear play-queue__clear--inline" disabled={busy} onClick={onClear}>
+        <button type="button" className="btn btn--ghost btn--sm play-queue__clear play-queue__clear--inline" data-queue-tail={spare ? undefined : ""} disabled={busy} onClick={onClear}>
           Desfazer fila
         </button>
       )}
-      {spare && <p className="play-queue__spare" role="note">{SPARE_NOTE}</p>}
+      {spare && <p className="play-queue__spare" role="note" data-queue-tail>{SPARE_NOTE}</p>}
     </section>
     <div className="play-queue__end" data-aim-safe>
         {spareAvailable && (

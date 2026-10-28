@@ -12,7 +12,7 @@ test("arena_tres_zonas_1440: chips legíveis e a 1ª carta inteira no painel sem
   await openCombat(page);
   const chips = page.locator(".arena--compact .tchip");
   await expect(chips.first()).toBeVisible();
-  for (const box of await chips.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().width))) expect(box).toBeGreaterThanOrEqual(224);
+  for (const box of await chips.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().width))) expect(box).toBeGreaterThanOrEqual(192); // SPEC-354 R3.3(c): minmax(12rem) — 3 chips por linha em 1440 (era 14rem/224)
   for (const lines of await page.locator(".tchip__vit").evaluateAll((els) => els.map((e) => e.getClientRects().length))) expect(lines).toBe(1);
   await expect(page.locator(".arena__empty-zones")).toContainText("Também na cena: Veio de Calcário · Boca do Abismo");
   expect(await panel(page).evaluate((el) => el.scrollTop)).toBe(0);

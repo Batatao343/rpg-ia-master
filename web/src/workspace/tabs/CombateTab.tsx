@@ -11,6 +11,7 @@ import { ForjaPanel } from "../../components/combat/ForjaPanel";
 import { forgeHasContent, type RewardSender } from "../../cardRewards";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
 import { Arena, buildParticipants } from "../../combat/Arena";
+import { RoundBoard } from "../../components/combat/RoundBoard";
 import { CardTooltip } from "../../combat/CardTooltip";
 import type { AimMark } from "../../combat/TargetChip";
 import {
@@ -56,7 +57,7 @@ const SPARE_TEXT = "Sem matar.";
 /** SPEC-325 R12/R13: frases que o servidor reconhece (combat_intents.abandon_target / accepts_sacrifice). */
 const ABANDON_TEXT = (name: string) => `Fujo e deixo ${name} para trás.`;
 const SACRIFICE_TEXT = "Aceito o sacrifício.";
-export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onGeneratePortrait, onOpenLevelUp, dismissedResult, onDismissResult }: {
+export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, reactionCardId, onReaction, onAction, onPrepareCards, onCardReward, onGeneratePortrait, onOpenLevelUp, dismissedResult, onDismissResult, lastNarration, onShowChat }: {
   data: GameResponse | null;
   busy: boolean;
   blocked: boolean;
@@ -78,6 +79,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
   dismissedResult?: string | null;
   onDismissResult?: (resultEventId: string) => void;
+  /** SPEC-354 R4.3: texto da última narração do Livro (o desfecho do conflito) e o atalho para a Crônica. */
+  lastNarration?: string;
+  onShowChat?: () => void;
 }) {
   const combat = data?.combat;
   const [localDismissed, setLocalDismissed] = useState<string | null>(null);
@@ -103,7 +107,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const spareOn = spare && !!combat?.nonlethal_available; // flag saiu de `on` -> ignora
   const cards = combat?.cards ?? [];
   const enemies = combat?.enemies ?? [];
-  const people = useMemo(() => (combat ? buildParticipants(combat, data?.party ?? []) : []), [combat, data?.party]);
+  const people = useMemo(() => (combat ? buildParticipants(combat, data?.party ?? [], data?.npcs) : []), [combat, data?.party, data?.npcs]);
   const nameOf = (id: string) => people.find((p) => p.id === id)?.name;
   const basics = combat ? (combat.basic_actions ?? legacyBasics(enemies.map((e) => e.id))) : [];
   const activeCards = cards.filter((c) => c.type === "ativa");
@@ -290,6 +294,19 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
         <CombatOutcomePanel result={combatResult} outcome={data?.turn_outcome}
           onContinue={() => dismissResult(combatResult.result_event_id)} />
       )}
+      {!fighting && combatResult && shouldShowResult(combatResult, dismissed) && lastNarration && (
+        <section className="ws-combat__desfecho" aria-label="O desfecho" data-desfecho-narracao>
+          <h3 className="section-label">O desfecho</h3>
+          <p className="ws-combat__desfecho-text">{lastNarration}</p>
+          {onShowChat && <button type="button" className="btn btn--ghost" data-ler-cronica onClick={onShowChat}>Ler na Crônica</button>}
+        </section>
+      )}
+      {!fighting && combatResult && shouldShowResult(combatResult, dismissed) && (combat?.registro_rodada?.length ?? 0) > 0 && (
+        <div className="ws-combat__ultima" data-ultima-rodada>
+          <h3 className="section-label">A última rodada</h3>
+          <RoundBoard entries={combat?.registro_rodada} round={combat?.round ?? 1} title="O que se jogou na rodada final" />
+        </div>
+      )}
       {!fighting && onCardReward && espolio && (
         <EspolioPanel espolio={espolio} busy={busy} onChoose={onCardReward} />
       )}
@@ -305,7 +322,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               onArm={(index, targets) => { targeting.cancel(); deckArm.arm(index, targets); }}
               onDisarm={deckArm.disarm} onClearTarget={deckArm.clearTarget}
               spareAvailable={!!combat.nonlethal_available} spare={spareOn} onSpare={() => setSpare((v) => !v)} onStuck={setStuck}
-              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} omens={omens} compact onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />}
+              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} omens={omens} compact onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />}
               maneuverAim={state.phase === "aiming" ? (
                 <div className="aimbar" data-aim-safe>
                   <span>{`Mirando ${aimLabel}: escolha o alvo na arena.`}</span>
@@ -318,7 +335,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               }} />
           ) : (
             <>
-              <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />
+              <Arena combat={combat} party={data?.party ?? []} npcs={data?.npcs} aim={aimMarks} onPick={pick} onGenerate={onGeneratePortrait ? generate : undefined} genDisabled={busy} />
               <div className="aimbar" data-aim-safe>
                 <span>{state.phase === "aiming" ? `Mirando ${aimLabel}: escolha um alvo`
                   : state.phase === "submitting" ? "Enviando…" : "Escolha uma carta ou ação"}</span>

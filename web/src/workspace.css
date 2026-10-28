@@ -460,7 +460,6 @@ details.scene-strip { display: block; }
 .roundboard__more summary { cursor: pointer; min-height: 2.2rem; display: flex; align-items: center; color: var(--muted); font-size: 0.85rem; }
 @media (pointer: coarse) { .roundboard__more summary { min-height: 44px; } }
 @media (min-width: 641px) {
-  .roundboard__list { grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); column-gap: 0.75rem; }
   .roundboard__row { font-size: 0.8rem; }
   .roundboard { padding: 0.4rem 0.5rem; }
 }
@@ -494,4 +493,30 @@ details.scene-strip { display: block; }
   .play-queue__end { gap: 0.35rem; }
   .play-queue__end .btn, .play-queue__end .actionchip { letter-spacing: 0; font-size: 0.75rem; padding-inline: 0.4rem; }
   .play-queue__submit { min-width: 0; }
+}
+
+/* SPEC-354 */
+@media (max-width: 640px) {
+  [data-queue-tail] { scroll-margin-block-end: calc(var(--tabbar-h) + 5rem); }
+  .ws-root--mobile .ws-panel:has(.deck-combat) { scroll-padding-block-end: calc(var(--tabbar-h) + 5rem); }
+}
+@media (min-width: 641px) { .roundboard__row { flex-wrap: nowrap; } .roundboard__who { max-width: 40%; } }
+.roundboard__who { min-width: 0; }
+.roundboard__who strong, .roundboard__to { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.roundboard__subtitle { margin: 0.2rem 0 0; }
+.roundboard__row--efeito { color: var(--muted); }
+.roundboard__fx { overflow-wrap: anywhere; }
+.roundboard__list--efeitos { padding-top: 0.1rem; }
+.ws-combat__desfecho, .ws-combat__ultima { display: grid; gap: 0.4rem; margin-block: 0.5rem; min-width: 0; }
+.ws-combat__desfecho h3, .ws-combat__ultima h3 { margin: 0; }
+.ws-combat__desfecho-text { margin: 0; display: -webkit-box; -webkit-line-clamp: 6; line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; color: var(--ink); }
+.ws-combat__desfecho .btn { justify-self: start; }
+@media (pointer: coarse) { .ws-combat__desfecho .btn { min-height: 44px; min-width: 44px; } }
+/* R7.2: ganhos do turno no fluxo (desktop), entre o Livro e o compositor — nunca sobre o texto */
+.ws-root:not(.ws-root--mobile) .ws-chat .outcome-toast { position: static; transform: none; max-width: 100%; bottom: auto; padding-block: 0.25rem; }
+.ws-root:not(.ws-root--mobile) .ws-chat .outcome-toast:empty { display: none; }
+/* R3.3(c): chips de inimigo mais estreitos no Baralho — 3 por linha em 1440 (a mão sobe para a dobra) */
+@media (min-width: 641px) {
+  .arena--compact .arena__members { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+  .roundboard__list--efeitos { display: flex; flex-wrap: wrap; column-gap: 1rem; row-gap: 0.15rem; }
 }
