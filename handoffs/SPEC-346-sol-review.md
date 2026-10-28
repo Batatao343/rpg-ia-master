@@ -1,7 +1,7 @@
 # SPEC-346 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol · **Data:** 2026-10-28 · **Commit revisado:** `3951602f` (branch `spec-346`)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, após a re-verificação; 1ª rodada em `3951602f`: `CHANGES_REQUIRED`)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-28 · **Commits revisados:** `3951602f` (1ª rodada) e `bc97cdd0` (re-verificação, branch `spec-346`)
 
 ## Escopo
 
@@ -76,7 +76,7 @@ Verifiquei também:
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche por commit)
+Ver "Re-verificação (bc97cdd0)" abaixo.
 
 ## Pendências
 
@@ -93,4 +93,83 @@ bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 4 tests/test_spec346_*.p
 pytest (ad-hoc, scratchpad) vigília nível 3 rodada 1 → FAIL: run_round(initiator='enemy') com a vigília (P1-1)
 pytest (ad-hoc, scratchpad) 5 frases não hostis + CLASSIFY esgotado → 5/5 roteadas para combat_agent (P1-2)
 git diff main...spec-346 --stat -- evals/ data/ config/flags.yaml web/ tests/fixtures/spec330_legacy_golden.json → vazio
+```
+
+## Re-verificação (bc97cdd0)
+
+Revisei `git diff c3bae0d6..bc97cdd0`, que tem 3 commits do executor: `17d54226`, `4c21f388` e `bc97cdd0`.
+Repeti as sondas avulsas da 1ª rodada (ficam no scratchpad e não foram commitadas).
+
+| Item | Estado | Evidência |
+|---|---|---|
+| P1-1 vigília | **Fechado** | Sonda com nível 3 + emboscada. Com vigília, `run_round(initiator=None)`; sem vigília, `"enemy"`. A correção está em `agents/combat.py:2292-2295`: na rodada 1 manda a decisão da abertura. O teste novo está em `test_spec346_vigilia.py`. |
+| P1-2 router | **Fechado como P1; o resto vira P2-5** | As 5 frases da 1ª rodada agora vão para STORY. Os verdadeiros positivos (smoke, "Ataco a criatura", "Sem hesitar, ataco o saqueador") seguem em COMBAT. Na bateria nova, 5 de 10 frases ainda viram falso positivo (ver P2-5). |
+| P2-1 alvo declarado | Fechado | `_run_round` passa `preferred_targets` da `TurnDeclaration` (`conflict_orchestrator.py:2593-2599`). Há teste novo. |
+| P2-2 rótulo da Última Ação | Fechado | O rótulo só é aplicado se `len(attacks)` cresceu. Há teste novo. |
+| P2-3 loot residual | Fechado | O bloqueio não depende mais de `conflict_summary`. Usa `loot_turn < turn_count` (`agents/loot.py:89-93`). Há teste novo. |
+| P3-1/3/5 | Fechados | Spec e `arena.md` atualizadas. |
+| P3-2 oráculo | Fechado, com ressalva (P3-7, P3-8) | O oráculo agora soma as **linhas** do `mech_log` e roda com inimigos do bestiário. |
+| P3-4 dígitos | **Regrediu** (ver P2-4) | |
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-4 | P2 | `services/round_log.py:325` | O `_no_digits` novo usa como substituição o **byte de controle U+0001** (o `\1` virou `\x01` ao ser escrito). Sonda: `_no_digits("Alvo 3 , ok.")` devolve `'Alvo\x01 ok.'`, e `"Você tomba .  Fim 2"` devolve `'Você tomba\x01 Fim'`. A função roda sempre em `deterministic_outcome_text` (texto que o jogador lê, salvo no histórico e em JSON). Há também um TAB literal na `:324` (inofensivo). | Trocar a substituição por `r"\1"` (1 linha) e incluir esses 2 casos no teste. **Corrigir antes do pouso.** |
+| P2-5 | P2 | `agents/router.py:353` (`if threat and tokens & set(em.name_tokens(ai))`) | **Falsos positivos que sobraram no fallback de hostilidade** (só com o CLASSIFY esgotado). Basta qualquer substantivo do objeto aparecer numa narração com palavra de ameaça. Viram COMBAT: "Golpeio a porta para arrombá-la" ("algo rosna do outro lado"), "Enfrento a tempestade a pé" ("A tempestade ameaça a estrada"), "Ataco o problema de frente e negocio", "Atiro em direção à árvore para treinar". Há um quinto caso pelo bestiário: "Enfrento o goblin numa partida de dados" (o alvo sai cru, `goblin numa partida de dados`, porque `hint_core` não corta `numa`/`num`). Com `on`, o jogador fica preso no tabuleiro. É bem mais estreito que o P1-2 original, por isso P2. | Retirar o caminho "token presente na narração". Exigir NPC em cena, espécie do bestiário, inimigo de `state["enemies"]` ou substantivo de pessoa/criatura de uma lista fechada (bandido, guarda, saqueador, soldado, vulto, criatura…). Acrescentar `num/numa/durante/para` aos cortes do objeto. Incluir as 5 frases como negativos. |
+| P3-6 | P3 | `agents/router.py:290` (`_NEGATION_BEFORE_RE`) | Falso negativo: "sem pensar ataco o saqueador" fica em STORY, porque "sem" a até 2 tokens do verbo é lido como negação. Com vírgula funciona. Aceitável no modo degradado. | Tratar `sem` como negação só se seguido de `atacar/golpear…` no infinitivo, ou documentar. |
+| P3-7 | P3 | `tests/test_spec346_mech_log.py:256` | `enemy_cultista_encapuzado` não está no bestiário, então 10 casos do oráculo fazem `pytest.skip` em silêncio. | Trocar por um id que exista, ou falhar em vez de pular. |
+| P3-8 | P3 | `tests/test_spec346_mech_log.py` (oráculos R10) | **Reação/contra-ataque do herói fora do oráculo.** Nos dois oráculos, `declarations={}`: o herói nunca joga Carta nem Reação. Ficam sem cobertura três situações: custo em Vitalidade de Carta do herói (ex.: Sangromante), dano refletido/Espinhos e auto-dano de Reação, e cura/mitigação de Reação. Todas mexem na Vitalidade do herói sem uma linha "→ Você · N dano", e R10 pede "cura e ganho de Vitalidade como linha própria". **Classificação: P3 (lacuna de teste, sem bug demonstrado).** O contra-ataque em si mira o inimigo e não entra na conta do herói. | Follow-up: um oráculo parametrizado com o herói declarando Carta de custo em Vitalidade + Reação (bloqueio/reflexo). Se a igualdade quebrar, criar uma linha própria no `mech_log` para custo/cura/reflexo. |
+
+### Integridade de eval: `_BOOKKEEPING` em `tests/spec330_equivalence.py` (commit `4c21f388`)
+
+Sou a revisão independente desta exclusão. Arquivo do fixture protegido
+(`tests/fixtures/spec330_legacy_golden.json`): **intocado**. O harness `tests/spec330_equivalence.py` não
+está em `evals/protected-paths.txt`, mas é o evaluator do golden, então tratei a mudança como mudança de
+exclusão.
+
+**(a) As chaves são só registro?** Sim. Hoje cada uma é cópia derivada de algo que **continua no hash**:
+- `ferimento` (por ataque, `conflict_orchestrator.py:1257`, `conflict_turn.py:586`) é um resumo de
+  `dres["wound"]`. A mecânica real (o ferimento aplicado) segue no ator, em `ferimentos` (plural, que
+  continua no hash), e o texto do dano segue em `out["logs"]`.
+- `ticks` (`conflict_orchestrator.py:334`) é o registro do tick de DoT. O efeito (Vitalidade do ator) e a
+  linha `"… sofre N de X (Vit V)."` em `out["logs"]` continuam no hash.
+- `scene_logs` é uma fatia copiada de `out["logs"]`, que segue hasheado.
+
+Fiz um grep: nenhuma outra estrutura do motor, das Cartas ou de `data/` usa essas três chaves com
+mecânica.
+
+**(b) A exclusão mascara regressão?** **Hoje, não.** Uma regressão no dano de ferimento ou no tick de DoT
+muda `actors[*].vitalidade`/`ferimentos` e `out["logs"]`, que seguem no hash.
+
+O risco é **futuro e estrutural**: `_strip` remove essas chaves **por nome, em qualquer profundidade** de
+`[out, actors, scene]`. Se um campo mecânico futuro usar `ticks` (ex.: duração de condição) ou
+`ferimento` dentro do ator ou da cena, ele sai do golden sem ninguém perceber.
+
+**Decisão: APROVADA a exclusão** (o golden volta a provar equivalência mecânica). Fica o follow-up
+**P3-9**: restringir a exclusão ao caminho exato, sem nada global por nome:
+- `out["ticks"]` e `out["scene_logs"]` no 1º nível de `out`;
+- `out["attacks"][i]["ferimento"]`.
+
+Por exemplo, um `_strip_out(out)` antes do `json.dumps`, mantendo `_BOOKKEEPING` só para `_cartas_rodada`.
+Mais um teste que falha se `ticks`/`ferimento` aparecerem em `actors` ou `scene`. Esse follow-up também
+precisa de revisão independente (não é o executor que se autoaprova).
+
+### Veredito final
+
+**`APPROVED_WITH_FOLLOWUPS`.** Nenhum P0/P1 aberto.
+- **P2-4** (byte `\x01` no texto do jogador) é 1 linha e deve ser corrigido **antes do pouso**. O
+  coordenador pode conferir sem nova revisão: basta `_no_digits("Alvo 3 , ok.") == "Alvo, ok."`.
+- **P2-5** (falsos positivos que sobraram no fallback do router, só no modo degradado): corrigir na mesma
+  rodada se for barato. Senão, follow-up explícito antes de ligar `RPG_CARD_DECK=on` no staging.
+- **P3-6..P3-9**: follow-ups.
+- Continuam abertos os critérios do smoke real (§6) e da suíte completa (coordenador).
+
+### Comandos da re-verificação
+
+```text
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 4 tests/test_spec346_*.py tests/test_card_effects_grammar.py tests/test_card_acervo_reparo.py tests/test_spec341_balanco.py tests/test_api_jogadas.py tests/test_review_high_integration.py tests/test_spec345_mech_log.py tests/test_spec345_player_text.py tests/test_wound_status_cards.py tests/test_log_event_registry.py tests/test_fase64.py → 354 passed, 10 skipped (P3-7) in 28 s
+sonda vigília nível 3, rodada 1 → com vigília None, sem vigília "enemy" (P1-1 fechado)
+sonda router (15 frases, CLASSIFY esgotado) → 5 falsos positivos novos (P2-5), 2 falsos negativos ("ataco o lobo", "sem pensar ataco…")
+sonda _no_digits → '\x01' no texto (P2-4)
 ```
