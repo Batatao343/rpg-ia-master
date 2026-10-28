@@ -54,4 +54,46 @@ test.describe("1440", () => {
     await page.waitForTimeout(300);
     await page.screenshot({ path: `${OUT}/1440-pos-combate.png` });
   });
+
+  test("1440-tooltip-espolio-forja", async ({ page, backend }) => {
+    const state = backend.states.get("game-a")!;
+    state.player_stats.espolio_pendente = { id: "esp1", origem: "vitoria", recusa_ouro: 5, ofertas: [
+      { id: "c1", name: "Estocada", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "Causa 2. **Sangria** 1.", descricao: "", conhecida: false },
+      { id: "c3", name: "Corte", raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "Causa 3. **Sangria** 2.", descricao: "", conhecida: false },
+    ] } as never;
+    state.player_stats.forja = {
+      permitido: true, motivo: "", baralho_min: 3,
+      baralho: [{ id: "golpe", name: "Golpe do Véu", copias: 1, esquecivel: true, bloqueio: null }],
+      esquecer: { descanso: false, templo: false, ouro: 30, motivos: { descanso: "Só dá para esquecer uma Carta depois de um descanso longo.", templo: "Só um templo ou curandeiro ajuda a esquecer uma Carta." } },
+      afiar: { material: null, afiaveis: [], afiadas: [] },
+      purgar: { medico: false, templo: false, ouro: 20 }, cicatrizes: [],
+    } as never;
+    await page.goto("/");
+    await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+    await page.getByRole("button", { name: /^Ayla/ }).click();
+    await page.getByRole("tab", { name: /Combate/ }).click();
+    await page.locator("article.combat-card.espolio__card").nth(1).locator(".kw").first().hover();
+    await expect(page.locator("[role=tooltip]")).toBeVisible();
+    await page.screenshot({ path: `${OUT}/1440-tooltip-espolio.png` });
+    await page.mouse.move(0, 0);
+    await page.locator("[data-forja-row='golpe']").click();
+    await page.locator("[data-forja-why]").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${OUT}/1440-forja.png` });
+  });
+});
+
+test.describe("390 pos-combate", () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test("390-pos-combate", async ({ page, backend }) => {
+    backend.unexpectedAllowed.push(/combat\/preview/);
+    armDeck(backend, { enemies: [["e1", "Saqueador"]] });
+    await openCombat(page);
+    await page.locator('.deck-card[data-card="golpe"]').dispatchEvent("click");
+    await page.locator("[data-play-confirm]").dispatchEvent("click");
+    await page.locator("[data-end-turn]").dispatchEvent("click");
+    await expect(page.locator(".combat-outcome__continue")).toBeVisible();
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `${OUT}/390-pos-combate.png` });
+  });
 });
