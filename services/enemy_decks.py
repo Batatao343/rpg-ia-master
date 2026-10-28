@@ -401,6 +401,70 @@ def prenuncio(actor: dict, rnd_exec: int) -> str | None:
     return texto.format(nome=str(actor.get("name") or actor.get("id") or "O inimigo"))
 
 
+def record_promise(scene: dict | None, actor: dict, rnd_exec: int) -> bool:
+    """SPEC-355 R3: grava na CENA a promessa que ``prenuncio(actor, rnd_exec)`` acabou de tornar
+    pública (assinatura na rodada ``rnd_exec + 1``). Nunca vai para o ator."""
+    if not isinstance(scene, dict) or prenuncio(actor, rnd_exec) is None:
+        return False
+    sig = assinatura_of(actor)
+    key = str(actor.get("id") or actor.get("name"))
+    scene.setdefault("prenuncios", {})[key] = {
+        "carta": str(sig["carta"]),
+        "rnd": int(rnd_exec) + 1,
+        "fase_idx": int(actor.get("fase_idx", 0) or 0),
+    }
+    return True
+
+
+_FRUSTRACAO_LINHA = {
+    "troca_de_fase": "a nova fase o muda",
+    "muito_ferido": "ferido demais",
+    "impossivel": "não há como",
+}
+
+
+def check_promises(
+    scene: dict | None,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    rnd: int,
+    out: dict,
+) -> None:
+    """SPEC-355 R3: na rodada ``rnd`` toda promessa vencida é cumprida ou frustrada com motivo
+    (troca_de_fase > muito_ferido > impossivel) e linha legível; depois sai da cena."""
+    if not active() or not isinstance(scene, dict):
+        return
+    promises = scene.get("prenuncios")
+    if not isinstance(promises, dict):
+        return
+    for key in list(promises):
+        promise = promises[key]
+        if int(promise.get("rnd", 0) or 0) > rnd:
+            continue
+        del promises[key]
+        if int(promise.get("rnd", 0) or 0) < rnd:
+            continue  # promessa de rodada que já passou (sem verificação): só limpa
+        actor = actors_by_id.get(key)
+        if not actor or actor.get("dead") or actor.get("fled") or key not in sides.get("enemy", []):
+            continue
+        planned = plan(actor, rnd) or {}
+        if planned.get("assinatura") == promise.get("carta"):
+            continue  # cumprida
+        if int(actor.get("fase_idx", 0) or 0) != int(promise.get("fase_idx", 0) or 0):
+            motivo = "troca_de_fase"
+        elif _badly_wounded(actor):
+            motivo = "muito_ferido"
+        else:
+            motivo = "impossivel"
+        out.setdefault("pressagios_frustrados", []).append(
+            {"actor_id": key, "tipo": "assinatura", "motivo": motivo}
+        )
+        nome = str(actor.get("name") or key)
+        out.setdefault("logs", []).append(
+            f"{nome} abandona o golpe que preparava: {_FRUSTRACAO_LINHA[motivo]}."
+        )
+
+
 def card_pool_kinds(slot: str) -> frozenset[str] | None:
     """Efeitos de carta preferidos pelo ``slot`` do padrão (``None`` = sem preferência)."""
     if slot in ("ataque", "ataque_multiplo"):

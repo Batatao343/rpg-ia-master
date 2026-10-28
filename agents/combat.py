@@ -2764,6 +2764,12 @@ def _combat_node(state: GameState):
             combat_meta["pressagios_publicos"] = _enemy_intent.public_round(
                 _next_round, actors_by_id, _exec_round
             )
+            if _enemy_decks.active():  # SPEC-355 R3: a promessa pública fica na cena
+                for _row in combat_meta["pressagios_publicos"]:
+                    if _row.get("prenuncio") and _row.get("actor_id") in actors_by_id:
+                        _enemy_decks.record_promise(
+                            scene, actors_by_id[_row["actor_id"]], _exec_round
+                        )
         except Exception:  # cosmético: nunca derruba o turno
             _log_event("combat", "pressagio_forecast_failed", level="warning")
     if _scene_cards.active():  # SPEC-331 R3: o que dispara na PRÓXIMA rodada

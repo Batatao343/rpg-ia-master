@@ -2601,6 +2601,9 @@ def _run_round(
         _mark_fresh_conditions(_cond_before, actors_by_id, None, sides)
     # SPEC-332: fase de chefe (so `on`) ANTES do presságio; troca de fase invalida o congelado.
     phase_changed = _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
+    _edk_mod.check_promises(
+        scene, actors_by_id, sides, cs.tactical_round(scene), out
+    )  # SPEC-355 R3
     if _edk_mod.mode() == "shadow":
         out["decks_shadow"] = _edk_mod.shadow_summary(actors_by_id, sides)
     # SPEC-329: Presságio. `off` = byte a byte como antes; `shadow` calcula e compara com a
@@ -2945,6 +2948,7 @@ def _run_round(
             _warn = _edk_mod.prenuncio(_en, cs.tactical_round(scene)) if _alive(_en) else None
             if _warn:
                 out["logs"].append(_warn)
+                _edk_mod.record_promise(scene, _en, cs.tactical_round(scene))  # SPEC-355 R3
     end = death_flow.combat_should_end({"hostiles": side_actors.get("enemy", [])})
     out["ended"] = end["ended"]
     out["reason"] = end["reason"]
