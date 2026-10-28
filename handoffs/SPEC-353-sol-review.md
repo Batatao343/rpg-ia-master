@@ -1,7 +1,7 @@
 # SPEC-353 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus (papel Sol, revisor independente) · **Data:** 2026-10-28 · **Commit revisado:** `7d8b34b7`
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (final, re-revisão; 1ª passada em `7d8b34b7` foi `CHANGES_REQUIRED`)
+> **Revisor:** Opus (papel Sol, revisor independente) · **Data:** 2026-10-28 · **Commits revisados:** `7d8b34b7` (1ª) e `ec3a2808` (re-revisão)
 
 ## Escopo
 
@@ -52,13 +52,29 @@ Pontos verificados que estão OK:
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche depois)
+Re-revisão em `ec3a2808` (commits `d0349744`..`ec3a2808`). Tudo conferido no código e nos testes:
+
+- **P1-1 fechado (`d0349744`).** `cards._in_scene_hand` agora lê `state["_piles"]` antes de `combat.pilhas`. Sonda refeita: `orch.run_round` com pilhas reais (`start_piles`), objeto na mão e `round_state` de produção dá `"Usa Derrubar (Sino Rachado)"` e um ataque do herói com `card_id = cena_sino_rachado_…`. Novo teste de ponta a ponta: `test_object_card_end_to_end_via_run_round`.
+- **P2-1 fechado.** O contrato da mão roda nas 5 Posturas com ids reais (`basicas_for_class`), mais 1 objeto de cena, no formato `{"player", "_piles"}`, com `checked >= 2`.
+- **Os testes novos falham sem a correção.** Num worktree temporário, voltei `services/cards.py` e `services/combat_preview.py` para `df9b6d34`. Falharam os 5 casos do contrato de R2, o teste de ponta a ponta (log "não pôde ser jogada") e o oráculo de defesa (`_after_public_defense` ausente). Worktree removido depois.
+- **P2-2 fechado (`80e84471`).** `dano_*_apos_defesa` sai do próprio `resolve_damage_and_wounds`, rodado numa cópia ("ghost") que só tem a defesa pública: armadura sem `resist_tipos` e condições visíveis. Dano não físico contra armadura sem condição de Proteção dá `None`. O crítico entra como `raw = dano_max` com `crit_mult=1`, que equivale ao motor, porque o motor multiplica antes da Proteção (`conflict_damage.py:230`). O oráculo de 45 casos (3 tipos × 3 Proteções × 5 seeds) compara o helper com o motor numa ficha real. Ele é quase tautológico (é o mesmo pipeline), mas é exatamente isso que a correção pretende garantir.
+  - **Decisão `reducoes_max` como público:** aceitável. O efeito é só a redução por Integridade, e `integridade_atual`/`integridade_max` já são públicos. Mas o campo não está em `bestiary_knowledge.public_panel`, então a prévia usa um campo fora do painel. Follow-up P3-6 abaixo.
+- **P2-3 fechado (`9b76caef`).** Os 3 parágrafos verbatim estão em `tests/fixtures/spec353_smoke.py` e passam por `authorship(last_out)` → `validate_attribution`, dando V1, V3 e V2. O `last_out` desses três foi escrito à mão a partir do registro. Há também um caso com `last_out` vindo do motor (`run_round`, golpe final por DoT, V3 e o texto correto aceito).
+- **P3-1, P3-2 e P3-5 fechados.** Ferimento em pt-BR na entrada `custo`. A frase de reconciliação não flexiona a espécie ("Só dois do bando avançam…"). Teste de agente para dica genérica, scanner e frase.
+- **P3-3 aceito como registrado em §9.** Nenhum campo público revela o Corpo, então R28 fica só com a frase base.
+- **P3-4 fechado com ressalva.** `sem_vitalidade_avisados` vai para `combat_meta`: lista ordenada de strings, JSON-safe, e o agente filtra. `_taunt_resisted` virou um `ContextVar` com lista efêmera; ver P3-7.
+- **Golden da 330 intacto.** `git diff main...HEAD -- tests/spec330_equivalence.py tests/fixtures/spec330_legacy_golden.json data/cards config/flags.yaml evals/` está vazio, e `test_card_effects_grammar` e `test_spec353_golden_guard` passam.
+
+### Follow-ups (P3, não bloqueiam)
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-6 | P3 | `services/combat_preview.py` (`_after_public_defense`) e `services/bestiary_knowledge.py:52-57` | A prévia usa `armor.reducoes_max`, que não está no painel público. É um vazamento indireto pequeno: o número da prévia deixa inferir o campo. | Expor `reducoes_max` em `public_panel` junto de Proteção/Integridade, deixando a decisão explícita no contrato público. A alternativa é tirá-lo do ghost e marcar `aproximado`. |
+| P3-7 | P3 | `services/conflict_orchestrator.py:421-433`, `:256`, `:466` | **ContextVar no hosted multi-thread.** É seguro contra vazamento entre requisições: o Starlette e o LangGraph copiam o contexto por chamada e o `.set` acontece dentro da cópia, então cada requisição tem sua própria lista. Há dois efeitos colaterais. (a) Com `RPG_ENEMY_INTENT` on, a Provocação é rolada no forecast do fim da requisição N e a lista se perde na N+1, então "resiste à Provocação" quase nunca aparece na API, embora apareça no CLI. (b) Em contexto longo (CLI, playtest, worker sem cópia), uma entrada não consumida (chave = id do ator, ex. `boss`/`enemy_1`) pode gerar a linha falsa num conflito posterior com o mesmo id. É só view, não afeta a mecânica. | Seguir o padrão do `sem_vitalidade_avisados`: gravar os ids que resistiram em `combat_meta` (o agente lê e limpa por rodada) ou, no mínimo, zerar a lista no início de `run_round`. |
 
 ## Pendências
 
-- Antes do pouso: P1-1 e P2-1 (bloqueiam). P2-2 e P2-3 também devem ser fechados nesta spec, porque são
-  oráculos que a spec exige (R21 e R11).
-- P3: podem virar follow-up; se ficarem para depois, o executor registra em §9.
+- Nenhum P0/P1/P2 aberto. P3-6 e P3-7 viram follow-up (spec pequena ou junto da 354).
 - O §9 "Etapa 0 (c)" segue aberta (o 6 do Penitente ainda não foi provado como Proteção). O smoke §6 fecha.
 
 ## Comandos rodados
@@ -70,4 +86,8 @@ scratch: cards.use_card com {"player","_piles"} (formato do motor) → recusa; c
 scratch: orch.run_round com objeto de cena na mão e round_state de produção → "Derrubar (Sino Rachado) não pôde ser jogada.", sem ataque do herói
 scratch: validate_attribution(message verbatim, autoria do motor) → d5 V1, k4 V3, r6 V2
 scratch: cards.get_card("bas_golpe"/"bas_guarda") → None
+re-revisão: scratch e2e.py (run_round, objeto na mão, round_state de produção) → "Usa Derrubar (Sino Rachado)", ataque do herói com card_id cena_…
+re-revisão: worktree temporário com cards.py/combat_preview.py de df9b6d34 → testes novos de R1/R2/R21 falham (prova negativa); worktree removido
+re-revisão: pytest -n 2 tests/test_spec353_*.py + golden 330 + 346/347 + scene_cards + preview + conflito_cartas → sem falhas (subconjunto: 352 passed)
+re-revisão: git diff main...HEAD -- golden 330 / data/cards / flags / evals → vazio
 ```
