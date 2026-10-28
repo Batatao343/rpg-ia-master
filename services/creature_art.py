@@ -177,6 +177,8 @@ def _registry_src(
     if row.get("visibility") == "game" and row.get("origin_game_id") != game_id:
         return None, False
     if row.get("status") == "ready":
+        if row.get("store") == "private" and row.get("origin_game_id") != game_id:
+            return None, True  # P2-1: objeto ainda em users/{owner}/ so serve ao jogo de origem
         thumb = (row.get("object_keys") or {}).get("thumb")
         signer = sign or getattr(registry, "sign", None)
         if thumb and signer is not None:
