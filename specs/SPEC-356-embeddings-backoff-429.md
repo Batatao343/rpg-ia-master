@@ -1,6 +1,6 @@
 # SPEC-356 — embeddings-backoff-429
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Depende de:** SPEC-039 (embeddings-provider)
 > **Desbloqueia:** reindex global confiável com Jina
