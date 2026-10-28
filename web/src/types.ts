@@ -257,6 +257,7 @@ export interface QuestBlock {
 
 export interface Condition {
   name: string;
+  label?: string;
   dot: number;
   duration: number;
 }

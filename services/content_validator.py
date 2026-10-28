@@ -1034,6 +1034,25 @@ def validate_bestiary(
                     )
                 )
 
+    # SPEC-355 R10: baralho de conjurador sem nenhuma magia no kit vem do `arquetipo` errado
+    for cid, cre in best.items():
+        if str(cre.get("arquetipo") or "") not in ("conjurador", "mistico"):
+            continue
+        magical = any(
+            isinstance(a, dict) and str(a.get("type") or "") in ("magic", "area")
+            for a in cre.get("attacks") or []
+        )
+        if not magical and not (cre.get("abilities") or []):
+            findings.append(
+                Finding(
+                    "bestiary",
+                    "warning",
+                    bestiary_path,
+                    cid,
+                    f"arquetipo {cre.get('arquetipo')!r} sem ataque mágico nem habilidades",
+                )
+            )
+
     volume_signatures: dict[tuple, str] = {}
     for cid, cre in best.items():
         p = bestiary_path

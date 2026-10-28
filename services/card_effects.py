@@ -1339,6 +1339,29 @@ _CONDICAO_LABEL = {
     "desarmado_risco": "Desarme",
     "silenciado": "Silêncio",
 }
+# SPEC-355 R8: rotulos so da EXIBICAO (o nome gravado no ator e o texto estatico nao mudam).
+_CONDICAO_LABEL_EXTRA = {
+    "armadura_comprometida": "Armadura Comprometida",
+    "enfraquecido": "Enfraquecido",
+    "sangrando": "Sangrando",
+}
+
+
+def condition_label(raw: str) -> str:
+    """Nome legivel de uma condicao: tabela -> glossario -> extras -> `raw` humanizado."""
+    text = str(raw or "")
+    key = _fold(text)
+    if key in _CONDICAO_LABEL:
+        return _CONDICAO_LABEL[key]
+    if key in glossary():
+        return str(glossary()[key]["nome"])
+    if key in _CONDICAO_LABEL_EXTRA:
+        return _CONDICAO_LABEL_EXTRA[key]
+    if "_" in text or text.islower():  # nome ja legivel ("Veneno Fraco") fica como esta
+        return text.replace("_", " ").capitalize()
+    return text
+
+
 _ESCALA_LABEL = {
     "entropia": "Entropia",
     "carga": "Carga do Abismo",

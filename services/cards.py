@@ -284,17 +284,31 @@ def _apply_afiada(card: dict) -> dict:
     return card
 
 
+def is_neutral(card: dict | None) -> bool:
+    """Carta neutra: sem Postura (`classe` vazia/'Neutra'/None) ou `neutra: true` (SPEC-355 R7)."""
+    if not card:
+        return False
+    return card.get("classe") in ("", "Neutra", "neutra", None) or bool(card.get("neutra"))
+
+
 def cards_for_class(class_name: str, subclass: str = "") -> list[dict]:
-    """Cartas de classe/subclasse (exclui Cartas de Virtude, tipo 'virtude')."""
+    """Cartas de classe/subclasse (exclui Cartas de Virtude, tipo 'virtude').
+
+    SPEC-355 R7: `class_name` vazio devolve so Cartas neutras, nunca Carta de Postura.
+    """
     out = []
     for c in _load_cards().values():
         if c.get("tipo") == "virtude" or c.get("basica"):
             continue  # basicas (SPEC-328) vivem no baralho, nunca no Acervo/progressao
         if c.get("tipo") in STATUS_TIPOS or c.get("origem") == "cartas-333":
             continue  # SPEC-333: status/maldicao/Sussurro entram so por regra, nunca por escolha
-        if c.get("classe") in (class_name, "") or class_name == "":
-            if not subclass or c.get("subclasse") in (subclass, ""):
-                out.append(c)
+        if class_name == "":
+            if not is_neutral(c):
+                continue
+        elif c.get("classe") not in (class_name, ""):
+            continue
+        if not subclass or c.get("subclasse") in (subclass, ""):
+            out.append(c)
     return out
 
 

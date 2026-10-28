@@ -413,7 +413,8 @@ def test_revelar_de_campo_publico_e_recusado():
         for i in card_lint.check_revelar_publico(inerte)
     )
     pressagio = card(efeitos=[{"kind": "revelar", "campo": "intencao"}])
-    assert [i.level for i in card_lint.check_revelar_publico(pressagio)] == ["warn"]
+    # SPEC-355 R9: `revelar intencao` passou a valer (presságio "estudada"); sem aviso
+    assert not card_lint.check_revelar_publico(pressagio)
     for campo in ("resistencias", "cartas"):
         ok = card(efeitos=[{"kind": "revelar", "campo": campo}])
         assert not card_lint.check_revelar_publico(ok)

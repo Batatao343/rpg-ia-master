@@ -211,6 +211,8 @@ def knowledge_level(enemy: dict, carta_id: str | None = None) -> str:
 
     if carta_id and bk.is_card_revealed(enemy, carta_id):
         return "estudada"
+    if "intencao" in (enemy.get("_revelado") or []):  # SPEC-355 R9: `revelar intencao` vale
+        return "estudada"
     if enemy.get("revealed_cards") or enemy.get("revealed_resistances") or enemy.get("known"):
         return "conhecida"
     return "desconhecida"

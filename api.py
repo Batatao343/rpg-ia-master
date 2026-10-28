@@ -2993,9 +2993,19 @@ def _combat_block(state: dict) -> dict[str, Any]:
         str(e.get("id") or e.get("name")) for e in enemies if isinstance(e, dict) and e not in alive
     }
 
+    def _condition_label(raw: str) -> str:
+        from services import card_effects as _fx
+
+        return _fx.condition_label(raw) if raw else ""
+
     def _conds(entity):
         return [
-            {"name": c.get("name", ""), "dot": c.get("dot", 0), "duration": c.get("duration", 0)}
+            {
+                "name": c.get("name", ""),
+                "label": _condition_label(str(c.get("name", ""))),
+                "dot": c.get("dot", 0),
+                "duration": c.get("duration", 0),
+            }
             for c in (entity.get("active_conditions") or [])
             if isinstance(c, dict)
         ]

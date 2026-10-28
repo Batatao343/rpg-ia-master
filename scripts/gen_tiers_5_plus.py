@@ -215,7 +215,27 @@ def build_cards(classes: dict) -> list[dict]:
     return result
 
 
-def main() -> None:
+def _dump(data: object) -> str:
+    return json.dumps(data, ensure_ascii=False, indent=2) + "\n"
+
+
+def _write_lf(path: Path, text: str) -> None:
+    with path.open("w", encoding="utf-8", newline="\n") as fh:
+        fh.write(text)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """SPEC-355 R6: default `--check` (nao grava, sai 1 se algo mudaria); `--write` grava."""
+    args = list(sys.argv[1:] if argv is None else argv)
+    write = "--write" in args
+    force = "--force" in args
+    pending: dict[Path, str] = {}  # arquivo -> texto novo (so os que diferem)
+
+    def stage(path: Path, text: str) -> None:
+        current = path.read_text(encoding="utf-8") if path.exists() else None
+        if current is None or current.replace("\r\n", "\n") != text:
+            pending[path] = text
+
     classes = json.loads(CLASSES_PATH.read_text(encoding="utf-8"))
     existing_by_branch: dict[tuple[str, str], list[str]] = {}
     trunk_by_class: dict[str, list[str]] = {}
@@ -227,6 +247,7 @@ def main() -> None:
                 card.get("classe") in PREFIX
                 and card.get("tipo") != "virtude"
                 and card.get("origem") != "tiers-5-plus"
+                and "onda" not in card  # SPEC-355 R6: Carta de onda tem tier/level_req proprios
             ):
                 level = {"inicial": 1, "avancado": 4, "superior": 7}.get(card.get("patamar"), 1)
                 tier = {
@@ -241,7 +262,7 @@ def main() -> None:
                 if not card.get("subclasse"):
                     trunk_by_class.setdefault(card["classe"], []).append(card["id"])
         if changed:
-            path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            stage(path, _dump(data))
 
     for classe, class_data in classes.items():
         normal_gain = int((class_data.get("level_gains") or {}).get("entropy", 0) or 0)
@@ -262,22 +283,27 @@ def main() -> None:
                 existing_by_branch.get((classe, branch_id), [])[:2]
                 or trunk_by_class.get(classe, [])[:2]
             )
-    CLASSES_PATH.write_text(
-        json.dumps(classes, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
+    stage(CLASSES_PATH, _dump(classes))
     cards = build_cards(classes)
     out_path = CARDS_DIR / "tiers_5_plus.json"
     # SPEC-335 P2-3: o texto das 80 foi reescrito à mão (descricao/contrapartida/raridade/
     # momento). Sem `--force`, o gerador só preenche o que falta e preserva o que existe.
-    if out_path.exists() and "--force" not in sys.argv:
+    if out_path.exists() and not force:
         old = {c["id"]: c for c in json.loads(out_path.read_text(encoding="utf-8"))["cards"]}
         for card in cards:
             for key in KEEP_FIELDS:
                 if key in old.get(card["id"], {}):
                     card[key] = old[card["id"]][key]
-    output = {"schema_version": 1, "source": "tiers-5-plus", "cards": cards}
-    out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    stage(out_path, _dump({"schema_version": 1, "source": "tiers-5-plus", "cards": cards}))
+
+    for path in sorted(pending):
+        print(("escrevendo " if write else "mudaria ") + str(path))
+    if write:
+        for path, text in pending.items():
+            _write_lf(path, text)
+        return 0
+    return 1 if pending else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -324,7 +324,9 @@ def check_escala_principal(card: dict) -> list[Issue]:
 
 # SPEC-335 (revisão Sol do Lote 4): `revelar` de campo que o painel já mostra não faz nada.
 REVELAR_PUBLICO_ERRO = frozenset({"vitalidade"})  # sempre no painel (`bestiary_knowledge`)
-REVELAR_PUBLICO_AVISO = frozenset({"intencao"})  # o presságio (329) já mostra a intenção
+# SPEC-355 R9: `revelar intencao` agora promove o presságio a "estudada" (nome da Carta,
+# faixa e valor), então deixou de duplicar o que o presságio já mostra.
+REVELAR_PUBLICO_AVISO: frozenset[str] = frozenset()
 
 
 def check_revelar_publico(card: dict) -> list[Issue]:

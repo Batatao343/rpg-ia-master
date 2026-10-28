@@ -87,7 +87,7 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
       </span>
       {p.engagedNames.length > 0 && <span className="tchip__meta">{`Engajado: ${p.engagedNames.join(", ")}`}</span>}
       {p.conditions.length > 0 && (
-        <span className="tchip__tags">{p.conditions.map((c, i) => <em key={i}>{c.name}</em>)}</span>
+        <span className="tchip__tags">{p.conditions.map((c, i) => <em key={i}>{c.label ?? c.name}</em>)}</span>
       )}
       {p.intel.length > 0 && <span className="tchip__meta">{`Revelado: ${p.intel.join(", ")}`}</span>}
       {omen && (

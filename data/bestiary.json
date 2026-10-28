@@ -5625,7 +5625,7 @@
     },
     "faction": "renegados_ermo",
     "categoria": "lacaio",
-    "arquetipo": "conjurador",
+    "arquetipo": "tatico",
     "virtudes": {
       "forca": 3,
       "agilidade": 3,
@@ -5649,7 +5649,7 @@
     "vulnerabilities": [],
     "immunities": [],
     "cartas": [
-      "bst_descarga_arcana"
+      "bst_pancada_esmagadora"
     ],
     "tactical_profile": {
       "priorities": [

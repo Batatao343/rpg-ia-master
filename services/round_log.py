@@ -14,6 +14,8 @@ import re
 from collections.abc import Iterable
 from typing import Any
 
+from services import card_effects as fx
+
 # Linhas internas do motor que NUNCA entram no registro (aritmética, ids, setas).
 _ARITH_RE = re.compile(
     r"\d+\s*[×x*]\s*\d+|->|→\s*\d|resist/vuln|Proteção\s*-|Proteção \(|Integridade|Rachadura/Torpor"
@@ -256,7 +258,7 @@ def round_registry(
                 str(payload.get("actor_id")), str(payload.get("actor_id") or "Alguém")
             )
             event_lines.append(
-                f"{payload.get('condition')} corrói {victim}: "
+                f"{fx.condition_label(str(payload.get('condition')))} corrói {victim}: "
                 f"{int(payload.get('dano_final', 0))} de dano contínuo."
             )
         elif kind == "custo":
@@ -441,7 +443,7 @@ def authorship(last_out: dict | None, names: dict[str, str]) -> dict:
                     hero_cards[key] = "hit" if (hit or hero_cards.get(key) == "hit") else "miss"
         elif kind == "tick":
             victim = names.get(str(payload.get("actor_id")), "Alguém")
-            lines.append(f"{payload.get('condition')} corroeu {victim}.")
+            lines.append(f"{fx.condition_label(str(payload.get('condition')))} corroeu {victim}.")
         elif kind == "custo":
             card = _card(payload.get("card_id")) or {}
             who = names.get(str(payload.get("actor_id")), "Alguém")

@@ -569,7 +569,7 @@ function CondChips({ conds }: { conds: Condition[] }) {
     <div className="conds__row">
       {conds.map((cd, i) => (
         <span key={i} className={"cond-chip" + (cd.dot > 0 ? " is-dot" : "")}>
-          {`${cd.name}${cd.dot > 0 ? ` ${cd.dot}/t` : ""} (${cd.duration})`}
+          {`${cd.label ?? cd.name}${cd.dot > 0 ? ` ${cd.dot}/t` : ""} (${cd.duration})`}
         </span>
       ))}
     </div>

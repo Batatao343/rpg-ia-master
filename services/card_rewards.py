@@ -116,7 +116,7 @@ def _pools(player: dict, defeated: list[dict], *, boss: bool, region_ids: set[st
         cid
         for cid, c in cards.all_cards().items()
         if cid not in known
-        and (c.get("classe") in ("", "Neutra", "neutra", None) or c.get("neutra"))
+        and cards.is_neutral(c)
         and not c.get("regiao_exclusiva")
         and _eligible(c, player, boss=boss)
         and (not c.get("regiao") or str(c.get("regiao")) in region_ids)

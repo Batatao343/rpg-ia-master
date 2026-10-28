@@ -384,7 +384,7 @@ def mech_log(
     def tick_line(tick: dict) -> str:
         victim = names.get(str(tick.get("actor_id")), str(tick.get("actor_id") or "Alguém"))
         dano = int(tick.get("dano_final", 0))
-        return f"{tick.get('condition')} → {victim} · dano contínuo · {dano} dano"
+        return f"{fx.condition_label(str(tick.get('condition')))} → {victim} · dano contínuo · {dano} dano"
 
     lines: list[str] = []
     base = out or {}
@@ -552,10 +552,10 @@ def round_board(
         return {
             "tipo": "dano_continuo",
             "ator_id": str(src) if known else None,
-            "ator_nome": names[str(src)] if known else cond,
+            "ator_nome": names[str(src)] if known else fx.condition_label(cond),
             "lado": side(str(src)) if known else "efeito",
             "carta_id": None,
-            "carta_nome": cond,
+            "carta_nome": fx.condition_label(cond),
             "alvo_id": victim,
             "alvo_nome": names.get(victim, "Alguém"),
             "origem": "turno",
