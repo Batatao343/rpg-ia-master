@@ -36,7 +36,7 @@ export function SceneStrip({ round, cena, objetivo, pressagios = [] }: {
           <span>Rodada {round}</span>
           {cena?.cartas.map((c) => <span key={c.id} className="scene-strip__extra">{c.nome}</span>)}
           {goal && <span className="scene-strip__extra">{goal}</span>}
-          {cena && <span className="scene-strip__extra">{clockLine(cena.relogio)}</span>}
+          {cena && <span className="scene-strip__extra scene-strip__clock">{clockLine(cena.relogio)}</span>}
         </summary>
         <div className="scene-strip__body">
           {cena?.cartas.map((c) => <p key={c.id}><strong>{c.nome}.</strong> {c.sabor}</p>)}

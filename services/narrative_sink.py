@@ -16,6 +16,11 @@ from collections.abc import Callable
 from contextvars import ContextVar, Token
 from typing import Any, Literal
 
+from services.turn_outcome import (
+    _RECEIPT_LINE as _RECEIPT,  # SPEC-345 R5: mesmos padrões do texto final
+)
+from services.turn_outcome import _SYSTEM_PREFIX
+
 TokenStreamMode = Literal["off", "shadow", "on"]
 
 Sink = Callable[[str, str], None]  # (kind: "delta"|"reset", text)
@@ -93,7 +98,6 @@ def replace_reason(shown: str, final: str) -> str:
     return "start" if common < min(len(shown), 40) else "tail"
 
 
-_RECEIPT = re.compile(r"[ \t]*\[RESULTADO\][^\r\n]*")
 # mesma segmentacao de `narrative_evidence.validate_narrative`
 _SENTENCE_SPLIT = re.compile(r"((?<=[.!?])\s+|\n+)")
 
@@ -159,7 +163,7 @@ class StreamGuard:
 
         # Mesmas normalizacoes baratas do texto final (preambulo meta, marcadores do motor,
         # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
-        text = sanitize(_RECEIPT.sub("", self.raw))
+        text = sanitize(_SYSTEM_PREFIX.sub("", _RECEIPT.sub("", self.raw)))
         if not text:
             return "", ""
         text = self.finalize(text) if self.finalize else self.prefix + text

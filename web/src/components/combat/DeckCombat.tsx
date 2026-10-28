@@ -101,6 +101,10 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   useEffect(() => {
     if (confirmKey) rootRef.current?.querySelector<HTMLElement>("[data-play-confirm]")?.focus();
   }, [confirmKey]);
+  // SPEC-345 R14: a mira aparece visível no 1º paint (sem rolar), acima da barra de envio fixa.
+  useEffect(() => {
+    if (armedCard) rootRef.current?.querySelector<HTMLElement>(".aimbar")?.scrollIntoView?.({ block: "nearest" });
+  }, [armed?.index, armed?.targetId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function disarm() {
     onDisarm();

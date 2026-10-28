@@ -294,7 +294,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
     <div className="ws-bar__status">
       <span className="ws-stat ws-stat--hp">Vitalidade <b>{p?.vitalidade ?? 0}/{p?.max_vitalidade ?? 0}</b></span>
       {(p?.max_entropy ?? 0) > 0 && <span className="ws-stat ws-stat--entropy">Entropia <b>{p?.entropy ?? 0}/{p?.max_entropy ?? 0}</b></span>}
-      {fighting && <span className="ws-stat ws-stat--fight">{mobile ? <><Icon name="combat" /> {fightChipLabel(data?.combat?.round ?? 1, true).visible}<span className="sr-only">{fightChipLabel(data?.combat?.round ?? 1, true).sr}</span></> : fightChipLabel(0, false).visible}</span>}
+      {fighting && <span className="ws-stat ws-stat--fight">{mobile ? <><Icon name="combat" /> <span aria-hidden="true">{fightChipLabel(data?.combat?.round ?? 1, true).visible}</span><span className="sr-only">{fightChipLabel(data?.combat?.round ?? 1, true).sr}</span></> : fightChipLabel(0, false).visible}</span>}
     </div>
   );
 

@@ -147,16 +147,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .btn:where(:not(:disabled)):hover { border-color: var(--accent); box-shadow: var(--elev-1); }
 .btn:active:where(:not(:disabled)) { transform: translateY(1px) scale(0.99); background-color: var(--state-pressed); }
-/* SPEC-345 item 9b: desabilitado sem opacity no texto (contraste); o sinal é cor apagada + borda tracejada. */
-.btn:disabled { cursor: not-allowed; opacity: 1; color: var(--muted); border-style: dashed; background-image: none; }
-.btn--primary:disabled { background: var(--surface-2); border-color: var(--line); }
 .btn[aria-busy="true"] { cursor: progress; }
 .btn--primary {
   background: linear-gradient(180deg, var(--accent), var(--accent-strong));
   color: var(--on-accent); border-color: oklch(0.80 0.09 74 / 0.5);
 }
 .btn--primary:hover { filter: brightness(1.07); }
-.btn--primary:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; filter: none; }
+/* SPEC-345 item 9b: desabilitado sem opacity (contraste >= 4,5:1): fundo fundo + texto --muted + borda tracejada. */
+.btn:disabled, .btn--primary:disabled, .btn--danger:disabled {
+  opacity: 1; cursor: not-allowed; box-shadow: none; filter: none; background: var(--bg-deep); background-image: none;
+  color: var(--muted); border: 1px dashed var(--line);
+}
 .btn--ghost { background: transparent; border-color: var(--line-soft); color: var(--muted); }
 .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
 

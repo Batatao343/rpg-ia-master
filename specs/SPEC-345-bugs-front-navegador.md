@@ -100,6 +100,8 @@ O objetivo é que nenhuma superfície do jogador mostre texto interno (ids, rót
   - falhando em ≥ 2, abre-se um achado próprio (fora desta spec).
 
   Em nenhum caso esta spec mexe no limiar de `effects.spec.ts:526-531`.
+- **R14 (extra, P3 da 342) — Mira visível no 1º paint (390 px).** Com a mira aberta no mobile, a linha "Mirando …" (`.aimbar`) não fica sob a barra de envio fixa: ao armar, `DeckCombat` leva a mira para a vista (`scrollIntoView` nearest) e `.aimbar` tem `scroll-margin-block-end`. Teste: `spec345-mobile390.spec.ts::mira_visivel_sem_rolar` (`elementFromPoint` sem rolar antes).
+- **R15 (extra, P3 da 342) — Faixa de cena legível (≤ 640 px).** O resumo do `details.scene-strip` mostra só rodada + relógio, inteiros (sem reticências); cartas e objetivo ficam no corpo. Teste: `faixa_de_cena_legivel`.
 - **R13 — Nada de regressão nos dois modos.** A suíte offline fica verde. Os prints "depois" são capturados com o mesmo roteiro dos "antes" (`off` e `on`, 360 e 1440) em `docs/spec345/prints/depois/`, com os mesmos nomes de arquivo. Saves antigos carregam sem migração, e nenhum campo do `GameState` muda.
 
 ### Fora de escopo
@@ -291,6 +293,6 @@ A prosa do LLM real passa pela mesma substituição do loot (R4.4) e pela mesma 
 - **D8 — Item 10 (2d6) só registrado.** As 4 cartas de `data/cards/exemplos.json` (`golpe_devoto` é carta inicial do Devoto) rolam `2d6` de verdade pela via legada (`services/conflict_turn.py:276-278`). O texto é fiel. Trocar por `dano_base` muda o balanço (média 7 contra os 3–5 das cartas novas) e afeta a arena por Postura (339/341). *Recomendação:* spec própria de balanço ou incluir na SPEC-341, com o dono decidindo o número. Não mudar nada nesta spec.
 - **D9 — Sem flag nova.** É correção nos dois modos. O texto e o layout não pedem rollout gradual, e o registro de flags da SPEC-340 não muda. *Recomendação:* aceitar.
 
-**Desvios da execução:** (a) R10.2: o botão Dispensar fica dentro do `<details>` (primeira linha do corpo), não no `summary` (botão interativo dentro de summary é frágil); (b) R8.3: altura mínima de toque medida = 44 px (o `.play .mtabbar__btn` já impõe 44; 48 nunca valeu em runtime); (c) teste SSR `deck_msg_montado_vazio` não escrito (CombatDeckTab pesado para SSR), coberto pelo e2e `preparacao_sem_faixa`.
+**Desvios da execução:** (0) §3 `strip_system_tags`: os padrões de `[RESULTADO]` (linha inteira a partir da tag) e `[SISTEMA]` NÃO são ancorados em `^` (recibo no meio da linha também sai; revisão Sol P1-1); `narrative_sink.StreamGuard` usa os mesmos padrões (stream = final); desabilitado: `.btn`/`--primary`/`--danger` sem opacity (fundo `--bg-deep`, `--muted`, borda tracejada); (a) R10.2: o botão Dispensar fica dentro do `<details>` (primeira linha do corpo), não no `summary` (botão interativo dentro de summary é frágil); (b) R8.3: altura mínima de toque medida = 44 px (o `.play .mtabbar__btn` já impõe 44; 48 nunca valeu em runtime); (c) teste SSR `deck_msg_montado_vazio` não escrito (CombatDeckTab pesado para SSR), coberto pelo e2e `preparacao_sem_faixa`.
 
 **Nota do coordenador (27/10):** D7 ajustada — a SPEC-342 pousa primeiro (já em revisão); a 345 faz rebase sobre ela, absorve o item 9b (`.btn:disabled`/Forja, ex-R32 sugerida) e regrava a linha de base R24 da 342 quando suas correções mudarem o caminho `off`.

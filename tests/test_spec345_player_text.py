@@ -142,3 +142,50 @@ def test_mensagem_interna_mantem_ledger(monkeypatch):
     )
     shown = player_facing_message({"messages": out["messages"]})
     assert "[SISTEMA]" not in shown and "+7 de ouro" in shown
+
+
+def test_recibo_no_meio_da_linha_removido():
+    assert strip_system_tags("Fim. [RESULTADO] +50 XP") == "Fim."
+    assert strip_system_tags("Fim. [SISTEMA] +50 XP") == "Fim. +50 XP"
+    assert "[" not in strip_system_tags("a [RESULTADO] b\nc [SISTEMA] d")
+
+
+def test_stream_guard_alinhado_com_fronteira():
+    from services import narrative_sink as ns
+
+    assert ns._SYSTEM_PREFIX.sub("", ns._RECEIPT.sub("", "Fim. [SISTEMA] x")) == "Fim. x"
+    assert ns._RECEIPT.sub("", "Fim. [RESULTADO] +50 XP").strip() == "Fim."
+
+
+def test_loot_tesouro_sem_id_nem_rotulo(monkeypatch):
+    from agents import loot
+    from tests.test_review_high_integration import (
+        _conflict_summary,
+        _HallucinatingLootLLM,
+        _player,
+    )
+
+    monkeypatch.setattr(loot, "get_llm", lambda **_k: _HallucinatingLootLLM())
+    monkeypatch.setattr(
+        loot, "get_location", lambda _i: {"id": "ponte", "name": "Ponte", "region_id": "planicie"}
+    )
+    monkeypatch.setattr(
+        loot.economy,
+        "roll_loot",
+        lambda *_a, **_k: {"gold": 12, "item_id": "adaga_ferro", "rarity": "uncommon"},
+    )
+    out = loot.loot_node(
+        {
+            "player": _player(),
+            "world": {"current_location_id": "ponte", "danger_level": 1, "turn_count": 3},
+            "combat": {"encounter_level": 4},
+            "conflict_summary": _conflict_summary(),
+            "loot_source": "TREASURE",
+            "messages": [HumanMessage(content="Vasculho os corpos.")],
+            "world_projection": {},
+            "bestiary_knowledge": {},
+        }
+    )
+    shown = player_facing_message({"messages": out["messages"]})
+    for bad in ("adaga_ferro", "Mortos:", "Espólio:", "[SISTEMA]"):
+        assert bad not in shown, shown

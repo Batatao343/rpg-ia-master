@@ -409,9 +409,10 @@ details.scene-strip { display: block; }
 .combatblock .hud__label { gap: 0.4em; }
 /* SPEC-342 P2-1/P2-6 — celular: faixa de cena numa linha, barra de envio compacta, Pilhas dentro da borda */
 @media (max-width: 640px) {
-  .scene-strip summary { flex-wrap: nowrap; overflow: hidden; white-space: nowrap; }
-  .scene-strip summary > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
-  .scene-strip summary > span:first-child { flex: none; }
+  /* SPEC-345 R15: no celular o resumo mostra só rodada + relógio (inteiros); cartas e objetivo ficam no corpo do details. */
+  .scene-strip summary { flex-wrap: wrap; }
+  .scene-strip summary > .scene-strip__extra:not(.scene-strip__clock) { display: none; }
+  .aimbar { scroll-margin-block-end: calc(var(--tabbar-h) + 5rem); }
   .play-queue__end { flex-wrap: nowrap; min-height: 44px; padding: 0.25rem 0; background: var(--surface-2); }
   .play-queue__submit { flex-direction: row; gap: 0.4rem; flex: 1 1 auto; min-height: 44px; padding: 0.2rem 0.6rem; }
   .deck-hand__piles { box-sizing: border-box; max-width: 100%; min-width: 0; margin-left: 0; }

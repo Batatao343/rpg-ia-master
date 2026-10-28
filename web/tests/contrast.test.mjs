@@ -33,3 +33,16 @@ test("tokens novos existem", () => {
   for (const n of ["--danger-text", "--field-border", "--abyss", "--abyss-dim", "--abyss-line", "--abyss-text",
     "--r-sharp", "--r-sm", "--r-md", "--r-pill"]) assert.ok(n in t, n);
 });
+
+test("SPEC-345 9b: botao desabilitado sem opacity e com contraste >= 4,5", async () => {
+  const { readFileSync } = await import("node:fs");
+  const css = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  const rule = css.match(/\.btn:disabled, \.btn--primary:disabled, \.btn--danger:disabled \{([^}]*)\}/);
+  assert.ok(rule, "regra unificada de botao desabilitado");
+  assert.match(rule[1], /opacity:\s*1\b/);
+  assert.match(rule[1], /background:\s*var\(--bg-deep\)/);
+  assert.match(rule[1], /color:\s*var\(--muted\)/);
+  const t = readTokens();
+  assert.ok(tokenRatio(t, "--muted", "--bg-deep") >= 4.5, "muted sobre bg-deep");
+  assert.doesNotMatch(css, /\.btn(--\w+)?:disabled\s*\{[^}]*opacity:\s*0?\.\d/);
+});

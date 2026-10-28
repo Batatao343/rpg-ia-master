@@ -82,7 +82,8 @@ test.describe("mobile 360x800", () => {
     await openGame(page);
     await tabBar(page).getByRole("button", { name: "Combate", exact: true }).click();
     const head = page.locator(".deck__head").first();
-    if (await head.count()) {
+    await expect(head).toBeVisible(); // falha se o cabeçalho não renderizar
+    {
       const [headBg, panelBg] = await head.evaluate((el) => [getComputedStyle(el).backgroundColor,
         getComputedStyle(el.closest(".tabpanel") as Element).backgroundColor]);
       expect(headBg).toBe(panelBg);
@@ -90,7 +91,9 @@ test.describe("mobile 360x800", () => {
       const geo = await head.evaluate((el) => ({ mt: parseFloat(getComputedStyle(el).marginTop), pb: parseFloat(getComputedStyle(el).paddingBottom) }));
       expect(geo.mt).toBeLessThan(0);
       expect(geo.pb).toBeGreaterThanOrEqual(6);
-      const msgH = await page.locator(".deck__msg:empty").first().evaluate((el) => el.getBoundingClientRect().height).catch(() => 0);
+      const msg = page.locator(".deck__msg:empty").first();
+      await expect(msg).toBeAttached();
+      const msgH = await msg.evaluate((el) => el.getBoundingClientRect().height);
       expect(msgH).toBe(0);
     }
   });
