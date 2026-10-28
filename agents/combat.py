@@ -1731,6 +1731,9 @@ def _fast_text(
             return None
         return text
     except Exception as e:
+        _log_event(
+            "combat", "fast_text_failed", level="warning", where=where, error=type(e).__name__
+        )
         if on_fail is not None:
             on_fail(type(e).__name__)
         return None
