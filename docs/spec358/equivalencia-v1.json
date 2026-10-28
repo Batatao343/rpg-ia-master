@@ -1,0 +1,67 @@
+{
+ "_meta": {
+  "ref": "main",
+  "sha": "be7212f3da1bfacd041c53f5dfd77ab89524b6b5",
+  "sementes": "0-19"
+ },
+ "arcanista_cinzento_calibrado.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "arcanista_cinzento_descoberto.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "arcanista_cinzento_improvisador.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "corruptor_alma.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "corruptor_biologia.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "corruptor_inorganica.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "devoto_consagrado.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "devoto_enlutado.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "devoto_zeloso.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "medico_boticario.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "medico_cirurgiao_ferro.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "medico_cirurgiao_trincheira.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "sangromante_avaro.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "sangromante_exposto.json": {
+  "cartas": 12,
+  "iguais": true
+ },
+ "sangromante_silencioso.json": {
+  "cartas": 12,
+  "iguais": true
+ }
+}

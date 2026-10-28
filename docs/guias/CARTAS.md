@@ -32,6 +32,17 @@ cortando a Carta; **não** mova poder para efeitos que a arena não mede (área,
 Torpor, Eco…): se a arena não mede, registre como limitação no relatório. `promote.py` sem
 `--sim-report` roda este protocolo.
 
+### Protocolo `lote-v2` (SPEC-358, opt-in)
+
+`sim.py --lote <arquivo> --protocolo lote-v2` (ou `promote.py --protocolo lote-v2`) usa os
+**mesmos** limiares, encontros e sementes do `lote`, com duas mudanças: (1) o delta de vitória é
+**por substituição**: a Carta contra uma referência sintética de mesmo custo de Fôlego, tier e
+faixa de orçamento (no ponto médio da faixa), no mesmo baralho; sem referência (reação, passiva,
+virtude, utilitária) vale o delta por remoção, que segue em `delta_pp_remocao`; (2) o uso medido
+pelo bot (`uso_baixo`, `uso_alto`, `uso_nao_medido`, `amostra_insuficiente`) vira **aviso**
+(`avisos`), não bandeira: `bandeiras` só tem `dominante` pelo delta. O **default da esteira segue
+`lote` (v1)**; trocar é decisão posterior, depois de ler `docs/spec358/RELATORIO-arena-v2.md`.
+
 ### Voz pendente
 
 `promote.py --revisor-voz <identificador>` só vale para quem **revisou**. Sem revisão ainda:
