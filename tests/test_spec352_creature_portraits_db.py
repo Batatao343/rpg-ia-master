@@ -510,73 +510,85 @@ def test_peek_ceiling_reads_without_writing_a_quote(pc):
     assert milli == 4 and before == after
 
 
-# --- arbitragem real entre duas conexões ------------------------------------------------------
-def test_concurrent_claim_two_connections():
-    """O PK é o árbitro: dois jogadores, duas conexões, mesma chave -> exatamente 1 vence."""
-    psycopg = pytest.importorskip("psycopg")
-    from psycopg.rows import dict_row
+def test_concurrent_claim_two_connections_real_confirm_flow():
+    """P0-1 (Sol): fluxo REAL do `_confirm` - claim + geração na MESMA transação, sem commit prévio.
+
+    tx1 abre (claim + geração); tx2 chama claim e bloqueia no PK; tx1 commita. tx2 deve ver a geração
+    recém-commitada (snapshot novo) e levantar `CreaturePortraitTaken`."""
+    import threading
+    import time
 
     dsn = os.getenv("RPG_TEST_DATABASE_URL")
     if not dsn:
         pytest.skip("RPG_TEST_DATABASE_URL absent")
-    import threading
+    from psycopg.rows import dict_row
 
     key = f"tipo:gen:race{uuid4().hex[:10]}"
-    owners = [uuid4(), uuid4()]
-    games = [uuid4(), uuid4()]
-    generations = [uuid4(), uuid4()]
-    results: list[str] = [""] * 2
+    owners, games, gens = [uuid4(), uuid4()], [uuid4(), uuid4()], [uuid4(), uuid4()]
     admin = psycopg.connect(dsn, row_factory=dict_row, autocommit=True)
     if admin.execute("select to_regclass('app.creature_portraits') as t").fetchone()["t"] is None:
         pytest.skip("migration da SPEC-352 não aplicada neste banco")
+    c1 = psycopg.connect(dsn, row_factory=dict_row)
+    c2 = psycopg.connect(dsn, row_factory=dict_row)
+    results = ["", ""]
+
+    def gen_insert(conn, i):
+        conn.execute(
+            """insert into app.art_generations (generation_id,owner_id,game_id,trigger_kind,
+            trigger_instance_id,subject_type,subject_id,status,model,profile_version,prompt_hash,
+            anchor_hash) values (%s,%s,%s,'creature_portrait',%s,'monster',%s,'pending','m','p',
+            repeat('a',64),repeat('b',64))""",
+            (gens[i], owners[i], games[i], key + str(i), key),
+        )
+
+    def claim(conn, i):
+        PostgresPortraitRegistry.claim(
+            conn,
+            portrait_key=key,
+            scope="tipo",
+            pool_entry_id=None,
+            origin_owner_id=owners[i],
+            origin_game_id=games[i],
+            generation_id=gens[i],
+        )
+
     try:
-        for owner, game, generation in zip(owners, games, generations, strict=True):
+        for owner, game in zip(owners, games, strict=True):
             admin.execute(
-                "insert into app.games (id,owner_id,schema_version,state,state_sha256,status,player_name,class_name,"
-                "player_level,location_name,world_day,game_over,combat_simulation) values "
+                "insert into app.games (id,owner_id,schema_version,state,state_sha256,status,"
+                "player_name,class_name,player_level,location_name,world_day,game_over,"
+                "combat_simulation) values "
                 "(%s,%s,1,'{}'::jsonb,repeat('c',64),'active','T','T',1,'T',1,false,false)",
                 (game, owner),
             )
-            admin.execute(
-                """insert into app.art_generations (generation_id,owner_id,game_id,trigger_kind,
-                trigger_instance_id,subject_type,subject_id,status,model,profile_version,prompt_hash,
-                anchor_hash) values (%s,%s,%s,'creature_portrait',%s,'monster',%s,'pending','m','p',
-                repeat('a',64),repeat('b',64))""",
-                (generation, owner, game, key, key),
-            )
-        barrier = threading.Barrier(2)
+        claim(c1, 0)
+        gen_insert(c1, 0)
 
-        def attempt(i: int) -> None:
-            with psycopg.connect(dsn, row_factory=dict_row) as conn:
-                barrier.wait()
-                try:
-                    with conn.transaction():
-                        PostgresPortraitRegistry.claim(
-                            conn,
-                            portrait_key=key,
-                            scope="tipo",
-                            pool_entry_id=None,
-                            origin_owner_id=owners[i],
-                            origin_game_id=games[i],
-                            generation_id=generations[i],
-                        )
-                    results[i] = "won"
-                except CreaturePortraitTaken:
-                    results[i] = "taken"
+        def second():
+            try:
+                claim(c2, 1)
+                gen_insert(c2, 1)
+                c2.commit()
+                results[1] = "won"
+            except CreaturePortraitTaken:
+                c2.rollback()
+                results[1] = "taken"
 
-        threads = [threading.Thread(target=attempt, args=(i,)) for i in range(2)]
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join(timeout=30)
-        assert sorted(results) == ["taken", "won"]
-        assert (
-            admin.execute(
-                "select count(*) as n from app.creature_portraits where portrait_key=%s", (key,)
-            ).fetchone()["n"]
-            == 1
-        )
+        thread = threading.Thread(target=second)
+        thread.start()
+        time.sleep(1.5)  # tx2 está bloqueada no PK
+        c1.commit()
+        results[0] = "won"
+        thread.join(30)
+        assert results == ["won", "taken"]
+        row = admin.execute(
+            "select generation_id, version from app.creature_portraits where portrait_key=%s", (key,)
+        ).fetchone()
+        assert row["generation_id"] == gens[0] and row["version"] == 1
     finally:
+        c1.close()
+        c2.close()
         admin.execute("delete from app.creature_portraits where portrait_key=%s", (key,))
+        admin.execute("delete from app.art_generations where generation_id = any(%s)", (gens,))
         admin.execute("delete from app.games where id = any(%s)", (games,))
         admin.close()

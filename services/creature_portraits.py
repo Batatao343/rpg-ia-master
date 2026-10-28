@@ -172,37 +172,72 @@ class PostgresPortraitRegistry:
         origin_game_id: UUID,
         generation_id: UUID,
     ) -> dict[str, Any]:
-        """nada -> pending; failed/retired (ou pending de geracao morta) -> pending. O PK e o arbitro."""
+        """nada -> pending; failed/retired (ou pending de geracao morta) -> pending. O PK e o arbitro.
+
+        Comandos SEPARADOS de proposito (READ COMMITTED: cada um tem snapshot novo). Um upsert unico com
+        `WHERE not exists (geracao)` nao enxerga a geracao que o vencedor acabou de commitar (P0-1)."""
+        visibility = visibility_for(portrait_key)
+        values = (
+            portrait_key,
+            scope,
+            generation_id,
+            visibility,
+            pool_entry_id,
+            origin_owner_id,
+            origin_game_id,
+        )
         row = connection.execute(
-            """insert into app.creature_portraits as cp
+            """insert into app.creature_portraits
             (portrait_key,scope,status,generation_id,visibility,pool_entry_id,
              origin_owner_id,origin_game_id)
             values (%s,%s,'pending',%s,%s,%s,%s,%s)
-            on conflict (portrait_key) do update set
-              status='pending', generation_id=excluded.generation_id, scope=excluded.scope,
-              visibility=excluded.visibility, pool_entry_id=excluded.pool_entry_id,
-              origin_owner_id=excluded.origin_owner_id, origin_game_id=excluded.origin_game_id,
+            on conflict (portrait_key) do nothing returning *""",
+            values,
+        ).fetchone()
+        if row is not None:
+            return dict(row)
+        # Bloqueia ate o outro dono commitar/abortar a linha dele.
+        current = connection.execute(
+            "select * from app.creature_portraits where portrait_key=%s for update",
+            (portrait_key,),
+        ).fetchone()
+        if current is None:  # o vencedor abortou e a linha sumiu: tenta de novo
+            return PostgresPortraitRegistry.claim(
+                connection,
+                portrait_key=portrait_key,
+                scope=scope,
+                pool_entry_id=pool_entry_id,
+                origin_owner_id=origin_owner_id,
+                origin_game_id=origin_game_id,
+                generation_id=generation_id,
+            )
+        claimable = current["status"] in ("failed", "retired")
+        if current["status"] == "pending":
+            gen = connection.execute(  # comando novo = snapshot novo
+                "select status from app.art_generations where generation_id=%s",
+                (current["generation_id"],),
+            ).fetchone()
+            claimable = gen is None or gen["status"] not in _LIVE_GENERATION
+        if not claimable:
+            raise CreaturePortraitTaken("retrato ja gerado ou em geracao")
+        updated = connection.execute(
+            """update app.creature_portraits set
+              status='pending', generation_id=%s, scope=%s, visibility=%s, pool_entry_id=%s,
+              origin_owner_id=%s, origin_game_id=%s,
               store=null, object_keys='{}'::jsonb, sha256='{}'::jsonb, error_code=null,
-              updated_at=now(), version=cp.version+1
-            where cp.status in ('failed','retired')
-               or (cp.status='pending' and not exists (
-                    select 1 from app.art_generations g
-                    where g.generation_id=cp.generation_id and g.status = any(%s)))
-            returning *""",
+              updated_at=now(), version=version+1
+            where portrait_key=%s returning *""",
             (
-                portrait_key,
-                scope,
                 generation_id,
-                visibility_for(portrait_key),
+                scope,
+                visibility,
                 pool_entry_id,
                 origin_owner_id,
                 origin_game_id,
-                list(_LIVE_GENERATION),
+                portrait_key,
             ),
         ).fetchone()
-        if row is None:
-            raise CreaturePortraitTaken("retrato ja gerado ou em geracao")
-        return dict(row)
+        return dict(updated)
 
     @staticmethod
     def mark_ready(
