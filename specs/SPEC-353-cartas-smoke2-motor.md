@@ -1,6 +1,6 @@
 # SPEC-353 — Cartas: correções de motor/backend do 2º smoke real do combate por cartas
 
-> **Status:** `approved` (dono em autonomia total até 28/10 08:30; decisões do autor em §8 valem como aprovadas)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS, P3-6/P3-7 fechados; falta o smoke real §6 pelo coordenador)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** smoke real de 28/10 na `main` `7c084cfc` (DeepSeek v4-flash, 26 turnos) — `docs/spec353/achados-smoke2.md`, estados `docs/spec353/smoke/state-*.json`, prints em `docs/spec353/smoke/`; log do servidor e `events.jsonl` no scratchpad do coordenador (`smoke2/server.log`, `smoke2/out/events.jsonl`)
 > **Depende de:** SPEC-346 (rodada sem LLM, resumo final, `mech_log`) e SPEC-347 (`round_board`/`registro_rodada`) já na `main`; código das SPEC-328–334 na `main` (flags `off` no staging)
