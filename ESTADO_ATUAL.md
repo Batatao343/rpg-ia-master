@@ -9,16 +9,16 @@
 ## Estado em 10 linhas
 
 - staging = `0e01677` (`lean`, stream `on`, hedge `0`; smokes verdes). 296–315 e 320–326 `done`.
-- Épico cartas 327–336 em execução (sessão `-69`), tudo atrás de flag `off`.
+- Épico cartas 327–345 (sessão `-69`), atrás de flag `off`.
 - **Latência** ([A/B 27/10](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 8,2–11,4 → 2,6 s; turno inteiro sem ganho (~10 s). **316–319 `done`**.
 - Flags: registro `config/flags.yaml` (340); preset do staging `scripts/staging/staging_flags.json`.
-- Máquina: e2e `--workers=1`; sem `uv run` em worktree; checar RAM (CLAUDE.md).
+- Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md).
 
 ## Próximos 3 passos
 
 1. Turno inteiro (~10 s até o `state`): investigar arquivista/commit após a narração.
-2. Bugfix 316 F-1 (`[RESULTADO]` cru, pré-existente); 319 P2-1 medir `replace` no combate.
-3. Revisar as 10 primeiras artes reais do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
+2. 319 P2-1 medir `replace` no combate.
+3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` pré-existente (seeds 25/32); 322 botões 3×3 + 57 oklch.
 
 ## Bloqueios no dono
 
@@ -75,9 +75,9 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover para `CHANGELOG.md`.
 
 <!-- onda:inserir-aqui -->
-- 27/10: cartas na sessão `-69`; suíte 1 por vez (avisar). 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
-- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`. Aceitos: CSRF sem vínculo à sessão, `rate_limit_buckets` sem RLS, FAISS pickle contido.
-- 27/10 cartas: `off` 328–336; 339 `done`; 342 front pousada (falta smoke staging); 341 aguarda dono (silencioso ~76 %); 345 bugs do navegador em execução. Antes de `on`: smoke LLM real.
+- 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
+- 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`..
+- 27/10 cartas: 328–336 `off`; 339 `done`; 342 pousada (smoke staging pendente); 341 com dono (silencioso 76 %); 345 em execução.
 
 
 ## Como rodar
