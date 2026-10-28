@@ -94,3 +94,25 @@ def test_loot_off_identical(monkeypatch):
     bought = loot.loot_node(_state(f"Compro o {name}."))
     assert "+1 Carta" not in bought["messages"][0].content
     assert (bought.get("player") or {}).get("known_cards", []) == []
+
+
+@pytest.mark.parametrize(
+    "tpl,buys",
+    [
+        ("Compro o {n}.", True),
+        ("Quero comprar o {n}.", True),
+        ("Não compro o {n}.", False),
+        ("Nao vou comprar o {n}", False),
+        ("Quanto custa comprar o {n}?", False),
+        ("Posso comprar o {n}", False),
+        ("Será que compro o {n}?", False),
+        ("Vendo minha adaga e compro o {n}.", False),
+    ],
+)
+def test_text_buy_requires_unambiguous_intent(tpl, buys):
+    _cid, name = _offer(_state(""))
+    out = loot.loot_node(_state(tpl.format(n=name)))
+    bought = _cid in (out.get("player") or {}).get("known_cards", [])
+    assert bought is buys
+    if not buys:
+        assert (out.get("player") or {}).get("gold", 500) == 500

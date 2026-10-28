@@ -366,9 +366,36 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     folded = economy._fold_key(text)
     if not re.search(r"\b(?:compro|comprar|compra|adquiro|adquirir)\b", folded):
         return None
+    # Venda/forja na mesma frase: o fluxo de itens decide (nunca gastar ouro aqui).
+    if re.search(r"\b(?:vendo|vender|venda|forjo|forjar|fabrico|fabricar|crio|criar)\b", folded):
+        return None
     card_id = card_shop.match_offer(work_state, folded)
     if card_id is None:
         return None
+    # Gasto irreversível: só intenção afirmativa inequívoca compra. Negação, pergunta ou consulta
+    # de preço -> responde com o preço e pede confirmação, sem debitar.
+    affirmative = re.search(
+        r"\b(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)\b", folded
+    )
+    doubtful = re.search(
+        r"\b(?:nao|nunca|jamais|sem|talvez|quanto|custa|preco|valor|posso|poderia|sera|se)\b|\?",
+        folded,
+    )
+    if not affirmative or doubtful:
+        merchant = economy.MERCHANTS.get(card_shop.shelf(work_state)[0] or "") or {}
+        cname = (cards.get_card(card_id) or {}).get("name", card_id)
+        price = card_shop.card_price(work_state, card_id, merchant)
+        return {
+            "messages": [
+                AIMessage(
+                    content=f"[SISTEMA] {cname} custa {price} moedas. "
+                    f"Diga claramente que compra {cname} para confirmar; nada foi cobrado."
+                )
+            ],
+            "world": world,
+            "loot_source": None,
+            "archive_due": False,
+        }
     gold_before = int(player.get("gold", 0) or 0)
     res = card_shop.buy(work_state, card_id)
     if not res.get("ok"):
