@@ -45,6 +45,11 @@ Gerado por `uv run python scripts/spec_index.py recent --days 1 --write ESTADO_A
 (roda dentro de `/spec-land` e `/estado`). Não edite à mão entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-27 · SPEC-345 `draft` — bugs-front-navegador
+- 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
+- 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
+- 2026-10-27 · SPEC-342 `in-progress` — Cartas: acabamento do front do combate por cartas (destrava as flags)
+- 2026-10-27 · SPEC-341 `draft` — balanco-sangromante
 - 2026-10-27 · SPEC-340 `done` — Registro de feature flags com validade
 - 2026-10-27 · SPEC-339 `done` — Controle aplicado por oponente expira antes de valer (tick de duração)
 - 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
@@ -72,7 +77,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: cartas na sessão `-69`; suíte 1 por vez (avisar). 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`. Aceitos: CSRF sem vínculo à sessão, `rate_limit_buckets` sem RLS, FAISS pickle contido.
-- 27/10 cartas: `off` 328–336; 339 `done` (Provocar/Marca d=1 valem; arena sem viés: Sangromante 78 %, demais 58–70 %). Falta: spec de balanço do Sangromante, e2e/smoke LLM antes de `on`.
+- 27/10 cartas: `off` 328–336; 339 `done`; 342 front pousada (falta smoke staging); 341 aguarda dono (silencioso ~76 %); 345 bugs do navegador em execução. Antes de `on`: smoke LLM real.
 
 
 ## Como rodar
