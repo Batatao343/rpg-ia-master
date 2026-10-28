@@ -1,10 +1,1322 @@
 {
   "version": 1,
   "waves": [
-    {"order": 1, "regions": ["nova_arcadia"], "status": "in_progress", "spec": "SPEC-350"},
-    {"order": 2, "regions": ["pantano_melancolia", "brekmar"], "status": "pending"}
+    {
+      "order": 1,
+      "regions": [
+        "nova_arcadia"
+      ],
+      "status": "in_progress",
+      "spec": "SPEC-350"
+    },
+    {
+      "order": 2,
+      "regions": [
+        "pantano_melancolia",
+        "brekmar"
+      ],
+      "status": "pending"
+    },
+    {
+      "order": 3,
+      "regions": [
+        "skallgard",
+        "pradaria_ruinas"
+      ],
+      "status": "pending"
+    },
+    {
+      "order": 4,
+      "regions": [
+        "montanhas_afiadas",
+        "aethelgard"
+      ],
+      "status": "pending"
+    },
+    {
+      "order": 5,
+      "regions": [
+        "floresta_sussurros",
+        "selva_xylos"
+      ],
+      "status": "pending"
+    },
+    {
+      "order": 6,
+      "regions": [
+        "deserto_zhur",
+        "costa_negra"
+      ],
+      "status": "pending"
+    },
+    {
+      "order": 7,
+      "regions": [
+        "ophidia"
+      ],
+      "status": "pending"
+    }
   ],
-  "threads": [],
-  "cast": {},
-  "excluded": {}
+  "threads": [
+    {
+      "id": "tr_na_documento_da_legiao",
+      "region_id": "nova_arcadia",
+      "title": "O documento que a Legião procura",
+      "pergunta": "Proteger quem não sabe o que é custa destruir o único papel que prova quem ela é?",
+      "resumo_publico": "A Legião revista adegas e confisca papéis nos becos atrás de um documento cujo nome nenhum cabo sabe dizer. No Anel de Lama, há quem ajude sem entender o porquê.",
+      "core": [
+        "npc_grum",
+        "npc_velha_magda",
+        "npc_comandante_thrace"
+      ],
+      "borda": [
+        "npc_ilsa",
+        "npc_tr_dalva_torneira",
+        "npc_tr_anselmo_tiza"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_documento_da_legiao__p1",
+          "anchor_npc_id": "npc_tr_dalva_torneira",
+          "location_id": "na_taverna_javali",
+          "link_kind": "emprego",
+          "hook_public": "A ajudante da adega paga uma moeda por noite a quem rolar barris e não perguntar por que a adega já foi revistada duas vezes."
+        },
+        {
+          "id": "tr_na_documento_da_legiao__p2",
+          "anchor_npc_id": "npc_tr_anselmo_tiza",
+          "location_id": "na_anel_lama",
+          "link_kind": "testemunha",
+          "hook_public": "Um cabo da Legião confisca papéis nos becos do Lama e não sabe dizer o que está procurando."
+        },
+        {
+          "id": "tr_na_documento_da_legiao__p3",
+          "anchor_npc_id": "npc_ilsa",
+          "location_id": "na_anel_lama",
+          "link_kind": "encomenda",
+          "hook_public": "A remendeira de redes precisa que alguém leve um recado à velha dos espetinhos e traga a resposta sem ler."
+        }
+      ],
+      "factions": [
+        "legiao_ferro",
+        "mao_sombria"
+      ],
+      "locations": [
+        "na_taverna_javali",
+        "na_anel_lama"
+      ],
+      "rumor_ids": [
+        "rumor_grum_guarda_algo_no_barril_de_cerveja_azeda"
+      ],
+      "secret_ids": [
+        "barril"
+      ],
+      "lore_refs": [
+        "lore_nova/npcs.txt:2417-2427"
+      ],
+      "lore_keyword": "remendeira",
+      "postura_afinidade": [],
+      "inspiracoes": [
+        {
+          "fonte": "The Alexandrian: Three Clue Rule",
+          "url": "https://thealexandrian.net/wordpress/1118/roleplaying-games/three-clue-rule",
+          "o_que_inspirou": "no mínimo 3 portas por trama (R3)"
+        },
+        {
+          "fonte": "Dungeon World SRD: Fronts",
+          "url": "https://www.dungeonworldsrd.com/gamemastering/fronts/",
+          "o_que_inspirou": "a pergunta em aberto de cada trama"
+        },
+        {
+          "fonte": "Blades in the Dark SRD: Factions",
+          "url": "https://bladesinthedark.com/factions",
+          "o_que_inspirou": "começar como peça pequena presa a gente com agenda própria (borda)"
+        }
+      ]
+    },
+    {
+      "id": "tr_na_o_que_o_lorde_trocou",
+      "region_id": "nova_arcadia",
+      "title": "O que o Lorde trocou",
+      "pergunta": "Quanto vale a verdade sobre o Código se o Código é a única coisa que mantém os anéis de pé?",
+      "resumo_publico": "Dizem que as leis de Valerius foram escritas numa noite só, e ninguém no Anel Dourado se lembra de quem segurava a pena. Nos fundos do Setor Leste e nas bancas de cópia, folhas velhas ainda circulam.",
+      "core": [
+        "npc_valerius",
+        "npc_bertil"
+      ],
+      "borda": [
+        "npc_tr_rute_corvo_veterana",
+        "npc_tr_tobias_pena_seca",
+        "npc_mv_mara_do_setimo_sino"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_o_que_o_lorde_trocou__p1",
+          "anchor_npc_id": "npc_tr_rute_corvo_veterana",
+          "location_id": "na_anel_lama",
+          "link_kind": "emprego",
+          "hook_public": "A Guilda paga por um par de braços na maca; a corvo veterana escolhe quem e não explica as marcas de tiza."
+        },
+        {
+          "id": "tr_na_o_que_o_lorde_trocou__p2",
+          "anchor_npc_id": "npc_tr_tobias_pena_seca",
+          "location_id": "na_anel_ferro",
+          "link_kind": "achado",
+          "hook_public": "Um copista demitido vende folhas velhas de rascunho; numa delas a letra não é de ninguém que ele conheça."
+        },
+        {
+          "id": "tr_na_o_que_o_lorde_trocou__p3",
+          "anchor_npc_id": "npc_mv_mara_do_setimo_sino",
+          "location_id": "nova_arcadia",
+          "link_kind": "testemunha",
+          "hook_public": "A relojoeira quer alguém acordado na hora em que o sétimo sino toca sozinho."
+        }
+      ],
+      "factions": [
+        "guilda_corvos",
+        "legiao_ferro"
+      ],
+      "locations": [
+        "na_anel_lama",
+        "na_anel_ferro",
+        "nova_arcadia"
+      ],
+      "rumor_ids": [
+        "rumor_as_leis_de_valerius_foram_escritas_em_uma_noite",
+        "rumor_valerius_conhece_nomes_que_nunca_foram_ditos_a_ele"
+      ],
+      "secret_ids": [
+        "pacto_valerius"
+      ],
+      "lore_refs": [
+        "lore_nova/daily_life.txt:146-151"
+      ],
+      "lore_keyword": "rute",
+      "postura_afinidade": [],
+      "inspiracoes": []
+    },
+    {
+      "id": "tr_na_corpos_marcados",
+      "region_id": "nova_arcadia",
+      "title": "Os corpos marcados",
+      "pergunta": "Quem fica com os marcados: o médico que os estuda, a guilda que os vende ou a lama que os esconde?",
+      "resumo_publico": "No Anel de Lama a Praga marca alguns e não os mata. Os Corvos recolhem os mortos de todo mundo; dizem que certos corpos nunca chegam ao forno.",
+      "core": [
+        "npc_doutor_silas_vane",
+        "npc_mae_corva"
+      ],
+      "borda": [
+        "npc_velha_netta",
+        "npc_benedita_a_parteira",
+        "npc_tr_pio_ferrugem",
+        "npc_tr_ludovina_agulha"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_corpos_marcados__p1",
+          "anchor_npc_id": "npc_tr_pio_ferrugem",
+          "location_id": "na_anel_lama",
+          "link_kind": "vizinhanca",
+          "hook_public": "O menino da marca sumiu uma noite e voltou sem sapatos e sem lembrar onde dormiu."
+        },
+        {
+          "id": "tr_na_corpos_marcados__p2",
+          "anchor_npc_id": "npc_tr_ludovina_agulha",
+          "location_id": "na_anel_ferro",
+          "link_kind": "emprego",
+          "hook_public": "A enfermeira da clínica paga bem a quem levar caixas lacradas antes do amanhecer."
+        },
+        {
+          "id": "tr_na_corpos_marcados__p3",
+          "anchor_npc_id": "npc_velha_netta",
+          "location_id": "na_anel_lama",
+          "link_kind": "encomenda",
+          "hook_public": "A curandeira precisa de musgo do Pântano e de alguém que não conte ao Doutor.",
+          "quest_hint": {
+            "kind": "entregar_material",
+            "anchor_id": "cha_druidas_anel_lama"
+          }
+        }
+      ],
+      "factions": [
+        "guilda_corvos"
+      ],
+      "locations": [
+        "na_anel_lama",
+        "na_anel_ferro"
+      ],
+      "rumor_ids": [
+        "rumor_a_guilda_dos_corvos_nunca_queima_certos_corpos",
+        "rumor_a_praga_de_ferro_nao_veio_das_minas",
+        "rumor_o_doutor_esta_costurando_partes_de_monstros_em_humanos"
+      ],
+      "secret_ids": [
+        "corpos",
+        "praga"
+      ],
+      "lore_refs": [
+        "lore_nova/npcs.txt:1466-1474"
+      ],
+      "lore_keyword": "netta",
+      "postura_afinidade": [
+        "Médico de Campo"
+      ],
+      "inspiracoes": []
+    },
+    {
+      "id": "tr_na_aco_que_lembra",
+      "region_id": "nova_arcadia",
+      "title": "O aço que lembra",
+      "pergunta": "Uma greve que faz o aço lembrar os mortos é vitória dos operários ou sacramento da seita?",
+      "resumo_publico": "Nas Fundições o aço chia com vozes que ninguém quer reconhecer, as caldeiras estouram sem causa e as fichas do turno sobram. Os operários dividem-se entre a greve e o fogo.",
+      "core": [
+        "npc_bors_martelo_partido",
+        "npc_mestre_fundidor_kald",
+        "npc_comandante_thrace"
+      ],
+      "borda": [
+        "npc_mv_irena_prego_frio",
+        "npc_mv_teo_chamine",
+        "npc_tr_gaspar_fole",
+        "npc_tr_lalo_das_fichas"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_aco_que_lembra__p1",
+          "anchor_npc_id": "npc_tr_gaspar_fole",
+          "location_id": "na_anel_ferro",
+          "link_kind": "testemunha",
+          "hook_public": "Um foleiro do turno da noite jura que ouviu a mulher morta no chiado do aço."
+        },
+        {
+          "id": "tr_na_aco_que_lembra__p2",
+          "anchor_npc_id": "npc_tr_lalo_das_fichas",
+          "location_id": "na_anel_ferro",
+          "link_kind": "divida",
+          "hook_public": "O menino que conta as fichas do turno diz que a conta não fecha: sobram fichas de quem não voltou."
+        },
+        {
+          "id": "tr_na_aco_que_lembra__p3",
+          "anchor_npc_id": "npc_mv_irena_prego_frio",
+          "location_id": "na_anel_ferro",
+          "link_kind": "encomenda",
+          "hook_public": "A fiscal de rebites procura a remessa oca antes que outra caldeira estoure."
+        },
+        {
+          "id": "tr_na_aco_que_lembra__p4",
+          "anchor_npc_id": "npc_mv_teo_chamine",
+          "location_id": "nova_arcadia",
+          "link_kind": "encomenda",
+          "hook_public": "O mensageiro dos telhados precisa levar uma lista de presos sem cruzar a patrulha."
+        }
+      ],
+      "factions": [
+        "resistencia_operaria_martelos_partidos",
+        "encapuzados_fornalha",
+        "legiao_ferro"
+      ],
+      "locations": [
+        "na_anel_ferro",
+        "nova_arcadia"
+      ],
+      "rumor_ids": [
+        "rumor_o_aco_de_sangue_tem_memoria"
+      ],
+      "secret_ids": [],
+      "lore_refs": [
+        "lore_nova/npcs.txt:1451-1459"
+      ],
+      "lore_keyword": "bors",
+      "postura_afinidade": [
+        "Sangromante"
+      ],
+      "inspiracoes": []
+    },
+    {
+      "id": "tr_na_lista_de_fornalha",
+      "region_id": "nova_arcadia",
+      "title": "A Lista de Fornalha",
+      "pergunta": "O registro que salva um mago da fogueira é o mesmo que o manda para os Jardins?",
+      "resumo_publico": "O Anel Dourado vende o registro como licença; nos livros da Legião, o nome é outro. No Lama e no Ferro, quem tem o Éter nas mãos escolhe entre se esconder e se inscrever.",
+      "core": [
+        "npc_arquimaga_sylvenne",
+        "npc_sennar_o_pregador_da_cicatriz"
+      ],
+      "borda": [
+        "npc_liane_chama_escondida",
+        "npc_korvus",
+        "npc_tr_matias_selo",
+        "npc_tr_caio_pavio"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_lista_de_fornalha__p1",
+          "anchor_npc_id": "npc_tr_matias_selo",
+          "location_id": "na_anel_ferro",
+          "link_kind": "emprego",
+          "hook_public": "O escrivão dos Inquisidores procura uma testemunha que assine que um nome da lista é de morto."
+        },
+        {
+          "id": "tr_na_lista_de_fornalha__p2",
+          "anchor_npc_id": "npc_tr_caio_pavio",
+          "location_id": "na_anel_lama",
+          "link_kind": "testemunha",
+          "hook_public": "O acendedor de lampiões jura que a própria sombra não o segue mais e quer alguém que confirme."
+        },
+        {
+          "id": "tr_na_lista_de_fornalha__p3",
+          "anchor_npc_id": "npc_liane_chama_escondida",
+          "location_id": "na_anel_lama",
+          "link_kind": "vizinhanca",
+          "hook_public": "Uma vizinha queima as luvas sem querer e pede que ninguém chame a Legião."
+        }
+      ],
+      "factions": [
+        "legiao_ferro",
+        "filhos_chama_azul"
+      ],
+      "locations": [
+        "na_anel_ferro",
+        "na_anel_lama"
+      ],
+      "rumor_ids": [
+        "rumor_os_magos_escravizados_dos_jardins_enlouquecem_sistematicamente"
+      ],
+      "secret_ids": [],
+      "lore_refs": [
+        "lore_nova/npcs.txt:1511-1519"
+      ],
+      "lore_keyword": "liane",
+      "postura_afinidade": [
+        "Arcanista Cinzento",
+        "Devoto do Abismo"
+      ],
+      "inspiracoes": []
+    },
+    {
+      "id": "tr_na_a_colecao",
+      "region_id": "nova_arcadia",
+      "title": "A Coleção",
+      "pergunta": "Libertar uma peça da coleção paga a dívida de quem a vendeu?",
+      "resumo_publico": "No Anel Dourado, as raridades vivas são exibidas em saraus; no Anel de Ferro, contratos que nunca vencem decidem quem vira raridade. Entre um e outro, alguém sabe o preço.",
+      "core": [
+        "npc_lorde_vesperio_valante",
+        "npc_lorde_oswin_conta_de_ouro"
+      ],
+      "borda": [
+        "npc_dama_vesperina",
+        "npc_lirio",
+        "npc_rato_de_ferro_tibb",
+        "npc_tr_bento_juros",
+        "npc_tr_aelis_sem_ampulheta"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_a_colecao__p1",
+          "anchor_npc_id": "npc_tr_bento_juros",
+          "location_id": "na_anel_ferro",
+          "link_kind": "divida",
+          "hook_public": "Um cobrador gentil oferece renegociar a dívida de alguém em troca de um serviço no Anel Dourado."
+        },
+        {
+          "id": "tr_na_a_colecao__p2",
+          "anchor_npc_id": "npc_tr_aelis_sem_ampulheta",
+          "location_id": "na_anel_dourado",
+          "link_kind": "encomenda",
+          "hook_public": "Uma criada élfica dos saraus pede que alguém compre de volta uma ampulheta penhorada."
+        },
+        {
+          "id": "tr_na_a_colecao__p3",
+          "anchor_npc_id": "npc_rato_de_ferro_tibb",
+          "location_id": "na_anel_ferro",
+          "link_kind": "emprego",
+          "hook_public": "O contrabandista precisa de mais um par de mãos para atravessar uma caixa que respira."
+        }
+      ],
+      "factions": [
+        "mao_sombria",
+        "quebrados"
+      ],
+      "locations": [
+        "na_anel_ferro",
+        "na_anel_dourado"
+      ],
+      "rumor_ids": [
+        "rumor_existem_contratos_que_nunca_vencem",
+        "rumor_o_preco_da_casa_dos_espelhos_e_literalmente_a_alma"
+      ],
+      "secret_ids": [],
+      "lore_refs": [
+        "lore_nova/npcs.txt:1309-1317"
+      ],
+      "lore_keyword": "coleciona",
+      "postura_afinidade": [
+        "Corruptor"
+      ],
+      "inspiracoes": []
+    },
+    {
+      "id": "tr_na_po_de_sonho",
+      "region_id": "nova_arcadia",
+      "title": "O pó que alivia",
+      "pergunta": "Quem responde por um alívio que mata devagar: quem vende com selo, quem assina a licença ou quem compra porque dói?",
+      "resumo_publico": "No Beco dos Desdentados vendem Pó de Sonho em cartuchos de papel. No Anel de Ferro, o Pó de Fada tem selo e licença. Os dois aliviam, os dois cobram, e nenhum balcão responde pelo cliente depois.",
+      "core": [
+        "npc_lorde_oswin_conta_de_ouro",
+        "npc_comandante_thrace"
+      ],
+      "borda": [
+        "npc_tr_dorotea_selo_verde",
+        "npc_tr_ysolt_fio_de_vidro",
+        "npc_pardal"
+      ],
+      "portas": [
+        {
+          "id": "tr_na_po_de_sonho__p1",
+          "anchor_npc_id": "npc_tr_ysolt_fio_de_vidro",
+          "location_id": "na_anel_dourado",
+          "link_kind": "vizinhanca",
+          "hook_public": "Uma lavadeira de olhos cor de vidro passa bilhetes dentro da roupa limpa; quem tem a pele rachada como a dela recebe o primeiro sem pedir."
+        },
+        {
+          "id": "tr_na_po_de_sonho__p2",
+          "anchor_npc_id": "npc_tr_dorotea_selo_verde",
+          "location_id": "na_anel_ferro",
+          "link_kind": "emprego",
+          "hook_public": "A boticária do Anel de Ferro procura quem leve receitas carimbadas aos criados do Anel Dourado sem perguntar a idade de quem recebe."
+        },
+        {
+          "id": "tr_na_po_de_sonho__p3",
+          "anchor_npc_id": "npc_velha_netta",
+          "location_id": "na_anel_lama",
+          "link_kind": "achado",
+          "hook_public": "A curandeira junta cartuchos de papel vazios do Beco dos Desdentados e quer saber de quem é a mão que os dobra."
+        }
+      ],
+      "factions": [
+        "quebrados",
+        "legiao_ferro"
+      ],
+      "locations": [
+        "na_anel_dourado",
+        "na_anel_ferro",
+        "na_anel_lama"
+      ],
+      "rumor_ids": [
+        "rumor_o_po_de_sonho_mostra_o_futuro"
+      ],
+      "secret_ids": [],
+      "lore_refs": [
+        "lore_nova/locations.txt:79-79"
+      ],
+      "lore_keyword": "po de sonho",
+      "postura_afinidade": [],
+      "inspiracoes": []
+    }
+  ],
+  "cast": {
+    "npc_tr_dalva_torneira": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "ajudante de adega que rola os barris e viu a adega ser revistada duas vezes"
+        }
+      ],
+      "desejo": "pagar a fiança do irmão preso no Oubliette",
+      "medo": "a taverna fechar e ela voltar a catar lama no Fosso",
+      "segredo_topico": "quem desce à adega depois do toque de recolher",
+      "segredo_doc_id": "npc_tr_dalva_torneira_segredo",
+      "voz": {
+        "registro": "conta tudo nos dedos, seca",
+        "fala": "Três barris, duas mentiras e um sargento. Dia calmo."
+      },
+      "home_location_id": "na_taverna_javali",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_anselmo_tiza": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "cabo que confisca papéis nos becos do Lama sem ordem clara do que procurar"
+        }
+      ],
+      "desejo": "ser transferido para o Anel Dourado antes do inverno",
+      "medo": "virar exemplo, como o legionário que desertou",
+      "segredo_topico": "como decide quais papéis são perigosos",
+      "segredo_doc_id": "npc_tr_anselmo_tiza_segredo",
+      "voz": {
+        "registro": "regulamento recitado pela metade",
+        "fala": "Artigo… o artigo diz que é pra entregar. Entrega."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "patrulheiro",
+      "fonte": "spec350"
+    },
+    "npc_tr_rute_corvo_veterana": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_o_que_o_lorde_trocou",
+          "papel": "coletora de corpos que recolhe os mortos do Lama e escolhe quem ajuda na maca"
+        }
+      ],
+      "desejo": "sair da Guilda antes do décimo segundo ano de ofício",
+      "medo": "ver a tiza vermelha riscada num nome conhecido",
+      "segredo_topico": "quem mais dorme no crematório",
+      "segredo_doc_id": "npc_tr_rute_corvo_veterana_segredo",
+      "voz": {
+        "registro": "fala de morto como se falasse do tempo",
+        "fala": "Hoje vieram sete. Choveu menos."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_tobias_pena_seca": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_o_que_o_lorde_trocou",
+          "papel": "copista demitido que vende folhas velhas; numa delas a letra não é de nenhum copista da corte"
+        }
+      ],
+      "desejo": "o posto na corte e a pensão de volta",
+      "medo": "esquecer os nomes que copiou",
+      "segredo_topico": "de onde veio a folha de letra estranha",
+      "segredo_doc_id": "npc_tr_tobias_pena_seca_segredo",
+      "voz": {
+        "registro": "cita artigo e parágrafo de tudo",
+        "fala": "Artigo nove, parágrafo dois: a sopa está fria."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_pio_ferrugem": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "menino de recados que sumiu uma noite e voltou sem sapatos e sem lembrar"
+        }
+      ],
+      "desejo": "ver o mar antes de a marca chegar ao rosto",
+      "medo": "quem dá pão de graça aos marcados",
+      "segredo_topico": "onde dormiu na noite em que sumiu",
+      "segredo_doc_id": "npc_tr_pio_ferrugem_segredo",
+      "voz": {
+        "registro": "pergunta tudo duas vezes",
+        "fala": "Cê vai? Cê vai mesmo?"
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "mensageiro",
+      "fonte": "spec350"
+    },
+    "npc_tr_ludovina_agulha": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "enfermeira que mantém as fichas da clínica e paga bem por caixas lacradas"
+        }
+      ],
+      "desejo": "a carta de mestra assinada pelo Doutor",
+      "medo": "a porta fechada nos fundos da clínica",
+      "segredo_topico": "o que vai nas caixas lacradas",
+      "segredo_doc_id": "npc_tr_ludovina_agulha_segredo",
+      "voz": {
+        "registro": "educada, e pergunta no fim de cada frase",
+        "fala": "O Doutor agradece a visita… não é?"
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_gaspar_fole": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "foleiro que jura ter ouvido a mulher morta no chiado do aço"
+        }
+      ],
+      "desejo": "ver o nome da mulher fora da lista de acidentes",
+      "medo": "ouvir a voz dela de novo no aço",
+      "segredo_topico": "a quem reza antes do turno",
+      "segredo_doc_id": "npc_tr_gaspar_fole_segredo",
+      "voz": {
+        "registro": "grita baixo, costume de fornalha",
+        "fala": "Fala baixo. O fogo escuta e o fogo lembra."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_lalo_das_fichas": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "contador de fichas que diz que sobram fichas de quem não voltou"
+        }
+      ],
+      "desejo": "quitar a dívida da mãe com a Fundição",
+      "medo": "a conta fechar um dia",
+      "segredo_topico": "para onde vão as fichas que sobram",
+      "segredo_doc_id": "npc_tr_lalo_das_fichas_segredo",
+      "voz": {
+        "registro": "conta em voz alta enquanto fala",
+        "fala": "Vinte e três, vinte e quatro. Falta um. Sobra um."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "mensageiro",
+      "fonte": "spec350"
+    },
+    "npc_tr_matias_selo": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "escrivão que procura quem assine que um nome da Lista de Fornalha é de morto"
+        }
+      ],
+      "desejo": "provar que o registro protege mais do que condena",
+      "medo": "o Éter que vaza das mãos do irmão",
+      "segredo_topico": "o que escreve em cima dos nomes riscados",
+      "segredo_doc_id": "npc_tr_matias_selo_segredo",
+      "voz": {
+        "registro": "lê nomes como quem reza",
+        "fala": "Registrado, protegido. Registrado, protegido."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_caio_pavio": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "acendedor que acende os lampiões do Lama e jura que a própria sombra o deixou"
+        }
+      ],
+      "desejo": "a sombra de volta",
+      "medo": "a fogueira",
+      "segredo_topico": "quem lhe deu o óleo dos lampiões este ano",
+      "segredo_doc_id": "npc_tr_caio_pavio_segredo",
+      "voz": {
+        "registro": "fala do escuro como de um vizinho",
+        "fala": "O escuro mora na esquina do Beco Quatro. Educado, o escuro."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_bento_juros": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "cobrador que oferece renegociar dívidas em troca de um serviço no Anel Dourado"
+        }
+      ],
+      "desejo": "quitar o próprio contrato, que nunca vence",
+      "medo": "ser o próximo item da coleção",
+      "segredo_topico": "para onde vão os serviços que cobra",
+      "segredo_doc_id": "npc_tr_bento_juros_segredo",
+      "voz": {
+        "registro": "gentil, fala de juros como de saúde",
+        "fala": "Como vai a sua dívida? Crescendo bem, espero."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "mercador_itinerante",
+      "fonte": "spec350"
+    },
+    "npc_tr_aelis_sem_ampulheta": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "criada que serve nos saraus de Vespério e quer recomprar a ampulheta penhorada"
+        }
+      ],
+      "desejo": "comprar de volta a ampulheta penhorada",
+      "medo": "envelhecer dentro da vitrine",
+      "segredo_topico": "o que costura por dentro do uniforme",
+      "segredo_doc_id": "npc_tr_aelis_sem_ampulheta_segredo",
+      "voz": {
+        "registro": "fala de si na terceira pessoa",
+        "fala": "Aelis serve. Aelis não ouve."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_dorotea_selo_verde": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "boticária que vende o Pó de Fada sob licença, com receita carimbada"
+        }
+      ],
+      "desejo": "renovar a licença que vence no fim do ano",
+      "medo": "que alguém compare as doses vendidas com os mortos do Lama",
+      "segredo_topico": "o que escreve depois que o cliente sai",
+      "segredo_doc_id": "npc_tr_dorotea_selo_verde_segredo",
+      "voz": {
+        "registro": "fala em receita, medida por medida",
+        "fala": "Uma medida de manhã, outra se a mão tremer. Duas, não."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "spec350"
+    },
+    "npc_tr_ysolt_fio_de_vidro": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "lavadeira que leva roupa limpa e bilhetes entre os criados do Anel Dourado"
+        }
+      ],
+      "desejo": "saber quem estava no quarto alugado onde um general élfico morreu",
+      "medo": "ser vendida junto com a casa se o dono morrer",
+      "segredo_topico": "quem lhe ensinou a ler os bilhetes",
+      "segredo_doc_id": "npc_tr_ysolt_fio_de_vidro_segredo",
+      "voz": {
+        "registro": "fala por dobras, nunca pelo meio",
+        "fala": "Roupa limpa não pergunta de quem é o suor."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "mensageiro",
+      "fonte": "spec350"
+    },
+    "npc_mv_irena_prego_frio": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "procura a remessa de rebites ocos antes que outra caldeira estoure"
+        }
+      ],
+      "desejo": "achar a remessa oca antes da próxima caldeira",
+      "medo": "aprovar uma caldeira que ainda vai estourar",
+      "segredo_topico": "quem aprovou a última remessa",
+      "segredo_doc_id": "npc_mv_irena_prego_frio_segredo",
+      "voz": {
+        "registro": "técnica, mede tudo em pancadas",
+        "fala": "Três pancadas ocas, uma cheia. A cheia mente."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "data/codex/npcs/mundo_vivo"
+    },
+    "npc_mv_mara_do_setimo_sino": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_o_que_o_lorde_trocou",
+          "papel": "relojoeira que ouve o sétimo sino tocar sozinho antes de cada desaparecimento"
+        }
+      ],
+      "desejo": "saber por que o sino toca antes de sumirem alguém",
+      "medo": "um dia reconhecer o nome do sumido",
+      "segredo_topico": "para quem conta os turnos",
+      "segredo_doc_id": "npc_mv_mara_do_setimo_sino_segredo",
+      "voz": {
+        "registro": "fala em horas, nunca em dias",
+        "fala": "Sete batidas, sem mão nenhuma. Eu conto. Alguém tem de contar."
+      },
+      "home_location_id": "nova_arcadia",
+      "archetype": "sedentario",
+      "fonte": "data/codex/npcs/mundo_vivo"
+    },
+    "npc_mv_teo_chamine": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "leva listas de presos pelos telhados fabris sem cruzar a patrulha"
+        }
+      ],
+      "desejo": "levar a lista de presos ao outro lado antes da ronda",
+      "medo": "a patrulha da Legião no telhado norte",
+      "segredo_topico": "de quem vem a lista que carrega",
+      "segredo_doc_id": "npc_mv_teo_chamine_segredo",
+      "voz": {
+        "registro": "fala correndo, frase sem verbo",
+        "fala": "Telhado, vento, ronda. Passou. Vai."
+      },
+      "home_location_id": "nova_arcadia",
+      "archetype": "mensageiro",
+      "fonte": "data/codex/npcs/mundo_vivo"
+    },
+    "npc_valerius": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_o_que_o_lorde_trocou",
+          "papel": "governa Nova Arcádia sob leis que ele nunca explica"
+        }
+      ],
+      "desejo": "que a lei continue sem ninguém perguntar de quem é a letra",
+      "medo": "o dia em que alguém peça o original",
+      "segredo_topico": "como as leis foram escritas",
+      "segredo_doc_id": "npc_valerius_segredo",
+      "voz": {
+        "registro": "frio, sem pressa, sem repetir",
+        "fala": "A lei é breve. Quem a alonga, responde."
+      },
+      "home_location_id": "nova_arcadia",
+      "archetype": "lider_residente",
+      "fonte": "lore_nova/npcs.txt:8-27"
+    },
+    "npc_grum": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "serve o Anel de Ferro no Dragão Bêbado e sabe o que não deve ser achado"
+        }
+      ],
+      "desejo": "que a taverna siga cheia e a adega, quieta",
+      "medo": "uma patrulha que reviste com paciência",
+      "segredo_topico": "o que fica na adega nas noites sem lua",
+      "segredo_doc_id": "npc_grum_segredo",
+      "voz": {
+        "registro": "rouco e lento, dá o troco e só depois a conversa",
+        "fala": "Bebe ou paga. As duas coisas, melhor."
+      },
+      "home_location_id": "na_taverna_javali",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:29-44"
+    },
+    "npc_velha_magda": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "vende espetinhos no Anel de Lama e vê quem passa e o que carrega"
+        }
+      ],
+      "desejo": "chegar ao fim do dia sem dever nada a ninguém",
+      "medo": "que alguém lhe pergunte o que ela lembra",
+      "segredo_topico": "o que ela ouviu de quem se achava sozinho",
+      "segredo_doc_id": "npc_velha_magda_segredo",
+      "voz": {
+        "registro": "miúda e afiada, repete o preço duas vezes",
+        "fala": "Dois por moeda. Três por um nome. Escolhe."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:46-62"
+    },
+    "npc_comandante_thrace": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "aplica o Código nos anéis de Ferro e Lama e começa a duvidar dele"
+        },
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "comanda a Legião que revista adegas atrás de um papel que nenhum cabo sabe nomear"
+        },
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "tolera o pó licenciado no Anel de Ferro porque o selo traz a assinatura da Legião"
+        }
+      ],
+      "desejo": "que a ordem do Código continue valendo para todos igualmente",
+      "medo": "descobrir que a ordem protege só os poderosos",
+      "segredo_topico": "as ordens que ele mesmo não conseguiu ler até o fim",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "seco e correto, sem adjetivo",
+        "fala": "A lei não sorri. Eu também não."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "lider_em_campanha",
+      "fonte": "lore_nova/npcs.txt:1294-1302"
+    },
+    "npc_doutor_silas_vane": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "atende os doentes do Ferro e estuda a Praga de Ferro"
+        }
+      ],
+      "desejo": "terminar o estudo da Praga antes que lhe fechem a clínica",
+      "medo": "que a Praga pare de responder ao tratamento",
+      "segredo_topico": "o destino dos que não voltam para casa",
+      "segredo_doc_id": "npc_doutor_silas_vane_segredo",
+      "voz": {
+        "registro": "clínico e cortês, fala em diagnósticos",
+        "fala": "É uma doença interessante. Para o senhor, infelizmente, também."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:64-81"
+    },
+    "npc_mae_corva": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "protege os órfãos do Lama e decide quais cargas dos Corvos passam sem pergunta"
+        }
+      ],
+      "desejo": "que o Anel de Lama não desista de si mesmo",
+      "medo": "o dia em que a Legião deixe de achar o Lama administrável",
+      "segredo_topico": "o que passa nas cargas que ela libera",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "feroz e doméstica, fala com as mãos ocupadas",
+        "fala": "Senta e come. Depois a gente vê de quem você é."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "lider_residente",
+      "fonte": "lore_nova/npcs.txt:1324-1334"
+    },
+    "npc_velha_netta": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "cura no Anel de Lama quem o Doutor não atende e vê a Praga que ele finge não ver"
+        },
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "junta cartuchos vazios do Beco dos Desdentados e quer saber quem os dobra"
+        }
+      ],
+      "desejo": "que nenhum marcado do seu beco vá parar na clínica",
+      "medo": "o dia em que o Doutor resolver que ela atrapalha",
+      "segredo_topico": "o que ela dá aos marcados que não adoecem",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "áspera e prática, cheira a ervas e fumaça",
+        "fala": "Senta. Não pergunta. Paga depois, se viver."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1466-1474"
+    },
+    "npc_benedita_a_parteira": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_corpos_marcados",
+          "papel": "costura quem a Praga quer e ensina a negar o Abismo à força de mão"
+        }
+      ],
+      "desejo": "que cada marcado do Lama aprenda a se costurar sozinho",
+      "medo": "que a Guilda conte como carga quem ela ainda tentaria salvar",
+      "segredo_topico": "o que leva na bolsa além das tesouras",
+      "segredo_doc_id": "npc_benedita_a_parteira_segredo",
+      "voz": {
+        "registro": "seca e prática, nunca pergunta o nome antes da bolsa",
+        "fala": "Mostra a ferida. O nome vem depois, se couber."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:2398-2410"
+    },
+    "npc_bertil": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_o_que_o_lorde_trocou",
+          "papel": "mantém o forno do crematório e conversa com a vassoura sobre nomes que ninguém lembra"
+        }
+      ],
+      "desejo": "que alguém lhe pergunte com paciência o que ele viu",
+      "medo": "a Legião à porta do crematório",
+      "segredo_topico": "o que viu numa noite de muito tempo atrás",
+      "segredo_doc_id": "npc_bertil_segredo",
+      "voz": {
+        "registro": "educado de modo antigo, trata todos por senhor e senhora",
+        "fala": "Se o senhor se sentar, eu varro por perto. É só para fazer companhia."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:2434-2444"
+    },
+    "npc_bors_martelo_partido": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "organiza os operários do Ferro e denuncia a Tosse de Ferro e os contratos sem fim"
+        }
+      ],
+      "desejo": "reforma das Fundições antes que o povo peça mais",
+      "medo": "que um mártir faça o povo pedir mais",
+      "segredo_topico": "o que a Legião lhe ofereceu para calar",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "potente, apaixonado, fala por cima do barulho",
+        "fala": "Eu perdi o braço, não a voz. E a voz é de todos."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "lider_residente",
+      "fonte": "lore_nova/npcs.txt:1451-1459"
+    },
+    "npc_mestre_fundidor_kald": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_aco_que_lembra",
+          "papel": "lidera os Encapuzados da Fornalha e forja Aço de Sangue para quem paga o preço"
+        }
+      ],
+      "desejo": "provar que o Aço de Sangue tem alma",
+      "medo": "que o fogo esfrie antes da prova",
+      "segredo_topico": "o que a fornalha recebeu em troca de cada lâmina",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "sereno e metódico, fala devagar com o fogo ao fundo",
+        "fala": "O aço bebeu. Agora o aço lembra. Ninguém lhe perguntou, mas ele diz."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "lider_residente",
+      "fonte": "lore_nova/npcs.txt:1341-1349"
+    },
+    "npc_arquimaga_sylvenne": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "mantém os Jardins Suspensos e supervisiona a magia registrada"
+        }
+      ],
+      "desejo": "que o registro continue sendo a única porta para a magia",
+      "medo": "o dia em que o registro não proteja nem a ela",
+      "segredo_topico": "o que a perturba na sala quando Valerius entra",
+      "segredo_doc_id": "npc_arquimaga_sylvenne_segredo",
+      "voz": {
+        "registro": "precisa e cortante, mede cada palavra",
+        "fala": "Eu respondo exatamente ao que me perguntam. Aprenda a perguntar."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1356-1366"
+    },
+    "npc_sennar_o_pregador_da_cicatriz": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "prega ao cair da noite e reconhece quem não vai aguentar o Batismo de Fogo"
+        }
+      ],
+      "desejo": "que o fogo seja o único processo honesto da cidade",
+      "medo": "que a cidade siga a mesma, com fogo ou sem",
+      "segredo_topico": "quando deixou a Legião",
+      "segredo_doc_id": "npc_sennar_o_pregador_da_cicatriz_segredo",
+      "voz": {
+        "registro": "calmo, nunca grita, deixa o silêncio terminar",
+        "fala": "O fogo não promete. É por isso que se pode crer nele."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "peregrino",
+      "fonte": "lore_nova/npcs.txt:2451-2461"
+    },
+    "npc_liane_chama_escondida": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "esconde nas mangas o Éter que vaza das mãos e foge dos Inquisidores"
+        }
+      ],
+      "desejo": "aprender a segurar o Éter sem queimar a roupa",
+      "medo": "ser registrada e levada aos Jardins",
+      "segredo_topico": "o que acontece quando ela se emociona",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "baixa e rápida, cobre as mãos ao falar",
+        "fala": "Por favor, não toca. Não é maldade. É que esquenta."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1511-1519"
+    },
+    "npc_korvus": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_lista_de_fornalha",
+          "papel": "legionário desertor que se esconde no Lama e sabe o que a Legião faz longe dos olhos"
+        }
+      ],
+      "desejo": "que a execução que recusou seja lembrada por alguém",
+      "medo": "virar o exemplo que Thrace quer",
+      "segredo_topico": "a ordem que ele não cumpriu",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "vigilante, frases curtas, olha a porta",
+        "fala": "Não pergunto quem é. Pergunto quem vem atrás."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1496-1504"
+    },
+    "npc_lorde_vesperio_valante": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "coleciona raridades vivas e financia o tráfico que as traz"
+        }
+      ],
+      "desejo": "completar a coleção com um Hospedeiro de Xylos",
+      "medo": "que a lei pare de ser comprável",
+      "segredo_topico": "onde ficam as peças que não estão em exposição",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "afável e culto, avalia cada pessoa como peça",
+        "fala": "Que olhos admiráveis. Não se preocupe: eu cuido do que adquiro."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1309-1317"
+    },
+    "npc_lorde_oswin_conta_de_ouro": {
+      "tier": "nucleo",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "empresta a metade da nobreza e licencia o que os contratos permitem"
+        },
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "financia a licença que deixa o Pó de Fada ser vendido com selo"
+        }
+      ],
+      "desejo": "ver cada casa do Anel Dourado em dia com a sua conta",
+      "medo": "uma dívida que ninguém reconheça como dele",
+      "segredo_topico": "quem ainda lhe deve sem saber",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "frio e paciente, fala em prazos",
+        "fala": "Não há dívida eterna. Há apenas prazos que ainda não foram escritos."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1436-1444"
+    },
+    "npc_dama_vesperina": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "vende os segredos da elite a quem paga e conhece os compradores da Coleção"
+        }
+      ],
+      "desejo": "subir um degrau no Anel Dourado sem cair do outro lado",
+      "medo": "vender o segredo errado ao comprador errado",
+      "segredo_topico": "quem lhe paga mais do que ela diz",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "encantadora, promete discrição como quem promete clima",
+        "fala": "Eu não conto segredos, querido. Eu os apresento a quem os mereça."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1481-1489"
+    },
+    "npc_lirio": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "veste os mortos amados de estranhos e guarda a própria memória fora das máscaras"
+        }
+      ],
+      "desejo": "sair da Casa dos Espelhos sem esquecer o próprio rosto",
+      "medo": "esquecer quem era antes da primeira máscara",
+      "segredo_topico": "o que os clientes confessam atrás da máscara",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "suave e cansada, muda de voz sem notar",
+        "fala": "Quem você quer que eu seja hoje? Eu digo quem eu fui depois."
+      },
+      "home_location_id": "na_anel_dourado",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:1420-1428"
+    },
+    "npc_rato_de_ferro_tibb": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_a_colecao",
+          "papel": "contrabandista dos três anéis que precisa de mais um par de mãos para atravessar uma caixa que respira"
+        }
+      ],
+      "desejo": "uma passagem entre os anéis que ninguém suba de preço",
+      "medo": "descobrir o que há dentro da caixa que respira",
+      "segredo_topico": "o que ele já atravessou de noite",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "rápido e oportunista, fala em preços e atalhos",
+        "fala": "Passa por três portões e dois subornos. Do quarto, a gente fala depois."
+      },
+      "home_location_id": "na_anel_ferro",
+      "archetype": "mercador_itinerante",
+      "fonte": "lore_nova/npcs.txt:1526-1534"
+    },
+    "npc_pardal": {
+      "tier": "ponte",
+      "threads": [
+        {
+          "thread_id": "tr_na_po_de_sonho",
+          "papel": "chefia a Quadrilha dos Telhados e vê de cima o pó que sobra das cargas do Beco dos Desdentados"
+        }
+      ],
+      "desejo": "sustentar os menores sem depender da Mão Sombria",
+      "medo": "que algum menor prove o pó",
+      "segredo_topico": "para quem trabalha de verdade",
+      "segredo_doc_id": "",
+      "voz": {
+        "registro": "desconfiada e rápida, descalça, mede a saída",
+        "fala": "Eu vejo tudo lá de cima. Perguntar custa; olhar é de graça."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "mensageiro",
+      "fonte": "lore_nova/npcs.txt:1388-1396"
+    },
+    "npc_ilsa": {
+      "tier": "borda",
+      "threads": [
+        {
+          "thread_id": "tr_na_documento_da_legiao",
+          "papel": "remenda redes do canal e é a pessoa em volta de quem as coisas certas acontecem a tempo"
+        }
+      ],
+      "desejo": "não dever favor a ninguém",
+      "medo": "desconfiar de uma gentileza sem motivo",
+      "segredo_topico": "por que os pescadores a defendem tanto",
+      "segredo_doc_id": "npc_ilsa_segredo",
+      "voz": {
+        "registro": "quieta e teimosa, boa de contas, uma canção sem letra",
+        "fala": "Eu pago o que devo. Não me deve nada, e eu não lhe devo."
+      },
+      "home_location_id": "na_anel_lama",
+      "archetype": "sedentario",
+      "fonte": "lore_nova/npcs.txt:2417-2427"
+    }
+  },
+  "excluded": {
+    "npc_elaryin_historico": "morto há quarenta e um anos; aparece só como história",
+    "npc_malagor": "contido nas masmorras; não é elenco jogável",
+    "npc_fehk": "demônio da Covardia; pressão em cena, não elenco",
+    "npc_o_cego": "carcereiro sobrenatural do Oubliette; núcleo possível de trama futura",
+    "npc_o_corretor": "aparece só nas luas novas; núcleo possível de trama futura"
+  }
 }

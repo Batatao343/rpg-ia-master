@@ -1028,5 +1028,282 @@
     ],
     "visibility": "public",
     "components": {}
+  },
+  "npc_tr_dalva_torneira": {
+    "id": "npc_tr_dalva_torneira",
+    "type": "npc",
+    "name": "Dalva Torneira",
+    "aliases": [
+      "Dalva",
+      "Torneira"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "taverna",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_taverna_javali",
+      "role": "ajudante de adega do Dragão Bêbado"
+    }
+  },
+  "npc_tr_anselmo_tiza": {
+    "id": "npc_tr_anselmo_tiza",
+    "type": "npc",
+    "name": "Cabo Anselmo Tiza",
+    "aliases": [
+      "Anselmo",
+      "Cabo Tiza"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "legiao",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_lama",
+      "role": "cabo de patrulha da Legião no Anel de Lama",
+      "faction": "legiao_ferro"
+    }
+  },
+  "npc_tr_rute_corvo_veterana": {
+    "id": "npc_tr_rute_corvo_veterana",
+    "type": "npc",
+    "name": "Rute",
+    "aliases": [
+      "Rute",
+      "Corvo Veterana"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "guilda_corvos",
+      "crematorio",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_lama",
+      "role": "coletora de corpos da Guilda dos Corvos",
+      "faction": "guilda_corvos"
+    }
+  },
+  "npc_tr_tobias_pena_seca": {
+    "id": "npc_tr_tobias_pena_seca",
+    "type": "npc",
+    "name": "Tobias Pena-Seca",
+    "aliases": [
+      "Tobias",
+      "Pena-Seca"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "mercado_de_carne",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "copista da corte, demitido"
+    }
+  },
+  "npc_tr_pio_ferrugem": {
+    "id": "npc_tr_pio_ferrugem",
+    "type": "npc",
+    "name": "Pio Ferrugem",
+    "aliases": [
+      "Pio"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "praga",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_lama",
+      "role": "menino de recados do Anel de Lama"
+    }
+  },
+  "npc_tr_ludovina_agulha": {
+    "id": "npc_tr_ludovina_agulha",
+    "type": "npc",
+    "name": "Ludovina Agulha",
+    "aliases": [
+      "Ludovina",
+      "Enfermeira Agulha"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "clinica",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "enfermeira da clínica do Doutor Vane"
+    }
+  },
+  "npc_tr_gaspar_fole": {
+    "id": "npc_tr_gaspar_fole",
+    "type": "npc",
+    "name": "Gaspar Fole",
+    "aliases": [
+      "Gaspar"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "fundicao",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "foleiro do turno da noite nas Fundições"
+    }
+  },
+  "npc_tr_lalo_das_fichas": {
+    "id": "npc_tr_lalo_das_fichas",
+    "type": "npc",
+    "name": "Lalo das Fichas",
+    "aliases": [
+      "Lalo"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "fundicao",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "menino que conta as fichas de pagamento do turno"
+    }
+  },
+  "npc_tr_matias_selo": {
+    "id": "npc_tr_matias_selo",
+    "type": "npc",
+    "name": "Matias Selo",
+    "aliases": [
+      "Matias",
+      "Escrivão Selo"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "inquisicao",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "escrivão dos Inquisidores do Código"
+    }
+  },
+  "npc_tr_caio_pavio": {
+    "id": "npc_tr_caio_pavio",
+    "type": "npc",
+    "name": "Caio Pavio",
+    "aliases": [
+      "Caio"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_lama",
+      "lampioes",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_lama",
+      "role": "acendedor de lampiões do Anel de Lama"
+    }
+  },
+  "npc_tr_bento_juros": {
+    "id": "npc_tr_bento_juros",
+    "type": "npc",
+    "name": "Bento Juros",
+    "aliases": [
+      "Bento"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "dividas",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "cobrador de Oswin no Anel de Ferro"
+    }
+  },
+  "npc_tr_aelis_sem_ampulheta": {
+    "id": "npc_tr_aelis_sem_ampulheta",
+    "type": "npc",
+    "name": "Aelis Sem-Ampulheta",
+    "aliases": [
+      "Aelis"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "elfo",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_dourado",
+      "role": "criada élfica dos saraus do Anel Dourado"
+    }
+  },
+  "npc_tr_dorotea_selo_verde": {
+    "id": "npc_tr_dorotea_selo_verde",
+    "type": "npc",
+    "name": "Dorotea Selo-Verde",
+    "aliases": [
+      "Dorotea",
+      "Boticária Selo-Verde"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_ferro",
+      "boticaria",
+      "po_de_fada",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_ferro",
+      "role": "boticária licenciada do Anel de Ferro"
+    }
+  },
+  "npc_tr_ysolt_fio_de_vidro": {
+    "id": "npc_tr_ysolt_fio_de_vidro",
+    "type": "npc",
+    "name": "Ysolt Fio-de-Vidro",
+    "aliases": [
+      "Ysolt"
+    ],
+    "tags": [
+      "nova_arcadia",
+      "anel_dourado",
+      "elfo",
+      "po_de_fada",
+      "trama"
+    ],
+    "visibility": "public",
+    "components": {
+      "home_location_id": "na_anel_dourado",
+      "role": "lavadeira élfica dos criados do Anel Dourado"
+    }
   }
 }

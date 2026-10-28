@@ -824,5 +824,250 @@
     "type": "located_in",
     "target": "nova_arcadia",
     "visibility": "public"
+  },
+  {
+    "id": "e_tr_dalva_torneira_em_local",
+    "source": "npc_tr_dalva_torneira",
+    "type": "located_in",
+    "target": "na_taverna_javali",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_anselmo_tiza_em_local",
+    "source": "npc_tr_anselmo_tiza",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_anselmo_tiza_membro",
+    "source": "npc_tr_anselmo_tiza",
+    "type": "member_of",
+    "target": "legiao_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_rute_corvo_veterana_em_local",
+    "source": "npc_tr_rute_corvo_veterana",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_rute_corvo_veterana_membro",
+    "source": "npc_tr_rute_corvo_veterana",
+    "type": "member_of",
+    "target": "guilda_corvos",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_tobias_pena_seca_em_local",
+    "source": "npc_tr_tobias_pena_seca",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_pio_ferrugem_em_local",
+    "source": "npc_tr_pio_ferrugem",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_ludovina_agulha_em_local",
+    "source": "npc_tr_ludovina_agulha",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_gaspar_fole_em_local",
+    "source": "npc_tr_gaspar_fole",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_gaspar_fole_membro_oculto",
+    "source": "npc_tr_gaspar_fole",
+    "type": "member_of",
+    "target": "encapuzados_fornalha",
+    "visibility": "hidden"
+  },
+  {
+    "id": "e_tr_lalo_das_fichas_em_local",
+    "source": "npc_tr_lalo_das_fichas",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_matias_selo_em_local",
+    "source": "npc_tr_matias_selo",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_caio_pavio_em_local",
+    "source": "npc_tr_caio_pavio",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_bento_juros_em_local",
+    "source": "npc_tr_bento_juros",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_aelis_sem_ampulheta_em_local",
+    "source": "npc_tr_aelis_sem_ampulheta",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_aelis_sem_ampulheta_membro_oculto",
+    "source": "npc_tr_aelis_sem_ampulheta",
+    "type": "member_of",
+    "target": "quebrados",
+    "visibility": "hidden"
+  },
+  {
+    "id": "e_tr_dorotea_selo_verde_em_local",
+    "source": "npc_tr_dorotea_selo_verde",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_ysolt_fio_de_vidro_em_local",
+    "source": "npc_tr_ysolt_fio_de_vidro",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_ysolt_fio_de_vidro_membro_oculto",
+    "source": "npc_tr_ysolt_fio_de_vidro",
+    "type": "member_of",
+    "target": "quebrados",
+    "visibility": "hidden"
+  },
+  {
+    "id": "e_tr_valerius_em_local",
+    "source": "npc_valerius",
+    "type": "located_in",
+    "target": "nova_arcadia",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_comandante_thrace_em_local",
+    "source": "npc_comandante_thrace",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_doutor_silas_vane_em_local",
+    "source": "npc_doutor_silas_vane",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_mae_corva_em_local",
+    "source": "npc_mae_corva",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_velha_netta_em_local",
+    "source": "npc_velha_netta",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_bors_martelo_partido_em_local",
+    "source": "npc_bors_martelo_partido",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_mestre_fundidor_kald_em_local",
+    "source": "npc_mestre_fundidor_kald",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_arquimaga_sylvenne_em_local",
+    "source": "npc_arquimaga_sylvenne",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_liane_chama_escondida_em_local",
+    "source": "npc_liane_chama_escondida",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_korvus_em_local",
+    "source": "npc_korvus",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_lorde_vesperio_valante_em_local",
+    "source": "npc_lorde_vesperio_valante",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_lorde_oswin_conta_de_ouro_em_local",
+    "source": "npc_lorde_oswin_conta_de_ouro",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_dama_vesperina_em_local",
+    "source": "npc_dama_vesperina",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_lirio_em_local",
+    "source": "npc_lirio",
+    "type": "located_in",
+    "target": "na_anel_dourado",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_rato_de_ferro_tibb_em_local",
+    "source": "npc_rato_de_ferro_tibb",
+    "type": "located_in",
+    "target": "na_anel_ferro",
+    "visibility": "public"
+  },
+  {
+    "id": "e_tr_pardal_em_local",
+    "source": "npc_pardal",
+    "type": "located_in",
+    "target": "na_anel_lama",
+    "visibility": "public"
   }
 ]

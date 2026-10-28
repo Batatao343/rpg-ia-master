@@ -7,9 +7,11 @@ tags:
 - nova_arcadia
 - mundo_vivo
 - legiao_ferro
+- trama
 visibility: public
 related_entities:
 - nova_arcadia
+- legiao_ferro
 curated: true
 home_location_id: nova_arcadia
 role: fiscal de rebites do Anel de Ferro
@@ -19,10 +21,10 @@ origin: conflito-17
 
 # Irena Prego-Frio
 
-Papel: fiscal de rebites do Anel de Ferro.
+Papel: fiscal de rebites do Anel de Ferro, a serviço da Legião. Bate em cada remessa com o martelo de prova e anota o som.
 
-Facção declarada: legiao_ferro.
+Aparência: Mulher de quarenta anos, rosto de pedra sem cuidado, martelo curto sempre à cintura. Tem a orelha direita surda de tanto ouvir aço.
 
-Gancho: Encontrar a remessa de rebites ocos que faz caldeiras explodirem.
+Como fala: Técnica, mede tudo em pancadas: "Três pancadas ocas, uma cheia. A cheia mente."
 
-Traços de cena: fala por imagens concretas, deseja algo verificável e reage às mudanças persistentes da região. Seus traços de personalidade são derivados deterministicamente por `npc_layers` a partir do ID.
+Gancho: Nos armazéns das Fundições, de manhã. Procura a remessa de rebites ocos que faz caldeiras explodirem, e paga a quem trouxer um rebite de cada lote.

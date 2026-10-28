@@ -1671,7 +1671,9 @@ def _build_plot_refs(data: dict, leak_phrases: list[str] | None):
     leaders = {e.get("source") for e in edges if isinstance(e, dict) and e.get("type") == "leads"}
     world_map = _read_json_file(os.path.join("data", "world_map.json"), {}) or {}
     locs = {loc.get("id") for loc in world_map.get("locations", []) if isinstance(loc, dict)}
-    factions = set(_read_json_file(os.path.join("data", "factions.json"), {}) or {})
+    factions = set(_read_json_file(os.path.join("data", "factions.json"), {}) or {}) | {
+        k for k, v in ents.items() if isinstance(v, dict) and v.get("type") == "faction"
+    }
     seeds = (_read_json_file(os.path.join("data", "world", "rumor_seeds.json"), {}) or {}).get(
         "seeds", {}
     )
@@ -1705,17 +1707,13 @@ def _build_plot_refs(data: dict, leak_phrases: list[str] | None):
         for v in (data.get("cast") or {}).values()
         if isinstance(v, dict) and v.get("segredo_doc_id")
     }
-    new_ids = {
-        k
-        for k, v in (data.get("cast") or {}).items()
-        if isinstance(v, dict) and v.get("fonte") == "spec350"
-    }
+    cast_ids = set(data.get("cast") or {})
     for _path, fm, body in _parse_codex(CODEX_DIR):
         did = str(fm.get("id") or "")
         doc_vis[did] = str(fm.get("visibility") or "")
         if did in secret_docs:
             secret_text[did] = body
-        if did in new_ids and fm.get("visibility") == "public":
+        if did in cast_ids and fm.get("visibility") == "public":
             public_text[did] = body
     return PlotRefs(
         npc_ids=npc_ids,

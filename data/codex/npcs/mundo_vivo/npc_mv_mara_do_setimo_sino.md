@@ -7,9 +7,11 @@ tags:
 - nova_arcadia
 - mundo_vivo
 - guilda_corvos
+- trama
 visibility: public
 related_entities:
 - nova_arcadia
+- guilda_corvos
 curated: true
 home_location_id: nova_arcadia
 role: relojoeira e informante de turnos
@@ -19,10 +21,10 @@ origin: conflito-17
 
 # Mara do Sétimo Sino
 
-Papel: relojoeira e informante de turnos.
+Papel: relojoeira de Nova Arcádia e informante de turnos da Guilda dos Corvos. Conserta o relógio do sétimo sino e sabe a que horas cada bairro dorme.
 
-Facção declarada: guilda_corvos.
+Aparência: Mulher de cinquenta anos, lupa presa na testa, dedos finos com dois dedais de latão. Fala olhando o ponteiro, não a pessoa.
 
-Gancho: Descobrir por que um sino toca sozinho antes de cada desaparecimento.
+Como fala: Fala em horas, nunca em dias: "Sete batidas, sem mão nenhuma. Eu conto. Alguém tem de contar."
 
-Traços de cena: fala por imagens concretas, deseja algo verificável e reage às mudanças persistentes da região. Seus traços de personalidade são derivados deterministicamente por `npc_layers` a partir do ID.
+Gancho: Na oficina sob o sétimo sino, de madrugada. Quer alguém acordado na hora em que o sino toca sozinho, antes de cada desaparecimento.

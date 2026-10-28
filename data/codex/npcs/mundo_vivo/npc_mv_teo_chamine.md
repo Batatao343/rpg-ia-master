@@ -7,9 +7,11 @@ tags:
 - nova_arcadia
 - mundo_vivo
 - resistencia_operaria_martelos_partidos
+- trama
 visibility: public
 related_entities:
 - nova_arcadia
+- resistencia_operaria_martelos_partidos
 curated: true
 home_location_id: nova_arcadia
 role: mensageiro pelos telhados fabris
@@ -19,10 +21,10 @@ origin: conflito-17
 
 # Téo Chaminé
 
-Papel: mensageiro pelos telhados fabris.
+Papel: mensageiro dos Martelos Partidos pelos telhados das fábricas. Leva listas, avisos e senhas por onde a Legião não alcança.
 
-Facção declarada: resistencia_operaria_martelos_partidos.
+Aparência: Rapaz de dezesseis anos, magro, pés enrolados em trapos para não fazer barulho nas telhas. Tem fuligem até nas pestanas.
 
-Gancho: Levar uma lista de operários presos sem cruzar uma patrulha da Legião.
+Como fala: Fala correndo, frase sem verbo: "Telhado, vento, ronda. Passou. Vai."
 
-Traços de cena: fala por imagens concretas, deseja algo verificável e reage às mudanças persistentes da região. Seus traços de personalidade são derivados deterministicamente por `npc_layers` a partir do ID.
+Gancho: Nas chaminés do Anel de Ferro, ao cair da noite. Precisa levar uma lista de operários presos sem cruzar a patrulha da Legião.
