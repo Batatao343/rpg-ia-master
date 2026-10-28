@@ -722,6 +722,15 @@ def _lore_fields(seed: QuestSeed) -> dict:
         "reward_gold_planned": int(seed.reward_gold),
         "reward_hint": seed.reward_label,
     }
+    from services import card_rewards, lore_quests
+
+    # SPEC-357 R11: rotulos listados prometem uma tecnica (so com RPG_CARD_REWARDS=on).
+    if card_rewards.mode() == "on" and seed.reward_label in (
+        lore_quests.cfg().get("card_rewards") or {}
+    ):
+        out["reward_card_planned"] = True
+        out["reward_card_label"] = seed.reward_label
+        out["reward_hint"] = f"{seed.reward_label} · uma técnica"
     if seed.llm_title:
         out["title"] = seed.llm_title
     if seed.llm_description:

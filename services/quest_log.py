@@ -627,6 +627,12 @@ def public_quest_view(quest: dict, day: int) -> dict:
         outcome = outcome_label(quest)  # SPEC-313 R28: so depois de concluida
         if outcome:
             view["outcome_label"] = outcome
+    if quest.get("reward_card"):  # SPEC-357 R13: so o nome; `reward_card_planned` nunca sai
+        from services import cards
+
+        view["reward_card_name"] = str(
+            (cards.get_card(str(quest["reward_card"])) or {}).get("name") or quest["reward_card"]
+        )
     return view
 
 

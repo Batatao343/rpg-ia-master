@@ -21,6 +21,10 @@
     "recolher_mortos": 15
   },
   "reward_labels": {"0": "", "10": "modesta", "15": "modesta", "20": "modesta", "25": "justa", "30": "justa", "40": "generosa", "45": "generosa"},
+  "card_rewards": {
+    "justa": {"comum": 80, "incomum": 20},
+    "generosa": {"incomum": 70, "rara": 30}
+  },
   "escort_archetypes": ["mercador_itinerante", "peregrino", "mensageiro"],
   "delivery_routes": [
     {

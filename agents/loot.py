@@ -18,8 +18,8 @@ from pydantic import BaseModel, Field
 from gamedata import get_location
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
+from services import card_shop, cards, economy, latency_flags, prose_guard
 from services import conflict_summary as conflict_summary_service
-from services import economy, latency_flags, prose_guard
 from services.prompt_guard import PLAYER_INPUT_RULE, guard_messages, unwrap_player_input
 from services.turn_outcome import record_gain
 from state import GameState
@@ -360,6 +360,50 @@ def _rarity_phrase(rarity: object) -> str:
     return f", {word}," if word else ""
 
 
+def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dict, text: str):
+    """SPEC-357 R10(a): 'compro <nome exato de UMA Carta da prateleira>' resolve em Python,
+    sem LLM de classificacao. Qualquer outro texto devolve None (fluxo de itens intacto)."""
+    folded = economy._fold_key(text)
+    if not re.search(r"\b(?:compro|comprar|compra|adquiro|adquirir)\b", folded):
+        return None
+    card_id = card_shop.match_offer(work_state, folded)
+    if card_id is None:
+        return None
+    gold_before = int(player.get("gold", 0) or 0)
+    res = card_shop.buy(work_state, card_id)
+    if not res.get("ok"):
+        msg = _narrate(f"TRANSAÇÃO RECUSADA: {res.get('error')}", f"🚫 {res.get('error')}")
+        return {
+            "messages": [
+                AIMessage(content=_player_facing_message(msg, f"[SISTEMA] {res.get('error')}"))
+            ],
+            "world": world,
+            "loot_source": None,
+            "archive_due": True,
+            **_low(world),
+        }
+    name = (cards.get_card(card_id) or {}).get("name", card_id)
+    total = int(player.get("gold", 0) or 0)
+    sistema = f"[SISTEMA] +1 Carta: {name} | Ouro −{res['gold']} (total {total})"
+    msg = _narrate(
+        f"BUY: Carta {name}, ouro −{res['gold']}, ouro final {total}",
+        "O negócio se fecha sem cerimônia.",
+    )
+    result = {
+        "player": player,
+        "world": world,
+        "messages": [AIMessage(content=_player_facing_message(msg, sistema))],
+        "loot_source": None,
+        "archive_due": True,
+    }
+    _bl = record_gain(state.get("turn_baseline"), "gold", total - gold_before, "loot")
+    if _bl is not state.get("turn_baseline"):
+        result["turn_baseline"] = _bl
+    if res["gold"] < _LEAN_TRADE_GOLD:
+        result.update(_low(world))
+    return result
+
+
 def loot_node(state: GameState):
     player = dict(state["player"])
     player["inventory"] = list(player.get("inventory", []))
@@ -376,6 +420,10 @@ def loot_node(state: GameState):
     # CRAFT / SHOP — Python decide, LLM narra
     # =========================================================
     if loot_source in ("CRAFT", "SHOP"):
+        if loot_source == "SHOP":
+            card_turn = _card_shop_turn(work_state, state, player, world, text)
+            if card_turn is not None:
+                return card_turn
         intent = _parse_trade_intent(state, loot_source, text)
         market_before = economy.public_market_snapshot(work_state)
         if intent.mode == "observe":
@@ -390,6 +438,8 @@ def loot_node(state: GameState):
                     f"(estoque {int(q.get('stock', 0) or 0)})"
                     for q in quotes[:12]
                 ]
+                if loot_source == "SHOP":  # SPEC-357 R10(b): técnicas à venda (flag on)
+                    rows += [f"- {ln}" for ln in card_shop.observe_lines(work_state)]
                 system = (
                     f"[SISTEMA] Mercado de {market_before.get('merchant_name', 'mercador')} "
                     "(consulta sem transação):\n" + ("\n".join(rows) or "- Sem ofertas.")

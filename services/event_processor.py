@@ -447,6 +447,7 @@ def process_pending_events(state: dict) -> dict:
     quests_changed = False
     quests_completed = 0  # Fase 4.1: cada conclusão vale XP_PER_QUEST
     quest_reward_gold = 0
+    card_quest_ids: list[str] = []  # SPEC-357 R12: quests de lore com tecnica prometida
     faction_setbacks: list[tuple[str, int]] = []  # SPEC-305 R13: (faction_id, pontos)
     killed_targets: list = []  # SPEC-230 R4
     accepted_events: list[dict] = []  # SPEC-298: feitos aceitos -> services.reputation
@@ -583,6 +584,8 @@ def process_pending_events(state: dict) -> dict:
                     ]
                 if was_active:  # SPEC-226 R2: XP só na transição real
                     quests_completed += 1
+                    if origem and origem.get("reward_card_planned"):
+                        card_quest_ids.append(str(qid))
                     if origem and origem.get("faction_id"):
                         # SPEC-301 R12: mérito, promoção, contra-jogo e rito de entrada.
                         from services import faction_membership
@@ -691,6 +694,28 @@ def process_pending_events(state: dict) -> dict:
         )
         player["gold"] = int(player.get("gold", 0) or 0) + quest_reward_gold
         updates["player"] = player
+        if card_quest_ids:
+            from services import card_rewards, cards
+
+            for cq_id in card_quest_ids:
+                cq = next((q for q in quests if q.get("id") == cq_id), None)
+                got = card_rewards.grant_for_quest(state, player, cq, turn) if cq else None
+                if not got:
+                    continue
+                cname = (cards.get_card(got) or {}).get("name", got)
+                quests = [{**q, "reward_card": got} if q.get("id") == cq_id else q for q in quests]
+                notices = list(
+                    updates.get("reputation_notices", state.get("reputation_notices")) or []
+                )
+                notices.append(
+                    {
+                        "kind": "carta",
+                        "subject_id": got,
+                        "text": f"Você aprende {cname} com a missão.",
+                        "turn": turn,
+                    }
+                )
+                updates["reputation_notices"] = notices[-16:]
         # SPEC-226 R10: cada conclusão é um ganho individual (XP e ouro).
         from services.turn_outcome import record_gain
 
