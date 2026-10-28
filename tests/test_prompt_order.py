@@ -14,9 +14,9 @@ _STATIC_MARKER = {"story": "<INSTRUÇÕES>", "npc": "<REGRAS DE ATUAÇÃO", "rou
 # sha256 dos prompts gerados pelo codigo de `main` ANTES da SPEC-317 (flag off), na fixture de
 # tests/prompt_capture.py. Mudanca legitima de prompt em outra spec atualiza estes hashes.
 _MAIN_GOLDEN = {
-    "npc": "b6bd8f60d58defd157f24595e7f48528b27f47590d2fb05ac4212cd94953bc45",
+    "npc": "724e574ccf5681bd6534bf2ae6618e497845aae6b10e7a8e96c4f82cec372b08",
     "router": "adbe6157f91b7a7ba50ff33a620fea95b79246861ca639924cdfd3abadd3fd46",
-    "story": "34ddf51f41975b7bf4b39b9ba39ff4f0c0f2ceb4452b43db760cab7cec20e696",
+    "story": "e8f88ce993c6529ced1c29b17372fb1e9942c3c63346054650c29328f9e691cc",
 }
 
 

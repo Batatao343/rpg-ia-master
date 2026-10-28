@@ -15,6 +15,10 @@ O Cego —located_in→ Nova Arcádia
 Irena Prego-Frio —located_in→ Nova Arcádia
 Téo Chaminé —located_in→ Nova Arcádia
 Mara do Sétimo Sino —located_in→ Nova Arcádia
+Sennar, o Pregador da Cicatriz —located_in→ Nova Arcádia
+Benedita, a Parteira —located_in→ Nova Arcádia
+Ilsa —located_in→ Nova Arcádia
+Bertil —located_in→ Nova Arcádia
 Comandante Thrace —leads→ A Legião de Ferro
 Mestre-fundidor Kald —leads→ Os Encapuzados da Fornalha
 Bors Martelo-partido —leads→ A Resistência Operária (os Martelos Partidos)
@@ -93,6 +97,18 @@ Korso Pedra-Móvel —located_in→ A Pradaria das Ruínas
 Mina Sete-Taxas —located_in→ Brekmar
 Jax Corda-Seca —located_in→ Brekmar
 Varo Dois-Portos —located_in→ Brekmar
+Keeper Morvan —leads→ As Cidades-estado Sobreviventes (Vaelorn e Solvhen)
+Keeper Morvan —located_in→ Solvhen
+Mãe Corva —leads→ A Guilda dos Corvos
+Sennar, o Pregador da Cicatriz —leads→ uma facção desconhecida
+Hrefna da Vigília —member_of→ Os Cultos do Despertar (Dispersos)
+Hrefna da Vigília —located_in→ Skallgard e o Ermo Branco
+Oriel Talho-fundo —member_of→ O Poder de Kahen
+Oriel Talho-fundo —located_in→ Brekmar
+Mairen das Margens —located_in→ As Ruínas Submersas de Aethelgard
+Hask, o Musgo —member_of→ Os Druidas do Ciclo Cinzento
+Hask, o Musgo —located_in→ O Pântano da Melancolia
+Bertil —member_of→ A Guilda dos Corvos
 Lorde Protetor Valerius: morto.
 </ESTADO_ATUAL_DO_MUNDO>
 ----
