@@ -46,3 +46,16 @@ test("SPEC-345 9b: botao desabilitado sem opacity e com contraste >= 4,5", async
   assert.ok(tokenRatio(t, "--muted", "--bg-deep") >= 4.5, "muted sobre bg-deep");
   assert.doesNotMatch(css, /\.btn(--\w+)?:disabled\s*\{[^}]*opacity:\s*0?\.\d/);
 });
+
+test("SPEC-345 P3-1: nenhum estado desabilitado usa opacity < 1 (exceto a face da carta, que tem motivo escrito)", async () => {
+  const { readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of ["../src/styles.css", "../src/workspace.css"]) {
+    readFileSync(new URL(f, import.meta.url), "utf8").split("\n").forEach((line, i) => {
+      if (/(:disabled|\[aria-disabled)/.test(line) && /opacity:\s*0?\.\d/.test(line) && !/\.combat-card/.test(line)) bad.push(`${f}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(bad, []);
+  const t = readTokens();
+  assert.ok(tokenRatio(t, "--muted", "--bg-deep") >= 4.5);
+});

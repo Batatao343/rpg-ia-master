@@ -29,3 +29,17 @@ test("faixa_de_cena_legivel: só rodada + relógio, sem truncar", async ({ page,
   expect(rows[0].t).toMatch(/^Rodada \d+/);
   for (const r of rows) expect(r.ok, r.t).toBe(true);
 });
+
+test("tabbar_h_definido_no_mobile: o scroll-margin da mira inclui a barra de superfícies", async ({ page, backend }) => {
+  armDeck(backend, { scene: true });
+  await openCombat(page);
+  const px = await page.evaluate(() => {
+    const probe = document.createElement("div");
+    probe.style.height = "var(--tabbar-h)";
+    document.body.appendChild(probe);
+    const h = probe.getBoundingClientRect().height;
+    probe.remove();
+    return h;
+  });
+  expect(px).toBeGreaterThanOrEqual(48);
+});

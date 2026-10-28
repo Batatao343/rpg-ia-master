@@ -17,9 +17,9 @@ from contextvars import ContextVar, Token
 from typing import Any, Literal
 
 from services.turn_outcome import (
-    _RECEIPT_LINE as _RECEIPT,  # SPEC-345 R5: mesmos padrões do texto final
+    _SYSTEM_PREFIX,
+    remove_receipts,  # SPEC-345 R5: mesmos padrões do texto final
 )
-from services.turn_outcome import _SYSTEM_PREFIX
 
 TokenStreamMode = Literal["off", "shadow", "on"]
 
@@ -163,7 +163,7 @@ class StreamGuard:
 
         # Mesmas normalizacoes baratas do texto final (preambulo meta, marcadores do motor,
         # espacos/pontuacao): evita `replace` falso so por formatacao (revisao P2-3).
-        text = sanitize(_SYSTEM_PREFIX.sub("", _RECEIPT.sub("", self.raw)))
+        text = sanitize(_SYSTEM_PREFIX.sub("", remove_receipts(self.raw)))
         if not text:
             return "", ""
         text = self.finalize(text) if self.finalize else self.prefix + text

@@ -23,7 +23,7 @@
 .ws-bar__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; min-width: 0; }
 .ws-modes { display: flex; gap: 0.25rem; margin-left: 0.35rem; }
 .ws-bar .iconbtn { min-height: 32px; }
-.ws-bar .iconbtn:disabled { opacity: 0.4; cursor: default; }
+.ws-bar .iconbtn:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .ws-bar .iconbtn:disabled:hover { border-color: var(--line-soft); color: var(--muted); }
 .ws-modes .iconbtn[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
 
@@ -279,7 +279,7 @@
   border: 1px dashed var(--line); border-radius: var(--r-sharp); cursor: pointer;
 }
 .msg__offer:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
-.msg__offer:disabled { opacity: 0.5; cursor: default; }
+.msg__offer:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .art-orders { display: grid; gap: 0.6rem; justify-items: start; }
 .art-orders .image-generations { padding: 0; }
 
@@ -368,10 +368,10 @@ details.scene-strip { display: block; }
 .play-queue__to { color: var(--muted); }
 .play-queue__ops { display: inline-flex; gap: 0.3rem; }
 .play-queue__ops button { min-width: 2.2rem; min-height: 2.2rem; border: 1px solid var(--line); border-radius: var(--r-sharp); background: var(--surface); color: var(--ink); cursor: pointer; }
-.play-queue__ops button:disabled { opacity: 0.45; cursor: default; }
+.play-queue__ops button:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .play-queue__end { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
 .play-queue__submit { display: inline-flex; flex-direction: column; align-items: center; min-height: 2.6rem; padding: 0.35rem 1rem; }
-.play-queue__submit[aria-disabled="true"] { opacity: 0.5; cursor: default; }
+.play-queue__submit[aria-disabled="true"] { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .play-queue__count { color: inherit; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
 .mech-log, .ws-combat__fold { color: var(--muted); font-size: 0.85rem; }
 .mech-log summary, .ws-combat__fold summary, .scene-strip summary { cursor: pointer; min-height: 2.2rem; display: flex; align-items: center; }

@@ -81,10 +81,16 @@ def _last_ai_text(state: dict) -> str:
 EMPTY_NARRATION_TEXT = "O momento passa; o registro do turno guarda o resultado."
 
 _RECEIPT_LINE = re.compile(
-    r"[ \t]*\[RESULTADO\][^\r\n]*\r?\n?"
-)  # sem âncora: pega recibo no meio da linha
+    r"^[ \t]*\[RESULTADO\][^\r\n]*\r?\n?", re.MULTILINE
+)  # linha inteira + quebra
+_RECEIPT_TAIL = re.compile(r"[ \t]*\[RESULTADO\][^\r\n]*")  # no meio da linha: não consome a quebra
 _SYSTEM_PREFIX = re.compile(r"\[SISTEMA\][ \t]*")
 _BLANKS = re.compile(r"\n{3,}")
+
+
+def remove_receipts(text: str) -> str:
+    """Remove `[RESULTADO] ...`: linha inteira (com a quebra) ou, no meio da linha, só até o fim dela."""
+    return _RECEIPT_TAIL.sub("", _RECEIPT_LINE.sub("", text))
 
 
 def strip_system_tags(text: str) -> str:
@@ -95,7 +101,7 @@ def strip_system_tags(text: str) -> str:
     frase neutra, nunca `""` nem a tag.
     """
     original = str(text or "")
-    cleaned = _RECEIPT_LINE.sub("", original)
+    cleaned = remove_receipts(original)
     cleaned = _SYSTEM_PREFIX.sub("", cleaned)
     cleaned = _BLANKS.sub("\n\n", cleaned).strip()
     if not cleaned and original.strip():

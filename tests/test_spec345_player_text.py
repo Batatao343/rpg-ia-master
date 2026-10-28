@@ -153,8 +153,8 @@ def test_recibo_no_meio_da_linha_removido():
 def test_stream_guard_alinhado_com_fronteira():
     from services import narrative_sink as ns
 
-    assert ns._SYSTEM_PREFIX.sub("", ns._RECEIPT.sub("", "Fim. [SISTEMA] x")) == "Fim. x"
-    assert ns._RECEIPT.sub("", "Fim. [RESULTADO] +50 XP").strip() == "Fim."
+    assert ns._SYSTEM_PREFIX.sub("", ns.remove_receipts("Fim. [SISTEMA] x")) == "Fim. x"
+    assert ns.remove_receipts("Fim. [RESULTADO] +50 XP").strip() == "Fim."
 
 
 def test_loot_tesouro_sem_id_nem_rotulo(monkeypatch):
@@ -189,3 +189,17 @@ def test_loot_tesouro_sem_id_nem_rotulo(monkeypatch):
     shown = player_facing_message({"messages": out["messages"]})
     for bad in ("adaga_ferro", "Mortos:", "Espólio:", "[SISTEMA]"):
         assert bad not in shown, shown
+
+
+def test_recibo_no_meio_preserva_quebra_de_linha():
+    assert strip_system_tags("A. [RESULTADO] x\nB.") == "A.\nB."
+    assert strip_system_tags("A. [SISTEMA] x\nB.") == "A. x\nB."
+    assert strip_system_tags("A estrada. [RESULTADO] +5\nVoce segue.") == "A estrada.\nVoce segue."
+    assert strip_system_tags("A.\n[RESULTADO] x\nB.") == "A.\nB."
+
+
+def test_stream_e_final_iguais_com_recibo_no_meio():
+    from services import narrative_sink as ns
+
+    mixed = "A. [RESULTADO] x\nB."
+    assert ns.remove_receipts(mixed) == strip_system_tags(mixed) == "A.\nB."

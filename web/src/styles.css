@@ -888,7 +888,7 @@ select {
 .death-card__body { margin: 0; color: var(--ink-soft); max-width: 42ch; line-height: 1.55; }
 .death-card__actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.4rem; }
 .death-btn { padding: 0.7rem 1.3rem; border-radius: var(--r-sharp); border: 1px solid var(--line); font-weight: 600; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.2s ease; }
-.death-btn:disabled { opacity: 0.5; cursor: default; }
+.death-btn:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .death-btn--continue { background: var(--accent); color: var(--on-accent); }
 .death-btn--accept { background: transparent; color: var(--danger-text); border-color: var(--danger); }
 .death-btn:not(:disabled):hover { transform: translateY(-1px); }
@@ -948,7 +948,7 @@ select {
 .placesbar { flex: none; display: flex; flex-wrap: wrap; gap: 0.45rem; padding: 0.45rem clamp(0.9rem, 3vw, 2.9rem); border-bottom: 1px solid var(--line-soft); background: oklch(0.13 0.012 250 / 0.7); }
 .placechip { font: inherit; font-size: 0.82rem; color: var(--ink-soft); background: oklch(0.18 0.015 250 / 0.8); border: 1px solid var(--line-soft); border-radius: var(--r-sharp); padding: 0.25rem 0.75rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .placechip:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); }
-.placechip:disabled { opacity: 0.5; cursor: default; }
+.placechip:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .placechip--exit { border-style: dashed; }
 /* sugestões de contexto (SPEC-323 R10): linha rolável acima do compositor */
 .suggestions { display: flex; gap: 0.45rem; overflow-x: auto; padding: 0 0 0.45rem; scrollbar-width: none; }
@@ -997,7 +997,7 @@ select {
 .combat-card__rupture, .combat-card__play { border-radius: var(--r-sharp); padding: 0.34rem 0.48rem; cursor: pointer; font: 0.8rem var(--label); letter-spacing: 0.05em; text-transform: uppercase; }
 .combat-card__rupture { border: 1px solid var(--abyss-line); background: transparent; color: var(--abyss-text); }
 .combat-card__play { border: 1px solid var(--danger); background: var(--danger-dim); color: var(--ink); }
-.combat-card button:disabled { opacity: 0.45; cursor: default; }
+.combat-card button:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 .reaction-prompt { margin: 0; padding: 0.55rem 0.7rem; border: 1px solid var(--abyss-line); border-radius: var(--r-sm); background: color-mix(in oklch, var(--abyss-dim) 60%, transparent); }
 .reaction-prompt legend { padding: 0 0.35rem; color: var(--abyss-text); font: 0.8rem var(--label); letter-spacing: 0.08em; text-transform: uppercase; }
 .reaction-prompt p { margin: 0 0 0.4rem; color: var(--faint); font-size: 0.75rem; }
@@ -1036,7 +1036,7 @@ select {
 .actionchips { display: flex; gap: 0.45rem; flex-wrap: wrap; padding: 0.5rem clamp(0.9rem, 3vw, 2.9rem) 0; background: oklch(0.13 0.012 250 / 0.92); }
 .actionchip { padding: 0.35rem 0.8rem; border: 1px solid var(--danger-dim); border-radius: var(--r-sharp); background: var(--surface-2); color: var(--ink); font: inherit; font-size: 0.88rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
 .actionchip:hover:not(:disabled) { border-color: var(--danger-bright); }
-.actionchip:disabled { opacity: 0.5; cursor: default; }
+.actionchip:disabled { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: default; }
 
 /* R5 — crônica: busca + download */
 .chron-tools { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
@@ -1265,7 +1265,7 @@ button.tchip { cursor: pointer; }
 .card-detail p { margin: 0 0 0.2rem; }
 .card-detail__hint { font-style: italic; color: var(--faint); }
 .card-detail__reason { color: var(--danger-text); }
-.actionchip[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.actionchip[aria-disabled="true"] { opacity: 1; background: var(--bg-deep); color: var(--muted); border: 1px dashed var(--line); cursor: not-allowed; }
 .actionchip[aria-pressed="true"] { border-color: var(--accent); outline: 2px solid var(--accent); }
 .reaction-prompt__title { margin: 0 0 0.4rem; color: var(--abyss-text); font: 0.8rem var(--label); letter-spacing: 0.08em; text-transform: uppercase; }
 
