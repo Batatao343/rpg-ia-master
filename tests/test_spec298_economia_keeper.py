@@ -142,7 +142,9 @@ def test_rare_stock_so_leal(monkeypatch):
     assert stock.get("pocao_cura") == 2
 
 
-def test_keeper_hostil_esconde_raro():
+def test_keeper_hostil_esconde_raro(monkeypatch):
+    # a Coroa saiu do estoque base (SPEC-348 E-08); o teste injeta um raro+ para exercitar a regra
+    monkeypatch.setitem(economy.MERCHANTS["ferreiro_skallgard"]["base_stock"], "art_coroa_pressao_rei_anao", 1)
     st = _with_keeper(5)
     _, normal = economy.merchant_stock(st, "skallgard")
     assert "art_coroa_pressao_rei_anao" in normal

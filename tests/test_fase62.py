@@ -143,7 +143,9 @@ def test_roll_loot_nunca_re_dropa(monkeypatch):
         assert roll["item_id"] != ADAGA
 
 
-def test_estoque_esconde_unico_reclamado():
+def test_estoque_esconde_unico_reclamado(monkeypatch):
+    # a Coroa saiu do estoque base (SPEC-348 E-08); o teste injeta o unico para exercitar a regra
+    monkeypatch.setitem(eco.MERCHANTS["ferreiro_skallgard"]["base_stock"], COROA, 1)
     s = _state(world_projection=_claimed(COROA))
     _, stock = eco.merchant_stock(s, "skallgard")
     assert COROA not in stock

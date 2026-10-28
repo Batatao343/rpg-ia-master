@@ -15,7 +15,7 @@ related_entities:
 
 # LORDE PROTETOR VALERIUS — O QUE NÃO É DITO
 
-História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Passou a década depois da guerra rastreando Daruun, o demônio que negocia, e no décimo ano de governo foi levado por ele às masmorras. Fez o pacto: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
+História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Passou a primeira década de governo rastreando Daruun, o demônio que negocia, e no décimo ano de governo foi levado por ele às masmorras. Fez o pacto: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
 
 O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. Daruun é o corretor; a armadura de Malagor é a porta por onde o Abismo cobra. O Código de Ferro — centenas de páginas que apareceram em uma noite, a mesma do pacto, em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
 

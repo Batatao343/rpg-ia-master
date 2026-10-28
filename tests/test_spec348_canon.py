@@ -149,7 +149,9 @@ def test_calendar_year_base_and_protocol_explained():
     assert cal["year_review"] == "aprovado"
     era7 = " ".join(d["text"] for d in public_docs() if d["id"].startswith("timeline_e7"))
     assert "livro do protocolo dos anoes" in era7 and "ano 112" in era7
-    assert "termina no 67" in era7 and "fundacao e no 68" in era7 and "sessenta e seis anos" in _public_text()
+    assert "termina no 67" in era7 and "fundacao e no 68" in era7
+    assert "a guerra comeca no ano 1" not in _public_text() and "sessenta e seis anos" not in _public_text()
+    assert "monte da perdicao voltou a fumegar" in era7
 
 
 # ---------------------------------------------------------------- mundo (R22-R28)

@@ -1,6 +1,6 @@
 # SPEC-348 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
+> **Veredito (re-revisão, `5570a0fc`):** `CHANGES_REQUIRED` (1ª rodada em `1f059e04`: `CHANGES_REQUIRED`)
 > **Revisor:** Opus · papel Sol (técnico) + Astra (semântica de lore/tom) · **Data:** 2026-10-28 · **Commit revisado:** `1f059e04` (código/lore em `36ed495a`; `1f059e04` só traz o reindex do FAISS)
 
 ## Escopo
@@ -94,3 +94,38 @@ bash scripts/dev/py.sh scripts/build_rumor_seeds.py --check → rc 0
 bash scripts/dev/py.sh scripts/validate_content.py → 0 ERRO(S) · 0 AVISO(S)
 varredura própria (scratchpad leakscan/pubscan): LEAK_PHRASES em data/*.json → só world_map:450; coocorrência em docs públicos → Nehla, Sylvenne, story_posturas:45
 ```
+
+## Re-revisão — `1f059e04..5570a0fc` (2026-10-28)
+
+**Veredito:** `CHANGES_REQUIRED` (R2-P1-1 e R2-P2-1/2 corrigidos depois: ver "Correções da re-revisão"). Resta 1 P1 novo, de cronologia. Ele foi introduzido pela correção do P1-5.
+
+Conferido e fechado: P1-1 (`world_map.json:450` só com o lado público), P1-2 (`story_posturas.md:45`),
+P1-3 (Nehla: o fato foi para `Segredo:`, o público ficou com "Mede o céu…"), P1-4 (Sylvenne sem Daruun no
+público), P1-6 (`lingote_aco_vorr: 4` na Forja dos Clãs; a rota pode ser cumprida), P2-1 a P2-9.
+A varredura própria refeita dá `LEAK_PHRASES` = 0 em `data/*.json` e 0 coocorrência Farol+Rede,
+Daruun+Valerius ou "marcados" com Vane nos docs públicos (o Oráculo de Ferro, "o que o Farol contém",
+fica como pista aceitável).
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-P1-1 | P1 | `lore_nova/timeline_completa.txt` (parágrafo do Livro do Protocolo, Era 7, e "Durou sessenta e seis anos" na Era 6), `lore_nova/daily_life.txt:318` × `lore_nova/npcs.txt:2459`, `lore_nova/npcs.txt:53` / `lore_nova/secrets.txt:48`, `lore_nova/secrets.txt:66` | Com o Livro aberto "quando Malagor despertou", a guerra passa a durar 66 anos (Ano 1–67). Só que o Dia Sem Sombra acontece **no instante** em que Malagor sai (`timeline:350`), ou seja, há 111 anos. Isso quebra pelo menos três passagens. (a) Sennar tem "cinquenta e muitos anos" e "viu as sombras se desconectarem quando era menino" (`npcs.txt:2459`): impossível, ele teria mais de 115. (b) Magda era "Sacerdotisa de alto nível **antes da guerra**" (`npcs.txt:53`, `secrets.txt:48`): hoje teria ~135 anos, mas é humana e descrita só como "senhora idosa". (c) Grum (humano, taverneiro na ativa) era Sargento da Guarda Real e viu o Rei morrer; funciona se o reino caiu no fim da guerra, mas fica no limite. Elaryin (elfo), os dragões, Brekmar, Ress (15 anos de Legião), a Landship (45 anos em "manutenção") e Valerius (lutou "sob Elaryin", podendo ter entrado tarde) não quebram. | Manter D1 (`YEAR_BASE` 112, Ano 1 = Livro do Protocolo) e **descolar a abertura do Livro do despertar de Malagor**: "o Livro corrente foi aberto quando o Monte da Perdição voltou a fumegar, décadas antes de Malagor sair dele". Assim a guerra volta a ser curta: Malagor e o Dia Sem Sombra perto do Ano 60, fim no 67. Tirar "Durou sessenta e seis anos…" da Era 6, ajustar `daily_life.txt:318` igual ("abriram quando o Monte voltou a fumegar") e o "a guerra começa no Ano 1" do parágrafo da Era 7. Teste: uma asserção de que o texto público não diz que a guerra começou no Ano 1. Com isso, Sennar (menino há ~52 anos) e Magda (~80) fecham. |
+| R2-P2-1 | P2 | `lore_nova/npcs.txt:12` (Valerius, "História real") | "Passou a **década depois da guerra** rastreando Daruun, e no décimo ano de governo…": a década depois da guerra é 45→35, e o décimo ano de governo é há 30. R16 e `secrets.txt:12` dizem "a década seguinte" ao vácuo de Elaryin (41/40). | "Passou a primeira década de governo rastreando Daruun". |
+| R2-P2-2 | P2 (follow-up) | `data/merchants.json:14`, `data/loot_tables.json:69` | Pendência apontada pelo executor. A Forja dos Clãs vende `art_coroa_pressao_rei_anao` (`unique`, épico) e o item também está no loot épico, enquanto E-08 põe a Coroa a bordo da LS-PFC-9, sob o gelo. **Não é P1:** está igual na `main`, não vaza segredo (a descrição do item é neutra) e mexer em estoque/loot é economia, fora do escopo de lore desta spec. Mesmo assim é contradição de canon que o jogador pode ver: comprar a Coroa em Skallgard. | Follow-up curto (spec de bestiário/loot G-14 ou uma bugfix): tirar a Coroa do `base_stock` da Forja e do loot `epico` e deixá-la como recompensa da Landship (quando existir). Se o coordenador quiser fechar já, remover a linha do `base_stock` é 1 linha sem efeito colateral. |
+
+### Comandos (re-revisão)
+
+```text
+pytest tests/test_spec348_{leaks,canon,anchors}.py test_fase25 test_fase73 test_spec312_seeds test_spec313_catalog test_spec307_calendar test_spec303_festivals -p no:xdist -o addopts="" → 158 passed
+lore_reanchor.py --check → 0 âncora(s) quebrada(s) · validate_content.py → 0 ERRO / 0 AVISO
+leakscan (data/*.json) → 0 (fora o nome da entidade oculta do testamento) · pubscan farol+rede / daruun+valerius / marcados → sem vazamento
+```
+
+Depois de R2-P1-1 (só texto): migrate + `gen_world_living_npcs.py` + lint + reanchor + reindex. Pode entrar
+como `APPROVED` sem nova rodada de revisão se a correção seguir a proposta acima e os testes focados ficarem verdes.
+
+### Correções da re-revisão
+
+- R2-P1-1: o Livro corrente do Protocolo abre no Ano 1, quando o Monte da Perdição volta a fumegar, décadas antes de Malagor; Malagor e o Dia Sem Sombra caem perto do Ano 60 e a guerra termina no 67 (guerra curta). Saíram "Durou sessenta e seis anos" (Era 6) e "a guerra começa no Ano 1" (Era 7); `daily_life.txt` ajustado; teste afirma que o texto público não diz que a guerra começou no Ano 1. Sennar, Magda e Grum fecham com ~52 anos desde o Dia Sem Sombra.
+- R2-P2-1: Valerius passa "a primeira década de governo" rastreando Daruun.
+- R2-P2-2: `art_coroa_pressao_rei_anao` fora do estoque da Forja dos Clãs e do loot épico; `test_spec298_economia_keeper` e `test_fase62` injetam a Coroa por monkeypatch para exercitar as regras de raro/único.
+- Reindex da lore refeito (Jina); testes focados 991 passed.

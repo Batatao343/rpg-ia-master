@@ -27,7 +27,7 @@ O crematório funciona a noite toda. Rute não fica para ver a cremação — se
 ## Como Valoria Conta o Tempo
 [TAGS: Valoria, calendário]
 
-Sete meses de vinte dias, cada um com nome de dragão: Morrakh, Vaelith, Malagor, Solveth, Orrakh, Vorrnak e Thessrak. Ninguém lembra quem decidiu isso. O que se diz é que os Anões puseram os nomes nos livros do Protocolo e que a gente de baixo nunca achou razão para trocar. O ano em que se vive é o 112, contado pelo Livro do Protocolo que os Anões abriram quando Malagor despertou (eles abrem um Livro novo a cada contenção que registram), e a cidade herdou a conta sem saber de onde ela vinha.
+Sete meses de vinte dias, cada um com nome de dragão: Morrakh, Vaelith, Malagor, Solveth, Orrakh, Vorrnak e Thessrak. Ninguém lembra quem decidiu isso. O que se diz é que os Anões puseram os nomes nos livros do Protocolo e que a gente de baixo nunca achou razão para trocar. O ano em que se vive é o 112, contado pelo Livro do Protocolo que os Anões abriram quando o Monte da Perdição voltou a fumegar, décadas antes de Malagor (eles abrem um Livro novo a cada contenção que registram), e a cidade herdou a conta sem saber de onde ela vinha.
 
 Em Nova Arcádia a semana tem cinco dias, e cada dia leva o nome de um sino: Ferro, Bronze, Cobre, Estanho e o Sino Mudo, que fecha a semana e não toca. Só ali. Fora dos muros, ninguém conta semana: os dias não têm nome, e quem pergunta que dia é hoje ouve quantos faltam para o mercado.
 
