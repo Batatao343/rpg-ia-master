@@ -25,7 +25,7 @@ function withVisuals(entries: Array<Record<string, unknown>>) {
 async function loadSave(page: Page, backend: InstanceType<typeof import("./fixtures").DeterministicBackend>, combat = process.env.SPEC354_COMBAT === "1") {
   backend.saves = REAL.saves;
   backend.states.clear();
-  backend.states.set(GID, structuredClone(REAL.state));
+  backend.states.set(GID, structuredClone(process.env.SPEC354_SMOKE === "1" ? { ...REAL.smoke_state, game_id: GID } : REAL.state));
   if (combat) { backend.states.set("game-a", backend.states.get(GID)!); armDeck(backend); }
   backend.histories.clear();
   backend.histories.set(GID, withVisuals(REAL.history) as never);
