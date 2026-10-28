@@ -495,3 +495,29 @@ def test_golden_extra_cobre_acerto_erro_e_critico():
     seen = {r for g in golden.values() for e in g["extra"].values() for r in e["res"]}
     assert {"acerto", "erro", "critico"} <= seen
     assert len(eq.EXTRA_SEEDS) == 3
+
+
+def test_chaves_de_registro_da_346_nao_vazam_para_actors_nem_scene():
+    """SPEC-346: a exclusão do golden vale SÓ para out["ticks"|"scene_logs"|"heals"] e
+    out["attacks"][i]["ferimento"]; se aparecessem em actors/scene o hash voltaria a vê-las."""
+    for cid, card in sorted(eq.legacy_cards().items()):
+        for seed in (7, *eq.EXTRA_SEEDS):
+            eq.run_card(card, seed=seed, mira=(seed == 7))
+            actors, scene = eq.LAST_STATE
+            assert eq.find_record_keys(actors) == [], (cid, seed)
+            assert eq.find_record_keys(scene) == [], (cid, seed)
+
+
+def test_strip_record_paths_e_exato():
+    out = {
+        "ticks": [1],
+        "scene_logs": [2],
+        "heals": [3],
+        "logs": ["x"],
+        "attacks": [{"ferimento": {"c": 1}, "dano_final": 4}],
+        "outro": {"ticks": "fica"},
+    }
+    clean = eq.strip_record_paths(out)
+    assert set(clean) == {"logs", "attacks", "outro"}
+    assert clean["attacks"] == [{"dano_final": 4}]
+    assert clean["outro"] == {"ticks": "fica"}  # só o caminho exato é excluído

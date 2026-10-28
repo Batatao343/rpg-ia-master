@@ -19,7 +19,42 @@ import sys
 
 GOLDEN = os.path.join(os.path.dirname(__file__), "fixtures", "spec330_legacy_golden.json")
 _V = {"forca": 3, "agilidade": 2, "corpo": 2, "mente": 3, "carisma": 2}
-_BOOKKEEPING = {"_cartas_rodada", "ferimento", "ticks", "scene_logs"}  # SPEC-346: só registro
+_BOOKKEEPING = {"_cartas_rodada"}
+# SPEC-346: chaves de REGISTRO do `out` (não mudam resultado), excluídas SÓ nestes caminhos exatos:
+#   out["ticks"], out["scene_logs"], out["heals"], out["attacks"][i]["ferimento"].
+_OUT_RECORD_KEYS = ("ticks", "scene_logs", "heals")
+_ATTACK_RECORD_KEYS = ("ferimento",)
+RECORD_KEYS_ANYWHERE_ELSE = frozenset(_OUT_RECORD_KEYS) | frozenset(_ATTACK_RECORD_KEYS)
+
+
+LAST_STATE: list = []
+
+
+def strip_record_paths(out: dict) -> dict:
+    """Tira de ``out`` só os caminhos de registro da SPEC-346 (cópia; nada mais é filtrado)."""
+    clean = {k: v for k, v in out.items() if k not in _OUT_RECORD_KEYS}
+    if isinstance(clean.get("attacks"), list):
+        clean["attacks"] = [
+            {k: v for k, v in a.items() if k not in _ATTACK_RECORD_KEYS}
+            if isinstance(a, dict)
+            else a
+            for a in clean["attacks"]
+        ]
+    return clean
+
+
+def find_record_keys(value, path="") -> list[str]:
+    """Caminhos onde uma chave de registro aparece (usado para provar que não vaza p/ actors/scene)."""
+    found: list[str] = []
+    if isinstance(value, dict):
+        for k, v in value.items():
+            if k in RECORD_KEYS_ANYWHERE_ELSE:
+                found.append(f"{path}/{k}")
+            found += find_record_keys(v, f"{path}/{k}")
+    elif isinstance(value, list):
+        for i, v in enumerate(value):
+            found += find_record_keys(v, f"{path}[{i}]")
+    return found
 
 
 def _strip(value):
@@ -106,7 +141,13 @@ def run_card(card: dict, seed: int = 7, mira: bool = True) -> dict:
                 trig["uso"] = cards.use_card({"player": player}, cid)
             trig["usage"] = player.get("card_usage")
             out["gatilhos"] = trig
-    blob = json.dumps(_strip([out, actors, scene]), sort_keys=True, default=str, ensure_ascii=False)
+    LAST_STATE[:] = [actors, scene]  # para o teste de "sem vazamento" (SPEC-346)
+    blob = json.dumps(
+        _strip([strip_record_paths(out), actors, scene]),
+        sort_keys=True,
+        default=str,
+        ensure_ascii=False,
+    )
     return {
         "sha": hashlib.sha256(blob.encode("utf-8")).hexdigest(),
         "logs": out.get("logs", []),
