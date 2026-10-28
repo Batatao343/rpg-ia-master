@@ -527,14 +527,24 @@ def _usage_entry(player: dict, card_id: str) -> dict:
     return usage.setdefault(card_id, {k: 0 for k in _ALL_COUNTERS})
 
 
+def _in_scene_hand(state: dict | None, card_id: str) -> bool:
+    """SPEC-353 R1: Carta temporária de objeto de cena presente na mão do conflito."""
+    from services import scene_cards
+
+    piles = ((state or {}).get("combat") or {}).get("pilhas")
+    return scene_cards.in_hand(piles, card_id) and card_id in _TEMP_CARDS
+
+
 def use_card(state: dict, card_id: str) -> dict:
     """Gasta uma Carta preparada/de Virtude: checa frequência + custo de Entropia,
     debita Entropia e incrementa os contadores de uso (R6). NÃO resolve efeito."""
     player = state.get("player") or {}
     card = get_card(card_id)
     if not card:
-        return {"ok": False, "error": f"Carta '{card_id}' desconhecida.", "log": ""}
+        return {"ok": False, "error": "Essa Carta não existe mais.", "log": ""}
     prepared = set(player.get("prepared_cards") or [])
+    if _in_scene_hand(state, card_id):  # SPEC-353 R1: objeto de cena na mão é jogável
+        prepared.add(card_id)
     if player.get("deck"):  # SPEC-328: com o baralho `on`, basicas e cartas do baralho valem
         from services import card_piles
 
@@ -543,7 +553,11 @@ def use_card(state: dict, card_id: str) -> dict:
     virtude_ids = {vc.get("card_id") for vc in (player.get("virtue_cards") or [])}
     prepared |= scene_card_ids(player)  # SPEC-333 R9: Sussurro do Abismo (so no conflito)
     if card_id not in prepared and card_id not in virtude_ids:
-        return {"ok": False, "error": f"Carta '{card_id}' não está preparada.", "log": ""}
+        return {
+            "ok": False,
+            "error": f"{card.get('name', 'Essa Carta')} não pôde ser jogada.",
+            "log": "",
+        }
 
     freq = str(card.get("frequencia", "livre"))
     entry = _usage_entry(player, card_id)
@@ -551,7 +565,7 @@ def use_card(state: dict, card_id: str) -> dict:
     if counter and int(entry.get(counter, 0)) >= 1:
         return {
             "ok": False,
-            "error": f"'{card.get('name', card_id)}' já foi usada (1×{freq}).",
+            "error": f"{card.get('name', 'Essa Carta')} já foi usada (1×{freq}).",
             "log": "",
         }
 
@@ -772,9 +786,9 @@ def use_ruptura(state: dict, card_id: str) -> dict:
     player = state.get("player") or {}
     card = get_card(card_id)
     if not card:
-        return {"ok": False, "error": f"Carta '{card_id}' desconhecida.", "log": ""}
+        return {"ok": False, "error": "Essa Carta não existe mais.", "log": ""}
     if not card.get("ruptura"):
-        return {"ok": False, "error": f"'{card.get('name', card_id)}' não tem Ruptura.", "log": ""}
+        return {"ok": False, "error": f"{card.get('name', 'Essa Carta')} não tem Ruptura.", "log": ""}
 
     # paga o custo/frequência como uso normal (cobra a Entropia ANTES da Carga nova)
     res = use_card(state, card_id)

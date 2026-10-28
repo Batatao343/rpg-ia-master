@@ -80,7 +80,7 @@ def test_use_card_debita_entropia():
 def test_use_card_precisa_estar_preparada():
     st = _state(prepared_cards=["golpe_devoto"])
     r = cards.use_card(st, "muralha_viva")  # conhecida mas não preparada
-    assert not r["ok"] and "não está preparada" in r["error"]
+    assert not r["ok"] and "não pôde ser jogada" in r["error"]
 
 
 def test_reset_turno_nao_libera_carta_de_cena():
