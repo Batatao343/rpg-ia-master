@@ -2935,13 +2935,14 @@ def _portrait_registry(state: dict, meta: dict, enemies: list[dict]):
 def _enemy_portrait(
     state: dict, meta: dict, enemy: dict, registry: Any = None
 ) -> dict[str, Any] | None:
-    """SPEC-347 R13.7: `retrato` por inimigo — só com `RPG_CREATURE_ART=on` ou com arte curada. Sem LLM,
-    sem vazar ficha secreta: só id/nome/família. SPEC-352: com o registro (perfil com banco) a view
-    mostra o retrato compartilhado e, se elegível, `gerar` (preço = teto da cotação)."""
+    """SPEC-347 R13.7 / SPEC-354 R6: `retrato` por inimigo SEMPRE (arte curada ou ícone da família), com a
+    flag `RPG_CREATURE_ART` ligada ou não. Sem LLM, sem vazar ficha secreta: só id/nome/família. SPEC-352:
+    com o registro (perfil com banco e flag `on`) a view mostra o retrato compartilhado e, se elegível,
+    `gerar` (preço = teto da cotação); com a flag `off` não há registro nem oferta."""
     from services import creature_art as _art
 
-    if _art.mode() != "on" and not _art.has_curated_art(enemy):
-        return None
+    if _art.mode() != "on":
+        registry = None
     manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
     return dict(
         _art.portrait_for(
@@ -3187,6 +3188,15 @@ def _combat_block(state: dict) -> dict[str, Any]:
         view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6
         if meta.get("last_round_board"):  # SPEC-347 R14.2: registro estruturado (só Baralho on)
             view["registro_rodada"] = list(meta["last_round_board"])
+    elif (
+        _piles.mode() == "on"
+        and meta.get("last_round_board")
+        and not meta.get("active")
+        and (meta.get("phase") == "ended" or _combat_result(state))
+    ):
+        # SPEC-354 R4.1 (D-354-4): o conflito acabou (pilhas apagadas) — o registro da rodada final
+        # continua visível no painel de Combate; some quando o próximo conflito começar (meta novo).
+        view["registro_rodada"] = list(meta["last_round_board"])
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}
