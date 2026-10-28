@@ -669,6 +669,7 @@ Desvios e escolhas que o revisor deve conhecer:
   `test_api_jogadas` (rodada `on` não narra), `test_spec345_mech_log`/`test_wound_status_cards`
   (texto livre é recusado: agora declaram ação estruturada), `test_review_high_integration`/
   `test_spec345_player_text` (loot pós-vitória sem LLM e sem repetir o resumo canônico).
-- **Exceção "vigília" (D4 revisada)** não implementada: nenhuma carta/condição existente anula surpresa.
+- **Exceção "vigília" (D4 revisada)** decisão do coordenador (opção a): com `dev_zel_vigilia` ("Vigília Ciumenta") no baralho/preparadas a emboscada é anulada e vale a regra de iniciativa atual (`_opening_initiator`; JSON da carta intocado).
+- **Arena, pior caso (100 % emboscada)**: Corruptor 42,7 % e Arcanista 39,2 % fora da faixa; aceito pelo coordenador (emboscada é minoria).
 - **Front (`web/`) não foi tocado**: esconder o input de texto e o botão "Fugir" ficam com a SPEC-347.
 - **Arena**: ver `docs/spec346/arena.md`.

@@ -1736,13 +1736,26 @@ def _fast_text(
         return None
 
 
-def _opening_initiator(world: dict, origin: str) -> tuple[str | None, str]:
+VIGILIA_CARD_ID = "dev_zel_vigilia"
+
+
+def _has_vigilia(player: dict | None) -> bool:
+    """Decisão do coordenador: "Vigília Ciumenta" no baralho/preparadas anula a emboscada."""
+    p = player or {}
+    return VIGILIA_CARD_ID in (list(p.get("deck") or []) + list(p.get("prepared_cards") or []))
+
+
+def _opening_initiator(
+    world: dict, origin: str, player: dict | None = None
+) -> tuple[str | None, str]:
     """D4 (SPEC-346): quem age primeiro na rodada 1, pelo contexto da cena.
 
     Emboscada contra o jogador -> inimigos; o jogador iniciou o ataque (ou emboscou) -> jogador;
     sem sinal claro -> ``None`` (regra de iniciativa atual do motor)."""
     surprise = (world or {}).get("encounter_surprise")
     if surprise == "enemy":
+        if _has_vigilia(player):  # surpresa anulada: cai na regra de iniciativa atual
+            return None, "ambush_negated_vigilia"
         return "enemy", "ambush"
     if surprise == "player":
         return "heroes", "player_ambush"
@@ -2998,7 +3011,7 @@ def _board_opening_result(
     from services import prose_guard
 
     world = state.get("world") or {}
-    initiator, why = _opening_initiator(world, str(combat_meta.get("origin") or ""))
+    initiator, why = _opening_initiator(world, str(combat_meta.get("origin") or ""), player)
     combat_meta["initiator"] = initiator
     combat_meta["initiator_reason"] = why
     # Presságio da rodada 1 já visível junto com a mão (a UI o mostra antes da jogada).
