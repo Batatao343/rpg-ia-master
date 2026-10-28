@@ -71,7 +71,7 @@ follow-up, não como bloqueio.
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche, um commit por item)
+Todos os P1 e P2 corrigidos nos commits `fix(lore)` desta branch; detalhe na spec §9.1. Volkar (P2-9) também aplicado. Reindex da lore refeito e smoke da §6 executado (ver §9.1).
 
 ## Pendências
 
