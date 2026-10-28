@@ -141,6 +141,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `cron.item_failed` | `error_type`, `item_kind`, `item_ref`, `task` |
 | `cron.started` | `task` |
 | `cron.state_unavailable` | `error_type`, `task` |
+| `cron_jobs.fallback` | — |
 | `db.connect_failed` | `attempt`, `error_type`, `pool`, `wait_ms` |
 | `db.idempotency_conflict` | `game_ref`, `op_kind`, `op_ref`, `reason` |
 | `db.lease_conflict` | `game_ref`, `op_kind`, `op_ref`, `reason` |
