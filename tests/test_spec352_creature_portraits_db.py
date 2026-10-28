@@ -643,3 +643,175 @@ def test_erase_owner_drops_unpromoted_pool_rows_and_frees_key(pc):
     assert row_of(pc, k_held) is None  # chave livre para nova cotação
     kept = row_of(pc, k_promoted)
     assert kept["status"] == "ready" and kept["origin_owner_id"] is None
+
+
+# --- re-revisão Sol (P2-4, P2-5) --------------------------------------------------------------
+def test_delete_game_also_drops_private_and_pending_rows(pc):
+    """P2-4: a geração some em cascade com o jogo; linha ready/private ou pending não pode travar a chave."""
+    private_key, pending_key, shared_key = f"{pc.key}:v", f"{pc.key}:p", f"{pc.key}:s"
+    _insert_ready(pc, private_key, visibility="shared", origin_game=pc.game_id, store="private")
+    _insert_ready(
+        pc,
+        shared_key,
+        visibility="shared",
+        origin_game=pc.game_id,
+        thumb="shared/creatures/ab/s.webp",
+    )
+    pc.db.execute(
+        """insert into app.creature_portraits (portrait_key,scope,status,visibility,origin_owner_id,
+        origin_game_id) values (%s,'tipo','pending','shared',%s,%s)""",
+        (pending_key, pc.owner.user_id, pc.game_id),
+    )
+    purge_game_portraits(pc.db, pc.owner.user_id, pc.game_id)
+    assert row_of(pc, private_key) is None and row_of(pc, pending_key) is None
+    assert row_of(pc, shared_key) is not None  # compartilhada pronta continua valendo
+
+
+def test_two_real_confirms_concurrently_one_reservation_one_job():
+    """P2-5: dois `repo.confirm` completos em 2 conexões (claim -> reserve -> job): 1 vence, o outro `taken`."""
+    import threading
+    from datetime import UTC, datetime
+
+    from psycopg.rows import dict_row
+    from psycopg.types.json import Jsonb
+
+    from infrastructure.postgres import PostgresGameStore
+    from infrastructure.postgres_jobs import PostgresJobQueue
+    from services.image_quotes import ImageQuoteRepository
+    from services.shard_pricing import (
+        INSTALLED_RATE_CARD_OBSERVED_AT,
+        INSTALLED_RATE_CARD_SHA256,
+    )
+    from services.usage_metering import RATE_CARD_VERSION
+    from tests.fakes.local_pricing import installed_card_max_age_seconds
+
+    dsn = os.getenv("RPG_TEST_DATABASE_URL")
+    if not dsn:
+        pytest.skip("RPG_TEST_DATABASE_URL absent")
+
+    class Pool:  # cada `connection()` é uma conexão própria que COMMITA ao sair
+        def connection(self):
+            return psycopg.connect(dsn, row_factory=dict_row)
+
+    admin = psycopg.connect(dsn, row_factory=dict_row, autocommit=True)
+    if admin.execute("select to_regclass('app.creature_portraits') as t").fetchone()["t"] is None:
+        pytest.skip("migration da SPEC-352 não aplicada neste banco")
+    pool = Pool()
+    at = datetime(2026, 10, 12, 12, tzinfo=UTC)
+    key = f"tipo:gen:cc{uuid4().hex[:10]}"
+    version_id, profile_id = f"cc-v-{uuid4()}", f"cc-p-{uuid4()}"
+    owners = [Principal(uuid4(), "test", "a"), Principal(uuid4(), "test", "b")]
+    games = [uuid4(), uuid4()]
+    results: list = [None, None]
+    try:
+        admin.execute(
+            """insert into app.pricing_versions
+            (version_id,shard_budget_unit_brl,fx_usd_brl,fx_source,fx_observed_at,fx_max_age_seconds,
+             fx_buffer_rate,rate_card_version,rate_card_sha256,rate_card_source,
+             rate_card_observed_at,rate_card_max_age_seconds,channel_fees)
+            values (%s,0.03,5,'test',%s,864000,0.1,%s,%s,'test',%s,%s,%s)""",
+            (
+                version_id,
+                at,
+                RATE_CARD_VERSION,
+                INSTALLED_RATE_CARD_SHA256,
+                INSTALLED_RATE_CARD_OBSERVED_AT,
+                installed_card_max_age_seconds(at),
+                Jsonb({"web": {"percentage": "0.04", "fixed_brl": "0.20"}}),
+            ),
+        )
+        admin.execute(
+            """insert into app.image_price_profiles
+            (profile_id,pricing_version_id,model,size,max_provider_usd,source,expires_at)
+            values (%s,%s,'gpt-image-2-2026-04-21','1024x1536',0.02,'synthetic test only',%s)""",
+            (profile_id, version_id, at + timedelta(hours=1)),
+        )
+        os.environ["RPG_IMAGE_PRICE_PROFILE"] = profile_id
+        repo = ImageQuoteRepository(pool, at=at)
+        store = PostgresGameStore(pool)
+        quotes = []
+        for owner, game in zip(owners, games, strict=True):
+            store.create(
+                owner,
+                {
+                    "game_id": str(game),
+                    "messages": [],
+                    "event_log": [],
+                    "player": {"name": "Iria", "class_name": "Devoto do Abismo", "level": 1},
+                    "world": {"current_location": "T", "turn_count": 0, "world_clock": {"day": 1}},
+                },
+            )
+            repo.wallet.adjust_admin(
+                owner,
+                adjustment_id=str(uuid4()),
+                signed_milli=1000,
+                actor_id=uuid4(),
+                reason="committed concurrency fixture (cleaned up)",
+            )
+            quotes.append(
+                issue_monster(SimpleNamespace(repo=repo, key=key, owner=owner, game_id=game))
+            )
+        queue = PostgresJobQueue(pool)
+        barrier = threading.Barrier(2)
+
+        def attempt(i: int) -> None:
+            with psycopg.connect(dsn, row_factory=dict_row) as conn:
+                barrier.wait()
+                try:
+                    with conn.transaction():
+                        repo.confirm(
+                            owners[i],
+                            games[i],
+                            quotes[i]["quote_id"],
+                            connection=conn,
+                            epoch=0,
+                            version=1,
+                            queue=queue,
+                        )
+                    results[i] = "won"
+                except CreaturePortraitTaken:
+                    results[i] = "taken"
+
+        threads = [threading.Thread(target=attempt, args=(i,)) for i in range(2)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(60)
+        assert sorted(results) == ["taken", "won"]
+        ids = [o.user_id for o in owners]
+        reservations = admin.execute(
+            "select count(*) as n from app.wallet_reservations where owner_id = any(%s)", (ids,)
+        ).fetchone()["n"]
+        jobs = admin.execute(
+            "select count(*) as n from app.jobs where kind='generate_dynamic_art' "
+            "and owner_id = any(%s)",
+            (ids,),
+        ).fetchone()["n"]
+        assert reservations == 1 and jobs == 1
+        loser = owners[results.index("taken")]
+        balance = repo.wallet.balance(loser)
+        assert balance.available_milli == 1000 and balance.reserved_milli == 0
+        winner_index = results.index("won")
+        assert repo.wallet.balance(owners[winner_index]).reserved_milli == int(
+            quotes[winner_index]["credits_milli"]
+        )
+    finally:
+        os.environ.pop("RPG_IMAGE_PRICE_PROFILE", None)
+        ids = [o.user_id for o in owners]
+        with admin.transaction():
+            admin.execute("set local session_replication_role = replica")
+            admin.execute("delete from app.creature_portraits where portrait_key=%s", (key,))
+            tables = admin.execute(
+                """select c.table_name from information_schema.columns c
+                join information_schema.tables t on t.table_schema=c.table_schema
+                  and t.table_name=c.table_name and t.table_type='BASE TABLE'
+                where c.table_schema='app' and c.column_name='owner_id'"""
+            ).fetchall()
+            for table in tables:
+                admin.execute(
+                    f'delete from app."{table["table_name"]}" where owner_id = any(%s)', (ids,)
+                )
+            admin.execute("delete from app.games where id = any(%s)", (games,))
+            admin.execute("delete from app.image_price_profiles where profile_id=%s", (profile_id,))
+            admin.execute("delete from app.pricing_versions where version_id=%s", (version_id,))
+        admin.close()

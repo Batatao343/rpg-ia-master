@@ -321,12 +321,12 @@ class PostgresPortraitRegistry:
 
     @staticmethod
     def delete_game(db, game_id: UUID) -> list[str]:
-        """R14: apaga as linhas `game` do jogo (as demais ficam). Devolve keys compartilhadas."""
+        """R14: apaga as linhas `game` do jogo, e as `private`/`pending` (a geracao some em cascade: P2-4). Devolve keys compartilhadas."""
         return [
             str(v)
             for row in db.execute(
                 """delete from app.creature_portraits where origin_game_id=%s
-                and visibility='game' returning object_keys, store""",
+                and (visibility='game' or store='private' or status='pending') returning object_keys, store""",
                 (game_id,),
             ).fetchall()
             if row["store"] == "shared"
