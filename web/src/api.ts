@@ -409,21 +409,22 @@ export const postArtBrief = (payload: {
 
 export interface ImageQuote {
   quote_id: string;
-  type: "player" | "npc" | "scene";
+  type: "player" | "npc" | "scene" | "monster";
   credits_milli: string;
   pricing_version: string;
   expires_at: string;
   reformulation: boolean;
 }
 
-export const requestImageQuote = (gameId: string, imageType: ImageQuote["type"] = "player", reformulation = false, offerId?: string) =>
+export const requestImageQuote = (gameId: string, imageType: ImageQuote["type"] = "player", reformulation = false, offerId?: string, enemyId?: string) =>
   req<ImageQuote>(`/game/${encodeURIComponent(gameId)}/art/quote`, {
-    method: "POST", body: JSON.stringify({ image_type: imageType, reformulation, offer_id: offerId }),
+    method: "POST", body: JSON.stringify({ image_type: imageType, reformulation, offer_id: offerId,
+      ...(imageType === "monster" && enemyId ? { enemy_id: enemyId } : {}) }),
   });
 
 export const confirmPlayerArt = (gameId: string, actionId: string, quoteId: string) =>
   req<{ status: string; generation_id?: string; type: ImageQuote["type"]; placeholder: boolean;
-    art_generations?: { generation_id: string; type: ImageQuote["type"]; subject_id: string }[];
+    art_generations?: { generation_id: string; type: "player" | "npc" | "scene"; subject_id: string }[];
     art_offers?: ArtOffer[] }>(
     `/game/${encodeURIComponent(gameId)}/art/confirm`, {
       method: "POST",

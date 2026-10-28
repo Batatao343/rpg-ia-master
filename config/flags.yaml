@@ -878,7 +878,7 @@ RPG_CREATURE_ART:
   default: "off"
   spec: SPEC-347
   expires: 2027-01-25
-  note: "retrato de inimigo no tabuleiro: oferta de geração paga pelo jogador"
+  note: "retrato de inimigo no tabuleiro; oferta de geração paga pelo jogador e registro compartilhado (SPEC-352)"
 RPG_SHARED_POOL:
   kind: release
   default: "off"

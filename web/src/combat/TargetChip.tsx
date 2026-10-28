@@ -51,7 +51,8 @@ function PortraitOffer({ p, onGenerate, disabled }: { p: Participant; onGenerate
   }
   return (
     <span className="tchip__gen-confirm" role="group" aria-label={`Gerar o retrato de ${p.name}`}>
-      <span>{`Gerar o retrato de ${p.name} por ${offer.preco_estilhas} Estilhas? ${alone ? `A imagem é só deste ${p.name}.` : "A imagem fica no bestiário e outros jogadores a verão."}`}</span>
+      <span>{`Gerar o retrato de ${p.name} por até ${offer.preco_estilhas} Estilhas? ${alone ? `A imagem é só deste ${p.name}.` : "A imagem fica no bestiário e outros jogadores a verão."}`}</span>
+      <small data-gen-risk>Se a geração falhar antes de começar, o saldo é liberado.</small>
       <button type="button" className="btn btn--primary btn--sm" data-gen-go onClick={() => { setAsking(false); onGenerate(p.id); }}>Gerar</button>
       <button type="button" className="btn btn--ghost btn--sm" data-gen-no onClick={() => setAsking(false)}>Agora não</button>
     </span>

@@ -27,6 +27,8 @@ interface Props {
   onEquip: (pick: { item_id?: string; unequip_slot?: string }) => void;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onCardReward?: RewardSender;
+  /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
+  onGeneratePortrait?: (enemyId: string, priceShards: number) => void;
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
@@ -42,7 +44,7 @@ interface Props {
 
 /** SPEC-204: orquestrador da tela de jogo — topbar + workspace (chat + UM painel)
  *  + overlays. Controles táticos vivem só na aba Combate do workspace. */
-export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
+export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, busy, onAction, onNew, onLevelUp, onEquip, onPrepareCards, onCardReward, onGeneratePortrait, onLogout, onAccount, accountBalance, confirmLeave = false, artPanel, onQuoteOffer, offersDisabled, owner = "legacy" }: Props) {
   const compact = useIsCompact();
   const [confirmingNew, setConfirmingNew] = useState(false);
   const [luDismissedKey, setLuDismissedKey] = useState<string | null>(null);
@@ -126,7 +128,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
       <Workspace key={data?.game_id ?? "sem-jogo"} ref={workspace} owner={owner} data={data} log={log}
         thinking={thinking} turn={turn} onRetryTurn={onRetryTurn} busy={busy} blocked={blocked}
         onAction={onAction} onEquip={onEquip}
-        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onOpenLevelUp={openLevelUp}
+        onPrepareCards={onPrepareCards} onCardReward={onCardReward} onGeneratePortrait={onGeneratePortrait} onOpenLevelUp={openLevelUp}
         artPanel={artPanel} onQuoteOffer={onQuoteOffer} offersDisabled={offersDisabled}
         place={data?.current_location || "—"} banner={compact ? banner : undefined}
         headActions={compact ? (

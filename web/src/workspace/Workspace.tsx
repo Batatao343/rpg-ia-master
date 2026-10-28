@@ -42,6 +42,8 @@ interface Props {
   onEquip?: EquipFn;
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onCardReward?: RewardSender;
+  /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
+  onGeneratePortrait?: (enemyId: string, priceShards: number) => void;
   onOpenLevelUp?: () => void;
   /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
   dismissedResult?: string | null;
@@ -355,7 +357,7 @@ export const Workspace = forwardRef<WorkspaceHandle, Props>(function Workspace(p
             codexSection={codexSection} onCodexSection={setCodexSection}
             onSelectTab={openTab} onClose={showChat} onEscape={() => composerRef.current?.focus()}
             onAction={onAction} onEquip={onEquip}
-            onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onOpenLevelUp={props.onOpenLevelUp}
+            onPrepareCards={props.onPrepareCards} onCardReward={props.onCardReward} onGeneratePortrait={props.onGeneratePortrait} onOpenLevelUp={props.onOpenLevelUp}
             dismissedResult={props.dismissedResult} onDismissResult={props.onDismissResult} artPanel={props.artPanel} />
         </div>
         <Composer ref={composerRef} data={data} busy={busy} blocked={blocked} deckLocked={!!data?.combat?.active && !!data?.combat?.pilhas} onFocusCombat={() => openTab("combate")}

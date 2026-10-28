@@ -486,6 +486,7 @@ details.scene-strip { display: block; }
 .tchip__portrait-badge { position: absolute; inset-inline: 0; bottom: 0; padding: 0.05rem 0.2rem; background: var(--bg-deep); color: var(--ink); font-size: 0.65rem; font-style: normal; text-align: center; }
 .tchip__gen, .tchip__gen-confirm { grid-column: 1 / -1; margin-top: 0.3rem; }
 .tchip__gen-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
+.tchip__gen-confirm small { flex-basis: 100%; font-size: 0.74rem; color: var(--muted); }
 @media (min-width: 641px) { .tchip__portrait { inline-size: 72px; block-size: 72px; } }
 @media (pointer: coarse) { .tchip__gen, .tchip__gen-confirm button { min-height: 44px; min-width: 44px; } }
 @media (max-width: 640px) {

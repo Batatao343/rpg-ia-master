@@ -23,6 +23,7 @@ import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
+import { portraitErrorBanner, withinShownPrice } from "./lib/portraitOrder";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
@@ -379,9 +380,31 @@ export function App() {
     } finally { if (session.current === generation) setImageBusy(false); }
   }
 
-  async function confirmImageQuote() {
-    const current = imageQuote;
-    if (!current || imageBusy || current.session !== session.current) return;
+  /** SPEC-352 R12: retrato pago de inimigo. O "Gerar" inline já foi o consentimento; se a cotação real não passa
+   *  do preço mostrado, confirma direto (sem 2º modal). Cotação maior abre o diálogo da 326 com o preço real. */
+  async function handleGeneratePortrait(enemyId: string, shownShards: number) {
+    const gameId = data?.game_id;
+    if (!gameId || imageBusy) return;
+    const generation = session.current;
+    setImageBusy(true); setImageError("");
+    try {
+      const quote = await api.requestImageQuote(gameId, "monster", false, undefined, enemyId);
+      if (session.current !== generation) return;
+      const current = { quote, gameId, session: generation, actionId: crypto.randomUUID() };
+      if (withinShownPrice(quote.credits_milli, shownShards)) await confirmImageQuote(current, true);
+      else setImageQuote(current);
+    } catch (error) {
+      if (session.current === generation) {
+        const status = error instanceof api.HttpError ? error.status : undefined;
+        const code = error instanceof api.HttpError ? error.code : undefined;
+        setBanner({ ...portraitErrorBanner(status, code, "Cotação indisponível: " + errMsg(error)), requestId: errRequestId(error) });
+      }
+    } finally { if (session.current === generation) setImageBusy(false); }
+  }
+
+  async function confirmImageQuote(direct?: typeof imageQuote, inline = false) {
+    const current = direct ?? imageQuote;
+    if (!current || (imageBusy && !inline) || current.session !== session.current) return;
     setImageBusy(true); setImageError("");
     try {
       const art = await api.confirmPlayerArt(current.gameId, current.actionId, current.quote.quote_id);
@@ -394,10 +417,21 @@ export function App() {
         art_offers: art.art_offers ?? prev.art_offers,
       } : prev);
       setImageQuote(null);
-      setBanner({ msg: "Imagem confirmada. O saldo foi reservado e a geração será processada.", kind: "info" });
+      setBanner({
+        msg: current.quote.type === "monster" ? "Retrato encomendado. O saldo foi reservado."
+          : "Imagem confirmada. O saldo foi reservado e a geração será processada.",
+        kind: "info",
+      });
       if (authRequired) void refreshBalance(owner.current, current.session);
     } catch (error) {
-      if (session.current === current.session) setImageError("Não foi possível confirmar: " + errMsg(error));
+      if (session.current !== current.session) return;
+      if (current.quote.type === "monster") {
+        // 409/402/503 do retrato: aviso curto (nada cobrado); o diálogo, se aberto, fecha.
+        const status = error instanceof api.HttpError ? error.status : undefined;
+        const code = error instanceof api.HttpError ? error.code : undefined;
+        setImageQuote(null);
+        setBanner({ ...portraitErrorBanner(status, code, "Não foi possível confirmar: " + errMsg(error)), requestId: errRequestId(error) });
+      } else setImageError("Não foi possível confirmar: " + errMsg(error));
     } finally { if (session.current === current.session) setImageBusy(false); }
   }
 
@@ -1060,6 +1094,7 @@ export function App() {
               onEquip={handleEquip}
               onPrepareCards={handlePrepareCards}
               onCardReward={handleCardReward}
+              onGeneratePortrait={handleGeneratePortrait}
               onLogout={authRequired ? handleLogout : undefined}
               onAccount={authRequired ? () => { accountReturn.current = "play"; setScreen("account"); } : undefined}
               accountBalance={accountBalance}
