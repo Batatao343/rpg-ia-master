@@ -108,6 +108,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "combat.companion_order_refused": ("verb",),
     "combat.companion_orders_shadow": ("verb",),
     "combat.enemy_knowledge_failed": (),
+    "combat.fast_text_failed": ("error", "where"),
     "combat.freetext_refused": (),
     "combat.mechanics": ("step_count", "steps", "truncated"),
     "combat.narrate_failed": ("error",),
