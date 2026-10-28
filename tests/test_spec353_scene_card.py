@@ -60,19 +60,70 @@ def test_named_refusals_never_expose_id(cid):
         assert not ID_RE.search(res["error"])
 
 
-def test_hand_contract_playable_cards_accepted(monkeypatch):
-    """R2: toda Carta jogavel da mao inicial (+ objeto de cena) e aceita por use_card."""
+def _engine_state(player: dict, piles: dict) -> dict:
+    """Formato que o agente passa ao motor (agents/combat.py: round_state)."""
+    return {"player": player, "_piles": piles, "_deck_mode": "on"}
+
+
+@pytest.mark.parametrize(
+    "klass",
+    ["Devoto do Abismo", "Sangromante", "Corruptor", "Arcanista Cinzento", "Médico de Campo"],
+)
+def test_hand_contract_playable_cards_accepted(monkeypatch, klass):
+    """R2: toda Carta ativa da mao inicial (+ 1 objeto de cena) e aceita por use_card no
+    formato de producao ({"player", "_piles"})."""
+    monkeypatch.setenv("RPG_CARD_DECK", "on")
+    basics = cards.basicas_for_class(klass)
+    deck = (basics["golpe"] * 5) + (basics["guarda"] * 4) + (basics["assinatura"] * 3)
+    assert deck and all(cards.get_card(c) for c in deck)  # ids reais, nada pulado
+    card = _obj_card()
+    player = {
+        "class_name": klass,
+        "prepared_cards": [],
+        "deck": deck,
+        "card_usage": {},
+        "entropy": 9,
+        "level": 1,
+    }
+    piles = card_piles.start_piles(player, 11)
+    piles["mao"].append(card["id"])
+    checked = 0
+    for cid in list(piles["mao"]):
+        if (cards.get_card(cid) or {}).get("tipo") != "ativa":
+            continue
+        fresh = dict(player, card_usage={}, entropy=9)
+        assert cards.use_card(_engine_state(fresh, piles), cid)["ok"], cid
+        checked += 1
+    assert checked >= 2
+
+
+def test_object_card_end_to_end_via_run_round(monkeypatch):
+    """P1-1: com pilhas reais e o objeto na mao, o motor resolve o ataque do heroi."""
+    import random
+
+    from services import conflict_orchestrator as orch
+    from services import conflict_turn as ct
+    from tests.test_fix_vitalidade_terminal import _actor, _scene
+
     monkeypatch.setenv("RPG_CARD_DECK", "on")
     card = _obj_card()
-    for cid in ("bas_golpe", "bas_guarda"):
-        if cards.get_card(cid) is None:
-            continue
-        st = {
-            "player": {"prepared_cards": [], "deck": [cid], "card_usage": {}, "entropy": 5},
-            "combat": {"pilhas": {"mao": [cid, card["id"]], "compra": [], "descarte": [], "exaurida": []}},
-        }
-        view = card_piles.public_view(st["combat"]["pilhas"])
-        for row in view["mao"]:
-            if row["jogavel"] and row["tipo"] == "ativa":
-                fresh = {"player": dict(st["player"], card_usage={}), "combat": st["combat"]}
-                assert cards.use_card(fresh, row["id"])["ok"], row["id"]
+    hero = _actor("player", corpo=5, is_player=True)
+    hero.update(class_name="Devoto do Abismo", prepared_cards=[], card_usage={}, entropy=9)
+    basics = cards.basicas_for_class("Devoto do Abismo")
+    hero["deck"] = (basics["golpe"] * 5) + (basics["guarda"] * 4) + (basics["assinatura"] * 3)
+    piles = card_piles.start_piles(hero, 3)
+    piles["mao"].append(card["id"])
+    boss = _actor("boss", corpo=3, categoria="padrao")
+    step = ct.TurnStep(kind="card", card_id=card["id"], target_id="boss")
+    out = orch.run_round(
+        _scene("player", "boss"),
+        {"player": hero, "boss": boss},
+        {"hero": ["player"], "ally": [], "enemy": ["boss"]},
+        declarations={"player": ct.TurnDeclaration(actor_id="player", acao=step, jogadas=[step])},
+        initiator="heroes",
+        state=_engine_state(hero, piles),
+        rng=random.Random(4),
+    )
+    mine = [a for a in out["attacks"] if a["actor_id"] == "player"]
+    assert mine and mine[0]["card_id"] == card["id"], out["logs"]
+    assert not any("não pôde ser jogada" in str(l) for l in out["logs"])

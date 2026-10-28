@@ -531,7 +531,8 @@ def _in_scene_hand(state: dict | None, card_id: str) -> bool:
     """SPEC-353 R1: Carta temporária de objeto de cena presente na mão do conflito."""
     from services import scene_cards
 
-    piles = ((state or {}).get("combat") or {}).get("pilhas")
+    st = state or {}
+    piles = st.get("_piles") or (st.get("combat") or {}).get("pilhas")  # round_state do agente
     return scene_cards.in_hand(piles, card_id) and card_id in _TEMP_CARDS
 
 
