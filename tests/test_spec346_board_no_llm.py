@@ -311,3 +311,13 @@ def test_shadow_and_off_keep_narrated_rounds(monkeypatch, mode):
     out = combat._combat_node(state)
     assert narrated, "off/shadow seguem narrando a rodada"
     assert out["combat"]["round"] == 1  # e a abertura resolve a 1ª rodada, como antes
+
+
+def test_api_flee_button_builds_structured_flee_declaration(monkeypatch):
+    """Contrato da API (D5): `action_kind="flee"` vira `combat_declaration.acao.kind == "flee"`."""
+    import api
+    from tests.test_api_jogadas import _req, _state
+
+    state = _state(monkeypatch)
+    api._apply_action_options(state, _req(action_kind="flee"))
+    assert state["combat_declaration"]["acao"]["kind"] == "flee"
