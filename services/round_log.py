@@ -25,6 +25,7 @@ _HUMAN_LINE_RES = tuple(
     re.compile(p)
     for p in (
         r": ganha condição ",
+        r": condição .+ renovada$",
         r" terminou\.$",
         r"cumpre o que o presságio anunciava\.$",
         r" age de novo\.$",
@@ -83,6 +84,30 @@ def _region(value: Any) -> str:
     return _REGION_PT.get(text, text.replace("_", " "))
 
 
+_CAT_PT = {"leve": "leve", "grave": "grave", "critico": "crítico", "crítico": "crítico"}
+_REGION_PREP = {
+    "cabeca": "na cabeça",
+    "torso": "no torso",
+    "braco_esquerdo": "no braço esquerdo",
+    "braco_direito": "no braço direito",
+    "perna_esquerda": "na perna esquerda",
+    "perna_direita": "na perna direita",
+    "braco": "no braço",
+    "perna": "na perna",
+}
+
+
+def _cat_pt(value: Any) -> str:
+    """SPEC-353 R34: categoria de Ferimento em pt-BR (com acento)."""
+    return _CAT_PT.get(str(value or "").strip(), str(value or "").strip())
+
+
+def _region_phrase(value: Any) -> str:
+    """SPEC-353 R34: "no torso / na cabeça / no braço esquerdo" — nunca "na região X"."""
+    text = str(value or "").strip()
+    return _REGION_PREP.get(text) or f"no {text.replace('_', ' ')}"
+
+
 def _result_phrase(atk: dict) -> str:
     """Resultado em linguagem, sem aritmética: erra / acerta — N de dano, ferimento X na Y."""
     resultado = str(atk.get("resultado") or "")
@@ -97,7 +122,9 @@ def _result_phrase(atk: dict) -> str:
     parts = [f"{head} — {int(dano)} de dano"]
     fer = atk.get("ferimento") or {}
     if fer.get("categoria"):
-        parts.append(f"ferimento {fer['categoria']} na região {_region(fer.get('regiao'))}")
+        parts.append(
+            f"ferimento {_cat_pt(fer['categoria'])} {_region_phrase(fer.get('regiao'))}"
+        )
     return ", ".join(parts)
 
 
@@ -149,50 +176,109 @@ def _weapon_name(actor: dict) -> str:
     return str(weapon or "").strip()
 
 
+def _voce(line: str, hero_name: str) -> str:
+    """SPEC-353 R36: linhas do motor falam de "Você", com condição em maiúscula e concordância."""
+    hero = (hero_name or "").strip()
+    text = line.strip()
+    if hero and text.startswith(hero):
+        m = re.match(rf"^{re.escape(hero)}: ganha condição (.+?)\.?$", text)
+        if m:
+            return f"Você ganha a condição {m.group(1)[:1].upper()}{m.group(1)[1:]}."
+        m = re.match(rf"^{re.escape(hero)}: condição (.+?) renovada\.?$", text)
+        if m:
+            return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} foi renovada."
+        m = re.match(rf"^{re.escape(hero)}: (.+?) terminou\.$", text)
+        if m:
+            return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} terminou."
+        text = "Você" + text[len(hero) :]
+    m = re.match(r"^(.+?): ganha condição (.+?)\.?$", text)
+    if m:
+        return f"{m.group(1)} ganha a condição {m.group(2)[:1].upper()}{m.group(2)[1:]}."
+    m = re.match(r"^(.+?): condição (.+?) renovada\.?$", text)
+    if m:
+        return f"A condição {m.group(2)[:1].upper()}{m.group(2)[1:]} de {m.group(1)} foi renovada."
+    return text
+
+
+def _sem_vitalidade_line(actor: dict, name: str) -> str:
+    """SPEC-353 R27/R28: o Padrão/Elite a 0 de Vitalidade segue de pé — explica o porquê."""
+    line = f"{name} está sem Vitalidade — cada golpe agora abre Ferimentos."
+    try:
+        from services import bestiary_knowledge as bk
+        from services import death_flow
+
+        corpo = ((bk.public_panel(actor).get("virtudes")) or {}).get("corpo")
+        if corpo is not None:
+            espacos = int(death_flow._wound_spaces(actor).get("critico", 0) or 0)
+            have = len((actor.get("ferimentos") or {}).get("critico", []) or [])
+            falta = max(0, espacos - have)
+            if falta:
+                s = "" if falta == 1 else "s"
+                line = line[:-1] + f"; faltam {falta} Ferimento{s} Crítico{s}."
+    except Exception:  # silent-ok: o número só aparece se for público; sem ele, a frase base basta
+        pass
+    return line
+
+
 def round_registry(
     out: dict,
     actors_by_id: dict[str, dict],
     status_logs: Iterable[str] | None = None,
     extra_lines: Iterable[str] | None = None,
 ) -> list[str]:
-    """R4/R5: frases curtas por evento, na ordem jogadas do herói/aliados, inimigos, DoT e
-    condições, quedas e Última Ação, Cartas de Cena e de status."""
+    """R4/R5 + SPEC-353 R12: frases curtas por evento na ordem CRONOLÓGICA da rodada (a mesma do
+    ``mech_log`` e do ``round_board``), depois condições do motor, quedas e Última Ação, Cartas de
+    Cena e de status."""
+    from services.combat_preview import chrono_events
+
     names = _names(actors_by_id)
-    attacks = [a for a in (out.get("attacks") or []) if a.get("label") != "Última Ação"]
-    hero_lines: list[str] = []
-    enemy_lines: list[str] = []
-    attacked: set[tuple[str, str]] = set()
-    for atk in attacks:
-        line = _attack_line(atk, names, actors_by_id)
-        (
-            hero_lines if _is_hero_side(str(atk.get("actor_id")), actors_by_id) else enemy_lines
-        ).append(line)
-        if atk.get("card_id"):
-            attacked.add((str(atk.get("actor_id")), str(atk.get("card_id"))))
-    # Cartas de apoio (cura, proteção...) não geram ataque: uma frase com o sabor.
-    for used in out.get("cards_used") or []:
-        key = (str(used.get("actor_id")), str(used.get("card_id")))
-        if key in attacked:
-            continue
-        card = used.get("card") or _card(used.get("card_id"))
-        if not card:
-            continue
-        who = names.get(str(used.get("actor_id")), "Alguém")
-        sabor = _sabor(card)
-        line = f"{who} joga {card.get('name')}" + (f": {sabor}." if sabor else ".")
-        (
-            hero_lines if _is_hero_side(str(used.get("actor_id")), actors_by_id) else enemy_lines
-        ).append(line)
+    hero_name = next(
+        (str(a.get("name") or "") for a in actors_by_id.values() if a.get("is_player")), ""
+    )
+    attacked = {
+        (str(a.get("actor_id")), str(a.get("card_id")))
+        for a in (out.get("attacks") or [])
+        if a.get("card_id") and a.get("label") != "Última Ação"
+    }
+    event_lines: list[str] = []
+    for kind, payload in chrono_events(out):
+        if kind == "attack":
+            atk = payload[0]
+            if atk.get("label") != "Última Ação":
+                event_lines.append(_attack_line(atk, names, actors_by_id))
+        elif kind == "tick":
+            victim = names.get(str(payload.get("actor_id")), str(payload.get("actor_id") or "Alguém"))
+            event_lines.append(
+                f"{payload.get('condition')} corrói {victim}: "
+                f"{int(payload.get('dano_final', 0))} de dano contínuo."
+            )
+        elif kind == "custo":
+            card = _card(payload.get("card_id")) or {}
+            who = names.get(str(payload.get("actor_id")), "Alguém")
+            verbo = "paga" if who == "Você" else "paga"
+            line = f"{who} {verbo} {int(payload.get('amount', 0))} de Vitalidade por {card.get('name', 'uma Carta')}"
+            note = payload.get("ferimento") or {}
+            if note.get("categoria"):
+                line += f", ferimento {_cat_pt(note['categoria'])} {_region_phrase(note.get('regiao'))}"
+            event_lines.append(line + ".")
+        else:  # "card": Carta de apoio sem ataque (cura, proteção...) — uma frase com o sabor
+            used = payload
+            key = (str(used.get("actor_id")), str(used.get("card_id")))
+            if key in attacked:
+                continue
+            card = used.get("card") or _card(used.get("card_id"))
+            if not card:
+                continue
+            who = names.get(str(used.get("actor_id")), "Alguém")
+            sabor = _sabor(card)
+            event_lines.append(f"{who} joga {card.get('name')}" + (f": {sabor}." if sabor else "."))
 
     dot_lines: list[str] = []
-    for tick in out.get("ticks") or []:
-        victim = names.get(str(tick.get("actor_id")), str(tick.get("actor_id") or "Alguém"))
-        dot_lines.append(
-            f"{tick.get('condition')} corrói {victim}: {int(tick.get('dano_final', 0))} de dano contínuo."
-        )
     for line in out.get("logs") or []:
-        if _is_human_line(str(line)) and str(line) not in dot_lines:
-            dot_lines.append(str(line))
+        if _is_human_line(str(line)):
+            human = _voce(str(line), hero_name)
+            if human not in dot_lines:
+                dot_lines.append(human)
 
     for line in extra_lines or []:  # fuga, ordens a companheiros, clima: já humanas
         line = str(line or "").strip()
@@ -206,6 +292,11 @@ def round_registry(
     for aid in out.get("terminal") or []:
         if aid != "player" and aid not in (out.get("deaths") or []):
             fall_lines.append(f"{names.get(str(aid), 'Alguém')} cai, à beira da morte.")
+    for item in out.get("sem_vitalidade") or []:
+        aid = str(item.get("actor_id"))
+        actor = actors_by_id.get(aid) or {}
+        if actor and not actor.get("dead") and aid not in (out.get("deaths") or []):
+            fall_lines.append(_sem_vitalidade_line(actor, names.get(aid, "Alguém")))
     for atk in out.get("attacks") or []:
         if atk.get("label") == "Última Ação":
             fall_lines.append(_attack_line(atk, names, actors_by_id))
@@ -215,7 +306,7 @@ def round_registry(
 
     seen: set[str] = set()
     result: list[str] = []
-    for line in [*hero_lines, *enemy_lines, *dot_lines, *fall_lines, *scene_lines, *status]:
+    for line in [*event_lines, *dot_lines, *fall_lines, *scene_lines, *status]:
         line = line.strip()
         if line and line not in seen:
             seen.add(line)
@@ -252,7 +343,7 @@ def _wound_phrases(player: dict) -> list[str]:
     out = []
     for cat in ("critico", "grave", "leve"):
         for w in fer.get(cat, []) or []:
-            out.append(f"ferimento {cat} na região {_region(w.get('regiao'))}")
+            out.append(f"ferimento {_cat_pt(cat)} {_region_phrase(w.get('regiao'))}")
     return out
 
 
@@ -267,6 +358,116 @@ _OUTCOME_PT = {
 }
 
 
+def _fact_names(player: dict, enemies: list[dict], extra: dict[str, str] | None = None) -> dict[str, str]:
+    names = {"player": "Você"}
+    for e in enemies or []:
+        for key in (e.get("id"), e.get("name")):
+            if key:
+                names[str(key)] = str(e.get("name") or key)
+    for key, value in (extra or {}).items():
+        names.setdefault(str(key), str(value))
+    return names
+
+
+def _event_result(atk: dict) -> str:
+    """Resultado em linguagem, SEM número (R5)."""
+    if not atk.get("acerto") or atk.get("resultado") == "erro":
+        return "errou"
+    head = {"critico": "acerto crítico", "supercritico": "acerto supercrítico"}.get(
+        str(atk.get("resultado")), "acertou"
+    )
+    fer = atk.get("ferimento") or {}
+    if fer.get("categoria"):
+        head += f", ferimento {_cat_pt(fer['categoria'])} {_region_phrase(fer.get('regiao'))}"
+    return head
+
+
+def authorship(last_out: dict | None, names: dict[str, str]) -> dict:
+    """SPEC-353 R5-R8: quem fez o quê na rodada final, estruturado.
+
+    ``hero_cards``: nome da Carta/arma do herói → "hit"|"miss"; ``final_by_hero``: o golpe final
+    foi do herói?; ``lines``: as linhas de fatos; ``final_lines``: as de golpe final."""
+    last_out = last_out or {}
+    from services.combat_preview import chrono_events
+
+    lines: list[str] = []
+    hero_cards: dict[str, str] = {}
+    last_hero_hit: bool | None = None
+    for kind, payload in chrono_events(last_out):
+        if kind == "attack":
+            atk = payload[0]
+            actor = str(atk.get("actor_id"))
+            who = names.get(actor, "Alguém")
+            target = names.get(str(atk.get("target_id")), "Alguém")
+            card = _card(atk.get("card_id"))
+            hero = actor == "player"
+            if atk.get("label") == "Última Ação":
+                verb = "executou a Última Ação"
+            elif card is not None and hero:
+                verb = "jogou"
+            else:
+                verb = "atacou"
+            what = f" {card['name']}" if card and verb != "executou a Última Ação" else ""
+            if verb == "executou a Última Ação" and card:
+                what = f" com {card['name']}"
+            lines.append(f"{who} {verb}{what} em {target}: {_event_result(atk)}.")
+            if hero:
+                last_hero_hit = bool(atk.get("acerto"))
+                if card:
+                    key = card["name"]
+                    hit = bool(atk.get("acerto"))
+                    hero_cards[key] = "hit" if (hit or hero_cards.get(key) == "hit") else "miss"
+        elif kind == "tick":
+            victim = names.get(str(payload.get("actor_id")), "Alguém")
+            lines.append(f"{payload.get('condition')} corroeu {victim}.")
+        elif kind == "custo":
+            card = _card(payload.get("card_id")) or {}
+            who = names.get(str(payload.get("actor_id")), "Alguém")
+            lines.append(f"{who} pagou Vitalidade pelo custo de {card.get('name', 'uma Carta')}.")
+    final_lines: list[str] = []
+    final_by_hero = False
+    final_on_enemy = False
+    for blow in last_out.get("final_blows") or []:
+        target = names.get(str(blow.get("target_id")), "Alguém")
+        by = str(blow.get("by_actor_id") or "")
+        card = _card(blow.get("card_id"))
+        kind = blow.get("kind")
+        if str(blow.get("target_id")) == "player":
+            if kind == "dano_continuo":
+                final_lines.append(
+                    f"Quem derrubou o herói: o dano contínuo de {blow.get('condition') or 'uma condição'}."
+                )
+            elif kind == "auto_dano":
+                final_lines.append("Quem derrubou o herói: o custo em Vitalidade da própria Carta.")
+            else:
+                final_lines.append(f"Quem derrubou o herói: {names.get(by, 'um inimigo')}.")
+            continue
+        final_on_enemy = True
+        if kind == "dano_continuo":
+            final_lines.append(
+                f"Golpe final: o {blow.get('condition') or 'dano contínuo'} (dano contínuo) em {target}."
+            )
+        elif by == "player":
+            final_by_hero = True
+            final_lines.append(
+                f"Golpe final: {card['name'] if card else 'seu ataque'} de Você em {target}."
+            )
+        else:
+            final_lines.append(
+                f"Golpe final: {card['name'] if card else 'o ataque'} de {names.get(by, 'um aliado')} em {target}."
+            )
+    if final_on_enemy and not final_by_hero and last_hero_hit is False:
+        final_lines.append("Seu último golpe errou.")
+    return {
+        "lines": lines,
+        "final_lines": final_lines,
+        "hero_cards": hero_cards,
+        "final_by_hero": final_by_hero,
+        "final_on_enemy": final_on_enemy,
+        "hero_last_missed": last_hero_hit is False,
+    }
+
+
 def outcome_facts(
     outcome: str,
     conflict_summary: dict,
@@ -274,8 +475,11 @@ def outcome_facts(
     enemies: list[dict],
     last_out: dict | None = None,
     decisive_cards: list[str] | None = None,
+    names: dict[str, str] | None = None,
 ) -> list[str]:
-    """R12/R14: fatos em linguagem, SEM nenhum dígito, para o resumo final."""
+    """R12/R14 + SPEC-353 R5/R6: fatos em linguagem, SEM nenhum dígito, para o resumo final.
+    As linhas de autoria (quem fez o quê, em quem, com que resultado) substituem as "Cartas
+    decisivas" soltas; o golpe final vem explícito."""
     last_out = last_out or {}
     facts = [f"Desfecho: {_OUTCOME_PT.get(outcome, outcome)}."]
     summ = conflict_summary or {}
@@ -287,15 +491,15 @@ def outcome_facts(
         ("fugitivos", "fugiu"),
         ("capturados", "foi capturado"),
     ):
-        names = [str(n) for n in summ.get(key) or [] if str(n) and str(n) != player.get("name")]
-        if names:
-            facts.append(f"{', '.join(names)} {verb}.")
+        pnames = [str(n) for n in summ.get(key) or [] if str(n) and str(n) != player.get("name")]
+        if pnames:
+            facts.append(f"{', '.join(pnames)} {verb}.")
+    auth = authorship(last_out, _fact_names(player, enemies, names))
+    facts += auth["lines"]
+    facts += auth["final_lines"]
     weapon = _weapon_name(player)
     if weapon:
         facts.append(f"Arma do herói: {weapon}.")
-    cards = [c for c in (decisive_cards or []) if c]
-    if cards:
-        facts.append(f"Cartas decisivas: {', '.join(cards)}.")
     wounds = _wound_phrases(player)
     facts.append(
         f"Herói: {qualitative_state(player)}" + (f" ({'; '.join(wounds)})." if wounds else ".")
@@ -339,7 +543,32 @@ def decisive_cards(last_out: dict, limit: int = 2) -> list[str]:
     return [str((_card(c) or {}).get("name") or c) for c in ranked]
 
 
-def deterministic_outcome_text(outcome: str, conflict_summary: dict, player: dict) -> str:
+def final_blow_sentence(last_out: dict | None, names: dict[str, str]) -> str:
+    """SPEC-353 R10: a frase do golpe final, sem dígitos, com a autoria certa."""
+    for blow in (last_out or {}).get("final_blows") or []:
+        tid = str(blow.get("target_id"))
+        if tid == "player":
+            continue
+        target = names.get(tid, "O inimigo")
+        by = str(blow.get("by_actor_id") or "")
+        if blow.get("kind") == "dano_continuo":
+            cond = str(blow.get("condition") or "dano contínuo")
+            return f"O {cond} termina o serviço: {target} tomba."
+        if by == "player":
+            return f"Seu golpe termina o serviço: {target} tomba."
+        who = names.get(by)
+        if who:
+            return f"{who} termina o serviço: {target} tomba."
+    return ""
+
+
+def deterministic_outcome_text(
+    outcome: str,
+    conflict_summary: dict,
+    player: dict,
+    last_out: dict | None = None,
+    names: dict[str, str] | None = None,
+) -> str:
     """R15: parágrafo legível montado em Python (nunca bullets, ⚔️, ids nem números)."""
     from services.conflict_summary import player_summary_text
 
@@ -356,6 +585,9 @@ def deterministic_outcome_text(outcome: str, conflict_summary: dict, player: dic
     body = player_summary_text(conflict_summary or {})
     if body:
         parts.append(body)
+    blow = final_blow_sentence(last_out, {"player": "Você", **(names or {})})
+    if blow:
+        parts.append(blow)
     wounds = _wound_phrases(player)
     if wounds and outcome != "fled":
         parts.append("Você carrega " + ", ".join(wounds[:3]) + ".")

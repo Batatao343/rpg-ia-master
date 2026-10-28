@@ -166,12 +166,14 @@ def test_dot_ticks_and_heals_enter_the_board():
             {"actor_id": "player", "attacks": [0, 0], "cards": [0, 1]},
         ],
     }
+    # SPEC-353 R51: fonte desconhecida -> ator_id None, lado "efeito"; a vítima vai em alvo_id.
     log = cpv.round_board(out, ACTORS, {"enemy_1"})
-    assert [e["ator_id"] for e in log] == ["enemy_1", "player"]
+    assert [e["ator_id"] for e in log] == [None, "player"]
+    assert log[0]["alvo_id"] == "enemy_1" and log[0]["tipo"] == "dano_continuo"
     assert (
         log[0]["rotulo"] == "Dano contínuo"
         and log[0]["efeito"] == "−2 Vitalidade"
-        and log[0]["lado"] == "inimigo"
+        and log[0]["lado"] == "efeito"
     )
     assert log[1]["efeito"] == "+2 Vitalidade"
 

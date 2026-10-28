@@ -226,6 +226,32 @@ def _snapshot_conditions(actors_by_id: dict[str, dict]) -> dict[str, list[dict]]
     return {aid: list(a.get("active_conditions") or []) for aid, a in actors_by_id.items()}
 
 
+def _note_turn_records(
+    before: dict[str, list[dict]], actors_by_id: dict[str, dict], actor_id: str, out: dict
+) -> None:
+    """SPEC-353 R51/R27: registro de view. Quem pôs cada condição nova (``condicoes_novas``) e
+    quem chegou a 0 de Vitalidade ainda de pé (``sem_vitalidade``). Nunca muda mecânica."""
+    for aid, actor in actors_by_id.items():
+        prev = before.get(aid, [])
+        for c in actor.get("active_conditions") or []:
+            if c.get("persistente") or c.get("name") is None:
+                continue
+            if bool(c.get("_renovada")) or not any(c is p for p in prev):
+                out.setdefault("condicoes_novas", []).append(
+                    {"victim_id": aid, "condition": str(c["name"]), "source_id": actor_id}
+                )
+        if (
+            not actor.get("is_player")
+            and int(actor.get("vitalidade", actor.get("hp", 1)) or 0) <= 0
+            and not actor.get("dead")
+            and not actor.get("incapacitated")
+            and actor.get("status", "ativo") == "ativo"
+            and not actor.get("_sem_vit_avisado")
+        ):
+            actor["_sem_vit_avisado"] = True
+            out.setdefault("sem_vitalidade", []).append({"actor_id": aid})
+
+
 def _mark_fresh_conditions(
     before: dict[str, list[dict]],
     actors_by_id: dict[str, dict],
@@ -1325,6 +1351,28 @@ def _post_hit(target: dict, target_id: str, out: dict, *, amount: int = 0) -> No
     _check_terminal(target, target_id, out, damage_applied=True)
 
 
+def _wound_snapshot(actor: dict) -> list[tuple[str, str]]:
+    fer = actor.get("ferimentos") or {}
+    return [
+        (cat, str(w.get("regiao")))
+        for cat in ("leve", "grave", "critico")
+        for w in (fer.get(cat) or [])
+        if isinstance(w, dict)
+    ]
+
+
+def _new_wound_note(actor: dict, before: list[tuple[str, str]]) -> dict | None:
+    """Ferimento que apareceu desde ``before`` (a pior categoria); ``None`` se nenhum."""
+    now = _wound_snapshot(actor)
+    fresh = [w for w in now if w not in before] or (
+        [w for w in now if now.count(w) > before.count(w)]
+    )
+    if not fresh:
+        return None
+    cat, regiao = max(fresh, key=lambda w: ("leve", "grave", "critico").index(w[0]))
+    return {"categoria": cat, "regiao": regiao}
+
+
 def _apply_player_card_mechanics(player: dict, used: dict, player_id: str, out: dict, rng) -> None:
     """Liga marcadores autorais fechados da Carta aos helpers sobreviventes."""
     card = used.get("card") or {}
@@ -1334,6 +1382,7 @@ def _apply_player_card_mechanics(player: dict, used: dict, player_id: str, out: 
         from services.conflict_damage import sacrifice_vitality
 
         before = int(player.get("vitalidade", 0) or 0)
+        wounds_before = _wound_snapshot(player)
         sacrifice_vitality(player, self_harm)
         player["_self_harmed_round"] = True  # gatilho `apos_auto_dano` (SPEC-232)
         out["logs"].append(
@@ -1345,9 +1394,14 @@ def _apply_player_card_mechanics(player: dict, used: dict, player_id: str, out: 
             "self_harm",
             amount=self_harm,
             vitality_delta=int(player.get("vitalidade", 0) or 0) - before,
+            actor_id=player_id,  # SPEC-353 R13: o custo tem dono e Carta no registro
+            card_id=used.get("card_id") or card.get("id"),
+            ferimento=_new_wound_note(player, wounds_before),
         )
         _entropy_event(player, {"kind": "on_self_harm", "amount": self_harm}, out)
-        _check_terminal(player, player_id, out, damage_applied=True)
+        _check_terminal(
+            player, player_id, out, damage_applied=True, cause="auto_dano", record=True
+        )
 
     decay_kind = mechanics.get("decadencia")
     if decay_kind:
@@ -1422,6 +1476,64 @@ def _mark_down(target: dict, target_id: str, out: dict, nonlethal: str, by: str)
 
 
 def _check_terminal(
+    target: dict,
+    target_id: str,
+    out: dict,
+    *,
+    damage_applied: bool = False,
+    nonlethal: str = "",
+    by: str = "",
+    cause: str = "",
+    record: bool = False,
+) -> None:
+    """Wrapper (SPEC-353 R7): com ``record=True`` grava em ``out["final_blows"]`` quem causou a
+    queda. Só os chamadores do nível do orquestrador pedem; Reação/efeitos de Carta não (R40)."""
+    before = (
+        target_id in out.get("deaths", []),
+        target_id in out.get("terminal", []),
+        bool(target.get("incapacitated")),
+    )
+    _check_terminal_inner(
+        target, target_id, out, damage_applied=damage_applied, nonlethal=nonlethal, by=by
+    )
+    after = (
+        target_id in out.get("deaths", []),
+        target_id in out.get("terminal", []),
+        bool(target.get("incapacitated")),
+    )
+    if record and after != before:
+        _record_final_blow(out, target_id, by=by, cause=cause)
+
+
+def _record_final_blow(out: dict, target_id: str, *, by: str = "", cause: str = "") -> None:
+    """Registro de autoria da queda (só para o resumo/registro; nunca afeta o motor)."""
+    blow: dict = {
+        "target_id": target_id,
+        "kind": cause or ("ataque" if by else "dano_continuo"),
+        "by_actor_id": by or None,
+        "card_id": None,
+        "condition": None,
+    }
+    if blow["kind"] == "ataque":
+        for atk in reversed(out.get("attacks") or []):
+            if (
+                str(atk.get("actor_id")) == str(by)
+                and str(atk.get("target_id")) == str(target_id)
+                and atk.get("acerto")
+            ):
+                blow["card_id"] = atk.get("card_id")
+                if atk.get("label") == "Última Ação":
+                    blow["kind"] = "ultima_acao"
+                break
+    elif blow["kind"] == "dano_continuo":
+        for tick in reversed(out.get("ticks") or []):
+            if str(tick.get("actor_id")) == str(target_id):
+                blow["condition"] = tick.get("condition")
+                break
+    out.setdefault("final_blows", []).append(blow)
+
+
+def _check_terminal_inner(
     target: dict,
     target_id: str,
     out: dict,
@@ -1808,7 +1920,9 @@ def _resolve_actor_turn_inner(
         elif player is not None and tid in set(sides.get("hero", []) + sides.get("ally", [])):
             _entropy_event(player, {"kind": "on_ally_suffer"}, out)
         nl_mode = _nonlethal_mode(decl, acao, actor_id, tid, sides)
-        _check_terminal(tgt, tid, out, damage_applied=True, nonlethal=nl_mode, by=actor_id)
+        _check_terminal(
+            tgt, tid, out, damage_applied=True, nonlethal=nl_mode, by=actor_id, record=True
+        )
         if fx_ctx is not None:  # SPEC-330 R3 (no-op sem ouvintes armados)
             fx.on_damage(fx_ctx, tid, actor_id, amount, out)
         if (
@@ -2584,6 +2698,7 @@ def _run_round(
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+            _note_turn_records(_cond_before, actors_by_id, actor_id, out)
             _mark_fresh_conditions(
                 _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
             )
@@ -2605,7 +2720,7 @@ def _run_round(
         # condição removida no tick podia ser reusado por buff novo deste turno.
         present_at_start = list(actor.get("active_conditions") or [])
         dot_applied = _tick_conditions_v4(actor, out, rng=rng)
-        _check_terminal(actor, actor_id, out, damage_applied=dot_applied)
+        _check_terminal(actor, actor_id, out, damage_applied=dot_applied, record=True)
         if not _can_act(actor):
             if intent_mode == "on" and frozen is not None:
                 _it = _next_intent(actor_id)
@@ -2631,6 +2746,7 @@ def _run_round(
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+        _note_turn_records(_cond_before, actors_by_id, actor_id, out)
         _mark_fresh_conditions(
             _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
         )

@@ -382,3 +382,58 @@ def narrative_or_fallback(summary: dict, proposed_text: str, *, player_facing: b
     if check["ok"]:
         return str(proposed_text or "").strip()
     return player_summary_text(summary) if player_facing else canonical_summary_text(summary)
+
+
+# --------------------------------------------------------------------------
+# SPEC-353 R8: autoria do resumo final (heurística determinística, por oração)
+# --------------------------------------------------------------------------
+def _fold_text(value: str) -> str:
+    import unicodedata
+
+    base = unicodedata.normalize("NFKD", str(value or "").casefold())
+    return "".join(ch for ch in base if not unicodedata.combining(ch))
+
+
+_BODY = r"(?:torso|cabeca|braco|perna|peito|costelas|ombro|flanco|ventre|pescoco|coxa)"
+_HIT_ON_HERO_RE = re.compile(
+    r"\b(?:teu|tua|seu|sua|seus|suas)\s+" + _BODY + r"|\bte\s+(?:atinge|acerta|rasga|encontra|fere|alcanca)"
+    r"|\bem\s+voce\b|\bem\s+ti\b"
+)
+_MISS_RE = re.compile(
+    r"\bnao\s+(?:encontra|acerta|atinge|alcanca)\b|\berra\b|\berrou\b|\bfalha\b|\bcorta\s+o\s+ar\b"
+    r"|\bescapa\s+da\s+mao\b|\bsem\s+alvo\b"
+)
+_HIT_RE = re.compile(r"\b(?:acerta|rasga|desmorona|tomba|cai|morre|atinge|fere|abate|derruba)\b")
+_FALL_RE = re.compile(r"\b(?:desmorona|tomba|cai|morre|desaba|sucumbe)\b")
+_HERO_WEAPON_RE = re.compile(
+    r"\b(?:tua|sua|teu|seu)\s+(?:\w+\s+)?(?:espada|machado|lamina|adaga|maca|martelo|lanca|arco|"
+    r"arma|golpe|punho|cajado|foice|clava|faca|ferro)\b"
+)
+
+
+def validate_attribution(text: str, auth: dict) -> list[str]:
+    """Códigos V1/V2/V3 de autoria trocada (vazio = ok). ``auth`` vem de
+    ``round_log.authorship``: ``hero_cards`` (nome → hit|miss) e ``final_by_hero``/``final_on_enemy``."""
+    codes: list[str] = []
+    cards = {_fold_text(k): v for k, v in (auth.get("hero_cards") or {}).items()}
+    for clause in re.split(r"[.;!?\n]+", str(text or "")):
+        low = _fold_text(clause)
+        if not low.strip():
+            continue
+        for card, outcome in cards.items():
+            if not card or card not in low:
+                continue
+            if _HIT_ON_HERO_RE.search(low):
+                codes.append("V1")
+            if outcome == "hit" and _MISS_RE.search(low):
+                codes.append("V2")
+            if outcome == "miss" and _HIT_RE.search(low):
+                codes.append("V2")
+        if (
+            auth.get("final_on_enemy")
+            and not auth.get("final_by_hero")
+            and _HERO_WEAPON_RE.search(low)
+            and _FALL_RE.search(low)
+        ):
+            codes.append("V3")
+    return sorted(set(codes))

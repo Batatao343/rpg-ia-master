@@ -1707,9 +1707,50 @@ def _fast_text(
     where: str,
     on_fail=None,
     stream: bool = True,
+    budget_s: float | None = None,
+    on_budget=None,
 ) -> str | None:
     """Uma chamada FAST de prosa com o guard de FallbackLLM. ``None`` = use o texto
-    determinístico (LLM indisponível, erro, resposta vazia ou espécie trocada)."""
+    determinístico (LLM indisponível, erro, resposta vazia ou espécie trocada).
+
+    SPEC-353 R39c: ``budget_s`` dá um prazo à chamada; estourou → ``None`` (``on_budget(ms)``) e a
+    thread que ainda corre é abandonada (o resultado dela é descartado)."""
+    if budget_s is None:
+        return _fast_text_call(
+            system, human, manifest=manifest, where=where, on_fail=on_fail, stream=stream
+        )
+    import concurrent.futures
+    import contextvars
+    import time
+
+    ctx = contextvars.copy_context()
+    pool = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    t0 = time.monotonic()
+    fut = pool.submit(
+        ctx.run,
+        lambda: _fast_text_call(
+            system, human, manifest=manifest, where=where, on_fail=on_fail, stream=stream
+        ),
+    )
+    try:
+        return fut.result(timeout=budget_s)
+    except concurrent.futures.TimeoutError:
+        if on_budget is not None:
+            on_budget(int((time.monotonic() - t0) * 1000))
+        return None
+    finally:
+        pool.shutdown(wait=False)
+
+
+def _fast_text_call(
+    system: SystemMessage,
+    human: str,
+    *,
+    manifest: dict | None = None,
+    where: str,
+    on_fail=None,
+    stream: bool = True,
+) -> str | None:
     from services import prose_guard
 
     try:
@@ -1835,6 +1876,9 @@ _OUTCOME_FECHO = {
 }
 
 
+_OUTCOME_BUDGET_S = 6.0  # SPEC-353 D7/R39c: orçamento só do resumo final (sem env/flag)
+
+
 def _narrate_outcome(
     outcome: str,
     conflict_sum: dict,
@@ -1846,6 +1890,7 @@ def _narrate_outcome(
     *,
     manifest: dict | None,
     withhold: str = "",
+    names: dict[str, str] | None = None,
 ) -> str:
     """R11-R15: a ÚNICA chamada de IA do combate `on`. Fatos em linguagem, sem números;
     pós-filtro de números; não contradiz o motor; fallback determinístico legível."""
@@ -1859,13 +1904,16 @@ def _narrate_outcome(
         enemies,
         last_out,
         decisive_cards=round_log.decisive_cards(last_out),
+        names=names,
     )
+    auth = round_log.authorship(last_out, round_log._fact_names(player, enemies, names))
     system = SystemMessage(
         content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
     Narre o FIM deste conflito em 1 parágrafo curto (3 a 5 frases), em segunda pessoa, usando
     APENAS os fatos abaixo. NÃO escreva números, dados, pontos de vida nem aritmética. Não invente
-    mortes, golpes nem resultados fora dos fatos.
+    mortes, golpes nem resultados fora dos fatos. Cada ação tem um autor: nunca atribua a Carta
+    ou o golpe de um combatente a outro, nem diga que um golpe acertou (ou errou) contra os fatos.
     Glossário: Vitalidade = vigor e resistência do corpo; Fôlego = energia para jogar Cartas
     (nunca é dano). Ferimentos são localizados e permanentes.
     <fatos>
@@ -1887,14 +1935,25 @@ def _narrate_outcome(
             "combat", "outcome_narration_failed", level="warning", error=err, outcome=label
         ),
         stream=False,  # o texto final = registro + resumo: o ao vivo não seria prefixo
+        budget_s=_OUTCOME_BUDGET_S,  # SPEC-353 R39c: estourou → fallback determinístico
+        on_budget=lambda ms: _log_event(
+            "combat", "outcome_narration_budget_exceeded", level="warning", elapsed_ms=ms
+        ),
     )
     if text:
         text, removed = prose_guard.strip_mechanic_numbers(text)
         if removed:
             _log_event("combat", "narration_numbers_stripped", level="info", count=removed)
         if text and summ.validate_narrative_text(conflict_sum, text)["ok"]:
-            return text
-    return round_log.deterministic_outcome_text(label, conflict_sum, player)
+            codes = summ.validate_attribution(text, auth)  # SPEC-353 R8
+            if not codes:
+                return text
+            _log_event(
+                "combat", "outcome_attribution_rejected", level="info", codes=",".join(codes)
+            )
+    return round_log.deterministic_outcome_text(
+        label, conflict_sum, player, last_out=last_out, names=names
+    )
 
 
 # ==========================================================================
@@ -2063,6 +2122,10 @@ def _combat_node(state: GameState):
             orch.ensure_combat_sheet(dict(a), is_ally=True)
             for a in party_mod.scene_allies(state, excluded=enemy_refs)
         ]
+        # SPEC-353 R22: o aliado de cena tem nome já na rodada 0; R54: conflito novo limpa o registro
+        combat_meta["scene_allies"] = party_mod.scene_allies(state, excluded=enemy_refs)
+        for _stale in ("last_round_board", "last_mech_log", "fontes_condicao"):
+            combat_meta.pop(_stale, None)
         scene = _prepare_scene(state, enemies, player, allies)
         _sync_enemy_knowledge(enemies, load_persisted=True)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
@@ -2274,6 +2337,7 @@ def _combat_node(state: GameState):
     hero_fled = False
     logs: list[str] = []
     flee_lines: list[str] = []  # SPEC-346: linhas humanas da fuga para o registro
+    flee_roll: dict | None = None  # SPEC-353 R39b: dado da fuga desta rodada, para o mech_log
     order_logs: list[str] = []
     weather_logs: list[str] = []
     world_out = None
@@ -2331,6 +2395,13 @@ def _combat_node(state: GameState):
                 flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
         _publish_sacrifice_offer(state, party, chase_state, hero_fled=hero_fled, logs=flee_logs)
         combat_meta["chase"] = chase_state
+        _last_roll = (chase_state or {}).get("_last") or {}
+        if _last_roll.get("total") is not None:  # SPEC-353 R39b
+            flee_roll = {
+                "total": _last_roll.get("total"),
+                "dificuldade": _last_roll.get("difficulty"),
+                "sucesso": bool(_last_roll.get("sucesso")),
+            }
         logs += weather_logs + logs_pre_flee + flee_logs
         flee_lines = list(logs_pre_flee) + list(flee_logs)
     elif flee_requested:
@@ -2710,6 +2781,11 @@ def _combat_node(state: GameState):
     combat_meta["last_reactions"] = list(out.get("reactions") or [])
     from services import combat_preview as _preview
 
+    if flee_roll:
+        out["fuga"] = flee_roll
+    fontes = combat_meta.setdefault("fontes_condicao", {})  # SPEC-353 R51
+    for novo in out.get("condicoes_novas") or []:
+        fontes.setdefault(novo["victim_id"], {})[novo["condition"]] = novo["source_id"]
     _preview.store_mech_log(
         combat_meta,
         out,
@@ -2988,6 +3064,11 @@ def _compose_board_narrative(
         withhold=_faction_withhold_clause(
             manifest, state.get("factions"), state.get("faction_intel")
         ),
+        names={
+            str(k): str(a.get("name"))
+            for k, a in actors_by_id.items()
+            if isinstance(a, dict) and a.get("name") and not a.get("is_player")
+        },
     )
     summary = prose_guard.sanitize_meta_preamble(summary)
     if player_dead:

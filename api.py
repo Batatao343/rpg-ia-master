@@ -2818,6 +2818,26 @@ def _enemy_portrait(state: dict, meta: dict, enemy: dict) -> dict[str, Any] | No
     )
 
 
+class _ParticipantNames(dict):
+    """SPEC-353 R23: nome exibível do participante — nunca o id cru (cai em ``state["npcs"]`` e,
+    por fim, em "Aliado"/"Inimigo")."""
+
+    def __init__(self, state: dict, meta: dict, enemies: list) -> None:
+        super().__init__()
+        self._npcs = state.get("npcs") or {}
+        self._enemy_ids = {str(e.get("id")) for e in enemies if isinstance(e, dict)}
+
+    def get(self, key, default=None):  # type: ignore[override]
+        if key in self:
+            return self[key]
+        key = str(key)
+        for npc_key, npc in self._npcs.items() if isinstance(self._npcs, dict) else ():
+            if isinstance(npc, dict) and key in (str(npc_key), str(npc.get("id"))):
+                if npc.get("name"):
+                    return str(npc["name"])
+        return "Inimigo" if key in self._enemy_ids else "Aliado"
+
+
 def _combat_block(state: dict) -> dict[str, Any]:
     """View tática pública do conflito, sem vazar ficha secreta de inimigo."""
     meta = state.get("combat") or {}
@@ -2847,7 +2867,8 @@ def _combat_block(state: dict) -> dict[str, Any]:
 
     initiative = list(meta.get("initiative") or [])
     scene = meta.get("scene") or {}
-    participant_names = {"player": player.get("name", "Protagonista")}
+    participant_names = _ParticipantNames(state, meta, enemies)
+    participant_names["player"] = player.get("name", "Protagonista")
     for entity in (
         list(enemies) + list(state.get("party") or []) + list(meta.get("scene_allies") or [])
     ):
@@ -3020,6 +3041,10 @@ def _combat_block(state: dict) -> dict[str, Any]:
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
         view["pilhas"] = _piles.public_view(meta["pilhas"])
+    if _piles.mode() == "on" and (
+        isinstance(meta.get("pilhas"), dict) or meta.get("last_round_board")
+    ):
+        # SPEC-353 R54: o registro da rodada final sobrevive ao fim do conflito (sem `pilhas`).
         view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6
         if meta.get("last_round_board"):  # SPEC-347 R14.2: registro estruturado (só Baralho on)
             view["registro_rodada"] = list(meta["last_round_board"])

@@ -174,17 +174,111 @@ _RESULT_LABEL = {
 }
 
 
+def chrono_events(out: dict) -> list[tuple[str, Any]]:
+    """SPEC-353 R12: UMA ordem cronológica para registro, ``mech_log`` e ``round_board``.
+
+    ``turn_spans`` manda: tick de DoT no início do turno de quem sofre, reações/oportunidades na
+    posição em que ocorreram, custo (auto-dano) junto da Carta que o causou. Eventos fora de turno
+    (Última Ação), DoT sem turno e custos soltos vêm por último. Sem ``turn_spans`` (save antigo):
+    a ordem de antes (ataques, depois ticks)."""
+    attacks = list(out.get("attacks") or [])
+    used = list(out.get("cards_used") or [])
+    ticks = list(out.get("ticks") or [])
+    custos = [
+        m
+        for m in (out.get("class_mechanics") or [])
+        if m.get("kind") == "self_harm" and m.get("actor_id")
+    ]
+    events: list[tuple[str, Any]] = []
+    spans = out.get("turn_spans")
+    if not spans:
+        events += [("attack", (a, bool(a.get("fora_de_turno")))) for a in attacks]
+        events += [("tick", t) for t in ticks]
+        events += [("custo", m) for m in custos]
+        return events
+    covered: set[int] = set()
+
+    def take_custo(actor_id: str, card_id: Any) -> list[tuple[str, Any]]:
+        got = [
+            ("custo", m)
+            for m in custos
+            if str(m.get("actor_id")) == actor_id and str(m.get("card_id")) == str(card_id)
+        ]
+        for _, m in got:
+            custos.remove(m)
+        return got
+
+    for span in spans:
+        if span.get("negado"):
+            continue
+        actor_id = str(span.get("actor_id"))
+        for tick in [t for t in ticks if str(t.get("actor_id")) == actor_id]:
+            ticks.remove(tick)
+            events.append(("tick", tick))
+        a0, a1 = span["attacks"]
+        c0, c1 = span["cards"]
+        span_attacks = [(i, attacks[i]) for i in range(a0, min(a1, len(attacks)))]
+        covered.update(i for i, _ in span_attacks)
+        span_cards = list(range(c0, min(c1, len(used))))
+        matched: dict[int, int] = {}
+        for j in span_cards:
+            m = next(
+                (
+                    i
+                    for i, atk in span_attacks
+                    if i not in matched
+                    and not atk.get("fora_de_turno")
+                    and str(atk.get("card_id")) == str(used[j].get("card_id"))
+                ),
+                None,
+            )
+            if m is not None:
+                matched[m] = j
+        done_cards = set(matched.values())
+        emitted: set[int] = set()
+        for i, atk in span_attacks:
+            if i in matched:
+                for j in span_cards:
+                    if j < matched[i] and j not in done_cards and j not in emitted:
+                        emitted.add(j)
+                        events.append(("card", used[j]))
+                events += take_custo(actor_id, atk.get("card_id"))
+                events.append(("attack", (atk, False)))
+            else:
+                events.append(("attack", (atk, bool(atk.get("fora_de_turno")))))
+        for j in span_cards:
+            if j not in done_cards and j not in emitted:
+                events += take_custo(actor_id, used[j].get("card_id"))
+                events.append(("card", used[j]))
+    for i, atk in enumerate(attacks):
+        if i not in covered:
+            events.append(("attack", (atk, bool(atk.get("fora_de_turno")))))
+    events += [("tick", t) for t in ticks]
+    events += [("custo", m) for m in custos]
+    return events
+
+
+def _flee_line(out: dict) -> str | None:
+    roll = out.get("fuga")
+    if not isinstance(roll, dict) or roll.get("total") is None:
+        return None
+    verdict = "escapou" if roll.get("sucesso") else "falhou"
+    return f"Fuga · total {roll['total']} vs {roll.get('dificuldade')} · {verdict}"
+
+
 def mech_log(
     attacks: list[dict],
     actors: list[dict],
     ticks: list[dict] | None = None,
     heals: list[dict] | None = None,
+    out: dict | None = None,
 ) -> list[str]:
     """R6: uma linha por ataque da rodada, só com números que o motor já resolveu.
     Ex.: ``Você · Corte Raso → Lobo · 2d10 6 + 7 +2 = 15 vs 12 · acerto · 5 dano``.
 
     SPEC-346: crítico diz a dupla que o causou (R8), a Última Ação diz o alvo (R9) e cada tick
-    de DoT tem linha própria (R7)."""
+    de DoT tem linha própria (R7). SPEC-353: com ``out`` a ordem é a cronológica (R12), o custo
+    em Vitalidade tem linha (R13), a Proteção que absorveu aparece (R20) e a fuga mostra o dado."""
     names: dict[str, str] = {}
     for a in actors:  # SPEC-345 R6: indexa por id OU nome (aliado de cena pode não ter id)
         key = str(a.get("id") or a.get("name") or ("player" if a.get("is_player") else ""))
@@ -193,8 +287,8 @@ def mech_log(
         if a.get("is_player"):
             names[key] = "Você"
     names["player"] = "Você"
-    lines: list[str] = []
-    for atk in attacks:
+
+    def attack_line(atk: dict) -> str:
         kept = atk.get("dice_kept") or []
         dice = "3d10" if len(atk.get("dice_rolled") or []) == 3 else "2d10"
         mod = int(atk.get("virtude", 0) or 0) + int(atk.get("modificador", 0) or 0)
@@ -206,6 +300,8 @@ def mech_log(
             if kept[0] == kept[1]:  # R8: a regra de dupla manda, mesmo abaixo da Esquiva
                 tail += f" (dupla de {kept[0]})"
         if atk.get("acerto") and atk.get("dano_final") is not None:
+            if int(atk.get("absorvido", 0) or 0) > 0:  # SPEC-353 R20
+                tail += f" · Proteção −{int(atk['absorvido'])}"
             tail += f" · {int(atk['dano_final'])} dano"
         if atk.get("label") == "Última Ação":
             head = f"Última Ação: {who} → {target}"
@@ -218,19 +314,43 @@ def mech_log(
             ):  # SPEC-347 R5.2: reação/oportunidade/contra-ataque ganham rótulo
                 what = f" · {atk['fora_de_turno']}"
             head = f"{who}{what} → {target}"
-        lines.append(
+        return (
             f"{head} · {dice} "
             f"{' + '.join(str(k) for k in kept)} {mod:+d} = {atk.get('total')} "
             f"vs {atk.get('esquiva_alvo')} · {tail}"
         )
-    for tick in ticks or []:  # R7: o DoT também fecha a conta (inclusive com 0 de dano)
+
+    def tick_line(tick: dict) -> str:
         victim = names.get(str(tick.get("actor_id")), str(tick.get("actor_id") or "Alguém"))
-        lines.append(
-            f"{tick.get('condition')} → {victim} · dano contínuo · {int(tick.get('dano_final', 0))} dano"
-        )
+        dano = int(tick.get("dano_final", 0))
+        return f"{tick.get('condition')} → {victim} · dano contínuo · {dano} dano"
+
+    lines: list[str] = []
+    base = out or {}
+    merged = {
+        **base,
+        "attacks": attacks,
+        "ticks": ticks if ticks is not None else base.get("ticks"),
+    }
+    for kind, payload in chrono_events(merged):
+        if kind == "attack":
+            lines.append(attack_line(payload[0]))
+        elif kind == "tick":
+            lines.append(tick_line(payload))
+        elif kind == "custo":
+            card = cards.get_card(str(payload.get("card_id") or "")) or {}
+            who = names.get(str(payload.get("actor_id")), "Alguém")
+            lines.append(
+                f"{who} · {card.get('name', 'Carta')} · custo · "
+                f"{int(payload.get('amount', 0))} Vitalidade"
+            )
+        # "card" (apoio sem ataque) não tinha linha de mecânica; a cura vem de ``heals``
     for heal in heals or []:  # R10: cura/ganho de Vitalidade tem linha própria
         who = names.get(str(heal.get("actor_id")), str(heal.get("actor_id") or "Alguém"))
         lines.append(f"{heal.get('card')} → {who} · cura · {int(heal.get('amount', 0))} Vitalidade")
+    flee = _flee_line(base)
+    if flee:
+        lines.append(flee)
     return lines
 
 
@@ -243,9 +363,11 @@ def store_mech_log(
     if card_piles.mode() != "on" or out.get("action_refused"):
         return
     meta["last_mech_log"] = mech_log(
-        out.get("attacks") or [], actors, out.get("ticks") or [], out.get("heals") or []
+        out.get("attacks") or [], actors, out.get("ticks") or [], out.get("heals") or [], out=out
     )
-    meta["last_round_board"] = round_board(out, actors, enemy_ids)  # SPEC-347 R14.2
+    meta["last_round_board"] = round_board(
+        out, actors, enemy_ids, fontes=meta.get("fontes_condicao")
+    )  # SPEC-347 R14.2
 
 
 # --- SPEC-347 R14: registro estruturado da rodada (só view; nenhum número muda) ---
@@ -273,6 +395,12 @@ _RESULT_KEY = {
 def _effect_text(card: dict) -> str:
     effect = card.get("efeito") or {}
     kind = str(effect.get("kind") or "")
+    if kind == "taunt":  # SPEC-353 R52
+        return "Provocado"
+    if kind == "aplicar_condicao":
+        label = str(effect.get("condicao") or "Condição").replace("_", " ").capitalize()
+        dur = int(effect.get("duracao", effect.get("duration", 0)) or 0)
+        return f"{label} {dur} rodadas" if dur > 1 else label
     label = _EFFECT_TEXT.get(kind, str(card.get("name") or "Efeito"))
     if kind in ("protecao", "cura", "buff_defesa"):
         return f"+{ct._effect_amount(effect)} {label}"
@@ -280,10 +408,16 @@ def _effect_text(card: dict) -> str:
 
 
 def round_board(
-    out: dict, actors: list[dict], enemy_ids: set[str] | None = None
+    out: dict,
+    actors: list[dict],
+    enemy_ids: set[str] | None = None,
+    fontes: dict | None = None,
 ) -> list[dict[str, Any]]:
-    """Uma entrada por ataque/carta usada, na ordem dos turnos resolvidos (`turn_spans`).
-    Reações/oportunidades (`fora_de_turno`) saem como `origem="reacao"`; turno negado não gera entrada."""
+    """Uma entrada por evento da rodada, na ordem cronológica (``chrono_events``, SPEC-353 R12).
+
+    Contrato (SPEC-353 R50-R53): ``tipo`` ∈ jogada | dano_continuo | queda | pressagio | custo.
+    Reações/oportunidades (``fora_de_turno``) saem como ``origem="reacao"``; turno negado não gera
+    entrada. ``fontes`` = ``combat_meta["fontes_condicao"]`` (vítima → condição → quem aplicou)."""
     names: dict[str, str] = {}
     for a in actors:
         key = str(a.get("id") or a.get("name") or ("player" if a.get("is_player") else ""))
@@ -291,8 +425,8 @@ def round_board(
             names[key] = str(a["name"])
     names["player"] = "Você" if "player" not in names else names["player"]
     enemy_ids = enemy_ids or set()
-    attacks = out.get("attacks") or []
-    used = out.get("cards_used") or []
+    fontes = fontes or {}
+    heals = list(out.get("heals") or [])
 
     def side(actor_id: str) -> str:
         if actor_id == "player":
@@ -304,6 +438,7 @@ def round_board(
         card = cards.get_card(str(atk.get("card_id") or "")) if atk.get("card_id") else None
         hit = bool(atk.get("acerto"))
         return {
+            "tipo": "jogada",
             "ator_id": actor_id,
             "ator_nome": names.get(actor_id, "Alguém"),
             "lado": side(actor_id),
@@ -320,10 +455,19 @@ def round_board(
             "efeito": None,
         }
 
+    def heal_note(use: dict) -> str | None:
+        for h in heals:
+            if str(h.get("actor_id")) == str(use.get("actor_id")) and h.get("card") == (
+                use.get("card") or {}
+            ).get("name"):
+                return f"+{int(h.get('amount', 0) or 0)} Vitalidade"
+        return None
+
     def card_entry(use: dict) -> dict[str, Any]:
         actor_id = str(use.get("actor_id"))
         card = use.get("card") or cards.get_card(str(use.get("card_id") or "")) or {}
         return {
+            "tipo": "jogada",
             "ator_id": actor_id,
             "ator_nome": names.get(actor_id, "Alguém"),
             "lado": side(actor_id),
@@ -338,81 +482,96 @@ def round_board(
             "efeito": heal_note(use) or _effect_text(card),
         }
 
-    entries: list[dict[str, Any]] = []
-    covered: set[int] = set()
-    # SPEC-346 R7/R10: ticks de DoT (início do turno de quem sofre) e curas viram entradas `efeito`.
-    ticks = list(out.get("ticks") or [])
-    heals = list(out.get("heals") or [])
-
     def tick_entry(tick: dict) -> dict[str, Any]:
-        actor_id = str(tick.get("actor_id"))
+        victim = str(tick.get("actor_id"))
+        cond = str(tick.get("condition") or "Condição")
+        src = (fontes.get(victim) or {}).get(cond)
+        dano = int(tick.get("dano_final", 0) or 0)
+        known = bool(src) and str(src) in names
         return {
+            "tipo": "dano_continuo",
+            "ator_id": str(src) if known else None,
+            "ator_nome": names[str(src)] if known else cond,
+            "lado": side(str(src)) if known else "efeito",
+            "carta_id": None,
+            "carta_nome": cond,
+            "alvo_id": victim,
+            "alvo_nome": names.get(victim, "Alguém"),
+            "origem": "turno",
+            "rotulo": "Dano contínuo",
+            "resultado": "efeito",
+            "dano": dano,
+            "efeito": f"−{dano} Vitalidade",
+        }
+
+    def custo_entry(m: dict) -> dict[str, Any]:
+        actor_id = str(m.get("actor_id"))
+        card = cards.get_card(str(m.get("card_id") or "")) or {}
+        amount = int(m.get("amount", 0) or 0)
+        note = m.get("ferimento") or {}
+        efeito = f"−{amount} Vitalidade"
+        if note.get("categoria"):
+            efeito += f", ferimento {note['categoria']}"
+        return {
+            "tipo": "custo",
+            "ator_id": actor_id,
+            "ator_nome": names.get(actor_id, "Alguém"),
+            "lado": side(actor_id),
+            "carta_id": card.get("id"),
+            "carta_nome": card.get("name"),
+            "alvo_id": actor_id,
+            "alvo_nome": names.get(actor_id, "Alguém"),
+            "origem": "turno",
+            "rotulo": "Custo",
+            "resultado": "efeito",
+            "dano": amount,
+            "efeito": efeito,
+        }
+
+    def queda_entry(actor_id: str, frase: str) -> dict[str, Any]:
+        return {
+            "tipo": "queda",
             "ator_id": actor_id,
             "ator_nome": names.get(actor_id, "Alguém"),
             "lado": side(actor_id),
             "carta_id": None,
-            "carta_nome": str(tick.get("condition") or "Condição"),
+            "carta_nome": None,
             "alvo_id": None,
             "alvo_nome": None,
             "origem": "turno",
-            "rotulo": "Dano contínuo",
+            "rotulo": None,
             "resultado": "efeito",
-            "dano": int(tick.get("dano_final", 0) or 0),
-            "efeito": f"−{int(tick.get('dano_final', 0) or 0)} Vitalidade",
+            "dano": None,
+            "efeito": frase,
         }
 
-    def heal_note(use: dict) -> str | None:
-        for h in heals:
-            if str(h.get("actor_id")) == str(use.get("actor_id")) and h.get("card") == (
-                use.get("card") or {}
-            ).get("name"):
-                return f"+{int(h.get('amount', 0) or 0)} Vitalidade"
-        return None
+    def pressagio_entry(p: dict) -> dict[str, Any]:
+        entry = queda_entry(str(p.get("actor_id")), "cumpre o presságio")
+        entry["tipo"] = "pressagio"
+        return entry
 
-    for span in out.get("turn_spans") or []:
-        if span.get("negado"):
-            continue
-        for tick in [t for t in ticks if str(t.get("actor_id")) == str(span.get("actor_id"))]:
-            ticks.remove(tick)
-            entries.append(tick_entry(tick))
-        a0, a1 = span["attacks"]
-        c0, c1 = span["cards"]
-        span_attacks = [(i, attacks[i]) for i in range(a0, min(a1, len(attacks)))]
-        covered.update(i for i, _ in span_attacks)
-        span_cards = list(range(c0, min(c1, len(used))))
-        matched: dict[int, int] = {}  # índice do ataque -> índice da carta que o causou
-        for j in span_cards:
-            m = next(
-                (
-                    i
-                    for i, atk in span_attacks
-                    if i not in matched
-                    and not atk.get("fora_de_turno")
-                    and str(atk.get("card_id")) == str(used[j].get("card_id"))
-                ),
-                None,
-            )
-            if m is not None:
-                matched[m] = j
-        done_cards: set[int] = set(matched.values())
-        emitted: set[int] = set()
-        # Ordem cronológica = ordem dos índices de `out["attacks"]`: a reação da janela (antes do golpe) vem
-        # antes e o contra-ataque passivo/Última Ação (depois de levar o golpe) vem depois do golpe que o causou.
-        for i, atk in span_attacks:
-            if i in matched:
-                for j in span_cards:  # efeitos sem ataque anteriores a esta carta
-                    if j < matched[i] and j not in done_cards and j not in emitted:
-                        emitted.add(j)
-                        entries.append(card_entry(used[j]))
-                entries.append(attack_entry(atk, reaction=False))
-            else:
-                entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))
-        for j in span_cards:
-            if j not in done_cards and j not in emitted:
-                entries.append(card_entry(used[j]))
-    for i, atk in enumerate(attacks):  # fora de qualquer turno (Última Ação etc.)
-        if i not in covered:
-            entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))
-    for tick in ticks:  # DoT de quem não teve turno resolvido na rodada
-        entries.append(tick_entry(tick))
+    entries: list[dict[str, Any]] = []
+    pressagios = {str(p.get("actor_id")): p for p in (out.get("pressagios_cumpridos") or [])}
+    seen_pressagio: set[str] = set()
+    for kind, payload in chrono_events(out):
+        if kind == "tick":
+            entries.append(tick_entry(payload))
+        elif kind == "card":
+            entries.append(card_entry(payload))
+        elif kind == "custo":
+            entries.append(custo_entry(payload))
+        else:
+            atk, reaction = payload
+            actor_id = str(atk.get("actor_id"))
+            if actor_id in pressagios and actor_id not in seen_pressagio and not reaction:
+                seen_pressagio.add(actor_id)
+                entries.append(pressagio_entry(pressagios[actor_id]))
+            entries.append(attack_entry(atk, reaction=reaction))
+    for aid in out.get("deaths") or []:
+        entries.append(queda_entry(str(aid), "morre"))
+    for aid in out.get("terminal") or []:
+        if aid not in (out.get("deaths") or []):
+            entries.append(queda_entry(str(aid), "cai, à beira da morte"))
+    for item in out.get("sem_vitalidade") or []:
+        entries.append(queda_entry(str(item.get("actor_id")), "sem Vitalidade"))
     return entries
