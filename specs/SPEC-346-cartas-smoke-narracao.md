@@ -1,6 +1,6 @@
 # SPEC-346 — Combate de cartas sem LLM por rodada, desfecho narrado pela IA e correções do smoke real (spawn, router, loot)
 
-> **Status:** `approved` (dono, 27/10: "corrigir tudo" + mudança de escopo D-dono-1..3, ver §8)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED; falta o smoke real §6, feito pelo coordenador após 347/352)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** smoke com LLM real de 27/10 na `main` `fae9a4e5` (`docs/spec346/achados-smoke.md`, históricos `docs/spec346/smoke/hist-*.json`, prints em `docs/spec346/smoke/`)
 > **Depende de:** SPEC-203, SPEC-226, SPEC-325, SPEC-339, SPEC-341 (`done`); código das SPEC-328/329/330/331/332/333/334 já na `main` (status `in-progress`, flags `off`); SPEC-345 (`in-progress`: mexe em `player_summary_text`/`strip_system_tags`; rebase antes do pouso)
@@ -677,3 +677,5 @@ Desvios e escolhas que o revisor deve conhecer:
 - **Arena, pior caso (100 % emboscada)**: Corruptor 42,7 % e Arcanista 39,2 % fora da faixa; aceito pelo coordenador (emboscada é minoria).
 - **Front (`web/`) não foi tocado**: esconder o input de texto e o botão "Fugir" ficam com a SPEC-347.
 - **Arena**: ver `docs/spec346/arena.md`.
+
+**Limites conhecidos do fallback do router (só quando os 3 candidatos do CLASSIFY falham), aceitos pelo coordenador sob autonomia do dono:** P3-6 parcial ("sem pensar ataco o saqueador" fica em STORY se o alvo não está em cena/bestiário/manifesto), P3-10 (frases forçadas com criatura real do bestiário abrem combate), P3-11 ("ataco o guarda para abrir caminho" fica em STORY). Todos caem no lado seguro ou exigem frase artificial; o caminho normal (CLASSIFY respondendo) não é afetado.
