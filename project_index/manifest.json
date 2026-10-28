@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "0a5c9a31d093816d22e02de7089bbb95f33fa978",
+  "commit_sha": "c88e5226ce78602198fafbf888b59eae65be4f13",
   "edge_counts": {
-    "calls": 33304,
-    "contains": 1089,
-    "defines": 16314,
-    "imports": 2694,
-    "likely_test_for": 1914,
+    "calls": 33446,
+    "contains": 1094,
+    "defines": 16381,
+    "imports": 2701,
+    "likely_test_for": 1921,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:272cf7b24e76159a13283ef2834a30210cc090d19b7ba7051be6c2814aa7c6a5",
+  "graph_hash": "sha256:b8fe3c18e5147b9fbc8731e41b5d12f0de3c56c23e188ef011d2db7f3d81efee",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -255,6 +255,7 @@
     "scripts/latency_journeys.py",
     "scripts/load_test.py",
     "scripts/log_ref.py",
+    "scripts/lore_reanchor.py",
     "scripts/migrate_bestiary_v4.py",
     "scripts/migrate_embedding_profile.py",
     "scripts/migrate_file_saves.py",
@@ -520,6 +521,7 @@
     "tests/spec325_chase_helpers.py",
     "tests/spec325_helpers.py",
     "tests/spec330_equivalence.py",
+    "tests/spec348_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_abyss_clock.py",
@@ -1084,6 +1086,9 @@
     "tests/test_spec347_initiative_view.py",
     "tests/test_spec347_mech_log.py",
     "tests/test_spec347_round_board.py",
+    "tests/test_spec348_anchors.py",
+    "tests/test_spec348_canon.py",
+    "tests/test_spec348_leaks.py",
     "tests/test_spec352_creature_portraits.py",
     "tests/test_spec352_creature_portraits_db.py",
     "tests/test_spec352_creature_quote_api.py",
@@ -1347,12 +1352,12 @@
     "artifact": 9,
     "class": 1013,
     "endpoint": 68,
-    "file": 1291,
-    "function": 5074,
+    "file": 1296,
+    "function": 5080,
     "method": 863,
-    "module": 1089,
-    "test": 9363
+    "module": 1094,
+    "test": 9424
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:54c062d9a29626a444f1a4795ba1362e4a848d66e7c6eaa09908d3a2fe4e6ed3"
+  "source_tree_hash": "sha256:0f82c72c26ff80988ae43515a2ca3d1fd4fc9c0762c959687571213ccc5cb9d4"
 }
