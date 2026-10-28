@@ -10,15 +10,15 @@
 
 - staging = `fae9a4e` (cartas `off`; 3 smokes verdes 28/10). 296–326 `done` exceto épico de cartas.
 - Épico cartas 327–352 (`-69`), flags `off`; combate por cartas sem LLM nas rodadas (346).
-- **Latência** (316–319 `done`, [A/B](docs/spec316/staging-measure-2026-10-27.md)): 1ª narração p50 → 2,6 s; turno inteiro ~10 s.
+- **Latência** (316–319 `done`): 1ª narração p50 2,6 s; turno inteiro ~10 s.
 - Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
-- Máquina: e2e `--workers=1`; sem `uv run` em worktree; RAM (CLAUDE.md)
+- Máquina: e2e `--workers=1`; sem `uv run` em worktree.
 
 ## Próximos 3 passos
 
-1. Turno inteiro (~10 s até o `state`): investigar arquivista/commit após a narração.
-2. 319 P2-1 medir `replace` no combate.
-3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 322 botões 3×3 + 57 oklch.
+1. Turno inteiro ~10 s: investigar arquivista/commit após a narração.
+2. 319 P2-1: medir `replace` no combate.
+3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 57 oklch (322).
 
 ## Bloqueios no dono
 
@@ -43,13 +43,15 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
+- 2026-10-28 · SPEC-354 `draft` — cartas-smoke2-tela
+- 2026-10-28 · SPEC-353 `in-progress` — Cartas: correções de motor/backend do 2º smoke real do combate por cartas
 - 2026-10-28 · SPEC-352 `draft` — retrato-inimigo-pago
+- 2026-10-28 · SPEC-347 `in-progress` — Cartas: o tabuleiro do combate depois do smoke real (layout, retrato do inimigo e registro da rodada)
 - 2026-10-28 · SPEC-346 `in-progress` — Combate de cartas sem LLM por rodada, desfecho narrado pela IA e correções do smoke real (spawn, router, loot)
 - 2026-10-27 · SPEC-351 `draft` — abertura-arco-tramas
 - 2026-10-27 · SPEC-350 `draft` — mundo-povoado-tramas
 - 2026-10-27 · SPEC-349 `draft` — bestiario-valoria-esteira
 - 2026-10-27 · SPEC-348 `draft` — lore-coerencia-valoria
-- 2026-10-27 · SPEC-347 `draft` — cartas-smoke-layout
 - 2026-10-27 · SPEC-345 `in-progress` — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
 - 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
 - 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
@@ -72,7 +74,6 @@ Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os
 - 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
 - 2026-10-27 · SPEC-318 `done` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
 - 2026-10-27 · SPEC-317 `done` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
-- 2026-10-27 · SPEC-316 `done` — Latência: narração entregue antes do arquivista e do commit (stream aberto)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -82,7 +83,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
-- 28/10 cartas: 339/341 `done`; 342/345/346 pousadas; 347 (tabuleiro) e 352 (retrato pago) em curso; smoke LLM real ao fim.
+- 28/10 cartas: 339/341 `done`; 342/345/346/347/353 pousadas; 352 (retrato pago) e 354 (tela) em curso; smoke LLM real ao fim.
 
 
 ## Como rodar
@@ -96,6 +97,6 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 - Cloud de produção não certificada (SPEC-104 on hold); só staging.
 - `saves/` local mistura fixtures e campanhas reais (limpeza só com o dono).
 - Long-runs são opt-in (free tiers não sustentam).
-- `post_response` do arquivista não compensa no Vercel (SPEC-213): staging fica `inline`.
-- Aviso de descontinuação do FAISS via `langchain-community` (migração exige spec).
+- Arquivista `inline` no Vercel (`post_response` não compensa, 213).
+- FAISS via `langchain-community` descontinuado (migração exige spec).
 - Flake conhecido: `WinError 5` no `os.replace` sob OneDrive (há retry).
