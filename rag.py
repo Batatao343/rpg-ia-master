@@ -27,6 +27,8 @@ from collections import Counter, OrderedDict
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from typing import Any, Dict, List, Literal, Optional
 from collections.abc import Callable, Iterator
 
@@ -37,7 +39,6 @@ from langchain_core.embeddings import Embeddings
 
 from observability.telemetry import log_event as _log_event
 from services.memory_provenance import format_memory_fact, make_memory_fact
-from datetime import UTC
 
 load_dotenv(override=True)  # .env canônico (sobrepõe env var do SO)
 
@@ -321,18 +322,12 @@ def _parse_retry_after(value: str | None) -> float | None:
         return max(0.0, float(value))
     except ValueError:
         pass
-    from email.utils import parsedate_to_datetime
-
     try:
         when = parsedate_to_datetime(value)
     except (TypeError, ValueError):
         return None
     if when.tzinfo is None:
-        from datetime import timezone
-
         when = when.replace(tzinfo=UTC)
-    from datetime import datetime, timezone
-
     return max(0.0, (when - datetime.now(UTC)).total_seconds())
 
 
