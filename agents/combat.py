@@ -2711,7 +2711,10 @@ def _combat_node(state: GameState):
     from services import combat_preview as _preview
 
     _preview.store_mech_log(
-        combat_meta, out, [player, *enemies, *allies]
+        combat_meta,
+        out,
+        [player, *enemies, *allies],
+        {str(e.get("id") or e.get("name")) for e in enemies},
     )  # SPEC-334 R6 (só deck on)
     if status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
         combat_meta["last_mech_log"] = list(combat_meta.get("last_mech_log") or []) + status_logs

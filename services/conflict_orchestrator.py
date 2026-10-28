@@ -1227,6 +1227,7 @@ def _basic_attack(
     )
     atk["actor_id"] = attacker_id
     atk["target_id"] = target_id
+    atk["fora_de_turno"] = label  # SPEC-347 R5.2: anotação de view (rótulo no log mecânico)
     out.setdefault("attacks", []).append(atk)
     out["logs"].append(
         f"{label}: {_name(attacker)} → {_name(target)}: "
@@ -1627,7 +1628,47 @@ def _own_side_support(step, actor_id: str, sides: dict[str, list[str]]) -> bool:
     return step.target_id == actor_id or step.target_id in set(_same_side_ids(actor_id, sides))
 
 
+def _note_denied_span(out: dict, actor_id: str) -> None:
+    """SPEC-347 R14.1: turno negado (atordoado/incapaz) — registro vazio, só para a view."""
+    out.setdefault("turn_spans", []).append(
+        {
+            "actor_id": actor_id,
+            "attacks": [len(out.get("attacks") or [])] * 2,
+            "cards": [len(out.get("cards_used") or [])] * 2,
+            "negado": True,
+        }
+    )
+
+
 def _resolve_actor_turn(
+    scene: dict,
+    actor: dict,
+    actor_id: str,
+    actors_by_id: dict[str, dict],
+    sides: dict[str, list[str]],
+    decl,
+    state,
+    out: dict,
+    rng,
+) -> None:
+    """SPEC-347 R14.1: anota em `out["turn_spans"]` os índices de `attacks`/`cards_used` do turno
+    (só view; nenhum número muda). A resolução em si está em `_resolve_actor_turn_inner`."""
+    a0, c0 = len(out.get("attacks") or []), len(out.get("cards_used") or [])
+    try:
+        _resolve_actor_turn_inner(
+            scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng
+        )
+    finally:
+        out.setdefault("turn_spans", []).append(
+            {
+                "actor_id": actor_id,
+                "attacks": [a0, len(out.get("attacks") or [])],
+                "cards": [c0, len(out.get("cards_used") or [])],
+            }
+        )
+
+
+def _resolve_actor_turn_inner(
     scene: dict,
     actor: dict,
     actor_id: str,
@@ -2547,6 +2588,7 @@ def _run_round(
         acted.add(actor_id)
         if actor is None or not _can_act(actor):
             denied.add(actor_id)
+            _note_denied_span(out, actor_id)
             if intent_mode == "on" and frozen is not None:
                 _it = _next_intent(actor_id)
                 if _it is not None:
@@ -2569,6 +2611,7 @@ def _run_round(
             continue
         if stunned_this_turn:
             denied.add(actor_id)
+            _note_denied_span(out, actor_id)
             out["logs"].append(f"{_name(actor)} está atordoado e perde o turno.")
             if intent_mode == "on" and frozen is not None:
                 _it = _next_intent(actor_id)

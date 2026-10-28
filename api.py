@@ -2993,6 +2993,8 @@ def _combat_block(state: dict) -> dict[str, Any]:
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
         view["pilhas"] = _piles.public_view(meta["pilhas"])
         view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6
+        if meta.get("last_round_log"):  # SPEC-347 R14.2: registro estruturado (só Baralho on)
+            view["registro_rodada"] = list(meta["last_round_log"])
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}

@@ -416,8 +416,10 @@ export function PartyBars({ party }: { party: import("../types").PartyMember[] }
   );
 }
 
-export function CombatTab({ c, hitKey, party, arena }: {
+export function CombatTab({ c, hitKey, party, arena, deck }: {
   c: CombatBlock | undefined; hitKey: number; party: import("../types").PartyMember[];
+  /** SPEC-347 R5.4: modo Baralho — a faixa de cena já mostra a rodada (sem repetir no cabeçalho). */
+  deck?: boolean;
   /** SPEC-205: a Arena (aba Combate) já mostra zonas e inimigos — evita duplicar. */
   arena?: boolean;
 }) {
@@ -432,13 +434,13 @@ export function CombatTab({ c, hitKey, party, arena }: {
   const cds = Object.entries(c.cooldowns || {});
   return (
     <div>
-      <Combat c={c} hitKey={hitKey} cds={cds} arena={arena} />
+      <Combat c={c} hitKey={hitKey} cds={cds} arena={arena} deck={deck} />
       <PartyBars party={party} />
     </div>
   );
 }
 
-function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds: [string, number][]; arena?: boolean }) {
+function Combat({ c, hitKey, cds, arena, deck }: { c: CombatBlock; hitKey: number; cds: [string, number][]; arena?: boolean; deck?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const first = useRef(true);
   useEffect(() => {
@@ -453,7 +455,7 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
   return (
     <div className="combatblock" ref={ref}>
       <h3 className="hud__label">
-        Combate{c.round ? <span className="muted"> · Rodada {c.round}</span> : null}
+        Combate{c.round && !deck ? <span className="muted"> · Rodada {c.round}</span> : null}
       </h3>
 
       <WoundTrack wounds={c.wounds} />
@@ -485,13 +487,13 @@ function Combat({ c, hitKey, cds, arena }: { c: CombatBlock; hitKey: number; cds
         ))}
       </ul>}
 
-      {c.order.length > 0 && (
+      {c.order.length > 0 && !arena && (
         <>
           <h3 className="hud__label hud__label--sub">Iniciativa</h3>
           <ol className="initiative">
             {c.order.map((o, i) => (
               <li key={i} className={"init " + (o.side === "hero" ? "init--hero" : "init--enemy")}>
-                {`${o.init} · ${o.name}`}
+                {o.name}
               </li>
             ))}
           </ol>

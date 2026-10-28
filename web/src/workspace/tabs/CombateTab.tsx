@@ -253,7 +253,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
               onArm={(index, targets) => { targeting.cancel(); deckArm.arm(index, targets); }}
               onDisarm={deckArm.disarm} onClearTarget={deckArm.clearTarget}
               spareAvailable={!!combat.nonlethal_available} spare={spareOn} onSpare={() => setSpare((v) => !v)} onStuck={setStuck}
-              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} omens={omens} />}
+              arena={(omens) => <Arena combat={combat} party={data?.party ?? []} aim={aimMarks} onPick={pick} omens={omens} compact />}
               maneuverAim={state.phase === "aiming" ? (
                 <div className="aimbar" data-aim-safe>
                   <span>{`Mirando ${aimLabel}: escolha o alvo na arena.`}</span>
@@ -345,7 +345,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
       {!fighting && !data?.combat_simulation?.enabled && onCardReward && forgeHasContent(forja) && (
         <ForjaPanel forja={forja} cards={data?.player_stats?.cards ?? []} busy={busy} onForge={onCardReward} />
       )}
-      <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} />
+      <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} deck={deckMode} />
     </div>
   );
 }

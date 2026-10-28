@@ -19,6 +19,10 @@ export interface DeckOpts {
   nonlethal?: boolean;
   loot?: boolean;
   forge?: boolean;
+  /** SPEC-347: zonas extras (vazias) na Arena. */
+  zones?: string[];
+  /** SPEC-347 R14: registro estruturado da rodada. */
+  roundLog?: unknown[];
 }
 
 /** Combate por Baralho com 2 inimigos, 5 cartas na mão e (opcional) presságios, cena, objetivo e "Sem matar". */
@@ -51,6 +55,10 @@ export function armDeck(backend: DeterministicBackend, o: DeckOpts = {}) {
     state.combat.pressagios_cena = [{ id: "nevoa", nome: "Névoa Cinza do Ermo", pressagio: "a névoa engole os contornos", quando: "fim_rodada", rodada: 2 }];
   }
   if (o.nonlethal !== false) state.combat.nonlethal_available = true;
+  if (o.zones?.length) {
+    state.combat.scene.zones = [...state.combat.scene.zones, ...o.zones.map((name, i) => ({ id: `z${i}`, name, connections: [] }))];
+  }
+  if (o.roundLog) (state.combat as unknown as Record<string, unknown>).registro_rodada = o.roundLog;
   return state;
 }
 

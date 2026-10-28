@@ -61,7 +61,7 @@ export function buildParticipants(combat: CombatBlock, party: PartyMember[]): Ar
 }
 
 /** SPEC-205 R11: arena por zonas com participantes clicáveis (evolução de SceneZones). */
-export function Arena({ combat, party, aim, onPick, omens }: {
+export function Arena({ combat, party, aim, onPick, omens, compact }: {
   combat: CombatBlock;
   party: PartyMember[];
   /** id → marca de validade, só durante a mira. */
@@ -69,6 +69,8 @@ export function Arena({ combat, party, aim, onPick, omens }: {
   onPick: (id: string) => void;
   /** SPEC-342 R8: id do inimigo → presságio. Só o modo Baralho passa isto; sem ele a Arena fica idêntica. */
   omens?: Record<string, OmenView>;
+  /** SPEC-347 R4: só o modo Baralho. Zonas vazias saem da grade e viram uma linha. */
+  compact?: boolean;
 }) {
   const people = buildParticipants(combat, party);
   const zones = combat.scene.zones;
@@ -78,7 +80,10 @@ export function Arena({ combat, party, aim, onPick, omens }: {
     ...zones.map((z) => ({ id: z.id, name: z.name, members: people.filter((p) => p.zoneId === z.id) })),
     ...(loose.length ? [{ id: "__campo", name: zones.length ? "Campo" : "Campo de batalha", members: loose }] : []),
   ];
-  const turnOrder = (combat.order ?? []).map((slot) => slot.name).join(" → ");
+  // SPEC-347 R5.3: a ordem é a da última rodada JÁ resolvida (a iniciativa é rolada de novo a cada rodada).
+  const firstSide = (combat.order ?? [])[0];
+  const shown = compact ? groups.filter((g) => g.members.length > 0) : groups;
+  const emptyZones = compact ? groups.filter((g) => g.members.length === 0).map((g) => g.name) : [];
 
   function onKeyDown(event: KeyboardEvent<HTMLElement>) {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
@@ -91,10 +96,14 @@ export function Arena({ combat, party, aim, onPick, omens }: {
   }
 
   return (
-    <section className="arena" aria-label="Arena de combate" data-aim-safe>
-      {turnOrder && <p className="arena__turn">{`Rodada ${combat.round} · iniciativa: ${turnOrder}`}</p>}
+    <section className={`arena${compact ? " arena--compact" : ""}`} aria-label="Arena de combate" data-aim-safe>
+      {firstSide && (
+        <p className="arena__turn" title="A iniciativa é rolada de novo a cada rodada.">
+          {`Na última rodada, ${firstSide.side === "hero" ? "Heróis" : "Inimigos"} agiram primeiro.`}
+        </p>
+      )}
       <div className="arena__zones" role="toolbar" aria-label="Alvos do combate" tabIndex={-1} onKeyDown={onKeyDown}>
-        {groups.map((g) => (
+        {shown.map((g) => (
           <article key={g.id} className="arena__zone" aria-label={`Zona: ${g.name}`}>
             <h3>{g.name}</h3>
             <div className="arena__members">
@@ -106,6 +115,7 @@ export function Arena({ combat, party, aim, onPick, omens }: {
           </article>
         ))}
       </div>
+      {emptyZones.length > 0 && <p className="arena__empty-zones">{`Também na cena: ${emptyZones.join(" · ")}`}</p>}
       <ChaseTrack chase={combat.chase} />
     </section>
   );

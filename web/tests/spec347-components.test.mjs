@@ -31,3 +31,34 @@ test('playqueue_desfazer_fila_na_fila_e_selo', async () => {
   assert.match(out, /play-queue__badge" aria-hidden="true">2</);
   assert.match(out, /aria-label="Encerrar a rodada, 2 cartas"/);
 });
+
+const combatBase = { round: 3, order: [{ name: 'Inimigos', side: 'enemy', init: 0 }, { name: 'Heróis', side: 'hero', init: 0 }],
+  enemies: [], scene: { zones: [{ id: 'a', name: 'Ponte', connections: [] }, { id: 'b', name: 'Vão', connections: [] }], positions: [
+    { participant_id: 'player', participant_name: 'Ayla', zone_id: 'a', distance: 'proximo', posture: 'neutro', concealment: 'visivel', engaged_with: [], engaged_names: [] }] },
+  wounds: { vitality: 5, max_vitality: 8, slots: {}, by_severity: {} }, player_conditions: [], chase: null };
+
+test('arena_iniciativa_honesta_e_compact', async () => {
+  const { Arena } = await load('../src/combat/Arena.tsx');
+  const full = html(h(Arena, { combat: combatBase, party: [], onPick() {} }));
+  assert.match(full, /Na última rodada, Inimigos agiram primeiro\./);
+  assert.doesNotMatch(full, /iniciativa:|Rodada 3/);
+  assert.match(full, /Zona: Vão/);
+  const compact = html(h(Arena, { combat: combatBase, party: [], onPick() {}, compact: true }));
+  assert.match(compact, /arena--compact/);
+  assert.doesNotMatch(compact, /Zona: Vão/);
+  assert.match(compact, /Também na cena: Vão/);
+});
+
+test('hud_rodada_uma_vez_e_sem_zero', async () => {
+  const { CombatTab } = await load('../src/components/Hud.tsx');
+  const c = { ...combatBase, active: true, enemies: [{ id: 'e1', name: 'X', vitalidade: 3, max_vitalidade: 3, esquiva: 5, protecao: 0, conditions: [], revealed_cards: [], revealed_resistances: [] }],
+    cooldowns: {}, cards: [] };
+  const off = html(h(CombatTab, { c, hitKey: 0, party: [] }));
+  assert.equal((off.match(/Rodada/g) || []).length, 1);
+  assert.doesNotMatch(off, /\b0 · /);
+  assert.match(off, /Inimigos/);
+  const deck = html(h(CombatTab, { c, hitKey: 0, party: [], deck: true }));
+  assert.doesNotMatch(deck, /Rodada/);
+  const withArena = html(h(CombatTab, { c, hitKey: 0, party: [], arena: true, deck: true }));
+  assert.doesNotMatch(withArena, /class="initiative"/);
+});

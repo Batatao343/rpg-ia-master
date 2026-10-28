@@ -213,6 +213,8 @@ def mech_log(
                 head += " (alvo declarado)"
         else:
             what = f" · {card['name']}" if card else ""
+            if atk.get("fora_de_turno"):  # SPEC-347 R5.2: reação/oportunidade/contra-ataque ganham rótulo
+                what = f" · {atk['fora_de_turno']}"
             head = f"{who}{what} → {target}"
         lines.append(
             f"{head} · {dice} "
@@ -230,7 +232,9 @@ def mech_log(
     return lines
 
 
-def store_mech_log(meta: dict, out: dict, actors: list[dict]) -> None:
+def store_mech_log(
+    meta: dict, out: dict, actors: list[dict], enemy_ids: set[str] | None = None
+) -> None:
     """R6: grava o log mecânico da rodada. Só com o Baralho `on` (save `off` fica idêntico)."""
     from services import card_piles
 
@@ -239,3 +243,108 @@ def store_mech_log(meta: dict, out: dict, actors: list[dict]) -> None:
     meta["last_mech_log"] = mech_log(
         out.get("attacks") or [], actors, out.get("ticks") or [], out.get("heals") or []
     )
+    meta["last_round_board"] = round_board(out, actors, enemy_ids)  # SPEC-347 R14.2
+
+
+# --- SPEC-347 R14: registro estruturado da rodada (só view; nenhum número muda) ---
+
+_EFFECT_TEXT = {
+    "cura": "Cura",
+    "estabilizar": "Estabiliza",
+    "protecao": "Proteção",
+    "reposicionar": "Reposiciona",
+    "esconder": "Esconde",
+    "purga_condicao": "Purga condição",
+    "vantagem": "Vantagem",
+    "buff_defesa": "Defesa",
+    "buff_acerto": "Acerto",
+    "buff_dano": "Dano",
+}
+_RESULT_KEY = {"erro": "erro", "acerto": "acerto", "critico": "critico", "supercritico": "supercritico"}
+
+
+def _effect_text(card: dict) -> str:
+    effect = card.get("efeito") or {}
+    kind = str(effect.get("kind") or "")
+    label = _EFFECT_TEXT.get(kind, str(card.get("name") or "Efeito"))
+    if kind in ("protecao", "cura", "buff_defesa"):
+        return f"+{ct._effect_amount(effect)} {label}"
+    return label
+
+
+def round_board(
+    out: dict, actors: list[dict], enemy_ids: set[str] | None = None
+) -> list[dict[str, Any]]:
+    """Uma entrada por ataque/carta usada, na ordem dos turnos resolvidos (`turn_spans`).
+    Reações/oportunidades (`fora_de_turno`) saem como `origem="reacao"`; turno negado não gera entrada."""
+    names: dict[str, str] = {}
+    for a in actors:
+        key = str(a.get("id") or a.get("name") or ("player" if a.get("is_player") else ""))
+        if key and a.get("name"):
+            names[key] = str(a["name"])
+    names["player"] = "Você" if "player" not in names else names["player"]
+    enemy_ids = enemy_ids or set()
+    attacks = out.get("attacks") or []
+    used = out.get("cards_used") or []
+
+    def side(actor_id: str) -> str:
+        if actor_id == "player":
+            return "heroi"
+        return "inimigo" if actor_id in enemy_ids else "aliado"
+
+    def attack_entry(atk: dict, *, reaction: bool) -> dict[str, Any]:
+        actor_id, target_id = str(atk.get("actor_id")), str(atk.get("target_id"))
+        card = cards.get_card(str(atk.get("card_id") or "")) if atk.get("card_id") else None
+        hit = bool(atk.get("acerto"))
+        return {
+            "ator_id": actor_id, "ator_nome": names.get(actor_id, "Alguém"), "lado": side(actor_id),
+            "carta_id": card["id"] if card else None, "carta_nome": card["name"] if card else None,
+            "alvo_id": target_id, "alvo_nome": names.get(target_id, "Alguém"),
+            "origem": "reacao" if reaction else "turno",
+            "rotulo": atk.get("fora_de_turno") if reaction else None,
+            "resultado": _RESULT_KEY.get(str(atk.get("resultado")), "erro" if not hit else "acerto"),
+            "dano": int(atk["dano_final"]) if hit and atk.get("dano_final") is not None else None,
+            "efeito": None,
+        }
+
+    def card_entry(use: dict) -> dict[str, Any]:
+        actor_id = str(use.get("actor_id"))
+        card = use.get("card") or cards.get_card(str(use.get("card_id") or "")) or {}
+        return {
+            "ator_id": actor_id, "ator_nome": names.get(actor_id, "Alguém"), "lado": side(actor_id),
+            "carta_id": use.get("card_id"), "carta_nome": card.get("name"),
+            "alvo_id": None, "alvo_nome": None, "origem": "turno", "rotulo": None,
+            "resultado": "efeito", "dano": None, "efeito": _effect_text(card),
+        }
+
+    entries: list[dict[str, Any]] = []
+    covered: set[int] = set()
+    for span in out.get("turn_spans") or []:
+        if span.get("negado"):
+            continue
+        a0, a1 = span["attacks"]
+        c0, c1 = span["cards"]
+        span_attacks = [(i, attacks[i]) for i in range(a0, min(a1, len(attacks)))]
+        covered.update(i for i, _ in span_attacks)
+        own_card_ids = {str(u.get("card_id")) for u in used[c0:c1]}
+        for _, atk in span_attacks:  # reações da janela abrem antes do golpe de quem age
+            if atk.get("fora_de_turno"):
+                entries.append(attack_entry(atk, reaction=True))
+        taken: set[int] = set()
+        for use in used[c0:c1]:
+            match = next(
+                (i for i, atk in span_attacks
+                 if i not in taken and not atk.get("fora_de_turno")
+                 and str(atk.get("card_id")) == str(use.get("card_id"))), None)
+            if match is not None:
+                taken.add(match)
+                entries.append(attack_entry(attacks[match], reaction=False))
+            else:
+                entries.append(card_entry(use))
+        for i, atk in span_attacks:
+            if i not in taken and not atk.get("fora_de_turno") and str(atk.get("card_id")) not in own_card_ids:
+                entries.append(attack_entry(atk, reaction=False))
+    for i, atk in enumerate(attacks):  # fora de qualquer turno (Última Ação etc.)
+        if i not in covered:
+            entries.append(attack_entry(atk, reaction=bool(atk.get("fora_de_turno"))))
+    return entries

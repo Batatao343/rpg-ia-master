@@ -361,18 +361,11 @@ test.describe("baralho 342 achados do navegador", () => {
     await expect(page.locator("[data-play-confirm]")).toHaveText("Jogar em Bandido 2");
   });
 
-  test("B-4 header says Rodada; B-6 whole hand visible on desktop", async ({ page, backend }) => {
+  test("B-4 header has no repeated Rodada (347); B-6 whole hand visible on desktop", async ({ page, backend }) => {
     armDeck(backend);
     await openCombat(page);
-    await expect(page.locator(".combatblock .hud__label")).toContainText(/Combate · Rodada 1/);
-    // o espaço tem de aparecer na tela (item flex descarta o espaço do textContent)
-    const gap = await page.evaluate(() => {
-      const label = document.querySelector(".combatblock .hud__label")!;
-      const range = document.createRange();
-      range.selectNodeContents(label.firstChild!);
-      return label.querySelector("span")!.getBoundingClientRect().left - range.getBoundingClientRect().right;
-    });
-    expect(gap).toBeGreaterThanOrEqual(2);
+    // SPEC-347 R5.4: no Baralho a faixa de cena já diz a rodada; o cabeçalho do HUD não repete.
+    await expect(page.locator(".combatblock .hud__label")).toHaveText("Combate");
     const clipped = await page.evaluate(() => {
       const rail = document.querySelector(".deck-hand__rail")!;
       const box = rail.getBoundingClientRect();

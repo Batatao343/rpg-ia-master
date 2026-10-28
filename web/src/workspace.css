@@ -435,3 +435,8 @@ details.scene-strip { display: block; }
   .play-queue__clear--inline { display: inline-flex; align-self: flex-start; min-height: 44px; }
   .play-queue__badge { display: inline-block; }
 }
+.arena__empty-zones { margin: 0; color: var(--muted); font-size: 0.85rem; }
+@media (min-width: 641px) {
+  .arena--compact .arena__zones { grid-template-columns: 1fr; }
+  .arena--compact .arena__members { grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); }
+}
