@@ -3181,22 +3181,15 @@ def _combat_block(state: dict) -> dict[str, Any]:
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
         view["pilhas"] = _piles.public_view(meta["pilhas"], player)
-    if _piles.mode() == "on" and (
-        isinstance(meta.get("pilhas"), dict) or meta.get("last_round_board")
-    ):
-        # SPEC-353 R54: o registro da rodada final sobrevive ao fim do conflito (sem `pilhas`).
+    # SPEC-353 R54 + SPEC-354 R4.1 (um só caminho): com o Baralho `on`, o registro da rodada vale durante o conflito
+    # (há `pilhas`) e, depois dele, só no turno de término (`_combat_result`), não até o próximo conflito.
+    _final_board = (
+        not meta.get("active") and bool(meta.get("last_round_board")) and bool(_combat_result(state))
+    )
+    if _piles.mode() == "on" and (isinstance(meta.get("pilhas"), dict) or _final_board):
         view["mech_log"] = list(meta.get("last_mech_log") or [])  # SPEC-334 R6
         if meta.get("last_round_board"):  # SPEC-347 R14.2: registro estruturado (só Baralho on)
             view["registro_rodada"] = list(meta["last_round_board"])
-    elif (
-        _piles.mode() == "on"
-        and meta.get("last_round_board")
-        and not meta.get("active")
-        and _combat_result(state)  # só no turno de término (e no reload antes de "Continuar")
-    ):
-        # SPEC-354 R4.1 (D-354-4): o conflito acabou (pilhas apagadas) — o registro da rodada final
-        # continua visível no painel de Combate; some quando o próximo conflito começar (meta novo).
-        view["registro_rodada"] = list(meta["last_round_board"])
     if combat_flags.active("nonlethal"):
         view["nonlethal_available"] = True  # SPEC-325 D8: chip "Sem matar" so com a flag `on`
     reinf = meta.get("reinforcement") or {}

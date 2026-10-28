@@ -30,11 +30,18 @@ def test_view_keeps_round_board_after_conflict_ends(monkeypatch):
     state = {
         "player": {"name": "Haldor"},
         "enemies": [],
-        "combat": {"active": False, "last_round_board": board, "last_mech_log": ["Fuga"]},
+        "combat": {
+            "active": False, "phase": "ended", "last_round_board": board, "last_mech_log": ["Fuga"],
+            "result": {"outcome": "fled", "xp_event_ref": "rc-1", "result_event_id": "res-1"},
+        },
+        "last_turn_outcome": {"receipt_id": "rc-1", "turn": 1},
     }
     view = api._combat_block(state)
     assert view["registro_rodada"] == board and view["mech_log"] == ["Fuga"]
     assert "pilhas" not in view
+    # SPEC-354 P2-1: no turno seguinte (o resultado já não é o do término) o registro some da view
+    state["last_turn_outcome"] = {"receipt_id": "rc-2", "turn": 2}
+    assert "registro_rodada" not in api._combat_block(state)
 
 
 # --- R31/R32 Baralho x Preparacao ---
