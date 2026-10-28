@@ -13,6 +13,11 @@ const log6 = [
   { ...base, ator_id: "e2", ator_nome: "Bandoleiro", lado: "inimigo", carta_id: null, carta_nome: null, alvo_id: null, alvo_nome: null, resultado: "efeito", dano: null, efeito: "abatido", tipo: "queda" },
 ];
 
+/** SPEC-354 R6: o retrato (marcador da família) agora vai sempre — o R3.4 mede COM ele. */
+function withMarkers(state: ReturnType<typeof armDeck>) {
+  for (const e of state.combat.enemies) (e as unknown as Record<string, unknown>).retrato = { estado: "marcador", src: null, familia: "bruto", icone: "combat", alt: `Retrato de ${e.name}`, proprio: false, gerar: null };
+}
+
 test.describe("tabuleiro 1440", () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -20,6 +25,7 @@ test.describe("tabuleiro 1440", () => {
     const state = armDeck(backend, { zones: ["Veio de Calcário", "Boca do Abismo"], intent: true, scene: true, roundLog: log6 });
     state.combat.enemies[0].conditions = [{ name: "Sangramento", duration: 2 }, { name: "Rachadura", duration: 1 }] as never;
     state.combat.enemies[1].conditions = [{ name: "Medo", duration: 1 }, { name: "Atordoado", duration: 1 }] as never;
+    withMarkers(state);
     state.combat.player_conditions = [{ name: "Sangrando", dot: 1, duration: 2 }] as never;
     await openCombat(page);
     await expect(page.locator("[data-roundboard]")).toBeVisible();

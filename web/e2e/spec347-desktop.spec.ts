@@ -9,6 +9,7 @@ test("arena_tres_zonas_1440: chips legíveis e a 1ª carta inteira no painel sem
   const state = armDeck(backend, { zones: ["Veio de Calcário", "Boca do Abismo"], intent: true, scene: true, roundLog: roundLog(4) });
   state.combat.enemies[0].conditions = [{ name: "Sangramento", duration: 2 }, { name: "Rachadura", duration: 1 }] as never;
   state.combat.enemies[1].conditions = [{ name: "Medo", duration: 1 }, { name: "Atordoado", duration: 1 }] as never;
+  for (const e of state.combat.enemies) (e as unknown as Record<string, unknown>).retrato = { estado: "marcador", src: null, familia: "bruto", icone: "combat", alt: `Retrato de ${e.name}`, proprio: false, gerar: null }; // SPEC-354 R6: retrato sempre
   await openCombat(page);
   const chips = page.locator(".arena--compact .tchip");
   await expect(chips.first()).toBeVisible();
