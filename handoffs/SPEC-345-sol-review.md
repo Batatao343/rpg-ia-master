@@ -1,7 +1,7 @@
 # SPEC-345 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `6f24a7aa`
+> **Veredito:** `CHANGES_REQUIRED` (re-review de `27f2720c`: 9 de 9 achados fechados; falta 1 achado novo, R-1, pequeno; ver § Re-review)
+> **Revisor:** Opus 5.5 / Sol (spec-reviewer) · **Data:** 2026-10-27 · **Commit revisado:** `6f24a7aa` (1ª) · `27f2720c` (re-review)
 
 ## Escopo
 
@@ -49,7 +49,7 @@ Notas sem severidade:
 
 ## Correções aplicadas
 
-(nenhuma ainda; para o executor: P1-1 e P1-2 bloqueiam o pouso, os P2 podem virar follow-up)
+Commits `529c4258` (código + testes) e `27f2720c` (prints da API local MockLLM). Conferência por item em § Re-review.
 
 ## Pendências
 
@@ -66,4 +66,44 @@ node --test web/tests/spec345-components.test.mjs → 5/5 pass
 RPG_E2E_PORT=4988 npx playwright test e2e/spec345-layout.spec.ts e2e/deck-342-baseline.spec.ts --workers=1 → 13 passed, 1 skipped (prints opt-in)
 py.sh -c "strip_system_tags('Fim. [RESULTADO] +50 XP')" → 'Fim. [RESULTADO] +50 XP' (main: 'Fim.')  [P1-1]
 md5sum docs/spec345/prints/depois/*.png → on-360_07 == off-360_08  [P2-3]
+```
+
+## Re-review (2026-10-27, `1a967b4b..27f2720c`, branch rebaseada na `main` com a 342)
+
+| Achado | Status | Evidência |
+|---|---|---|
+| P1-1 | **fechado** | `turn_outcome.py:83-86` sem âncora: `"Fim. [RESULTADO] +50 XP"` → `"Fim."`, `"Prosa [SISTEMA] Adaga"` → `"Prosa Adaga"`. Desvio (0) registrado no §8. |
+| P1-2 | **fechado** | `styles.css`: uma regra única `.btn:disabled, .btn--primary:disabled, .btn--danger:disabled`, especificidade (0,2,0), com `opacity: 1`, fundo `--bg-deep`, `--muted` e borda tracejada. A regra antiga com opacity 0,5 saiu. `contrast.test.mjs` prova `--muted`/`--bg-deep` ≥ 4,5 e nenhuma `.btn*:disabled` com opacity < 1. |
+| P2-1 | **fechado** | `.btn--danger:disabled` entra na mesma regra e perde o fundo vermelho (`.btn--danger` em `:978` tem especificidade 0,1,0). |
+| P2-2 | **fechado** | O ghost desabilitado ganha fundo `--bg-deep` e borda tracejada `--line` e já se distingue do habilitado (transparente, borda sólida). |
+| P2-3 | **fechado** | Os 8 prints `depois/` foram regravados pela API local MockLLM, todos com md5 distinto. `off-360_06` mostra o 1º turno com a dica recolhida e a narração visível. `on-360_07`/`09` mostram o chip `R2` e o lugar inteiro. `off-360_12` mostra a Preparação sem faixa preta. `on-1440_12` mostra o roster sem o Bandido 1 derrotado. |
+| P2-4 | **fechado** | `spec345-layout.spec.ts:85-97`: `toBeVisible()` no cabeçalho e `toBeAttached()` em `.deck__msg:empty`, sem `catch`. |
+| P2-5 | **fechado** | `test_integra_no_no_de_combate_com_aliado` (nó real, deck `on`, aliado de cena: `last_mech_log` começa com "Mestre Aldric", sem `?`) e teste de loot com item pela fronteira em `test_spec345_player_text.py`. |
+| P2-6 | **fechado** | `Workspace.tsx:297`: `R{n}` com `aria-hidden="true"` e por extenso em `sr-only`. As duas chamadas ficaram, mas a função é pura e trivial; sem ação. |
+| P2-7 | **fechado** | `narrative_sink.py:19-22,166` usa os mesmos padrões de `turn_outcome`, então o stream sai igual ao texto final. |
+| R14/R15 (extra) | **ok** | `DeckCombat.tsx:104-107` (`scrollIntoView` nearest ao armar) + `.aimbar { scroll-margin-block-end }`. A ≤ 640 px o resumo da faixa de cena mostra só rodada e relógio (`workspace.css:411-415`, `SceneStrip.tsx:39`). `spec345-mobile390.spec.ts` está verde. |
+
+### Achado novo
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R-1 | P2 (bloqueia o pouso pela regra "zero pendência" do dono) | `services/turn_outcome.py:83-85` (também usado em `narrative_sink.py:166`) | Sem âncora, o padrão consome o `\r?\n` final mesmo quando o recibo está **no meio** da linha. Com isso, a prosa da linha seguinte cola na anterior. Medido: `strip_system_tags("A estrada. [RESULTADO] +5\nVoce segue.")` → `'A estrada.Voce segue.'`. Só acontece com recibo forjado inline pelo LLM, mas aí o texto chega ao jogador corrompido no POST, no SSE e no `/history`. | Separar em dois padrões: (a) linha inteira, ancorado, consumindo a quebra: `^[ \t]*\[RESULTADO\][^\r\n]*\r?\n?` (MULTILINE); (b) inline, sem consumir a quebra: `[ \t]*\[RESULTADO\][^\r\n]*`. Teste: `"A. [RESULTADO] x\nB."` → `"A.\nB."`. |
+
+### P3 restantes (nenhum bloqueia; listados a pedido do dono)
+
+- **P3-1.** Controles fora de `.btn` continuam desabilitados por opacity: `.death-btn` (`styles.css:891`), `.placechip` (`:951`), `.combat-card button` (`:1000`), `.actionchip` (`:1039`), `.ws-bar .iconbtn` (`workspace.css:26`), `.msg__offer` (`:282`) e `.play-queue__ops button` (`:371`). Estão fora do item 9b, que tratava só do `.btn` global, e o WCAG isenta controle desabilitado. Se o dono quiser uniformidade, cabe numa spec de polimento da 322.
+- **P3-2.** `--tabbar-h` vale sempre `0px` (`styles.css:71`; nenhum TS o define), então o `scroll-margin` da `.aimbar` é só `5rem`. O e2e passa a 390, mas o nome sugere uma altura dinâmica que não existe (pré-existente, também em `.pending-operation`/`.outcome-toast`).
+- **P3-3.** Os prints da API não mostram o texto do desfecho com espólio ("Vasculho o corpo") nem um inimigo "sem Vitalidade": no MockLLM o Bandido 1 caiu direto, com excedente. R4/R5 e R1 estão provados por teste (pytest, SSR e e2e), não por print. Esse texto é o foco do smoke real do §6.
+- **P3-4.** Na Arena do Véu (simulação de combate) a narração em MockLLM mostra a conta mecânica crua ("dano 7×2=14; Proteção (efeito) -1 -> 13; Vitalidade 10 -> 0 (excedente 3)"; prints `on-1440_12`, `on-360_07`). É pré-existente e fora desta spec. Vale conferir no smoke real se o mesmo bloco chega à narração fora da arena.
+- **P3-5.** `npm run lint`: 1 warning pré-existente (diretiva `eslint-disable` sem uso em `src/hooks/useTypewriter.ts:65`), num arquivo que a spec não toca.
+- Fora da revisão e com o coordenador: R12 (perf 3×), o smoke com LLM real do §6, a suíte completa e a marcação dos critérios da §5 / 316 F-1.
+
+### Comandos (re-review)
+
+```text
+py.sh -m pytest -q -n 2 (14 arquivos da 1ª rodada + test_spec319_shadow_replay + test_streaming) → 233 passed, sem falhas
+node --test tests/spec345-components.test.mjs tests/contrast.test.mjs → 10/10 pass
+RPG_E2E_PORT=4988 npx playwright test spec345-layout spec345-mobile390 deck-342-baseline --workers=1 → 15 passed, 1 skipped (prints opt-in); porta liberada
+npm run typecheck → limpo · npm run lint → 0 erros, 1 warning pré-existente
+py.sh -c strip_system_tags("A estrada. [RESULTADO] +5\nVoce segue.") → 'A estrada.Voce segue.'  [R-1]
 ```
