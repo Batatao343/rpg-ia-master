@@ -238,3 +238,49 @@ def test_last_stand_label_only_when_attack_was_added(monkeypatch):
         _scene("player", "a", "b"), {"player": hero, "a": a, "b": b}, sides, out, _HighRng()
     )
     assert "label" in prior and prior["label"] is None and "alvo_declarado" not in prior
+
+
+@pytest.mark.parametrize(
+    "enemy_id", ["enemy_bandido", "mon_corvo_gelo", "enemy_cultista_encapuzado"]
+)
+@pytest.mark.parametrize("seed", range(10))
+def test_mech_log_accounts_with_enemy_cards_in_play(seed, enemy_id, monkeypatch):
+    """R10 com inimigo do bestiário (Cartas inimigas, efeitos e DoT): linhas do mech_log
+    contra o herói = queda real da Vitalidade + excedente que virou Ferimento."""
+    import re
+
+    from agents.bestiary import template_by_id
+
+    template = template_by_id(enemy_id, encounter_level=4)
+    if not template:
+        pytest.skip(f"{enemy_id} fora do bestiário")
+    foe = orch.ensure_combat_sheet(dict(template) | {"id": "boss"})
+    hero = _actor("player", corpo=5, is_player=True)
+    hero["esquiva"] = 4
+    results = []
+    real = cd.resolve_damage_and_wounds
+
+    def spy(target, **kw):
+        res = real(target, **kw)
+        if target is hero:
+            results.append(res)
+        return res
+
+    monkeypatch.setattr(orch, "resolve_damage_and_wounds", spy)
+    monkeypatch.setattr(cd, "resolve_damage_and_wounds", spy)
+    vit_before = hero["vitalidade"]
+    out = orch.run_round(
+        _scene("player", "boss"),
+        {"player": hero, "boss": foe},
+        SIDES,
+        declarations={},
+        initiator="enemy",
+        rng=random.Random(seed),
+    )
+    lines = preview.mech_log(out["attacks"], [hero, foe], out["ticks"])
+    lines_total = sum(
+        int(m.group(1)) for ln in lines if "→ Você" in ln and (m := re.search(r"(\d+) dano$", ln))
+    )
+    drop = vit_before - hero["vitalidade"]
+    excess = sum(int(r.get("excedente", 0) or 0) for r in results)
+    assert lines_total == drop + excess, (enemy_id, seed, lines, drop, excess)
