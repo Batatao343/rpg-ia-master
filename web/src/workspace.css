@@ -525,3 +525,6 @@ details.scene-strip { display: block; }
   .arena--compact .tchip--portrait .tchip__portrait { grid-row: 1 / span 3; }
   .arena--compact .tchip--portrait > .tchip__tags, .arena--compact .tchip--portrait > .tchip__omen { grid-column: 1 / -1; }
 }
+
+/* SPEC-357: Técnicas à venda reusa .espolio__*; só o rótulo de destino/preço. */
+.loja__price { margin: 0; color: var(--muted); font-size: 0.85rem; }

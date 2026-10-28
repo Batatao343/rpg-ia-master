@@ -1,5 +1,5 @@
 import type { CardRewardRequest } from "./api";
-import type { ForjaView } from "./types";
+import type { ForjaView, LojaOferta } from "./types";
 
 /** SPEC-333: resultado de uma ação de espólio/forja (mensagem pt-BR já pronta para o leitor de tela). */
 export interface RewardOutcome { ok: boolean; message: string }
@@ -37,4 +37,18 @@ export function purgeChoices(forja: ForjaView): Array<{ via: "templo" | "medico"
 /** A Forja só aparece quando há algo para o jogador fazer ou entender (nunca uma aba vazia). */
 export function forgeHasContent(forja: ForjaView | undefined | null): forja is ForjaView {
   return !!forja && (forja.baralho.length > 0 || forja.cicatrizes.length > 0);
+}
+
+/** SPEC-357 R14: rótulo do destino previsto da Carta comprada (vem do servidor). */
+export const DESTINO_LABEL: Record<string, string> = {
+  baralho: "vai para o Baralho",
+  acervo: "só para o Acervo — Baralho cheio",
+  preparadas: "vai para as Preparadas",
+};
+
+/** Estado do botão "Comprar": desabilitado com o texto de `bloqueio` do servidor. */
+export function shopOfferState(oferta: LojaOferta): { enabled: boolean; label: string } {
+  if (oferta.conhecida) return { enabled: false, label: oferta.bloqueio || "Você já conhece essa Carta." };
+  if (oferta.bloqueio) return { enabled: false, label: oferta.bloqueio };
+  return { enabled: true, label: `Comprar por ${oferta.preco} de ouro` };
 }

@@ -8,6 +8,7 @@ import { ReactionPrompt } from "../../components/ReactionPrompt";
 import { CombatOutcomePanel } from "../../components/CombatOutcomePanel";
 import { EspolioPanel } from "../../components/combat/EspolioPanel";
 import { ForjaPanel } from "../../components/combat/ForjaPanel";
+import { LojaCartasPanel } from "../../components/combat/LojaCartasPanel";
 import { forgeHasContent, type RewardSender } from "../../cardRewards";
 import { resultFrom, shouldShowResult } from "../../combatOutcome";
 import { Arena, buildParticipants } from "../../combat/Arena";
@@ -114,6 +115,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const deckMode = !!combat?.pilhas; // SPEC-334: sem `pilhas` (flag off) a UI atual segue idêntica
   const espolio = data?.player_stats?.espolio_pendente; // SPEC-333: só com RPG_CARD_REWARDS=on
   const forja = data?.player_stats?.forja;
+  const loja = data?.player_stats?.loja_cartas; // SPEC-357
 
   const state = targeting.state;
   const aimingCard: CardView | undefined = state.phase === "aiming" && state.source.kind === "card"
@@ -414,6 +416,9 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
       )}
       {!fighting && !data?.combat_simulation?.enabled && onCardReward && forgeHasContent(forja) && (
         <ForjaPanel forja={forja} cards={data?.player_stats?.cards ?? []} busy={busy} onForge={onCardReward} />
+      )}
+      {!fighting && !data?.combat_simulation?.enabled && onCardReward && loja && loja.ofertas.length > 0 && (
+        <LojaCartasPanel loja={loja} busy={busy} onBuy={onCardReward} />
       )}
       <CombatTab c={combat} hitKey={hitKey} party={data?.party ?? []} arena={live} deck={deckMode} />
     </div>

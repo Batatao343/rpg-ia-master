@@ -90,6 +90,22 @@ export interface PlayerStats {
   /** SPEC-333: só existem com RPG_CARD_REWARDS=on (servidor antigo/flag off = a UI não muda). */
   espolio_pendente?: EspolioPendente;
   forja?: ForjaView;
+  /** SPEC-357: Técnicas à venda no mercador do local (só com RPG_CARD_REWARDS=on). */
+  loja_cartas?: LojaCartasView;
+}
+
+/** SPEC-357 R8: o servidor decide preço, destino e bloqueio (o front nunca recalcula). */
+export interface LojaOferta extends EspolioOferta {
+  preco: number;
+  destino: "baralho" | "acervo" | "preparadas";
+  bloqueio: string | null;
+}
+export interface LojaCartasView {
+  merchant_id: string;
+  merchant_name: string;
+  renova_em_dias: number;
+  motivo: string | null;
+  ofertas: LojaOferta[];
 }
 
 /** SPEC-333 R1/R3: 3 Cartas do espólio pós-conflito; recusar paga `recusa_ouro`. */
@@ -239,6 +255,8 @@ export interface Quest {
   created_turn: number;
   resolved_turn: number;
   reward_hint: string;
+  /** SPEC-357 R13: técnica entregue por uma missão de lore concluída. */
+  reward_card_name?: string;
   // SPEC-305: quests de mundo. Rótulo vago de prazo, nunca número de dia.
   kind?: "comum" | "faccao" | "mundo";
   deadline_label?: string;

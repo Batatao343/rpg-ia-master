@@ -374,12 +374,13 @@ export interface CardRewardResult {
 }
 export type CardRewardRequest =
   | { kind: "espolio"; card_id: string | null }
+  | { kind: "loja"; card_id: string }
   | { kind: "forja"; acao: "esquecer"; card_id: string; via: "descanso" | "templo" }
   | { kind: "forja"; acao: "afiar"; card_id: string }
   | { kind: "forja"; acao: "purgar"; scar_id: string; via: "templo" | "medico" };
 export const postCardReward = (request: CardRewardRequest, gameId?: string | null) => {
   const { kind, ...body } = request;
-  return req<CardRewardResult>(kind === "espolio" ? "/game/espolio" : "/game/forja", {
+  return req<CardRewardResult>(kind === "espolio" ? "/game/espolio" : kind === "loja" ? "/game/loja-cartas" : "/game/forja", {
     method: "POST",
     body: JSON.stringify({ ...body, game_id: gameId, action_id: crypto.randomUUID() }),
   });

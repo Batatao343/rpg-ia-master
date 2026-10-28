@@ -205,4 +205,11 @@ Pergunta ao dono (não bloqueia a execução): os números de D2 e a exclusão d
 
 ## 9. Registro de implementação
 
-(preencher na execução)
+Executado em `spec-357` (28/10), etapas 1-6; Etapa 7 (smoke §6 real e revisão Sol) pendente.
+
+- **Etapas 1-3 (`services/card_shop.py`, `_loja.json`, API):** `cards.is_neutral` foi criado aqui (a SPEC-355 R7 ainda não tinha pousado; mesmo nome/assinatura, quem pousar depois rebaseia). `economy.local_buy_mult`, `card_rewards.add_to_deck` (alias) e `POST /game/loja-cartas` (+ código `loja_cartas_rejected`, doc/JSON gerados). Flag: só a `note` de `RPG_CARD_REWARDS` mudou (D1).
+- **Etapa 4 (`agents/loot.py`):** `_card_shop_turn` intercepta "compro <nome exato>" antes do CLASSIFY (exige verbo de compra + exatamente 1 Carta da prateleira); `observe` acrescenta até 3 linhas "Técnica: X — compra N moedas".
+- **Etapa 5:** `_lore_fields` grava `reward_card_planned` + `reward_card_label` (campo interno extra, para o sorteio não depender do texto do hint); `grant_for_quest` chamado no bloco do XP do `event_processor` (mesmo `player`); `public_quest_view` expõe `reward_card_name`.
+- **Etapa 6:** `LojaCartasPanel`, `shopOfferState`, `RewardSender` `kind: "loja"`, QuestsTab "Técnica: X".
+- **Desvios/observações:** (a) testes de quest usam quest sem `world_kind` (o validador de `quest_completed` exige prova do motor para quests de mundo; a Carta não depende de `world_kind`); (b) idempotência por `action_id` só existe no perfil DB, como no espólio: no legacy a repetição é rejeitada (400) sem nova cobrança; (c) `test_rewards_roll_unchanged` compara o pool neutro com a fórmula antiga em vez de um golden gravado; (d) sem e2e de QuestsTab "Técnica:" (coberto por tsc; fixture do backend não tem quests); (e) `README` de flags: sem flag nova.
+- **Testes:** `tests/test_card_shop.py`, `test_card_shop_api.py`, `test_card_quest_rewards.py`, `test_card_shop_loot_text.py` + regressão (forge, loot, spec313, flag registry) verdes; `web/tests/card-shop.test.mjs`; `web/e2e/card-shop-357.spec.ts` (3 passam, `--workers=1`).

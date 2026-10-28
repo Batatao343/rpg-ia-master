@@ -47,7 +47,7 @@ export function QuestsTab({ quest }: { quest: QuestBlock | undefined }) {
               )}
               {q.description && <p className="quest__desc">{q.description}</p>}
               <p className="quest__meta">
-                {[q.origin_name && `de ${q.origin_name}`, q.reward_hint].filter(Boolean).join(" · ") || "—"}
+                {[q.origin_name && `de ${q.origin_name}`, q.reward_hint, q.reward_card_name && `Técnica: ${q.reward_card_name}`].filter(Boolean).join(" · ") || "—"}
               </p>
             </li>
           ))}
