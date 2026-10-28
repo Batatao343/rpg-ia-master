@@ -1,0 +1,177 @@
+{
+ "_meta": {
+  "gerado_de": "56465f3ab81fe9d74a4317563e2a42c9f6622841",
+  "comando": "bash scripts/dev/py.sh docs/spec358/gerar_golden_v1.py",
+  "pool_congelado": [
+   {
+    "id": "med_lote_91",
+    "name": "Fio 91",
+    "tipo": "ativa",
+    "origem": "pool-358",
+    "classe": "Médico de Campo",
+    "subclasse": "boticario",
+    "patamar": "inicial",
+    "raridade": "comum",
+    "custo_entropia": 0,
+    "frequencia": "livre",
+    "virtude_permitida": [
+     "mente"
+    ],
+    "efeitos": [
+     {
+      "kind": "dano",
+      "dano_base": 4,
+      "categoria_arma": "leve"
+     }
+    ],
+    "descricao": "Cinza de fornalha fecha a ferida.",
+    "momento": "Melhor jogada quando o caso 91 pede calma e o inimigo hesita.",
+    "tier": 1,
+    "level_req": 1,
+    "apex": false,
+    "onda": 1,
+    "versao": 1
+   },
+   {
+    "id": "med_lote_92",
+    "name": "Fio 92",
+    "tipo": "ativa",
+    "origem": "pool-358",
+    "classe": "Médico de Campo",
+    "subclasse": "boticario",
+    "patamar": "inicial",
+    "raridade": "comum",
+    "custo_entropia": 0,
+    "frequencia": "livre",
+    "virtude_permitida": [
+     "mente"
+    ],
+    "efeitos": [
+     {
+      "kind": "protecao",
+      "valor": 2
+     }
+    ],
+    "descricao": "Cinza de fornalha fecha a ferida.",
+    "momento": "Melhor jogada quando o caso 92 pede calma e o inimigo hesita.",
+    "tier": 1,
+    "level_req": 1,
+    "apex": false,
+    "onda": 1,
+    "versao": 1
+   },
+   {
+    "id": "med_lote_93",
+    "name": "Fio 93",
+    "tipo": "ativa",
+    "origem": "pool-358",
+    "classe": "Médico de Campo",
+    "subclasse": "boticario",
+    "patamar": "inicial",
+    "raridade": "comum",
+    "custo_entropia": 0,
+    "frequencia": "livre",
+    "virtude_permitida": [
+     "mente"
+    ],
+    "efeitos": [
+     {
+      "kind": "cura",
+      "valor": 3
+     }
+    ],
+    "descricao": "Cinza de fornalha fecha a ferida.",
+    "momento": "Melhor jogada quando o caso 93 pede calma e o inimigo hesita.",
+    "tier": 1,
+    "level_req": 1,
+    "apex": false,
+    "onda": 1,
+    "versao": 1
+   }
+  ]
+ },
+ "simulate_batch": {
+  "med_lote_1": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 11,
+   "vezes_jogada": 11,
+   "taxa_uso": 1.0,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 1.0,
+   "delta_pp": 25.0,
+   "lutas_por_braco": 8,
+   "dano_por_folego": 20.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med_lote_2": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 13,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 1.0,
+   "delta_pp": 25.0,
+   "lutas_por_braco": 8,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "uso_nao_medido"
+   ]
+  },
+  "med_lote_3": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 16,
+   "vezes_jogada": 16,
+   "taxa_uso": 1.0,
+   "vitoria_sem": 0.75,
+   "vitoria_com": 1.0,
+   "delta_pp": 25.0,
+   "lutas_por_braco": 8,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "simulate_protocolo_lote": {
+  "med_lote_11": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 136,
+   "vezes_jogada": 131,
+   "taxa_uso": 0.963,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.938,
+   "delta_pp": 6.2,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "med_lote_12": {
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 161,
+   "vezes_jogada": 161,
+   "taxa_uso": 1.0,
+   "vitoria_sem": 0.875,
+   "vitoria_com": 0.925,
+   "delta_pp": 5.0,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ },
+ "main": {
+  "stdout": "med_lote_11: uso 96% (131/136) delta +6.2pp dano/F 5.0 prot/F 0.0 dominante\nmed_lote_12: uso 100% (161/161) delta +5.0pp dano/F 0.0 prot/F 3.0 dominante\n",
+  "codigo": 1,
+  "out_arquivo": "{\n \"med_lote_11\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 136,\n  \"vezes_jogada\": 131,\n  \"taxa_uso\": 0.963,\n  \"vitoria_sem\": 0.875,\n  \"vitoria_com\": 0.938,\n  \"delta_pp\": 6.2,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 5.0,\n  \"protecao_por_folego\": 0.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n },\n \"med_lote_12\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 161,\n  \"vezes_jogada\": 161,\n  \"taxa_uso\": 1.0,\n  \"vitoria_sem\": 0.875,\n  \"vitoria_com\": 0.925,\n  \"delta_pp\": 5.0,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 0.0,\n  \"protecao_por_folego\": 3.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n }\n}\n"
+ }
+}
