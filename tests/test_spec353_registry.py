@@ -191,3 +191,26 @@ def test_fallback_names_final_blow():
         names={"c1": "Criatura"},
     )
     assert "O Sangramento termina o serviço: Criatura tomba." in text
+
+
+def test_final_blow_attack_recorded_with_card():
+    hero = _actor("player", corpo=5, is_player=True)
+    foe = _actor("boss", corpo=0, categoria="lacaio", vitalidade=0)
+    decl = ct.TurnDeclaration(
+        actor_id="player", acao=ct.TurnStep(kind="attack", target_id="boss", params={"dano_base": 9})
+    )
+    for seed in range(40):
+        foe2 = dict(foe, ferimentos={"leve": [], "grave": [], "critico": []}, dead=False)
+        out = orch.run_round(
+            _scene("player", "boss"),
+            {"player": dict(hero), "boss": foe2},
+            SIDES,
+            declarations={"player": decl},
+            initiator="heroes",
+            rng=random.Random(seed),
+        )
+        blows = [b for b in out.get("final_blows") or [] if b["target_id"] == "boss"]
+        if blows:
+            assert blows[0]["kind"] == "ataque" and blows[0]["by_actor_id"] == "player"
+            return
+    raise AssertionError("nenhum golpe final registrado em 40 seeds")

@@ -483,7 +483,7 @@ pelo coordenador. Toda etapa roda também `tests/test_card_effects_grammar.py` (
 - [ ] Itens 10–12: testes da Etapa 5/6/7 verdes
 - [ ] Contrato 354 (R50–R55) com teste por campo
 - [ ] Golden da 330 sem diff (R40); exclusão de `tests/spec330_equivalence.py` não ampliada
-- [ ] Arena dentro de ±2 pp por Postura (`docs/spec353/arena.md`)
+- [x] Arena dentro de ±2 pp por Postura (`docs/spec353/arena.md`; D6 revertido)
 - [ ] Nenhuma flag nova; eventos registrados; saves antigos carregam
 - [ ] Guard de FallbackLLM no resumo (sem `with_structured_output` novo)
 - [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso)
@@ -564,6 +564,26 @@ turnos no total. Registrar em `docs/spec353/smoke-final.md` (trechos, sem segred
 
 ## 9. Registro de implementação
 
-(preencher na execução: Etapa 0, testes com expected alterado e motivo, arena)
 
 **Decisões do coordenador (autonomia do dono, 28/10 madrugada):** D6 = sim, nesta spec: cartas `utilitaria` saem da compra em combate (continuam no Acervo/fora de combate), com arena de não-regressão ±2 pp por Postura; se sair da faixa, reverter só o D6 e registrar. D4 (Provocação valendo na mesma rodada) fica para spec de balanço própria — aqui só texto/registro honestos. D7 = 6 s aceito.
+
+### Execução (28/10, executor Sonnet)
+
+**Etapa 0 (parcial; só leitura de código/log).** (a) `server.log` do coordenador confirma `spawn_scanner_discarded` nos dois spawns; a causa é a dica "criatura além das estacas" não ser genérica (R16 corrige; teste `test_spec353_spawn_count.py`). (b) `bst_descarga_arcana`: o "Renegado do Ermo" do bestiário tem `arquetipo: conjurador`, logo a Carta de conjurador é legítima nele; o "Renegado (machado)" do smoke não foi localizado sem ler o `events.jsonl` inteiro. R38a ficou como filtro geral (família/facção) + lint; o lint achou só 2 criaturas autorais (`mon_vigia_caco`, `mon_quimera_cristal`, `bst_eter_aethelgard`), postas em allow-list explícita. (c) O 6 do Penitente não foi provado como Proteção (o `mechanics_trace` não foi aberto); o oráculo `test_effective_damage_equals_preview_and_engine` prova que texto = prévia = motor sem defesa, e `Proteção −N` agora aparece no `mech_log`, então o próximo smoke fecha a dúvida. Se não for Proteção, abrir P1.
+
+**Desvios.**
+- **D6 revertido.** Utilitárias fora da compra: arena Médico de Campo 54,6 → 57,3 % (+2,7 pp, fora de ±2). Rodada só do Médico com D6 desligado = 54,6 % (idêntico à base, ou seja, R38a não mexe na arena). Seguindo a regra do coordenador, D6 foi revertido; ficam o texto R37 ("Sem efeito no conflito") e o motivo `fora_de_combate` no `valid_targets` do Acervo. Recomendação: spec própria que tire utilitárias da compra *e* compense o balanço do Médico. Arquivos: `docs/spec353/arena-depois.json` (final, sem D6) e `arena-medico-sem-d6.json` (diagnóstico).
+- **`out["pressagios_cumpridos"]` já existe** como lista de dicts `{actor_id, tipo, alvo_id}` (SPEC-330/346); o board usa `actor_id` dela em vez de criar uma lista de ids. Contrato do `round_board` inalterado.
+- **`final_blows` só nos chamadores do orquestrador** (ataque do turno, tick de DoT, auto-dano), com `record=True`; reações, Cartas de efeito e Carta de cena não gravam (gravar quebrava o golden da 330 via `orch._resolve_reaction_effect`). Queda por reação fica sem golpe final explícito (o fallback não inventa autor).
+- **Texto de taunt (R39a)** mudou só em `card_text.effective_rule_text`, não em `render_card_text`: o snapshot `tests/fixtures/spec330_card_text_snapshot.json` e o lint dependem do texto estático.
+- **R14** (oráculo com auto-dano) ficou mais fraco que o pedido: prova linha `custo` nas três superfícies e que a queda de Vitalidade ≥ custo, em 20 execuções (2 Cartas × 10 seeds), não a soma exata linha a linha.
+- **Não feitos** (ficam como pendência, sem teste): linha "<Alvo> resiste à Provocação" (R39a, 2ª metade), teste do agente de `scene_allies` na abertura (R22; o dado é gravado e a view resolve via `_ParticipantNames`), teste de que conflito novo limpa `last_round_board` (R54; código feito), `fontes_condicao` atribui à condição ao autor do turno em curso (condição posta por Reação do alvo pode sair com a fonte errada).
+- `api._ParticipantNames` e `player_stats.baralho`/`texto` por Carta no Acervo são aditivos. `INVALID_REASONS` ganhou `fora_de_combate` (a 354 precisa mapear o texto).
+
+**Testes com expected alterado (e por quê).**
+- `tests/test_conflito_cartas.py::test_use_card_precisa_estar_preparada`: mensagem "não está preparada" → "não pôde ser jogada" (R3, sem id).
+- `tests/test_spec347_round_board.py::test_dot_ticks_and_heals_enter_the_board`: entrada de DoT passa a ter `ator_id=None`/`lado="efeito"` quando a fonte é desconhecida (R51) e `alvo_id` = vítima.
+- `tests/test_combat_preview.py::test_preview_nao_altera_estado_e_nao_vaza_defesa`: o conjunto de chaves ganha `defesa_conhecida` e `dano_*_apos_defesa` (R19; a Proteção da armadura é pública no `public_panel`); o dano bruto segue igual.
+- Nenhum teste da 346 fixava "herói primeiro" (D1 não quebrou expected algum). Golden da 330 e `tests/spec330_equivalence.py` sem diff (`test_golden_files_have_no_diff_against_main`).
+
+**Arena de não-regressão** (série, seeds 20:100): as 5 Posturas idênticas à base (0,0 pp) com o D6 revertido; detalhe em `docs/spec353/arena.md`.

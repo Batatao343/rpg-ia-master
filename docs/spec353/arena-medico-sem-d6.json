@@ -1,0 +1,135 @@
+{
+ "seeds": [
+  20,
+  100
+ ],
+ "versoes": {},
+ "posturas": {
+  "Médico de Campo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      253,
+      320
+     ],
+     "L1 elite": [
+      213,
+      320
+     ],
+     "L3 padrao": [
+      251,
+      320
+     ],
+     "L3 elite": [
+      210,
+      320
+     ],
+     "L5 padrao": [
+      90,
+      320
+     ],
+     "L5 elite": [
+      31,
+      320
+     ]
+    },
+    "total": 0.546,
+    "padrao": 0.619,
+    "elite": 0.473
+   },
+   "cirurgiao_trincheira": {
+    "celulas": {
+     "L1 padrao": [
+      253,
+      320
+     ],
+     "L1 elite": [
+      191,
+      320
+     ],
+     "L3 padrao": [
+      269,
+      320
+     ],
+     "L3 elite": [
+      233,
+      320
+     ],
+     "L5 padrao": [
+      98,
+      320
+     ],
+     "L5 elite": [
+      26,
+      320
+     ]
+    },
+    "total": 0.557,
+    "padrao": 0.646,
+    "elite": 0.469
+   },
+   "boticario": {
+    "celulas": {
+     "L1 padrao": [
+      257,
+      320
+     ],
+     "L1 elite": [
+      202,
+      320
+     ],
+     "L3 padrao": [
+      253,
+      320
+     ],
+     "L3 elite": [
+      226,
+      320
+     ],
+     "L5 padrao": [
+      95,
+      320
+     ],
+     "L5 elite": [
+      44,
+      320
+     ]
+    },
+    "total": 0.561,
+    "padrao": 0.63,
+    "elite": 0.492
+   },
+   "cirurgiao_ferro": {
+    "celulas": {
+     "L1 padrao": [
+      268,
+      320
+     ],
+     "L1 elite": [
+      224,
+      320
+     ],
+     "L3 padrao": [
+      275,
+      320
+     ],
+     "L3 elite": [
+      224,
+      320
+     ],
+     "L5 padrao": [
+      164,
+      320
+     ],
+     "L5 elite": [
+      63,
+      320
+     ]
+    },
+    "total": 0.634,
+    "padrao": 0.736,
+    "elite": 0.532
+   }
+  }
+ }
+}
