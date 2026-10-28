@@ -14,4 +14,4 @@ related_entities:
 # Guardião-Sem-Rosto
 
 Tipo: Assombração | Perigo: Extremo
-Relacionado ao Farol da Chama Negra. Os guardiões anteriores que morreram no ciclo de cem anos não partem completamente — permanecem como sentinelas pálidas ao redor do Farol, sem rosto, observando quem se aproxima. Não atacam quem vem com propósito legítimo. Despedaçam quem vem para apagar a chama.
+Relacionado ao Farol da Chama Negra. Sentinelas pálidas ao redor da torre, sem rosto, observando quem se aproxima. Os Nascidos do Gelo não dizem o que elas foram. Não atacam quem vem com propósito legítimo. Despedaçam quem vem para apagar a chama.

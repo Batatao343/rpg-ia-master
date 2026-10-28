@@ -187,8 +187,7 @@
     "tags": [
       "mao_sombria",
       "crime",
-      "vibora",
-      "magda"
+      "vibora"
     ],
     "visibility": "public",
     "components": {}
@@ -589,9 +588,8 @@
     "aliases": [],
     "tags": [
       "velha_magda",
-      "mao_sombria",
-      "vibora",
-      "identidade_secreta"
+      "anel_de_lama",
+      "mendiga"
     ],
     "visibility": "public",
     "components": {}
@@ -6865,7 +6863,7 @@
       "nova_arcadia",
       "artefato_unico"
     ],
-    "visibility": "public",
+    "visibility": "hidden",
     "components": {}
   },
   "art_armadura_vazia_malagor": {

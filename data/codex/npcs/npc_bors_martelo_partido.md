@@ -8,7 +8,8 @@ tags:
 - Anel_Ferro
 - Líder_Operário
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # BORS MARTELO-PARTIDO — A VOZ DOS TRABALHADORES

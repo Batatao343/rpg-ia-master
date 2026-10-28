@@ -1,7 +1,7 @@
 ---
 id: timeline_e5_1_primeira_metade_o_abismo_concentrou_mais
 type: timeline
-name: Era 5 — A Inundação Humana, a Queda de Aethelgard e o Dia sem Sombra (1)
+name: Era 5 — A Inundação Humana e a Queda de Aethelgard (1)
 aliases: []
 tags:
 - timeline
@@ -9,7 +9,7 @@ tags:
 visibility: public
 ---
 
-# ERA 5 — A INUNDAÇÃO HUMANA, A QUEDA DE AETHELGARD E O DIA SEM SOMBRA
+# ERA 5 — A INUNDAÇÃO HUMANA E A QUEDA DE AETHELGARD
 
 PRIMEIRA METADE
 

@@ -9,7 +9,8 @@ tags:
 - Nobre
 - Colecionador
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # LORDE VESPÉRIO VALANTE — O COLECIONADOR

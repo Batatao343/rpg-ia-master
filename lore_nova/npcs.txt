@@ -9,9 +9,9 @@ LORDE PROTETOR VALERIUS
 Papel: Governante absoluto de Nova Arcádia
 Aparência: Homem alto, cabelos grisalhos impecáveis, armadura cerimonial negra. Olhos frios, sem emoção. Nunca é visto comendo ou dormindo.
 
-História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Fez pacto com Daruun: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
+História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Passou a década depois da guerra rastreando Daruun, o demônio que negocia, e no décimo ano de governo foi levado por ele às masmorras. Fez o pacto: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
 
-O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. O Código de Ferro — centenas de páginas que apareceram em uma noite em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
+O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. Daruun é o corretor; a armadura de Malagor é a porta por onde o Abismo cobra. O Código de Ferro — centenas de páginas que apareceram em uma noite, a mesma do pacto, em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
 
 Motivação declarada: Ordem a qualquer custo. Acredita que a liberdade causou a Guerra das Cinzas (nome antigo para os conflitos pré-Malagor).
 
@@ -19,7 +19,7 @@ Motivação real: Não está completamente claro nem para ele. O pacto consumiu 
 
 Comportamento com personagens: Sempre sabe nomes que não deveria saber. Chama peticionários por apelidos íntimos. Nunca demonstra vacilação. Quando confrontado com evidência de erros, reinterpreta como confirmação de que estava certo.
 
-Rumor verdadeiro: Os servos que trabalhavam no palácio na época do décimo ano de governo morreram todos de causas variadas nos vinte anos seguintes. Nenhum de causa violenta.
+Rumor verdadeiro: Os servos que trabalhavam no palácio na época do décimo ano de governo constam todos como mortos, de causas variadas, nos vinte anos seguintes. Nenhum de causa violenta. Um dos registros está errado (ver Bertil, o velho do crematório).
 
 ---
 
@@ -32,7 +32,7 @@ Aparência: Meio-orc maciço, falta uma das presas. Metade do rosto é queimadur
 
 Personalidade: Cínico, prático, surpreendentemente leal a quem paga. Odeia heróis — "Heróis trazem problemas e não pagam a conta."
 
-História real: Era Sargento da antiga Guarda Real. Viu o Rei morrer. Fugiu. Guarda a medalha de honra e um documento no fundo de um barril de cerveja azeda — o testamento real que nomeia um herdeiro ao trono que ninguém sabe que existe.
+História real: Era Sargento da antiga Guarda Real do Reino da Colina Cinza. Viu o último Rei morrer, quando Malagor queimou o reino. Fugiu. Guarda a medalha de honra e um documento no fundo de um barril de cerveja azeda — o testamento real que nomeia um herdeiro ao trono que ninguém sabe que existe.
 
 O segredo do barril: O documento nunca foi lido por Grum. Ele não sabe o conteúdo — só sabe que é importante e perigoso. Fica nervoso quando o assunto de "como era antes de Valerius" surge. Olha involuntariamente para o canto esquerdo do bar quando alguém pergunta sobre a história da cidade.
 
@@ -41,17 +41,18 @@ Falas: "Se for vomitar, faça lá fora." / "Eu não vi nada, não ouvi nada e es
 ---
 
 [CATEGORIA: NPC]
-[TAGS: Velha_Magda, Mão_Sombria, Víbora, Identidade_Secreta]
+[TAGS: Velha_Magda, Anel_de_Lama, Mendiga]
 
-VELHA MAGDA — A RATOEIRA (A VÍBORA)
+VELHA MAGDA — A RATOEIRA
 Papel aparente: Vendedora de espetinhos e amuletos no Anel de Lama
-Papel real: Líder da Mão Sombria
 
 Aparência: Senhora idosa e encarquilhada empurrando carrinho de mão cheio de lixo e "comida". Às vezes recita profecias em línguas mortas durante "delírios".
 
-A verdade: Magda foi Sacerdotisa de alto nível antes da guerra — culto ao "Conhecimento Quieto", dedicado a observar sem intervir. A guerra destruiu o culto e revelou o problema da filosofia: observação sem poder é impotência quando tudo desmorona. Passou quinze anos construindo a Mão Sombria de baixo para cima.
+Segredo: Papel real — Líder da Mão Sombria. É a Víbora, o nome que a Mão Sombria usa para a mão que assina.
 
-O carrinho: Escritório da Mão Sombria. Fundo falso com documentos, frascos e rede de comunicação. As "profecias em línguas mortas" durante os delírios são comunicados codificados para células.
+A verdade: Magda foi Sacerdotisa de alto nível antes da guerra — culto ao "Conhecimento Quieto", dedicado a observar sem intervir. A guerra destruiu o culto e revelou o problema da filosofia: observação sem poder é impotência quando tudo desmorona. Passou quinze anos construindo a Mão Sombria de baixo para cima, entre quarenta e quatro e vinte e nove anos atrás. Tem memória perfeita, e é por isso que sabe o que Grum guarda no barril e para quem ele deveria ir.
+
+Segredo: O carrinho é o escritório da Mão Sombria. Fundo falso com documentos, frascos e rede de comunicação. As "profecias em línguas mortas" durante os delírios são comunicados codificados para células.
 
 Como identificar (se o jogador prestar muita atenção): Seus olhos são muito calmos para uma pessoa em estado confusional. Às vezes sai do "delírio" por um momento e dá uma resposta coerente demais. Nenhum soldado da Legião vasculha o lixo de uma velha louca.
 
@@ -68,9 +69,11 @@ Serviço real: Cura qualquer coisa — facadas, estágios iniciais da Praga de F
 
 Obsessão declarada: Criar o "Humano Perfeito", imune à névoa. Compra partes de corpos de monstros para experimentos.
 
-O que não diz: Foi expulso da corte por "experimentos não éticos" — estudou por dezoito anos os dois únicos sobreviventes de infecção por fungo de Xylos sem morte. Cada paciente que trata fornece amostras. Está na quarta geração de um agente que pode criar resistência à Praga de Ferro. Em ratos.
+O que não diz: Foi expulso da corte por "experimentos não éticos" — estudou por dezoito anos os dois únicos sobreviventes não simbióticos de infecção por fungo de Xylos sem morte, e é um dos dois: a prova está no próprio sangue, e ele a usa. Cada paciente que trata fornece amostras. Está na quarta geração de um agente que pode criar resistência à Praga de Ferro. Em ratos.
 
 Relação com a Guilda dos Corvos: Acordo de trinta anos. Corpos com a "marca" (formação específica de mineralização nas veias do pescoço que indica resposta imune parcial) vão para ele, não para o crematório. Bônus pago. Ninguém faz perguntas.
+
+Segredo: A caixa de "amostras científicas" que chegou ao consultório há quinze anos trazia a cepa atual da Praga de Ferro, e Vane sabe que o surto de agora saiu dali. Os marcados que a Guilda lhe entrega resistem porque carregam a assinatura de Morrakh; ele os abre procurando o porquê.
 
 ---
 
@@ -79,13 +82,15 @@ Relação com a Guilda dos Corvos: Acordo de trinta anos. Corpos com a "marca" (
 
 ELARYIN (HISTÓRICO — MORTO)
 Papel: General Élfico que unificou a coalizão contra Malagor
-Status: Morto três anos após a fundação de Nova Arcádia. Overdose de Pó de Fada.
+Status: Morto três anos após a fundação de Nova Arcádia, há quarenta e um anos. A versão oficial diz que bebeu até morrer.
 
 Por que importa agora: A história oficial o menciona em uma linha. Valerius tem um capítulo inteiro. Qualquer pesquisador que investigue a fundação de Nova Arcádia encontrará inconsistências — Elaryin fez coisas que Valerius recebeu crédito por fazer.
 
 O funeral: Doze pessoas presentes. Valerius mandou uma coroa de flores.
 
-Legado: Não há estátua, não há rua com o nome, não há feriado. Há um registro em arquivo da Guilda dos Corvos — um Elfo de nome não especificado, encontrado num quarto alugado no Anel Dourado, causa da morte: overdose. Enterrado sem cerimônia.
+Legado: Não há estátua, não há rua com o nome, não há feriado. Há um registro em arquivo da Guilda dos Corvos — um Elfo de nome não especificado, encontrado num quarto alugado no Anel Dourado, garrafas vazias ao lado da cama. Enterrado sem cerimônia.
+
+Segredo: Causa real da morte — overdose de Pó de Fada, que o Anel de Ferro vendia sob licença. "Bebeu até morrer" é o que a licença permitia dizer. Os Quebrados sabem quem estava no quarto.
 
 ---
 
@@ -125,19 +130,23 @@ Aviso para narradores: O que o comprador perde é sempre real e sempre permanent
 [CATEGORIA: NPC]
 [TAGS: Kahen, Cinzéu, Brekmar, Sanguinomante]
 
-KAHEN — GOVERNANTE DE BREKMAR
-Papel: Líder da elite pirata de Brekmar
+KAHEN — ÁRBITRO DE BREKMAR
+Papel: Árbitro de Brekmar e líder da elite pirata (quem vem de fora diz "governante"; em Brekmar, quem diz isso é olhado de lado)
 Raça: Cinzéu
 
-História: Ex-escravo que ascendeu socialmente pela conexão com a magia. A sangrinomancia — uso do próprio sangue e do sangue alheio como catalisador mágico — é naturalmente mais acessível para um Cinzéu que não sente dor ao executá-la. O que para outras raças seria processo agonizante, para Kahen é apenas procedimento.
+História: Ex-escravo que ascendeu socialmente pela conexão com a magia. A sangrinomancia — uso do próprio sangue e do sangue alheio como catalisador mágico — cobra do corpo o preço do Éter, e o preço é dor. Um Cinzéu não sente dor, mas isso não o faz pagar menos: só não sabe quanto pagou. Kahen paga por procedimento, e conta o que gastou olhando os braços.
 
 O que o torna único: Foge completamente das convenções do que é um Cinzéu. Onde sua raça é contemplativa e observadora, ele é prático e efetivo. Toma decisões rápidas e as executa sem o período de imobilidade contemplativa que define os Cinzéus. Ao mesmo tempo, é profundamente filosófico — cada decisão tem fundamento em um sistema de pensamento que ele elaborou ao longo de décadas. A diferença é que ele age enquanto pensa, não depois.
 
-Como governa: Com a mesma frieza emocional de um Cinzéu, mas com a velocidade de execução que outros Cinzéus nunca desenvolvem. Não é cruel por prazer — é preciso por necessidade. Brekmar é uma cidade que só funciona enquanto ele a mantém funcionando.
+Como arbitra: Com a mesma frieza emocional de um Cinzéu, mas com a velocidade de execução que outros Cinzéus nunca desenvolvem. Não é cruel por prazer — é preciso por necessidade. Brekmar é uma cidade que só funciona enquanto ele a mantém funcionando.
 
 Aparência: Cinzéu com pele quase preta, veias brancas aparentes. Marcas de sangrinomancia visíveis nos braços — cicatrizes que não deveriam estar lá em alguém que não sente dor, mas que existem como registro de décadas de prática. Correntes decorativas nas costas, como qualquer Cinzéu, mas mais funcionais — algumas terminam em ganchos que têm uso prático.
 
 Para o narrador: Kahen é o tipo de personagem que ouve tudo antes de responder. Não por hesitação — por cálculo. Quando fala, já decidiu. O silêncio dele antes de uma resposta é mais ameaçador que a maioria das ameaças explícitas.
+
+Segredo: Kahen foi mercadoria de Groth Algema-Fria, e Groth ainda guarda o recibo. Há um número gravado na pele dele, sob as correntes das costas. É por isso que os Mercadores de Escravos nunca entram em Brekmar e que Kahen compra Cinzéus em silêncio, um a um, sem registro.
+
+Segredo: A única coisa que Kahen sente com força é a vergonha desse número. Lyss sabe, e procura exatamente isso; Helvira sabe, e vende a informação a quem pagar por ela.
 
 
 
@@ -583,13 +592,13 @@ Para o narrador: Grelda é o contato natural de forasteiros em Skallgard. Justa 
 
 VOLKAR, O GUARDIÃO DO FAROL — O QUE NÃO É MAIS HUMANO
 Papel: O guardião vivo do Farol da Chama Negra
-Aparência: Avistado só à distância pelos Nascidos do Gelo, que não comentam o que veem. Forma vagamente humana, alta demais, parada tempo demais no topo do Farol. O ciclo de cem anos o mudou.
+Aparência: Avistado só à distância pelos Nascidos do Gelo, que não comentam o que veem. Forma vagamente humana, alta demais, parada tempo demais no topo do Farol. Quem o viu de perto diz que o posto o mudou, e não diz mais nada.
 
-Natureza: Chegou ao Farol décadas atrás como andarilho, atraído pelo impulso que atrai todos os guardiões. Matou o anterior. Assumiu. O tempo no Farol, alimentando a anti-luz que contém a Rede Carmesim, o transformou em algo entre humano e função.
+Segredo: Natureza — Chegou ao Farol décadas atrás como andarilho, atraído pelo impulso que atrai todos os guardiões. Matou o anterior. Assumiu. O tempo no Farol, alimentando a anti-luz que suprime a Rede Carmesim, o transformou em algo entre humano e função.
 
-O que sabe: Tudo sobre a Rede Carmesim — sente o despertar dela diretamente, é o que ele contém. Sabe quando o próximo guardião virá matá-lo. Sabe que o ciclo é uma compensação que o Abismo cobra. Não pode deixar o posto.
+Segredo: O que sabe — Tudo sobre a Rede Carmesim: sente o despertar dela diretamente, é o que ele contém. Sabe quando o próximo guardião virá matá-lo. Sabe que o ciclo de cem anos é uma compensação que o Abismo cobra. Não pode deixar o posto.
 
-Para o narrador: O Guardião é um dos seres mais importantes e inacessíveis de Valoria. Chegar até ele é uma jornada épica pelo Ermo Branco. Ele pode revelar verdades sobre a Rede, sobre os Gigantes que construíram o Farol, sobre o que acontece se a chama se apagar — mas raramente fala, e o que diz custa caro. Pode até oferecer o posto a quem chegar: o próximo guardião sempre vem.
+Para o narrador: O Guardião é um dos seres mais importantes e inacessíveis de Valoria. Chegar até ele é uma jornada épica pelo Ermo Branco. Ele raramente fala, e o que diz custa caro. Quem chega pergunta o porquê do Farol e não recebe resposta: ninguém sabe por quê, ou ninguém que ainda viva admite saber. Pode até oferecer o posto a quem chegar.
 
 ---
 
@@ -1263,7 +1272,7 @@ Para o narrador: A Carniça-Mãe é obstáculo climático do pântano — guardi
 #########################################################
 NPCS POR LOCAL: NOVA ARCÁDIA (CENTRO-SUL)
 #########################################################
-A maior cidade. Já listados acima nas entradas principais: VALERIUS (Lorde Protetor), GRUM (taverneiro com o testamento real), VELHA MAGDA/A VÍBORA (líder da Mão Sombria), DOUTOR SILAS VANE (médico da Praga de Ferro), ELARYIN (herói morto e esquecido). Os demônios FEHK (Covardia) e o dragão MALAGOR (contido nas masmorras) também operam aqui. Abaixo, personagens adicionais que dão vida aos três anéis.
+A maior cidade. Já listados acima nas entradas principais: VALERIUS (Lorde Protetor), GRUM (taverneiro do Dragão Bêbado), VELHA MAGDA (vendedora de espetinhos no Anel de Lama), DOUTOR SILAS VANE (médico da Praga de Ferro), ELARYIN (herói morto e esquecido). Os demônios FEHK (Covardia) e o dragão MALAGOR (contido nas masmorras) também operam aqui. Abaixo, personagens adicionais que dão vida aos três anéis.
 
 ---
 
@@ -1307,6 +1316,8 @@ Aparência: Mulher robusta de meia-idade, roupas remendadas mas limpas, mãos qu
 Personalidade: Feroz, generosa, pragmática. Construiu uma rede de proteção mútua no Anel de Lama — quem ela acolhe, ela defende. Não tem poder formal nem mágico, só a lealdade dos esquecidos e uma teimosa recusa de deixar o Anel de Lama desistir de si mesmo.
 
 O que faz: Abriga órfãos (alguns viram a Quadrilha dos Telhados), media conflitos, esconde fugitivos da Legião, distribui o pouco que consegue. É o oposto de tudo que Nova Arcádia representa — solidariedade num lugar projetado para o desespero. A Legião a tolera porque ela mantém o Anel de Lama administrável.
+
+A Guilda: É também quem fala pelos coveiros da Guilda dos Corvos. Eles lhe devem o pão e a ordem, e ela decide que cargas passam sem pergunta.
 
 Para o narrador: Mãe Corva é o coração do Anel de Lama — aliada natural de personagens de bom coração, fonte de informação da base, e contraste moral com a crueldade da cidade. Dá missões de proteção e resgate. Conhece todos os esquecidos. Sua rede é mais poderosa do que a Legião imagina.
 
@@ -1866,11 +1877,13 @@ O ECO DO APRENDIZ — A SOMBRA DA DECISÃO
 Papel: O eco que o aprendiz deixou na noite que destruiu Aethelgard (distinto do Arauto da Névoa errante)
 Aparência: Uma figura translúcida de elfo jovem, repetindo eternamente o gesto de desativar os cristais de contenção, nas câmaras onde tudo começou. Rosto de quem toma a decisão mais pesada possível.
 
-Natureza: Não é o Arauto da Névoa (que vagueia o mundo) — é o resíduo, a cena impressa no Éter, do momento exato em que o aprendiz agiu. Quem o presencia vê e sente a decisão sendo tomada: o peso de fazer a coisa certa de forma irreversível, destruindo a cidade para impedir algo pior.
+O que é: Não é o Arauto da Névoa (que vagueia o mundo) — é o resíduo, a cena impressa no Éter, do momento exato em que o aprendiz agiu. Quem o presencia vê e sente a decisão sendo tomada: o peso de uma coisa irreversível, feita por alguém que não vai ser perdoado.
 
-O que revela: Como a contenção foi desfeita. Por que o aprendiz agiu — o que ele descobriu que tornou a destruição de Aethelgard o mal menor. A verdade que a história não conta. Quem testemunha o Eco com atenção entende que o aprendiz pode ter sido o maior herói esquecido de Valoria, ou seu maior tolo.
+O que se vê: Como a contenção foi desfeita, cristal por cristal. A história oficial não conta o resto. Quem testemunha o Eco com atenção sai sem saber se viu o maior herói esquecido de Valoria ou seu maior tolo.
 
-Para o narrador: O Eco do Aprendiz é a chave para a verdade sobre Aethelgard e gancho para o Arauto da Névoa (a mesma pessoa, dois resíduos). Revela lore crucial através da experiência, não da fala. Pode ensinar o que o aprendiz sabia — perigoso conhecimento. Tragédia central de Valoria: fazer o certo de forma que ninguém perdoa.
+Segredo: O que revela — Por que o aprendiz agiu: descobriu que a destruição de Aethelgard era o mal menor, e destruiu a cidade para impedir algo pior. O Eco e o Arauto da Névoa são a mesma pessoa, dois resíduos de um só homem.
+
+Para o narrador: O Eco do Aprendiz é gancho para a verdade sobre Aethelgard e para o Arauto da Névoa. Revela lore através da experiência, não da fala. Pode ensinar o que o aprendiz sabia — perigoso conhecimento. Tragédia central de Valoria: carregar uma culpa que ninguém perdoa.
 
 
 #########################################################

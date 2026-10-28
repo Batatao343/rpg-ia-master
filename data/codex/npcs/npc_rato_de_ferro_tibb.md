@@ -8,7 +8,8 @@ tags:
 - Anel_Ferro
 - Contrabandista_Interno
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # RATO-DE-FERRO TIBB — O CONTRABANDISTA DOS ANÉIS

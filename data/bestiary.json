@@ -2193,7 +2193,7 @@
     "id": "enemy_boss_vibora",
     "name": "A Víbora (Boss)",
     "type": "BOSS",
-    "description": "Líder da Mão Sombria. Impossível de segurar.",
+    "description": "A mão que assina as ordens da Mão Sombria. Impossível de segurar.",
     "hp": 110,
     "max_hp": 110,
     "ac": 19,

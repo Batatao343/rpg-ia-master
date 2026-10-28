@@ -232,6 +232,11 @@ def parse_categoria_blocks(path: str) -> list[Block]:
 # Curadoria explícita e revisável — como eras 6/7 não têm divisores `---` internos, a
 # granularidade tem de ser por parágrafo, não por era inteira. Ver plano da ingestão.
 _TIMELINE_HIDDEN_CLUSTERS = [
+    # Era 0: propósito do Farol + liturgia dos Gigantes (SPEC-348 R27/R40; o parágrafo
+    # público anterior termina em "Para quê, ninguém que ainda viva sabe dizer.")
+    ("o farol nunca foi obra de defesa", "ninguem lembra mais por que"),
+    # Era 4: o ciclo do guardião (SPEC-348 R40; separado do nascimento dos Cinzéus)
+    ("conter o abismo tem custo", "apenas sabe que nao pode partir"),
     # Era 5: o aprendiz destrói Aethelgard e vira o Arauto da Névoa
     (
         "em aethelgard, o aprendiz havia parado de subir",

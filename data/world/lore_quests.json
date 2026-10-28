@@ -40,7 +40,7 @@
       "item_id": "minerio_ferro",
       "qty": 3,
       "patron_tags": ["mercador", "ferr", "minei", "sindicat"],
-      "lore_ref": "lore_nova/factions.txt:241-241",
+      "lore_ref": "lore_nova/factions.txt:245-245",
       "lore_keyword": "rotas",
       "review": "dono"
     }

@@ -21,4 +21,6 @@ Os Filhos da Chama Azul foram os últimos a se organizar — e os mais perturbad
 
 O ciclo do Abismo recuou. Não desapareceu — nunca desaparece. Mas a intensidade que havia produzido humanos, afundado Aethelgard, despertado o Rei Subterrâneo e manifestado os sete dragões baixou para o nível que o mundo reconhece como normal. A entropia continuou, como sempre continua. Apenas em ritmo que as raças conseguem, por enquanto, acompanhar.
 
-Nova Arcádia ficou. Valerius ficou. O Pântano da Melancolia ficou. Os seis dragões restantes ficaram — cada um no seu território, cada um à sua forma, cada um esperando ou simplesmente existindo sem precisar esperar nada.
+Os registros élficos, os únicos que sabem contar essas coisas, anotam um detalhe que ninguém celebra: entre um transbordamento e o seguinte correram dois mil anos; entre o da Era 5 e o da Era 6, mil. O intervalo caiu à metade. Quem sabe fazer a conta teme a casa dos quinhentos.
+
+Nova Arcádia ficou. Valerius ficou. O Pântano da Melancolia ficou. Os seis dragões restantes ficaram — cinco em seus territórios, cada um à sua forma, e Thessrak sob o mar leste, selado — cada um esperando ou simplesmente existindo sem precisar esperar nada.

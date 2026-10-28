@@ -11,11 +11,11 @@ visibility: secret
 
 # SEGREDO — A Praga de Ferro Foi Criada em Laboratório
 
-A Ferrugem do Sangue não é doença natural. É resultado de um experimento do Doutor Silas Vane, desenvolvido a partir das duas amostras de sobreviventes da infecção de Xylos que ele estudou por dezoito anos enquanto servia à corte.
+A doença é do Abismo, e mais velha que Vane: Morrakh a carrega, Malagor a espalhou pelo sangue na guerra, e a primeira onda brotou nas minas há trinta anos (ver a conexão com o fungo de Xylos, adiante). O que não é natural é a cepa atual, a que mata Nova Arcádia hoje. Essa foi criada em laboratório, num experimento do Doutor Silas Vane, desenvolvido a partir das duas amostras de sobreviventes não simbióticos da infecção de Xylos que ele estudou por dezoito anos enquanto servia à corte. É o que Magda quer dizer quando garante que a Ferrugem de agora "não veio das minas".
 
 O objetivo original era legítimo: criar um agente que tornasse o sistema imunológico humano tão resistente quanto o dos Hospedeiros de Xylos — imune à Névoa, às pragas naturais, às condições de Valoria. O resultado foi o oposto: um agente que substitui a flexibilidade biológica por rigidez metálica, tentando criar resistência através de mineralização e alcançando apenas paralisia.
 
-Vane sabe disso. A caixa de "amostras científicas" endereçada a ele há quinze anos continha o agente em forma estável. Houve vazamento acidental durante transporte — ele não é responsável pelo início do surto.
+Vane sabe disso. A caixa de "amostras científicas" endereçada a ele há quinze anos continha o agente em forma estável. Houve vazamento acidental durante transporte — ele não é responsável pelo início da Praga, só da cepa atual, e o surto de agora saiu daquela caixa.
 
 O que ele é responsável: continuar pesquisando à custa dos doentes que trata. Cada paciente que ele "ajuda" com a Praga de Ferro fornece amostras que ele usa para aprimorar a formulação. Ele está na quarta geração do agente. A quarta geração funciona. Ela cria resistência sem mineralização. Em ratos.
 

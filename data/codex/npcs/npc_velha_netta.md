@@ -8,7 +8,8 @@ tags:
 - Anel_Lama
 - Curandeira_Ilegal
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # VELHA NETTA — A CURANDEIRA DO ANEL DE LAMA

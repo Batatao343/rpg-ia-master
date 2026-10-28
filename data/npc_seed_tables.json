@@ -61,7 +61,7 @@
     {"id": "prof_andarilho_remendeiro", "label": "andarilho que vive de consertos de tenda e cordame", "races": ["race_humanos"], "source": "lore_nova/races.txt:349"},
     {"id": "prof_escriturario_de_bordo", "label": "escriturário de bordo que registra cada decisão em protocolo", "races": ["race_anoes_fuligem"], "source": "lore_nova/races.txt:124"},
     {"id": "prof_tatuador_de_rotas", "label": "tatuador de mapas de rota na pele", "races": ["race_cinzeus"], "source": "lore_nova/daily_life.txt:221"},
-    {"id": "prof_carregador_de_contrabando", "label": "carregador de contrabando entre os anéis", "regions": ["nova_arcadia"], "factions": ["mao_sombria"], "source": "lore_nova/factions.txt:47"},
+    {"id": "prof_carregador_de_contrabando", "label": "carregador de contrabando entre os anéis", "regions": ["nova_arcadia"], "factions": ["mao_sombria"], "source": "lore_nova/factions.txt:49"},
     {"id": "prof_preparador_do_cha", "label": "preparador do chá que atenua a praga", "regions": ["pantano_melancolia"], "factions": ["druidas_ciclo_cinzento"], "source": "lore_nova/locations.txt:114"}
   ],
   "desires": [
@@ -108,8 +108,8 @@
     {"id": "des_osshari_cacada", "label": "liderar a próxima grande caçada do vilarejo", "regions": ["costa_negra"], "races": ["race_osshari"], "source": "lore_nova/races.txt:296"},
     {"id": "des_vrel_navio_proprio", "label": "comandar um navio afinado só com a própria tripulação", "regions": ["brekmar"], "races": ["race_vrel"], "source": "lore_nova/races.txt:185"},
     {"id": "des_elfo_memorias", "label": "gravar numa cidade élfica as memórias de quem partiu", "regions": ["pradaria_ruinas"], "races": ["race_elfos"], "source": "lore_nova/locations.txt:386"},
-    {"id": "des_registros_do_reino", "label": "recuperar os registros perdidos do reino antes de morrer", "regions": ["montanhas_afiadas"], "factions": ["ultimos_anoes_reino"], "source": "lore_nova/factions.txt:418"},
-    {"id": "des_nome_na_parede", "label": "ter o nome gravado entre os que alimentaram a cidade", "regions": ["skallgard"], "factions": ["clas_combate"], "source": "lore_nova/factions.txt:160"}
+    {"id": "des_registros_do_reino", "label": "recuperar os registros perdidos do reino antes de morrer", "regions": ["montanhas_afiadas"], "factions": ["ultimos_anoes_reino"], "source": "lore_nova/factions.txt:422"},
+    {"id": "des_nome_na_parede", "label": "ter o nome gravado entre os que alimentaram a cidade", "regions": ["skallgard"], "factions": ["clas_combate"], "source": "lore_nova/factions.txt:164"}
   ],
   "fears": [
     {"id": "fear_escuro", "label": "o escuro total"},
@@ -156,7 +156,7 @@
     {"id": "fear_vrel_memoria", "label": "acordar sem saber qual das memórias é a sua", "races": ["race_vrel"], "source": "lore_nova/races.txt:176"},
     {"id": "fear_osshari_trono", "label": "o grande crânio que ainda não terminou de morrer", "regions": ["costa_negra"], "races": ["race_osshari"], "source": "lore_nova/locations.txt:338"},
     {"id": "fear_humano_sem_lugar", "label": "não ter um lugar que seja seu por origem", "races": ["race_humanos"], "source": "lore_nova/races.txt:320"},
-    {"id": "fear_estacas_arrancadas", "label": "encontrar as estacas de medição arrancadas pela manhã", "regions": ["pantano_melancolia"], "factions": ["druidas_ciclo_cinzento"], "source": "lore_nova/factions.txt:459"}
+    {"id": "fear_estacas_arrancadas", "label": "encontrar as estacas de medição arrancadas pela manhã", "regions": ["pantano_melancolia"], "factions": ["druidas_ciclo_cinzento"], "source": "lore_nova/factions.txt:463"}
   ],
   "secrets": [
     {"id": "sec_deve_favor", "label": "deve um favor perigoso a alguém influente"},
@@ -198,10 +198,10 @@
     {"id": "sec_origem_inventada", "label": "nunca esteve em Ophidia e inventou a origem para ser levado a sério", "regions": ["ophidia"], "source": "data/origins.json:126"},
     {"id": "sec_vende_atalhos", "label": "se faz passar por guia Cinzéu sem nunca ter atravessado as montanhas", "regions": ["montanhas_afiadas"], "source": "lore_nova/locations.txt:357"},
     {"id": "sec_nome_do_espectro", "label": "reconheceu um espectro das ruínas e nunca contou à família", "regions": ["pradaria_ruinas"], "source": "lore_nova/locations.txt:405"},
-    {"id": "sec_elfo_ampulheta", "label": "sabe que a ampulheta está quase no fim e escondeu isso da família", "regions": ["pradaria_ruinas"], "races": ["race_elfos"], "source": "lore_nova/factions.txt:323"},
+    {"id": "sec_elfo_ampulheta", "label": "sabe que a ampulheta está quase no fim e escondeu isso da família", "regions": ["pradaria_ruinas"], "races": ["race_elfos"], "source": "lore_nova/factions.txt:327"},
     {"id": "sec_osshari_finge", "label": "finge sentir o êxtase da caçada que o seu povo exibe", "regions": ["costa_negra"], "races": ["race_osshari"], "source": "lore_nova/races.txt:289"},
     {"id": "sec_legiao_ficha", "label": "falsificou uma ficha de prisão para poupar um conhecido", "regions": ["nova_arcadia"], "factions": ["legiao_ferro"], "source": "lore_nova/factions.txt:20"},
-    {"id": "sec_mao_vende_rede", "label": "vende em segredo informações da rede em que trabalha", "regions": ["nova_arcadia"], "factions": ["mao_sombria"], "source": "lore_nova/factions.txt:47"},
+    {"id": "sec_mao_vende_rede", "label": "vende em segredo informações da rede em que trabalha", "regions": ["nova_arcadia"], "factions": ["mao_sombria"], "source": "lore_nova/factions.txt:49"},
     {"id": "sec_deve_ao_navio", "label": "deve uma decisão ao navio das docas centrais e ainda não pagou", "regions": ["brekmar"], "factions": ["poder_kahen"], "source": "lore_nova/locations.txt:431"}
   ],
   "contradictions": [
@@ -293,6 +293,6 @@
     {"id": "man_pisca_devagar", "label": "pisca devagar como quem recebe lembranças que não são suas", "races": ["race_vrel"], "source": "lore_nova/races.txt:176"},
     {"id": "man_assina_tudo", "label": "assina e data tudo o que entrega, até um copo d'água", "races": ["race_anoes_fuligem"], "source": "lore_nova/races.txt:116"},
     {"id": "man_risca_frases", "label": "risca frases curtas na superfície mais próxima enquanto fala", "races": ["race_cinzeus"], "source": "lore_nova/races.txt:240"},
-    {"id": "man_de_frente_ao_mar", "label": "prefere sentar-se de frente para a porta e para o mar", "regions": ["brekmar"], "factions": ["grupos_piratas_rivais"], "source": "lore_nova/factions.txt:258"}
+    {"id": "man_de_frente_ao_mar", "label": "prefere sentar-se de frente para a porta e para o mar", "regions": ["brekmar"], "factions": ["grupos_piratas_rivais"], "source": "lore_nova/factions.txt:262"}
   ]
 }

@@ -5,13 +5,13 @@
                 "PASS_EXTRA_PERIODS": 2, "FESTIVAL_HERALD_DAYS": 2},
   "year_review": "dono",
   "months": [
-    {"id": "morrakh",  "name": "Morrakh",  "of": "de Morrakh",  "climate": "transicao", "season": "primavera", "lore_ref": "timeline_completa.txt:338"},
-    {"id": "vaelith",  "name": "Vaelith",  "of": "de Vaelith",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:334"},
-    {"id": "malagor",  "name": "Malagor",  "of": "de Malagor",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:326"},
-    {"id": "solveth",  "name": "Solveth",  "of": "de Solveth",  "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:330"},
-    {"id": "orrakh",   "name": "Orrakh",   "of": "de Orrakh",   "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:336"},
-    {"id": "vorrnak",  "name": "Vorrnak",  "of": "de Vorrnak",  "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:328"},
-    {"id": "thessrak", "name": "Thessrak", "of": "de Thessrak", "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:332"}
+    {"id": "morrakh",  "name": "Morrakh",  "of": "de Morrakh",  "climate": "transicao", "season": "primavera", "lore_ref": "timeline_completa.txt:348"},
+    {"id": "vaelith",  "name": "Vaelith",  "of": "de Vaelith",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:344"},
+    {"id": "malagor",  "name": "Malagor",  "of": "de Malagor",  "climate": "calor",     "season": "verao",     "lore_ref": "timeline_completa.txt:336"},
+    {"id": "solveth",  "name": "Solveth",  "of": "de Solveth",  "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:340"},
+    {"id": "orrakh",   "name": "Orrakh",   "of": "de Orrakh",   "climate": "transicao", "season": "outono",    "lore_ref": "timeline_completa.txt:346"},
+    {"id": "vorrnak",  "name": "Vorrnak",  "of": "de Vorrnak",  "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:338"},
+    {"id": "thessrak", "name": "Thessrak", "of": "de Thessrak", "climate": "frio",      "season": "inverno",   "lore_ref": "timeline_completa.txt:342"}
   ],
   "weekdays": [
     {"id": "ferro",   "name": "Sino de Ferro",   "short": "Ferro",   "lore_ref": "daily_life.txt:9"},

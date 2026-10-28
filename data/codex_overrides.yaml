@@ -23,3 +23,9 @@
 # revelável só na descida/contexto de narrador (include_hidden).
 mon_verme_primordial_das_raizes_do_mundo:
   visibility: hidden
+
+# SPEC-348 R38: o testamento no barril de Grum é o segredo de E-01 (o herdeiro da
+# Colina Cinza). O artefato continua no grafo, mas o doc não pode ir ao narrador
+# público: `items.txt` mantém o fato e o override esconde o doc.
+art_testamento_real_no_barril:
+  visibility: hidden

@@ -8,7 +8,8 @@ tags:
 - Anel_Dourado
 - Cortesã_Informante
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # DAMA VESPERINA — A CORTESÃ QUE SABE TUDO

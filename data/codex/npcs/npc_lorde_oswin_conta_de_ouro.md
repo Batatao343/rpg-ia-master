@@ -8,7 +8,8 @@ tags:
 - Anel_Dourado
 - Banqueiro
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # LORDE OSWIN CONTA-DE-OURO — O BANQUEIRO DA CIDADE

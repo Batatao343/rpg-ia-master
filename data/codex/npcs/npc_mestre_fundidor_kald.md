@@ -9,7 +9,8 @@ tags:
 - Fundição
 - Culto
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # MESTRE-FUNDIDOR KALD — O SACERDOTE DO AÇO DE SANGUE

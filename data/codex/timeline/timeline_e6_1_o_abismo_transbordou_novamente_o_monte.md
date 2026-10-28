@@ -1,7 +1,7 @@
 ---
 id: timeline_e6_1_o_abismo_transbordou_novamente_o_monte
 type: timeline
-name: Era 6 — A Guerra de Malagor, o Pacto de Valerius e o Nascimento de Nova Arcádia (1)
+name: Era 6 — A Guerra de Malagor, o Dia sem Sombra e o Nascimento de Nova Arcádia (1)
 aliases: []
 tags:
 - timeline
@@ -9,7 +9,7 @@ tags:
 visibility: public
 ---
 
-# ERA 6 — A GUERRA DE MALAGOR, O PACTO DE VALERIUS E O NASCIMENTO DE NOVA ARCÁDIA
+# ERA 6 — A GUERRA DE MALAGOR, O DIA SEM SOMBRA E O NASCIMENTO DE NOVA ARCÁDIA
 
 O Abismo transbordou novamente.
 
@@ -23,15 +23,15 @@ Vorrnak — translúcido como gelo sujo, quase invisível no ar. Não emitia som
 
 Solveth — corpo de névoa densa e ácida que nunca assumia forma completamente sólida. Não destruía estruturas, dissolvia — pedra, metal, carne viravam pó cinza em contato com ela. Não era vista, era sentida: o ar ficava pesado, cheirava a metal queimado, e as bordas das coisas começavam a ficar imprecisas antes de ela aparecer. Foi para a borda entre a Floresta dos Sussurros e a Selva de Xylos, onde ainda habita.
 
-Thessrak — o mais antigo depois de Malagor. Corpo coberto de bocas: não apenas a principal, mas dezenas espalhadas pelo pescoço, asas e cauda, cada uma falando simultaneamente em línguas diferentes e eras diferentes. Não destruía fisicamente — enlouquecia. Quem o ouvia começava a misturar memórias próprias com as das bocas, perdendo a noção do que havia vivido e do que o dragão transmitia. Foi selado durante a guerra nas profundezas do mar leste — nas câmaras submersas do que havia sido Aethelgard. Os Afogados dentro das ruínas são o que restou das últimas pessoas que o ouviram antes do selo.
+Thessrak — o mais antigo depois de Malagor. Corpo coberto de bocas: não apenas a principal, mas dezenas espalhadas pelo pescoço, asas e cauda, cada uma falando simultaneamente em línguas diferentes e eras diferentes. Não destruía fisicamente — enlouquecia. Quem o ouvia começava a misturar memórias próprias com as das bocas, perdendo a noção do que havia vivido e do que o dragão transmitia. Foi selado durante a guerra nas profundezas do mar leste — nas câmaras submersas do que havia sido Aethelgard, no lago de cratera que o mar invadiu. Os Afogados dentro das ruínas são o que restou das últimas pessoas que o ouviram antes do selo.
 
 Vaelith — corpo coberto de areia negra que escorria constantemente sem nunca acabar. Onde pousava, o tempo ao redor ficava estranho: plantas cresciam e apodreciam em segundos, feridas fechavam e reabriam, pessoas envelheciam e rejuvenesciam em loops curtos. Não matava diretamente — fazia o mundo ao redor perder coerência temporal até desintegrar. Foi para o Deserto de Zhur, onde seu efeito interage com os cristais de Urath. As miragens de parentes mortos que os viajantes veem são fragmentos do seu campo vazando pelo vidro.
 
 Orrakh — não voava. Era grande demais e pesado demais, e arrastava o corpo pelo chão abrindo fendas que não fechavam. Seu efeito principal não era físico: aumentava o peso de tudo ao redor. Objetos ficavam mais pesados. Pessoas ficavam mais pesadas. Pensamentos ficavam mais pesados. Exércitos entravam em colapso sob o próprio peso antes de chegar perto. Foi para o fundo do oceano leste após a guerra. Quando o mar fica anormalmente calmo numa região sem razão, marinheiros sabem que estão sobre ele.
 
-Morrakh — o menor dos sete, tamanho de um boi grande, corpo coberto de feridas abertas que nunca cicatrizavam e pulsavam com luz negra. Não atacava diretamente. Simplesmente existia, e o que tocava carregava um fragmento do Abismo dentro — não morte, algo pior. Criaturas tocadas por Morrakh continuavam vivas, continuavam conscientes, mas com a natureza do Abismo crescendo por dentro até que o que eram desaparecia e o que restava era apenas extensão dele. O contágio se espalhava por contato, por fluidos, por ar em concentração suficiente. Foi para as profundezas da Selva de Xylos após a guerra. A Praga de Ferro que assola Nova Arcádia tem traços do seu toque — diluído, transformado pelo tempo e pela distância, mas com a mesma assinatura.
+Morrakh — o menor dos sete, tamanho de um boi grande, corpo coberto de feridas abertas que nunca cicatrizavam e pulsavam com luz negra. Não atacava diretamente. Simplesmente existia, e o que tocava carregava um fragmento do Abismo dentro — não morte, algo pior. Criaturas tocadas por Morrakh continuavam vivas, continuavam conscientes, mas com a natureza do Abismo crescendo por dentro até que o que eram desaparecia e o que restava era apenas extensão dele. O contágio se espalhava por contato, por fluidos, por ar em concentração suficiente. Foi para as profundezas da Selva de Xylos após a guerra. A Praga de Ferro que assola Nova Arcádia carrega a assinatura do seu toque: o mesmo organismo, que Malagor depois espalharia pelo sangue na guerra, diluído e transformado pelo tempo e pela distância.
 
-Ele não emergiu sozinho. No mesmo instante em que o dragão rasgou a crosta vulcânica, as sombras de cada ser racional em Valoria se desconectaram dos seus corpos simultaneamente — do Elfo mais experiente ao humano recém-nascido, do Nascido do Gelo em Skallgard ao Osshari na costa oeste. Não das pessoas que haviam cometido crimes, não dos culpados ou injustos. De todos. O Abismo transbordando em duas formas ao mesmo tempo, como se uma saída não fosse suficiente para a pressão acumulada.
+Ele não emergiu sozinho. No mesmo instante em que o dragão rasgou a crosta vulcânica, as sombras de cada ser racional em Valoria se desconectaram dos seus corpos simultaneamente (o que os registros chamam de Dia Sem Sombra), do Elfo mais experiente ao humano recém-nascido, do Nascido do Gelo em Skallgard ao Osshari na costa oeste. Não das pessoas que haviam cometido crimes, não dos culpados ou injustos. De todos. O Abismo transbordando em duas formas ao mesmo tempo, como se uma saída não fosse suficiente para a pressão acumulada.
 
 As sombras não tinham consciência própria — não pensavam, não planejavam. Mas tinham a forma do corpo que haviam pertencido e a força que corpo físico tem. E atacaram com a indiscriminação perfeita do Abismo: sem critério, sem objetivo, sem parar. Enquanto Malagor destruía cidades, cada ser racional lutava simultaneamente contra o reflexo escuro de si mesmo. O mundo chegou à guerra de Malagor exausto — sem líderes em muitas regiões, sem estrutura em outras, com populações que perdiam vizinhos e familiares tanto para o dragão quanto para suas próprias sombras.
 
@@ -77,6 +77,8 @@ As primeiras semanas depois da vitória foram de euforia e exaustão. As semanas
 
 A Praga de Ferro — chamada pelos primeiros médicos de Ferrugem do Sangue — não era contagiosa no início. Era contaminação direta pelo sangue do dragão. Mas o Abismo que havia entrado nos primeiros infectados continuou se replicando dentro deles, e fluidos corporais passaram a carregar concentração suficiente para transmitir. Um aperto de mão. Uma ferida compartilhada. Água do mesmo poço usado por alguém no estágio avançado.
 
+Durante quinze anos foram casos isolados: soldados que haviam sido banhados no sangue de Malagor, um a um, nas casas de reconstrução. O sangue, porém, havia encharcado muito mais que soldados. Encharcou as minas e as fundições onde a cidade buscava ferro para erguer-se, e a terra devolveu o que bebera. A primeira onda da Praga de Ferro subiu dessas minas há trinta anos, no mesmo ano em que o Código de Ferro apareceu numa noite. Foi a que a cidade aprendeu a controlar.
+
 A praga se espalhou por todas as raças — o sangue de Malagor não distinguia entre Elfo, Cinzéu, Osshari ou humano. Mas Nova Arcádia, onde a densidade populacional era maior e onde muitos dos soldados sobreviventes se concentraram, tornou-se o epicentro. A praga existe em todo o mundo — aparece em Skallgard, nas bordas de Xylos, nos acampamentos Osshari da costa — mas queima mais intensamente onde há mais combustível humano.
 
 Não há cura. O Éter que os druidas vendem em forma de chá atenua os sintomas porque dilui levemente a concentração de Abismo no sangue — não elimina, apenas retarda. A amputação de membros afetados pode ganhar tempo. O estágio final é imobilidade completa — a vítima trava como estátua, consciente mas incapaz de mover ou respirar, morrendo sufocada dentro do próprio corpo enquanto o Abismo termina o processo de mineralização.
@@ -89,7 +91,7 @@ O que aconteceu nas pradarias centrais não foi isso. Foram centenas de milhares
 
 Abismo concentrado sem controle, sem transferência, sem ninguém para absorver o custo — deforma a realidade ao redor da única forma que pode: dissolvendo o que existe. A estabilidade emocional de quem se aproxima é o primeiro a ceder, porque emoção é o que a consciência usa para se ancorar na realidade. Quem caminha perto do Pântano sente a dissolução antes de entendê-la. A tristeza não é o efeito. É o sintoma de algo maior cedendo por baixo.
 
-Nas mesmas semanas em que a batalha final ocorria, o mar leste entrou em erupção novamente. As ilhas de Ophidia — que existiam desde a Era 3 mas sempre haviam mantido distância das raças do continente — responderam ao calor residual de Malagor com atividade vulcânica intensa. A fumaça de cor estranha que os marinheiros relatavam há eras ficou mais densa, mais visível, mais presente. As raças da coalizão, exaustas da guerra, notaram e não foram investigar. Ophidia sempre havia sido mistério suficiente à distância.
+Nas mesmas semanas em que a batalha final ocorria, o mar leste entrou em erupção novamente, e subiu: invadiu o lago de cratera onde Aethelgard afundara. A água, que era parada, tornou-se salobra, e uma garganta se abriu para o mar. As ilhas de Ophidia — que existiam desde a Era 3 mas sempre haviam mantido distância das raças do continente — responderam ao calor residual de Malagor com atividade vulcânica intensa. A fumaça de cor estranha que os marinheiros relatavam há eras ficou mais densa, mais visível, mais presente. As raças da coalizão, exaustas da guerra, notaram e não foram investigar. Ophidia sempre havia sido mistério suficiente à distância.
 
 Os magos da coalizão — humanos e Elfos que haviam coordenado a magia de guerra contra Malagor — voltaram sua atenção para as comunidades costeiras que haviam recusado participar da batalha. O Povo-Recife, humanos que habitavam as costas rochosas do sul, havia calculado que a distância os protegia e que morrer por uma guerra que não era especificamente sua não era obrigação. O cálculo era compreensível. Os magos não perdoaram assim mesmo.
 
@@ -101,6 +103,8 @@ O Povo-Recife construiu cultura em torno do que recebeu. Não chamam de maldiç�
 
 Hoje habitam as costas rochosas e as plataformas submersas rasas onde constroem estruturas que metade está sob a água e metade acima. Raramente sobem para o interior. Quando o fazem, é para comércio que fazem questão de encerrar rápido, com o olhar fixo no horizonte do mar como quem está tolerando uma visita a lugar inferior. Gerações a mais de transformação e talvez não sejam mais reconhecíveis como humanos. Por enquanto ainda são — mas cada geração lembra menos o que era ser completamente terrestre.
 
-O ciclo do Abismo recuou. Os seis dragões que sobreviveram à guerra — Vorrnak, Solveth, Thessrak, Vaelith, Orrakh e Morrakh — dispersaram-se pelo mundo, cada um para seu território, sem coordenação, sem plano. Malagor estava contido. A armadura vazia, ainda quente, foi carregada pelas raças da coalizão como troféu e aviso simultâneos.
+O ciclo do Abismo recuou. Dos seis dragões que sobreviveram à guerra, cinco dispersaram-se pelo mundo — Vorrnak, Solveth, Vaelith, Orrakh e Morrakh, cada um para seu território, sem coordenação, sem plano. Thessrak foi selado. Malagor estava contido. A armadura vazia, ainda quente, foi carregada pelas raças da coalizão como troféu e aviso simultâneos.
+
+Na costa oeste, enquanto a coalizão ainda sangrava nas pradarias, um porto nasceu do medo. Brekmar começou como lugar de fuga para quem desertou da guerra, e os navios eram do Anão Durrak, que ainda trazia o número da Landship na manga e construía por encomenda, pago adiantado, sem perguntas. Quando a guerra acabou, os navios ficaram, e quem embarcou neles ficou também. Lyss chegou ao porto no ano em que ele parou de enterrar os mortos.
 
 A guerra havia terminado. O mundo que restou era o que havia sobrado depois que tudo que podia quebrar havia quebrado.

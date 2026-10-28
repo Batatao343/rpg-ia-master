@@ -6,7 +6,7 @@ aliases: []
 tags:
 - nova_arcadia
 - artefato_unico
-visibility: public
+visibility: hidden
 related_entities:
 - nova_arcadia
 ---

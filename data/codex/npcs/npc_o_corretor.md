@@ -9,7 +9,8 @@ tags:
 - Beco_Sussurro
 - Misterioso
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # O CORRETOR — A VOZ DO BECO DO SUSSURRO

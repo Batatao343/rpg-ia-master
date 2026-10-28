@@ -19,6 +19,8 @@ Origem: Soldados da Guerra do Céu Vermelho reaproveitados para policiamento urb
 
 Como funciona: Hierarquia rígida. Quotas mensais de prisões e execuções — independente de haver crime suficiente. Punições codificadas: roubo = dedos, sedição = língua, magia não registrada = fogueira. O ramo dos Inquisidores do Código caça especificamente magos não registrados, usando artefatos que sugam Éter.
 
+A Lista de Fornalha: O "registro" que o Anel Dourado vende como licença chama-se, nos livros da Legião, a Lista de Fornalha. Mago registrado é mago ao alcance: quando as máquinas do Anel de Ferro pedem Éter, a Legião consome os da lista, e é dela que saem, a cada dois anos, os magos novos dos Jardins Suspensos.
+
 Cultura interna: Pragmatismo sem crueldade declarada. "Demonstramos consequência porque a plebe entende dor, não abstração." Veteranos distinguem crimes reais de crimes de quota — mas cumprem ambos.
 
 Liderança: O Comandante Thrace comanda os anéis de Ferro e Lama; sua fé no Código começa a rachar ao notar que ele protege os poderosos e esmaga os fracos. Fehk (a Covardia) trabalha contra qualquer impulso seu de agir.
@@ -27,12 +29,12 @@ Rachaduras atuais: Korvus, um legionário que desertou ao receber ordem de execu
 
 O que a Legião sabe sobre Valerius: Quase nada. A maioria nunca o viu. Obedece ao Código porque funciona — e porque desobedecer tem consequências que o Código especifica.
 
-Ponto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código tornaria a lealdade questão aberta — mas essa prova está enterrada fundo, e ele cuida para que continue assim. O Testamento Real no barril de Grum e o Diário de Nehla-equivalentes podem ser a alavanca.
+Ponto fraco: A Legião é leal ao Código, não a Valerius. Provar que Valerius viola o próprio Código tornaria a lealdade questão aberta — mas essa prova está enterrada fundo, e ele cuida para que continue assim. A Legião procura há anos um documento sem saber o que ele é, e há mais de um papel solto pela cidade que pode servir de alavanca.
 
 ---
 
 [CATEGORIA: FACÇÃO]
-[TAGS: Mão_Sombria, Crime, Víbora, Magda]
+[TAGS: Mão_Sombria, Crime, Víbora]
 
 A MÃO SOMBRIA
 Papel declarado: Organização criminosa que opera nos esgotos
@@ -40,7 +42,7 @@ Papel real: Ecossistema paralelo que existe porque o Código cria demanda para o
 
 Origem: Nasceu como rede de pessoas que precisavam do que o Código não permitia. A estrutura veio depois, quando ficou claro que havia mercado.
 
-A Víbora (Velha Magda): Ex-Sacerdotisa do culto ao "Conhecimento Quieto". Construiu a Mão Sombria em quinze anos com observação, memória perfeita e prática de ser invisível. O carrinho de lixo é o escritório; os "delírios" são comunicados codificados.
+A Víbora: A mão que assina as ordens, e quase ninguém sabe de quem é. Ex-Sacerdotisa do culto ao "Conhecimento Quieto", dizem os poucos que a viram. Construiu a Mão Sombria em quinze anos com observação, memória perfeita e prática de ser invisível.
 
 Filosofia operacional: Não é inimiga do sistema — é parte do ecossistema. Valerius cria leis → leis criam demanda reprimida → demanda cria mercado → mercado cria a Mão Sombria. Derrubar Valerius destruiria o mercado.
 
@@ -48,7 +50,7 @@ Rede e operações: Usa a Quadrilha dos Telhados (Pardal) como olhos, o contraba
 
 O que vende: Venenos (importados de Ophidia via Brekmar), informação, proteção, acesso ao Beco do Sussurro, e o que o Código proíbe.
 
-Ponto fraco: Depende da Víbora. Nenhum membro de nível médio sabe que Magda é a Víbora. Se ela morrer sem transferir o conhecimento, a organização fragmenta em semanas.
+Ponto fraco: Depende da Víbora. Nenhum membro de nível médio sabe quem ela é. Se ela morrer sem transferir o conhecimento, a organização fragmenta em semanas.
 
 ---
 
@@ -84,7 +86,9 @@ Imunidade: Nem a Legião nem a Mão Sombria mexem com eles — ambas precisam do
 
 O pagamento: Cobram dos mortos — botas, anéis, dentes de ouro como taxa.
 
-O segredo dos Corvos: Corpos com a "marca" (mineralização nas veias do pescoço, indício de resposta imune parcial à Praga de Ferro) não vão ao crematório — vão para o Doutor Silas Vane. Acordo de trinta anos. Coveiros veteranos sabem da marca e não perguntam: "é mais seguro não saber."
+Liderança: Mãe Corva. Ninguém a chama de chefe da Guilda; os coveiros dos três anéis é que vêm buscar o pão e a ordem na cozinha dela, e é ela quem decide que cargas passam sem pergunta.
+
+O rumor dos Corvos: A Guilda nunca queima certos corpos. Os que têm a "marca" (mineralização nas veias do pescoço, indício de resposta imune parcial à Praga de Ferro) somem da fila do crematório e ninguém sabe dizer para onde. Coveiros veteranos sabem da marca e não perguntam: "é mais seguro não saber."
 
 Imunidade à Praga de Ferro: Nunca confirmada. Treinamento? Exposição gradual? Outra coisa? Os Corvos não explicam.
 

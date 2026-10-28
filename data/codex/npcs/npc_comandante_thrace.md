@@ -9,7 +9,8 @@ tags:
 - Comandante
 - Anel_Ferro
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # COMANDANTE THRACE — O PUNHO DA LEGIÃO

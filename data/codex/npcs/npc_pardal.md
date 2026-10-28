@@ -9,7 +9,8 @@ tags:
 - Quadrilha
 - Jovem
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # PARDAL — A LÍDER DA QUADRILHA DOS TELHADOS

@@ -9,7 +9,8 @@ tags:
 - Carcereiro
 - Sobrenatural
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # O CEGO — CARCEREIRO DO OUBLIETTE

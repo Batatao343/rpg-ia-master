@@ -9,7 +9,8 @@ tags:
 - Líder_Comunitário
 - Resistência
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # MÃE CORVA — A PROTETORA DO ANEL DE LAMA
@@ -20,5 +21,7 @@ Aparência: Mulher robusta de meia-idade, roupas remendadas mas limpas, mãos qu
 Personalidade: Feroz, generosa, pragmática. Construiu uma rede de proteção mútua no Anel de Lama — quem ela acolhe, ela defende. Não tem poder formal nem mágico, só a lealdade dos esquecidos e uma teimosa recusa de deixar o Anel de Lama desistir de si mesmo.
 
 O que faz: Abriga órfãos (alguns viram a Quadrilha dos Telhados), media conflitos, esconde fugitivos da Legião, distribui o pouco que consegue. É o oposto de tudo que Nova Arcádia representa — solidariedade num lugar projetado para o desespero. A Legião a tolera porque ela mantém o Anel de Lama administrável.
+
+A Guilda: É também quem fala pelos coveiros da Guilda dos Corvos. Eles lhe devem o pão e a ordem, e ela decide que cargas passam sem pergunta.
 
 Para o narrador: Mãe Corva é o coração do Anel de Lama — aliada natural de personagens de bom coração, fonte de informação da base, e contraste moral com a crueldade da cidade. Dá missões de proteção e resgate. Conhece todos os esquecidos. Sua rede é mais poderosa do que a Legião imagina.

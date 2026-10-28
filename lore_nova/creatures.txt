@@ -25,7 +25,7 @@ Estado: Despertando — por acúmulo, não por gatilho
 Natureza: Éter cristalizado de séculos de mortes no norte — batalhas dos Cinzéus contra os Anões, mortes pelo frio, a guerra contra os dragões. O gelo preservou o que deveria se dissipar, e a concentração formou uma rede necromântica difusa sob toda a região. Não tem mente. Não tem intenção. É um sistema que cresce e que, ao despertar, reanima o que morreu no seu alcance.
 
 Efeito atual: Aurora boreal com ritmo regular sobre Skallgard. Vibração registrada pelos instrumentos dos clãs tecnológicos. Memórias de Vrel ficando mais nítidas na região. Espíritos de animais despertando na Parede dos Mortos.
-Contenção: O Farol da Chama Negra suprime o despertar. Se a chama se apagar, a rede acorda por completo.
+Contenção: Nenhuma que se conheça. A Rede cresce por acúmulo, e o que fará quando acordar por completo ninguém quis medir em voz alta.
 
 ---
 
@@ -50,7 +50,7 @@ OS GIGANTES
 Localização: Pouquíssimos sobreviventes dispersos, paradeiro desconhecido
 Estado: Quase extintos — a maioria morreu quando o norte congelou na Era 4
 
-Natureza: Imortais, imensos (dezenas de metros), a criatura mais inteligente da Era 0. Não queriam dominar — queriam entender. Construíram o Farol da Chama Negra para conter a Rede Carmesim antes mesmo de ela existir, prevendo o que o acúmulo de morte produziria. Construíram a Fortaleza de Vorr.
+Natureza: Imortais, imensos (dezenas de metros), a criatura mais inteligente da Era 0. Não queriam dominar — queriam entender. Construíram o Farol da Chama Negra e a Fortaleza de Vorr. Para quê o Farol, nenhum registro diz, e os que poderiam dizer morreram com o gelo.
 
 Sobreviventes: Os que migraram para o sul antes do gelo. Não há informação confiável sobre onde estão. Um Gigante vivo seria a testemunha mais antiga do mundo — alguém que viu a Era 0 com os próprios olhos.
 Nota de interpretação: Se um Gigante sobrevivente aparecer numa história, é raro o suficiente para ser evento. Diferente dos demônios e dragões, um Gigante é uma pessoa (de escala imensa) e poderia ser movido para npcs.txt se ganhar nome e papel específico.
@@ -143,7 +143,7 @@ Nas noites mais frias, ouve-se choro de criança vindo da tundra. São ecos de c
 
 [CRIATURA: Guardião-Sem-Rosto]
 Tipo: Assombração | Perigo: Extremo
-Relacionado ao Farol da Chama Negra. Os guardiões anteriores que morreram no ciclo de cem anos não partem completamente — permanecem como sentinelas pálidas ao redor do Farol, sem rosto, observando quem se aproxima. Não atacam quem vem com propósito legítimo. Despedaçam quem vem para apagar a chama.
+Relacionado ao Farol da Chama Negra. Sentinelas pálidas ao redor da torre, sem rosto, observando quem se aproxima. Os Nascidos do Gelo não dizem o que elas foram. Não atacam quem vem com propósito legítimo. Despedaçam quem vem para apagar a chama.
 
 ===== ABERRAÇÃO =====
 

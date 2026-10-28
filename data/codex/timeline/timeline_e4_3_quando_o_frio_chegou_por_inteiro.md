@@ -1,7 +1,7 @@
 ---
-id: timeline_e4_1_o_abismo_concentrou_como_sempre_faz
+id: timeline_e4_3_quando_o_frio_chegou_por_inteiro
 type: timeline
-name: Era 4 — O Gelo, o Sangue e o Aprendiz (1)
+name: Era 4 — O Gelo, o Sangue e o Aprendiz (3)
 aliases: []
 tags:
 - timeline
@@ -9,17 +9,7 @@ tags:
 visibility: public
 ---
 
-# ERA 4 — O GELO, O SANGUE E O APRENDIZ
-
-O Abismo concentrou. Como sempre faz a cada dois mil anos — não por vontade, não por plano, mas porque é a natureza do que é. A entropia acumulou até o ponto em que o mundo respondeu em vários lugares ao mesmo tempo, como madeira velha que racha em múltiplos pontos sob pressão suficiente.
-
-No norte, o Abismo concentrado transformou o que havia sido pradaria aberta em território de gelo. O frio chegou de uma vez — não como inverno chega, gradualmente, por semanas — mas como decisão. Em dias, as pradarias setentrionais congelaram. O que havia sido terra habitável tornou-se o Ermo Branco, gelo eterno que não é apenas clima mas condição do próprio Abismo — a entropia drenando calor do norte para redistribuí-lo ao sul, onde o Deserto de Zhur queima em compensação.
-
-Os Gigantes, que haviam escolhido o norte como refúgio por sua quietude, descobriram o custo dessa quietude. Seres imensos perdem calor em proporção à sua superfície corporal — e superfície gigante em ambiente de gelo eterno é sentença. A maioria morreu durante o congelamento, simplesmente incapazes de manter temperatura suficiente para sobreviver. Alguns conseguiram migrar para o sul antes que o frio os alcançasse completamente — poucos, dispersos, perdendo a comunidade que haviam construído por eras.
-
-O Farol da Chama Negra ficou. Construído para durar além dos seus criadores, continuou emitindo anti-luz sem ninguém para operá-lo. Por séculos funcionou sozinho. Mas conter o Abismo tem custo — e sem os Gigantes para pagá-lo através do que eles pagavam, o Abismo encontrou outra forma de cobrar.
-
-O ciclo do guardião não foi planejado por ninguém. Surgiu como surgem as coisas em Valoria — como consequência inevitável da física do mundo. A anti-luz do Farol precisa de vida para sustentar a contenção. O Abismo atrai quem atrai para preencher a lacuna. A cada cem anos, um andarilho chega ao Farol por razões que nunca consegue explicar completamente — um impulso, um sonho recorrente, uma sensação de que é lá que precisa estar. Ele mata o guardião anterior, porque o Abismo cobra através da morte, e assume o posto. Nunca sabe por quanto tempo ficará. Nunca sabe o que guarda exatamente. Apenas sabe que não pode partir. Rios pararam no meio do movimento. Árvores racharam de dentro para fora. E no gelo que cobriu tudo, formas começaram a aparecer — silhuetas humanoides presas na espessura transparente, como se sempre tivessem estado lá e o gelo apenas as revelasse. As estátuas de gelo aqueceram de dentro. Racharam. E os Cinzéus saíram.
+Quando o frio chegou por inteiro, rios pararam no meio do movimento. Árvores racharam de dentro para fora. E no gelo que cobriu tudo, formas começaram a aparecer — silhuetas humanoides presas na espessura transparente, como se sempre tivessem estado lá e o gelo apenas as revelasse. As estátuas de gelo aqueceram de dentro. Racharam. E os Cinzéus saíram.
 
 Eram cinzas — na pele, nos olhos, na forma de se mover. Não sentiam o frio que os havia produzido. Não sentiam o calor do sol quando ele voltou. Não sentiam a pedra cortando os pés descalços enquanto caminhavam para o sul. Dor física não existia para eles — nem dor, nem prazer físico, nenhuma sensação do corpo. O que sentiam eram emoções, e essas sim chegavam com uma intensidade que compensava tudo o mais — alegria, raiva, luto, amor, tudo mais vivo do que qualquer outra raça experienciava. Mas o corpo era silêncio. Podiam quebrar um osso e não saber, a não ser pelo ângulo errado do membro.
 

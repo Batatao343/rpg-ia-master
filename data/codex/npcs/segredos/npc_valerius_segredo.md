@@ -15,10 +15,10 @@ related_entities:
 
 # LORDE PROTETOR VALERIUS — O QUE NÃO É DITO
 
-História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Fez pacto com Daruun: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
+História real: Nobre mediano que lutou sob Elaryin na Guerra do Céu Vermelho não por heroísmo mas por cálculo. Mapeou poder enquanto outros combatiam. Passou a década depois da guerra rastreando Daruun, o demônio que negocia, e no décimo ano de governo foi levado por ele às masmorras. Fez o pacto: cedeu a família (consumida, não morta) em troca de imortalidade. A família foi apresentada como morta em ataque de saqueadores.
 
-O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. O Código de Ferro — centenas de páginas que apareceram em uma noite em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
+O pacto e seus efeitos: Valerius é imortal enquanto mantiver o acordo. Daruun é o corretor; a armadura de Malagor é a porta por onde o Abismo cobra. O Código de Ferro — centenas de páginas que apareceram em uma noite, a mesma do pacto, em caligrafia desconhecida — é produto de uma mente sem as amarras do tempo. O que os servos chamam de "conversar com a armadura de Malagor" é real. O que acontece nesses encontros é desconhecido.
 
 Motivação real: Não está completamente claro nem para ele. O pacto consumiu algo que permitiria introspecção. Ele age porque é o que faz — e não consegue conceber que poderia agir diferente.
 
-Rumor verdadeiro: Os servos que trabalhavam no palácio na época do décimo ano de governo morreram todos de causas variadas nos vinte anos seguintes. Nenhum de causa violenta.
+Rumor verdadeiro: Os servos que trabalhavam no palácio na época do décimo ano de governo constam todos como mortos, de causas variadas, nos vinte anos seguintes. Nenhum de causa violenta. Um dos registros está errado (ver Bertil, o velho do crematório).

@@ -5,7 +5,7 @@
       "id": "dia_da_fundacao", "name": "Dia da Fundação",
       "location_ids": ["nova_arcadia", "na_anel_dourado", "na_anel_ferro", "na_anel_lama"],
       "month": "vaelith", "day_of_month": 18, "duration_days": 2, "label": "em festa",
-      "lore_refs": ["timeline_completa.txt:318", "timeline_completa.txt:432", "npcs.txt:88"],
+      "lore_refs": ["timeline_completa.txt:328", "timeline_completa.txt:448", "npcs.txt:91"],
       "review": "dono"
     },
     {
@@ -13,7 +13,7 @@
       "location_ids": ["nova_arcadia", "na_anel_dourado", "na_anel_ferro", "na_anel_lama"],
       "month": "vorrnak", "day_of_month": 1, "duration_days": 1, "label": "em silêncio",
       "effects": {"price_mult": 1.0, "restock_mult": 0.0, "merchant_closed": true},
-      "lore_refs": ["daily_life.txt:137", "timeline_completa.txt:340", "timeline_completa.txt:218"],
+      "lore_refs": ["daily_life.txt:137", "timeline_completa.txt:350", "timeline_completa.txt:228"],
       "review": "dono"
     },
     {
@@ -29,14 +29,14 @@
       "location_ids": ["skallgard"],
       "month": "solveth", "day_of_month": 1, "duration_days": 1, "label": "em luto",
       "effects": {"price_mult": 1.0},
-      "lore_refs": ["daily_life.txt:201", "factions.txt:160"],
+      "lore_refs": ["daily_life.txt:201", "factions.txt:164"],
       "review": "dono"
     },
     {
       "id": "fim_do_ceu_vermelho", "name": "Dia do Céu Limpo",
       "location_ids": ["brekmar"],
       "month": "morrakh", "day_of_month": 3, "duration_days": 1, "label": "em festa",
-      "lore_refs": ["timeline_completa.txt:368", "factions.txt:62"],
+      "lore_refs": ["timeline_completa.txt:378", "factions.txt:64"],
       "review": "dono"
     },
     {
@@ -44,7 +44,7 @@
       "location_ids": ["pantano_melancolia"],
       "month": "solveth", "day_of_month": 3, "duration_days": 1, "label": "em vigília",
       "effects": {"price_mult": 1.0},
-      "lore_refs": ["daily_life.txt:117", "npcs.txt:1123"],
+      "lore_refs": ["daily_life.txt:117", "npcs.txt:1132"],
       "review": "dono"
     },
     {
@@ -52,7 +52,7 @@
       "location_ids": ["deserto_zhur"],
       "month": "malagor", "day_of_month": 1, "duration_days": 1, "label": "em rito",
       "effects": {"price_mult": 1.0},
-      "lore_refs": ["locations.txt:131", "daily_life.txt:283", "npcs.txt:1760"],
+      "lore_refs": ["locations.txt:131", "daily_life.txt:283", "npcs.txt:1771"],
       "review": "dono"
     },
     {
@@ -74,7 +74,7 @@
       "location_ids": ["aethelgard"],
       "month": "thessrak", "day_of_month": 6, "duration_days": 1, "label": "em vigília",
       "effects": {"price_mult": 1.0},
-      "lore_refs": ["locations.txt:248", "timeline_completa.txt:106"],
+      "lore_refs": ["locations.txt:248", "timeline_completa.txt:112"],
       "review": "dono"
     },
     {
@@ -96,7 +96,7 @@
       "id": "dia_do_levante", "name": "Dia do Levante",
       "location_ids": ["montanhas_afiadas", "ma_saidas_baixas"],
       "month": "morrakh", "day_of_month": 12, "duration_days": 1, "label": "em festa",
-      "lore_refs": ["timeline_completa.txt:82", "npcs.txt:848"],
+      "lore_refs": ["timeline_completa.txt:88", "npcs.txt:857"],
       "review": "dono"
     },
     {
@@ -104,7 +104,7 @@
       "location_ids": ["pr_solvhen"],
       "month": "vorrnak", "day_of_month": 9, "duration_days": 1, "label": "em luto",
       "effects": {"price_mult": 1.0},
-      "lore_refs": ["races.txt:245", "creatures.txt:488", "factions.txt:325"],
+      "lore_refs": ["races.txt:245", "creatures.txt:488", "factions.txt:329"],
       "review": "dono"
     }
   ]

@@ -24,4 +24,4 @@ Skallgard: Cidade fundada pelos humanos do norte. Dividida em clãs por função
 
 Fortaleza de Vorr: Antiga construção dos Gigantes. Degraus na cintura de um humano, portas de 20 metros. "Estátuas" são aventureiros congelados pelo Sopro de Vorr — anomalia de Vorrnak. Ainda conscientes.
 
-Farol da Chama Negra: Construído pelos Gigantes. Emite anti-luz que suprime o despertar da Rede Carmesim. Guardião único que nunca fala — ciclo de 100 anos onde um andarilho chega, mata o anterior e assume. O Abismo cobra vida como compensação pela contenção.
+Farol da Chama Negra: Construído pelos Gigantes. Emite anti-luz, e a aurora do norte muda de ritmo ao redor dele. Tem um guardião que nunca fala e que ninguém alcança. Para quê serve o Farol, ninguém sabe.

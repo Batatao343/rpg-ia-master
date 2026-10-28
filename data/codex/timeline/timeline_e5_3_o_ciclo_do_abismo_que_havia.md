@@ -1,7 +1,7 @@
 ---
 id: timeline_e5_3_o_ciclo_do_abismo_que_havia
 type: timeline
-name: Era 5 — A Inundação Humana, a Queda de Aethelgard e o Dia sem Sombra (3)
+name: Era 5 — A Inundação Humana e a Queda de Aethelgard (3)
 aliases: []
 tags:
 - timeline

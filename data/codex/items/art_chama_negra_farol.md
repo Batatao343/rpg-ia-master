@@ -14,7 +14,7 @@ related_entities:
 # A Chama Negra do Farol [ARTEFATO ÚNICO]
 
 Tipo: Artefato único / fenômeno contido
-Origem: Anti-luz acesa pelos Gigantes no Farol para suprimir a Rede Carmesim. Mantida pelo guardião Volkar.
-Uso: Enquanto arde, contém o despertar da Rede sob o norte. Não transportável — é o coração da contenção.
+Origem: Anti-luz acesa pelos Gigantes no Farol. Mantida pelo guardião Volkar. Para quê, ninguém que ainda viva sabe dizer.
+Uso: Arde sem combustível que se veja, e a aurora do norte muda de ritmo ao redor dela. Não transportável.
 Valor/Raridade: Inestimável.
-Perigo: Aproximar-se sem propósito atrai os Guardiões-Sem-Rosto. Apagá-la é catástrofe continental.
+Perigo: Aproximar-se sem propósito atrai os Guardiões-Sem-Rosto. Os clãs dizem que apagá-la seria um erro que ninguém quer medir.

@@ -1,7 +1,7 @@
 ---
 id: timeline_e5_2_em_aethelgard_o_aprendiz_havia_parado
 type: timeline
-name: Era 5 — A Inundação Humana, a Queda de Aethelgard e o Dia sem Sombra (2)
+name: Era 5 — A Inundação Humana e a Queda de Aethelgard (2)
 aliases: []
 tags:
 - timeline
@@ -19,7 +19,7 @@ O aprendiz desativou todos os cristais de contenção em uma noite. Não havia t
 
 Aethelgard não explodiu. Implodiu primeiro, e depois explodiu. O colapso interno durou segundos. O que veio depois alcançou quilômetros.
 
-O mar respondeu ao impulso mágico. A cidade que havia funcionado por eras como motor de refinamento do Éter, alimentada por vidas, foi engolida em horas. As câmaras, os cristais, o conselho, os registros — tudo desceu. O conhecimento da Destilação, que havia sido o segredo mais guardado de Aethelgard, foi para o fundo junto com os que o guardavam.
+O lago respondeu ao impulso mágico: Aethelgard ficava na cratera de um lago antigo, e a água subiu como se a cratera tivesse sido esperada. A cidade que havia funcionado por eras como motor de refinamento do Éter, alimentada por vidas, foi engolida em horas. As câmaras, os cristais, o conselho, os registros — tudo desceu. O conhecimento da Destilação, que havia sido o segredo mais guardado de Aethelgard, foi para o fundo junto com os que o guardavam.
 
 O aprendiz não sobreviveu. Não da forma que a palavra implica.
 
@@ -45,7 +45,7 @@ A diáspora foi caótica de uma forma que os Anões nunca haviam experimentado e
 
 As Landships eram o plano B. Os Anões sempre tiveram um plano B — é o tipo de raça que considera imprevisão um fracasso moral. Doze Landships, construídas ao longo de décadas em câmaras secretas do Reino Subterrâneo, prontas para o evento que o sistema classificava como "colapso total da estrutura principal". Quando o Rei Subterrâneo despertou, o evento foi acionado. As doze naves saíram.
 
-Doze é o número que existe. Não há como fabricar mais — o processo de construção exigia recursos e infraestrutura que só o Reino Subterrâneo fornecia, e o Reino Subterrâneo está ocupado. Os Anões vivem com o que têm, melhorando o que podem, sabendo que se perderem uma Landship não haverá reposição. Isso não é mencionado em conversas. É simplesmente sabido.
+Doze é o número que os Anões dizem, e o que o Protocolo registra. Onze navegam. A que falta consta nos livros como "em manutenção prolongada", porque o Protocolo tem procedimento para tudo, menos para registrar uma perda. Não há como fabricar mais — o processo de construção exigia recursos e infraestrutura que só o Reino Subterrâneo fornecia, e o Reino Subterrâneo está ocupado. Os Anões vivem com o que têm, melhorando o que podem, sabendo que não haverá reposição. Isso não é mencionado em conversas. É simplesmente sabido.
 
 O trauma de ter perdido o único lugar que havia sido completamente seu nunca foi processado, porque processar trauma exigiria reconhecer que algo havia saído errado, e os Anões não têm vocabulário para isso.
 

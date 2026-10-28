@@ -17,7 +17,7 @@ visibility: public
 Localização: Pouquíssimos sobreviventes dispersos, paradeiro desconhecido
 Estado: Quase extintos — a maioria morreu quando o norte congelou na Era 4
 
-Natureza: Imortais, imensos (dezenas de metros), a criatura mais inteligente da Era 0. Não queriam dominar — queriam entender. Construíram o Farol da Chama Negra para conter a Rede Carmesim antes mesmo de ela existir, prevendo o que o acúmulo de morte produziria. Construíram a Fortaleza de Vorr.
+Natureza: Imortais, imensos (dezenas de metros), a criatura mais inteligente da Era 0. Não queriam dominar — queriam entender. Construíram o Farol da Chama Negra e a Fortaleza de Vorr. Para quê o Farol, nenhum registro diz, e os que poderiam dizer morreram com o gelo.
 
 Sobreviventes: Os que migraram para o sul antes do gelo. Não há informação confiável sobre onde estão. Um Gigante vivo seria a testemunha mais antiga do mundo — alguém que viu a Era 0 com os próprios olhos.
 Nota de interpretação: Se um Gigante sobrevivente aparecer numa história, é raro o suficiente para ser evento. Diferente dos demônios e dragões, um Gigante é uma pessoa (de escala imensa) e poderia ser movido para npcs.txt se ganhar nome e papel específico.

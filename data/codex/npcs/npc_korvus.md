@@ -8,7 +8,8 @@ tags:
 - Legião
 - Desertor
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # KORVUS — O LEGIONÁRIO QUE FUGIU

@@ -17,6 +17,8 @@ Urath, manifestação consciente do Orgulho, existia antes de qualquer raça. O 
 
 Os Elfos não se rebelaram num momento de heroísmo organizado. Viveram séculos em fuga e guerra constante, caçados pela prole de Urath como presas com consciência — o que os tornava mais interessantes, não menos vulneráveis. A lua de Zhur não foi estratégia. Foi desespero. A única força grande o suficiente que encontraram, lançada sem certeza de que funcionaria.
 
+Lançada é a palavra dos registros élficos, e não é figura. A lua foi movida com magia, por destilação em massa: um método que ainda não tinha nome, o mesmo que Aethelgard, eras depois, aprenderia a chamar de Destilação. Milhares de Elfos foram queimados para empurrar uma pedra do céu até o chão. Os registros não dizem quem escolheu os primeiros. Dizem só que ninguém cobrou o preço depois.
+
 Funcionou parcialmente. O impacto da lua vitrificou centenas de quilômetros de pradaria no sul — a areia fundida pelo calor da colisão solidificou em cristal, criando o que seria conhecido como o Deserto de Zhur, o Mar de Vidro. O que havia sido planície aberta tornou-se território intransponível, e no centro do deserto criado pelo impacto, Urath foi fragmentado e selado. A areia vitrificada ainda pulsa com o que sobrou dele. A prole sobreviveu. Orgulhosa demais para resgatar o pai — reconhecer que precisam de Urath seria admitir que sozinhos não bastam — ela se dispersou pelo mundo e ainda existe, sem plano, sem culto, sem coordenação. Cada um age por conta própria.
 
 Os Elfos de hoje não sabem se isso é história ou mito. O Éter Sujo corroeu a memória coletiva ao longo dos séculos. Sabem que sofreram algo enorme. Não sabem mais o nome do que os caçou.

@@ -8,7 +8,8 @@ tags:
 - Anel_Dourado
 - Mago_Jovem_Proibido
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # LIANE CHAMA-ESCONDIDA — A MAGA QUE SE ESCONDE

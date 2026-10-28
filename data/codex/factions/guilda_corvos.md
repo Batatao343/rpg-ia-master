@@ -24,6 +24,8 @@ Imunidade: Nem a Legião nem a Mão Sombria mexem com eles — ambas precisam do
 
 O pagamento: Cobram dos mortos — botas, anéis, dentes de ouro como taxa.
 
-O segredo dos Corvos: Corpos com a "marca" (mineralização nas veias do pescoço, indício de resposta imune parcial à Praga de Ferro) não vão ao crematório — vão para o Doutor Silas Vane. Acordo de trinta anos. Coveiros veteranos sabem da marca e não perguntam: "é mais seguro não saber."
+Liderança: Mãe Corva. Ninguém a chama de chefe da Guilda; os coveiros dos três anéis é que vêm buscar o pão e a ordem na cozinha dela, e é ela quem decide que cargas passam sem pergunta.
+
+O rumor dos Corvos: A Guilda nunca queima certos corpos. Os que têm a "marca" (mineralização nas veias do pescoço, indício de resposta imune parcial à Praga de Ferro) somem da fila do crematório e ninguém sabe dizer para onde. Coveiros veteranos sabem da marca e não perguntam: "é mais seguro não saber."
 
 Imunidade à Praga de Ferro: Nunca confirmada. Treinamento? Exposição gradual? Outra coisa? Os Corvos não explicam.

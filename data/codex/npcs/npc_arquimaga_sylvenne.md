@@ -9,7 +9,8 @@ tags:
 - Maga
 - Registrada
 visibility: public
-related_entities: []
+related_entities:
+- nova_arcadia
 ---
 
 # ARQUIMAGA SYLVENNE — A MAGA DA CORTE
