@@ -24,6 +24,7 @@ def _seed(label="justa", gold=25):
         origin_key="engine",
         reward_gold=gold,
         reward_label=label,
+        region_id="brekmar",
         llm_title="",
         llm_description="",
     )
@@ -177,3 +178,45 @@ def test_notice_kept_with_origin_faction():
     assert out["player"]["known_cards"]
     notes = [n for n in out.get("reputation_notices") or [] if n["kind"] == "carta"]
     assert len(notes) == 1 and notes[0]["subject_id"] in out["player"]["known_cards"]
+
+
+def test_region_id_wins_over_location():
+    """P2-2 (R12): `quest.region_id` vem antes da regiao do local."""
+    q = _quest(location="brekmar")
+    q["region_id"] = "skallgard"
+    seen = set()
+    for i in range(30):
+        q["id"] = f"qr{i}"
+        got = cr.grant_for_quest({}, {"level": 12, "known_cards": []}, q, 5)
+        reg = cards.get_card(got).get("regiao")
+        assert reg in (None, "", "skallgard")
+        seen.add(reg)
+    assert "skallgard" in seen and "brekmar" not in seen
+
+
+def test_region_id_planned_on_creation():
+    assert world_quests._lore_fields(_seed("justa"))["region_id"] == _seed().region_id
+
+
+def test_regiao_exclusiva_never_offered(monkeypatch):
+    """P2-4: regra unica; Carta com `regiao_exclusiva` nao sai em espolio, loja nem missao."""
+    from services import card_shop
+
+    allc = cards.all_cards()
+    ids = [c for c in allc if c.startswith("neu1_ge_")]
+    for c in ids:
+        monkeypatch.setitem(allc[c], "regiao_exclusiva", True)
+    p = {"level": 12, "known_cards": [], "class_name": "Sangromante"}
+    assert not any(
+        c.startswith("neu1_ge_") for c in cr._pools(p, [], boss=False, region_ids=set())["neutra"]
+    )
+    st = {
+        "game_id": "g",
+        "player": p,
+        "world": {"current_location_id": "brekmar", "world_clock": {"day": 1}},
+    }
+    assert not any(c in ids for c in card_shop.shelf_pool(st, "quinquilharias_brekmar"))
+    q = _quest()
+    for i in range(20):
+        q["id"] = f"qx{i}"
+        assert cr.grant_for_quest({}, {"level": 12, "known_cards": []}, q, 5) not in ids

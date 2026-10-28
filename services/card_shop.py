@@ -85,7 +85,7 @@ def shelf_pool(state: dict, mid: str) -> list[str]:
     hide_rare = _hostile(state, mid, merchant)
     out: list[str] = []
     for cid, c in sorted(cards.all_cards().items()):
-        if not cards.is_neutral(c) or not card_rewards._eligible(c, player, boss=False):
+        if not card_rewards.neutral_eligible(c, player):
             continue
         if _excluded(cid, cfg):
             continue

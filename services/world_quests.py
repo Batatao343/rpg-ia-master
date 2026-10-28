@@ -730,6 +730,7 @@ def _lore_fields(seed: QuestSeed) -> dict:
     ):
         out["reward_card_planned"] = True
         out["reward_card_label"] = seed.reward_label
+        out["region_id"] = seed.region_id
         out["reward_hint"] = f"{seed.reward_label} · uma técnica"
     if seed.llm_title:
         out["title"] = seed.llm_title

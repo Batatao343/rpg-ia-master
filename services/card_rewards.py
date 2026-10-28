@@ -103,6 +103,16 @@ def _eligible(card: dict | None, player: dict, *, boss: bool) -> bool:
     return True
 
 
+def neutral_eligible(card: dict | None, player: dict, *, boss: bool = False) -> bool:
+    """SPEC-357 P2-4: regra única de Carta neutra ofertável (espólio, loja e missão)."""
+    return bool(
+        card
+        and cards.is_neutral(card)
+        and not card.get("regiao_exclusiva")
+        and _eligible(card, player, boss=boss)
+    )
+
+
 def _pools(player: dict, defeated: list[dict], *, boss: bool, region_ids: set[str]) -> dict:
     import progression
 
@@ -116,9 +126,7 @@ def _pools(player: dict, defeated: list[dict], *, boss: bool, region_ids: set[st
         cid
         for cid, c in cards.all_cards().items()
         if cid not in known
-        and cards.is_neutral(c)
-        and not c.get("regiao_exclusiva")
-        and _eligible(c, player, boss=boss)
+        and neutral_eligible(c, player, boss=boss)
         and (not c.get("regiao") or str(c.get("regiao")) in region_ids)
     )
     saque_ids: set[str] = set()
@@ -306,17 +314,14 @@ def grant_for_quest(state: dict, player: dict, quest: dict, turn: int) -> str | 
     ) or {}
     if not weights_cfg:
         return None
-    region = ""
+    region = str(quest.get("region_id") or "")  # R12: region_id antes do local
     lid = str(quest.get("location_id") or "")
-    if lid:
+    if not region and lid:
         region = str((gamedata.get_location(lid) or {}).get("region_id") or "")
-    region = region or str(quest.get("region_id") or "")
     known = set(player.get("known_cards") or [])
     by_rarity: dict[str, tuple[list[str], list[str]]] = {}
     for cid, c in sorted(cards.all_cards().items()):
-        if cid in known or not cards.is_neutral(c) or c.get("regiao_exclusiva"):
-            continue
-        if not _eligible(c, player, boss=False):
+        if cid in known or not neutral_eligible(c, player):
             continue
         rar = rarity_of(c)
         if rar not in weights_cfg:

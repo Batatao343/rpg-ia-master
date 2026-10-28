@@ -308,3 +308,9 @@ def test_buy_telemetry_source_loja(monkeypatch):
     _, ids = card_shop.shelf(st)
     card_shop.buy(st, ids[0])
     assert seen == [(ids[0], "loja")]
+
+
+def test_is_neutral_defined_once():
+    """P2-3: guarda contra definicao duplicada apos rebase com a SPEC-355."""
+    src = open(os.path.join(os.path.dirname(cards.__file__), "cards.py"), encoding="utf-8").read()
+    assert src.count("def is_neutral(") == 1
