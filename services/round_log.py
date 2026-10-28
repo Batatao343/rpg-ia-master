@@ -116,6 +116,13 @@ def _result_phrase(atk: dict) -> str:
     head = {"critico": "acerto crítico", "supercritico": "acerto supercrítico"}.get(
         resultado, "acerta"
     )
+    try:  # SPEC-353 R29: crítico por dupla com total abaixo da Esquiva diz por quê
+        if resultado in ("critico", "supercritico") and int(atk.get("total")) < int(
+            atk.get("esquiva_alvo")
+        ):
+            head += " (dupla nos dados)"
+    except (TypeError, ValueError):
+        pass  # silent-ok: sem total/Esquiva no registro, o rótulo simples basta
     dano = atk.get("dano_final")
     if dano is None:
         return head

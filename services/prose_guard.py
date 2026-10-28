@@ -427,3 +427,69 @@ def species_drift(text: str, manifest: dict | None) -> list:
 def log_species_drift(flags: list, *, where: str = "combate") -> None:
     if flags:
         _LOG.warning("species_drift where=%s species=%s", where, [f.get("species") for f in flags])
+
+
+# --------------------------------------------------------------------------
+# SPEC-353 R17: contagem da narração de entrada x manifesto do encontro
+# --------------------------------------------------------------------------
+_NUM_WORDS = {
+    "um": 1,
+    "uma": 1,
+    "dois": 2,
+    "duas": 2,
+    "tres": 3,
+    "quatro": 4,
+    "cinco": 5,
+    "seis": 6,
+    "sete": 7,
+    "oito": 8,
+    "nove": 9,
+    "dez": 10,
+}
+_NUM_BY_VALUE = {1: "um", 2: "dois", 3: "três", 4: "quatro", 5: "cinco", 6: "seis", 7: "sete"}
+
+
+def count_drift(text: str, manifest: dict | None) -> list[dict]:
+    """Numeral ligado ao nome de uma espécie do manifesto, maior que o N ATIVO dela
+    ("três bandidos" com 2 no tabuleiro). Só marca; quem chama decide reconciliar."""
+    from services.encounter_manifest import _fold, name_tokens
+
+    participants = (manifest or {}).get("participants") or []
+    if not text or not participants:
+        return []
+    active: dict[str, int] = {}
+    for p in participants:
+        if p.get("status", "ativo") == "ativo":
+            label = str(p.get("species_label") or "")
+            active[label] = active.get(label, 0) + 1
+    flags: list[dict] = []
+    folded = _fold(text)
+    for label, n in active.items():
+        tokens = name_tokens(label)
+        if not tokens:
+            continue
+        stem = tokens[0][: max(4, len(tokens[0]) - 2)]
+        rx_num = r"(\d+|" + "|".join(_NUM_WORDS) + r")"
+        for m in re.finditer(rx_num + r"\s+(?:[a-z]+\s+){0,2}?" + re.escape(stem), folded):
+            raw = m.group(1)
+            claimed = int(raw) if raw.isdigit() else _NUM_WORDS.get(raw, 0)
+            if claimed > n:
+                flags.append({"species": label, "claimed": claimed, "active": n})
+                break
+    return flags
+
+
+def reconcile_count_sentence(flags: list[dict]) -> str:
+    """Frase determinística que corrige a contagem: "Só dois Bandidos avançam contra você..."."""
+    if not flags:
+        return ""
+    parts = []
+    for f in flags:
+        n = int(f["active"])
+        word = _NUM_BY_VALUE.get(n, str(n))
+        label = str(f["species"])
+        if n == 1:
+            parts.append(f"Só {word} {label} avança")
+        else:
+            parts.append(f"Só {word} {label}s avançam")
+    return " ".join(p + " contra você; o resto some na sombra." for p in parts[:1])

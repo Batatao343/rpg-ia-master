@@ -241,7 +241,46 @@ def shares_identity(requested: str, resolved: str) -> bool:
 
 
 _CORE_ARTICLES = {"o", "a", "os", "as", "um", "uma", "uns", "umas"}
-_CORE_LOCATIVES = {"na", "no", "nas", "nos", "em", "pela", "pelo", "perto", "longe", "ate"}
+_CORE_LOCATIVES = {
+    "na",
+    "no",
+    "nas",
+    "nos",
+    "em",
+    "pela",
+    "pelo",
+    "perto",
+    "longe",
+    "ate",
+    # SPEC-353 R16: locativos de posição ("a criatura além das estacas")
+    "alem",
+    "atras",
+    "sob",
+    "sobre",
+    "entre",
+    "diante",
+    "dentro",
+    "fora",
+    "junto",
+    "acima",
+    "abaixo",
+    "rente",
+}
+# SPEC-353 R16: cabeça genérica — o complemento "da fenda/das estacas" não identifica espécie.
+_GENERIC_HEADS = {
+    "criatura",
+    "criaturas",
+    "inimigo",
+    "inimigos",
+    "vulto",
+    "vultos",
+    "ameaca",
+    "ameacas",
+    "agressor",
+    "agressores",
+    "atacante",
+    "atacantes",
+}
 _CORE_QUALIFIER_PREFIXES = (
     "primeir",
     "segund",
@@ -283,6 +322,11 @@ def hint_core(text: str) -> str:
         if folded.startswith(_CORE_QUALIFIER_PREFIXES):
             continue
         kept.append(word.casefold())
+    if kept and _fold(kept[0]) in _GENERIC_HEADS:
+        for i, word in enumerate(kept):
+            if _fold(word) in {"de", "da", "do", "das", "dos"}:
+                kept = kept[:i]
+                break
     while kept and _fold(kept[-1]) in {"de", "da", "do", "das", "dos", "e", "com"}:
         kept.pop()
     while kept and _fold(kept[0]) in {"de", "da", "do", "das", "dos", "e", "com"}:

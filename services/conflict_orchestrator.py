@@ -23,6 +23,7 @@ import copy
 import json
 import logging
 import random
+import re
 from typing import Dict, List, Optional
 
 import combat_mechanics as cm  # helpers que SOBREVIVEM (condições, Entropia/Carga)
@@ -1783,6 +1784,24 @@ def _resolve_actor_turn(
         )
 
 
+_ABSORB_RE = re.compile(r"(?:Proteção(?: \(efeito\))?|Vigília) -(\d+)")
+
+
+def _annotate_absorbed(sub: dict) -> None:
+    """SPEC-353 R20: quanto a Proteção do alvo tirou de cada golpe que acertou, lido do registro
+    do próprio pipeline de dano (uma linha com "(excedente" por golpe com dano, na mesma ordem)."""
+    dmg_logs = [l for l in sub.get("logs", []) if l and "(excedente" in str(l)]
+    hits = [
+        a for a in sub.get("attacks", []) if a.get("acerto") and a.get("dano_final") is not None
+    ]
+    if len(dmg_logs) != len(hits):
+        return
+    for atk, line in zip(hits, dmg_logs, strict=True):
+        total = sum(int(n) for n in _ABSORB_RE.findall(str(line)))
+        if total > 0:
+            atk["absorvido"] = total
+
+
 def _resolve_actor_turn_inner(
     scene: dict,
     actor: dict,
@@ -1836,6 +1855,7 @@ def _resolve_actor_turn_inner(
     finally:
         if fx_ctx is not None:
             fx_ctx.nonlethal, fx_ctx.nonlethal_actor = "", None
+    _annotate_absorbed(sub)  # SPEC-353 R20 (registro; fora de ct.resolve_turn)
     out["logs"] += [l for l in sub.get("logs", []) if l]
     out.setdefault("attacks", []).extend(sub.get("attacks", []))
     out.setdefault("cards_used", []).extend(sub.get("cards_used", []))

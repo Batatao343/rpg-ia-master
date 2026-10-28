@@ -1859,6 +1859,16 @@ def _narrate_entrance(
         where="combate",
         on_fail=lambda err: _log_event("combat", "narrate_failed", level="warning", error=err),
     )
+    if text:
+        drift = prose_guard.count_drift(text, manifest)  # SPEC-353 R17
+        if drift:
+            _log_event(
+                "combat",
+                "entrance_count_reconciled",
+                level="info",
+                species=",".join(str(d["species"]) for d in drift),
+            )
+            text = text.rstrip() + " " + prose_guard.reconcile_count_sentence(drift)
     return text or deterministic
 
 
