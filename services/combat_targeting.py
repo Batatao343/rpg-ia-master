@@ -32,6 +32,7 @@ INVALID_REASONS = (
     "out_of_zone",
     "not_your_turn",
     "combat_inactive",
+    "fora_de_combate",  # SPEC-353 R37: utilitária não age no conflito
 )
 
 MANEUVERS = ("engajar", "desengajar", "guardar", "esconder", "procurar")

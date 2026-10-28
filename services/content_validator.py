@@ -1011,13 +1011,17 @@ def validate_bestiary(
     from services import cards as _cards
     from services import enemy_decks as _edk
 
+    authored_ok = {  # exceções autorais conscientes (criaturas de cristal/éter com Carta arcana)
+        ("mon_vigia_caco", "bst_eter_aethelgard"),
+        ("mon_quimera_cristal", "bst_eter_aethelgard"),
+    }
     for cid, cre in best.items():
         if not _edk._is_melee_only(cre):
             continue
         for raw in cre.get("cartas") or []:
             card_id = raw.get("id") if isinstance(raw, dict) else raw
             dtype = str(((_cards.get_card(str(card_id)) or {}).get("efeito") or {}).get("dano_tipo"))
-            if dtype in _edk._CASTER_DAMAGE:
+            if dtype in _edk._CASTER_DAMAGE and (cid, str(card_id)) not in authored_ok:
                 findings.append(
                     Finding(
                         "bestiary",
