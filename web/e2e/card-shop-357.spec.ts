@@ -1,5 +1,5 @@
 // SPEC-357 Etapa 6: painel "Técnicas à venda" (aba Combate fora de encontro). Preço/bloqueio vêm do servidor.
-import { test, expect } from "./fixtures";
+import { test, expect, openFicha } from "./fixtures";
 
 const oferta = (id: string, name: string, preco: number, extra: Record<string, unknown> = {}) => ({
   id, name, raridade: "comum", custo_folego: 1, custo_entropia: 0, texto: "Causa 2.", descricao: "Um golpe de cais.",
@@ -66,3 +66,23 @@ test.describe("mobile 390", () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 });
+
+// R13: quest de lore concluída mostra "Técnica: X" (nome vindo do servidor).
+for (const [w, h] of [[1440, 900], [390, 844]] as const) {
+  test.describe(`quests ${w}`, () => {
+    test.use({ viewport: { width: w, height: h }, hasTouch: w < 500, isMobile: w < 500 });
+    test(`quest_tecnica_${w}: QuestsTab mostra a técnica entregue`, async ({ page, backend }) => {
+      const st = backend.states.get("game-a")!;
+      const side = (st as { quest: { side: Array<Record<string, unknown>> } }).quest.side;
+      side[0] = { ...side[0], status: "completed", reward_hint: "justa · uma técnica", reward_card_name: "Traje Branco" };
+      await page.goto("/");
+      await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
+      await page.getByRole("button", { name: /^Ayla/ }).click();
+      await openFicha(page);
+      await page.getByRole("tab", { name: /Missões/ }).click();
+      await expect(page.getByText("Técnica: Traje Branco")).toBeVisible();
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  });
+}
