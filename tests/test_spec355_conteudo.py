@@ -186,3 +186,23 @@ def test_condition_label_swap_respects_word_boundaries_and_prose():
     # chave colada em outra palavra não é trocada; prosa comum ("sangrando") nunca é tocada
     assert "xarmadura_comprometidax" in rule("xarmadura_comprometidax")
     assert "Sangrando" not in rule("sangrando").replace("Aplica Sangrando", "")
+
+
+def test_validator_still_warns_for_a_new_caster_without_spell(tmp_path):
+    best = {
+        "enemy_novo_conjurador": {
+            "categoria": "lacaio",
+            "arquetipo": "conjurador",
+            "attacks": [{"type": "melee"}],
+        }
+    }
+    path = tmp_path / "bestiary.json"
+    path.write_text(json.dumps(best), encoding="utf-8")
+    found = [
+        f for f in cv.validate_bestiary(str(path), str(tmp_path / "x")) if "arquetipo" in f.message
+    ]
+    assert [f.entity_id for f in found] == ["enemy_novo_conjurador"]
+
+
+def test_real_bestiary_has_no_findings():
+    assert cv.validate_bestiary() == []

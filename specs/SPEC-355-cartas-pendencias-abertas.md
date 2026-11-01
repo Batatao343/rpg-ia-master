@@ -533,6 +533,7 @@ API local `legacy` com as flags de cartas `on` (`RPG_CARD_DECK`, `RPG_ENEMY_INTE
 no reagente: `bst_defesa_instintiva` (inimigo), `san_esquiva` e afins do jogador. Criaturas com `arquetipo`
 conjurador/místico sem ataque `magic`/`area` nem `abilities` (regra nova do validador, `warning`): a lista sai de
 `uv run python scripts/validate_content.py` (só o Renegado foi corrigido).
+Criaturas apontadas e NÃO corrigidas (allowlist `caster_pendente` em `content_validator`): enemy_devorador_sol_zhur, enemy_djinn_menor, enemy_observador_menor, enemy_cultista_destilacao, enemy_pirata_brekmar, enemy_arpoador_osshari, enemy_orc_saidas_baixas.
 
 **R15 (`san_exp_espetaculo`).** Legada; a bandeira não se confirmou (+8,3 pp nas 0-19 × -4,0 pp nas 20-99,
 "ruído", `docs/spec341/r8-bandeiras-sementes20-99.json`). Nada mudou; D7 não acionado.

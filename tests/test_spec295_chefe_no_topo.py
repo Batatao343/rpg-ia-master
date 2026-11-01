@@ -221,7 +221,15 @@ def test_old_save_enemy_without_new_fields_acts_once():
     assert "acoes_por_rodada" not in old and "protecao_natural" not in old
     out, _ = _round(old)
     assert out["resolved_turns"].count("boss") == 1
-    assert cm.combat_modifiers(old)["protection"] == 0
+    # SPEC-355 R1: a Proteção que a Reação "Defesa Instintiva" do chefe põe em si vale até o próximo
+    # ataque (por desenho); a Proteção NATURAL (R9 desta spec) é o que não pode existir no save antigo.
+    natural = {
+        **old,
+        "active_conditions": [
+            c for c in old["active_conditions"] if c.get("source") != "bst_defesa_instintiva"
+        ],
+    }
+    assert cm.combat_modifiers(natural)["protection"] == 0
 
 
 def test_same_seed_same_outcome():
