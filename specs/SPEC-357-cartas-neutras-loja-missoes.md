@@ -1,6 +1,6 @@
 # SPEC-357 — Cartas neutras na loja do mercador e como recompensa de missão
 
-> **Status:** `approved` (dono: "abre e executa", 28/10; as recomendações do §8 valem como decisão até o dono dizer o contrário)
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke real §6 pelo coordenador)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** SPEC-355 item 16 / D15 (`specs/SPEC-355-cartas-pendencias-abertas.md:52,220,516-517`, worktree `rpg-spec-355`); SPEC-333 § Fora de escopo (`specs/SPEC-333-cartas-06-espolio-e-forja-do-baralho.md:39`)
 > **Depende de:** SPEC-333 (espólio/Forja, código na `main`, flag `off`), SPEC-335 Lote 6 (as 40 neutras `neu1_*`), SPEC-313 (quests de lore). Usa `cards.is_neutral` da SPEC-355 R7 se ela já tiver pousado; senão, esta spec extrai o predicado (R1) e quem pousar em segundo resolve o conflito trivial.
