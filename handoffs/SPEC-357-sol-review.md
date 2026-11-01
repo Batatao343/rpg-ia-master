@@ -1,7 +1,7 @@
 # SPEC-357 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `a34c5f30`: 1 P1 novo na compra por texto; demais achados resolvidos)
-> **Revisor:** Opus / Sol · **Data:** 2026-10-28 (re-revisão 2026-11-01) · **Commits revisados:** `a6c9e037`, depois `bd3ad373..a34c5f30`
+> **Veredito:** `CHANGES_REQUIRED` (3º passe, `c6e1de52`: só o P1-2 segue aberto — a lista de dúvidas continua vazando; demais achados resolvidos e rebase ok)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-28 (re-revisões 2026-11-01) · **Commits revisados:** `a6c9e037` → `a34c5f30` → `c6e1de52` (rebaseado na main)
 
 ## Escopo
 
@@ -72,15 +72,35 @@ Re-revisão de `bd3ad373..a34c5f30` (5 commits):
 |---|---|---|---|---|
 | P1-2 | P1 | `agents/loot.py:377-383` | A lista de palavras de dúvida não cobre negação com "nem", ironia nem adiamento, e o "afirmativo" aceita `compro` em qualquer posição. Sondagem (MockLLM, Brekmar, 500 de ouro; teste descartável) — **compram e debitam**: "Nem pensar que eu compro o X.", "Até parece que eu compro o X.", "Nem a pau compro o X.", "Amanhã eu compro o X.", "Compro o X depois, agora só olho.". Seguras (pedem confirmação ou caem no fluxo de itens): "Desisto de comprar…", "Se eu comprar o X, …?", "Caso eu compre…", "como se eu fosse comprar…", "Ele compra…", "Pensei em comprar…", "não vou comprar…", "Compro o X e o Y." (duas cartas → `match_offer` None). Gasto de ouro irreversível numa recusa explícita. | Trocar a lista negra por âncora: comprar só se a frase **começa** (após `eu`/`entao`/pontuação) por `compro|adquiro|quero comprar|vou comprar|levo` **e** não tem `nem|parece|depois|amanha|mais tarde|outra hora` + as palavras atuais. Parametrizar `test_text_buy_requires_unambiguous_intent` com as 5 frases acima (esperado: sem débito). |
 
+### 3º passe (`0f2f9a47` + rebase `c6e1de52`)
+
+O P1-2 corrigido exige o verbo no início da frase e acrescentou `nem/parece/depois/amanha/mais tarde`;
+as 5 frases do 2º passe agora estão seguras. Sondagem nova (teste descartável, mesmo cenário):
+**continuam comprando e debitando**:
+- "Eu compro o X... mentira, deixa pra lá."
+- "Ok, compro o X. Brincadeira."
+- "Compro o X quando eu tiver mais ouro."
+- "Compro o X na próxima visita."
+- "Compro o X, ou melhor, desisto."
+- "Quero comprar o X mas vou pensar."
+
+Seguras: "Compro o X hoje não.", "Nem pensar que eu compro o X."; compras legítimas mantidas:
+"Oi, compro o X.", "Eu compro o X!".
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-2 (reaberto) | P1 | `agents/loot.py:380-388` | A lista negra de palavras de dúvida sempre vai vazar: qualquer oração depois do nome (retratação, condição, adiamento) passa, e o ouro sai sem volta. | Inverter para lista **branca da frase inteira**: comprar só se o texto normalizado (sem pontuação) casar `^<saudação>* (eu)? (compro\|adquiro\|quero comprar\|vou comprar\|levo) (o\|a\|um\|uma)? <nome da Carta> (por favor\|agora\|entao\|mesmo)?$`. Qualquer resto → mensagem de confirmação sem cobrança (o caminho que já existe). Acrescentar as 6 frases acima ao teste parametrizado (esperado: sem débito) e manter as 2 legítimas. |
+
+**Rebase conferido:** a branch contém a `main` (`merge-base --is-ancestor` ok); `services/cards.py`
+sem diff contra a `main` (usa o `is_neutral` da SPEC-355, 1 definição só);
+`card_rewards._pools` usa `neutral_eligible` (que chama `cards.is_neutral` + `regiao_exclusiva` +
+`_eligible`, mesma semântica da main); `workspace.css` só acrescenta `.loja__price` no fim, sem
+marcador de conflito.
+
 ## Pendências
 
-- Executor corrige P1-2; re-revisão Sol só desse diff (o resto está aprovado).
-- **Pouso (coordenador):** `git merge-tree main spec-357` hoje dá conflito textual em
-  `services/card_rewards.py` (`_pools`: main com o predicado em linha × branch com
-  `neutral_eligible` → ficar com `neutral_eligible`) e `web/src/workspace.css` (fim do arquivo,
-  manter os dois blocos). `services/cards.py` **auto-mescla sem conflito com `def is_neutral`
-  duplicada** (linhas 150 e 301 do resultado; os corpos são idênticos) → apagar a cópia da 357
-  (`:150`); `test_is_neutral_defined_once` falha se esquecerem.
+- Executor fecha o P1-2 com a lista branca da frase inteira; re-revisão Sol só desse diff (o resto está aprovado).
+- Pouso: o rebase já foi feito e conferido (ver 3º passe); o conflito textual era só o `workspace.css`.
 - Smoke §6 com LLM real (Etapa 7) ainda pendente.
 
 ## Comandos rodados
@@ -97,4 +117,9 @@ pytest (sem -n) tests/test_card_shop_api.py -k "db_profile or round_trip" → 2 
 teste descartável de 15 frases na compra por texto → 5 compram indevidamente (P1-2)
 RPG_E2E_PORT=5121 npx playwright test card-shop-357 --workers=1 → 5 passed (RAM 3,0 GB)
 git merge-tree --write-tree main spec-357 → conflitos card_rewards.py e workspace.css; cards.py com is_neutral 2x
+# 3º passe (c6e1de52, rebaseado)
+pytest -n 2 (mesmos 5 arquivos, -k "not db_profile") → 78 passed
+pytest (sem -n) tests/test_card_shop_api.py -k db_profile → 1 passed
+teste descartável de 10 frases novas → 6 compram indevidamente (P1-2 reaberto)
+RPG_E2E_PORT=5121 npx playwright test card-shop-357 --workers=1 → 5 passed (RAM 3,2 GB)
 ```
