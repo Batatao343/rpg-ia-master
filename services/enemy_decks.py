@@ -449,20 +449,58 @@ def check_promises(
             continue
         planned = plan(actor, rnd) or {}
         if planned.get("assinatura") == promise.get("carta"):
-            continue  # cumprida
-        if int(actor.get("fase_idx", 0) or 0) != int(promise.get("fase_idx", 0) or 0):
-            motivo = "troca_de_fase"
-        elif _badly_wounded(actor):
-            motivo = "muito_ferido"
-        else:
-            motivo = "impossivel"
-        out.setdefault("pressagios_frustrados", []).append(
-            {"actor_id": key, "tipo": "assinatura", "motivo": motivo}
-        )
-        nome = str(actor.get("name") or key)
-        out.setdefault("logs", []).append(
-            f"{nome} abandona o golpe que preparava: {_FRUSTRACAO_LINHA[motivo]}."
-        )
+            # o plano ainda manda jogar: a promessa só é "cumprida" pela jogada EFETIVA
+            # (`note_declaration`); sem ela, `close_promises` frustra no fim da rodada.
+            promises[key] = {**promise, "aguarda": True}
+            continue
+        _frustrate_promise(out, key, actor, promise)
+
+
+def _frustrate_promise(out: dict, key: str, actor: dict, promise: dict) -> None:
+    if int(actor.get("fase_idx", 0) or 0) != int(promise.get("fase_idx", 0) or 0):
+        motivo = "troca_de_fase"
+    elif _badly_wounded(actor):
+        motivo = "muito_ferido"
+    else:
+        motivo = "impossivel"
+    out.setdefault("pressagios_frustrados", []).append(
+        {"actor_id": key, "tipo": "assinatura", "motivo": motivo}
+    )
+    nome = str(actor.get("name") or key)
+    out.setdefault("logs", []).append(
+        f"{nome} abandona o golpe que preparava: {_FRUSTRACAO_LINHA[motivo]}."
+    )
+
+
+def note_declaration(scene: dict | None, actor_id: str, card_id: str | None, rnd: int) -> None:
+    """SPEC-355 R3: a declaração efetiva do inimigo jogou a Carta prometida? Então cumpriu."""
+    promises = (scene or {}).get("prenuncios") if isinstance(scene, dict) else None
+    promise = promises.get(actor_id) if isinstance(promises, dict) else None
+    if (
+        promise
+        and promise.get("aguarda")
+        and int(promise.get("rnd", 0) or 0) == rnd
+        and card_id == promise.get("carta")
+    ):
+        del promises[actor_id]
+
+
+def close_promises(scene: dict | None, actors_by_id: dict[str, dict], rnd: int, out: dict) -> None:
+    """Fim da rodada ``rnd``: promessa que o plano mantinha mas o inimigo não jogou é frustrada."""
+    promises = scene.get("prenuncios") if isinstance(scene, dict) else None
+    if not isinstance(promises, dict):
+        return
+    for key in list(promises):
+        promise = promises[key]
+        if not promise.get("aguarda") or int(promise.get("rnd", 0) or 0) != rnd:
+            continue
+        del promises[key]
+        actor = actors_by_id.get(key)
+        if not actor or actor.get("dead") or actor.get("fled"):
+            continue
+        if any(f.get("actor_id") == key for f in out.get("pressagios_frustrados") or []):
+            continue  # o orquestrador já registrou a queda deste inimigo nesta rodada
+        _frustrate_promise(out, key, actor, promise)
 
 
 def card_pool_kinds(slot: str) -> frozenset[str] | None:

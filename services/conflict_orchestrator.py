@@ -2714,6 +2714,16 @@ def _run_round(
         return swap(decl), new
 
     def _enemy_decl(actor_id: str, actor: dict):
+        decl = _enemy_decl_inner(actor_id, actor)
+        _edk_mod.note_declaration(  # SPEC-355 R3: cumprida pela jogada efetiva
+            scene,
+            actor_id,
+            getattr(getattr(decl, "acao", None), "card_id", None),
+            cs.tactical_round(scene),
+        )
+        return decl
+
+    def _enemy_decl_inner(actor_id: str, actor: dict):
         def late():
             return enemy_declaration(
                 scene, actor_id, actors_by_id, sides, scene_state=scene_state, rng=rng
@@ -2965,6 +2975,7 @@ def _run_round(
 
     # SPEC-332 P2-1/P2-2: fase de chefe no FIM da rodada (depois do dano), para o presságio da
     # rodada seguinte já nascer na fase nova; sem Presságio `on` o aviso da assinatura vai ao log.
+    _edk_mod.close_promises(scene, actors_by_id, cs.tactical_round(scene), out)  # SPEC-355 R3
     _edk_mod.apply_phases(actors_by_id, sides, out, cs.tactical_round(scene))
     if _edk_mod.active() and ei.mode() != "on":
         for _eid in sides.get("enemy", []):

@@ -97,3 +97,23 @@ def test_prenuncios_live_in_scene_not_actor(monkeypatch):
     edk.record_promise(scene, e, 2)
     assert "prenuncios" in scene
     assert "prenuncios" not in e and not any("prenuncio" in k for k in e)
+
+
+def test_promise_not_played_is_frustrated_by_the_effective_declaration(monkeypatch):
+    """O plano manda jogar a assinatura, mas a declaração real é um ataque básico."""
+    e, scene, actors, sides = _boss(monkeypatch)
+    edk.record_promise(scene, e, 2)
+    real = orch.enemy_declaration
+    monkeypatch.setattr(
+        orch,
+        "enemy_declaration",
+        lambda sc, aid, *a, **k: ct.TurnDeclaration(
+            actor_id=aid, acao=ct.TurnStep(kind="attack", target_id="player")
+        ),
+    )
+    out = _round(scene, actors, sides, 2)
+    assert [f["motivo"] for f in out["pressagios_frustrados"] if f["tipo"] == "assinatura"] == [
+        "impossivel"
+    ]
+    assert any("abandona o golpe" in ln for ln in out["logs"])
+    assert real is not None
