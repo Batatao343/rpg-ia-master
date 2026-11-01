@@ -170,3 +170,19 @@ def test_validator_warns_caster_without_spell(tmp_path):
     ]
     assert [f.entity_id for f in msgs] == ["mon_x"]
     assert msgs[0].severity == "warning"
+
+
+def test_condition_label_swap_respects_word_boundaries_and_prose():
+    def rule(condicao: str) -> str:
+        card = {
+            "id": "z",
+            "name": "Z",
+            "tipo": "ativa",
+            "efeito": {"kind": "aplicar_condicao", "condicao": condicao},
+        }
+        return card_text.effective_rule_text(None, card)
+
+    assert "Armadura Comprometida" in rule("armadura_comprometida")
+    # chave colada em outra palavra não é trocada; prosa comum ("sangrando") nunca é tocada
+    assert "xarmadura_comprometidax" in rule("xarmadura_comprometidax")
+    assert "Sangrando" not in rule("sangrando").replace("Aplica Sangrando", "")

@@ -32,8 +32,10 @@ def effective_rule_text(
         return f"Fora de combate: {hint}." if hint else fx.render_card_text(card)
     text = fx.render_card_text(card)
     for raw in fx._CONDICAO_LABEL_EXTRA:  # SPEC-355 R8: nunca expor a chave crua na mao
-        if raw in text:
-            text = text.replace(raw, fx.condition_label(raw))
+        if "_" in raw:  # só chaves técnicas (com "_"): prosa comum ("fica sangrando") não é tocada
+            text = re.sub(
+                rf"(?<![A-Za-z0-9_]){re.escape(raw)}(?![A-Za-z0-9_])", fx.condition_label(raw), text
+            )
     if kind == "taunt":  # R39a: o texto estático promete mais do que o motor cumpre (presságio)
         text = text.replace(
             "ele precisa atacar você", "a partir da próxima intenção, ele tende a atacar você"
