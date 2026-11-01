@@ -60,6 +60,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "campaign.world_replan_trigger": ("cause",),
     "campaign_manager.fallback": (),
     "card_draft.fallback": (),
+    "card_shop.fallback": (),
     "cards.card_exhausted": ("card_id",),
     "cards.card_offered": ("card_id", "picked", "source"),
     "cards.card_picked": ("card_id", "source"),
