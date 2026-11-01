@@ -1,5 +1,5 @@
 {
-  "commit_sha": "2030bef023f1f6030055689afd780ddba2270a49",
+  "commit_sha": "f1ff95ddf460cd348cffebb56a49463e896d1d46",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -174664,7 +174664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 194
+        "line": 196
       },
       "source": "module:tests.test_spec298_economia_keeper",
       "target": "symbol:tests.test_spec298_economia_keeper._raw",
@@ -174719,7 +174719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 169
+        "line": 171
       },
       "source": "module:tests.test_spec298_economia_keeper",
       "target": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
@@ -174763,7 +174763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 204
+        "line": 206
       },
       "source": "module:tests.test_spec298_economia_keeper",
       "target": "symbol:tests.test_spec298_economia_keeper.test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load",
@@ -174807,7 +174807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 156
+        "line": 158
       },
       "source": "module:tests.test_spec298_economia_keeper",
       "target": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
@@ -204914,7 +204914,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 202
+        "line": 207
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._edges",
@@ -204925,7 +204925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 206
+        "line": 211
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._entity_ids",
@@ -204958,7 +204958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 47
+        "line": 49
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
@@ -204969,7 +204969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 424
+        "line": 464
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._lore_seeds",
@@ -204980,7 +204980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 393
+        "line": 433
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._new_docs_text",
@@ -205002,7 +205002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 51
+        "line": 53
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon._public_with",
@@ -205013,7 +205013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 252
+        "line": 265
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_autoria_declares_mundo_vivo_canon",
@@ -205024,7 +205024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 146
+        "line": 148
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
@@ -205035,7 +205035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 229
+        "line": 242
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_cidades_keep_living_leader_when_aerwen_dies",
@@ -205046,7 +205046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 257
+        "line": 270
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_delivery_route_uses_vorr_ingot",
@@ -205057,7 +205057,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 307
+        "line": 320
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_each_expansion_has_canonical_text",
@@ -205068,7 +205068,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 193
+        "line": 198
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden",
@@ -205079,7 +205079,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 58
+        "line": 60
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_era7_public_anchor_has_dates_and_no_hidden_dates",
@@ -205090,7 +205090,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 434
+        "line": 474
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_false_ratio_in_range",
@@ -205101,7 +205101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 448
+        "line": 488
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
@@ -205112,7 +205112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 321
+        "line": 334
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_forja_text_does_not_explain_orcs",
@@ -205123,7 +205123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 212
+        "line": 217
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_graph_new_leads_and_located_in",
@@ -205134,7 +205134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 429
+        "line": 469
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_guardian_rumor_true",
@@ -205145,7 +205145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 80
+        "line": 82
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_hidden_chronology_block",
@@ -205156,7 +205156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 187
+        "line": 192
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_kahen_title_arbitro",
@@ -205167,7 +205167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 465
+        "line": 505
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_new_rumor_seeds_enabled_with_regions",
@@ -205178,7 +205178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 404
+        "line": 444
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_new_texts_no_forbidden_lexicon",
@@ -205189,7 +205189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 99
+        "line": 101
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
@@ -205200,7 +205200,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 441
+        "line": 481
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
@@ -205211,7 +205211,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 121
+        "line": 123
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
@@ -205222,7 +205222,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 135
+        "line": 137
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_plague_chain_present",
@@ -205233,7 +205233,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 341
+        "line": 354
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
@@ -205244,7 +205244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 357
+        "line": 370
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_posturas_masters_are_graph_npcs",
@@ -205255,7 +205255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 373
+        "line": 395
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms",
@@ -205266,7 +205266,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 312
+        "line": 325
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
@@ -205277,7 +205277,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 245
+        "line": 258
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_quebrados_faction_public_without_diary",
@@ -205288,7 +205288,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 475
+        "line": 515
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_rumor_seeds_generator_check_is_green",
@@ -205299,7 +205299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 266
+        "line": 279
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
@@ -205310,7 +205310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 160
+        "line": 165
       },
       "source": "module:tests.test_spec348_canon",
       "target": "symbol:tests.test_spec348_canon.test_world_fixes_present",
@@ -511858,7 +511858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 180
+        "line": 182
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
       "target": "symbol:services.economy.execute_trade",
@@ -511869,7 +511869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 191
+        "line": 193
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
       "target": "symbol:services.economy.execute_trade",
@@ -511880,7 +511880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 184
+        "line": 186
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
       "target": "symbol:tests.test_spec298_economia_keeper._raw",
@@ -511891,7 +511891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 177
+        "line": 179
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
       "target": "symbol:tests.test_spec298_economia_keeper._state",
@@ -511990,42 +511990,31 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 149
-      },
-      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
-      "target": "symbol:services.economy.merchant_stock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec298_economia_keeper.py",
-        "line": 152
-      },
-      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
-      "target": "symbol:services.economy.merchant_stock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec298_economia_keeper.py",
-        "line": 148
-      },
-      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
-      "target": "symbol:tests.test_spec298_economia_keeper._with_keeper",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec298_economia_keeper.py",
         "line": 151
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
+      "target": "symbol:services.economy.merchant_stock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec298_economia_keeper.py",
+        "line": 154
+      },
+      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
+      "target": "symbol:services.economy.merchant_stock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec298_economia_keeper.py",
+        "line": 150
+      },
+      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
       "target": "symbol:tests.test_spec298_economia_keeper._with_keeper",
       "type": "calls"
     },
@@ -512034,7 +512023,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 228
+        "line": 153
+      },
+      "source": "symbol:tests.test_spec298_economia_keeper.test_keeper_hostil_esconde_raro",
+      "target": "symbol:tests.test_spec298_economia_keeper._with_keeper",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec298_economia_keeper.py",
+        "line": 230
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load",
       "target": "symbol:tests.test_spec298_economia_keeper._raw",
@@ -512045,7 +512045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 211
+        "line": 213
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load",
       "target": "symbol:tests.test_spec298_economia_keeper._state",
@@ -512210,7 +512210,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 162
+        "line": 164
+      },
+      "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
+      "target": "symbol:services.economy.execute_trade",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec298_economia_keeper.py",
+        "line": 168
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "target": "symbol:services.economy.execute_trade",
@@ -512224,17 +512235,6 @@
         "line": 166
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
-      "target": "symbol:services.economy.execute_trade",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec298_economia_keeper.py",
-        "line": 164
-      },
-      "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "target": "symbol:services.economy.trade_reason_code",
       "type": "calls"
     },
@@ -512243,7 +512243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 159
+        "line": 161
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "target": "symbol:services.reputation.find_keeper",
@@ -512254,7 +512254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 157
+        "line": 159
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "target": "symbol:tests.test_spec298_economia_keeper._state",
@@ -512265,7 +512265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec298_economia_keeper.py",
-        "line": 158
+        "line": 160
       },
       "source": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "target": "symbol:tests.test_spec298_economia_keeper._visit",
@@ -589331,7 +589331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 203
+        "line": 208
       },
       "source": "symbol:tests.test_spec348_canon._edges",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589342,7 +589342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 207
+        "line": 212
       },
       "source": "symbol:tests.test_spec348_canon._entity_ids",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589353,7 +589353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 208
+        "line": 213
       },
       "source": "symbol:tests.test_spec348_canon._entity_ids",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589386,7 +589386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 48
+        "line": 50
       },
       "source": "symbol:tests.test_spec348_canon._hidden_with",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589397,7 +589397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 48
+        "line": 50
       },
       "source": "symbol:tests.test_spec348_canon._hidden_with",
       "target": "symbol:tests.spec348_helpers.hidden_docs",
@@ -589408,7 +589408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 425
+        "line": 465
       },
       "source": "symbol:tests.test_spec348_canon._lore_seeds",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589419,7 +589419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 395
+        "line": 435
       },
       "source": "symbol:tests.test_spec348_canon._new_docs_text",
       "target": "symbol:tests.spec348_helpers.codex_docs",
@@ -589430,7 +589430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 399
+        "line": 439
       },
       "source": "symbol:tests.test_spec348_canon._new_docs_text",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589441,7 +589441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 44
+        "line": 45
       },
       "source": "symbol:tests.test_spec348_canon._public_text",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -589452,7 +589452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 52
+        "line": 54
       },
       "source": "symbol:tests.test_spec348_canon._public_with",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589463,7 +589463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 52
+        "line": 54
       },
       "source": "symbol:tests.test_spec348_canon._public_with",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -589474,7 +589474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 253
+        "line": 266
       },
       "source": "symbol:tests.test_spec348_canon.test_autoria_declares_mundo_vivo_canon",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589485,7 +589485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 147
+        "line": 149
       },
       "source": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589496,7 +589496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 150
+        "line": 152
       },
       "source": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -589507,7 +589507,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 153
+        "line": 156
       },
       "source": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -589518,7 +589518,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 258
+        "line": 157
+      },
+      "source": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
+      "target": "symbol:tests.test_spec348_canon._public_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec348_canon.py",
+        "line": 271
       },
       "source": "symbol:tests.test_spec348_canon.test_delivery_route_uses_vorr_ingot",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589529,7 +589540,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 262
+        "line": 275
       },
       "source": "symbol:tests.test_spec348_canon.test_delivery_route_uses_vorr_ingot",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589540,7 +589551,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 308
+        "line": 321
       },
       "source": "symbol:tests.test_spec348_canon.test_each_expansion_has_canonical_text",
       "target": "symbol:tests.spec348_helpers.hidden_docs",
@@ -589551,7 +589562,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 308
+        "line": 321
       },
       "source": "symbol:tests.test_spec348_canon.test_each_expansion_has_canonical_text",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -589562,7 +589573,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 196
+        "line": 201
       },
       "source": "symbol:tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
@@ -589573,7 +589584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 194
+        "line": 199
       },
       "source": "symbol:tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -589584,7 +589595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 195
+        "line": 200
       },
       "source": "symbol:tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden",
       "target": "symbol:tests.test_spec348_canon._public_with",
@@ -589595,7 +589606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 59
+        "line": 61
       },
       "source": "symbol:tests.test_spec348_canon.test_era7_public_anchor_has_dates_and_no_hidden_dates",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -589606,7 +589617,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 77
+        "line": 79
       },
       "source": "symbol:tests.test_spec348_canon.test_era7_public_anchor_has_dates_and_no_hidden_dates",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -589617,7 +589628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 435
+        "line": 475
       },
       "source": "symbol:tests.test_spec348_canon.test_false_ratio_in_range",
       "target": "symbol:tests.test_spec348_canon._lore_seeds",
@@ -589628,7 +589639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 459
+        "line": 499
       },
       "source": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589639,7 +589650,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 460
+        "line": 500
       },
       "source": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589650,7 +589661,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 449
+        "line": 489
       },
       "source": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589661,7 +589672,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 453
+        "line": 493
       },
       "source": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589672,7 +589683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 326
+        "line": 339
       },
       "source": "symbol:tests.test_spec348_canon.test_forja_text_does_not_explain_orcs",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -589683,7 +589694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 322
+        "line": 335
       },
       "source": "symbol:tests.test_spec348_canon.test_forja_text_does_not_explain_orcs",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589694,7 +589705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 322
+        "line": 335
       },
       "source": "symbol:tests.test_spec348_canon.test_forja_text_does_not_explain_orcs",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589705,7 +589716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 213
+        "line": 218
       },
       "source": "symbol:tests.test_spec348_canon.test_graph_new_leads_and_located_in",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -589716,7 +589727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 214
+        "line": 219
       },
       "source": "symbol:tests.test_spec348_canon.test_graph_new_leads_and_located_in",
       "target": "symbol:tests.test_spec348_canon._edges",
@@ -589727,7 +589738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 221
+        "line": 234
       },
       "source": "symbol:tests.test_spec348_canon.test_graph_new_leads_and_located_in",
       "target": "symbol:tests.test_spec348_canon._entity_ids",
@@ -589738,7 +589749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 430
+        "line": 470
       },
       "source": "symbol:tests.test_spec348_canon.test_guardian_rumor_true",
       "target": "symbol:tests.test_spec348_canon._lore_seeds",
@@ -589749,7 +589760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 83
+        "line": 85
       },
       "source": "symbol:tests.test_spec348_canon.test_hidden_chronology_block",
       "target": "symbol:tests.spec348_helpers.hidden_docs",
@@ -589760,7 +589771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 188
+        "line": 193
       },
       "source": "symbol:tests.test_spec348_canon.test_kahen_title_arbitro",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -589771,7 +589782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 190
+        "line": 195
       },
       "source": "symbol:tests.test_spec348_canon.test_kahen_title_arbitro",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -589782,7 +589793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 466
+        "line": 506
       },
       "source": "symbol:tests.test_spec348_canon.test_new_rumor_seeds_enabled_with_regions",
       "target": "symbol:tests.test_spec348_canon._lore_seeds",
@@ -589793,7 +589804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 407
+        "line": 447
       },
       "source": "symbol:tests.test_spec348_canon.test_new_texts_no_forbidden_lexicon",
       "target": "symbol:tests.test_spec348_canon._has_forbidden",
@@ -589804,21 +589815,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 405
+        "line": 445
       },
       "source": "symbol:tests.test_spec348_canon.test_new_texts_no_forbidden_lexicon",
       "target": "symbol:tests.test_spec348_canon._new_docs_text",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec348_canon.py",
-        "line": 100
-      },
-      "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
-      "target": "symbol:tests.spec348_helpers.fold",
       "type": "calls"
     },
     {
@@ -589837,7 +589837,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 106
+        "line": 104
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589848,7 +589848,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 109
+        "line": 108
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589859,7 +589859,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 110
+        "line": 111
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589870,18 +589870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 116
-      },
-      "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
-      "target": "symbol:tests.spec348_helpers.fold",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec348_canon.py",
-        "line": 117
+        "line": 112
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589903,7 +589892,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 100
+        "line": 119
+      },
+      "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
+      "target": "symbol:tests.spec348_helpers.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec348_canon.py",
+        "line": 120
+      },
+      "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
+      "target": "symbol:tests.spec348_helpers.fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec348_canon.py",
+        "line": 102
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589914,7 +589925,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 101
+        "line": 103
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589925,7 +589936,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 106
+        "line": 108
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589936,7 +589947,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 109
+        "line": 111
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589947,7 +589958,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 110
+        "line": 112
       },
       "source": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589958,7 +589969,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 443
+        "line": 483
       },
       "source": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589969,7 +589980,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 444
+        "line": 484
       },
       "source": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -589980,7 +589991,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 444
+        "line": 484
       },
       "source": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -589991,7 +590002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 442
+        "line": 482
       },
       "source": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "target": "symbol:tests.test_spec348_canon._lore_seeds",
@@ -590002,7 +590013,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 445
+        "line": 485
       },
       "source": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -590013,7 +590024,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 127
+        "line": 129
       },
       "source": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -590024,7 +590035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 129
+        "line": 131
       },
       "source": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
       "target": "symbol:tests.spec348_helpers.hidden_docs",
@@ -590035,7 +590046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 127
+        "line": 129
       },
       "source": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
       "target": "symbol:tests.spec348_helpers.public_docs",
@@ -590046,31 +590057,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 122
+        "line": 124
       },
       "source": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
-      "target": "symbol:tests.test_spec348_canon._hidden_with",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec348_canon.py",
-        "line": 140
-      },
-      "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
-      "target": "symbol:tests.spec348_helpers.hidden_docs",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec348_canon.py",
-        "line": 138
-      },
-      "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
       "type": "calls"
     },
@@ -590082,6 +590071,17 @@
         "line": 142
       },
       "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
+      "target": "symbol:tests.spec348_helpers.hidden_docs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec348_canon.py",
+        "line": 140
+      },
+      "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
       "type": "calls"
     },
@@ -590090,7 +590090,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 136
+        "line": 144
+      },
+      "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
+      "target": "symbol:tests.test_spec348_canon._hidden_with",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec348_canon.py",
+        "line": 138
       },
       "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -590101,7 +590112,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 139
+        "line": 141
       },
       "source": "symbol:tests.test_spec348_canon.test_plague_chain_present",
       "target": "symbol:tests.test_spec348_canon._public_with",
@@ -590112,7 +590123,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 342
+        "line": 355
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590123,7 +590134,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 350
+        "line": 363
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590134,7 +590145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 348
+        "line": 361
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -590145,7 +590156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 351
+        "line": 364
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -590156,7 +590167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 344
+        "line": 357
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590167,7 +590178,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 358
+        "line": 371
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_masters_are_graph_npcs",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590178,7 +590189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 359
+        "line": 372
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_masters_are_graph_npcs",
       "target": "symbol:tests.test_spec348_canon._edges",
@@ -590189,7 +590200,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 365
+        "line": 378
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_masters_are_graph_npcs",
       "target": "symbol:tests.test_spec348_canon._entity_ids",
@@ -590200,7 +590211,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 374
+        "line": 396
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590211,7 +590222,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 376
+        "line": 398
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -590222,7 +590233,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 377
+        "line": 399
       },
       "source": "symbol:tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms",
       "target": "symbol:tests.test_spec348_canon._has_forbidden",
@@ -590233,7 +590244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 315
+        "line": 328
       },
       "source": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590244,7 +590255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 316
+        "line": 329
       },
       "source": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590255,7 +590266,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 317
+        "line": 330
       },
       "source": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590266,7 +590277,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 318
+        "line": 331
       },
       "source": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590277,7 +590288,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 313
+        "line": 326
       },
       "source": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -590288,7 +590299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 246
+        "line": 259
       },
       "source": "symbol:tests.test_spec348_canon.test_quebrados_faction_public_without_diary",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590299,7 +590310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 249
+        "line": 262
       },
       "source": "symbol:tests.test_spec348_canon.test_quebrados_faction_public_without_diary",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
@@ -590310,7 +590321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 267
+        "line": 280
       },
       "source": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590321,7 +590332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 269
+        "line": 282
       },
       "source": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590332,7 +590343,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 272
+        "line": 285
       },
       "source": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590343,7 +590354,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 277
+        "line": 290
       },
       "source": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
       "target": "symbol:tests.spec348_helpers.load_json",
@@ -590354,7 +590365,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 163
+        "line": 168
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.spec348_helpers.doc",
@@ -590365,7 +590376,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 174
+        "line": 179
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.spec348_helpers.fold",
@@ -590376,7 +590387,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 174
+        "line": 179
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.spec348_helpers.lore_text",
@@ -590387,7 +590398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 171
+        "line": 176
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
@@ -590398,7 +590409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 177
+        "line": 182
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.test_spec348_canon._hidden_with",
@@ -590409,7 +590420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 161
+        "line": 166
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.test_spec348_canon._public_text",
@@ -590420,7 +590431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec348_canon.py",
-        "line": 178
+        "line": 183
       },
       "source": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "target": "symbol:tests.test_spec348_canon._public_with",
@@ -721214,7 +721225,7 @@
     {
       "id": "symbol:tests.test_spec298_economia_keeper._raw",
       "kind": "test",
-      "line": 194,
+      "line": 196,
       "path": "tests/test_spec298_economia_keeper.py",
       "qualified_name": "tests.test_spec298_economia_keeper._raw"
     },
@@ -721249,7 +721260,7 @@
     {
       "id": "symbol:tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save",
       "kind": "test",
-      "line": 169,
+      "line": 171,
       "path": "tests/test_spec298_economia_keeper.py",
       "qualified_name": "tests.test_spec298_economia_keeper.test_compra_persiste_keeper_no_update_do_no_e_no_save"
     },
@@ -721277,7 +721288,7 @@
     {
       "id": "symbol:tests.test_spec298_economia_keeper.test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load",
       "kind": "test",
-      "line": 204,
+      "line": 206,
       "path": "tests/test_spec298_economia_keeper.py",
       "qualified_name": "tests.test_spec298_economia_keeper.test_loot_node_real_devolve_npcs_e_sobrevive_ao_save_load"
     },
@@ -721305,7 +721316,7 @@
     {
       "id": "symbol:tests.test_spec298_economia_keeper.test_recusa_comercio_codigo",
       "kind": "test",
-      "line": 156,
+      "line": 158,
       "path": "tests/test_spec298_economia_keeper.py",
       "qualified_name": "tests.test_spec298_economia_keeper.test_recusa_comercio_codigo"
     },
@@ -738056,14 +738067,14 @@
     {
       "id": "symbol:tests.test_spec348_canon._edges",
       "kind": "test",
-      "line": 202,
+      "line": 207,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._edges"
     },
     {
       "id": "symbol:tests.test_spec348_canon._entity_ids",
       "kind": "test",
-      "line": 206,
+      "line": 211,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._entity_ids"
     },
@@ -738084,21 +738095,21 @@
     {
       "id": "symbol:tests.test_spec348_canon._hidden_with",
       "kind": "test",
-      "line": 47,
+      "line": 49,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._hidden_with"
     },
     {
       "id": "symbol:tests.test_spec348_canon._lore_seeds",
       "kind": "test",
-      "line": 424,
+      "line": 464,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._lore_seeds"
     },
     {
       "id": "symbol:tests.test_spec348_canon._new_docs_text",
       "kind": "test",
-      "line": 393,
+      "line": 433,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._new_docs_text"
     },
@@ -738112,203 +738123,203 @@
     {
       "id": "symbol:tests.test_spec348_canon._public_with",
       "kind": "test",
-      "line": 51,
+      "line": 53,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon._public_with"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_autoria_declares_mundo_vivo_canon",
       "kind": "test",
-      "line": 252,
+      "line": 265,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_autoria_declares_mundo_vivo_canon"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained",
       "kind": "test",
-      "line": 146,
+      "line": 148,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_calendar_year_base_and_protocol_explained"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_cidades_keep_living_leader_when_aerwen_dies",
       "kind": "test",
-      "line": 229,
+      "line": 242,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_cidades_keep_living_leader_when_aerwen_dies"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_delivery_route_uses_vorr_ingot",
       "kind": "test",
-      "line": 257,
+      "line": 270,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_delivery_route_uses_vorr_ingot"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_each_expansion_has_canonical_text",
       "kind": "test",
-      "line": 307,
+      "line": 320,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_each_expansion_has_canonical_text"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden",
       "kind": "test",
-      "line": 193,
+      "line": 198,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_elaryin_official_version_public_real_cause_hidden"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_era7_public_anchor_has_dates_and_no_hidden_dates",
       "kind": "test",
-      "line": 58,
+      "line": 60,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_era7_public_anchor_has_dates_and_no_hidden_dates"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_false_ratio_in_range",
       "kind": "test",
-      "line": 434,
+      "line": 474,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_false_ratio_in_range"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_festivals_named_and_approved",
       "kind": "test",
-      "line": 448,
+      "line": 488,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_festivals_named_and_approved"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_forja_text_does_not_explain_orcs",
       "kind": "test",
-      "line": 321,
+      "line": 334,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_forja_text_does_not_explain_orcs"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_graph_new_leads_and_located_in",
       "kind": "test",
-      "line": 212,
+      "line": 217,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_graph_new_leads_and_located_in"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_guardian_rumor_true",
       "kind": "test",
-      "line": 429,
+      "line": 469,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_guardian_rumor_true"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_hidden_chronology_block",
       "kind": "test",
-      "line": 80,
+      "line": 82,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_hidden_chronology_block"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_kahen_title_arbitro",
       "kind": "test",
-      "line": 187,
+      "line": 192,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_kahen_title_arbitro"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_new_rumor_seeds_enabled_with_regions",
       "kind": "test",
-      "line": 465,
+      "line": 505,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_new_rumor_seeds_enabled_with_regions"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_new_texts_no_forbidden_lexicon",
       "kind": "test",
-      "line": 404,
+      "line": 444,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_new_texts_no_forbidden_lexicon"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova",
       "kind": "test",
-      "line": 99,
+      "line": 101,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_no_stale_phrases_in_lore_nova"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti",
       "kind": "test",
-      "line": 441,
+      "line": 481,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_ophidia_seed_west_and_no_yuan_ti"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version",
       "kind": "test",
-      "line": 121,
+      "line": 123,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_pact_story_is_hidden_and_single_version"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_plague_chain_present",
       "kind": "test",
-      "line": 135,
+      "line": 137,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_plague_chain_present"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete",
       "kind": "test",
-      "line": 341,
+      "line": 354,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_posturas_doc_curated_public_and_complete"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_posturas_masters_are_graph_npcs",
       "kind": "test",
-      "line": 357,
+      "line": 370,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_posturas_masters_are_graph_npcs"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms",
       "kind": "test",
-      "line": 373,
+      "line": 395,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_posturas_no_mechanics_no_forbidden_terms"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_public_sides_of_expansions",
       "kind": "test",
-      "line": 312,
+      "line": 325,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_public_sides_of_expansions"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_quebrados_faction_public_without_diary",
       "kind": "test",
-      "line": 245,
+      "line": 258,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_quebrados_faction_public_without_diary"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_rumor_seeds_generator_check_is_green",
       "kind": "test",
-      "line": 475,
+      "line": 515,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_rumor_seeds_generator_check_is_green"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable",
       "kind": "test",
-      "line": 266,
+      "line": 279,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_vorr_route_is_fulfillable_and_profitable"
     },
     {
       "id": "symbol:tests.test_spec348_canon.test_world_fixes_present",
       "kind": "test",
-      "line": 160,
+      "line": 165,
       "path": "tests/test_spec348_canon.py",
       "qualified_name": "tests.test_spec348_canon.test_world_fixes_present"
     },
@@ -744670,5 +744681,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:268f8bded7d9403a90e95d9d717f3c104bf1f49b7e3f463688a14e057ce9326f"
+  "source_tree_hash": "sha256:9b7e54abcf514a5b7402516d8467180450708a29cc4e9e3339895309e7ef631a"
 }
