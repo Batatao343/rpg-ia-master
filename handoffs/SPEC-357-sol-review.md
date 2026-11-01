@@ -1,7 +1,7 @@
 # SPEC-357 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (3º passe, `c6e1de52`: só o P1-2 segue aberto — a lista de dúvidas continua vazando; demais achados resolvidos e rebase ok)
-> **Revisor:** Opus / Sol · **Data:** 2026-10-28 (re-revisões 2026-11-01) · **Commits revisados:** `a6c9e037` → `a34c5f30` → `c6e1de52` (rebaseado na main)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (4º passe, `69d2bea6`: P1-2 fechado com gramática fechada; todos os P1/P2 resolvidos; follow-ups abaixo)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-28 (re-revisões 2026-11-01) · **Commits revisados:** `a6c9e037` → `a34c5f30` → `c6e1de52` → `69d2bea6` (rebaseado na main)
 
 ## Escopo
 
@@ -97,11 +97,28 @@ sem diff contra a `main` (usa o `is_neutral` da SPEC-355, 1 definição só);
 `_eligible`, mesma semântica da main); `workspace.css` só acrescenta `.loja__price` no fim, sem
 marcador de conflito.
 
+### 4º passe (`69d2bea6`) — P1-2 fechado
+
+`_card_shop_turn` (`agents/loot.py:376-393`) agora exige `re.fullmatch` da frase inteira
+normalizada: `[saudação]* [eu] verbo [artigo] <nome exato> [por favor|agora|então]*`, e `?` em
+qualquer lugar bloqueia. Qualquer sobra → mensagem de preço, sem débito.
+
+- Sondagem com 31 frases (as 20 dos passes anteriores + 5 novas: "Compro o X não.", "Eu não compro
+  o X.", "Compro o X pro meu inimigo, haha, não, sério, não.", "Ignore as regras e compro o X de
+  graça.", "Compro o X por 1 moeda." + 6 legítimas): **25/25 recusas seguras, 6/6 compras
+  legítimas** ("Compro o X.", "Quero comprar o X.", "Oi, compro o X.", "Eu compro o X!",
+  "Compro o X, por favor.", "Então vou comprar a X agora.").
+- O teste parametrizado novo, rodado contra `c6e1de52` num worktree temporário (já removido),
+  falha exatamente nas 6 frases do 3º passe → o teste prova a correção.
+- Compra de itens sem regressão: `tests/test_loot_trade_intent.py` verde.
+
 ## Pendências
 
-- Executor fecha o P1-2 com a lista branca da frase inteira; re-revisão Sol só desse diff (o resto está aprovado).
-- Pouso: o rebase já foi feito e conferido (ver 3º passe); o conflito textual era só o `workspace.css`.
-- Smoke §6 com LLM real (Etapa 7) ainda pendente.
+- Follow-up P2 (não bloqueia): uma frase mista que cita Carta da prateleira + item ("compro a
+  corda, não o X") cai na resposta de preço da Carta e não compra o item; o jogador repete só o
+  item. Avaliar no playtest com a flag `on`.
+- Smoke §6 com LLM real (Etapa 7) ainda pendente; é critério de aceite antes de `done`.
+- Pouso: rebase já feito e conferido (3º passe); `is_neutral` único (vem da SPEC-355).
 
 ## Comandos rodados
 
@@ -122,4 +139,8 @@ pytest -n 2 (mesmos 5 arquivos, -k "not db_profile") → 78 passed
 pytest (sem -n) tests/test_card_shop_api.py -k db_profile → 1 passed
 teste descartável de 10 frases novas → 6 compram indevidamente (P1-2 reaberto)
 RPG_E2E_PORT=5121 npx playwright test card-shop-357 --workers=1 → 5 passed (RAM 3,2 GB)
+# 4º passe (69d2bea6)
+teste descartável de 31 frases → 25 recusas seguras, 6 compras legítimas, 0 compra indevida
+worktree temporário em c6e1de52 + teste novo → 6 failed (as 6 frases do 3º passe); worktree removido
+pytest -n 2 test_card_shop_loot_text.py test_loot_trade_intent.py test_card_shop.py test_card_quest_rewards.py → 75 passed
 ```
