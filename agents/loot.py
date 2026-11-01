@@ -372,20 +372,25 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     card_id = card_shop.match_offer(work_state, folded)
     if card_id is None:
         return None
+
     # Gasto irreversível: só intenção afirmativa inequívoca compra. Negação, pergunta ou consulta
     # de preço -> responde com o preço e pede confirmação, sem debitar.
-    # A frase COMEÇA pelo verbo de compra (saudação curta e pontuação ignoradas).
-    lead = re.sub(r"[^\w\s]", " ", folded).strip()
-    affirmative = re.match(
-        r"^(?:(?:oi|ola|ei|entao|bem|certo|ok|pois|bom dia|boa tarde|boa noite)\s+)*"
-        r"(?:eu\s+)?(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)\b",
-        lead,
+    # Gramática fechada: a frase INTEIRA normalizada precisa ser
+    # [saudação curta] + [eu] + verbo de compra + [artigo] + nome exato + [por favor/agora/então].
+    # Qualquer sobra (ressalva, condição, adiamento, desistência, pergunta) -> sem débito.
+    def _plain(t: str) -> str:
+        return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", t)).strip()
+
+    name_plain = re.escape(
+        _plain(economy._fold_key((cards.get_card(card_id) or {}).get("name", "")))
     )
-    doubtful = re.search(
-        r"\b(?:nao|nem|nunca|jamais|sem|talvez|quanto|custa|preco|valor|posso|poderia|sera|se|"
-        r"parece|depois|amanha|mais tarde)\b|\?",
-        folded,
+    greet = r"(?:(?:oi|ola|ei|entao|bem|certo|ok|pois|bom dia|boa tarde|boa noite) )*"
+    verb = r"(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)"
+    tail = r"(?: (?:por favor|agora|entao))*"
+    affirmative = re.fullmatch(
+        rf"{greet}(?:eu )?{verb} (?:(?:o|a|um|uma) )?{name_plain}{tail}", _plain(folded)
     )
+    doubtful = "?" in folded
     if not affirmative or doubtful:
         merchant = economy.MERCHANTS.get(card_shop.shelf(work_state)[0] or "") or {}
         cname = (cards.get_card(card_id) or {}).get("name", card_id)
