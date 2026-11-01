@@ -1,5 +1,5 @@
 {
-  "commit_sha": "ca05630869d2ebb7ba1f1049ceb2dc71d60b731c",
+  "commit_sha": "f1ef6d31b81db8dba12cb48a49f0d0edc6dffa49",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -173168,7 +173168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 238
+        "line": 246
       },
       "source": "module:tests.test_spec295_chefe_no_topo",
       "target": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
@@ -173256,7 +173256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 227
+        "line": 235
       },
       "source": "module:tests.test_spec295_chefe_no_topo",
       "target": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
@@ -209050,6 +209050,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_conteudo.py",
+        "line": 207
+      },
+      "source": "module:tests.test_spec355_conteudo",
+      "target": "symbol:tests.test_spec355_conteudo.test_real_bestiary_has_no_findings",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec355_conteudo.py",
         "line": 142
       },
       "source": "module:tests.test_spec355_conteudo",
@@ -209065,6 +209076,17 @@
       },
       "source": "module:tests.test_spec355_conteudo",
       "target": "symbol:tests.test_spec355_conteudo.test_revelar_intencao_makes_pressagio_estudada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec355_conteudo.py",
+        "line": 191
+      },
+      "source": "module:tests.test_spec355_conteudo",
+      "target": "symbol:tests.test_spec355_conteudo.test_validator_still_warns_for_a_new_caster_without_spell",
       "type": "defines"
     },
     {
@@ -508206,7 +508228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 246
+        "line": 254
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
       "target": "symbol:agents.bestiary.apply_encounter_survival",
@@ -508316,7 +508338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 224
+        "line": 232
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_old_save_enemy_without_new_fields_acts_once",
       "target": "symbol:combat_mechanics.combat_modifiers",
@@ -508382,7 +508404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 230
+        "line": 238
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "target": "symbol:agents.bestiary.template_by_id",
@@ -508393,7 +508415,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 231
+        "line": 239
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -508404,7 +508426,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 232
+        "line": 240
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "target": "symbol:tests.test_spec295_chefe_no_topo._round",
@@ -508415,7 +508437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 229
+        "line": 237
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "target": "symbol:tests.test_spec295_chefe_no_topo._split",
@@ -508426,7 +508448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 228
+        "line": 236
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "target": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
@@ -508437,7 +508459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 230
+        "line": 238
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
       "target": "symbol:agents.bestiary.template_by_id",
@@ -508448,7 +508470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 231
+        "line": 239
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
       "target": "symbol:services.conflict_orchestrator.ensure_combat_sheet",
@@ -508459,7 +508481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 232
+        "line": 240
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
       "target": "symbol:tests.test_spec295_chefe_no_topo._round",
@@ -508470,7 +508492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec295_chefe_no_topo.py",
-        "line": 229
+        "line": 237
       },
       "source": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
       "target": "symbol:tests.test_spec295_chefe_no_topo._split",
@@ -599044,6 +599066,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_conteudo.py",
+        "line": 208
+      },
+      "source": "symbol:tests.test_spec355_conteudo.test_real_bestiary_has_no_findings",
+      "target": "symbol:services.content_validator.validate_bestiary",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec355_conteudo.py",
         "line": 147
       },
       "source": "symbol:tests.test_spec355_conteudo.test_renegado_family_is_not_conjurador",
@@ -599103,6 +599136,17 @@
       },
       "source": "symbol:tests.test_spec355_conteudo.test_revelar_intencao_makes_pressagio_estudada",
       "target": "symbol:services.enemy_intent.public_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec355_conteudo.py",
+        "line": 202
+      },
+      "source": "symbol:tests.test_spec355_conteudo.test_validator_still_warns_for_a_new_caster_without_spell",
+      "target": "symbol:services.content_validator.validate_bestiary",
       "type": "calls"
     },
     {
@@ -725069,7 +725113,7 @@
     {
       "id": "symbol:tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection",
       "kind": "test",
-      "line": 238,
+      "line": 246,
       "path": "tests/test_spec295_chefe_no_topo.py",
       "qualified_name": "tests.test_spec295_chefe_no_topo.test_invalid_survival_field_keeps_boss_actions_and_protection"
     },
@@ -725125,14 +725169,14 @@
     {
       "id": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome",
       "kind": "test",
-      "line": 227,
+      "line": 235,
       "path": "tests/test_spec295_chefe_no_topo.py",
       "qualified_name": "tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome"
     },
     {
       "id": "symbol:tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run",
       "kind": "test",
-      "line": 228,
+      "line": 236,
       "path": "tests/test_spec295_chefe_no_topo.py",
       "qualified_name": "tests.test_spec295_chefe_no_topo.test_same_seed_same_outcome.run"
     },
@@ -745017,6 +745061,13 @@
       "qualified_name": "tests.test_spec355_conteudo.test_gen_tiers_write_uses_lf"
     },
     {
+      "id": "symbol:tests.test_spec355_conteudo.test_real_bestiary_has_no_findings",
+      "kind": "test",
+      "line": 207,
+      "path": "tests/test_spec355_conteudo.py",
+      "qualified_name": "tests.test_spec355_conteudo.test_real_bestiary_has_no_findings"
+    },
+    {
       "id": "symbol:tests.test_spec355_conteudo.test_renegado_family_is_not_conjurador",
       "kind": "test",
       "line": 142,
@@ -745029,6 +745080,13 @@
       "line": 117,
       "path": "tests/test_spec355_conteudo.py",
       "qualified_name": "tests.test_spec355_conteudo.test_revelar_intencao_makes_pressagio_estudada"
+    },
+    {
+      "id": "symbol:tests.test_spec355_conteudo.test_validator_still_warns_for_a_new_caster_without_spell",
+      "kind": "test",
+      "line": 191,
+      "path": "tests/test_spec355_conteudo.py",
+      "qualified_name": "tests.test_spec355_conteudo.test_validator_still_warns_for_a_new_caster_without_spell"
     },
     {
       "id": "symbol:tests.test_spec355_conteudo.test_validator_warns_caster_without_spell",
@@ -750268,5 +750326,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:2a9b58950f5f5e84c58b85284f61e4318d0a568edd189851ebe5d469d580aa8c"
+  "source_tree_hash": "sha256:d16ca5dc8b93b932efbe5fda67dad20678d5ee209debded0bf2aae439cdd91d3"
 }
