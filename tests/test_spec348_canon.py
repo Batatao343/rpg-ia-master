@@ -41,7 +41,9 @@ def _has_forbidden(text: str) -> list[str]:
 
 
 def _public_text(prefix: str | None = None) -> str:
-    return " ".join(d["text"] for d in public_docs() if prefix is None or d["id"].startswith(prefix))
+    return " ".join(
+        d["text"] for d in public_docs() if prefix is None or d["id"].startswith(prefix)
+    )
 
 
 def _hidden_with(*terms: str) -> list[str]:
@@ -150,7 +152,10 @@ def test_calendar_year_base_and_protocol_explained():
     era7 = " ".join(d["text"] for d in public_docs() if d["id"].startswith("timeline_e7"))
     assert "livro do protocolo dos anoes" in era7 and "ano 112" in era7
     assert "termina no 67" in era7 and "fundacao e no 68" in era7
-    assert "a guerra comeca no ano 1" not in _public_text() and "sessenta e seis anos" not in _public_text()
+    assert (
+        "a guerra comeca no ano 1" not in _public_text()
+        and "sessenta e seis anos" not in _public_text()
+    )
     assert "monte da perdicao voltou a fumegar" in era7
 
 
@@ -213,10 +218,18 @@ def test_graph_new_leads_and_located_in():
     rel = load_json("data/graph/relation_types.json")
     by_id = {e["id"]: e for e in _edges()}
     expected = {
-        "e_morvan_lidera_cidades": ("npc_keeper_morvan", "leads", "cidades_estado_sobreviventes_vaelorn_solvhen"),
+        "e_morvan_lidera_cidades": (
+            "npc_keeper_morvan",
+            "leads",
+            "cidades_estado_sobreviventes_vaelorn_solvhen",
+        ),
         "e_morvan_em_solvhen": ("npc_keeper_morvan", "located_in", "pr_solvhen"),
         "e_mae_corva_lidera_corvos": ("npc_mae_corva", "leads", "guilda_corvos"),
-        "e_sennar_lidera_chama_azul": ("npc_sennar_o_pregador_da_cicatriz", "leads", "filhos_chama_azul"),
+        "e_sennar_lidera_chama_azul": (
+            "npc_sennar_o_pregador_da_cicatriz",
+            "leads",
+            "filhos_chama_azul",
+        ),
     }
     ents = _entity_ids()
     for eid, (src, typ, tgt) in expected.items():
@@ -311,7 +324,7 @@ def test_each_expansion_has_canonical_text(eid, vis, phrases):
 
 def test_public_sides_of_expansions():
     pub = _public_text()
-    assert "o casco \"toma a sua\"" in pub
+    assert 'o casco "toma a sua"' in pub
     assert "as bigornas estao quentes" in doc("ma_forja_profunda")["text"]
     assert "ninguem diz quem as alimenta" in doc("ma_forja_profunda")["text"]
     assert "quieto demais" in doc("pr_solvhen")["text"]
@@ -364,9 +377,18 @@ def test_posturas_masters_are_graph_npcs():
         for e in mine:
             assert e["target"] in _entity_ids(), (master, e["target"])
             assert e["type"] != "enemy_of"
-    assert not [e for e in edges if e["id"].startswith(("e_hrefna", "e_oriel", "e_mairen", "e_hask", "e_benedita")) and e["type"] == "enemy_of"]
+    assert not [
+        e
+        for e in edges
+        if e["id"].startswith(("e_hrefna", "e_oriel", "e_mairen", "e_hask", "e_benedita"))
+        and e["type"] == "enemy_of"
+    ]
     # só Benedita e Hrefna não têm facção própria de origem obrigatória? ambas conferidas acima
-    members = [e for e in edges if e["type"] == "member_of" and e["source"] in {m[1] for m in POSTURAS.values()}]
+    members = [
+        e
+        for e in edges
+        if e["type"] == "member_of" and e["source"] in {m[1] for m in POSTURAS.values()}
+    ]
     assert len(members) == 3  # Hrefna, Oriel, Hask; Mairen saiu do culto e Benedita nao tem faccao
 
 
@@ -378,15 +400,33 @@ def test_posturas_no_mechanics_no_forbidden_terms():
 
 
 NEW_DOC_IDS = [
-    "story_posturas", "pm_cripta_afogada", "pr_solvhen", "ma_forja_profunda", "quebrados",
-    "npc_hrefna_da_vigilia", "npc_oriel_talho_fundo", "npc_mairen_das_margens", "npc_hask_o_musgo",
-    "npc_benedita_a_parteira", "npc_ilsa", "npc_bertil", "npc_sennar_o_pregador_da_cicatriz",
+    "story_posturas",
+    "pm_cripta_afogada",
+    "pr_solvhen",
+    "ma_forja_profunda",
+    "quebrados",
+    "npc_hrefna_da_vigilia",
+    "npc_oriel_talho_fundo",
+    "npc_mairen_das_margens",
+    "npc_hask_o_musgo",
+    "npc_benedita_a_parteira",
+    "npc_ilsa",
+    "npc_bertil",
+    "npc_sennar_o_pregador_da_cicatriz",
 ]
 NEW_SECRET_TITLES = [
-    "cronologia que ninguem escreve", "ilsa, a remendeira, e a herdeira", "a pagina que falta",
-    "o aco de sangue lembra", "os marcados resistem", "a decima segunda landship",
-    "o estaleiro das almas cobra", "o veneno de ophidia e o que as ilhas", "solvhen dorme",
-    "morvath mantem thessrak", "o diario em codigo dos quebrados", "as bigornas da forja profunda",
+    "cronologia que ninguem escreve",
+    "ilsa, a remendeira, e a herdeira",
+    "a pagina que falta",
+    "o aco de sangue lembra",
+    "os marcados resistem",
+    "a decima segunda landship",
+    "o estaleiro das almas cobra",
+    "o veneno de ophidia e o que as ilhas",
+    "solvhen dorme",
+    "morvath mantem thessrak",
+    "o diario em codigo dos quebrados",
+    "as bigornas da forja profunda",
 ]
 
 
@@ -478,6 +518,7 @@ def test_rumor_seeds_generator_check_is_green():
 
     proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts/build_rumor_seeds.py"), "--check"],
-        capture_output=True, cwd=ROOT,
+        capture_output=True,
+        cwd=ROOT,
     )
     assert proc.returncode == 0, proc.stdout
