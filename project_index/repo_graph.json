@@ -1,5 +1,5 @@
 {
-  "commit_sha": "ccd88569fe7722cabbb36e5c435e6f5af582331e",
+  "commit_sha": "0f5f06c5078ca33745f68cc84553ec0fcfd8d0f0",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -71693,7 +71693,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 70
+        "line": 73
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._closed",
@@ -71715,7 +71715,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 101
+        "line": 104
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._epoch",
@@ -71726,7 +71726,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 47
+        "line": 50
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._excluded",
@@ -71737,7 +71737,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 60
+        "line": 63
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._hostile",
@@ -71748,7 +71748,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 54
+        "line": 57
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._merchant_here",
@@ -71759,7 +71759,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 146
+        "line": 149
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._planned_destino",
@@ -71770,7 +71770,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 141
+        "line": 144
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop._refusal",
@@ -71781,7 +71781,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 197
+        "line": 200
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.buy",
@@ -71792,7 +71792,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 130
+        "line": 133
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.card_price",
@@ -71803,7 +71803,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 237
+        "line": 240
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.match_offer",
@@ -71814,7 +71814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 251
+        "line": 254
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.observe_lines",
@@ -71825,7 +71825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 150
+        "line": 153
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.public_shop",
@@ -71836,7 +71836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 37
+        "line": 40
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.reload_config",
@@ -71847,7 +71847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 106
+        "line": 109
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.shelf",
@@ -71858,7 +71858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 42
+        "line": 45
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.shelf_config",
@@ -71869,7 +71869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 76
+        "line": 79
       },
       "source": "module:services.card_shop",
       "target": "symbol:services.card_shop.shelf_pool",
@@ -104814,7 +104814,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 179
+        "line": 180
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.FakeIdentity",
@@ -104825,7 +104825,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 216
+        "line": 217
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -104836,7 +104836,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 296
+        "line": 297
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy._as_principal",
@@ -104847,7 +104847,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 352
+        "line": 353
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy._patched_execute",
@@ -104858,7 +104858,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 110
+        "line": 111
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy._req",
@@ -104869,7 +104869,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 222
+        "line": 223
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy._search",
@@ -104880,7 +104880,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 193
+        "line": 194
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.env",
@@ -104891,7 +104891,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 151
+        "line": 152
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_account_security_and_captcha_use_client_ip",
@@ -104902,7 +104902,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 438
+        "line": 439
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_authfail_bucket_blocks_before_calling_the_verifier",
@@ -104913,7 +104913,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 451
+        "line": 452
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_authfail_is_per_ip",
@@ -104924,7 +104924,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 282
+        "line": 283
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_blocks_are_counted_in_metrics_without_ids",
@@ -104935,7 +104935,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 226
+        "line": 227
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
@@ -104946,7 +104946,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 68
+        "line": 69
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_classify",
@@ -104957,7 +104957,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 117
+        "line": 118
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers",
@@ -104968,7 +104968,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 146
+        "line": 147
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_client_ip_never_raises",
@@ -104979,7 +104979,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 132
+        "line": 133
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
@@ -104990,7 +104990,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 122
+        "line": 123
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
@@ -105001,7 +105001,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 323
+        "line": 324
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
@@ -105012,7 +105012,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 73
+        "line": 74
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_every_money_route_in_api_has_a_class",
@@ -105023,7 +105023,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 471
+        "line": 472
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration",
@@ -105034,7 +105034,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 247
+        "line": 248
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
@@ -105045,7 +105045,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 91
+        "line": 92
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
@@ -105056,7 +105056,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 163
+        "line": 164
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_memory_daily_quota_limits_per_owner_and_day",
@@ -105067,7 +105067,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 461
+        "line": 462
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_missing_cookie_does_not_consume_the_authfail_bucket",
@@ -105078,7 +105078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 259
+        "line": 260
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_payments_quote_and_export_classes_are_limited",
@@ -105089,7 +105089,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 337
+        "line": 338
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
@@ -105100,7 +105100,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 406
+        "line": 407
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_quota_error_reaches_sse_payload_with_retry",
@@ -105111,7 +105111,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 412
+        "line": 413
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header",
@@ -105122,7 +105122,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 275
+        "line": 276
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_rate_limit_zero_disables_every_minute_limit",
@@ -105133,7 +105133,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 364
+        "line": 365
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
@@ -105144,7 +105144,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 383
+        "line": 384
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check",
@@ -105155,7 +105155,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 300
+        "line": 301
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
@@ -105166,7 +105166,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 237
+        "line": 238
       },
       "source": "module:tests.test_abuse_policy",
       "target": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
@@ -298634,7 +298634,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 64
+        "line": 67
       },
       "source": "symbol:services.card_shop._hostile",
       "target": "symbol:services.economy._controller_disposition",
@@ -298645,7 +298645,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 66
+        "line": 69
       },
       "source": "symbol:services.card_shop._hostile",
       "target": "symbol:services.economy._keeper_row",
@@ -298656,7 +298656,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 56
+        "line": 59
       },
       "source": "symbol:services.card_shop._merchant_here",
       "target": "symbol:services.economy.merchants_at",
@@ -298667,21 +298667,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 142
+        "line": 145
       },
       "source": "symbol:services.card_shop._refusal",
       "target": "symbol:services.economy._keeper_refusal",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_shop.py",
-        "line": 201
-      },
-      "source": "symbol:services.card_shop.buy",
-      "target": "symbol:services.card_rewards._fail",
       "type": "calls"
     },
     {
@@ -298744,7 +298733,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 220
+        "line": 219
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_rewards._fail",
@@ -298755,7 +298744,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 206
+        "line": 223
+      },
+      "source": "symbol:services.card_shop.buy",
+      "target": "symbol:services.card_rewards._fail",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_shop.py",
+        "line": 209
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_shop._refusal",
@@ -298766,7 +298766,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 217
+        "line": 220
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_shop.card_price",
@@ -298777,7 +298777,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 202
+        "line": 205
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_shop.shelf",
@@ -298788,7 +298788,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 223
+        "line": 226
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_telemetry.offered",
@@ -298799,7 +298799,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 224
+        "line": 227
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_telemetry.picked",
@@ -298810,7 +298810,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 222
+        "line": 225
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.card_telemetry.source_scope",
@@ -298821,7 +298821,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 214
+        "line": 217
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.cards.get_card",
@@ -298832,7 +298832,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 199
+        "line": 202
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.cards.reorganize_status",
@@ -298843,7 +298843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 221
+        "line": 224
       },
       "source": "symbol:services.card_shop.buy",
       "target": "symbol:services.economy.clamp_gold",
@@ -298854,7 +298854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 134
+        "line": 137
       },
       "source": "symbol:services.card_shop.card_price",
       "target": "symbol:services.card_rewards.rarity_of",
@@ -298865,7 +298865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 132
+        "line": 135
       },
       "source": "symbol:services.card_shop.card_price",
       "target": "symbol:services.card_shop._config",
@@ -298876,7 +298876,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 133
+        "line": 136
       },
       "source": "symbol:services.card_shop.card_price",
       "target": "symbol:services.cards.get_card",
@@ -298887,7 +298887,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 138
+        "line": 141
       },
       "source": "symbol:services.card_shop.card_price",
       "target": "symbol:services.economy._round5",
@@ -298898,7 +298898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 138
+        "line": 141
       },
       "source": "symbol:services.card_shop.card_price",
       "target": "symbol:services.economy.local_buy_mult",
@@ -298909,7 +298909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 239
+        "line": 242
       },
       "source": "symbol:services.card_shop.match_offer",
       "target": "symbol:services.card_rewards.mode",
@@ -298920,7 +298920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 241
+        "line": 244
       },
       "source": "symbol:services.card_shop.match_offer",
       "target": "symbol:services.card_shop.shelf",
@@ -298931,7 +298931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 245
+        "line": 248
       },
       "source": "symbol:services.card_shop.match_offer",
       "target": "symbol:services.cards.get_card",
@@ -298942,7 +298942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 245
+        "line": 248
       },
       "source": "symbol:services.card_shop.match_offer",
       "target": "symbol:services.economy._fold_key",
@@ -298953,7 +298953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 253
+        "line": 256
       },
       "source": "symbol:services.card_shop.observe_lines",
       "target": "symbol:services.card_rewards.mode",
@@ -298964,7 +298964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 265
+        "line": 268
       },
       "source": "symbol:services.card_shop.observe_lines",
       "target": "symbol:services.card_shop.card_price",
@@ -298975,7 +298975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 255
+        "line": 258
       },
       "source": "symbol:services.card_shop.observe_lines",
       "target": "symbol:services.card_shop.shelf",
@@ -298986,32 +298986,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 264
+        "line": 267
       },
       "source": "symbol:services.card_shop.observe_lines",
       "target": "symbol:services.cards.get_card",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_shop.py",
-        "line": 180
-      },
-      "source": "symbol:services.card_shop.public_shop",
-      "target": "symbol:services.card_rewards.card_view",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_shop.py",
-        "line": 152
-      },
-      "source": "symbol:services.card_shop.public_shop",
-      "target": "symbol:services.card_rewards.mode",
       "type": "calls"
     },
     {
@@ -299022,6 +299000,28 @@
         "line": 183
       },
       "source": "symbol:services.card_shop.public_shop",
+      "target": "symbol:services.card_rewards.card_view",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_shop.py",
+        "line": 155
+      },
+      "source": "symbol:services.card_shop.public_shop",
+      "target": "symbol:services.card_rewards.mode",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_shop.py",
+        "line": 186
+      },
+      "source": "symbol:services.card_shop.public_shop",
       "target": "symbol:services.card_shop._planned_destino",
       "type": "calls"
     },
@@ -299030,7 +299030,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 164
+        "line": 167
       },
       "source": "symbol:services.card_shop.public_shop",
       "target": "symbol:services.card_shop._refusal",
@@ -299041,7 +299041,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 169
+        "line": 172
       },
       "source": "symbol:services.card_shop.public_shop",
       "target": "symbol:services.card_shop.card_price",
@@ -299052,7 +299052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 157
+        "line": 160
       },
       "source": "symbol:services.card_shop.public_shop",
       "target": "symbol:services.card_shop.shelf",
@@ -299063,7 +299063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 154
+        "line": 157
       },
       "source": "symbol:services.card_shop.public_shop",
       "target": "symbol:services.cards.reorganize_status",
@@ -299074,21 +299074,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 122
+        "line": 125
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_rewards.rarity_of",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/card_shop.py",
-        "line": 112
-      },
-      "source": "symbol:services.card_shop.shelf",
-      "target": "symbol:services.card_shop._closed",
       "type": "calls"
     },
     {
@@ -299099,6 +299088,17 @@
         "line": 115
       },
       "source": "symbol:services.card_shop.shelf",
+      "target": "symbol:services.card_shop._closed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/card_shop.py",
+        "line": 118
+      },
+      "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop._config",
       "type": "calls"
     },
@@ -299107,7 +299107,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 116
+        "line": 119
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop._epoch",
@@ -299118,7 +299118,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 108
+        "line": 111
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop._merchant_here",
@@ -299129,7 +299129,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 119
+        "line": 122
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop.shelf.key",
@@ -299140,7 +299140,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 112
+        "line": 115
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop.shelf_config",
@@ -299151,7 +299151,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 114
+        "line": 117
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.card_shop.shelf_pool",
@@ -299162,7 +299162,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 120
+        "line": 123
       },
       "source": "symbol:services.card_shop.shelf",
       "target": "symbol:services.cards.get_card",
@@ -299173,7 +299173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 122
+        "line": 125
       },
       "source": "symbol:services.card_shop.shelf.key",
       "target": "symbol:services.card_rewards.rarity_of",
@@ -299184,7 +299184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 120
+        "line": 123
       },
       "source": "symbol:services.card_shop.shelf.key",
       "target": "symbol:services.cards.get_card",
@@ -299195,7 +299195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 43
+        "line": 46
       },
       "source": "symbol:services.card_shop.shelf_config",
       "target": "symbol:services.card_shop._config",
@@ -299206,7 +299206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 88
+        "line": 91
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.card_rewards.neutral_eligible",
@@ -299217,7 +299217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 95
+        "line": 98
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.card_rewards.rarity_of",
@@ -299228,7 +299228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 90
+        "line": 93
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.card_shop._excluded",
@@ -299239,7 +299239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 85
+        "line": 88
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.card_shop._hostile",
@@ -299250,7 +299250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 78
+        "line": 81
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.card_shop.shelf_config",
@@ -299261,7 +299261,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/card_shop.py",
-        "line": 87
+        "line": 90
       },
       "source": "symbol:services.card_shop.shelf_pool",
       "target": "symbol:services.cards.all_cards",
@@ -363622,7 +363622,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 180
+        "line": 181
       },
       "source": "symbol:tests.test_abuse_policy.FakeIdentity",
       "target": "symbol:tests.test_abuse_policy.FakeIdentity.__init__",
@@ -363633,7 +363633,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 184
+        "line": 185
       },
       "source": "symbol:tests.test_abuse_policy.FakeIdentity",
       "target": "symbol:tests.test_abuse_policy.FakeIdentity.verify",
@@ -363644,7 +363644,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 188
+        "line": 189
       },
       "source": "symbol:tests.test_abuse_policy.FakeIdentity.verify",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -363655,7 +363655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 189
+        "line": 190
       },
       "source": "symbol:tests.test_abuse_policy.FakeIdentity.verify",
       "target": "symbol:infrastructure.contracts.Unauthorized",
@@ -363666,7 +363666,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 297
+        "line": 298
       },
       "source": "symbol:tests.test_abuse_policy._as_principal",
       "target": "symbol:infrastructure.contracts.Principal",
@@ -363677,7 +363677,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 297
+        "line": 298
       },
       "source": "symbol:tests.test_abuse_policy._as_principal",
       "target": "symbol:infrastructure.request_context.set_current_principal",
@@ -363688,7 +363688,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 197
+        "line": 198
       },
       "source": "symbol:tests.test_abuse_policy.env",
       "target": "symbol:infrastructure.local_adapters.MemoryRateLimiter",
@@ -363699,7 +363699,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 198
+        "line": 199
       },
       "source": "symbol:tests.test_abuse_policy.env",
       "target": "symbol:services.abuse_policy.MemoryDailyQuota",
@@ -363710,7 +363710,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 209
+        "line": 210
       },
       "source": "symbol:tests.test_abuse_policy.env",
       "target": "symbol:services.auth_sessions.CsrfSigner",
@@ -363721,7 +363721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 194
+        "line": 195
       },
       "source": "symbol:tests.test_abuse_policy.env",
       "target": "symbol:tests.test_abuse_policy.FakeIdentity",
@@ -363732,7 +363732,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 155
+        "line": 156
       },
       "source": "symbol:tests.test_abuse_policy.test_account_security_and_captcha_use_client_ip",
       "target": "symbol:tests.test_abuse_policy._req",
@@ -363743,7 +363743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 440
+        "line": 441
       },
       "source": "symbol:tests.test_abuse_policy.test_authfail_bucket_blocks_before_calling_the_verifier",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -363754,7 +363754,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 453
+        "line": 454
       },
       "source": "symbol:tests.test_abuse_policy.test_authfail_is_per_ip",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -363765,7 +363765,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 286
+        "line": 287
       },
       "source": "symbol:tests.test_abuse_policy.test_blocks_are_counted_in_metrics_without_ids",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -363776,21 +363776,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 288
+        "line": 289
       },
       "source": "symbol:tests.test_abuse_policy.test_blocks_are_counted_in_metrics_without_ids",
       "target": "symbol:tests.test_abuse_policy._search",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 228
-      },
-      "source": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
-      "target": "symbol:tests.test_abuse_policy._as",
       "type": "calls"
     },
     {
@@ -363801,7 +363790,7 @@
         "line": 229
       },
       "source": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
-      "target": "symbol:tests.test_abuse_policy._search",
+      "target": "symbol:tests.test_abuse_policy._as",
       "type": "calls"
     },
     {
@@ -363809,7 +363798,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 231
+        "line": 230
       },
       "source": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
       "target": "symbol:tests.test_abuse_policy._search",
@@ -363820,7 +363809,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 69
+        "line": 232
+      },
+      "source": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
+      "target": "symbol:tests.test_abuse_policy._search",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 70
       },
       "source": "symbol:tests.test_abuse_policy.test_classify",
       "target": "symbol:services.abuse_policy.classify",
@@ -363831,32 +363831,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
+        "line": 120
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers",
+      "target": "symbol:services.abuse_policy.client_ip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
         "line": 119
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers",
-      "target": "symbol:services.abuse_policy.client_ip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 118
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers",
       "target": "symbol:tests.test_abuse_policy._req",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 147
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_never_raises",
-      "target": "symbol:services.abuse_policy.client_ip",
       "type": "calls"
     },
     {
@@ -363875,9 +363864,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 134
+        "line": 149
       },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_never_raises",
       "target": "symbol:services.abuse_policy.client_ip",
       "type": "calls"
     },
@@ -363897,7 +363886,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 137
+        "line": 136
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "target": "symbol:services.abuse_policy.client_ip",
@@ -363908,7 +363897,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 139
+        "line": 138
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "target": "symbol:services.abuse_policy.client_ip",
@@ -363919,7 +363908,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 141
+        "line": 140
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "target": "symbol:services.abuse_policy.client_ip",
@@ -363930,7 +363919,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 133
+        "line": 142
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
+      "target": "symbol:services.abuse_policy.client_ip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 134
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "target": "symbol:tests.test_abuse_policy._req",
@@ -363941,10 +363941,54 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 141
+        "line": 142
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "target": "symbol:tests.test_abuse_policy._req",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 125
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
+      "target": "symbol:services.abuse_policy.client_ip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 126
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
+      "target": "symbol:services.abuse_policy.client_ip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
+      "target": "symbol:services.abuse_policy.client_ip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 129
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
+      "target": "symbol:services.abuse_policy.client_ip",
       "type": "calls"
     },
     {
@@ -363955,61 +363999,6 @@
         "line": 124
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
-      "target": "symbol:services.abuse_policy.client_ip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 125
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
-      "target": "symbol:services.abuse_policy.client_ip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 126
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
-      "target": "symbol:services.abuse_policy.client_ip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 128
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
-      "target": "symbol:services.abuse_policy.client_ip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 123
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
-      "target": "symbol:tests.test_abuse_policy._req",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 125
-      },
-      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
       "target": "symbol:tests.test_abuse_policy._req",
       "type": "calls"
     },
@@ -364029,7 +364018,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 128
+        "line": 127
       },
       "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
       "target": "symbol:tests.test_abuse_policy._req",
@@ -364040,7 +364029,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 328
+        "line": 129
+      },
+      "source": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
+      "target": "symbol:tests.test_abuse_policy._req",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 329
       },
       "source": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
       "target": "symbol:api._enforce_owner_budget",
@@ -364051,7 +364051,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 332
+        "line": 333
       },
       "source": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
       "target": "symbol:api._enforce_owner_budget",
@@ -364062,7 +364062,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 334
+        "line": 335
       },
       "source": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
       "target": "symbol:infrastructure.request_context.reset_current_principal",
@@ -364073,7 +364073,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 324
+        "line": 325
       },
       "source": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
       "target": "symbol:tests.test_abuse_policy._as_principal",
@@ -364084,7 +364084,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 83
+        "line": 84
       },
       "source": "symbol:tests.test_abuse_policy.test_every_money_route_in_api_has_a_class",
       "target": "symbol:services.abuse_policy.classify",
@@ -364095,7 +364095,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 475
+        "line": 476
       },
       "source": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration",
       "target": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db",
@@ -364106,7 +364106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 476
+        "line": 477
       },
       "source": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db",
       "target": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.__init__",
@@ -364117,7 +364117,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 479
+        "line": 480
       },
       "source": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db",
       "target": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.execute",
@@ -364128,7 +364128,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 251
+        "line": 252
+      },
+      "source": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
+      "target": "symbol:tests.test_abuse_policy._as",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 254
       },
       "source": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364142,7 +364153,7 @@
         "line": 253
       },
       "source": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
-      "target": "symbol:tests.test_abuse_policy._as",
+      "target": "symbol:tests.test_abuse_policy._search",
       "type": "calls"
     },
     {
@@ -364150,7 +364161,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 252
+        "line": 255
       },
       "source": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
       "target": "symbol:tests.test_abuse_policy._search",
@@ -364161,32 +364172,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 254
-      },
-      "source": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
-      "target": "symbol:tests.test_abuse_policy._search",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 103
+        "line": 104
       },
       "source": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
       "target": "symbol:services.abuse_policy.daily_quota_limit",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 93
-      },
-      "source": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
-      "target": "symbol:services.abuse_policy.limits_for",
       "type": "calls"
     },
     {
@@ -364227,7 +364216,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 98
+        "line": 97
       },
       "source": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
       "target": "symbol:services.abuse_policy.limits_for",
@@ -364271,7 +364260,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 164
+        "line": 102
+      },
+      "source": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
+      "target": "symbol:services.abuse_policy.limits_for",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 165
       },
       "source": "symbol:tests.test_abuse_policy.test_memory_daily_quota_limits_per_owner_and_day",
       "target": "symbol:services.abuse_policy.MemoryDailyQuota",
@@ -364282,7 +364282,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 467
+        "line": 468
       },
       "source": "symbol:tests.test_abuse_policy.test_missing_cookie_does_not_consume_the_authfail_bucket",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364293,7 +364293,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 261
+        "line": 262
       },
       "source": "symbol:tests.test_abuse_policy.test_payments_quote_and_export_classes_are_limited",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364304,7 +364304,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 347
+        "line": 348
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
       "target": "symbol:api._enforce_owner_budget",
@@ -364315,7 +364315,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 349
+        "line": 350
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
       "target": "symbol:infrastructure.request_context.reset_current_principal",
@@ -364326,7 +364326,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 345
+        "line": 346
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
       "target": "symbol:tests.test_abuse_policy._as_principal",
@@ -364337,7 +364337,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 340
+        "line": 341
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
       "target": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom",
@@ -364348,7 +364348,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 341
+        "line": 342
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom",
       "target": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom.bump",
@@ -364359,7 +364359,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 418
+        "line": 419
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header",
       "target": "symbol:api._enforce_owner_budget",
@@ -364370,7 +364370,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 423
+        "line": 424
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364381,7 +364381,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 417
+        "line": 418
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header",
       "target": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header._probe",
@@ -364392,7 +364392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 418
+        "line": 419
       },
       "source": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header._probe",
       "target": "symbol:api._enforce_owner_budget",
@@ -364403,7 +364403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 278
+        "line": 279
       },
       "source": "symbol:tests.test_abuse_policy.test_rate_limit_zero_disables_every_minute_limit",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364414,7 +364414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 279
+        "line": 280
       },
       "source": "symbol:tests.test_abuse_policy.test_rate_limit_zero_disables_every_minute_limit",
       "target": "symbol:tests.test_abuse_policy._search",
@@ -364425,7 +364425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 369
+        "line": 370
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:api.ActionRequest",
@@ -364436,18 +364436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 372
-      },
-      "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
-      "target": "symbol:api._execute_action",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 375
+        "line": 373
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:api._execute_action",
@@ -364469,7 +364458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 378
+        "line": 377
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:api._execute_action",
@@ -364480,10 +364469,32 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 380
+        "line": 379
+      },
+      "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
+      "target": "symbol:api._execute_action",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 381
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:infrastructure.request_context.reset_current_principal",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 369
+      },
+      "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
+      "target": "symbol:tests.test_abuse_policy._as_principal",
       "type": "calls"
     },
     {
@@ -364494,17 +364505,6 @@
         "line": 368
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
-      "target": "symbol:tests.test_abuse_policy._as_principal",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 367
-      },
-      "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:tests.test_abuse_policy._patched_execute",
       "type": "calls"
     },
@@ -364513,7 +364513,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 374
+        "line": 375
       },
       "source": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "target": "symbol:tests.test_abuse_policy._patched_execute",
@@ -364524,7 +364524,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 388
+        "line": 389
       },
       "source": "symbol:tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check",
       "target": "symbol:tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check.calls",
@@ -364535,7 +364535,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 304
+        "line": 305
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:api._enforce_owner_budget",
@@ -364546,7 +364546,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 306
+        "line": 307
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:api._enforce_owner_budget",
@@ -364557,7 +364557,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 314
+        "line": 315
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:api._enforce_owner_budget",
@@ -364568,7 +364568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 316
+        "line": 317
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:api._enforce_owner_budget",
@@ -364579,7 +364579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 309
+        "line": 310
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:infrastructure.request_context.reset_current_principal",
@@ -364590,7 +364590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 320
+        "line": 321
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:infrastructure.request_context.reset_current_principal",
@@ -364601,7 +364601,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 301
+        "line": 302
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:tests.test_abuse_policy._as_principal",
@@ -364612,7 +364612,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 311
+        "line": 312
       },
       "source": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "target": "symbol:tests.test_abuse_policy._as_principal",
@@ -364623,7 +364623,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 239
+        "line": 240
       },
       "source": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
       "target": "symbol:tests.test_abuse_policy._as",
@@ -364634,21 +364634,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 243
+        "line": 244
       },
       "source": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
       "target": "symbol:tests.test_abuse_policy._as",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_abuse_policy.py",
-        "line": 241
-      },
-      "source": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
-      "target": "symbol:tests.test_abuse_policy._search",
       "type": "calls"
     },
     {
@@ -364667,7 +364656,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_abuse_policy.py",
-        "line": 244
+        "line": 243
+      },
+      "source": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
+      "target": "symbol:tests.test_abuse_policy._search",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_abuse_policy.py",
+        "line": 245
       },
       "source": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
       "target": "symbol:tests.test_abuse_policy._search",
@@ -665150,7 +665150,7 @@
     {
       "id": "symbol:services.card_shop._closed",
       "kind": "function",
-      "line": 70,
+      "line": 73,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._closed"
     },
@@ -665164,112 +665164,112 @@
     {
       "id": "symbol:services.card_shop._epoch",
       "kind": "function",
-      "line": 101,
+      "line": 104,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._epoch"
     },
     {
       "id": "symbol:services.card_shop._excluded",
       "kind": "function",
-      "line": 47,
+      "line": 50,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._excluded"
     },
     {
       "id": "symbol:services.card_shop._hostile",
       "kind": "function",
-      "line": 60,
+      "line": 63,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._hostile"
     },
     {
       "id": "symbol:services.card_shop._merchant_here",
       "kind": "function",
-      "line": 54,
+      "line": 57,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._merchant_here"
     },
     {
       "id": "symbol:services.card_shop._planned_destino",
       "kind": "function",
-      "line": 146,
+      "line": 149,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._planned_destino"
     },
     {
       "id": "symbol:services.card_shop._refusal",
       "kind": "function",
-      "line": 141,
+      "line": 144,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop._refusal"
     },
     {
       "id": "symbol:services.card_shop.buy",
       "kind": "function",
-      "line": 197,
+      "line": 200,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.buy"
     },
     {
       "id": "symbol:services.card_shop.card_price",
       "kind": "function",
-      "line": 130,
+      "line": 133,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.card_price"
     },
     {
       "id": "symbol:services.card_shop.match_offer",
       "kind": "function",
-      "line": 237,
+      "line": 240,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.match_offer"
     },
     {
       "id": "symbol:services.card_shop.observe_lines",
       "kind": "function",
-      "line": 251,
+      "line": 254,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.observe_lines"
     },
     {
       "id": "symbol:services.card_shop.public_shop",
       "kind": "function",
-      "line": 150,
+      "line": 153,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.public_shop"
     },
     {
       "id": "symbol:services.card_shop.reload_config",
       "kind": "function",
-      "line": 37,
+      "line": 40,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.reload_config"
     },
     {
       "id": "symbol:services.card_shop.shelf",
       "kind": "function",
-      "line": 106,
+      "line": 109,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.shelf"
     },
     {
       "id": "symbol:services.card_shop.shelf.key",
       "kind": "function",
-      "line": 119,
+      "line": 122,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.shelf.key"
     },
     {
       "id": "symbol:services.card_shop.shelf_config",
       "kind": "function",
-      "line": 42,
+      "line": 45,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.shelf_config"
     },
     {
       "id": "symbol:services.card_shop.shelf_pool",
       "kind": "function",
-      "line": 76,
+      "line": 79,
       "path": "services/card_shop.py",
       "qualified_name": "services.card_shop.shelf_pool"
     },
@@ -686479,294 +686479,294 @@
     {
       "id": "symbol:tests.test_abuse_policy.FakeIdentity",
       "kind": "class",
-      "line": 179,
+      "line": 180,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.FakeIdentity"
     },
     {
       "id": "symbol:tests.test_abuse_policy.FakeIdentity.__init__",
       "kind": "test",
-      "line": 180,
+      "line": 181,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.FakeIdentity.__init__"
     },
     {
       "id": "symbol:tests.test_abuse_policy.FakeIdentity.verify",
       "kind": "test",
-      "line": 184,
+      "line": 185,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.FakeIdentity.verify"
     },
     {
       "id": "symbol:tests.test_abuse_policy._as",
       "kind": "test",
-      "line": 216,
+      "line": 217,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy._as"
     },
     {
       "id": "symbol:tests.test_abuse_policy._as_principal",
       "kind": "test",
-      "line": 296,
+      "line": 297,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy._as_principal"
     },
     {
       "id": "symbol:tests.test_abuse_policy._patched_execute",
       "kind": "test",
-      "line": 352,
+      "line": 353,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy._patched_execute"
     },
     {
       "id": "symbol:tests.test_abuse_policy._req",
       "kind": "test",
-      "line": 110,
+      "line": 111,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy._req"
     },
     {
       "id": "symbol:tests.test_abuse_policy._search",
       "kind": "test",
-      "line": 222,
+      "line": 223,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy._search"
     },
     {
       "id": "symbol:tests.test_abuse_policy.env",
       "kind": "test",
-      "line": 193,
+      "line": 194,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.env"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_account_security_and_captcha_use_client_ip",
       "kind": "test",
-      "line": 151,
+      "line": 152,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_account_security_and_captcha_use_client_ip"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_authfail_bucket_blocks_before_calling_the_verifier",
       "kind": "test",
-      "line": 438,
+      "line": 439,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_authfail_bucket_blocks_before_calling_the_verifier"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_authfail_is_per_ip",
       "kind": "test",
-      "line": 451,
+      "line": 452,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_authfail_is_per_ip"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_blocks_are_counted_in_metrics_without_ids",
       "kind": "test",
-      "line": 282,
+      "line": 283,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_blocks_are_counted_in_metrics_without_ids"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner",
       "kind": "test",
-      "line": 226,
+      "line": 227,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_chronicle_search_is_limited_per_owner"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_classify",
       "kind": "test",
-      "line": 68,
+      "line": 69,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_classify"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers",
       "kind": "test",
-      "line": 117,
+      "line": 118,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_client_ip_default_ignores_forwarded_headers"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_client_ip_never_raises",
       "kind": "test",
-      "line": 146,
+      "line": 147,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_client_ip_never_raises"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right",
       "kind": "test",
-      "line": 132,
+      "line": 133,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_client_ip_trusted_hops_takes_nth_from_the_right"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header",
       "kind": "test",
-      "line": 122,
+      "line": 123,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_client_ip_vercel_mode_uses_platform_header"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips",
       "kind": "test",
-      "line": 323,
+      "line": 324,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_daily_quota_zero_disables_and_legacy_profile_skips"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_every_money_route_in_api_has_a_class",
       "kind": "test",
-      "line": 73,
+      "line": 74,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_every_money_route_in_api_has_a_class"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration",
       "kind": "test",
-      "line": 471,
+      "line": 472,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db",
       "kind": "class",
-      "line": 475,
+      "line": 476,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.__init__",
       "kind": "test",
-      "line": 476,
+      "line": 477,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.__init__"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.execute",
       "kind": "test",
-      "line": 479,
+      "line": 480,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_export_and_delete_skip_daily_counters_before_migration.Db.execute"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners",
       "kind": "test",
-      "line": 247,
+      "line": 248,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_ip_limit_is_per_class_and_shared_by_owners"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_limits_defaults_and_overrides",
       "kind": "test",
-      "line": 91,
+      "line": 92,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_limits_defaults_and_overrides"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_memory_daily_quota_limits_per_owner_and_day",
       "kind": "test",
-      "line": 163,
+      "line": 164,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_memory_daily_quota_limits_per_owner_and_day"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_missing_cookie_does_not_consume_the_authfail_bucket",
       "kind": "test",
-      "line": 461,
+      "line": 462,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_missing_cookie_does_not_consume_the_authfail_bucket"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_payments_quote_and_export_classes_are_limited",
       "kind": "test",
-      "line": 259,
+      "line": 260,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_payments_quote_and_export_classes_are_limited"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down",
       "kind": "test",
-      "line": 337,
+      "line": 338,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom",
       "kind": "class",
-      "line": 340,
+      "line": 341,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom.bump",
       "kind": "test",
-      "line": 341,
+      "line": 342,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_backend_failure_does_not_take_the_game_down.Boom.bump"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_error_reaches_sse_payload_with_retry",
       "kind": "test",
-      "line": 406,
+      "line": 407,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_error_reaches_sse_payload_with_retry"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header",
       "kind": "test",
-      "line": 412,
+      "line": 413,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_exceeded_http_body_and_header"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_quota_exceeded_http_body_and_header._probe",
       "kind": "test",
-      "line": 417,
+      "line": 418,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_quota_exceeded_http_body_and_header._probe"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_rate_limit_zero_disables_every_minute_limit",
       "kind": "test",
-      "line": 275,
+      "line": 276,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_rate_limit_zero_disables_every_minute_limit"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota",
       "kind": "test",
-      "line": 364,
+      "line": 365,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_replay_by_action_id_does_not_consume_quota"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check",
       "kind": "test",
-      "line": 383,
+      "line": 384,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check.calls",
       "kind": "test",
-      "line": 388,
+      "line": 389,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_stream_and_post_share_the_single_per_turn_check.calls"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_turn_budget_minute_then_daily",
       "kind": "test",
-      "line": 300,
+      "line": 301,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_turn_budget_minute_then_daily"
     },
     {
       "id": "symbol:tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket",
       "kind": "test",
-      "line": 237,
+      "line": 238,
       "path": "tests/test_abuse_policy.py",
       "qualified_name": "tests.test_abuse_policy.test_two_owners_on_same_ip_do_not_share_owner_bucket"
     },
@@ -756065,5 +756065,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:17c5b37b8151f31789ba281af0681e08781e57d5f6af6d58cb72837d52c08007"
+  "source_tree_hash": "sha256:5cd5fa10f9fce1f80c7b060750ce40758cdd8cae5c50914ec4b42709fe8cabb8"
 }
