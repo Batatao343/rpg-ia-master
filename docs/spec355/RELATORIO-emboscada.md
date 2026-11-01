@@ -13,7 +13,7 @@ JSON: `arena-emboscada-0-19.json`, `arena-emboscada-20-99.json`.
 | Médico de Campo | 52,1 % | 56,9 % | 53,5 % | 56,9 % | 56,1 % |
 
 Corruptor e Arcanista ficam abaixo de 45 % (0-19) → R17 implementado (`_has_vigilia` aceita qualquer Carta
-`buff_iniciativa`). As 5 Cartas são `passiva`/`reacao`: só o Médico tem uma (`med_dose_choque`, `reacao`, nível 4) no `full_deck` de algumas células, então só o Médico mexe (`realista_com_contrapartida` 53,2 % × 53,5 % em 0-19; 56,1 % × 56,1 % em 20-99); as demais Posturas não mudam.
+`buff_iniciativa`). As 5 Cartas são `passiva`/`reacao`: só o Médico tem uma (`med_dose_choque`, `reacao`, nível 4) no `full_deck` de algumas células, então só o Médico mexe (`realista_com_contrapartida` 53,2 % × 53,5 % em 0-19; 56,2 % × 56,1 % em 20-99); as demais Posturas não mudam.
 **Exceções pendentes:** Corruptor (sem Carta `buff_iniciativa`; 45,2 % na held-out) e Arcanista (42,1 %; as
 duas Cartas dele são passivas fora do baralho de arena). Sem número novo nesta spec.
 
