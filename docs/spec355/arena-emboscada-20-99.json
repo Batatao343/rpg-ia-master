@@ -1,0 +1,399 @@
+{
+ "seeds": [
+  20,
+  100
+ ],
+ "cenario": "emboscada realista (f_viagem = 1) sobre o avaliador congelado",
+ "posturas": {
+  "Devoto do Abismo": {
+   "todas": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.609,
+    "emboscada_total": 0.601,
+    "realista": {
+     "total": 0.6052,
+     "padrao": 0.7117,
+     "elite": 0.4988
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6052,
+     "padrao": 0.7117,
+     "elite": 0.4988
+    }
+   },
+   "consagrado": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.654,
+    "emboscada_total": 0.639,
+    "realista": {
+     "total": 0.6465,
+     "padrao": 0.7408,
+     "elite": 0.5522
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6465,
+     "padrao": 0.7408,
+     "elite": 0.5522
+    }
+   },
+   "zeloso": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.565,
+    "emboscada_total": 0.535,
+    "realista": {
+     "total": 0.5503,
+     "padrao": 0.644,
+     "elite": 0.4567
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5503,
+     "padrao": 0.644,
+     "elite": 0.4567
+    }
+   },
+   "enlutado": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.648,
+    "emboscada_total": 0.624,
+    "realista": {
+     "total": 0.6364,
+     "padrao": 0.7228,
+     "elite": 0.5499
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6364,
+     "padrao": 0.7228,
+     "elite": 0.5499
+    }
+   }
+  },
+  "Sangromante": {
+   "todas": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.619,
+    "emboscada_total": 0.537,
+    "realista": {
+     "total": 0.5791,
+     "padrao": 0.7215,
+     "elite": 0.4368
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5791,
+     "padrao": 0.7215,
+     "elite": 0.4368
+    }
+   },
+   "exposto": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.586,
+    "emboscada_total": 0.539,
+    "realista": {
+     "total": 0.5629,
+     "padrao": 0.6967,
+     "elite": 0.4291
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5629,
+     "padrao": 0.6967,
+     "elite": 0.4291
+    }
+   },
+   "avaro": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.642,
+    "emboscada_total": 0.595,
+    "realista": {
+     "total": 0.6185,
+     "padrao": 0.761,
+     "elite": 0.476
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6185,
+     "padrao": 0.761,
+     "elite": 0.476
+    }
+   },
+   "silencioso": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.639,
+    "emboscada_total": 0.58,
+    "realista": {
+     "total": 0.6096,
+     "padrao": 0.7556,
+     "elite": 0.4636
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6096,
+     "padrao": 0.7556,
+     "elite": 0.4636
+    }
+   }
+  },
+  "Corruptor": {
+   "todas": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.465,
+    "emboscada_total": 0.421,
+    "realista": {
+     "total": 0.4516,
+     "padrao": 0.5641,
+     "elite": 0.3392
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4516,
+     "padrao": 0.5641,
+     "elite": 0.3392
+    }
+   },
+   "biologia": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.543,
+    "emboscada_total": 0.5,
+    "realista": {
+     "total": 0.5303,
+     "padrao": 0.6401,
+     "elite": 0.4204
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5303,
+     "padrao": 0.6401,
+     "elite": 0.4204
+    }
+   },
+   "alma": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.433,
+    "emboscada_total": 0.392,
+    "realista": {
+     "total": 0.421,
+     "padrao": 0.5256,
+     "elite": 0.3164
+    },
+    "realista_com_contrapartida": {
+     "total": 0.421,
+     "padrao": 0.5256,
+     "elite": 0.3164
+    }
+   },
+   "inorganica": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.49,
+    "emboscada_total": 0.452,
+    "realista": {
+     "total": 0.4782,
+     "padrao": 0.568,
+     "elite": 0.3883
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4782,
+     "padrao": 0.568,
+     "elite": 0.3883
+    }
+   }
+  },
+  "Arcanista Cinzento": {
+   "todas": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.439,
+    "emboscada_total": 0.368,
+    "realista": {
+     "total": 0.421,
+     "padrao": 0.5417,
+     "elite": 0.3003
+    },
+    "realista_com_contrapartida": {
+     "total": 0.421,
+     "padrao": 0.5417,
+     "elite": 0.3003
+    }
+   },
+   "calibrado": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.554,
+    "emboscada_total": 0.491,
+    "realista": {
+     "total": 0.5383,
+     "padrao": 0.6721,
+     "elite": 0.4044
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5383,
+     "padrao": 0.6721,
+     "elite": 0.4044
+    }
+   },
+   "descoberto": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.427,
+    "emboscada_total": 0.352,
+    "realista": {
+     "total": 0.4083,
+     "padrao": 0.5224,
+     "elite": 0.2943
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4083,
+     "padrao": 0.5224,
+     "elite": 0.2943
+    }
+   },
+   "improvisador": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.559,
+    "emboscada_total": 0.509,
+    "realista": {
+     "total": 0.5465,
+     "padrao": 0.6682,
+     "elite": 0.4247
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5465,
+     "padrao": 0.6682,
+     "elite": 0.4247
+    }
+   }
+  },
+  "Médico de Campo": {
+   "todas": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.569,
+    "emboscada_total": 0.543,
+    "realista": {
+     "total": 0.5609,
+     "padrao": 0.6408,
+     "elite": 0.481
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5617,
+     "padrao": 0.6424,
+     "elite": 0.481
+    }
+   },
+   "cirurgiao_trincheira": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.59,
+    "emboscada_total": 0.553,
+    "realista": {
+     "total": 0.5789,
+     "padrao": 0.6739,
+     "elite": 0.4839
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5814,
+     "padrao": 0.676,
+     "elite": 0.4867
+    }
+   },
+   "boticario": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.556,
+    "emboscada_total": 0.544,
+    "realista": {
+     "total": 0.5521,
+     "padrao": 0.6379,
+     "elite": 0.4664
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5521,
+     "padrao": 0.6379,
+     "elite": 0.4664
+    }
+   },
+   "cirurgiao_ferro": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.623,
+    "emboscada_total": 0.592,
+    "realista": {
+     "total": 0.6137,
+     "padrao": 0.7254,
+     "elite": 0.502
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6189,
+     "padrao": 0.7298,
+     "elite": 0.5079
+    }
+   }
+  }
+ }
+}

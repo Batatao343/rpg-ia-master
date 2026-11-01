@@ -529,4 +529,36 @@ API local `legacy` com as flags de cartas `on` (`RPG_CARD_DECK`, `RPG_ENEMY_INTE
 
 ## 9. Registro de implementação
 
-(vazio; o executor preenche: Etapa 0, R15, lista do R10, arenas, desvios e testes com expected alterado.)
+**Etapa 0.** Baseline verde (grammar, 339, 341, 346: ~290 testes). Cartas `reacao` com `ac`/`protection`
+no reagente: `bst_defesa_instintiva` (inimigo), `san_esquiva` e afins do jogador. Criaturas com `arquetipo`
+conjurador/místico sem ataque `magic`/`area` nem `abilities` (regra nova do validador, `warning`): a lista sai de
+`uv run python scripts/validate_content.py` (só o Renegado foi corrigido).
+
+**R15 (`san_exp_espetaculo`).** Legada; a bandeira não se confirmou (+8,3 pp nas 0-19 × -4,0 pp nas 20-99,
+"ruído", `docs/spec341/r8-bandeiras-sementes20-99.json`). Nada mudou; D7 não acionado.
+
+**Desvios da spec**
+- **R10:** a causa da "Descarga Arcana" no Renegado não era só o `arquetipo`: a Carta está em `cartas`
+  próprio da criatura (`bst_descarga_arcana`, compartilhada por 15). Além do `arquetipo` → `tatico`, troquei a Carta
+  própria por `bst_pancada_esmagadora` (martial pesada, machado). Sem isso o baralho seguia com a Descarga.
+- **R8:** `condition_label` só humaniza o fallback quando o nome tem `_` ou é todo minúsculo (não deforma
+  "Veneno Fraco").
+- **R5/P3-10:** o teste da 346 que codificava criatura do bestiário fora de cena abrindo combate mudou (a
+  narração do fixture agora cita bandido/goblin); `test_card_lint` (aviso `revelar intencao`) e
+  `test_spec353_misc` (D6 da 353 reexecutado pelo R11) também mudaram de expected, por desenho.
+- **Etapa 7:** arena pós-B só nas sementes 0-19 (a 20-99 inteira ficou para a confirmação, uma vez).
+- **R13:** nenhum passo resolveu (ver `RELATORIO.md`); nenhuma Carta de onda alterada. `arena-final.json` = A1.
+- **R14 NÃO aplicado:** `dano_base` 6→5 (v3) não tirou a bandeira (`dominante` +11,3 pp), deixou o silencioso
+  padrão em 78,7 % (>76,6) e **derruba `test_arena_versoes_batem_com_catalogo`** (D17; o ajuste é de outro
+  agente). Para reaplicar: `data/cards/posturas/sangromante_silencioso.json`, id `san1_sil_corte_sem_aviso`.
+- **R17 implementado** (Corruptor 44,2 % e Arcanista 42,1 % realistas 0-19); as Cartas são passivas, então a
+  arena não muda.
+
+**Pendências para o dono (held-out 20-99, sem reajuste):** Arcanista Cinzento 43,9 % total (piso 45 %; 42,1 %
+com emboscada); Corruptor sem contrapartida de emboscada (45,2 % realista); `avaro` 77,6 % e `silencioso` 76,8 %
+padrão acima do teto; Devoto +2,7 pp pós-R11 (na faixa, 0,7 acima de ±2,0). Decisão: aceitar ou nova spec com
+número novo (ex.: Carta `buff_iniciativa` para o Corruptor, buff ao Arcanista).
+
+**Testes novos:** `tests/test_spec355_{conteudo,reacao_buff,golpe_reacao,provocacao_rodada,promessa_chefe,
+router_fallback,compra_utilitaria,exemplos_fora,emboscada,arena,guardas}.py`. R2 ficou fora de
+`ct.resolve_turn`; R3/R4 gravam só em `out`/cena. Fora do escopo desta spec e não feito: `web` só ganhou `label`.

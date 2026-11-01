@@ -1,0 +1,154 @@
+{
+ "seeds": [
+  0,
+  20
+ ],
+ "versoes": {
+  "san1_sil_corte_sem_aviso": 3
+ },
+ "posturas": {
+  "Sangromante": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      70,
+      80
+     ],
+     "L1 elite": [
+      50,
+      80
+     ],
+     "L3 padrao": [
+      60,
+      80
+     ],
+     "L3 elite": [
+      42,
+      80
+     ],
+     "L5 padrao": [
+      50,
+      80
+     ],
+     "L5 elite": [
+      17,
+      80
+     ]
+    },
+    "total": 0.602,
+    "padrao": 0.75,
+    "elite": 0.454
+   },
+   "exposto": {
+    "celulas": {
+     "L1 padrao": [
+      67,
+      80
+     ],
+     "L1 elite": [
+      45,
+      80
+     ],
+     "L3 padrao": [
+      61,
+      80
+     ],
+     "L3 elite": [
+      41,
+      80
+     ],
+     "L5 padrao": [
+      39,
+      80
+     ],
+     "L5 elite": [
+      19,
+      80
+     ]
+    },
+    "total": 0.567,
+    "padrao": 0.696,
+    "elite": 0.438
+   },
+   "avaro": {
+    "celulas": {
+     "L1 padrao": [
+      70,
+      80
+     ],
+     "L1 elite": [
+      60,
+      80
+     ],
+     "L3 padrao": [
+      70,
+      80
+     ],
+     "L3 elite": [
+      50,
+      80
+     ],
+     "L5 padrao": [
+      35,
+      80
+     ],
+     "L5 elite": [
+      26,
+      80
+     ]
+    },
+    "total": 0.648,
+    "padrao": 0.729,
+    "elite": 0.567
+   },
+   "silencioso": {
+    "celulas": {
+     "L1 padrao": [
+      74,
+      80
+     ],
+     "L1 elite": [
+      56,
+      80
+     ],
+     "L3 padrao": [
+      64,
+      80
+     ],
+     "L3 elite": [
+      43,
+      80
+     ],
+     "L5 padrao": [
+      51,
+      80
+     ],
+     "L5 elite": [
+      20,
+      80
+     ]
+    },
+    "total": 0.642,
+    "padrao": 0.787,
+    "elite": 0.496
+   }
+  }
+ },
+ "cartas": {
+  "san1_sil_corte_sem_aviso": {
+   "classe": "Sangromante",
+   "vezes_na_mao": 144,
+   "vezes_jogada": 64,
+   "taxa_uso": 0.444,
+   "vitoria_sem": 0.537,
+   "vitoria_com": 0.65,
+   "delta_pp": 11.3,
+   "lutas_por_braco": 80,
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  }
+ }
+}

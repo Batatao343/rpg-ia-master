@@ -1,0 +1,1032 @@
+{
+ "seeds": [
+  20,
+  100
+ ],
+ "versoes": {},
+ "posturas": {
+  "Devoto do Abismo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      256,
+      320
+     ],
+     "L1 elite": [
+      179,
+      320
+     ],
+     "L3 padrao": [
+      277,
+      320
+     ],
+     "L3 elite": [
+      215,
+      320
+     ],
+     "L5 padrao": [
+      159,
+      320
+     ],
+     "L5 elite": [
+      84,
+      320
+     ]
+    },
+    "total": 0.609,
+    "padrao": 0.721,
+    "elite": 0.498
+   },
+   "consagrado": {
+    "celulas": {
+     "L1 padrao": [
+      255,
+      320
+     ],
+     "L1 elite": [
+      194,
+      320
+     ],
+     "L3 padrao": [
+      284,
+      320
+     ],
+     "L3 elite": [
+      261,
+      320
+     ],
+     "L5 padrao": [
+      176,
+      320
+     ],
+     "L5 elite": [
+      85,
+      320
+     ]
+    },
+    "total": 0.654,
+    "padrao": 0.745,
+    "elite": 0.562
+   },
+   "zeloso": {
+    "celulas": {
+     "L1 padrao": [
+      233,
+      320
+     ],
+     "L1 elite": [
+      171,
+      320
+     ],
+     "L3 padrao": [
+      263,
+      320
+     ],
+     "L3 elite": [
+      215,
+      320
+     ],
+     "L5 padrao": [
+      132,
+      320
+     ],
+     "L5 elite": [
+      71,
+      320
+     ]
+    },
+    "total": 0.565,
+    "padrao": 0.654,
+    "elite": 0.476
+   },
+   "enlutado": {
+    "celulas": {
+     "L1 padrao": [
+      270,
+      320
+     ],
+     "L1 elite": [
+      215,
+      320
+     ],
+     "L3 padrao": [
+      273,
+      320
+     ],
+     "L3 elite": [
+      248,
+      320
+     ],
+     "L5 padrao": [
+      156,
+      320
+     ],
+     "L5 elite": [
+      83,
+      320
+     ]
+    },
+    "total": 0.648,
+    "padrao": 0.728,
+    "elite": 0.569
+   }
+  },
+  "Sangromante": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      276,
+      320
+     ],
+     "L1 elite": [
+      197,
+      320
+     ],
+     "L3 padrao": [
+      259,
+      320
+     ],
+     "L3 elite": [
+      182,
+      320
+     ],
+     "L5 padrao": [
+      187,
+      320
+     ],
+     "L5 elite": [
+      88,
+      320
+     ]
+    },
+    "total": 0.619,
+    "padrao": 0.752,
+    "elite": 0.486
+   },
+   "exposto": {
+    "celulas": {
+     "L1 padrao": [
+      265,
+      320
+     ],
+     "L1 elite": [
+      180,
+      320
+     ],
+     "L3 padrao": [
+      249,
+      320
+     ],
+     "L3 elite": [
+      191,
+      320
+     ],
+     "L5 padrao": [
+      163,
+      320
+     ],
+     "L5 elite": [
+      77,
+      320
+     ]
+    },
+    "total": 0.586,
+    "padrao": 0.705,
+    "elite": 0.467
+   },
+   "avaro": {
+    "celulas": {
+     "L1 padrao": [
+      294,
+      320
+     ],
+     "L1 elite": [
+      221,
+      320
+     ],
+     "L3 padrao": [
+      274,
+      320
+     ],
+     "L3 elite": [
+      193,
+      320
+     ],
+     "L5 padrao": [
+      177,
+      320
+     ],
+     "L5 elite": [
+      73,
+      320
+     ]
+    },
+    "total": 0.642,
+    "padrao": 0.776,
+    "elite": 0.507
+   },
+   "silencioso": {
+    "celulas": {
+     "L1 padrao": [
+      287,
+      320
+     ],
+     "L1 elite": [
+      208,
+      320
+     ],
+     "L3 padrao": [
+      274,
+      320
+     ],
+     "L3 elite": [
+      197,
+      320
+     ],
+     "L5 padrao": [
+      176,
+      320
+     ],
+     "L5 elite": [
+      84,
+      320
+     ]
+    },
+    "total": 0.639,
+    "padrao": 0.768,
+    "elite": 0.509
+   }
+  },
+  "Corruptor": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      237,
+      320
+     ],
+     "L1 elite": [
+      151,
+      320
+     ],
+     "L3 padrao": [
+      214,
+      320
+     ],
+     "L3 elite": [
+      155,
+      320
+     ],
+     "L5 padrao": [
+      107,
+      320
+     ],
+     "L5 elite": [
+      28,
+      320
+     ]
+    },
+    "total": 0.465,
+    "padrao": 0.581,
+    "elite": 0.348
+   },
+   "biologia": {
+    "celulas": {
+     "L1 padrao": [
+      260,
+      320
+     ],
+     "L1 elite": [
+      195,
+      320
+     ],
+     "L3 padrao": [
+      248,
+      320
+     ],
+     "L3 elite": [
+      180,
+      320
+     ],
+     "L5 padrao": [
+      120,
+      320
+     ],
+     "L5 elite": [
+      40,
+      320
+     ]
+    },
+    "total": 0.543,
+    "padrao": 0.654,
+    "elite": 0.432
+   },
+   "alma": {
+    "celulas": {
+     "L1 padrao": [
+      228,
+      320
+     ],
+     "L1 elite": [
+      141,
+      320
+     ],
+     "L3 padrao": [
+      192,
+      320
+     ],
+     "L3 elite": [
+      143,
+      320
+     ],
+     "L5 padrao": [
+      96,
+      320
+     ],
+     "L5 elite": [
+      32,
+      320
+     ]
+    },
+    "total": 0.433,
+    "padrao": 0.537,
+    "elite": 0.329
+   },
+   "inorganica": {
+    "celulas": {
+     "L1 padrao": [
+      243,
+      320
+     ],
+     "L1 elite": [
+      182,
+      320
+     ],
+     "L3 padrao": [
+      239,
+      320
+     ],
+     "L3 elite": [
+      168,
+      320
+     ],
+     "L5 padrao": [
+      78,
+      320
+     ],
+     "L5 elite": [
+      30,
+      320
+     ]
+    },
+    "total": 0.49,
+    "padrao": 0.583,
+    "elite": 0.396
+   }
+  },
+  "Arcanista Cinzento": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      230,
+      320
+     ],
+     "L1 elite": [
+      159,
+      320
+     ],
+     "L3 padrao": [
+      169,
+      320
+     ],
+     "L3 elite": [
+      113,
+      320
+     ],
+     "L5 padrao": [
+      132,
+      320
+     ],
+     "L5 elite": [
+      39,
+      320
+     ]
+    },
+    "total": 0.439,
+    "padrao": 0.553,
+    "elite": 0.324
+   },
+   "calibrado": {
+    "celulas": {
+     "L1 padrao": [
+      268,
+      320
+     ],
+     "L1 elite": [
+      193,
+      320
+     ],
+     "L3 padrao": [
+      265,
+      320
+     ],
+     "L3 elite": [
+      182,
+      320
+     ],
+     "L5 padrao": [
+      128,
+      320
+     ],
+     "L5 elite": [
+      28,
+      320
+     ]
+    },
+    "total": 0.554,
+    "padrao": 0.689,
+    "elite": 0.42
+   },
+   "descoberto": {
+    "celulas": {
+     "L1 padrao": [
+      223,
+      320
+     ],
+     "L1 elite": [
+      151,
+      320
+     ],
+     "L3 padrao": [
+      186,
+      320
+     ],
+     "L3 elite": [
+      118,
+      320
+     ],
+     "L5 padrao": [
+      107,
+      320
+     ],
+     "L5 elite": [
+      35,
+      320
+     ]
+    },
+    "total": 0.427,
+    "padrao": 0.537,
+    "elite": 0.317
+   },
+   "improvisador": {
+    "celulas": {
+     "L1 padrao": [
+      274,
+      320
+     ],
+     "L1 elite": [
+      195,
+      320
+     ],
+     "L3 padrao": [
+      257,
+      320
+     ],
+     "L3 elite": [
+      192,
+      320
+     ],
+     "L5 padrao": [
+      120,
+      320
+     ],
+     "L5 elite": [
+      35,
+      320
+     ]
+    },
+    "total": 0.559,
+    "padrao": 0.678,
+    "elite": 0.44
+   }
+  },
+  "Médico de Campo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      253,
+      320
+     ],
+     "L1 elite": [
+      211,
+      320
+     ],
+     "L3 padrao": [
+      257,
+      320
+     ],
+     "L3 elite": [
+      224,
+      320
+     ],
+     "L5 padrao": [
+      113,
+      320
+     ],
+     "L5 elite": [
+      34,
+      320
+     ]
+    },
+    "total": 0.569,
+    "padrao": 0.649,
+    "elite": 0.489
+   },
+   "cirurgiao_trincheira": {
+    "celulas": {
+     "L1 padrao": [
+      269,
+      320
+     ],
+     "L1 elite": [
+      210,
+      320
+     ],
+     "L3 padrao": [
+      269,
+      320
+     ],
+     "L3 elite": [
+      229,
+      320
+     ],
+     "L5 padrao": [
+      117,
+      320
+     ],
+     "L5 elite": [
+      39,
+      320
+     ]
+    },
+    "total": 0.59,
+    "padrao": 0.682,
+    "elite": 0.498
+   },
+   "boticario": {
+    "celulas": {
+     "L1 padrao": [
+      249,
+      320
+     ],
+     "L1 elite": [
+      216,
+      320
+     ],
+     "L3 padrao": [
+      253,
+      320
+     ],
+     "L3 elite": [
+      198,
+      320
+     ],
+     "L5 padrao": [
+      111,
+      320
+     ],
+     "L5 elite": [
+      40,
+      320
+     ]
+    },
+    "total": 0.556,
+    "padrao": 0.639,
+    "elite": 0.473
+   },
+   "cirurgiao_ferro": {
+    "celulas": {
+     "L1 padrao": [
+      264,
+      320
+     ],
+     "L1 elite": [
+      217,
+      320
+     ],
+     "L3 padrao": [
+      267,
+      320
+     ],
+     "L3 elite": [
+      215,
+      320
+     ],
+     "L5 padrao": [
+      172,
+      320
+     ],
+     "L5 elite": [
+      61,
+      320
+     ]
+    },
+    "total": 0.623,
+    "padrao": 0.732,
+    "elite": 0.514
+   }
+  }
+ },
+ "cartas": {},
+ "emboscada_realista": {
+  "Devoto do Abismo": {
+   "todas": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.609,
+    "emboscada_total": 0.601,
+    "realista": {
+     "total": 0.6052,
+     "padrao": 0.7117,
+     "elite": 0.4988
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6052,
+     "padrao": 0.7117,
+     "elite": 0.4988
+    }
+   },
+   "consagrado": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.654,
+    "emboscada_total": 0.639,
+    "realista": {
+     "total": 0.6465,
+     "padrao": 0.7408,
+     "elite": 0.5522
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6465,
+     "padrao": 0.7408,
+     "elite": 0.5522
+    }
+   },
+   "zeloso": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.565,
+    "emboscada_total": 0.535,
+    "realista": {
+     "total": 0.5503,
+     "padrao": 0.644,
+     "elite": 0.4567
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5503,
+     "padrao": 0.644,
+     "elite": 0.4567
+    }
+   },
+   "enlutado": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.648,
+    "emboscada_total": 0.624,
+    "realista": {
+     "total": 0.6364,
+     "padrao": 0.7228,
+     "elite": 0.5499
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6364,
+     "padrao": 0.7228,
+     "elite": 0.5499
+    }
+   }
+  },
+  "Sangromante": {
+   "todas": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.619,
+    "emboscada_total": 0.537,
+    "realista": {
+     "total": 0.5791,
+     "padrao": 0.7215,
+     "elite": 0.4368
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5791,
+     "padrao": 0.7215,
+     "elite": 0.4368
+    }
+   },
+   "exposto": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.586,
+    "emboscada_total": 0.539,
+    "realista": {
+     "total": 0.5629,
+     "padrao": 0.6967,
+     "elite": 0.4291
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5629,
+     "padrao": 0.6967,
+     "elite": 0.4291
+    }
+   },
+   "avaro": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.642,
+    "emboscada_total": 0.595,
+    "realista": {
+     "total": 0.6185,
+     "padrao": 0.761,
+     "elite": 0.476
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6185,
+     "padrao": 0.761,
+     "elite": 0.476
+    }
+   },
+   "silencioso": {
+    "p_emb": {
+     "1": 0.5,
+     "3": 0.5,
+     "5": 0.45
+    },
+    "base_total": 0.639,
+    "emboscada_total": 0.58,
+    "realista": {
+     "total": 0.6096,
+     "padrao": 0.7556,
+     "elite": 0.4636
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6096,
+     "padrao": 0.7556,
+     "elite": 0.4636
+    }
+   }
+  },
+  "Corruptor": {
+   "todas": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.465,
+    "emboscada_total": 0.421,
+    "realista": {
+     "total": 0.4516,
+     "padrao": 0.5641,
+     "elite": 0.3392
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4516,
+     "padrao": 0.5641,
+     "elite": 0.3392
+    }
+   },
+   "biologia": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.543,
+    "emboscada_total": 0.5,
+    "realista": {
+     "total": 0.5303,
+     "padrao": 0.6401,
+     "elite": 0.4204
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5303,
+     "padrao": 0.6401,
+     "elite": 0.4204
+    }
+   },
+   "alma": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.433,
+    "emboscada_total": 0.392,
+    "realista": {
+     "total": 0.421,
+     "padrao": 0.5256,
+     "elite": 0.3164
+    },
+    "realista_com_contrapartida": {
+     "total": 0.421,
+     "padrao": 0.5256,
+     "elite": 0.3164
+    }
+   },
+   "inorganica": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.49,
+    "emboscada_total": 0.452,
+    "realista": {
+     "total": 0.4782,
+     "padrao": 0.568,
+     "elite": 0.3883
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4782,
+     "padrao": 0.568,
+     "elite": 0.3883
+    }
+   }
+  },
+  "Arcanista Cinzento": {
+   "todas": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.439,
+    "emboscada_total": 0.368,
+    "realista": {
+     "total": 0.421,
+     "padrao": 0.5417,
+     "elite": 0.3003
+    },
+    "realista_com_contrapartida": {
+     "total": 0.421,
+     "padrao": 0.5417,
+     "elite": 0.3003
+    }
+   },
+   "calibrado": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.554,
+    "emboscada_total": 0.491,
+    "realista": {
+     "total": 0.5383,
+     "padrao": 0.6721,
+     "elite": 0.4044
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5383,
+     "padrao": 0.6721,
+     "elite": 0.4044
+    }
+   },
+   "descoberto": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.427,
+    "emboscada_total": 0.352,
+    "realista": {
+     "total": 0.4083,
+     "padrao": 0.5224,
+     "elite": 0.2943
+    },
+    "realista_com_contrapartida": {
+     "total": 0.4083,
+     "padrao": 0.5224,
+     "elite": 0.2943
+    }
+   },
+   "improvisador": {
+    "p_emb": {
+     "1": 0.25,
+     "3": 0.25,
+     "5": 0.25
+    },
+    "base_total": 0.559,
+    "emboscada_total": 0.509,
+    "realista": {
+     "total": 0.5465,
+     "padrao": 0.6682,
+     "elite": 0.4247
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5465,
+     "padrao": 0.6682,
+     "elite": 0.4247
+    }
+   }
+  },
+  "Médico de Campo": {
+   "todas": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.569,
+    "emboscada_total": 0.543,
+    "realista": {
+     "total": 0.5609,
+     "padrao": 0.6408,
+     "elite": 0.481
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5617,
+     "padrao": 0.6424,
+     "elite": 0.481
+    }
+   },
+   "cirurgiao_trincheira": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.59,
+    "emboscada_total": 0.553,
+    "realista": {
+     "total": 0.5789,
+     "padrao": 0.6739,
+     "elite": 0.4839
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5814,
+     "padrao": 0.676,
+     "elite": 0.4867
+    }
+   },
+   "boticario": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.556,
+    "emboscada_total": 0.544,
+    "realista": {
+     "total": 0.5521,
+     "padrao": 0.6379,
+     "elite": 0.4664
+    },
+    "realista_com_contrapartida": {
+     "total": 0.5521,
+     "padrao": 0.6379,
+     "elite": 0.4664
+    }
+   },
+   "cirurgiao_ferro": {
+    "p_emb": {
+     "1": 0.3,
+     "3": 0.3,
+     "5": 0.3
+    },
+    "base_total": 0.623,
+    "emboscada_total": 0.592,
+    "realista": {
+     "total": 0.6137,
+     "padrao": 0.7254,
+     "elite": 0.502
+    },
+    "realista_com_contrapartida": {
+     "total": 0.6189,
+     "padrao": 0.7298,
+     "elite": 0.5079
+    }
+   }
+  }
+ }
+}
