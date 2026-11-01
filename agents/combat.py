@@ -1784,9 +1784,19 @@ VIGILIA_CARD_ID = "dev_zel_vigilia"
 
 
 def _has_vigilia(player: dict | None) -> bool:
-    """Decisão do coordenador: "Vigília Ciumenta" no baralho/preparadas anula a emboscada."""
+    """Decisão do coordenador: "Vigília Ciumenta" no baralho/preparadas anula a emboscada.
+    SPEC-355 R17: vale para QUALQUER Carta de Iniciativa (`buff_iniciativa`) do baralho/preparadas."""
+    from services import card_effects as fx
+    from services import cards
+
     p = player or {}
-    return VIGILIA_CARD_ID in (list(p.get("deck") or []) + list(p.get("prepared_cards") or []))
+    for cid in list(p.get("deck") or []) + list(p.get("prepared_cards") or []):
+        if cid == VIGILIA_CARD_ID:
+            return True
+        card = cards.get_card(str(cid))
+        if card and any(e.get("kind") == "buff_iniciativa" for e in fx.normalize(card)):
+            return True
+    return False
 
 
 def _opening_initiator(
