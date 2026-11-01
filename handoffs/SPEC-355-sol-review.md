@@ -1,6 +1,6 @@
 # SPEC-355 — revisão sol (review)
 
-> **Veredito final:** `APPROVED_WITH_FOLLOWUPS` (re-revisão sobre `3deded66`; 1ª passada em `e78e7e80` foi `CHANGES_REQUIRED` pelo P1-1, agora corrigido)
+> **Veredito final:** `APPROVED_WITH_FOLLOWUPS` (re-revisão sobre `3deded66`; 3º passe sobre `aee8750e`; 1ª passada em `e78e7e80` foi `CHANGES_REQUIRED` pelo P1-1, agora corrigido)
 > **Revisor:** Opus / Sol · **Data:** 2026-11-01 · **Commits revisados:** `e78e7e80` e depois `fbf675d0..3deded66` (branch `spec-355`, rebaseada em `main` `4d4e9182`)
 
 ## Escopo
@@ -76,6 +76,39 @@ Re-revisão (2026-11-01) de `fbf675d0..3deded66`. Os testes novos foram rodados 
   (`combat["scene"]["prenuncios"]`, `combat["pilhas"]["fora_do_conflito"]`), com e sem os campos. **Ok.**
 - Integridade de novo: o diff de `main...3deded66` está vazio para avaliador, golden, orçamento, `data/cards/`,
   `flags.yaml` e `evals/`.
+
+**Terceiro passe (2026-11-01), commits `cb8e62b9` e `aee8750e`:**
+
+- **Expected da 295** (`tests/test_spec295_chefe_no_topo.py:224-232`): **preserva a intenção, não mascara
+  regressão.** A Proteção natural vem do campo `protecao_natural` (`combat_mechanics.py:452`), não de condição.
+  Tirar da conta só as condições com `source == "bst_defesa_instintiva"`, que é o id da Carta gravado em
+  `conflict_orchestrator.py:1226`, mede exatamente "save antigo sem Proteção natural". Qualquer outra Proteção
+  continua contando. Sugestão P2 (não bloqueia): assertar também que a condição filtrada é a da Reação, com
+  `source_actor_id == "boss"`, para o filtro não esconder uma persistência indevida.
+- **Bestiário:** as 7 trocas são coerentes com a lore. Conferi por Grep nome, descrição e ataques de cada criatura.
+  - **Mudaram de arquétipo e de Carta:**
+    - Devorador de Sol (lança e arco) → `tatico` + Bote Certeiro.
+    - Pirata de Brekmar (cutelo e pistola, "briga suja") → `tatico` + Bote Certeiro.
+    - Orc das Saídas Baixas ("embosca grupos pequenos") → `emboscador` + Golpe das Sombras.
+    - Arpoador Osshari (arpão de leviatã) → `tatico` + Pancada Esmagadora. Encaixa como golpe pesado; só o tipo de
+      dano (perfurante × esmagamento) é um detalhe de sabor.
+  - **Conjuradores reais**, cujo ataque passou a `type: magic`:
+    - Djinn, espírito elemental: Lâmina de Vento.
+    - Gazer: Raio de Gelo.
+    - Cultista "mago proibido": Extração Parcial.
+  - O único consumidor mecânico de `attacks[].type` é `enemy_decks._is_melee_only`, e as 3 criaturas seguem
+    `conjurador`, então o baralho delas não muda. A allowlist saiu e `validate_content.py` não acusa mais nada.
+- **Arena:** `arena-bestiario-0-19.json` bate com o §9. As leituras padrão são idênticas às de `arena-final` em todas
+  as Posturas e subclasses, só a elite muda (Devoto 64,2 → 61,5 %; Sangromante 61,0 → 59,8 %; Corruptor 45,6 → 46,7 %;
+  Arcanista igual; Médico 52,1 → 51,2 %). Por isso `EXCECOES_TETO`, que trata do padrão, e `EXCECOES_PISO` (Arcanista
+  44,4 %) continuam válidas sem regerar nada.
+  Ressalva P2: `arena-final`, a confirmação 20–99 e a emboscada foram medidas com o Arpoador antigo. A leitura
+  elite delas fica até ~5 pp otimista para o Devoto (elite 57,9 → 52,5 %). Não se regera nesta spec (R18), mas a
+  próxima spec de balanço deve partir de uma base nova.
+
+Testes do 3º passe, `-n 2`, todos com exit 0: `test_spec295_chefe_no_topo`, `test_spec355_*`, `test_enemy_decks`,
+`test_spec353_misc`, `test_conflito_autoria_bestiario`, `test_import_bestiary_art`. `validate_content.py` sem erro.
+**Veredito mantido: `APPROVED_WITH_FOLLOWUPS`.**
 
 ## Pendências
 
