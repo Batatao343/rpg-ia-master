@@ -22,11 +22,16 @@ def test_exemplo_2d6_out_of_pool():
 def test_creation_pool_skips_exemplos():
     import character_creator
 
-    for cls in {cards.get_card(c)["classe"] for c in IDS}:
-        sheet = (
-            character_creator.build_player_sheet({"name": "T", "class_name": cls, "race": "Humano"})
-            if hasattr(character_creator, "build_player_sheet")
-            else None
-        )
-        if sheet:
-            assert not set(IDS) & set(sheet.get("known_cards") or [])
+    classes = {cards.get_card(c)["classe"] for c in IDS}
+    assert classes
+    for cls in sorted(classes):
+        cards_out = character_creator._resolve_starting_cards({"level": 1}, cls, {})
+        got = {
+            cid
+            for value in cards_out.values()
+            if isinstance(value, list)
+            for cid in value
+            if isinstance(cid, str)
+        }
+        assert got, cls  # a criação monta algum Acervo
+        assert not set(IDS) & got, cls
