@@ -1,4 +1,10 @@
-"""Autoria reproduzível do lote de 80 Cartas tardias e metadata de progressão."""
+"""Autoria reproduzível do lote de 80 Cartas tardias e metadata de progressão.
+
+SPEC-355 R6: o default é `--check` (não grava; sai 1 se algo mudaria). Hoje o `--check` já sai 1 na
+`main` por divergência PRÉ-EXISTENTE em `data/cards/basicas.json` e `data/cards/tiers_5_plus.json`
+(metadata de tier/level_req que o gerador recalcularia). Não é CI: use o `--check` para ver o diff
+do que ele geraria, e `--write` só com seleção humana.
+"""
 
 from __future__ import annotations
 

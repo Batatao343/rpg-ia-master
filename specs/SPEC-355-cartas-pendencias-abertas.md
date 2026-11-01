@@ -559,6 +559,14 @@ com emboscada); Corruptor sem contrapartida de emboscada (45,2 % realista); `ava
 padrão acima do teto (e `silencioso` **78,7 %** nas 0-19 pós-R11/R12, +2,5 pp sobre o pós-B 76,2 %; `EXCECOES_TETO` em `tests/test_spec355_arena.py`); Devoto +2,7 pp pós-R11 (na faixa, 0,7 acima de ±2,0). Decisão: aceitar ou nova spec com
 número novo (ex.: Carta `buff_iniciativa` para o Corruptor, buff ao Arcanista).
 
+**Revisão Sol (P1-1, P2-1..9) corrigida** em commits próprios: teto por subclasse com `EXCECOES_TETO`;
+desvio por Provocação não loga "cumpre" e grava o alvo real; a Provocação gasta só as novas, depois da ação;
+promessa do chefe cumprida pela declaração efetiva (`note_declaration`/`close_promises`); rótulo só com
+fronteira de palavra e chave técnica; teste real da criação; round-trip por `save_game_state`/`load_game_state`;
+guarda `git diff main` só na branch `spec-355`; `EXCECOES_PISO` sai com a spec de balanço do Arcanista.
+**Anomalia do Médico emboscado** (56,9 % × 52,1 %, L3 +8/+10 pp): efeito do bot, não do wrapper (ver `RELATORIO-emboscada.md`).
+**`gen_tiers_5_plus.py --check` sai 1 na `main`** (basicas/tiers_5_plus: divergência pré-existente; documentado no script, sem mexer em Carta).
+
 **Testes novos:** `tests/test_spec355_{conteudo,reacao_buff,golpe_reacao,provocacao_rodada,promessa_chefe,
 router_fallback,compra_utilitaria,exemplos_fora,emboscada,arena,guardas}.py`. R2 ficou fora de
 `ct.resolve_turn`; R3/R4 gravam só em `out`/cena. Fora do escopo desta spec e não feito: `web` só ganhou `label`.
