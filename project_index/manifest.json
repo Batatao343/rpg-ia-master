@@ -1,13 +1,13 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "2363518f6fbcd6fa6f9298d97337621f9b091ddd",
+  "commit_sha": "9cd5a57d69654f9e4afb74c7e6531d19da462418",
   "edge_counts": {
-    "calls": 33735,
-    "contains": 1108,
-    "defines": 16508,
-    "imports": 2741,
-    "likely_test_for": 1955,
-    "route_to": 68
+    "calls": 34065,
+    "contains": 1113,
+    "defines": 16603,
+    "imports": 2753,
+    "likely_test_for": 1965,
+    "route_to": 69
   },
   "excluded_prefixes": [
     ".agents",
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:a1a914c922bf3bda5096e36fa0e9bde9aa000839cbfc450e1f50fdc2f5bf8863",
+  "graph_hash": "sha256:b7dbef9673ebb629abfbdcf2870607148892b53fdf6756326bdcd314fb79a5f5",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -339,6 +339,7 @@
     "services/card_lint.py",
     "services/card_piles.py",
     "services/card_rewards.py",
+    "services/card_shop.py",
     "services/card_status.py",
     "services/card_telemetry.py",
     "services/card_text.py",
@@ -598,7 +599,11 @@
     "tests/test_card_effects_review_spec330.py",
     "tests/test_card_lint.py",
     "tests/test_card_piles.py",
+    "tests/test_card_quest_rewards.py",
     "tests/test_card_rewards.py",
+    "tests/test_card_shop.py",
+    "tests/test_card_shop_api.py",
+    "tests/test_card_shop_loot_text.py",
     "tests/test_card_sim.py",
     "tests/test_card_variety.py",
     "tests/test_cards_prepare_api.py",
@@ -1160,6 +1165,7 @@
     "web/e2e/a11y-headings.spec.ts",
     "web/e2e/account-lifecycle.spec.ts",
     "web/e2e/account.spec.ts",
+    "web/e2e/card-shop-357.spec.ts",
     "web/e2e/checkout.spec.ts",
     "web/e2e/client-error-dedupe.spec.ts",
     "web/e2e/combat-gesture.spec.ts",
@@ -1242,6 +1248,7 @@
     "web/src/components/combat/ForjaPanel.tsx",
     "web/src/components/combat/Hand.tsx",
     "web/src/components/combat/KeywordTip.tsx",
+    "web/src/components/combat/LojaCartasPanel.tsx",
     "web/src/components/combat/MechLog.tsx",
     "web/src/components/combat/PlayQueue.tsx",
     "web/src/components/combat/PreviewChip.tsx",
@@ -1370,14 +1377,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1015,
-    "endpoint": 68,
-    "file": 1316,
-    "function": 5105,
+    "class": 1016,
+    "endpoint": 69,
+    "file": 1323,
+    "function": 5129,
     "method": 864,
-    "module": 1108,
-    "test": 9523
+    "module": 1113,
+    "test": 9593
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d16ca5dc8b93b932efbe5fda67dad20678d5ee209debded0bf2aae439cdd91d3"
+  "source_tree_hash": "sha256:17c5b37b8151f31789ba281af0681e08781e57d5f6af6d58cb72837d52c08007"
 }
