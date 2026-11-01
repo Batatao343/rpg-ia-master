@@ -107,6 +107,13 @@ def test_loot_off_identical(monkeypatch):
         ("Posso comprar o {n}", False),
         ("Será que compro o {n}?", False),
         ("Vendo minha adaga e compro o {n}.", False),
+        ("Nem pensar que eu compro o {n}.", False),
+        ("Até parece que eu compro o {n}.", False),
+        ("Nem a pau compro o {n}.", False),
+        ("Amanhã eu compro o {n}.", False),
+        ("Compro o {n} depois, agora só olho.", False),
+        ("Oi! Compro o {n}.", True),
+        ("Eu compro o {n}, por favor.", True),
     ],
 )
 def test_text_buy_requires_unambiguous_intent(tpl, buys):

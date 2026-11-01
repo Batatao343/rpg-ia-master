@@ -374,11 +374,16 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
         return None
     # Gasto irreversível: só intenção afirmativa inequívoca compra. Negação, pergunta ou consulta
     # de preço -> responde com o preço e pede confirmação, sem debitar.
-    affirmative = re.search(
-        r"\b(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)\b", folded
+    # A frase COMEÇA pelo verbo de compra (saudação curta e pontuação ignoradas).
+    lead = re.sub(r"[^\w\s]", " ", folded).strip()
+    affirmative = re.match(
+        r"^(?:(?:oi|ola|ei|entao|bem|certo|ok|pois|bom dia|boa tarde|boa noite)\s+)*"
+        r"(?:eu\s+)?(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)\b",
+        lead,
     )
     doubtful = re.search(
-        r"\b(?:nao|nunca|jamais|sem|talvez|quanto|custa|preco|valor|posso|poderia|sera|se)\b|\?",
+        r"\b(?:nao|nem|nunca|jamais|sem|talvez|quanto|custa|preco|valor|posso|poderia|sera|se|"
+        r"parece|depois|amanha|mais tarde)\b|\?",
         folded,
     )
     if not affirmative or doubtful:
