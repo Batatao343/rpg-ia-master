@@ -29,7 +29,10 @@ def _config() -> dict:
         try:
             with open(path, encoding="utf-8") as f:
                 _CONFIG = json.load(f)
-        except Exception:
+        except (OSError, ValueError) as exc:
+            from observability.telemetry import log_fallback
+
+            log_fallback("card_shop", "config_unreadable", exc)
             _CONFIG = {}
     return _CONFIG
 
