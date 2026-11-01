@@ -107,3 +107,40 @@ def test_intent_off_unchanged(monkeypatch):
 
 def test_modulo_ordens_cobertas():
     assert set(ORDENS) == {"hero_first", "enemy_first"}
+
+
+def test_diverted_attack_does_not_claim_the_original_promise():
+    actors, scene, sides = _cena_devoto()
+    frozen = _frozen(actors, scene, sides)
+    out = _round(actors, scene, sides, _voto(), frozen)
+    assert out["pressagios_desviados"]
+    assert not any("cumpre o que o presságio anunciava" in ln for ln in out["logs"])
+    assert out["pressagios_cumpridos"][0]["alvo_id"] == "player"  # alvo real, não o congelado
+
+
+def test_taunt_ends_after_the_enemy_action_in_the_log():
+    actors, scene, sides = _cena_devoto()
+    frozen = _frozen(actors, scene, sides)
+    out = _round(actors, scene, sides, _voto(), frozen)
+    logs = out["logs"]
+    i_ataque = next(i for i, ln in enumerate(logs) if ln.startswith("e → player"))
+    ended = [i for i, ln in enumerate(logs) if "terminou" in ln and ln.startswith("e:")]
+    assert ended and min(ended) > i_ataque
+
+
+def test_older_taunt_from_another_source_is_not_spent():
+    actors, scene, sides = _cena_devoto()
+    old = {
+        "name": "taunt",
+        "dot": 0,
+        "duration": 3,
+        "control": "taunt",
+        "source": "t",
+        "source_actor_id": "ally",
+        "delta": 2,
+    }
+    actors["e"]["active_conditions"].append(old)
+    frozen = _frozen(actors, scene, sides)
+    _round(actors, scene, sides, _voto(), frozen)
+    kept = [c for c in actors["e"]["active_conditions"] if c.get("source_actor_id") == "ally"]
+    assert kept and kept[0]["duration"] >= 2  # só o tick normal; sem gasto da rolagem

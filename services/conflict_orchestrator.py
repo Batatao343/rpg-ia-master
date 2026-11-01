@@ -2646,39 +2646,55 @@ def _run_round(
         _mt.record_step("pressagio_frustrado", actor=actor_id, reason=motivo, card_id=None)
         logger.info("pressagio_frustrado actor=%s motivo=%s name=%s", actor_id, motivo, _name(a))
 
-    def _taunt_same_round(actor_id: str, actor: dict, intent: dict) -> dict:
-        """SPEC-355 R2: Provocação aplicada NESTA rodada desvia a intenção de ataque congelada
-        (uma declaração por aplicação). Sem desvio possível devolve a declaração como está."""
-        decl = intent["declaration"]
-        if intent["tipo"] not in ("ataque", "ataque_multiplo"):
-            return decl
-        if not any(
-            n.get("victim_id") == actor_id and n.get("control") == "taunt"
-            for n in out.get("condicoes_novas") or []
-        ):
-            return decl
-        orig = intent.get("alvo_id")
-        candidates = [t for t in _opposing_ids(actor_id, sides) if _alive(actors_by_id.get(t))]
-        taunts = [c for c in actor.get("active_conditions") or [] if c.get("control") == "taunt"]
-        sources = {
-            str(c.get("source_actor_id") or "")
-            for c in taunts
-            if str(c.get("source_actor_id") or "") in candidates
-        }
-        if not sources or sources == {str(orig)}:
-            return decl  # sem fonte válida, ou o alvo já é o provocador: não rola
-        new = _taunt_target(actor, candidates, actors_by_id, rng, scene)
+    taunt_spend: dict[str, list[dict]] = {}  # SPEC-355 R2: Provocações a gastar APÓS a ação
+
+    def _spend_taunt(actor_id: str, actor: dict) -> None:
+        """Cada Provocação desta rodada que decidiu/rolou perde 1 de duração depois da ação do
+        inimigo; zerada, sai com a linha "terminou" (depois do ataque no registro)."""
+        spent = taunt_spend.pop(actor_id, None)
+        if not spent:
+            return
         survivors = []
         for c in actor.get("active_conditions") or []:
-            if c.get("control") == "taunt" and str(c.get("source_actor_id") or "") in sources:
+            if any(c is s for s in spent):
                 c["duration"] = int(c.get("duration", 0) or 0) - 1
                 if c["duration"] <= 0:
                     out["logs"].append(f"{_name(actor)}: {c.get('name', 'Provocação')} terminou.")
                     continue
             survivors.append(c)
         actor["active_conditions"] = survivors
+
+    def _taunt_same_round(actor_id: str, actor: dict, intent: dict) -> tuple[dict, str | None]:
+        """SPEC-355 R2: Provocação aplicada NESTA rodada desvia a intenção de ataque congelada
+        (uma declaração por aplicação). Devolve (declaração, novo alvo ou None)."""
+        decl = intent["declaration"]
+        if intent["tipo"] not in ("ataque", "ataque_multiplo"):
+            return decl, None
+        fresh_sources = {
+            str(n.get("source_id") or "")
+            for n in out.get("condicoes_novas") or []
+            if n.get("victim_id") == actor_id and n.get("control") == "taunt"
+        }
+        if not fresh_sources:
+            return decl, None
+        orig = intent.get("alvo_id")
+        candidates = [t for t in _opposing_ids(actor_id, sides) if _alive(actors_by_id.get(t))]
+        # só as Provocações NOVAS desta rodada (as antigas de outra fonte não rolam nem gastam)
+        fresh = [
+            c
+            for c in actor.get("active_conditions") or []
+            if c.get("control") == "taunt"
+            and str(c.get("source_actor_id") or "") in candidates
+            and (str(c.get("source_actor_id") or "") in fresh_sources or "" in fresh_sources)
+        ]
+        sources = {str(c.get("source_actor_id") or "") for c in fresh}
+        if not sources or sources == {str(orig)}:
+            return decl, None  # sem fonte válida, ou o alvo já é o provocador: não rola
+        shim = {**actor, "active_conditions": fresh}
+        new = _taunt_target(shim, candidates, actors_by_id, rng, scene)
+        taunt_spend.setdefault(actor_id, []).extend(fresh)
         if not new or new == orig:
-            return decl
+            return decl, None
 
         def swap(node):
             if isinstance(node, dict):
@@ -2695,7 +2711,7 @@ def _run_round(
         out["logs"].append(
             f"{_name(actor)}, provocado por {_name(actors_by_id[new])}, muda de alvo."
         )
-        return swap(decl)
+        return swap(decl), new
 
     def _enemy_decl(actor_id: str, actor: dict):
         def late():
@@ -2722,11 +2738,17 @@ def _run_round(
         if ei.still_possible(intent, actors_by_id, scene):
             if intent["tipo"] == "render-se":
                 actor["surrendered"] = True
+            decl_dict, desviado = _taunt_same_round(actor_id, actor, intent)
             out.setdefault("pressagios_cumpridos", []).append(
-                {"actor_id": actor_id, "tipo": intent["tipo"], "alvo_id": intent.get("alvo_id")}
+                {
+                    "actor_id": actor_id,
+                    "tipo": intent["tipo"],
+                    "alvo_id": desviado or intent.get("alvo_id"),
+                }
             )
-            out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
-            return ct.TurnDeclaration(**_taunt_same_round(actor_id, actor, intent))
+            if not desviado:  # desviado: a linha "muda de alvo" já diz o que acontece
+                out["logs"].append(f"{_name(actor)} cumpre o que o presságio anunciava.")  # R8
+            return ct.TurnDeclaration(**decl_dict)
         _frustrate(actor_id, intent, "impossivel")
         return late()
 
@@ -2847,6 +2869,7 @@ def _run_round(
             out["logs"].append(f"{_name(actor)} age de novo.")
             decl = _enemy_decl(actor_id, actor)
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+            _spend_taunt(actor_id, actor)
             _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
             _mark_fresh_conditions(
                 _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
@@ -2895,6 +2918,7 @@ def _run_round(
             )
         else:
             _resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
+        _spend_taunt(actor_id, actor)
         _note_turn_records(_cond_before, actors_by_id, actor_id, out, scene)
         _mark_fresh_conditions(
             _cond_before, actors_by_id, actor_id, sides, taunt_frozen_acted=_tf_acted()
