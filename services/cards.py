@@ -147,13 +147,6 @@ _CARDS: dict[str, dict] | None = None
 STATUS_TIPOS = frozenset({"status", "maldicao"})
 
 
-def is_neutral(card: dict | None) -> bool:
-    """SPEC-357 R1: Carta neutra (sem Postura). Predicado único do espólio, da loja e da missão."""
-    if not card:
-        return False
-    return card.get("classe") in ("", "Neutra", "neutra", None) or bool(card.get("neutra"))
-
-
 def scene_card_ids(player: dict) -> set[str]:
     """SPEC-333 R9: Cartas temporarias do conflito (Sussurro do Abismo), jogaveis sem Acervo."""
     return {str(c) for c in (player.get("cartas_cena") or [])}
