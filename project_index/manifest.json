@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "d94332c644f9b4de9b625e5c3eee633196bdfd4b",
+  "commit_sha": "c5f0bc67528bf0ae3f9386c47b4792ae6ef2677a",
   "edge_counts": {
-    "calls": 33480,
-    "contains": 1096,
-    "defines": 16406,
-    "imports": 2706,
-    "likely_test_for": 1926,
+    "calls": 33733,
+    "contains": 1108,
+    "defines": 16506,
+    "imports": 2741,
+    "likely_test_for": 1955,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:45307a0716207d7549a8bc9c50fb6d559ab8e52d32cb90b5162725685648296c",
+  "graph_hash": "sha256:25fdca54b076297af305062147c6e076630bd0c13c00e97b99313d99e2a5a39d",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -104,6 +104,7 @@
     "docs/spec341/arena_spec341.py",
     "docs/spec346/arena_spec346.py",
     "docs/spec346/diag_groq_router.py",
+    "docs/spec355/arena_spec355.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -1102,6 +1103,17 @@
     "tests/test_spec353_text.py",
     "tests/test_spec354_final_round_view.py",
     "tests/test_spec354_portrait_always.py",
+    "tests/test_spec355_arena.py",
+    "tests/test_spec355_compra_utilitaria.py",
+    "tests/test_spec355_conteudo.py",
+    "tests/test_spec355_emboscada.py",
+    "tests/test_spec355_exemplos_fora.py",
+    "tests/test_spec355_golpe_reacao.py",
+    "tests/test_spec355_guardas.py",
+    "tests/test_spec355_promessa_chefe.py",
+    "tests/test_spec355_provocacao_rodada.py",
+    "tests/test_spec355_reacao_buff.py",
+    "tests/test_spec355_router_fallback.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1358,14 +1370,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1014,
+    "class": 1015,
     "endpoint": 68,
-    "file": 1304,
-    "function": 5081,
+    "file": 1316,
+    "function": 5105,
     "method": 864,
-    "module": 1096,
-    "test": 9446
+    "module": 1108,
+    "test": 9521
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:9b7e54abcf514a5b7402516d8467180450708a29cc4e9e3339895309e7ef631a"
+  "source_tree_hash": "sha256:2a9b58950f5f5e84c58b85284f61e4318d0a568edd189851ebe5d469d580aa8c"
 }
