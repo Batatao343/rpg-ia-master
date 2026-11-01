@@ -1,0 +1,35 @@
+{
+ "ctl_ferro_dano4_marcial": {
+  "protocolo": "lote-v2",
+  "classe": "Médico de Campo",
+  "vezes_na_mao": 830,
+  "vezes_jogada": 609,
+  "taxa_uso": 0.734,
+  "vitoria_sem": 0.287,
+  "vitoria_ref": 0.506,
+  "vitoria_com": 0.394,
+  "delta_pp": -11.2,
+  "delta_base": "substituicao",
+  "delta_pp_remocao": 10.6,
+  "lutas_por_braco": 320,
+  "referencia": {
+   "id": "ctl_ferro_dano4_marcial~ref",
+   "efeito": {
+    "kind": "dano",
+    "dano_base": 7,
+    "categoria_arma": "marcial"
+   },
+   "power_score": 6.0,
+   "faixa": [
+    -3.0,
+    16.0
+   ]
+  },
+  "dano_por_folego": 4.0,
+  "protecao_por_folego": 0.0,
+  "bandeiras": [],
+  "avisos": [
+   "uso_alto"
+  ]
+ }
+}

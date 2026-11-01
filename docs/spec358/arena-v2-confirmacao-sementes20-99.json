@@ -1,0 +1,2500 @@
+{
+ "_meta": {
+  "sementes": "20-99",
+  "selecionados": [
+   "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_rede|",
+   "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_segunda_medicao|",
+   "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_folga|",
+   "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_impacto|",
+   "arquivo:arcanista_cinzento_descoberto.json|arc1_des_dedos|",
+   "arquivo:arcanista_cinzento_descoberto.json|arc1_des_corrente|",
+   "arquivo:arcanista_cinzento_improvisador.json|arc1_imp_orquestra|",
+   "arquivo:corruptor_alma.json|cor1_alm_lembranca_errada|",
+   "arquivo:corruptor_alma.json|cor1_alm_corredor_sem_eco|",
+   "arquivo:corruptor_biologia.json|cor1_bio_raiz_na_pele|",
+   "arquivo:corruptor_biologia.json|cor1_bio_mordida_do_bolor|",
+   "arquivo:corruptor_biologia.json|cor1_bio_golpe_de_mofo|",
+   "arquivo:corruptor_inorganica.json|cor1_ino_medir_a_fadiga|",
+   "arquivo:corruptor_inorganica.json|cor1_ino_colapso_programado|",
+   "arquivo:corruptor_inorganica.json|cor1_ino_geometria_da_ruina|",
+   "arquivo:devoto_consagrado.json|dev1_con_veu_de_incenso|",
+   "arquivo:devoto_consagrado.json|dev1_con_cajado_votivo|",
+   "arquivo:devoto_consagrado.json|dev1_con_cicatriz_votiva|",
+   "arquivo:devoto_enlutado.json|dev1_enl_nome_repetido|",
+   "arquivo:devoto_enlutado.json|dev1_enl_peso_dos_ausentes|",
+   "arquivo:devoto_enlutado.json|dev1_enl_luto_que_aquece|",
+   "arquivo:devoto_enlutado.json|dev1_enl_cortejo_de_cinzas|",
+   "arquivo:devoto_enlutado.json|dev1_enl_missa_dos_ausentes|",
+   "arquivo:medico_boticario.json|med1_bot_agulha_envenenada|",
+   "arquivo:medico_cirurgiao_ferro.json|med1_fer_garra_de_protese|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_remendo_rapido|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_maca_erguida|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_no_desfeito|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_sedativo_seco|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_pancada_de_cabo|",
+   "arquivo:medico_cirurgiao_trincheira.json|med1_tri_respiro_forcado|",
+   "arquivo:sangromante_avaro.json|san1_ava_juros_do_primeiro|",
+   "arquivo:sangromante_avaro.json|san1_ava_poupar_ferida|",
+   "arquivo:sangromante_avaro.json|san1_ava_execucao_da_divida|",
+   "arquivo:sangromante_avaro.json|san1_ava_cofre_sem_fundo|",
+   "arquivo:sangromante_exposto.json|san1_exp_cicatriz_aberta|",
+   "arquivo:sangromante_exposto.json|san1_exp_gole_rubro|",
+   "arquivo:sangromante_exposto.json|san1_exp_selo_de_dor|",
+   "arquivo:sangromante_silencioso.json|san1_sil_corte_sem_aviso|",
+   "arquivo:sangromante_silencioso.json|san1_sil_arterial_fina|",
+   "arquivo:sangromante_silencioso.json|san1_sil_cirurgia_sem_testemunha|",
+   "arquivo:sangromante_silencioso.json|san1_sil_ultima_gota|",
+   "tronco|arc1_tro_marca_de_giz|calibrado",
+   "tronco|arc1_tro_lance_calculado|descoberto",
+   "tronco|arc1_tro_lance_calculado|improvisador",
+   "tronco|arc1_tro_contrassinal|calibrado",
+   "tronco|arc1_tro_contrassinal|descoberto",
+   "tronco|arc1_tro_contrassinal|improvisador",
+   "tronco|dev1_tro_vigilia_de_cinza|zeloso",
+   "tronco|dev1_tro_palavra_que_corta|consagrado",
+   "tronco|dev1_tro_palavra_que_corta|zeloso",
+   "tronco|dev1_tro_dedo_de_sentenca|zeloso",
+   "tronco|san1_tro_corte_de_penitencia|exposto",
+   "tronco|san1_tro_corte_de_penitencia|silencioso",
+   "tronco|san1_tro_eco_de_ferida|exposto",
+   "neutras|neu1_na_espada_da_legiao|devoto",
+   "neutras|neu1_na_espada_da_legiao|arcanista",
+   "neutras|neu1_na_fuligem_das_chamines|devoto",
+   "neutras|neu1_na_fuligem_das_chamines|arcanista",
+   "neutras|neu1_na_gazua_dos_telhados|devoto",
+   "neutras|neu1_na_gazua_dos_telhados|arcanista",
+   "neutras|neu1_na_salvo_conduto_falso|devoto",
+   "neutras|neu1_na_salvo_conduto_falso|arcanista",
+   "neutras|neu1_er_emboscada_dos_renegados|arcanista",
+   "neutras|neu1_er_machado_de_vorr|devoto",
+   "neutras|neu1_br_sabre_de_pirata|devoto",
+   "neutras|neu1_br_sabre_de_pirata|arcanista",
+   "neutras|neu1_br_grogue_do_porto|devoto",
+   "neutras|neu1_br_grogue_do_porto|arcanista",
+   "neutras|neu1_br_arpao_de_osso|arcanista",
+   "neutras|neu1_sb_pedagio_de_sangue|devoto",
+   "neutras|neu1_sb_pedagio_de_sangue|arcanista",
+   "neutras|neu1_sb_martelo_de_guerra_anao|arcanista",
+   "neutras|neu1_sb_corda_de_aranha|devoto",
+   "neutras|neu1_sb_corda_de_aranha|arcanista",
+   "neutras|neu1_ge_nectar_da_furia|arcanista",
+   "neutras|neu1_ge_ampulheta_de_vaelorn|arcanista"
+  ]
+ },
+ "itens": {
+  "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_rede|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 553,
+   "vezes_jogada": 310,
+   "taxa_uso": 0.561,
+   "vitoria_sem": 0.247,
+   "vitoria_ref": 0.409,
+   "vitoria_com": 0.306,
+   "delta_pp": -10.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_cal_rede~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 9,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_segunda_medicao|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 1133,
+   "vezes_jogada": 329,
+   "taxa_uso": 0.29,
+   "vitoria_sem": 0.247,
+   "vitoria_ref": 0.328,
+   "vitoria_com": 0.291,
+   "delta_pp": -3.7,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 4.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_cal_segunda_medicao~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 10
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_folga|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 311,
+   "vezes_jogada": 75,
+   "taxa_uso": 0.241,
+   "vitoria_sem": 0.534,
+   "vitoria_ref": 0.478,
+   "vitoria_com": 0.494,
+   "delta_pp": 1.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -4.1,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_cal_folga~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.3,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_impacto|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 317,
+   "vezes_jogada": 122,
+   "taxa_uso": 0.385,
+   "vitoria_sem": 0.534,
+   "vitoria_ref": 0.534,
+   "vitoria_com": 0.534,
+   "delta_pp": 0.0,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_cal_impacto~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:arcanista_cinzento_descoberto.json|arc1_des_dedos|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 410,
+   "vezes_jogada": 4,
+   "taxa_uso": 0.01,
+   "vitoria_sem": 0.641,
+   "vitoria_ref": 0.656,
+   "vitoria_com": 0.678,
+   "delta_pp": 2.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_des_dedos~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:arcanista_cinzento_descoberto.json|arc1_des_corrente|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 410,
+   "vezes_jogada": 4,
+   "taxa_uso": 0.01,
+   "vitoria_sem": 0.641,
+   "vitoria_ref": 0.656,
+   "vitoria_com": 0.678,
+   "delta_pp": 2.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_des_corrente~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 6
+    },
+    "power_score": 3.3,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:arcanista_cinzento_improvisador.json|arc1_imp_orquestra|": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 227,
+   "vezes_jogada": 10,
+   "taxa_uso": 0.044,
+   "vitoria_sem": 0.644,
+   "vitoria_ref": 0.694,
+   "vitoria_com": 0.65,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_imp_orquestra~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 19,
+     "categoria_arma": "leve"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 2.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:corruptor_alma.json|cor1_alm_lembranca_errada|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 260,
+   "vezes_jogada": 149,
+   "taxa_uso": 0.573,
+   "vitoria_sem": 0.434,
+   "vitoria_ref": 0.512,
+   "vitoria_com": 0.447,
+   "delta_pp": -6.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_alm_lembranca_errada~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 9,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 7.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:corruptor_alma.json|cor1_alm_corredor_sem_eco|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 249,
+   "vezes_jogada": 9,
+   "taxa_uso": 0.036,
+   "vitoria_sem": 0.619,
+   "vitoria_ref": 0.653,
+   "vitoria_com": 0.619,
+   "delta_pp": -3.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_alm_corredor_sem_eco~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:corruptor_biologia.json|cor1_bio_raiz_na_pele|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 483,
+   "vezes_jogada": 359,
+   "taxa_uso": 0.743,
+   "vitoria_sem": 0.806,
+   "vitoria_ref": 0.875,
+   "vitoria_com": 0.806,
+   "delta_pp": -6.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_bio_raiz_na_pele~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.0,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:corruptor_biologia.json|cor1_bio_mordida_do_bolor|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 473,
+   "vezes_jogada": 356,
+   "taxa_uso": 0.753,
+   "vitoria_sem": 0.806,
+   "vitoria_ref": 0.834,
+   "vitoria_com": 0.8,
+   "delta_pp": -3.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_bio_mordida_do_bolor~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:corruptor_biologia.json|cor1_bio_golpe_de_mofo|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 247,
+   "vezes_jogada": 103,
+   "taxa_uso": 0.417,
+   "vitoria_sem": 0.506,
+   "vitoria_ref": 0.559,
+   "vitoria_com": 0.559,
+   "delta_pp": 0.0,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_bio_golpe_de_mofo~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:corruptor_inorganica.json|cor1_ino_medir_a_fadiga|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 481,
+   "vezes_jogada": 6,
+   "taxa_uso": 0.012,
+   "vitoria_sem": 0.791,
+   "vitoria_ref": 0.797,
+   "vitoria_com": 0.772,
+   "delta_pp": -2.5,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -1.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_ino_medir_a_fadiga~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 5
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:corruptor_inorganica.json|cor1_ino_colapso_programado|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 240,
+   "vezes_jogada": 132,
+   "taxa_uso": 0.55,
+   "vitoria_sem": 0.506,
+   "vitoria_ref": 0.603,
+   "vitoria_com": 0.509,
+   "delta_pp": -9.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_ino_colapso_programado~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18,
+     "categoria_arma": "pesada"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:corruptor_inorganica.json|cor1_ino_geometria_da_ruina|": {
+   "protocolo": "lote-v2",
+   "classe": "Corruptor",
+   "vezes_na_mao": 273,
+   "vezes_jogada": 40,
+   "taxa_uso": 0.147,
+   "vitoria_sem": 0.6,
+   "vitoria_ref": 0.637,
+   "vitoria_com": 0.572,
+   "delta_pp": -6.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -2.8,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "cor1_ino_geometria_da_ruina~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 1.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:devoto_consagrado.json|dev1_con_veu_de_incenso|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 570,
+   "vezes_jogada": 497,
+   "taxa_uso": 0.872,
+   "vitoria_sem": 0.806,
+   "vitoria_ref": 0.831,
+   "vitoria_com": 0.819,
+   "delta_pp": -1.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_con_veu_de_incenso~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 6
+    },
+    "power_score": 3.8,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 4.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:devoto_consagrado.json|dev1_con_cajado_votivo|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 530,
+   "vezes_jogada": 468,
+   "taxa_uso": 0.883,
+   "vitoria_sem": 0.806,
+   "vitoria_ref": 0.85,
+   "vitoria_com": 0.859,
+   "delta_pp": 0.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_con_cajado_votivo~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 4,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:devoto_consagrado.json|dev1_con_cicatriz_votiva|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 736,
+   "vezes_jogada": 225,
+   "taxa_uso": 0.306,
+   "vitoria_sem": 0.403,
+   "vitoria_ref": 0.403,
+   "vitoria_com": 0.438,
+   "delta_pp": 3.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_con_cicatriz_votiva~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.8,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:devoto_enlutado.json|dev1_enl_nome_repetido|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 568,
+   "vezes_jogada": 383,
+   "taxa_uso": 0.674,
+   "vitoria_sem": 0.831,
+   "vitoria_ref": 0.838,
+   "vitoria_com": 0.834,
+   "delta_pp": -0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_enl_nome_repetido~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "versatil"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:devoto_enlutado.json|dev1_enl_peso_dos_ausentes|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 253,
+   "vezes_jogada": 121,
+   "taxa_uso": 0.478,
+   "vitoria_sem": 0.672,
+   "vitoria_ref": 0.694,
+   "vitoria_com": 0.672,
+   "delta_pp": -2.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_enl_peso_dos_ausentes~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 9,
+     "categoria_arma": "versatil"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:devoto_enlutado.json|dev1_enl_luto_que_aquece|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 266,
+   "vezes_jogada": 57,
+   "taxa_uso": 0.214,
+   "vitoria_sem": 0.672,
+   "vitoria_ref": 0.675,
+   "vitoria_com": 0.731,
+   "delta_pp": 5.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_enl_luto_que_aquece~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.8,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:devoto_enlutado.json|dev1_enl_cortejo_de_cinzas|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 249,
+   "vezes_jogada": 73,
+   "taxa_uso": 0.293,
+   "vitoria_sem": 0.703,
+   "vitoria_ref": 0.669,
+   "vitoria_com": 0.666,
+   "delta_pp": -0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_enl_cortejo_de_cinzas~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18,
+     "categoria_arma": "versatil"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:devoto_enlutado.json|dev1_enl_missa_dos_ausentes|": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 231,
+   "vezes_jogada": 30,
+   "taxa_uso": 0.13,
+   "vitoria_sem": 0.7,
+   "vitoria_ref": 0.738,
+   "vitoria_com": 0.703,
+   "delta_pp": -3.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_enl_missa_dos_ausentes~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_boticario.json|med1_bot_agulha_envenenada|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 633,
+   "vezes_jogada": 253,
+   "taxa_uso": 0.4,
+   "vitoria_sem": 0.244,
+   "vitoria_ref": 0.441,
+   "vitoria_com": 0.312,
+   "delta_pp": -12.8,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 6.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_bot_agulha_envenenada~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_ferro.json|med1_fer_garra_de_protese|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 923,
+   "vezes_jogada": 531,
+   "taxa_uso": 0.575,
+   "vitoria_sem": 0.828,
+   "vitoria_ref": 0.869,
+   "vitoria_com": 0.825,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_fer_garra_de_protese~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 4
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_remendo_rapido|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 864,
+   "vezes_jogada": 83,
+   "taxa_uso": 0.096,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.844,
+   "vitoria_com": 0.838,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_tri_remendo_rapido~ref",
+    "efeito": {
+     "kind": "cura",
+     "valor": 5
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_maca_erguida|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 893,
+   "vezes_jogada": 463,
+   "taxa_uso": 0.518,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.872,
+   "vitoria_com": 0.863,
+   "delta_pp": -0.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_tri_maca_erguida~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 6
+    },
+    "power_score": 3.8,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_no_desfeito|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 695,
+   "vezes_jogada": 390,
+   "taxa_uso": 0.561,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.859,
+   "vitoria_com": 0.816,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_tri_no_desfeito~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_sedativo_seco|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 701,
+   "vezes_jogada": 390,
+   "taxa_uso": 0.556,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.875,
+   "vitoria_com": 0.803,
+   "delta_pp": -7.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_tri_sedativo_seco~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.0,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_pancada_de_cabo|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 640,
+   "vezes_jogada": 301,
+   "taxa_uso": 0.47,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.866,
+   "vitoria_com": 0.825,
+   "delta_pp": -4.1,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 2.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "med1_tri_pancada_de_cabo~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:medico_cirurgiao_trincheira.json|med1_tri_respiro_forcado|": {
+   "protocolo": "lote-v2",
+   "classe": "Médico de Campo",
+   "vezes_na_mao": 838,
+   "vezes_jogada": 0,
+   "taxa_uso": 0.0,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": null,
+   "vitoria_com": 0.834,
+   "delta_pp": 3.1,
+   "delta_base": "remocao",
+   "delta_pp_remocao": 3.1,
+   "lutas_por_braco": 320,
+   "referencia": null,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_nao_medido",
+    "sem_referencia"
+   ]
+  },
+  "arquivo:sangromante_avaro.json|san1_ava_juros_do_primeiro|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 660,
+   "vezes_jogada": 56,
+   "taxa_uso": 0.085,
+   "vitoria_sem": 0.509,
+   "vitoria_ref": 0.531,
+   "vitoria_com": 0.475,
+   "delta_pp": -5.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_ava_juros_do_primeiro~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 7,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 1.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_avaro.json|san1_ava_poupar_ferida|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 1004,
+   "vezes_jogada": 45,
+   "taxa_uso": 0.045,
+   "vitoria_sem": 0.922,
+   "vitoria_ref": 0.919,
+   "vitoria_com": 0.922,
+   "delta_pp": 0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_ava_poupar_ferida~ref",
+    "efeito": {
+     "kind": "cura",
+     "valor": 5
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_baixo"
+   ]
+  },
+  "arquivo:sangromante_avaro.json|san1_ava_execucao_da_divida|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 323,
+   "vezes_jogada": 161,
+   "taxa_uso": 0.498,
+   "vitoria_sem": 0.616,
+   "vitoria_ref": 0.688,
+   "vitoria_com": 0.706,
+   "delta_pp": 1.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 9.1,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_ava_execucao_da_divida~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18,
+     "categoria_arma": "pesada"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_avaro.json|san1_ava_cofre_sem_fundo|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 313,
+   "vezes_jogada": 149,
+   "taxa_uso": 0.476,
+   "vitoria_sem": 0.713,
+   "vitoria_ref": 0.731,
+   "vitoria_com": 0.734,
+   "delta_pp": 0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 2.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_ava_cofre_sem_fundo~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18,
+     "categoria_arma": "pesada"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 4.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_exposto.json|san1_exp_cicatriz_aberta|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 434,
+   "vezes_jogada": 309,
+   "taxa_uso": 0.712,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.831,
+   "vitoria_com": 0.8,
+   "delta_pp": -3.1,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_exp_cicatriz_aberta~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:sangromante_exposto.json|san1_exp_gole_rubro|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 442,
+   "vezes_jogada": 44,
+   "taxa_uso": 0.1,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.825,
+   "vitoria_com": 0.809,
+   "delta_pp": -1.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_exp_gole_rubro~ref",
+    "efeito": {
+     "kind": "cura",
+     "valor": 5
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_exposto.json|san1_exp_selo_de_dor|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 432,
+   "vezes_jogada": 297,
+   "taxa_uso": 0.688,
+   "vitoria_sem": 0.803,
+   "vitoria_ref": 0.831,
+   "vitoria_com": 0.778,
+   "delta_pp": -5.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -2.5,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_exp_selo_de_dor~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 5.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "arquivo:sangromante_silencioso.json|san1_sil_corte_sem_aviso|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 579,
+   "vezes_jogada": 275,
+   "taxa_uso": 0.475,
+   "vitoria_sem": 0.531,
+   "vitoria_ref": 0.559,
+   "vitoria_com": 0.55,
+   "delta_pp": -0.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_sil_corte_sem_aviso~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 3.5,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_silencioso.json|san1_sil_arterial_fina|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 253,
+   "vezes_jogada": 73,
+   "taxa_uso": 0.289,
+   "vitoria_sem": 0.559,
+   "vitoria_ref": 0.6,
+   "vitoria_com": 0.594,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_sil_arterial_fina~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 15.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_silencioso.json|san1_sil_cirurgia_sem_testemunha|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 227,
+   "vezes_jogada": 111,
+   "taxa_uso": 0.489,
+   "vitoria_sem": 0.619,
+   "vitoria_ref": 0.662,
+   "vitoria_com": 0.656,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_sil_cirurgia_sem_testemunha~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 17,
+     "categoria_arma": "leve"
+    },
+    "power_score": 14.5,
+    "faixa": [
+     -1.0,
+     31.0
+    ]
+   },
+   "dano_por_folego": 9.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "arquivo:sangromante_silencioso.json|san1_sil_ultima_gota|": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 211,
+   "vezes_jogada": 111,
+   "taxa_uso": 0.526,
+   "vitoria_sem": 0.703,
+   "vitoria_ref": 0.716,
+   "vitoria_com": 0.694,
+   "delta_pp": -2.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_sil_ultima_gota~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 18,
+     "categoria_arma": "pesada"
+    },
+    "power_score": 15.0,
+    "faixa": [
+     -1.0,
+     32.0
+    ]
+   },
+   "dano_por_folego": 16.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|arc1_tro_marca_de_giz|calibrado": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 706,
+   "vezes_jogada": 167,
+   "taxa_uso": 0.237,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.841,
+   "vitoria_com": 0.825,
+   "delta_pp": -1.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_marca_de_giz~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|arc1_tro_lance_calculado|descoberto": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 610,
+   "vezes_jogada": 188,
+   "taxa_uso": 0.308,
+   "vitoria_sem": 0.281,
+   "vitoria_ref": 0.297,
+   "vitoria_com": 0.266,
+   "delta_pp": -3.1,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -1.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_lance_calculado~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.3,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|arc1_tro_lance_calculado|improvisador": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 601,
+   "vezes_jogada": 188,
+   "taxa_uso": 0.313,
+   "vitoria_sem": 0.422,
+   "vitoria_ref": 0.416,
+   "vitoria_com": 0.366,
+   "delta_pp": -5.0,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -5.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_lance_calculado~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.3,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|arc1_tro_contrassinal|calibrado": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 370,
+   "vezes_jogada": 267,
+   "taxa_uso": 0.722,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.847,
+   "vitoria_com": 0.834,
+   "delta_pp": -1.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_contrassinal~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|arc1_tro_contrassinal|descoberto": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 315,
+   "vezes_jogada": 203,
+   "taxa_uso": 0.644,
+   "vitoria_sem": 0.675,
+   "vitoria_ref": 0.744,
+   "vitoria_com": 0.731,
+   "delta_pp": -1.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 5.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_contrassinal~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|arc1_tro_contrassinal|improvisador": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 485,
+   "vezes_jogada": 332,
+   "taxa_uso": 0.685,
+   "vitoria_sem": 0.816,
+   "vitoria_ref": 0.872,
+   "vitoria_com": 0.853,
+   "delta_pp": -1.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "arc1_tro_contrassinal~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|dev1_tro_vigilia_de_cinza|zeloso": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 517,
+   "vezes_jogada": 125,
+   "taxa_uso": 0.242,
+   "vitoria_sem": 0.762,
+   "vitoria_ref": 0.759,
+   "vitoria_com": 0.75,
+   "delta_pp": -0.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -1.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_tro_vigilia_de_cinza~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 2.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|dev1_tro_palavra_que_corta|consagrado": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 506,
+   "vezes_jogada": 278,
+   "taxa_uso": 0.549,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.825,
+   "vitoria_com": 0.809,
+   "delta_pp": -1.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_tro_palavra_que_corta~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|dev1_tro_palavra_que_corta|zeloso": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 443,
+   "vezes_jogada": 273,
+   "taxa_uso": 0.616,
+   "vitoria_sem": 0.762,
+   "vitoria_ref": 0.806,
+   "vitoria_com": 0.794,
+   "delta_pp": -1.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.1,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_tro_palavra_que_corta~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|dev1_tro_dedo_de_sentenca|zeloso": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 489,
+   "vezes_jogada": 258,
+   "taxa_uso": 0.528,
+   "vitoria_sem": 0.762,
+   "vitoria_ref": 0.812,
+   "vitoria_com": 0.725,
+   "delta_pp": -8.8,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "dev1_tro_dedo_de_sentenca~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 6
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "tronco|san1_tro_corte_de_penitencia|exposto": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 461,
+   "vezes_jogada": 318,
+   "taxa_uso": 0.69,
+   "vitoria_sem": 0.834,
+   "vitoria_ref": 0.856,
+   "vitoria_com": 0.812,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -2.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_tro_corte_de_penitencia~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 6,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|san1_tro_corte_de_penitencia|silencioso": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 424,
+   "vezes_jogada": 304,
+   "taxa_uso": 0.717,
+   "vitoria_sem": 0.894,
+   "vitoria_ref": 0.897,
+   "vitoria_com": 0.891,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_tro_corte_de_penitencia~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 6,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "tronco|san1_tro_eco_de_ferida|exposto": {
+   "protocolo": "lote-v2",
+   "classe": "Sangromante",
+   "vezes_na_mao": 450,
+   "vezes_jogada": 230,
+   "taxa_uso": 0.511,
+   "vitoria_sem": 0.834,
+   "vitoria_ref": 0.866,
+   "vitoria_com": 0.869,
+   "delta_pp": 0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "san1_tro_eco_de_ferida~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 6,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "neutras|neu1_na_espada_da_legiao|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 496,
+   "vezes_jogada": 322,
+   "taxa_uso": 0.649,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.85,
+   "vitoria_com": 0.844,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_espada_da_legiao~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_espada_da_legiao|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 373,
+   "vezes_jogada": 273,
+   "taxa_uso": 0.732,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.834,
+   "vitoria_com": 0.828,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_espada_da_legiao~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_fuligem_das_chamines|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 529,
+   "vezes_jogada": 325,
+   "taxa_uso": 0.614,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.834,
+   "vitoria_com": 0.791,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -1.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_fuligem_das_chamines~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.5,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_fuligem_das_chamines|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 379,
+   "vezes_jogada": 291,
+   "taxa_uso": 0.768,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.884,
+   "vitoria_com": 0.841,
+   "delta_pp": -4.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_fuligem_das_chamines~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.5,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_gazua_dos_telhados|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 540,
+   "vezes_jogada": 325,
+   "taxa_uso": 0.602,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.819,
+   "vitoria_com": 0.772,
+   "delta_pp": -4.7,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -3.7,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_gazua_dos_telhados~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 6
+    },
+    "power_score": 3.3,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_gazua_dos_telhados|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 375,
+   "vezes_jogada": 291,
+   "taxa_uso": 0.776,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.859,
+   "vitoria_com": 0.834,
+   "delta_pp": -2.5,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_gazua_dos_telhados~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 6
+    },
+    "power_score": 3.3,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_salvo_conduto_falso|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 530,
+   "vezes_jogada": 325,
+   "taxa_uso": 0.613,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.844,
+   "vitoria_com": 0.775,
+   "delta_pp": -6.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_salvo_conduto_falso~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.0,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_na_salvo_conduto_falso|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 378,
+   "vezes_jogada": 291,
+   "taxa_uso": 0.77,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.875,
+   "vitoria_com": 0.856,
+   "delta_pp": -1.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_na_salvo_conduto_falso~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5
+    },
+    "power_score": 3.0,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_er_emboscada_dos_renegados|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 552,
+   "vezes_jogada": 239,
+   "taxa_uso": 0.433,
+   "vitoria_sem": 0.35,
+   "vitoria_ref": 0.491,
+   "vitoria_com": 0.391,
+   "delta_pp": -10.0,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 4.1,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_er_emboscada_dos_renegados~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 8,
+     "categoria_arma": "leve"
+    },
+    "power_score": 6.0,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 3.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "neutras|neu1_er_machado_de_vorr|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 299,
+   "vezes_jogada": 169,
+   "taxa_uso": 0.565,
+   "vitoria_sem": 0.728,
+   "vitoria_ref": 0.787,
+   "vitoria_com": 0.753,
+   "delta_pp": -3.4,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 2.5,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_er_machado_de_vorr~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 9,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "neutras|neu1_br_sabre_de_pirata|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 512,
+   "vezes_jogada": 322,
+   "taxa_uso": 0.629,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.816,
+   "vitoria_com": 0.812,
+   "delta_pp": -0.3,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.3,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_br_sabre_de_pirata~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_br_sabre_de_pirata|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 371,
+   "vezes_jogada": 273,
+   "taxa_uso": 0.736,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.844,
+   "vitoria_com": 0.838,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_br_sabre_de_pirata~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "leve"
+    },
+    "power_score": 3.0,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_br_grogue_do_porto|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 529,
+   "vezes_jogada": 325,
+   "taxa_uso": 0.614,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.828,
+   "vitoria_com": 0.809,
+   "delta_pp": -1.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_br_grogue_do_porto~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_br_grogue_do_porto|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 369,
+   "vezes_jogada": 291,
+   "taxa_uso": 0.789,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.872,
+   "vitoria_com": 0.831,
+   "delta_pp": -4.1,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_br_grogue_do_porto~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_br_arpao_de_osso|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 554,
+   "vezes_jogada": 307,
+   "taxa_uso": 0.554,
+   "vitoria_sem": 0.35,
+   "vitoria_ref": 0.484,
+   "vitoria_com": 0.372,
+   "delta_pp": -11.2,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 2.2,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_br_arpao_de_osso~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 9,
+     "categoria_arma": "marcial"
+    },
+    "power_score": 6.5,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  },
+  "neutras|neu1_sb_pedagio_de_sangue|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 485,
+   "vezes_jogada": 322,
+   "taxa_uso": 0.664,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.85,
+   "vitoria_com": 0.844,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 3.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_sb_pedagio_de_sangue~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "versatil"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_sb_pedagio_de_sangue|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 370,
+   "vezes_jogada": 289,
+   "taxa_uso": 0.781,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.834,
+   "vitoria_com": 0.803,
+   "delta_pp": -3.1,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -1.9,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_sb_pedagio_de_sangue~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 5,
+     "categoria_arma": "versatil"
+    },
+    "power_score": 3.5,
+    "faixa": [
+     -2.0,
+     9.0
+    ]
+   },
+   "dano_por_folego": 6.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_sb_martelo_de_guerra_anao|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 379,
+   "vezes_jogada": 238,
+   "taxa_uso": 0.628,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.816,
+   "vitoria_com": 0.816,
+   "delta_pp": 0.0,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": -0.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_sb_martelo_de_guerra_anao~ref",
+    "efeito": {
+     "kind": "dano",
+     "dano_base": 10,
+     "categoria_arma": "pesada"
+    },
+    "power_score": 8.0,
+    "faixa": [
+     4.0,
+     13.0
+    ]
+   },
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_sb_corda_de_aranha|devoto": {
+   "protocolo": "lote-v2",
+   "classe": "Devoto do Abismo",
+   "vezes_na_mao": 537,
+   "vezes_jogada": 325,
+   "taxa_uso": 0.605,
+   "vitoria_sem": 0.809,
+   "vitoria_ref": 0.828,
+   "vitoria_com": 0.809,
+   "delta_pp": -1.9,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 0.0,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_sb_corda_de_aranha~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_sb_corda_de_aranha|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 381,
+   "vezes_jogada": 291,
+   "taxa_uso": 0.764,
+   "vitoria_sem": 0.822,
+   "vitoria_ref": 0.872,
+   "vitoria_com": 0.866,
+   "delta_pp": -0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 4.4,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_sb_corda_de_aranha~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 7
+    },
+    "power_score": 3.6,
+    "faixa": [
+     0.0,
+     7.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_ge_nectar_da_furia|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 502,
+   "vezes_jogada": 329,
+   "taxa_uso": 0.655,
+   "vitoria_sem": 0.35,
+   "vitoria_ref": 0.425,
+   "vitoria_com": 0.431,
+   "delta_pp": 0.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 8.1,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_ge_nectar_da_furia~ref",
+    "efeito": {
+     "kind": "protecao",
+     "valor": 11
+    },
+    "power_score": 6.8,
+    "faixa": [
+     -3.0,
+     16.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": [
+    "uso_alto"
+   ]
+  },
+  "neutras|neu1_ge_ampulheta_de_vaelorn|arcanista": {
+   "protocolo": "lote-v2",
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 250,
+   "vezes_jogada": 37,
+   "taxa_uso": 0.148,
+   "vitoria_sem": 0.694,
+   "vitoria_ref": 0.725,
+   "vitoria_com": 0.709,
+   "delta_pp": -1.6,
+   "delta_base": "substituicao",
+   "delta_pp_remocao": 1.6,
+   "lutas_por_braco": 320,
+   "referencia": {
+    "id": "neu1_ge_ampulheta_de_vaelorn~ref",
+    "efeito": {
+     "kind": "cura",
+     "valor": 19
+    },
+    "power_score": 15.5,
+    "faixa": [
+     -1.0,
+     32.0
+    ]
+   },
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [],
+   "avisos": []
+  }
+ }
+}
