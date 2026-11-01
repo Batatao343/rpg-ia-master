@@ -459,7 +459,7 @@
     },
     "faction": "tribos_devoradores_sol",
     "categoria": "lacaio",
-    "arquetipo": "conjurador",
+    "arquetipo": "tatico",
     "virtudes": {
       "forca": 3,
       "agilidade": 4,
@@ -483,7 +483,7 @@
     "vulnerabilities": [],
     "immunities": [],
     "cartas": [
-      "bst_descarga_arcana"
+      "bst_bote_certeiro"
     ],
     "tactical_profile": {
       "priorities": [
@@ -3409,7 +3409,7 @@
     "attacks": [
       {
         "name": "Lâmina de Vento",
-        "type": "melee",
+        "type": "magic",
         "bonus": 7,
         "damage": "2d6+4 slashing + 1d6 lightning"
       }
@@ -4369,7 +4369,7 @@
     "attacks": [
       {
         "name": "Raio de Gelo",
-        "type": "ranged",
+        "type": "magic",
         "bonus": 5,
         "damage": "3d6 cold"
       },
@@ -6696,7 +6696,7 @@
       },
       {
         "name": "Extração Parcial",
-        "type": "ranged",
+        "type": "magic",
         "bonus": 6,
         "damage": "2d6 necrotic + drena vida"
       }
@@ -7482,7 +7482,7 @@
     },
     "faction": "grupos_piratas_rivais",
     "categoria": "lacaio",
-    "arquetipo": "conjurador",
+    "arquetipo": "tatico",
     "virtudes": {
       "forca": 3,
       "agilidade": 3,
@@ -7506,7 +7506,7 @@
     "vulnerabilities": [],
     "immunities": [],
     "cartas": [
-      "bst_descarga_arcana"
+      "bst_bote_certeiro"
     ],
     "tactical_profile": {
       "priorities": [
@@ -7673,7 +7673,7 @@
     },
     "faction": "osshari_brekmar",
     "categoria": "elite",
-    "arquetipo": "conjurador",
+    "arquetipo": "tatico",
     "virtudes": {
       "forca": 5,
       "agilidade": 3,
@@ -7697,7 +7697,7 @@
     "vulnerabilities": [],
     "immunities": [],
     "cartas": [
-      "bst_descarga_arcana"
+      "bst_pancada_esmagadora"
     ],
     "tactical_profile": {
       "priorities": [
@@ -7768,7 +7768,7 @@
     },
     "faction": "bandos_orc_saidas_baixas",
     "categoria": "lacaio",
-    "arquetipo": "conjurador",
+    "arquetipo": "emboscador",
     "virtudes": {
       "forca": 4,
       "agilidade": 3,
@@ -7792,7 +7792,7 @@
     "vulnerabilities": [],
     "immunities": [],
     "cartas": [
-      "bst_descarga_arcana"
+      "bst_golpe_sombras"
     ],
     "tactical_profile": {
       "priorities": [

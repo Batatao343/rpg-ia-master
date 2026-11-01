@@ -1035,20 +1035,7 @@ def validate_bestiary(
                 )
 
     # SPEC-355 R10: baralho de conjurador sem nenhuma magia no kit vem do `arquetipo` errado.
-    # Os 7 abaixo foram apontados pela regra e ficam como estão (SPEC-355 §9: corrigir cada um é
-    # trabalho de bestiário, não desta spec); criatura NOVA com o mesmo defeito volta a avisar.
-    caster_pendente = {
-        "enemy_devorador_sol_zhur",
-        "enemy_djinn_menor",
-        "enemy_observador_menor",
-        "enemy_cultista_destilacao",
-        "enemy_pirata_brekmar",
-        "enemy_arpoador_osshari",
-        "enemy_orc_saidas_baixas",
-    }
     for cid, cre in best.items():
-        if cid in caster_pendente:
-            continue
         if str(cre.get("arquetipo") or "") not in ("conjurador", "mistico"):
             continue
         magical = any(

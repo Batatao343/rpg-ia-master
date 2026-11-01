@@ -533,7 +533,7 @@ API local `legacy` com as flags de cartas `on` (`RPG_CARD_DECK`, `RPG_ENEMY_INTE
 no reagente: `bst_defesa_instintiva` (inimigo), `san_esquiva` e afins do jogador. Criaturas com `arquetipo`
 conjurador/místico sem ataque `magic`/`area` nem `abilities` (regra nova do validador, `warning`): a lista sai de
 `uv run python scripts/validate_content.py` (só o Renegado foi corrigido).
-Criaturas apontadas e NÃO corrigidas (allowlist `caster_pendente` em `content_validator`): enemy_devorador_sol_zhur, enemy_djinn_menor, enemy_observador_menor, enemy_cultista_destilacao, enemy_pirata_brekmar, enemy_arpoador_osshari, enemy_orc_saidas_baixas.
+As 7 outras criaturas apontadas foram corrigidas (pedido do dono, sem allowlist): devorador_sol_zhur, pirata_brekmar → `tatico` + `bst_bote_certeiro`; arpoador_osshari → `tatico` + `bst_pancada_esmagadora`; orc_saidas_baixas → `emboscador` + `bst_golpe_sombras`; djinn_menor, observador_menor, cultista_destilacao são conjuradores de fato: o ataque que carrega a magia passou a `type: magic` (Lâmina de Vento, Raio de Gelo, Extração Parcial).
 
 **R15 (`san_exp_espetaculo`).** Legada; a bandeira não se confirmou (+8,3 pp nas 0-19 × -4,0 pp nas 20-99,
 "ruído", `docs/spec341/r8-bandeiras-sementes20-99.json`). Nada mudou; D7 não acionado.
@@ -567,6 +567,8 @@ fronteira de palavra e chave técnica; teste real da criação; round-trip por `
 guarda `git diff main` só na branch `spec-355`; `EXCECOES_PISO` sai com a spec de balanço do Arcanista.
 **Anomalia do Médico emboscado** (56,9 % × 52,1 %, L3 +8/+10 pp): efeito do bot, não do wrapper (ver `RELATORIO-emboscada.md`).
 **`gen_tiers_5_plus.py --check` sai 1 na `main`** (basicas/tiers_5_plus: divergência pré-existente; documentado no script, sem mexer em Carta).
+
+**Arena depois da correção do bestiário (`arena-bestiario-0-19.json`):** só o Arpoador Osshari está nos 4 elites da arena; padrão idêntico, elite muda → total 0-19: Devoto 61,5 % (era 64,2), Sangromante 59,8 (61,0), Corruptor 46,7 (45,6), Arcanista 44,4 (44,4), Médico 51,2 (52,1). Os JSON `arena-final`/`confirmacao` (e a emboscada) foram medidos com o Arpoador antigo e não foram regerados (confirmação uma vez, R18); tudo dentro das faixas, exceto as pendências já listadas.
 
 **Testes novos:** `tests/test_spec355_{conteudo,reacao_buff,golpe_reacao,provocacao_rodada,promessa_chefe,
 router_fallback,compra_utilitaria,exemplos_fora,emboscada,arena,guardas}.py`. R2 ficou fora de
