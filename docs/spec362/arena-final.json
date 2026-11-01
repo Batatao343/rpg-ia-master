@@ -1,0 +1,645 @@
+{
+ "seeds": [
+  0,
+  20
+ ],
+ "versoes": {
+  "arc1_imp_bomba_estopim": 2,
+  "arc1_imp_truque": 2,
+  "arc1_cal_pulso_medido": 2
+ },
+ "posturas": {
+  "Devoto do Abismo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      54,
+      80
+     ],
+     "L3 padrao": [
+      68,
+      80
+     ],
+     "L3 elite": [
+      55,
+      80
+     ],
+     "L5 padrao": [
+      39,
+      80
+     ],
+     "L5 elite": [
+      17,
+      80
+     ]
+    },
+    "total": 0.615,
+    "padrao": 0.704,
+    "elite": 0.525
+   },
+   "consagrado": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      53,
+      80
+     ],
+     "L3 padrao": [
+      69,
+      80
+     ],
+     "L3 elite": [
+      54,
+      80
+     ],
+     "L5 padrao": [
+      45,
+      80
+     ],
+     "L5 elite": [
+      19,
+      80
+     ]
+    },
+    "total": 0.629,
+    "padrao": 0.733,
+    "elite": 0.525
+   },
+   "zeloso": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      44,
+      80
+     ],
+     "L3 padrao": [
+      69,
+      80
+     ],
+     "L3 elite": [
+      51,
+      80
+     ],
+     "L5 padrao": [
+      32,
+      80
+     ],
+     "L5 elite": [
+      14,
+      80
+     ]
+    },
+    "total": 0.567,
+    "padrao": 0.679,
+    "elite": 0.454
+   },
+   "enlutado": {
+    "celulas": {
+     "L1 padrao": [
+      69,
+      80
+     ],
+     "L1 elite": [
+      55,
+      80
+     ],
+     "L3 padrao": [
+      68,
+      80
+     ],
+     "L3 elite": [
+      52,
+      80
+     ],
+     "L5 padrao": [
+      39,
+      80
+     ],
+     "L5 elite": [
+      17,
+      80
+     ]
+    },
+    "total": 0.625,
+    "padrao": 0.733,
+    "elite": 0.517
+   }
+  },
+  "Sangromante": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      70,
+      80
+     ],
+     "L1 elite": [
+      45,
+      80
+     ],
+     "L3 padrao": [
+      60,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      51,
+      80
+     ],
+     "L5 elite": [
+      17,
+      80
+     ]
+    },
+    "total": 0.598,
+    "padrao": 0.754,
+    "elite": 0.442
+   },
+   "exposto": {
+    "celulas": {
+     "L1 padrao": [
+      67,
+      80
+     ],
+     "L1 elite": [
+      41,
+      80
+     ],
+     "L3 padrao": [
+      61,
+      80
+     ],
+     "L3 elite": [
+      40,
+      80
+     ],
+     "L5 padrao": [
+      39,
+      80
+     ],
+     "L5 elite": [
+      20,
+      80
+     ]
+    },
+    "total": 0.558,
+    "padrao": 0.696,
+    "elite": 0.421
+   },
+   "avaro": {
+    "celulas": {
+     "L1 padrao": [
+      70,
+      80
+     ],
+     "L1 elite": [
+      59,
+      80
+     ],
+     "L3 padrao": [
+      70,
+      80
+     ],
+     "L3 elite": [
+      48,
+      80
+     ],
+     "L5 padrao": [
+      35,
+      80
+     ],
+     "L5 elite": [
+      24,
+      80
+     ]
+    },
+    "total": 0.637,
+    "padrao": 0.729,
+    "elite": 0.546
+   },
+   "silencioso": {
+    "celulas": {
+     "L1 padrao": [
+      74,
+      80
+     ],
+     "L1 elite": [
+      54,
+      80
+     ],
+     "L3 padrao": [
+      64,
+      80
+     ],
+     "L3 elite": [
+      43,
+      80
+     ],
+     "L5 padrao": [
+      51,
+      80
+     ],
+     "L5 elite": [
+      26,
+      80
+     ]
+    },
+    "total": 0.65,
+    "padrao": 0.787,
+    "elite": 0.512
+   }
+  },
+  "Corruptor": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      58,
+      80
+     ],
+     "L1 elite": [
+      49,
+      80
+     ],
+     "L3 padrao": [
+      51,
+      80
+     ],
+     "L3 elite": [
+      37,
+      80
+     ],
+     "L5 padrao": [
+      25,
+      80
+     ],
+     "L5 elite": [
+      4,
+      80
+     ]
+    },
+    "total": 0.467,
+    "padrao": 0.558,
+    "elite": 0.375
+   },
+   "biologia": {
+    "celulas": {
+     "L1 padrao": [
+      58,
+      80
+     ],
+     "L1 elite": [
+      44,
+      80
+     ],
+     "L3 padrao": [
+      60,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      36,
+      80
+     ],
+     "L5 elite": [
+      10,
+      80
+     ]
+    },
+    "total": 0.525,
+    "padrao": 0.642,
+    "elite": 0.408
+   },
+   "alma": {
+    "celulas": {
+     "L1 padrao": [
+      60,
+      80
+     ],
+     "L1 elite": [
+      44,
+      80
+     ],
+     "L3 padrao": [
+      46,
+      80
+     ],
+     "L3 elite": [
+      29,
+      80
+     ],
+     "L5 padrao": [
+      25,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.442,
+    "padrao": 0.546,
+    "elite": 0.338
+   },
+   "inorganica": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      52,
+      80
+     ],
+     "L3 padrao": [
+      60,
+      80
+     ],
+     "L3 elite": [
+      39,
+      80
+     ],
+     "L5 padrao": [
+      23,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.508,
+    "padrao": 0.604,
+    "elite": 0.412
+   }
+  },
+  "Arcanista Cinzento": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      60,
+      80
+     ],
+     "L1 elite": [
+      34,
+      80
+     ],
+     "L3 padrao": [
+      47,
+      80
+     ],
+     "L3 elite": [
+      23,
+      80
+     ],
+     "L5 padrao": [
+      40,
+      80
+     ],
+     "L5 elite": [
+      19,
+      80
+     ]
+    },
+    "total": 0.465,
+    "padrao": 0.613,
+    "elite": 0.317
+   },
+   "calibrado": {
+    "celulas": {
+     "L1 padrao": [
+      66,
+      80
+     ],
+     "L1 elite": [
+      44,
+      80
+     ],
+     "L3 padrao": [
+      66,
+      80
+     ],
+     "L3 elite": [
+      49,
+      80
+     ],
+     "L5 padrao": [
+      31,
+      80
+     ],
+     "L5 elite": [
+      11,
+      80
+     ]
+    },
+    "total": 0.556,
+    "padrao": 0.679,
+    "elite": 0.433
+   },
+   "descoberto": {
+    "celulas": {
+     "L1 padrao": [
+      56,
+      80
+     ],
+     "L1 elite": [
+      37,
+      80
+     ],
+     "L3 padrao": [
+      44,
+      80
+     ],
+     "L3 elite": [
+      22,
+      80
+     ],
+     "L5 padrao": [
+      30,
+      80
+     ],
+     "L5 elite": [
+      6,
+      80
+     ]
+    },
+    "total": 0.406,
+    "padrao": 0.542,
+    "elite": 0.271
+   },
+   "improvisador": {
+    "celulas": {
+     "L1 padrao": [
+      66,
+      80
+     ],
+     "L1 elite": [
+      53,
+      80
+     ],
+     "L3 padrao": [
+      67,
+      80
+     ],
+     "L3 elite": [
+      43,
+      80
+     ],
+     "L5 padrao": [
+      41,
+      80
+     ],
+     "L5 elite": [
+      10,
+      80
+     ]
+    },
+    "total": 0.583,
+    "padrao": 0.725,
+    "elite": 0.442
+   }
+  },
+  "Médico de Campo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      62,
+      80
+     ],
+     "L1 elite": [
+      53,
+      80
+     ],
+     "L3 padrao": [
+      59,
+      80
+     ],
+     "L3 elite": [
+      44,
+      80
+     ],
+     "L5 padrao": [
+      20,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.512,
+    "padrao": 0.588,
+    "elite": 0.438
+   },
+   "cirurgiao_trincheira": {
+    "celulas": {
+     "L1 padrao": [
+      64,
+      80
+     ],
+     "L1 elite": [
+      55,
+      80
+     ],
+     "L3 padrao": [
+      62,
+      80
+     ],
+     "L3 elite": [
+      50,
+      80
+     ],
+     "L5 padrao": [
+      29,
+      80
+     ],
+     "L5 elite": [
+      9,
+      80
+     ]
+    },
+    "total": 0.56,
+    "padrao": 0.646,
+    "elite": 0.475
+   },
+   "boticario": {
+    "celulas": {
+     "L1 padrao": [
+      56,
+      80
+     ],
+     "L1 elite": [
+      61,
+      80
+     ],
+     "L3 padrao": [
+      66,
+      80
+     ],
+     "L3 elite": [
+      45,
+      80
+     ],
+     "L5 padrao": [
+      27,
+      80
+     ],
+     "L5 elite": [
+      8,
+      80
+     ]
+    },
+    "total": 0.548,
+    "padrao": 0.621,
+    "elite": 0.475
+   },
+   "cirurgiao_ferro": {
+    "celulas": {
+     "L1 padrao": [
+      65,
+      80
+     ],
+     "L1 elite": [
+      52,
+      80
+     ],
+     "L3 padrao": [
+      67,
+      80
+     ],
+     "L3 elite": [
+      57,
+      80
+     ],
+     "L5 padrao": [
+      40,
+      80
+     ],
+     "L5 elite": [
+      15,
+      80
+     ]
+    },
+    "total": 0.617,
+    "padrao": 0.717,
+    "elite": 0.517
+   }
+  }
+ },
+ "folga_atingida": true,
+ "base": "docs/spec362/arena-base-0-19.json"
+}

@@ -49,7 +49,7 @@
         {
           "kind": "dano",
           "categoria_arma": "leve",
-          "dano_base": 3
+          "dano_base": 4
         }
       ],
       "palavras_chave": {
@@ -61,7 +61,7 @@
       "level_req": 1,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "arc1_cal_prumo",

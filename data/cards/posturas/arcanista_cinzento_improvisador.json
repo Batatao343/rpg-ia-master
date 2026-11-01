@@ -192,7 +192,7 @@
       "raridade": "incomum",
       "custo_entropia": 1,
       "custo_folego": 1,
-      "frequencia": "cena",
+      "frequencia": "turno",
       "virtude_permitida": [
         "mente"
       ],
@@ -200,7 +200,7 @@
         {
           "kind": "dano",
           "categoria_arma": "marcial",
-          "dano_base": 4
+          "dano_base": 5
         },
         {
           "kind": "dano",
@@ -214,7 +214,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "arc1_imp_truque",
@@ -237,7 +237,7 @@
         },
         {
           "kind": "protecao",
-          "valor": 2,
+          "valor": 3,
           "alvo": "eu"
         }
       ],
@@ -247,7 +247,7 @@
       "level_req": 4,
       "apex": false,
       "onda": 1,
-      "versao": 1
+      "versao": 2
     },
     {
       "id": "arc1_imp_arame",

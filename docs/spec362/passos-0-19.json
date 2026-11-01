@@ -1,0 +1,9 @@
+{"base_todas": 0.444,
+ "passos": [
+  {"carta": "arc1_des_garganta", "passo": "custo_folego 1->0", "todas": 0.438, "resultado": "revertido (-0,6 pp)"},
+  {"carta": "arc1_imp_bomba_estopim", "passo": "frequencia cena->turno", "todas": 0.448, "resultado": "mantido (+0,4)"},
+  {"carta": "arc1_imp_bomba_estopim", "passo": "dano_base 4->5", "todas": 0.454, "resultado": "mantido (+0,6)"},
+  {"carta": "arc1_imp_truque", "passo": "frequencia turno->livre", "todas": 0.454, "resultado": "revertido (0,0)"},
+  {"carta": "arc1_imp_truque", "passo": "protecao valor 2->3", "todas": 0.463, "resultado": "mantido (+0,9)"},
+  {"carta": "arc1_cal_pulso_medido", "passo": "dano_base 3->4", "todas": 0.465, "resultado": "mantido (+0,2); pacote final 46,5 %"}
+ ]}

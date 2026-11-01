@@ -1,0 +1,335 @@
+{
+ "arc1_cal_pulso_medido": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": 2.5,
+   "total": 2.5,
+   "padrao": 3.8
+  },
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -3.7,
+   "total": -3.7,
+   "padrao": -3.7
+  }
+ },
+ "arc1_des_brasa": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -1.2,
+   "total": -1.3,
+   "padrao": -2.5
+  },
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": -2.5,
+   "total": -2.5,
+   "padrao": -6.2
+  }
+ },
+ "arc1_des_garganta": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -3.1,
+   "total": -3.1,
+   "padrao": -5.0
+  },
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -5.1,
+   "total": -5.0,
+   "padrao": -3.7
+  }
+ },
+ "arc1_des_sobrecarga": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 2.5,
+   "total": 2.5,
+   "padrao": 1.3
+  },
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 4.4,
+   "total": 4.4,
+   "padrao": 10.0
+  }
+ },
+ "arc1_imp_bomba_estopim": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 6.2,
+   "total": 6.2,
+   "padrao": 7.5
+  },
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 3.2,
+   "total": 3.1,
+   "padrao": 5.0
+  }
+ },
+ "arc1_imp_carretel": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": 2.6,
+   "total": 2.5,
+   "padrao": 5.0
+  },
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -0.6,
+   "total": -0.6,
+   "padrao": 2.5
+  }
+ },
+ "arc1_imp_mola": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -1.2,
+   "total": -1.3,
+   "padrao": -2.5
+  },
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": 0.0,
+   "total": 0.0,
+   "padrao": 3.7
+  }
+ },
+ "arc1_imp_olho_latao": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": -1.9,
+   "total": -1.9,
+   "padrao": -1.2
+  },
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    1,
+    3
+   ],
+   "L1": 1.3,
+   "L3": -1.8,
+   "total": -0.3,
+   "padrao": 3.1
+  }
+ },
+ "arc1_imp_truque": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 4.9,
+   "total": 5.0,
+   "padrao": 6.2
+  }
+ },
+ "arc1_tro_centelha_ressoante": {
+  "todas": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": 0.0,
+   "total": 0.0,
+   "padrao": 0.0
+  }
+ },
+ "arc1_cal_estilhaco": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 8.8,
+   "total": 8.8,
+   "padrao": 12.5
+  }
+ },
+ "arc1_cal_gabarito": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    1,
+    3
+   ],
+   "L1": -1.8,
+   "L3": -3.7,
+   "total": -2.8,
+   "padrao": -3.7
+  }
+ },
+ "arc1_cal_leitura": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": -3.7,
+   "total": -3.7,
+   "padrao": 2.5
+  }
+ },
+ "arc1_cal_prumo": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": 0.0,
+   "total": 0.0,
+   "padrao": -3.7
+  }
+ },
+ "arc1_cal_rede": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 8.8,
+   "total": 8.8,
+   "padrao": 10.0
+  }
+ },
+ "arc1_cal_segunda_medicao": {
+  "calibrado": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 7.5,
+   "total": 7.5,
+   "padrao": 10.0
+  }
+ },
+ "arc1_des_corrente": {
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    1,
+    3
+   ],
+   "L1": -2.5,
+   "L3": -0.7,
+   "total": -1.6,
+   "padrao": -3.1
+  }
+ },
+ "arc1_des_dedos": {
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    3
+   ],
+   "L3": -0.7,
+   "total": -0.6,
+   "padrao": 0.0
+  }
+ },
+ "arc1_des_estouro_contido": {
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": -1.2,
+   "total": -1.2,
+   "padrao": 0.0
+  }
+ },
+ "arc1_des_vazao_selvagem": {
+  "descoberto": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": 0.6,
+   "total": 0.6,
+   "padrao": 7.5
+  }
+ },
+ "arc1_imp_gambiarra": {
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    5
+   ],
+   "L5": -0.6,
+   "total": -0.6,
+   "padrao": 2.5
+  }
+ },
+ "arc1_imp_parafuso": {
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    1
+   ],
+   "L1": 0.6,
+   "total": 0.6,
+   "padrao": 2.5
+  }
+ },
+ "arc1_imp_remendo_cobre": {
+  "improvisador": {
+   "onda": true,
+   "no_baralho": [
+    1,
+    3
+   ],
+   "L1": 1.3,
+   "L3": 4.4,
+   "total": 2.8,
+   "padrao": 1.3
+  }
+ }
+}

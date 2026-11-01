@@ -1,0 +1,380 @@
+{
+ "atual": {
+  "todas": {
+   "celulas": {
+    "L1 padrao": [
+     59,
+     80
+    ],
+    "L1 elite": [
+     34,
+     80
+    ],
+    "L3 padrao": [
+     47,
+     80
+    ],
+    "L3 elite": [
+     23,
+     80
+    ],
+    "L5 padrao": [
+     36,
+     80
+    ],
+    "L5 elite": [
+     14,
+     80
+    ]
+   },
+   "total": 0.444,
+   "padrao": 0.592,
+   "elite": 0.296
+  },
+  "calibrado": {
+   "celulas": {
+    "L1 padrao": [
+     66,
+     80
+    ],
+    "L1 elite": [
+     44,
+     80
+    ],
+    "L3 padrao": [
+     65,
+     80
+    ],
+    "L3 elite": [
+     49,
+     80
+    ],
+    "L5 padrao": [
+     31,
+     80
+    ],
+    "L5 elite": [
+     11,
+     80
+    ]
+   },
+   "total": 0.554,
+   "padrao": 0.675,
+   "elite": 0.433
+  },
+  "descoberto": {
+   "celulas": {
+    "L1 padrao": [
+     56,
+     80
+    ],
+    "L1 elite": [
+     37,
+     80
+    ],
+    "L3 padrao": [
+     44,
+     80
+    ],
+    "L3 elite": [
+     22,
+     80
+    ],
+    "L5 padrao": [
+     30,
+     80
+    ],
+    "L5 elite": [
+     6,
+     80
+    ]
+   },
+   "total": 0.406,
+   "padrao": 0.542,
+   "elite": 0.271
+  },
+  "improvisador": {
+   "celulas": {
+    "L1 padrao": [
+     66,
+     80
+    ],
+    "L1 elite": [
+     53,
+     80
+    ],
+    "L3 padrao": [
+     67,
+     80
+    ],
+    "L3 elite": [
+     43,
+     80
+    ],
+    "L5 padrao": [
+     32,
+     80
+    ],
+    "L5 elite": [
+     7,
+     80
+    ]
+   },
+   "total": 0.558,
+   "padrao": 0.688,
+   "elite": 0.429
+  }
+ },
+ "com_raio_cinza": {
+  "todas": {
+   "celulas": {
+    "L1 padrao": [
+     62,
+     80
+    ],
+    "L1 elite": [
+     42,
+     80
+    ],
+    "L3 padrao": [
+     47,
+     80
+    ],
+    "L3 elite": [
+     23,
+     80
+    ],
+    "L5 padrao": [
+     36,
+     80
+    ],
+    "L5 elite": [
+     14,
+     80
+    ]
+   },
+   "total": 0.467,
+   "padrao": 0.604,
+   "elite": 0.329
+  },
+  "calibrado": {
+   "celulas": {
+    "L1 padrao": [
+     66,
+     80
+    ],
+    "L1 elite": [
+     44,
+     80
+    ],
+    "L3 padrao": [
+     68,
+     80
+    ],
+    "L3 elite": [
+     44,
+     80
+    ],
+    "L5 padrao": [
+     31,
+     80
+    ],
+    "L5 elite": [
+     11,
+     80
+    ]
+   },
+   "total": 0.55,
+   "padrao": 0.688,
+   "elite": 0.412
+  },
+  "descoberto": {
+   "celulas": {
+    "L1 padrao": [
+     58,
+     80
+    ],
+    "L1 elite": [
+     38,
+     80
+    ],
+    "L3 padrao": [
+     53,
+     80
+    ],
+    "L3 elite": [
+     27,
+     80
+    ],
+    "L5 padrao": [
+     30,
+     80
+    ],
+    "L5 elite": [
+     6,
+     80
+    ]
+   },
+   "total": 0.442,
+   "padrao": 0.588,
+   "elite": 0.296
+  },
+  "improvisador": {
+   "celulas": {
+    "L1 padrao": [
+     69,
+     80
+    ],
+    "L1 elite": [
+     55,
+     80
+    ],
+    "L3 padrao": [
+     67,
+     80
+    ],
+    "L3 elite": [
+     43,
+     80
+    ],
+    "L5 padrao": [
+     32,
+     80
+    ],
+    "L5 elite": [
+     7,
+     80
+    ]
+   },
+   "total": 0.569,
+   "padrao": 0.7,
+   "elite": 0.438
+  }
+ },
+ "utilitarias_na_compra": {
+  "todas": {
+   "celulas": {
+    "L1 padrao": [
+     56,
+     80
+    ],
+    "L1 elite": [
+     33,
+     80
+    ],
+    "L3 padrao": [
+     44,
+     80
+    ],
+    "L3 elite": [
+     25,
+     80
+    ],
+    "L5 padrao": [
+     31,
+     80
+    ],
+    "L5 elite": [
+     14,
+     80
+    ]
+   },
+   "total": 0.423,
+   "padrao": 0.546,
+   "elite": 0.3
+  },
+  "calibrado": {
+   "celulas": {
+    "L1 padrao": [
+     64,
+     80
+    ],
+    "L1 elite": [
+     50,
+     80
+    ],
+    "L3 padrao": [
+     67,
+     80
+    ],
+    "L3 elite": [
+     37,
+     80
+    ],
+    "L5 padrao": [
+     19,
+     80
+    ],
+    "L5 elite": [
+     12,
+     80
+    ]
+   },
+   "total": 0.519,
+   "padrao": 0.625,
+   "elite": 0.412
+  },
+  "descoberto": {
+   "celulas": {
+    "L1 padrao": [
+     56,
+     80
+    ],
+    "L1 elite": [
+     35,
+     80
+    ],
+    "L3 padrao": [
+     50,
+     80
+    ],
+    "L3 elite": [
+     31,
+     80
+    ],
+    "L5 padrao": [
+     30,
+     80
+    ],
+    "L5 elite": [
+     6,
+     80
+    ]
+   },
+   "total": 0.433,
+   "padrao": 0.567,
+   "elite": 0.3
+  },
+  "improvisador": {
+   "celulas": {
+    "L1 padrao": [
+     61,
+     80
+    ],
+    "L1 elite": [
+     47,
+     80
+    ],
+    "L3 padrao": [
+     63,
+     80
+    ],
+    "L3 elite": [
+     43,
+     80
+    ],
+    "L5 padrao": [
+     32,
+     80
+    ],
+    "L5 elite": [
+     7,
+     80
+    ]
+   },
+   "total": 0.527,
+   "padrao": 0.65,
+   "elite": 0.404
+  }
+ }
+}
