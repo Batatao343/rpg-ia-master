@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "a07f289d99781a565598f4a6723ca76283f4684c",
+  "commit_sha": "2e491b65a9b75ab522f238a6c7a7b5c07235b9c2",
   "edge_counts": {
-    "calls": 33463,
-    "contains": 1094,
-    "defines": 16394,
-    "imports": 2701,
-    "likely_test_for": 1921,
+    "calls": 33479,
+    "contains": 1096,
+    "defines": 16406,
+    "imports": 2706,
+    "likely_test_for": 1926,
     "route_to": 68
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:410051ae7912eb1922ca95a6d64dcc6eeedfccf5b80d1e4d943976435f4bba84",
+  "graph_hash": "sha256:0d94ca4d5ceb33da644b67c6fbeebc3cd6723e931bf6ea66bd4d19da9c2de5d2",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1100,6 +1100,8 @@
     "tests/test_spec353_scene_card.py",
     "tests/test_spec353_spawn_count.py",
     "tests/test_spec353_text.py",
+    "tests/test_spec354_final_round_view.py",
+    "tests/test_spec354_portrait_always.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1181,6 +1183,11 @@
     "web/e2e/spec347-prints.spec.ts",
     "web/e2e/spec347-retrato.spec.ts",
     "web/e2e/spec352-retrato-pago.spec.ts",
+    "web/e2e/spec354-desktop.spec.ts",
+    "web/e2e/spec354-livro.spec.ts",
+    "web/e2e/spec354-mobile.spec.ts",
+    "web/e2e/spec354-pos-combate.spec.ts",
+    "web/e2e/spec354-prints.spec.ts",
     "web/e2e/support-code.spec.ts",
     "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
@@ -1203,6 +1210,7 @@
     "web/src/combat/CardTooltip.tsx",
     "web/src/combat/conflictChips.ts",
     "web/src/combat/deck.ts",
+    "web/src/combat/displayName.ts",
     "web/src/combat/familyIcon.ts",
     "web/src/combat/TargetChip.tsx",
     "web/src/combat/targeting.ts",
@@ -1350,14 +1358,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1013,
+    "class": 1014,
     "endpoint": 68,
-    "file": 1296,
+    "file": 1304,
     "function": 5081,
     "method": 864,
-    "module": 1094,
-    "test": 9435
+    "module": 1096,
+    "test": 9446
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:6e71578b07ab9b76114862edf4eae66b37a65a32db06cd569457f18ec139d465"
+  "source_tree_hash": "sha256:268f8bded7d9403a90e95d9d717f3c104bf1f49b7e3f463688a14e057ce9326f"
 }
