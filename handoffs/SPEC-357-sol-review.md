@@ -1,7 +1,7 @@
 # SPEC-357 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol · **Data:** 2026-10-28 · **Commit revisado:** `a6c9e037`
+> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `a34c5f30`: 1 P1 novo na compra por texto; demais achados resolvidos)
+> **Revisor:** Opus / Sol · **Data:** 2026-10-28 (re-revisão 2026-11-01) · **Commits revisados:** `a6c9e037`, depois `bd3ad373..a34c5f30`
 
 ## Escopo
 
@@ -53,22 +53,48 @@ Conferido e OK:
 
 ## Correções aplicadas
 
-(nenhuma ainda — revisão inicial)
+Re-revisão de `bd3ad373..a34c5f30` (5 commits):
+
+| Achado | Commit | Situação |
+|---|---|---|
+| P1-1 | `90f276d0` | **Resolvido.** Os avisos de Carta vão para `card_notices` e entram depois de `process_deeds`/`fm_notes` (`event_processor.py:837-839`). Teste `test_notice_kept_with_origin_faction` usa `origin_faction_id="poder_kahen"` (fação real) e confere 1 aviso `carta`. |
+| P2-1 | `97bb5b9e` | **Parcial**: ver P1-2 abaixo. Venda/forja na mesma frase, `nao/nunca/sem/talvez/quanto/custa/preco/se/?` passam a pedir confirmação sem cobrar. |
+| P2-2 | `e0747981` | Resolvido: `quest.region_id` antes da região do local (+ `region_id` gravado na criação). |
+| P2-3 | `e0747981` | Guarda `test_is_neutral_defined_once` adicionada. Ver risco de pouso abaixo. |
+| P2-4 | `e0747981` | Resolvido: `card_rewards.neutral_eligible` é a regra única (espólio, loja, missão); teste `test_regiao_exclusiva_never_offered`. |
+| P2-5 | `a873dcb5` | Resolvido: os 4 campos declarados em `state.py`; teste de round-trip `save_game_state`/`load_game_state` + quest pré-357 carrega. |
+| P2-6 | `a873dcb5` | Resolvido: `test_db_profile_replay_returns_receipt_single_debit` (perfil DB offline, sem `-n`) → mesmo `action_id` devolve o mesmo corpo, 1 débito, 1 cópia. |
+| P2-7/P2-8 | `a34c5f30` | Resolvido: §9 atualizado; preço visível com bloqueio; e2e checa alvo ≥ 44 px. |
+
+### Achado novo da re-revisão
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-2 | P1 | `agents/loot.py:377-383` | A lista de palavras de dúvida não cobre negação com "nem", ironia nem adiamento, e o "afirmativo" aceita `compro` em qualquer posição. Sondagem (MockLLM, Brekmar, 500 de ouro; teste descartável) — **compram e debitam**: "Nem pensar que eu compro o X.", "Até parece que eu compro o X.", "Nem a pau compro o X.", "Amanhã eu compro o X.", "Compro o X depois, agora só olho.". Seguras (pedem confirmação ou caem no fluxo de itens): "Desisto de comprar…", "Se eu comprar o X, …?", "Caso eu compre…", "como se eu fosse comprar…", "Ele compra…", "Pensei em comprar…", "não vou comprar…", "Compro o X e o Y." (duas cartas → `match_offer` None). Gasto de ouro irreversível numa recusa explícita. | Trocar a lista negra por âncora: comprar só se a frase **começa** (após `eu`/`entao`/pontuação) por `compro|adquiro|quero comprar|vou comprar|levo` **e** não tem `nem|parece|depois|amanha|mais tarde|outra hora` + as palavras atuais. Parametrizar `test_text_buy_requires_unambiguous_intent` com as 5 frases acima (esperado: sem débito). |
 
 ## Pendências
 
-- Executor corrige P1-1 (obrigatório) e, de preferência, P2-1/P2-2/P2-4/P2-5 no mesmo ciclo;
-  re-revisão Sol só do diff da correção.
-- Smoke §6 com LLM real (Etapa 7) segue pendente — especialmente o passo 5 (aviso "Você aprende…"
-  numa quest com fação de origem, que é o caso do P1-1).
-- P2-3 no pouso (coordenador), qualquer que seja a ordem 355/357.
+- Executor corrige P1-2; re-revisão Sol só desse diff (o resto está aprovado).
+- **Pouso (coordenador):** `git merge-tree main spec-357` hoje dá conflito textual em
+  `services/card_rewards.py` (`_pools`: main com o predicado em linha × branch com
+  `neutral_eligible` → ficar com `neutral_eligible`) e `web/src/workspace.css` (fim do arquivo,
+  manter os dois blocos). `services/cards.py` **auto-mescla sem conflito com `def is_neutral`
+  duplicada** (linhas 150 e 301 do resultado; os corpos são idênticos) → apagar a cópia da 357
+  (`:150`); `test_is_neutral_defined_once` falha se esquecerem.
+- Smoke §6 com LLM real (Etapa 7) ainda pendente.
 
 ## Comandos rodados
 
 ```text
-bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_card_shop.py tests/test_card_shop_api.py tests/test_card_quest_rewards.py tests/test_card_shop_loot_text.py tests/test_flag_registry.py → 57 passed
-node --test web/tests/card-shop.test.mjs → 3 pass, 0 fail
-teste descartável (não commitado) com quest justa + origin_faction_id="poder_kahen" → reward_card e known_cards preenchidos, reputation_notices == [] (P1-1 reproduzido)
-git diff --stat main...spec-357 -- <caminhos protegidos do cabeçalho> evals → vazio
-Playwright: não rodado (RAM livre 2,9 GB)
+# revisão inicial (a6c9e037)
+pytest -n 2 test_card_shop{,_api,_loot_text}.py test_card_quest_rewards.py test_flag_registry.py → 57 passed
+node --test web/tests/card-shop.test.mjs → 3 pass
+teste descartável quest justa + origin_faction_id=poder_kahen → reputation_notices == [] (P1-1)
+git diff --stat main...spec-357 -- <caminhos protegidos> evals → vazio
+# re-revisão (a34c5f30)
+pytest -n 2 (mesmos 5 arquivos, -k "not db_profile") → 71 passed
+pytest (sem -n) tests/test_card_shop_api.py -k "db_profile or round_trip" → 2 passed
+teste descartável de 15 frases na compra por texto → 5 compram indevidamente (P1-2)
+RPG_E2E_PORT=5121 npx playwright test card-shop-357 --workers=1 → 5 passed (RAM 3,0 GB)
+git merge-tree --write-tree main spec-357 → conflitos card_rewards.py e workspace.css; cards.py com is_neutral 2x
 ```
