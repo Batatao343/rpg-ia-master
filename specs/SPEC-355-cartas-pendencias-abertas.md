@@ -1,6 +1,6 @@
 # SPEC-355 — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
 
-> **Status:** `approved`
+> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; pendências de balanço com o dono no §9; bloco D com o coordenador)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** levantamento do coordenador em `docs/spec355/pendencias.md` (19 itens em 4 blocos), conferido item a item no source da `main` (`9daed66c`) — §1.1
 > **Depende de:** SPEC-339 `done`, SPEC-341 `done`; código das SPEC-328–336, 346, 347, 353 e 354 na `main` (353 aguarda só o smoke do coordenador)
