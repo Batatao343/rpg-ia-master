@@ -556,7 +556,7 @@ conjurador/místico sem ataque `magic`/`area` nem `abilities` (regra nova do val
 
 **Pendências para o dono (held-out 20-99, sem reajuste):** Arcanista Cinzento 43,9 % total (piso 45 %; 42,1 %
 com emboscada); Corruptor sem contrapartida de emboscada (45,2 % realista); `avaro` 77,6 % e `silencioso` 76,8 %
-padrão acima do teto; Devoto +2,7 pp pós-R11 (na faixa, 0,7 acima de ±2,0). Decisão: aceitar ou nova spec com
+padrão acima do teto (e `silencioso` **78,7 %** nas 0-19 pós-R11/R12, +2,5 pp sobre o pós-B 76,2 %; `EXCECOES_TETO` em `tests/test_spec355_arena.py`); Devoto +2,7 pp pós-R11 (na faixa, 0,7 acima de ±2,0). Decisão: aceitar ou nova spec com
 número novo (ex.: Carta `buff_iniciativa` para o Corruptor, buff ao Arcanista).
 
 **Testes novos:** `tests/test_spec355_{conteudo,reacao_buff,golpe_reacao,provocacao_rodada,promessa_chefe,

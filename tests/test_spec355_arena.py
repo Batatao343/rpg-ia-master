@@ -9,7 +9,21 @@ from services import cards
 
 D = Path(__file__).resolve().parents[1] / "docs" / "spec355"
 # Excecoes pendentes registradas em SPEC-355 §9 (decisao do dono): ficam abaixo do piso de 45 %.
+# Destino: a spec de balanco que ganhar numero novo para o Arcanista (SPEC-355 §9) remove esta linha.
 EXCECOES_PISO = {"Arcanista Cinzento"}
+# Teto de 75 % por subclasse na leitura padrao. Excecoes = valor medido, registrado em §9 para o dono
+# (341 aceitou avaro 75,2 / silencioso 76,6; o R11/R12 empurrou o silencioso a 78,7 nas 0-19).
+EXCECOES_TETO = {
+    "arena-final.json": {
+        ("Sangromante", "todas"): 0.754,
+        ("Sangromante", "silencioso"): 0.787,
+    },
+    "arena-confirmacao.json": {
+        ("Sangromante", "todas"): 0.752,
+        ("Sangromante", "avaro"): 0.776,
+        ("Sangromante", "silencioso"): 0.768,
+    },
+}
 
 
 def _load(name: str) -> dict:
@@ -34,6 +48,19 @@ def test_faixas_por_postura():
             assert total <= 0.85, (name, cls)
             if cls not in EXCECOES_PISO:
                 assert total >= 0.45, (name, cls, total)
+
+
+def test_teto_padrao_por_subclasse():
+    for name in ("arena-final.json", "arena-confirmacao.json"):
+        for cls, subs in _load(name)["posturas"].items():
+            for sub, cell in subs.items():
+                limit = EXCECOES_TETO[name].get((cls, sub), 0.75)
+                assert cell["padrao"] <= limit + 1e-9, (name, cls, sub, cell["padrao"])
+    # a lista de excecoes nao pode ter folga: cada uma e um valor realmente medido
+    for name, table in EXCECOES_TETO.items():
+        posturas = _load(name)["posturas"]
+        for (cls, sub), value in table.items():
+            assert abs(posturas[cls][sub]["padrao"] - value) < 1e-9, (name, cls, sub)
 
 
 def test_emboscada_realista_gravada():

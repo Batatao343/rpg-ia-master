@@ -28,7 +28,22 @@ NEW_KEYS = (
 )
 
 
+def _on_spec_355_branch() -> bool:
+    res = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=ROOT,
+    )
+    return res.stdout.strip() == "spec-355"
+
+
 def test_protected_paths_have_no_diff_against_main():
+    # Guarda de integridade da PROPRIA spec: so vale na branch dela. Depois do pouso, uma spec futura
+    # que mude esses arquivos por protocolo (R44, D7 da 339...) nao pode ser bloqueada por ele.
+    if not _on_spec_355_branch():
+        return
     for path in PROTEGIDOS:
         res = subprocess.run(
             ["git", "diff", "--quiet", "main", "--", path],
