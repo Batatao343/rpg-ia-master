@@ -1,7 +1,7 @@
 # SPEC-355 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1 pequeno: teste/registro do teto por subclasse; motor aprovado)
-> **Revisor:** Opus / Sol · **Data:** 2026-11-01 · **Commit revisado:** `e78e7e80` (branch `spec-355`, rebaseada em `main` `4d4e9182`)
+> **Veredito final:** `APPROVED_WITH_FOLLOWUPS` (re-revisão sobre `3deded66`; 1ª passada em `e78e7e80` foi `CHANGES_REQUIRED` pelo P1-1, agora corrigido)
+> **Revisor:** Opus / Sol · **Data:** 2026-11-01 · **Commits revisados:** `e78e7e80` e depois `fbf675d0..3deded66` (branch `spec-355`, rebaseada em `main` `4d4e9182`)
 
 ## Escopo
 
@@ -50,11 +50,36 @@ envolve `orch.run_round` no próprio processo.
 
 ## Correções aplicadas
 
-Nenhuma ainda (revisão sobre `e78e7e80`).
+Re-revisão (2026-11-01) de `fbf675d0..3deded66`. Os testes novos foram rodados contra o código de
+`fbf675d0`, num worktree temporário depois removido, e **todos falham sem o fix** (5/5):
+`test_diverted_attack_does_not_claim_the_original_promise`, `test_taunt_ends_after_the_enemy_action_in_the_log`,
+`test_older_taunt_from_another_source_is_not_spent`, `test_promise_not_played_is_frustrated_by_the_effective_declaration`,
+`test_condition_label_swap_respects_word_boundaries_and_prose`.
+
+- **P1-1** `d08bc6ef`: `test_teto_padrao_por_subclasse` com `EXCECOES_TETO` medidas (silencioso 78,7 / todas 75,4 nas
+  0-19; avaro 77,6 / silencioso 76,8 / todas 75,2 nas 20-99) e checagem de que a exceção é igual ao valor medido,
+  sem folga. O §9 registra o silencioso 78,7 %. **Ok.**
+- **P2-1/P2-2** `47612c06`: o desvio não loga "cumpre" e `pressagios_cumpridos` grava o alvo real. Gastam só as
+  Provocações novas desta rodada (`fresh`, via shim para o `_taunt_target`), e o gasto e o "terminou" vêm depois de
+  `_resolve_actor_turn` (`_spend_taunt`, nos dois caminhos). **Ok.**
+- **P2-3** `dbb6e1b5`: a promessa fica `aguarda` quando o plano ainda manda jogar. `note_declaration` a cumpre pela
+  `acao.card_id` efetiva, e `close_promises` (fim da rodada, antes da fase) frustra sem duplicar. **Ok.**
+- **P2-4** `a2ad507c`: só chaves com `_` e fronteira de palavra. **Ok.**
+- **P2-5** `d94533f0`/`3deded66`: o relatório foi corrigido (só o Médico mexe, por `med_dose_choque` no `full_deck`). Sobre a
+  anomalia, **concordo** que é efeito do bot, não do wrapper: o wrapper só troca o `initiator` na rodada 0 (conferido
+  em `arena_spec355.py:34-37`), e o ganho está concentrado em L3/L5, coerente com cura/Reação rendendo mais depois do
+  dano. Fica bem a ressalva de que a mistura do Médico não é piso.
+- **P2-6** `227ae164`: o teste de criação agora exercita a função real. **Ok.**
+- **P2-7**: a divergência pré-existente está documentada no docstring do gerador e no §9. **Ok.**
+- **P2-8** `d08bc6ef`: o guarda `git diff main` só vale na branch `spec-355`, e `EXCECOES_PISO` tem destino. **Ok.**
+- **P2-9** `d94533f0`: round-trip por `persistence.save_game_state`/`load_game_state` com as chaves reais
+  (`combat["scene"]["prenuncios"]`, `combat["pilhas"]["fora_do_conflito"]`), com e sem os campos. **Ok.**
+- Integridade de novo: o diff de `main...3deded66` está vazio para avaliador, golden, orçamento, `data/cards/`,
+  `flags.yaml` e `evals/`.
 
 ## Pendências
 
-- P1-1 antes do pouso (executor ou coordenador; só teste + §9).
+- P1-1 corrigido (ver acima). Resíduo aceito: `_taunt_same_round` aceita qualquer Provocação quando a fonte da condição nova é desconhecida (`"" in fresh_sources`, caso de Reação), o que é raro e só afeta a duração. Não bloqueia.
 - Para o dono (já no §9, sem reajuste nesta spec): Arcanista 43,9 % held-out (< 45), Corruptor sem contrapartida de emboscada, avaro/silencioso acima do teto, Devoto +2,7 pp. Destino: spec nova de balanço com número novo.
 - R44 não se aplica (nenhuma `versao` mudou; R14 não aplicado).
 
@@ -67,4 +92,6 @@ pytest -n 2 test_card_acervo_reparo test_jev_router_port test_spec353_golden_gua
 mutação R1 (`_tag_self_buffs` no-op, teste no scratchpad) → teste das duas ordens falha 2/2 (como deve)
 py.sh scripts/gen_tiers_5_plus.py (sem --write) → exit 1, "mudaria basicas.json, tiers_5_plus.json", worktree limpo
 script de conferência dos JSON da arena → bate com RELATORIO.md e RELATORIO-emboscada.md
+mutação: os 5 testes novos rodados contra `fbf675d0` (worktree temporário) → 5 falhas (como devem)
+pytest -n 2 test_spec355_* + card_lint + spec346_* + spec353 + 341 + grammar + 339 + decks/piles/multi_play/router/acervo em `3deded66` → exit 0
 ```
