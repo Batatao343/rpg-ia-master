@@ -1,6 +1,6 @@
 # SPEC-366 — abertura-followups
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-351 (`done`), SPEC-350 (`done`)
 > **Desbloqueia:** —
@@ -58,7 +58,7 @@ Alterar o oráculo/`FROZEN_348`; medir adesão com LLM real (fica para o próxim
 - [x] R1–R5 com testes (`tests/test_spec366_followups.py`, 14 casos)
 - [x] Testes da 348/350/351/prólogo/flags verdes (escopo)
 - [x] Oráculo `playtest/opening_checks.py` intocado
-- [ ] Revisão independente
+- [x] Revisão independente (rodada 2: aprovada com follow-ups; P2-R2-1/2 corrigidos)
 
 ## 6. Smoke test com LLM real
 

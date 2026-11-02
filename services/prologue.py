@@ -283,7 +283,8 @@ def _normalize(
             if _free_text_leaks(data[key]):
                 base = base or fallback_scenario(char_input, menu)
                 data[key] = getattr(base, key)
-                data["seeking"] = base.seeking  # E5: seeking precisa conversar com o texto novo
+                if key == "prologue" and base.seeking:  # E5: seeking acompanha o prólogo trocado
+                    data["seeking"] = base.seeking
                 _log_event("prologue", "thread.downgraded", reason=f"{key}_leak")
     npcs = []
     for npc in data.get("seed_npcs") or []:
@@ -610,16 +611,16 @@ _HOSTILE = re.compile(
     # verbo de descarte + alvo COMPOSTO de instrução ("esquecer as instruções do meu mestre",
     # "ignorou um pedido anterior", "armadura acima do joelho" são benignos)
     r"\b(ignor\w*|esque\w*|desconsider\w*|descart\w*|forget|disregard|override)\b"
-    r".{0,40}\b(instru\w*\s+(anteriores|previas|acima|do\s+sistema)|"
+    r".{0,40}\b((instru\w*|ordens|diretrizes)[\s._-]+(anteriores|previas|acima|do\s+sistema)|"
     r"(tudo|o\s+que\s+foi\s+dito|o\s+que\s+veio)\s+(acima|antes|anteriormente)|"
-    r"regras\s+(anteriores|do\s+sistema)|"
+    r"regras[\s._-]+(anteriores|do\s+sistema)|"
     r"(previous|prior|above|earlier|all)\s+(instructions|rules|prompts?|context)|"
     r"system\s*prompt|prompt\s+do\s+sistema)|"
     r"system\s*prompt|prompt\s+do\s+sistema|"
     r"\b(revele|registre|marque|reveal|record)\b.{0,40}\b(json|proposed_events|quest_\w+|sistema)\b|"
     r"</?\w+>|\bquest_\w+|\bproposed_events\b|jailbreak|"
     r"\byou\s+are\s+now\b.{0,30}\b(dan|free|unrestricted|without|no\s+limits)\b|"
-    r"(^|[.!?:]\s*)agora\s+voce\s+e\b.{0,30}\b(dan|livre|sem\s+(limites|regras|restricoes)|assistente|ia)\b|"
+    r"(^|[.!?:]\s*)(a\s+partir\s+de\s+)?agora\s+voce\s+e\b.{0,30}\b(dan|livre|sem\s+(limites|regras|restricoes)|assistente|ia|o\s+mestre|narrador|o\s+sistema)\b|"
     r"\bnovas?\s+instrucoes\b|\bdeveloper\s+mode\b",
     re.IGNORECASE | re.DOTALL,
 )
