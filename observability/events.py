@@ -341,6 +341,8 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "persistence.store_save_failed": ("duration_ms", "error_type", "game_ref"),
     "planner_context.fallback": (),
     "playtest.fallback": (),
+    "plot.catalog_invalid": ("error",),
+    "plot.fallback": (),
     "pool.admin_action": ("action", "entry_id"),
     "pool.cast_offered": ("count",),
     "pool.cast_used": ("entry_id",),

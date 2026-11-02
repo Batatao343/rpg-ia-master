@@ -27,4 +27,6 @@ Aparência: Mulher de cinquenta anos, lupa presa na testa, dedos finos com dois 
 
 Como fala: Fala em horas, nunca em dias: "Sete batidas, sem mão nenhuma. Eu conto. Alguém tem de contar."
 
-Gancho: Na oficina sob o sétimo sino, de madrugada. Quer alguém acordado na hora em que o sino toca sozinho, antes de cada desaparecimento.
+Gancho: Descobrir por que um sino toca sozinho antes de cada desaparecimento.
+
+Onde achar: Na oficina sob o sétimo sino, de madrugada. Quer alguém acordado na hora em que o sino toca sozinho, antes de cada desaparecimento.

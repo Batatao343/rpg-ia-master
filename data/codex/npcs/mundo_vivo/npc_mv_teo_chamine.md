@@ -27,4 +27,6 @@ Aparência: Rapaz de dezesseis anos, magro, pés enrolados em trapos para não f
 
 Como fala: Fala correndo, frase sem verbo: "Telhado, vento, ronda. Passou. Vai."
 
-Gancho: Nos telhados de Nova Arcádia, das chaminés do Ferro às torres do Dourado, ao cair da noite. Precisa levar uma lista de operários presos sem cruzar a patrulha da Legião.
+Gancho: Levar uma lista de operários presos sem cruzar uma patrulha da Legião.
+
+Onde achar: Nos telhados de Nova Arcádia, das chaminés do Ferro às torres do Dourado, ao cair da noite. Precisa levar uma lista de operários presos sem cruzar a patrulha da Legião.

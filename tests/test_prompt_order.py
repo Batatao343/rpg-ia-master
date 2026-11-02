@@ -11,12 +11,13 @@ _DYNAMIC_MARKER = {"story": "<PERSONA>", "npc": "<ROLE>", "router": "Local Atual
 _STATIC_MARKER = {"story": "<INSTRUÇÕES>", "npc": "<REGRAS DE ATUAÇÃO", "router": "REGRAS:"}
 
 
+# SPEC-350: npc/story atualizados so pelas arestas located_in/member_of novas do grafo (dado).
 # sha256 dos prompts gerados pelo codigo de `main` ANTES da SPEC-317 (flag off), na fixture de
 # tests/prompt_capture.py. Mudanca legitima de prompt em outra spec atualiza estes hashes.
 _MAIN_GOLDEN = {
-    "npc": "724e574ccf5681bd6534bf2ae6618e497845aae6b10e7a8e96c4f82cec372b08",
+    "npc": "8b1af4afdd72c8ab372c2863c3f60f3e51487471c44f616aaf7d2f77fcf6ba5d",
     "router": "adbe6157f91b7a7ba50ff33a620fea95b79246861ca639924cdfd3abadd3fd46",
-    "story": "e8f88ce993c6529ced1c29b17372fb1e9942c3c63346054650c29328f9e691cc",
+    "story": "48b5ae5e0719f330901ee0be3cad5a5717c163d75a08d52c3796264f6d55ac3b",
 }
 
 

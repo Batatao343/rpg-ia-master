@@ -131,18 +131,21 @@ def _load(path: str) -> PlotCatalog:
         with open(path, encoding="utf-8") as f:
             return parse_catalog(json.load(f))
     except Exception as exc:  # arquivo ausente/inválido nunca derruba o jogo (R20)
-        try:
-            from observability.telemetry import log_event
+        from observability.telemetry import log_event
 
-            log_event("plot", "catalog_invalid", level="warning", error=type(exc).__name__)
-        except Exception:
-            pass
+        log_event("plot", "catalog_invalid", level="warning", error=type(exc).__name__)
         return PlotCatalog()
 
 
 @lru_cache(maxsize=1)
 def catalog() -> PlotCatalog:
     return _load(CATALOG_PATH)
+
+
+def _fallback(event: str, exc: Exception) -> None:
+    from observability.telemetry import log_fallback
+
+    log_fallback("plot", event, exc)
 
 
 def clear_cache() -> None:
@@ -182,7 +185,8 @@ def _graph_names(npc_id: str) -> list[str]:
         from services import graph_resolver as gr
 
         ent = gr.get_entity(npc_id)
-    except Exception:
+    except Exception as exc:
+        _fallback("graph_entity_failed", exc)
         ent = None
     if not isinstance(ent, dict):
         return []
@@ -223,7 +227,8 @@ def _other_canonical_id(rid: str) -> bool:
         from services import graph_resolver as gr
 
         ent = gr.get_entity(rid)
-    except Exception:
+    except Exception as exc:
+        _fallback("graph_entity_failed", exc)
         return False
     return isinstance(ent, dict) and ent.get("type") == "npc"
 
@@ -349,7 +354,8 @@ def _public_docs() -> dict[str, str]:
             path = os.path.join(root, fname)
             try:
                 fm, _body = parse_codex_file(path)
-            except Exception:
+            except Exception as exc:
+                _fallback("codex_doc_unreadable", exc)
                 continue
             if fm.get("visibility") == "public" and fm.get("id"):
                 out.setdefault(str(fm["id"]), path)
@@ -364,7 +370,8 @@ def _persona_of(npc_id: str) -> str:
 
     try:
         _fm, body = parse_codex_file(path)
-    except Exception:
+    except Exception as exc:
+        _fallback("codex_doc_unreadable", exc)
         return ""
     for para in body.split("\n\n"):
         text = para.strip()

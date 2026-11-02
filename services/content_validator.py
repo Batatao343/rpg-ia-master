@@ -1756,7 +1756,7 @@ def validate_plot_threads(
         from services import plot_threads
 
         plot_threads.parse_catalog(data)
-    except Exception as exc:
+    except Exception as exc:  # silent-ok: vira Finding de erro no lint
         return [Finding("plot_threads", "error", path, "", f"schema inválido: {exc}")]
     refs = _build_plot_refs(data, leak_phrases)
     return [Finding("plot_threads", "error", path, "", p) for p in lint_plot_threads(data, refs)]

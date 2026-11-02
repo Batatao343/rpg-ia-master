@@ -27,4 +27,6 @@ Aparência: Mulher de quarenta anos, rosto de pedra sem cuidado, martelo curto s
 
 Como fala: Técnica, mede tudo em pancadas: "Três pancadas ocas, uma cheia. A cheia mente."
 
-Gancho: Nos armazéns das Fundições, de manhã. Procura a remessa de rebites ocos que faz caldeiras explodirem, e paga a quem trouxer um rebite de cada lote.
+Gancho: Encontrar a remessa de rebites ocos que faz caldeiras explodirem.
+
+Onde achar: Nos armazéns das Fundições, de manhã. Paga a quem trouxer um rebite de cada lote.

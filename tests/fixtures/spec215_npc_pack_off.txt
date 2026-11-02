@@ -19,6 +19,7 @@ Sennar, o Pregador da Cicatriz —located_in→ Nova Arcádia
 Benedita, a Parteira —located_in→ Nova Arcádia
 Ilsa —located_in→ Nova Arcádia
 Bertil —located_in→ Nova Arcádia
+Lorde Protetor Valerius —located_in→ Nova Arcádia
 Comandante Thrace —leads→ A Legião de Ferro
 Mestre-fundidor Kald —leads→ Os Encapuzados da Fornalha
 Bors Martelo-partido —leads→ A Resistência Operária (os Martelos Partidos)
@@ -109,6 +110,37 @@ Mairen das Margens —located_in→ As Ruínas Submersas de Aethelgard
 Hask, o Musgo —member_of→ Os Druidas do Ciclo Cinzento
 Hask, o Musgo —located_in→ O Pântano da Melancolia
 Bertil —member_of→ A Guilda dos Corvos
+Dalva Torneira —located_in→ Taverna do Javali Dourado
+Cabo Anselmo Tiza —located_in→ Anel de Lama
+Cabo Anselmo Tiza —member_of→ A Legião de Ferro
+Rute —located_in→ Anel de Lama
+Rute —member_of→ A Guilda dos Corvos
+Tobias Pena-Seca —located_in→ Anel de Ferro
+Pio Ferrugem —located_in→ Anel de Lama
+Ludovina Agulha —located_in→ Anel de Ferro
+Gaspar Fole —located_in→ Anel de Ferro
+Lalo das Fichas —located_in→ Anel de Ferro
+Matias Selo —located_in→ Anel de Ferro
+Caio Pavio —located_in→ Anel de Lama
+Bento Juros —located_in→ Anel de Ferro
+Aelis Sem-Ampulheta —located_in→ Anel Dourado
+Dorotea Selo-Verde —located_in→ Anel de Ferro
+Ysolt Fio-de-Vidro —located_in→ Anel Dourado
+Comandante Thrace —located_in→ Anel de Ferro
+Doutor Silas Vane —located_in→ Anel de Ferro
+Mãe Corva —located_in→ Anel de Lama
+Velha Netta —located_in→ Anel de Lama
+Bors Martelo-partido —located_in→ Anel de Ferro
+Mestre-fundidor Kald —located_in→ Anel de Ferro
+Arquimaga Sylvenne —located_in→ Anel Dourado
+Liane Chama-escondida —located_in→ Anel de Lama
+Korvus —located_in→ Anel de Lama
+Lorde Vespério Valante —located_in→ Anel Dourado
+Lorde Oswin Conta-de-ouro —located_in→ Anel Dourado
+Dama Vesperina —located_in→ Anel Dourado
+Lírio —located_in→ Anel Dourado
+Rato-de-ferro Tibb —located_in→ Anel de Ferro
+Pardal —located_in→ Anel de Lama
 Lorde Protetor Valerius: morto.
 </ESTADO_ATUAL_DO_MUNDO>
 ----
