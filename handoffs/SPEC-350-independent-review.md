@@ -102,3 +102,34 @@ bash scripts/dev/py.sh scripts/validate_content.py → 0 ERRO(S); validate_plot_
 sonda sheet_for_row("Bento"/"Caio"/"Rute"/… em sk_porto) → ficha de Nova Arcádia (P1-1)
 sonda npc_self_blocks para as 39 fichas → tópico cortado em 8 (P1-2); linha de trama presente em 39
 ```
+
+## Rodada 2
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` · **Data:** 2026-11-02 · **Commit revisado:** `51b9f003` (correções em `9461ba67`)
+
+| Item | Status | Verificação |
+|---|---|---|
+| P1-1 | resolvido | `sheet_for_row` só aceita nome quando a região de `home_location_id` é a da trama e o `id` não é de outro NPC do grafo. Sonda no catálogo real: "Bento"/"Caio"/"Rute" em `sk_porto` → `None`; "Bors" em `na_anel_ferro` e "Rute" em `na_anel_lama` → ficha certa. Teste novo `test_sheet_for_row_name_match_requires_thread_region`. Resíduo aceito: linha sem `home_location_id` ainda casa por nome (NPC gerado em `agents/npc.py:943/995` recebe casa). |
+| P1-2 | resolvido | o assunto que evita vem antes da voz; `test_avoided_topic_line_present_for_every_sheet` exige a linha nas 39 fichas (verde). |
+| P1-3 / Rute | resolvido → **aprovado** | "A Legião marca com tiza vermelha os corpos que não quer carregar; esses são de Rute": os marcados são dela, como em `daily_life.txt`. Reindex em `51b9f003`. |
+| P2-1 / P2-9 | resolvido | Anselmo: "Para ele, papel bom é papel com selo"; a voz passou a ser a ordem do dia ("Ordem é ordem…"), sem "artigo". Doc público e ficha batem. |
+| P2-2 | resolvido | Pardal em `core`, Netta em `borda`; lint novo: a âncora da porta precisa estar em `core ∪ borda`. |
+| P2-3 | resolvido | desejo da Ysolt: "que o dono não abra os livros da casa antes do inverno" (liga ao segredo da dívida, sem tocar em Elaryin). |
+| P2-4 | resolvido | grupos `aco_lembra` e `elaryin` em `leak_phrases.json`, citados nas tramas. Lista de Fornalha e Coleção **são públicas**: `factions.txt:22` traz a Lista de Fornalha como fato público (SPEC-348 R26/G-10) e `npcs.txt:1309-1313` apresenta o Colecionador e as "raridades vivas" na ficha pública dele. O que é oculto ali é segredo individual (Bento, Matias), já guardado pelo lint R16c. Aceito. |
+| P2-5 | adiado (aceito) | registrado na §9 como restrição para a SPEC-351 (`faction_id` público antes de ir ao estado). |
+| P2-6 | resolvido | `_candidates` não acrescenta o id canônico quando já há um NPC materializado com o mesmo nome/alias (só com a flag `on`; `off` idêntico). Teste `test_roster_dedupes_materialized_cast_by_name`. |
+| P2-7 | resolvido | `test_spec350_leak_snapshot` congela as frases originais de `vibora`/`barril`/`corpos`/`praga`. Follow-up menor: `farol` está só com contagem mínima (≥ 12 de 14), e `arauto` só confere ≥ 5; listar as frases literais fecharia o oráculo por inteiro. |
+| P2-8 | resolvido | `[plot_threads] OK (0 erros)` aparece no `validate_content.py`. |
+| Téo | ok | o doc agora cita os telhados da cidade, coerente com a porta em `nova_arcadia`. |
+
+Rubrica R18: nenhum `refazer` pendente (Rute aprovada; Anselmo e Ysolt aprovados). Critério R18 da spec
+marcado e caminho trocado para este arquivo.
+
+Pendências que continuam: P2-5 (SPEC-351), snapshot completo de `farol`/`arauto` (P2-7, opcional), playtest
+de 50 turnos da §7 antes de D6/D8, `shared_pool.get_by_name_fold` no staging para os 14 nomes.
+
+```text
+bash scripts/dev/py.sh -m pytest -n 2 tests/test_spec350_*.py tests/test_spec348_leaks.py tests/test_spec304_{roster,review}.py tests/test_spec310_{npc_self,npc_prompt,no_leak}.py tests/test_fase71.py → 243 passed, 1 skipped
+bash scripts/dev/py.sh scripts/validate_content.py → [plot_threads] OK; 0 ERRO(S)
+sonda sheet_for_row no catálogo real (Bento/Caio/Rute em sk_porto; Bors; Rute em na_anel_lama) → conforme acima
+```

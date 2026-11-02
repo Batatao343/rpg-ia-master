@@ -170,7 +170,7 @@ trama. **Porta** = um jeito concreto e mundano de o jogador entrar na trama por 
   "cobradores"). Duplicata provável = ERRO com o par apontado.
 - **R18 — Revisão independente com rubrica.** Um subagente `spec-reviewer` (Opus) que não escreveu o
   conteúdo lê os 12 docs novos, os 3 promovidos e todas as fichas de Nova Arcádia contra a rubrica de §3.8
-  e grava `handoffs/SPEC-350-review.md` com veredito por NPC (`aprovado` / `refazer` + motivo) e por
+  e grava `handoffs/SPEC-350-independent-review.md` com veredito por NPC (`aprovado` / `refazer` + motivo) e por
   trama. Qualquer `refazer` bloqueia o `done` até nova rodada.
 - **R19 — Aprovação do mapa antes do texto.** O mapa de tramas (§3.6) e a lista de nomes (§3.7) são
   aprovados pelo dono antes da autoria dos docs (Etapa 3). Nomes trocados pelo dono entram sem nova
@@ -258,7 +258,7 @@ trama. **Porta** = um jeito concreto e mundano de o jogador entrar na trama por 
 | `tests/test_spec350_api.py` | R20, R21, R25, R26 (API pura, filtros de estado, nada de segredo) |
 | `tests/test_spec350_npc_prompt.py` | R22, R23, R26, R28 (blocos do `npc_self`, orçamento, flag off) |
 | `tests/test_spec350_roster.py` | R24, R28 (ordem do roster, teto, congelamento) |
-| `handoffs/SPEC-350-review.md` | Revisão independente (R18) |
+| `handoffs/SPEC-350-independent-review.md` | Revisão independente (R18) |
 
 ### 3.2 Arquivos alterados
 
@@ -654,7 +654,7 @@ Nomes trocados entram direto.
 
 ### Etapa 6 — Revisão independente
 
-`spec-reviewer` (Opus) aplica §3.8 e grava `handoffs/SPEC-350-review.md`. `refazer` → autor corrige →
+`spec-reviewer` (Opus) aplica §3.8 e grava `handoffs/SPEC-350-independent-review.md`. `refazer` → autor corrige →
 nova rodada só nos itens marcados.
 
 ### Etapa 7 — Reindex, guia e smoke
@@ -673,7 +673,7 @@ nova rodada só nos itens marcados.
 - [x] 3 mundo vivo de Nova Arcádia promovidos, sem a frase-modelo (R12)
 - [x] Todo NPC nomeado de Nova Arcádia no `cast` ou em `excluded` com motivo (R13)
 - [x] `validate_content.py` com 0 ERRO, incluindo `validate_plot_threads` (R15–R17)
-- [ ] `handoffs/SPEC-350-review.md` sem `refazer` pendente (R18)
+- [x] `handoffs/SPEC-350-independent-review.md` sem `refazer` pendente (R18)
 - [x] `tests/test_spec350_*` verdes; `uv run pytest` verde (suíte completa, coordenador)
 - [x] Flag `off` deixa prompt e roster idênticos (R28)
 - [x] Nenhuma chamada LLM nova; nenhum campo novo em `GameState`; saves antigos carregam (R26)
@@ -792,7 +792,7 @@ reindex, resultado do smoke)
 - **Etapa 5:** `npc_self.motive_lines(row, sheet)` e linha "O que está em jogo para você" (atrás da flag); `npc_world._candidates` põe o elenco da região atual depois dos conhecidos e antes de `key_npcs`; `ROSTER_CAP` intacto. A linha do "assunto que evita" ficou mais curta ("Desconverse se tocarem nele.") para não ser cortada pelo teto de 450 caracteres nas fichas longas. Flag `RPG_PLOT_THREADS` segue `off` (D6) até a decisão do coordenador pós-smoke.
 - **Smoke §6 (parcial, real, `RPG_PLOT_THREADS=on`):** 4 invocações de `npc_actor_node` com a ficha: Netta (2 turnos; desconversa sobre os marcados sem citar o segredo), Rute (voz "Hoje vieram cinco… Choveu menos.") e Bors (resolvido pela ficha); 2–12 s por turno, provider/modelo não registrados pelo script. Não rodado: viagem completa pelo `/game/action` e `/game/state` ao vivo (coberto por testes offline).
 - **Reindex:** `faiss_lore_index` refeito (2394 -> 2441 chunks; 42 `npc_tr_*`, 59 `_segredo` ocultos no total). O reindex das regras falhou com 429 da Jina (SPEC-356 trata o backoff); `faiss_rules_index` não mudou e não depende desta spec.
-- **Pendente para o coordenador:** Etapa 6 (revisão Opus, `handoffs/SPEC-350-review.md`); `shared_pool.get_by_name_fold` no staging para os 14 nomes antes do deploy; decidir `RPG_PLOT_THREADS=on`; playtest 50 turnos antes/depois do roster (§7); `waves[0].status` segue `in_progress` até a revisão.
+- **Pendente para o coordenador:** Etapa 6 (revisão Opus, `handoffs/SPEC-350-independent-review.md`); `shared_pool.get_by_name_fold` no staging para os 14 nomes antes do deploy; decidir `RPG_PLOT_THREADS=on`; playtest 50 turnos antes/depois do roster (§7); `waves[0].status` segue `in_progress` até a revisão.
 
 **Correções da revisão independente (`handoffs/SPEC-350-independent-review.md`, CHANGES_REQUIRED):**
 
