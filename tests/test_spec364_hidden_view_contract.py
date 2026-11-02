@@ -31,6 +31,8 @@ def test_view_marks_hidden_enemy_and_filters_hand_targets(monkeypatch):
 
 def test_e2e_fixture_uses_the_same_literals():
     text = E2E.read_text(encoding="utf-8")
-    assert 'concealment = "escondido"' in text  # valor que o motor emite em `scene.positions[*].concealment`
+    assert (
+        'concealment = "escondido"' in text
+    )  # valor que o motor emite em `scene.positions[*].concealment`
     assert "valid_targets" in text and "invalid_reason" in text
     assert "bas_" in text  # Carta basica da mao

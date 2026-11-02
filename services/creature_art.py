@@ -38,7 +38,9 @@ FAMILY_ICON: dict[str, str] = {  # D-347-H: só ícones que já existem em web/s
 
 class GerarOffer(TypedDict):
     preco_estilhas: int
-    preco_milli: NotRequired[str]  # SPEC-364 R18: teto exato (string de inteiro, como credits_milli)
+    preco_milli: NotRequired[
+        str
+    ]  # SPEC-364 R18: teto exato (string de inteiro, como credits_milli)
     escopo: Literal["tipo", "unico"]
 
 

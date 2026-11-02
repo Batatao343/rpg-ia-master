@@ -12,7 +12,9 @@ from services import round_log
 
 HERO = "Smoke4A"
 PLAYER = {
-    "name": HERO, "vitalidade": 0, "max_vitalidade": 18,
+    "name": HERO,
+    "vitalidade": 0,
+    "max_vitalidade": 18,
     "ferimentos": {"critico": [{"regiao": "perna"}]},
 }
 ENEMIES = [
@@ -40,7 +42,15 @@ BAD_LLM = "Você tomba. O Goblin também tomba sem vida ao seu lado. Smoke4A cai
 def _outcome(monkeypatch, text, sink):
     monkeypatch.setattr(combat, "_fast_text", lambda *a, **k: text)
     return combat._narrate_outcome(
-        "death", SUMMARY, PLAYER, ENEMIES, LAST_OUT, "ataco", "", manifest=None, names=NAMES,
+        "death",
+        SUMMARY,
+        PLAYER,
+        ENEMIES,
+        LAST_OUT,
+        "ataco",
+        "",
+        manifest=None,
+        names=NAMES,
         source_sink=sink,
     )
 
@@ -76,15 +86,22 @@ def test_registry_and_facts_never_mutilate_the_name():
         "scene_logs": [f"{HERO} sente o Abismo mais perto (+1 Carga)."],
         "logs": [f"{HERO}: ganha condição cego"],
         "attacks": [
-            {"actor_id": "enemy_mino", "target_id": "player", "acerto": True, "resultado": "acerto",
-             "dano_final": 5}
+            {
+                "actor_id": "enemy_mino",
+                "target_id": "player",
+                "acerto": True,
+                "resultado": "acerto",
+                "dano_final": 5,
+            }
         ],
         **LAST_OUT,
     }
     lines = "\n".join(round_log.round_registry(out, actors))
     assert "SmokeA" not in lines
     assert not any(ln.startswith(HERO) for ln in lines.splitlines())
-    facts = "\n".join(round_log.outcome_facts("death", SUMMARY, PLAYER, ENEMIES, LAST_OUT, names=NAMES))
+    facts = "\n".join(
+        round_log.outcome_facts("death", SUMMARY, PLAYER, ENEMIES, LAST_OUT, names=NAMES)
+    )
     assert "SmokeA" not in facts
     assert "Antes do fim, Goblin já tinha morrido." in facts
 

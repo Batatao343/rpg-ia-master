@@ -86,7 +86,8 @@ def test_explicit_sell_still_sells(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "text", ["Posso vender a Tocha?", "Quanto vale a Tocha?", "Me vende a Corda?", "Quanto custa a Corda?"]
+    "text",
+    ["Posso vender a Tocha?", "Quanto vale a Tocha?", "Me vende a Corda?", "Quanto custa a Corda?"],
 )
 def test_question_never_trades_item(text, no_llm):
     st = _st(text)
@@ -95,7 +96,11 @@ def test_question_never_trades_item(text, no_llm):
     body = out["messages"][0].content
     assert "nada mudou" in body or "consulta sem transação" in body
     assert _snap(st) == before
-    assert "player" not in out or out["player"] is None or _snap({**st, "player": out["player"]}) == before
+    assert (
+        "player" not in out
+        or out["player"] is None
+        or _snap({**st, "player": out["player"]}) == before
+    )
     assert not no_llm
 
 
@@ -107,7 +112,10 @@ def test_question_quote_text():
 
 
 def test_market_two_sections():
-    st = _st("Examino o estoque.", inventory_extra=[{"id": "item_desconhecido", "qty": 1, "display_name": LONG}])
+    st = _st(
+        "Examino o estoque.",
+        inventory_extra=[{"id": "item_desconhecido", "qty": 1, "display_name": LONG}],
+    )
     body = loot.loot_node(st)["messages"][0].content
     assert "À venda:" in body and "Pelo que você carrega:" in body
     sell_part = body.split("Pelo que você carrega:")[1]

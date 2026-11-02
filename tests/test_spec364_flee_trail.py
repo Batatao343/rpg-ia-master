@@ -31,11 +31,18 @@ def _player():
 
 
 def _enemy():
-    return {"id": "lobo", "name": "Lobo", "pursuit_policy": "persegue", "virtudes": {"agilidade": 0}}
+    return {
+        "id": "lobo",
+        "name": "Lobo",
+        "pursuit_policy": "persegue",
+        "virtudes": {"agilidade": 0},
+    }
 
 
 def _flee(existing, rng, scene=None, **kw):
-    return _attempt_flee(scene or _scene(), _player(), [_enemy()], {}, rng, existing_chase=existing, **kw)
+    return _attempt_flee(
+        scene or _scene(), _player(), [_enemy()], {}, rng, existing_chase=existing, **kw
+    )
 
 
 def test_two_flees_same_trail():
@@ -49,7 +56,10 @@ def test_two_flees_same_trail():
     assert payload["de"] == "pressionado" and payload["para"] == "afastado"
     assert payload["veredito"] == "avancou"
     mech = cp._flee_line({"fuga": payload})
-    assert mech == "Fuga · total 20 vs 12 · avança (pressionado → afastado)" or "pressionado → afastado" in mech
+    assert (
+        mech == "Fuga · total 20 vs 12 · avança (pressionado → afastado)"
+        or "pressionado → afastado" in mech
+    )
     assert "pressionado → afastado" in " ".join(logs)
     assert not _ID_RE.search(mech + " ".join(logs))
 
@@ -105,13 +115,29 @@ def test_track_label_never_returns_id():
     assert chase.track_label("lixo_interno") == ""
     assert chase.track_label(None) == ""
     line = cp._flee_line(
-        {"fuga": {"total": 3, "dificuldade": 12, "veredito": "avancou", "de": "lixo_interno", "para": "afastado"}}
+        {
+            "fuga": {
+                "total": 3,
+                "dificuldade": 12,
+                "veredito": "avancou",
+                "de": "lixo_interno",
+                "para": "afastado",
+            }
+        }
     )
     assert "lixo_interno" not in line and "(" not in line
 
 
 def test_no_track_ids_anywhere():
     alc = cp._flee_line(
-        {"fuga": {"total": 3, "dificuldade": 12, "veredito": "alcancado", "de": "pressionado", "para": "alcancado"}}
+        {
+            "fuga": {
+                "total": 3,
+                "dificuldade": 12,
+                "veredito": "alcancado",
+                "de": "pressionado",
+                "para": "alcancado",
+            }
+        }
     )
     assert not _ID_RE.search(alc)

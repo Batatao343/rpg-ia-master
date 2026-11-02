@@ -19,7 +19,9 @@ def find_internal_ids(text: str) -> list[str]:
         for m in _SNAKE.findall(text)
         if m in ARTIFACTS_DB or m in STATE_IDS or m == "item_desconhecido"
     ]
-    found += re.findall(r"\balcancado\b", text)  # SPEC-364 R3/R29: a trilha nunca mostra o id sem acento
+    found += re.findall(
+        r"\balcancado\b", text
+    )  # SPEC-364 R3/R29: a trilha nunca mostra o id sem acento
     return found
 
 

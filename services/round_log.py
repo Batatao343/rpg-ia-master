@@ -592,7 +592,9 @@ def fall_partition(
     Sem dado da rodada final (save antigo) tudo é "agora", como antes."""
     last = last or {}
     now_ids = {str(b.get("target_id")) for b in last.get("final_blows") or []}
-    now_ids |= {str(i) for i in last.get("deaths") or []} | {str(i) for i in last.get("terminal") or []}
+    now_ids |= {str(i) for i in last.get("deaths") or []} | {
+        str(i) for i in last.get("terminal") or []
+    }
     now_ids |= {str(x.get("actor_id")) for x in last.get("sem_vitalidade") or []}
     now_names = {nm.get(i, i) for i in now_ids if i != "player"}
     fallen = [

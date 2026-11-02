@@ -38,9 +38,14 @@ def test_scene_condition_line_once():
 def test_no_hero_name_in_player_surfaces(hero):
     out = {
         "logs": [f"{hero}: ganha condição cego"],
-        "scene_logs": [f"{hero} sente o Abismo mais perto (+1 Carga).", f"{hero}: ganha condição cego"],
+        "scene_logs": [
+            f"{hero} sente o Abismo mais perto (+1 Carga).",
+            f"{hero}: ganha condição cego",
+        ],
     }
-    lines = round_log.round_registry(out, ACTORS(hero), status_logs=[f"{hero}: ganha condição cego"])
+    lines = round_log.round_registry(
+        out, ACTORS(hero), status_logs=[f"{hero}: ganha condição cego"]
+    )
     for ln in lines:
         assert not ln.startswith(hero) and f"{hero}:" not in ln, ln
     assert sum("Cego" in ln for ln in lines) == 1

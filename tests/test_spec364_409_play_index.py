@@ -51,7 +51,7 @@ def test_sse_409_names_the_exact_play(seeded):
     text = r.text
     assert "event: error" in text, text[:400]
     data = next(
-        json.loads(line[len("data:"):].strip())
+        json.loads(line[len("data:") :].strip())
         for block in text.split("\n\n")
         if block.startswith("event: error")
         for line in block.splitlines()
@@ -65,5 +65,7 @@ def test_sse_409_names_the_exact_play(seeded):
 def test_first_invalid_play_index_zero(seeded):
     client, saved, gid, plays, cid = seeded
     hidden = plays[1]["target_id"]
-    r = client.post("/game/action", json=_body(gid, [{"card_id": cid, "target_id": hidden}, plays[0]]))
+    r = client.post(
+        "/game/action", json=_body(gid, [{"card_id": cid, "target_id": hidden}, plays[0]])
+    )
     assert r.status_code == 409 and r.json()["detail"]["play_index"] == 0

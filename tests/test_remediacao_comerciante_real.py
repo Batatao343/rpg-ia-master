@@ -51,7 +51,9 @@ def test_observar_mercado_nao_cria_transacao_nem_muta_player():
     assert out.get("last_economy_action") is None
     assert state["player"] == before
     assert "consulta sem transação" in out["messages"][0].content
-    assert "À venda:" in out["messages"][0].content  # SPEC-364 R7: duas seções, sem "compra / venda"
+    assert (
+        "À venda:" in out["messages"][0].content
+    )  # SPEC-364 R7: duas seções, sem "compra / venda"
 
 
 def test_verbo_de_compra_explicito_vence_vocabulario_de_observacao(monkeypatch):

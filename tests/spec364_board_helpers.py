@@ -5,7 +5,11 @@ from __future__ import annotations
 from copy import deepcopy
 
 CARD_FLAGS = (
-    "RPG_CARD_DECK", "RPG_CARD_REWARDS", "RPG_ENEMY_INTENT", "RPG_SCENE_CARDS", "RPG_ENEMY_DECKS",
+    "RPG_CARD_DECK",
+    "RPG_CARD_REWARDS",
+    "RPG_ENEMY_INTENT",
+    "RPG_SCENE_CARDS",
+    "RPG_ENEMY_DECKS",
     "RPG_COMBAT_NONLETHAL",
 )
 
@@ -37,8 +41,14 @@ def api_client(monkeypatch, hero: str = "Smoke4A"):
     client = TestClient(api.app)
     new = client.post(
         "/game/new",
-        json={"name": hero, "race": "Humano", "class_name": "Sangromante", "region": "Nova Arcádia",
-              "level": 1, "backstory": ""},
+        json={
+            "name": hero,
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
     )
     assert new.status_code == 200, new.text
     return client, saved, new.json()["game_id"]

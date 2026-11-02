@@ -144,9 +144,7 @@ _CATALOG_RE = re.compile(
     r"\b(?:a venda|(?:pra|para) vender|(?<!me )vendem?|(?:esta|estao) vendendo|mercadorias?|"
     r"o que (?:voce|voces|ele|ela|a [a-z ]{1,30}?|o [a-z ]{1,30}?) tem)\b"
 )
-_QUESTION_RE = re.compile(
-    r"^(?:o que|quanto|qual|quais|posso|tem|voces? tem|me vende)\b"
-)
+_QUESTION_RE = re.compile(r"^(?:o que|quanto|qual|quais|posso|tem|voces? tem|me vende)\b")
 
 
 def _cites_inventory(state: GameState, folded: str) -> dict | None:
@@ -191,7 +189,9 @@ def _shop_question_quote(work_state: dict, text: str) -> str | None:
     if entry is not None:
         shown = inv.short_display(entry)
         for q in snap.get("quotes") or []:
-            if q.get("item_id") == entry.get("id") and q.get("item_name") == inv.item_display(entry):
+            if q.get("item_id") == entry.get("id") and q.get("item_name") == inv.item_display(
+                entry
+            ):
                 return (
                     f"[SISTEMA] {shown}: o mercador paga {int(q.get('sell_price', 0) or 0)} moedas. "
                     "Diga claramente que vende para confirmar; nada mudou."

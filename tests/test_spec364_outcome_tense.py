@@ -10,8 +10,13 @@ from tests.fixtures import spec364_smoke as fx
 
 
 def _facts(last_out=fx.LAST_OUT):
-    enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}, {"id": "enemy_goblin", "name": "Goblin"}]
-    return round_log.outcome_facts("victory", fx.SUMMARY, fx.PLAYER, enemies, last_out, names=fx.NAMES)
+    enemies = [
+        {"id": "enemy_mino", "name": "Minotauro Esqueleto"},
+        {"id": "enemy_goblin", "name": "Goblin"},
+    ]
+    return round_log.outcome_facts(
+        "victory", fx.SUMMARY, fx.PLAYER, enemies, last_out, names=fx.NAMES
+    )
 
 
 def test_facts_split_final_and_earlier():
@@ -38,7 +43,15 @@ def test_prompt_mentions_past(monkeypatch):
     monkeypatch.setattr(combat, "_fast_text", fake_fast)
     enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}]
     combat._narrate_outcome(
-        "victory", fx.SUMMARY, fx.PLAYER, enemies, fx.LAST_OUT, "ataco", "", manifest=None, names=fx.NAMES
+        "victory",
+        fx.SUMMARY,
+        fx.PLAYER,
+        enemies,
+        fx.LAST_OUT,
+        "ataco",
+        "",
+        manifest=None,
+        names=fx.NAMES,
     )
     assert seen and "conte no passado" in seen[0]
 

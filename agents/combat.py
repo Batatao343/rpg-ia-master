@@ -3399,7 +3399,10 @@ def _attempt_flee(
     previous_track = chase_state.get("trilha")
     if force_escape:
         chase_state.update(trilha="escapou", escapou=True, alcancado=False, eligible=True)
-        chase_state["_last"] = {**(chase_state.get("_last") or {}), "de": previous_track}  # SPEC-364 R1
+        chase_state["_last"] = {
+            **(chase_state.get("_last") or {}),
+            "de": previous_track,
+        }  # SPEC-364 R1
         return FleeDecision(
             True,
             ["Você aproveita a brecha e FOGE do combate."],
