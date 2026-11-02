@@ -115,8 +115,8 @@ def test_motivo_trama_sem_350(monkeypatch):
 def test_motivo_trama_com_350(monkeypatch):
     fake = types.ModuleType("services.plot_threads")
     fake.mode = lambda: "on"
-    fake.threads_for_region = lambda r: [{"id": "t2"}, {"id": "t1"}, {"id": "t3"}]
-    fake.public_thread_brief = lambda t: f"Trama pública {t['id']}."
+    fake.threads_for_region = lambda r: [types.SimpleNamespace(id=i) for i in ("t2", "t1", "t3")]
+    fake.public_thread_brief = lambda thread_id: f"Trama pública {thread_id}."
     monkeypatch.setitem(sys.modules, "services.plot_threads", fake)
     m = cg.motivo_trama(_state(), "nova_arcadia")
     assert "Trama pública t1." in m and "Trama pública t2." in m and "t3" not in m
@@ -196,3 +196,23 @@ def test_resolver_nome_igual_resolve_bestiary_name(best):
     textos += [str(e.get("name")) for e in list(best.values())[:40]]
     for t in textos:
         assert cg.resolver_nome(t, best) == resolve_bestiary_name(t, best), t
+
+
+@pytest.mark.parametrize("modo", ["on", "off"])
+def test_motivo_trama_com_plot_threads_real(monkeypatch, modo):
+    """R9 com a SPEC-350 de verdade: `on` traz o resumo público das tramas da região
+    (nunca segredo); `off` cai no caminho só-campaign_plan."""
+    from services import plot_threads
+
+    monkeypatch.setenv("RPG_PLOT_THREADS", modo)
+    regiao = next((t.region_id for t in plot_threads.catalog().threads), "nova_arcadia")
+    briefs = [
+        plot_threads.public_thread_brief(t.id) for t in plot_threads.threads_for_region(regiao)[:2]
+    ]
+    m = cg.motivo_trama(_state(), regiao)
+    assert m.startswith("Arco: A greve dos fundidores.")
+    tem = any(b[:40] in m for b in briefs if b)
+    assert tem is (modo == "on" and bool(briefs))
+    for t in plot_threads.threads_for_region(regiao):
+        for segredo in t.secret_ids:
+            assert segredo not in m

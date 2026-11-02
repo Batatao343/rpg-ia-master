@@ -576,16 +576,18 @@ def _sem_segredo(texto: str) -> str:
 def _plot_threads_brief(regiao: str) -> list[str]:
     """SPEC-350 opcional: sem o módulo (ou com a flag off), nada."""
     try:
-        from services import plot_threads  # type: ignore[attr-defined]
+        import importlib
+
+        plot_threads = importlib.import_module("services.plot_threads")
     except ImportError:
         return []
     try:
         if plot_threads.mode() != "on":
             return []
-        threads = sorted(
-            plot_threads.threads_for_region(regiao), key=lambda t: str(t.get("id") or "")
-        )
-        return [str(plot_threads.public_thread_brief(t)) for t in threads[:2]]
+        # API da SPEC-350: `threads_for_region` -> PlotThread (ordenadas por id);
+        # `public_thread_brief(thread_id)` = título + resumo público + pergunta (nunca segredo)
+        ids = sorted(str(t.id) for t in plot_threads.threads_for_region(regiao))
+        return [b for b in (str(plot_threads.public_thread_brief(i)) for i in ids[:2]) if b]
     except Exception as exc:  # silent-ok: trama é contexto opcional
         log_event("bestiary", "plot_threads_failed", level="debug", error=type(exc).__name__)
         return []

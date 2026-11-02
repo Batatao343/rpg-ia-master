@@ -1,6 +1,6 @@
 # SPEC-361 — Criatura gerada em jogo com ficha de Valoria: few-shot, trama, gate U1–U13, variante antes de nova e revisão Opus antes do pool
 
-> **Status:** `in-review`
+> **Status:** `done` (pousa com `RPG_CREATURE_GEN=legacy`; ligar `on` depende das pré-condições abertas da D11)
 > **Criada:** 2026-11-01 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-349 (`approved`, em execução: `services/bestiary_lint.py`, `data/bestiario/fichas/*.yaml`, léxico e enums precisam estar na `main`, condição dura); SPEC-297 (`done`: pool compartilhado); SPEC-332 (baralho de inimigo, padrão e assinatura). SPEC-350 é **opcional**: sem `services/plot_threads.py` ou com `RPG_PLOT_THREADS=off`, o contexto de trama usa só o `campaign_plan` (R9).
 > **Desbloqueia:** SPEC-360 (criaturas vivas no mundo) quando ela quiser criar espécie nova; ondas 2–12 da 349 ganham um consumidor runtime das fichas; retrato de criatura (SPEC-352) passa a receber `appearance` de criatura gerada.
@@ -724,6 +724,12 @@ Parecer: pousar com a flag em `legacy` e corrigir os P1 antes de ligar.
 - **R2-P2-2:** decisão registrada. O dedupe é permanente: cada pedido gera no máximo uma vez por jogo; se cair em fallback, fica a substituta. O comentário foi corrigido.
 - **R2-P2-3:** teste de que `build_handlers()` registra `creature_gen`.
 - **R2-P2-4:** o payload guarda `player_token_hashes` (hash de tokens com ≥ 4 letras, para o `name_origin`) e `player_shingles` (os hashes que o validador de texto literal já usa, repassados a `shared_pool.submit(shingles=…)`). As falas não ficam em `app.jobs.payload`.
+
+### Pouso (02/11)
+
+- Rebase sobre a `main` com a 349 (squash), 350, 351 e 366 (`git rebase --onto main 830fb496 spec-361`). O único conflito foi em `config/flags.yaml`: `RPG_OPENING_THREAD` (351) e as flags da 361 foram mantidas.
+- **R9 com a 350 real.** O `services/plot_threads.py` real tem outra API: `threads_for_region` devolve `PlotThread` e `public_thread_brief(thread_id)` recebe o id. `_plot_threads_brief` foi ajustado e importa o módulo por `importlib`, que respeita `sys.modules` nos testes. Teste novo com o módulo real: `RPG_PLOT_THREADS=on` traz o resumo público das tramas da região, e `off` fica só no `campaign_plan`. Nenhum `secret_id` entra.
+- Status `done` com a flag `legacy`. **D11, pré-condições para `on`:** a 1 está feita; as 2–4 ficam abertas (limiar de latência turno × job e `idioma_pt`; `lint_primeira` ≥ 70 % ou aceite do dono; smoke §6, passos 2–5).
 
 ### Aprovação do dono (02/11)
 
