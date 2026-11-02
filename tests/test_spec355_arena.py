@@ -8,9 +8,10 @@ from pathlib import Path
 from services import cards
 
 D = Path(__file__).resolve().parents[1] / "docs" / "spec355"
-# Excecoes pendentes registradas em SPEC-355 §9 (decisao do dono): ficam abaixo do piso de 45 %.
-# Destino: a spec de balanco que ganhar numero novo para o Arcanista (SPEC-355 §9) remove esta linha.
-EXCECOES_PISO = {"Arcanista Cinzento"}
+# SPEC-362: o Arcanista saiu da excecao de piso (0-19 53,5 %; confirmacao 180-259 51,4 %). Os JSON
+# da 355 ficam congelados com 43,9/44,4 %; o piso do Arcanista e lido dos artefatos da 362.
+EXCECOES_PISO: set[str] = set()
+SUPERADO_POR = {"Arcanista Cinzento": "spec362"}
 # Teto de 75 % por subclasse na leitura padrao. Excecoes = valor medido, registrado em §9 para o dono
 # (341 aceitou avaro 75,2 / silencioso 76,6; o R11/R12 empurrou o silencioso a 78,7 nas 0-19).
 EXCECOES_TETO = {
@@ -45,6 +46,11 @@ def test_faixas_por_postura():
     for name in ("arena-final.json", "arena-confirmacao.json"):
         for cls, subs in _load(name)["posturas"].items():
             total = subs["todas"]["total"]
+            if cls in SUPERADO_POR:
+                novo = D.parent / SUPERADO_POR[cls] / name
+                total = json.loads(novo.read_text(encoding="utf-8"))["posturas"][cls]["todas"][
+                    "total"
+                ]
             assert total <= 0.85, (name, cls)
             if cls not in EXCECOES_PISO:
                 assert total >= 0.45, (name, cls, total)
