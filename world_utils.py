@@ -952,6 +952,7 @@ def pick_encounter_enemy(
     season: str | None = None,
     world: dict | None = None,
     world_sim: dict | None = None,
+    game_id: str = "",
 ):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
@@ -997,7 +998,10 @@ def pick_encounter_enemy(
             import random as _random
 
             clock = (world or {}).get("world_clock") or {}
-            key = f"{turn}|{(loc or {}).get('id', '')}|{clock.get('day')}|{clock.get('period')}"
+            key = (
+                f"{game_id}|{turn}|{(loc or {}).get('id', '')}|{clock.get('day')}|"
+                f"{clock.get('period')}"
+            )
             rng = _random.Random(int(_hl.sha256(key.encode()).hexdigest()[:12], 16))
         return eco3.weighted_pick(cands, weights, rng)
     cands, weights, _why = _weighted_pool(*args, season, world, world_sim, fauna_on=False)
@@ -1135,17 +1139,18 @@ def _weighted_pool(
             turn=turn,
             season=season,
         )
-        eco_weights = []
-        for w0, w_leg, e in zip(pre_season, legacy_weights, pool):
+        factors: dict[int, float] = {}
+        for i, e in enumerate(pool):
             fe = fauna.entry(e.get("id", ""))
-            if not fe:
-                eco_weights.append(w_leg)  # sem fauna: fator 1,0 (a estação do calendário vale)
-                continue
-            f, reasons = fauna.eco_multiplier(
-                fe, ctx
-            )  # a estação da ficha substitui a do calendário
-            why[str(e.get("id"))] = reasons
-            eco_weights.append(w0 * f)
+            if fe:  # a estação da ficha substitui a do calendário
+                factors[i], why[str(e.get("id"))] = fauna.eco_multiplier(fe, ctx)
+        # P1-1 (Sol): quem não tem fauna recebe o fator MÉDIO das que têm, no mesmo contexto —
+        # neutro relativo: não ganha bônus quando a fauna cai fora do território/horário.
+        neutral = sum(factors.values()) / len(factors) if factors else 1.0
+        eco_weights = [
+            pre_season[i] * factors[i] if i in factors else legacy_weights[i] * neutral
+            for i in range(len(pool))
+        ]
         if sum(eco_weights) > 0:
             weights = eco_weights
 
@@ -1237,6 +1242,7 @@ def check_encounter(
     hunt_anchor: str = "",
     rumor_hint: dict | None = None,
     world_sim: dict | None = None,
+    game_id: str = "",
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1383,7 +1389,9 @@ def check_encounter(
             season=season_id,
             world=fauna_world,
             world_sim=world_sim,
+            game_id=game_id,
         )
+        entry = _presence_entry(entry, presence, loc, eff)  # SPEC-360 R15
         flavor = str(threat)
         if tfac and not in_sphere:
             flavor = f"Ecos de uma ameaça distante: {threat} Aqui, porém, o perigo é outro."
@@ -1416,7 +1424,9 @@ def check_encounter(
             season=season_id,
             world=fauna_world,
             world_sim=world_sim,
+            game_id=game_id,
         )
+        entry = _presence_entry(entry, presence, loc, eff)  # SPEC-360 R15
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
         res = {
             "hint": hint,
@@ -1441,6 +1451,17 @@ def _fauna_presence(world: dict, world_sim: dict | None, loc_id: str) -> dict | 
     return fauna.presence_at(world_sim, loc_id, day)
 
 
+def _presence_entry(entry: dict | None, presence: dict | None, loc: dict, eff: int):
+    """SPEC-360 R15: a criatura que está na área é a do encontro sempre que cabe no porte
+    (a pressão de caça não a troca por outra sem anúncio)."""
+    if not presence or (entry and entry.get("id") == presence.get("creature_id")):
+        return entry
+    prep = _encounter_pool(loc, eff, hunt_theme(str(presence.get("creature_id") or "")))
+    if prep and prep[2]:
+        return next((e for e in prep[0] if e.get("id") == presence.get("creature_id")), entry)
+    return entry
+
+
 def _fauna_encounter(res: dict, entry: dict | None, presence: dict | None, world_sim) -> dict:
     """SPEC-360 R15-R17: presença usada, conversão em sinal e aproximação no `flavor`."""
     if world_sim is None or not entry:
@@ -1458,8 +1479,10 @@ def _fauna_encounter(res: dict, entry: dict | None, presence: dict | None, world
         res["presence_id"] = presence["pid"]
         if cedo and not presence.get("sinais_mostrados") and fauna.const("ANUNCIA_PRESENCA_NOVA"):
             res["fauna_convert"] = True  # R16 (§9): presença ainda sem sinal anuncia antes
-    elif not presence and cedo:
-        res["fauna_convert"] = True  # R16: sem presença no local, o encontro vira sinal
+    elif cedo:
+        # R16: sem presença no local (ou com a de OUTRA criatura, P2-6 do Sol) a criatura
+        # sorteada não foi anunciada: o encontro vira o 1º sinal dela.
+        res["fauna_convert"] = True
     line = fauna.approach_line(cid)
     if line:
         res["flavor"] = line

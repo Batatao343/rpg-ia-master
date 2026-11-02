@@ -2,7 +2,7 @@
   "_doc": "SPEC-360: constantes [BALANCEAR] da fauna viva (R8, R11, R13, R18, R21). Ajuste registrado na §9 da spec; o avaliador (scripts/fauna/eval.py) nunca muda junto.",
   "constants": {
     "HORARIO_FORA": 0.2,
-    "TERRITORIO_FORA": 0.02,
+    "TERRITORIO_FORA": 0.05,
     "PRESA_LIBERADA": 1.8,
     "PREDADOR_FAMINTO": 0.45,
     "FOGE_DE": 0.3,
@@ -11,14 +11,15 @@
     "PRESSAO_SUPRIMIDA": 0.3,
     "CARCACA_DIAS": 2,
     "MAX_CARCACAS": 20,
-    "P_PRESENCA": 1.0,
+    "P_PRESENCA": 0.6,
     "MAX_PRESENCAS_REGIAO": 4,
     "MAX_PRESENCAS": 12,
     "MAX_LOCAIS": 4,
     "PRESENCA_BONUS_DETECCAO": 2,
     "SINAIS_PARA_BONUS": 2,
     "TERRITORIO_OCUPADO": 0.05,
-    "ANUNCIA_PRESENCA_NOVA": true,
+    "ANUNCIA_PRESENCA_NOVA": false,
+    "P_SINAL_CENA": 0.35,
     "RUMOR_BOOST": 3.0
   }
 }

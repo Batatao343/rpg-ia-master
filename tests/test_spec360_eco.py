@@ -133,14 +133,28 @@ def test_foge_de_presenca():
     assert "foge_de" in why and f == pytest.approx(fauna.const("FOGE_DE"))
 
 
-def test_sem_entrada_fator_1(on):
-    """Criatura sem fauna (ex.: legado de outra regiao) pesa como antes."""
+def _shares(world, loc_id):
+    rows = wu.encounter_distribution(
+        gamedata.get_location(loc_id), 3, 100, bestiary_knowledge={}, projection={},
+        world=world, world_sim={},
+    )  # fmt: skip
+    total = sum(w for _e, w in rows)
+    return {e["id"]: w / total for e, w in rows}
+
+
+def test_sem_entrada_fator_neutro_relativo(monkeypatch):
+    """P1-1 (Sol): sem fauna, o fator e a MEDIA das candidatas com fauna no mesmo contexto,
+    e a fatia de quem nao tem fauna fica a <= 1,5x da fatia com a flag `off`."""
     cid = "enemy_assassino_cinzeu"
     assert fauna.entry(cid) is None
-    loc = gamedata.get_location(LAMA)
-    on_rows = dict((e["id"], w) for e, w in wu.encounter_distribution(
-        loc, 3, 100, bestiary_knowledge={}, projection={}, world=_world(), world_sim={}))  # fmt: skip
-    assert on_rows[cid] == pytest.approx(1.0)
+    for loc_id in ("nova_arcadia", LAMA, FERRO, DOURADO):
+        for period in ("Manhã", "Noite"):
+            world = _world(loc_id, period)
+            monkeypatch.setenv("RPG_FAUNA", "off")
+            off = _shares(world, loc_id)
+            monkeypatch.setenv("RPG_FAUNA", "on")
+            on_ = _shares(world, loc_id)
+            assert on_[cid] <= 1.5 * off[cid], (loc_id, period, on_[cid], off[cid])
 
 
 def test_taxa_de_gatilho_inalterada(monkeypatch):

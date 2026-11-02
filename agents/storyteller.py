@@ -1578,6 +1578,7 @@ def storyteller_node(state: GameState):
                     if _fauna.mode() != "off"
                     else None
                 ),  # SPEC-360: ecologia, presença e conversão em sinal
+                game_id=str(state.get("game_id") or ""),
             )
             if enc and enc.get("reason") == "rumor":
                 from services import rumor_adoption as _ra

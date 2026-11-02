@@ -149,3 +149,69 @@ def test_latencia_por_chamada(monkeypatch):
     dist_ms = 1000 * (time.perf_counter() - t0) / 20
     assert eco_ms < 20 and hook_ms < 20 and scene_ms < 20 and dist_ms < 50
     assert all(len(b) / 4 <= 60 for b in blocks)
+
+
+_LAMA_ACTS = ["olho a viela", "descanso aqui", "olho em volta", "sigo o rastro", "descanso"]
+
+
+def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
+    """P1-2 (Sol), R26/R29 com a fauna atuando: campanha MockLLM pelo grafo no Anel de Lama
+    (perigo forçado 4, motor de mundo `on`). A cada turno, o MESMO estado roda também com as
+    flags `off`: o turno `on` nunca chama a LLM mais vezes que o `off` (na caça, só a abertura
+    do combate que ela abre). Houve sinal, conversão
+    ou caça e encontro de fauna; o invariante `fauna_presenca_valida` não acusa nada."""
+    import copy
+    import random
+
+    from langchain_core.messages import HumanMessage
+
+    from main import app
+    from playtest.invariants import check_fauna
+    from playtest.runner import _build_initial_state
+    from services import fauna
+
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
+    calls = _count_invokes(monkeypatch)
+    state = _build_initial_state("explorador", 3, start_level=3)
+    state["world"].update(
+        {
+            "current_location_id": "na_anel_lama",
+            "current_location": "Anel de Lama",
+            "danger_overrides": {"na_anel_lama": 4},
+        }
+    )
+    extra, violations, hunts, off_starts = [], [], [], []
+    for t in range(30):
+        busy = bool((state.get("combat") or {}).get("active"))
+        text = "fujo do combate" if busy else _LAMA_ACTS[t % len(_LAMA_ACTS)]
+        state["messages"] = list(state.get("messages") or []) + [HumanMessage(content=text)]
+        _flags(monkeypatch, "off", "off")
+        calls[0] = 0
+        random.seed(1000 + t)  # o mesmo acaso nos dois ramos do turno
+        off_out = app.invoke(copy.deepcopy(state), {"recursion_limit": 60})
+        off_calls = calls[0]
+        if not busy and (off_out.get("combat") or {}).get("active"):
+            off_starts.append(off_calls)  # custo de um início de combate qualquer (`off`)
+        _flags(monkeypatch, "on", "on")
+        calls[0] = 0
+        random.seed(1000 + t)
+        state = app.invoke(state, {"recursion_limit": 60})
+        # A caça (R20) troca um turno de história por um início de combate: as chamadas são as
+        # de QUALQUER encontro (preparo, declaração e narração do combate) mais a do roteador,
+        # que classifica o texto livre. Nenhuma é da fauna.
+        hunt = text == "sigo o rastro" and bool((state.get("combat") or {}).get("active"))
+        if hunt:
+            hunts.append(calls[0])
+        elif calls[0] > off_calls:
+            extra.append((t, text, calls[0], off_calls))
+        violations += check_fauna(state, None, t)
+    summary = fauna.summary(state.get("world_sim"))
+    rows = (state.get("world_sim") or {}).get("fauna", {}).get("presencas") or []
+    assert summary["sinal"] >= 1
+    assert summary["caca"] >= 1 or any(p["origem"] == "conversao" for p in rows)
+    assert summary["encontro"] >= 1
+    assert not violations
+    assert not extra, extra
+    assert off_starts  # houve encontro comum para comparar
+    if hunts:
+        assert max(hunts) <= max(off_starts) + 1, (hunts, off_starts)

@@ -3256,7 +3256,7 @@ def _fauna_carcasses(state: dict, dead: list[dict]) -> dict | None:
     """SPEC-360 R11: criatura de fauna morta deixa carcaça no local (writer: services.fauna)."""
     from services import fauna as _fauna
 
-    if _fauna.mode() == "off":
+    if _fauna.mode() != "on":  # R12: `shadow` so registra
         return None
     world = state.get("world") or {}
     loc = str(world.get("current_location_id") or "")

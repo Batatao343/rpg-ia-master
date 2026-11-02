@@ -63,11 +63,12 @@ def mode() -> str:
 
 
 def sinais_mode() -> str:
-    """`RPG_FAUNA_SINAIS`; exige `RPG_FAUNA != off` (senao vale `off`, com 1 log)."""
+    """`RPG_FAUNA_SINAIS`; exige `RPG_FAUNA=on` (com `off` ou `shadow` vale `off`, com 1 log:
+    o `shadow` so registra, nunca muda o jogo — R12)."""
     global _warned_sinais
     raw = os.getenv("RPG_FAUNA_SINAIS", "").strip().lower()
     val = raw if raw in SINAIS_MODES else "off"
-    if val == "on" and mode() == "off":
+    if val == "on" and mode() != "on":
         if not _warned_sinais:
             _warned_sinais = True
             _log("sinais_sem_motor")
@@ -556,6 +557,13 @@ def scene_block(state: dict) -> tuple[str, dict]:
             break
     if not pres or not e or not kind:
         return "", {}
+    # P2-1 (Sol): densidade. O 1º sinal sai sempre (anuncia); os seguintes só numa fração das
+    # cenas (sorteio estável por presença e turno), para o "evitar" (R19) existir.
+    if pres.get("sinais_mostrados"):
+        turn = int(world.get("turn_count", 0) or 0)
+        u = int(_sha(pres["pid"], turn, "cena")[:8], 16) / 0xFFFFFFFF
+        if u >= float(const("P_SINAL_CENA")):
+            return "", {}
     fauna = _fauna_of(sim)
     for p in fauna["presencas"]:
         if p["pid"] == pres["pid"]:
@@ -663,7 +671,7 @@ def mark_encountered(
 
 def record_kill(sim: dict | None, creature_id: str, location_id: str, day: int) -> dict:
     """R11: morte de criatura de fauna deixa carcaca no local (cap 20, expira em 2 dias)."""
-    if mode() == "off" or not entry(creature_id) or not location_id:
+    if mode() != "on" or not entry(creature_id) or not location_id:
         return dict(sim or {})
     fauna = _expire(_fauna_of(sim), day)
     fauna["carcacas"] = [

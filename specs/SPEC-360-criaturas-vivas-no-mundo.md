@@ -54,7 +54,7 @@
 - **R4 — Lint determinístico** (`services/fauna_lint.py`, fonte única, chamado por `content_validator.validate_fauna()` dentro de `validate_all` e por `scripts/fauna/lint.py --regiao`). Regras E1–E16 de §3.4. Termina com 0 erro para cada região coberta.
 - **R5 — Sem nome no sinal.** Nenhum texto de `sinais` (rastro, resto, som, cheiro, marca, rumor, aproximacao) contém token do nome da criatura, do id, nem do nome da família em jogo (comparação `fold` sem acento, como `encounter_manifest._fold`, `services/encounter_manifest.py:165`). O jogador lê o sinal e deduz; quem nomeia é o encontro.
 - **R6 — Sinal concreto e coerente com o corpo.** Cada sinal descreve um vestígio físico que a anatomia da ficha produz (ex.: o Arame Vivo arrasta arame na lama, `nova_arcadia.yaml:63-72`). O lint barra os vagos do léxico (`data/bestiario/_lexico_sinais.txt`, seção `[vagos]`: "presença maligna", "algo estranho", "energia sombria", "sensação ruim"…). A coerência com a anatomia fica com o revisor (§3.8, item 2).
-- **R7 — Backfill autorado.** O backfill de Nova Arcádia (27 fichas + legado da região) segue o processo de §3.7: rascunho por script → autor Opus → revisor Opus independente → lint. O parecer fica em `handoffs/SPEC-360-fauna-review-nova_arcadia.md`.
+- **R7 — Backfill autorado.** O backfill de Nova Arcádia (27 fichas + legado da região) segue o processo de §3.7: rascunho por script → autor Opus → revisor Opus independente → lint. O parecer fica em `handoffs/SPEC-360-independent-review.md` (uma revisão por região na 360-B: o lint de nome de handoff só aceita `SPEC-NNN[-papel]-review|independent-review`; a 360-B decide o nome por região).
 
 ### B. Motor de ecologia (pesos), flag `RPG_FAUNA`
 
@@ -73,13 +73,14 @@
 
 ### C. Presença e sinais, flag `RPG_FAUNA_SINAIS`
 
-- **R13 — Presença.** É uma criatura que está "na área" antes do encontro. Fica em `world_sim.fauna.presencas` (schema em §3.3) e tem um writer único, `services/fauna.py`. Hook diário `fauna.day_hook` (`post`, `order=15`, antes dos rumores em 20; `services/world_engine.py:729-736`): em cada região frequentada (`rumors.frequented_regions`), com chance `P_PRESENCA` e no máximo `MAX_PRESENCAS_REGIAO` (2) ativas, nasce 1 presença. A criatura sai do sorteio ecológico de R8 (não BOSS, porte compatível com o perigo da região), e os `locais` saem do território efetivo. O TTL vem de `ecologia.permanencia` (dias, default 3–6). Tudo com `day_rng(game_id, day, "fauna")`.
+- **R13 — Presença.** É uma criatura que está "na área" antes do encontro. Fica em `world_sim.fauna.presencas` (schema em §3.3) e tem um writer único, `services/fauna.py`. Hook diário `fauna.day_hook` (`post`, `order=15`, antes dos rumores em 20; `services/world_engine.py:729-736`): em cada região frequentada (`rumors.frequented_regions`), com chance `P_PRESENCA` (0,6) e no máximo `MAX_PRESENCAS_REGIAO` (4, um por nó de Nova Arcádia) ativas, nasce 1 presença. A criatura sai do sorteio ecológico de R8 (não BOSS, porte compatível com o perigo da região; território já todo coberto por outra presença pesa `TERRITORIO_OCUPADO`), e os `locais` saem do território efetivo. O TTL vem de `ecologia.permanencia` (dias, default 3–6; Nova Arcádia autorou 6–12 nas não-BOSS). O 1º sinal de uma presença sai na 1ª cena; os seguintes só em `P_SINAL_CENA` (0,35) das cenas (densidade, P2-1 do Sol). Tudo com `day_rng(game_id, day, "fauna")`.
 - **R14 — Sinal em cena.** Ao chegar, descansar ou agir num local que está nos `locais` de uma presença ativa, `fauna.scene_block(state)` devolve `<SINAIS_NA_CENA>` com **no máximo 1** sinal novo por cena e registra o tipo em `presenca.sinais_mostrados`. A ordem segue a antecedência: primeiro um dos `{marca, rastro, resto}`, depois `{som, cheiro}` (só depois de ≥ 1 sinal mostrado). Cada tipo aparece no máximo uma vez por presença. Sem sinal novo, o bloco não existe (zero token, como em `law.py:1045-1046`). O bloco inclui a instrução fixa "narre como detalhe do ambiente; não nomeie nem descreva a criatura".
 - **R15 — O encontro usa a presença.** Quando `check_encounter` dispara por fauna (`looming_threat`, `high_danger`, ou `rumor` com `criatura_avistada`) num local com presença ativa, a criatura é a da presença, com a mesma mecânica de preferência de `hunt_theme` (`world_utils.py:1058-1064`). O porte segue o perigo; se a criatura não couber, o sorteio normal segue. O `enc` ganha `presence_id`.
 - **R16 — Encontro sem presença.** Se o gatilho de fauna dispara num local **sem** presença:
   - criatura com `sinais.antecedencia: cedo` → o encontro **vira sinal**. Nasce uma presença (`origem: "conversao"`) com o primeiro sinal já mostrado, e o turno não tem combate (`world_note` "ENCONTRO NA ESTRADA (sinal)"). O cooldown é carimbado como se fosse encontro;
   - criatura com `antecedencia: imediato` (emboscador, artilharia oculta; teto de 30 % por região, E14) → combate no mesmo turno, com a `aproximacao` no texto de início (R17).
-  - (§9, desvio da execução) presença **ativa mas ainda sem sinal mostrado**, de criatura `cedo`, conta como "sem anúncio": o gatilho mostra o 1º sinal dela e não há combate (constante `ANUNCIA_PRESENCA_NOVA`). Sem isso uma presença nascida no dia vira luta na 1ª chegada, sem sinal antes (M1 caía para ~0,65).
+  - (§9, desvio da execução) presença **ativa mas ainda sem sinal mostrado**, de criatura `cedo`, conta como "sem anúncio": o gatilho mostra o 1º sinal dela e não há combate (constante `ANUNCIA_PRESENCA_NOVA`, **desligada** na calibração final: com o P1-1 e o P2-6 a conversão já é frequente e ligá-la leva o M5 a −0,25).
+  - (§9, P2-6 do Sol) há presença no local, mas o sorteio cai noutra criatura `cedo` (a da presença não cabe no porte): o encontro também vira o 1º sinal da sorteada. A criatura da presença é a do encontro sempre que cabe no porte, mesmo sob pressão de caça (R15).
 
   Esse é o único ponto em que a taxa de combate pode cair; o limite fica no M5.
 - **R17 — Narração de aproximação.** Todo combate de fauna com entrada em `fauna.json` troca o `flavor` genérico (`world_utils.py:1265`, `:1229-1236`) pela `sinais.aproximacao` da criatura. Ela vai em `COMBAT START. {flavor} {sur_txt}` (`storyteller.py:1615`) e no `combat_encounter_hint` (`storyteller.py:216-229`, campo `aproximacao`). A abertura narrada pela IA (SPEC-346) recebe a frase como contexto, **na mesma chamada**.
@@ -140,7 +141,7 @@
 | `services/fauna_lint.py` | Regras E1–E16 (puro; recebe refs) |
 | `scripts/fauna/{build,lint,rascunho,eval}.py` | Compilação, CLI de lint, pré-preenchimento (§3.7), eval (R28) |
 | `docs/spec360/eval-nova_arcadia.md` | Relatório do eval |
-| `handoffs/SPEC-360-fauna-review-nova_arcadia.md` | Revisão de fauna (§3.8) |
+| `handoffs/SPEC-360-independent-review.md` | Revisão de fauna (§3.8) |
 | `tests/test_spec360_{schema_lint,build,eco,presenca,sinais,caca,rumor,flags_off,eval,saves}.py` | Ver §4 |
 
 **Alterados**
@@ -274,7 +275,7 @@ def normalize_fauna_sim(raw: Any) -> FaunaSim: ...
 | Fonte | O que tomou | Distância |
 |---|---|---|
 | *Monster Hunter: World* (Capcom, 2018): rastros que, juntados, levam ao monstro e sobem o nível de pesquisa | Sinais acumulados preparam a luta (R18) e alimentam o saber (R23, 360-C) | Sem "insetos guia" nem medidor; o sinal é prosa diegética, 1 por cena |
-| *S.T.A.L.K.E.R.: Shadow of Chernobyl* (GSC Game World, 2007), sistema A-Life | A fauna existe e se move fora da vista do jogador | A simulação é um hook diário barato e limitado (≤ 2 presenças por região) |
+| *S.T.A.L.K.E.R.: Shadow of Chernobyl* (GSC Game World, 2007), sistema A-Life | A fauna existe e se move fora da vista do jogador | A simulação é um hook diário barato e limitado (≤ 4 presenças por região, 1 nascimento por dia) |
 | *Rain World* (Videocult, 2017): cadeia alimentar que funciona sem o jogador | Predador e presa com efeito no sorteio (R8, R10) | Sem simulação de agente; só pesos derivados do censo |
 | *Slay the Spire* (MegaCrit, 2019): ícone de intenção do inimigo | O telegrafo já é o presságio (SPEC-329); a 360-C só o liga ao saber | Nada novo na Fase 1 |
 | *The Witcher 3* (CD Projekt Red, 2015): investigação do contrato antes da caça e bestiário que ensina a fraqueza | Contra-jogo revelado pelo que se viu (360-C); caçar seguindo o rastro (R20) | Sem "sentidos de bruxo"; tudo pelo texto e pela ação livre |
@@ -486,7 +487,29 @@ Conteúdo (autor, não constante): `permanencia` das não-BOSS subiu +4 dias (pr
 
 *Testes do escopo:* `test_spec360_{schema_lint,build,eco,presenca,sinais,caca,rumor,saves,flags_off,eval}.py` verdes; golden `off` byte-idêntico depois de todo o produto; contagem de `invoke` igual `on`×`off` em 30 turnos. Playtest `explorador` 50 turnos com as flags `on`: 0 erro, 0 violação. Mini-campanha MockLLM pelo grafo no Anel de Lama (scratch): presença nasce na virada do dia, 2 sinais em cena, "sigo o rastro" abre combate com surpresa do jogador, `sinais_vistos` gravado, 0 violação `fauna_presenca_valida`.
 
-*Pendente (fora do executor):* revisão de fauna independente (todas as 38 entradas estão `revisao: pendente`; parecer em `handoffs/SPEC-360-fauna-review-nova_arcadia.md`), revisão Sol (`handoffs/SPEC-360-sol-review.md`), smoke real da §6 e IDs das filhas 360-B/C/D.
+*Pendente (fora do executor):* revisão de fauna independente (todas as 38 entradas estão `revisao: pendente`; parecer em `handoffs/SPEC-360-independent-review.md`), revisão Sol (`handoffs/SPEC-360-sol-review.md`), smoke real da §6 e IDs das filhas 360-B/C/D.
+
+**Rodada de correções pós-revisão (02/11).** As duas revisões (`c7c2822e` fauna, `6757a5ef` Sol) deram `CHANGES_REQUIRED`. O que mudou (o avaliador e os limiares não foram tocados):
+
+- *Conteúdo (F-01…F-15):* Roda sem presa (a reação à carcaça cobre o "sangue"); Enxerto caça o Soldado da Legião (sangue + armadura), não o Autômato; Gralha sem o Lençol (e o Lençol sem `foge_de` da Gralha); Fila com colar de ferro e batente gasto (não confunde com a Escritura); mãos do Anel de Lama: Degolador vira telha virada + pano preto (sem sinal canônico da Mão Sombria), Velório vira contorno de sal no catre e trilha salgada (sem "sulcos paralelos"); Lençol com antenas e carapaça (sem "corpo quente deitado"); Pavio com retângulo vitrificado (sem leque no muro); Cão sem "rebitada" e com cheiro próprio; Garrick com couro torcido e fio de aço (o silêncio é da Traça) e pegadas coladas às soleiras; Centopeia com o morto que prendeu o fôlego; Cavadeira com pontas de dedo quebradas ("unha" é token do nome, E10); Víbora com o livro do agiota; testemunhas variadas ("jura" 9 → 3); "Um peitoral"; cheiro do Relicário. Lint 0 erro; `fauna.json` e `rumor_seeds.json` regenerados.
+- *P1-1:* quem não tem fauna recebe o fator **médio** das candidatas com fauna no mesmo contexto (neutro relativo). Teste: a fatia do `assassino_cinzeu` com `on` fica ≤ 1,5× a do `off` nos 4 nós × 2 períodos. Isso deixou `TERRITORIO_FORA` subir de 0,02 para 0,05 (M4 0,854).
+- *P1-2:* `test_campanha_na_lama_exercita_fauna_sem_chamada_extra` joga 30 turnos MockLLM pelo grafo no Anel de Lama (perigo 4, motor `on`); a cada turno o mesmo estado roda com as flags `off` (mesma semente). Nenhum turno `on` chama a LLM mais que o `off`; na caça, o turno vira início de combate e custa o mesmo que qualquer início de combate (preparo, declaração e narração) mais o roteador, nunca uma chamada da fauna. Houve sinal, conversão ou caça e encontro; `fauna_presenca_valida` limpo.
+- *P2-2:* a semente do sorteio com fauna inclui o `game_id` (o storyteller passa).
+- *P2-3:* `shadow` só registra: `RPG_FAUNA_SINAIS` exige `RPG_FAUNA=on`, e carcaça só é gravada com `on`.
+- *P2-5:* o E16 importa `services.leak_phrases.all_phrases()` direto; sem o módulo (esta base, sem a 350) cai em `secret_signatures` + `[vazamento]` com `log_event(fauna_lint, leak_phrases_fallback)`, sem `except` silencioso.
+- *P2-6:* ver R16.
+- *P2-1 (densidade):* nova constante `P_SINAL_CENA` (0,35) — o 1º sinal sai sempre, os seguintes numa fração estável das cenas — e `P_PRESENCA` 1,0 → 0,6. **Densidade final medida no eval:** sinais em cena em 1205 de 4800 ações (**25,1 %**, era 49 %); com as conversões, 1428/4800 (**29,8 %**, era 55 %).
+- *P2-4* (cap global de presenças com 12 regiões) e *P2-7* (teste de carcaça pelo `_combat_node`, a "carcaça arrastada" de R11 e o R15 do rumor) vão para a **360-B/360-C**; *F-16* (presa "social" entre humanos), *X-02* (contra-jogo de legado sem mecânica) e *X-03* (codex público com a Velha Magda, anterior à 360) idem/lore. *P2-8* é do coordenador (arquivo protegido).
+- *Nome do parecer:* `SPEC-360-fauna-review-nova_arcadia.md` → `SPEC-360-independent-review.md` (o lint de nome de handoff só aceita `SPEC-NNN[-papel]-review|independent-review`); `check_handoff_names.py` exit 0.
+
+| Constante | Antes desta rodada | Final |
+|---|---|---|
+| `TERRITORIO_FORA` | 0,02 | 0,05 |
+| `P_PRESENCA` | 1,0 | 0,6 |
+| `ANUNCIA_PRESENCA_NOVA` | `true` | `false` |
+| `P_SINAL_CENA` | (novo) | 0,35 |
+
+*Eval final desta rodada* (20 seeds × 60 dias): M1 0,754 precedidos e 1,0 com aproximação · M2 0,289 · M3 presa ×1,75 (mínimo), predador ×0,555 (máximo) · M4 0,854 · M5 −0,169 (off 15,06 → on 12,52 combates/100 ações; 1200 gatilhos nos dois modos) · M6 0 · M7 byte-idêntico.
 
 ### Aprovação do dono (02/11)
 

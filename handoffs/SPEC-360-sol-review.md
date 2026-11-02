@@ -13,7 +13,7 @@ schema/lint/build/fauna, `31fdeee1` motor/integração/flags). Lidos: `services/
 (E16), `playtest/invariants.py`, `config/flags.yaml`, `scripts/fauna/eval.py`,
 `tests/test_spec360_*.py`, `data/world/fauna_config.json`, relatório do eval.
 Fora: qualidade autoral dos sinais (é do revisor de fauna,
-`handoffs/SPEC-360-fauna-review-nova_arcadia.md`) e smoke real (§6, coordenador).
+`handoffs/SPEC-360-independent-review.md`) e smoke real (§6, coordenador).
 
 ## Integridade de eval: conclusão
 
@@ -69,7 +69,7 @@ segredo); nenhum `with_structured_output` novo; nenhum valor de LLM consumido pe
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche por commit)
+Executor (02/11, commit da rodada de correções): P1-1 (fator neutro = média das candidatas com fauna; teste ≤ 1,5× do `off`; `TERRITORIO_FORA` 0,02 → 0,05), P1-2 (campanha no Anel de Lama pelo grafo, comparação turno a turno com o mesmo estado `off`, invariante limpo), P2-1 (`P_SINAL_CENA` 0,35 e `P_PRESENCA` 0,6: sinais em cena 49 % → 25,1 % das ações), P2-2 (`game_id` na semente), P2-3 (`shadow` só registra; carcaça só com `on`), P2-5 (import direto de `services.leak_phrases` com fallback logado), P2-6 (conversão também com presença de outra criatura; a da presença vence a pressão de caça quando cabe no porte). P2-4 e P2-7 registrados para a 360-B/C. Eval M1–M7 verde sem tocar o avaliador; números na §9 da spec.
 
 ## Pendências
 

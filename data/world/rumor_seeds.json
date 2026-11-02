@@ -1167,7 +1167,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um taverneiro do Anel diz que quem acha marca de mão no batente muda de casa no mesmo dia"
+      "sinal_rumor": "um telhadeiro do Anel conta que acha telha virada onde ninguém subiu, e que na mesma rua alguém amanhece frio"
     },
     "rumor_avist_enemy_soldado_legiao_ferro": {
       "family": "avistamento",
@@ -1342,7 +1342,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "uma criada do Palácio jura que um colega que limpava os andares de baixo ainda passa por ela sem ser visto"
+      "sinal_rumor": "um copeiro do Palácio garante que um colega que limpava os andares de baixo ainda passa por ela sem ser visto"
     },
     "rumor_avist_enemy_horror_esgoto": {
       "family": "avistamento",
@@ -5024,7 +5024,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "uma lavadeira jura que ouviu metal rangendo atrás da casa dela a noite inteira"
+      "sinal_rumor": "uma lavadeira conta que ouviu metal rangendo atrás da casa dela a noite inteira"
     },
     "rumor_avist_mon_fole_de_costela": {
       "family": "avistamento",
@@ -5078,7 +5078,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um escrivão do Mercado jura que ninguém tira papel do pátio dos fundos desde que os acorrentados pararam de andar"
+      "sinal_rumor": "um escrivão do Mercado repete que ninguém tira papel do pátio dos fundos desde que os acorrentados pararam de andar"
     },
     "rumor_avist_mon_lencol_de_chamine": {
       "family": "avistamento",
@@ -5168,7 +5168,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um preso solto do Oubliette jura que lá embaixo aprendeu a respirar baixo, porque algo escuta do teto"
+      "sinal_rumor": "um preso solto do Oubliette garante que lá embaixo aprendeu a respirar baixo, porque algo escuta do teto"
     },
     "rumor_avist_mon_sorvedouro_do_codigo": {
       "family": "avistamento",
@@ -5258,7 +5258,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um preso que voltou do Oubliette diz que de noite ainda ouve arranhar debaixo da cama"
+      "sinal_rumor": "uma mulher que lava o chão do porão de uma estalagem diz que de noite ouve arranhar por baixo da pedra"
     },
     "rumor_avist_mon_convidado_de_cera": {
       "family": "avistamento",
@@ -5294,7 +5294,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um devedor do Mercado de Carne jura que o contrato dele foi lido em voz alta sem ninguém segurar o papel"
+      "sinal_rumor": "um devedor do Mercado de Carne garante que o contrato dele foi lido em voz alta sem ninguém segurar o papel"
     },
     "rumor_avist_mon_portao_que_morde": {
       "family": "avistamento",
@@ -5366,7 +5366,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "uma criada do Anel Dourado diz que a casa onde trabalha tem um elfo que só se levanta para cantar"
+      "sinal_rumor": "um vidraceiro chamado a uma casa do Anel Dourado conta que a janela rachou com o canto de alguém lá dentro"
     },
     "rumor_avist_mon_nadador_escaldado": {
       "family": "avistamento",
