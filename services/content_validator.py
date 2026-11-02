@@ -1826,6 +1826,37 @@ def plot_signature(sheet, thread_index: dict, radicals=()):
     return _sig(raw, thread_index, radicals)
 
 
+def validate_fauna(regions: list[str] | None = None) -> list[Finding]:
+    """SPEC-360 R4: bloco de fauna por região (E1-E16 + cobertura R2) e frescor do
+    `data/world/fauna.json` compilado."""
+    from services import fauna_lint
+
+    out: list[Finding] = []
+    for region in regions if regions is not None else fauna_lint.covered_regions():
+        path = os.path.join("data", "bestiario", "fauna", f"{region}.yaml")
+        for problem in fauna_lint.lint_file(region):
+            head = problem.split(":", 1)[0].split()
+            entity = head[1] if len(head) > 1 else ""
+            out.append(Finding("fauna", "error", path, entity, problem))
+    if regions is None and fauna_lint.covered_regions():
+        try:
+            from scripts.fauna import build as fauna_build  # type: ignore[import-not-found]
+
+            if not fauna_build.is_fresh():
+                out.append(
+                    Finding(
+                        "fauna",
+                        "error",
+                        os.path.join("data", "world", "fauna.json"),
+                        "",
+                        "fauna.json desatualizado: rode scripts/fauna/build.py",
+                    )
+                )
+        except ImportError:  # silent-ok: build fora do path (instalação sem scripts/)
+            pass
+    return out
+
+
 def validate_all(
     codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR, overrides_path: str = OVERRIDES_PATH
 ) -> list[Finding]:
@@ -1854,6 +1885,7 @@ def validate_all(
 
         findings.extend(validate_faction_membership())
         findings.extend(validate_plot_threads())
+        findings.extend(validate_fauna())
     else:
         paths = _codex_md_paths(codex_dir)
         if os.path.isdir(graph_dir):

@@ -1,0 +1,79 @@
+# SPEC-360: bloco de fauna sintético que passa no lint (referências em test_spec360_schema_lint.py).
+regiao: regiao_teste
+criaturas:
+  mon_alfa:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      estacoes: {outono: 1.3, verao: 0.6}
+      territorio: [n1]
+      permanencia: [2, 4]
+      presas: [enemy_gama]
+      foge_de: []
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+        - {quando: "pressao:praga", efeito: menos}
+        - {quando: carcaca_recente, efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Três riscos fundos na terra batida, paralelos, que terminam num buraco raso."
+      resto: "Um couro de bode virado do avesso, raspado até ficar transparente."
+      som: "Um raspar seco e repetido atrás do muro, como pedra contra pedra."
+      cheiro: null
+      marca: null
+      aproximacao: "Do escuro baixo vem um corpo comprido de quatro patas, o dorso coberto de lascas."
+      rumor: "um pastor jura que perdeu três bodes numa noite e só achou o couro"
+    contra_jogo: "Fogo e distância."
+    tramas: []
+    autor: opus
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
+  mon_beta:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde]
+      foge_de: [mon_alfa]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Cacos leitosos espalhados num círculo perfeito sobre o chão do pátio."
+      som: "Um tilintar fino, de copo batendo em copo, sem ninguém por perto."
+      cheiro: "Cheiro de areia molhada e de forno recém-apagado."
+      marca: "Na parede caiada, uma mancha redonda de fuligem na altura de um rosto."
+      aproximacao: "Uma figura baixa de pele lisa e brilhante se desprende da parede."
+      rumor: "a lavadeira do pátio diz que os copos dela racham sozinhos de madrugada"
+    contra_jogo: "Quebrar o vidro."
+    autor: opus
+    revisao: pendente
+  enemy_gama:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de quatro dedos com unha comprida, aos pares, entrando no mato."
+      resto: "Ossos de galinha roídos e largados em montinho."
+      som: "Latidos curtos e roucos, muito longe, que param de repente."
+      cheiro: "Pelo molhado e carniça velha."
+      marca: null
+      aproximacao: "Um bicho magro de pelo ralo e costela à mostra sai rosnando do mato."
+      rumor: "o moleiro conta que alguma coisa revirou o galinheiro e levou a ninhada"
+    contra_jogo: "Fazer barulho e acender tocha."
+    autor: opus
+    revisao: pendente
+  enemy_boss_delta:
+    fonte: legado
+    ecologia:
+      horario: [Noite]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco largo, liso, como de um tronco arrastado morro abaixo."
+      resto: "Uma carroça inteira esmagada, as rodas enterradas no barro."
+      som: "Um estrondo surdo no vale que faz os passarinhos calarem."
+      cheiro: null
+      marca: null
+      aproximacao: "A encosta inteira parece se mover quando ele se ergue do vale."
+      rumor: "os carroceiros não passam mais pelo vale depois que a carroça do Juca sumiu"
+    contra_jogo: "Não lutar no vale."
+    autor: opus
+    revisao: pendente

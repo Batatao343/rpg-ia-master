@@ -1,0 +1,65 @@
+# SPEC-360 R6 - lexico dos sinais de fauna (lido por services/fauna_lint.py).
+# Uma expressao por linha, sem acento. [vagos] = proibidos (E11, casamento por substring
+# sem acento). [sensorial] = referencia do autor, nao e regra. [vazamento] = frases de segredo
+# da lore (E16) que nao podem sair num sinal; o lint soma as assinaturas de
+# services/secret_signatures.py e, quando existir, content_validator._default_leak_phrases().
+[vagos]
+presenca maligna
+presenca sombria
+algo estranho
+algo sinistro
+energia sombria
+energia maligna
+sensacao ruim
+sensacao estranha
+aura sombria
+aura maligna
+mal antigo
+forca obscura
+algo nao esta certo
+um arrepio percorre
+calafrio na espinha
+[sensorial]
+pegada
+sulco
+arranhao
+lasca
+crosta
+pingo
+fio
+pelo
+escama
+casca
+muco
+fuligem
+cinza
+ferrugem
+rangido
+estalo
+chiado
+zumbido
+raspar
+gotejar
+fedor
+cheiro de queimado
+azedo
+podre
+adocicado
+metalico
+[vazamento]
+magda e a vibora
+a vibora (velha magda)
+lider da mao sombria
+testamento real
+testamento do antigo rei
+herdeiro ao trono
+vao para o doutor silas vane
+vende os marcados
+entrega os marcados
+suprime o despertar
+suprimir a rede carmesim
+ciclo de cem anos
+mata o guardiao anterior
+caixa de amostras
+criada em laboratorio
+cepa atual
