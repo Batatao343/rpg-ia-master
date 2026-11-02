@@ -2181,3 +2181,73 @@ bash scripts/dev/py.sh -m ruff check scripts/bestiario services/bestiary_lint.py
 ```
 
 Para virar `APPROVED`: P1-1 (arena e baseline remedidos no HEAD, §9 atualizada) e P1-2 (teste de round-trip). Os P2 podem entrar no mesmo commit, mas não bloqueiam.
+
+---
+
+# Etapa 8 — rodada 2 (Sol)
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
+> **Revisor:** spec-reviewer (Opus, papel Sol) · **Data:** 2026-11-02 · **Commit revisado:** `cb0e03a6` (rebaseado na `main` `48cd2b45`, com a SPEC-350)
+
+## P1/P2 da rodada 1
+
+| ID | Status | Conferência |
+|---|---|---|
+| P1-1 | resolvido | Arena e baseline remedidos no HEAD. Reexecutei 3 criaturas no HEAD (`mon_besouro_do_estalo` 75/85,5 %, `mon_isca_amarrada` 43/76,5 %, `enemy_esqueleto_legiao_antiga` 48,5/41,5 %) e os valores são idênticos aos commitados. A recontagem dos JSON dá 281 criaturas, 253 na faixa nos dois modos, 247 pelo veredito e 28 fora, como na §9. Não reproduzi o baseline da `main`, porque isso exigiria um worktree da `main` com `arena.py`; os valores mudaram pouco e de forma coerente com a deriva do motor. |
+| P1-2 | resolvido | `tests/test_spec349_mecanica.py:240-273`: round-trip `off`/`on` com Roda de Mandíbulas e `enemy_gargula_ferro`, inclusive em `bestiary_knowledge`. Verde. |
+| P2-1 | resolvido | `arena.py:72` usa `round(…, 1)`. |
+| P2-2 | resolvido, mas a §9 nova tem sinais errados de novo | Ver P2-R2-2. |
+| P2-3 | resolvido | Nenhum dos 32 slots perde um `kind` de efeito da Carta substituída. Conferido com script de comparação contra a `main`: 0 faltando. |
+| P2-4 | resolvido | `content_validator.py` lê `_esteira.yaml` e repassa ao `lint_global`. |
+| P2-5, P2-6 | resolvidos | Docstring corrigida; `cartas` do snapshot atualizado. |
+
+## Arena: de 22 para 28 fora (pedido do coordenador)
+
+Comparei criatura a criatura a arena da rodada 1 (`408ec5ec`) com a do HEAD, separando as 16 criaturas cuja mecânica mudou (P2-3) das outras 265:
+
+- **P2-3 (16 slots):** efeito líquido zero. Uma criatura sai da faixa (`enemy_esqueleto_legiao_antiga`, `on` 49,5 % → 41,5 %) e uma entra (`enemy_esqueleto_mago`, `off` 43 % → 47,5 %). A variação média é de 3,1 pp, com máximo de 12 pp.
+- **Rebase (mecânica intacta):** 6 criaturas saem da faixa e nenhuma entra. A variação média é de 1,3 pp, com máximo de 5 pp. Todas estavam na borda: `mon_besouro_do_estalo` `on` 85 → 85,5 %; `mon_mapa_de_cicatrizes` `off` 45,5 → 41 %; `mon_desafiante_rubro` `on` 45 → 44 %; `enemy_troll_ponte` `off` 46,5 → 44,5 %; `mon_isca_amarrada` `off` 47,5 → 43 %; `mon_ticao_do_juramento` `off` 46,5 → 42,5 %.
+
+**Conclusão:** a piora vem da deriva do motor depois do sync (SPEC-350/355/362 no herói e no motor), não da correção P2-3. É ruído de borda (|Δ| ≤ 5 pp) em criaturas que já estavam a 0–2,5 pp do limite. Acho aceitável como exceção nominal, desde que o critério de aceite reflita os números novos (P2-R2-1). Não recomendo recalibrar agora: a calibração seguiria o motor, que ainda muda com o épico de cartas. Os 6 slots que estouram o delta estão todos na faixa absoluta e entram como follow-up.
+
+## Teste da SPEC-289 (integridade)
+
+A mudança é legítima e não esconde nenhuma regressão da lógica da 289. Rodei o arquivo novo sem a fixture e o arquivo da `main` contra o HEAD. As falhas são todas de "a única temática da esfera" ou de um conjunto exato:
+- o Alambique de Carne é combatente da Destilação, temático de verdade;
+- o Pajem de Obsidiana, slot reinventado, passou a ser elite temático da Chama Azul;
+- a Quimera virou Ariranha e saiu do tema.
+
+A fixture mantém a população anterior à esteira, inclusive os 32 slots com nomes novos, então a lógica de escolha continua coberta pelos mesmos casos. O teste novo cobre a população cheia, com uma garantia mais fraca: "sempre dentro do tema" em vez de "conjunto exato". Remover o Pajem só para exercer o fallback de porte é correto: o ramo continua testado.
+
+**Ressalva (P2-R2-3):** a mesma fixture também tira das asserções o **Camarão Faxineiro**, que só entra no tema da Destilação por coincidência de radical (`_theme_stems`: "Camarão" → `camara`, igual ao "câmara" do texto de Corvane). Na população real, um encontro de ameaça do culto da Destilação pode sortear um camarão faxineiro como "criatura temática". O teste novo aceita isso porque `theme(entry) > 0`. É um falso positivo de produto que a 289 já permitia e a 349 expôs. Não bloqueia, mas precisa de follow-up, e a §9 item 10 deveria tratá-lo como falso positivo e não como "temática legítima".
+
+## Sync
+
+- `data/graph/entities_extra.json`: 96 → 348 entidades. Nenhuma removida em relação à `main`. As 29 alteradas são todas slots `generico` renomeados. A `main` não mexeu nesse arquivo desde a base anterior.
+- `rumor_seed_overrides.json`: 51 → 54, nenhum override da `main` removido ou alterado.
+- `faiss_lore_index` (`e32601a5`): reindexado depois do rebase. O `index.pkl` contém os docs da SPEC-350 (`npc_tr_anselmo_tiza`) e os da 349 (`mon_roda_de_mandibulas`, `mon_besouro_do_estalo`), então nada da 350 se perdeu.
+- `_decks.json` e as entradas legadas de `bestiary.json`: não foram alterados pela 350; as conclusões da rodada 1 continuam válidas.
+
+## Achados da rodada 2
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-R2-1 | P2 | `specs/SPEC-349-bestiario-valoria-esteira.md:483`, `:488` | O critério de aceite ainda diz "259/281 … 255/281". O critério de saves continua `[ ]`, embora o teste exista e passe. | Trocar para 253/281 e 247/281 e marcar o critério de saves. |
+| P2-R2-2 | P2 | `specs/SPEC-349-…md:669` | Sinais errados: Verme de Vidro `off` é **+8,5** (53 → 61,5 %) e Basilisco `on` é **+11,5** (54 → 65,5 %). | Corrigir os sinais. |
+| P2-R2-3 | P2 | `world_utils.py:819-834` (`_theme_stems`); §9 item 10 | O Camarão Faxineiro casa com o tema da Destilação só por radical (`camara`), um falso positivo exposto pela esteira. | Follow-up: stop-list ou exigir um radical de substantivo da facção/ameaça. Registrar como falso positivo na §9 e no hand-back (spec de mundo/ameaça). |
+
+## Pendências (aceitas)
+
+- 28 criaturas fora de 45–85 % e 6 slots acima do delta de 8 pp: exceções nominais da §9, a reavaliar quando o motor de cartas estabilizar.
+- As pendências da rodada 1 continuam: teto de família na SPEC-336, chefes no `on` e os 4 slots ainda genéricos.
+
+## Comandos rodados
+
+```text
+bash scripts/dev/py.sh <scratchpad>/cmp_arena.py   → rodada 1 × HEAD: P2-3 líquido 0 (1 sai, 1 entra); rebase 6 saem (|Δ| médio 1,3 pp, máx. 5)
+bash scripts/dev/py.sh <scratchpad>/arena_chk.py   → 281 · 253 nos 2 modos · 247 veredito · 6 slots acima do delta
+bash scripts/dev/py.sh scripts/bestiario/arena.py --seeds 40 --ids mon_besouro_do_estalo,mon_isca_amarrada,enemy_esqueleto_legiao_antiga → idêntico ao commitado
+bash scripts/dev/py.sh <scratchpad>/r3b.py         → 0 slots perdendo kind
+pytest (scratchpad) test_spec289 sem fixture + versão da main → falhas só de "conjunto exato"/"única temática" (Alambique, Pajem, Camarão)
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec349_{mecanica,bestiary_lint,curadoria_legado,onda_nova_arcadia}.py tests/test_enemy_decks.py tests/test_conflito_autoria_bestiario.py tests/test_boss_phases.py tests/test_spec312_seeds.py tests/test_fase71.py tests/test_conflito_volume_conteudo.py tests/test_spec348_leaks.py tests/test_spec289_ameaca_tematica.py → 835 passed
+```
