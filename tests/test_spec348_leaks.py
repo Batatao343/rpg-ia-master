@@ -13,7 +13,6 @@ import pytest
 
 from services.content_validator import NPC_SECRET_LABELS
 from services.leak_phrases import leak_phrases
-from services.secret_signatures import SECRET_SIGNATURES
 from tests.spec348_helpers import (
     codex_docs,
     doc,
