@@ -14,21 +14,53 @@ import agents.combat as combat
 from tests import spec364_board_helpers as hp
 
 HERO = "Smoke4A"
-GOOD_LLM = "Você tomba diante do Goblin. O chão frio recebe o seu corpo."
+GOOD_LLM = "Você tomba diante do Goblin. O Goblin B, que já tinha tombado, jaz ao seu lado."
 BAD_LLM = (
-    "Smoke4A cai. Ficas de pé, com teu cajado firme, e Você respira fundo."  # V5: tratamento misto
+    "Smoke4A cai. O Goblin B também tomba sem vida ao seu lado."  # V6: queda antiga no presente
 )
 
 
 def _die(monkeypatch, llm_text: str):
-    """Herói em Estado Terminal; o seam é a estabilização (morte). Round-trip pela API."""
+    """Rodada 1: o herói derruba o Goblin B (semente buscada); rodada 2: o herói morre (seam de estabilização)."""
     from services import death_flow
 
     client, saved, gid = hp.api_client(monkeypatch, hero=HERO)
     st = hp.open_combat(client, saved, gid)
-    st["player"]["vitalidade"] = 0
-    st["player"]["estado_terminal"] = True
+    other = hp.add_second_enemy(st)
+    for e in st["enemies"]:
+        if e["id"] == other:
+            e.update(vitalidade=1, hp=1)
+    st["player"]["vitalidade"] = max(int(st["player"].get("vitalidade", 18) or 18), 12)
     saved[gid] = deepcopy(st)
+    fell = False
+    for seed in range(60):
+        snapshot = deepcopy(saved[gid])
+        random.seed(seed)
+        r = client.post(
+            "/game/action",
+            json={
+                "game_id": gid,
+                "input_text": "Ataco",
+                "action_kind": "attack",
+                "target_id": other,
+            },
+        )
+        assert r.status_code == 200, r.text
+        now = saved[gid]
+        goblin_b = next((e for e in now["enemies"] if e["id"] == other), None)
+        if (
+            (goblin_b is None or goblin_b.get("dead"))
+            and (now.get("combat") or {}).get("active")
+            and not now.get("death_pending")
+        ):
+            fell = True
+            break
+        saved[gid] = snapshot
+    assert fell, "nenhuma semente derrubou o Goblin B na rodada 1"
+    st2 = deepcopy(saved[gid])
+    st2["player"]["vitalidade"] = 0
+    st2["player"]["estado_terminal"] = True
+    saved[gid] = st2
     monkeypatch.setattr(
         death_flow,
         "attempt_stabilization",
@@ -68,10 +100,11 @@ def test_death_end_to_end(monkeypatch, llm_text):
     assert "SmokeA" not in mech and not mech.lstrip().startswith(HERO)
 
 
-def test_forced_fallback_source(monkeypatch):
+def test_forced_fallback_source_and_past_tense(monkeypatch):
     resp, saved, _hist = _die(monkeypatch, BAD_LLM)
     assert saved["combat"]["last_outcome_source"] == "fallback_attribution"
-    assert "Você tomba." in resp["message"] and "Smoke4A cai" not in resp["message"]
+    assert "Goblin B" in resp["message"] and "já tinha tombado" in resp["message"]
+    assert "Smoke4A cai" not in resp["message"] and "também tomba" not in resp["message"]
 
 
 def test_accepted_llm_source(monkeypatch):

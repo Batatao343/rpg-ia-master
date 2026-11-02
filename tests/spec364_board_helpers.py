@@ -91,4 +91,10 @@ def add_second_enemy(state: dict) -> str:
     state["enemies"].append(clone)
     positions = state["combat"]["scene"]["positions"]
     positions[new_id] = deepcopy(positions[base["id"]])
+    # P3-8: o 2o inimigo também entra no manifesto do encontro, senão `reconcile_roster` o corta como intruso
+    from services import encounter_manifest as em
+
+    meta = state["combat"]
+    if em.is_valid_manifest(meta.get("encounter")):
+        meta["encounter"] = em.add_joined(meta["encounter"], clone, "teste", 0)
     return new_id

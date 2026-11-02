@@ -142,3 +142,28 @@ def test_prefix_final_round_always_when_last_out_exists():
 )
 def test_v6_rejects_more_present_tense_forms(text):
     assert "V6" in cs.validate_attribution(text, _auth())
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Ao lado do Goblin, tomba o Minotauro Esqueleto.",
+        "Ao lado do Goblin tomba o Minotauro Esqueleto.",
+        "Junto ao Goblin, desaba o colosso.",
+    ],
+)
+def test_v6_accepts_post_verb_subject(text):
+    """P3-11: o Goblin é só o lugar; quem cai é outro (sujeito depois do verbo)."""
+    assert "V6" not in cs.validate_attribution(text, _auth())
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "O Goblin tomba ao lado do Minotauro Esqueleto.",
+        "Ao lado do Minotauro Esqueleto, tomba o Goblin.",
+        "O Goblin, ferido, tomba ao seu lado.",
+    ],
+)
+def test_v6_still_rejects_earlier_fallen_as_subject(text):
+    assert "V6" in cs.validate_attribution(text, _auth())

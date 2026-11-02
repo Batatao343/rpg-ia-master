@@ -198,8 +198,19 @@ def test_no_internal_ids_or_hero_name_in_history_r29(monkeypatch):
         if not (saved[gid].get("combat") or {}).get("active"):
             break
     saved[gid]["combat"] = {**(saved[gid].get("combat") or {}), "active": False}
-    r = client.post("/game/action", json={"game_id": gid, "input_text": "Quero ver o mercado"})
+    world = saved[gid]["world"]
+    world["current_location_id"] = "na_anel_dourado"  # local com mercador
+    world["visited"] = [*world.get("visited", []), "na_anel_dourado"]
+    r = client.post(
+        "/game/action", json={"game_id": gid, "input_text": "O que o mercador tem à venda?"}
+    )
     texts.append(str(r.json().get("message") or ""))
+    # P3-10: a consulta aconteceu de fato, com o item livre longo pelo nome curto
+    assert "consulta sem transação" in texts[-1], texts[-1]
+    assert (
+        "Pelo que você carrega:" in texts[-1] and "Faca de esfolar de osso de baleia" in texts[-1]
+    )
+    assert "a lâmina que Haldor" not in texts[-1]
     history = client.get("/game/history", params={"game_id": gid}).json()["entries"]
     lines = [
         ln

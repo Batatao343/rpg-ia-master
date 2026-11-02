@@ -492,13 +492,17 @@ testes `image_case` seguem pulados; o revisor (ou o coordenador com Supabase de 
 - P2-3/P3-2: `fall_partition` inclui `inconscientes`; "Na rodada final" sempre que há `last_out`.
 - P2-4: `tests/test_spec364_death_api.py` (TestClient; seam = `death_flow.attempt_stabilization`) afirma mensagem, Livro,
   `death_context.killer`, crônica ("Smoke4A tombou em combate" íntegro, nunca "SmokeA") e `mech_log`, nos caminhos LLM
-  aceito e fallback (`fallback_attribution` por V5). **Limite honesto:** o inimigo morto em rodada anterior sai de
-  `state["enemies"]` antes do resumo seguinte, então a queda antiga **não chega ao `conflict_summary`** neste cenário de API;
-  V6/R10 ficam provados em unidade (`test_spec364_outcome_tense.py`). O coordenador deve confirmar no §6 se o smoke 4 listou o
-  Goblin em `mortos` por outro caminho.
+  aceito e fallback (`fallback_attribution` por V6), incluindo a queda antiga (Goblin B, derrubado na rodada 1) no
+  passado ("já tinha tombado"). Correção do texto anterior (P3-8): o corte não vinha do motor, e sim do clone de teste, que
+  não estava em `combat.encounter.participants` e era removido por `reconcile_roster`; `add_second_enemy` agora o registra
+  no manifesto (`add_joined`).
 - P2-5: `test_no_internal_ids_or_hero_name_in_history_r29` (2 fugas, Cartas de Cena, item livre longo, voz).
 - P3-1: V6 com plural e "cai morto" e verbo sem sujeito herdando o nome. P3-3: pergunta de compra cota o preço de compra
   (item que o mercador não tem → "não está à venda aqui"). P3-4: saldo da conta no singular. P3-5: teste renomeado
   `test_settle_above_ceiling_capped`; os 2 testes Postgres não rodam no CI. **R17 será provado pela evidência do §6.3 no
   smoke de staging** (débito liquidado ≤ cotação e reserva 0), anotada pelo coordenador. P3-6: asserção tautológica trocada.
   P3-7: fixture R13 agora usa o `A_end.message` bruto do staging.
+- P3-9: o escape grava a trilha no `mech_log` ("escapou (quase livre → livre)"; `_flee_line` passou a incluir o `trail`
+  no veredito `escapou`). P3-10: o R29 afirma que a consulta do mercado aconteceu (local com mercador, item longo em nome curto).
+  P3-11: V6 aceita o sujeito depois do verbo e o nome só como lugar ("Ao lado do Goblin, tomba o Minotauro"), testado nos
+  dois lados.

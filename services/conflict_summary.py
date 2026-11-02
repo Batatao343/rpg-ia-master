@@ -514,6 +514,7 @@ _PAST_MARK_RE = re.compile(
 
 # V6 vê o singular e o plural do presente; "cai morto" é presente (o "morto" não é marca de passado)
 _V6_FALL_RE = re.compile(r"\b(?:desmoronam?|tombam?|caem|cai|morrem|morre|desabam?|sucumbem?)\b")
+_LOCATIVE = r"(?:ao lado|junto|perto|diante|ao pe|atras|ao redor|em volta)"
 _V6_FALL_DEAD_RE = re.compile(r"\b(?:cai|caem|tomba|tombam)\s+mort[oa]s?\b")
 
 
@@ -525,6 +526,11 @@ def _v6(low: str, auth: dict) -> bool:
         return False
 
     def named(part: str) -> bool:
+        # P3-11: o nome só vale como sujeito; "ao lado do Goblin, tomba o Minotauro" cita o Goblin como lugar
+        for n in names:
+            part = re.sub(
+                rf"\b{_LOCATIVE}\s+(?:d[oae]s?\s+|a[os]?\s+)?{re.escape(n)}s?\b", " ", part
+            )
         return any(re.search(rf"\b{re.escape(n)}s?\b", part) for n in names)
 
     for sentence in re.split(r"[.;!?:\n]", low):
@@ -534,8 +540,10 @@ def _v6(low: str, auth: dict) -> bool:
             verb = _V6_FALL_RE.search(clause)
             past = _PAST_MARK_RE.search(clause)
             if verb and not past:
-                bare = re.match(r"\s*(?:e\s+)?" + re.escape(verb.group(0)) + r"\b", clause)
-                if named(clause) or (carried and bare):
+                v = re.escape(verb.group(0))
+                bare = re.match(r"\s*(?:e\s+)?" + v + r"\b", clause)
+                post_subject = re.search(v + r"\s+(?:o|a|os|as|um|uma)\s+\w+", clause)
+                if named(clause) or (carried and bare and not post_subject):
                     return True
             if verb:
                 carried = False

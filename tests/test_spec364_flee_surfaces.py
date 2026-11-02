@@ -72,10 +72,15 @@ def _flee(monkeypatch, *, chase=None, distance=None, want_success: bool, escape:
             "/game/action", json={"game_id": gid, "input_text": "Fugir", "action_kind": "flee"}
         )
         assert r.status_code == 200, r.text
-        fuga = [ln for ln in (r.json()["combat"].get("mech_log") or []) if ln.startswith("Fuga ·")]
+        log_lines = (
+            r.json()["combat"].get("mech_log")
+            or (saved[gid].get("combat") or {}).get("last_mech_log")
+            or []
+        )
+        fuga = [ln for ln in log_lines if ln.startswith("Fuga ·")]
         if escape:  # escapar encerra o conflito: o tabuleiro fecha, sem linha de trilha
             ok = not r.json()["combat"].get("active")
-            fuga = fuga or ["escapou"]
+            ok = ok and bool(fuga)  # P3-9: o mech_log salvo traz a linha de trilha do escape
         else:
             ok = bool(fuga) and (
                 ("avança" in fuga[0] or "escapou" in fuga[0])
@@ -125,6 +130,7 @@ def test_same_trail_on_every_surface(monkeypatch, label, chase, distance, succes
         assert (
             resp["combat"]["active"] is False
         )  # escapou: sem trilha a mostrar, mas sem ids em nenhuma superficie
+        assert line.endswith(f"escapou ({expected})"), line  # P3-9: quase livre → livre no mech_log
         for name, text in surf.items():
             assert not ID_RE.search(text), (label, name)
         return

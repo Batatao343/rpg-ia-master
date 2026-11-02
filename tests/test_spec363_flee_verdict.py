@@ -66,7 +66,9 @@ def test_mech_log_flee_line_uses_verdict_not_roll():
         }
     )
     assert lost.endswith("perde terreno (afastado → pressionado)")
-    assert cp._flee_line({"fuga": {**roll, "veredito": "escapou"}}).endswith("escapou")
+    assert cp._flee_line({"fuga": {**roll, "veredito": "escapou"}}).endswith(
+        "escapou (pressionado → afastado)"
+    )
     # save antigo, sem veredito: não afirma "escapou" só porque o dado passou
     assert "escapou" not in cp._flee_line(
         {"fuga": {"total": 9, "dificuldade": 12, "sucesso": True}}

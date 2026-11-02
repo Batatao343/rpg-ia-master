@@ -337,7 +337,7 @@ def _flee_line(out: dict) -> str | None:
     de, para = track_label(roll.get("de")), track_label(roll.get("para"))
     trail = f" ({de} → {para})" if de and para else ""
     text = {
-        "escapou": "escapou",
+        "escapou": f"escapou{trail}",
         "avancou": f"avança{trail}",
         "perdeu_terreno": f"perde terreno{trail}",
         "alcancado": "alcançado",
