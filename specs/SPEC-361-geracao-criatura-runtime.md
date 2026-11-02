@@ -231,11 +231,11 @@ combat._spawn_v4_enemies → _grounded_template(name, ctx, lvl, state)
 # services/creature_gen.py
 @dataclass(frozen=True)
 class PedidoCriatura:
-    pedido: str                     # dica/nome já sanitizado; vai envelopado ao LLM
-    regiao: str                     # shared_pool._region_of(location_id)
+    pedido: str  # dica/nome já sanitizado; vai envelopado ao LLM
+    regiao: str  # shared_pool._region_of(location_id)
     location_id: str
     categoria_sugerida: str | None  # "lacaio" se o núcleo citar lacaio/capanga; senão None
-    motivo_trama: str               # motivo_trama(state)
+    motivo_trama: str  # motivo_trama(state)
     encounter_level: int
     game_id: str
     turn: int
@@ -243,10 +243,13 @@ class PedidoCriatura:
     forcar: Literal["auto", "nova", "variante"] = "auto"
 
     @classmethod
-    def from_spawn(cls, name: str, context: str, *, state: dict | None,
-                   encounter_level: int, location_id: str) -> "PedidoCriatura": ...
+    def from_spawn(
+        cls, name: str, context: str, *, state: dict | None, encounter_level: int, location_id: str
+    ) -> "PedidoCriatura": ...
+
 
 Caminho = Literal["existente", "variante", "nova", "fallback"]
+
 
 @dataclass
 class Decisao:
@@ -254,7 +257,8 @@ class Decisao:
     base_id: str | None = None
     modificador_id: str | None = None
     familia_alvo: str | None = None
-    motivo: str = ""                # código curto: "resolve", "mod:mente_unica+base", "teto", ...
+    motivo: str = ""  # código curto: "resolve", "mod:mente_unica+base", "teto", ...
+
 
 @dataclass
 class ResultadoGeracao:
@@ -266,16 +270,31 @@ class ResultadoGeracao:
     latencia_ms: int
     prompt_chars: int
 
-def decidir_caminho(p: PedidoCriatura, *, bestiary: dict, fichas: dict[str, dict],
-                    runtime: list[dict], contador: dict) -> Decisao: ...
+
+def decidir_caminho(
+    p: PedidoCriatura,
+    *,
+    bestiary: dict,
+    fichas: dict[str, dict],
+    runtime: list[dict],
+    contador: dict,
+) -> Decisao: ...
 def motivo_trama(state: dict | None, regiao: str) -> str: ...
-def escolher_exemplos(regiao: str, familia_alvo: str | None, pedido: str, motivo: str,
-                      k: int = 2) -> list[dict]: ...
+def escolher_exemplos(
+    regiao: str, familia_alvo: str | None, pedido: str, motivo: str, k: int = 2
+) -> list[dict]: ...
 def projetar_exemplo(ficha: dict, limite: int = 1400) -> str: ...
 def eixos_ocupados(regiao: str, runtime: list[dict], limite: int = 1500) -> str: ...
-def montar_prompt(p: PedidoCriatura, exemplos: list[dict], *, lore: str, ocupados: str,
-                  feedback: list[Issue] | None = None, anterior: dict | None = None,
-                  modificador: dict | None = None) -> list[BaseMessage]: ...
+def montar_prompt(
+    p: PedidoCriatura,
+    exemplos: list[dict],
+    *,
+    lore: str,
+    ocupados: str,
+    feedback: list[Issue] | None = None,
+    anterior: dict | None = None,
+    modificador: dict | None = None,
+) -> list[BaseMessage]: ...
 def lint_runtime(ficha: dict, regiao: str, *, runtime: list[dict]) -> list[Issue]: ...
 def ficha_para_template(ficha: dict, *, encounter_level: int) -> dict: ...
 def mais_proxima(p: PedidoCriatura, *, bestiary: dict, fichas: dict[str, dict]) -> str | None: ...
@@ -286,28 +305,29 @@ def gerar(p: PedidoCriatura) -> ResultadoGeracao: ...
 # Saída do LLM — nenhum número; Literals vêm de bestiary_lint/enemy_decks (não duplicar listas)
 class FichaCriaturaGerada(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    nome: str = Field(max_length=40)                       # 2–4 palavras (U1)
+    nome: str = Field(max_length=40)  # 2–4 palavras (U1)
     familia: Literal["corpo_reescrito", "besta_entropia", "humanoide_preco", "demonio_encarnado"]
-    origem_fonte: Literal["praga_ferro", "praga_ossos", "abismo", "eter", "demonio",
-                          "faccao", "dragao", "outro"]
-    demonio: DemonioId | None = None                       # obrigatório se demonio_encarnado (U10)
-    faccao: str | None = None                              # validado contra o grafo em Python
+    origem_fonte: Literal[
+        "praga_ferro", "praga_ossos", "abismo", "eter", "demonio", "faccao", "dragao", "outro"
+    ]
+    demonio: DemonioId | None = None  # obrigatório se demonio_encarnado (U10)
+    faccao: str | None = None  # validado contra o grafo em Python
     plano_corporal: PlanoCorporal
     material: Material
     escala: Escala
     locomocao: Locomocao
     percepcao: Percepcao
-    anatomia_texto: str = Field(max_length=600)            # 3–5 frases, ≥ 3 partes do corpo (U9)
+    anatomia_texto: str = Field(max_length=600)  # 3–5 frases, ≥ 3 partes do corpo (U9)
     silhueta: str = Field(max_length=160)
     comportamento: str = Field(max_length=400)
     papel_tatico: PapelTatico
-    arquetipo: FamiliaBaralho                              # enemy_decks.FAMILIAS
+    arquetipo: FamiliaBaralho  # enemy_decks.FAMILIAS
     categoria: Literal["lacaio", "padrao", "elite", "chefe"]
     estilo_ataque: Literal["corpo_a_corpo", "distancia", "magico", "area"]
     nome_ataque: str = Field(max_length=40)
     padrao: list[SlotIntencao] = Field(min_length=2, max_length=4)
-    telegrafo: str = Field(max_length=120)                 # contém "{nome}"
-    mecanica_assinatura: str = Field(max_length=200)       # frase, sem número
+    telegrafo: str = Field(max_length=120)  # contém "{nome}"
+    mecanica_assinatura: str = Field(max_length=200)  # frase, sem número
     contra_jogo: str = Field(max_length=200)
     gancho: str = Field(max_length=240)
     description: str = Field(max_length=200)
@@ -321,12 +341,19 @@ Os tipos `PlanoCorporal`, `Material` e os demais são `Literal[...]` construído
 ```python
 # Python, não LLM (R15)
 ARQUETIPO_VIRTUDE = {
-    "predador": "agil", "emboscador": "agil", "covarde_oportunista": "astuto", "tatico": "astuto",
-    "conjurador": "mistico", "abissal": "mistico", "bruto": "bruto",
-    "morto_vivo_implacavel": "bruto", "predador_apice": "bruto",
-    "guardiao": "equilibrado", "lider_matilha": "equilibrado",
+    "predador": "agil",
+    "emboscador": "agil",
+    "covarde_oportunista": "astuto",
+    "tatico": "astuto",
+    "conjurador": "mistico",
+    "abissal": "mistico",
+    "bruto": "bruto",
+    "morto_vivo_implacavel": "bruto",
+    "predador_apice": "bruto",
+    "guardiao": "equilibrado",
+    "lider_matilha": "equilibrado",
 }
-A_CADA_N = {"lacaio": 3, "padrao": 3, "elite": 2, "chefe": 2}   # [D?D8] calibrar com a arena 349
+A_CADA_N = {"lacaio": 3, "padrao": 3, "elite": 2, "chefe": 2}  # [D?D8] calibrar com a arena 349
 ```
 
 Template gerado (campos novos, todos opcionais na leitura):
