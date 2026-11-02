@@ -197,6 +197,26 @@ _EM_VOO = threading.Lock()
 _ULTIMA_THREAD: threading.Thread | None = None
 
 
+def tem_pendente(queue=None) -> bool:
+    """Há ``creature_gen`` na fila em memória? Fila sem essa leitura (DB): ``True``."""
+    try:
+        from infrastructure.runtime import get_runtime
+
+        q = queue or get_runtime().job_queue
+        jobs = getattr(q, "_jobs", None)
+        if not isinstance(jobs, dict):
+            return True
+        return any(
+            getattr(r, "status", "") == "queued" and r.request.kind == JOB_KIND
+            for r in list(jobs.values())
+        )
+    except Exception as exc:
+        log_event(
+            "bestiary", "creature_gen_drain_failed", level="warning", error=type(exc).__name__
+        )
+        return False
+
+
 def drenar_em_segundo_plano() -> bool:
     """Perfil legacy (processo local): UM job por vez numa thread daemon, fora do lock do jogo
     (R2-P1-2). O job não toca no estado do jogo; a próxima ação nunca espera por ele.

@@ -6859,12 +6859,14 @@ def _execute_action(
 def _drain_creature_gen() -> None:
     """SPEC-361 (R2-P1-2): perfil legacy roda a criatura nova agendada numa thread daemon, um job
     por vez, FORA do lock do jogo (a próxima ação não espera). Perfil DB: worker/cron."""
-    if _database_profile():
-        return
+    # Nunca levanta nem bloqueia: roda depois de a resposta (já persistida) ir para a fila do SSE.
     try:
-        from services.creature_gen_jobs import drenar_em_segundo_plano
+        if _database_profile():
+            return
+        from services.creature_gen_jobs import drenar_em_segundo_plano, tem_pendente
 
-        drenar_em_segundo_plano()
+        if tem_pendente():  # sem job agendado, nenhuma thread
+            drenar_em_segundo_plano()
     except Exception as exc:
         _log_event(
             "bestiary", "creature_gen_drain_failed", level="warning", error=type(exc).__name__

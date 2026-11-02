@@ -1401,7 +1401,11 @@ def _invocar(msgs, restante_s: float, providers: list[str], schema: type = None)
 
         with llm_attempt_scope(capture), llm_spend_guard_scope(guarda):
             llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
-            return llm.with_structured_output(schema).invoke(msgs)
+            resultado = llm.with_structured_output(schema).invoke(msgs)
+        # guard CRÍTICO (SPEC-230): FallbackLLM devolve AIMessage, nunca a ficha
+        if not isinstance(resultado, (FichaCriaturaGerada, CorrecaoFicha)):
+            return None
+        return resultado
 
     ctx = contextvars.copy_context()
     fut = _executor().submit(ctx.run, chamar)
