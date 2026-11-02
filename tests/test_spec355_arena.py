@@ -8,8 +8,8 @@ from pathlib import Path
 from services import cards
 
 D = Path(__file__).resolve().parents[1] / "docs" / "spec355"
-# Excecoes pendentes registradas em SPEC-355 §9 (decisao do dono): ficam abaixo do piso de 45 %.
-# Destino: a spec de balanco que ganhar numero novo para o Arcanista (SPEC-355 §9) remove esta linha.
+# Excecao de piso do Arcanista: SPEC-362 (pacote de 3 Cartas) subiu 0-19 de 44,4 para 46,5 % e a confirmacao 20-99 deu 44,8 %; fica abaixo de 45 % (decisao do coordenador 02/11).
+# Destino: follow-up (raio_cinza de volta ao pool, +2,3 pp medido) remove esta linha; leitura do artefato novo em tests/test_spec362_arcanista.py.
 EXCECOES_PISO = {"Arcanista Cinzento"}
 # Teto de 75 % por subclasse na leitura padrao. Excecoes = valor medido, registrado em §9 para o dono
 # (341 aceitou avaro 75,2 / silencioso 76,6; o R11/R12 empurrou o silencioso a 78,7 nas 0-19).
