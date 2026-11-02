@@ -1,6 +1,6 @@
 # SPEC-364 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `4c05ca40`: só P3 abertos; ver § Re-revisão)
+> **Veredito:** `CHANGES_REQUIRED` (conferência final de `135d3631`: 1 P2 de teste instável + 2 P3; ver § Conferência final)
 > **Revisor:** Opus / Sol (spec-reviewer) · **Data:** 2026-11-02 · **Commit revisado:** `a6ab7d61`
 
 ## Escopo
@@ -108,5 +108,38 @@ git diff 50fb8f12..HEAD --stat → 17 arquivos, +474/−57
 pytest -n 2 test_spec364_* (13 arquivos) + test_spec346_board_no_llm + test_spec363_ids + test_spec363_outcome_text + test_remediacao_comerciante_real + test_card_effects_grammar → 189 passed, 2 skipped (Postgres)
 sonda temporária (clone morto semeado, spy em build_summary; arquivo removido) → participantes sem o clone; causa = reconcile_roster (intruso fora do manifesto)
 tsc -p web/tsconfig.json --noEmit → 0 erros
+ruff check (arquivos alterados) → All checks passed
+```
+
+## Conferência final (2026-11-02, `f6d77624..135d3631`)
+
+**Veredito:** `CHANGES_REQUIRED`. A correção do produto está certa. Faltam 1 P2 (teste instável que vai
+quebrar a suíte do pouso) e 2 P3 (um falso negativo que o P3-11 abriu no V6 e um teste de contrato instável).
+
+### P3-8..P3-11
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P3-8 | **Fechado no mérito**, com teste instável → P2-6 | `add_second_enemy` registra o clone no manifesto (`em.add_joined`); `test_spec364_death_api.py` derruba o Goblin B na rodada 1 e mata o herói na 2; o §9 foi corrigido (o corte vinha do seed). |
+| P3-9 | **Fechado, legítimo** | `_flee_line` passou a anexar `trail` no veredito `escapou` (`services/combat_preview.py:340`). A mudança em `tests/test_spec363_flee_verdict.py:69-71` **aperta** a asserção (`endswith("escapou")` → `endswith("escapou (pressionado → afastado)")`): é a consequência direta de uma mudança intencional de comportamento, coerente com R2 (mesmo `de → para` em toda superfície), e não afrouxa nada; o teste antigo de save sem veredito ("não afirma escapou só porque o dado passou") continua. Conferi os caminhos de escape: pelo dado (`para = escapou` → "livre"), pelo limite de tentativas (`_enforce_flee_attempt_limit` grava `trilha="escapou"`) e sem perseguidor (`resolve_chase_round` volta cedo, sem `total`, então não há linha). Nenhum produz trilha incoerente. O caso (d) de `test_spec364_flee_surfaces.py` agora exige a linha `escapou (quase livre → livre)`. |
+| P3-10 | **Fechado** | R29 põe o herói num local com mercador e afirma "consulta sem transação", "Pelo que você carrega:", o nome curto e a ausência do texto longo. |
+| P3-11 | **Fechado o falso positivo; abriu falso negativo** → P3-12 | Ver abaixo. |
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-6 | P2 | `tests/test_spec364_death_api.py:36-56` | **Instável.** Em 4 rodadas iguais com `-n 2` (os 5 arquivos de API da spec), `test_forced_fallback_source_and_past_tense` falhou em 2: `assert 'llm' == 'fallback_attribution'`. Ou seja, nessas execuções o Goblin B não chegou a `earlier_fallen`, e o texto ruim ("O Goblin B também tomba…") passou como `llm`. A busca de semente aceita `goblin_b is None` como "caiu" (o clone pode ter saído da lista por outro motivo) e depende de aleatoriedade fora do `random.seed` (ordem de worker, outros RNGs). No pouso com `-n auto` isso vira falha intermitente. | Tornar o seed determinístico: exigir `goblin_b is not None and goblin_b.get("dead")` **e** que o manifesto marque o Goblin B como `morto`; ou, melhor, semear direto a queda da rodada 1 (inimigo `dead=True`/`status="morto"` + `em.apply_composition`/`sync_statuses` no manifesto) sem busca por semente. Afirmar `"Goblin B" in auth/earlier_fallen` (ou nos fatos) antes de checar a fonte. Rodar 5× com `-n 2` para provar que não oscila. |
+| P3-12 | P3 | `services/conflict_summary.py:545-546` | O `post_subject` do P3-11 (`verbo + o|a|os|as|um|uma + palavra`) toma complemento por sujeito e **abre falso negativo** no caminho de sujeito herdado (da P3-1). Sonda: "O Goblin, ferido, tomba a seus pés.", "O Goblin, sem forças, desaba uma última vez." e "O Goblin, ferido, cai a poucos passos de você." agora passam sem V6 (antes do P3-11 eram rejeitadas). O caminho principal (nome e verbo na mesma oração, ex. "O Goblin tomba a seus pés.") continua rejeitando. | Só considerar sujeito posposto quando o que vem depois do artigo for um **nome de participante que não está em `earlier_fallen`** (expor os nomes da rodada final em `authorship`, ex. `final_fallen`, ou usar `names` do mapa), ou excluir explicitamente locuções adverbiais (`a seus/seu/sua pés`, `a poucos`, `uma vez`, `uma última`). Acrescentar as 3 frases da sonda como positivos de V6 e manter os 3 benignos do P3-11. |
+| P3-13 | P3 | `tests/test_spec364_hidden_view_contract.py:23-24` | Instável (1 falha em 6 execuções com `-n 2`): `AssertionError: mao sem Carta de inimigo`. A mão sorteada às vezes não tem Carta de alvo inimigo. Provavelmente pré-existente (o arquivo é da 1ª rodada), mas também cai no pouso. | Fixar a mão (semear `pilhas.mao` com uma Carta básica `bas_*` de alvo `inimigo`, como a fixture do e2e) ou `random.seed` antes de `open_combat`. |
+
+### Comandos rodados (conferência final)
+
+```text
+git diff f6d77624..135d3631 --stat → 9 arquivos, +113/−18
+pytest -n 2 (17 arquivos do escopo, incl. test_spec363_flee_verdict) → 201 passed, 1 failed (hidden_view_contract: mão sem Carta de inimigo), 2 skipped
+pytest (hidden_view_contract + 409, serial) → 5 passed
+pytest -n 2 ×4 (hidden_view_contract, 409, death_api, flee_surfaces, 363_ids) → 2 verdes, 2 com death_api::test_forced_fallback_source_and_past_tense ('llm' != 'fallback_attribution')
+sonda V6 (7 frases; arquivo temporário removido) → 3 falsos negativos no sujeito herdado; 'Ao lado do Goblin, tomba o Minotauro' aceito; 'O Goblin tomba a seus pés' rejeitado
 ruff check (arquivos alterados) → All checks passed
 ```
