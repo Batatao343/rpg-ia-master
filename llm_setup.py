@@ -452,7 +452,9 @@ def _build_ollama(temperature: float, model: str) -> "BaseLanguageModel":
     return ChatOllama(model=model, base_url=base_url, temperature=temperature)
 
 
-def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguageModel":
+def _build_openai(
+    provider: str, temperature: float, model: str, timeout: float | None = None
+) -> "BaseLanguageModel":
     """OpenAI + qualquer endpoint OpenAI-compat (groq/qwen/glm/minimax/kimi/deepseek)."""
     try:
         from langchain_openai import ChatOpenAI
@@ -482,11 +484,14 @@ def _build_openai(provider: str, temperature: float, model: str) -> "BaseLanguag
         kwargs["extra_body"] = {"thinking": {"type": "disabled"}}
 
     global_timeout = os.getenv("LLM_TIMEOUT_SECONDS")
-    timeout_seconds = float(
-        global_timeout
-        if global_timeout is not None
-        else (os.getenv("DEEPSEEK_TIMEOUT_SECONDS", "12") if provider == "deepseek" else "90")
-    )
+    if global_timeout is not None:
+        timeout_seconds = float(global_timeout)
+    elif provider == "deepseek" and timeout is not None and "DEEPSEEK_TIMEOUT_SECONDS" not in os.environ:
+        timeout_seconds = float(timeout)  # SPEC-363 R34: constante por tier
+    else:
+        timeout_seconds = float(
+            os.getenv("DEEPSEEK_TIMEOUT_SECONDS", "12") if provider == "deepseek" else "90"
+        )
     return ChatOpenAI(
         model=model,
         api_key=api_key,
@@ -519,7 +524,9 @@ def _build_anthropic(temperature: float, model: str) -> "BaseLanguageModel":
     )
 
 
-def _build_client(provider: str, model: str, temperature: float) -> "BaseLanguageModel":
+def _build_client(
+    provider: str, model: str, temperature: float, timeout: float | None = None
+) -> "BaseLanguageModel":
     """Dispatcher de construção (seam de teste). Levanta em qualquer falha —
     o RoutedLLM captura e pula pro próximo candidato."""
     if provider == "gemini":
@@ -528,7 +535,7 @@ def _build_client(provider: str, model: str, temperature: float) -> "BaseLanguag
         return _build_ollama(temperature, model)
     if provider == "anthropic":
         return _build_anthropic(temperature, model)
-    return _build_openai(provider, temperature, model)
+    return _build_openai(provider, temperature, model, timeout=timeout)
 
 
 # Cache por (provider, model, temperature) — evita reconstruir client a cada turno (R7).
@@ -567,13 +574,39 @@ def _open_circuit_if_permanent(provider: str, model: str, exc: BaseException) ->
         _OPEN_CIRCUITS[(provider, model)] = str(exc)[:500]
 
 
-def _get_cached_client(provider: str, model: str, temperature: float) -> "BaseLanguageModel":
-    key = (provider, model, temperature)
+# SPEC-363 R34: o CLASSIFY desiste cedo do DeepSeek (parse curto; a cauda longa só atrasa o turno).
+# Parâmetro de engenharia (sem flag/env nova). `LLM_TIMEOUT_SECONDS`/`DEEPSEEK_TIMEOUT_SECONDS` vencem.
+DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.0
+
+
+def _tier_timeout(provider: str, tier: "ModelTier | None") -> float | None:
+    if provider == "deepseek" and tier == ModelTier.CLASSIFY:
+        return DEEPSEEK_CLASSIFY_TIMEOUT_S
+    return None
+
+
+def _get_cached_client(
+    provider: str, model: str, temperature: float, tier: "ModelTier | None" = None
+) -> "BaseLanguageModel":
+    timeout = _tier_timeout(provider, tier)
+    key = (provider, model, temperature) if timeout is None else (provider, model, temperature, timeout)
     client = _CLIENT_CACHE.get(key)
     if client is None:
-        client = _build_client(provider, model, temperature)  # pode levantar (não cacheia falha)
+        if timeout is None:  # pode levantar (não cacheia falha)
+            client = _build_client(provider, model, temperature)
+        else:
+            client = _build_client(provider, model, temperature, timeout=timeout)
         _CLIENT_CACHE[key] = client
     return client
+
+
+def _cached_for_tier(
+    provider: str, model: str, temperature: float, tier: "ModelTier | None"
+) -> "BaseLanguageModel":
+    """Só o DeepSeek no CLASSIFY usa a chave/timeout próprios; o resto segue o caminho de sempre."""
+    if _tier_timeout(provider, tier) is None:
+        return _get_cached_client(provider, model, temperature)
+    return _get_cached_client(provider, model, temperature, tier)
 
 
 # ---------------------------------------------------------------------------
@@ -1000,7 +1033,7 @@ class RoutedLLM:
                 continue
             build_t0 = time.perf_counter()
             try:
-                client = _get_cached_client(provider, model, self.temperature)
+                client = _cached_for_tier(provider, model, self.temperature, self.tier)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
                 errors.append(f"{provider}:{model} build:{type(e).__name__}")
@@ -1183,7 +1216,7 @@ class RoutedLLM:
                 continue
             build_t0 = time.perf_counter()
             try:
-                client = _get_cached_client(provider, model, self.temperature)
+                client = _cached_for_tier(provider, model, self.temperature, self.tier)
                 client = self._apply(client, provider)
             except Exception as e:
                 latency_ms = int((time.perf_counter() - build_t0) * 1000)
@@ -1432,7 +1465,7 @@ class RoutedLLM:
             ]
         build_t0 = time.perf_counter()
         try:
-            client = _get_cached_client(provider, model, self.temperature)
+            client = _cached_for_tier(provider, model, self.temperature, self.tier)
             if structured:
                 tool_name = schema.model_json_schema().get("title") or schema.__name__
                 client = client.bind_tools([schema], tool_choice=tool_name)
