@@ -344,10 +344,17 @@ def purge_fardos(piles: dict, n: int) -> int:
 
 
 def pick_discards(
-    piles: dict, n: int, *, escolha: bool, rng: random.Random | None = None, protect: str = ""
+    piles: dict,
+    n: int,
+    *,
+    escolha: bool,
+    rng: random.Random | None = None,
+    protect: str = "",
+    prefer: list[str] | None = None,
 ) -> list[str]:
-    """Quais Cartas da mao `descartar` leva. `escolha` (a politica do jogador, sem UI
-    ainda): Fardo primeiro, depois Carta com Vazao, depois a mais a direita. Sem
+    """Quais Cartas da mao `descartar` leva. `escolha`: primeiro as Cartas que o jogador
+    marcou na UI (`prefer`, SPEC-368 R8a; so as que estao na mao); o que faltar segue a
+    politica: Fardo primeiro, depois Carta com Vazao, depois a mais a direita. Sem
     `escolha`: ao acaso (rng persistido). `protect` poupa UMA copia (a Carta em jogo)."""
     hand = list(piles["mao"])
     if protect and protect in hand:
@@ -356,6 +363,19 @@ def pick_discards(
     if not n:
         return []
     if escolha:
+        chosen: list[str] = []
+        pool = list(hand)
+        for cid in prefer or []:
+            if len(chosen) < n and cid in pool:
+                pool.remove(cid)
+                chosen.append(cid)
+        if chosen:
+            rest = (
+                pick_discards({**piles, "mao": pool}, n - len(chosen), escolha=True, rng=rng)
+                if len(chosen) < n
+                else []
+            )
+            return chosen + rest
 
         def rank(cid: str) -> int:
             c = card_of(cid)
@@ -525,6 +545,37 @@ def pay(piles: dict, player: dict, card: dict, *, allow_pact: bool = True) -> di
 # ==========================================================================
 # Validacao de uma lista de jogadas (R7/R15) - sem efeito colateral
 # ==========================================================================
+def discard_cost(card: dict | None) -> int | None:
+    """SPEC-368 R6/R8a: Fôlego para DESCARTAR esta Carta da mão (campo autoral
+    `descartar_folego`, ex.: Dor Surda). None = a Carta não se descarta por escolha."""
+    raw = (card or {}).get("descartar_folego")
+    try:
+        n = int(raw) if raw is not None else 0
+    except (TypeError, ValueError):
+        return None
+    return n if n > 0 else None
+
+
+def _choice_discards(card: dict | None) -> int:
+    """Quantas Cartas da mao o `descartar` (com `escolha`) da Carta leva; 0 se nao ha."""
+    total = 0
+    for eff in fx.normalize(card or {}):
+        if eff.get("kind") == "descartar" and eff.get("escolha"):
+            try:
+                total += max(0, int(eff.get("valor") or 0))
+            except (TypeError, ValueError):
+                pass
+    return total
+
+
+def discard_by_choice(piles: dict, card_id: str) -> bool:
+    """Descarte por escolha do jogador: a Carta sai do ciclo (exaurida até o fim do conflito)."""
+    if exhaust(piles, card_id):
+        _forget(piles, card_id)
+        return True
+    return False
+
+
 def step_folego(step: Any, get_card: Callable[[str], dict | None] = cards.get_card) -> int:
     """Fôlego de uma jogada: carta -> `custo_folego`; mover/passar gratis; o resto 1."""
     kind = str(getattr(step, "kind", "pass") or "pass").lower()
@@ -535,6 +586,9 @@ def step_folego(step: Any, get_card: Callable[[str], dict | None] = cards.get_ca
     if kind == "card":
         card = get_card(str(getattr(step, "card_id", "") or "")) or {}
         return cards.custo_folego(card) if card else 1
+    if kind == "discard":
+        card = card_of(str(getattr(step, "card_id", "") or ""))
+        return discard_cost(card) or 1
     return 1
 
 
@@ -556,6 +610,27 @@ def plan_plays(
         cost = step_folego(step, get_card)
         entropy_cost = 0
         card: dict | None = None
+        if (
+            kind == "discard"
+        ):  # SPEC-368 R6: só Fôlego próprio (sem Pacto) e só Carta descartável da mão
+            cid = str(getattr(step, "card_id", "") or "")
+            target = card_of(cid)
+            if discard_cost(target) is None or cid not in sim["mao"]:
+                return {
+                    "ok": False,
+                    "motivo": f"{target.get('name', cid) if target else cid} não pode ser descartada.",
+                    **total,
+                }
+            if int(sim.get("folego", 0) or 0) < cost:
+                return {
+                    "ok": False,
+                    "motivo": f"Falta Fôlego para descartar {target.get('name', cid)} ({cost}).",
+                    **total,
+                }
+            sim["folego"] = int(sim["folego"]) - cost
+            discard_by_choice(sim, cid)
+            total["folego_total"] += cost
+            continue
         if kind == "card":
             cid = str(getattr(step, "card_id", "") or "")
             card = FARDO_CARD if cid == FARDO_ID else get_card(cid)
@@ -666,6 +741,12 @@ def public_view(piles: dict | None, player: dict | None = None) -> dict | None:
                 "alvo": _target_kind(card),  # SPEC-334: o front decide se pede alvo/prévia
                 "texto": _rule_text(card, player),  # SPEC-334 R2: texto gerado, sem LLM
                 "palavras_chave": sorted(fx.keywords(card)),
+                **({"descarta_escolha": _choice_discards(card)} if _choice_discards(card) else {}),
+                **(
+                    {"descartar_folego": discard_cost(card)}
+                    if discard_cost(card) is not None
+                    else {}
+                ),
             }
         )
 

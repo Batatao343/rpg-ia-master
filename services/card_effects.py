@@ -875,6 +875,7 @@ def _apply_pile(
             escolha=bool(eff.get("escolha")),
             rng=_rng_of(ctx),
             protect=str(card.get("id") or ""),
+            prefer=list(piles.get("descartar_escolhidas") or []),  # SPEC-368 R8a: marcadas na UI
         )
         gone = cp.discard_cards(piles, ids)
         logs.append(f"{who} descarta {len(gone)} Carta(s).")
@@ -1817,4 +1818,11 @@ def validate_card(card: dict) -> list[str]:
                     errs.append(f"palavra-chave {key} exige true")
             if kws.get("vazao") and not any(gatilho(e) == "ao_descartar" for e in normalize(card)):
                 errs.append("Vazão exige um efeito com quando=ao_descartar")
+            if kws.get("ressoar"):
+                # SPEC-368 R8b: `_bump` mexe na 1ª chave de valor; mais de uma torna o Ressoar ambíguo.
+                prim = primary_effect(card) or {}
+                if sum(1 for k in _VALUE_KEYS if prim.get(k) is not None) > 1:
+                    errs.append(
+                        "Ressoar exige uma só chave de valor (valor/dano_base/n) no principal"
+                    )
     return errs

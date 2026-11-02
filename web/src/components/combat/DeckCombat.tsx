@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { CombatBlock, HandCard, OmenView } from "../../types";
 import * as api from "../../api";
 import { subscribeRejectedPlay } from "../../lib/rejectedPlay";
-import { BLOCK_TEXT, blockReason, cardTargets, dropRejectedPlay, visibleEnemyIds, endText, enqueue, folegoState, keywordRules, move, omenView, remove, toJogadas, type QueuedPlay } from "../../combat/deck";
+import { BLOCK_TEXT, blockReason, cardTargets, discardReason, dropRejectedPlay, visibleEnemyIds, endText, enqueue, enqueueDiscard, folegoState, keywordRules, move, omenView, remove, togglePick, toJogadas, type QueuedPlay } from "../../combat/deck";
 import type { DeckArm } from "../../combat/useDeckArm";
 import { useGlossary } from "../../combat/useGlossary";
 import { FolegoPips } from "./FolegoPips";
@@ -52,6 +52,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   const glossary = useGlossary();
   const [queue, setQueue] = useState<QueuedPlay[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [picks, setPicks] = useState<number[]>([]); // SPEC-368 R8a: posições da mão marcadas para o `descartar`
   const [preview, setPreview] = useState<PreviewState>({ status: "idle" });
   const trigger = useRef<HTMLElement | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -61,7 +62,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   const firstRound = useRef(true);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza estado com sistema externo (fetch/timer/DOM/assinatura) ao montar/trocar a chave; derivar em render mudaria o fluxo de carregamento
-    setQueue([]); setSelected(null); onDisarm();
+    setQueue([]); setSelected(null); setPicks([]); onDisarm();
     if (firstRound.current) { firstRound.current = false; return; }
     const root = rootRef.current;
     if (root && root.contains(document.activeElement)) root.querySelector<HTMLElement>(".deck-card")?.focus();
@@ -70,6 +71,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
 
   const enemyIds = useMemo(() => visibleEnemyIds(combat.enemies), [combat.enemies]);
   const reasons = piles.mao.map((c, i) => blockReason(c, piles.mao, i, queue, piles, entropy));
+  const discardReasons = piles.mao.map((c, i) => discardReason(c, piles.mao, i, queue, piles));
   const fol = folegoState(piles, queue);
   const armedCard: HandCard | null = armed ? piles.mao[armed.index] ?? null : null;
   const targetsFor = (card: HandCard): string[] =>
@@ -131,6 +133,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
   }, [queue.length, spare]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function disarm() {
+    setPicks([]);
     onDisarm();
     trigger.current?.focus();
   }
@@ -140,6 +143,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     const reason = reasons[index];
     if (reason) { onAnnounce(`${card.name}: ${BLOCK_TEXT[reason]}.`); return; }
     if (armed?.index === index) { disarm(); return; } // 2º toque desarma
+    setPicks([]);
     if (card.alvo === "si") {
       if (touch) { onArm(index, []); return; } // toque: arma, mostra o texto e as regras, e "Jogar" confirma (R9.1)
       add(card);
@@ -151,9 +155,20 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     onAnnounce(targets.length > 1 ? `Mirando ${card.name}: escolha o alvo na arena.` : "");
   }
 
+  function discard(card: HandCard, index: number, el: HTMLElement) {
+    trigger.current = el;
+    const reason = discardReasons[index];
+    if (reason) { onAnnounce(`${card.name}: ${BLOCK_TEXT[reason]}.`); return; }
+    setQueue((q) => enqueueDiscard(q, card, `p${++uidSeq}`));
+    onDisarm();
+    onAnnounce(`Descartar ${card.name} (${card.descartar_folego} de Fôlego) vai na fila, em ${queue.length + 1}º.`);
+  }
+
   function add(card: HandCard, targetId?: string) {
     const n = queue.length + 1;
-    setQueue((q) => enqueue(q, card, targetId, `p${++uidSeq}`));
+    const chosen = card.descarta_escolha ? picks.map((i) => piles.mao[i]?.id).filter((id): id is string => !!id) : undefined;
+    setQueue((q) => enqueue(q, card, targetId, `p${++uidSeq}`, chosen));
+    setPicks([]);
     onDisarm();
     onAnnounce(`${card.name} vai na fila, em ${n}º.`);
     trigger.current?.focus({ preventScroll: true }); // SPEC-354 R2.2: o foco não desfaz a rolagem da cauda da fila
@@ -194,7 +209,7 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
       <RoundBoard entries={combat.registro_rodada} round={combat.round} compact={touch} />
       {arena(omens)}
       <Hand piles={piles} glossary={glossary} reasons={reasons} armedIndex={armed?.index ?? null} busy={busy} onPlay={play}
-        head={<FolegoPips piles={piles} state={fol} />} onStuck={onStuck} />
+        head={<FolegoPips piles={piles} state={fol} />} onStuck={onStuck} discardReasons={discardReasons} onDiscard={discard} />
       {armedCard ? (
         <div className="aimbar" data-aim-safe data-deck-aim role="group" aria-label={`Mira de ${armedCard.name}`}>
           {needsTarget && !armed?.targetId ? (
@@ -213,6 +228,15 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
                 <button type="button" className="actionchip" data-other-target onClick={onClearTarget}>Outro alvo</button>
               )}
             </>
+          )}
+          {!!armedCard.descarta_escolha && (
+            <div className="aimbar__discard" role="group" data-discard-picks aria-label={`Escolha até ${armedCard.descarta_escolha} carta(s) da mão para descartar`}>
+              <span>Descartar até {armedCard.descarta_escolha}:</span>
+              {piles.mao.map((c, i) => i === armed?.index ? null : (
+                <button key={`${c.id}-${i}`} type="button" className="actionchip" aria-pressed={picks.includes(i)}
+                  onClick={() => setPicks((p) => togglePick(p, i, armedCard.descarta_escolha ?? 0))}>{c.name}</button>
+              ))}
+            </div>
           )}
           {touch && (
             <div className="aimbar__rules" data-card-rules>

@@ -529,3 +529,6 @@ details.scene-strip { display: block; }
 
 /* SPEC-357: Técnicas à venda reusa .espolio__*; só o rótulo de destino/preço. */
 .loja__price { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.deck-card-wrap { display: grid; gap: 0.3rem; align-content: start; }
+.deck-card__discard[aria-disabled="true"] { color: var(--muted); cursor: not-allowed; }
+.aimbar__discard { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }

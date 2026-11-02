@@ -92,9 +92,16 @@ def resolve_player_plays(
         return
     last = len(plays) - 1
     carry_guard = False
+    acted = False
     for i, step in enumerate(plays):
         if i and not orch._can_act(actor):
             break
+        if (
+            str(step.kind or "").lower() == "discard"
+        ):  # SPEC-368 R6: descarte por escolha, só Fôlego
+            _discard_by_choice(piles, actor, step, out)
+            continue
+        acted = True
         sub = ct.TurnDeclaration(
             actor_id=decl.actor_id,
             pre_acao=decl.pre_acao if i == 0 else None,
@@ -131,7 +138,15 @@ def resolve_player_plays(
                 entropia_extra=plan["entropia_extra"],
             )
         used_before = len(out.get("cards_used") or [])
-        orch._resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, sub, state, out, rng)
+        picked = [str(c) for c in (step.params or {}).get("descartar") or [] if isinstance(c, str)]
+        if picked:  # SPEC-368 R8a: Cartas marcadas na UI para o `descartar` com `escolha`
+            piles["descartar_escolhidas"] = picked
+        try:
+            orch._resolve_actor_turn(
+                scene, actor, actor_id, actors_by_id, sides, sub, state, out, rng
+            )
+        finally:
+            piles.pop("descartar_escolhidas", None)
         if carry_guard:  # P2-2: `resolve_turn` zera a Guarda a cada jogada; ela dura a rodada
             _restore_guard(scene, actor_id)
         carry_guard = _guarding(scene, actor_id)
@@ -156,6 +171,24 @@ def resolve_player_plays(
                     0, int(piles.get("folego_emprestado", 0) or 0) - plan["emprestado"]
                 )
                 card_piles.undo_pact(piles, actor, plan, carga_added)  # só o delta do Pacto
+    if not acted:  # só descartes: o jogador passa a vez (o motor ainda registra o turno)
+        orch._resolve_actor_turn(
+            scene,
+            actor,
+            actor_id,
+            actors_by_id,
+            sides,
+            ct.TurnDeclaration(
+                actor_id=decl.actor_id,
+                pre_acao=decl.pre_acao,
+                acao=ct.TurnStep(kind="pass"),
+                pos_acao=decl.pos_acao,
+                reaction_card_id=decl.reaction_card_id,
+            ),
+            state,
+            out,
+            rng,
+        )
     seen = False
     deduped: list = []
     for turn_id in out.get("resolved_turns") or []:
@@ -165,6 +198,24 @@ def resolve_player_plays(
             seen = True
         deduped.append(turn_id)
     out["resolved_turns"] = deduped
+
+
+def _discard_by_choice(piles: dict, actor: dict, step, out: dict) -> None:
+    """Paga o Fôlego (sem Pacto) e tira a Carta do ciclo; recusa explicada, sem gasto."""
+    cid = str(step.card_id or "")
+    card = card_piles.card_of(cid)
+    cost = card_piles.discard_cost(card)
+    name = card.get("name", cid) if card else cid
+    if cost is None or cid not in piles["mao"]:
+        out["logs"].append(f"{name} não pode ser descartada.")
+        return
+    plan = card_piles.pay_cost(piles, actor, cost, 0, apply=True, allow_pact=False)
+    if not plan["ok"]:
+        out["logs"].append(f"Falta Fôlego para descartar {name} ({cost}).")
+        return
+    card_piles.discard_by_choice(piles, cid)
+    out["logs"].append(f"Você descarta {name} ({cost} Fôlego).")
+    out.setdefault("pilhas_eventos", []).append({"kind": "descarte_escolhido", "carta": cid})
 
 
 def end_round(ctx, state, player_id, out: dict) -> None:

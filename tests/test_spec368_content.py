@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from services import card_lint, cards, enemy_decks as edk
 from services import card_effects as fx
+from services import card_lint, cards
+from services import enemy_decks as edk
 
 NEW_FACTIONS = (
     "tribos_devoradores_sol",

@@ -492,8 +492,10 @@ export interface PlayStep {
   card_id?: string;
   target_id?: string;
   ruptura?: boolean;
-  action_kind?: "attack" | "maneuver" | "pass";
+  action_kind?: "attack" | "maneuver" | "pass" | "discard";
   maneuver?: "engajar" | "desengajar" | "guardar" | "esconder" | "procurar";
+  /** SPEC-368 R8a: Cartas da mão marcadas para o `descartar` com escolha (o motor valida). */
+  descartar?: string[];
 }
 
 /** SPEC-328 R16 / SPEC-334: carta da mão como o servidor a descreve (texto gerado, sem LLM). */
@@ -508,6 +510,10 @@ export interface HandCard {
   alvo?: "inimigo" | "aliado" | "si";
   texto?: string;
   palavras_chave?: string[];
+  /** SPEC-368 R6: Fôlego para descartar esta carta da mão (ex.: Dor Surda); ausente = não se descarta. */
+  descartar_folego?: number;
+  /** SPEC-368 R8a: quantas cartas da mão o jogador escolhe descartar ao jogar esta. */
+  descarta_escolha?: number;
   /** SPEC-363 R19: alvos válidos calculados pelo servidor para QUALQUER carta da mão (motor = view). */
   valid_targets?: string[];
   invalid_reason?: string | null;

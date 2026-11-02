@@ -12,6 +12,10 @@ export interface QueuedPlay {
   targetId?: string;
   folego: number;
   entropia: number;
+  /** SPEC-368 R6: descarte por Fôlego (a carta não é jogada). */
+  discard?: boolean;
+  /** SPEC-368 R8a: cartas da mão escolhidas para o `descartar` da carta jogada. */
+  descartar?: string[];
 }
 
 export interface FolegoState {
@@ -54,7 +58,7 @@ export function blockReason(card: HandCard, hand: HandCard[], index: number, que
   if (!card.jogavel) return "fardo";
   if (queue.length >= MAX_PLAYS) return "limite";
   const copiesBefore = hand.slice(0, index + 1).filter((c) => c.id === card.id).length;
-  if (queue.filter((p) => p.cardId === card.id).length >= copiesBefore) return "ja_na_fila";
+  if (queue.filter((p) => p.cardId === card.id && !p.discard).length >= copiesBefore) return "ja_na_fila";
   const st = folegoState(piles, queue);
   if (card.custo_folego > st.free + st.room - st.borrowed) return "sem_folego";
   const entropyQueued = queue.reduce((n, p) => n + p.entropia, 0);
@@ -62,8 +66,32 @@ export function blockReason(card: HandCard, hand: HandCard[], index: number, que
   return null;
 }
 
-export function enqueue(queue: QueuedPlay[], card: HandCard, targetId: string | undefined, uid: string): QueuedPlay[] {
-  return [...queue, { uid, cardId: card.id, name: card.name, targetId, folego: card.custo_folego, entropia: card.custo_entropia }];
+export function enqueue(queue: QueuedPlay[], card: HandCard, targetId: string | undefined, uid: string, descartar?: string[]): QueuedPlay[] {
+  return [...queue, { uid, cardId: card.id, name: card.name, targetId, folego: card.custo_folego, entropia: card.custo_entropia,
+    ...(descartar?.length ? { descartar } : {}) }];
+}
+
+/** SPEC-368 R6: por que esta carta (cópia `index`) não pode ser descartada agora. Descarte paga só Fôlego PRÓPRIO (sem Pacto). */
+export function discardReason(card: HandCard, hand: HandCard[], index: number, queue: QueuedPlay[],
+  piles: Pick<PilesView, "folego" | "folego_emprestado" | "pacto_max">): BlockReason {
+  const cost = card.descartar_folego;
+  if (!cost) return null;
+  if (queue.length >= MAX_PLAYS) return "limite";
+  const copiesBefore = hand.slice(0, index + 1).filter((c) => c.id === card.id).length;
+  if (queue.filter((p) => p.cardId === card.id && p.discard).length >= copiesBefore) return "ja_na_fila";
+  const st = folegoState(piles, queue);
+  if (st.borrowed > 0 || cost > st.free) return "sem_folego";
+  return null;
+}
+
+export function enqueueDiscard(queue: QueuedPlay[], card: HandCard, uid: string): QueuedPlay[] {
+  return [...queue, { uid, cardId: card.id, name: `Descartar ${card.name}`, folego: card.descartar_folego ?? 1, entropia: 0, discard: true }];
+}
+
+/** SPEC-368 R8a: alterna a carta (por posição na mão) entre as escolhidas, respeitando o teto `max`. */
+export function togglePick(picks: number[], index: number, max: number): number[] {
+  if (picks.includes(index)) return picks.filter((i) => i !== index);
+  return picks.length >= max ? picks : [...picks, index];
 }
 
 export const remove = (queue: QueuedPlay[], uid: string) => queue.filter((p) => p.uid !== uid);
@@ -78,7 +106,9 @@ export function move(queue: QueuedPlay[], uid: string, delta: -1 | 1): QueuedPla
 
 /** A fila vira a lista `jogadas` do request único ("Encerrar turno"), na ordem escolhida. */
 export function toJogadas(queue: QueuedPlay[]): PlayStep[] {
-  return queue.map((p) => ({ card_id: p.cardId, ...(p.targetId ? { target_id: p.targetId } : {}) }));
+  return queue.map((p) => p.discard
+    ? { card_id: p.cardId, action_kind: "discard" as const }
+    : { card_id: p.cardId, ...(p.targetId ? { target_id: p.targetId } : {}), ...(p.descartar?.length ? { descartar: p.descartar } : {}) });
 }
 
 /** Palavras-chave: `**Nome**` no texto gerado pelo servidor; `tip` casa com o glossário pelo nome. */

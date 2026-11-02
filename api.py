@@ -1888,8 +1888,12 @@ class PlayStepRequest(BaseModel):
     card_id: str | None = Field(default=None, max_length=128)
     target_id: str | None = Field(default=None, max_length=128)
     ruptura: bool = False
-    action_kind: Literal["attack", "maneuver", "pass"] | None = None
+    action_kind: Literal["attack", "maneuver", "pass", "discard"] | None = None
     maneuver: Literal["engajar", "desengajar", "guardar", "esconder", "procurar"] | None = None
+    # SPEC-368 R8a: Cartas da mão marcadas para o `descartar` com `escolha`; o motor valida.
+    descartar: list[Annotated[str, Field(max_length=128)]] | None = Field(
+        default=None, max_length=4
+    )
 
 
 class ActionRequest(BaseModel):
@@ -6073,6 +6077,13 @@ def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]
     default_target = str(active_enemies[0].get("id")) if active_enemies else None
     steps: list[dict] = []
     for play_index, play in enumerate(req.jogadas or []):
+        if (
+            play.action_kind == "discard"
+        ):  # SPEC-368 R6: descartar por Fôlego; sem alvo, o motor valida
+            if not play.card_id:
+                raise HTTPException(422, detail="Descartar pede a Carta (card_id).")
+            steps.append({"kind": "discard", "card_id": play.card_id})
+            continue
         bad = _targeting.check_declared_target(
             state,
             card_id=play.card_id,
@@ -6102,7 +6113,10 @@ def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]
                     or _default_card_target(
                         _cards_svc.get_card(play.card_id) or {}, default_target
                     ),
-                    "params": {"ruptura": bool(play.ruptura)},
+                    "params": {
+                        "ruptura": bool(play.ruptura),
+                        **({"descartar": list(play.descartar)} if play.descartar else {}),
+                    },
                 }
             )
         elif play.action_kind == "maneuver" and play.maneuver:

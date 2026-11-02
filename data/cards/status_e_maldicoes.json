@@ -16,6 +16,7 @@
       "injogavel": true,
       "palavras_chave": { "fardo": true, "exaurir": true },
       "ao_comprar_status": { "exaurir_fim_rodada": true },
+      "descartar_folego": 1,
       "descricao": "Uma pontada que não vai embora; pesa na mão até o fim da rodada.",
       "momento": "Aparece quando um Ferimento leve se abre no meio da luta."
     },

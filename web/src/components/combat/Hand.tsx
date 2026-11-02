@@ -11,7 +11,7 @@ export const BLOCKED_HAND_NOTE = "Nenhuma carta responde agora. Recorra às mano
 
 /** SPEC-334 R2/R3 + SPEC-342: a mão do Baralho de Conflito. Substitui `CardHand` quando o servidor manda `pilhas`.
  *  O título traz o Fôlego (`head`); cada carta traz o texto completo no `aria-describedby` (sr-only). */
-export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head, onStuck }: {
+export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head, onStuck, discardReasons, onDiscard }: {
   piles: PilesView;
   glossary: Glossary;
   reasons: BlockReason[];
@@ -21,6 +21,9 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
   head?: ReactNode;
   /** R16: mão vazia ou toda bloqueada → o contêiner abre as manobras. */
   onStuck?: (stuck: boolean) => void;
+  /** SPEC-368 R6: motivo de bloqueio do descarte por Fôlego, por posição da mão (só cartas com `descartar_folego`). */
+  discardReasons?: BlockReason[];
+  onDiscard?: (card: HandCard, index: number, trigger: HTMLElement) => void;
 }) {
   const [openPile, setOpenPile] = useState<(typeof PILES)[number][0] | null>(null);
   const empty = piles.mao.length === 0;
@@ -62,7 +65,8 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
           const plain = (card.texto ?? "").replace(/\*\*/g, "");
           const descId = `deck-card-${index}-rules`;
           const desc = [plain, ...rules, reason ? `Indisponível: ${BLOCK_TEXT[reason]}.` : ""].filter(Boolean).join(" ");
-          return (
+          const discardReason = discardReasons?.[index] ?? null;
+          const cardButton = (
             <button key={`${card.id}-${index}`} type="button" className={`combat-card deck-card${reason ? " is-dim" : ""}${armed ? " is-aiming" : ""}`}
               data-card={card.id} aria-pressed={armed} aria-disabled={reason ? true : undefined}
               aria-keyshortcuts={index < 5 ? String(index + 1) : undefined}
@@ -79,6 +83,19 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
               {reason && <span className="combat-card__state" aria-hidden="true">{BLOCK_TEXT[reason]}</span>}
               <span id={descId} className="sr-only">{desc}</span>
             </button>
+          );
+          if (!card.descartar_folego || !onDiscard) return cardButton;
+          return (
+            <div key={`${card.id}-${index}`} className="deck-card-wrap">
+              {cardButton}
+              <button type="button" className="btn btn--ghost btn--sm deck-card__discard" data-discard={card.id}
+                aria-disabled={discardReason || busy ? true : undefined}
+                title={discardReason ? BLOCK_TEXT[discardReason] : undefined}
+                aria-label={`Descartar ${card.name} por ${card.descartar_folego} de Fôlego${discardReason ? `. Indisponível: ${BLOCK_TEXT[discardReason]}` : ""}`}
+                onClick={(e) => { if (!busy && !discardReason) onDiscard(card, index, e.currentTarget); }}>
+                Descartar ({card.descartar_folego} Fôlego)
+              </button>
+            </div>
           );
         })}
       </div>
