@@ -1,6 +1,6 @@
 # SPEC-350 — Mundo povoado por tramas: NPCs nomeados com papel concreto, por região, em ondas
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** pedido do dono (27/10): "o mundo tem poucos NPCs nomeados ligados às tramas; os NPCs
 > gerados na abertura não levam a nenhuma história". Decisão do dono: **antes** de mudar a abertura
