@@ -2118,3 +2118,66 @@ bash scripts/dev/py.sh - (U2/U3/R29 dos eixos novos) → T8, T9, T10, T12, T13 s
 ```
 
 Sem pytest (revisão de conteúdo); nenhuma ficha editada.
+
+---
+
+# Etapa 8 — revisão técnica (Sol)
+
+> **Veredito:** `CHANGES_REQUIRED` (2 × P1, ambos pequenos; nenhum P0)
+> **Revisor:** spec-reviewer (Opus, papel Sol) · **Data:** 2026-11-02 · **Commit revisado:** `830fb496` (branch `spec-349`, base `main` `15364c20`)
+
+## Escopo
+
+Etapas 5–7 (mecânica, baralho, arena, integração) e o sync com a `main`. A unicidade e a prosa já estavam revisadas acima e não foram refeitas. Revisados `scripts/bestiario/{gerar_mecanica,arena,calibrar,lint}.py`, `services/content_validator.py`, os testes novos `tests/test_spec349_*.py`, os testes de produto alterados, o `tests/fixtures/spec349_legado_snapshot.json` e os dados gerados: `data/bestiary.json`, `data/cards/criaturas/*.json`, `data/cards/inimigos/_decks.json` e `data/world/rumor_seed_overrides.json`. Os dados foram conferidos por script de comparação, sem leitura integral.
+
+## O que está correto (conferido)
+
+- **O gerador é determinístico e idempotente.** Reexecutei `gerar()` nas 12 regiões em memória (com `_write` capturado). O resultado ficou byte a byte igual aos 12 `data/cards/criaturas/*.json` commitados e às entradas de `bestiary.json`; o `_decks.json` também bate. Nenhuma criatura ficou sem mecânica.
+- **Arena determinística.** Duas reexecuções seguidas, com as mesmas seeds, deram números idênticos. A contagem dos JSON commitados confere com a §9: 281 criaturas, 259 na faixa nos dois modos, 255 pelo veredito. A lista dos 22 fora da faixa está completa e com os valores certos (9 chefes). O delta de 8 pp só vale quando o slot estava na faixa antes, e os 4 que estouram o delta são os citados: Ent, Basilisco, Morcego e Esqueleto da Legião.
+- **Cartas de criatura.** São 689 Cartas, todas com `kind` no catálogo fechado (`fx.all_kinds`). As condições aplicadas (`enraizado`, `cego`, `armadura_comprometida`, `desarmado_risco` e outras) existem em `combat_mechanics.NAMED_CONDITIONS` ou em `card_effects._CONTROL_BY_NAME`. `armadura_comprometida` é a única que nenhuma Carta antiga usava, mas está em `combat_mechanics.py:202`. Nenhum `dano_tipo` é novo. As linhas `aprox:` só usam a gramática existente, então nenhum efeito fora do motor foi introduzido. Orçamento, voz e nomes passam em `test_cartas_criaturas_lint`.
+- **Slots (R3).** Os 32 slots alterados mantêm `id`, `categoria`, `arquetipo`, `virtudes`, `max_vitalidade`, `ferimento_espacos`, `regions`, `faction` e `behavior.profile` iguais aos da `main`. Em `attacks[]` só muda o `name`. Em `tactical_profile.priorities` só muda o `action_hint`. O único outro campo alterado é `type`, só em `enemy_aranha_de_cristal`, que passou a `BOSS`; `type` não está na lista congelada do R3. São 13 chefes (11 novos + Aranha + General), todos com fases 60/40 e `baralho_extra` oculto. Em `_decks.json` só a chave `fases` mudou: as 12 fases da `main` foram mantidas, e só as do General e da Aranha foram reescritas.
+- **Sync com a `main`.** As 92 entradas legadas que não são slot estão idênticas à `main`. As mudanças da `main` desde a base antiga (SPEC-348 na descrição da Víbora; SPEC-355 com 5 arquétipos/Cartas de conjurador e `attacks.type: magic` em Djinn/Observador/Cultista) foram todas preservadas: no Djinn e no Observador, que são slots, só o `name` do ataque mudou. `rumor_seed_overrides.json` não perdeu nem alterou nenhum override da `main` (+3 novos).
+- **Fixture (integridade de eval).** A alteração de `895db007` troca só `arquetipo` em 5 entradas `valoria` (Arpoador, Devorador, Orc, Pirata, Renegado), e os valores são exatamente os de `aee8750e` (SPEC-355) na `main`. O snapshot continua batendo com a `main` em todos os campos testados. É um reflexo da reclassificação feita na `main`, não um afrouxamento. `evals/` não foi tocado.
+- **Testes alterados.**
+  - `test_conflito_autoria_bestiario`: a varredura recursiva é mais estrita.
+  - `test_boss_phases`: `== 12` virou `>= 12`, mas o loop continua exigindo 2 fases válidas para todo chefe.
+  - `test_spec349_onda_nova_arcadia`: `cid in CUR` só exclui criaturas novas, que não são legado. `test_todas_classificadas` garante que as 124 legadas estão no `CUR`.
+  - `test_enemy_decks` (teto de 15 só para a população da 332): é um afrouxamento real de um invariante de produto. Está registrado (§9 desvio 2 e follow-up 8a, coordenador 02/11) e tem uma trava nova (`<= 36`, uso atual 31). Os 32 slots continuam contados no teto de 15. Aceito como follow-up para a SPEC-336.
+- **Compatibilidade 332/346.** Com `on`, `test_padrao_e_assinatura_validos` cobre as 281 criaturas (assinatura na rodada certa, telegrafo 1 rodada antes) e `test_chefe_fases` cobre os 13 chefes. A arena roda as 281 em `off` e `on`. Fiz uma checagem ad hoc de save/load (`persistence.save_game_state`/`load_game_state`) com instâncias de `mon_roda_de_mandibulas`, `enemy_gargula_ferro` e `mon_cavador_de_funil` em `enemies` e `bestiary_knowledge[enemy_gargula_ferro]`, nos modos `off` e `on`: o round-trip ficou idêntico.
+- **LLM.** Nenhum `with_structured_output`/`get_llm` novo e nenhum segredo em log. `ruff` limpo nos arquivos novos.
+
+## Achados
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P1-1 | P1 | `docs/spec349/arena-*.json`/`.md`; `specs/SPEC-349-bestiario-valoria-esteira.md:483`, `:619-663` | **Os números da arena estão defasados em relação ao HEAD.** A arena foi medida antes do rebase sobre a `main` (SPEC-362: Vitalidade do Arcanista 8, um dos 5 heróis da arena; SPEC-355/358 no motor) e antes de `895db007` (4 criaturas passaram a ataque `ranged`). A arena é determinística, mas os valores mudam no HEAD: `mon_cavador_de_funil` de 44/89 % para 46,5/88,5 % (`off` entra na faixa); `mon_convidado_de_cera` de 44/83 % para 41/83,5 %; `enemy_polvo_esgoto` de 44/71 % para 43,5/72,5 %; `mon_roda_de_mandibulas` de 62,5/50,5 % para 65/53,5 %; `enemy_aranha_de_cristal` de 53,5/28 % para 53/28,5 %. A lista "22 fora" e as contagens 259/255 do critério de aceite não valem para o código que vai pousar. | Reexecutar `scripts/bestiario/arena_todas.sh` no HEAD (~1 h). Remedir o baseline dos 32 slots com o `bestiary.json` da `main` atual no mesmo motor, senão o delta compara motores diferentes. Atualizar a tabela, a lista e o critério na §9. Aplicar ajuste só se alguma criatura cruzar a faixa, registrando em `_ajustes.yaml`. |
+| P1-2 | P1 | `tests/test_spec349_*.py` (ausente); critério `specs/SPEC-349-…md:488` | O critério exige um teste de round-trip com save que tem `enemy_gargula_ferro` em `bestiary_knowledge`, e nenhum teste o cobre. A checagem ad hoc da revisão passa, mas não fica na suíte. | Adicionar o teste: um estado com 1 inimigo novo (de `ensure_combat_sheet`) + 1 slot em `enemies` e `bestiary_knowledge[enemy_gargula_ferro]`, `save_game_state` → `load_game_state` sob o `tmp_path` do conftest, conferindo `bestiary_knowledge`, `cartas`, `tactical_profile`, `max_vitalidade` e `appearance`. |
+| P2-1 | P2 | `scripts/bestiario/arena.py:72` | `abs(w - base) * 100 > 8` com float: 0,535 → 0,455 dá `8.000000000000002`, e o Esqueleto da Legião Antiga (Δ −8,0 pp, que é ≤ 8) aparece como reprovado ("delta 8.0 pp > 8"). Com isso a contagem certa seria 256, não 255. | `round(abs(w - base) * 100, 1) > DELTA_MAX_PP`. |
+| P2-2 | P2 | `specs/SPEC-349-…md:663` | Sinais errados: Basilisco `off` é −12 (não +12) e Esqueleto da Legião `off` é −8 (não +8). | Corrigir junto com o P1-1. |
+| P2-3 | P2 | `data/bestiary.json` (16 slots); R3 em `specs/SPEC-349-…md:71` | O R3 pede Cartas próprias "com o mesmo `kind` de efeito … da carta substituída". Em 16 dos 32 slots um `kind` antigo some, por exemplo: `enemy_lobo_invernal` perde `dot`/`marca`, `enemy_aranha_lobo` perde `aplicar_condicao`/`esconder`, `enemy_sombra_espreitadora` perde `esconder` e `mon_jotun_cinza` perde `empurrao`. O desvio não está registrado. O equilíbrio é medido pelo delta da arena, mas o R3 literal não é cumprido. | Registrar na §9 como decisão (a mecânica segue a ficha reinventada e o equilíbrio é aferido pelo delta da arena) ou ajustar as Cartas. |
+| P2-4 | P2 | `services/content_validator.py:1229` | `validate_bestiary_identity` chama `bl.lint_global(por_regiao)` sem `esteira=`. Assim o R27 (cobertura dos 13 demônios) não roda no `validate_content`/`test_fase71`, e nenhum pytest roda o R27, embora as 12 regiões já estejam `pousada` (o R27 só passa a falhar nesse estado). Hoje só `scripts/bestiario/lint.py` checa: 0 erro. | Ler `data/bestiario/_esteira.yaml` e repassar, como no `lint.py:51-58`, ou criar um teste `lint_global(..., esteira=...)` sem erro. |
+| P2-5 | P2 | `tests/test_spec349_mecanica.py:182-184` | A docstring diz que o `type` do slot `enemy_aranha_de_cristal` "não muda (R3)" e fica fora de `_BOSS_TYPES`. Desde `950fa5b1` ele é `BOSS`. | Atualizar a docstring. |
+| P2-6 | P2 | `tests/fixtures/spec349_legado_snapshot.json` (5 entradas SPEC-355) | A atualização trocou só `arquetipo`. O campo `cartas` dessas 5 entradas ainda é `bst_descarga_arcana`, enquanto a `main` tem outra Carta. Nenhum teste lê esse campo, então não há impacto, mas o snapshot fica incoerente com a origem declarada. | Atualizar também `cartas` dessas 5 entradas a partir da `main`, ou anotar no `_meta`/§9 que `cartas` não é campo congelado. |
+
+## Pendências (aceitas, não bloqueiam)
+
+- O teto de 15 usos por Carta de família vale só para a população da 332, e a trava `<= 36` vale para a esteira. Dono: SPEC-336 (crescer os pools de família).
+- 9 chefes ficam abaixo de 45 % no `on`, por causa do baralho de família e das 2 ações por rodada. Já registrado na §9 (follow-up 8b).
+- 4 slots genéricos ainda sem reinvenção (`enemy_lobo_sombrio`, `enemy_carniçal`, `enemy_esqueleto`, `enemy_goblin`). Estão listados no `PAINEL.md` e ficam inalterados, iguais à `main`.
+- Os 145 efeitos aproximados (`aprox:`) são uma demanda de motor futura (tabela da §9).
+
+## Comandos rodados
+
+```text
+bash scripts/dev/py.sh <scratchpad>/idem.py        → gerar() nas 12 regiões em memória: 0 diferença (cartas, bestiário, _decks)
+bash scripts/dev/py.sh <scratchpad>/cmp.py/cmp2.py → snapshot × main × branch: 92 legadas idênticas; 32 slots só com campos de texto/Cartas/tactical; frozen iguais
+bash scripts/dev/py.sh <scratchpad>/arena_chk.py   → 281 criaturas · 259 em faixa nos 2 modos · 255 veredito · 22 fora (bate com a §9)
+bash scripts/dev/py.sh scripts/bestiario/arena.py --regiao deserto_zhur --seeds 40 --ids enemy_aranha_de_cristal,mon_cavador_de_funil  (2×) → idêntico entre si; difere do commitado (P1-1)
+bash scripts/dev/py.sh scripts/bestiario/arena.py --regiao nova_arcadia --seeds 40 --ids mon_convidado_de_cera,enemy_polvo_esgoto,mon_roda_de_mandibulas → difere do commitado (P1-1)
+bash scripts/dev/py.sh <scratchpad>/rt_check.py    → save/load com criaturas novas + bestiary_knowledge, off e on: ok
+bash scripts/dev/py.sh scripts/bestiario/lint.py   → 368 fichas · 0 erro · 29 avisos
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec349_{mecanica,bestiary_lint,curadoria_legado,onda_nova_arcadia}.py tests/test_enemy_decks.py tests/test_conflito_autoria_bestiario.py tests/test_boss_phases.py tests/test_spec312_seeds.py tests/test_fase71.py tests/test_conflito_volume_conteudo.py tests/test_spec348_leaks.py → 812 passed
+bash scripts/dev/py.sh -m ruff check scripts/bestiario services/bestiary_lint.py services/content_validator.py tests/test_spec349_*.py → All checks passed
+```
+
+Para virar `APPROVED`: P1-1 (arena e baseline remedidos no HEAD, §9 atualizada) e P1-2 (teste de round-trip). Os P2 podem entrar no mesmo commit, mas não bloqueiam.
