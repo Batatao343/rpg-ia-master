@@ -1,0 +1,316 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 109.8,
+ "criaturas": {
+  "mon_arame_vivo": {
+   "nome": "Arame Vivo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.655,
+    "L3|on": 0.7
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fole_de_costela": {
+   "nome": "Fole de Costela",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.845,
+    "L3|on": 0.845
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_rosario_de_vertebras": {
+   "nome": "Rosário de Vértebras",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.695,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_fila_de_grilhoes": {
+   "nome": "Fila de Grilhões",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.58,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lencol_de_chamine": {
+   "nome": "Lençol de Chaminé",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.69,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_traca_do_sino_mudo": {
+   "nome": "Traça do Sino Mudo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.85
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_gralha_de_crematorio": {
+   "nome": "Gralha de Crematório",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.84,
+    "L3|on": 0.56
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_porca_da_queda": {
+   "nome": "Porca da Queda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.685
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_centopeia_da_torre_invertida": {
+   "nome": "Centopeia da Torre Invertida",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.68,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_sorvedouro_do_codigo": {
+   "nome": "Sorvedouro do Código",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.71
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pavio_da_lista": {
+   "nome": "Pavio da Lista",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_enxerto_da_fornalha": {
+   "nome": "Enxerto da Fornalha",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.78,
+    "L3|on": 0.72
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vira_costas_da_praca": {
+   "nome": "Vira-Costas da Praça",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.785,
+    "L3|on": 0.55
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_roda_de_mandibulas": {
+   "nome": "Roda de Mandíbulas",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.625,
+    "L5|on": 0.505
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cavadeira_de_unhas": {
+   "nome": "Cavadeira de Unhas",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.74
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_convidado_de_cera": {
+   "nome": "Convidado de Cera",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.44,
+    "L3|on": 0.83
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 44% fora de 45-85%"
+   ]
+  },
+  "mon_escritura_rastejante": {
+   "nome": "Escritura Rastejante",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.66,
+    "L3|on": 0.48
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_portao_que_morde": {
+   "nome": "Portão que Morde",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_sentinela_ferro": {
+   "nome": "Pajem de Obsidiana",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.68,
+    "L3|on": 0.52
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_horror_esgoto": {
+   "nome": "Coisa do Esgoto",
+   "categoria": "elite",
+   "status": "adotada",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.76
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_elemental_fogo_poluido": {
+   "nome": "Caído do Cadinho",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.77,
+    "L3|on": 0.67
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_polvo_esgoto": {
+   "nome": "Bagre de Varal",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.44,
+    "L3|on": 0.71
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 44% fora de 45-85%",
+    "L3|on delta 24.5 pp > 8"
+   ]
+  },
+  "mon_relicario_de_osso": {
+   "nome": "Relicário da Catedral",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.785
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_golem_lixo": {
+   "nome": "Velório de Sal",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_sangrado_da_clinica": {
+   "nome": "Sangrado da Clínica",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_quebrado_de_vitrine": {
+   "nome": "Quebrado de Vitrine",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.585,
+    "L3|on": 0.635
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_gargula_ferro": {
+   "nome": "Rã de Lótus",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.67,
+    "L3|on": 0.57
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

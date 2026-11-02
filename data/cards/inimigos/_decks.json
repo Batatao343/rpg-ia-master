@@ -288,32 +288,32 @@
       {
         "ate_vitalidade_pct": 60,
         "baralho_extra": [
-          "inf_predador_apice_ferida_que_nao_fecha"
+          "cri_trono_de_ajoelhados_costas_dos_ajoelhados"
         ],
         "padrao": [
-          "ataque",
+          "defesa",
           "enfraquecer",
-          "ataque",
+          "ataque_multiplo",
           "reforco_proprio"
         ],
-        "narracao": "{nome} arranca a armadura quebrada; o que sobra é só o ferrão."
+        "narracao": "{nome} fecha as costas dos ajoelhados ao redor do corpo ereto, que fica ainda mais alto."
       },
       {
         "ate_vitalidade_pct": 40,
         "baralho_extra": [
-          "inf_chefe_ferrao_do_general"
+          "cri_trono_de_ajoelhados_monte_de_joelhos"
         ],
         "padrao": [
+          "ataque_multiplo",
           "ataque",
-          "ataque",
-          "enfraquecer"
+          "ataque"
         ],
         "assinatura": {
-          "carta": "inf_chefe_ferrao_do_general",
+          "carta": "cri_trono_de_ajoelhados_monte_de_joelhos",
           "a_cada_n": 2,
-          "telegrafo": "{nome} arqueia a cauda sobre as costas e mira."
+          "telegrafo": "{nome} ergue o monte todo, e os ajoelhados começam a tremer juntos."
         },
-        "narracao": "{nome} cai de quatro no chão e a cauda fica solta, sem dono."
+        "narracao": "{nome} perde ajoelhados pelo caminho, e os que restam desabam com ele."
       }
     ],
     "enemy_boss_arauto_nevoa": [
@@ -384,32 +384,32 @@
       {
         "ate_vitalidade_pct": 60,
         "baralho_extra": [
-          "inf_predador_apice_rugido_que_dobra"
+          "cri_braceiro_da_borda_sul_beirada_inteira"
         ],
         "padrao": [
-          "ataque",
           "enfraquecer",
+          "ataque_multiplo",
           "ataque",
-          "reforco_proprio"
+          "defesa"
         ],
-        "narracao": "Rachaduras luminosas abrem na carapaça de {nome}: frágil, e mais rápida."
+        "narracao": "{nome} firma os dois cotovelos na beirada e a borda inteira treme."
       },
       {
         "ate_vitalidade_pct": 40,
         "baralho_extra": [
-          "inf_chefe_fio_de_cristal"
+          "cri_braceiro_da_borda_sul_queda_de_cotovelo"
         ],
         "padrao": [
+          "ataque_multiplo",
           "ataque",
-          "ataque",
-          "enfraquecer"
+          "ataque"
         ],
         "assinatura": {
-          "carta": "inf_chefe_fio_de_cristal",
+          "carta": "cri_braceiro_da_borda_sul_queda_de_cotovelo",
           "a_cada_n": 2,
-          "telegrafo": "{nome} vibra um fio de cristal entre as patas dianteiras."
+          "telegrafo": "{nome} ergue o cotovelo comprido por cima da borda e a sombra cobre você."
         },
-        "narracao": "{nome} estilhaça as próprias patas e continua, cada caco um fio."
+        "narracao": "{nome} perde um dedo e solta a parede: a queda toda vem junto com ele."
       }
     ],
     "mon_urso_tita": [
@@ -602,6 +602,356 @@
           "telegrafo": "A sombra de {nome} se alonga contra a luz, esticada demais."
         },
         "narracao": "{nome} fecha o último vão de luz, e o eclipse deixa de ser só uma imagem."
+      }
+    ],
+    "mon_roda_de_mandibulas": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_roda_de_mandibulas_fichas_apertadas",
+          "cri_roda_de_mandibulas_girar_mais_depressa"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque_multiplo",
+          "reforco_proprio"
+        ],
+        "narracao": "{nome} gira mais depressa: as cabeças já não se distinguem umas das outras."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_roda_de_mandibulas_uivo_da_vala"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_roda_de_mandibulas_uivo_da_vala",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} para de girar e as doze gargantas puxam o ar ao mesmo tempo."
+        },
+        "narracao": "{nome} perde um raio, mas a vala inteira uiva com ela."
+      }
+    ],
+    "mon_borda_que_anda": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_borda_que_anda_lama_funda"
+        ],
+        "padrao": [
+          "mover",
+          "ataque_multiplo",
+          "enfraquecer",
+          "ataque"
+        ],
+        "narracao": "{nome} afunda as patas e o barro ao redor sobe até a altura dos tornozelos."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_borda_que_anda_mare_da_borda"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_borda_que_anda_mare_da_borda",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} range inteira e a água do pântano começa a subir pelas pernas dela."
+        },
+        "narracao": "{nome} perde um ano de turfa por estaca arrancada, mas a borda inteira vira lama."
+      }
+    ],
+    "mon_chifres_travados": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_chifres_travados_no_apertado"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "reforco_proprio"
+        ],
+        "narracao": "{nome} aperta o nó dos chifres e o corpo de um lado ganha o peso do outro."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_chifres_travados_no_solto"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_chifres_travados_no_solto",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} range no nó e os dois corpos puxam cada um para o seu lado."
+        },
+        "narracao": "{nome} perde o travamento: os dois corpos puxam para lados opostos, mais furiosos."
+      }
+    ],
+    "mon_casco_de_costelas": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_casco_de_costelas_quilha_aberta"
+        ],
+        "padrao": [
+          "ataque",
+          "ataque_multiplo",
+          "reforco_proprio",
+          "mover"
+        ],
+        "narracao": "{nome} afunda a proa rachada e as costelas de um lado se abrem como portas de porão."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_casco_de_costelas_naufragio_em_pe"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_casco_de_costelas_naufragio_em_pe",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} inclina o casco inteiro para a frente e as tábuas rangem todas juntas."
+        },
+        "narracao": "{nome} perde as costelas de um lado e tomba em avanço, mais perto do chão e pior."
+      }
+    ],
+    "mon_hospede_do_estomago": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_hospede_do_estomago_estomago_fechado"
+        ],
+        "padrao": [
+          "ataque",
+          "enfraquecer",
+          "ataque_multiplo",
+          "reforco_proprio"
+        ],
+        "narracao": "{nome} se fecha em volta do arpoador e a parede engrossa."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_hospede_do_estomago_vomito_de_mare"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_hospede_do_estomago_vomito_de_mare",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} se contrai inteiro e o cheiro azedo sobe até a garganta."
+        },
+        "narracao": "{nome} vira do avesso, e o arpoador preso dentro grita junto com ele."
+      }
+    ],
+    "mon_peso_dos_vencidos": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_peso_dos_vencidos_monte_firme"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "reforco_proprio",
+          "ataque"
+        ],
+        "narracao": "{nome} se ancora nas patas de baixo, e os Goblins mortos seguram o Orc no alto."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_peso_dos_vencidos_monte_tombado"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_peso_dos_vencidos_monte_tombado",
+          "a_cada_n": 2,
+          "telegrafo": "O monte de {nome} se inclina para um lado e as patas de baixo escorregam."
+        },
+        "narracao": "{nome} perde patas de Goblin e tomba, arrastando tudo com ele."
+      }
+    ],
+    "mon_toldo_das_clareiras": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_toldo_das_clareiras_galhos_soltos"
+        ],
+        "padrao": [
+          "mover",
+          "ataque_multiplo",
+          "enfraquecer",
+          "ataque"
+        ],
+        "narracao": "{nome} solta os galhos de um lado e a membrana enche de vento."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_toldo_das_clareiras_noite_na_clareira"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_toldo_das_clareiras_noite_na_clareira",
+          "a_cada_n": 2,
+          "telegrafo": "O céu da clareira escurece inteiro quando {nome} abre a membrana por cima de vocês."
+        },
+        "narracao": "{nome} rasga a borda, e a clareira inteira fica sem luz."
+      }
+    ],
+    "mon_escavador_das_camaras": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_escavador_das_camaras_escamas_de_luz"
+        ],
+        "padrao": [
+          "defesa",
+          "ataque_multiplo",
+          "mover",
+          "ataque"
+        ],
+        "narracao": "{nome} desenrola a barriga, furioso com a luz, e golpeia mais fundo."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_escavador_das_camaras_camara_abaixo"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_escavador_das_camaras_camara_abaixo",
+          "a_cada_n": 2,
+          "telegrafo": "O chão sob você treme quando {nome} cava por baixo, e a terra desce."
+        },
+        "narracao": "{nome} perde a casca de escamas, mas cava por baixo e o chão desaba."
+      }
+    ],
+    "mon_colecionador_de_poses": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_colecionador_de_poses_pose_dobrada"
+        ],
+        "padrao": [
+          "enfraquecer",
+          "ataque_multiplo",
+          "ataque",
+          "defesa"
+        ],
+        "narracao": "{nome} guarda mais uma pose e as estátuas do tronco fecham o vidro em volta."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_colecionador_de_poses_galeria_de_vidro"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_colecionador_de_poses_galeria_de_vidro",
+          "a_cada_n": 2,
+          "telegrafo": "Todas as estátuas de {nome} viram a cabeça para a mesma pose: a sua."
+        },
+        "narracao": "{nome} perde uma estátua, mas as outras abrem os braços juntas."
+      }
+    ],
+    "mon_cacao_de_lastro": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_cacao_de_lastro_pedra_na_barriga"
+        ],
+        "padrao": [
+          "ataque",
+          "mover",
+          "ataque_multiplo"
+        ],
+        "narracao": "{nome} engole mais pedras e afunda um pouco, a água ao redor escurecendo."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_cacao_de_lastro_queda_do_cacao"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_cacao_de_lastro_queda_do_cacao",
+          "a_cada_n": 2,
+          "telegrafo": "As pedras rangem na barriga de {nome} e ele começa a subir para fora da água."
+        },
+        "narracao": "{nome} solta o lastro e sobe para o ar, caindo do alto sobre tudo."
+      }
+    ],
+    "mon_mastro_dos_ultimos": [
+      {
+        "ate_vitalidade_pct": 60,
+        "baralho_extra": [
+          "cri_mastro_dos_ultimos_coluna_refeita"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "defesa",
+          "reforco_proprio",
+          "ataque"
+        ],
+        "narracao": "{nome} refaz a coluna, os corpos de cima agarrados aos de baixo."
+      },
+      {
+        "ate_vitalidade_pct": 40,
+        "baralho_extra": [
+          "cri_mastro_dos_ultimos_ultimo_mastro"
+        ],
+        "padrao": [
+          "ataque_multiplo",
+          "ataque",
+          "ataque"
+        ],
+        "assinatura": {
+          "carta": "cri_mastro_dos_ultimos_ultimo_mastro",
+          "a_cada_n": 2,
+          "telegrafo": "{nome} balança inteiro e os de cima soltam as mãos todos de uma vez."
+        },
+        "narracao": "{nome} perde a base, mas a coluna que sobra tomba com tudo."
       }
     ]
   }

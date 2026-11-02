@@ -62,7 +62,9 @@ ENTITY_ALIASES = {"valerius": "npc_valerius"}
 # Substantivos femininos entre os nomes do bestiario (artigo "uma"); o resto sai "um".
 FEMININE_NOUNS = frozenset(
     "mumia vinha gargula sombra aranha sereia fumaca gaivota viuva mariposa larva rainha faisca "
-    "sanguessuga cabra serpente vipera quimera moreia capita sentinela".split()
+    "sanguessuga cabra serpente vipera quimera moreia capita sentinela "
+    # SPEC-349 onda 1 (Nova Arcadia): slots reinventados/adotados e criaturas novas
+    "coisa ra brasa fila porca traca gralha centopeia escritura roda cavadeira".split()
 )
 SUBJECT_BY_TYPE = {"npc": "pessoa", "faction": "faccao", "location": "lugar"}
 

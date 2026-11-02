@@ -1,0 +1,2073 @@
+# SPEC-349 (esteira) — Ficha de identidade da onda: Deserto de Zhur.
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto,
+# conferido também contra as 6 fichas retro da região.
+# Cotas próprias da onda (o gate ainda não tem entrada em COTAS_ONDA; o autor confere à mão):
+# Urath obrigatório (único demônio de lugar fixo em Zhur, npcs.txt:163-165); ≥ 4 demônios;
+# habitat_min deserto_zhur 12, dz_borda_do_vazio 6. Chefe: os 2 slots de chefe da região
+# (General Escorpião e Aranha de Cristal) ocupam a cota 1–2, então não há chefe novo.
+regiao: deserto_zhur
+onda: 5
+spec: SPEC-349
+nome_regiao: Deserto de Zhur
+habitat_nome:
+  deserto_zhur: Mar de Vidro
+  dz_borda_do_vazio: Borda do Vazio
+paleta: >-
+  **Deserto de Zhur** — o Mar de Vidro: centenas de léguas de areia que a lua derreteu e o tempo
+  não esfriou, dunas de vidro fosco, cristais que afloram como dentes, ruínas presas dentro das
+  camadas. Movimento só à noite. Luz e paleta: azul-noite e prata fria de lua sobre vidro,
+  âmbar-cobre de brasa no horizonte ao amanhecer, ocre de couro de lagarto, preto lustroso de
+  obsidiana, violeta de Cristal-de-Urath; na Borda do Vazio, cinza sem sombra e nenhuma estrela
+  abaixo da linha do chão.
+familias_em_jogo:            # D10 — mesmos nomes da onda 1 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: elite,  papel_tatico: drenador,         arquetipo: guardiao,              plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: rasteja,        percepcao: eter,          habitat: [deserto_zhur]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: padrao, papel_tatico: quebra_defesa,    arquetipo: bruto,                 plano_corporal: bipede_ereto,     material: carne_exposta,     escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [deserto_zhur]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: padrao, papel_tatico: controlador,      arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: osso,              escala: humana,  locomocao: anda,           percepcao: som,           habitat: [dz_borda_do_vazio]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: elite,  papel_tatico: artilharia,       arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: vidro_cristal,     escala: humana,  locomocao: anda,           percepcao: luz,           habitat: [deserto_zhur, dz_borda_do_vazio]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: sacrificial,      arquetipo: bruto,                 plano_corporal: bipede_ereto,     material: ferro_ferrugem,    escala: humana,  locomocao: anda,           percepcao: respiracao,    habitat: [deserto_zhur]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,  categoria: elite,  papel_tatico: bruto_de_linha,   arquetipo: predador,              plano_corporal: quadrupede,       material: couro_tecido,      escala: grande,  locomocao: anda,           percepcao: calor,         habitat: [deserto_zhur]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: predador,              plano_corporal: segmentado,       material: vidro_cristal,     escala: pequena, locomocao: rola,           percepcao: vibracao,      habitat: [deserto_zhur]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: lacaio, papel_tatico: drenador,         arquetipo: covarde_oportunista,   plano_corporal: hexapode_ou_mais, material: quitina,           escala: pequena, locomocao: anda,           percepcao: respiracao,    habitat: [deserto_zhur]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: padrao, papel_tatico: emboscador,       arquetipo: emboscador,            plano_corporal: radial,           material: carne_exposta,     escala: grande,  locomocao: plana_voa,      percepcao: calor,         habitat: [deserto_zhur]}
+  - {vaga: 10, familia: besta_entropia,  categoria: padrao, papel_tatico: controlador,      arquetipo: emboscador,            plano_corporal: hexapode_ou_mais, material: quitina,           escala: grande,  locomocao: cava,           percepcao: vibracao,      habitat: [deserto_zhur]}
+  - {vaga: 11, familia: besta_entropia,  categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: lider_matilha,         plano_corporal: bipede_curvado,   material: vidro_cristal,     escala: pequena, locomocao: salta,          percepcao: som,           habitat: [deserto_zhur]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: tatico,               plano_corporal: bipede_ereto,     material: vidro_cristal,     escala: humana,  locomocao: escala_paredes, percepcao: visao,         habitat: [deserto_zhur]}
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: guarda_protetor,  arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: couro_tecido,      escala: grande,  locomocao: anda,           percepcao: som,           habitat: [deserto_zhur]}
+  - {vaga: 14, familia: humanoide_preco, categoria: padrao, papel_tatico: quebra_defesa,    arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: eter_cristalizado, escala: humana,  locomocao: cava,           percepcao: som,           habitat: [deserto_zhur]}
+  - {vaga: 15, familia: humanoide_preco, categoria: lacaio, papel_tatico: suporte,          arquetipo: tatico,                plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: anda,           percepcao: respiracao,    habitat: [deserto_zhur]}
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: emboscador,       arquetipo: emboscador,            plano_corporal: bipede_ereto,     material: cinza,             escala: humana,  locomocao: rasteja,        percepcao: calor,         habitat: [deserto_zhur]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},   categoria: elite,  papel_tatico: tanque_reativo, arquetipo: tatico,              plano_corporal: bipede_ereto,     material: osso,          escala: grande,  locomocao: anda,     percepcao: visao,       habitat: [deserto_zhur]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: padrao, papel_tatico: drenador,       arquetipo: predador,            plano_corporal: bipede_ereto,       material: vidro_cristal, escala: grande,  locomocao: anda,     percepcao: sangue_cheiro, habitat: [dz_borda_do_vazio, deserto_zhur]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: padrao, papel_tatico: controlador,    arquetipo: abissal,             plano_corporal: serpentiforme,    material: escoria_fuligem, escala: humana, locomocao: rasteja, percepcao: medo_emocao, habitat: [dz_borda_do_vazio]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},    categoria: lacaio, papel_tatico: saqueador,      arquetipo: covarde_oportunista, plano_corporal: quadrupede,       material: carne_exposta, escala: pequena, locomocao: anda,     percepcao: luz,         habitat: [deserto_zhur]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_skarath}, categoria: elite,  papel_tatico: quebra_defesa,  arquetipo: tatico,              plano_corporal: bipede_curvado,   material: sal_mineral,   escala: humana,  locomocao: anda,     percepcao: medo_emocao, habitat: [deserto_zhur]}
+  # --- slots genéricos (R24; não contam nas 20–25) ---
+  - {vaga: 22, slot: enemy_mumia_de_po,            status: reinventada, familia: corpo_reescrito,   categoria: elite, papel_tatico: perseguidor_marca, arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado, material: madeira_fibra, escala: humana, locomocao: anda, percepcao: vibracao, habitat: [deserto_zhur]}
+  - {vaga: 23, slot: enemy_verme_areia_jovem,      status: adotada,     familia: besta_entropia,    categoria: elite, papel_tatico: emboscador,     arquetipo: predador,      plano_corporal: serpentiforme,  material: vidro_cristal, escala: grande, locomocao: cava,      percepcao: vibracao, habitat: [deserto_zhur]}
+  - {vaga: 24, slot: enemy_djinn_menor,            status: reinventada, familia: besta_entropia,    categoria: elite, papel_tatico: artilharia,     arquetipo: conjurador,    plano_corporal: alado,          material: couro_tecido,  escala: grande, locomocao: plana_voa, percepcao: som,      habitat: [dz_borda_do_vazio, deserto_zhur]}
+  - {vaga: 25, slot: enemy_boss_general_escorpiao, status: reinventada, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath}, categoria: chefe, papel_tatico: guarda_protetor, arquetipo: predador_apice, plano_corporal: composto, material: vidro_cristal, escala: enorme, locomocao: anda, percepcao: medo_emocao, habitat: [deserto_zhur]}
+  - {vaga: 26, slot: enemy_aranha_de_cristal,      status: reinventada, familia: besta_entropia,    categoria: chefe, papel_tatico: emboscador,     arquetipo: predador_apice, plano_corporal: sessil_ancorado, material: carne_exposta, escala: enorme, locomocao: ancorada, percepcao: som,     habitat: [dz_borda_do_vazio]}
+criaturas:
+  # ======================= RETRO (R6) — o legado único da região, só eixos =======================
+  - {id: enemy_devorador_sol_zhur, nome: "Devorador de Sol (Zhur)", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Nômade do deserto com lentes de obsidiana costuradas na pele."}, papel_tatico: artilharia, arquetipo: conjurador, categoria: lacaio}
+  - {id: enemy_escorpiao_cristal, nome: "Escorpião de Cristal", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: vidro_cristal, escala: enorme, locomocao: anda, percepcao: vibracao, texto: "Predador alfa de Zhur. Sua carapaça refrata luz e é dura como aço."}, papel_tatico: emboscador, arquetipo: predador, categoria: elite}
+  - {id: mon_escaravelho_vidro, nome: "Escaravelho de Vidro", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: vidro_cristal, escala: pequena, locomocao: anda, percepcao: luz, texto: "Seu casco nasce dos cacos que as tempestades de Zhur vitrificam nas dunas."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: lacaio}
+  - {id: mon_hiena_sol, nome: "Hiena do Sol Partido", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: humana, locomocao: anda, percepcao: sangue_cheiro, texto: "Segue as caravanas dos Devoradores de Sol esperando a última sombra desaparecer."}, papel_tatico: perseguidor_marca, arquetipo: lider_matilha, categoria: padrao}
+  - {id: mon_colosso_duna, nome: "Colosso de Duna Oca", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: enorme, locomocao: anda, percepcao: som, texto: "Uma armadura vazia movida pelo vento que sopra da Borda do Vazio."}, papel_tatico: bruto_de_linha, arquetipo: bruto, categoria: elite}
+  - {id: mon_eclipse_caminhante, nome: "Eclipse Caminhante", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: eter_cristalizado, escala: grande, locomocao: anda, percepcao: luz, texto: "Os Devoradores do Sol o chamam de profecia; as caravanas chamam de fim da rota."}, papel_tatico: controlador, arquetipo: conjurador, categoria: chefe}
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_andarilho_de_duas_idades
+    vaga: 1
+    nome: Andarilho de Duas Idades
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: npc_vaelith
+      refs: ["lore_nova/npcs.txt:442", "lore_nova/creatures.txt:1162"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: rasteja
+      percepcao: eter
+      texto: >-
+        Um viajante que dormiu dentro de um bolsão de Tempo-Morto e acordou com o corpo em duas
+        idades. O lado esquerdo envelheceu cem anos: a pele virou couro fino sobre os ossos, o braço
+        esticou e secou até arrastar no chão, e os dedos são raízes de unha amarela. O lado direito
+        voltou a ser de criança: perna curta, mão pequena e macia, uma face sem barba. Na linha que
+        separa as duas idades, do crânio ao ventre, a carne não casa e fica aberta, vermelha, uma
+        costura que nunca fecha.
+    silhueta: Um vulto torto que se arrasta apoiado num braço comprido demais, com uma perna de criança balançando do outro lado.
+    comportamento: >-
+      Fica nas dobras do vidro onde Vaelith pousou e segue quem passa, arrastando-se pelo braço velho.
+      Quando alcança, segura com a mão de criança e não solta; o lado velho bebe o tempo de quem
+      segura e remoça um palmo.
+    papel_tatico: drenador
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_andarilho_de_duas_idades_anos_emprestados
+      frase: >-
+        Segura o alvo com a mão de criança e toma-lhe o tempo: fecha um Ferimento próprio e deixa o
+        alvo entorpecido na rodada seguinte.
+    contra_jogo: Cortar a mão pequena, que é a que segura; o braço velho bate forte e devagar, e sem a mão de criança ele não toma nada.
+    gancho: >-
+      Onde Vaelith pousa, o tempo do corpo fica solto; o que acorda de um bolsão assim aprende que pode
+      emprestar o tempo de quem chega perto.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} estende a mão pequena, e o braço velho se recolhe contra o peito."
+    description: Um viajante que acordou de um bolsão de Tempo-Morto com um lado do corpo velhíssimo e o outro de criança, e que se arrasta atrás de quem tem tempo para lhe dar.
+    perigo: Alto
+    lore: >-
+      Os Devoradores de Sol contam os bolsões de Tempo-Morto pelos que saem deles. Este saiu com o corpo
+      partido em duas idades, e a costura entre elas nunca fechou. Arrasta-se pelas dobras do vidro onde
+      a dragoa do tempo pousou e segura quem encontra com a mão de criança. Quem foi segurado e escapou
+      voltou mais cansado do que a luta explicava, e com uma mecha branca que não tinha.
+    aparencia: >-
+      Vulto curvado de duas idades: lado esquerdo velhíssimo, pele de couro fino, braço comprido e seco
+      arrastando no chão; lado direito de criança, perna curta e mão pequena; uma costura de carne viva
+      e vermelha do crânio ao ventre.
+    como_se_luta: >-
+      Segura com a mão de criança e toma o fôlego de quem segura para fechar as próprias feridas.
+      Cortar a mão pequena desfaz a pegada; o braço velho bate forte, mas devagar.
+    related_entities: [deserto_zhur, npc_vaelith]
+    arte:
+      visual: >-
+        Figura humana assimétrica em três-quartos, partida verticalmente em duas idades: lado esquerdo
+        de ancião centenário, pele de pergaminho colada aos ossos, braço esquerdo longo e seco tocando o
+        chão com dedos de unhas amarelas como raízes; lado direito de criança de oito anos, perna curta,
+        mão pequena estendida. Uma costura aberta de carne vermelha corre do alto do crânio ao ventre.
+        Trapos de viajante desbotados.
+      composicao: >-
+        Noite no Mar de Vidro, numa dobra de duna vitrificada onde a areia escorre devagar demais, grãos
+        parados no ar. O Andarilho em primeiro plano, arrastando-se pelo braço velho em direção a um
+        cantil de couro caído, do tamanho de um antebraço, que dá a escala. Luz fria de lua, um brilho
+        âmbar fraco de areia negra escorrendo ao fundo.
+      evitar: Fantasma, velho de barba de mago, homem partido de cartoon. É um corpo vivo e torto, de carne aberta, sem aura nem brilho mágico.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_esfolado_da_tempestade
+    vaga: 2
+    nome: Esfolado da Tempestade
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:130", "lore_nova/creatures.txt:1265"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um caravaneiro que a Tempestade de Navalha esfolou até o músculo e não matou. A pele nunca
+        voltou: o corpo é músculo vermelho, seco por fora como carne de varal, com tiras de tendão à
+        mostra nos braços e no pescoço. O vidro que o vento enfiou na carne ficou e cresceu, lascas finas
+        deitadas como escamas ao longo das costas, dos ombros e dos antebraços, todas apontando para trás.
+        Os olhos não têm pálpebra e estão leitosos de areia.
+    silhueta: Um homem vermelho e cru, eriçado de lascas brilhantes nos ombros e nos braços, como um peixe escamado ao contrário.
+    comportamento: >-
+      Anda dentro das tempestades, onde nada mais anda, e sai delas atrás do cheiro das caravanas. Luta
+      de perto, abraçando e esfregando o antebraço no alvo: as lascas raspam como lixa e levam couro,
+      malha e pele.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_esfolado_da_tempestade_abraco_de_lixa
+      frase: >-
+        Esfrega o antebraço escamado no alvo: as lascas levam a proteção que ele tinha, e o próximo golpe
+        de qualquer um entra inteiro.
+    contra_jogo: As lascas só cortam num sentido; golpear de baixo para cima, contra elas, quebra as escamas sem se cortar. Óleo nas costas faz os cacos escorregarem.
+    gancho: >-
+      A Tempestade de Navalha esfola em minutos; ele ficou dentro dela uma noite inteira, e o vidro que
+      levou a pele trouxe outra coisa no lugar.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: biologia (escamas placoides)
+        referencia: "pele de tubarão, de dentículos que raspam num só sentido"
+        tomou: escamas que lixam num sentido e escorregam no outro
+        distancia: é um homem esfolado com lascas de vidro crescidas no músculo; não tem nada de peixe além da direção das lascas
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} cruza os braços sobre o peito e as lascas dos antebraços se eriçam com um chiado."
+    description: Um caravaneiro esfolado pela Tempestade de Navalha, de músculo vermelho exposto e lascas de vidro crescidas na carne como escamas.
+    perigo: Médio
+    lore: >-
+      Os Devoradores de Sol dizem que a Tempestade de Navalha não escolhe e não termina o que começa.
+      Este caravaneiro ficou uma noite dentro dela, preso ao camelo morto, e ao amanhecer estava sem
+      pele e de pé. O vidro que o esfolou ficou nele e cresceu. Desde então anda dentro das tempestades
+      e sai delas atrás de caravanas, e o que ele abraça perde o couro.
+    aparencia: >-
+      Homem de músculo vermelho e seco exposto, sem pele, tendões à mostra, lascas finas de vidro
+      crescidas nas costas, ombros e antebraços como escamas viradas para trás, olhos sem pálpebra e
+      leitosos de areia.
+    como_se_luta: >-
+      Abraça e esfrega as lascas no alvo, raspando armadura e pele, e o próximo golpe entra inteiro.
+      Golpes de baixo para cima quebram as escamas; óleo nas costas faz os cacos escorregarem.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Homem adulto inteiramente sem pele, musculatura vermelho-escura e seca como carne curada, tendões
+        claros visíveis no pescoço e nos antebraços. Lascas finas e translúcidas de vidro brotam do
+        músculo das costas, ombros e antebraços, sobrepostas como escamas, todas inclinadas para trás.
+        Olhos sem pálpebra, esbranquiçados. Restos de um cinto de caravaneiro.
+      composicao: >-
+        Borda de uma Tempestade de Navalha à noite, cortina de areia de vidro brilhando à lua; o Esfolado
+        saindo da cortina a passos lentos, braços cruzados no peito, lascas eriçadas; à frente, um camelo
+        de carga ajoelhado e uma sela de couro no chão dão a escala humana. Ocre, vermelho-músculo, prata
+        fria.
+      evitar: Zumbi podre, esqueleto, prancha de anatomia de livro. Não é morto nem gore; é um homem vivo, seco, de músculo exposto e escamas de vidro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_provador_da_borda
+    vaga: 3
+    nome: Provador da Borda
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:138", "lore_nova/factions.txt:530", "data/world_map.json:241"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um dos que ficaram perto demais da borda sul, onde o som tem gosto. O queixo partiu ao meio e as
+        duas metades da mandíbula se soltaram uma da outra e pendem abertas como duas pinças de osso; a
+        boca rasgou junto, pelo pescoço, até a garganta. Dali sai a língua, que cresceu do tamanho de um
+        braço, cinzenta e cheia de papilas grossas, e fica para fora, provando o ar. Os ouvidos fecharam
+        com cicatriz; ele não ouve mais, prova.
+    silhueta: Um homem magro e curvado de queixo partido em duas pinças abertas, com uma língua comprida pendendo da garganta até a cintura.
+    comportamento: >-
+      Vive de cócoras à beira da queda, com a língua no vento. Prova os passos de quem chega antes de
+      vê-lo, e prova também o que a pessoa vai fazer: o som que um corpo faz antes de agir tem gosto, e
+      ele aprendeu os gostos.
+    papel_tatico: controlador
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_provador_da_borda_gosto_do_gesto
+      frase: >-
+        Prova o gesto antes de ele sair: revela uma Carta da mão do alvo e a deixa mais cara na rodada.
+    contra_jogo: Calar o próprio corpo; quem fica parado, ou luta coberto pelo barulho de outro, não tem gosto. A língua é mole e é por ela que se começa.
+    gancho: >-
+      Harradin, o eremita, ouviu o gosto e voltou dizendo coisa com coisa; os outros que ficaram na borda
+      não voltaram, e também não foram embora.
+    habitat: [dz_borda_do_vazio]
+    inspiracao: []
+    padrao: [enfraquecer, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre as duas metades do queixo e estica a língua no ar, provando devagar."
+    description: Um dos que ficaram perto demais da borda sul, de queixo partido em duas pinças de osso e língua comprida, que prova o som dos passos e dos gestos.
+    perigo: Médio
+    lore: >-
+      Na borda sul de Zhur, onde o deserto cai no nada, sobe um som que não é vento nem eco, e os poucos
+      que o descrevem dizem que ele tem gosto. Os Devoradores de Sol não se aproximam. Alguns
+      forasteiros se aproximaram e ficaram; com os anos o queixo deles se abriu para provar melhor.
+      Vivem de cócoras na beirada, com a língua no vento, e provam quem chega antes de vê-lo.
+    aparencia: >-
+      Homem magro e curvado, queixo partido com as duas metades da mandíbula pendendo abertas como
+      pinças de osso, boca rasgada até a garganta, uma língua cinzenta e grossa do tamanho de um braço
+      pendendo para fora, ouvidos fechados por cicatriz.
+    como_se_luta: >-
+      Prova o gesto antes de ele sair e atrapalha o que o alvo ia fazer. Ficar parado ou lutar coberto
+      pelo barulho de outro tira o gosto; a língua é o ponto mole.
+    related_entities: [dz_borda_do_vazio]
+    arte:
+      visual: >-
+        Homem esquálido de cócoras, pele cor de poeira; a mandíbula partida no centro do queixo, as duas
+        metades de osso afastadas e pendentes como pinças, a boca rasgada pelo pescoço até a garganta; de
+        dentro sai uma língua cinzenta, grossa, coberta de papilas, comprida como um braço, erguida no ar.
+        Orelhas reduzidas a cicatrizes lisas. Farrapos de manto.
+      composicao: >-
+        A beirada da Borda do Vazio à noite: chão de vidro fosco que acaba numa linha reta e, além dela,
+        um cinza sem fundo e sem estrelas. O Provador de cócoras na beira, de perfil, língua erguida
+        para o lado de quem chega; uma lanterna de caravana apagada caída perto do pé dele dá a escala.
+        Cinza frio, ocre de pele, nenhuma sombra projetada além da borda.
+      evitar: Demônio de língua de serpente, predador de mandíbula de cinema, tentáculos, peito aberto. É um homem de queixo partido e língua de carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_peito_de_geodo
+    vaga: 4
+    nome: Peito de Geodo
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1158", "lore_nova/locations.txt:132"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um saqueador que dormiu anos encostado num Cristal-de-Urath. O cristal entrou pela pele das
+        costas e cresceu por dentro: o tórax partiu ao comprido, as costelas abriram como as duas metades
+        de uma pedra rachada, e o oco do peito está forrado de cristais violeta, pontudos, que pulsam. O
+        coração e os pulmões ficaram encolhidos no fundo, entre as pontas. Ele anda curvado pelo peso, com
+        as mãos segurando as bordas das costelas abertas.
+    silhueta: Um homem curvado que segura o próprio peito aberto com as duas mãos, e de dentro dele sai uma luz violeta em pontas.
+    comportamento: >-
+      Fica parado onde dormiu até a luz de uma lanterna o tocar; então se vira de frente, abre as
+      costelas com as mãos e deixa a luz sair. Os cristais de dentro se soltam com um estalo e voam como
+      pregos. O que perdeu volta a crescer se ele ficar parado no sol da tarde.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_peito_de_geodo_estouro_violeta
+      frase: >-
+        Abre as costelas e dispara as pontas de cristal do peito sobre todos à frente; depois fica com o
+        peito oco até a terceira rodada.
+    contra_jogo: Depois do disparo o peito fica vazio e o coração à mostra; é a hora de chegar perto. Quem fica de lado, fora da boca do peito, não leva as pontas.
+    gancho: >-
+      Os Cristais-de-Urath enchem quem os toca de certeza; este tocou tanto que o cristal veio morar
+      dentro dele, e ele tem certeza de que o peito é seu.
+    habitat: [deserto_zhur, dz_borda_do_vazio]
+    inspiracao:
+      - fonte: geologia (geodo)
+        referencia: "geodo de ametista, pedra oca forrada de cristais"
+        tomou: o oco forrado de cristais pontudos, aberto em duas metades
+        distancia: é um tórax humano aberto pelo Cristal-de-Urath, que dispara as pontas; nenhuma pedra anda
+    padrao: [ataque_multiplo, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} enfia os dedos entre as costelas e começa a abri-las, e a luz violeta cresce."
+    description: Um saqueador que dormiu encostado num Cristal-de-Urath e tem o tórax aberto como pedra rachada, forrado de pontas violeta que ele dispara.
+    perigo: Alto
+    lore: >-
+      Os Cristais-de-Urath pulsam numa frequência que só os sensíveis ao Abismo percebem, e quem os toca
+      por tempo demais fica cheio de certeza. Um saqueador dormiu anos encostado num deles. O cristal
+      entrou pelas costas e abriu o peito dele por dentro, e hoje ele carrega o próprio cristal. Fica
+      parado onde dormiu até uma luz o achar, e então abre o peito para ela.
+    aparencia: >-
+      Homem curvado com o tórax partido ao comprido e as costelas abertas como as metades de uma pedra
+      rachada, o oco do peito forrado de cristais violeta pontudos que pulsam, as mãos segurando as
+      bordas das costelas.
+    como_se_luta: >-
+      Abre o peito e dispara as pontas de cristal sobre quem está à frente; depois fica oco por um tempo.
+      É aí que se chega perto; quem fica de lado não leva as pontas.
+    related_entities: [deserto_zhur, dz_borda_do_vazio]
+    arte:
+      visual: >-
+        Homem magro de pele queimada de sol, curvado para a frente, segurando com as duas mãos as bordas
+        do próprio tórax aberto ao comprido; as costelas viradas para fora como as metades de um geodo
+        partido; o oco interior forrado de cristais de ametista pontudos e densos, pulsando luz violeta
+        de dentro; coração pequeno e escuro no fundo, entre as pontas. Calças de saqueador e botas.
+      composicao: >-
+        Ruína soterrada no vidro, à noite; um Cristal-de-Urath alto ao lado, da mesma cor do peito dele;
+        uma lanterna de saqueador no chão em primeiro plano, do tamanho de uma cabeça, ilumina de baixo.
+        Violeta, ocre, sombra azul. Lascas violeta no ar diante do peito.
+      evitar: Coração de cristal brilhante de fantasia, armadura de cristal, peito com gema única, funil no esterno, postura ereta. São muitas pontas pequenas forrando um oco de costelas, e o homem está vivo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fervente_de_ferrugem
+    vaga: 5
+    nome: Fervente de Ferrugem
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:384", "lore_nova/creatures.txt:1200"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um doente da Ferrugem do Sangue que os Saqueadores-de-Cristal levam para cavar no calor, porque o
+        ferro do sangue aguenta o sol que mata os outros. O sol não o matou; fez o sangue ferver. As
+        veias saltaram do pescoço e dos braços como cordas grossas, cor de ferrugem, e onde a pele afinou
+        o sangue sai em bolhas que estouram e secam em contas de ferro. O peito sobe e desce depressa,
+        chiando como chaleira, e os dentes estão pretos de óxido.
+    silhueta: Um cavador magro de veias grossas como cordas, cercado de um vapor avermelhado que sai da pele.
+    comportamento: >-
+      Trabalha até cair e, se não cai, corre para quem aparece, abraça e aperta até as veias rebentarem.
+      O sangue que sai é fervente e cheio de ferro; ele morre fazendo isso, e não parece importar.
+    papel_tatico: sacrificial
+    arquetipo: bruto
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fervente_de_ferrugem_veias_rebentadas
+      frase: >-
+        Abraça o alvo e rebenta as próprias veias: sangue fervente queima quem está perto, e ele cai.
+    contra_jogo: Não deixar que chegue; de longe é só um homem doente e curto de fôlego. Quem o derruba antes do abraço fica com um cadáver morno.
+    gancho: >-
+      Os Saqueadores-de-Cristal levam doentes da Ferrugem para o Mar de Vidro como quem leva mula; o sol
+      de Zhur cobra deles o resto da conta.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo]
+    a_cada_n: 2
+    telegrafo: "{nome} solta a picareta e abre os braços, e as veias do pescoço começam a inchar."
+    description: Um doente da Ferrugem do Sangue levado para cavar no sol de Zhur, de veias grossas como cordas e sangue que ferve e sai em contas de ferro.
+    perigo: Baixo
+    lore: >-
+      A Ferrugem do Sangue oxida o sangue por dentro e pede ferro sem parar. Os Saqueadores-de-Cristal
+      descobriram que esses doentes aguentam o sol do Mar de Vidro mais do que os sãos, e os levam para
+      cavar as camadas. Alguns aguentam demais: o sangue ferve sem matá-los, e eles passam a correr para
+      qualquer um que apareça, de braços abertos. Os saqueadores os deixam ir na frente.
+    aparencia: >-
+      Cavador magro e queimado, veias grossas cor de ferrugem saltadas no pescoço e nos braços, bolhas
+      de sangue estourando na pele e secando em contas de ferro, vapor avermelhado saindo do corpo,
+      dentes pretos de óxido.
+    como_se_luta: >-
+      Corre e abraça, e rebenta as próprias veias sobre quem segura; o sangue fervente queima quem está
+      perto e ele morre. Derrubá-lo de longe, antes do abraço, resolve.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Homem magro e queimado de sol, de tanga e trapos de cavador, veias inchadas cor de ferrugem
+        saltando do pescoço, dos braços e das têmporas como cordas grossas; pequenas bolhas de sangue
+        estourando na pele e contas de ferro escuro secas sobre ela; vapor avermelhado subindo do corpo;
+        boca aberta ofegante, dentes pretos. Uma picareta caindo da mão.
+      composicao: >-
+        Duna aberta ao fim da tarde, uma fila de cavadores acorrentados descendo para a escavação ao
+        fundo; o Fervente desgarrado da fila, correndo de braços abertos para a frente da cena, a corrente
+        partida no tornozelo; uma carroça de saqueador atrás dá a escala. Laranja de sol baixo, ferrugem,
+        vapor.
+      evitar: Morto-vivo, homem em chamas, armadura de ferro. É um doente vivo cujo sangue ferve; nada de fogo aberto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_mumia_de_po
+    vaga: 22
+    nome: Carregador de Liteira
+    status: reinventada
+    substitui: enemy_mumia_de_po
+    ataques: ["Varal da Liteira"]
+    acoes: ["Segue quem carrega o que saiu da câmara do rei; não foge, não se rende."]
+    substitui_generico: Múmia de Pó
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1259", "lore_nova/creatures.txt:1158"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um servo enterrado vivo com um rei que Zhur engoliu, que carregou a liteira do rei para dentro
+        da câmara e não a largou mais. Os varais de madeira escura da liteira entraram pelos ombros e se
+        fundiram às omoplatas, e a madeira continua a crescer pelos braços em fibras duras, por baixo da
+        pele seca e escura. A espinha arqueou para a frente sob o peso; as mãos são duas garras de
+        madeira e unha. No pescoço ainda leva a coleira de cobre do seu rei.
+    silhueta: Um homem curvado com dois varais de madeira saindo dos ombros, como quem ainda carrega uma liteira que não está ali.
+    comportamento: >-
+      Fica na câmara enquanto nada sai dela. Quando um saqueador leva alguma coisa do rei, ele se levanta
+      e segue, sem pressa e sem parar, sentindo no chão o passo de quem carrega o peso, até tomar de
+      volta. Não importa a distância nem os dias.
+    papel_tatico: perseguidor_marca
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_carregador_de_liteira_o_que_e_do_rei
+      frase: >-
+        Marca quem carrega um objeto tirado de uma câmara real: segue esse alvo pelo campo, e o golpe
+        nele não erra.
+    contra_jogo: Largar o que foi tirado; ele para, pega e volta para baixo. Os varais dos ombros são o ponto fraco, e madeira seca quebra.
+    gancho: >-
+      Os Reis-Enterrados ainda exigem reverência nas câmaras sob o cristal; os que os carregaram para lá
+      ainda servem, e servir, para eles, é buscar o que foi levado.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, ataque, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} se ergue no fundo da câmara, e os varais dos ombros rangem como uma liteira que levanta."
+    description: Um servo enterrado com um rei de Zhur, com os varais da liteira crescidos pelos ombros, que segue quem tira alguma coisa da câmara real.
+    perigo: Alto
+    lore: >-
+      Nas câmaras preservadas sob o cristal, os reis que Zhur engoliu ainda se sentam nos tronos e
+      exigem reverência. Os servos que os levaram até lá foram enterrados junto, de liteira no ombro, e
+      a madeira dos varais cresceu para dentro deles. Ficam quietos enquanto nada sai da câmara. Os
+      Saqueadores-de-Cristal aprenderam a deixar tudo como acharam, ou a correr muito.
+    aparencia: >-
+      Homem curvado de pele seca e escura, dois varais de madeira de liteira saindo dos ombros e
+      fundidos às omoplatas, fibras de madeira crescendo por baixo da pele dos braços, mãos de garra de
+      madeira e unha, coleira de cobre no pescoço.
+    como_se_luta: >-
+      Persegue quem levou algo da câmara do rei, sem parar, e o golpe nele não erra. Largar o que foi
+      tirado o faz parar; os varais dos ombros quebram.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Homem descarnado e curvado em ângulo de carga, pele seca cor de tâmara, dois varais longos de
+        madeira escura e lisa saindo das omoplatas para a frente e para trás, como se ainda segurasse uma
+        liteira invisível; fibras de madeira saltando sob a pele dos braços; mãos que são garras de
+        madeira e unha; coleira larga de cobre esverdeado no pescoço; restos de tanga de linho.
+      composicao: >-
+        Câmara real soterrada sob uma camada de vidro translúcido, luz de lua filtrada de cima em azul; um
+        trono vazio desfocado ao fundo; o Carregador saindo da câmara por uma fenda, varais raspando as
+        paredes; um saqueador fugindo em primeiro plano com uma taça de ouro na mão, da mesma altura, dá
+        a escala. Ocre, cobre esverdeado, azul de vidro.
+      evitar: Múmia de faixas, faraó, sarcófago, olhos brilhando. Não tem faixas nem ouro no corpo; é um servo com madeira crescida pelos ombros.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_varano_vidrado
+    vaga: 6
+    nome: Varano Vidrado
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:134", "data/world/calendar.json:26"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um lagarto do comprimento de duas carroças, da espécie cujo couro os Devoradores de Sol vestem.
+        Na Estação do Vidro ele se deita na areia que amolece para tomar calor, e a areia grudou nas
+        escamas das costas e fundiu: o dorso é uma carapaça lisa e fosca de areia vidrada, rachada nas
+        dobras dos ombros e do quadril, onde a carne viva aparece. A cabeça é chata e larga, a língua
+        bifurcada é preta e a boca baba uma saliva espessa que ferve quando ele está quente.
+    silhueta: Um lagarto baixo e enorme de costas lisas e brilhantes como uma vidraça, com a cabeça chata erguida.
+    comportamento: >-
+      Passa a manhã deitado na areia quente até as costas ficarem brancas de calor; aí sai para caçar.
+      Quente, morde e a saliva queima; frio, é lento e quebra nas rachaduras. Os Devoradores o caçam ao
+      amanhecer, quando ainda está frio.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_varano_vidrado_tomar_calor
+      frase: >-
+        Deita na areia e toma calor: na rodada seguinte as costas vidradas ardem, quem o golpeia de perto
+        se queima, e a mordida dele queima também.
+    contra_jogo: Lutar com ele ao amanhecer ou na sombra; água fria nas costas quentes trinca o vidro. As rachaduras dos ombros são carne.
+    gancho: >-
+      Os Devoradores de Sol vestem o couro dele; o que não dizem é quantos morrem por cada couro tirado na
+      estação errada.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (varanos)
+        referencia: "varanos que tomam sol antes de caçar e ficam lentos no frio"
+        tomou: o ciclo de tomar calor e caçar quente
+        distancia: as costas de areia fundida na Estação do Vidro e a saliva que ferve são de Zhur
+    padrao: [reforco_proprio, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} se achata na areia e as costas vidradas começam a branquear de calor."
+    description: Um lagarto do comprimento de duas carroças, cujas costas a Estação do Vidro cobriu de areia fundida, que toma calor antes de caçar.
+    perigo: Alto
+    lore: >-
+      Os Devoradores de Sol cobrem o corpo com o couro dos lagartos gigantes do Mar de Vidro. Na Estação
+      do Vidro esses lagartos se deitam na areia que amolece, e as costas deles saem vidradas. Quentes,
+      são a coisa mais perigosa da noite; frios, ao amanhecer, são couro esperando faca. Os Devoradores
+      só os caçam na hora certa, e mesmo assim contam os mortos.
+    aparencia: >-
+      Lagarto enorme e baixo, comprido como duas carroças, dorso coberto por uma carapaça lisa e fosca
+      de areia vidrada, rachada nas dobras dos ombros e do quadril com carne viva aparecendo, cabeça
+      chata e larga, língua bifurcada preta.
+    como_se_luta: >-
+      Toma calor na areia e depois as costas e a mordida queimam. Frio é lento; água fria nas costas
+      quentes trinca o vidro, e as rachaduras dos ombros são carne.
+    related_entities: [deserto_zhur, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Varano gigante, baixo e pesado, cauda grossa, patas tortas com garras curtas; o dorso inteiro
+        coberto por uma placa contínua de areia vitrificada, lisa e fosca, cor de mel queimado, rachada
+        nas articulações dos ombros e do quadril, onde aparece carne rosada; cabeça chata e larga
+        erguida, língua bifurcada preta, baba espessa fumegando no canto da boca.
+      composicao: >-
+        Duna ao amanhecer, sol baixo atrás; o Varano saindo de um leito de areia fundida que ainda brilha;
+        à esquerda, um caçador Devorador de couro de lagarto agachado com lança, bem menor, dá a escala.
+        Âmbar, ocre, azul-noite recuando no céu.
+      evitar: Dragão, crocodilo de cartoon, lagarto de fogo com chamas. É um varano real de dorso vidrado, sem asas, sem chifres, sem fogo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tatu_de_navalha
+    vaga: 7
+    nome: Tatu de Navalha
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:130", "lore_nova/creatures.txt:1124"]
+    anatomia:
+      plano_corporal: segmentado
+      material: vidro_cristal
+      escala: pequena
+      locomocao: rola
+      percepcao: vibracao
+      texto: >-
+        Um bicho do tamanho de um cão, de casco em cintas que correm do ombro à cauda. Rola dentro das
+        Tempestades de Navalha, e o vidro que o vento carrega se encravou entre as cintas em lâminas
+        finas que ficam para fora. Enrolado, é uma bola de cacos; aberto, tem focinho comprido, garras
+        chatas de cavar e uma barriga rosada e sem casco.
+    silhueta: Uma bola de lâminas de vidro rolando na areia, do tamanho de um cão.
+    comportamento: >-
+      Anda em grupos que rolam juntos ladeira abaixo, a favor do vento, e passam por cima de quem está
+      no caminho. No fim da rolada se abrem e voltam a subir a duna para rolar de novo.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tatu_de_navalha_rolada
+      frase: >-
+        Rola através da linha e sai do outro lado: corta quem atravessa e troca de lugar no campo.
+    contra_jogo: Aberto, a barriga é mole; quem sai do caminho da rolada e espera ele se abrir no pé da duna o mata com um golpe.
+    gancho: >-
+      Na Tempestade de Navalha nada anda; ele rola, e o vento o levou tantas vezes que as lâminas viraram
+      parte dele.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (tatu-bola)
+        referencia: "tatu-bola, que se enrola numa bola de cintas"
+        tomou: o casco em cintas que se fecha em bola
+        distancia: a bola é de lâminas de vidro da Tempestade e ele ataca rolando; o tatu-bola só se defende
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} se enrola no alto da duna e o vento começa a empurrá-lo."
+    description: Um bicho do tamanho de um cão, de casco em cintas encravadas de lâminas da Tempestade de Navalha, que ataca rolando duna abaixo.
+    perigo: Baixo
+    lore: >-
+      Quando a Tempestade de Navalha passa, tudo que anda se deita e espera. Este bicho não se deita: se
+      enrola e deixa o vento levar, e o vidro do vento ficou cravado no casco. Hoje rola de propósito,
+      em grupos, duna abaixo, e passa por cima do que encontra. Os Devoradores de Sol acampam no pé das
+      dunas de costas para o vento, e os forasteiros aprendem por quê.
+    aparencia: >-
+      Bicho do tamanho de um cão, de casco em cintas do ombro à cauda com lâminas finas de vidro
+      encravadas entre elas; enrolado é uma bola de cacos; aberto mostra focinho comprido, garras chatas
+      e barriga rosada sem casco.
+    como_se_luta: >-
+      Rola através da linha, corta quem atravessa e sai do outro lado. Saindo do caminho e esperando
+      que se abra no pé da duna, a barriga mole fica à mostra.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Pequeno mamífero de casco em cintas, do tamanho de um cão médio, metade enrolado: as cintas
+        cor de areia com lâminas finas de vidro translúcido cravadas entre elas, todas para fora como uma
+        bola de facas; o focinho comprido e as garras chatas aparecendo; a barriga rosada e nua à mostra
+        no ponto em que se abre.
+      composicao: >-
+        Encosta de duna de vidro sob o luar, com três ou quatro desses bichos rolando em fila ladeira
+        abaixo, deixando sulcos brilhantes; um alforje de couro caído no caminho deles, do tamanho de
+        um deles, dá a escala. Prata, ocre, sombra azul.
+      evitar: Ouriço, porco-espinho de cartoon, bola de cristal lisa. É um casco em cintas com lâminas cravadas, não um bicho fofo nem uma joia.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lambedor_de_halito
+    vaga: 8
+    nome: Lambedor de Hálito
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1124", "lore_nova/locations.txt:134"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um besouro do tamanho de um gato, de pernas compridas e finas e costas cobertas de calombos
+        pretos. À noite sobe nas dunas, abaixa a cabeça e levanta as costas contra o vento, e a umidade
+        do ar se junta nos calombos e escorre até a boca. Tem duas antenas em pena que sentem a
+        respiração e uma tromba curta e mole debaixo da cabeça, que ele encaixa onde o ar é úmido.
+    silhueta: Um besouro de pernas altas, de costas empinadas e cheias de calombos, com a cabeça baixa.
+    comportamento: >-
+      Aprendeu que o ar mais úmido do Mar de Vidro é o que sai da boca de quem dorme. Chega no acampamento
+      de madrugada, sobe no peito de quem dorme e põe a tromba na boca; bebe o hálito até a pessoa acordar
+      sem ar. Acordados, eles avançam em fila sobre quem respira mais forte.
+    papel_tatico: drenador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lambedor_de_halito_beber_o_folego
+      frase: >-
+        Põe a tromba na boca do alvo e bebe o hálito: o alvo perde Fôlego e o Lambedor fica pesado de
+        água.
+    contra_jogo: Pano molhado na boca ou prender a respiração tira o rumo deles; pesados de água, ficam lentos e estouram com um tapa.
+    gancho: >-
+      No Mar de Vidro a água vem do ar ou do corpo; este bicho achou que o corpo fica mais perto.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (besouro do nevoeiro)
+        referencia: "besouro do deserto do Namibe que bebe o nevoeiro pelas costas"
+        tomou: a postura de costas contra o vento para juntar umidade
+        distancia: o Lambedor bebe o hálito de quem dorme; o besouro real só bebe o nevoeiro
+    padrao: [ataque, enfraquecer, mover]
+    a_cada_n: 4
+    telegrafo: "{nome} empina as costas e as antenas viram, todas juntas, para a boca de alguém."
+    description: Um besouro do tamanho de um gato que bebe a umidade do ar e aprendeu que a mais úmida sai da boca de quem dorme.
+    perigo: Baixo
+    lore: >-
+      Os Devoradores de Sol caçam forasteiros pela água do corpo; não são os únicos. Nas noites de Zhur
+      um besouro de pernas altas sobe nas dunas e bebe a umidade do vento pelas costas. Alguns
+      aprenderam a beber de mais perto. Quem acampa no Mar de Vidro dorme de boca coberta, e quem não
+      sabe disso acorda com um deles no peito.
+    aparencia: >-
+      Besouro preto do tamanho de um gato, pernas compridas e finas, costas empinadas cobertas de
+      calombos, antenas em pena e uma tromba curta e mole sob a cabeça baixa.
+    como_se_luta: >-
+      Bebe o hálito de quem está perto e o deixa sem fôlego. Pano molhado na boca tira o rumo deles;
+      cheios de água, ficam lentos e estouram com um tapa.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Besouro preto-fosco do tamanho de um gato, sobre seis pernas longas e finas como de aranha-alfaiate,
+        abdômen erguido para trás, élitros cobertos de calombos redondos com gotas de orvalho; antenas
+        plumosas viradas para a frente; tromba curta, mole e úmida sob a cabeça.
+      composicao: >-
+        Acampamento de caravana de madrugada, brasas quase apagadas; um viajante dormindo enrolado num
+        manto, e o Lambedor de pé sobre o peito dele, tromba baixando até a boca; uma bota ao lado, do
+        tamanho do besouro, dá a escala. Azul de madrugada, brasa fraca, orvalho brilhando.
+      evitar: Escaravelho egípcio, besouro dourado de joia, inseto gigante de filme. É um besouro preto do tamanho de um gato, de costas de calombos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lastreiro_da_cratera
+    vaga: 9
+    nome: Lastreiro da Cratera
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1213", "lore_nova/items.txt:1104"]
+    anatomia:
+      plano_corporal: radial
+      material: carne_exposta
+      escala: grande
+      locomocao: plana_voa
+      percepcao: calor
+      texto: >-
+        Um bicho que come o Pó-de-Estrela-Caída da cratera e ficou leve demais para o chão. O corpo é uma
+        bexiga de pele fina e esticada do tamanho de uma tenda, cheia de um ar que não pesa, com veias
+        escuras à mostra. Por baixo pendem tripas compridas e grossas, e na ponta da mais longa vai uma
+        pedra que ele engoliu e segura com um anel de músculo, para não subir até sumir. A boca é redonda,
+        no fundo da bexiga, cercada de dentes virados para dentro.
+    silhueta: Uma bexiga pálida parada no céu noturno, com tripas penduradas e uma pedra na ponta, balançando.
+    comportamento: >-
+      Passa a noite parado no alto, com a pedra roçando a areia. Quando sente calor de corpo por baixo,
+      solta a pedra em cima dele e puxa a tripa de volta, e o que vem preso nela sobe até a boca.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lastreiro_da_cratera_solta_o_lastro
+      frase: >-
+        Solta a pedra do lastro em cima do alvo e o iça pela tripa: dano de queda, e o alvo sai do chão até
+        se soltar.
+    contra_jogo: Furar a bexiga de longe; ou cortar a tripa do lastro, e ele sobe e não volta. Não acampar debaixo de estrela que não pisca.
+    gancho: >-
+      Os Devoradores evitam a cratera onde algo respira devagar; os bichos que pastam o pó dela ficam
+      leves, e ficam com fome.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (caravela-portuguesa)
+        referencia: "caravela-portuguesa, flutuador de gás com tentáculos pendentes"
+        tomou: o flutuador com longas tripas penduradas
+        distancia: o Lastreiro voa preso a uma pedra de lastro para não subir, e pesca de cima para baixo; não tem nada de marinho
+    padrao: [mover, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} desce um palmo e a pedra do lastro para de balançar."
+    description: Um bicho que comeu o pó da cratera e ficou leve demais, uma bexiga no céu presa a uma pedra pela tripa, que pesca quem passa embaixo.
+    perigo: Médio
+    lore: >-
+      Na cratera onde a lua caiu, o vidro é mais fundo e o pó que sobe dele é raro e caro. Os bichos que
+      o comem ficam leves. Um deles ficou tão leve que engoliu uma pedra para não subir, e passa as
+      noites parado no alto com a pedra roçando a areia. Os viajantes o tomam por estrela. Os Devoradores
+      de Sol olham para cima antes de deitar.
+    aparencia: >-
+      Bexiga de pele pálida e fina do tamanho de uma tenda, com veias escuras, parada no ar; tripas
+      compridas penduradas por baixo, a mais longa com uma pedra presa por um anel de músculo; uma boca
+      redonda de dentes virados para dentro no fundo da bexiga.
+    como_se_luta: >-
+      Solta a pedra do lastro sobre quem está embaixo e o iça pela tripa. Furar a bexiga ou cortar a
+      tripa do lastro acaba com ele; cortada a pedra, ele sobe e não volta.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Grande bexiga orgânica translúcida e pálida, do tamanho de uma tenda, flutuando, veias escuras
+        visíveis na pele esticada; por baixo pendem feixes de tripas grossas e cor de carne; a mais longa
+        termina numa pedra escura presa por um anel de músculo apertado; boca circular de dentes curvos
+        para dentro no fundo da bexiga.
+      composicao: >-
+        Céu noturno sobre a borda da cratera de vidro, poeira cintilante no ar; o Lastreiro no terço
+        superior, a pedra pendendo até quase tocar um camelo de carga parado embaixo, que dá a escala.
+        Azul-noite, prata de pó, a bexiga com um brilho leitoso de lua atravessando.
+      evitar: Água-viva marinha, balão, medusa de fantasia brilhante. É uma bexiga de carne que voa presa a uma pedra; nada de tentáculos lisos nem cores neon.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cavador_de_funil
+    vaga: 10
+    nome: Cavador de Funil
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:130", "lore_nova/creatures.txt:1124"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: grande
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Uma larva do tamanho de um boi enterrada no fundo de um funil de areia de vidro. Só aparecem as
+        mandíbulas, duas foices curvas de quitina com fileiras de pelos ocos que bebem o que mordem, e
+        uma cabeça chata. O corpo enterrado é gordo, cinzento, coberto de cerdas viradas para trás que o
+        prendem na areia, e as seis patas curtas jogam areia para cima sem parar.
+    silhueta: Um buraco em funil na duna e, no fundo, duas foices curvas abertas.
+    comportamento: >-
+      Cava o funil onde a duna é mais fofa e espera. Quando algo pisa a borda, joga areia de vidro com a
+      cabeça e a parede desce, levando a presa para as mandíbulas. Não sai do buraco; quem não desce, ele
+      não pega.
+    papel_tatico: controlador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cavador_de_funil_parede_que_desce
+      frase: >-
+        Joga areia na parede do funil: o alvo escorrega uma zona para dentro e fica sem passo firme até
+        sair.
+    contra_jogo: Não pisar a borda; de cima, com lança ou corda, as mandíbulas não alcançam. Areia molhada não escorre.
+    gancho: >-
+      A areia de Zhur é vidro moído e escorre como água seca; ele faz do chão inteiro a armadilha.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (formiga-leão)
+        referencia: "larva de formiga-leão no fundo do funil de areia"
+        tomou: o funil e a areia jogada para derrubar a presa
+        distancia: do tamanho de um boi, em areia de vidro que corta quem escorrega; não vira inseto alado
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} sacode a cabeça no fundo do buraco e a areia da borda começa a escorrer."
+    description: Uma larva do tamanho de um boi no fundo de um funil de areia de vidro, que faz a parede escorrer até a presa cair nas mandíbulas.
+    perigo: Médio
+    lore: >-
+      A areia de Zhur é misturada com pó de vidro e escorre mais do que areia comum. Nas dunas fofas,
+      algo cava funis largos como uma tenda e espera no fundo. Os Devoradores de Sol contornam qualquer
+      buraco redondo; os forasteiros às vezes descem para ver o que brilha lá embaixo.
+    aparencia: >-
+      Larva cinzenta e gorda do tamanho de um boi, enterrada no fundo de um funil de areia de vidro;
+      só aparecem a cabeça chata e duas mandíbulas em foice de quitina com fileiras de pelos ocos.
+    como_se_luta: >-
+      Joga areia na parede do funil e faz o alvo escorregar para dentro, até as mandíbulas. Quem não
+      pisa a borda e luta de cima, com lança ou corda, não é alcançado.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Funil perfeito na areia de vidro, largo como uma tenda; no fundo, a cabeça chata e cinzenta de uma
+        larva gigante com duas mandíbulas em foice, curvas, longas e escuras, eriçadas de pelos ocos;
+        jatos de areia brilhante saltando para cima da borda.
+      composicao: >-
+        Vista de cima, a três-quartos, da borda do funil sob o luar; um forasteiro de manto escorregando
+        pela parede com a areia, a mão estendida para cima; a larva no fundo com as foices abertas. A
+        figura humana na parede dá a escala. Prata, sombra azul, cinza.
+      evitar: Verme da areia gigante de cinema, boca circular de dentes. São duas foices de inseto num funil, e o corpo não aparece.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_saltador_de_palafita
+    vaga: 11
+    nome: Saltador de Palafita
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["data/world/calendar.json:26", "lore_nova/locations.txt:130"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: vidro_cristal
+      escala: pequena
+      locomocao: salta
+      percepcao: som
+      texto: >-
+        Um roedor do tamanho de uma lebre que pula sobre duas pernas. Os pés queimaram em tantas Estações
+        do Vidro que a pele das canelas virou calo e o calo virou vidro: as pernas são duas varetas finas
+        e translúcidas, compridas como o corpo inteiro, com o osso escuro visível dentro. A cauda é longa,
+        com um tufo na ponta, as orelhas são grandes como folhas e os olhos saltam da cabeça.
+    silhueta: Um bichinho de orelhas enormes equilibrado em duas varetas de vidro, no alto de um salto.
+    comportamento: >-
+      Vivem em bando nas dunas e saltam dez passos de cada vez. Um deles grita fino quando vê presa, e o
+      bando chega pulando e morde canelas; quem bate num quebra as varetas, e eles continuam vindo.
+    papel_tatico: batedor_rapido
+    arquetipo: lider_matilha
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_saltador_de_palafita_grito_fino
+      frase: >-
+        Grita fino e o bando chega: chama outro Saltador para o combate, e o próximo ataque deles vem de
+        longe, num salto.
+    contra_jogo: Calar primeiro o que grita; as varetas quebram com qualquer pancada, e um saltador sem perna só morde o chão.
+    gancho: >-
+      A Estação do Vidro queima tudo que anda; o que pula toca menos o chão, e o que tocou demais virou
+      vidro da canela para baixo.
+    habitat: [deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (jerboa)
+        referencia: "jerboa, roedor saltador do deserto de pernas muito compridas"
+        tomou: o salto sobre duas pernas longas e as orelhas grandes
+        distancia: as pernas são varetas de vidro que quebram e o bando caça aos gritos; a jerboa é solitária e foge
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} se ergue nas varetas, abre a boca e o grito fino corta a noite."
+    description: Um roedor do tamanho de uma lebre que salta sobre duas canelas que viraram varetas de vidro, e caça em bando chamado no grito.
+    perigo: Baixo
+    lore: >-
+      Na Estação do Vidro a areia amolece e queima o que pisa nela. Os bichos pequenos que sobreviveram
+      foram os que pulam. Este pula tanto, e queimou tantas vezes, que as canelas viraram vidro. Vivem em
+      bandos, gritam fino e mordem canelas, e os Devoradores de Sol os espantam batendo pedra com pedra.
+    aparencia: >-
+      Roedor do tamanho de uma lebre de pé sobre duas pernas que são varetas finas de vidro translúcido
+      com o osso escuro dentro, cauda longa de tufo na ponta, orelhas grandes como folhas, olhos saltados.
+    como_se_luta: >-
+      Grita e chama o bando, que chega saltando de longe e morde. Calar primeiro o que grita resolve
+      metade; qualquer pancada quebra as varetas.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Pequeno roedor de pelo cor de areia, do tamanho de uma lebre, de pé em duas pernas compridíssimas
+        de vidro translúcido, finas como varetas, com o osso escuro visível dentro; patas dianteiras
+        minúsculas encolhidas no peito; orelhas enormes e finas; cauda longa terminada em tufo preto;
+        boca aberta num grito.
+      composicao: >-
+        Crista de duna sob o luar, um bando de Saltadores em pleno salto, sombras longas; uma bota de
+        caravaneiro com a perna enfaixada em primeiro plano, mais alta que eles, dá a escala. Prata, ocre,
+        reflexos nas varetas de vidro.
+      evitar: Coelho fofo, canguru, bicho de desenho animado. É um roedor magro de pernas de vidro e boca aberta, com fome.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_verme_areia_jovem
+    vaga: 23
+    nome: Verme de Vidro
+    status: adotada
+    substitui: enemy_verme_areia_jovem
+    ataques: ["Bote do Fundo"]
+    acoes: ["Persegue o passo mais leve e isolado que anda na superfície.", "Ferido demais, foge afundando no vidro e não volta.", "Sobe por baixo de quem está mais perto e engole."]
+    substitui_generico: Verme da Areia (Jovem)
+    codex_id: mon_verme_de_vidro
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1140", "lore_nova/locations.txt:128"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: vidro_cristal
+      escala: grande
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Um verme do comprimento de três carroças, de corpo em anéis duros que o atrito com a areia poliu
+        até brilhar. Não tem olhos: na ponta tem uma boca redonda que abre em três abas, com fileiras de
+        dentes de vidro virados para dentro. Os anéis da frente são mais quentes e fundem a areia ao
+        passar, e atrás dele fica um rastro de vidro novo. Sente o peso dos passos pela barriga.
+    silhueta: Uma boca redonda de três abas saindo da duna, com um corpo de anéis brilhantes atrás.
+    comportamento: >-
+      Nada sob a areia e escuta o peso. Sobe embaixo do que anda, engole e volta a afundar. O guincho do
+      atrito do corpo na areia é o único aviso, e quase sempre chega tarde.
+    papel_tatico: emboscador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_verme_de_vidro_bote_do_fundo
+      frase: >-
+        Some na areia e sobe embaixo do alvo: golpe em quem está naquela zona, e o mais leve fica
+        engolido até se soltar.
+    contra_jogo: Ficar parado, porque ele sente o peso que anda; pedra ou vidro sólido não o deixam subir, e o rastro de vidro novo mostra onde está.
+    gancho: >-
+      Os Vermes-de-Vidro comuns descendem do antigo que nada no vidro sólido das profundezas; este nada
+      na areia de cima, e é por isso que encontra gente.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} guincha debaixo da duna, e a areia em volta de alguém começa a afundar."
+    description: Um verme do comprimento de três carroças que nada sob a areia de vidro, sente o peso dos passos e sobe para engolir, deixando rastro de vidro fundido.
+    perigo: Alto
+    lore: >-
+      Criaturas que se movem sob a areia de vidro, deixando rastros de superfície fundida. Detectam peso,
+      emergem para engolir e voltam a afundar. O atrito do corpo contra a areia produz um som agudo, o
+      único aviso.
+    aparencia: >-
+      Verme enorme de corpo em anéis polidos que brilham, sem olhos, boca redonda aberta em três abas
+      com fileiras de dentes de vidro virados para dentro, deixando atrás um rastro de vidro recém-fundido.
+    como_se_luta: >-
+      Sobe por baixo de quem anda e engole o mais leve. Ficar parado, ou em chão de pedra, o deixa sem
+      alvo; o rastro de vidro novo mostra por onde ele vem.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Verme colossal emergindo da areia, corpo de anéis largos e polidos cor de mel e fumaça, brilhando
+        como vidro gasto; ponta sem olhos aberta em três abas carnudas, revelando anéis concêntricos de
+        dentes de vidro curvados para dentro; areia derretida escorrendo dos primeiros anéis.
+      composicao: >-
+        Duna ao luar estourando para cima; um caravaneiro com camelo, pequenos, na beira do buraco, a boca
+        do Verme subindo sob eles; atrás, um rastro reto de vidro novo brilhando na areia. Azul-noite,
+        âmbar de vidro quente.
+      evitar: Shai-Hulud, verme de Duna, boca de lampreia de filme. Três abas e dentes de vidro; o corpo é anelado e polido, não liso nem de rocha.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_djinn_menor
+    vaga: 24
+    nome: Pipa de Costelas
+    status: reinventada
+    substitui: enemy_djinn_menor
+    ataques: ["Saraiva do Papo"]
+    acoes: ["Se alguém chega perto, sobe com o vento e volta para longe.", "Quando os da frente caem, foge: deixa o vento o levar embora.", "Fica alto e longe, cuspindo vidro sobre quem está no chão."]
+    substitui_generico: Djinn Menor
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:130", "lore_nova/locations.txt:138"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: grande
+      locomocao: plana_voa
+      percepcao: som
+      texto: >-
+        Um bicho chato e largo, de pele fina e escura esticada entre costelas compridíssimas que saem da
+        espinha como as varetas de uma pipa. Não bate asas; abre as costelas e o vento o carrega. Na
+        garganta tem um papo de couro que enche de areia de vidro quando passa rente às dunas, e uma boca
+        estreita por onde cospe a areia com força de funda. A cauda é uma tira comprida de pele e tendão
+        que serve de leme.
+    silhueta: Uma pipa de couro escuro com costelas por varetas e uma cauda de tira comprida, parada no vento.
+    comportamento: >-
+      Vive no vento que sobe da borda sul e nas beiradas das Tempestades de Navalha. Passa rente às dunas
+      para encher o papo, sobe e cospe o vidro em rajadas sobre quem está embaixo. Quando o vento para,
+      desce e se arrasta, e é só pele.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pipa_de_costelas_saraiva_do_papo
+      frase: >-
+        Esvazia o papo de vidro numa rajada sobre todos de um lado; depois precisa descer às dunas para
+        encher de novo.
+    contra_jogo: Esperar o vento parar ou lutar abrigado dele, porque sem vento ela não sobe. Furar a pele entre as costelas a derruba.
+    gancho: >-
+      Os forasteiros falam de espíritos do vento em Zhur; os Devoradores sabem que o vento que sobe da
+      borda carrega bichos de couro, e que eles cospem vidro.
+    habitat: [dz_borda_do_vazio, deserto_zhur]
+    inspiracao: []
+    padrao: [ataque_multiplo, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} desce rente à duna e o papo enche de areia com um ronco."
+    description: Um bicho chato de pele esticada entre costelas compridas que o vento da borda carrega, e que cospe areia de vidro do papo em rajadas.
+    perigo: Alto
+    lore: >-
+      Os forasteiros que voltam de Zhur falam de espíritos do vento que cospem vidro. Os Devoradores de
+      Sol riem disso. O vento que sobe da borda sul é forte e constante, e há bichos que vivem nele, de
+      pele esticada nas costelas, que enchem o papo nas dunas e o esvaziam em quem está embaixo. Quando o
+      vento para, eles caem, e os Devoradores os comem.
+    aparencia: >-
+      Bicho chato e largo de pele fina e escura esticada entre costelas compridíssimas como varetas de
+      pipa, papo de couro inchado de areia na garganta, boca estreita, cauda de tira longa de pele e
+      tendão.
+    como_se_luta: >-
+      Cospe o vidro do papo em rajadas sobre quem está embaixo e sobe com o vento. Sem vento não voa;
+      furar a pele entre as costelas a derruba.
+    related_entities: [dz_borda_do_vazio, deserto_zhur]
+    arte:
+      visual: >-
+        Criatura plana em forma de losango, pele marrom-escura e fina, quase translúcida contra a lua,
+        esticada sobre costelas longas e retas que saem de uma espinha central como varetas de pipa;
+        cabeça pequena com papo de couro inchado na garganta e boca estreita; cauda longa feita de uma
+        tira de pele e tendão tremulando.
+      composicao: >-
+        Céu da Borda do Vazio ao anoitecer, vento forte levando areia em fitas; a Pipa parada no ar,
+        inclinada contra o vento, cuspindo uma rajada de areia brilhante; abaixo, um Devorador de couro
+        de lagarto se cobrindo com o braço, pequeno, dá a escala. Cinza, ocre, brilho de vidro.
+      evitar: Gênio de lâmpada, espírito de fumaça, morcego, arraia. Não tem asas de membrana entre dedos nem corpo de fumaça; é pele em costelas, como uma pipa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_aranha_de_cristal
+    vaga: 26
+    nome: Braceiro da Borda Sul
+    status: reinventada
+    substitui: enemy_aranha_de_cristal
+    ataques: ["Mão Sobre a Beirada", "Beirada Quebrada"]
+    acoes: ["À beira da morte, foge: solta a parede e desce para o escuro; volta outra noite.", "Agarra primeiro quem cuida dos outros, onde estiver.", "Fica embaixo da beirada, quebra o chão e guarda a Carta assinatura para quando todos estiverem perto da queda."]
+    substitui_generico: Aranha de Cristal
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:138", "data/world_map.json:241"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: carne_exposta
+      escala: enorme
+      locomocao: ancorada
+      percepcao: som
+      texto: >-
+        Uma coisa grande e pálida que vive presa à parede da queda, logo abaixo da borda sul. O tronco é um
+        peito largo como uma carroça, colado à rocha por placas de calo, sem pernas. Dele saem só dois
+        braços, compridos como mastros, cada um dobrado em três cotovelos, de pele esticada sobre os
+        tendões; as mãos são enormes, de dedos largos e chatos como remos, e as unhas são grossas como
+        telhas. Não tem olhos; dos dois lados do peito abrem orelhas grandes e moles, viradas para cima.
+    silhueta: Duas mãos enormes agarradas à beirada de um penhasco, com braços compridos dobrados em três cotovelos sumindo para baixo.
+    comportamento: >-
+      Fica pendurado embaixo da beirada, onde nenhum Devorador olha. Quando ouve passos perto da borda, as
+      mãos sobem e agarram, ou batem no chão da beirada até ele rachar e cair com quem está em cima.
+    papel_tatico: emboscador
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_braceiro_da_borda_sul_beirada_quebrada
+      frase: >-
+        Bate as mãos na beirada até ela ceder: a zona mais perto da queda some do campo, e quem estava nela
+        leva o golpe e fica pendurado até subir.
+    contra_jogo: Longe da beirada ele só tem os braços, e cada cotovelo é uma junta que se quebra; cortar os dedos é cortar o que segura. Silêncio perto da borda o deixa parado.
+    gancho: >-
+      Os Devoradores não se aproximam da borda sul por causa do som; quem se aproxima por outra razão
+      descobre que a parede da queda também tem bichos.
+    habitat: [dz_borda_do_vazio]
+    inspiracao: []
+    padrao: [enfraquecer, ataque_multiplo, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} espalma as duas mãos no chão da beirada, e a borda inteira estala."
+    description: Uma coisa pálida presa à parede da queda logo abaixo da borda sul, com dois braços compridos como mastros que sobem pela beirada, agarram e quebram o chão.
+    perigo: Extremo
+    lore: >-
+      Onde o Deserto de Zhur termina numa queda para o nada, a parede de vidro desce até onde a vista não
+      alcança. Os Devoradores de Sol não se aproximam por causa do som que sobe dali. Os forasteiros que
+      se aproximam por outra razão às vezes veem duas mãos pálidas na beirada antes de ver o resto. O chão
+      da borda sul é mais curto a cada ano, e há quem diga que não é o vento que o come.
+    aparencia: >-
+      Tronco pálido largo como uma carroça colado à parede do penhasco logo abaixo da borda, sem pernas
+      nem olhos, dois braços compridos como mastros dobrados em três cotovelos, mãos enormes de dedos
+      chatos como remos, orelhas grandes e moles viradas para cima.
+    como_se_luta: >-
+      Agarra quem está perto da beirada e quebra o chão até ele cair. Longe da borda só alcança com os
+      braços; os cotovelos quebram, cortar os dedos solta a pegada, e o silêncio o deixa parado.
+    related_entities: [dz_borda_do_vazio]
+    arte:
+      visual: >-
+        Criatura pálida e enorme agarrada a um paredão de vidro escuro logo abaixo da beira: tronco largo
+        e liso como um barril deitado, com placas de calo coladas à rocha; apenas dois braços humanos
+        alongadíssimos, cada um com três cotovelos dobrados em zigue-zague, tendões salientes; mãos do
+        tamanho de uma porta, dedos largos e chatos como remos, unhas grossas; duas orelhas grandes, moles
+        e enrugadas abertas para cima; nenhum olho.
+      composicao: >-
+        A Borda do Vazio vista de lado, em corte: em cima, o chão de vidro e dois viajantes pequenos perto
+        da beira com uma lanterna; as duas mãos espalmadas no chão perto dos pés deles; embaixo, pendurado
+        no paredão, o tronco pálido e os braços dobrados. Os viajantes dão a escala. Abaixo, cinza sem
+        fundo. Cinza frio, pele pálida, uma lanterna âmbar.
+      evitar: Aranha gigante, kraken, polvo, muitos braços. São só dois braços humanos de três cotovelos num tronco pálido; nenhum tentáculo, nenhuma pata de inseto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_costurado_de_lentes
+    vaga: 12
+    nome: Costurado de Lentes
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tribos_devoradores_sol
+      refs: ["lore_nova/locations.txt:134", "lore_nova/factions.txt:522"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: visao
+      texto: >-
+        Um vigia dos Devoradores de Sol que não se contentou com as lentes nos olhos. Tem discos de
+        obsidiana costurados pelo corpo todo, na testa, nas palmas das mãos, nos ombros, no peito e na
+        nuca, cada um num ninho de pele franzida e linha de tendão. A pele em volta das lentes escureceu
+        e engrossou; por baixo delas a carne aprendeu a ver, e quando ele se vira, as lentes viram junto
+        com estalos pequenos. Os dedos são compridos e calejados de subir em cristal.
+    silhueta: Um homem agarrado no alto de um cristal, com o corpo pontilhado de discos negros que brilham como olhos.
+    comportamento: >-
+      Sobe nos cristais altos ao anoitecer e fica ali. Não tem costas: vê para todos os lados. Quando
+      escolhe uma presa, aponta-lhe a palma da mão, e os outros Devoradores atiram para onde a palma
+      aponta.
+    papel_tatico: perseguidor_marca
+    arquetipo: tatico
+    categoria: padrao
+    faccao: tribos_devoradores_sol
+    mecanica_assinatura:
+      carta: cri_costurado_de_lentes_palma_apontada
+      frase: >-
+        Aponta a palma de obsidiana para um alvo e o marca: enquanto a marca durar, o alvo não surpreende
+        ninguém e os aliados do Costurado o acertam com mais facilidade.
+    contra_jogo: Areia nas lentes, fumaça ou noite sem lua; ele vê pela obsidiana e ela precisa de alguma luz. Derrubado do cristal, é um homem magro.
+    gancho: >-
+      Os Devoradores costuram obsidiana nos olhos; este achou que dois olhos eram pouco, e a tribo achou
+      isso eficiente.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} vira a palma da mão para alguém, e as lentes do corpo inteiro viram junto."
+    description: Um vigia dos Devoradores de Sol com discos de obsidiana costurados pelo corpo todo, que vê para todos os lados e aponta a presa com a palma.
+    perigo: Médio
+    lore: >-
+      Os Devoradores de Sol costuram lentes de obsidiana nos olhos, e para eles o sofrimento é
+      informação. Alguns vigias foram além e costuraram lentes no corpo todo, até a carne por baixo
+      aprender a ver. Ficam no alto dos cristais ao anoitecer, sem costas para ninguém. Quando um deles
+      aponta a palma da mão, a tribo inteira sabe para onde atirar.
+    aparencia: >-
+      Homem magro de couro de lagarto, discos de obsidiana costurados na testa, palmas, ombros, peito e
+      nuca, cada um num ninho de pele franzida e linha de tendão, dedos compridos e calejados, agarrado
+      no alto de um cristal.
+    como_se_luta: >-
+      Marca a presa apontando a palma, e os outros Devoradores acertam o marcado. Areia nas lentes,
+      fumaça ou escuro tiram a vista dele; no chão é um homem magro.
+    related_entities: [deserto_zhur, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Homem esguio e rijo, pele bronzeada escura, roupas de couro de lagarto sobreposto; dezenas de
+        discos de obsidiana negra e polida do tamanho de moedas grandes costurados na testa, nas palmas,
+        nos ombros, no peito e na nuca, cada um cercado de pele franzida e pontos grossos de tendão;
+        os olhos também são lentes; braço estendido com a palma aberta mostrando a lente do centro.
+      composicao: >-
+        Agarrado com as pernas a um cristal alto como três homens, sob a lua; abaixo, dois caçadores
+        Devoradores de arco erguido seguem a direção da palma. Os caçadores e o cristal dão a escala.
+        Preto lustroso, ocre de couro, azul-noite, um brilho de lua em cada lente.
+      evitar: Monstro de muitos olhos, olhos de carne pelo corpo, aberração, o Devorador comum de lentes só nos olhos. São dezenas de discos de pedra costurados no corpo todo; a pele franzida e os pontos aparecem.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_couro_pegado
+    vaga: 13
+    nome: Couro Pegado
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tribos_devoradores_sol
+      refs: ["lore_nova/locations.txt:134", "lore_nova/factions.txt:522"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: grande
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um guerreiro Devorador que vestiu o couro de varano por tanto tempo que o couro pegou. As escamas
+        enraizaram na pele, os pontos das costuras viraram cicatriz e as bordas do couro se fundiram à
+        carne do pescoço e dos punhos. O couro continua crescendo: faz uma crista grossa nas costas e um
+        anteparo de escamas no antebraço esquerdo, largo como uma porta. Uma vez por ano ele troca de pele
+        inteiro, como o bicho, e nesses dias fica cru e se esconde.
+    silhueta: Um guerreiro largo de pele escamada, com um antebraço que é uma placa de escamas do tamanho de uma porta.
+    comportamento: >-
+      Anda na frente do grupo de caça com o braço escamado erguido, e os outros atiram por trás dele. Não
+      persegue; para onde ele fica, a linha fica.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: tribos_devoradores_sol
+    mecanica_assinatura:
+      carta: cri_couro_pegado_braco_de_escamas
+      frase: >-
+        Ergue o antebraço de escamas diante de um aliado: o próximo golpe contra esse aliado bate nas
+        escamas dele.
+    contra_jogo: O couro é grosso mas não sente; quem o rodeia acha as costas dos outros. Fogo nas escamas faz o couro encolher e puxar a carne dele.
+    gancho: >-
+      Os Devoradores vestem couro de lagarto gigante; nenhum deles diz em que ano o couro deixa de ser
+      roupa.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} planta os pés e ergue o antebraço de escamas na frente de um dos seus."
+    description: Um guerreiro Devorador em quem o couro de varano criou raiz, com uma crista nas costas e um antebraço de escamas largo como uma porta.
+    perigo: Médio
+    lore: >-
+      Os Devoradores de Sol cobrem o corpo com couro de lagartos gigantes sobreposto, e alguns não o
+      tiram mais. Nesses o couro pega: enraíza na pele, cresce e escama. Os mais velhos andam na frente
+      das caçadas com um braço que virou escudo de couro vivo, e uma vez por ano somem por dias para
+      trocar de pele, como o bicho que vestiram.
+    aparencia: >-
+      Guerreiro largo de pele coberta de escamas de varano enraizadas, bordas do couro fundidas ao
+      pescoço e aos punhos, crista grossa de escamas nas costas, antebraço esquerdo que é uma placa de
+      escamas larga como uma porta.
+    como_se_luta: >-
+      Ergue o braço de escamas na frente dos seus e toma os golpes por eles. Quem o rodeia acha os de
+      trás; fogo faz o couro encolher e puxar a carne.
+    related_entities: [deserto_zhur, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Guerreiro alto e largo, pele quase inteira coberta por escamas de lagarto ocre e marrom que
+        crescem dela, com cicatrizes em linha onde antes havia costura; uma crista de escamas grossas ao
+        longo da espinha; o antebraço esquerdo alargado numa placa de escamas sobrepostas, da altura do
+        homem, usada como anteparo; lentes de obsidiana nos olhos; lança curta na mão direita.
+      composicao: >-
+        Grupo de caça Devorador numa crista de duna à noite; o Couro Pegado na frente, braço erguido, e
+        dois arqueiros agachados atrás dele; uma flecha cravada na placa de escamas. Os arqueiros dão a
+        escala. Ocre, marrom, preto lustroso, azul de lua.
+      evitar: Homem-lagarto, réptil humanoide, cavaleiro de armadura. É um homem cujo couro de vestir criou raiz; o rosto é humano.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_maos_de_cinzel
+    vaga: 14
+    nome: Mãos de Cinzel
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1200", "lore_nova/factions.txt:530"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: eter_cristalizado
+      escala: humana
+      locomocao: cava
+      percepcao: som
+      texto: >-
+        Um Saqueador-de-Cristal que passou anos tirando Éter cristalizado das camadas com as mãos nuas. O
+        Éter entrou pelos dedos: as mãos viraram cristal azulado até os punhos, os dedos se juntaram em
+        duas cunhas lisas e afiadas, e veias de luz sobem pelos antebraços até os cotovelos. O resto do
+        corpo é magro e torto de anos cavando agachado, os joelhos grossos, as costas em arco. Ele encosta
+        a orelha no vidro antes de bater.
+    silhueta: Um cavador agachado de costas em arco, com duas cunhas de cristal azul no lugar das mãos.
+    comportamento: >-
+      Cava as camadas do Mar de Vidro atrás de ruína e de Éter, e escuta o vidro para saber onde ele
+      racha. Faz o mesmo com armadura e com osso: escuta, acha a linha e bate ali.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_maos_de_cinzel_linha_da_racha
+      frase: >-
+        Encosta a cunha e escuta onde racha: o golpe seguinte racha a proteção do alvo, e a rachadura
+        fica até ser consertada.
+    contra_jogo: Barulho tira o ouvido dele, e quem luta batendo metal nunca o deixa achar a linha. As cunhas são cristal, e cristal quebra de lado.
+    gancho: >-
+      As ruínas presas no vidro valem fortunas; o Éter das camadas cobra de quem as abre com as mãos.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [ataque, ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} encosta a orelha no chão de vidro e bate de leve com a cunha, escutando."
+    description: Um Saqueador-de-Cristal cujas mãos o Éter cristalizado transformou em duas cunhas azuis, que escuta onde as coisas racham antes de bater.
+    perigo: Médio
+    lore: >-
+      Os Saqueadores-de-Cristal entram em Zhur atrás das ruínas presas nas camadas e do Éter
+      cristalizado, e disputam os achados com violência. Os que cavam com as mãos nuas por anos pagam
+      pelas mãos. Este já não tem dedos, tem cunhas, e aprendeu a ouvir o vidro. Os outros saqueadores
+      o contratam para abrir câmaras e o evitam no acampamento.
+    aparencia: >-
+      Cavador magro de costas em arco e joelhos grossos, mãos de cristal azulado até os punhos com os
+      dedos fundidos em duas cunhas lisas e afiadas, veias de luz subindo pelos antebraços.
+    como_se_luta: >-
+      Escuta onde a armadura racha e bate ali, e a rachadura fica. Barulho de metal tira o ouvido dele;
+      as cunhas de cristal quebram com golpe de lado.
+    related_entities: [deserto_zhur]
+    arte:
+      visual: >-
+        Homem magro e encurvado, de costas em arco e joelhos grossos, roupas de saqueador puídas e lenço
+        na cabeça; as duas mãos são cunhas de cristal azul-gelo, lisas e afiadas, sem dedos, translúcidas
+        até os punhos; veias de luz azul subindo pelos antebraços; o rosto de lado, a orelha encostada no
+        chão de vidro.
+      composicao: >-
+        Dentro de uma escavação estreita nas camadas de vidro, uma ruína de pedra presa na parede; o Mãos
+        de Cinzel agachado, cunha encostada numa fenda; ao lado, um balde e uma lamparina de saqueador
+        dão a escala. Azul de Éter, ocre, sombra densa.
+      evitar: Golem de cristal, braços de gelo de fantasia, garras de metal. É um homem magro com mãos de cristal; o resto do corpo é carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_aguadeiro_de_bucho
+    vaga: 15
+    nome: Aguadeiro de Bucho
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tribos_devoradores_sol
+      refs: ["lore_nova/locations.txt:134", "lore_nova/factions.txt:526"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um Devorador a quem a tribo costurou dois buchos de varano por dentro da pele dos antebraços, e os
+        buchos pegaram. Os antebraços incharam até virar dois odres moles e pesados, cheios de água e de
+        sangue de cativo, que pendem até os joelhos e balançam quando ele anda; a pele deles é fina,
+        estriada e quente. As mãos ficaram pequenas na ponta dos odres, e no pulso de cada um sai um tubo
+        de tripa seca com uma rolha de osso. Os ombros caíram e as costas curvaram com o peso.
+    silhueta: Um homem curvado com dois antebraços inchados e moles pendurados até os joelhos, como odres, e mãos pequenas na ponta.
+    comportamento: >-
+      Vai atrás da caçada e nunca na frente. Quando um dos seus cai, chega, ergue um dos braços, tira a
+      rolha do pulso e dá de beber do tubo, e o caído se levanta. Se a caçada vai mal, é o primeiro que a
+      tribo protege.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: tribos_devoradores_sol
+    mecanica_assinatura:
+      carta: cri_aguadeiro_de_bucho_tirar_a_rolha
+      frase: >-
+        Tira a rolha do pulso e dá de beber a um aliado: o aliado fecha um Ferimento e recupera Fôlego.
+    contra_jogo: Furar um dos odres derruba a água e o sangue no chão, e aquele braço não dá mais de beber. Ele não luta; matá-lo primeiro encurta a caçada inteira.
+    gancho: >-
+      Os Devoradores caçam forasteiros pela água do corpo; alguém tem de carregar o que eles caçam.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue um dos braços inchados e leva o tubo do pulso à boca de um dos seus."
+    description: Um Devorador com dois buchos costurados por dentro dos antebraços, inchados como odres até os joelhos, que dá de beber aos caídos da caçada.
+    perigo: Baixo
+    lore: >-
+      Para os Devoradores de Sol um forasteiro capturado é bolsa de água e memórias. A água tem de ir a
+      algum lugar. A tribo escolhe um dos seus e costura buchos de varano por dentro da pele dos
+      antebraços dele, e os buchos pegam. Ele anda atrás das caçadas com os braços cheios até os joelhos,
+      e quem cai bebe do pulso dele e se levanta.
+    aparencia: >-
+      Homem curvado de ombros caídos, os dois antebraços inchados como odres moles de pele fina e
+      estriada pendendo até os joelhos, mãos pequenas na ponta, um tubo de tripa seca com rolha de osso
+      saindo de cada pulso.
+    como_se_luta: >-
+      Fica atrás e dá de beber a quem cai, que se levanta. Furar os odres dos braços acaba com a água;
+      matá-lo primeiro encurta a luta inteira.
+    related_entities: [deserto_zhur, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Homem magro de tronco e pernas, roupas de couro de lagarto, ombros puxados para baixo; os dois
+        antebraços enormes, inchados como odres de couro cheios, pele fina e esticada com estrias claras e
+        cicatrizes de costura em espiral, pendendo até os joelhos; mãos pequenas na ponta; de cada pulso
+        sai um tubo de tripa seca e escura com rolha de osso; lentes de obsidiana nos olhos.
+      composicao: >-
+        Fim de uma caçada noturna, um Devorador ferido no chão; o Aguadeiro ajoelhado ao lado, um braço
+        inchado erguido com esforço, levando o tubo do pulso à boca dele; uma lança caída no chão, do
+        comprimento de um homem, dá a escala. Ocre, couro, azul-noite, um fio escuro escorrendo da rolha.
+      evitar: Gordo cômico, braços de lutador, monstro inchado. É um homem magro com dois odres vivos no lugar dos antebraços; a cena é séria.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cacador_sem_calor
+    vaga: 16
+    nome: Caçador Sem Calor
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tribos_devoradores_sol
+      refs: ["lore_nova/creatures.txt:1156", "lore_nova/npcs.txt:1800"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Um caçador Devorador que aprendeu a andar entre as miragens. Para não ter calor, raspou a pele e a
+        cobre de cinza e barro molhado, que racha e é refeito todas as noites; por baixo a carne é pálida
+        e azulada. Costurou a boca até a metade para respirar devagar e frio, e arrancou as unhas para não
+        suar nas mãos. Os olhos são de obsidiana, e o peito sobe uma vez a cada muitas batidas de coração.
+    silhueta: Um vulto agachado e cinzento, rachado como barro seco, quase parado entre as figuras pálidas de uma miragem.
+    comportamento: >-
+      As miragens não têm calor, e é assim que os viajantes sabem que não são gente. Ele também não tem.
+      Fica parado entre elas, deixa a vítima passar achando que é mais uma, e se levanta pelas costas.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: tribos_devoradores_sol
+    mecanica_assinatura:
+      carta: cri_cacador_sem_calor_entre_as_miragens
+      frase: >-
+        Fica imóvel entre as miragens: não pode ser alvo até agir, e o primeiro golpe que dá é pelas
+        costas.
+    contra_jogo: Tocar as miragens ou jogar água; o barro molhado escorre e ele aparece. Quem olha o chão vê as pegadas que miragem não deixa.
+    gancho: >-
+      As miragens de Zhur aprendem com quem passa; os Devoradores aprenderam com as miragens, e um deles
+      aprendeu bem demais.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} some entre as figuras pálidas; uma delas deixa pegadas."
+    description: Um caçador Devorador coberto de cinza e barro, de boca costurada e carne fria, que fica parado entre as miragens até a vítima passar.
+    perigo: Médio
+    lore: >-
+      As miragens de Vaelith não produzem calor, e é por isso que os Devoradores de Sol as distinguem dos
+      vivos. As miragens aprendem com quem passa; os Devoradores aprenderam com elas. Alguns caçadores se
+      esfriam até o corpo não dizer nada a ninguém, e esperam entre as figuras pálidas que acenam no
+      horizonte. Quem segue uma miragem às vezes é pego antes de morrer de sede.
+    aparencia: >-
+      Caçador magro e agachado, pele raspada coberta de cinza e barro rachado, carne pálida e azulada nas
+      rachaduras, boca costurada até a metade, mãos sem unhas, olhos de obsidiana.
+    como_se_luta: >-
+      Fica parado entre as miragens e ataca pelas costas. Tocar as miragens ou jogar água o revela, e as
+      pegadas dele aparecem onde miragem não pisa.
+    related_entities: [deserto_zhur, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Homem magro e agachado, corpo inteiro coberto por uma crosta de cinza e barro cinzento rachada em
+        placas, carne pálida e azulada nas fendas; boca costurada com linha escura até o centro do lábio;
+        dedos sem unhas; olhos de lente de obsidiana; nenhuma roupa além de uma faixa de couro e uma faca
+        curta.
+      composicao: >-
+        Planície de vidro à hora azul; ao fundo, figuras pálidas e esgarçadas de uma miragem, uma família
+        acenando; entre elas, o Caçador quase igual a elas, agachado; em primeiro plano, um viajante de
+        cantil na mão passando de costas, do mesmo tamanho, dá a escala; pegadas só atrás do Caçador.
+        Cinza, azul pálido, ocre.
+      evitar: Fantasma, ninja, monge. É um caçador de corpo frio e rachado; a miragem é translúcida e ele não.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_altivo_do_vidro
+    vaga: 17
+    nome: Altivo do Vidro
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/npcs.txt:163", "lore_nova/npcs.txt:167"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um cativo dos Devoradores que tocou o resíduo de Urath no vidro e não caiu de joelhos como os
+        outros. O orgulho do demônio tomou o esqueleto e o empurrou para a frente: a espinha arqueou
+        para trás como um arco retesado, e o esterno cresceu para fora numa placa de osso branco, larga
+        e lisa, estufada como peito de pombo, que rasgou a pele e vai à frente dele. As costelas se
+        abriram em leque atrás dela, e o músculo vermelho aparece entre elas. A cabeça caiu para trás
+        sobre os ombros e travou, com o rosto para o céu. As pernas são as de um homem, de joelhos
+        travados e expostos. Não consegue olhar para baixo.
+    silhueta: >-
+      Uma figura de costas arqueadas para trás como um arco, peito de osso estufado para a frente e o
+      rosto virado para o céu.
+    comportamento: >-
+      Não se esconde nem desvia. Vai em linha reta, de queixo erguido, e recebe o golpe sem levantar o
+      braço; depois devolve, mais forte, como quem corrige uma ofensa. Não vê o que está aos pés dele.
+    papel_tatico: tanque_reativo
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_altivo_do_vidro_ofensa_cobrada
+      frase: >-
+        Não se defende: recebe o golpe inteiro e devolve outro igual e mais forte, no mesmo instante, em
+        quem bateu.
+    contra_jogo: >-
+      Não bater na placa do peito, que devolve; rasteiras e golpes nos joelhos travados o pegam por
+      baixo, onde ele não olha, e quem bate de cima recebe de volta.
+    gancho: >-
+      Urath está selado sob o vidro e ainda sabe que o mundo lhe deve reverência; o que se levanta do vidro
+      tocado por ele não aprendeu a curvar o pescoço.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre os braços e espera o golpe, com o queixo erguido para o céu."
+    description: >-
+      Um cativo de espinha arqueada para trás pelo resíduo de Urath, de peito de osso estufado e rosto
+      travado para o céu, que devolve cada golpe.
+    perigo: Alto
+    lore: >-
+      Urath, o Orgulho, está selado e fragmentado sob o Mar de Vidro, e a areia vitrificada ainda
+      carrega o resíduo dele. Quem o toca costuma cair de joelhos. Alguns não caem. Nesses o orgulho
+      toma o peito, estufa o osso para a frente até rasgar a pele e arqueia a espinha para trás. Andam
+      de rosto para o céu, não desviam de nada, e devolvem cada ofensa com juros.
+    aparencia: >-
+      Figura de espinha arqueada para trás, esterno crescido numa placa de osso branco estufada para a
+      frente, costelas abertas em leque com músculo vermelho entre elas, cabeça caída para trás com o
+      rosto para o céu, joelhos travados e expostos.
+    como_se_luta: >-
+      Não se defende: aguenta o golpe e devolve mais forte em quem bateu. Não vê o chão; rasteiras e
+      golpes nos joelhos travados o pegam por baixo.
+    related_entities: [deserto_zhur, npc_urath]
+    arte:
+      visual: >-
+        Humanoide grande, um palmo acima de um homem, de pé com a espinha muito arqueada para trás; o
+        esterno projetado para a frente numa placa de osso branco, larga e lisa, que rasga a pele do
+        peito; costelas abertas em leque, com músculo vermelho visível entre elas; cabeça caída para
+        trás, travada, rosto voltado para o céu, olhos abertos; braços abertos e pendentes; pernas
+        humanas de comprimento normal, joelhos travados e nus. Sem pernas de pau nem canelas alongadas
+        (essa leitura é da Pernalta do Conselho, Aethelgard).
+      composicao: >-
+        Planície de vidro sob a lua cheia; o Altivo de frente, braços abertos, queixo erguido; a seus pés,
+        sem que ele veja, um Devorador ajoelhado com a testa no chão, bem menor, dá a escala. Violeta
+        fraco subindo do vidro, branco de osso, vermelho de músculo, azul-noite.
+      evitar: Rei de coroa, demônio de chifres, esqueleto vivo, anjo, gola de costelas, pernas finas de vidro. É um homem cujos ossos das pernas e do crânio cresceram para cima; nada de asas, chifres ou coroa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_despenseiro_de_espinhos
+    vaga: 18
+    nome: Despenseiro de Espinhos
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_daruun
+      refs: ["lore_nova/npcs.txt:197", "lore_nova/factions.txt:522"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Uma ave corredora sem voo, mais alta que um homem a cavalo, de pernas grossas e garras de três
+        dedos, pescoço comprido e pelado e bico curvo em gancho. As penas das costas e dos tocos de asa
+        endureceram em espinhos de vidro compridos e curvos, apontados para cima, numa sela de pontas. É
+        ali que ela guarda o que toma: odres, bolsas, facas, pedaços de arreio, tudo espetado e
+        balançando, nada vivo. O papo, sob o bico, é largo e solto como um saco, e ela o enche e o
+        esvazia sem engolir.
+    silhueta: >-
+      Uma ave alta de pescoço comprido e pernas grossas, com as costas eriçadas de espinhos de vidro
+      carregados de odres e bolsas espetados.
+    comportamento: >-
+      Não mata o que encontra. Arranca, carrega e passa adiante: o odre de um viajante vai parar no bico
+      de outro bicho, a faca na mão de um Devorador. Leva a sela cheia para a borda sul e volta vazia.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_despenseiro_de_espinhos_passa_adiante"
+      frase: >-
+        Arranca com o bico o melhor que o alvo tem à mão (um consumível, a arma ou o reforço que ele
+        acendeu) e o espeta nas costas; na rodada seguinte o passa a outra criatura da cena, que passa a
+        usá-lo. Derrubada, tudo o que está espetado volta ao dono.
+    contra_jogo: >-
+      Não levar nada valioso à mão perto dela, ou derrubá-la pelas pernas grossas, que não têm espinho,
+      antes que ela passe adiante o que tomou.
+    gancho: >-
+      Daruun consome e redistribui, e tudo tem de passar por suas mãos; nos poços onde os Devoradores
+      trocam cativos por água, o resíduo dele tomou o corpo da ave que levava as sobras de um lado para
+      o outro.
+    habitat: [dz_borda_do_vazio, deserto_zhur]
+    inspiracao:
+      - fonte: zoologia (picanço e aves corredoras)
+        referencia: "o picanço, ave que espeta as presas em espinhos como despensa, e as aves corredoras sem voo do deserto"
+        tomou: a despensa de presas espetadas e o corpo de corredora alta
+        distancia: os espinhos nascem das próprias penas, ela carrega a despensa nas costas e bebe dela viva; é cria de Maalrek, não ave comum
+    padrao: [ataque, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abaixa o pescoço, abre o papo e mira o que você tem na mão."
+    description: >-
+      Uma ave corredora sem voo, de penas das costas endurecidas em espinhos de vidro, que arranca o que
+      os vivos carregam e o passa a quem estiver com ela.
+    perigo: Médio
+    lore: >-
+      Para os Devoradores de Sol tudo se troca: água por informação, cativo por água. Nos poços onde
+      fazem essas trocas, uma ave corredora levava as sobras de um lado para o outro, e o resíduo de
+      Daruun, que não tem poder próprio e vive do que passa pelas mãos, tomou-lhe o corpo. Hoje ela
+      arranca o que os vivos carregam, espeta nas costas e entrega a outro. Os Devoradores não a caçam.
+      Dizem que ela aprendeu com eles.
+    aparencia: >-
+      Ave corredora sem voo, alta, de pernas grossas e pescoço nu, bico em gancho e papo largo e solto,
+      costas eriçadas numa sela de espinhos de vidro curvos com odres, bolsas, facas e arreios
+      espetados.
+    como_se_luta: >-
+      Arranca o melhor que você tem à mão e o passa a outra criatura. Não carregue o valioso à vista;
+      derrubada pelas pernas, devolve tudo.
+    related_entities: [deserto_zhur, dz_borda_do_vazio, npc_maalrek]
+    arte:
+      visual: >-
+        Ave corredora sem voo, mais alta que um homem a cavalo, pernas grossas de três dedos, pescoço
+        longo e nu, bico curvo em gancho, papo largo e solto sob o bico; nas costas, uma sela de
+        espinhos de vidro curvos apontados para cima, com odres de couro, bolsas, facas e pedaços de
+        arreio espetados neles. Nenhuma presa viva espetada (a despensa de presas é do Picanço de
+        Espinheiro, Floresta).
+      composicao: >-
+        Beira de um poço de cativos dos Devoradores, à noite, grades de osso e corda; o Despenseiro
+        passando de lado, a sela de espinhos carregada; um Devorador encostado na grade, observando sem se
+        mexer, dá a escala. Âmbar de vidro, sangue seco marrom, azul-noite.
+      evitar: Avestruz cômica, dinossauro, grifo, ave de fogo, gore explícito. A presa espetada é um animal pequeno e em sombra; o horror está no hábito, não no sangue.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lacrador_de_saidas
+    vaga: 19
+    nome: Lacrador de Saídas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:272", "lore_nova/locations.txt:138"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: escoria_fuligem
+      escala: humana
+      locomocao: rasteja
+      percepcao: medo_emocao
+      texto: >-
+        Um bicho comprido e sem patas, da grossura de um homem, de pele cinzenta e áspera como escória de
+        forno. A garganta é um papo que brilha laranja por dentro: ele engole areia de vidro e a derrete na
+        barriga, e cospe o vidro mole em cordões que endurecem no ar. Os olhos ficam no alto da cabeça,
+        e o corpo inteiro treme sem parar, como quem tem pressa e não sabe de quê.
+    silhueta: Uma serpente grossa e cinzenta de papo aceso, cuspindo um fio de vidro que brilha.
+    comportamento: >-
+      Aparece quando alguém já está com medo, e rodeia a luta cuspindo paredes de vidro nas passagens,
+      uma de cada vez, até não sobrar caminho. Não mata depressa. Fecha.
+    papel_tatico: controlador
+    arquetipo: abissal
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lacrador_de_saidas_parede_cuspida
+      frase: >-
+        Cospe vidro mole numa passagem: o alvo não pode recuar nem fugir enquanto a parede durar, e quem
+        está preso perde Fôlego.
+    contra_jogo: O vidro cuspido é mole na primeira rodada e quebra com o ombro; quem vai para a parede logo, sai. O papo aceso queima se furado.
+    gancho: >-
+      Dorrhen anda procurando uma saída que sabe não existir; na borda sul, onde o mundo acaba numa queda,
+      o resíduo dele achou um corpo que fecha as outras.
+    habitat: [dz_borda_do_vazio]
+    inspiracao: []
+    padrao: [enfraquecer, enfraquecer, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} incha o papo, que acende laranja, e se vira para a passagem que sobrou."
+    description: Um bicho comprido de pele de escória e papo aceso que derrete areia na barriga e cospe paredes de vidro nas passagens até não sobrar caminho.
+    perigo: Médio
+    lore: >-
+      Dorrhen, o Desespero, anda sem parar atrás de uma saída que sabe não existir, e faz a situação
+      parecer mais fechada do que é. Na borda sul de Zhur, onde o mundo termina numa queda, o resíduo
+      dele tomou um bicho que engole areia e cospe vidro. Ele aparece quando alguém já tem medo e fecha
+      as passagens uma a uma. Os que escaparam dizem que a última parede estava mole, e que só viram isso
+      depois.
+    aparencia: >-
+      Bicho comprido e sem patas da grossura de um homem, pele cinzenta e áspera de escória, papo na
+      garganta que brilha laranja por dentro, olhos no alto da cabeça, cuspindo cordões de vidro mole.
+    como_se_luta: >-
+      Cospe paredes de vidro nas passagens e prende quem está com medo. A parede é mole na primeira rodada
+      e quebra com o ombro; furar o papo queima o bicho.
+    related_entities: [dz_borda_do_vazio, npc_dorrhen]
+    arte:
+      visual: >-
+        Corpo serpentino grosso como um homem, sem patas, pele cinza-carvão áspera e porosa como escória
+        de fundição; garganta inchada num papo translúcido com brilho laranja de vidro derretido por
+        dentro; boca estreita soltando um cordão de vidro incandescente que esfria em âmbar no ar; olhos
+        pequenos no alto do crânio; o corpo em leve tremor.
+      composicao: >-
+        Passagem estreita entre blocos de vidro perto da Borda do Vazio; uma parede de vidro recém-cuspida,
+        ainda alaranjada, fecha a saída; o Lacrador enrolado na frente dela; um viajante encurralado, de
+        costas para o vidro, mão espalmada nele, dá a escala. Laranja de vidro quente, cinza-carvão, cinza
+        sem fundo ao longe.
+      evitar: Serpente de fogo, dragão, salamandra em chamas. Não há fogo aberto; o calor está dentro do papo e no vidro mole.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_furador_de_odres
+    vaga: 20
+    nome: Furador de Odres
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:257", "lore_nova/locations.txt:134"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: pequena
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um bicho do tamanho de uma raposa, chato e comprido, de pele pelada cinza-rosada caída em pregas
+        sobre o lombo, como couro grande demais. As quatro patas são curtas e de dedos longos, com
+        almofadas que não fazem barulho. A cabeça é quase só um dente: um incisivo único, comprido e oco
+        como uma sovela, que sai da mandíbula de baixo e passa da ponta do focinho. Os olhos são grandes e
+        úmidos e acham o brilho da água através do couro de um cantil.
+    silhueta: Um bicho chato e pelado, rente ao chão, com um único dente comprido e fino saindo do focinho como uma agulha.
+    comportamento: >-
+      Não bebe a água que solta. Entra nos acampamentos, acha o cantil mais cheio, fura e vai ao próximo;
+      rói correias de sela e de alforje e deixa a carga cair. Escolhe sempre quem tem mais. Encurralado,
+      espeta a sovela num tornozelo e foge pela fresta mais estreita.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_furador_de_odres_sovela_no_cantil
+      frase: >-
+        Fura o cantil ou o odre de quem carrega mais: o alvo perde um consumível e não recupera Fôlego na
+        rodada seguinte.
+    contra_jogo: Água em cabaça dura ou vidro grosso não fura; quem carrega pouco não interessa a ele. A sovela é fina e quebra num golpe de lado.
+    gancho: >-
+      Veth não quer o que o outro tem, quer que o outro não tenha; no Mar de Vidro, o que um tem e o outro
+      não tem é água.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue o focinho e a sovela gira devagar na direção do cantil mais cheio."
+    description: Um bicho pelado e chato com um único dente comprido e oco como sovela, que fura os cantis e rói as correias de quem carrega mais, sem beber nada.
+    perigo: Baixo
+    lore: >-
+      Veth, a Inveja, existe só entre dois. No Mar de Vidro, onde cada gole é contado, o resíduo dela
+      tomou um bicho pelado de dente comprido. Ele entra nos acampamentos de madrugada, fura o cantil de
+      quem tem mais água e vai embora sem beber. Os Devoradores de Sol carregam água em cabaça, e os
+      forasteiros aprendem a dormir com o cantil debaixo da cabeça.
+    aparencia: >-
+      Bicho do tamanho de uma raposa, chato e comprido, pele pelada cinza-rosada em pregas sobre o lombo,
+      patas curtas de dedos longos, um único incisivo comprido e oco como sovela saindo da mandíbula de
+      baixo além do focinho, olhos grandes e úmidos.
+    como_se_luta: >-
+      Fura o cantil de quem carrega mais e foge. Água em cabaça dura não fura; a sovela quebra num golpe
+      de lado.
+    related_entities: [deserto_zhur, npc_veth]
+    arte:
+      visual: >-
+        Pequeno bicho chato e alongado, do tamanho de uma raposa, rente ao chão; pele pelada cinza-rosada
+        caindo em pregas largas sobre o lombo; patas curtas com dedos longos e finos; cabeça estreita
+        dominada por um único dente longo, fino e oco como uma sovela de sapateiro, projetado da mandíbula
+        inferior além do focinho; olhos grandes, escuros e úmidos refletindo a lua.
+      composicao: >-
+        Parada de caravana ao meio-dia, sob um toldo de couro, camelos deitados à sombra e os homens
+        cochilando; o Furador cravando a sovela num odre pendurado na sela, um fio de água escorrendo na
+        areia de vidro; a sela de camelo, bem maior que ele, dá a escala. Branco de sol, sombra ocre, prata
+        do fio de água.
+      evitar: Rato de cartoon, mosquito gigante, javali de presas. É um bicho pelado de um dente só, fino como agulha; nada de fofura nem presas em par.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_guia_avesso
+    vaga: 21
+    nome: Guia Avesso
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_skarath
+      refs: ["lore_nova/npcs.txt:332", "lore_nova/npcs.txt:336", "lore_nova/locations.txt:134"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: sal_mineral
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Um guia de caravana que vendeu a sua aos Devoradores de Sol por água, e que o resíduo da Traição
+        achou no caminho de volta. O corpo virou do avesso o que devia olhar para a frente: a cabeça girou
+        inteira sobre o pescoço e ficou voltada para as costas, os joelhos e os cotovelos dobram para
+        trás, e os pés apontam para o lado de onde ele vem. A pele secou numa crosta de sal branca e
+        rachada que estala quando ele anda, e por baixo a carne é rosada e úmida. A mão direita está
+        sempre estendida, de palma aberta, como quem convida a seguir.
+    silhueta: Um homem que anda de costas para onde vai, com o rosto virado para quem o segue e uma mão estendida.
+    comportamento: >-
+      Aparece à noite como um guia, chamando, e vai na frente olhando para quem o segue. Escolhe a hora:
+      põe a mão no ombro de quem confiou e, no passo seguinte, é a mão do próprio companheiro que bate.
+      Não persegue quem desconfia; espera quem confia.
+    papel_tatico: quebra_defesa
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_guia_avesso_mao_que_vira"
+      frase: >-
+        Põe a mão no ombro de quem estiver mais perto: na rodada seguinte, a primeira Carta de ataque do
+        tocado acerta o companheiro mais perto dele em vez da criatura que ele escolheu.
+    contra_jogo: >-
+      Não deixar que toque: quem recua quando a mão vem, ou luta longe dele, não é virado. Tocado, jogar
+      defesa em vez de ataque na rodada seguinte; e os joelhos dobram para trás, então um golpe de
+      frente nas canelas o derruba.
+    gancho: >-
+      Skarath não precisa mentir; espera a confiança. No Mar de Vidro, quem confia num guia confia a
+      vida, e a traição parece ao guia só a coisa sensata a fazer.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} estende a mão aberta, e o rosto virado para trás sorri para quem está mais perto."
+    description: >-
+      Um guia de caravana que vendeu a sua aos Devoradores e voltou do avesso, de cabeça virada para as
+      costas e pele de sal, que põe a mão no ombro de quem confia e o faz golpear o companheiro.
+    perigo: Alto
+    lore: >-
+      Skarath, a Traição, não se anuncia: parece lucidez, como se o traidor finalmente visse as pessoas
+      como são. Um guia de caravana viu assim a sua e a vendeu aos Devoradores de Sol por água. No caminho
+      de volta o resíduo do demônio o achou, e o corpo dele virou do avesso. Ainda guia. Vai na frente,
+      de rosto voltado para quem segue, e as caravanas que o seguem não chegam a lugar nenhum.
+    aparencia: >-
+      Homem curvado de pele em crosta de sal branca e rachada sobre carne rosada, cabeça girada inteira
+      para as costas, joelhos e cotovelos dobrando para trás, pés virados para trás, mão direita
+      estendida de palma aberta.
+    como_se_luta: >-
+      Põe a mão no ombro, e na rodada seguinte o primeiro ataque do tocado acerta um companheiro. Recue
+      quando a mão vem; tocado, defenda em vez de atacar.
+    related_entities: [deserto_zhur, npc_skarath, tribos_devoradores_sol]
+    arte:
+      visual: >-
+        Homem magro de roupa de guia de caravana em farrapos, cajado de rota na mão esquerda; a cabeça
+        girada cento e oitenta graus, o rosto olhando por cima das próprias costas; joelhos e cotovelos
+        dobrados ao contrário, pés virados para trás; a pele coberta de uma crosta de sal branca e
+        rachada, com carne rosada e úmida nas fendas; a mão direita estendida, palma aberta, convidando.
+      composicao: >-
+        Trilha de caravana marcada por estacas no Mar de Vidro, noite sem lua, só uma lanterna; o Guia
+        dois passos à frente, de costas para o caminho e de rosto para o viajante que o segue; o viajante
+        com o camelo pela rédea, da mesma altura, dá a escala. Branco de sal, âmbar de lanterna, azul-negro.
+      evitar: Possessão de filme de terror, contorcionista de circo, fantasma. É um homem vivo de corpo avesso e pele de sal; nada de olhos brilhando nem levitação.
+    autor: opus
+    revisor_unicidade: coordenador-revisao-cruzada
+    revisao: aprovada
+
+  - id: enemy_boss_general_escorpiao
+    vaga: 25
+    nome: Trono de Ajoelhados
+    status: reinventada
+    substitui: enemy_boss_general_escorpiao
+    ataques: ["Peso da Reverência", "Mão do Alto"]
+    acoes: ["À beira da morte, foge nos braços dos de baixo; volta outro dia.", "Manda os de baixo sobre quem cura ou conjura primeiro.", "Fica no alto, comanda a cena e guarda a Carta assinatura para quando alguém estiver de joelhos."]
+    substitui_generico: General Escorpião
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/npcs.txt:167", "lore_nova/creatures.txt:1158"]
+    anatomia:
+      plano_corporal: composto
+      material: vidro_cristal
+      escala: enorme
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Um monte que anda, feito de gente de joelhos. Uma dúzia de viajantes que se ajoelharam diante do
+        resíduo de Urath e não se levantaram: o vidro fundiu as costas curvadas umas nas outras, os braços
+        viraram pernas de apoio e as cabeças baixas ficaram na frente, testas no chão, como cascos. No alto
+        do monte vai sentado um só corpo, ereto, de pele lisa e cristal violeta saindo das clavículas como
+        uma gola, com as mãos pousadas nas nucas dos de baixo. Os de baixo ainda respiram.
+    silhueta: Um monte de costas curvadas que anda sobre braços e cabeças, com uma figura reta sentada no topo.
+    comportamento: >-
+      Atravessa o vidro devagar, e os de baixo vão para onde o de cima aponta. Quem chega perto sente as
+      pernas pedirem para dobrar. Em quem dobra, o de cima desce a mão, sem pressa, como quem castiga.
+    papel_tatico: guarda_protetor
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_trono_de_ajoelhados_peso_da_reverencia
+      frase: >-
+        O de cima aponta e o peso da reverência cai: os alvos à frente ficam de joelhos, sem passo e sem
+        defesa na rodada, e quem já estava de joelhos leva o golpe da mão do alto.
+    contra_jogo: Os de baixo protegem o de cima com as costas; matá-lo exige subir ou derrubar o monte pelas pernas da frente. Quem não olha para ele dobra menos.
+    gancho: >-
+      Urath caçou os Elfos porque não o reverenciavam; selado sob o vidro, o resíduo dele ainda junta quem
+      se ajoelha, e com eles faz um trono para andar por aí.
+    habitat: [deserto_zhur]
+    inspiracao: []
+    padrao: [defesa, enfraquecer, ataque_multiplo, reforco_proprio]
+    a_cada_n: 4
+    telegrafo: "{nome} ergue a mão do alto do monte, e os de baixo encostam as testas no chão."
+    description: Um monte que anda, feito de viajantes ajoelhados e fundidos pelo vidro, com um único corpo ereto sentado no alto que faz quem chega perto se ajoelhar.
+    perigo: Extremo
+    lore: >-
+      Urath, o Orgulho, caçou os Elfos na primeira era porque a existência de quem não o reverenciava era
+      uma ofensa. Selado sob o Mar de Vidro, ele não mudou. Os viajantes que tocam o resíduo dele costumam
+      cair de joelhos, e alguns não se levantam mais. O vidro os junta. Os Devoradores de Sol contam de um
+      monte de ajoelhados que anda à noite com alguém sentado em cima, e não o seguem.
+    aparencia: >-
+      Monte de uma dúzia de corpos ajoelhados fundidos pelo vidro, costas curvadas coladas, braços como
+      pernas de apoio e cabeças baixas na frente; no alto, um corpo ereto de pele lisa com uma gola de
+      cristal violeta nas clavículas e as mãos nas nucas dos de baixo.
+    como_se_luta: >-
+      Faz quem está à frente se ajoelhar e castiga quem já está de joelhos. Os de baixo protegem o de
+      cima; derrubar o monte pelas pernas da frente ou subir até o alto, e não olhar para ele.
+    related_entities: [deserto_zhur, npc_urath]
+    arte:
+      visual: >-
+        Massa do tamanho de uma casa pequena feita de corpos humanos ajoelhados, costas arqueadas fundidas
+        umas nas outras por vidro fosco e lustroso; braços estendidos para baixo como pernas de apoio,
+        cabeças baixas com as testas no chão na frente da massa; no topo, uma figura humana sentada muito
+        reta, pele lisa e pálida, gola de cristais violeta saindo das clavículas, braço direito erguido
+        apontando; mãos pousadas nas nucas dos de baixo.
+      composicao: >-
+        Mar de Vidro sob a lua, ruínas de colunas soterradas; o Trono avançando em diagonal; em primeiro
+        plano, um viajante já de joelhos na areia, olhando para cima, e outro tentando erguê-lo pelo
+        braço. Os viajantes dão a escala. Violeta, prata de vidro, ocre de pele, azul-noite.
+      evitar: Trono de ouro, rei de coroa, montanha de cadáveres em gore, escorpião. Os de baixo estão vivos e ajoelhados, não despedaçados; o de cima não usa coroa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada

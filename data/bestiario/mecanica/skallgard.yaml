@@ -1,0 +1,116 @@
+# SPEC-349 Etapa 5: mecânica de Skallgard (onda 10). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_parado_do_sopro:
+    cartas:
+      - {n: Braço Parado, t: "O braço jovem, parado no fim do golpe, desce antes que alguém o veja mexer.", e: ["d:versatil:impactante"]}
+      - {n: Golpe Já Dado, sig: 1, t: "O braço já chegou ao fim do golpe: ninguém reage a algo que já aconteceu.", e: ["d:pesada:impactante", {kind: buff_iniciativa, alvo: eu, valor: 3}], fol: 2}
+    aprox: "age sempre primeiro e o golpe não aceita Reação -> buff de iniciativa (sem bloqueio de Reação)"
+  mon_levantado_de_rubi:
+    cartas:
+      - {n: Mão de Rubi, t: "A mão morna, de cristal vermelho no pulso, bate seca no peito.", e: ["d:marcial:impactante"]}
+      - {n: Rubi no Peito, sig: 1, fol: 2, t: "O rubi esquenta e a neve derrete em círculo; quem caiu perto se levanta fraco.", e: [{kind: cura, alvo: aliados, valor: 4}, {kind: protecao, alvo: aliados, valor: 2}]}
+    aprox: "o 1º inimigo caído se levanta mais fraco enquanto o rubi estiver inteiro -> cura/proteção em aliados"
+  mon_queimado_de_breu:
+    cartas:
+      - {n: Soco de Breu, t: "A crosta preta e fosca do punho bate sem brilho.", e: ["d:marcial:abissal"]}
+      - {n: Bebe a Luz, sig: 1, t: "Bebe a luz perto dele e ataca de novo, uma vez para cada chama acesa.", e: ["d:marcial:abissal", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+    aprox: "ataques por rodada = luzes acesas na cena -> buff de dano"
+  mon_parelha_carmesim:
+    cartas:
+      - {n: Dentada de Matilha, t: "Dois cães mortos e atrelados mordem juntos na perna.", e: ["d:versatil:perfurante"]}
+      - {n: Atropelo, sig: 1, t: "A parelha inteira atropela a fila e para do outro lado.", e: ["a:4:impactante", {kind: reposicionar, alvo: eu, valor: 2}], fol: 2}
+      - {n: Tirantes Esticados, f: cena, t: "Os tirantes esticam de uma vez e o trenó vazio ganha velocidade.", e: [{kind: buff_dano, valor: 2}, {kind: protecao, valor: 3}]}
+    aprox: "cortar o tirante do cão da frente faz a parelha girar em falso -> sem ponto fraco"
+  mon_desfiado_da_aurora:
+    cartas:
+      - {n: Farpa Acesa, t: "Arranca do ombro uma tira verde de carne acesa e a joga.", e: ["d:marcial:igneo"]}
+      - {n: Tira que Queima, sig: 1, t: "A tira gruda no alvo e queima a cada rodada até ele rolar na neve.", e: ["d:leve:igneo", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: igneo}], fol: 2}
+  mon_ermitao_de_elmo:
+    cartas:
+      - {n: Garra de Viseira, t: "Duas garras finas saem pelas fendas do elmo e arranham o pulso.", e: ["d:leve:cortante"]}
+      - {n: Viseira no Pulso, sig: 1, t: "Fecha a viseira no pulso de quem bateu e fica pendurado, ocupando a mão.", e: ["d:leve:cortante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}, "c:enraizado:1"]}
+    aprox: "preso, ocupa um espaço da mão do jogador (uma Carta a menos) -> desarmado_risco + enraizado"
+  mon_carrapato_de_mamute:
+    cartas:
+      - {n: Boca de Dentes, t: "A cabeça de dentes crava e puxa um naco inteiro.", e: ["d:marcial:perfurante"]}
+      - {n: Sangue Passado, sig: 1, t: "Bebe por uma boca e passa o sangue pela outra, ao bicho grande da cena.", e: ["d:leve:perfurante", {kind: cura, alvo: aliados, valor: 3}]}
+    aprox: "o sangue bebido cura o inimigo mais forte da cena -> cura em aliados"
+  mon_lagarta_sete_invernos:
+    cartas:
+      - {n: Pelo de Gelo, t: "O pelo congelado bate como uma vassoura de estilhaços.", e: ["d:versatil:gelido"]}
+      - {n: Degelo, sig: 1, t: "Degela de uma vez e se debate contra tudo em volta, derretendo o chão.", e: ["a:3:gelido", {kind: empurrao, valor: 1}], fol: 2}
+    aprox: "alterna uma rodada congelada (imune) e outra degelada -> padrão defesa/ataque_multiplo"
+  mon_mandriao_dois_bicos:
+    cartas:
+      - {n: Bico Partido, t: "Os dois bicos fecham no ombro de quem já sangra.", e: ["d:marcial:perfurante"]}
+      - {n: Bicada Dupla, sig: 1, t: "Desce sobre o ferido e os dois bicos abrem a ferida em duas.", e: ["d:leve:perfurante", {kind: sangria, valor: 2}]}
+  mon_montaria_cravada:
+    cartas:
+      - {n: Pata de Urso-Titã, t: "A pata cravada de ganchos desce com o peso do cavaleiro por cima.", e: ["d:versatil:cortante"]}
+      - {n: Ganchos Vivos, sig: 1, t: "O cavaleiro aponta e o urso só ataca o marcado, com o peso dos dois.", e: ["d:pesada:cortante", {kind: marca, valor: 3}], fol: 2}
+      - {n: Arpão do Cavaleiro, t: "O cavaleiro arremessa o arpão no pé do alvo e puxa o urso junto.", e: ["d:marcial:perfurante", {kind: taunt, valor: 2}], fol: 2}
+    aprox: "derrubado o cavaleiro, o urso perde o rumo -> sem perda de rumo"
+  mon_ferreiro_chama_fria:
+    cartas:
+      - {n: Mão Preta, t: "A mão preta de chama-fátua azul bate no cabo da arma.", e: ["d:marcial:gelido"]}
+      - {n: Mão no Cabo, sig: 1, t: "Agarra a mão de quem segura metal e a chama fria a gela no cabo.", e: ["d:leve:gelido", "c:enraizado:2", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 2}], fol: 2}
+  mon_lascador_morno:
+    cartas:
+      - {n: Lasca Vermelha, t: "Atira uma lasca de cristal vermelho que geme baixinho no ar.", e: ["d:marcial:perfurante"]}
+      - {n: Morte Alheia, sig: 1, t: "A lasca faz o ferido reviver a morte de outro e perder a mão da rodada.", e: ["d:leve:perfurante", {kind: marca_do_abismo, valor: 1}, {kind: torpor, valor: 1}], fol: 2}
+    aprox: "a Carta escolhida é trocada por outra da mão ao acaso -> marca_do_abismo + torpor"
+  mon_escuta_do_sinal:
+    cartas:
+      - {n: Cornetada, t: "A corneta do crânio sopra um zumbido que dói nos dentes.", e: ["d:leve:impactante"]}
+      - {n: Chamado sob o Gelo, sig: 1, t: "Chama os outros pelo gelo e um reforço entra na cena depois de duas rodadas.", e: [{kind: buff_dano, alvo: aliados, valor: 2}, {kind: protecao, alvo: aliados, valor: 2}]}
+    aprox: "chama um lacaio novo a cada duas rodadas -> buff e proteção em aliados (sem convocação)"
+  mon_caldeira_de_peito:
+    cartas:
+      - {n: Punho de Armação, t: "O punho da armação de ferro bate com o peso de uma bigorna.", e: ["d:versatil:impactante"]}
+      - {n: Alívio de Pressão, sig: 1, t: "As válvulas soltam o jato e empurram todos para longe, queimando quem volta.", e: ["a:3:igneo", {kind: empurrao, valor: 2}], fol: 2}
+      - {n: Caldeira Cheia, f: cena, t: "A caldeira enche de novo e a armação range, quente por inteiro.", e: [{kind: protecao, valor: 6}, {kind: buff_dano, valor: 1}]}
+  mon_andas_de_caribu:
+    cartas:
+      - {n: Chute de Osso, t: "A ponta da anda de osso chuta de cima, por cima da cabeça.", e: ["d:versatil:perfurante"]}
+      - {n: Chute do Alto, sig: 1, t: "Chuta de cima com a ponta de osso e o golpe passa por cima da defesa.", e: ["d:marcial:perfurante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}]}
+  mon_ticao_do_juramento:
+    cartas:
+      - {n: Brasa de Lenha, t: "Atira uma brasa da fogueira velha que gruda no pelo.", e: ["d:leve:igneo"]}
+      - {n: Rancor Atiçado, sig: 1, t: "Sopra a própria brasa e os feridos da cena revidam mais furiosos.", e: [{kind: buff_dano, alvo: aliados, valor: 2}, {kind: buff_acerto, alvo: aliados, valor: 2}]}
+  mon_colecionador_de_poses:
+    cartas:
+      - {n: Braço de Estátua, t: "Um braço de estátua de vidro desce copiando a postura do alvo.", e: ["d:pesada:cortante"]}
+      - {n: Pose Guardada, sig: 1, t: "Guarda a pose do alvo e o obriga a repetir o que fez na rodada seguinte.", e: ["d:marcial:cortante", {kind: revelar, campo: cartas}, {kind: torpor, valor: 2}, "c:enraizado:1"], fol: 3}
+      - {n: Pernas de Estátua, t: "As pernas de estátua se encaixam e pisam juntas, em compasso.", e: ["a:3:impactante"], fol: 2}
+      - {n: Pose Dobrada, f: cena, t: "Guarda duas poses ao mesmo tempo e o vidro de todo o corpo fica mais grosso.", e: [{kind: protecao, valor: 6}, {kind: buff_dano, valor: 2}]}
+      - {n: Galeria de Vidro, f: cena, t: "Todas as estátuas da montagem abrem os braços juntas e fecham sobre a fila.", e: ["a:4:cortante", "c:amedrontado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_colecionador_de_poses_pose_dobrada], padrao: [enfraquecer, ataque_multiplo, ataque, defesa], narracao: "{nome} guarda mais uma pose e as estátuas do tronco fecham o vidro em volta."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_colecionador_de_poses_galeria_de_vidro], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_colecionador_de_poses_galeria_de_vidro, a_cada_n: 2, telegrafo: "Todas as estátuas de {nome} viram a cabeça para a mesma pose: a sua."}, narracao: "{nome} perde uma estátua, mas as outras abrem os braços juntas."}
+    aprox: "alvo repete a última Carta se ela ainda estiver na mão -> revelar cartas + torpor + enraizado"
+  mon_feltro_do_ventre:
+    cartas:
+      - {n: Franja de Cobre, t: "As franjas de farpas de cobre raspam a pele e esfriam o que tocam.", e: ["d:marcial:perfurante"]}
+      - {n: O Vizinho Paga, sig: 1, t: "Enrola-se num herói e o calor dele sobe pelo vizinho que ficou ao lado.", e: ["d:leve:perfurante", "c:enraizado:1", {kind: torpor, valor: 1}], fol: 2}
+  mon_aperto_da_tregua:
+    cartas:
+      - {n: Mão Apertada, t: "Os dois braços presos num aperto batem juntos, de cima para baixo.", e: ["d:versatil:impactante"]}
+      - {n: Pacto de Um Lado, sig: 1, t: "Aperta o pulso num pacto que só vale para um lado: o outro não consegue revidar.", e: ["d:marcial:impactante", "c:desmoralizado:2", "c:silenciado:1"], fol: 2}
+  mon_enegrecido_que_espera:
+    cartas:
+      - {n: Toco Preto, t: "O toco preto de geada cai de lado, lento e pesado.", e: ["d:versatil:impactante"]}
+      - {n: Hora Certa, sig: 1, t: "A respiração calma entra em quem chegou perto: o corpo para e acha que escolheu.", e: ["c:enraizado:2", "d:leve:gelido", {kind: torpor, valor: 1}], fol: 2}
+  enemy_lobo_invernal:
+    cartas:
+      - {n: Mordida de Forquilha, t: "A forquilha de quitina morde por baixo, de dentro da neve.", e: ["d:marcial:perfurante"]}
+      - {n: Salto de Forquilha, sig: 1, t: "Salta por cima de quem guarda e morde o que está protegido.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  enemy_yeti:
+    cartas:
+      - {n: Corcova de Gordura, t: "O bisão bate de corcova com o peso de uma carroça.", e: ["d:versatil:impactante"]}
+      - {n: Corcova Furada, sig: 1, t: "A corcova fura e a gordura fervente espirra em todos em volta.", e: ["a:3:igneo", {kind: buff_dano, alvo: eu, valor: 1}], fol: 2}
+      - {n: Gordura Quente, f: cena, t: "A gordura da corcova ferve e guarda calor por inteiro.", e: [{kind: protecao, valor: 5}]}
+  mon_jotun_cinza:
+    cartas:
+      - {n: Punho de Tala, t: "O punho preso na tala de osso de mamute bate de cima.", e: ["d:pesada:impactante"]}
+      - {n: Talas Quebradas, sig: 1, t: "Enquanto as talas aguentam ele não cede; quando elas cedem, bate rasgando a própria pele.", e: ["d:pesada:impactante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2, pc: {sacrificio: 1}}
+      - {n: Correias Firmes, f: cena, t: "As correias das talas estalam no frio e seguram o corpo inteiro.", e: [{kind: protecao, valor: 6}]}

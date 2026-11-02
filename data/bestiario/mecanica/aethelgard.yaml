@@ -1,0 +1,120 @@
+# SPEC-349 Etapa 5: mecânica de Aethelgard (onda 11). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_doador_inacabado:
+    cartas:
+      - {n: Mão Fria de Doador, t: "A mão fria, de veias apagadas, aperta o tornozelo e puxa para a boca.", e: ["d:marcial:impactante"]}
+      - {n: Terminar em Ti, sig: 1, t: "Bebe a Vitalidade de quem segura e as veias do peito acendem uma a uma.", e: ["d:leve:impactante", {kind: cura, alvo: eu, valor: 3, se: {engajado: true}}], fol: 1}
+  mon_dentado_de_eras:
+    cartas:
+      - {n: Mordida de Eras, t: "A mandíbula de muitos dentes fecha e deixa pedaços de várias eras na carne.", e: ["d:versatil:perfurante"]}
+      - {n: Dente de Toda Era, sig: 1, t: "A mordida deixa dentes cravados na armadura e a defesa racha e não volta.", e: ["d:marcial:perfurante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}, {kind: rachadura, valor: 1}], fol: 2}
+      - {n: Placas de Dente, f: cena, t: "Os dentes descem pelo pescoço em placas e cobrem o peito.", e: [{kind: protecao, valor: 5}]}
+  mon_avesso_de_oghma:
+    cartas:
+      - {n: Chute de Costela, t: "Pelo avesso, o chute sobe de baixo, pelas costelas abertas.", e: ["d:marcial:perfurante"]}
+      - {n: Gaiola que Fecha, sig: 1, fol: 2, fol: 2, t: "A gaiola de costelas fecha sobre o braço de quem está na frente.", e: ["d:leve:perfurante", "c:enraizado:2", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 2}]}
+  mon_fervido_da_corrente:
+    cartas:
+      - {n: Punho de Cinza, t: "A pele esticada sobre a cinza fervente estala no soco.", e: ["d:marcial:igneo"]}
+      - {n: Água que Ferve, sig: 1, t: "A água em volta ferve mais a cada ferida e queima todos os que estão perto.", e: ["a:3:igneo", {kind: protecao, valor: 3}], fol: 2}
+  enemy_esqueleto_mago:
+    cartas:
+      - {n: Raio de Prisma, t: "Um prisma do braço solta um fio de luz que corta a pele.", e: ["d:versatil:arcano"]}
+      - {n: Feixe Partido, sig: 1, t: "Junta a luz da sala nos prismas por uma rodada e a solta num feixe que corta.", e: ["d:pesada:arcano", {kind: rachadura, valor: 1}], fol: 2}
+      - {n: Prismas Virados, f: cena, t: "Os prismas das costas se viram para a lamparina e ela some no vidro.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+    aprox: "se a luz for tapada o feixe sai partido e fraco -> sem dependência de luz da cena"
+  enemy_fantasma:
+    cartas:
+      - {n: Dedo de Afogado, t: "O dedo claro como água fecha no pescoço, por baixo, sem aviso.", e: ["d:versatil:gelido"]}
+      - {n: Abraço Frio, sig: 1, t: "Invisível na água clara, abraça por baixo e o frio entra até os ossos.", e: ["d:marcial:gelido", "c:enraizado:1", {kind: esconder, alvo: eu, valor: 2}], fol: 2}
+      - {n: Água Clara, f: cena, t: "Mergulha de volta na água clara, onde só o coração escuro aparece.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 4}]}
+    aprox: "o que se lança contra ele antes de vê-lo erra -> esconder"
+  enemy_golem_carne:
+    cartas:
+      - {n: Quatro Braços, t: "Quatro braços costurados caem juntos sobre a pilha que guardam.", e: ["d:versatil:impactante"]}
+      - {n: Lacre Quebrado, sig: 1, t: "Quem mexe num caixote leva o abraço dos quatro braços com força dobrada.", e: ["d:pesada:impactante", "c:enraizado:1"], fol: 2}
+      - {n: Caixote Fechado, f: cena, t: "Põe as quatro mãos sobre os caixotes e vira as duas cabeças para fora.", e: [{kind: protecao, valor: 6}, {kind: taunt, valor: 2}]}
+  mon_cacao_de_lastro:
+    cartas:
+      - {n: Mordida de Fundo, t: "Sobe do fundo da água e fecha as mandíbulas em quem está na borda.", e: ["d:pesada:perfurante"]}
+      - {n: Lastro Solto, sig: 1, t: "Perde as pedras da barriga e sobe para o ar, caindo do alto sobre a superfície.", e: ["a:3:impactante", "c:amedrontado:1"], fol: 2}
+      - {n: Cauda de Corrente, t: "A cauda comprida bate a água e sobe uma onda cheia de Éter.", e: ["a:3:impactante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Pedra na Barriga, f: cena, t: "Engole mais pedras da laje das Ruínas e desce de novo ao fundo.", e: [{kind: protecao, valor: 6}, {kind: buff_dano, valor: 2}]}
+      - {n: Queda do Cação, f: cena, t: "O cação inteiro cai do ar sobre o barco e a água estoura em volta.", e: ["a:4:impactante", "c:atordoado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_cacao_de_lastro_pedra_na_barriga], padrao: [ataque, mover, ataque_multiplo], narracao: "{nome} engole mais pedras e afunda um pouco, a água ao redor escurecendo."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_cacao_de_lastro_queda_do_cacao], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_cacao_de_lastro_queda_do_cacao, a_cada_n: 2, telegrafo: "As pedras rangem na barriga de {nome} e ele começa a subir para fora da água."}, narracao: "{nome} solta o lastro e sobe para o ar, caindo do alto sobre tudo."}
+    aprox: "muda de luta ao perder o lastro: do fundo ao ar -> fase de 35 % com queda em área"
+  mon_bigua_de_vidro:
+    cartas:
+      - {n: Pena de Vidro, t: "Uma pena de vidro corta no mergulho e o bico bate depois.", e: ["d:marcial:cortante"]}
+      - {n: Mergulho de Vidro, sig: 1, t: "Mergulha, corta com as asas de vidro e volta para a estaca.", e: ["d:marcial:cortante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  mon_aranha_de_bolha:
+    cartas:
+      - {n: Presa de Bolha, t: "As presas da aranha d'água picam rápido e deixam uma bolha de ar.", e: ["d:marcial:perfurante"]}
+      - {n: Puxada para o Sino, sig: 1, t: "Puxa o alvo pelos fios para o sino de ar, longe de quem o ajudaria.", e: ["d:leve:perfurante", {kind: mover_alvo_zona, direcao: aproximar}, "c:enraizado:2"], fol: 2}
+  mon_lesma_de_penacho:
+    cartas:
+      - {n: Raspa de Penacho, t: "O penacho aceso raspa a mão que toca e solta uma centelha.", e: ["d:leve:arcano"]}
+      - {n: Penacho Cheio, sig: 1, t: "O Éter que a atinge vai para as pontas e volta contra quem toca.", e: [{kind: contra_ataque, dano_base: 3}, {kind: protecao, valor: 3}]}
+    aprox: "o primeiro efeito de Éter que a atinge vai para o penacho e é descarregado em quem tocar -> contra-ataque + proteção"
+  mon_ourico_de_lajedo:
+    cartas:
+      - {n: Espinho de Lajedo, t: "Dispara um espinho de ouriço que crava na laje ao lado.", e: ["d:marcial:perfurante"]}
+      - {n: Espinheiro, sig: 1, t: "Os espinhos que erram crescem na laje até o chão virar espinheiro.", e: ["a:2:perfurante", {kind: dot, dano_base: 1, duracao: 3, dano_tipo: perfurante}], fol: 2}
+  mon_cupinzeiro_de_vidro:
+    cartas:
+      - {n: Cuspe de Soldado, t: "Os soldados cospem vidro mole que endurece na pele.", e: ["d:marcial:cortante"]}
+      - {n: Parede Cuspida de Vidro, sig: 1, t: "Cospem uma parede de vidro na frente do aliado mais ferido do ninho.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: buff_defesa, alvo: aliados, valor: 1}]}
+  mon_camarao_faxineiro:
+    cartas:
+      - {n: Pinça de Nuvem, t: "A nuvem de camarões belisca todas as frestas da armadura.", e: ["d:leve:perfurante"]}
+      - {n: Casca Nova de Camarão, sig: 1, t: "Desce sobre o aliado ferido e fecha o corte com pele nova de quitina.", e: [{kind: cura, alvo: aliados, valor: 3}, {kind: protecao, alvo: aliados, valor: 2}]}
+  mon_quimera_cristal:
+    cartas:
+      - {n: Bigode de Cristal, t: "Os bigodes de cristal chicoteiam o rosto como varas de vidro.", e: ["d:versatil:cortante"]}
+      - {n: Bote da Corrente, sig: 1, t: "Monta uma Corrente-de-Éter e dá o bote de longe no mais isolado.", e: ["d:pesada:perfurante", {kind: marca, valor: 2}], fol: 2}
+      - {n: Corrente de Éter, f: cena, t: "A corrente a leva para longe e ela volta com o Éter na pele.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 4}]}
+  mon_peito_de_sino:
+    cartas:
+      - {n: Abraço de Barril, t: "Os braços curtos apertam a cintura contra o peito largo.", e: ["d:versatil:impactante"]}
+      - {n: Mergulho Junto, sig: 1, t: "Agarra o alvo e afunda com ele; o fôlego é só do outro.", e: ["d:marcial:impactante", "c:enraizado:2", {kind: torpor, valor: 1}], fol: 2}
+  mon_mao_de_oghma:
+    cartas:
+      - {n: Soco de Cristal, t: "O punho de pedra turva desce com o braço de vidro atrás.", e: ["d:versatil:impactante"]}
+      - {n: Custo Passado, sig: 1, t: "O soco passa adiante o que o cristal cobra do dono da mão.", e: ["d:pesada:impactante", {kind: marca_do_abismo, valor: 2}], fol: 2}
+      - {n: Cotovelo Rachado, f: cena, t: "O cotovelo rachado range e o cristal da mão escurece por dentro.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+  mon_alambique_de_carne:
+    cartas:
+      - {n: Serpentina Quente, t: "A serpentina de vidro nas veias solta um jato quente.", e: ["d:marcial:igneo"]}
+      - {n: Gota de Si, sig: 1, t: "Pinga nos aliados o Éter destilado do próprio sangue.", e: ["d:leve:igneo", {kind: buff_dano, alvo: aliados, valor: 2}, {kind: buff_acerto, alvo: aliados, valor: 2}], pc: {sacrificio: 1}}
+  mon_aspirante_de_coral:
+    cartas:
+      - {n: Ombro de Coral, t: "O ombro coberto de coral bate como um recife.", e: ["d:marcial:impactante"]}
+      - {n: Crosta no Golpe, sig: 1, t: "O coral engrossa onde bateram e o mesmo golpe quase não fere.", e: [{kind: protecao, valor: 5}, {kind: contra_ataque, dano_base: 2}]}
+  mon_comedor_de_alga:
+    cartas:
+      - {n: Faca de Alga, t: "A faca de osso fura por baixo do pálido braço de veias acesas.", e: ["d:marcial:cortante"]}
+      - {n: Hálito de Alga, sig: 1, t: "Marca quem conjurou por último e o hálito de alga faz falhar a próxima magia.", e: ["d:leve:cortante", {kind: marca, valor: 3}, {kind: aplicar_condicao, condicao: silenciado, duracao: 1}], fol: 2}
+  mon_lambedor_de_aboboda:
+    cartas:
+      - {n: Língua de Argamassa, t: "A língua longa chicoteia com cheiro de pedra molhada.", e: ["d:versatil:impactante"]}
+      - {n: Teto que Cede, sig: 1, t: "Lambe a argamassa da abóbada e cai pedra sobre todos os que estão embaixo.", e: ["a:4:impactante", "c:desmoralizado:1"], fol: 2}
+      - {n: Sebo Pálido, f: cena, t: "O sebo pálido escorre do corpo e cobre a abóbada em volta.", e: [{kind: protecao, valor: 5}]}
+  mon_pernalta_do_conselho:
+    cartas:
+      - {n: Perna de Osso, t: "Uma das pernas compridas de osso chuta de cima.", e: ["d:versatil:impactante"]}
+      - {n: Mão que Rebaixa, sig: 1, t: "Põe a mão aberta sobre a cabeça do mais inteiro e ele passa a agir por último.", e: ["d:leve:impactante", {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}, {kind: buff_iniciativa, alvo: eu, valor: 2}]}
+  mon_veu_faminto:
+    cartas:
+      - {n: Trança de Seda, t: "A trança de cabelo e seda enrola no braço e aperta.", e: ["d:marcial:impactante"]}
+      - {n: Tudo para Dentro, sig: 1, t: "Enrola-se no alvo e puxa para os nós os reforços que ele tinha.", e: ["d:leve:impactante", {kind: purga_condicao, valor: 1}, {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+  mon_novelo_de_anzois:
+    cartas:
+      - {n: Anzol Solto, t: "Um anzol do novelo sai da rede e fisga a manga.", e: ["d:leve:perfurante"]}
+      - {n: Refém nas Linhas, sig: 1, t: "Prende um alvo nas linhas e toma a forma dele; o grupo fere o preso.", e: ["c:enraizado:2", "d:leve:perfurante", {kind: protecao, valor: 3}]}
+    aprox: "metade do dano do grupo no Novelo vai para o preso -> enraizar + proteção (sem redirecionamento de dano)"
+  mon_subida_de_cracas:
+    cartas:
+      - {n: Gomo de Crosta, t: "Um gomo da coluna cai com placas de craca abertas.", e: ["d:marcial:cortante"]}
+      - {n: Peso de Casca, sig: 1, t: "Cresce no alvo como numa parede e cada gesto custa o peso das cascas.", e: ["d:leve:cortante", {kind: torpor, valor: 2}, "c:enraizado:1"], fol: 2}

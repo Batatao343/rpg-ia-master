@@ -1,0 +1,254 @@
+# Plano da esteira do bestiário (SPEC-349 R27). Gerado a partir das fichas; o mapa de demônios alimenta o R27.
+ordem:
+- pantano_melancolia
+- pradaria_ruinas
+- brekmar
+- deserto_zhur
+- costa_negra
+- montanhas_afiadas
+- floresta_sussurros
+- selva_xylos
+- skallgard
+- aethelgard
+- ophidia
+- nova_arcadia
+regioes:
+  pantano_melancolia:
+    status: pousada
+    spec: SPEC-359
+    n_novas: 21
+    n_reinventadas: 1
+    demonios:
+    - npc_daruun
+    - npc_morvath
+    - npc_skarath
+    - npc_solvhara
+    - npc_thessavar
+    - npc_veleth
+    revisores:
+    - opus-spec-reviewer
+  pradaria_ruinas:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 1
+    demonios:
+    - npc_solvhara
+    - npc_urath
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+  brekmar:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 20
+    n_reinventadas: 0
+    demonios:
+    - npc_dorrhen
+    - npc_lyss
+    - npc_skarath
+    - npc_urath
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+  deserto_zhur:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 4
+    demonios:
+    - npc_daruun
+    - npc_dorrhen
+    - npc_skarath
+    - npc_urath
+    - npc_veth
+    revisores:
+    - coordenador-revisao-cruzada
+    - opus-spec-reviewer
+  costa_negra:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 22
+    n_reinventadas: 0
+    demonios:
+    - npc_dorrhen
+    - npc_lyss
+    - npc_maalrek
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+  montanhas_afiadas:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 20
+    n_reinventadas: 7
+    demonios:
+    - npc_dorrhen
+    - npc_maalrek
+    - npc_skarath
+    - npc_urath
+    - npc_veleth
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+  floresta_sussurros:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 4
+    demonios:
+    - npc_maalrek
+    - npc_thessavar
+    - npc_urath
+    - npc_veleth
+    revisores:
+    - opus-spec-reviewer
+  selva_xylos:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 0
+    demonios:
+    - npc_dorrhen
+    - npc_maalrek
+    - npc_thessavar
+    - npc_veth
+    revisores:
+    - opus-spec-reviewer
+  skallgard:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 20
+    n_reinventadas: 3
+    demonios:
+    - npc_fehk
+    - npc_maalrek
+    - npc_skarath
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+  aethelgard:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 4
+    demonios:
+    - npc_dorrhen
+    - npc_lyss
+    - npc_maalrek
+    - npc_morvath
+    - npc_urath
+    revisores:
+    - coordenador-revisao-cruzada
+    - opus-spec-reviewer
+  ophidia:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 20
+    n_reinventadas: 0
+    demonios:
+    - npc_daruun
+    - npc_dorrhen
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - coordenador-revisao-cruzada
+    - opus-spec-reviewer
+  nova_arcadia:
+    status: pousada
+    spec: SPEC-349
+    n_novas: 21
+    n_reinventadas: 5
+    demonios:
+    - npc_daruun
+    - npc_dorrhen
+    - npc_fehk
+    - npc_maalrek
+    - npc_solvhara
+    - npc_veth
+    - npc_vhrak
+    revisores:
+    - opus-spec-reviewer
+demonios:
+  npc_daruun:
+  - mon_despenseiro_de_espinhos
+  - mon_escritura_rastejante
+  - mon_fardo_de_espolio
+  - mon_ninho_dos_mergulhadores
+  npc_dorrhen:
+  - mon_balsa_de_ultimo_dia
+  - mon_boia_de_bracos
+  - mon_cavadeira_de_unhas
+  - mon_lacrador_de_saidas
+  - mon_mastro_dos_ultimos
+  - mon_subida_de_cracas
+  - mon_tampao_da_camara
+  - mon_tropel_sem_saida
+  npc_fehk:
+  - mon_enegrecido_que_espera
+  - mon_vira_costas_da_praca
+  npc_lyss:
+  - mon_sino_de_enlace
+  - mon_ventre_partilhado
+  - mon_veu_faminto
+  npc_maalrek:
+  - mon_colecionador_de_poses
+  - mon_gancho_de_esfola
+  - mon_isca_amarrada
+  - mon_mastro_de_trofeus
+  - mon_novelo_de_anzois
+  - mon_picanco_de_espinheiro
+  - mon_roda_de_mandibulas
+  npc_morvath:
+  - mon_cisne_de_patina
+  - mon_lambedor_de_aboboda
+  npc_skarath:
+  - mon_aperto_da_tregua
+  - mon_cordao_de_medida
+  - mon_guia_avesso
+  - mon_mao_da_borda
+  - mon_mao_estendida
+  npc_solvhara:
+  - enemy_golem_lixo
+  - mon_egua_de_costas
+  - mon_regaco_da_margem
+  npc_thessavar:
+  - enemy_sombra_espreitadora
+  - mon_arraia_de_lodo
+  - mon_ermitao_de_carcaca
+  - mon_oco_da_fronteira
+  npc_urath:
+  - enemy_boss_general_escorpiao
+  - mon_altivo_do_vidro
+  - mon_cabeca_acima
+  - mon_carranca_de_proa
+  - mon_desafiante_rubro
+  - mon_pernalta_do_conselho
+  - mon_pisador_do_salao
+  npc_veleth:
+  - mon_enrolado_da_clareira
+  - mon_lingua_de_lima
+  - mon_maos_no_rosto
+  npc_veth:
+  - mon_broca_de_costado
+  - mon_convidado_de_cera
+  - mon_feltro_do_ventre
+  - mon_furador_de_odres
+  - mon_monte_de_alheios
+  - mon_raspadeira_de_barbatana
+  - mon_remora_de_conves
+  - mon_retalho_das_duas_cidades
+  - mon_tesoura_de_cordada
+  npc_vhrak:
+  - mon_arpeu_de_bracos
+  - mon_chifres_travados
+  - mon_estivador_das_facas
+  - mon_peso_dos_vencidos
+  - mon_portao_que_morde
+  - mon_rancor_de_pincas
+  - mon_ticao_do_juramento

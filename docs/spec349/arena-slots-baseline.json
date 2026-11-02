@@ -1,0 +1,409 @@
+{
+ "regiao": "nova_arcadia",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 90.4,
+ "criaturas": {
+  "enemy_aranha_de_cristal": {
+   "nome": "Braceiro da Borda Sul",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.05,
+    "L5|on": 0.05
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 5% fora de 45-85%",
+    "L5|on 5% fora de 45-85%"
+   ]
+  },
+  "enemy_aranha_lobo": {
+   "nome": "Saltão Desbotado",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.735,
+    "L3|on": 0.685
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_basilisco_caverna": {
+   "nome": "Caramujo de Estalagmite",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.625,
+    "L3|on": 0.505
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_boss_general_escorpiao": {
+   "nome": "Trono de Ajoelhados",
+   "categoria": "chefe",
+   "status": "controle",
+   "cells": {
+    "L5|off": 0.025,
+    "L5|on": 0.015
+   },
+   "ok": false,
+   "motivos": [
+    "L5|off 2% fora de 45-85%",
+    "L5|on 2% fora de 45-85%"
+   ]
+  },
+  "enemy_djinn_menor": {
+   "nome": "Pipa de Costelas",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.705
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_elemental_fogo_poluido": {
+   "nome": "Caído do Cadinho",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.745,
+    "L3|on": 0.73
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_esqueleto_legiao_antiga": {
+   "nome": "Capim de Couraça",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.535,
+    "L3|on": 0.525
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_esqueleto_mago": {
+   "nome": "Iniciado Refratado",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.47,
+    "L3|on": 0.57
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_fantasma": {
+   "nome": "Nadador Transparente",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.515,
+    "L3|on": 0.465
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_gargula_ferro": {
+   "nome": "Rã de Lótus",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.37,
+    "L3|on": 0.205
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 37% fora de 45-85%",
+    "L3|on 20% fora de 45-85%"
+   ]
+  },
+  "enemy_golem_carne": {
+   "nome": "Encomenda Costurada",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.085,
+    "L3|on": 0.055
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 8% fora de 45-85%",
+    "L3|on 6% fora de 45-85%"
+   ]
+  },
+  "enemy_golem_lixo": {
+   "nome": "Velório de Sal",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.0,
+    "L3|on": 0.02
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 0% fora de 45-85%",
+    "L3|on 2% fora de 45-85%"
+   ]
+  },
+  "enemy_horror_esgoto": {
+   "nome": "Coisa do Esgoto",
+   "categoria": "elite",
+   "status": "adotada",
+   "cells": {
+    "L3|off": 0.715,
+    "L3|on": 0.84
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_lobo_invernal": {
+   "nome": "Pulga de Forquilha",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.46,
+    "L3|on": 0.58
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_mimico_bau": {
+   "nome": "Morador do Caldeirão",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.7
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_minotauro_esqueleto": {
+   "nome": "Boi de Canga",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.2,
+    "L3|on": 0.18
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 20% fora de 45-85%",
+    "L3|on 18% fora de 45-85%"
+   ]
+  },
+  "enemy_morcego_vampiro": {
+   "nome": "Lenço do Desfiladeiro",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_mumia_de_po": {
+   "nome": "Carregador de Liteira",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.255,
+    "L3|on": 0.335
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 26% fora de 45-85%",
+    "L3|on 34% fora de 45-85%"
+   ]
+  },
+  "enemy_observador_menor": {
+   "nome": "Olhos em Volta",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.71,
+    "L3|on": 0.635
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_polvo_esgoto": {
+   "nome": "Bagre de Varal",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.335,
+    "L3|on": 0.465
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 34% fora de 45-85%"
+   ]
+  },
+  "enemy_sentinela_ferro": {
+   "nome": "Pajem de Obsidiana",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.11,
+    "L3|on": 0.0
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 11% fora de 45-85%",
+    "L3|on 0% fora de 45-85%"
+   ]
+  },
+  "enemy_sombra_espreitadora": {
+   "nome": "Sombra Deitada",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.65
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_troll_ponte": {
+   "nome": "Ponte de Ombros",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.445,
+    "L3|on": 0.37
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 44% fora de 45-85%",
+    "L3|on 37% fora de 45-85%"
+   ]
+  },
+  "enemy_urso_coruja_mutante": {
+   "nome": "Casuar de Elmo Fundo",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.46,
+    "L3|on": 0.53
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_verme_areia_jovem": {
+   "nome": "Verme de Vidro",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.49,
+    "L3|on": 0.35
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 35% fora de 45-85%"
+   ]
+  },
+  "enemy_vinha_estranguladora": {
+   "nome": "Serpente Cipó Constritora",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.995,
+    "L3|on": 0.94
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 100% fora de 45-85%",
+    "L3|on 94% fora de 45-85%"
+   ]
+  },
+  "enemy_wyvern_jovem": {
+   "nome": "Leque de Costelas",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.31,
+    "L3|on": 0.315
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 31% fora de 45-85%",
+    "L3|on 32% fora de 45-85%"
+   ]
+  },
+  "enemy_yeti": {
+   "nome": "Corcova Fervente",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.315,
+    "L3|on": 0.36
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 32% fora de 45-85%",
+    "L3|on 36% fora de 45-85%"
+   ]
+  },
+  "enemy_zumbi_blindado": {
+   "nome": "Curtido da Turfeira",
+   "categoria": "lacaio",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.315,
+    "L3|on": 0.245
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 32% fora de 45-85%",
+    "L3|on 24% fora de 45-85%"
+   ]
+  },
+  "mon_ent_dormindo": {
+   "nome": "Preguiça da Pradaria",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.74,
+    "L3|on": 0.555
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_jotun_cinza": {
+   "nome": "Crescido do Clã",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_quimera_cristal": {
+   "nome": "Ariranha de Arcada",
+   "categoria": "elite",
+   "status": "controle",
+   "cells": {
+    "L3|off": 0.8,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

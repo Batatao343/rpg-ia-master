@@ -1,0 +1,993 @@
+# SPEC-349 R1 - curadoria do legado (gerado por scripts/bestiario/curadoria.py; editar DECISOES lá).
+enemy_rato_peste_anel_lama:
+  classe: valoria
+  subclasse: unico
+  motivo: Peste e Anel de Lama são de Valoria; manter (par com Rato de Caldeira só avisa)
+  evidencia: lore_nova/creatures.txt:417
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_degolador_mao_sombria:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (mao_sombria)
+  evidencia: data/graph/entities.json:182
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_soldado_legiao_ferro:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:740
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_iniciado_chama_azul:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (filhos_chama_azul)
+  evidencia: data/graph/entities.json:196
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_devorador_sol_zhur:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (tribos_devoradores_sol)
+  evidencia: data/graph/entities.json:501
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_escorpiao_cristal:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1128
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_mumia_de_po:
+  classe: generico
+  subclasse: generico
+  motivo: Múmia é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_hospedeiro_fungico:
+  classe: valoria
+  subclasse: unico
+  motivo: Hospedeiro é condição/povo de Valoria (colmeia de Xylos)
+  evidencia: lore_nova/creatures.txt:818
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+enemy_vinha_estranguladora:
+  classe: generico
+  subclasse: generico
+  motivo: Planta assassina de manual; lore de Xylos usa Víbora-Flora/Hospedeiros
+  evidencia: data/codex/monsters/mon_serpente_cipo_constritora.md:1
+  destino: adotar:mon_serpente_cipo_constritora
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+enemy_guerreiro_bjorn:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (clas_combate)
+  evidencia: data/graph/entities.json:266
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+enemy_lobo_invernal:
+  classe: generico
+  subclasse: generico
+  motivo: 'Lobo genérico de Skallgard; o Lobo-de-Vidro (creatures.txt:72) já tem ficha mecânica, então não é adotável (D4): reinventar com âncora na fauna do Norte'
+  evidencia: lore_nova/creatures.txt:72
+  destino: reinventar
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+enemy_sentinela_ferro:
+  classe: generico
+  subclasse: generico
+  motivo: Constructo genérico; o slot do Anel de Ferro pede corpo da Praga/Fornalha
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_horror_esgoto:
+  classe: generico
+  subclasse: generico
+  motivo: Ooze de manual; a Coisa-do-Esgoto é a criatura física da lore para o mesmo slot (R4/D4)
+  evidencia: lore_nova/creatures.txt:798
+  destino: adotar:mon_coisa_do_esgoto
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_necromante_renegado:
+  classe: valoria
+  subclasse: unico
+  motivo: necromantes amadores existem na lore do Anel de Lama/Pradaria; humano, dúvida -> manter
+  evidencia: lore_nova/creatures.txt:750
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_esqueleto_legiao_antiga:
+  classe: generico
+  subclasse: generico
+  motivo: 'Esqueleto genérico; o Afogado da Batalha (creatures.txt:630) já tem ficha mecânica, então não é adotável (D4): reinventar ancorado nos mortos da batalha'
+  evidencia: lore_nova/creatures.txt:630
+  destino: reinventar
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_espectro_lamento:
+  classe: valoria
+  subclasse: conceitual
+  motivo: 'conceitual (espectro): perigo conceitual de Valoria, não se altera'
+  evidencia: lore_nova/creatures.txt:140
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_gargula_ferro:
+  classe: generico
+  subclasse: generico
+  motivo: Gárgula é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_assassino_cinzeu:
+  classe: valoria
+  subclasse: unico
+  motivo: Cinzéu é raça de Valoria
+  evidencia: lore_nova/creatures.txt:818
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_urso_coruja_mutante:
+  classe: generico
+  subclasse: generico
+  motivo: Urso-coruja é o owlbear de manual; a lore tem Coruja-de-Osso/Urso-de-Espinha distintos
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+enemy_elemental_fogo_poluido:
+  classe: generico
+  subclasse: generico
+  motivo: 'Elemental é monstro de manual (proibido_nome); a Brasa Profunda é do Reino Subterrâneo e elemental no corpo: reinventar (coordenador 28/10)'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_boss_valerius:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (legiao_ferro)
+  evidencia: data/graph/entities.json:168
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_boss_vibora:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (mao_sombria)
+  evidencia: data/graph/entities.json:182
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_boss_general_escorpiao:
+  classe: generico
+  subclasse: generico
+  motivo: Chefe sem nenhum hit na lore; reinventar ancorado no Escorpião-de-Cristal de Zhur
+  evidencia: data/codex/monsters/mon_escorpiao_de_cristal.md:1
+  destino: reinventar
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_boss_arauto_nevoa:
+  classe: valoria
+  subclasse: unico
+  motivo: Arauto da Névoa é entidade da lore
+  evidencia: lore_nova/npcs.txt:95
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+enemy_gigante_gelo_norte:
+  classe: valoria
+  subclasse: unico
+  motivo: chefe do Norte; os Gigantes têm doc no Codex; dúvida -> manter
+  evidencia: data/codex/monsters/mon_gigantes.md:1
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+enemy_mimico_bau:
+  classe: generico
+  subclasse: generico
+  motivo: Mímico é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_basilisco_caverna:
+  classe: generico
+  subclasse: generico
+  motivo: Basilisco é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_troll_ponte:
+  classe: generico
+  subclasse: generico
+  motivo: 'Troll de ponte: clichê de manual (proibido_nome)'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_golem_lixo:
+  classe: generico
+  subclasse: generico
+  motivo: Golem é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_sombra_espreitadora:
+  classe: generico
+  subclasse: generico
+  motivo: 'dono 28/10: genérico'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+enemy_verme_areia_jovem:
+  classe: generico
+  subclasse: generico
+  motivo: 'Verme da areia: clichê; marcador ''Jovem''. A lore tem o Verme-de-Vidro para o slot'
+  evidencia: lore_nova/creatures.txt:1140
+  destino: adotar:mon_verme_de_vidro
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_djinn_menor:
+  classe: generico
+  subclasse: generico
+  motivo: Djinn é monstro de manual (proibido_nome); marcador 'Menor'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_esqueleto_mago:
+  classe: generico
+  subclasse: generico
+  motivo: 'Esqueleto mago: clichê de manual; os mortos de Aethelgard são os Afogados'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+enemy_nomade_canibal:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (bandos_nomades)
+  evidencia: data/graph/entities.json:390
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_yeti:
+  classe: generico
+  subclasse: generico
+  motivo: Yeti é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+enemy_wyvern_jovem:
+  classe: generico
+  subclasse: generico
+  motivo: Wyvern é monstro de manual (proibido_nome); marcador 'Jovem'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_bandido_capitao:
+  classe: valoria
+  subclasse: unico
+  motivo: humano, não é monstro de manual; dúvida -> manter
+  evidencia: 0 hits em creatures.txt/codex (dúvida; manter)
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_morcego_vampiro:
+  classe: generico
+  subclasse: generico
+  motivo: Vampiros são canon (Bebedores de Ferrugem), mas o morcego-vampiro gigante é de manual; o morcego segue genérico
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_aranha_lobo:
+  classe: generico
+  subclasse: generico
+  motivo: Aranha-lobo genérica; mon_aranha_de_pedra não passa em U9 (0 partes concretas no Codex), então reinventar
+  evidencia: lore_nova/creatures.txt:288
+  destino: reinventar
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+enemy_zumbi_blindado:
+  classe: generico
+  subclasse: generico
+  motivo: Zumbi é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+enemy_polvo_esgoto:
+  classe: generico
+  subclasse: generico
+  motivo: 'Polvo de esgoto: clichê de ooze/horror aquático; o Polvo dos Destroços é da costa e sem física quebrada: reinventar (coordenador 28/10)'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_fantasma:
+  classe: generico
+  subclasse: generico
+  motivo: 'dono 28/10: genérico'
+  evidencia: lore_nova/creatures.txt:120
+  destino: reinventar
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+enemy_observador_menor:
+  classe: generico
+  subclasse: generico
+  motivo: Observador/Gazer é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_minotauro_esqueleto:
+  classe: generico
+  subclasse: generico
+  motivo: Minotauro é monstro de manual (proibido_nome)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+enemy_golem_carne:
+  classe: generico
+  subclasse: generico
+  motivo: 'Golem é monstro de manual (proibido_nome). ÂNCORA OBRIGATÓRIA na prosa: Silas Vane (npcs.txt:63; secrets.txt:26,134; rumors.txt:163)'
+  evidencia: lore_nova/npcs.txt:63
+  destino: reinventar
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+enemy_aranha_de_cristal:
+  classe: generico
+  subclasse: generico
+  motivo: Chefe sem hit na lore; reinventar derivado de creatures.txt:1128
+  evidencia: lore_nova/creatures.txt:1128
+  destino: reinventar
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+enemy_lobo_sombrio:
+  classe: generico
+  subclasse: generico
+  motivo: 'Lobo Sombrio (dire/shadow wolf): clichê sem ligação com a lore (lobos de Valoria: Vidro, Aurora, Pradaria)'
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: '-'
+  revisor: opus-audit (independente) + coordenador
+enemy_carniçal:
+  classe: generico
+  subclasse: generico
+  motivo: Carniçal = ghoul de manual; Valoria tem a Carniça-Andante (outra criatura)
+  evidencia: 0 hits em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: '-'
+  revisor: opus-audit (independente) + coordenador
+enemy_esqueleto:
+  classe: generico
+  subclasse: generico
+  motivo: Esqueleto genérico sem região nem ligação com a lore
+  evidencia: 4 hits de 'Esqueleto' em creatures.txt/codex
+  destino: reinventar
+  regiao_onda: '-'
+  revisor: opus-audit (independente) + coordenador
+enemy_garrick,_o_silenciador:
+  classe: valoria
+  subclasse: unico
+  motivo: nomeado do grafo (entities_extra)
+  evidencia: data/graph/entities_extra.json:843
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+enemy_goblin:
+  classe: generico
+  subclasse: generico
+  motivo: Goblin canônico (Goblins Mineiros); slot reaproveita a criatura da lore em vez de monstro de manual genérico
+  evidencia: lore_nova/creatures.txt:348
+  destino: adotar:mon_goblins_mineiros
+  regiao_onda: '-'
+  revisor: opus-audit (independente) + coordenador
+enemy_bandido:
+  classe: valoria
+  subclasse: unico
+  motivo: humano, não é monstro de manual; dúvida -> manter
+  evidencia: lore_nova/creatures.txt:356
+  destino: manter
+  regiao_onda: '-'
+  revisor: opus-audit (independente) + coordenador
+mon_urso_tita:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:68
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_lobo_de_vidro:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:72
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_verme_do_gelo:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:92
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+enemy_renegado_ermo:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:164
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_sanguessuga_braco:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:590
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_sapo_boi_acido:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:594
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_afogado_da_batalha:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:630
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+enemy_druida_renegado:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:662
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_urso_de_espinha:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:844
+  destino: manter
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+mon_serpente_raiz:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:862
+  destino: manter
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+mon_vipera_flora:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:988
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_predador_crescido:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1000
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_sentinela_hospedeiro:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1046
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_afogado_de_aethelgard:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1310
+  destino: manter
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+mon_mergulhadores_saqueadores:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1334
+  destino: manter
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+enemy_cultista_destilacao:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1338
+  destino: manter
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+mon_sereia_de_ophidia:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1640
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_fumaca_de_cor_errada:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1632
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_os_que_voltaram_e_nao_eram_eles:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1636
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_tubarao_de_casco:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1438
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_caranguejo_mare:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura de lore costeira; tem doc no Codex (Caranguejo-Maré) e Caranguejeiro em creatures.txt
+  evidencia: data/codex/monsters/mon_caranguejo_mare.md:1
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_gaivota_ladra:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1450
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_o_que_come_nas_praias:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1460
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+enemy_pirata_brekmar:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (grupos_piratas_rivais)
+  evidencia: data/graph/entities.json:335
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+mon_capangas_do_poco:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:1428
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+enemy_arpoador_osshari:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (osshari_brekmar)
+  evidencia: data/graph/entities.json:348
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+enemy_orc_saidas_baixas:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:344
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_cabra_navalha:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:272
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_anao_eco:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:316
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_espectro_elfico:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:474
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+mon_lobo_da_pradaria:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:434
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+enemy_capturador_groth:
+  classe: valoria
+  subclasse: unico
+  motivo: facção do grafo (mercadores_escravos_pradaria)
+  evidencia: data/graph/entities.json:404
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+mon_rato_caldeira:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8257
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+mon_cao_rebite:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8347
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+mon_automato_fundicao:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8436
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+mon_mosquito_eter:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8518
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_viuva_lodo:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8614
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_cervo_afogado:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8705
+  destino: manter
+  regiao_onda: pantano_melancolia
+  revisor: opus-audit (independente) + coordenador
+mon_escaravelho_vidro:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8782
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+mon_hiena_sol:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8866
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+mon_colosso_duna:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:8955
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador
+mon_mariposa_sussurro:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9037
+  destino: manter
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+mon_cacador_casca:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9133
+  destino: manter
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+mon_ent_dormindo:
+  classe: generico
+  subclasse: generico
+  motivo: 'dono 28/10: genérico'
+  evidencia: data/bestiary.json:9222
+  destino: reinventar
+  regiao_onda: floresta_sussurros
+  revisor: opus-audit (independente) + coordenador
+mon_larva_hospedeira:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9304
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_macaco_esporo:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9393
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_rainha_cipo:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9489
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_corvo_gelo:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9578
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_lobo_aurora:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9677
+  destino: manter
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_jotun_cinza:
+  classe: generico
+  subclasse: generico
+  motivo: 'dono 28/10: genérico'
+  evidencia: data/bestiary.json:9766
+  destino: reinventar
+  regiao_onda: skallgard
+  revisor: opus-audit (independente) + coordenador
+mon_faisca_destilacao:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9848
+  destino: manter
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+mon_vigia_caco:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:9937
+  destino: manter
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+mon_quimera_cristal:
+  classe: generico
+  subclasse: generico
+  motivo: 'dono 28/10: genérico'
+  evidencia: data/bestiary.json:10019
+  destino: reinventar
+  regiao_onda: aethelgard
+  revisor: opus-audit (independente) + coordenador
+mon_caranguejo_cinza:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10110
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_moreia_vulcanica:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10192
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_oraculo_coral:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10281
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_carrapato_osso:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10370
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_saqueador_marfim:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10459
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_baleia_ossario:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10555
+  destino: manter
+  regiao_onda: costa_negra
+  revisor: opus-audit (independente) + coordenador
+mon_goblin_eco:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10637
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_cabra_labirinto:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10735
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_guardiao_basalto:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10824
+  destino: manter
+  regiao_onda: montanhas_afiadas
+  revisor: opus-audit (independente) + coordenador
+mon_gafanhoto_runa:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:10906
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+mon_cavaleiro_sem_rosto:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11002
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+mon_auroque_ruinas:
+  classe: valoria
+  subclasse: unico
+  motivo: criatura/povo existe na lore (creatures.txt/Codex)
+  evidencia: lore_nova/creatures.txt:438
+  destino: manter
+  regiao_onda: pradaria_ruinas
+  revisor: opus-audit (independente) + coordenador
+mon_rato_cais_brekmar:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11166
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+mon_cobrador_gancho:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11263
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+mon_capita_corda:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11359
+  destino: manter
+  regiao_onda: brekmar
+  revisor: opus-audit (independente) + coordenador
+mon_locomotiva_penitente:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11448
+  destino: manter
+  regiao_onda: nova_arcadia
+  revisor: opus-audit (independente) + coordenador
+mon_mae_micelio:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11539
+  destino: manter
+  regiao_onda: selva_xylos
+  revisor: opus-audit (independente) + coordenador
+mon_leviata_caldeira:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11630
+  destino: manter
+  regiao_onda: ophidia
+  revisor: opus-audit (independente) + coordenador
+mon_eclipse_caminhante:
+  classe: valoria
+  subclasse: unico
+  motivo: autoral de Valoria (origem conflito-17); ambientação própria do mundo
+  evidencia: data/bestiary.json:11721
+  destino: manter
+  regiao_onda: deserto_zhur
+  revisor: opus-audit (independente) + coordenador

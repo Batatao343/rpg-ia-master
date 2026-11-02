@@ -1,0 +1,239 @@
+{
+ "regiao": "brekmar",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 76.6,
+ "criaturas": {
+  "mon_casco_de_costelas": {
+   "nome": "Casco de Costelas",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.625,
+    "L5|on": 0.335
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 34% fora de 45-85%"
+   ]
+  },
+  "mon_quilhado_do_estaleiro": {
+   "nome": "Quilhado do Estaleiro",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.7,
+    "L3|on": 0.645
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_odre_de_oleo": {
+   "nome": "Odre de Óleo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lavado_da_mare_vermelha": {
+   "nome": "Lavado da Maré Vermelha",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.68,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cardume_coagulado": {
+   "nome": "Cardume Coagulado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_gato_de_lastro": {
+   "nome": "Gato de Lastro",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.505,
+    "L3|on": 0.64
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_craca_de_amarra": {
+   "nome": "Craca de Amarra",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.56
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pescador_de_lanterna": {
+   "nome": "Pescador de Lanterna",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.835
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tripeiro_de_fundo": {
+   "nome": "Tripeiro de Fundo",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.705,
+    "L3|on": 0.82
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_sangria_de_aluguel": {
+   "nome": "Sangria de Aluguel",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.505,
+    "L3|on": 0.59
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_torcido_da_rinha": {
+   "nome": "Torcido da Rinha",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.39,
+    "L3|on": 0.855
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off 39% fora de 45-85%",
+    "L3|on 86% fora de 45-85%"
+   ]
+  },
+  "mon_anzolado_da_casa": {
+   "nome": "Anzolado da Casa",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.745,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tambor_do_ossario": {
+   "nome": "Tambor do Ossário",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.745,
+    "L3|on": 0.83
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_penhorado_do_poco": {
+   "nome": "Penhorado do Poço",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.825,
+    "L3|on": 0.77
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_sino_de_enlace": {
+   "nome": "Sino de Enlace",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.63,
+    "L3|on": 0.76
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_carranca_de_proa": {
+   "nome": "Carranca de Proa",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.72,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_estivador_das_facas": {
+   "nome": "Estivador das Facas",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.6,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_boia_de_bracos": {
+   "nome": "Boia de Braços",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.595,
+    "L3|on": 0.765
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_broca_de_costado": {
+   "nome": "Broca de Costado",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.68,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mao_estendida": {
+   "nome": "Mão Estendida",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.61
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

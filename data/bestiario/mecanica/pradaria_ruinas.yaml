@@ -1,0 +1,122 @@
+# SPEC-349 Etapa 5: mecânica da Pradaria das Ruínas (onda 3). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_vertedor_de_areia:
+    cartas:
+      - {n: Tapa de Porcelana, t: "A mão rachada como porcelana bate e solta um fio de areia cinza.", e: ["d:marcial:cortante"]}
+      - {n: Últimos Grãos, sig: 1, t: "A areia escorre mais grossa e ele ataca cada vez mais depressa, sem se defender.", e: ["d:marcial:cortante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+    aprox: "rajada que acelera e desaba sozinho quando a areia acaba -> buff de dano próprio sem defesa (sem contagem regressiva)"
+  mon_vidrado_do_morro:
+    cartas:
+      - {n: Ombro de Vidro, t: "O ombro de vidro verde desce como um bloco quente sobre quem sobe o morro.", e: ["d:versatil:impactante"]}
+      - {n: Sol no Peito, sig: 1, t: "O peito de vidro gira para o sol e joga a luz inteira nos olhos de quem sobe.", e: ["c:cego:2", "d:leve:igneo"], fol: 2}
+      - {n: Crosta Verde, f: cena, t: "A crosta de vidro engrossa sobre os ombros e a luz corre por ela sem entrar.", e: [{kind: protecao, valor: 5}]}
+    aprox: "reflexo só pega com o sol de frente -> cego por 2 rodadas sem depender da cena"
+  mon_costas_de_alicerce:
+    cartas:
+      - {n: Laje nas Costas, t: "Gira e a laje das costas bate de lado como uma porta de pedra.", e: ["d:marcial:impactante"]}
+      - {n: Parede que Anda, sig: 1, t: "Põe a laje na frente do companheiro e o golpe bate primeiro nela.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: taunt, valor: 2}]}
+    aprox: "laje intercepta o golpe seguinte em favor de um aliado -> proteção em aliados + provocação"
+  mon_vestido_de_gafanhotos:
+    cartas:
+      - {n: Soco de Cascas, t: "O braço coberto de gafanhotos vivos cai com o peso de uma bigorna.", e: ["d:versatil:impactante"]}
+      - {n: Enxame Muda de Corpo, sig: 1, t: "O enxame levanta num zumbido e cai sobre quem estiver ao lado, em camadas.", e: ["a:2:perfurante", {kind: protecao, alvo: aliados, valor: 3}], fol: 2}
+      - {n: Camada de Cascas, f: cena, t: "Mais uma camada de gafanhotos sobe pelo peito e cobre o músculo roído.", e: [{kind: protecao, valor: 5}]}
+    aprox: "ao cair, o enxame dá armadura ao aliado mais próximo -> proteção em aliados + dano em área"
+  mon_fucador_da_semente:
+    cartas:
+      - {n: Presa Longa, t: "A presa longa entra de lado e abre o flanco de quem corre.", e: ["d:versatil:perfurante"]}
+      - {n: Presa Podre, sig: 1, t: "A ferida que a presa abre apodrece e continua a tirar do alvo depois.", e: ["d:marcial:perfurante", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: corrosivo}], fol: 2}
+    aprox: "ferida apodrece e piora se acertar o mesmo lugar -> dot corrosivo por 3 rodadas (sem agravar no mesmo lugar)"
+  mon_nadador_de_pedra:
+    cartas:
+      - {n: Mordida de Fundação, t: "Sai da parede ao lado e fecha os dentes rosados no joelho.", e: ["d:marcial:perfurante"]}
+      - {n: Onda no Chão, sig: 1, t: "As lajes ondulam como água de poço e empurram quem estava perto.", e: ["d:leve:impactante", {kind: empurrao, valor: 2}, {kind: esconder, alvo: eu, valor: 2}]}
+    aprox: "dentro da pedra não pode ser alvejado -> esconder"
+  mon_cobra_de_legua:
+    cartas:
+      - {n: Bote do Capim, t: "A cabeça grossa sai do capim alto e bate no peito.", e: ["d:marcial:impactante"]}
+      - {n: Mais uma Volta, sig: 1, t: "Prende e aperta mais uma volta tirada do capim; o aperto só cresce.", e: ["d:leve:impactante", "c:enraizado:2", {kind: sangria, valor: 1}], fol: 2}
+    aprox: "aperto cresce a cada rodada preso e não diminui -> enraizado + sangria"
+  mon_rodante_de_espinhos:
+    cartas:
+      - {n: Rolada de Espinhos, t: "Enrola-se numa bola e rola em cima do alvo com todos os espinhos de osso.", e: ["d:marcial:perfurante"]}
+      - {n: Atrás do Barulho, sig: 1, t: "Rola sempre sobre quem fez barulho por último, com todos os espinhos.", e: ["a:2:perfurante", {kind: marca, valor: 2}]}
+    aprox: "alvo é quem fez barulho por último; parado e defendendo não é achado -> marca + dano em área"
+  mon_pernalta_das_colunas:
+    cartas:
+      - {n: Bicada de Cima, t: "O bico desce do alto da coluna como um arpão curto.", e: ["d:versatil:perfurante"]}
+      - {n: Arpão de Cima, sig: 1, t: "Fica no alto e arpoa quem está longe, sem sair do lugar.", e: ["d:versatil:perfurante", {kind: marca, valor: 1}], fol: 2}
+    aprox: "perna quebrada derruba a ave inteira -> sem derrubada"
+  mon_lagarto_de_mudas:
+    nf: false
+    cartas:
+      - {n: Mordida em Carne Viva, t: "A boca de carne viva morde uma vez e já recua pela parede.", e: ["d:marcial:perfurante"]}
+      - {n: Casca que Anda, sig: 1, t: "Larga a pele inteira no lugar e a casca vazia recebe o próximo golpe.", e: [{kind: protecao, valor: 4}, {kind: esconder, alvo: eu, valor: 1}]}
+    aprox: "casca recebe o ataque e morde uma vez antes de desmanchar -> proteção + esconder"
+  mon_besouro_de_alavanca:
+    cartas:
+      - {n: Chifre de Alavanca, t: "O chifre chato entra na junta e levanta como pé de cabra.", e: ["d:leve:perfurante"]}
+      - {n: Placa Torta, sig: 1, t: "O chifre entorta a placa da armadura e a junta fica aberta para o próximo.", e: ["d:leve:perfurante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}, {kind: rachadura, valor: 1}], fol: 2}
+    aprox: "armadura aberta até gastar uma ação para encaixar -> armadura_comprometida 3 rodadas + rachadura"
+  mon_carregador_de_ganchos:
+    cartas:
+      - {n: Corrente de Gancho, t: "A corrente gira e o gancho morde o ombro de quem passa.", e: ["d:versatil:cortante"]}
+      - {n: Tranco, sig: 1, t: "O gancho fisga e arrasta de um tranco para o meio dos caçadores.", e: ["d:leve:cortante", {kind: mover_alvo_zona, direcao: aproximar}], fol: 2}
+      - {n: Outro Gancho, f: cena, t: "Solta o gancho no mesmo tranco e já gira outro na ponta da corrente.", e: [{kind: vantagem, alvo: eu, valor: 1}, {kind: protecao, valor: 3}]}
+  mon_leitor_de_cativos:
+    cartas:
+      - {n: Palpo Fino, t: "O segundo par de palpos bate seco no pulso.", e: ["d:marcial:perfurante"]}
+      - {n: O Bando Sabe, sig: 1, t: "As antenas leem a jogada e o bando ao lado já muda de lugar.", e: ["d:leve:perfurante", {kind: buff_acerto, alvo: aliados, valor: 2}, {kind: revelar, campo: cartas}]}
+      - {n: Ferrão de Leitura, t: "Fura o cativo e lê o que sobra pelo ferrão.", e: ["d:versatil:perfurante", {kind: marca, valor: 1}], fol: 2}
+    aprox: "lê a jogada e dá o presságio aos Vrel -> buff de acerto em aliados + revelar"
+  mon_profanador_cravejado:
+    cartas:
+      - {n: Pedra Cravada, t: "Bate com o peito cravejado de relíquias como se fosse uma armadura de espinhos.", e: ["d:marcial:perfurante"]}
+      - {n: Peça Arrancada, sig: 1, t: "O peito estufa e as relíquias clareiam todas; quem arranca uma fica com o peso dela.", e: [{kind: protecao, valor: 5}, {kind: rachadura, valor: 1, se: {eu_tenho: rachadura}}], fol: 1}
+    aprox: "quem arranca uma relíquia tira a armadura -> proteção própria (sem remoção por peça)"
+  mon_cauda_emendada:
+    cartas:
+      - {n: Varrida Baixa, t: "A cauda emendada varre os tornozelos e derruba quem está de pé.", e: ["d:marcial:impactante"]}
+      - {n: Varrida, sig: 1, t: "A cauda recua em arco rente ao chão e leva os tornozelos embora.", e: ["d:leve:impactante", "c:desmoralizado:2", {kind: reposicionar, alvo: eu, valor: 2}]}
+  mon_desfiado_de_vaelorn:
+    cartas:
+      - {n: Soco sem Dor, t: "O braço de nervos para fora bate com força cheia, mesmo partido.", e: ["d:versatil:impactante"]}
+      - {n: Salto de Nervos, sig: 1, t: "Salta do alto do muro e cai com a força inteira, sem sentir os ossos.", e: ["d:pesada:impactante"], fol: 2}
+    aprox: "cada salto o fere sem perceber -> sem dano próprio no salto"
+  mon_arqueiro_de_tendao:
+    cartas:
+      - {n: Tiro de Tendão, t: "A corda de tendão estala e a flecha de cristal sai raspando.", e: ["d:marcial:perfurante"]}
+      - {n: Corda de Carne, sig: 1, t: "Puxa o tendão até a orelha e solta; cada tiro bate mais forte que o anterior.", e: ["d:marcial:perfurante", {kind: buff_dano, alvo: eu, valor: 1}]}
+    aprox: "dano cresce a cada tiro e no quarto o tendão estala -> buff de dano próprio"
+  mon_egua_de_costas:
+    cartas:
+      - {n: Coice Cego, t: "Os cascos de trás saem para onde o corpo não olha.", e: ["d:versatil:impactante"]}
+      - {n: Coice em Quem Vai, sig: 1, t: "Escoiceia quem se afasta ou passa por trás dela, com os dois cascos.", e: ["d:versatil:impactante", {kind: empurrao, valor: 1}, {kind: torpor, valor: 1}], fol: 2}
+    aprox: "só pega quem recua ou contorna -> dano com empurrão sem condição de movimento"
+  mon_cabeca_acima:
+    cartas:
+      - {n: Anel de Vértebras, t: "Um anel de vértebras gira e bate como uma corrente de ossos.", e: ["d:versatil:impactante"]}
+      - {n: Cabeça Baixa, sig: 1, t: "A frente erguida desce de uma vez sobre quem ficou embaixo.", e: ["d:pesada:impactante"], fol: 2}
+      - {n: Erguer o Anel, f: cena, t: "Mais um anel de vértebras sobe e o diadema passa acima de todos.", e: [{kind: protecao, valor: 6}]}
+    aprox: "só o golpe forte entra e cada um faz a frente descer um anel -> proteção alta + dano"
+  mon_chifres_travados:
+    cartas:
+      - {n: Cabeçada Dupla, t: "Os dois crânios fundidos batem juntos, com o peso dos dois corpos.", e: ["d:pesada:impactante"]}
+      - {n: Cabo de Guerra, sig: 1, t: "O nó de chifre escorrega para o lado menos ferido, que bate com o peso dos dois.", e: ["d:versatil:impactante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+      - {n: Pisada de Auroque, t: "Os dois corpos pisam juntos e o chão da arena treme.", e: ["a:3:impactante"], fol: 2}
+      - {n: Nó Apertado, f: cena, t: "Os chifres travam mais fundo e a cabeça dupla fecha o pescoço.", e: [{kind: protecao, valor: 6}, {kind: buff_dano, valor: 2}]}
+      - {n: Nó Solto, f: cena, t: "O nó cede um palmo e os dois corpos puxam cada um para um lado ao mesmo tempo.", e: ["a:3:impactante", "c:amedrontado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_chifres_travados_no_apertado], padrao: [ataque_multiplo, ataque, reforco_proprio], narracao: "{nome} aperta o nó dos chifres e o corpo de um lado ganha o peso do outro."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_chifres_travados_no_solto], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_chifres_travados_no_solto, a_cada_n: 2, telegrafo: "{nome} range no nó e os dois corpos puxam cada um para o seu lado."}, narracao: "{nome} perde o travamento: os dois corpos puxam para lados opostos, mais furiosos."}
+    aprox: "ferir os dois corpos por igual trava o nó e ele passa a rodada sem atacar -> sem corpo duplo; fases por Vitalidade"
+  mon_retalho_das_duas_cidades:
+    cartas:
+      - {n: Mão Costurada, t: "A mão de um dos lados bate e a do outro lado se retrai.", e: ["d:marcial:cortante"]}
+      - {n: Cada Um por Si, sig: 1, t: "As duas mãos se estendem e a ajuda de um para o outro se desfaz antes de valer.", e: ["d:leve:cortante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}, {kind: torpor, valor: 1}]}
+    aprox: "desfaz a ajuda dada a outro herói enquanto estiver de pé -> armadura_comprometida + torpor"
+  enemy_esqueleto_legiao_antiga:
+    cartas:
+      - {n: Haste de Capim, t: "O braço de raiz e capim cai como uma foice lenta.", e: ["d:marcial:cortante"]}
+      - {n: Passo do Vento, sig: 1, t: "O vento vira, o capim das costas enche como vela e ele avança com a rajada.", e: ["d:versatil:cortante", {kind: buff_dano, alvo: eu, valor: 1}], fol: 2}
+    aprox: "só ataca nas rodadas de vento a favor e entre elas fica parado sem defesa -> buff de dano"

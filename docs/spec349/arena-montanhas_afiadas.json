@@ -1,0 +1,324 @@
+{
+ "regiao": "montanhas_afiadas",
+ "seeds": 40,
+ "heroes": [
+  "Devoto do Abismo",
+  "Sangromante",
+  "Corruptor",
+  "Arcanista Cinzento",
+  "Médico de Campo"
+ ],
+ "elapsed_s": 122.2,
+ "criaturas": {
+  "mon_deitado_na_parede": {
+   "nome": "Deitado na Parede",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.74
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_geodo_da_praga": {
+   "nome": "Geodo da Praga",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.79,
+    "L3|on": 0.63
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_cauda_de_atalaia": {
+   "nome": "Cauda de Atalaia",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.72,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_queimado_de_frio": {
+   "nome": "Queimado de Frio",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.57,
+    "L3|on": 0.75
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_observador_menor": {
+   "nome": "Olhos em Volta",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.675,
+    "L3|on": 0.6
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_wyvern_jovem": {
+   "nome": "Leque de Costelas",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.56,
+    "L3|on": 0.715
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_minotauro_esqueleto": {
+   "nome": "Boi de Canga",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.185
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on 18% fora de 45-85%"
+   ]
+  },
+  "enemy_mimico_bau": {
+   "nome": "Morador do Caldeirão",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.57,
+    "L3|on": 0.89
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off delta 19.0 pp > 8",
+    "L3|on 89% fora de 45-85%",
+    "L3|on delta 19.0 pp > 8"
+   ]
+  },
+  "enemy_basilisco_caverna": {
+   "nome": "Caramujo de Estalagmite",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.505,
+    "L3|on": 0.655
+   },
+   "ok": false,
+   "motivos": [
+    "L3|off delta 12.0 pp > 8",
+    "L3|on delta 15.0 pp > 8"
+   ]
+  },
+  "enemy_morcego_vampiro": {
+   "nome": "Lenço do Desfiladeiro",
+   "categoria": "lacaio",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.82,
+    "L3|on": 0.72
+   },
+   "ok": false,
+   "motivos": [
+    "L3|on delta 9.0 pp > 8"
+   ]
+  },
+  "mon_bexiga_de_respiro": {
+   "nome": "Bexiga de Respiro",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.845,
+    "L3|on": 0.755
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_saltao_de_galeria": {
+   "nome": "Saltão de Galeria",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.75,
+    "L3|on": 0.74
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_rolador_de_escarpa": {
+   "nome": "Rolador de Escarpa",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.84,
+    "L3|on": 0.79
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_chicote_de_fenda": {
+   "nome": "Chicote de Fenda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.76,
+    "L3|on": 0.815
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_ladrao_de_lume": {
+   "nome": "Ladrão de Lume",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.755,
+    "L3|on": 0.825
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "enemy_troll_ponte": {
+   "nome": "Ponte de Ombros",
+   "categoria": "elite",
+   "status": "reinventada",
+   "cells": {
+    "L3|off": 0.465,
+    "L3|on": 0.545
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_bracos_de_tenaz": {
+   "nome": "Braços de Tenaz",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.615,
+    "L3|on": 0.745
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_marco_que_aponta": {
+   "nome": "Marco que Aponta",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.795
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_armador_de_fosso": {
+   "nome": "Armador de Fosso",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.775,
+    "L3|on": 0.77
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_vedado_de_piche": {
+   "nome": "Vedado de Piche",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.64,
+    "L3|on": 0.66
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_peso_dos_vencidos": {
+   "nome": "Peso dos Vencidos",
+   "categoria": "chefe",
+   "status": "nova",
+   "cells": {
+    "L5|off": 0.65,
+    "L5|on": 0.255
+   },
+   "ok": false,
+   "motivos": [
+    "L5|on 26% fora de 45-85%"
+   ]
+  },
+  "mon_tampao_da_camara": {
+   "nome": "Tampão da Câmara",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.59,
+    "L3|on": 0.78
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_tesoura_de_cordada": {
+   "nome": "Tesoura de Cordada",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.83,
+    "L3|on": 0.8
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mastro_de_trofeus": {
+   "nome": "Mastro de Troféus",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.515,
+    "L3|on": 0.635
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_mao_da_borda": {
+   "nome": "Mão da Borda",
+   "categoria": "padrao",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.755,
+    "L3|on": 0.675
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_lingua_de_lima": {
+   "nome": "Língua de Lima",
+   "categoria": "lacaio",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.62,
+    "L3|on": 0.81
+   },
+   "ok": true,
+   "motivos": []
+  },
+  "mon_pisador_do_salao": {
+   "nome": "Pisador do Salão",
+   "categoria": "elite",
+   "status": "nova",
+   "cells": {
+    "L3|off": 0.485,
+    "L3|on": 0.625
+   },
+   "ok": true,
+   "motivos": []
+  }
+ }
+}

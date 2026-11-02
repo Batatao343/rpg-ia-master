@@ -1,0 +1,3472 @@
+{
+ "enemy_aranha_de_cristal": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_teia"
+  ],
+  "categoria": "chefe",
+  "description": "Um aracnídeo gigante, do tamanho de um cavalo, cuja carapaça é composta por um cristal translúcido e duro como diamante. Vive em cavernas subterrâneas onde a luz é abundante, usando sua carapaça reflexiva para se camuflar perfeitamente entre as formações de quartzo. Caça forasteiros, atraída pela água em seus corpos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Aranha de Cristal",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_aranha_lobo": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_teia"
+  ],
+  "categoria": "lacaio",
+  "description": "Caçadora rápida que não tece teias, apenas persegue.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Aranha Lobo",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_arpoador_osshari": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "elite",
+  "description": "Caçador de leviatãs deslocado para as docas. Sente pouco — inclusive medo. Só recua quando a caça deixa de ser caça.",
+  "faction": "osshari_brekmar",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Arpoador Osshari",
+  "regions": [
+   "brekmar",
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "enemy_assassino_cinzeu": {
+  "arquetipo": "emboscador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_golpe_sombras"
+  ],
+  "categoria": "elite",
+  "description": "Humanoide sem olhos dos túneis profundos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Assassino Cinzéu",
+  "regions": [
+   "pradaria_ruinas",
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "enemy_bandido": {
+  "arquetipo": "bruto",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_pancada_esmagadora"
+  ],
+  "categoria": "lacaio",
+  "description": "Criatura hostil das ruínas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Bandido",
+  "regions": [],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_bandido_capitao": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_uivo_comando"
+  ],
+  "categoria": "elite",
+  "description": "Líder carismático e perigoso de um bando de estrada.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Capitão dos Bandidos",
+  "regions": [
+   "pradaria_ruinas",
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "enemy_basilisco_caverna": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_petrificar"
+  ],
+  "categoria": "elite",
+  "description": "Réptil de oito patas cujo olhar petrifica.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Basilisco da Caverna",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 0
+  }
+ },
+ "enemy_boss_arauto_nevoa": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_grito_terror"
+  ],
+  "categoria": "chefe",
+  "description": "Entidade feita de fumaça e lamento que assombra as criptas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "O Arauto da Névoa",
+  "regions": [
+   "pantano_melancolia",
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 5,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 3
+  }
+ },
+ "enemy_boss_general_escorpiao": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_golpe_mestre"
+  ],
+  "categoria": "chefe",
+  "description": "Abominação híbrida que comanda as bestas de Zhur.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "General Escorpião",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 3,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "enemy_boss_valerius": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_golpe_mestre"
+  ],
+  "categoria": "chefe",
+  "description": "O Tirano de Nova Arcádia. Mestre espadachim em armadura completa.",
+  "faction": "legiao_ferro",
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Lorde Protetor Valerius",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 5,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 4
+  }
+ },
+ "enemy_boss_vibora": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_golpe_mestre"
+  ],
+  "categoria": "chefe",
+  "description": "Líder da Mão Sombria. Impossível de segurar.",
+  "faction": "mao_sombria",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "A Víbora (Boss)",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 3,
+   "mente": 4
+  }
+ },
+ "enemy_capturador_groth": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_postura_muralha"
+  ],
+  "categoria": "elite",
+  "description": "Mercador de escravos da rede de Groth Algema-Fria. Trata pessoas como inventário; luta como quem protege carga, não como quem tem causa.",
+  "faction": "mercadores_escravos_pradaria",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Capturador de Groth",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "enemy_carniçal": {
+  "arquetipo": "bruto",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_mordida_infecciosa"
+  ],
+  "categoria": "lacaio",
+  "description": "Criatura hostil das ruínas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Carniçal",
+  "regions": [],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_cultista_destilacao": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "elite",
+  "description": "Mago proibido que estuda os Afogados como professores e vê pessoas como matéria-prima de almas. Brilhante, moralmente morto — e pragmático quando o ritual dá errado.",
+  "faction": "cultistas_destilacao",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Cultista da Destilação",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 4
+  }
+ },
+ "enemy_degolador_mao_sombria": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco"
+  ],
+  "categoria": "lacaio",
+  "description": "Agente da guilda de assassinos, veste couro preto e máscara de pano.",
+  "faction": "mao_sombria",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Degolador da Mão Sombria",
+  "regions": [
+   "nova_arcadia",
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "enemy_devorador_sol_zhur": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "lacaio",
+  "description": "Nômade do deserto com lentes de obsidiana costuradas na pele.",
+  "faction": "tribos_devoradores_sol",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Devorador de Sol (Zhur)",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "enemy_djinn_menor": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_baforada_ignea"
+  ],
+  "categoria": "elite",
+  "description": "Espírito elemental escravizado pelos feiticeiros de Zhur.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Djinn Menor",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 4,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "enemy_druida_renegado": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "elite",
+  "description": "Ex-membro do Ciclo Cinzento convertido pela melancolia. Guia vítimas para a névoa densa falando de misericórdia — e recua quando a misericórdia encontra resistência.",
+  "faction": "druidas_renegados",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Druida-Renegado",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 2,
+   "mente": 4
+  }
+ },
+ "enemy_elemental_fogo_poluido": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_baforada_ignea"
+  ],
+  "categoria": "elite",
+  "description": "Chamas misturadas com a fumaça tóxica das forjas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Elemental de Fogo Poluído",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_escorpiao_cristal": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Predador alfa de Zhur. Sua carapaça refrata luz e é dura como aço.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Escorpião de Cristal",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_espectro_lamento": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido",
+   "bst_grito_terror"
+  ],
+  "categoria": "elite",
+  "description": "Espírito de uma vítima da peste, intangível.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Espectro do Lamento",
+  "regions": [
+   "pradaria_ruinas",
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 0,
+   "mente": 2
+  }
+ },
+ "enemy_esqueleto": {
+  "arquetipo": "bruto",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_pancada_esmagadora"
+  ],
+  "categoria": "lacaio",
+  "description": "Criatura hostil das ruínas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Esqueleto",
+  "regions": [],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_esqueleto_legiao_antiga": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "lacaio",
+  "description": "Ossos vestindo restos da armadura da velha Arcádia.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Esqueleto da Legião Antiga",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 2,
+   "mente": 1
+  }
+ },
+ "enemy_esqueleto_mago": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Restos mortais de um mago que ainda lembra feitiços.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Esqueleto Arcanista",
+  "regions": [
+   "aethelgard",
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "enemy_fantasma": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido",
+   "bst_grito_terror"
+  ],
+  "categoria": "elite",
+  "description": "Alma que não completou sua missão.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Fantasma",
+  "regions": [
+   "aethelgard",
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 2
+  }
+ },
+ "enemy_gargula_ferro": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_postura_muralha"
+  ],
+  "categoria": "lacaio",
+  "description": "Estátua animada que vigia os telhados da cidade alta.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Gárgula de Ferro",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_garrick,_o_silenciador": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "nomeado",
+  "description": "Garrick, o Silenciador, é um carrasco implacável que atua nas profundezas da Oubliette sob as ordens diretas d'O Cego. Ele veste uma túnica de couro escurecido e a tradicional máscara de madeira sem boca da seita do Silêncio. Garrick é o encarregado de caçar prisioneiros fugitivos ou heréticos que ousaram quebrar o silêncio sagrado. Ele se move como uma sombra e usa um garrote de aço para garantir que suas vítimas morram sem emitir um único sussurro.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Garrick, o Silenciador",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "enemy_gigante_gelo_norte": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_sopro_gelido"
+  ],
+  "categoria": "chefe",
+  "description": "Um antigo gigante adormecido sob Skallgard.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Titã de Gelo (Norte)",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "enemy_goblin": {
+  "arquetipo": "bruto",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_pancada_esmagadora"
+  ],
+  "categoria": "lacaio",
+  "description": "Criatura hostil das ruínas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Goblin",
+  "regions": [],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_golem_carne": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_postura_muralha"
+  ],
+  "categoria": "elite",
+  "description": "Frankenstein mágico criado por Silas Vane.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Golem de Carne",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_golem_lixo": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_bafo_acido"
+  ],
+  "categoria": "elite",
+  "description": "Constructo feito de detritos do Anel de Lama.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Golem de Lixo",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 0
+  }
+ },
+ "enemy_guerreiro_bjorn": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco"
+  ],
+  "categoria": "lacaio",
+  "description": "Bárbaro do Norte vestindo ossos de baleia e peles.",
+  "faction": "clas_combate",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Guerreiro Bjorn",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 2,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "enemy_horror_esgoto": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_bafo_acido"
+  ],
+  "categoria": "elite",
+  "description": "Amálgama de lixo, excremento e magia necromântica.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Horror do Esgoto (Ooze)",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 4,
+   "mente": 0
+  }
+ },
+ "enemy_hospedeiro_fungico": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora"
+  ],
+  "categoria": "lacaio",
+  "description": "Humano cujos órgãos foram substituídos por micélio. Não sente dor.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Hospedeiro Fúngico (Xylos)",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 3,
+   "mente": 0
+  }
+ },
+ "enemy_iniciado_chama_azul": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_baforada_ignea"
+  ],
+  "categoria": "lacaio",
+  "description": "Fanático com cicatrizes de queimadura auto-infligidas.",
+  "faction": "filhos_chama_azul",
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Iniciado da Chama Azul",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 2,
+   "forca": 2,
+   "mente": 3
+  }
+ },
+ "enemy_lobo_invernal": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco",
+   "bst_sopro_gelido"
+  ],
+  "categoria": "lacaio",
+  "description": "Lobo enorme de pelagem branca, olhos azuis brilhantes.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Lobo das Geleiras",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "enemy_lobo_sombrio": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "lacaio",
+  "description": "Criatura hostil das ruínas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Lobo Sombrio",
+  "regions": [],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "enemy_mimico_bau": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora"
+  ],
+  "categoria": "elite",
+  "description": "Predador metamorfo comum em ruínas antigas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Mímico (Baú)",
+  "regions": [
+   "montanhas_afiadas",
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "enemy_minotauro_esqueleto": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Ossos gigantescos de um guardião do labirinto.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Minotauro Esqueleto",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_morcego_vampiro": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_mordida_infecciosa"
+  ],
+  "categoria": "lacaio",
+  "description": "Morcego do tamanho de uma águia, sedento de sangue.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Morcego Vampiro Gigante",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 1,
+   "mente": 1
+  }
+ },
+ "enemy_mumia_de_po": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Cadáver seco preservado pelas areias mágicas de Zhur.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Múmia de Pó",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 3,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 1
+  }
+ },
+ "enemy_necromante_renegado": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "elite",
+  "description": "Mago expulso da Torre, agora pratica nas criptas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Necromante Renegado",
+  "regions": [
+   "pradaria_ruinas",
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 4
+  }
+ },
+ "enemy_nomade_canibal": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_uivo_comando",
+   "bst_mordida_infecciosa"
+  ],
+  "categoria": "lacaio",
+  "description": "Guerreiro do deserto enlouquecido pela fome.",
+  "faction": "bandos_nomades",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Nômade Canibal",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "enemy_observador_menor": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_petrificar"
+  ],
+  "categoria": "lacaio",
+  "description": "Pequena esfera flutuante com quatro olhos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Observador Menor (Gazer)",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 0,
+   "mente": 1
+  }
+ },
+ "enemy_orc_saidas_baixas": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "lacaio",
+  "description": "Refugiado do Reino Subterrâneo que nunca voltou às profundezas. Embosca grupos pequenos, foge de grupos grandes — Gruumsha entende números.",
+  "faction": "bandos_orc_saidas_baixas",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Orc das Saídas Baixas",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 1
+  }
+ },
+ "enemy_pirata_brekmar": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "lacaio",
+  "description": "Tripulante da guerra de rotas do mar oeste. Briga suja, aposta alto — e sabe exatamente quando uma luta deixou de valer o saque.",
+  "faction": "grupos_piratas_rivais",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Pirata de Brekmar",
+  "regions": [
+   "brekmar",
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "enemy_polvo_esgoto": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_bafo_acido"
+  ],
+  "categoria": "elite",
+  "description": "Cefalópode mutante adaptado à sujeira.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Polvo do Esgoto",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 1
+  }
+ },
+ "enemy_rato_peste_anel_lama": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_mordida_infecciosa"
+  ],
+  "categoria": "lacaio",
+  "description": "Roedor inchado que se alimenta dos cadáveres jogados no fosso de Nova Arcádia.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Rato da Peste (Anel de Lama)",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 1
+  }
+ },
+ "enemy_renegado_ermo": {
+  "arquetipo": "conjurador",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_descarga_arcana"
+  ],
+  "categoria": "lacaio",
+  "description": "Ex-caçador exilado de Skallgard que sobreviveu ao Ermo e voltou selvagem. Pensa como a cidade que o expulsou — e ataca como quem não tem mais nada a perder, até a matemática dizer o contrário.",
+  "faction": "renegados_ermo",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Renegado do Ermo",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "enemy_sentinela_ferro": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_postura_muralha"
+  ],
+  "categoria": "elite",
+  "description": "Automato movido a vapor e magia, guarda o Palácio de Obsidiana.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Sentinela de Ferro (Constructo)",
+  "regions": [
+   "nova_arcadia",
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_soldado_legiao_ferro": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_uivo_comando"
+  ],
+  "categoria": "elite",
+  "description": "A polícia brutal de Lorde Valerius. Armadura pesada e disciplina rígida.",
+  "faction": "legiao_ferro",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Soldado da Legião de Ferro",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "enemy_sombra_espreitadora": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "lacaio",
+  "description": "Vulto escuro que drena força.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Sombra Espreitadora",
+  "regions": [
+   "floresta_sussurros",
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 1
+  }
+ },
+ "enemy_troll_ponte": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Gigante regenerativo que cobra pedágio em carne.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Troll de Ponte",
+  "regions": [
+   "montanhas_afiadas",
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_urso_coruja_mutante": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Monstruosidade de Xylos com placas de fungo.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Urso-Coruja Mutante",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_verme_areia_jovem": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Filhote dos titãs que nadam na areia de Zhur.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Verme da Areia (Jovem)",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 0
+  }
+ },
+ "enemy_vinha_estranguladora": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_teia"
+  ],
+  "categoria": "elite",
+  "description": "Planta carnívora camuflada nas árvores de Xylos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Vinha Estranguladora",
+  "regions": [
+   "selva_xylos",
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 0
+  }
+ },
+ "enemy_wyvern_jovem": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_baforada_ignea"
+  ],
+  "categoria": "elite",
+  "description": "Réptil alado venenoso, comum nos picos de montanha.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Wyvern Jovem",
+  "regions": [
+   "montanhas_afiadas",
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "enemy_yeti": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_sopro_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Predador das neves com pelagem branca e garras negras.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Yeti das Cavernas",
+  "regions": [
+   "skallgard",
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "enemy_zumbi_blindado": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "lacaio",
+  "description": "Guarda morto reanimado ainda vestindo sua cota de malha.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Zumbi Blindado",
+  "regions": [
+   "pantano_melancolia",
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 3,
+   "mente": 0
+  }
+ },
+ "mon_afogado_da_batalha": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Morto da batalha final contra Malagor, ancorado no Éter concentrado. Não tem inteligência — tem número e a resistência que o Éter lhe dá.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Afogado da Batalha",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 0
+  }
+ },
+ "mon_afogado_de_aethelgard": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "O que restou de quem estava na cidade quando o aprendiz agiu. Thessrak ainda fala através deles — e o que fala não recua.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Afogado de Aethelgard",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 1
+  }
+ },
+ "mon_anao_eco": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Morto do Reino que não partiu: ainda 'trabalha' nas galerias, martelo fantasma em ritmo de turno. Interrompê-lo é virar parte do serviço.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Anão-Eco",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "mon_auroque_ruinas": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_uivo_comando",
+   "bst_poeira_pradaria",
+   "bst_mimetismo_morto"
+  ],
+  "categoria": "elite",
+  "description": "Seu rebanho derruba colunas antigas para lamber o sal das fundações.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Auroque das Ruínas",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 4
+  }
+ },
+ "mon_automato_fundicao": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_fuligem_arcadia",
+   "bst_saliva_paralisante"
+  ],
+  "categoria": "elite",
+  "description": "Um molde de guerra abandonado pelos Encapuzados da Fornalha ainda guarda seu forno.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Autômato de Fundição",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "mon_baleia_ossario": {
+  "arquetipo": "bruto",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_osso_costa",
+   "bst_ordem_quebrar"
+  ],
+  "categoria": "elite",
+  "description": "Nada sob areia e ossos, emergindo quando o Éter faz a maré recuar.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Filhote de Baleia-Ossário",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "mon_cabra_labirinto": {
+  "arquetipo": "predador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_eco_montanhas",
+   "bst_casca_reativa"
+  ],
+  "categoria": "padrao",
+  "description": "Conhece passagens nas Montanhas Afiadas que não existem no mesmo lugar duas vezes.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Cabra do Labirinto",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_cabra_navalha": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "lacaio",
+  "description": "Herbívoro das encostas com chifres que cortam corda e couro. Ataca se encurralada, foge quando pode.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Cabra-Navalha",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "mon_cacador_casca": {
+  "arquetipo": "emboscador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_sombras",
+   "bst_sussurro_thessavar",
+   "bst_casca_reativa"
+  ],
+  "categoria": "padrao",
+  "description": "Fica imóvel entre troncos até a floresta decidir quem atravessou sem permissão.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Caçador de Casca",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_cao_rebite": {
+  "arquetipo": "predador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_fuligem_arcadia",
+   "bst_casca_reativa"
+  ],
+  "categoria": "padrao",
+  "description": "Fareja óleo e sangue nas vielas fabris patrulhadas pela Legião de Ferro.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Cão de Rebite",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_capangas_do_poco": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco"
+  ],
+  "categoria": "lacaio",
+  "description": "Cobrador de dívidas dos sindicatos. Trabalha em dupla, quebra o que foi mandado quebrar, e some quando o serviço azeda.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Capanga do Poço",
+  "regions": [
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_capita_corda": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_uivo_comando",
+   "bst_sino_brekmar",
+   "bst_ordem_quebrar"
+  ],
+  "categoria": "elite",
+  "description": "Pirata afogada que ainda comanda uma tripulação presa às próprias amarras.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Capitã da Corda Molhada",
+  "regions": [
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_caranguejo_cinza": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_mare_ophidia",
+   "bst_coro_colmeia"
+  ],
+  "categoria": "lacaio",
+  "description": "Reveste a carapaça com cinza das ilhas vulcânicas de Ophidia.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Caranguejo de Cinza",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 1
+  }
+ },
+ "mon_caranguejo_mare": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "lacaio",
+  "description": "Crustáceo do tamanho de um cão que habita os crânios dos leviatãs. Territorial: garras que cortam osso quando a carcaça é disputada.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Caranguejeiro da Maré",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "mon_carrapato_osso": {
+  "arquetipo": "predador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_osso_costa",
+   "bst_fenda_sonica"
+  ],
+  "categoria": "lacaio",
+  "description": "Escava as ossadas titânicas da Costa Negra e veste fragmentos dos antigos donos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Carrapato de Osso",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_cavaleiro_sem_rosto": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_toque_gelido",
+   "bst_poeira_pradaria",
+   "bst_carregar_ruina"
+  ],
+  "categoria": "padrao",
+  "description": "Ainda patrulha a fronteira de uma cidade-estado cujo nome foi apagado.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Cavaleiro sem Rosto",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_cervo_afogado": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_toque_gelido",
+   "bst_lodo_melancolia",
+   "bst_mimetismo_morto"
+  ],
+  "categoria": "elite",
+  "description": "Carrega nos chifres oferendas de peregrinos que nunca voltaram da água negra.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Cervo Afogado",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_cobrador_gancho": {
+  "arquetipo": "tatico",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_ordem_foco",
+   "bst_sino_brekmar",
+   "bst_roubar_calor"
+  ],
+  "categoria": "padrao",
+  "description": "Uma criatura treinada pelos sindicatos para trazer devedores vivos ao Porto Sem Lei.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Cobrador do Gancho",
+  "regions": [
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_colosso_duna": {
+  "arquetipo": "bruto",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_vidro_zhur",
+   "bst_ordem_quebrar"
+  ],
+  "categoria": "elite",
+  "description": "Uma armadura vazia movida pelo vento que sopra da Borda do Vazio.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Colosso de Duna Oca",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 4
+  }
+ },
+ "mon_corvo_gelo": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_sopro_gelido",
+   "bst_noite_skallgard",
+   "bst_fenda_sonica"
+  ],
+  "categoria": "lacaio",
+  "description": "Rouba lascas de memória dos mortos deixados na noite eterna de Skallgard.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Corvo de Gelo Negro",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_eclipse_caminhante": {
+  "arquetipo": "conjurador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_vidro_zhur",
+   "bst_coro_colmeia"
+  ],
+  "categoria": "chefe",
+  "description": "Os Devoradores do Sol o chamam de profecia; as caravanas chamam de fim da rota.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Eclipse Caminhante",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_ent_dormindo": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_sussurro_thessavar",
+   "bst_saliva_paralisante"
+  ],
+  "categoria": "elite",
+  "description": "Suas raízes guardam um sonho anterior à escuridão que cobriu a floresta.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Ent que Sonha Acordado",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_escaravelho_vidro": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_vidro_zhur",
+   "bst_fenda_sonica"
+  ],
+  "categoria": "lacaio",
+  "description": "Seu casco nasce dos cacos que as tempestades de Zhur vitrificam nas dunas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 1,
+   "leve": 3
+  },
+  "max_vitalidade": 8,
+  "name": "Escaravelho de Vidro",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 1,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_espectro_elfico": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido",
+   "bst_grito_terror"
+  ],
+  "categoria": "elite",
+  "description": "Alma élfica ancorada no Éter das ruínas: perturbadoramente belo e mortalmente perigoso ao mesmo tempo. Não foge — já não há para onde.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Espectro Élfico",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 4,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_faisca_destilacao": {
+  "arquetipo": "conjurador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_eter_aethelgard",
+   "bst_sangrar_alcateia"
+  ],
+  "categoria": "lacaio",
+  "description": "Fragmento vivo do experimento que derrubou Aethelgard e ainda procura um recipiente.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 1,
+   "leve": 3
+  },
+  "max_vitalidade": 8,
+  "name": "Faísca da Destilação",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 1,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_fumaca_de_cor_errada": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_grito_terror"
+  ],
+  "categoria": "elite",
+  "description": "A névoa que os vulcões de Ophidia produzem — em cores que não têm referência fora dali. Envolve. Não persegue: já está em toda parte.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Fumaça de Cor Errada",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 5,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_gafanhoto_runa": {
+  "arquetipo": "tatico",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_ordem_foco",
+   "bst_poeira_pradaria",
+   "bst_coro_colmeia"
+  ],
+  "categoria": "lacaio",
+  "description": "Devora inscrições das cidades caídas e carrega fragmentos de magia no casco.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 1,
+   "leve": 3
+  },
+  "max_vitalidade": 8,
+  "name": "Gafanhoto de Runa",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 1,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_gaivota_ladra": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "lacaio",
+  "description": "Ave de rapina de envergadura anormal que mergulha sobre qualquer coisa que se mova entre as carcaças — e desiste na primeira resistência séria.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Gaivota-Ladra",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 0,
+   "corpo": 2,
+   "forca": 1,
+   "mente": 1
+  }
+ },
+ "mon_goblin_eco": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_eco_montanhas",
+   "bst_sangrar_alcateia"
+  ],
+  "categoria": "lacaio",
+  "description": "Mineradores goblins o criaram para encontrar túneis; ele aprendeu a fechá-los.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Goblin de Eco",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_guardiao_basalto": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_eco_montanhas",
+   "bst_saliva_paralisante"
+  ],
+  "categoria": "elite",
+  "description": "Uma sentinela anã sem mestre protege a estrada para o reino subterrâneo perdido.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Guardião de Basalto",
+  "regions": [
+   "montanhas_afiadas"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_hiena_sol": {
+  "arquetipo": "lider_matilha",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_uivo_comando",
+   "bst_vidro_zhur",
+   "bst_roubar_calor"
+  ],
+  "categoria": "padrao",
+  "description": "Segue as caravanas dos Devoradores de Sol esperando a última sombra desaparecer.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Hiena do Sol Partido",
+  "regions": [
+   "deserto_zhur"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_jotun_cinza": {
+  "arquetipo": "bruto",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_noite_skallgard",
+   "bst_ordem_quebrar"
+  ],
+  "categoria": "elite",
+  "description": "Um gigante coberto pela cinza das máquinas térmicas soterradas no gelo.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Jötunn de Cinza",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_larva_hospedeira": {
+  "arquetipo": "predador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_esporo_xylos",
+   "bst_coro_colmeia"
+  ],
+  "categoria": "lacaio",
+  "description": "Procura um corpo para levar até as cidades suspensas da Colmeia.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Larva Hospedeira",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_leviata_caldeira": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_mare_ophidia",
+   "bst_saliva_paralisante"
+  ],
+  "categoria": "chefe",
+  "description": "Dorme sob uma caldeira vulcânica de Ophidia e desperta quando a chama fica azul.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Leviatã da Caldeira Azul",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "mon_lobo_aurora": {
+  "arquetipo": "predador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_noite_skallgard",
+   "bst_roubar_calor"
+  ],
+  "categoria": "padrao",
+  "description": "Caça sob uma aurora que os clãs tecnológicos juram ter desligado décadas atrás.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Lobo da Aurora Morta",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_lobo_da_pradaria": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco"
+  ],
+  "categoria": "lacaio",
+  "description": "Caçador da grama alta. A matilha cerca, morde e recua — e volta quando a presa cansa.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Lobo da Pradaria",
+  "regions": [
+   "pradaria_ruinas"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "mon_lobo_de_vidro": {
+  "arquetipo": "tatico",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_ordem_foco"
+  ],
+  "categoria": "lacaio",
+  "description": "Predador do Ermo com pelagem translúcida que confunde o olho na neve. Caça em matilha; quando a matilha quebra, dispersa.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Lobo de Vidro",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 1
+  }
+ },
+ "mon_locomotiva_penitente": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_fuligem_arcadia",
+   "bst_sangrar_alcateia"
+  ],
+  "categoria": "chefe",
+  "description": "Uma máquina da Legião de Ferro que ganhou fome ao transportar minério abissal.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Locomotiva Penitente",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 4,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_macaco_esporo": {
+  "arquetipo": "tatico",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_ordem_foco",
+   "bst_esporo_xylos",
+   "bst_carregar_ruina"
+  ],
+  "categoria": "padrao",
+  "description": "Aprendeu a imitar os sinais manuais dos Hospedeiros e arma emboscadas nas copas.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Macaco de Esporo",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_mae_micelio": {
+  "arquetipo": "conjurador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_esporo_xylos",
+   "bst_casca_reativa"
+  ],
+  "categoria": "chefe",
+  "description": "A memória coletiva da Colmeia rejeitou esta matriz, que agora cria hospedeiros próprios.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Mãe do Micélio Errante",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_mariposa_sussurro": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_sussurro_thessavar",
+   "bst_sangrar_alcateia"
+  ],
+  "categoria": "lacaio",
+  "description": "Repete em suas asas palavras que Thessavar ainda não pronunciou.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Mariposa do Sussurro",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 1
+  }
+ },
+ "mon_mergulhadores_saqueadores": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja"
+  ],
+  "categoria": "lacaio",
+  "description": "Caça-tesouros que arrisca as partes rasas das ruínas. Corajoso até a primeira sombra errada na água.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Mergulhador Saqueador",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_moreia_vulcanica": {
+  "arquetipo": "emboscador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_sombras",
+   "bst_mare_ophidia",
+   "bst_carregar_ruina"
+  ],
+  "categoria": "padrao",
+  "description": "Vive em tubos de lava inundados e ataca barcos pelo calor dos remos.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Moreia Vulcânica",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 2,
+   "forca": 3,
+   "mente": 2
+  }
+ },
+ "mon_mosquito_eter": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_lodo_melancolia",
+   "bst_coro_colmeia"
+  ],
+  "categoria": "lacaio",
+  "description": "Enxames bebem o Éter que aflora entre raízes e cadáveres do Pântano da Melancolia.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Mosquito de Éter",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_o_que_come_nas_praias": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_golpe_mestre"
+  ],
+  "categoria": "chefe",
+  "description": "A coisa sob as docas e entre as ossadas que se alimenta dos corpos. Os Osshari sabem que existe. Não explicam. Não recua — o mar inteiro é dela.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "O Que Come nas Praias",
+  "regions": [
+   "costa_negra",
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 2
+  }
+ },
+ "mon_oraculo_coral": {
+  "arquetipo": "conjurador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_mare_ophidia",
+   "bst_mimetismo_morto"
+  ],
+  "categoria": "elite",
+  "description": "Uma colônia que responde perguntas com correntes capazes de afogar o consulente.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Oráculo de Coral",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_os_que_voltaram_e_nao_eram_eles": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Marinheiros de barcos que sumiram perto de Ophidia — devolvidos à costa, exatamente iguais, exceto por tudo. Não fogem: para onde fugiriam?",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Os Que Voltaram (e não eram eles)",
+  "regions": [
+   "ophidia",
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 4,
+   "mente": 2
+  }
+ },
+ "mon_predador_crescido": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Mamífero de caça que o ciclo acelerado alimentou além do tamanho possível. A fome cresceu junto.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Predador Crescido",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "mon_quimera_cristal": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_mestre",
+   "bst_eter_aethelgard",
+   "bst_saliva_paralisante"
+  ],
+  "categoria": "elite",
+  "description": "Três animais fundidos pelo Éter de Aethelgard disputam o mesmo esqueleto transparente.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Quimera de Cristal Destilado",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 4
+  }
+ },
+ "mon_rainha_cipo": {
+  "arquetipo": "conjurador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_descarga_arcana",
+   "bst_esporo_xylos",
+   "bst_mimetismo_morto"
+  ],
+  "categoria": "elite",
+  "description": "Uma planta consciente que negocia corpos com a Colmeia em troca de luz.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Rainha-Cipó",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "mon_rato_cais_brekmar": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_mordida_infecciosa",
+   "bst_sino_brekmar",
+   "bst_fenda_sonica"
+  ],
+  "categoria": "lacaio",
+  "description": "Reconhece moedas falsas pelo gosto e morde primeiro quem as carrega.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Rato de Cais de Brekmar",
+  "regions": [
+   "brekmar"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 1
+  }
+ },
+ "mon_rato_caldeira": {
+  "arquetipo": "emboscador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_sombras",
+   "bst_mordida_infecciosa",
+   "bst_fuligem_arcadia",
+   "bst_sangrar_alcateia"
+  ],
+  "categoria": "lacaio",
+  "description": "Nidifica sob as caldeiras do Anel de Ferro e mastiga rebites ainda quentes.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Rato de Caldeira",
+  "regions": [
+   "nova_arcadia"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ },
+ "mon_sanguessuga_braco": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_mordida_infecciosa"
+  ],
+  "categoria": "lacaio",
+  "description": "Sanguessuga do tamanho de um braço humano que detecta calor através da lama e não solta enquanto houver sangue.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Sanguessuga-Braço",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 2,
+   "mente": 0
+  }
+ },
+ "mon_sapo_boi_acido": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_bafo_acido"
+  ],
+  "categoria": "lacaio",
+  "description": "Do tamanho de um cão médio, cospe ácido concentrado. O Éter do pântano o fez crescer — e o deixou sem medo.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Sapo-Boi Ácido",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 0
+  }
+ },
+ "mon_saqueador_marfim": {
+  "arquetipo": "tatico",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_ordem_foco",
+   "bst_osso_costa",
+   "bst_roubar_calor"
+  ],
+  "categoria": "padrao",
+  "description": "Segue mapas Osshari gravados em presas que ninguém admite ter vendido.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Saqueador de Marfim",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 4,
+   "corpo": 4,
+   "forca": 2,
+   "mente": 2
+  }
+ },
+ "mon_sentinela_hospedeiro": {
+  "arquetipo": "guardiao",
+  "behavior_profile": "tatico",
+  "cartas": [
+   "bst_postura_muralha"
+  ],
+  "categoria": "elite",
+  "description": "Hospedeiro dedicado à defesa do território da colmeia. Luta com coordenação de muitos; recua quando a colmeia decide que o custo não vale.",
+  "faction": "colmeia_hospedeiros",
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Sentinela Hospedeiro",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 1,
+   "corpo": 3,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_sereia_de_ophidia": {
+  "arquetipo": "morto_vivo_implacavel",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_toque_gelido"
+  ],
+  "categoria": "elite",
+  "description": "O que canta nas águas ao redor do arquipélago. Quem ouve de perto descreve o canto de formas que não são consistentes entre si. Ninguém descreve duas vezes.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Sereia de Ophidia",
+  "regions": [
+   "ophidia"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 5,
+   "corpo": 3,
+   "forca": 3,
+   "mente": 3
+  }
+ },
+ "mon_serpente_raiz": {
+  "arquetipo": "covarde_oportunista",
+  "behavior_profile": "covarde",
+  "cartas": [
+   "bst_fuga_suja",
+   "bst_teia"
+  ],
+  "categoria": "lacaio",
+  "description": "Indistinguível das raízes até se mover. O veneno carrega um eco do escuro de Thessavar.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Serpente-Raiz",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 4,
+   "carisma": 0,
+   "corpo": 2,
+   "forca": 2,
+   "mente": 1
+  }
+ },
+ "mon_tubarao_de_casco": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Predador da maré entre as ossadas, couro grosso como madeira de quilha. Ataca tudo que sangra.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Tubarão de Casco",
+  "regions": [
+   "costa_negra"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 0
+  }
+ },
+ "mon_urso_de_espinha": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro"
+  ],
+  "categoria": "elite",
+  "description": "Predador alfa da floresta: pelagem caída, pele purulenta, espinhos de osso. Suas garras fazem feridas que não fecham. Quer porradaria até a morte — fugir não existe no que restou da mente dele.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Urso-de-Espinha",
+  "regions": [
+   "floresta_sussurros"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 1,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "mon_urso_tita": {
+  "arquetipo": "predador_apice",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_golpe_mestre"
+  ],
+  "categoria": "chefe",
+  "description": "Colosso do Ermo Branco, pelagem branca sobre músculo antigo. Não conhece o conceito de fuga: luta até a morte porque nada no gelo jamais o fez recuar.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Urso-Titã",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 1,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 1
+  }
+ },
+ "mon_verme_do_gelo": {
+  "arquetipo": "predador",
+  "behavior_profile": "feroz",
+  "cartas": [
+   "bst_bote_certeiro",
+   "bst_sopro_gelido"
+  ],
+  "categoria": "elite",
+  "description": "Escava sob a neve compacta e ataca de baixo. O frio dentro dele é condição do Abismo, não temperatura.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 3,
+   "grave": 3,
+   "leve": 5
+  },
+  "max_vitalidade": 16,
+  "name": "Verme do Gelo",
+  "regions": [
+   "skallgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 0,
+   "corpo": 5,
+   "forca": 5,
+   "mente": 0
+  }
+ },
+ "mon_vigia_caco": {
+  "arquetipo": "guardiao",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_postura_muralha",
+   "bst_eter_aethelgard",
+   "bst_casca_reativa"
+  ],
+  "categoria": "padrao",
+  "description": "Patrulha corredores élficos quebrados repetindo a última ordem do Conselho.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 1,
+   "grave": 2,
+   "leve": 3
+  },
+  "max_vitalidade": 10,
+  "name": "Vigia de Caco",
+  "regions": [
+   "aethelgard"
+  ],
+  "virtudes": {
+   "agilidade": 1,
+   "carisma": 2,
+   "corpo": 2,
+   "forca": 4,
+   "mente": 3
+  }
+ },
+ "mon_vipera_flora": {
+  "arquetipo": "bruto",
+  "behavior_profile": "implacavel",
+  "cartas": [
+   "bst_pancada_esmagadora",
+   "bst_teia"
+  ],
+  "categoria": "elite",
+  "description": "Cipó muscular que enrola no pescoço, puxa para a copa e drena fluidos por dias. Nem planta nem animal — e nenhuma das duas metades sabe fugir.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 3,
+   "leve": 4
+  },
+  "max_vitalidade": 14,
+  "name": "Vipera-Flora",
+  "regions": [
+   "selva_xylos"
+  ],
+  "virtudes": {
+   "agilidade": 3,
+   "carisma": 0,
+   "corpo": 4,
+   "forca": 5,
+   "mente": 0
+  }
+ },
+ "mon_viuva_lodo": {
+  "arquetipo": "emboscador",
+  "behavior_profile": null,
+  "cartas": [
+   "bst_golpe_sombras",
+   "bst_lodo_melancolia",
+   "bst_carregar_ruina"
+  ],
+  "categoria": "padrao",
+  "description": "Tece ninhos nos marcos afundados dos druidas do Ciclo Cinzento.",
+  "faction": null,
+  "ferimento_espacos": {
+   "critico": 2,
+   "grave": 2,
+   "leve": 4
+  },
+  "max_vitalidade": 12,
+  "name": "Viúva do Lodo",
+  "regions": [
+   "pantano_melancolia"
+  ],
+  "virtudes": {
+   "agilidade": 2,
+   "carisma": 3,
+   "corpo": 3,
+   "forca": 1,
+   "mente": 3
+  }
+ }
+}

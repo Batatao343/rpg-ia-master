@@ -1,0 +1,2099 @@
+# SPEC-349 — Ficha de identidade da onda 1: Nova Arcádia.
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+regiao: nova_arcadia
+onda: 1
+spec: SPEC-349
+familias_em_jogo:            # D10 — nomes que o mundo usa (doc story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: drenador,          arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado,     material: ferro_ferrugem,    escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [na_anel_lama, na_anel_ferro]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: padrao, papel_tatico: artilharia,        arquetipo: conjurador,            plano_corporal: bipede_curvado,     material: escoria_fuligem,   escala: humana,  locomocao: anda,           percepcao: respiracao,    habitat: [na_anel_ferro]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: serpentiforme,      material: osso,              escala: grande,  locomocao: nada,           percepcao: vibracao,      habitat: [na_anel_lama]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: elite,  papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: composto,           material: ferro_ferrugem,    escala: grande,  locomocao: rasteja,        percepcao: som,           habitat: [na_anel_ferro]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: elite,  papel_tatico: artilharia,        arquetipo: morto_vivo_implacavel, plano_corporal: sessil_ancorado,    material: eter_cristalizado,              escala: grande,  locomocao: ancorada,       percepcao: som,           habitat: [na_anel_lama]}
+  - {vaga: 6,  familia: corpo_reescrito, categoria: padrao, papel_tatico: batedor_rapido,    arquetipo: predador,              plano_corporal: bipede_ereto,       material: carne_exposta,      escala: humana,  locomocao: salta,          percepcao: sangue_cheiro, habitat: [na_anel_ferro]}
+  # --- bestas da entropia ---
+  - {vaga: 7,  familia: besta_entropia,  categoria: lacaio, papel_tatico: sacrificial,       arquetipo: predador,              plano_corporal: composto,           material: escoria_fuligem,   escala: pequena, locomocao: rasteja,        percepcao: calor,         habitat: [na_anel_ferro]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: lacaio, papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: alado,              material: quitina,           escala: miuda,   locomocao: plana_voa,      percepcao: som,           habitat: [na_anel_ferro]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: lacaio, papel_tatico: saqueador,         arquetipo: covarde_oportunista,   plano_corporal: alado,              material: cinza,             escala: pequena, locomocao: plana_voa,      percepcao: calor,         habitat: [na_anel_ferro, na_anel_lama]}
+  - {vaga: 10, familia: besta_entropia,  categoria: padrao, papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: quadrupede,         material: lama_turfa,        escala: grande,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [na_anel_lama]}
+  - {vaga: 11, familia: besta_entropia,  categoria: elite,  papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: segmentado,         material: quitina,           escala: grande,  locomocao: escala_paredes, percepcao: respiracao,    habitat: [na_anel_ferro]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: padrao, papel_tatico: drenador,          arquetipo: conjurador,            plano_corporal: bipede_ereto,       material: eter_cristalizado, escala: humana,  locomocao: anda,           percepcao: eter,          habitat: [na_anel_ferro, na_anel_lama]}
+  - {vaga: 13, familia: humanoide_preco, categoria: elite,  papel_tatico: artilharia,        arquetipo: conjurador,            plano_corporal: acoplado,           material: ferro_ferrugem,    escala: grande,  locomocao: anda,           percepcao: eter,          habitat: [na_anel_ferro]}
+  - {vaga: 14, familia: humanoide_preco, categoria: padrao, papel_tatico: quebra_defesa,     arquetipo: bruto,                 plano_corporal: hospedeiro_parasita, material: carne_exposta,    escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [na_anel_ferro]}
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,           arquetipo: conjurador,            plano_corporal: bipede_ereto,       material: vidro_cristal,     escala: humana,  locomocao: anda,           percepcao: luz,           habitat: [na_anel_dourado]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_fehk}, categoria: padrao, papel_tatico: tanque_reativo,  arquetipo: covarde_oportunista,   plano_corporal: bipede_curvado,     material: couro_tecido,      escala: humana,  locomocao: anda,           percepcao: medo_emocao,   habitat: [na_anel_dourado, na_anel_ferro, na_anel_lama]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: chefe,  papel_tatico: bruto_de_linha,  arquetipo: predador_apice,        plano_corporal: radial,             material: carne_exposta,     escala: grande,  locomocao: rola,           percepcao: sangue_cheiro, habitat: [na_anel_lama]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: lacaio, papel_tatico: emboscador,      arquetipo: emboscador,            plano_corporal: hexapode_ou_mais,   material: osso,              escala: pequena, locomocao: cava,           percepcao: vibracao,      habitat: [na_anel_ferro, na_anel_lama]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth}, categoria: padrao, papel_tatico: controlador,     arquetipo: tatico,                plano_corporal: bipede_ereto,       material: cera_sebo,         escala: humana,  locomocao: anda,           percepcao: medo_emocao,   habitat: [na_anel_dourado]}
+  - {vaga: 22, familia: demonio_encarnado, origem_lore: {detalhe: npc_daruun}, categoria: lacaio, papel_tatico: drenador,        arquetipo: covarde_oportunista,   plano_corporal: serpentiforme,      material: couro_tecido,      escala: humana,  locomocao: rasteja,        percepcao: calor,         habitat: [na_anel_ferro]}
+  - {vaga: 23, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak}, categoria: elite,  papel_tatico: quebra_defesa,   arquetipo: abissal,               plano_corporal: sessil_ancorado,    material: ferro_ferrugem,    escala: grande,  locomocao: ancorada,       percepcao: vibracao,      habitat: [na_anel_dourado, na_anel_ferro]}
+  # --- slots genéricos reinventados/adotados (R24; não contam nas 20–25) ---
+  - {vaga: 24, slot: enemy_sentinela_ferro, status: reinventada,        familia: corpo_reescrito,   categoria: elite,  papel_tatico: guarda_protetor, arquetipo: guardiao, plano_corporal: bipede_ereto,   material: vidro_cristal, escala: humana, locomocao: escala_paredes, percepcao: calor,         habitat: [na_anel_dourado]}
+  - {vaga: 25, slot: enemy_gargula_ferro, status: reinventada, familia: besta_entropia,    categoria: lacaio, papel_tatico: suporte,         arquetipo: guardiao, plano_corporal: quadrupede,     material: couro_tecido,  escala: pequena, locomocao: salta,     percepcao: visao,         habitat: [na_anel_dourado]}
+  - {vaga: 26, slot: enemy_golem_lixo, status: reinventada, familia: demonio_encarnado, origem_lore: {detalhe: npc_solvhara}, categoria: elite,  papel_tatico: guarda_protetor, arquetipo: guardiao, plano_corporal: bipede_curvado, material: sal_mineral,   escala: grande, locomocao: rasteja,   percepcao: medo_emocao,   habitat: [na_anel_lama]}
+  - {vaga: 27, slot: enemy_horror_esgoto, status: adotada,          familia: besta_entropia,    categoria: elite,  papel_tatico: bruto_de_linha,  arquetipo: bruto,    plano_corporal: composto,       material: lama_turfa,    escala: grande, locomocao: rasteja,   percepcao: vibracao,      habitat: [na_anel_lama, na_anel_ferro]}
+  - {vaga: 28, slot: enemy_elemental_fogo_poluido, status: reinventada, familia: corpo_reescrito, categoria: elite,  papel_tatico: bruto_de_linha,  arquetipo: bruto,    plano_corporal: bipede_curvado, material: escoria_fuligem, escala: grande, locomocao: anda,      percepcao: calor,         habitat: [na_anel_ferro]}
+  - {vaga: 29, slot: enemy_polvo_esgoto, status: reinventada,           familia: besta_entropia,    categoria: elite,  papel_tatico: emboscador,      arquetipo: predador, plano_corporal: serpentiforme,  material: carne_exposta, escala: grande, locomocao: nada,      percepcao: respiracao,    habitat: [na_anel_lama]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_arame_vivo
+    vaga: 1
+    nome: Arame Vivo
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:398", "lore_nova/daily_life.txt:79"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um corpo humano no último estágio da Ferrugem do Sangue, curvado até quase dobrar, com as veias
+        endurecidas em arame que saiu da pele dos braços e do pescoço e ficou de fora, em laços
+        enferrujados que rangem a cada passo. As mãos acabaram em ganchos de dedos travados. O peito está
+        afundado onde o coração virou um nó de ferro, e a boca, sem lábios, mostra dentes
+        escurecidos de óxido.
+    silhueta: Um homem dobrado ao contrário, com um emaranhado de fios saindo das costas como uma cerca caída.
+    comportamento: >-
+      Vaga pelas vielas do Anel de Lama atrás de sangue que ainda corre, porque o seu não corre mais. Não
+      foge: se aproxima devagar, arrasta o arame no chão e enrosca quem alcança. Aparece aos pares nas
+      semanas de chuva, quando a Praga sobe das margens.
+    papel_tatico: drenador
+    arquetipo: morto_vivo_implacavel
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_arame_vivo_enroscar
+      frase: Enrosca o alvo no próprio arame e bebe o Fôlego pelo contato, uma jogada que só rende enquanto encosta.
+    contra_jogo: Manter distância e cortar o arame antes que feche; sem contato, não drena nada e cai depressa.
+    gancho: >-
+      Benedita atende um caso por semana no Anel de Lama; alguns não chegam à porta dela e continuam
+      andando quando já não deveriam.
+    habitat: [na_anel_lama, na_anel_ferro]
+    inspiracao: []
+    padrao: [mover, ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} recolhe o arame das costas e abre os ganchos das mãos."
+    description: Um doente terminal da Ferrugem do Sangue que ainda anda, com as veias viradas em arame para fora da pele.
+    perigo: Baixo
+    lore: >-
+      A Ferrugem do Sangue termina assim para quem não tem moeda para o Doutor nem lugar na fila de
+      Benedita: as veias endurecem, o coração para de bater e o corpo não para de andar. No Anel de Lama
+      chamam de Arame Vivo e deixam passar, como se deixa passar um carroção sem freio. Vai atrás de
+      sangue que ainda corre, porque o seu virou metal. Os que caem ficam na viela até alguém pagar para tirá-los; os outros continuam até a chuva seguinte.
+    aparencia: >-
+      Homem curvado quase até o chão, pele cinza-metálica rachada, veias endurecidas em arame enferrujado que
+      saiu dos braços e do pescoço em laços, mãos travadas em ganchos, peito afundado, boca sem lábios com
+      dentes escuros de óxido.
+    como_se_luta: >-
+      Vem devagar e precisa encostar; o arame enrosca e bebe o Fôlego enquanto há contato. Quem corta o
+      arame ou mantém distância o vence sem custo.
+    related_entities: [na_anel_lama, na_anel_ferro]
+    arte:
+      visual: >-
+        Humano adulto em estágio final da Praga de Ferro: postura dobrada ao contrário (tronco quase paralelo
+        ao chão), pele cinza-metálica rachada em placas finas, veias que viraram arame enferrujado saindo da
+        pele dos braços, do pescoço e das costas em laços soltos que arrastam no chão. Mãos fechadas em ganchos
+        de dedos travados. Peito côncavo. Boca sem lábios, dentes pretos de óxido. Roupa de trabalhador do
+        Anel de Lama, encharcada.
+      composicao: >-
+        Viela do Anel de Lama sob chuva, lama até o tornozelo; a criatura avança de frente, arame riscando
+        a lama atrás; uma porta de casebre entreaberta com uma criança do tamanho de metade dele a espiar
+        dá a escala. Luz cinza de dia nublado, um lampião amarelo numa janela.
+      evitar: Zumbi de pele verde, carne caindo, olhos brilhantes. É um doente, não um morto; a cor é ferrugem e cinza.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fole_de_costela
+    vaga: 2
+    nome: Fole de Costela
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:59", "lore_nova/locations.txt:61"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: escoria_fuligem
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um operário de fundição com a caixa torácica aberta para fora: as costelas se alargaram e se
+        cobriram de escória preta, formando um fole que infla e esvazia com um chiado. Os pulmões, visíveis
+        entre as costelas, são sacos endurecidos de fuligem. Os ombros se curvaram para a frente para
+        acomodar o volume, os braços ficaram finos e longos, e o rosto, ainda com o lenço molhado atado,
+        não tem mais nariz, só duas fendas que apitam.
+    silhueta: Um barril de costelas abertas sobre duas pernas finas, com um lenço pendurado onde deveria haver rosto.
+    comportamento: >-
+      Fica parado na Rua das Chaminés, onde a fumaça é mais densa, e respira. Ouve a respiração de quem se
+      aproxima e sopra fuligem quente à distância, como uma fornalha que cospe. Anda pouco: o fole pesa.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fole_de_costela_sopro_de_escoria
+      frase: Sopra uma nuvem de escória que fere à distância e tira a visão da fila do jogador por uma rodada.
+    contra_jogo: Fechar a distância pelo lado e golpear o fole quando ele infla; esvaziado, não sopra.
+    gancho: >-
+      A Tosse de Ferro leva anos para matar e às vezes não mata: a fuligem que tomou os pulmões endurece as
+      costelas de fora para dentro e o operário continua indo para o turno, até que o sino não o manda mais.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} infla as costelas até o lenço se levantar e o chiado virar apito."
+    description: Um operário da Rua das Chaminés cuja caixa torácica virou um fole de escória que sopra fuligem quente.
+    perigo: Médio
+    lore: >-
+      Nas Fundições Valerianas o sino bate a cada quatro horas e ninguém falta. A Tosse de Ferro dá anos de
+      aviso, mas no Anel de Ferro aviso não é folga. Em alguns, a fuligem que tomou os pulmões endurece as
+      costelas para fora e o peito vira um fole que respira sozinho. O operário ainda atende ao sino por
+      um tempo; depois fica na Rua das Chaminés, onde a fumaça é mais espessa, e sopra. Os outros
+      desviam do lado de onde vem o chiado.
+    aparencia: >-
+      Operário curvado com a caixa torácica aberta para fora, costelas alargadas e cobertas de escória preta
+      formando um fole que infla, pulmões de fuligem endurecida visíveis entre elas, braços finos e longos,
+      lenço molhado atado sobre um rosto sem nariz, só duas fendas que apitam.
+    como_se_luta: >-
+      Fere de longe com sopro de escória e cega a fila por um instante. Quem fecha a distância pelo flanco
+      enquanto o fole infla o esvazia e ele não sopra.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Humano em roupa de fundição (avental de couro, mangas enroladas), ombros caídos para a frente. A
+        caixa torácica aberta e virada para fora como um fole de ferreiro: costelas alargadas, enegrecidas,
+        com crosta de escória; entre elas, sacos escuros de pulmão endurecido. Braços compridos e magros,
+        mãos grandes de trabalhador. Lenço encharcado amarrado sobre o rosto, sem relevo de nariz, duas fendas.
+        Chiado visível como fiapos de fumaça saindo das costelas.
+      composicao: >-
+        Rua das Chaminés ao fim de turno, visibilidade de dez metros, chaminés ao fundo; a criatura parada
+        no centro da rua com as costelas infladas, um operário comum de costas no primeiro plano cobrindo o
+        rosto com o lenço dá a escala. Luz laranja de fundição vindo de uma porta lateral, resto em cinza.
+      evitar: Monstro de fogo, chamas visíveis, rosto demoníaco. O horror é um peito de fole e um lenço; nada arde.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_rosario_de_vertebras
+    vaga: 3
+    nome: Rosário de Vértebras
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ossos
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:386", "lore_nova/locations.txt:14"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: osso
+      escala: grande
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Uma coluna de vértebras de vários mortos, emendadas por crescimento de medula que não parou com a
+        morte: cada vértebra maior que a anterior, com espinhos de osso novo saindo das juntas. Na ponta,
+        um crânio humano com a mandíbula fundida numa segunda fileira de dentes. Não tem pele; o tecido
+        entre as vértebras é cartilagem cinza que estala. Nada ondulando no rio como uma corrente de
+        contas.
+    silhueta: Um colar de contas grossas serpenteando na água, com uma cabeça de caveira no fecho.
+    comportamento: >-
+      Vive nos rios que descem do Anel de Lama para o pântano, onde os corpos sem Corvo acabam. Sente a
+      vibração de quem pisa na margem e morde uma vez; depois segue a farpa que deixou na carne por onde
+      a vítima for, sem pressa.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_rosario_de_vertebras_farpa
+      frase: Deixa uma farpa de osso no alvo, e todo ataque seguinte contra quem carrega a farpa acerta mais fácil.
+    contra_jogo: Arrancar a farpa (gastar a ação) ou sair da água, onde ele é lento e as vértebras expõem as juntas.
+    gancho: >-
+      A Praga dos Ossos faz a medula crescer; num afogado que a carregava, continuou crescendo debaixo da
+      água e costurou o esqueleto dele aos que a cidade joga no rio.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [ataque, mover, ataque_multiplo]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue o crânio da água e estala a segunda fileira de dentes."
+    description: Uma coluna de vértebras de muitos mortos, emendada por medula que cresceu depois da morte, que nada nos rios do Anel de Lama.
+    perigo: Médio
+    lore: >-
+      Os rios que dão de beber ao Anel Dourado levam o esgoto da cidade para o Pântano, e levam também os
+      mortos que ninguém pagou para os Corvos buscarem. A Praga dos Ossos faz a medula crescer de dentro
+      para fora, e num afogado ela não soube que o dono tinha morrido: continuou, debaixo da água,
+      costurando vértebra em vértebra de todos os esqueletos que a corrente trouxe. O que sai da água
+      hoje é um rosário de contas de osso com uma caveira no fecho. As lavadeiras do Anel de Lama sabem
+      em que trecho da margem não se ajoelha.
+    aparencia: >-
+      Coluna serpentina de vértebras humanas de tamanhos diferentes, cada uma com espinhos de osso novo nas
+      juntas, ligadas por cartilagem cinza; na ponta um crânio humano com uma segunda fileira de dentes
+      fundida à mandíbula. Sem pele, ondula na água como uma corrente.
+    como_se_luta: >-
+      Morde uma vez e deixa uma farpa; depois segue quem a carrega. Fora da água é lento e expõe as
+      juntas; arrancar a farpa custa uma ação e tira dele a vantagem.
+    related_entities: [na_anel_lama, pantano_melancolia]
+    arte:
+      visual: >-
+        Serpente feita só de vértebras humanas, umas vinte, cada uma maior que a anterior, com espinhos de
+        osso novo brotando das articulações; cartilagem cinza entre elas. Comprimento de uma canoa. Na ponta,
+        crânio humano adulto com segunda fileira de dentes fundida sob a primeira. Osso amarelado e manchado
+        de lodo, sem carne, sem olhos.
+      composicao: >-
+        Margem de rio no Anel de Lama, água parda e oleosa; a criatura emergindo em arco com o crânio para
+        fora, uma lavadeira de joelhos com a bacia de roupa a um passo, congelada. Névoa leitosa, luz de
+        entardecer verde-oliva, um ponto de Éter azul-pálido na água.
+      evitar: Serpente marinha com escamas, esqueleto de dragão, dentes de dragão. É osso humano, de muita gente.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fila_de_grilhoes
+    vaga: 4
+    nome: Fila de Grilhões
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:63", "lore_nova/timeline_completa.txt:398"]
+    anatomia:
+      plano_corporal: composto
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: rasteja
+      percepcao: som
+      texto: >-
+        Cinco ou seis servos do Mercado de Carne presos pela mesma corrente, cujos pescoços mineralizados
+        pela Praga se fundiram aos colares de ferro: a corrente virou a coluna de um só corpo. Os troncos
+        se rasgaram e se soldaram uns aos outros pelos ombros; as pernas, demais e desencontradas, não
+        andam, arrastam. Cada cabeça ainda tem o próprio rosto, de olhos fechados, e todas viram juntas
+        para o som.
+    silhueta: Uma fileira baixa e comprida de ombros e cabeças, como gente sentada num banco, que se move inteira.
+    comportamento: >-
+      Fica no pátio dos contratos, à sombra do Mercado, e não deixa ninguém tirar nada dali: nem gente,
+      nem papel. Ouve passos, estende a corrente e puxa para dentro da fila. Nunca persegue além do
+      portão; não é dela sair.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fila_de_grilhoes_puxar_para_a_fila
+      frase: Puxa o alvo para junto de si e, enquanto ele está preso à fila, absorve os golpes que iam para os outros inimigos.
+    contra_jogo: Quebrar um elo (as juntas entre dois corpos são o ponto fraco) e lutar de longe; ela não larga o pátio.
+    gancho: >-
+      No Mercado de Carne os servos andam em fila, presos pelo pescoço à mesma corrente; a Praga de
+      Ferro endurece o pescoço, e um pescoço endurecido dentro de um colar vira um só osso com ele.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [defesa, ataque, reforco_proprio, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} estende a corrente no chão e todas as cabeças viram para o mesmo lado."
+    description: Servos do Mercado de Carne que a Praga soldou à própria corrente, agora um só corpo de muitos ombros que guarda o pátio dos contratos.
+    perigo: Alto
+    lore: >-
+      No Mercado de Carne se vende prazo, e o prazo nunca chega. A Praga de Ferro chega antes: endurece o
+      pescoço, e o pescoço estava num colar. Uma fila inteira adoeceu junta, no mesmo pátio, e quando o
+      ferreiro veio abrir os colares já não havia onde cortar: a corrente tinha virado espinha. A fila continua no
+      pátio, de olhos fechados, e puxa para dentro quem chega perto do que ainda é dela. Os
+      mercadores aprenderam a dar a volta e a vender o pátio como garantia.
+    aparencia: >-
+      Fileira de cinco ou seis corpos humanos soldados pelos ombros e pelos colares de ferro, a corrente
+      fundida aos pescoços mineralizados como uma coluna; pernas demais que se arrastam; cada cabeça com o
+      próprio rosto, olhos fechados, todas virando juntas para o som.
+    como_se_luta: >-
+      Puxa o alvo para a fila e absorve os golpes dirigidos aos outros. Os elos entre dois corpos são o
+      ponto fraco; quebrado um, o resto se separa e para de arrastar.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Seis humanos de aparência de servos (túnicas cinzas, pés descalços) ligados por uma corrente grossa
+        de ferro que passa pelos colares e se fundiu aos pescoços, agora rígidos e metalizados; os ombros
+        soldaram uns nos outros numa fileira horizontal, braços pendendo, pernas emaranhadas sob o corpo
+        comum. Rostos individuais, olhos fechados, bocas entreabertas. Ferrugem e pele cinza; corrente
+        polida onde raspa o chão.
+      composicao: >-
+        Pátio de pedra atrás do Mercado de Carne, mesas de contratos vazias, lampião de ferro aceso; a Fila
+        atravessada na saída, todas as cabeças viradas para um mercador que recua com um rolo de papel na
+        mão. Luz quente baixa, sombras compridas.
+      evitar: Monstro de muitos braços estilo carne amorfa, bocas abertas gritando. Eles parecem gente sentada em silêncio; a corrente é o que une.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_lencol_de_chamine
+    vaga: 7
+    nome: Lençol de Chaminé
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:57", "lore_nova/locations.txt:61"]
+    anatomia:
+      plano_corporal: composto
+      material: escoria_fuligem
+      escala: pequena
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Centenas de baratas das chaminés que comem escória e deixaram de ser muitas: as carapaças se
+        soldaram pelas bordas numa só placa flexível, preta e lustrosa, do tamanho de um lençol de cama,
+        com as patas todas por baixo e as antenas todas por cima, em pelo. Por dentro a placa é brasa:
+        o calor da fundição ficou preso entre as carapaças e não sai nem apaga. Quando se contrai, as
+        bordas se levantam e mostram o laranja.
+    silhueta: Um tapete preto e brilhante que escorre pela parede de uma chaminé e dobra a esquina sem cair.
+    comportamento: >-
+      Desce das chaminés à noite atrás de calor de corpo. Cobre o que encontra e aperta; se é ferido
+      demais, a placa racha e a brasa de dentro queima tudo ao redor de uma vez. Não ataca fogo aceso:
+      vai para o lado mais frio.
+    papel_tatico: sacrificial
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lencol_de_chamine_rachar_brasa
+      frase: Ao cair, racha e solta a brasa presa, ferindo todos os que estão em contato com ele.
+    contra_jogo: Matar de longe ou empurrar para junto dos outros inimigos antes que estoure; perto de fogo aceso ele recua.
+    gancho: >-
+      A escória das Fundições Valerianas não é só pedra: o que a fornalha não termina de queimar sai pela
+      chaminé, e as baratas que a comem vão ficando quentes.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [mover, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} se contrai e as bordas se levantam mostrando o laranja de dentro."
+    description: Centenas de baratas de chaminé soldadas numa placa preta com brasa presa por dentro, que cobre o que encontra e estoura ao morrer.
+    perigo: Baixo
+    lore: >-
+      As Fundições Valerianas nunca param, e o que a fornalha não termina de queimar sobe pelas chaminés
+      da Rua das Chaminés como escória miúda. As baratas comem. Com o tempo, as carapaças se grudam
+      pelas bordas e o calor fica preso entre elas sem apagar; o que desce da chaminé à noite é um
+      lençol preto que brilha e procura corpo quente. Os operários dormem longe das paredes. Quando
+      um estoura, o beco inteiro acorda com cheiro de cabelo queimado.
+    aparencia: >-
+      Placa preta e lustrosa do tamanho de um lençol feita de centenas de carapaças de barata soldadas
+      pelas bordas, patas por baixo, antenas por cima como pelo, brasa laranja presa entre as carapaças
+      aparecendo quando se contrai.
+    como_se_luta: >-
+      Cobre e aperta; quando morre, racha e a brasa queima tudo ao redor. Melhor de longe, ou empurrado
+      para junto dos outros inimigos. Recua de fogo aceso.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Uma manta de dois metros feita de carapaças de barata pretas e brilhantes soldadas umas às outras,
+        como escamas grandes; as bordas se curvam e mostram, por baixo, patas finas em pente e um fulgor
+        laranja de brasa entre as placas; antenas cobrem o dorso como pelo curto. Escorre pela parede
+        de tijolo de uma chaminé, moldando-se aos tijolos.
+      composicao: >-
+        Rua das Chaminés de madrugada; a manta descendo a parede de uma chaminé sobre um operário dormindo
+        encostado nela, embrulhado no lenço, do tamanho de metade da placa. Única luz é o laranja que
+        vaza das bordas; fundo preto de fuligem.
+      evitar: Enxame de insetos voando soltos, besouros individuais. É uma peça só, lisa, de longe parece um tapete.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_traca_do_sino_mudo
+    vaga: 8
+    nome: Traça do Sino Mudo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:61", "lore_nova/daily_life.txt:9"]
+    anatomia:
+      plano_corporal: alado
+      material: quitina
+      escala: miuda
+      locomocao: plana_voa
+      percepcao: som
+      texto: >-
+        Uma mariposa do tamanho de uma mão aberta, de quitina cinza-estanho, com as asas em quatro
+        lóbulos rígidos que não batem: vibram. O tórax é oco e ressoa como um sino pequeno; a cabeça não
+        tem olhos, só duas antenas em pente viradas para trás. As patas terminam em ganchos finos para
+        se pendurar nos badalos. Vive em nuvens de dezenas, mas cada uma vibra num tom próprio.
+    silhueta: Uma nuvem cinzenta de quatro pontas no alto de uma torre, imóvel contra o céu, onde não se ouve nada.
+    comportamento: >-
+      Pousa nos sinos do Anel de Ferro e come o som: as asas vibram em contratempo e o badalo não soa.
+      Em volta delas tudo fica abafado, inclusive gritos. Atacam quando o silêncio já desorientou; os
+      ganchos rasgam fino, muitas vezes.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_traca_do_sino_mudo_contratempo
+      frase: Abafa a cena por uma rodada; nenhuma Carta que dependa de aviso ou de Reação pode ser jogada sob o silêncio.
+    contra_jogo: Luz e fogo; sem som para comer, elas voam para a próxima torre, e fumaça as derruba do badalo.
+    gancho: >-
+      A semana do Anel de Ferro fecha com o Sino Mudo, que não toca; os sineiros juram que ele não toca
+      porque alguma coisa come o som antes de sair.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [enfraquecer, ataque_multiplo, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} para de vibrar por um instante e o ar em volta fica surdo."
+    description: Mariposa de quitina cinza que pousa nos sinos do Anel de Ferro e come o som; em volta dela tudo fica surdo.
+    perigo: Baixo
+    lore: >-
+      Em Nova Arcádia a semana tem cinco sinos, e o último, o Sino Mudo, não toca. Os sineiros do Anel
+      de Ferro dizem que ele toca, sim, e que alguma coisa come o badalo antes do som sair: traças de
+      quitina cor de estanho, penduradas pelos ganchos, vibrando em contratempo. Onde elas pousam, o
+      turno não é chamado e ninguém ouve o acidente na fundição ao lado. Os sineiros sobem com tochas.
+      Elas vão para a próxima torre e esperam.
+    aparencia: >-
+      Mariposa do tamanho de uma mão aberta, quitina cinza-estanho, quatro asas rígidas em lóbulos que
+      vibram em vez de bater, tórax oco que ressoa como sino pequeno, cabeça sem olhos com antenas em
+      pente viradas para trás, patas em ganchos finos.
+    como_se_luta: >-
+      Abafa a cena e tira os avisos e as Reações por um instante, depois rasga fino em bando. Luz e
+      fumaça as derrubam do badalo; sem som para comer, vão embora.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Mariposa de quitina lisa, cor de estanho oxidado, do tamanho de uma mão; asas em quatro lóbulos
+        rígidos e angulosos, como lâminas de leque, que vibram (desenhar as bordas desfocadas); tórax em
+        forma de sino pequeno, oco, com uma fenda; cabeça lisa sem olhos, antenas em pente dobradas para
+        trás; seis patas em ganchos. Dezenas delas penduradas num badalo de bronze.
+      composicao: >-
+        Interior de uma torre de sino do Anel de Ferro, visto de baixo: o sino grande acima, coberto de
+        traças imóveis; um sineiro na escada com uma tocha erguida, a chama dobrando as sombras das asas.
+        Paleta de estanho, bronze escuro e fuligem; o único calor é a tocha.
+      evitar: Borboleta colorida, mariposa fofa de pelo, olhos grandes de inseto. Ela é angulosa, metálica e cega.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_gralha_de_crematorio
+    vaga: 9
+    nome: Gralha de Crematório
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/factions.txt:79", "lore_nova/daily_life.txt:147"]
+    anatomia:
+      plano_corporal: alado
+      material: cinza
+      escala: pequena
+      locomocao: plana_voa
+      percepcao: calor
+      texto: >-
+        Um corvídeo do tamanho de um gato que se criou nas chaminés dos fornos da Guilda e ficou feito
+        da cinza que respirou: as penas são escamas de cinza prensada que se soltam e se refazem, o
+        bico é osso calcinado, cinza-branco, e as patas são gravetos carbonizados. Não pesa o que
+        deveria: voa sem bater as asas, levada, e pousa sem som. Os olhos são dois carvões apagados.
+    silhueta: Um borrão de cinza em forma de pássaro parado no ar sobre um forno, sem bater as asas.
+    comportamento: >-
+      Vive nos fornos do Setor Leste e nas pilhas dos Corvos. Sente o calor de quem passa e desce para
+      roubar o que estiver solto nas mãos: anel, frasco, Carta preparada. Some no primeiro vento.
+      Nunca luta até o fim; se apanha, vira cinza e some.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_gralha_de_crematorio_bicada_de_cinza
+      frase: Rouba a Carta preparada do alvo e a leva consigo; se a Gralha cai antes de fugir, a Carta volta.
+    contra_jogo: Matá-la antes de ela sair do alcance ou não preparar nada enquanto ela ronda; ferida, se desfaz e devolve.
+    gancho: >-
+      A Guilda dos Corvos queima os mortos para que não voltem; os fornos ficam acesos dia e noite, e o
+      que se cria na cinza quente não é corvo.
+    habitat: [na_anel_ferro, na_anel_lama]
+    inspiracao: []
+    padrao: [mover, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} paira sobre a mão aberta do alvo sem bater as asas."
+    description: Corvídeo feito de cinza prensada dos fornos da Guilda dos Corvos, que paira sem bater as asas e rouba o que a mão segura.
+    perigo: Baixo
+    lore: >-
+      Os fornos da Guilda dos Corvos não apagam, porque morto sem queimar volta. Nas chaminés do Setor
+      Leste criou-se um pássaro que não é corvo, embora os coveiros o chamem assim por preguiça: feito de
+      cinza prensada, bico de osso calcinado, pesa menos do que deveria e paira sem mexer as asas. Desce
+      sobre o que está na mão de quem passa e leva. Os coveiros não espantam; dizem que é parte da
+      Guilda e cobra a parte dela.
+    aparencia: >-
+      Pássaro do tamanho de um gato com penas que são escamas de cinza prensada, bico de osso calcinado
+      cinza-branco, patas como gravetos carbonizados, olhos de carvão apagado; paira sem bater as asas e
+      pousa sem som.
+    como_se_luta: >-
+      Rouba a Carta preparada e foge; morta antes de sair do alcance, se desfaz e devolve. Não vale
+      preparar nada enquanto ela ronda.
+    related_entities: [na_anel_ferro, na_anel_lama, guilda_corvos]
+    arte:
+      visual: >-
+        Corvídeo grande, de contorno pouco nítido: penas em escamas de cinza cinza-clara e prensada que se
+        esfarelam nas pontas das asas; bico curto de osso branco-queimado; patas finas carbonizadas; olhos
+        foscos como carvão. Pairando com as asas abertas e paradas, um fio de cinza caindo dela.
+      composicao: >-
+        Pátio de um forno da Guilda dos Corvos ao amanhecer, chaminé baixa soltando fumaça branca; um
+        coveiro com carrinho de corpos cobertos, uma mão estendida segurando um anel, e a gralha a um palmo
+        da mão. Luz fria do amanhecer, brasa vermelha na boca do forno.
+      evitar: Fênix, pássaro de fogo, corvo preto comum. É cinza, não chama; parece um desenho mal apagado.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_porca_da_queda
+    vaga: 10
+    nome: Porca da Queda
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:79", "lore_nova/daily_life.txt:179"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: lama_turfa
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Uma porca de rua do Anel de Lama que comeu o que os viciados do Beco dos Desdentados vomitam e
+        ficou pesada do jeito errado: o corpo, do tamanho de um boi, é um saco de lama endurecida sobre
+        quatro pernas curtas que afundam até a barriga em chão firme. O focinho é largo, de pele
+        rachada, com dentes de toda espécie enterrados nas gengivas. Os olhos são pequenos e caídos. Onde
+        ela se deita, o chão cede.
+    silhueta: Um morro baixo de lama com focinho, afundado até a barriga em chão que não deveria ceder.
+    comportamento: >-
+      Dorme nas poças do Beco e levanta com cheiro de sangue. Avança em linha reta, devagar, e o peso
+      dela chega antes: quem está perto sente as pernas afundarem. Não desvia de nada. Volta a deitar
+      quando a fome passa.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_porca_da_queda_pisar_fundo
+      frase: "Afunda o chão em volta: quem está em contato com ela perde o movimento da rodada e leva o peso em cima."
+    contra_jogo: Atacar de longe e nunca de frente; ela não vira depressa e o flanco de lama racha onde já secou.
+    gancho: >-
+      Depois do Pó de Sonho vem A Queda, um peso que não é cansaço; a porca que come o que os viciados
+      deixam carrega esse peso no corpo, e o chão sabe.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [mover, ataque, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} ergue o focinho do chão e as pernas afundam mais um palmo."
+    description: Porca de rua do Anel de Lama, pesada do jeito errado, feita de lama endurecida; o chão cede onde ela pisa.
+    perigo: Médio
+    lore: >-
+      Quem usa o Pó de Sonho conhece A Queda, o peso do dia seguinte que não é cansaço. No Beco dos
+      Desdentados as porcas de rua comem o que os viciados deixam, e uma delas ficou pesada daquele
+      jeito: do tamanho de um boi, a pele virou lama endurecida, e o chão afunda onde ela se deita.
+      Os moradores lhe dão passagem como se dá a uma carroça da Legião. Não corre, não precisa; o peso
+      chega antes dela.
+    aparencia: >-
+      Porca do tamanho de um boi com o corpo em saco de lama endurecida sobre pernas curtas que afundam
+      até a barriga em chão firme, focinho largo de pele rachada com dentes de toda espécie enterrados nas
+      gengivas, olhos pequenos e caídos.
+    como_se_luta: >-
+      Afunda o chão em volta e esmaga quem fica perto. De longe e pelo flanco, onde a lama secou e racha;
+      de frente ela não vira depressa, mas não para.
+    related_entities: [na_anel_lama]
+    arte:
+      visual: >-
+        Porca enorme, do tamanho de um boi, com o corpo em forma de saco pesado de lama cinza-oliva
+        endurecida e rachada, pelos ralos presos no barro; pernas curtas afundadas até a barriga num chão
+        de pedra que se curva em volta como se fosse pano; focinho largo, pele rachada, dentes humanos,
+        de cão e de porco misturados nas gengivas; olhos pequenos e caídos.
+      composicao: >-
+        Beco dos Desdentados ao entardecer, poças, muros com marcas de mão; a porca avançando pela rua com
+        o chão afundando em círculo à volta dela; dois viciados sentados no degrau de uma porta, com as
+        pernas encolhidas, do tamanho de uma perna da porca. Luz verde-oliva doente, névoa baixa.
+      evitar: Javali de presas enormes, monstro de lama sem forma, porco demoníaco com olhos vermelhos. É uma porca de rua, só errada no peso.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_centopeia_da_torre_invertida
+    vaga: 11
+    nome: Centopeia da Torre Invertida
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:65", "lore_nova/locations.txt:372"]
+    anatomia:
+      plano_corporal: segmentado
+      material: quitina
+      escala: grande
+      locomocao: escala_paredes
+      percepcao: respiracao
+      texto: >-
+        Uma centopeia do comprimento de três homens, de quitina cor de pedra molhada, que subiu pelos
+        túneis sob o Nível Dez e vive nas paredes do Oubliette de cabeça para baixo: para ela, o chão da
+        torre invertida é o teto. As patas, aos pares, são ganchos que entram na pedra. A cabeça tem
+        dois pares de mandíbulas em tesoura e, em vez de olhos, uma fileira de poros que sentem o ar
+        entrando e saindo de um peito. Quando cai, cai para cima.
+    silhueta: Uma corrente de segmentos escuros colada ao poço de uma torre, cabeça para baixo, lendo o ar.
+    comportamento: >-
+      Fica imóvel na parede do poço e espera uma respiração. Desce pelo lado errado da gravidade, marca a
+      presa com um corte das mandíbulas e a segue pelos níveis, sempre pela parede, até ela cansar de
+      prender o fôlego. O Cego a tolera: ela só pega quem respira alto.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_centopeia_da_torre_invertida_cair_para_cima
+      frase: Escapa pela parede depois de marcar o alvo e volta de cima, pelo lado em que a defesa não está apontada.
+    contra_jogo: Lutar em sala de teto baixo ou encostado a uma parede; sem o poço, ela perde o lado de cima e vira um bicho comprido.
+    gancho: >-
+      O rumor do Oubliette diz que o fundo do Nível Dez dá em túneis que chegam às Montanhas, e que algo
+      sobe por eles para buscar prisioneiros; o que sobe não obedece ao mesmo chão que os presos.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [mover, ataque, mover, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} solta as patas da parede e o corpo inteiro cai para cima, sem som."
+    description: Centopeia do comprimento de três homens que vive nas paredes do Oubliette de cabeça para baixo e cai para cima; sente a respiração.
+    perigo: Alto
+    lore: >-
+      O Oubliette é uma torre cavada para baixo, e quanto mais fundo, pior. Do Nível Dez sobem rumores
+      de túneis que chegam às Montanhas Afiadas e de algo que vem por eles buscar presos. O que os
+      carcereiros veem é uma centopeia de quitina cor de pedra molhada, do comprimento de três homens,
+      colada às paredes do poço de cabeça para baixo; quando solta as patas, cai para o alto. Não tem
+      olhos. Lê o ar que entra e sai de um peito. O Cego a deixa; ela só leva quem respira alto.
+    aparencia: >-
+      Centopeia de quitina cor de pedra molhada, comprimento de três homens, patas em ganchos aos pares
+      presas na parede, cabeça com dois pares de mandíbulas em tesoura e, no lugar dos olhos, uma fileira
+      de poros; vive de cabeça para baixo e cai para cima.
+    como_se_luta: >-
+      Marca com um corte e some pela parede, voltando de cima pelo lado desprotegido. Em teto baixo ou
+      encostado a uma parede ela perde o alto e vira só um bicho comprido.
+    related_entities: [na_anel_ferro, npc_o_cego]
+    arte:
+      visual: >-
+        Centopeia de uns cinco metros, segmentos largos de quitina cinza-azulada fosca com brilho de pedra
+        molhada, um par de patas-gancho por segmento cravadas na pedra; cabeça achatada com dois pares de
+        mandíbulas cruzadas, uma fileira de poros escuros no lugar dos olhos. Presa à parede de um poço
+        de pedra com a cabeça apontando para baixo, corpo curvando para cima.
+      composicao: >-
+        Vista de dentro do poço do Oubliette olhando para cima: anéis de celas com grades, uma única
+        abertura de céu cinza no topo; a centopeia atravessa a parede em diagonal; num patamar, um
+        carcereiro com lampião de braço erguido, pequeno como um segmento dela. Luz de lampião âmbar
+        embaixo, luz fria do alto.
+      evitar: Verme gigante de areia, boca redonda de dentes concêntricos, baba. É um artrópode seco, articulado, de pedra.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_sorvedouro_do_codigo
+    vaga: 12
+    nome: Sorvedouro do Código
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: legiao_ferro
+      refs: ["lore_nova/factions.txt:20", "lore_nova/creatures.txt:817"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um Inquisidor do Código que usou por anos o artefato que suga Éter e não o largou a tempo: o
+        funil de chumbo está enxertado no esterno, e em volta dele cresceu uma crosta de cristal turvo,
+        azul-esverdeado, que sobe pelo pescoço até a mandíbula e desce pelos braços até os punhos. Os
+        olhos ficaram brancos; ele não vê, sente onde há Éter. A farda negra da Legião está rasgada no
+        peito para o funil respirar. As mãos, de dedos engrossados pelo cristal, ainda seguram o Código.
+    silhueta: Um legionário de peito aberto onde a luz fria se acumula, parado de cabeça erguida como quem lê.
+    comportamento: >-
+      Patrulha os anéis de baixo atrás de magia não registrada. Não corre; para, aponta o funil e puxa.
+      Quem carrega Éter sente a Entropia sair pelo peito. Recita o artigo antes de punir. Não aceita
+      suborno, porque já não entende para que serve.
+    papel_tatico: drenador
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: legiao_ferro
+    mecanica_assinatura:
+      carta: cri_sorvedouro_do_codigo_artigo_sugado
+      frase: Puxa a Entropia acumulada do alvo para a própria crosta; cada ponto sugado reforça a defesa dele nessa rodada.
+    contra_jogo: Chegar sem Entropia acumulada ou descarregá-la antes; sem o que sugar, o funil engasga e a crosta racha fácil.
+    gancho: >-
+      Os Inquisidores do Código usam artefatos que sugam Éter para caçar magos selvagens; o artefato
+      não sabe onde termina o mago e começa o inquisidor.
+    habitat: [na_anel_ferro, na_anel_lama]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue o Código com a mão esquerda e o funil do peito começa a puxar o ar."
+    description: Um Inquisidor do Código com o funil de sugar Éter enxertado no esterno e uma crosta de cristal turvo subindo até a mandíbula.
+    perigo: Médio
+    lore: >-
+      A Legião de Ferro caça magia não registrada com os Inquisidores do Código, que carregam artefatos
+      de sugar Éter. Mago registrado é mago ao alcance; inquisidor que serve anos demais também. O funil
+      de chumbo acaba enxertado no esterno, e em volta dele cresce uma crosta de Éter cristalizado que
+      sobe pelo pescoço. O homem deixa de ver e passa a sentir onde há Éter, e continua patrulhando,
+      recitando o artigo. A Legião não o dispensa. Ainda cumpre quota.
+    aparencia: >-
+      Inquisidor de farda negra rasgada no peito, funil de chumbo enxertado no esterno, crosta de cristal
+      turvo azul-esverdeado subindo pelo pescoço até a mandíbula e descendo pelos braços até os punhos,
+      olhos brancos, dedos engrossados de cristal segurando um livro.
+    como_se_luta: >-
+      Para, aponta o funil e suga a Entropia acumulada do alvo para a própria crosta, que endurece. Sem
+      Entropia a sugar, o funil engasga e a crosta racha ao primeiro golpe.
+    related_entities: [na_anel_ferro, na_anel_lama, legiao_ferro]
+    arte:
+      visual: >-
+        Homem de farda negra de colarinho alto da Legião, rasgada e aberta no peito; no esterno, um funil
+        de chumbo fosco enxertado na carne; ao redor, cristais turvos azul-esverdeados, de brilho interno
+        úmido, crescendo em placas pelo pescoço, pela mandíbula e pelos antebraços; olhos leitosos; um livro
+        de capa de ferro na mão esquerda; espada regulamentar embainhada e intocada.
+      composicao: >-
+        Portão entre o Anel de Ferro e o Anel de Lama, à noite; o Sorvedouro parado de frente, uma fila de
+        gente comum passando encolhida a um braço dele; o funil puxa um fiapo de luz fria de uma mulher
+        com uma cesta. Lampiões de ferro, fuligem, o único azul é o cristal.
+      evitar: Mago com cristais brilhantes de poder, armadura ornamentada, energia saindo das mãos. O cristal é doença de serviço, fosco e torto.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pavio_da_lista
+    vaga: 13
+    nome: Pavio da Lista
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: legiao_ferro
+      refs: ["lore_nova/factions.txt:22", "lore_nova/locations.txt:47"]
+    anatomia:
+      plano_corporal: acoplado
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Dois corpos: um mago da Lista de Fornalha preso numa gaiola de ferro forjado em forma de
+        berço, com os pulsos e os tornozelos rebitados às barras, e o carregador da Legião que leva a
+        gaiola às costas por correias, curvado sob o peso. O mago tem a pele das costas queimada em
+        padrão de grade pelas barras quentes e os olhos cobertos por uma venda de ferro; sente o Éter
+        de quem se aproxima e, quando a gaiola esquenta, grita e o Éter sai pela boca aberta dele em
+        fogo azul-fosco. O carregador tem a nuca marcada pelas mesmas barras e nunca olha para cima.
+    silhueta: Um homem curvado carregando às costas uma gaiola do tamanho de um berço com outro homem dentro.
+    comportamento: >-
+      O carregador leva o mago até onde a máquina do Anel de Ferro precisa de Éter. O mago sente Éter
+      e vira a cabeça para ele; a gaiola esquenta, o mago grita, o fogo sai. O carregador não luta: põe
+      a gaiola no chão e tapa os ouvidos. Nenhum dos dois pode fugir do outro.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: elite
+    faccao: legiao_ferro
+    mecanica_assinatura:
+      carta: cri_pavio_da_lista_descarga_paga_em_dor
+      frase: "Descarga de Éter que fere a fila inteira à distância e custa ao Pavio um Ferimento próprio: a dor é o combustível."
+    contra_jogo: "Deixar que ele se gaste, ou derrubar o carregador: com a gaiola de lado no chão o mago não acha o Éter de ninguém."
+    gancho: >-
+      A Lista de Fornalha é o registro dos magos que a Legião consome quando as máquinas do Anel de
+      Ferro pedem Éter; alguns não vão para os Jardins, vão às costas de um carregador.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} vira a cabeça vendada para o alvo e as barras da gaiola começam a esquentar."
+    description: Um mago da Lista de Fornalha rebitado numa gaiola de ferro que um carregador da Legião leva às costas; quando a gaiola esquenta, o Éter sai pela boca dele em fogo.
+    perigo: Alto
+    lore: >-
+      No Anel Dourado o registro de magos chama-se licença; nos livros da Legião chama-se Lista de
+      Fornalha. Quando as máquinas do Anel de Ferro pedem Éter, a Legião consome os da lista. Os que
+      têm sorte vão para os Jardins. Os outros são rebitados numa gaiola de ferro em forma de berço,
+      que um carregador da Legião leva às costas até a máquina que pediu; a gaiola esquenta, o mago
+      sente a dor, e o Éter sai pela boca dele em fogo. O carregador nunca olha para cima. Aprendeu
+      que é pior.
+    aparencia: >-
+      Mago rebitado pelos pulsos e tornozelos numa gaiola de ferro forjado em forma de berço, pele das
+      costas queimada em grade, venda de ferro nos olhos, boca aberta de onde sai fogo azul-fosco; a
+      gaiola vai às costas de um carregador curvado da Legião, de nuca marcada pelas barras.
+    como_se_luta: >-
+      Fere a fila inteira de longe com o fogo que sai pela boca do mago, e cada descarga o fere
+      também. Deixá-lo gastar-se, ou derrubar o carregador para a gaiola cair de lado, é o caminho;
+      nenhum dos dois foge.
+    related_entities: [na_anel_ferro, legiao_ferro]
+    arte:
+      visual: >-
+        Gaiola de ferro forjado em forma de berço, barras grossas e enferrujadas, do tamanho de um
+        homem encolhido; dentro, um mago magro de túnica rasgada, pulsos e tornozelos rebitados às barras,
+        costas marcadas em grade por queimaduras, venda de ferro rebitada sobre os olhos, boca aberta;
+        correias de couro prendem a gaiola às costas de um carregador da Legião de farda, curvado, nuca
+        queimada em grade, mãos nas correias. Um brilho azul-esverdeado fosco começa na garganta do mago.
+      composicao: >-
+        Galpão das Fundições Valerianas, fornalha ao fundo; o carregador de joelhos pondo a gaiola no
+        chão e tapando os ouvidos, o mago dentro com a cabeça virada para um operário que recua com uma
+        pá; o fogo azul-fosco começando a sair da boca. Laranja de forja contra o azul fosco do Éter.
+      evitar: Máquina a vapor, ciborgue, canos e válvulas, prisioneiro heroico. É uma gaiola feia nas costas de um homem cansado, e outro homem dentro.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_enxerto_da_fornalha
+    vaga: 14
+    nome: Enxerto da Fornalha
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: encapuzados_fornalha
+      refs: ["lore_nova/factions.txt:108", "lore_nova/factions.txt:112"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um Encapuzado que deu o braço direito à fornalha e recebeu de volta uma lâmina de Aço de Sangue
+        enxertada no ombro, sem punho: o metal entra pela carne aberta do ombro, que não fecha, e segue
+        por dentro até o quadril, onde se vê a ponta sob a pele. A lâmina tem vontade e o homem é o que
+        ela usa para andar. O capuz de couro cobre o rosto; a boca, à mostra, está sempre torcida de dor.
+        O braço esquerdo, humano, tenta às vezes segurar o direito.
+    silhueta: Um encapuzado com um braço de ferro longo demais, que anda inclinado para o lado da lâmina.
+    comportamento: >-
+      Guarda as fornalhas e os segredos da forja. Fareja sangue e vai direto para a armadura: a lâmina
+      quer abrir metal. Depois de cada golpe, a carne do ombro se rasga mais. Quando o homem cansa, a
+      lâmina continua mexendo o corpo.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: encapuzados_fornalha
+    mecanica_assinatura:
+      carta: cri_enxerto_da_fornalha_lamina_que_puxa
+      frase: "A lâmina puxa o braço do homem para o alvo mais blindado e racha a peça: a próxima defesa desse alvo vale metade, e o Enxerto abre um Ferimento no ombro a cada puxão."
+    contra_jogo: Esperar o puxão com o lado esquerdo dele à frente (não há lâmina ali) e deixá-lo sangrar pelo ombro; a peça rachada se troca, o ombro não.
+    gancho: >-
+      Os Encapuzados da Fornalha acreditam que o Aço de Sangue tem alma; algumas lâminas ganham vontade,
+      e o culto pode ser devorado pelo que venera.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [ataque, mover, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} geme, o braço esquerdo solta o direito e a lâmina do ombro se levanta sozinha."
+    description: Um Encapuzado da Fornalha com uma lâmina de Aço de Sangue enxertada no ombro aberto; a lâmina tem vontade e ele é o que ela usa para andar.
+    perigo: Médio
+    lore: >-
+      Os Encapuzados da Fornalha acreditam que o metal que bebeu vida tem alma. Quem entrega o braço direito à fornalha recebe de volta uma lâmina de Aço de Sangue enxertada no ombro, sem punho, enfiada carne adentro até o quadril, e passa a ser o que ela usa para andar. A lâmina vai para o metal mais grosso que houver na sala.
+      O homem anda inclinado para o lado dela, tenta segurá-la com a mão que sobrou e guarda a forja
+      enquanto o ombro não fecha. Kald chama isso de sacerdócio.
+    aparencia: >-
+      Homem de capuz de couro com uma lâmina de Aço de Sangue sem punho enxertada no ombro direito aberto,
+      o metal seguindo por dentro do corpo até o quadril; boca à mostra torcida de dor, braço esquerdo
+      humano tentando segurar o direito, anda inclinado para o lado da lâmina.
+    como_se_luta: >-
+      A lâmina o puxa para o alvo mais blindado e racha a peça: a defesa seguinte vale metade, e cada puxão rasga mais o ombro dele. Pelo lado esquerdo não há lâmina; deixá-lo sangrar é o caminho.
+    related_entities: [na_anel_ferro, encapuzados_fornalha, mon_sangue_de_aco]
+    arte:
+      visual: >-
+        Trabalhador de fundição de capuz de couro escuro e avental, boca visível com os dentes cerrados;
+        no ombro direito, uma lâmina de aço escuro com veios vermelhos, sem punho, cravada numa ferida
+        aberta e inchada que não fecha; sob a pele do flanco e do quadril, a saliência da lâmina que
+        continua por dentro; braço esquerdo humano agarrando o antebraço de ferro; corpo inclinado.
+      composicao: >-
+        Boca de fornalha ao fundo, brasa e escória; o Enxerto de pé entre a fornalha e a porta, lâmina
+        erguida, e no chão à frente dele uma bigorna que dá a escala. Luz vermelha da forja de um lado,
+        escuro de fuligem do outro; a lâmina reflete o vermelho.
+      evitar: Cavaleiro com braço biônico, lâmina elegante, pose heroica. A lâmina é um parasita e o homem sofre.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_vira_costas_da_praca
+    vaga: 17
+    nome: Vira-Costas da Praça
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_fehk
+      refs: ["lore_nova/npcs.txt:292", "lore_nova/locations.txt:31"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: couro_tecido
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        O que a Covardia deixa numa praça de execução toma a carne de quem virou as costas: um corpo
+        humano curvado feito só de costas, ombros, nucas e cotovelos, sem frente nenhuma, vestido com
+        os casacos de lã e os lenços de muita gente costurados uns nos outros. Onde deveria haver rosto
+        há outra nuca. Os braços nascem para trás e terminam em cotovelos duros como joelhos. Anda de
+        lado, sempre a um passo de ir embora.
+    silhueta: Uma pessoa de casaco vista de costas, de todos os lados ao mesmo tempo, encolhida.
+    comportamento: >-
+      Fica na borda das praças e dos portões onde a Legião executa e a cidade olha para o chão. Nunca
+      ataca primeiro: espera ser tocada e responde com os cotovelos, duro e rápido, e depois dá um passo
+      para longe. Sente o medo de quem chega e fica mais perto dos que hesitam.
+    papel_tatico: tanque_reativo
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vira_costas_da_praca_razao_para_esperar
+      frase: Enquanto não é atacado, absorve dano por todos os inimigos; o primeiro golpe que recebe ele devolve em dobro com os cotovelos.
+    contra_jogo: Atacar primeiro, forte, e de uma vez; ele vive de quem hesita, e sem a Reação é só um corpo mole de casacos.
+    gancho: >-
+      Fehk está em Nova Arcádia em grande quantidade; o que sobra de tanta gente sensata, olhando para o
+      outro lado nas execuções, precisa de carne.
+    habitat: [na_anel_dourado, na_anel_ferro, na_anel_lama]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} encolhe os ombros e os cotovelos de trás se armam, como quem só espera ser empurrado."
+    description: Cria da Covardia feita das costas de quem olhou para o outro lado nas execuções; não tem frente e só bate em quem a toca.
+    perigo: Médio
+    lore: >-
+      A Covardia não produz medo; produz razões. Em Nova Arcádia ela está em grande quantidade, e o que
+      sobra de tanta razão, nas praças onde a Legião executa e a cidade olha para o chão, toma a carne
+      de quem virou as costas. Fica um corpo só de costas, nucas e cotovelos, vestido com os casacos de
+      muita gente, sem frente para onde se olhe. Nunca ataca primeiro. Espera. Quem o toca aprende que
+      esperar também era uma escolha, e que ele a fez melhor.
+    aparencia: >-
+      Corpo humano curvado feito só de costas, ombros, nucas e cotovelos, sem rosto nem frente, vestido
+      com casacos de lã e lenços de muitas pessoas costurados uns nos outros; braços nascem para trás e
+      terminam em cotovelos duros; anda de lado.
+    como_se_luta: >-
+      Absorve o que vai para os outros enquanto ninguém o toca, e devolve em dobro o primeiro golpe. O
+      jeito é atacar primeiro e forte; sem a sua espera, é só um corpo mole de casacos.
+    related_entities: [na_anel_dourado, na_anel_ferro, na_anel_lama, npc_fehk]
+    arte:
+      visual: >-
+        Figura humana curvada, de tamanho normal, composta inteiramente de costas: a frente do corpo é
+        outra nuca, outros ombros, outra lombar; vestida com três ou quatro casacos de lã cinza e marrom
+        costurados juntos, lenços amarrados; braços voltados para trás com cotovelos salientes e
+        calejados; pernas humanas, botas gastas. Nenhum rosto visível de nenhum ângulo.
+      composicao: >-
+        Praça de execução do Anel de Ferro, cadafalso ao fundo com legionários; multidão de costas no
+        primeiro plano, e entre eles o Vira-Costas, idêntico aos outros até se notar que também está de
+        costas para o observador e para o cadafalso ao mesmo tempo. Luz cinza de meio-dia nublado.
+      evitar: Monstro de muitos braços, rostos gritando, bocas. A inquietação é só a ausência de frente.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_roda_de_mandibulas
+    vaga: 18
+    nome: Roda de Mandíbulas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:214", "lore_nova/locations.txt:83"]
+    anatomia:
+      plano_corporal: radial
+      material: carne_exposta
+      escala: grande
+      locomocao: rola
+      percepcao: sangue_cheiro
+      texto: >-
+        A Crueldade que se acumula no Fosso dos Cães tomou a carne dos cães e das mãos dos apostadores:
+        uma roda de carne viva, mais alta que um homem, com doze cabeças de cão dispostas em raio e as
+        mandíbulas voltadas para fora, ligadas no cubo por um nó de braços humanos de mangas arregaçadas
+        que apertam fichas de aposta. Os pescoços são os raios. Gira sobre as mandíbulas, mordendo o chão
+        para andar. As línguas pendem para o lado da rotação.
+    silhueta: Uma roda de carroça do tamanho de uma porta rolando sozinha, com focinhos onde deveria haver aro.
+    comportamento: >-
+      Fica no fundo da vala e sobe quando há sangue e plateia. Rola em círculo em volta da presa, como a
+      roda do Fosso, e cada volta é uma mordida de uma cabeça diferente. Quanto mais a presa grita,
+      mais depressa gira. Não para enquanto houver quem olhe.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_roda_de_mandibulas_volta_completa
+      frase: "Uma volta inteira em torno da fila: cada cabeça morde um alvo diferente, e cada Ferimento que já havia na fila dobra a mordida."
+    contra_jogo: Não deixar Ferimentos abertos e travar a roda contra uma parede; de lado ela não rola, e as mãos do cubo são frágeis.
+    gancho: >-
+      No Fosso dos Cães, cães famintos numa vala e um prisioneiro ou voluntário na mesma vala; a
+      Crueldade não assistiu de fora.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} para de girar, todas as doze cabeças farejam ao mesmo tempo e as mãos do cubo apertam as fichas."
+    description: "Chefe do Fosso dos Cães: uma roda de carne viva com doze cabeças de cão em raio e um cubo de mãos de apostadores, que rola sobre as mandíbulas."
+    perigo: Extremo
+    lore: >-
+      O Fosso dos Cães muda de lugar para a Legião não fechar: cães famintos numa vala, um prisioneiro ou
+      um voluntário, apostadores em volta. A Crueldade senta onde a dor é mais nítida, e ali ficou nítida
+      por anos. O que sobrou tomou a carne que havia: doze cabeças de cão em raio e as mãos dos
+      apostadores no cubo, apertando fichas. Rola sobre as mandíbulas. Dizem que um homem venceu o Fosso
+      vinte vezes falando com os cães; ninguém o viu falar com a roda.
+    aparencia: >-
+      Roda de carne viva mais alta que um homem, doze cabeças de cão dispostas em raio com as mandíbulas
+      para fora e os pescoços como raios, ligadas num cubo de braços humanos de mangas arregaçadas que
+      apertam fichas de aposta; rola sobre as mandíbulas, línguas pendendo para o lado do giro.
+    como_se_luta: >-
+      Rola em volta da fila e morde com uma cabeça por volta, mais forte onde já há Ferimento. Travada de
+      lado contra uma parede não rola, e o cubo de mãos é o ponto fraco.
+    related_entities: [na_anel_lama, npc_maalrek]
+    arte:
+      visual: >-
+        Roda de dois metros e meio de diâmetro feita de carne: doze cabeças de cães de raças de rua, de
+        orelhas rasgadas, dispostas como as horas de um relógio com os focinhos para fora e as mandíbulas
+        abertas; pescoços esticados formando os raios; no cubo, um nó de uns vinte braços humanos de
+        mangas arregaçadas, mãos fechadas em fichas de madeira e moedas. Sem pele no conjunto, músculo
+        vermelho-escuro e tendão. Línguas pendendo todas para o mesmo lado.
+      composicao: >-
+        Vala do Fosso dos Cães vista de dentro, paredes de terra batida, bordas cheias de apostadores de
+        tochas; a Roda rolando em círculo em torno de um lutador com um porrete, do tamanho de um raio
+        dela. Luz de tocha laranja de cima, lama molhada refletindo.
+      evitar: Cérbero de três cabeças, cão infernal com olhos de fogo, roda de espinhos de masmorra. É uma roda de cães de rua e mãos de gente.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cavadeira_de_unhas
+    vaga: 19
+    nome: Cavadeira de Unhas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:276", "lore_nova/locations.txt:65"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: osso
+      escala: pequena
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        O Desespero dos que cavam a parede da cela com as unhas tomou as unhas: um bicho do tamanho de
+        um cão pequeno feito de dezenas de dedos humanos de falanges nuas, articulados num tronco de
+        nós de juntas, cada dedo terminando numa unha rachada e preta de terra. Não tem cabeça; o centro
+        é uma boca de dedos fechados. Cava com todos ao mesmo tempo e deixa atrás um túnel estreito e
+        raspado.
+    silhueta: Um ouriço de dedos que aparece do chão e some pelo buraco que ele mesmo faz, antes de se ver direito.
+    comportamento: >-
+      Vive nos túneis que os presos do Oubliette abrem e não terminam, e nos porões do Anel de Lama. Sente
+      o chão tremer sob um passo e sai do piso por baixo, arranhando; se é golpeada, cava mais fundo e
+      volta por outro lado. Nunca desiste de uma saída que não existe.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cavadeira_de_unhas_sair_por_baixo
+      frase: Some pelo chão e reaparece sob um alvo à escolha, ferindo as pernas e tirando dele o movimento da rodada.
+    contra_jogo: Ficar sobre pedra ou madeira firme, onde ela não cava; na superfície é um bicho pequeno de osso que quebra fácil.
+    gancho: >-
+      Dorrhen procura uma saída que sabe não existir; nas celas do Oubliette há paredes raspadas a unha
+      até a pedra, e as unhas não ficaram nos dedos.
+    habitat: [na_anel_ferro, na_anel_lama]
+    inspiracao: []
+    padrao: [mover, ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} fecha todos os dedos em bola e o chão em volta começa a esfarelar."
+    description: Cria do Desespero feita de dezenas de dedos de osso com unhas rachadas, que cava sob o chão e sai por baixo das pernas.
+    perigo: Baixo
+    lore: >-
+      Nas celas fundas do Oubliette há paredes raspadas até a pedra por unhas de gente que sabia que não
+      havia saída e cavou mesmo assim. O Desespero fica onde se cava sem porta. O que sobra dele toma as
+      unhas: um bicho sem cabeça feito de dedos nus de osso, que cava com todos ao mesmo tempo e sai
+      por baixo de quem passa. Os carcereiros tapam os buracos com argamassa. Ela abre outro. Nos porões
+      do Anel de Lama, onde se cava por outros motivos, também aparece.
+    aparencia: >-
+      Bicho do tamanho de um cão pequeno feito de dezenas de dedos humanos de falanges nuas articulados num
+      tronco de juntas, cada dedo com uma unha rachada e preta de terra; sem cabeça, o centro é uma boca de
+      dedos fechados; cava com todos ao mesmo tempo.
+    como_se_luta: >-
+      Some pelo chão e sai sob um alvo, ferindo as pernas e prendendo-o no lugar. Sobre pedra ou madeira
+      firme não cava, e na superfície é um bicho pequeno de osso que quebra.
+    related_entities: [na_anel_ferro, na_anel_lama, npc_dorrhen]
+    arte:
+      visual: >-
+        Massa do tamanho de um cão pequeno feita de dezenas de dedos humanos descarnados, falanges de osso
+        amarelado articuladas umas nas outras em feixes que saem de um tronco de juntas; na ponta de cada
+        dedo uma unha longa, rachada, preta de terra; no centro, os dedos se fecham como uma boca; terra
+        e argamassa presas nas juntas. Saindo de um buraco no piso de pedra.
+      composicao: >-
+        Cela do Oubliette, parede com milhares de riscos de unha; um prisioneiro encolhido no canto com
+        os pés levantados do chão, e a Cavadeira emergindo do piso ao lado da tigela dele. Luz de uma
+        fresta alta, cinza, resto escuro.
+      evitar: Mão rastejante de filme, aranha de ossos, caveira. Não tem rosto nem crânio; é só dedos e unhas.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_convidado_de_cera
+    vaga: 20
+    nome: Convidado de Cera
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/locations.txt:51"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cera_sebo
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        A Inveja que sobra dos jantares do Anel Dourado toma a cera dos candelabros: um corpo de homem
+        alto feito de cera de vela amarelada, mole nas juntas, com as mãos derretendo para baixo em
+        dedos compridos. Veste joias que não são suas, enterradas na cera do pescoço e dos pulsos. O
+        rosto é um oco liso com a marca de um rosto que foi encostado ali, e os olhos são dois pavios
+        apagados. Deixa pingos por onde passa.
+    silhueta: Um convidado alto e bem vestido, parado na sala, de quem não se consegue dizer o rosto.
+    comportamento: >-
+      Frequenta as casas do Anel Dourado como se fosse de lá e ninguém o convida porque todos acham que
+      outro convidou. Sente quem deseja o que não tem e encosta o rosto oco nele; o desejo passa para a
+      cera. Em combate, aponta o que o outro tem e trava o que o alvo ia fazer com aquilo.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_convidado_de_cera_por_que_ele_e_nao_voce
+      frase: Escolhe a Carta mais cara na mão do alvo e a tranca por duas rodadas; enquanto trancada, a cera dele endurece.
+    contra_jogo: Jogar barato e rápido; sem nada caro na mão dele não há o que invejar, e cera fria quebra com pancada.
+    gancho: >-
+      Onde Veth está, ninguém constrói e todos derrubam; os salões do Anel Dourado foram feitos para
+      calcular quanto cada um vale, e a cera dos candelabros assistiu a tudo.
+    habitat: [na_anel_dourado]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} vira o oco do rosto para o alvo e os dedos de cera escorrem apontando a mão dele."
+    description: "Cria da Inveja feita da cera dos candelabros dos salões do Anel Dourado: um convidado alto sem rosto, de joias alheias, que tranca o que o outro tem de melhor."
+    perigo: Médio
+    lore: >-
+      Nos salões do Anel Dourado todo mundo calcula quanto o outro vale e quanto custaria tirá-lo. A
+      Inveja não precisa entrar; está servida. O que sobra dela ao fim dos jantares toma a cera dos
+      candelabros e veste as joias que ficaram nas mesas. Ninguém convida o Convidado de Cera, e ninguém
+      o manda embora, porque todos acham que outro o trouxe. Ele encosta o rosto oco em quem deseja o
+      que não tem. Os criados varrem os pingos de manhã e não comentam.
+    aparencia: >-
+      Homem alto de cera de vela amarelada, mole nas juntas, mãos derretendo em dedos compridos, joias
+      alheias enterradas na cera do pescoço e dos pulsos, rosto oco e liso com a marca de outro rosto,
+      olhos de pavio apagado; deixa pingos por onde passa.
+    como_se_luta: >-
+      Tranca a Carta mais cara da mão do alvo e endurece enquanto a segura. Jogar barato e rápido o deixa
+      sem o que invejar, e cera fria quebra com pancada.
+    related_entities: [na_anel_dourado, npc_veth]
+    arte:
+      visual: >-
+        Figura masculina alta e esguia, de casaca de jantar escura, feita de cera de vela amarelada e
+        translúcida nas bordas, com escorridos nas juntas dos cotovelos e dos joelhos; mãos alongadas,
+        dedos pingando; colares, anéis e broches de ouro e granada meio afundados na cera do pescoço e
+        dos pulsos; no lugar do rosto, uma depressão lisa com o relevo invertido de um rosto, e dois
+        pavios pretos no lugar dos olhos. Pingos de cera no tapete.
+      composicao: >-
+        Salão de jantar do Anel Dourado, mesa longa, candelabros acesos; nobres sentados em conversa, e de
+        pé atrás de uma cadeira, o Convidado inclinando o oco do rosto para a nuca de uma dama. Luz de
+        vela quente, obsidiana preta nas paredes que não reflete nada.
+      evitar: Manequim de loja, boneco de cera realista, fantasma de lençol. Ele escorre; é cera de vela mole, não plástico.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_escritura_rastejante
+    vaga: 22
+    nome: Escritura Rastejante
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_daruun
+      refs: ["lore_nova/npcs.txt:197", "lore_nova/locations.txt:63"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        A Cobiça que se deposita no Mercado de Carne toma o couro dos contratos: um rolo de pergaminho
+        de pele humana curtida, do comprimento de dois homens e da largura de um braço, escrito em
+        tinta que parece sangue seco, enrolado em espiral como uma serpente. As assinaturas dos
+        devedores formam uma espinha ao longo do dorso. Na ponta, o selo de cera vermelha do Mercado
+        serve de cabeça, com a mordida de uma boca cortada na pele por baixo. Rasteja farfalhando.
+    silhueta: Um rolo de papel grosso que se desenrola sozinho pelo chão e vem na direção dos pés.
+    comportamento: >-
+      Dorme nos arquivos do Mercado de Carne. Sente o calor de uma mão e se desenrola na direção
+      dela, lendo em voz baixa as cláusulas; cada cláusula lida encarece o que o alvo faz a seguir.
+      Não precisa encostar. Foge do fogo como foge do prazo.
+    papel_tatico: drenador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_escritura_rastejante_taxa_administrativa
+      frase: Lê uma cláusula à distância e o alvo assina sem querer; a próxima Carta que ele jogar custa o dobro de Fôlego, e a cláusula seguinte dobra de novo.
+    contra_jogo: Rasgar o rolo pelo selo antes da terceira cláusula, ou gastar a Carta mais cara de uma vez enquanto só a primeira foi lida; nunca pegar o rolo com a mão.
+    gancho: >-
+      Os contratos do Mercado de Carne têm prazo e taxas que crescem mais depressa que o pagamento; a
+      Cobiça não busca ninguém, espera que venham assinar.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [enfraquecer, mover, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} se desenrola até a última cláusula e o selo de cera vira para a mão do alvo."
+    description: "Cria da Cobiça: um rolo de contratos de pele curtida que rasteja como serpente, com o selo do Mercado por cabeça, e cobra uma Carta por rodada enroscada."
+    perigo: Baixo
+    lore: >-
+      No Mercado de Carne se assina o próprio nome, ou o do filho, e as taxas administrativas sobem mais
+      depressa que qualquer braço consegue pagar. A Cobiça não procura ninguém; espera que venham, e vêm.
+      O que sobra dela nos arquivos tomou o couro dos próprios contratos: um rolo de pele curtida,
+      escrito em tinta cor de sangue seco, que se desenrola pelo chão na direção de quem tem a mão
+      quente. Lê as cláusulas em voz baixa, e o que se faz depois custa mais. Os escrivães do Mercado mantêm uma vela acesa na mesa e
+      dizem que é por causa do frio.
+    aparencia: >-
+      Rolo de pergaminho de pele humana curtida, do comprimento de dois homens, enrolado em espiral como
+      uma serpente, escrito em tinta cor de sangue seco, assinaturas formando uma espinha no dorso, selo
+      de cera vermelha por cabeça e uma boca cortada na pele por baixo; rasteja farfalhando.
+    como_se_luta: >-
+      Lê cláusulas de longe e cada Carta do alvo passa a custar mais Fôlego. Rasgar pelo selo antes da terceira cláusula, ou gastar o caro logo, enquanto só a primeira foi lida; pegar o rolo com a mão é deixá-la ler.
+    related_entities: [na_anel_ferro, npc_daruun]
+    arte:
+      visual: >-
+        Rolo de pergaminho amarelado de pele curtida, largo como um antebraço e longo como dois homens,
+        enrolado em espiral apertada; texto denso em caligrafia de escrivão, tinta marrom-avermelhada;
+        uma linha de assinaturas em relevo correndo pelo dorso como vértebras; na extremidade, um selo
+        de cera vermelha do tamanho de um punho, e logo abaixo um corte curvo na pele que se abre como
+        boca, sem dentes. Fitas de cera e barbante presas nas bordas.
+      composicao: >-
+        Arquivo do Mercado de Carne, estantes de rolos até o teto, escrivaninha com vela; a Escritura
+        desenrolada pelo chão com o selo erguido a um palmo da mão de um escrivão sentado que ainda
+        escreve, sem olhar para baixo. Luz de vela amarela, pergaminho e madeira escura.
+      evitar: Serpente com escamas, múmia enfaixada, livro voador. É papel de pele, plano, que se dobra; nada de corpo de réptil.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_portao_que_morde
+    vaga: 23
+    nome: Portão que Morde
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/locations.txt:19"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: ancorada
+      percepcao: vibracao
+      texto: >-
+        O Ódio que se acumula nos portões entre os anéis, onde se diz a cada dia quem passa e quem não
+        passa, tomou o ferro do próprio portão: duas folhas de grade enferrujada, altas como uma casa,
+        com as barras verticais tortas em presas e as dobradiças inchadas em articulações de ombro. Nos
+        vãos das barras, dentes de gente, cuspidos ali por quem foi barrado, cresceram enfiados no
+        ferro. Não sai do batente. Fecha com força de prensa e abre devagar, rangendo.
+    silhueta: Um portão de ferro fechado que, de perto, está entreaberto demais na altura do peito.
+    comportamento: >-
+      Fica no batente de um portão entre anéis, quase sempre o que dá para o Anel de Lama. Sente o chão
+      tremer com quem se aproxima e espera o passo entre as folhas; então fecha. Abre de novo sozinho,
+      com quem estava dentro já no chão. A Legião pôs guardas ao lado e não os trocou de posto.
+    papel_tatico: quebra_defesa
+    arquetipo: abissal
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_portao_que_morde_fechar_de_vez
+      frase: Fecha sobre o alvo e quebra a defesa dele em metal ou couro para o resto do combate; o Portão só ataca quem passa pelo vão.
+    contra_jogo: Não passar pelo vão; de lado, pelas dobradiças inchadas, ele não alcança, e cada dobradiça quebrada deixa uma folha pendurada.
+    gancho: >-
+      Vhrak não cria ódio do nada: remove os freios do que já existe, e os portões de Nova Arcádia
+      foram feitos para controlar quem entra, nunca quem sai.
+    habitat: [na_anel_dourado, na_anel_ferro]
+    inspiracao: []
+    padrao: [defesa, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} range as dobradiças inchadas e as duas folhas recuam um palmo, abrindo o vão."
+    description: Cria do Ódio no ferro de um portão entre anéis, com barras tortas em presas e dentes de gente crescidos nos vãos; fecha sobre quem passa.
+    perigo: Alto
+    lore: >-
+      Entrar no Anel de Ferro exige nome, origem e propósito; entrar no Dourado exige alguém de dentro.
+      Nos portões se diz todo dia quem passa e quem não passa, e quem não passa cospe. O Ódio não
+      inventa nada; tira os freios do que já está ali. O que sobra dele tomou o ferro de um portão: as
+      barras entortaram em presas, as dobradiças incharam em ombros, e os dentes cuspidos cresceram
+      enfiados no ferro. Fecha sobre quem passa pelo vão. A Legião pôs dois guardas ao lado e um aviso
+      para usar a porta pequena.
+    aparencia: >-
+      Portão de duas folhas de grade enferrujada, alto como uma casa, barras verticais tortas em presas,
+      dobradiças inchadas em articulações de ombro, dentes humanos crescidos nos vãos do ferro; preso ao
+      batente, fecha com força de prensa e abre devagar rangendo.
+    como_se_luta: >-
+      Só ataca quem passa pelo vão: fecha e quebra a defesa de metal ou couro para o resto do combate.
+      Pelas dobradiças inchadas, de lado, ele não alcança, e cada dobradiça quebrada deixa uma folha
+      pendurada.
+    related_entities: [na_anel_dourado, na_anel_ferro, npc_vhrak]
+    arte:
+      visual: >-
+        Portão de ferro forjado de duas folhas, uns cinco metros de altura, enferrujado em tons de
+        vermelho e marrom; as barras verticais se curvaram para dentro em pontas como presas de uma
+        mandíbula; as dobradiças, do tamanho de um torso, estão inchadas e nodosas como articulações
+        inflamadas; entre as barras, dezenas de dentes humanos de tamanhos variados crescidos do metal
+        como de uma gengiva. Batente de pedra e obsidiana.
+      composicao: >-
+        Portão entre o Anel de Ferro e o Anel de Lama ao entardecer, muralha dos dois lados; dois
+        legionários parados a três passos de cada folha sem olhar para ela; uma mulher com trouxa
+        hesitando diante do vão entreaberto, pequena como uma barra. Luz rasante laranja, ferrugem e
+        fuligem.
+      evitar: "Portão com rosto esculpido, boca demoníaca de dentes grandes, olhos. Não há rosto: só barras, dobradiças e dentes pequenos de gente."
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= SLOTS GENÉRICOS REINVENTADOS NO MESMO ID (R3/R24) =======================
+  - id: enemy_sentinela_ferro
+    vaga: 24
+    nome: Pajem de Obsidiana
+    status: reinventada
+    substitui: enemy_sentinela_ferro
+    ataques: ["Placa que Corta", "Lasca das Juntas"]
+    acoes: ["Guarda o corredor até cair; recua um passo pela parede, nunca sai do Palácio.", "Desce sobre quem esquenta a parede; não persegue além do corredor."]
+    substitui_generico: Sentinela de Ferro (Constructo)
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:43", "lore_nova/rumors.txt:19"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Um servo dos andares de baixo do Palácio que limpou por anos o que as paredes de obsidiana
+        transpiram e foi reescrito por isso: a pele virou vidro negro fosco, que não reflete nada, em
+        placas finas que cortam onde se encostam; as juntas dos dedos e dos joelhos são lascas que
+        rangem. O rosto ficou liso como a pedra do Palácio, sem olhos, só duas depressões mornas por
+        onde sente o calor de quem entra. Sobe pelas paredes lisas como se fossem chão. Ainda usa a
+        libré.
+    silhueta: Um criado de libré parado numa parede vertical do corredor, da cor exata da parede.
+    comportamento: >-
+      Guarda os corredores do Palácio de Obsidiana sem ser visto, colado à parede, da cor dela. Sente o
+      calor de um corpo e desce para bloquear a passagem; não persegue para fora do Palácio. Quando
+      ferido, as placas se soltam e cortam quem está perto.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pajem_de_obsidiana_placa_que_corta
+      frase: Fica entre o alvo e os outros inimigos; quem o golpeia de perto leva o corte das placas de volta.
+    contra_jogo: Golpes de impacto, não de lâmina, e de longe; vidro negro racha com pancada, e sem o calor de um corpo perto ele não sabe para onde descer.
+    gancho: >-
+      As paredes de baixo do Palácio de Obsidiana transpiram um líquido escuro que não é água; alguém
+      tem de limpar, e quem limpa por anos deixa de ser visto.
+    habitat: [na_anel_dourado]
+    inspiracao: []
+    padrao: [defesa, ataque, defesa, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} desce da parede sem som e as placas dos braços se eriçam como lascas."
+    description: "Servo do Palácio de Obsidiana reescrito pelo que as paredes transpiram: pele de vidro negro que corta, rosto liso sem olhos, sobe pelas paredes."
+    perigo: Alto
+    lore: >-
+      O Palácio de Obsidiana não tem janelas nos andares de baixo, e os servos que trabalham lá falam de
+      correntes de ar sem origem e de um cheiro de metal oxidado. Um sargento conta que as paredes
+      transpiram um líquido escuro. Alguém limpa. Quem limpa por anos acaba da cor da parede: a pele
+      vira vidro negro fosco que corta onde encosta, o rosto fica liso como a pedra, e o pajem passa a
+      subir pelos corredores como se fossem chão. Continua de libré. Continua a serviço. Ninguém no
+      Dourado comenta que os criados dos andares de baixo não envelhecem.
+    aparencia: >-
+      Criado de libré do Palácio com a pele em placas finas de obsidiana fosca que não reflete nada e
+      corta ao toque, juntas dos dedos e joelhos em lascas que rangem, rosto liso sem olhos com duas
+      depressões mornas; anda pelas paredes lisas como se fossem chão.
+    como_se_luta: >-
+      Fica entre o alvo e os outros e devolve cortes a quem o golpeia de perto. Impacto, não lâmina, e
+      de longe: o vidro negro racha com pancada e ele não acha quem não esquenta a parede.
+    related_entities: [na_anel_dourado]
+    arte:
+      visual: >-
+        Humano de libré escura de pajem (colarinho alto, botões de prata), pele inteiramente coberta de
+        placas finas e angulosas de obsidiana fosca, preta, sem reflexo, sobrepostas como escamas de
+        vidro; mãos de dedos em lascas; rosto liso e cego, com dois côncavos onde seriam os olhos. Preso a
+        uma parede vertical de obsidiana polida, corpo em pé paralelo à parede, quase invisível.
+      composicao: >-
+        Corredor subterrâneo do Palácio de Obsidiana, sem janelas, uma única lanterna de mão; uma criada
+        com balde passa no corredor sem olhar para cima, e o Pajem está na parede acima dela, da mesma
+        cor, só a libré e as lascas delatando. Preto sobre preto, pontos de luz na lanterna.
+      evitar: Golem de pedra, estátua viva, cavaleiro de cristal brilhante. É um criado magro de vidro fosco, não um bloco.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_horror_esgoto
+    vaga: 27
+    nome: Coisa do Esgoto
+    status: adotada
+    substitui: enemy_horror_esgoto
+    ataques: ["Braço de Ossos"]
+    acoes: ["Só recua pelo ralo à beira da morte; antes disso avança.", "Engole o que cai e bate no mais próximo com os braços de osso."]
+    substitui_generico: Horror do Esgoto (Ooze)
+    codex_id: mon_coisa_do_esgoto
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:798", "lore_nova/locations.txt:14"]
+    anatomia:
+      plano_corporal: composto
+      material: lama_turfa
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Uma massa do tamanho de uma carroça feita do que os três anéis despejam: ossos do Lama em
+        feixes, escória do Ferro em placas, cacos de vidro do Dourado como escamas, tudo preso num
+        lodo escuro que se mexe. Tem braços de ossos amarrados por tendões de lixo, uma boca que é um
+        ralo de ferro entalado no lodo, e nenhum olho; sente pelo chão. Cresce com o que engole. Sobe
+        pelos ralos quando há fome.
+    silhueta: Um morro de lixo molhado que respira num canal de esgoto, com um ralo de ferro no lugar da boca.
+    comportamento: >-
+      Vive nos esgotos que ligam os anéis e descem ao pântano. Sobe pelos ralos quando há pouco
+      movimento acima e engole o que alcança; bate com os braços de osso. Volta para baixo quando a
+      rua acorda. Não distingue nada do que come.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_coisa_do_esgoto_engolir_o_despejo
+      frase: Engole um inimigo caído ou um objeto da cena e cura um Ferimento; cada coisa engolida reforça a pancada seguinte.
+    contra_jogo: Não deixar nada caído perto dela e golpear os braços de osso, que são o que a mantém erguida; sem eles, só rasteja.
+    gancho: >-
+      A cidade bebe de um lado o que despeja do outro; o que o despejo faz no escuro sob os três
+      anéis, sobe pelos ralos quando tem fome.
+    habitat: [na_anel_lama, na_anel_ferro]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} abre o ralo de ferro que tem por boca e o lodo em volta recua para dentro."
+    description: Massa do tamanho de uma carroça feita do despejo dos três anéis, com braços de osso e um ralo de ferro por boca, que sobe pelos ralos quando há fome.
+    perigo: Alto
+    lore: >-
+      Nos esgotos que ligam os três anéis e descem para o Pântano, o despejo de Nova Arcádia criou algo
+      que incorpora o lixo de todos: ossos do Lama, escória do Ferro, restos de feitiço do Dourado.
+      Cresce no escuro sob a cidade e sobe pelos ralos quando há fome e pouco movimento acima.
+    aparencia: >-
+      Massa do tamanho de uma carroça de lodo escuro com ossos em feixes, placas de escória e cacos de
+      vidro como escamas, braços de ossos amarrados por tendões de lixo, uma boca que é um ralo de ferro
+      entalado no lodo, sem olhos.
+    como_se_luta: >-
+      Bate com os braços de osso e engole o que cai para curar e reforçar a pancada. Sem nada caído por
+      perto e com os braços quebrados, só rasteja.
+    related_entities: [na_anel_lama, na_anel_ferro]
+    arte:
+      visual: >-
+        Monte de lodo escuro do tamanho de uma carroça, com feixes de ossos humanos e de animal saindo
+        como braços grossos, amarrados por tendões e trapos; placas de escória preta nas costas, cacos de
+        vidro e cristal espetados como escamas; uma grade de ralo de ferro enterrada na frente como boca,
+        lodo escorrendo por entre as barras. Sem olhos.
+      composicao: >-
+        Canal de esgoto abobadado sob o Anel de Lama, água escura, um ralo de rua aberto no teto deixando
+        entrar um feixe de luz cinza; a Coisa erguida sob o feixe com um braço de osso estendido para o
+        ralo; um rato comum do tamanho de um caco de vidro dela na borda. Verde-lodo, ferro, um brilho
+        azul-pálido de feitiço velho.
+      evitar: Gosma verde lisa, slime de desenho, tentáculos lisos. É lixo sólido preso em lodo, cheio de arestas.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_elemental_fogo_poluido
+    vaga: 28
+    nome: Caído do Cadinho
+    status: reinventada
+    substitui: enemy_elemental_fogo_poluido
+    ataques: ["Braço de Escória"]
+    acoes: ["Recua para a panela mais perto quando a crosta já não fecha; lá dentro amolece de novo.", "Anda na direção do calor mais próximo e bate com o braço inteiro, crosta e tudo."]
+    substitui_generico: Elemental de Fogo Poluído
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:61", "lore_nova/timeline_completa.txt:396", "lore_nova/timeline_completa.txt:398"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: escoria_fuligem
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um fundidor que já tinha a Ferrugem do Sangue e caiu na panela de gusa: o ferro das veias não
+        ferveu, chamou o metal para dentro, e o corpo saiu da panela maior do que entrou. Placas de
+        escória negra, grossas como telha, cobrem os ombros, o peito e as costas, e entre elas o músculo fica à mostra, sem pele, vermelho-escuro e molhado, fumegando como carne tirada do caldeirão; não brilha, ferve. Os dois braços engrossaram e terminam num bloco só, os punhos fundidos um no outro, que ele levanta junto como um malho. A cabeça afundou entre os
+        ombros, e da boca aberta sai um bafo amarelo de enxofre.
+    silhueta: Um homem largo e curvado sob telhas pretas rachadas, fumegando pelas juntas, com os dois braços acabando num malho só.
+    comportamento: >-
+      Anda pelas Fundições atrás de calor, porque o calor o mantém mole: deita na boca das fornalhas,
+      encosta em corpos quentes. Longe do fogo a crosta fecha, ele fica mais lento a cada hora e acaba
+      parado em pé no pátio, como lingote. Os mestres de turno mandam deixá-lo esfriar num canto e
+      vender a sucata depois.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_caido_do_cadinho_partir_a_crosta
+      frase: "É o único que esfria: a cada rodada a crosta fecha, mais dura e mais lenta, até travar como lingote; para voltar a lutar ele a parte de dentro com um golpe de braço inteiro e fica uma rodada em carne viva."
+    contra_jogo: Recuar e deixá-lo esfriar, longe das fornalhas, até ele parar; ou golpear forte logo depois que ele parte a crosta, quando a carne está à mostra.
+    gancho: >-
+      Nas Fundições, quando um trabalhador cai no metal derretido, a produção não para. Quase sempre o
+      lote sai pesado de sangue; com quem já tinha a Ferrugem, às vezes o lote sai leve, e alguém sai
+      da panela.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [ataque, defesa, defesa, ataque_multiplo]
+    a_cada_n: 4
+    telegrafo: "{nome} finca o bloco dos punhos no próprio peito e a crosta estala nas juntas, vermelha por baixo."
+    description: "Fundidor com a Ferrugem do Sangue que caiu na panela de gusa e saiu coberto de placas de escória, com o músculo em brasa por baixo; esfria até travar e parte a crosta para voltar."
+    perigo: Alto
+    lore: >-
+      As Fundições Valerianas não param quando alguém cai no metal derretido; o lote só muda de nome.
+      Com quem já tinha a Ferrugem do Sangue, o metal às vezes não fica com o corpo: o ferro das veias
+      chama o da panela, e o trabalhador sai pelo outro lado, coberto de escória, com o músculo cru, fervendo por baixo. Os operários chamam de Caído do Cadinho e não usam mais o nome antigo. Ele anda atrás
+      de calor, porque longe do fogo a crosta fecha e ele trava em pé, como lingote, no fim que a Praga
+      dá a todos. Às vezes alguém acende a forja ao lado antes da hora.
+    aparencia: >-
+      Fundidor curvado e largo demais, placas de escória negra como telha nos ombros, peito e
+      costas, músculo vermelho-escuro, sem pele e fumegante à mostra entre elas; os dois braços terminam num bloco só, os punhos fundidos como um malho; cabeça afundada nos ombros, boca aberta soltando bafo amarelo.
+    como_se_luta: >-
+      Bate com o braço inteiro e queima; a cada rodada a crosta fecha, mais dura e mais lenta, até ele
+      travar. Longe das fornalhas, deixe-o esfriar; quando ele parte a crosta para voltar, a carne fica
+      à mostra por um momento.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Homem adulto grande, curvado para a frente, o volume aumentado por uma crosta de escória preta e
+        fosca em placas grossas e irregulares, como telhas quebradas, sobre ombros, peito, costas e coxas;
+        nas juntas entre as placas, músculo vermelho-escuro, cru e molhado, sem pele, soltando vapor, sem luz própria. Os dois braços grossos terminam num único bloco de gusa, os punhos fundidos. Cabeça enterrada entre os ombros, boca
+        aberta soltando vapor amarelo de enxofre. Restos queimados de um avental de couro de fundidor na
+        cintura.
+      composicao: >-
+        Pátio das Fundições à noite, a boca de uma fornalha aberta à direita lançando luz laranja; a
+        criatura caminha para ela, de perfil, as placas das costas já cinzentas e secas, as da frente ainda fumegando. Um operário de lenço molhado no rosto, com uma vara de ferro comprida, mantém
+        distância; ele chega ao ombro da criatura, o que dá a escala. Fuligem no ar, preto e laranja.
+      evitar: Elemental de fogo, homem de lava, demônio flamejante, chamas saindo do corpo. Não pega fogo; é escória fria por fora e carne em brasa por dentro, um doente, não um espírito. Rachaduras que brilham, magma, golem de pedra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_polvo_esgoto
+    vaga: 29
+    nome: Bagre de Varal
+    status: reinventada
+    substitui: enemy_polvo_esgoto
+    ataques: ["Barbilhões"]
+    acoes: ["Desce sobre quem está ferido ou de costas e mete a cabeça dele na água.", "Recua para cima dos varais e espera; não larga o que já segura.", "Nada pelo ar entre os barracos na direção de quem respira mais alto."]
+    substitui_generico: Polvo do Esgoto
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:75", "lore_nova/locations.txt:96", "lore_nova/creatures.txt:800", "lore_nova/timeline_completa.txt:380"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: grande
+      locomocao: nada
+      percepcao: respiracao
+      texto: >-
+        Um bagre do tamanho de um homem que subiu dos canais do Anel de Lama e perdeu a pele inteira para
+        o despejo: o que sobrou é músculo vermelho e liso, com fileiras de placas de osso no dorso e nos
+        flancos, que estalam quando ele se dobra. A cabeça é larga como um barril, a boca ocupa a frente
+        toda, e quatro barbilhões grossos, compridos como braços, saem dos cantos dela e agarram. Os
+        olhos são dois pontos brancos que não servem; ele acha a presa pela respiração. Vive dentro de
+        um bolsão de água parda do canal que não cai, pendurado no ar à altura dos varais.
+    silhueta: Um peixe enorme parado no ar entre dois varais, dentro de uma bolha de água suja que balança como roupa molhada.
+    comportamento: >-
+      Sai dos canais nas noites de chuva, quando as ruas do Anel de Lama viram água. Nada pelo ar entre
+      os barracos atrás de quem respira alto, o bêbado, o doente, quem tosse, e mete a cabeça da presa
+      dentro da própria água. Não larga enquanto a água não cai. De manhã, os moradores acham lodo na
+      roupa dos varais e não perguntam.
+    papel_tatico: emboscador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bagre_de_varal_cabeca_na_agua
+      frase: "Mete a cabeça do alvo dentro da água que carrega: até se soltar, o alvo só joga uma Carta por rodada, porque está prendendo o ar."
+    contra_jogo: Rasgar a água, não o peixe; um golpe pesado no bolsão o derruba no chão seco, onde ele se debate sem ar e não agarra ninguém.
+    gancho: >-
+      A água que sobe pelos esgotos do Anel de Lama vem do Pântano, onde os rios perderam a direção;
+      nas noites de chuva, uma parte dela sobe e não lembra de descer.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre a boca larga e a água parda em volta dele se estica para quem respira mais alto."
+    description: "Bagre sem pele, do tamanho de um homem, com placas de osso sobre o músculo, que nada pelo ar do Anel de Lama dentro de um bolsão de água de canal que não cai e afoga a presa de pé."
+    perigo: Alto
+    lore: >-
+      Quando chove, as ruas do Anel de Lama viram canais, e a água que sobe pelos esgotos veio do
+      Pântano, onde os rios perderam a direção. Às vezes ela não lembra para que lado fica o chão. O
+      Bagre de Varal sai dos canais nessas noites dentro de um bolsão dessa água e nada pelo ar entre os
+      barracos, à altura da roupa estendida. Perdeu a pele para o despejo faz tempo; o que resta é
+      músculo e placas de osso. Acha a presa pela respiração e a afoga de pé, sem tirá-la do lugar. De
+      manhã a roupa dos varais amanhece com lodo, e ninguém lava duas vezes.
+    aparencia: >-
+      Bagre do tamanho de um homem, sem pele, músculo vermelho e liso com fileiras de placas de osso no
+      dorso e nos flancos, cabeça larga como barril, boca de lado a lado com quatro barbilhões grossos
+      como braços, olhos brancos cegos; suspenso no ar dentro de um bolsão de água parda.
+    como_se_luta: >-
+      Agarra com os barbilhões e mete a cabeça do alvo na água que carrega; preso, o alvo mal consegue
+      agir. Um golpe pesado na água o derruba no chão seco, onde ele se debate sem ar.
+    related_entities: [na_anel_lama]
+    arte:
+      visual: >-
+        Peixe de fundo enorme, corpo de bagre do tamanho de um homem, sem pele: músculo vermelho-escuro
+        brilhante, com fileiras de placas ósseas amareladas e sobrepostas no dorso e nos flancos. Cabeça
+        achatada e larga, boca de lado a lado, quatro barbilhões grossos como braços, um deles enrolado
+        num pulso humano. Olhos pequenos e brancos. O peixe inteiro está dentro de um bolsão de água parda
+        e turva que flutua no ar sem recipiente, com a borda tremendo e pingando lodo.
+      composicao: >-
+        Viela do Anel de Lama numa noite de chuva, varais com roupa estendida cruzando entre dois
+        barracos; o bolsão com o Bagre pendurado entre os varais, à altura de uma janela, um barbilhão
+        puxando para cima a cabeça de um bêbado de pé na lama, que tem o comprimento do peixe e dá a
+        escala. Lampião amarelo numa porta, chuva fina, verde-oliva e pardo.
+      evitar: Polvo, tentáculos, peixe de desenho, bolha de sabão brilhante, peixe voador com asas. É um bagre real sem pele dentro de água suja que não cai; ele não voa, nada.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_relicario_de_osso
+    vaga: 5
+    nome: Relicário da Catedral
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:81", "lore_nova/locations.txt:14"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: eter_cristalizado
+      escala: grande
+      locomocao: ancorada
+      percepcao: som
+      texto: >-
+        Os Corvos recolhem os mortos da Catedral Afundada, mas não os que caem na nave: a água escura, que ninguém testou, chega antes, e devolve cristalizado: pés, mãos, mandíbulas e costelas de muita gente, presos uns aos outros por um cristal leitoso de veios cor de lodo que cresceu do altar até os bancos, do tamanho de um
+        confessionário. As articulações de cristal estalam ao esfriar. Não tem cabeça; no alto do
+        altar, uma mão de muitos dedos cristalizados se abre e fecha, e das pontas se soltam lascas
+        que voltam a crescer.
+    silhueta: Um altar coberto de uma crosta de cristal que, de perto, é feita de mãos e pés de gente.
+    comportamento: >-
+      Não se move; ouve a água. Quem entra na nave devagar, sem fazer a água bater, passa; quem corre
+      ou cai leva uma lasca de cristal atirada do altar. Os moradores da parte alta chamam de Relicário e dizem que é a Catedral guardando os deles.
+    papel_tatico: artilharia
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_relicario_da_catedral_lasca_de_cristal
+      frase: Atira lascas de cristal que atravessam a fila inteira; cada rodada em que a água em volta dele é agitada, as lascas voltam a crescer.
+    contra_jogo: Atravessar a nave devagar, pela borda seca, e quebrar a mão do alto; ele não foge nem se vira.
+    gancho: >-
+      A Catedral afundou e o interior está metade submerso em água que ninguém testou; os Corvos recolhem os mortos da Catedral, mas não os que caem na nave: a água chega antes.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} fecha a mão de cristal do alto do altar e todas as lascas das pontas se soltam de uma vez."
+    description: Os mortos que os moradores da Catedral Afundada dão à água da nave voltam cristalizados e presos ao altar; uma crosta de mãos e pés de Éter que atira lascas em quem agita a água.
+    perigo: Alto
+    lore: >-
+      A Catedral Afundada tem o interior metade submerso numa água escura que ninguém quis testar. Os
+      leprosos e os rejeitados vivem na parte alta. Os Corvos recolhem os mortos da Catedral, mas não os que caem na nave: a água chega antes, e devolve: pés, mãos, mandíbulas, presos uns aos outros por um cristal leitoso de veios cor de lodo que cresceu do altar até os bancos. Os moradores chamam de Relicário e dizem que é a Catedral guardando os deles.
+      Quem atravessa a nave devagar passa. Quem faz a água bater leva uma lasca. A Legião não entra.
+    aparencia: >-
+      Crosta de cristal leitoso de veios cor de lodo do tamanho de um confessionário crescida do altar da
+      Catedral até os bancos, feita de pés, mãos, mandíbulas e costelas de muita gente cristalizados;
+      sem cabeça, no alto uma mão de muitos dedos que abre e fecha e solta lascas das pontas.
+    como_se_luta: >-
+      Atira lascas que atravessam a fila e as refaz enquanto a água é agitada. Não se move; chegar
+      devagar pela borda seca e quebrar a mão do alto encerra.
+    related_entities: [na_anel_lama]
+    arte:
+      visual: >-
+        Altar de pedra inclinado numa nave inundada, coberto por uma crosta de cristal leitoso, fosco, com veios verde-lodo e um brilho úmido por dentro; dentro do cristal e saindo dele, pés, mãos,
+        maxilares e costelas humanos de tamanhos diferentes, cristalizados em tom de osso sob a cor do
+        Éter; no topo, uma mão feita de uma dúzia de dedos cristalizados, aberta; lascas finas de cristal
+        espetadas nas pontas. Água escura até o joelho ao redor, bancos cobertos pela crosta.
+      composicao: >-
+        Nave da Catedral Afundada, paredes inclinadas, teto meio caído, luz cinza por um vitral quebrado;
+        o Relicário no altar ao fundo brilhando fraco; no primeiro plano um leproso embrulhado em trapos
+        atravessando a água devagar, carregando um corpo pequeno enrolado em trapos. Reflexos na água parada.
+      evitar: "Anjo, auréola, caveira no centro, esqueleto montado. Não há crânio nem figura: é uma crosta de pedaços de gente em cristal."
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_golem_lixo
+    vaga: 26
+    nome: Velório de Sal
+    status: reinventada
+    substitui: enemy_golem_lixo
+    substitui_generico: Golem de Lixo
+    ataques: ["Mão de Sal"]
+    acoes: ["Recua para junto dos leprosos e se ajoelha; não sai da Catedral mesmo ferido.", "Salga quem ameaça os que ele guarda; solta quem para de se mexer."]
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_solvhara
+      refs: ["lore_nova/npcs.txt:244", "lore_nova/locations.txt:81"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: sal_mineral
+      escala: grande
+      locomocao: rasteja
+      percepcao: medo_emocao
+      texto: >-
+        A Tristeza que se senta na Catedral Afundada tomou o que fica quando a água das lágrimas seca:
+        uma figura ajoelhada de crosta de sal, mais alta que uma porta, de costas largas e cabeça
+        baixa, com os braços compridos apoiados no chão e as mãos abertas, brancas e ásperas. O sal
+        cresce em agulhas nos ombros e nos cotovelos. Não tem rosto; onde haveria um, a crosta é lisa
+        e úmida. Por dentro, visível nas rachaduras, há trapos e cabelos. Move-se de joelhos, raspando.
+    silhueta: Uma figura branca ajoelhada no escuro da nave, do tamanho de duas pessoas, que não se levanta.
+    comportamento: >-
+      Fica na parte alta da Catedral entre os leprosos e os guarda do que entra: quem ameaça os que ele vela é coberto de sal pelas mãos abertas, até parar de se mexer e ficar conservado; não se põe na frente de ninguém. Não
+      persegue; volta a se ajoelhar. Sente a tristeza de quem chega e se aproxima mais de quem já
+      desistiu.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_velorio_de_sal_salgar
+      frase: "Cobre o alvo de sal: enquanto a crosta durar, ele não pode ser curado nem trocar de lugar, e perde Fôlego a cada rodada em que não a quebra; o sal conserva."
+    contra_jogo: Água e fogo; a crosta dissolve e racha, e ele não segue quem sai da Catedral.
+    gancho: >-
+      A Tristeza não ataca, senta-se perto; na Catedral Afundada, onde os leprosos e os rejeitados
+      vivem, há quem se sente ao lado deles há mais tempo do que qualquer um, e não os deixa partir.
+    habitat: [na_anel_lama]
+    inspiracao: []
+    padrao: [defesa, mover, enfraquecer, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} levanta as mãos brancas do chão e o sal começa a escorrer dos dedos."
+    description: "Cria da Tristeza na Catedral Afundada: uma figura ajoelhada de crosta de sal, mais alta que uma porta, que cobre de sal quem ameaça os leprosos que vela."
+    perigo: Alto
+    lore: >-
+      A Tristeza não ataca; senta-se perto, e na Catedral Afundada senta-se há mais tempo do que
+      qualquer um. O que sobra dela tomou o que fica quando a água das lágrimas seca: uma figura
+      ajoelhada de crosta de sal, mais alta que uma porta, de cabeça baixa e mãos abertas. Vela os
+      leprosos da parte alta e cobre de sal quem os ameaça, até parar de se mexer; o sal conserva.
+      Os leprosos o chamam pelo nome de quem perderam e não o apresentam a ninguém.
+    aparencia: >-
+      Figura ajoelhada de crosta de sal branca e áspera, mais alta que uma porta, costas largas e
+      cabeça baixa sem rosto, braços compridos apoiados no chão com as mãos abertas, agulhas de sal nos
+      ombros e cotovelos, trapos e cabelos visíveis nas rachaduras; move-se de joelhos, raspando.
+    como_se_luta: >-
+      Cobre o alvo de sal, que o impede de curar e de sair do lugar e lhe tira Fôlego enquanto dura. Água e fogo dissolvem e racham a crosta; ele não segue quem sai da Catedral.
+    related_entities: [na_anel_lama, npc_solvhara]
+    arte:
+      visual: >-
+        Figura humanoide ajoelhada, de dois metros e meio mesmo de joelhos, inteiramente de crosta de sal
+        branca e granulada, com veios cinza; costas largas curvadas, cabeça baixa sem traços, braços
+        longos com as mãos abertas apoiadas no chão; agulhas de sal crescendo nos ombros e cotovelos;
+        nas rachaduras da crosta, trapos escuros e mechas de cabelo. Um rastro branco raspado no piso.
+      composicao: >-
+        Parte alta da Catedral Afundada, piso inclinado, água escura abaixo; três leprosos envoltos em
+        trapos sentados contra a parede, e o Velório ajoelhado diante deles, de costas para a nave, uma
+        mão aberta sobre o ombro de um; luz cinza de um vitral quebrado, o sal como a única coisa branca.
+      evitar: "Golem de pedra, estátua de santo, monstro de lama. Não está de pé e não é lama: é sal branco, ajoelhado, com as mãos abertas."
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_sangrado_da_clinica
+    vaga: 6
+    nome: Sangrado da Clínica
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/rumors.txt:163", "lore_nova/locations.txt:59"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: salta
+      percepcao: sangue_cheiro
+      texto: >-
+        Um doente da Praga de Ferro que uma clínica da Rua das Chaminés tratou sangrando o ferro para
+        fora, lanceta a lanceta, até não sobrar sangue: a pele é branca como papel e coberta de
+        centenas de cortes finos abertos que não fecham e não sangram, em fileiras pelos braços, pelo
+        pescoço e pelas coxas, a carne seca à mostra em cada um. As veias vazias afundaram em sulcos.
+        Pesa metade do que um homem pesa e por isso salta; os joelhos estalam de secos. Os olhos
+        afundados são os dele, e procuram nos outros o que não tem mais.
+    silhueta: Um homem branco e leve demais, agachado no alto de um muro, riscado de cortes como um livro de contas.
+    comportamento: >-
+      Sente sangue a cem passos, porque não tem nenhum, e vai até ele aos saltos pelos muros do Anel
+      de Ferro. É mais rápido do que deveria e bate antes de qualquer um; se alguém o fere, fica uma
+      rodada parado, apertando os cortes abertos. Às vezes fala, para pedir desculpa.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_sangrado_da_clinica_leve_demais
+      frase: Age duas vezes na rodada em que ninguém o feriu; se foi ferido, os cortes abrem e ele perde a segunda ação.
+    contra_jogo: Feri-lo toda rodada, mesmo de raspão; sem o fôlego dos cortes fechados, é um homem seco de pernas trêmulas.
+    gancho: >-
+      Dizem na Rua das Chaminés que pacientes de uma clínica acordam com sensações que não deveriam
+      ter, e que a cura da Praga pela lanceta tira o ferro e leva o resto junto.
+    habitat: [na_anel_ferro]
+    inspiracao: []
+    padrao: [ataque, ataque, mover, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} dobra os joelhos secos e os cortes dos braços se fecham todos ao mesmo tempo."
+    description: Um doente da Praga de Ferro sangrado numa clínica da Rua das Chaminés até não sobrar sangue; branco, leve demais, coberto de cortes abertos, fareja sangue de longe e age antes de todos.
+    perigo: Médio
+    lore: >-
+      Na Rua das Chaminés há clínicas que tratam a Praga de Ferro de quem pode pagar, sangrando o
+      ferro para fora com lancetas. Dizem que alguns pacientes acordam com sensações que não
+      deveriam ter: um jura que sente sangue a cem passos. Os que saem pelos fundos estão brancos como
+      papel, riscados de cortes que não fecham, leves demais, e vão pelos muros baixos atrás do
+      cheiro do que lhes tiraram. Ainda sabem o próprio nome. Pedem desculpa antes de bater.
+    aparencia: >-
+      Homem branco como papel, coberto de centenas de cortes finos abertos que não sangram, em fileiras
+      pelos braços, pescoço e coxas, carne seca à mostra, veias afundadas em sulcos, olhos afundados;
+      leve demais, anda agachado e aos saltos.
+    como_se_luta: >-
+      Age duas vezes enquanto ninguém o fere; ferido, os cortes abrem e ele perde a segunda ação.
+      Feri-lo toda rodada, mesmo de raspão, é o bastante.
+    related_entities: [na_anel_ferro]
+    arte:
+      visual: >-
+        Humano magro e exangue, pele branca de papel, agachado sobre um muro baixo de tijolo; centenas
+        de cortes finos e paralelos de lanceta, abertos e secos, em fileiras regulares pelos braços, pelo
+        pescoço e pelas coxas, mostrando carne escura e seca por dentro; veias afundadas como sulcos;
+        olhos fundos, humanos. Calça de pano de hospital, pés descalços.
+      composicao: >-
+        Beco do Anel de Ferro à noite, fuligem no ar; a criatura no alto de um muro baixo, um lampião
+        abaixo dela e, à altura do lampião, um guarda da Legião de costas que ainda não a viu. Luz
+        quente de baixo iluminando o branco da pele.
+      evitar: "Costuras, parafusos, retalhos, vampiro de capa, sangue escorrendo. Ele não sangra: é seco e branco, riscado como um livro de contas."
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_quebrado_de_vitrine
+    vaga: 16
+    nome: Quebrado de Vitrine
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/factions.txt:155", "lore_nova/factions.txt:161"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um Elfo de estimação de uma casa do Anel Dourado cuja pele, rachada pelo Éter Sujo e tratada
+        com Pó de Fada até não sobrar remédio, encheu as rachaduras de vidro: a pele é de Elfo, cinza
+        e envelhecida, mas cada racha, do rosto aos pés, está preenchida por um veio de vidro leitoso
+        que a luz atravessa. As pontas dos dedos racharam fundo e os veios ali são afiados. A coleira
+        de prata da casa está no pescoço. Senta-se numa cadeira de exposição e só se levanta para
+        cantar; a voz sai como vidro raspando.
+    silhueta: Um Elfo magro sentado numa cadeira de sala, riscado de luz como uma louça rachada vista contra a vela.
+    comportamento: >-
+      Fica sentado onde a casa o exibe e os criados da casa lutam na frente dele. Quando há luz, canta
+      com a voz de vidro, e a luz que entra pelas rachaduras pisca com o canto: quem luta ao lado dele
+      ganha fôlego, quem o olha de frente perde a mira. Só ataca quem chega perto, com as pontas dos
+      dedos, e perde um veio a cada golpe.
+    papel_tatico: suporte
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_quebrado_de_vitrine_cantico_de_vidro
+      frase: "Canta: enquanto a cena tem luz, os outros inimigos recuperam Fôlego no início de cada rodada; o Quebrado nunca recupera."
+    contra_jogo: Apagar a luz ou derrubá-lo primeiro; sentado e sem veios para perder, ele é a peça mais frágil da sala.
+    gancho: >-
+      Os Quebrados compram, uns dos outros, o Pó de Fada que o Anel de Ferro vende sob licença, porque
+      é a única coisa que alivia e é também o que os mata; o que a casa faz com o que sobra fica na
+      cadeira da sala.
+    habitat: [na_anel_dourado]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} ergue o queixo para a vela mais próxima e as rachaduras do rosto começam a piscar."
+    description: Um Elfo de estimação do Anel Dourado com as rachaduras da pele cheias de vidro; sentado na cadeira da sala, canta com voz de vidro e a luz que o atravessa dá fôlego aos outros.
+    perigo: Médio
+    lore: >-
+      As casas do Anel Dourado exibem Elfos de estimação nos jantares, como prova de gosto. O Éter Sujo
+      da cidade envelhece um Elfo mais depressa do que um século deveria, e a pele racha; o Pó de Fada
+      alivia e mata. Quando não sobra remédio, as rachaduras se enchem de vidro leitoso e a casa não o
+      enterra: deixa na cadeira da sala, de coleira, onde sempre esteve. Os outros Quebrados da casa
+      não o tiram de lá. Quando há luz ele canta, com voz de vidro raspando, e os donos acham bonito.
+    aparencia: >-
+      Elfo magro de pele cinza e envelhecida, cada rachadura da pele do rosto aos pés preenchida por um
+      veio de vidro leitoso que a luz atravessa, pontas dos dedos rachadas em veios afiados, coleira de
+      prata da casa no pescoço; sentado numa cadeira de exposição, canta com voz de vidro.
+    como_se_luta: >-
+      Canta e, com luz na cena, os outros inimigos recuperam Fôlego a cada rodada. Apagar a luz ou
+      derrubá-lo primeiro; sentado, é a peça mais frágil da sala.
+    related_entities: [na_anel_dourado]
+    arte:
+      visual: >-
+        Figura élfica magra sentada ereta numa cadeira de espaldar alto, roupa de seda da casa; pele
+        cinza e envelhecida, orelhas longas, rachada em teia fina do rosto aos pés, e cada racha
+        preenchida por um filete de vidro leitoso que brilha com a luz da vela atrás; pontas dos dedos
+        rachadas em lascas; coleira de prata fina com um brasão de casa. Boca aberta num canto.
+      composicao: >-
+        Sala de visitas do Anel Dourado, paredes de obsidiana que não refletem, candelabro aceso atrás
+        da cadeira; o Quebrado sentado, iluminado por trás, os filetes de vidro desenhando a teia; na
+        porta, uma criada com bandeja, da altura do espaldar, de olhos semicerrados. Luz quente de vela.
+      evitar: Estátua de cristal, corpo inteiro de vidro, golem de gelo, elfo heroico. É pele de gente rachada, com vidro só nas rachas, e está sentado.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_gargula_ferro
+    vaga: 25
+    nome: Rã de Lótus
+    status: reinventada
+    substitui: enemy_gargula_ferro
+    substitui_generico: Gárgula de Ferro
+    ataques: ["Mordida Adiantada"]
+    acoes: ["Recua para o tanque dos Jardins quando ferida e espera na água.", "Coaxa antes do golpe e avisa os outros; só morde quem chega ao tanque."]
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:47", "lore_nova/locations.txt:41"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: pequena
+      locomocao: salta
+      percepcao: visao
+      texto: >-
+        Uma rã do tamanho de um gato que vive nos tanques dos Jardins Suspensos e bebeu por gerações a
+        água em que os magos fazem crescer flores que não existem: a pele é lisa e úmida, de cores que
+        não há em nenhum bicho, roxo-azeitona com manchas que mudam. As patas traseiras são longas e
+        grossas; as dianteiras têm dedos com ventosas. Os olhos, dourados, estão sempre meio segundo
+        à frente do corpo: vê-se a rã antes de ela chegar onde está, e ela vê o golpe antes de ele
+        sair.
+    silhueta: Um vulto pequeno nos terraços dos Jardins que se vê onde ainda não está, e um segundo depois está.
+    comportamento: >-
+      Vigia os terraços e os telhados dos Jardins Suspensos e coaxa meio segundo antes de qualquer
+      golpe cair, porque já o viu; os guardas da casa aprenderam a ouvir. Não desce para a rua. Só
+      morde quem chega ao tanque. Quando ferida, volta à água e espera; os nobres dizem que é parte
+      do jardim.
+    papel_tatico: suporte
+    arquetipo: guardiao
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ra_de_lotus_coaxo_adiantado
+      frase: "Coaxa antes do golpe: o primeiro ataque do jogador na rodada é avisado, e o inimigo que ele atinge defende de graça."
+    contra_jogo: Matar a rã primeiro, de perto (ela só vê o golpe, não o impede), ou atacar duas vezes na rodada; o aviso vale só para o primeiro golpe.
+    gancho: >-
+      Os Jardins Suspensos são mantidos por magos que fazem flores crescerem sem sol, de cores que a
+      natureza não produziu; o que bebe dos tanques cresce errado do mesmo jeito.
+    habitat: [na_anel_dourado]
+    inspiracao: []
+    padrao: [reforco_proprio, mover, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} infla a garganta e os olhos dourados já estão olhando para onde o golpe vai cair."
+    description: Rã dos tanques dos Jardins Suspensos, de cores que não existem, cujos olhos estão sempre meio segundo à frente do corpo; coaxa antes de cada golpe cair.
+    perigo: Baixo
+    lore: >-
+      Os Jardins Suspensos da Ilusão são mantidos por magos escravizados que fazem flores crescerem sem
+      sol, de cores que a natureza não produziu. Nos tanques entre as flores vivem rãs que beberam
+      aquela água por gerações: a pele tem cores de bicho nenhum, e os olhos chegam antes do corpo.
+      Coaxam meio segundo antes de qualquer golpe cair nos terraços, porque já o viram, e os guardas
+      da casa aprenderam a ouvir. Os nobres acham que são parte do jardim e mandam contá-las.
+    aparencia: >-
+      Rã do tamanho de um gato, pele lisa e úmida roxo-azeitona com manchas que mudam, patas traseiras
+      longas e grossas, dedos dianteiros com ventosas, olhos dourados que se veem meio segundo antes
+      de o corpo chegar; coaxa antes de o golpe cair.
+    como_se_luta: >-
+      Avisa o primeiro golpe da rodada e quem é atingido defende de graça. Matá-la primeiro, de perto,
+      ou golpear duas vezes; ela vê o golpe, não o impede.
+    related_entities: [na_anel_dourado]
+    arte:
+      visual: >-
+        Rã grande, do tamanho de um gato, pele lisa e brilhante de roxo-azeitona com manchas amarelas e
+        cor-de-vinho que não combinam com nenhum anfíbio real; patas traseiras musculosas, dedos
+        dianteiros com ventosas largas; olhos dourados grandes desenhados um pouco deslocados do corpo,
+        como um fantasma duplo adiante; garganta inflada. Sentada na borda de um tanque de pedra entre
+        flores impossíveis.
+      composicao: >-
+        Terraço dos Jardins Suspensos à noite, flores de cores erradas sob luz de Éter, fumaça da favela
+        ao fundo; a rã na borda do tanque com a garganta inflada, um guarda da casa já virando a cabeça
+        para um jovem ladrão da Quadrilha agachado no parapeito, do tamanho de três rãs. Luz violeta-fosca
+        das flores, obsidiana preta.
+      evitar: Sapo gigante monstruoso, rã de desenho animado, boca cheia de dentes, cuspe. É uma rã real com cores erradas e olhos adiantados.
+    autor: fable
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — só os eixos; texto = description do bestiário =======================
+  - {id: enemy_rato_peste_anel_lama, nome: "Rato da Peste (Anel de Lama)", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: pequena, locomocao: anda, percepcao: sangue_cheiro, texto: "Roedor inchado que se alimenta dos cadáveres jogados no fosso de Nova Arcádia."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: enemy_degolador_mao_sombria, nome: "Degolador da Mão Sombria", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Agente da guilda de assassinos, veste couro preto e máscara de pano."}, papel_tatico: emboscador, arquetipo: tatico, categoria: lacaio}
+  - {id: enemy_soldado_legiao_ferro, nome: "Soldado da Legião de Ferro", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: humana, locomocao: anda, percepcao: visao, texto: "A polícia brutal de Lorde Valerius. Armadura pesada e disciplina rígida."}, papel_tatico: bruto_de_linha, arquetipo: lider_matilha, categoria: elite}
+  - {id: enemy_iniciado_chama_azul, nome: "Iniciado da Chama Azul", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: cinza, escala: humana, locomocao: anda, percepcao: visao, texto: "Fanático com cicatrizes de queimadura auto-infligidas."}, papel_tatico: artilharia, arquetipo: conjurador, categoria: lacaio}
+  - {id: enemy_assassino_cinzeu, nome: "Assassino Cinzéu", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: sal_mineral, escala: humana, locomocao: escala_paredes, percepcao: som, texto: "Humanoide sem olhos dos túneis profundos."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: elite}
+  - {id: enemy_boss_valerius, nome: "Lorde Protetor Valerius", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: humana, locomocao: anda, percepcao: visao, texto: "O Tirano de Nova Arcádia. Mestre espadachim em armadura completa."}, papel_tatico: quebra_defesa, arquetipo: predador_apice, categoria: chefe}
+  - {id: enemy_boss_vibora, nome: "A Víbora (Boss)", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: escala_paredes, percepcao: visao, texto: "Líder da Mão Sombria. Impossível de segurar."}, papel_tatico: controlador, arquetipo: predador_apice, categoria: chefe}
+  - {id: "enemy_garrick,_o_silenciador", nome: "Garrick, o Silenciador", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: som, texto: "Carrasco da Oubliette com túnica de couro escurecido e máscara de madeira sem boca; usa garrote de aço."}, papel_tatico: perseguidor_marca, arquetipo: conjurador, categoria: nomeado}
+  - {id: mon_rato_caldeira, nome: "Rato de Caldeira", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: ferro_ferrugem, escala: pequena, locomocao: escala_paredes, percepcao: calor, texto: "Nidifica sob as caldeiras do Anel de Ferro e mastiga rebites ainda quentes."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: lacaio}
+  - {id: mon_cao_rebite, nome: "Cão de Rebite", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: ferro_ferrugem, escala: pequena, locomocao: anda, percepcao: sangue_cheiro, texto: "Fareja óleo e sangue nas vielas fabris patrulhadas pela Legião de Ferro."}, papel_tatico: perseguidor_marca, arquetipo: predador, categoria: padrao}
+  - {id: mon_automato_fundicao, nome: "Autômato de Fundição", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: grande, locomocao: anda, percepcao: calor, texto: "Um molde de guerra abandonado pelos Encapuzados da Fornalha ainda guarda seu forno."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: elite}
+  - {id: mon_locomotiva_penitente, nome: "Locomotiva Penitente", status: retro, familia: legado, anatomia: {plano_corporal: segmentado, material: ferro_ferrugem, escala: enorme, locomocao: rola, percepcao: calor, texto: "Uma máquina da Legião de Ferro que ganhou fome ao transportar minério abissal."}, papel_tatico: bruto_de_linha, arquetipo: predador_apice, categoria: chefe}

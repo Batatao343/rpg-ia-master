@@ -1,0 +1,102 @@
+# SPEC-349 Etapa 5: mecânica de Ophidia (onda 12). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_nadador_escaldado:
+    cartas:
+      - {n: Soco Escaldante, t: "O punho de pele cozida bate e deixa uma marca vermelha que arde.", e: ["d:marcial:igneo"]}
+      - {n: Abraço de Caldeira, sig: 1, t: "Traz o calor do mar no corpo e a queimadura continua a arder depois do golpe.", e: ["d:marcial:igneo", {kind: dot, dano_base: 2, duracao: 2, dano_tipo: igneo}], fol: 2}
+    aprox: "perde a força a cada rodada fora da água quente e racha -> sem perda por secar"
+  mon_ossada_de_pomes:
+    cartas:
+      - {n: Costela de Pedra, t: "A costela de pedra-pomes bate leve e estala ao primeiro choque.", e: ["d:marcial:perfurante"]}
+      - {n: Assobio na Água, sig: 1, t: "O assobio chega primeiro e a ossada já está em cima, rasgando.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  mon_cabeleira_de_vidro:
+    cartas:
+      - {n: Crina de Vidro, t: "A crina de vidro vulcânico chicoteia rente ao rosto.", e: ["d:versatil:cortante"]}
+      - {n: Crina de Agulhas, sig: 1, t: "O vento desfia a crina em agulhas que caem sobre quem está do lado errado.", e: ["a:3:cortante", {kind: sangria, valor: 1}], fol: 2}
+      - {n: Costas ao Vento, f: cena, t: "Vira de costas para o vento e a crina inteira se abre em leque, tinindo.", e: [{kind: protecao, valor: 6}]}
+    aprox: "quem fica do lado para onde sopra o vento leva os fios toda rodada, sem ele atacar -> dano em área + sangria"
+  mon_vazado_da_mare:
+    cartas:
+      - {n: Borda de Sal, t: "A borda de sal do furo bate seca contra o pulso.", e: ["d:marcial:impactante"]}
+      - {n: Furo que Prende, sig: 1, fol: 2, t: "Põe o corpo furado na frente do outro; a arma passa pelo furo e prende no sal.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: taunt, valor: 2}, {kind: torpor, valor: 1}]}
+  mon_desbotado_da_nevoa:
+    cartas:
+      - {n: Mão de Pão, t: "A mão mole como pão molhado agarra e pesa.", e: ["d:leve:impactante"]}
+      - {n: Tornozelo no Fundo, sig: 1, t: "Deitado no raso segura o tornozelo e pesa como afogado.", e: ["c:enraizado:2", "d:leve:impactante", {kind: torpor, valor: 1}]}
+    aprox: "um segundo herói puxando junto solta o preso na hora -> sem libertação por ajuda"
+  mon_turu_de_casco:
+    cartas:
+      - {n: Conchas Girando, t: "As conchas da cabeça giram contra a madeira e a carne.", e: ["d:marcial:cortante"]}
+      - {n: Broca de Conchas, sig: 1, t: "Fura o escudo e o couro de dentro para fora e a defesa vai embora em lascas.", e: ["d:marcial:cortante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}], fol: 2}
+  mon_vela_sem_barco:
+    cartas:
+      - {n: Cordão de Ferrão, t: "Um cordão de ferrão sobe da água e chicoteia no rosto.", e: ["d:versatil:igneo"]}
+      - {n: Cordões de Brasa, sig: 1, t: "Os cordões caem sobre todos de uma vez e queimam até serem cortados.", e: ["a:3:igneo", "c:enraizado:2"], fol: 3}
+      - {n: Bolsa de Vento, f: cena, t: "A bolsa de gás se enche de vento e a colônia inteira vira contra o vento.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+  mon_lagarto_espirrador:
+    cartas:
+      - {n: Dente de Pedra, t: "O lagarto de rocha morde de lado, rápido.", e: ["d:leve:perfurante"]}
+      - {n: Espirro de Cal, sig: 1, t: "O espirro lança o pó quente de cal e o bando inteiro responde em coro.", e: ["c:cego:1", "d:leve:corrosivo", {kind: buff_acerto, alvo: aliados, valor: 1}]}
+  mon_bucho_de_praia:
+    cartas:
+      - {n: Corpo Mole, t: "O corpo mole e comprido bate de lado como saco molhado.", e: ["d:marcial:impactante"]}
+      - {n: Tripas da Praia, sig: 1, t: "Joga as tripas em quem o feriu e os fios apertam a cada gesto do preso.", e: ["c:enraizado:2", "d:leve:impactante", {kind: torpor, valor: 1}]}
+  mon_cobra_de_sangria:
+    cartas:
+      - {n: Dente Listrado, t: "A cobra listrada morde e solta de volta, sem veneno.", e: ["d:marcial:perfurante"]}
+      - {n: Bolsa Cheia, sig: 1, t: "Puxa o sangue para a bolsa do pescoço e fica mais cheia a cada gole.", e: ["d:leve:perfurante", {kind: cura, alvo: eu, valor: 2}, {kind: sangria, valor: 1}], fol: 2}
+  mon_escorpena_de_basalto:
+    cartas:
+      - {n: Espinho de Basalto, t: "Uma fileira de agulhas sobe da pedra e crava no pé.", e: ["d:marcial:perfurante"]}
+      - {n: Espinho Pisado, sig: 1, t: "O espinho pisado solta um veneno novo a cada vez: sono, febre ou cãibra.", e: ["d:leve:perfurante", {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}, {kind: dot, dano_base: 1, duracao: 3, dano_tipo: corrosivo}], fol: 2}
+    aprox: "cada ferroada sorteia pela semente um efeito diferente entre sono, febre, cãibra e dor contínua, sem repetir seguido -> enfraquecido + dot fixos (sem sorteio nem rotação)"
+  mon_tatuzinho_de_afogado:
+    cartas:
+      - {n: Mordida de Casca, t: "Os tatuzinhos rolam contra o tornozelo e mordem juntos.", e: ["d:marcial:perfurante"]}
+      - {n: Maré de Cascas, sig: 1, t: "A maré de cascas rola atrás do cheiro de sangue e morde quem sangra.", e: ["a:2:perfurante", {kind: marca, valor: 2}]}
+  mon_doente_de_encomenda:
+    cartas:
+      - {n: Torneira de Latão, t: "A torneira do punho espirra um jato de sangue doente.", e: ["d:marcial:corrosivo"]}
+      - {n: Torneira Aberta, sig: 1, t: "Abre as torneiras e o sangue doente atinge de longe e não fecha a ferida.", e: ["d:marcial:corrosivo", {kind: sangria, valor: 2}, {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}], fol: 2}
+    aprox: "o Ferimento causado não fecha enquanto a luta durar -> sangria + enfraquecido"
+  mon_puxado_do_oeste:
+    cartas:
+      - {n: Punho de Agulha, t: "A agulha do peito gira e o punho bate para o lado do mar.", e: ["d:versatil:impactante"]}
+      - {n: Agulha Firme, sig: 1, t: "A agulha aponta o oeste e cada golpe empurra o alvo um passo para a água.", e: ["d:marcial:impactante", {kind: empurrao, valor: 2}, {kind: mover_alvo_zona, direcao: afastar}], fol: 2}
+      - {n: Oeste Puxando, f: cena, t: "A agulha treme e gira um dedo; o corpo inteiro gira junto.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+  mon_vigia_de_cor_errada:
+    cartas:
+      - {n: Cesto de Gávea, t: "Atira da gávea uma pedra que bate no ombro.", e: ["d:marcial:impactante"]}
+      - {n: Grito do Cesto, sig: 1, t: "Aponta e grita do alto e a tripulação inteira acha o alvo.", e: ["d:leve:impactante", {kind: marca, valor: 3}, {kind: buff_acerto, alvo: aliados, valor: 2}]}
+  mon_trepano_de_borda:
+    cartas:
+      - {n: Trépano Girando, t: "O trépano gira e arranca um naco redondo da manga e da carne.", e: ["d:versatil:perfurante"]}
+      - {n: Amostra Etiquetada, sig: 1, t: "Tira uma amostra de carne e osso e o que ele leva não volta com curativo.", e: ["d:marcial:perfurante", {kind: rachadura, valor: 2}, {kind: sangria, valor: 1}], fol: 2}
+      - {n: Frasco Cheio, f: cena, t: "Rolha um frasco cheio de volta no peito e o Éter dele esfria um grau.", e: [{kind: protecao, valor: 5}, {kind: cura, alvo: eu, valor: 2}]}
+    aprox: "baixa a Vitalidade máxima do jogador até o próximo descanso -> rachadura + sangria (o motor não reduz a Vitalidade máxima do jogador)"
+  mon_arpeu_de_bracos:
+    cartas:
+      - {n: Gancho de Dedos, t: "Os dedos em gancho do arpéu sobem pela perna e puxam.", e: ["d:marcial:perfurante"]}
+      - {n: Corda Curta, sig: 1, t: "Crava as quatro mãos e encurta a corda; o preso só pode atacar.", e: ["d:marcial:perfurante", "c:enraizado:2", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+  mon_ninho_dos_mergulhadores:
+    cartas:
+      - {n: Pulmão Apertado, t: "Um pulmão do ninho se contrai e empurra o ar para fora de quem o toca.", e: ["d:versatil:impactante"]}
+      - {n: Largar para Sair, sig: 1, t: "Fecha-se sobre a mão estendida e suga o ar; só solta quem larga o que tem.", e: ["d:marcial:impactante", "c:enraizado:2", {kind: torpor, valor: 1}], fol: 2}
+      - {n: Pulmões Cheios, f: cena, t: "Todos os pulmões incham ao mesmo tempo em torno da pedra no fundo.", e: [{kind: protecao, valor: 5}]}
+    aprox: "o aperto cresce com o valor carregado pelo preso (ouro, relíquia, melhor arma) -> torpor fixo; a escala por carga do motor mede a Carga do próprio ator"
+  mon_mastro_dos_ultimos:
+    cartas:
+      - {n: Braço de Mastro, t: "Os braços agarrados uns nos outros caem juntos sobre quem está embaixo.", e: ["d:pesada:impactante"]}
+      - {n: Queda do Mastro, sig: 1, t: "Cai inteiro sobre um alvo e depois se ergue de novo, corpo por corpo.", e: ["a:3:impactante", "c:enraizado:1"], fol: 3}
+      - {n: Pés de Afogado, t: "Os corpos da base agarram as pernas de quem está perto.", e: ["a:2:impactante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Coluna Refeita, f: cena, t: "Os corpos que subiram de volta refazem a coluna inteira e ela se endireita.", e: [{kind: protecao, valor: 6}, {kind: cura, alvo: eu, valor: 3}]}
+      - {n: Último Mastro, f: cena, t: "O mastro inteiro tomba sobre a linha com todos os braços abertos.", e: ["a:4:impactante", "c:atordoado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_mastro_dos_ultimos_coluna_refeita], padrao: [ataque_multiplo, defesa, reforco_proprio, ataque], narracao: "{nome} refaz a coluna, os corpos de cima agarrados aos de baixo."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_mastro_dos_ultimos_ultimo_mastro], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_mastro_dos_ultimos_ultimo_mastro, a_cada_n: 2, telegrafo: "{nome} balança inteiro e os de cima soltam as mãos todos de uma vez."}, narracao: "{nome} perde a base, mas a coluna que sobra tomba com tudo."}
+    aprox: "cada golpe solta corpos que agarram as pernas e os que sobem refazem o mastro -> pés de afogado + fases"
+  mon_remora_de_conves:
+    cartas:
+      - {n: Palato Humano, t: "O palato humano da rêmora arranha as costas ao grudar.", e: ["d:leve:perfurante"]}
+      - {n: Palato Grudado, sig: 1, t: "Gruda nas costas e passa a tomar o que o hospedeiro ganharia.", e: ["d:leve:perfurante", {kind: purga_condicao, valor: 1}, {kind: cura, alvo: eu, valor: 2}]}
+    aprox: "toda cura, reforço e Fôlego do jogador desviados para ela -> purga_condicao + cura própria (sem desvio de ganhos)"

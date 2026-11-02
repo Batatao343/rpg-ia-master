@@ -1,0 +1,1807 @@
+# SPEC-359 — Ficha de identidade da onda 2: Pântano da Melancolia (spec-filha da SPEC-349, D8).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da SPEC-348 (main be7212f3), mesma convenção da onda 1.
+regiao: pantano_melancolia
+onda: 2
+spec: SPEC-359
+nome_regiao: Pântano da Melancolia
+habitat_nome:
+  pantano_melancolia: Borda do Pântano
+  pm_profundezas: Profundezas
+  pm_cripta_afogada: Cripta dos Afogados
+paleta: >-
+  **Pântano da Melancolia** — pradaria afundada da batalha final contra Malagor: água oleosa que
+  reflete arco-íris sujo, névoa baixa que sabe a ferro e fungo, turfa escura, estacas de medição
+  dos druidas, décadas de armaduras e estandartes da coalizão sob a lama. Luz e paleta: verde-oliva
+  doente, cinza-lodo, névoa leitosa, pontos de Éter azul-pálido; violeta e verde-cobre da podridão
+  bonita nas Profundezas; branco frio de água parada na Cripta.
+familias_em_jogo:            # D10 — mesmos nomes da onda 1 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: guarda_protetor,  arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,     material: cera_sebo,         escala: humana,  locomocao: anda,     percepcao: som,           habitat: [pm_cripta_afogada, pm_profundezas]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: padrao, papel_tatico: controlador,      arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: eter_cristalizado, escala: humana,  locomocao: anda,     percepcao: calor,         habitat: [pantano_melancolia]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: elite,  papel_tatico: bruto_de_linha,   arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: ferro_ferrugem,    escala: humana,  locomocao: anda,     percepcao: sangue_cheiro, habitat: [pm_profundezas, pantano_melancolia]}
+  # --- bestas da entropia ---
+  - {vaga: 5,  familia: besta_entropia,  categoria: padrao, papel_tatico: controlador,      arquetipo: guardiao,              plano_corporal: quadrupede,       material: couro_tecido,      escala: grande,  locomocao: nada,     percepcao: vibracao,      habitat: [pantano_melancolia]}
+  - {vaga: 6,  familia: besta_entropia,  categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: predador,              plano_corporal: hexapode_ou_mais, material: quitina,           escala: humana,  locomocao: anda,     percepcao: vibracao,      habitat: [pantano_melancolia, pm_profundezas]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: padrao, papel_tatico: guarda_protetor,  arquetipo: guardiao,              plano_corporal: quadrupede,       material: sal_mineral,       escala: grande,  locomocao: rasteja,  percepcao: calor,         habitat: [pm_profundezas, pm_cripta_afogada]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: elite,  papel_tatico: artilharia,       arquetipo: emboscador,            plano_corporal: serpentiforme,    material: couro_tecido,      escala: humana,  locomocao: nada,     percepcao: visao,         habitat: [pm_profundezas, pm_cripta_afogada]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: elite,  papel_tatico: tanque_reativo,   arquetipo: guardiao,              plano_corporal: hexapode_ou_mais, material: carne_exposta,     escala: grande,  locomocao: nada,     percepcao: vibracao,      habitat: [pm_profundezas]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: drenador,         arquetipo: predador,              plano_corporal: quadrupede,       material: carne_exposta,     escala: pequena, locomocao: anda,     percepcao: sangue_cheiro,         habitat: [pantano_melancolia]}
+  - {vaga: 11, familia: besta_entropia,  categoria: chefe,  papel_tatico: controlador,      arquetipo: predador_apice,        plano_corporal: segmentado,       material: lama_turfa,        escala: enorme,  locomocao: rasteja,  percepcao: vibracao,      habitat: [pantano_melancolia]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: elite,  papel_tatico: saqueador,        arquetipo: tatico,                plano_corporal: bipede_ereto,     material: osso,              escala: humana,  locomocao: anda,     percepcao: eter,          habitat: [pantano_melancolia]}
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: drenador,         arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: anda,     percepcao: eter,          habitat: [pantano_melancolia, pm_profundezas]}
+  - {vaga: 14, familia: humanoide_preco, categoria: lacaio, papel_tatico: sacrificial,      arquetipo: covarde_oportunista,   plano_corporal: bipede_ereto,     material: vidro_cristal,     escala: humana,  locomocao: anda,     percepcao: luz,           habitat: [pantano_melancolia]}
+  - {vaga: 15, familia: humanoide_preco, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: emboscador,           plano_corporal: bipede_ereto,     material: carne_exposta,     escala: humana,  locomocao: nada,     percepcao: sangue_cheiro, habitat: [pm_profundezas, pantano_melancolia]}
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,          arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: sal_mineral,       escala: humana,  locomocao: anda,     percepcao: vibracao,      habitat: [pantano_melancolia]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_solvhara},  categoria: elite,  papel_tatico: controlador,    arquetipo: tatico,              plano_corporal: sessil_ancorado,  material: lama_turfa,    escala: grande,  locomocao: ancorada, percepcao: medo_emocao, habitat: [pantano_melancolia, pm_profundezas]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_skarath},   categoria: padrao, papel_tatico: emboscador,     arquetipo: tatico,              plano_corporal: serpentiforme,    material: carne_exposta, escala: humana,  locomocao: rasteja,  percepcao: calor,       habitat: [pantano_melancolia]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_veleth},    categoria: padrao, papel_tatico: quebra_defesa,  arquetipo: covarde_oportunista, plano_corporal: bipede_ereto,     material: carne_exposta, escala: humana,  locomocao: anda,     percepcao: medo_emocao, habitat: [pantano_melancolia]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_morvath},   categoria: elite,  papel_tatico: quebra_defesa,  arquetipo: predador,            plano_corporal: alado,            material: couro_tecido,  escala: grande,  locomocao: nada,     percepcao: visao,       habitat: [pm_profundezas]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_thessavar}, categoria: lacaio, papel_tatico: suporte,        arquetipo: tatico,              plano_corporal: radial,           material: couro_tecido,  escala: humana,  locomocao: nada,     percepcao: vibracao,    habitat: [pm_profundezas, pm_cripta_afogada]}
+  - {vaga: 4,  familia: demonio_encarnado, origem_lore: {detalhe: npc_daruun},    categoria: lacaio, papel_tatico: saqueador,      arquetipo: covarde_oportunista, plano_corporal: hexapode_ou_mais, material: carne_exposta, escala: humana,  locomocao: anda,     percepcao: som,         habitat: [pm_profundezas]}
+  # --- slot genérico reinventado (R24; não conta nas 20–25) ---
+  - {vaga: 22, slot: enemy_zumbi_blindado, status: reinventada, familia: corpo_reescrito, categoria: lacaio, papel_tatico: tanque_reativo, arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado, material: couro_tecido, escala: humana, locomocao: rasteja, percepcao: respiracao, habitat: [pantano_melancolia, pm_profundezas]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_estaqueiro_afogado
+    vaga: 1
+    nome: Estaqueiro Afogado
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["data/world_map.json:873", "lore_nova/locations.txt:111"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cera_sebo
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um afogado que passou anos em pé na água fria da Cripta: a gordura do corpo virou cera de
+        cadáver, branca e granulosa, que endureceu a pele do rosto e das mãos como sebo de vela frio.
+        As pálpebras incharam e fecharam lisas sobre os olhos. Uma tira de couro está atada ao pulso e
+        afundou na carne até o osso, e a mão direita não larga uma estaca de madeira escura, gasta na
+        ponta de tanto ser fincada. A roupa que veste já foi de alguma cor e hoje é da cor da água.
+    silhueta: Um vulto em pé debaixo da água, atrás de uma fileira de bastões fincados até a altura do peito.
+    comportamento: >-
+      Fica na Cripta dos Afogados, enfileirado com os outros, voltado para a porta. Quando alguém
+      entra, finca estacas na lama, uma ao lado da outra, até fechar a passagem. Não persegue além
+      da fileira; quem tenta passar por ela apanha.
+    papel_tatico: guarda_protetor
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_estaqueiro_afogado_fileira_de_estacas
+      frase: >-
+        Finca uma fileira de estacas na frente dos outros afogados: quem a atravessa para alcançá-los
+        leva o golpe da estaca; quem luta com ele do lado de cá, não.
+    contra_jogo: Arrancar as estacas da fileira, uma por vez, ou derrubá-lo primeiro; sem a fileira, os de trás ficam ao alcance.
+    gancho: >-
+      Os afogados da Cripta não vagam como os do resto do Pântano: esperam em fila, voltados para a
+      porta, e o que os mantém ali parece ter sido feito, não ter acontecido.
+    habitat: [pm_cripta_afogada, pm_profundezas]
+    inspiracao:
+      - fonte: medicina legal (adipocera)
+        referencia: "adipocera, a cera de cadáver que se forma em corpos mantidos em água fria e sem ar"
+        tomou: a pele de cera branca e granulosa de quem ficou anos na água parada
+        distancia: só o material do corpo; o comportamento (fincar, guardar a porta) vem da Cripta, não de nenhuma obra
+    padrao: [defesa, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} finca mais uma estaca na lama, rente à anterior, sem virar o rosto da porta."
+    description: Um afogado de pele de cera branca que guarda a porta da Cripta dos Afogados atrás de uma fileira de estacas.
+    perigo: Médio
+    lore: >-
+      Os afogados da Cripta dos Afogados não são os de Aethelgard e não vagam como os do resto do
+      Pântano, atraídos pelo calor de quem respira. Ficam em fila, voltados para a porta. O da frente
+      tem uma tira de couro atada ao pulso e uma estaca na mão, e quando alguém desce ele finca
+      estacas, uma rente à outra, com o cuidado de quem faz isso há muito tempo. Quem tenta passar
+      apanha. Os que voltaram da Cripta dizem que eles esperam como quem foi posto ali.
+    aparencia: >-
+      Afogado em pé, de roupa desbotada da cor da água, pele de cera de cadáver branca e granulosa no
+      rosto e nas mãos, pálpebras inchadas e fechadas, tira de couro afundada no pulso até o osso, uma
+      estaca de madeira escura na mão.
+    como_se_luta: >-
+      Finca uma fileira de estacas diante dos outros afogados e golpeia quem a atravessa. Arrancar as
+      estacas, ou derrubá-lo primeiro, abre caminho para os de trás.
+    related_entities: [pm_cripta_afogada, pm_profundezas]
+    arte:
+      visual: >-
+        Humano adulto afogado, de pé, em roupas simples de tecido grosso desbotadas até o cinza-esverdeado
+        da água, sem insígnia. Pele do rosto e das mãos em adipocera: branca, cerosa, granulosa, com
+        rachaduras finas como sebo frio. Pálpebras inchadas, lisas, fechadas. Uma tira de couro atada ao
+        pulso esquerdo, afundada na carne; na mão direita uma estaca de madeira escura de um metro, ponta
+        gasta. Água até a cintura.
+      composicao: >-
+        Interior da Cripta dos Afogados, alagada até a cintura: fila de vultos voltados para a porta ao
+        fundo, desfocados; em primeiro plano o Estaqueiro atrás de uma fileira de estacas fincadas na lama;
+        um saqueador com lanterna parado na soleira, do tamanho do Estaqueiro, dá a escala. Luz branca
+        fria refletida na água, um ponto azul-pálido de Éter.
+      evitar: Zumbi de pele verde, esqueleto de armadura, fantasma translúcido, manto de monge. É carne que virou cera, não osso nem névoa; e não é um soldado.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_romeiro_de_ambar
+    vaga: 2
+    nome: Romeiro de Âmbar
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:400", "lore_nova/locations.txt:114"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um doente da Ferrugem do Sangue que bebe o chá dos druidas há vinte anos: o ferro das veias e o
+        Éter do chá viraram uma seiva grossa cor de âmbar que escorre pelos poros e endurece ao ar. O
+        corpo está coberto de placas dessa resina, translúcidas, sobre a carne viva e vermelha que ficou
+        por baixo; dentro delas há mosquitos, sementes e uma unha que não é dele. As juntas dos joelhos e
+        dos cotovelos racham a cada passo e se fecham de novo. A boca é uma fenda na resina, sempre
+        úmida de chá.
+    silhueta: Um homem curvado que brilha cor de mel contra a luz baixa, como um vidro de compota com alguém dentro.
+    comportamento: >-
+      Vive nas tendas da borda onde os druidas vendem o chá, e vai atrás de quem carrega ervas ou
+      chá. Sente o calor de um corpo a dez passos e se aproxima devagar, escorrendo; quando alcança,
+      aperta as placas e a resina quente corre para o chão.
+    papel_tatico: controlador
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_romeiro_de_ambar_resina_que_prende
+      frase: >-
+        Espreme a resina das placas sobre os pés do alvo: o âmbar endurece na hora e o alvo não troca de
+        lugar nem recua até quebrá-lo com um golpe.
+    contra_jogo: Pancada quebra o âmbar, nos pés e nele; fogo amolece a resina, e as placas dele escorrem antes das de quem ficou preso.
+    gancho: >-
+      O chá do Ciclo Cinzento retarda a Ferrugem do Sangue e não a cura; quem vive de chá na borda do
+      Pântano vive muito, e não do jeito que pediu.
+    habitat: [pantano_melancolia]
+    inspiracao:
+      - fonte: história natural (âmbar)
+        referencia: "âmbar báltico com insetos presos na resina fossilizada"
+        tomou: placas translúcidas com mosquitos e sementes presos dentro
+        distancia: a resina sai do sangue de um doente da Praga de Ferro tratado com chá de Éter; é um homem vivo, não fóssil
+    padrao: [enfraquecer, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} aperta as placas do peito e a resina começa a correr, cor de chá."
+    description: Um doente da Ferrugem do Sangue que vive de chá na borda do Pântano, coberto de placas de resina cor de âmbar sobre a carne viva.
+    perigo: Médio
+    lore: >-
+      O chá dos druidas atenua a Ferrugem do Sangue porque dilui o Abismo no sangue; não cura, só
+      retarda. Na borda do Pântano há quem o beba há vinte anos e não tenha morrido. Nesses, o ferro e
+      o Éter fizeram uma seiva que escorre pelos poros e endurece em placas cor de mel. O Romeiro vive
+      perto das tendas, sempre com sede, e segue quem carrega ervas. Os druidas lhe vendem chá barato
+      para ele ir embora; ele vai, e volta.
+    aparencia: >-
+      Homem curvado coberto de placas de resina translúcida cor de âmbar sobre a carne viva e vermelha,
+      mosquitos e sementes presos nas placas, juntas que racham e se fecham a cada passo, boca como uma
+      fenda úmida na resina.
+    como_se_luta: >-
+      Escorre resina sobre os pés de quem chega perto e o prende no lugar. Pancada quebra o âmbar,
+      nele e no chão, e o fogo faz as placas dele escorrerem.
+    related_entities: [pantano_melancolia, druidas_ciclo_cinzento]
+    arte:
+      visual: >-
+        Homem magro e curvado, nu da cintura para cima, o corpo inteiro coberto de placas irregulares de
+        resina âmbar translúcida, grossas como vidro de garrafa, através das quais se vê músculo vermelho
+        e úmido; dentro das placas, mosquitos, sementes, uma unha. Juntas dos cotovelos e joelhos com
+        rachaduras novas brilhando. Rosto quase todo encoberto pela resina, boca como fenda. Uma caneca de
+        latão amarrada ao cinto.
+      composicao: >-
+        Borda do Pântano ao entardecer, tenda de lona dos druidas com ervas penduradas ao fundo; o
+        Romeiro avança para um viajante que segura um saco de ervas, da mesma altura que ele, e a resina
+        escorre das placas para a lama em fios brilhantes. Luz baixa atravessando as placas, que acendem
+        cor de mel; resto em cinza-lodo.
+      evitar: Golem de cristal, homem de vidro brilhante, criatura de fogo. É resina opaca nas bordas sobre carne viva; brilha só contra a luz.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_banhado_do_centro
+    vaga: 3
+    nome: Banhado do Centro
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:390", "lore_nova/timeline_completa.txt:336"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um velho que lutou no centro da batalha final e foi banhado no que escorria de Malagor: a pele
+        nunca mineralizou como na Ferrugem dos outros; em vez disso, ele sua ferrugem. Um suor negro e
+        grosso, que cheira a sangue velho, escorre sem parar dos poros do pescoço, do peito e dos braços e
+        mancha tudo o que ele toca. As veias aparecem pretas sob a pele cinzenta e úmida, e as unhas
+        caíram, deixando os dedos de ponta escura. As mãos são enormes; os olhos, de velho, claros e
+        molhados.
+    silhueta: Um velho largo e curvado, molhado de preto como quem saiu de um poço de piche, deixando pegadas escuras.
+    comportamento: >-
+      Mora nas Profundezas, onde o Éter parado faz a ferrugem dele andar devagar, e guarda o trecho de
+      lama em que caíram os da sua linha. Quem vem tirar armadura do fundo ele enfrenta de frente, e a
+      arma que o fere sai dele enferrujando.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_banhado_do_centro_suor_de_ferrugem
+      frase: >-
+        O suor negro sobe pela lâmina de quem o fere: a arma que o tocou fica enferrujada e cada ataque
+        seguinte com ela tira menos, até ser limpa num descanso.
+    contra_jogo: Feri-lo com o que não enferruja (pedra, osso, pau, fogo) ou trocar de arma a cada golpe; quem insiste na mesma lâmina acaba batendo com ferrugem.
+    gancho: >-
+      Os primeiros banhados no sangue de Malagor morreram em quinze anos; um ou outro não morreu, e o
+      único lugar em que a ferrugem dele anda devagar é o Éter parado do Pântano.
+    habitat: [pm_profundezas, pantano_melancolia]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} passa as mãos pretas pelo peito encharcado e as estende, pingando, para a sua lâmina."
+    description: Um veterano da batalha final banhado no sangue de Malagor, que sua uma ferrugem negra e enferruja a arma de quem o fere.
+    perigo: Alto
+    lore: >-
+      Os soldados do centro da batalha final foram banhados no que escorria de Malagor, e a maioria
+      morreu da Ferrugem nos quinze anos seguintes. Alguns não morreram. Neles a ferrugem não endurece
+      a carne: sai pelos poros como suor negro, e enferruja o que toca. O Banhado do Centro vive nas
+      Profundezas porque ali ela anda devagar, e guarda a lama onde caíram os da linha dele. Os
+      saqueadores o chamam de velho e levam pás de pau; os que levam espada voltam com ela vermelha.
+    aparencia: >-
+      Velho largo e curvado, pele cinzenta encharcada de um suor negro e grosso de ferrugem que escorre
+      do pescoço, do peito e dos braços, veias pretas aparentes, dedos sem unhas de ponta escura, mãos
+      enormes, olhos claros e molhados.
+    como_se_luta: >-
+      O suor negro enferruja a arma de quem o fere, e cada golpe seguinte com ela vale menos até o
+      descanso. Use pedra, osso, pau ou fogo, ou troque de arma.
+    related_entities: [pm_profundezas, pantano_melancolia]
+    arte:
+      visual: >-
+        Homem muito velho, largo de ombros, curvado, com restos de uma túnica de soldado de outra era
+        amarrados na cintura. Pele cinzenta lisa e encharcada de um suor preto, espesso como óleo, que
+        escorre em fios do pescoço, do peito e dos braços e pinga das pontas dos dedos sem unhas; veias
+        pretas sob a pele. Mãos enormes. Barba rala branca manchada de preto, olhos azuis aguados.
+      composicao: >-
+        Profundezas do Pântano, lama até as canelas, cabos de lança e elmos enferrujados saindo da água
+        atrás dele como uma cerca; um saqueador, da altura do ombro do Banhado, olha a própria espada
+        ficando vermelha de ferrugem onde tocou o velho. Névoa baixa, luz cinza de meio-dia nublado,
+        poça preta em volta dos pés dele.
+      evitar: Placas, crosta ou escamas de ferrugem; cavaleiro negro de armadura, demônio de lava, criatura de piche. É um velho vivo e úmido; nada brilha nem arde.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_castor_de_estacas
+    vaga: 5
+    nome: Castor de Estacas
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:111", "lore_nova/factions.txt:484"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Um castor do tamanho de um bezerro, de pelo empapado de lama e piche, eriçado de lascas de
+        madeira que entraram na pele e não saíram. Os incisivos são duas lâminas laranja-escuras,
+        compridas como a mão de um homem, e roem madeira tratada como se fosse junco. A cauda é chata e
+        larga como uma pá, coberta de escamas grossas e rachadas, e bate na água com um estalo que se
+        ouve na borda inteira. As patas da frente têm dedos quase humanos, que encaixam estaca em estaca
+        e osso em osso.
+    silhueta: Um bicho atarracado em cima de um amontoado de estacas e ossos, com uma cauda de pá erguida.
+    comportamento: >-
+      Rói as estacas que os druidas fincam para medir a borda e as dos postos, e com elas e com os
+      ossos do fundo ergue represas. A água que ele represa sobe e não desce, nem quando a represa fica
+      acima do nível do Pântano, e o Pântano avança atrás dela. Defende a represa como se fosse a toca.
+    papel_tatico: controlador
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_castor_de_estacas_represa
+      frase: >-
+        Ergue a represa no meio da luta: a cena fica partida em dois lados e o jogador só alcança um
+        deles por rodada, porque a água represada não desce.
+    contra_jogo: Derrubar uma estaca da represa a desfaz; ele larga tudo para consertar, e é aí que fica de costas.
+    gancho: >-
+      Os druidas fincam estacas novas na borda para medir quanto o Pântano avançou, e alguém as arranca;
+      os Renegados levam a culpa, e às vezes é deles.
+    habitat: [pantano_melancolia]
+    inspiracao:
+      - fonte: história natural (castor)
+        referencia: "castores (Castor fiber) que represam rios e alagam vales inteiros"
+        tomou: a represa que muda o terreno e a cauda que bate na água como aviso
+        distancia: a água represada pelo Éter não obedece ao nível; ele rói as estacas de medição dos druidas e o Pântano cresce atrás dele
+    padrao: [reforco_proprio, defesa, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} bate a cauda chata na água duas vezes e começa a arrastar estacas."
+    description: Um castor do tamanho de um bezerro que rói as estacas de medição dos druidas e ergue represas de estaca e osso onde a água sobe e não desce.
+    perigo: Médio
+    lore: >-
+      Os druidas do Ciclo Cinzento medem a borda com estacas para saber quanto o Pântano avançou, e
+      todo ano algumas somem. A culpa vai para os Renegados, que de fato sabotam as estacas; mas nas
+      margens há represas feitas delas, com ossos do fundo encaixados entre uma e outra. O Castor de
+      Estacas as rói à noite. A água que ele represa sobe e fica, mesmo acima do nível, e o Pântano
+      anda atrás dela. Irmão Ceslo diz que não odeia o bicho; só gostaria que ele roesse outra coisa.
+    aparencia: >-
+      Castor do tamanho de um bezerro, pelo empapado de lama e piche eriçado de lascas de madeira,
+      incisivos laranja-escuros longos como uma mão, cauda chata de escamas grossas rachadas, patas da
+      frente de dedos quase humanos.
+    como_se_luta: >-
+      Ergue uma represa que parte a luta em dois lados, e só se alcança um por vez. Derrubar uma estaca
+      a desfaz, e ele dá as costas para consertá-la.
+    related_entities: [pantano_melancolia, druidas_ciclo_cinzento]
+    arte:
+      visual: >-
+        Castor enorme, do tamanho de um bezerro, pelo marrom-escuro empapado de lama e piche, espetado de
+        lascas e farpas de madeira saindo da pele; incisivos laranja-ferrugem, compridos, curvos; cauda
+        larga e chata de escamas cinzentas rachadas; patas da frente com dedos longos e ágeis segurando
+        uma estaca de medição com fita. Sentado em cima de uma represa de estacas pintadas e ossos longos.
+      composicao: >-
+        Margem do Pântano em névoa baixa; a represa atravessa um canal e a água do lado de dentro está um
+        palmo acima da de fora, lisa, parada contra o ar; um druida de túnica cinza com um maço de
+        estacas novas no ombro, a três passos, dá a escala. Luz verde-oliva, reflexos de óleo na água.
+      evitar: Castor fofo de desenho animado, castor gigante pré-histórico de documentário. É um bicho de lama com dentes de lâmina; o estranho é a água parada acima do nível.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_patinador_de_oleo
+    vaga: 6
+    nome: Patinador de Óleo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:586", "lore_nova/locations.txt:104"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um inseto de corpo estreito do comprimento de um antebraço sobre seis pernas finas e compridas
+        como varas de junco, as quatro de trás tão abertas que ocupa o espaço de uma carroça. As pontas
+        das pernas não furam a água: a película oleosa do Pântano, grossa de Éter, segura o peso dele
+        como uma pele esticada. As pernas da frente são curtas e dobradas em gancho, com espinhos na face
+        de dentro, e a boca é um estilete que fura e chupa. Os olhos são duas contas escuras grandes
+        demais para a cabeça.
+    silhueta: Um risco escuro parado sobre a água com seis varas abertas em volta, como um compasso aberto que não afunda.
+    comportamento: >-
+      Corre sobre as poças largas como sobre um assoalho, sentindo pelas pontas das pernas cada
+      tremor da película. Vem de longe, crava as pernas de gancho, fura, e está de novo do outro lado da
+      poça antes que a vítima se vire. Foge de água agitada, que não o segura.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_patinador_de_oleo_furar_e_voltar
+      frase: >-
+        Corre sobre a película da água como sobre chão: ataca e volta para longe na mesma rodada, e só
+        quem atira de longe o alcança antes que ele volte.
+    contra_jogo: Agitar a água; a película quebrada não o segura, e ele cai e se debate como qualquer inseto molhado.
+    gancho: >-
+      No Pântano a água não se comporta: o óleo e o Éter fazem da superfície uma pele, e o que aprendeu
+      a andar nela caça o que afunda.
+    habitat: [pantano_melancolia, pm_profundezas]
+    inspiracao:
+      - fonte: história natural (insetos patinadores)
+        referencia: "Gerridae, insetos que andam sobre a água pela tensão superficial"
+        tomou: as pernas longas abertas e o andar sobre a película
+        distancia: o inseto real é miúdo; aqui é a película de óleo e Éter que sustenta um caçador do tamanho de uma carroça
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} afunda as quatro pernas compridas na película e a água inteira se curva sob ele."
+    description: Um inseto de pernas de junco que corre sobre a película de óleo do Pântano como sobre chão e caça o que afunda.
+    perigo: Baixo
+    lore: >-
+      A água do Pântano é grossa de óleo e de Éter, e nas poças largas a superfície fica tensa como
+      couro de tambor. Os Patinadores de Óleo correm por cima. São magros, de seis pernas compridas, e
+      sentem pelas pontas delas o tremor de quem entra na água. Furam e voltam antes do grito. Os
+      Coletores atravessam as poças batendo a água com varas, porque água agitada não segura o bicho.
+    aparencia: >-
+      Inseto de corpo estreito do comprimento de um antebraço sobre seis pernas finas como varas de
+      junco abertas na largura de uma carroça, pernas da frente curtas em gancho com espinhos, boca de
+      estilete, olhos de conta grandes demais.
+    como_se_luta: >-
+      Ataca e volta para longe na mesma rodada, sobre a água; só o alcança quem ataca de longe.
+      Água agitada quebra a película e o derruba.
+    related_entities: [pantano_melancolia, pm_profundezas]
+    arte:
+      visual: >-
+        Inseto aquático gigante, corpo fino e escuro de quitina fosca, pouco mais longo que um antebraço,
+        sobre seis pernas finíssimas e muito longas, abertas em leque por três metros; onde as pontas tocam
+        a água, a película oleosa afunda em covinhas iridescentes sem romper. Pernas da frente curtas,
+        dobradas em gancho, com espinhos. Olhos esféricos escuros, enormes.
+      composicao: >-
+        Poça larga e lisa do Pântano, superfície espelhada de óleo; o Patinador parado no centro, as
+        covinhas das pernas refletindo a névoa; um Coletor na margem com uma vara erguida para bater na
+        água, do tamanho de uma das pernas, dá a escala. Luz difusa de névoa, verde-oliva e prata.
+      evitar: Aranha gigante, mosquito, inseto de ficção científica. É magro e quase invisível; o que se vê primeiro são as covinhas na água.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cagado_de_geada
+    vaga: 7
+    nome: Cágado de Geada
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:116", "lore_nova/timeline_completa.txt:408"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: sal_mineral
+      escala: grande
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Um cágado de água com o casco do tamanho de uma mesa de taverna, coberto de uma crosta de geada
+        salobra que não derrete nem no verão; a água que encosta nele vira agulhas brancas e cai. A
+        cabeça é grande demais para o casco, com um bico de osso em gancho e uma mandíbula que fecha com o
+        estalo de uma armadilha. A pele do pescoço e das patas é cinza-azulada, grossa, rachada de frio, e
+        as garras raspam a lama como pás.
+    silhueta: Uma pedra larga e branca de geada na beira de um poço escuro, com uma cabeça grande demais saindo de baixo.
+    comportamento: >-
+      Deita na beira dos poços mais fundos das Profundezas, onde o espólio é bom, e fica imóvel como
+      pedra. Sente o calor de quem se debruça e morde; a mordida não solta e o frio sobe por ela. Não
+      sai da beira do poço que escolheu.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cagado_de_geada_mordida_que_gela
+      frase: >-
+        Morde quem avança sobre o poço e a geada sobe pela mordida: o alvo mordido não joga Carta de
+        ataque na rodada seguinte, e ninguém passa por ele até soltar.
+    contra_jogo: Calor. Fogo perto da cabeça o faz soltar e recolher; e nunca se debruçar no poço que ele guarda pela frente.
+    gancho: >-
+      Nas poças mais fundas a água é mais fria que qualquer inverno de Nova Arcádia; os Coletores dizem
+      que o Éter parado bebe o calor como bebe a vontade, e que algumas coisas aprenderam a beber junto.
+    habitat: [pm_profundezas, pm_cripta_afogada]
+    inspiracao:
+      - fonte: história natural (tartaruga-aligátor)
+        referencia: "Macrochelys temminckii, tartaruga de bico em gancho que espera imóvel no fundo"
+        tomou: o bico em gancho, a cabeça grande e a mordida que não solta
+        distancia: sem a língua-isca (o Pântano já tem luzes traiçoeiras demais); o frio sem inverno é a física torta do Éter
+    padrao: [defesa, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre a boca devagar e o hálito dele embranquece a água em volta."
+    description: Um cágado de casco coberto de geada que não derrete, que guarda a beira dos poços fundos e morde com uma mordida que gela.
+    perigo: Médio
+    lore: >-
+      O Éter parado das Profundezas dissolve o que encontra, e começa pela vontade de quem se aproxima;
+      em alguns poços, dissolve também o calor. A água ali é mais fria que qualquer inverno. Na beira
+      desses poços deitam os Cágados de Geada, de casco branco de uma geada salobra que não derrete no
+      verão. Ficam imóveis como pedra até alguém se debruçar atrás do espólio. A mordida não solta, e o
+      frio sobe pelo braço. Os Saqueadores carregam brasa num pote só por causa deles.
+    aparencia: >-
+      Cágado de casco do tamanho de uma mesa coberto de crosta de geada salobra, agulhas de gelo caindo
+      onde a água encosta, cabeça grande demais com bico de osso em gancho, pele cinza-azulada rachada
+      de frio, garras como pás.
+    como_se_luta: >-
+      Morde e não solta, e o frio impede o mordido de atacar e de passar. Fogo perto da cabeça o faz
+      recolher; nunca se debruce no poço dele pela frente.
+    related_entities: [pm_profundezas, pm_cripta_afogada]
+    arte:
+      visual: >-
+        Cágado de água enorme, casco abaulado de um metro e meio, coberto de uma crosta branca e
+        cristalina de geada salobra, com agulhas de gelo pendendo das bordas; cabeça desproporcional,
+        larga, com bico de osso em gancho entreaberto e hálito visível; pele grossa cinza-azulada
+        rachada como lama seca no pescoço e nas patas; garras pretas.
+      composicao: >-
+        Beira de um poço escuro nas Profundezas, água preta e lisa, um cabo de espada saindo dela; o
+        Cágado parece uma pedra branca na margem enquanto um saqueador se debruça com um gancho, a cabeça
+        do bicho já saindo de baixo, do tamanho do tronco do homem. Névoa, luz fria azulada, gelo no
+        meio do verde-oliva.
+      evitar: Tartaruga-ilha com ruínas no casco, tartaruga dragão, gelo azul brilhante de fantasia. A geada é suja e salobra; o susto é a cabeça grande demais.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fundeiro_da_poca
+    vaga: 8
+    nome: Fundeiro da Poça
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:586", "lore_nova/creatures.txt:719"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: humana
+      locomocao: nada
+      percepcao: visao
+      texto: >-
+        Um peixe do tamanho de um homem, de corpo alto e achatado dos lados, coberto de escamas grossas
+        cor de lodo com uma faixa de óleo iridescente no dorso. A boca é um tubo virado para cima, de
+        lábios duros como chifre, e a língua faz uma calha contra o céu da boca. Os olhos ficam altos na
+        cabeça, grandes, e acertam o alvo através da água torta como se ela fosse reta. As guelras incham
+        antes do jato e o peito estufa.
+    silhueta: Um peixe largo parado logo abaixo da superfície, com um tubo de boca apontado para fora da água.
+    comportamento: >-
+      Vive nas poças fundas das Profundezas e da Cripta, imóvel sob a superfície. Quando vê alguém na
+      margem, enche as guelras e cospe: a água oleosa do Pântano sai do tubo dura como pedra e só se
+      desfaz depois de bater. Derruba, espera afundar e come.
+    papel_tatico: artilharia
+    arquetipo: emboscador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fundeiro_da_poca_jato_de_pedra
+      frase: >-
+        Cospe do fundo um jato de água oleosa que bate como pedra: fere de longe e arranca da mão do
+        alvo a Carta de defesa preparada, que afunda.
+    contra_jogo: Sair da linha da poça; ele só cospe para cima e para a frente, e de lado, na margem rasa, não alcança nem enxerga.
+    gancho: >-
+      O óleo e o Éter engrossam a água do Pântano; um peixe que derrubava insetos com jatos de água
+      aprendeu, nela, a derrubar gente.
+    habitat: [pm_profundezas, pm_cripta_afogada]
+    inspiracao:
+      - fonte: história natural (peixe-arqueiro)
+        referencia: "Toxotes, peixe que derruba insetos com jatos de água corrigindo a refração"
+        tomou: a boca em tubo, os olhos altos que corrigem a água torta e o jato
+        distancia: tamanho humano; o jato vira pedra pela água grossa de Éter; vive em poça doce de óleo
+    padrao: [ataque, enfraquecer, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} sobe até a beira da poça e o tubo da boca aponta para fora da água."
+    description: Um peixe do tamanho de um homem que cospe, das poças fundas, jatos de água oleosa duros como pedra.
+    perigo: Alto
+    lore: >-
+      A água das poças fundas é grossa de óleo e de Éter. Nela, o Fundeiro da Poça, um peixe largo de
+      boca em tubo, cospe jatos que saem duros como pedra e só voltam a ser água depois de bater. Ele
+      vê através da superfície torta como se fosse vidro reto. Derruba quem está na margem, espera
+      afundar e come. Os Coletores andam de lado na beira das poças, porque de lado ele não enxerga.
+    aparencia: >-
+      Peixe do tamanho de um homem, corpo alto e achatado de escamas grossas cor de lodo com faixa de
+      óleo iridescente no dorso, boca em tubo virada para cima de lábios duros como chifre, olhos
+      grandes no alto da cabeça.
+    como_se_luta: >-
+      Cospe de longe um jato duro como pedra que fere e faz perder a defesa preparada. De lado, na
+      margem rasa, ele não alcança nem enxerga.
+    related_entities: [pm_profundezas, pm_cripta_afogada]
+    arte:
+      visual: >-
+        Peixe grande, do tamanho de um homem, corpo alto e comprimido como um prato de lado, escamas
+        grossas e foscas cor de lodo com uma faixa dorsal de óleo iridescente; boca em tubo curto virado
+        para cima, lábios córneos; olhos enormes no alto da cabeça; guelras infladas. Um jato de água
+        escura saindo da boca, rígido como uma vara, com as bordas ainda em gotas.
+      composicao: >-
+        Poça funda nas Profundezas vista de lado, metade acima e metade abaixo da linha d'água: abaixo,
+        o Fundeiro inclinado mirando; acima, um saqueador na margem atingido no escudo pelo jato, o
+        escudo voando; o homem é da altura do peixe. Névoa acima, água verde-escura abaixo, um ponto
+        azul-pálido de Éter.
+      evitar: Peixe-monstro com dentes de tubarão, peixe-dragão, piranha. A arma é o jato e a mira; a boca é pequena e sem dentes à mostra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tritao_de_sobra
+    vaga: 9
+    nome: Tritão de Sobra
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:104", "lore_nova/creatures.txt:650"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: carne_exposta
+      escala: grande
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Um tritão de água do tamanho de um boi, de pele lisa cinza-esverdeada e brilhante de muco, com
+        três pares de guelras vermelhas em franja atrás da cabeça larga. O ciclo acelerado do Pântano
+        regenera o que ele perde, depressa demais e sem conta: dos flancos brotam patas a mais, duas
+        caudas, um olho na base do pescoço, cada um sobra de um ferimento antigo, rosado e mais novo que
+        o resto. As patas originais são curtas e de dedos abertos; as novas, compridas e desencontradas.
+        A boca não tem dentes, só uma borda dura que esmaga.
+    silhueta: Uma salamandra enorme com patas e caudas demais, desencontradas, como um desenho feito por várias mãos.
+    comportamento: >-
+      Vive no fundo das poças das Profundezas e sobe quando sente a vibração de gente na água. Não
+      foge de ferida: cada corte é mais uma pata daqui a pouco. Os mais velhos andam tortos de tanto
+      membro e quase não saem do fundo.
+    papel_tatico: tanque_reativo
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tritao_de_sobra_brotar
+      frase: >-
+        Cada Ferimento que leva brota de volta como um membro a mais e lhe dá mais um golpe por rodada;
+        só fogo, ou um golpe que esmaga em vez de cortar, fecha a ferida sem brotar.
+    contra_jogo: Fogo e pancada, não lâmina; e acabar rápido, porque cada corte sem queimar é mais uma pata.
+    gancho: >-
+      No Pântano o ciclo é acelerado: o que morre é comido e o que é comido cresce de novo em dias. Num
+      bicho que já regenerava, o ciclo não sabe parar.
+    habitat: [pm_profundezas]
+    inspiracao:
+      - fonte: história natural (salamandras e axolotes)
+        referencia: "regeneração de membros em salamandras; erros de regeneração que produzem patas e caudas extras"
+        tomou: as guelras em franja e o membro que volta, às vezes em dobro
+        distancia: a regeneração acelerada pelo ciclo do Pântano vira o perigo do combate; tamanho de boi, sem dentes, esmaga
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} estremece e um toco rosado começa a brotar da ferida aberta no flanco."
+    description: Um tritão do tamanho de um boi em quem o ciclo acelerado do Pântano regenera cada ferida como uma pata ou uma cauda a mais.
+    perigo: Alto
+    lore: >-
+      O ciclo do Pântano é acelerado: as plantas crescem, capturam, digerem e recomeçam em dias. Num
+      tritão, bicho que já regenerava, o ciclo não sabe a conta. Cada ferida volta como um membro
+      novo, rosado, mais comprido que os outros. Os velhos andam tortos de tantas patas e caudas, com um
+      olho a mais aqui e ali. Os Saqueadores aprenderam a não cortá-los e a levar tocha para o fundo.
+    aparencia: >-
+      Tritão do tamanho de um boi, pele lisa cinza-esverdeada de muco, três pares de guelras vermelhas
+      em franja atrás da cabeça larga, patas e caudas a mais brotando dos flancos, rosadas e
+      desencontradas, um olho extra na base do pescoço, boca sem dentes.
+    como_se_luta: >-
+      Cada corte volta como um membro e um golpe a mais. Fogo e pancada fecham a ferida sem brotar;
+      quanto mais a luta demora, mais patas ele tem.
+    related_entities: [pm_profundezas]
+    arte:
+      visual: >-
+        Salamandra aquática gigante, corpo de boi, pele lisa e úmida cinza-esverdeada com manchas
+        escuras; três pares de guelras externas vermelhas e plumosas atrás de uma cabeça larga e chata de
+        sorriso sem dentes. Dos flancos saem membros extras de tamanhos diferentes, rosados e de pele
+        mais fina, uma segunda cauda torta, um olho pequeno na base do pescoço. Postura torta, como se os
+        membros não concordassem.
+      composicao: >-
+        Fundo raso de uma poça das Profundezas, água turva até a altura do peito do bicho; o Tritão
+        saindo da lama na direção de um saqueador que levanta uma tocha acesa, da altura do lombo dele;
+        uma pata cortada boiando, já com um broto rosado. Luz laranja da tocha contra o verde-lodo.
+      evitar: Dragão, lagarto de fogo, axolote fofo. É um bicho liso e sem dentes; o horror são as sobras rosadas e o número de patas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_musaranho_de_dente_vermelho
+    vaga: 10
+    nome: Musaranho de Dente Vermelho
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:408", "lore_nova/creatures.txt:586"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: pequena
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um musaranho do tamanho de um cão de caça, magro a ponto de as costelas aparecerem sob o pelo
+        ralo e cinza, de focinho comprido e móvel que nunca para de farejar. Os dentes são vermelhos de
+        ferro até a raiz, curvos para trás, e a mandíbula mastiga mesmo vazia. O coração bate tão depressa
+        que o peito treme. O que ele come se desfaz no estômago antes de alimentar, e por isso come sem
+        parar.
+    silhueta: Um bicho baixo e comprido de focinho de agulha que treme inteiro, sempre de boca mexendo.
+    comportamento: >-
+      Corre pela borda atrás de qualquer coisa quente: rã, sanguessuga, tornozelo. Morde, engole e
+      morde de novo, sem se afastar, porque parar de comer é cair. Quando não acha o que comer, come o
+      próprio rabo.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_musaranho_de_dente_vermelho_fome_que_nao_fecha
+      frase: >-
+        Cada mordida tira Fôlego do alvo e devolve Vitalidade ao Musaranho; numa rodada em que não
+        morde, ele perde Vitalidade, porque a fome come de dentro.
+    contra_jogo: Mantê-lo longe por uma ou duas rodadas; sem morder, ele se gasta sozinho.
+    gancho: >-
+      O Éter concentrado do Pântano desfaz o que existe; no estômago de um bicho pequeno, desfaz a
+      comida antes que ela vire bicho.
+    habitat: [pantano_melancolia]
+    inspiracao:
+      - fonte: história natural (musaranhos)
+        referencia: "Soricidae: dentes de ponta vermelha pelo ferro no esmalte; metabolismo que exige comer quase o próprio peso por dia"
+        tomou: os dentes vermelhos e a fome que não pode parar
+        distancia: tamanho de cão; a fome vem do Éter que desfaz a comida no estômago
+    padrao: [ataque, ataque_multiplo]
+    a_cada_n: 2
+    telegrafo: "{nome} para de mastigar por um instante e os dentes vermelhos estalam no ar."
+    description: Um musaranho do tamanho de um cão de caça, de dentes vermelhos de ferro, em quem o Éter desfaz a comida antes de alimentar.
+    perigo: Baixo
+    lore: >-
+      O Abismo concentrado do Pântano desfaz o que existe, e num bicho pequeno começa pelo que ele
+      come. O Musaranho de Dente Vermelho engole e continua com fome, porque a comida se desfaz no
+      estômago antes de alimentar. Por isso não para: corre a borda atrás de tudo que está quente e
+      morde até acabar ou até cair. Os filhos dos coletores aprendem cedo a ficar em cima da carroça.
+    aparencia: >-
+      Musaranho do tamanho de um cão de caça, costelas aparecendo sob o pelo ralo e cinza, focinho
+      comprido e móvel, dentes vermelhos de ferro curvos para trás, peito que treme com o coração
+      acelerado.
+    como_se_luta: >-
+      Cada mordida tira Fôlego e o cura; se passa uma rodada sem morder, enfraquece sozinho. Mantê-lo
+      longe é a melhor arma.
+    related_entities: [pantano_melancolia]
+    arte:
+      visual: >-
+        Musaranho do tamanho de um cão de caça, corpo comprido e baixo, pelo cinza ralo com falhas,
+        costelas e vértebras marcando a pele; focinho longo, fino e móvel com vibrissas; olhos miúdos e
+        pretos; boca entreaberta mostrando dentes curvos com pontas vermelho-ferrugem. Patas finas de
+        dedos rosados. Pelo arrepiado pelo tremor.
+      composicao: >-
+        Trilha de tábuas na borda do Pântano, lama dos dois lados; o Musaranho mordendo a bota de um
+        coletor que tenta subir numa carroça de ervas; a roda da carroça, da altura do bicho, dá a
+        escala. Luz cinza de manhã, névoa baixa, reflexo oleoso nas poças.
+      evitar: Rato gigante de esgoto, roedor fofo, lobo. É magro demais, de focinho de agulha; os dentes vermelhos são o detalhe.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_borda_que_anda
+    vaga: 11
+    nome: Borda que Anda
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/rumors.txt:73", "lore_nova/daily_life.txt:117"]
+    anatomia:
+      plano_corporal: segmentado
+      material: lama_turfa
+      escala: enorme
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um bicho comprido e baixo, do tamanho de um celeiro deitado, feito do barranco da borda: o lombo
+        é coberto de tijolos de turfa cortados, encaixados como placas, e entre eles aparece uma carne
+        preta e molhada que pulsa como músculo e cheira a ferro e fungo. Ao longo da espinha, numa
+        fileira, estão as estacas dos druidas, enterradas fundo, uma por ano de medição, as mais novas
+        ainda com a fita. Não tem cabeça; tem uma frente larga e rasa, que se abre como lama quando
+        pisa. As patas são colunas de lodo que se refazem a cada passo.
+    silhueta: Um barranco comprido que se levanta do chão, com uma fileira de estacas espetadas no lombo como uma crista.
+    comportamento: >-
+      Fica deitado na borda como barranco por semanas e, numa noite de névoa, anda alguns metros na
+      direção de Nova Arcádia. Quando há gente na faixa firme, levanta-se e vem; por onde passa, o chão
+      firme vira pântano. Volta atrás para buscar estaca arrancada.
+    papel_tatico: controlador
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_borda_que_anda_chao_que_cede
+      frase: >-
+        Avança e a cena encolhe: a cada rodada uma faixa de chão firme vira pântano, e quem estiver nela
+        afunda até os joelhos e perde o movimento.
+    contra_jogo: Lutar de costas para a terra seca e mirar as estacas da crista; cada estaca arrancada é um ano que ela perde, e ela recua para buscá-lo.
+    gancho: >-
+      O Pântano cresce cinco metros por ano, e Irmão Ceslo mede a borda toda segunda-feira; às vezes,
+      de manhã, a borda está onde ele não a deixou.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} se ergue nas patas de lodo e as estacas da crista rangem uma contra a outra."
+    description: "Chefe da borda do Pântano: um barranco de turfa do tamanho de um celeiro, com as estacas de medição dos druidas cravadas na espinha, que anda e faz o chão firme virar pântano."
+    perigo: Extremo
+    lore: >-
+      Um druida mede a borda do Pântano há oito anos e diz que ela avançou quarenta metros na direção
+      do Anel de Lama: "Não é cheia. É crescimento." Às vezes o crescimento tem lombo. O que os druidas
+      chamam de Borda que Anda é um barranco de turfa que se levanta numa noite de névoa e anda,
+      levando nas costas as estacas que eles fincaram, uma por ano. Gresh diz que ela não é o motor do
+      crescimento; é o que o crescimento empurra na frente. Ceslo anota, sem comentar, onde a encontrou.
+    aparencia: >-
+      Bicho comprido e baixo do tamanho de um celeiro, lombo de tijolos de turfa encaixados como placas
+      sobre carne preta e molhada que pulsa, fileira de estacas de medição cravadas na espinha como
+      crista, sem cabeça, frente larga e rasa, patas de lodo.
+    como_se_luta: >-
+      A cada rodada o chão firme encolhe e quem fica na faixa afunda. Lute de costas para a terra seca e
+      arranque as estacas da crista: cada uma a faz recuar.
+    related_entities: [pantano_melancolia, druidas_ciclo_cinzento]
+    arte:
+      visual: >-
+        Criatura colossal e baixa, comprida como um celeiro, sem cabeça: o dorso é um mosaico de blocos
+        retangulares de turfa cortada, marrom-escuros e fibrosos, encaixados como placas de armadura;
+        nas frestas entre os blocos, carne preta e brilhante que pulsa. Ao longo da espinha, uma crista
+        de vinte estacas de madeira cravadas em fila, as da frente com fitas brancas desbotadas. A frente
+        é uma borda larga e rasa de lama que se abre. Patas como colunas grossas de lodo escorrendo.
+      composicao: >-
+        Borda do Pântano à noite, névoa baixa; a criatura levantando-se do barranco, lama escorrendo das
+        placas; em primeiro plano um druida de túnica cinza segurando uma estaca e um cordão, do tamanho
+        de uma das estacas da crista. Lanterna do druida como única luz quente; resto em verde-oliva e
+        preto molhado.
+      evitar: Raiz colossal ou árvore andante (isso é a Raiz-Mãe), golem de terra, dragão de lama. Não tem cabeça nem rosto; é um barranco com crista de estacas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_podador_do_ciclo
+    vaga: 12
+    nome: Podador do Ciclo
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: druidas_ciclo_cinzento
+      refs: ["lore_nova/timeline_completa.txt:400", "lore_nova/factions.txt:465"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um druida do Ciclo Cinzento que cortou o que apodrece por quarenta anos segurando o Éter na
+        lâmina: os ossos dos dois antebraços cresceram para fora da pele e se curvaram em podões de osso
+        cinzento, afiados por dentro, e a pele calejada e rachada recuou até os cotovelos. As mãos
+        encolheram e ficaram penduradas sob as lâminas como dedos de criança, inúteis. O rosto é o de um
+        velho cuidadoso, cinza da exposição, de olhos que procuram a parte podre de tudo o que veem.
+    silhueta: Um velho de túnica cinza com dois braços que terminam em foices curtas, erguidos à altura do peito como quem reza.
+    comportamento: >-
+      Anda sozinho pela borda e corta o que apodrece: galho, raiz, Tumor, e gente ferida, que para ele
+      é galho que vai apodrecer. Escolhe com calma. Não corta quem está inteiro, a não ser que o
+      impeçam de cortar.
+    papel_tatico: saqueador
+    arquetipo: tatico
+    categoria: elite
+    faccao: druidas_ciclo_cinzento
+    mecanica_assinatura:
+      carta: cri_podador_do_ciclo_poda
+      frase: >-
+        Poda: contra um alvo ferido, corta fora o Ferimento como um galho podre; o Ferimento some, mas a
+        melhor Carta da mão do alvo vai junto, perdida até o fim do combate.
+    contra_jogo: Enfrentá-lo sem Ferimento aberto, ou deixar a Carta melhor para depois do corte; contra quem está inteiro, ele não acha o que podar e só corta raso.
+    gancho: >-
+      No Ciclo Cinzento não se conserta o que apodrece: escolhe-se o que cortar para o resto aguentar.
+      A amputação ganha tempo contra a Praga. Alguns aprenderam a lição bem demais.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} ergue os dois antebraços curvos e escolhe, com calma, onde cortar."
+    description: Um druida do Ciclo Cinzento cujos antebraços viraram podões de osso, que corta dos feridos o que apodrece e leva junto o que não devia.
+    perigo: Alto
+    lore: >-
+      O Ciclo Cinzento contém o Pântano e trata os infectados, e na Praga a amputação ganha tempo. Há
+      druidas que cortam o que apodrece há quarenta anos com o Éter na lâmina. Num deles, os ossos dos
+      antebraços aceitaram o ofício e saíram da pele em podões. Ele anda pela borda e corta galho,
+      Tumor, raiz e ferido, com o mesmo cuidado. Os outros druidas não o expulsam nem o seguem;
+      contam a quem chega que ele não faz mal a quem está inteiro.
+    aparencia: >-
+      Druida velho de túnica cinza, pele acinzentada, os ossos dos dois antebraços saídos da pele e
+      curvados em podões de osso cinzento, pele calejada recuada até os cotovelos, mãos encolhidas
+      penduradas sob as lâminas como dedos de criança.
+    como_se_luta: >-
+      Contra quem está ferido, corta fora o Ferimento e leva junto a melhor Carta da mão. Inteiro, o
+      alvo não lhe dá o que podar.
+    related_entities: [pantano_melancolia, druidas_ciclo_cinzento]
+    arte:
+      visual: >-
+        Druida velho, magro, de túnica de lã cinza com avental de couro manchado de seiva; pele
+        acinzentada. Os dois antebraços terminam em lâminas curvas de osso cinzento, como podões de
+        jardineiro, que saem rasgando a pele na altura do punho; a pele calejada e rachada enrolada perto
+        dos cotovelos; as mãos verdadeiras pequenas e murchas penduradas sob as lâminas. Rosto calmo,
+        atento.
+      composicao: >-
+        Borda do Pântano, salgueiros tortos; o Podador em pé diante de um saqueador ferido sentado num
+        tronco, os braços erguidos em ângulo de reza, escolhendo; um galho cortado limpo no chão entre
+        os dois; o saqueador sentado tem a cabeça na altura do peito do druida. Luz cinza, névoa, um
+        brilho azul-pálido no fio de osso.
+      evitar: Ceifador da morte, esqueleto com foice, monstro de garras. É um velho cuidadoso de túnica; as lâminas são osso dele, não ferramenta.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_jardineiro_de_tumores
+    vaga: 13
+    nome: Jardineiro de Tumores
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: druidas_renegados
+      refs: ["lore_nova/factions.txt:484", "lore_nova/creatures.txt:654"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um Druida-Renegado que abriu as próprias costas em sulcos, como um canteiro, e plantou neles os
+        Tumores do Pântano: seis ou sete crescimentos pulsantes de carne e musgo brotam entre as omoplatas
+        e descem pela espinha, presos por raízes que entram na carne. A pele das costas, esticada entre
+        os sulcos, é verde-acinzentada e úmida. Anda curvado sob o peso do canteiro, com os braços magros
+        abertos para o equilíbrio, e tem terra até os punhos. Os Tumores respiram quando ele respira.
+    silhueta: Um homem curvado carregando nas costas um canteiro de bolhas que pulsam, como um mascate de jarros.
+    comportamento: >-
+      Anda pelas trilhas onde o Éter é denso, cuidando dos Tumores que planta na lama e dos que leva no
+      corpo. Não ataca quem passa longe; quem chega perto ganha um corte, e no corte, uma semente.
+    papel_tatico: drenador
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: druidas_renegados
+    mecanica_assinatura:
+      carta: cri_jardineiro_de_tumores_semear_na_ferida
+      frase: >-
+        Planta um esporo de Tumor no Ferimento que abre: esse Ferimento não fecha no descanso e, se
+        ninguém o tratar até o próximo descanso, vira Cicatriz.
+    contra_jogo: Matá-lo de longe, sem lhe dar ferida para semear; e quem sair ferido procura um druida do Ciclo antes de dormir.
+    gancho: >-
+      Os Renegados de Saelwen cultivam os Tumores do Pântano como jardins; o mais devoto dos
+      jardineiros deu a eles a melhor terra que tinha.
+    habitat: [pantano_melancolia, pm_profundezas]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} curva as costas e os Tumores do canteiro incham ao mesmo tempo."
+    description: Um Druida-Renegado que plantou Tumores do Pântano nas próprias costas e semeia esporos nas feridas que abre.
+    perigo: Médio
+    lore: >-
+      Os Druidas-Renegados de Saelwen cultivam os Tumores do Pântano como jardins, e quem é infectado
+      por eles e não é tratado vira, devagar, parte do Pântano. O Jardineiro foi além do jardim: abriu
+      as costas em sulcos e plantou neles os Tumores. Carrega o canteiro curvado, com terra até os
+      punhos, e semeia na ferida de quem se aproxima. Os druidas do Ciclo dizem que ferida dele se
+      trata no mesmo dia ou não se trata mais.
+    aparencia: >-
+      Homem curvado com as costas abertas em sulcos de canteiro onde brotam Tumores pulsantes de carne e
+      musgo presos por raízes à espinha, pele verde-acinzentada e úmida, braços magros abertos, terra
+      até os punhos.
+    como_se_luta: >-
+      Semeia um esporo na ferida que abre, e essa ferida não fecha no descanso e pode virar Cicatriz.
+      Combata-o de longe e procure um druida do Ciclo antes de dormir.
+    related_entities: [pantano_melancolia, pm_profundezas, druidas_renegados]
+    arte:
+      visual: >-
+        Homem magro, curvado para a frente, nu da cintura para cima, túnica de druida amarrada na
+        cintura; as costas abertas em quatro sulcos paralelos de carne, como leiras, e neles brotam seis
+        Tumores do tamanho de um punho a uma cabeça, massas pulsantes de carne avermelhada e musgo verde,
+        presas por raízes finas que entram na pele. Pele verde-acinzentada úmida. Mãos e antebraços
+        sujos de terra preta. Rosto sereno.
+      composicao: >-
+        Trilha estreita nas Profundezas, névoa densa; o Jardineiro de costas para o observador, ajoelhado,
+        enterrando um Tumor pequeno na lama; à frente dele, um viajante parado com a espada meio
+        erguida, da mesma altura; outros Tumores plantados em fila ao lado da trilha. Luz difusa
+        verde-oliva, brilho azul-pálido nos Tumores.
+      evitar: Corcunda de conto, homem-planta, homem-árvore. Os Tumores são carne e musgo, não flores; o corpo dele é o canteiro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mula_de_lagrimas
+    vaga: 14
+    nome: Mula de Lágrimas
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:666", "lore_nova/creatures.txt:622"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um contrabandista dos Coletores-de-Lágrima que passou a engolir as Lágrimas-de-Éter para
+        atravessá-las pelos portões de Nova Arcádia: a barriga está esticada até a pele ficar fina e
+        translúcida como vidro soprado, e dentro dela brilham dezenas de gotas azul-pálidas. As veias do
+        ventre e do peito ficaram azuis. O rosto é magro e cinza, de lábios rachados de sede; os olhos
+        choram sem parar uma água que cheira a ferro. Anda de pernas abertas, com as mãos sobre a barriga.
+    silhueta: Um homem magro de barriga enorme que brilha por dentro como uma lanterna de papel.
+    comportamento: >-
+      Faz a trilha entre as poças de Lágrimas e a borda, à noite, guiando-se pela própria luz. Foge de
+      tudo que pode; quando não pode, aperta a barriga contra o inimigo e espera. Não sobrevive muito
+      tempo, e sabe disso.
+    papel_tatico: sacrificial
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mula_de_lagrimas_carga_que_racha
+      frase: >-
+        Quando cai, as Lágrimas engolidas racham dentro dele e a tristeza escorre: todos em contato perdem
+        Fôlego, e quem o matou de perto perde mais.
+    contra_jogo: Matá-lo de longe, ou deixá-lo fugir; ele foge quando pode, e a carga vai embora com ele.
+    gancho: >-
+      Os Coletores-de-Lágrima vendem o que colhem em Nova Arcádia sem a disciplina dos druidas; os
+      portões revistam a bagagem, não a barriga.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [defesa, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} aperta a barriga com as duas mãos e a luz azul dentro dela treme."
+    description: Um contrabandista que engole Lágrimas-de-Éter para passá-las pelos portões, de barriga esticada e translúcida que brilha por dentro.
+    perigo: Baixo
+    lore: >-
+      As Lágrimas-de-Éter valem muito em Nova Arcádia, e tocá-las sem luva passa a tristeza do Pântano
+      direto para dentro. Os Coletores sem disciplina descobriram que os portões revistam a bagagem e
+      não a barriga. Quem engole muitas por muitos anos fica com a barriga translúcida e cheia de luz
+      azul, e chora uma água que cheira a ferro. Quando uma Mula cai, as Lágrimas racham, e quem está
+      perto sente de uma vez tudo o que ela carregava.
+    aparencia: >-
+      Homem magro e cinza de barriga enorme esticada até ficar translúcida como vidro soprado, com
+      dezenas de gotas azul-pálidas brilhando dentro, veias azuis no ventre e no peito, olhos que choram
+      sem parar, mãos sobre a barriga.
+    como_se_luta: >-
+      Foge quando pode; quando cai, as Lágrimas racham e quem está perto perde Fôlego, mais quem o
+      matou. Melhor de longe, ou deixá-lo ir.
+    related_entities: [pantano_melancolia]
+    arte:
+      visual: >-
+        Homem esquálido de pele cinzenta, roupas de contrabandista remendadas abertas sobre uma barriga
+        desproporcional, esticada e lisa, translúcida como vidro soprado, com dezenas de gotas de luz
+        azul-pálida flutuando dentro; veias azuis ramificadas no ventre e no peito; rosto encovado,
+        lábios rachados, lágrimas escorrendo; mãos abertas protegendo a barriga.
+      composicao: >-
+        Trilha de tábuas na borda do Pântano à noite; a Mula andando de pernas abertas, a barriga
+        iluminando a névoa à volta dele de azul; ao fundo, as luzes de um portão de Nova Arcádia e um
+        guarda com lanterna, do mesmo tamanho. Escuro quase total, só o azul da barriga e o amarelo
+        distante.
+      evitar: Monstro de cristal, homem-lanterna mágico, barriga explodindo em gore. É um homem doente que esconde contrabando; a luz é fraca e fria.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_casaco_de_sanguessugas
+    vaga: 15
+    nome: Casaco de Sanguessugas
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:592", "lore_nova/creatures.txt:660"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: nada
+      percepcao: sangue_cheiro
+      texto: >-
+        Um Saqueador-de-Espólio que aprendeu que as Sanguessugas-Braço anestesiam antes de beber e
+        passou a vesti-las: um casaco vivo de vinte ou trinta sanguessugas do tamanho de um braço presas
+        ao peito, às costas e aos ombros, inchando e murchando no ritmo do coração dele. A pele que se
+        vê, no pescoço e nas mãos, é branca de quem não tem mais sangue para corar, com marcas redondas de
+        ventosa por toda parte. Não sente frio, dor nem a tristeza do Pântano; os olhos estão parados e o
+        rosto, mole.
+    silhueta: Um homem de casaco grosso e ondulante que se mexe sozinho, com uma pá de cabo curto na mão.
+    comportamento: >-
+      Entra nas águas fundas onde os outros saqueadores não aguentam ficar, porque não sente o que o
+      Pântano faz sentir. Defende o trecho de espólio que achou contra qualquer um, e não para de lutar
+      quando devia: não sente as feridas.
+    papel_tatico: perseguidor_marca
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_casaco_de_sanguessugas_arremesso
+      frase: >-
+        Arranca uma sanguessuga do casaco e a joga no alvo: ela fica presa e bebe Fôlego a cada rodada
+        até ser arrancada, e enquanto bebe o Casaco acerta o alvo de onde estiver.
+    contra_jogo: Arrancar a sanguessuga na hora, mesmo custando a ação; fogo no casaco solta todas de uma vez, e ele passa a sentir o que não sentia.
+    gancho: >-
+      O Pântano pesa em quem entra e as sanguessugas anestesiam antes de beber; um saqueador que
+      precisava ficar mais tempo no fundo juntou as duas coisas.
+    habitat: [pm_profundezas, pantano_melancolia]
+    inspiracao: []
+    padrao: [enfraquecer, mover, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} enfia a mão por dentro do casaco e alguma coisa se solta com um estalo molhado."
+    description: Um Saqueador-de-Espólio que veste um casaco vivo de Sanguessugas-Braço para não sentir o Pântano, e as arremessa em quem disputa o espólio.
+    perigo: Médio
+    lore: >-
+      Os Saqueadores-de-Espólio que sobrevivem ao Pântano ficam endurecidos e dispostos a matar pela
+      mesma presa. As Sanguessugas-Braço anestesiam antes de beber, e uma vítima parada pelo Pântano é
+      drenada sem perceber. Um saqueador juntou as duas coisas e passou a vesti-las: o casaco vivo bebe
+      dele e, em troca, ele não sente frio, dor nem tristeza. Fica no fundo mais tempo que qualquer um.
+      Também não sente quando devia parar.
+    aparencia: >-
+      Saqueador vestido com um casaco vivo de vinte ou trinta Sanguessugas-Braço presas ao peito, às
+      costas e aos ombros, inchando no ritmo do coração, pele branca sem sangue marcada de ventosas no
+      pescoço e nas mãos, olhos parados, pá de espólio na mão.
+    como_se_luta: >-
+      Joga uma sanguessuga do casaco que fica presa e bebe Fôlego, e enquanto ela bebe ele acerta o
+      marcado de longe. Arranque-a na hora; fogo no casaco solta todas.
+    related_entities: [pm_profundezas, pantano_melancolia]
+    arte:
+      visual: >-
+        Homem adulto de corpo comum, vestido do pescoço aos joelhos com um "casaco" de dezenas de
+        sanguessugas pretas e lustrosas, cada uma do tamanho de um antebraço, presas pela ventosa,
+        sobrepostas como franjas, algumas inchadas e avermelhadas; pele do rosto, do pescoço e das mãos
+        branca como papel, coberta de cicatrizes redondas de ventosa; olhos sem expressão; uma pá de
+        espólio de cabo curto, afiada na borda.
+      composicao: >-
+        Água até a cintura nas Profundezas, cabos de armas e um elmo saindo da lama atrás; o Casaco
+        arremessando uma sanguessuga num rival que vem com uma lanterna, do mesmo tamanho; a sanguessuga
+        no ar, as do casaco ondulando. Névoa, luz cinza, reflexo oleoso.
+      evitar: Monstro de tentáculos, homem-sanguessuga, gosma. É um homem com um casaco vivo; as sanguessugas são bichos, não parte do corpo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_turno_vencido
+    vaga: 16
+    nome: Turno Vencido
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: druidas_ciclo_cinzento
+      refs: ["lore_nova/locations.txt:109", "lore_nova/daily_life.txt:119"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: sal_mineral
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um druida do Ciclo Cinzento que ficou no posto além das duas semanas, e depois além de dois
+        meses, renovando a cada manhã a marca de argila cinza atrás das orelhas: a argila subiu pelo
+        crânio, fechou as orelhas, cobriu o rosto até a boca e secou numa casca rachada de oleiro. Por
+        baixo, a pele morreu e colou na casca; pelas rachaduras se vê carne seca. Os olhos ficaram atrás de
+        duas fendas, e ele sente o mundo pela sola dos pés. As mãos continuam limpas, porque é com elas
+        que passa a argila.
+    silhueta: Um homem de túnica com a cabeça inteira dentro de um pote de barro rachado.
+    comportamento: >-
+      Continua no posto que ninguém veio render, renovando os rituais de proteção nos outros como
+      renovava nos colegas: em quem estiver do lado dele, seja quem for. Sente os passos pela lama e
+      vai até eles com as mãos sujas de argila.
+    papel_tatico: suporte
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: druidas_ciclo_cinzento
+    mecanica_assinatura:
+      carta: cri_turno_vencido_argila_dos_outros
+      frase: >-
+        Passa a argila cinza dos rituais nos outros inimigos: na rodada seguinte eles não podem ser postos
+        em torpor, medo ou silêncio; quando a argila dele racha, a dos outros cai junto.
+    contra_jogo: Rachar a argila dele com um golpe de pancada; a dos outros cai junto, e quem estava protegido volta a ceder.
+    gancho: >-
+      Os turnos no Pântano não passam de duas semanas, porque depois disso o efeito começa a entrar até
+      pelos rituais; alguém sempre fica para o turno de quem não veio.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} raspa a argila da própria cara com dois dedos e a estende para o lado."
+    description: Um druida do Ciclo que ficou no posto além do turno, com a cabeça fechada numa casca de argila ritual, e protege com ela quem estiver a seu lado.
+    perigo: Médio
+    lore: >-
+      Os druidas do Ciclo Cinzento trabalham no Pântano em turnos de duas semanas, com fumaça de ervas
+      e uma marca de argila cinza atrás das orelhas. Mais que isso, o efeito entra mesmo pelos rituais.
+      Num posto que ninguém veio render, um druida ficou e continuou passando argila, cada manhã mais,
+      até a cabeça virar um pote rachado. Ainda faz o ofício: protege quem estiver do lado dele. Não
+      escolhe mais de que lado está.
+    aparencia: >-
+      Druida de túnica cinza com a cabeça inteira coberta por uma casca de argila cinza rachada que
+      fecha orelhas, rosto e boca, duas fendas nos olhos, carne seca nas rachaduras, mãos limpas.
+    como_se_luta: >-
+      Passa a argila dos rituais nos outros inimigos e os protege de torpor, medo e silêncio. Uma
+      pancada que racha a argila dele derruba a dos outros.
+    related_entities: [pantano_melancolia, druidas_ciclo_cinzento]
+    arte:
+      visual: >-
+        Homem de túnica de lã cinza do Ciclo, corda na cintura com saquinhos de ervas; a cabeça inteira,
+        do pescoço ao topo, encerrada numa casca de argila cinza seca e rachada como um pote de oleiro
+        mal queimado, sem orelhas, com duas fendas horizontais nos olhos e nenhuma boca; nas rachaduras,
+        pele morta e carne seca escura. Mãos limpas, abertas, com um punhado de argila molhada numa delas.
+      composicao: >-
+        Posto dos druidas na borda: tenda de lona caída, estacas, um braseiro apagado; o Turno Vencido
+        caminha para um viajante ferido que se arrasta, do mesmo tamanho; atrás dele, dois Afogados com
+        manchas de argila na testa. Névoa, luz cinza de amanhecer.
+      evitar: Golem de barro, múmia de faixas, cavaleiro de elmo. É um homem comum de túnica com a cabeça num pote; o corpo é magro e humano.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_regaco_da_margem
+    vaga: 17
+    nome: Regaço da Margem
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_solvhara
+      refs: ["lore_nova/npcs.txt:244", "lore_nova/locations.txt:101"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: lama_turfa
+      escala: grande
+      locomocao: ancorada
+      percepcao: medo_emocao
+      texto: >-
+        A Tristeza demorou-se por anos num trecho da margem onde as pessoas sentam para não levantar, e o
+        resíduo tomou a lama e a carne dos que sentaram ali: uma massa sentada, larga como uma carroça,
+        com o colo afundado em turfa morna coberta de musgo macio. Do tronco saem quatro braços compridos
+        de muitas juntas, de pele cinza e mole, com mãos abertas e sem unhas. Não se vê o rosto: a cabeça
+        pende para a frente, coberta de cabelo molhado de várias cores. O colo respira devagar, como quem
+        dorme.
+    silhueta: Uma figura enorme sentada na margem, de cabeça baixa, com quatro braços abertos esperando um abraço.
+    comportamento: >-
+      Não sai do lugar. Abre os braços para quem passa triste, e o Pântano faz todo mundo passar triste.
+      Quem deita no colo é embalado, aquecido, descansa; e não levanta mais. Quem se debate é solto sem
+      raiva.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_regaco_da_margem_acolher
+      frase: >-
+        Acolhe o alvo no colo e o embala: enquanto estiver preso, ele recupera Fôlego a cada rodada e não
+        age; quem se debate sai, quem descansa fica.
+    contra_jogo: Recusar o descanso; quem foi tomado gasta a ação para se debater e sai; os outros cortam os braços nos cotovelos, onde a lama é fina.
+    gancho: >-
+      O Pântano faz querer deitar e dormir para sempre; onde a Tristeza se senta mais tempo, o que sobra
+      dela acolhe quem quiser deitar.
+    habitat: [pantano_melancolia, pm_profundezas]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre os quatro braços compridos e a turfa do colo fica morna e funda."
+    description: Uma cria da Tristeza na margem do Pântano, uma massa sentada de turfa morna e quatro braços longos que embala quem deita até não levantar.
+    perigo: Alto
+    lore: >-
+      A Tristeza não ataca: senta-se perto. No Pântano há trechos de margem onde as pessoas sentam para
+      descansar e não levantam, e ali ela se demorou anos. O que sobrou tomou a lama e a carne dos que
+      sentaram: uma coisa grande e sentada, de colo morno, que abre quatro braços para quem passa.
+      Não é ela e não fala por ela. Os Corvos recolhem corpos nessa margem que parecem dormir. Os
+      druidas passam por ali em dupla, conversando alto.
+    aparencia: >-
+      Massa sentada larga como uma carroça, colo de turfa morna coberto de musgo macio, quatro braços
+      compridos de muitas juntas com pele cinza e mole e mãos abertas sem unhas, cabeça pendida coberta
+      de cabelo molhado de várias cores.
+    como_se_luta: >-
+      Prende no colo e embala: o preso recupera Fôlego mas não age. Quem se debate sai; os braços cedem
+      nos cotovelos.
+    related_entities: [pantano_melancolia, pm_profundezas, npc_solvhara]
+    arte:
+      visual: >-
+        Figura colossal sentada, do tamanho de uma carroça, feita de turfa escura e úmida e de carne
+        cinzenta: o colo é uma depressão funda forrada de musgo verde macio, quase convidativa; do tronco
+        saem quatro braços muito longos, articulados demais, de pele cinza flácida, mãos abertas, palmas
+        para cima, sem unhas. Cabeça caída para a frente, coberta por uma cortina de cabelos molhados de
+        cores diferentes, castanhos, ruivos, brancos. Vapor morno subindo do colo.
+      composicao: >-
+        Margem do Pântano ao entardecer, salgueiros pendentes; uma viajante sentada no chão a poucos
+        passos, olhando para o colo com o rosto cansado, do tamanho de uma das mãos abertas; os braços já
+        se curvando em volta dela, sem pressa. Luz baixa dourada fraca na névoa; nenhuma ameaça aparente.
+      evitar: Mãe-monstro de fantasia, árvore com braços, demônio com chifres. Não tem rosto à vista e não parece hostil; o horror é o conforto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cordao_de_medida
+    vaga: 18
+    nome: Cordão de Medida
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_skarath
+      refs: ["lore_nova/npcs.txt:336", "lore_nova/daily_life.txt:117"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Onde os druidas esticam cordas-guia entre estacas para atravessar a névoa, a Traição se demorou na
+        confiança de quem segurava, e o resíduo tomou os tendões dos que soltaram a mão de alguém para se
+        salvar: um cordão vivo, grosso como um pulso e do comprimento de uma casa, trançado de tendões
+        claros e gordurosos. A cada braço de distância há um nó, e cada nó é uma mão humana fechada em
+        punho com os dedos entrelaçados na trança. Uma ponta termina numa mão aberta; a outra, numa mão que
+        aperta.
+    silhueta: Uma corda grossa esticada rente à água entre duas estacas, com nós que parecem punhos.
+    comportamento: >-
+      Fica esticado onde a corda-guia deveria estar, quieto, sentindo o calor das mãos que o seguram.
+      Deixa a vítima chegar ao meio da névoa e então puxa, para o lado do fundo. Aprende o que a
+      vítima faz e o devolve.
+    papel_tatico: emboscador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cordao_de_medida_devolver
+      frase: >-
+        Devolve a jogada: a última Carta de ataque que o alvo usou volta contra ele na rodada seguinte,
+        puxada pelo cordão em que ele confiou.
+    contra_jogo: Desconfiar da corda; atravessar sem apoio e variar as Cartas; ele só devolve o que aprendeu.
+    gancho: >-
+      Na névoa do Pântano só se atravessa segurando a corda-guia dos druidas; a Traição não precisa de
+      muito mais que uma mão que confia.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [defesa, ataque, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} fica esticado e quieto entre duas estacas, exatamente onde a corda-guia deveria estar."
+    description: Uma cria da Traição na névoa do Pântano, um cordão vivo de tendões trançados e nós de punho que finge ser a corda-guia dos druidas.
+    perigo: Médio
+    lore: >-
+      Na névoa do Pântano só se atravessa segurando uma corda-guia esticada entre estacas. A Traição se
+      demora onde há confiança suficiente para ser traída, e ali havia: mãos que seguravam a corda e
+      outras mãos. O resíduo tomou os tendões de quem soltou alguém para se salvar e trançou um cordão
+      vivo, de nós que são punhos. Fica onde a corda devia estar. Não é a Traição; é o que ela deixou na
+      corda. Os druidas mudam a cor das cordas toda semana, e não dizem por quê.
+    aparencia: >-
+      Cordão vivo grosso como um pulso e do comprimento de uma casa, trançado de tendões claros e
+      gordurosos, com um nó a cada braço que é uma mão humana fechada em punho; numa ponta uma mão
+      aberta, na outra uma mão que aperta.
+    como_se_luta: >-
+      Devolve ao alvo a última Carta de ataque que ele usou. Variar as Cartas e atravessar sem se apoiar
+      nele o deixa sem o que aprender.
+    related_entities: [pantano_melancolia, npc_skarath]
+    arte:
+      visual: >-
+        Uma corda viva, grossa como um pulso e longa, trançada de tendões humanos claros, brilhantes de
+        gordura; a intervalos regulares, nós que são mãos humanas fechadas em punho com os dedos
+        entrelaçados na trança; numa ponta uma mão aberta, palma para cima, na outra uma mão em garra.
+        Esticada entre duas estacas de druida, rente à água, idêntica a uma corda-guia vista de longe.
+      composicao: >-
+        Névoa densa no Pântano, visibilidade de poucos metros; um viajante segura a corda com as duas mãos
+        e avança, olhando para a frente; só o observador vê que o nó mais próximo dele é um punho; a
+        estaca ao lado é da altura do peito do viajante. Cinza-leitoso por toda parte, um ponto azul de
+        Éter na água.
+      evitar: Serpente, tentáculo, verme. É uma corda de tendões e punhos; de longe tem de parecer só uma corda.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_maos_no_rosto
+    vaga: 19
+    nome: Mãos no Rosto
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veleth
+      refs: ["lore_nova/npcs.txt:351", "lore_nova/timeline_completa.txt:406"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Onde sobreviventes da batalha final se esconderam debaixo dos mortos para não lutar, a Vergonha
+        ficou, e o resíduo tomou a carne dos que nunca contaram: um corpo alto e magro, de pele
+        cinza-esverdeada coberta de lama seca, de cujos ombros, pescoço e peito brotam braços a mais, oito
+        ou nove, todos dobrados para cima e com as mãos espalmadas sobre o mesmo rosto. Os dedos estão
+        cravados na pele da testa e das faces, e entre eles escorre água. Os dois braços de baixo são os
+        únicos que lutam, compridos, de unhas grossas.
+    silhueta: Um homem alto parado na névoa, de cabeça coberta por um feixe de braços dobrados, como alguém que se esconde em si mesmo.
+    comportamento: >-
+      Anda pelas partes do Pântano onde há mais mortos debaixo da lama e evita ser visto de frente.
+      Quando alguém o encara, se aproxima. Não se sabe o que acontece se as mãos abrem; quem conta diz
+      só que viu um olho, e era o seu.
+    papel_tatico: quebra_defesa
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_maos_no_rosto_virtude_calada
+      frase: >-
+        Cobre o rosto e a Virtude do alvo se cala: enquanto o Mãos no Rosto estiver de pé, o alvo joga
+        sem o bônus de Virtude.
+    contra_jogo: Derrubá-lo primeiro, sem esperar ver o rosto; com ele no chão, a Virtude volta inteira.
+    gancho: >-
+      Na batalha final contra Malagor houve quem se deitasse entre os mortos e esperasse acabar; o
+      Pântano está em cima deles agora, e a Vergonha não precisa de testemunha.
+    habitat: [pantano_melancolia]
+    inspiracao: []
+    padrao: [defesa, enfraquecer, ataque, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} afasta dois dedos do rosto e um olho, só um, procura o seu."
+    description: Uma cria da Vergonha no Pântano, um corpo alto de cujos ombros e peito brotam braços a mais que cobrem o mesmo rosto.
+    perigo: Médio
+    lore: >-
+      A Vergonha não acusa de fora; confirma de dentro. Na batalha final houve quem se deitasse entre os
+      mortos e esperasse acabar, e não contou a ninguém. O Pântano cresceu em cima, e a Vergonha não
+      precisou de testemunha. O resíduo tomou a carne desses que se esconderam e fez um corpo que não
+      para de esconder o rosto, com braços a mais para isso. Quem o encara sente, por um momento, que não
+      merece o que tem de melhor.
+    aparencia: >-
+      Corpo alto e magro de pele cinza-esverdeada coberta de lama seca, com oito ou nove braços a mais
+      brotando dos ombros, do pescoço e do peito, dobrados para cima, mãos espalmadas sobre o mesmo
+      rosto e dedos cravados na pele; dois braços de baixo compridos de unhas grossas.
+    como_se_luta: >-
+      Enquanto estiver de pé, cala a Virtude de quem o enfrenta. Derrube-o primeiro, sem esperar o rosto.
+    related_entities: [pantano_melancolia, npc_veleth]
+    arte:
+      visual: >-
+        Figura humanoide alta e magra, pele cinza-esverdeada com crosta de lama seca rachada; dos ombros,
+        da base do pescoço e do peito brotam oito braços extras finos, dobrados para cima, sobrepostos
+        como as varetas de um leque fechado, todas as mãos espalmadas sobre um único rosto que não se
+        vê; dedos afundados na pele da testa; água escorrendo entre eles. Dois braços normais pendem,
+        longos, de unhas grossas e escuras.
+      composicao: >-
+        Lodaçal das Profundezas com mãos e elmos de mortos aparecendo na lama; a figura parada em pé,
+        levemente virada, enquanto uma druida a encara de lanterna erguida, da altura do ombro dela; um
+        único dedo afastado do rosto, mostrando um olho. Névoa, luz amarela da lanterna, resto em cinza.
+      evitar: Monstro de muitos braços de deus hindu, aranha humana, demônio de chifres. Os braços estão todos quietos sobre o rosto; o gesto é de esconder, não de atacar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cisne_de_patina
+    vaga: 20
+    nome: Cisne de Pátina
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_morvath
+      refs: ["lore_nova/npcs.txt:321", "lore_nova/locations.txt:116"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: grande
+      locomocao: nada
+      percepcao: visao
+      texto: >-
+        A Decadência gosta do que apodrece devagar e bonito, e nas Profundezas há décadas de estandartes
+        da coalizão desmanchando sob a água; o resíduo tomou a carne dos cisnes que nadavam ali e a seda
+        dos estandartes: uma ave do tamanho de um cavalo, de pescoço longo em que as vértebras aparecem
+        sob a pele fina, coberta de penas que são tiras de seda podre, verde-cobre, violeta e ouro
+        desbotado. O bico é de cobre esverdeado de pátina, de borda serrilhada. As patas são pretas,
+        palmadas, e deixam um rastro de óleo iridescente.
+    silhueta: Um cisne grande demais de pescoço em S, com penas que pendem como bandeiras molhadas.
+    comportamento: >-
+      Desliza devagar entre as armaduras afundadas e bica o que está enferrujando, como quem prova. É
+      bonito, e quem olha demora a lembrar de sair do caminho. Ataca o que brilha: fivela, lâmina,
+      peitoral novo.
+    papel_tatico: quebra_defesa
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cisne_de_patina_envelhecer
+      frase: >-
+        O que o bico toca envelhece: a defesa do alvo perde um grau a cada rodada de contato, e o Cisne
+        fica mais duro com cada grau que tira.
+    contra_jogo: Golpear o pescoço, onde não há seda, e afastar-se depois de cada golpe; sem contato, ele não envelhece nada.
+    gancho: >-
+      A Decadência visita as ruínas que apodrecem sob a água; nas Profundezas, os estandartes da coalizão
+      apodrecem devagar há décadas, e isso também é obra para ela.
+    habitat: [pm_profundezas]
+    inspiracao: []
+    padrao: [ataque, enfraquecer, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} arqueia o pescoço e as penas de seda podre se abrem num leque de cores."
+    description: Uma cria da Decadência nas Profundezas, um cisne do tamanho de um cavalo de penas de seda de estandarte podre e bico de cobre que envelhece o que toca.
+    perigo: Alto
+    lore: >-
+      A Decadência torna a ruína bela e o apodrecimento confortável, e não tem pressa. Nas Profundezas,
+      os estandartes da coalizão desmancham sob a água há décadas, em cores que nenhum tintureiro
+      repetiria. O resíduo tomou a carne dos cisnes e a seda das bandeiras e fez uma ave grande e
+      bonita. O bico envelhece o que toca: o ferro enferruja, o couro racha, a fivela cai. Os saqueadores
+      que entram com armadura nova saem com armadura velha, quando saem.
+    aparencia: >-
+      Cisne do tamanho de um cavalo, pescoço longo com as vértebras sob a pele fina, penas de tiras de
+      seda podre verde-cobre, violeta e ouro desbotado, bico de cobre esverdeado de pátina com borda
+      serrilhada, patas pretas palmadas que deixam óleo iridescente.
+    como_se_luta: >-
+      O bico envelhece a defesa de quem fica em contato, e ele endurece com isso. Golpeie o pescoço e
+      afaste-se depois de cada golpe.
+    related_entities: [pm_profundezas, npc_morvath]
+    arte:
+      visual: >-
+        Cisne enorme, do tamanho de um cavalo, pescoço em S com as vértebras visíveis sob pele fina
+        acinzentada; em vez de penas, tiras e franjas de seda de estandarte apodrecida, em verde-cobre,
+        violeta, ouro velho e carmim desbotado, algumas com restos de bordado heráldico; bico largo de
+        cobre com pátina verde e borda serrilhada; olhos pretos calmos; patas pretas palmadas. Rastro de
+        óleo iridescente atrás.
+      composicao: >-
+        Profundezas do Pântano, água parada entre armaduras e elmos afundados, um estandarte rasgado
+        ainda preso a uma haste inclinada; o Cisne bicando o peitoral de um saqueador que recua com
+        água até a cintura, o pescoço da ave acima da cabeça dele; a fivela do peitoral já verde. Luz
+        difusa, cores de podridão ricas contra o cinza.
+      evitar: Cisne branco de conto de fadas, fênix, ave demoníaca de fogo. A beleza é a das cores de podridão; nada brilha nem arde.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_arraia_de_lodo
+    vaga: 21
+    nome: Arraia de Lodo
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_thessavar
+      refs: ["lore_nova/npcs.txt:182", "lore_nova/locations.txt:116"]
+    anatomia:
+      plano_corporal: radial
+      material: couro_tecido
+      escala: humana
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        O Oculto gosta do que se esconde debaixo de camadas, e o fundo do Pântano esconde décadas; o
+        resíduo tomou a carne das arraias de lodo que vivem nas poças da Cripta: um disco de couro pardo
+        da largura de uma porta, fino nas bordas, que se cola à lama ou à superfície e some na cor dela. Os
+        dois olhos migraram para o mesmo lado do corpo, e um deles nunca para de girar. Por baixo, a pele é
+        branca e lisa, com fileiras de fendas de guelra que sopram lodo em nuvem. A cauda é um chicote
+        curto, sem ferrão.
+    silhueta: Uma mancha parda e chata na água que só se vê quando um olho nela gira.
+    comportamento: >-
+      Deita-se colada sobre o que outros escondem no fundo e solta lodo quando alguém se aproxima,
+      até a água ficar parda. Não morde quase nunca; encobre. Os outros bichos das poças caçam melhor
+      dentro da nuvem dela.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_arraia_de_lodo_nuvem_parda
+      frase: >-
+        Achata-se sobre a água e sopra lodo pelas guelras: enquanto estiver viva, o presságio dos outros
+        inimigos fica turvo, e o jogador não vê o que eles vão fazer.
+    contra_jogo: Achá-la primeiro; a nuvem nasce dela, e por baixo ela é fina e mole; morta, as intenções dos outros voltam a se ver.
+    gancho: >-
+      O Oculto coleciona o que se quer esconder, e o fundo do Pântano esconde de graça décadas de
+      espólio e de mortos; um pouco dela escorreu para as poças.
+    habitat: [pm_profundezas, pm_cripta_afogada]
+    inspiracao:
+      - fonte: história natural (arraias de água doce e linguados)
+        referencia: "Potamotrygonidae, arraias de rio que se enterram no lodo; linguados, cujos olhos migram para um lado"
+        tomou: o disco chato que some no fundo e os dois olhos do mesmo lado
+        distancia: sem ferrão; a arma é a nuvem de lodo que turva o presságio, efeito de Valoria
+    padrao: [defesa, mover, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} se achata sobre a água e o lodo sobe em nuvem pelas fendas das guelras."
+    description: Uma cria do Oculto nas poças fundas do Pântano, um disco de couro pardo de olhos do mesmo lado que sopra lodo e esconde o que os outros vão fazer.
+    perigo: Baixo
+    lore: >-
+      O Oculto não se esconde por estratégia; esconder-se é o que ele é, e coleciona o que os outros
+      querem esconder. O fundo do Pântano esconde décadas de espólio e de mortos sem pedir nada em troca,
+      e um pouco do Oculto escorreu para lá. O resíduo tomou a carne das arraias de lodo da Cripta e fez
+      um disco pardo que se cola ao fundo e sopra lodo. Os bichos das poças caçam melhor dentro da nuvem.
+      Os Coletores atiram pedras na água parda antes de entrar.
+    aparencia: >-
+      Disco de couro pardo da largura de uma porta, fino nas bordas, colado à lama ou à superfície e da
+      cor dela, dois olhos do mesmo lado do corpo e um que gira sem parar, ventre branco com fileiras de
+      fendas de guelra, cauda curta sem ferrão.
+    como_se_luta: >-
+      Enquanto vive, turva o presságio dos outros inimigos. Ache-a primeiro: por baixo ela é fina e mole,
+      e morta as intenções dos outros voltam a se ver.
+    related_entities: [pm_profundezas, pm_cripta_afogada, npc_thessavar]
+    arte:
+      visual: >-
+        Arraia de água doce em forma de disco quase circular, da largura de uma porta, couro pardo-lodo
+        manchado exatamente como o fundo, bordas finas onduladas; dois olhos salientes juntos do mesmo
+        lado do dorso, um deles com a pupila virada para outra direção; o ventre, visível numa borda
+        levantada, branco e liso com fileiras de fendas de guelra soltando fumaça de lodo; cauda curta.
+      composicao: >-
+        Poça dentro da Cripta dos Afogados, água rasa e clara de um lado, parda do outro; a Arraia meio
+        erguida na borda da nuvem, e dentro da nuvem a silhueta de outra criatura; um coletor com vara e
+        lanterna na beira, a arraia da largura do corpo dele. Luz branca fria, nuvem marrom subindo.
+      evitar: Arraia-jamanta do mar, ferrão venenoso, monstro abissal de olhos brilhantes. Ela é chata e discreta; o olho que gira é o único sinal.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fardo_de_espolio
+    vaga: 4
+    nome: Fardo de Espólio
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_daruun
+      refs: ["lore_nova/npcs.txt:197", "lore_nova/creatures.txt:660"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Onde saqueadores afundaram por não largar o que tinham achado, a Cobiça ficou, e o resíduo tomou
+        os antebraços deles: oito braços humanos de pele branca e enrugada de afogado, dobrados como patas
+        de caranguejo, sustentam um escudo de torre rachado que serve de carapaça. Cada mão ainda aperta o
+        que não largou: uma moeda, um anel, um punhal, um cálice. Não tem boca; os cotovelos estalam
+        quando anda de lado. Por baixo do escudo pendem os ombros dos donos, sem o resto.
+    silhueta: Um escudo velho que anda de lado sobre oito braços, cada mão fechada sobre alguma coisa.
+    comportamento: >-
+      Anda de lado pelo fundo raso das Profundezas, atraído pelo tilintar de metal. Vem para perto de
+      quem carrega espólio e estende uma mão aberta, como quem cobra. Paga-se, ou apanha-se.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fardo_de_espolio_pedagio
+      frase: >-
+        Cobra pedágio: no início da rodada o alvo escolhe pagar Fôlego ou deixar o Fardo curar um
+        Ferimento; e as mãos não soltam o que já pegaram.
+    contra_jogo: Não pagar; deixar que cure e matá-lo depressa, mão por mão; sem Fôlego cobrado, é um caranguejo de braços fracos.
+    gancho: >-
+      A Cobiça não busca ninguém; espera que venham, e ao fundo do Pântano vem muita gente buscar o que
+      não é dela.
+    habitat: [pm_profundezas]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} levanta uma das mãos e abre os dedos, mostrando a moeda, como quem cobra."
+    description: Uma cria da Cobiça no fundo do Pântano, um escudo de torre que anda de lado sobre oito braços de afogado, cada mão agarrada ao que não largou.
+    perigo: Médio
+    lore: >-
+      A Cobiça não tem poder próprio; espera que venham, porque quem vem já decidiu o que quer. No
+      fundo do Pântano vem muita gente, e alguns afundam por não largar o que acharam. O resíduo tomou os
+      braços desses e os pôs sob um escudo de torre rachado. O Fardo anda de lado atrás do tilintar do
+      metal e estende a mão a quem carrega espólio. Quem paga segue; quem não paga apanha de oito mãos
+      que não soltam nada.
+    aparencia: >-
+      Escudo de torre rachado servindo de carapaça sobre oito braços humanos de pele branca e enrugada
+      de afogado, dobrados como patas de caranguejo, cada mão apertando uma moeda, um anel, um punhal,
+      um cálice; ombros pendendo por baixo do escudo.
+    como_se_luta: >-
+      Cobra pedágio a cada rodada: o alvo paga Fôlego ou o deixa curar um Ferimento. Não pague; mate-o
+      depressa, mão por mão.
+    related_entities: [pm_profundezas, npc_daruun]
+    arte:
+      visual: >-
+        Um escudo de torre retangular, antigo, de madeira e ferro rachado, coberto de lodo, carregado como
+        carapaça por oito braços humanos de pele branca enrugada de afogado, dobrados nos cotovelos como
+        patas de caranguejo; cada mão fechada sobre um objeto: moeda, anel, punhal, cálice, fivela; uma
+        mão erguida e aberta mostrando uma moeda. Por baixo do escudo, sombras de ombros pendurados.
+      composicao: >-
+        Fundo raso das Profundezas, água até o tornozelo, espólio espalhado na lama; o Fardo andando de
+        lado na direção de um saqueador agachado sobre um baú aberto, o escudo da altura dos joelhos do
+        homem; uma mão aberta estendida para ele. Névoa, luz cinza, brilho opaco de metal na lama.
+      evitar: Caranguejo gigante, mímico de baú, aranha. São braços de gente sob um escudo; nada é quitina.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= SLOT GENÉRICO REINVENTADO (R24) =======================
+  - id: enemy_zumbi_blindado
+    vaga: 22
+    nome: Curtido da Turfeira
+    status: reinventada
+    substitui: enemy_zumbi_blindado
+    ataques: ["Abraço de Couro"]
+    acoes: ["Rasteja até o calor de quem respira e não para; sem ossos, não foge nem cai de dor."]
+    substitui_generico: Zumbi Blindado
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/rumors.txt:73", "lore_nova/creatures.txt:586"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: couro_tecido
+      escala: humana
+      locomocao: rasteja
+      percepcao: respiracao
+      texto: >-
+        Um corpo que deitou na lama da borda e ficou anos na turfa ácida: a pele curtiu até virar couro
+        marrom-escuro, duro e brilhante como sela velha, e os ossos amoleceram e quase sumiram por dentro.
+        Sem esqueleto que o segure, o corpo dobra em qualquer ponto, e o rosto achatado tem os traços
+        apertados de quem dorme. Os cabelos ficaram ruivos de turfa; um cordão de amuleto ainda passa
+        pelo pescoço. Rasteja dobrando o tronco e se desdobra de uma vez quando chega perto.
+    silhueta: Um saco de couro escuro do tamanho de um homem que se arrasta dobrando-se em dois e se põe de pé sem joelhos.
+    comportamento: >-
+      Fica deitado na turfa da borda, achatado, até sentir a respiração de alguém. Rasteja na direção do
+      fôlego e não para: sem ossos, não sente o golpe nem cai de dor. Abraça e aperta com o corpo todo.
+    papel_tatico: tanque_reativo
+    arquetipo: morto_vivo_implacavel
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_curtido_da_turfeira_couro_que_escorrega
+      frase: >-
+        A pele curtida pela turfa é dura como couro fervido: a lâmina escorrega e o corte não abre
+        Ferimento; só a pancada o amassa.
+    contra_jogo: Pancada, não lâmina; sem ossos que o sustentem, depois de amassado ele não se levanta.
+    gancho: >-
+      A Guilda dos Corvos recolheu sete corpos que deitaram na lama da borda e não se levantaram; os que
+      ninguém recolheu ficaram na turfa, e a turfa não deixa apodrecer.
+    habitat: [pantano_melancolia, pm_profundezas]
+    inspiracao:
+      - fonte: arqueologia (corpos de turfeira)
+        referencia: "Homem de Tollund e Homem de Grauballe: a turfa ácida curte a pele e dissolve os ossos"
+        tomou: a pele curtida e escura, os ossos amolecidos, o cabelo ruivo de turfa
+        distancia: não é sacrifício ritual nem múmia de museu; é o efeito do Pântano em quem se deitou, e ele anda e luta
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} se dobra sobre si mesmo como um saco e endurece as costas."
+    description: Um corpo que deitou na borda do Pântano e foi curtido pela turfa, de pele dura como couro de sela e sem ossos, que rasteja atrás de quem respira.
+    perigo: Baixo
+    lore: >-
+      A Guilda dos Corvos recolheu sete corpos na borda do Pântano, de gente que deitou na lama por
+      vontade própria e não se levantou. Os que ninguém recolhe afundam na turfa, e a turfa não deixa
+      apodrecer: curte a pele como couro e amolece os ossos até sumirem. Anos depois, alguns se arrastam
+      atrás do fôlego de quem passa, dobrando-se como sacos. Têm a cara de quem dorme. Lâmina não os
+      corta; os druidas os afastam com o cabo da pá.
+    aparencia: >-
+      Corpo humano de pele curtida em couro marrom-escuro brilhante como sela velha, sem ossos, dobrando
+      em qualquer ponto, rosto achatado de traços apertados de quem dorme, cabelo ruivo de turfa, um
+      cordão de amuleto no pescoço.
+    como_se_luta: >-
+      Lâmina escorrega na pele curtida e não abre Ferimento; pancada o amassa, e amassado ele não se
+      levanta.
+    related_entities: [pantano_melancolia, pm_profundezas]
+    arte:
+      visual: >-
+        Corpo humano adulto de pele inteiramente curtida, marrom-escura e lustrosa como couro de sela, com
+        dobras e vincos profundos; sem rigidez de ossos: tronco dobrado em ângulo impossível, braços
+        moles; rosto achatado de lado, olhos fechados, expressão de sono; cabelo ralo ruivo-alaranjado;
+        um cordão de amuleto de couro em volta do pescoço. Sem roupa além de um cinto de couro.
+      composicao: >-
+        Turfeira na borda do Pântano, blocos de turfa cortados empilhados ao lado; o Curtido se
+        desdobrando de dentro de um buraco de corte de turfa na direção de um cortador de turfa com uma
+        pá, do mesmo tamanho; a pá erguida de cabo. Luz cinza baixa, névoa, tons de marrom e ferrugem.
+      evitar: Zumbi verde apodrecido, múmia de faixas, esqueleto. Não há osso nem podridão à vista; é couro inteiro e mole.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: enemy_boss_arauto_nevoa, nome: "O Arauto da Névoa", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: cinza, escala: grande, locomocao: plana_voa, percepcao: medo_emocao, texto: "Entidade feita de fumaça e lamento que assombra as criptas."}, papel_tatico: controlador, arquetipo: predador_apice, categoria: chefe}
+  - {id: mon_sanguessuga_braco, nome: "Sanguessuga-Braço", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: carne_exposta, escala: pequena, locomocao: nada, percepcao: calor, texto: "Sanguessuga do tamanho de um braço humano que detecta calor através da lama e não solta enquanto houver sangue."}, papel_tatico: drenador, arquetipo: predador, categoria: lacaio}
+  - {id: mon_sapo_boi_acido, nome: "Sapo-Boi Ácido", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: pequena, locomocao: salta, percepcao: visao, texto: "Do tamanho de um cão médio, cospe ácido concentrado. O Éter do pântano o fez crescer — e o deixou sem medo."}, papel_tatico: artilharia, arquetipo: predador, categoria: lacaio}
+  - {id: mon_afogado_da_batalha, nome: "Afogado da Batalha", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: humana, locomocao: anda, percepcao: calor, texto: "Morto da batalha final contra Malagor, ancorado no Éter concentrado. Não tem inteligência — tem número e a resistência que o Éter lhe dá."}, papel_tatico: tanque_reativo, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: enemy_druida_renegado, nome: "Druida-Renegado", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Ex-membro do Ciclo Cinzento convertido pela melancolia. Guia vítimas para a névoa densa falando de misericórdia — e recua quando a misericórdia encontra resistência."}, papel_tatico: controlador, arquetipo: covarde_oportunista, categoria: elite}
+  - {id: mon_mosquito_eter, nome: "Mosquito de Éter", status: retro, familia: legado, anatomia: {plano_corporal: alado, material: quitina, escala: miuda, locomocao: plana_voa, percepcao: eter, texto: "Enxames bebem o Éter que aflora entre raízes e cadáveres do Pântano da Melancolia."}, papel_tatico: drenador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_viuva_lodo, nome: "Viúva do Lodo", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: lama_turfa, escala: grande, locomocao: escala_paredes, percepcao: vibracao, texto: "Tece ninhos nos marcos afundados dos druidas do Ciclo Cinzento."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: padrao}
+  - {id: mon_cervo_afogado, nome: "Cervo Afogado", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: osso, escala: grande, locomocao: anda, percepcao: som, texto: "Carrega nos chifres oferendas de peregrinos que nunca voltaram da água negra."}, papel_tatico: guarda_protetor, arquetipo: morto_vivo_implacavel, categoria: elite}

@@ -1,0 +1,2030 @@
+# Bestiário de Valoria — onda da região Aethelgard (esteira da SPEC-349, processo da onda 1).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da SPEC-348 (checkout principal), mesma convenção das ondas 1 e 2.
+regiao: aethelgard
+onda: 11
+spec: SPEC-349
+nome_regiao: Aethelgard
+habitat_nome:
+  aethelgard: O Lago de Aethelgard
+  ae_ruinas_submersas: Ruínas Submersas
+  ae_camara_seca: Câmara Seca
+paleta: >-
+  **Aethelgard** — lago de cratera, hoje salobro, sobre a cidade élfica que implodiu numa noite:
+  arcos e corredores esculpidos sob água cristalina nas bordas, água escura sobre Oghma, cracas e
+  sal onde o mar entrou pela garganta, cristais de contenção apagados nas câmaras. Luz e paleta:
+  verde-garrafa e azul-ardósia da água, branco-osso da pedra élfica, cinza de sal, o azul-esverdeado
+  fosco do Éter vazando de dentro das coisas; nas Ruínas, o escuro que a luz não atravessa; na
+  Câmara Seca, ocre de lamparina sobre pedra suada.
+familias_em_jogo:            # D10 — mesmos nomes das ondas 1 e 2 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: drenador,          arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado,   material: eter_cristalizado, escala: humana,  locomocao: rasteja,       percepcao: calor,         habitat: [ae_ruinas_submersas, ae_camara_seca]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: elite,  papel_tatico: quebra_defesa,     arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: osso,              escala: humana,  locomocao: anda,          percepcao: som,           habitat: [ae_ruinas_submersas]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: controlador,       arquetipo: morto_vivo_implacavel, plano_corporal: quadrupede,       material: osso,              escala: humana,  locomocao: anda,          percepcao: respiracao,    habitat: [ae_ruinas_submersas]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: cinza,             escala: humana,  locomocao: anda,          percepcao: calor,         habitat: [ae_ruinas_submersas, aethelgard]}
+  # --- bestas da entropia ---
+  - {vaga: 5,  familia: besta_entropia,  categoria: chefe,  papel_tatico: bruto_de_linha,    arquetipo: predador_apice,        plano_corporal: serpentiforme,    material: couro_tecido,      escala: enorme,  locomocao: nada,          percepcao: sangue_cheiro, habitat: [aethelgard]}
+  - {vaga: 6,  familia: besta_entropia,  categoria: lacaio, papel_tatico: batedor_rapido,    arquetipo: predador,              plano_corporal: alado,            material: vidro_cristal,     escala: pequena, locomocao: plana_voa,     percepcao: visao,         habitat: [aethelgard]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: padrao, papel_tatico: controlador,       arquetipo: emboscador,            plano_corporal: hexapode_ou_mais, material: quitina,           escala: humana,  locomocao: nada,          percepcao: vibracao,      habitat: [ae_ruinas_submersas]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: lacaio, papel_tatico: saqueador,         arquetipo: covarde_oportunista,   plano_corporal: radial,           material: carne_exposta,     escala: pequena, locomocao: rasteja,       percepcao: eter,          habitat: [ae_ruinas_submersas]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: lacaio, papel_tatico: artilharia,        arquetipo: predador,              plano_corporal: radial,           material: quitina,           escala: pequena, locomocao: rola,          percepcao: vibracao,      habitat: [aethelgard, ae_ruinas_submersas]}
+  - {vaga: 10, familia: besta_entropia,  categoria: padrao, papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: sessil_ancorado,  material: vidro_cristal,     escala: grande,  locomocao: ancorada,      percepcao: vibracao,      habitat: [ae_camara_seca]}
+  - {vaga: 11, familia: besta_entropia,  categoria: lacaio, papel_tatico: suporte,           arquetipo: covarde_oportunista,   plano_corporal: composto,         material: quitina,           escala: miuda,   locomocao: nada,          percepcao: sangue_cheiro, habitat: [ae_ruinas_submersas]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: padrao, papel_tatico: controlador,       arquetipo: bruto,                 plano_corporal: bipede_ereto,     material: carne_exposta,     escala: grande,  locomocao: nada,          percepcao: respiracao,    habitat: [aethelgard, ae_ruinas_submersas]}
+  - {vaga: 13, familia: humanoide_preco, categoria: elite,  papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: eter_cristalizado, escala: humana,  locomocao: anda,          percepcao: eter,          habitat: [ae_camara_seca, aethelgard]}
+  - {vaga: 14, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,           arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: vidro_cristal,     escala: humana,  locomocao: anda,          percepcao: sangue_cheiro, habitat: [ae_camara_seca]}
+  - {vaga: 15, familia: humanoide_preco, categoria: lacaio, papel_tatico: tanque_reativo,    arquetipo: bruto,                 plano_corporal: bipede_ereto,     material: sal_mineral,       escala: humana,  locomocao: nada,          percepcao: vibracao,      habitat: [aethelgard]}
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: tatico,                plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: anda,          percepcao: visao,         habitat: [ae_camara_seca, ae_ruinas_submersas]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_morvath}, categoria: elite,  papel_tatico: controlador,    arquetipo: tatico,     plano_corporal: hexapode_ou_mais, material: cera_sebo,     escala: grande,  locomocao: escala_paredes, percepcao: vibracao,   habitat: [ae_ruinas_submersas, ae_camara_seca]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},   categoria: padrao, papel_tatico: quebra_defesa,  arquetipo: bruto,      plano_corporal: bipede_ereto,     material: osso,          escala: grande,  locomocao: anda,           percepcao: visao,      habitat: [aethelgard]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_lyss},    categoria: padrao, papel_tatico: drenador,       arquetipo: predador,   plano_corporal: serpentiforme,           material: couro_tecido,  escala: grande,  locomocao: nada,           percepcao: calor,      habitat: [ae_ruinas_submersas]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: lacaio, papel_tatico: emboscador,     arquetipo: emboscador, plano_corporal: composto,         material: couro_tecido,  escala: humana,  locomocao: rola,           percepcao: medo_emocao, habitat: [aethelgard]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: padrao, papel_tatico: drenador,       arquetipo: predador,   plano_corporal: segmentado,       material: sal_mineral,   escala: humana,  locomocao: escala_paredes, percepcao: som,        habitat: [ae_ruinas_submersas, ae_camara_seca]}
+  # --- slots genéricos reinventados (R24; não contam nas 20–25) ---
+  - {vaga: 22, slot: enemy_esqueleto_mago, status: reinventada, familia: corpo_reescrito, categoria: elite, papel_tatico: artilharia,        arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,   material: eter_cristalizado, escala: humana, locomocao: anda, percepcao: luz,           habitat: [ae_camara_seca, ae_ruinas_submersas]}
+  - {vaga: 23, slot: enemy_fantasma,       status: reinventada, familia: corpo_reescrito, categoria: elite, papel_tatico: emboscador,        arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado, material: carne_exposta,     escala: humana, locomocao: nada, percepcao: calor,         habitat: [aethelgard, ae_ruinas_submersas]}
+  - {vaga: 24, slot: enemy_golem_carne,    status: reinventada, familia: corpo_reescrito, categoria: elite, papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: composto,       material: carne_exposta,     escala: grande, locomocao: anda, percepcao: sangue_cheiro, habitat: [aethelgard]}
+  - {vaga: 25, slot: mon_quimera_cristal,  status: reinventada, familia: besta_entropia,  categoria: elite, papel_tatico: perseguidor_marca, arquetipo: predador_apice,        plano_corporal: quadrupede,     material: couro_tecido,      escala: grande, locomocao: nada, percepcao: eter,          habitat: [aethelgard, ae_ruinas_submersas]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_doador_inacabado
+    vaga: 1
+    nome: Doador Inacabado
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:126", "lore_nova/timeline_completa.txt:118"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: eter_cristalizado
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Um Elfo que entrou numa câmara de cristal como voluntário e não terminou de ser consumido
+        quando a contenção caiu. Da cintura para baixo quase não sobrou carne: as pernas são dois
+        feixes de tendões secos que ele arrasta. No peito e nos braços a pele ficou fina como papel
+        molhado, e por baixo dela, onde havia músculo, correm veias de cristal turvo, vazias, que
+        brilham fraco quando ele se aproxima de um corpo quente. A boca fica sempre aberta, e os
+        dedos, compridos de magreza, procuram pele.
+    silhueta: "Um vulto magro que se arrasta pelos cotovelos, com linhas de luz fraca correndo por dentro do peito."
+    comportamento: >-
+      Fica deitado nas câmaras onde caiu, voltado para a porta. Quando sente o calor de alguém,
+      arrasta-se até ele e agarra o tornozelo; o que bebe corre pelas veias de cristal e as acende.
+      Não foge: ainda está tentando terminar.
+    papel_tatico: drenador
+    arquetipo: morto_vivo_implacavel
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_doador_inacabado_terminar_em_ti
+      frase: >-
+        Bebe Vitalidade de quem segura e fecha com ela um Ferimento próprio: quanto mais bebe, mais
+        as veias acendem e mais inteiro ele fica.
+    contra_jogo: Não deixá-lo agarrar; manter distância, ou matá-lo enquanto as veias ainda estão apagadas.
+    gancho: >-
+      As câmaras da Destilação estavam cheias na noite em que a cidade caiu, e nem todos os
+      voluntários tinham terminado; os que não terminaram ainda pedem o resto.
+    habitat: [ae_ruinas_submersas, ae_camara_seca]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} encosta a boca no tornozelo que segura, e as linhas do peito começam a acender."
+    description: Um voluntário élfico da Destilação que não terminou de ser consumido; arrasta-se até o calor de quem respira e bebe o que falta para se completar.
+    perigo: Baixo
+    lore: >-
+      Nas câmaras de cristal de Aethelgard, a Destilação tirava a vida do voluntário de dentro para
+      fora, e a consciência ficava até o fim. Na noite em que a contenção caiu, havia voluntários pela
+      metade. Alguns ainda estão lá, nas câmaras que a água não alcançou e nas que alcançou, com o peito
+      transparente e as veias de cristal vazias. Quando sentem calor, arrastam-se até ele. Os
+      mergulhadores dizem que eles não estão com fome: estão tentando terminar.
+    aparencia: >-
+      Elfo esquálido que se arrasta pelos cotovelos, pernas reduzidas a feixes de tendões secos, pele
+      do peito e dos braços fina como papel molhado sobre veias de cristal turvo que acendem em
+      azul-esverdeado, boca aberta, dedos compridos.
+    como_se_luta: >-
+      Agarra o tornozelo e bebe; o que bebe fecha as feridas dele e acende o peito. Mantenha distância
+      ou mate-o enquanto as veias ainda estão apagadas.
+    related_entities: [ae_ruinas_submersas, ae_camara_seca]
+    arte:
+      visual: >-
+        Elfo adulto esquálido, rosto de maçãs altas afundado, cabelo claro e ralo colado à cabeça,
+        arrastando-se de bruços apoiado nos antebraços. Das coxas para baixo, só feixes de tendões
+        secos cor de corda. Pele do tórax e dos braços translúcida e enrugada como papel molhado; por
+        baixo, uma rede de veias de cristal turvo, metade apagada, metade acesa em azul-esverdeado
+        fosco. Restos de uma túnica branca de voluntário.
+      composicao: >-
+        Chão de uma câmara de cristal da Destilação, meio alagada, com a moldura vazia de um cristal de
+        contenção ao fundo; o Doador arrastando-se para o tornozelo de um mergulhador de pé, de botas e
+        lanterna, enquadrado só da cintura para baixo, que dá a escala. Luz de lanterna quente contra o
+        brilho frio das veias.
+      evitar: Morto-vivo esfarrapado, múmia de faixas, fantasma luminoso. Não é um morto que voltou; é alguém que ainda não acabou de ser consumido.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_dentado_de_eras
+    vaga: 2
+    nome: Dentado de Eras
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:419", "lore_nova/locations.txt:253", "lore_nova/timeline_completa.txt:342"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um mergulhador que desceu fundo o bastante para ouvir as bocas do selo e voltou com elas na
+        própria boca. A mandíbula deslocou-se e cresceu para a frente, e não para de dar dentes: de
+        leite, de Elfo, de peixe, de bicho que ninguém nomeia, cada um de uma era, apinhados até furar o
+        rosto. Os dentes desceram pelo pescoço e pelo peito em placas sobrepostas, como escamas, com a
+        gengiva viva aparecendo entre elas. Anda curvado pelo peso da cabeça, e os dentes batem uns nos
+        outros quando ele respira.
+    silhueta: "Um homem curvado com a cabeça comprida demais para a frente, eriçada de pontas até o peito."
+    comportamento: >-
+      Ronda a borda do escuro sobre o selo, onde ainda ouve. Ataca o que faz barulho, de boca primeiro,
+      e morde a armadura antes da carne, como quem quer chegar ao que está por baixo. Murmura em línguas
+      que não são a dele.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_dentado_de_eras_dente_de_toda_era
+      frase: >-
+        A mordida deixa dentes de várias eras cravados na armadura: a defesa do alvo racha e não volta
+        enquanto os dentes estiverem lá.
+    contra_jogo: Lutar sem contar com a armadura, ou gastar uma ação para arrancar os dentes cravados; atacar pelos lados, onde a cabeça pesada demora a virar.
+    gancho: >-
+      Quem desce fundo em Aethelgard começa a ouvir antes de chegar perto; uns voltam com a cabeça
+      cheia de vozes, este voltou com a boca cheia de dentes que não eram dele.
+    habitat: [ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [ataque, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "Os dentes de {nome} batem todos de uma vez, num estalo comprido, e a cabeça baixa para a sua armadura."
+    description: Um mergulhador que ouviu de perto as bocas do selo; a mandíbula cresceu e não para de dar dentes de todas as eras, que descem pelo pescoço em placas.
+    perigo: Alto
+    lore: >-
+      Thessrak está selado nas câmaras mais fundas, e as bocas dele ainda falam. Os mergulhadores
+      conhecem o aviso: quem começa a ouvir deve subir. Este não subiu a tempo. Voltou à borda das
+      Ruínas com a mandíbula estendida e cheia de dentes que não são só de gente: de leite, de Elfo, de
+      peixe, de coisa sem nome, um de cada era que as bocas lembram. Os dentes desceram pelo pescoço
+      como escamas. Ele morde a armadura primeiro.
+    aparencia: >-
+      Homem curvado de cabeça projetada para a frente, mandíbula deslocada e alongada, apinhada de
+      dentes de formas e tamanhos diferentes que furam o rosto e descem pelo pescoço e pelo peito em
+      placas sobrepostas, gengiva viva entre elas, roupa de mergulho em tiras.
+    como_se_luta: >-
+      Morde a armadura e deixa dentes cravados nela; a defesa racha até que sejam arrancados. Ataque
+      pelos lados, onde a cabeça pesada demora a virar.
+    related_entities: [ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Humano adulto curvado, cabeça projetada à frente; mandíbula inferior deslocada e alongada,
+        apinhada de dentes desiguais (pequenos e brancos, finos e transparentes, largos e amarelados,
+        agulhas escuras) furando as bochechas; os dentes continuam pelo pescoço, ombros e peito em placas
+        sobrepostas como escamas, com gengiva rosada viva entre elas. Restos de roupa de mergulho de
+        couro encerado, cordas de lastro na cintura.
+      composicao: >-
+        Borda de um corredor élfico submerso que desce para o escuro; o Dentado de perfil mordendo a
+        ombreira de ferro de um saqueador do mesmo tamanho, que recua com o arpão erguido; dentes soltos
+        boiando. Luz fria de alga luminosa vinda de baixo, o resto em sombra.
+      evitar: Homem-tubarão, bocarra vertical de cinema, boca com tentáculos. São dentes humanos e de bicho apinhados num rosto de gente, não uma boca nova.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_avesso_de_oghma
+    vaga: 3
+    nome: Avesso de Oghma
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:246", "lore_nova/timeline_completa.txt:110"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Alguém que chegou perto demais de Oghma, onde a pressão empurra de dentro para fora, e foi
+        virado do avesso devagar. O esterno abriu-se e as costelas giraram para fora até formar uma
+        gaiola de ossos sobre o tronco; o corpo passou a andar de barriga para cima, apoiado nas mãos e
+        nos pés, com a cabeça pendurada para trás. As costelas abertas ainda têm músculo nas juntas e se
+        fecham de estalo, como dedos, sobre o que entra entre elas. O rosto, de cabeça para baixo, ainda
+        pisca.
+    silhueta: "Um corpo de gente andando de quatro com a barriga para cima e uma gaiola de costelas abertas apontando para o alto."
+    comportamento: >-
+      Anda em bando pelas galerias que descem para Oghma, às vezes mais perto da superfície do que
+      deveria. Corre para quem respira, rápido e desajeitado, e se joga por baixo do braço ou da perna
+      de quem está na frente. Então a gaiola fecha.
+    papel_tatico: controlador
+    arquetipo: morto_vivo_implacavel
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_avesso_de_oghma_gaiola_que_fecha
+      frase: >-
+        Fecha a gaiola de costelas sobre o braço ou a perna de quem está na frente: com o membro preso
+        entre os ossos, o alvo perde a Reação enquanto o Avesso não for solto ou morto.
+    contra_jogo: Não deixar que ele chegue por baixo, chutando-o de lado; preso, quebrar uma costela da gaiola solta o membro.
+    gancho: >-
+      Sobre o coração de Aethelgard a água é escura e empurra de dentro para fora; o que fica tempo
+      demais ali sai virado, e nem sempre sai morto.
+    habitat: [ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "As costelas de {nome} se abrem até o limite, rangendo nas juntas, e ele se encolhe para o salto."
+    description: Um corpo virado do avesso pela pressão perto de Oghma; anda de barriga para cima, com as costelas abertas numa gaiola que se fecha sobre o braço de quem está na frente.
+    perigo: Médio
+    lore: >-
+      Os mergulhadores que chegaram perto de Oghma falam de uma pressão que não é a da profundidade:
+      algo que empurra de dentro para fora. Quem fica ali tempo demais é virado do avesso, devagar, e
+      nem sempre morre no caminho. Os Avessos sobem pelas galerias de quatro, de barriga para cima, com
+      as costelas abertas sobre o tronco. Correm para quem respira e se enfiam por baixo do braço dele.
+      Os mergulhadores contam de quem voltou com o antebraço quebrado em seis lugares, no formato de uma
+      gaiola.
+    aparencia: >-
+      Corpo humano de quatro, de barriga para cima, apoiado nas mãos e nos pés, cabeça pendurada para
+      trás; esterno aberto e costelas giradas para fora numa gaiola de osso sobre o tronco, com músculo
+      nas juntas, pele pálida enrugada pela água.
+    como_se_luta: >-
+      Enfia-se por baixo de quem está na frente e fecha a gaiola de costelas sobre o braço ou a perna;
+      preso, o alvo perde a Reação. Chute-o de lado antes, ou quebre uma costela para soltar.
+    related_entities: [ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Corpo humano adulto em ponte invertida, andando de quatro com a barriga e o rosto para o alto,
+        cabeça caída para trás de olhos abertos; esterno partido e costelas giradas para fora, curvas,
+        formando uma gaiola aberta de osso branco sobre o tronco, com tendões vermelhos nas juntas de
+        cada costela. Pele branco-azulada, enrugada de água, restos de calças de linho.
+      composicao: >-
+        Escadaria élfica submersa descendo para a água escura sobre Oghma; três Avessos subindo os
+        degraus de quatro; o da frente fechou a gaiola de costelas sobre o antebraço de uma mergulhadora
+        agachada no patamar, do mesmo tamanho, que puxa o braço. Luz de lanterna quente em cima, escuro
+        absoluto embaixo.
+      evitar: Aranha gigante, contorcionista de cinema de terror, gore com vísceras. As costelas são o desenho; osso limpo para fora, nada de entranhas espalhadas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fervido_da_corrente
+    vaga: 4
+    nome: Fervido da Corrente
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1298", "lore_nova/locations.txt:261"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um mago que atravessou uma Corrente-de-Éter atrás do poder que ela dá e se queimou por dentro. A
+        pele ficou inteira, esticada e brilhante como couro molhado; por dentro não sobrou carne, só
+        cinza quente e os ossos, que aparecem como sombras quando a luz bate de lado. Dos olhos, da boca
+        e de baixo das unhas sai um brilho baço, e a água em volta dos ombros nunca para de soltar
+        bolhas. Cada ferida que leva abre a pele, a cinza vaza, e a água em volta ferve mais.
+    silhueta: "Um homem parado dentro de um rolo de vapor, com luz saindo dos olhos e da boca."
+    comportamento: >-
+      Fica nas galerias por onde as Correntes passam, como se esperasse a próxima. Não corre atrás de
+      ninguém; segura o corredor. Quanto mais apanha, mais quente fica a água à volta dele, até
+      escaldar quem estiver no mesmo corredor.
+    papel_tatico: tanque_reativo
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fervido_da_corrente_agua_que_ferve
+      frase: >-
+        Cada Ferimento que ele leva faz a água à volta ferver mais: no fim de cada rodada, todos os que
+        estão perto dele se queimam, e a queimadura cresce com as feridas dele.
+    contra_jogo: Feri-lo pouco e matá-lo de uma vez, com um golpe grande, ou atraí-lo para fora da água, onde o calor se perde no ar.
+    gancho: >-
+      Uma Corrente-de-Éter dá a um mago poder imenso por um instante ou o queima por dentro; nas
+      galerias que ela atravessa, os que se queimaram continuam de pé esperando a próxima.
+    habitat: [ae_ruinas_submersas, aethelgard]
+    inspiracao: []
+    padrao: [defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "A água em volta de {nome} borbulha mais forte, e o brilho dos olhos dele sobe."
+    description: Um mago que atravessou uma Corrente-de-Éter e se queimou por dentro; pele inteira esticada sobre cinza fervente, e a água em volta ferve mais a cada ferida que ele leva.
+    perigo: Médio
+    lore: >-
+      Atravessar uma Corrente-de-Éter dá a um mago um poder que ele não teria em dez anos, ou o queima
+      por dentro. Aethelgard ainda atrai os que apostam. Os que perderam ficam nas galerias por onde a
+      Corrente passa, de pé, com a pele intacta e nada por dentro além de cinza quente. A água ferve
+      devagar em volta deles, e mais depressa quando alguém os fere. Os mergulhadores aprenderam a
+      passar longe, ou a acabar com eles de uma vez.
+    aparencia: >-
+      Mago de pé, de túnica encharcada, pele inteira esticada e lustrosa como couro molhado, sem carne
+      por baixo, ossos aparecendo como sombras; brilho baço azul-esverdeado saindo dos olhos, da boca e
+      das unhas; vapor e bolhas subindo dos ombros.
+    como_se_luta: >-
+      Cada ferida que leva faz a água em volta ferver mais e queimar todos os que estão perto. Mate-o
+      de uma vez, com um golpe grande, ou tire-o da água.
+    related_entities: [ae_ruinas_submersas, aethelgard]
+    arte:
+      visual: >-
+        Homem adulto magro, de pé, de túnica élfica de mago encharcada e escurecida; a pele do rosto e
+        das mãos esticada, lisa e brilhante, quase translúcida, com as sombras do crânio e dos ossos das
+        mãos visíveis por dentro; um brilho fosco azul-esverdeado vazando dos olhos, entre os lábios e
+        sob as unhas; um corte no antebraço deixando escorrer cinza escura incandescente. Vapor e bolhas
+        subindo em volta dos ombros.
+      composicao: >-
+        Galeria submersa atravessada ao fundo por uma faixa de luz líquida, a Corrente-de-Éter; o
+        Fervido de pé no corredor com água pelos joelhos, três cortes no corpo vazando cinza e a água em
+        volta em ebulição; dois mergulhadores do mesmo tamanho recuando do vapor. Luz fria da Corrente
+        vazando por trás.
+      evitar: Homem de fogo, esqueleto em chamas, demônio de lava. Não há chama; é cinza quente dentro de uma pele inteira, e vapor.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # --- slots genéricos reinventados (R3/R24; não contam nas 20–25) ---
+  - id: enemy_esqueleto_mago
+    vaga: 22
+    nome: Iniciado Refratado
+    status: reinventada
+    substitui: enemy_esqueleto_mago
+    ataques: ["Feixe Partido", "Toque de Prisma"]
+    acoes: ["Avança sem pressa, de braços erguidos para a luz; não foge, não se rende."]
+    substitui_generico: Esqueleto Arcanista
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:110", "lore_nova/timeline_completa.txt:120"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um iniciado do conselho que trabalhava ao lado dos cristais de Oghma e respirou Éter puro por
+        décadas, até ele se depositar nos ossos. A medula virou cristal turvo, e o cristal cresceu para
+        fora: prismas de seis faces furam a pele dos antebraços, dos ombros e da espinha, compridos como
+        dedos. A carne em volta secou e encolheu. Os olhos ficaram leitosos; ele vê pela luz que entra
+        nos prismas, e vira o corpo para ela como planta.
+    silhueta: "Um vulto de túnica com os braços erguidos, eriçado de pontas de cristal nos braços e nas costas."
+    comportamento: >-
+      Patrulha as câmaras secas onde a luz das lamparinas ainda entra. Ergue os braços para qualquer
+      luz e a devolve partida, num feixe que corta. Não fala; os lábios se mexem no ritmo das fórmulas
+      que recitava.
+    papel_tatico: artilharia
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_iniciado_refratado_feixe_partido
+      frase: >-
+        Junta a luz da sala nos prismas por uma rodada e a solta num feixe que corta; se a luz for
+        tapada antes, o feixe sai partido e fraco.
+    contra_jogo: Apagar ou tapar a luz, ou pôr-se atrás de pedra quando os prismas acendem; no escuro, ele só tem as mãos.
+    gancho: >-
+      Os iniciados trabalhavam ao lado dos cristais de Oghma e eram o futuro do conselho; o Éter que
+      respiraram ficou nos ossos deles e continuou crescendo depois que a cidade caiu.
+    habitat: [ae_camara_seca, ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque]
+    a_cada_n: 2
+    telegrafo: "Os prismas nos braços de {nome} se viram todos para a sua lamparina e começam a clarear."
+    description: Um iniciado do conselho de Aethelgard cuja medula virou cristal; prismas furam os braços e as costas e devolvem a luz da sala num feixe que corta.
+    perigo: Alto
+    lore: >-
+      Os iniciados de Aethelgard trabalhavam no processo ao lado dos cristais de Oghma e esperavam um
+      dia entrar no conselho. Respiraram Éter puro por décadas. Quando a cidade caiu, o Éter já estava
+      nos ossos, e continuou crescendo: hoje fura a pele em prismas compridos nos braços e na espinha.
+      Os iniciados ainda andam pelas câmaras secas, de braços para a luz, e devolvem a luz partida. No
+      escuro, são só um velho magro.
+    aparencia: >-
+      Elfo magro e encolhido de túnica de iniciado puída, olhos leitosos, prismas de cristal turvo de
+      seis faces, compridos como dedos, furando a pele dos antebraços, dos ombros e da espinha; braços
+      sempre erguidos para a luz, que os prismas acendem.
+    como_se_luta: >-
+      Junta a luz nos prismas e a solta num feixe que corta. Tape ou apague a luz, ou fique atrás de
+      pedra quando os prismas acendem; no escuro, ele só tem as mãos.
+    related_entities: [ae_camara_seca, ae_ruinas_submersas, cultistas_destilacao]
+    arte:
+      visual: >-
+        Elfo adulto de idade incerta, magro e seco, túnica comprida de iniciado em tecido fino, puída e
+        manchada de água; braços erguidos à altura do rosto, palmas abertas; dos antebraços, dos ombros e
+        ao longo da espinha saem prismas hexagonais de cristal turvo, compridos como dedos, com a pele
+        repuxada e rachada em volta da base; olhos brancos leitosos; luz entrando nos prismas e saindo
+        partida em feixes finos.
+      composicao: >-
+        Câmara seca de pedra élfica com uma lamparina de óleo caída no chão; o Iniciado de pé diante
+        dela, braços erguidos, um feixe fino de luz partida cortando a sala em diagonal até a borda do
+        escudo de madeira de um explorador agachado, do mesmo tamanho. Ocre da lamparina contra o
+        azul-esverdeado dos prismas.
+      evitar: Esqueleto de mago com cajado, rei-morto de coroa, cristal de videogame em neon. É gente seca com cristal turvo saindo dos ossos, e a luz é fosca.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_fantasma
+    vaga: 23
+    nome: Nadador Transparente
+    status: reinventada
+    substitui: enemy_fantasma
+    ataques: ["Abraço Frio"]
+    acoes: ["Some na água clara e só aparece quando já está perto; não foge, não se rende."]
+    substitui_generico: Fantasma
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:246", "lore_nova/creatures.txt:1312"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: nada
+      percepcao: calor
+      texto: >-
+        Um afogado que passou tanto tempo na água escura sobre Oghma, onde o Éter muda a luz, que a
+        carne perdeu a cor por inteiro. Pele, músculo e gordura ficaram claros como água: na água limpa
+        da borda, o que se vê é a ossada nadando, com o coração escuro batendo devagar dentro das
+        costelas. Os dedos das mãos e dos pés cresceram compridos, com membrana entre eles, e o corpo
+        dobrado nada de lado, rente ao fundo. Fora da água, a carne fica opaca e cinzenta, e ele pesa.
+    silhueta: "Uma ossada nadando de lado na água clara, rente ao fundo, com um ponto escuro pulsando entre as costelas."
+    comportamento: >-
+      Não anda nas rotas dos Afogados de patrulha nem obedece ao que os comanda: caça por conta própria
+      na água rasa e cristalina das bordas, onde ninguém espera nada. Chega por baixo, abraça e puxa
+      para o frio. Os pescadores o chamam de fantasma porque só se vê o osso.
+    papel_tatico: emboscador
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_nadador_transparente_abraco_frio
+      frase: >-
+        Fica invisível na água clara: o primeiro abraço vem sem aviso, e o que se lança contra ele
+        antes de vê-lo erra, até ele mostrar o coração escuro.
+    contra_jogo: Turvar a água ou tirá-lo dela; turvo ou fora da água ele fica opaco e lento. Mirar o coração escuro.
+    gancho: >-
+      Os pescadores das bordas dizem que o Lago tem fantasmas que nadam; os mergulhadores, que já
+      tiraram um da água, sabem que é carne.
+    habitat: [aethelgard, ae_ruinas_submersas]
+    inspiracao:
+      - fonte: biologia (peixe-vidro, Kryptopterus)
+        referencia: "bagre de corpo transparente em que se vê o esqueleto e os órgãos"
+        tomou: a carne clara como água deixando ver só a ossada e um órgão escuro
+        distancia: é um afogado de Aethelgard mudado pelo Éter sobre Oghma; o peixe só deu a imagem da carne invisível
+    padrao: [defesa, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "Na água clara à sua frente, um ponto escuro bate devagar e chega mais perto: {nome} vai abraçar."
+    description: Um afogado de carne clara como água; na borda cristalina do Lago parece só uma ossada nadando, e abraça por baixo.
+    perigo: Alto
+    lore: >-
+      A água sobre Oghma muda a luz, e o que passa tempo demais nela perde a cor. Este afogado perdeu
+      toda: pele, músculo e gordura ficaram claros como a água. Na borda cristalina do Lago, o que se
+      vê é uma ossada nadando rente ao fundo e um coração escuro que bate devagar. Os pescadores o
+      chamam de fantasma. Os mergulhadores que o tiraram da água sabem que, fora dela, é carne cinzenta e
+      pesada.
+    aparencia: >-
+      Afogado de corpo dobrado, carne e pele transparentes como água, deixando ver a ossada e um
+      coração escuro batendo entre as costelas; dedos das mãos e dos pés compridos e palmados; fora da
+      água, carne opaca e cinzenta.
+    como_se_luta: >-
+      Na água clara é invisível, e o primeiro abraço vem sem aviso. Turve a água ou tire-o dela, e mire
+      o coração escuro.
+    related_entities: [aethelgard, ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Figura humana adulta nadando de lado, dobrada, quase invisível: carne transparente como
+        gelatina límpida, contornos marcados só por reflexos finos; dentro, o esqueleto branco inteiro,
+        nítido, e um coração escuro, vermelho-negro, entre as costelas; dedos das mãos e dos pés longos e
+        finos, com membranas transparentes. Restos de um colar élfico no pescoço.
+      composicao: >-
+        Água rasa e cristalina da borda do Lago sobre um arco élfico submerso, vista de cima através da
+        superfície: o esqueleto e o coração do Nadador deslizando rente às pedras para as pernas de um
+        pescador com água pela cintura, que segura um puçá. Luz do dia filtrada, cáusticas no fundo.
+      evitar: Fantasma translúcido brilhante, espectro de lençol, figura de névoa. Não brilha; é carne que ficou clara como água, e o que se vê é o esqueleto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_golem_carne
+    vaga: 24
+    nome: Encomenda Costurada
+    status: reinventada
+    substitui: enemy_golem_carne
+    ataques: ["Abraço de Caixote"]
+    acoes:
+      - "Fica junto dos caixotes que guarda e não sai dali; recua um passo, nunca o abandona."
+      - "Ataca quem abre ou arrasta um caixote; não persegue além da margem."
+    substitui_generico: Golem de Carne
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:64", "lore_nova/npcs.txt:70", "lore_nova/creatures.txt:1312"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Três Afogados que saqueadores da margem costuraram num corpo só, dobrado para caber num caixote
+        de embarque e ser vendido a peso como bicho raro. Para caber, quebraram-lhe os joelhos e os
+        cotovelos e dobraram tudo para dentro: de pé, as pernas ainda se dobram para trás e os braços,
+        quatro, saem em ângulos de caixa, com as palmas viradas para fora. Os pontos de corda alcatroada
+        correm pelo peito e pelos ombros, e duas cabeças tombam sobre o peito; a terceira foi cortada
+        para ganhar espaço. Ripas do caixote ainda estão pregadas nas costas.
+    silhueta: "Um vulto quadrado e dobrado em ângulos de caixa, com braços demais e ripas pregadas nas costas, ao lado de uma pilha de caixotes."
+    comportamento: >-
+      Fica na margem, junto dos caixotes que ninguém veio buscar, e às vezes se dobra de volta para
+      dentro do seu. Não ataca quem passa; ataca quem abre um caixote ou tenta arrastá-lo. Abraça com os
+      quatro braços e aperta, dobrando o outro como foi dobrado.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_encomenda_costurada_lacre_quebrado
+      frase: >-
+        Guarda a pilha de caixotes: quem mexe num deles leva o abraço dos quatro braços com força
+        dobrada; quem o enfrenta longe da pilha luta com uma coisa lenta.
+    contra_jogo: Não tocar nos caixotes, ou atraí-lo para longe da margem antes de abri-los; cortar os pontos de corda solta um braço.
+    gancho: >-
+      Um médico do Anel de Ferro compra partes de bicho para os seus estudos e paga pelo peso; houve
+      saqueadores que lhe quiseram vender três Afogados costurados como se fossem um bicho só.
+    habitat: [aethelgard]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} põe as quatro mãos sobre os caixotes e vira as duas cabeças para quem está mais perto deles."
+    description: Três Afogados costurados e dobrados por saqueadores para caber num caixote e ser vendidos como bicho raro; o Lago os pôs de pé, e eles guardam a remessa na margem.
+    perigo: Alto
+    lore: >-
+      Um médico do Anel de Ferro compra partes de bicho para os seus estudos, e paga pelo peso. Uns
+      saqueadores da margem acharam que três Afogados costurados num corpo só passariam por um bicho
+      raro, e os dobraram para caber num caixote, quebrando o que não dobrava. O caixote nunca
+      embarcou. O que o Lago põe de pé nos Afogados pôs de pé também este, do jeito que estava: dobrado.
+      Fica junto da pilha, na margem, e não deixa ninguém abrir os outros caixotes.
+    aparencia: >-
+      Corpo quadrado de três Afogados costurados com corda alcatroada, dobrado em ângulos de caixa:
+      joelhos que se dobram para trás, quatro braços em ângulo reto de palmas para fora, duas cabeças
+      tombadas no peito, ripas de caixote pregadas nas costas.
+    como_se_luta: >-
+      Abraça com os quatro braços quem mexe nos caixotes que guarda e dobra o outro como foi dobrado.
+      Não toque na pilha, ou atraia-o para longe dela; cortar os pontos solta um braço.
+    related_entities: [aethelgard, nova_arcadia]
+    arte:
+      visual: >-
+        Figura de uns dois metros e meio, quadrada como o caixote em que foi posta, montada com três
+        corpos humanos de pele cinza-azulada enrugada de água; costuras grossas de corda alcatroada preta
+        no peito e nos ombros; pernas que dobram para trás nos joelhos quebrados; quatro braços de
+        comprimentos e tons diferentes saindo em ângulos retos, palmas para fora; duas cabeças de olhos
+        fechados tombadas sobre o peito; três ripas de madeira pregadas nas costas, com a marca de
+        remessa pintada.
+      composicao: >-
+        Margem do Lago com uma pilha de caixotes de madeira cintados de ferro, um deles arrombado por
+        dentro; a Encomenda de pé ao lado da pilha, duas mãos sobre a tampa; um estivador com pé de
+        cabra parado a três passos, uma cabeça mais baixo. Névoa leve, luz cinzenta da manhã, água
+        verde-garrafa ao fundo.
+      evitar: Criatura de Frankenstein com parafusos no pescoço, homem de barro, colcha de retalhos colorida, pele de cera. São afogados dobrados em forma de caixa para embarque; a leitura é o ângulo de caixote.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_cacao_de_lastro
+    vaga: 5
+    nome: Cação de Lastro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:240", "lore_nova/locations.txt:251"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: enorme
+      locomocao: nada
+      percepcao: sangue_cheiro
+      texto: >-
+        Um cação do mar que entrou no Lago pela garganta e cresceu no Éter até o comprimento de um
+        barco. O Éter o deixou mais leve que a água, e ele vive engolindo pedras para não subir: a
+        barriga é um saco de couro esticado, áspero como lixa, cheio de pedras esculpidas das Ruínas,
+        cujas arestas marcam a pele por dentro. A cabeça é chata e larga, com fileiras de dentes que se
+        dobram para trás. Quando a barriga se abre, as pedras caem, e o corpo sobe à superfície e para
+        fora dela, debatendo-se no ar.
+    silhueta: "Um peixe comprido de barriga caída e cheia de arestas de pedra, nadando rente ao fundo."
+    comportamento: >-
+      Patrulha o fundo raso da borda, onde as pedras soltas são fáceis de engolir. Sente sangue na água
+      de longe e vem por baixo. Se perde o lastro, não foge: sobe se debatendo e cai de volta sobre o
+      que estiver na superfície.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cacao_de_lastro_lastro_solto
+      frase: >-
+        Ferido na barriga, perde as pedras e sobe para fora da água: muda de luta e passa a cair do alto
+        sobre quem está na superfície, em vez de morder por baixo.
+    contra_jogo: Escolher quando abrir a barriga; no fundo ele morde, no ar ele cai. Quem está num barco o prefere no fundo, quem está na água o quer no ar.
+    gancho: >-
+      Desde que o mar entrou no Lago pela garganta, vem coisa do mar; o Éter deixou esta leve demais
+      para a água, e ela come as Ruínas para ficar no fundo.
+    habitat: [aethelgard]
+    inspiracao: []
+    padrao: [ataque, mover, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "A água escurece de sangue em volta de {nome}, as pedras rangem dentro da barriga, e ele começa a subir."
+    description: Um cação do mar crescido no Éter do Lago, leve demais para a água, que engole pedras das Ruínas para ficar no fundo e sobe para fora dela quando perde o lastro.
+    perigo: Extremo
+    lore: >-
+      Na Era 6 o mar leste entrou no Lago por uma garganta, e o que era água parada ficou salobra. Com
+      o sal vieram bichos do mar. Este era um cação. O Éter do Lago o fez crescer até o comprimento de um
+      barco e o deixou mais leve que a água, e ele vive engolindo pedras esculpidas das Ruínas para não
+      subir. Os mergulhadores reconhecem a barriga, marcada por dentro pelas arestas das pedras. Quem a
+      abre vê o bicho sair da água.
+    aparencia: >-
+      Cação do comprimento de um barco, cabeça chata e larga com fileiras de dentes dobrados para trás,
+      pele cinza áspera como lixa; barriga caída e esticada, marcada por dentro pelas arestas das pedras
+      esculpidas que ele engoliu como lastro.
+    como_se_luta: >-
+      No fundo morde por baixo; com a barriga aberta perde as pedras, sobe e cai do alto sobre quem está
+      na superfície. Escolha onde você o quer.
+    related_entities: [aethelgard]
+    arte:
+      visual: >-
+        Cação enorme, do comprimento de um barco de pesca, corpo fusiforme cinza-ardósia, pele de lixa
+        com cicatrizes; cabeça larga e achatada, boca em meia-lua com várias fileiras de dentes
+        triangulares dobrados para trás; barriga pendente, esticada até quase rasgar, com os contornos
+        de pedras esculpidas (um capitel, um pedaço de rosto de estátua) marcando a pele por dentro; um
+        corte na barriga soltando pedras.
+      composicao: >-
+        Corte acima e abaixo da superfície, na borda do Lago: embaixo, o Cação passando rente a arcos
+        élficos submersos, pedras caindo do corte na barriga; em cima, um barco de pesca a remo com dois
+        pescadores, do tamanho da cabeça do bicho. Água verde-garrafa clara, luz do dia.
+      evitar: Tubarão de cinema saltando de boca aberta, peixe pré-histórico, monstro marinho de tentáculos. É um cação inchado de pedras, pesado e feio; a estranheza é a barriga.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bigua_de_vidro
+    vaga: 6
+    nome: Biguá de Vidro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:251", "lore_nova/locations.txt:246"]
+    anatomia:
+      plano_corporal: alado
+      material: vidro_cristal
+      escala: pequena
+      locomocao: plana_voa
+      percepcao: visao
+      texto: >-
+        Uma ave de mergulho, preta e de pescoço comprido, que pesca onde o Éter aflora. A cada mergulho
+        o Éter vidra mais uma pena: as asas e o dorso ficaram cobertos de penas de vidro turvo, finas e
+        cortantes como lascas, que tilintam quando ela se sacode. O bico é longo e tem gancho na ponta, e
+        os olhos, verdes como os de qualquer biguá, ficaram baços de tanto olhar o brilho do fundo. Com o
+        peso do vidro, voa baixo e mal, mas mergulha como pedra.
+    silhueta: "Uma ave escura de pescoço em S sobre uma estaca, de asas abertas para secar, que brilham como vidraça quebrada."
+    comportamento: >-
+      Vive em bando nas estacas e nos arcos que despontam da água, de asas abertas para secar. Mergulha
+      em quem está na água, corta e sobe de novo para a estaca antes do troco.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bigua_de_vidro_mergulho_de_vidro
+      frase: >-
+        Mergulha, corta com as penas de vidro e volta para a estaca: entre um mergulho e outro fica fora
+        do alcance de quem não tem arma de arremesso.
+    contra_jogo: Arma de arremesso, ou esperar o mergulho e golpear quando ela está na água; molhada e pesada de vidro, demora a levantar.
+    gancho: >-
+      Os pescadores das bordas sempre dividiram o Lago com os biguás; os que pescam onde o Éter aflora
+      voltam com penas que cortam a rede.
+    habitat: [aethelgard]
+    inspiracao: []
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} fecha as asas de vidro na estaca e encolhe o pescoço, de olho na água perto de você."
+    description: Uma ave de mergulho cujas penas o Éter do Lago vidrou; mergulha, corta com as asas e volta para a estaca.
+    perigo: Baixo
+    lore: >-
+      Os biguás pescam no Lago desde antes de ele ser lago. Os que pescam onde o Éter aflora voltam de
+      cada mergulho com mais uma pena vidrada, até que as asas e o dorso viram vidro turvo. Voam mal com
+      o peso e mergulham como pedra. Ficam em bando nas estacas e nos arcos que saem da água, de asas
+      abertas, e os pescadores aprenderam a não pescar debaixo deles.
+    aparencia: >-
+      Ave de mergulho preta de pescoço comprido em S e bico longo com gancho na ponta, olhos verdes
+      baços; asas e dorso cobertos de penas de vidro turvo, finas e cortantes como lascas, abertas para
+      secar.
+    como_se_luta: >-
+      Mergulha, corta e volta para a estaca, fora de alcance. Use arma de arremesso, ou golpeie no
+      instante em que ela está na água.
+    related_entities: [aethelgard]
+    arte:
+      visual: >-
+        Biguá do tamanho de um ganso, corpo preto fosco, pescoço comprido em S, bico longo e fino com
+        gancho na ponta, olho verde-esmeralda baço; asas abertas em cruz para secar, com as penas de voo
+        e as do dorso transformadas em lâminas de vidro turvo esverdeado, translúcidas nas pontas,
+        algumas lascadas.
+      composicao: >-
+        Estaca de madeira e um arco élfico despontando da água clara da borda; quatro biguás de asas
+        abertas, um deles mergulhando em diagonal para o ombro de um pescador numa canoa logo abaixo, que
+        se encolhe sob o chapéu de palha. Luz de fim de tarde atravessando as penas de vidro.
+      evitar: Fênix de cristal, pássaro de gelo, ave de fogo. É um biguá comum, preto e de pescoço comprido; só as penas viraram vidro turvo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_aranha_de_bolha
+    vaga: 7
+    nome: Aranha de Bolha
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:251", "lore_nova/locations.txt:261"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: humana
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Uma aranha d'água do tamanho de um homem agachado, de carapaça marrom-escura e pernas finas
+        cobertas de pelos que prendem o ar. Leva o ar preso em volta do abdômen como um véu prateado e o
+        descarrega num sino de seda que tece entre os arcos submersos. As patas da frente são mais
+        grossas, com garras em gancho; as fiandeiras soltam fios que grudam debaixo da água. O Éter a fez
+        crescer e deu ao sino dela o tamanho de um quarto.
+    silhueta: "Uma aranha de pernas finas dentro de uma bolha prateada do tamanho de uma porta, presa entre dois arcos."
+    comportamento: >-
+      Estende fios de seda pelos corredores submersos e espera no sino. Sente pelos fios o mergulhador
+      que passa e os puxa, enrolando-lhe as pernas. Quem fica preso é arrastado para dentro do sino,
+      onde há ar.
+    papel_tatico: controlador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_aranha_de_bolha_puxada_para_o_sino
+      frase: >-
+        Puxa o alvo pelos fios para dentro do sino de ar: lá dentro ele luta sozinho com ela, e os
+        aliados não o alcançam nem o ajudam até ele sair.
+    contra_jogo: Cortar os fios antes de ir até ela; quem foi puxado deve furar o sino, porque sem ar dentro ela perde a casa e solta.
+    gancho: >-
+      Os mergulhadores acharam bolsões de ar nos corredores submersos que não deviam estar ali; alguns
+      se salvaram neles, outros não saíram.
+    habitat: [ae_ruinas_submersas]
+    inspiracao:
+      - fonte: biologia (aranha-de-sino, Argyroneta aquatica)
+        referencia: "aranha que vive debaixo da água num sino de seda cheio do ar que ela leva preso nos pelos"
+        tomou: o ar preso nos pelos como véu prateado e o sino de seda entre os arcos
+        distancia: aumentada pelo Éter; os fios que prendem mergulhadores e o sino que salva e mata vêm das Ruínas, não da espécie
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "Os fios presos ao seu cinto ficam tensos de uma vez: {nome} está recolhendo a linha para dentro do sino."
+    description: Uma aranha d'água do tamanho de um homem que tece um sino de ar entre os arcos submersos e puxa quem passa para dentro dele, longe dos companheiros.
+    perigo: Médio
+    lore: >-
+      Nos corredores submersos das Ruínas há bolsões de ar que não deviam existir, e alguns
+      mergulhadores sobreviveram neles. São sinos de seda de uma aranha d'água que o Éter fez crescer
+      até o tamanho de um homem e que leva o ar preso nos pelos como um véu prateado. Ela estende fios
+      pelos corredores e sente quem passa. Os que ficam presos são puxados para o sino, onde há ar, e
+      onde ela come.
+    aparencia: >-
+      Aranha d'água do tamanho de um homem agachado, carapaça marrom-escura, pernas finas peludas, patas
+      da frente grossas com garras em gancho, abdômen envolto num véu de ar prateado; vive num sino de
+      seda cheio de ar entre os arcos.
+    como_se_luta: >-
+      Puxa o alvo para dentro do sino, onde os aliados não o alcançam. Corte os fios antes de avançar;
+      puxado, fure o sino.
+    related_entities: [ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Aranha aquática enorme, corpo do tamanho de um homem agachado, carapaça marrom-escura fosca, oito
+        pernas longas e finas cobertas de pelos curtos que seguram bolhas de ar; o abdômen envolto num
+        envelope de ar prateado e brilhante como mercúrio; pernas da frente mais grossas, garras curvas;
+        fios de seda branca esticados na água.
+      composicao: >-
+        Corredor élfico submerso de arcos; entre dois arcos, um sino de seda cheio de ar do tamanho de
+        uma porta, com a aranha dentro; fios esticados até o tornozelo de um mergulhador de capacete de
+        couro, do tamanho dela, sendo puxado. Luz fria de alga luminosa, a bolha refletindo prata.
+      evitar: Aranha gigante de terror com olhos vermelhos, aranha de lava, aranha de cristal. É uma aranha d'água de verdade, aumentada, marrom e peluda; o espanto é o sino de ar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lesma_de_penacho
+    vaga: 8
+    nome: Lesma de Penacho
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1302", "lore_nova/creatures.txt:1284"]
+    anatomia:
+      plano_corporal: radial
+      material: carne_exposta
+      escala: pequena
+      locomocao: rasteja
+      percepcao: eter
+      texto: >-
+        Uma lesma do mar do tamanho de um gato, sem concha, de carne mole e lustrosa em listras de cor
+        que mudam. Nas costas, um penacho de dezenas de dedos carnudos, cada um com a ponta cheia do Éter
+        que ela tirou do que comeu: lascas de Cristal-de-Oghma, folhas de Planta-Vertical, o que o
+        mergulhador carrega. Não tem olhos; duas antenas curtas na cabeça sentem o Éter. Rasteja num pé
+        achatado e deixa um rastro que brilha.
+    silhueta: "Uma lesma gorda com um penacho de dedos acesos nas costas, como uma escova de luz."
+    comportamento: >-
+      Pasta nas paredes das câmaras onde há cristal. Sente o Éter de longe e vai até ele, inclusive na
+      bolsa ou no feitiço de quem passa. O que a atinge de Éter, ela come e guarda; o que guardou, solta
+      em quem a toca.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lesma_de_penacho_penacho_cheio
+      frase: >-
+        O primeiro efeito de Éter que a atinge não a fere: vai para as pontas do penacho, e ela o
+        descarrega em quem a tocar em seguida.
+    contra_jogo: Abrir a luta com aço e deixar a magia para depois, ou gastar nela um feitiço fraco primeiro; com o penacho cheio, não a toque de mão. Sal faz o penacho murchar.
+    gancho: >-
+      Os Caranguejos-Relíquia carregam cristal nas costas; as lesmas comem o cristal, e há magos que
+      juram ter levado de volta, na mão, o feitiço que lançaram numa delas.
+    habitat: [ae_ruinas_submersas]
+    inspiracao:
+      - fonte: biologia (nudibrânquios, cleptocnidos)
+        referencia: "lesmas do mar sem concha que comem cnidários e guardam os ferrões intactos nas pontas das ceratas"
+        tomou: o penacho de ceratas com a arma roubada guardada nas pontas
+        distancia: a arma roubada é o Éter e o feitiço do mergulhador; o cristal de Oghma e as câmaras são das Ruínas
+    padrao: [enfraquecer, defesa]
+    a_cada_n: 2
+    telegrafo: "O penacho de {nome} está aceso até as pontas, e ela se arrasta para a sua mão."
+    description: Uma lesma do mar sem concha que come Éter e o guarda nas pontas do penacho; o feitiço lançado nela não a fere e volta em quem a toca.
+    perigo: Médio
+    lore: >-
+      Nas câmaras onde o Cristal-de-Oghma aflora vivem lesmas do mar sem concha, do tamanho de um gato,
+      de carne listrada que muda de cor. Comem cristal, folha de Planta-Vertical e o que mais tiver
+      Éter, e o guardam nas pontas de um penacho de dedos nas costas. Os magos aprenderam do jeito
+      difícil que elas também comem o feitiço lançado contra elas. E que, tocadas, devolvem.
+    aparencia: >-
+      Lesma do mar sem concha do tamanho de um gato, carne mole e lustrosa em listras que mudam de cor,
+      sem olhos, duas antenas curtas, penacho de dezenas de dedos carnudos nas costas com as pontas
+      acesas de Éter azul-esverdeado.
+    como_se_luta: >-
+      O primeiro feitiço que a atinge não a fere e volta em quem a tocar. Abra com aço, ou gaste nela
+      um feitiço fraco primeiro.
+    related_entities: [ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Nudibrânquio enorme do tamanho de um gato, corpo alongado e macio, pele lustrosa em listras
+        laranja-ferrugem, violeta e branco; duas antenas curtas lameladas na cabeça; nas costas, um
+        penacho denso de dezenas de projeções carnudas como dedos, cada uma com a ponta translúcida
+        acesa em azul-esverdeado fosco; rastro brilhante atrás.
+      composicao: >-
+        Parede de câmara submersa com veios de cristal turvo; a Lesma rastejando sobre a alça da bolsa
+        de couro de um mergulhador apoiada numa saliência, e a mão dele entrando no quadro para pegá-la,
+        dando a escala. Luz das pontas do penacho iluminando a pedra.
+      evitar: Lesma de desenho animado, verme de fogo, criatura em neon. A cor é de bicho do mar, fosca; só as pontas do penacho brilham.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ourico_de_lajedo
+    vaga: 9
+    nome: Ouriço de Lajedo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:240", "lore_nova/locations.txt:251"]
+    anatomia:
+      plano_corporal: radial
+      material: quitina
+      escala: pequena
+      locomocao: rola
+      percepcao: vibracao
+      texto: >-
+        Um ouriço do mar que veio com o sal e cresceu até o tamanho de uma cabeça, de casca escura e
+        espinhos longos e ocos, cor de ferrugem. O Éter mexeu no tempo dos espinhos: cada um que se solta
+        continua crescendo, rápido, dentro do que encontrar. A boca, no centro da parte de baixo, tem
+        cinco dentes que raspam a pedra. Não tem olhos; sente pelo tremor da laje, e rola sobre os
+        espinhos de baixo para chegar mais perto.
+    silhueta: "Uma bola de espinhos compridos do tamanho de uma cabeça, pousada numa laje como uma flor seca."
+    comportamento: >-
+      Vive em tapetes nas lajes rasas das bordas e nos degraus das Ruínas. Sente quem pisa e dispara
+      espinhos pela água. Não persegue; rola devagar para a próxima laje.
+    papel_tatico: artilharia
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ourico_de_lajedo_espinheiro
+      frase: >-
+        Os espinhos que erram caem na laje e continuam crescendo ali: a cada rodada o chão em volta vira
+        mais espinheiro, e quem se mexe por ele se fere.
+    contra_jogo: Matá-lo logo, antes que a laje feche, ou lutar parado; quem tem de atravessar vai calçado e devagar, porque ele sente o tremor do passo.
+    gancho: >-
+      Desde que a água ficou salobra, as lajes rasas das bordas se encheram de ouriços; os degraus onde
+      um deles brigou ficam intransitáveis por uma estação, cobertos de espinheiro.
+    habitat: [aethelgard, ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [ataque, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "Os espinhos de {nome} se viram para o lado do seu último passo, e a laje em volta estala."
+    description: Um ouriço do mar do tamanho de uma cabeça, crescido no Éter; os espinhos que dispara e erram continuam crescendo na laje até o chão virar espinheiro.
+    perigo: Baixo
+    lore: >-
+      Quando o mar entrou no Lago, os ouriços vieram com o sal e cobriram as lajes rasas das bordas e os
+      degraus das Ruínas. O Éter os fez crescer até o tamanho de uma cabeça e mexeu no tempo dos
+      espinhos: o que se solta continua crescendo onde cai. Depois de uma briga, a laje em volta vira um
+      espinheiro cor de ferrugem que leva uma estação para quebrar. Os pescadores mais velhos andam
+      nas lajes devagar, de bota, e não brigam com ouriço.
+    aparencia: >-
+      Ouriço do mar do tamanho de uma cabeça humana, casca escura, espinhos longos e ocos cor de
+      ferrugem, boca de cinco dentes na parte de baixo, sem olhos; em volta, a laje eriçada dos espinhos
+      soltos que continuaram crescendo.
+    como_se_luta: >-
+      Os espinhos que erram crescem na laje e o chão em volta vira espinheiro, que fere quem se mexe.
+      Mate-o logo ou lute parado; ele sente o passo.
+    related_entities: [aethelgard, ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Ouriço do mar esférico do tamanho de uma cabeça humana, casca violeta-negra, espinhos longos,
+        finos e ocos, cor de ferrugem com faixas mais claras, alguns quebrados; na parte de baixo, a boca
+        em estrela de cinco dentes brancos. Vários ouriços em volta, como um tapete.
+      composicao: >-
+        Degraus élficos rasos na borda do Lago, água pela canela; um ouriço no degrau do meio, e em volta
+        dele os espinhos soltos que cresceram na pedra, um matagal de varas cor de ferrugem até a altura do
+        joelho; um pescador de botas parado na beira do espinheiro, com uma vara, sem saber por onde
+        passar. Luz clara de manhã, água transparente.
+      evitar: Bola de espinhos de videogame, ouriço-cacheiro, mina naval. É um ouriço do mar, fosco e vivo; o horror está no chão que virou espinheiro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cupinzeiro_de_vidro
+    vaga: 10
+    nome: Cupinzeiro de Vidro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:278", "lore_nova/locations.txt:256"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: vidro_cristal
+      escala: grande
+      locomocao: ancorada
+      percepcao: vibracao
+      texto: >-
+        Um ninho de cupins que comem os restos dos cristais de contenção apagados e devolvem vidro. O
+        monte, da altura de um homem, é de vidro turvo e bolhoso, cuspido grão a grão, com galerias por
+        dentro onde se veem os cupins brancos andando. A rainha, inchada e do tamanho de um braço, fica no
+        fundo, colada à pedra; os soldados têm a cabeça grande, mandíbulas em tesoura e um jato de cola
+        que vira vidro no ar. Quando o ninho é tocado, todos saem de uma vez pelas bocas do monte.
+    silhueta: "Um monte de vidro bolhoso da altura de um homem, encostado na parede de um túnel."
+    comportamento: >-
+      Cresce nas câmaras secas, onde ficaram os cristais de contenção. Quando há luta perto, os soldados
+      cospem vidro e erguem paredes diante dos que estão do lado do ninho, cupins ou não.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cupinzeiro_de_vidro_parede_cuspida
+      frase: >-
+        A cada rodada os soldados cospem uma parede de vidro diante de um aliado do ninho; enquanto a
+        rainha vive, a obra não para.
+    contra_jogo: Quebrar o monte até a rainha, ou levar a luta para longe do ninho; as paredes são de vidro e cedem a pancada, não a lâmina.
+    gancho: >-
+      O aprendiz apagou os cristais de contenção numa noite; os cupins da Câmara Seca comem os restos
+      desde então, e o que devolvem é vidro.
+    habitat: [ae_camara_seca]
+    inspiracao: []
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "Os soldados de {nome} saem pelas bocas do monte e se enfileiram diante do aliado mais ferido."
+    description: Um ninho de cupins que comem os cristais de contenção apagados de Aethelgard e cospem vidro; o monte ergue paredes diante de quem luta do lado dele.
+    perigo: Médio
+    lore: >-
+      Na noite em que a cidade caiu, o aprendiz apagou os cristais de contenção de Aethelgard. Os restos
+      ficaram nas câmaras secas, e os cupins vieram comê-los. Comem cristal e devolvem vidro turvo, grão
+      a grão, em montes da altura de um homem encostados nas paredes. Os soldados cospem uma cola que
+      vira vidro no ar. Os guardiões da entrada seca dizem que eles não escolhem lado: erguem parede
+      diante de qualquer um que esteja perto do ninho.
+    aparencia: >-
+      Monte de vidro turvo e bolhoso da altura de um homem, colado à parede de pedra, com galerias por
+      onde andam cupins brancos; soldados de cabeça grande e mandíbulas em tesoura cuspindo cola que
+      vira vidro; a rainha inchada no fundo.
+    como_se_luta: >-
+      Ergue paredes de vidro diante de quem luta perto do ninho. Quebre o monte até a rainha, a pancada,
+      ou leve a luta para longe dele.
+    related_entities: [ae_camara_seca]
+    arte:
+      visual: >-
+        Cupinzeiro alto, da altura de um homem, de vidro turvo esverdeado, bolhoso e irregular, com
+        aberturas como bocas; através do vidro, galerias com cupins brancos; na base, soldados do tamanho
+        de um polegar, de cabeça marrom grande e mandíbulas cruzadas, cuspindo fios de cola que endurecem
+        em lâminas de vidro; no fundo, a rainha branca e inchada, do tamanho de um braço.
+      composicao: >-
+        Câmara seca com a moldura vazia de um cristal de contenção na parede e o cupinzeiro encostado a
+        ela; uma parede curva de vidro recém-cuspida protege um Afogado do golpe de um explorador com
+        martelo, ambos da altura do monte. Luz de lamparina atravessando o vidro em manchas verdes.
+      evitar: Formigueiro de cristal brilhante, colmeia de abelhas, inseto gigante. Os cupins têm tamanho de cupim; grande é o monte, e o vidro é turvo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_camarao_faxineiro
+    vaga: 11
+    nome: Camarão Faxineiro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:253", "lore_nova/creatures.txt:1312"]
+    anatomia:
+      plano_corporal: composto
+      material: quitina
+      escala: miuda
+      locomocao: nada
+      percepcao: sangue_cheiro
+      texto: >-
+        Um enxame de camarões claros, do tamanho de um dedo, que vivem sobre os Afogados e cuidam deles.
+        Têm a carapaça quase transparente, listrada de vermelho, antenas brancas compridas e pinças finas
+        que tiram a carne podre e os parasitas das feridas. O Éter das Ruínas os ensinou a fazer mais: a
+        saliva fecha o corte com uma pele nova de quitina, grossa e clara. Nadam em nuvem em volta do
+        Afogado que limpam, e a nuvem guarda a forma de gente.
+    silhueta: "Uma nuvem de pontos claros com a forma de um homem, em volta de um afogado parado."
+    comportamento: >-
+      Vivem sobre os Afogados que patrulham as Ruínas e os seguem. Quando um deles é ferido, a nuvem
+      desce sobre o corte. Fogem da luz forte e de quem os ataca, e voltam logo.
+    papel_tatico: suporte
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_camarao_faxineiro_casca_nova
+      frase: >-
+        Desce sobre o aliado ferido e fecha o corte com uma pele nova de quitina: tira dele um
+        Ferimento.
+    contra_jogo: Espantar o enxame primeiro, com luz forte, fogo ou rede fina, ou ferir os Afogados longe dele; sem a nuvem, os Afogados não fecham.
+    gancho: >-
+      Os Afogados patrulham as Ruínas há gerações e nenhum apodreceu; os mergulhadores achavam que era o
+      Éter, até verem a nuvem de camarões que os acompanha.
+    habitat: [ae_ruinas_submersas]
+    inspiracao:
+      - fonte: biologia (camarões-limpadores)
+        referencia: "camarões de recife que limpam parasitas e tecido morto de peixes grandes em estações de limpeza"
+        tomou: o enxame que vive sobre um bicho maior e cuida das feridas dele
+        distancia: aqui o cliente é um morto de Aethelgard e o Éter faz a saliva fechar o corte com quitina, coisa que nenhum camarão faz
+    padrao: [reforco_proprio, mover]
+    a_cada_n: 2
+    telegrafo: "A nuvem de {nome} deixa o ombro do Afogado e desce sobre o corte mais fundo dele."
+    description: Um enxame de camarões claros que vivem sobre os Afogados das Ruínas, limpam as feridas deles e as fecham com quitina nova.
+    perigo: Baixo
+    lore: >-
+      Os Afogados patrulham as Ruínas há gerações e não apodrecem. Os mergulhadores punham isso na conta
+      do Éter, até verem de perto: em volta de cada um nada uma nuvem de camarões claros, listrados de
+      vermelho, que tiram a carne morta e os parasitas e fecham o corte com uma pele nova de quitina.
+      Fogem da lanterna e voltam. Quem quer derrubar um Afogado aprende a espantar a nuvem antes.
+    aparencia: >-
+      Enxame de camarões do tamanho de um dedo, carapaça quase transparente listrada de vermelho,
+      antenas brancas compridas, pinças finas; nadam em nuvem em volta de um Afogado, cobrindo-lhe as
+      feridas, e a nuvem guarda a forma de um homem.
+    como_se_luta: >-
+      Fecha com quitina as feridas dos Afogados que acompanha. Espante ou destrua o enxame primeiro,
+      com luz forte, fogo ou rede fina.
+    related_entities: [ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Centenas de camarões do tamanho de um dedo, corpos translúcidos com listras vermelhas e brancas,
+        antenas longas e brancas, aglomerados num corte no ombro de um afogado, onde se vê uma camada nova
+        de quitina clara e brilhante cobrindo a ferida; o resto do enxame em nuvem, desenhando o contorno
+        de um corpo.
+      composicao: >-
+        Corredor submerso; um Afogado de pé, imóvel, coberto pela nuvem de camarões, com um corte no
+        ombro sendo fechado; em primeiro plano, a mão de um mergulhador erguendo uma lanterna e o enxame
+        recuando da luz. Luz quente da lanterna contra o verde-garrafa.
+      evitar: Camarão gigante, praga de insetos, cardume luminoso. São camarões pequenos e reais, de listras vermelhas; a estranheza é o que fazem com a ferida.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_quimera_cristal
+    vaga: 25
+    nome: Ariranha de Arcada
+    status: reinventada
+    substitui: mon_quimera_cristal
+    ataques: ["Bote da Corrente"]
+    acoes:
+      - "Ferida e encurralada, volta para a Corrente e some, para caçar outro dia."
+      - "Morde primeiro quem ficou mais fraco ou mais longe dos outros."
+      - "Espera a Corrente certa e guarda o bote para quando ele decide a luta."
+    substitui_generico: Quimera de Cristal Destilado
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1298", "lore_nova/locations.txt:251"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: nada
+      percepcao: eter
+      texto: >-
+        Uma ariranha do tamanho de um homem deitado, de pelo marrom-escuro curto e oleoso, com uma mancha
+        clara na garganta, diferente em cada uma. Os bigodes engrossaram e viraram fios de cristal turvo,
+        longos como um braço, que sentem as Correntes-de-Éter. Ela aprendeu a entrar numa Corrente e a
+        deixar-se jogar: sai do outro lado da galeria mais rápida do que nada qualquer bicho. As patas têm
+        membranas largas e garras grossas; a mordida quebra osso.
+    silhueta: "Uma lontra comprida e musculosa, de cabeça chata e bigodes longos como varas de pescar."
+    comportamento: >-
+      Caça em família nas galerias por onde as Correntes passam. Escolhe o mergulhador que ficou para
+      trás, entra na Corrente e sai em cima dele. Ferida, volta para a Corrente e some.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador_apice
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ariranha_de_arcada_bote_da_corrente
+      frase: >-
+        Monta uma Corrente-de-Éter e dá o bote de longe no alvo mais fraco ou mais isolado; ferida, volta
+        para a Corrente e some.
+    contra_jogo: Ficar junto, sem deixar ninguém para trás, e lutar longe das Correntes; quebrar os bigodes de cristal a deixa sem saber onde a Corrente está.
+    gancho: >-
+      As ariranhas pescavam no lago da cratera antes da cidade; as que ficaram aprenderam a usar as
+      Correntes-de-Éter que queimam os magos.
+    habitat: [aethelgard, ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [mover, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "Os bigodes de cristal de {nome} se esticam para a Corrente, e ela some na luz."
+    description: Uma ariranha grande de bigodes de cristal que sente as Correntes-de-Éter e se deixa jogar por elas para dar o bote no mergulhador que ficou para trás.
+    perigo: Alto
+    lore: >-
+      As ariranhas pescavam no lago da cratera antes de existir Aethelgard, e algumas famílias ficaram
+      depois que a cidade afundou. O Éter engrossou os bigodes delas em fios de cristal que sentem as
+      Correntes. Uma Corrente-de-Éter queima um mago por dentro; as ariranhas aprenderam a entrar nela e
+      a deixar-se jogar, e saem do outro lado da galeria em cima do mergulhador que ficou para trás.
+      Feridas, voltam para a luz e somem.
+    aparencia: >-
+      Ariranha do tamanho de um homem deitado, pelo marrom-escuro curto e oleoso, mancha clara na
+      garganta, cabeça chata, bigodes de cristal turvo longos como um braço, patas de membranas largas e
+      garras grossas.
+    como_se_luta: >-
+      Entra numa Corrente-de-Éter e sai em cima de quem ficou para trás; ferida, some na Corrente.
+      Fiquem juntos e lutem longe das Correntes.
+    related_entities: [aethelgard, ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Ariranha enorme, corpo comprido e musculoso de quase dois metros, pelo marrom-chocolate curto e
+        molhado, mancha creme irregular na garganta, cabeça larga e achatada, olhos pequenos e escuros;
+        bigodes transformados em fios grossos de cristal turvo azul-esverdeado, longos como um braço, um
+        deles quebrado; patas palmadas com garras escuras e grossas; boca aberta mostrando os caninos.
+      composicao: >-
+        Galeria submersa atravessada por uma faixa de luz líquida, a Corrente-de-Éter; a Ariranha saindo
+        da luz em disparada, corpo esticado, na direção de um mergulhador isolado com corda de segurança,
+        do tamanho dela; ao fundo, outros dois mergulhadores longe demais. Movimento borrado na água, luz
+        fria.
+      evitar: Bicho de três cabeças, lobo de cristal, lontra fofa. É uma ariranha de verdade, grande e feroz; só os bigodes viraram cristal.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_peito_de_sino
+    vaga: 12
+    nome: Peito de Sino
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:1847", "lore_nova/creatures.txt:1336"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: grande
+      locomocao: nada
+      percepcao: respiracao
+      texto: >-
+        Um mergulhador veterano que trocou anos de fôlego por Éter: cada descida alargou um pouco mais
+        os pulmões, até o peito virar um barril que levanta as costelas e os ombros como um sino de
+        bronze. A pele do tórax esticou e rachou; pelas rachas se vê o músculo vermelho, e os pulmões
+        incham por baixo como foles. O pescoço afundou entre os ombros, e a cabeça ficou pequena em cima
+        do corpo. Segura o ar por meia hora, e os braços curtos e grossos não soltam o que agarram.
+    silhueta: "Um homem de tronco enorme em forma de sino, cabeça pequena e braços curtos, parado na água até o peito."
+    comportamento: >-
+      Mergulha mais fundo e por mais tempo que qualquer saqueador e defende as rotas que só ele alcança.
+      Não luta de pé: agarra o outro pela cintura, enche o peito e se deixa afundar com ele, e espera lá
+      embaixo, com meia hora de ar, que o outro acabe o dele.
+    papel_tatico: controlador
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_peito_de_sino_mergulho_junto
+      frase: >-
+        Agarra o alvo e afunda com ele: enquanto estiverem submersos, o alvo perde Fôlego a cada rodada e
+        o Peito de Sino não perde nada.
+    contra_jogo: Não deixar que ele chegue à cintura, lutando na margem ou em água rasa; agarrado, golpear as rachas do peito, porque o ar que sai é o que o leva para cima.
+    gancho: >-
+      Os mergulhadores veteranos de Aethelgard têm o fôlego que os outros invejam; o preço é o peito,
+      que o Éter não para de alargar.
+    habitat: [aethelgard, ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [reforco_proprio, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} abre os braços curtos na altura da sua cintura e enche o peito até as rachas abrirem."
+    description: Um mergulhador veterano cujo peito o Éter alargou num barril em forma de sino; agarra quem enfrenta e afunda com ele, com meia hora de ar contra o fôlego do outro.
+    perigo: Médio
+    lore: >-
+      Os mergulhadores veteranos de Aethelgard descem mais fundo e ficam mais tempo do que deveria ser
+      possível. É o Éter: cada descida alarga um pouco mais os pulmões. Nos mais antigos, o peito virou
+      um sino que levanta as costelas e os ombros, a pele do tórax racha, e a cabeça parece pequena em
+      cima de tudo. Eles defendem as rotas que só eles alcançam, e não brigam na superfície: agarram e
+      descem, e esperam lá embaixo.
+    aparencia: >-
+      Homem enorme de tronco em forma de sino, peito de barril que ergue costelas e ombros, pele do
+      tórax esticada e rachada mostrando músculo vermelho, pescoço afundado, cabeça pequena, braços
+      curtos; roupa de mergulho de couro aberta no peito.
+    como_se_luta: >-
+      Agarra e afunda junto: submerso, o alvo perde Fôlego a cada rodada e ele não. Lute na margem ou
+      no raso; agarrado, golpeie as rachas do peito.
+    related_entities: [aethelgard, ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Homem de dois metros, tronco desproporcional em forma de sino de bronze, mais largo embaixo,
+        costelas e ombros erguidos e abertos; pele do tórax esticada, lustrosa, rachada em linhas por onde
+        aparece músculo vermelho-escuro; pescoço afundado, cabeça pequena raspada, olhos fundos; braços
+        curtos e grossos; restos de roupa de mergulho de couro encerado com as correias abertas no peito;
+        manchas luminescentes de Éter na pele.
+      composicao: >-
+        Corte meio fora, meio dentro da água, junto a um arco submerso da borda; embaixo, o Peito de Sino
+        descendo devagar, peito inchado, os braços curtos fechados na cintura de um saqueador do tamanho
+        dele que se debate soltando bolhas; em cima, a superfície clara e longe. Luz de meio-dia
+        atravessando a água.
+      evitar: Gigante gordo de desenho animado, homem-baiacu, armadura em forma de sino. É carne; o peito cresceu para fora, e as rachas mostram músculo, não metal.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mao_de_oghma
+    vaga: 13
+    nome: Mão de Oghma
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1302", "lore_nova/timeline_completa.txt:118"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um saqueador que achou um Cristal-de-Oghma do tamanho de um punho e não o largou mais. O cristal
+        colou na palma e foi subindo: a mão inteira virou pedra turva, do tamanho de uma cabeça, e o
+        antebraço, até o cotovelo, ficou transparente, com os ossos virando vidro à vista e as veias
+        apagando. O ombro do outro lado murchou; o corpo inteiro se curvou para o lado do braço pesado. Os
+        olhos têm o mesmo brilho fosco do cristal, e a pele em volta do cotovelo racha como gelo.
+    silhueta: "Um homem torto, puxado para baixo por um braço que acaba num punho de cristal grande como uma cabeça."
+    comportamento: >-
+      Vaga pelas câmaras secas e pela margem atrás de mais cristal, ou de alguém que tire o dele. Bate
+      com o punho de cristal, e quem apanha sente o peso que ele carrega.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mao_de_oghma_custo_passado
+      frase: >-
+        O punho de cristal passa o custo adiante: quem leva o soco recebe a Entropia que o cristal estava
+        cobrando do dono da mão.
+    contra_jogo: Evitar a troca de golpes e terminar rápido, ou mirar o cotovelo rachado; partido o braço, o cristal cai, e o homem cai junto.
+    gancho: >-
+      O Cristal-de-Oghma destila devagar a alma de quem o segura; há saqueadores que descobriram, como
+      os magos da cidade, que dá para empurrar a conta para outro.
+    habitat: [ae_camara_seca, aethelgard]
+    inspiracao: []
+    padrao: [ataque, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "O cristal na mão de {nome} escurece por dentro, como se enchesse, e ele leva o braço para trás do ombro."
+    description: Um saqueador que não largou um Cristal-de-Oghma; a mão virou pedra turva, o braço está virando vidro, e o soco passa o custo para quem apanha.
+    perigo: Alto
+    lore: >-
+      Todo mago cobiça o Cristal-de-Oghma, e quem o segura tempo demais começa a ser destilado por ele,
+      devagar, como foi Aethelgard. Este saqueador achou um do tamanho de um punho e não o largou. A mão
+      virou cristal, o antebraço está virando vidro, e o corpo dobrou para o lado do peso. Os outros
+      mergulhadores dizem que ele aprendeu o que os magos da cidade sabiam: o custo não some, passa para
+      outro. Passa no soco.
+    aparencia: >-
+      Homem curvado para um lado, mão fundida num cristal turvo grande como uma cabeça, antebraço
+      transparente até o cotovelo com os ossos virando vidro à vista, pele rachada como gelo em volta do
+      cotovelo, ombro oposto murcho, olhos de brilho fosco.
+    como_se_luta: >-
+      O soco passa ao alvo a Entropia que o cristal está cobrando do dono. Termine rápido ou mire o
+      cotovelo rachado; partido o braço, ele cai.
+    related_entities: [ae_camara_seca, aethelgard]
+    arte:
+      visual: >-
+        Homem adulto magro, tronco inclinado para a direita sob o peso do braço; a mão direita fundida num
+        bloco de cristal turvo azul-esverdeado, irregular, do tamanho de uma cabeça, brilhando por dentro;
+        o antebraço translúcido até o cotovelo, deixando ver ossos metade vidro, metade osso; rachaduras
+        brancas como gelo partindo da junta; ombro esquerdo murcho; olhos com o mesmo brilho fosco do
+        cristal; roupas de saqueador gastas, uma bolsa vazia na cintura.
+      composicao: >-
+        Câmara seca com estantes de pedra vazias; o Mão de Oghma levando o braço de cristal para trás
+        para golpear um explorador do mesmo tamanho, que ergue um escudo redondo; ao fundo, a margem do
+        Lago vista por uma abertura. Luz de lamparina no cristal, sombra no resto.
+      evitar: Braço de cristal mágico de herói, gema de anel, mão de pedra de estátua viva. O cristal é feio, turvo e pesado, e o homem está sendo comido por ele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_alambique_de_carne
+    vaga: 14
+    nome: Alambique de Carne
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: cultistas_destilacao
+      refs: ["lore_nova/creatures.txt:1340", "lore_nova/timeline_completa.txt:118"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um cultista da Destilação que, sem câmara e sem voluntário, destila a si mesmo. Tem tubos de vidro
+        enfiados nas veias dos dois antebraços e do pescoço, que correm por baixo da pele e saem pelas
+        costas numa serpentina de vidro presa às omoplatas com tiras de couro. O sangue sobe pelos tubos,
+        escurece e pinga, já Éter, num frasco pendurado no peito. A pele é cinzenta de tanto sangue
+        tirado, os lábios são brancos, e as mãos tremem.
+    silhueta: "Um homem curvado com uma serpentina de vidro nas costas e um frasco pendurado no peito, como um aparelho que anda."
+    comportamento: >-
+      Trabalha nas câmaras secas junto dos outros cultistas e luta atrás deles. Abre a torneira do
+      frasco e dá aos aliados gotas do que destilou de si; a cada gota, fica mais cinzento.
+    papel_tatico: suporte
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: cultistas_destilacao
+    mecanica_assinatura:
+      carta: cri_alambique_de_carne_gota_de_si
+      frase: >-
+        Pinga nos aliados o Éter que destilou do próprio sangue: eles ganham força para a próxima jogada,
+        e ele perde Vitalidade a cada gota.
+    contra_jogo: Quebrar o frasco ou a serpentina, ou só esperar; cada gota que ele dá o deixa mais perto de cair sozinho.
+    gancho: >-
+      Os Cultistas querem reaprender a Destilação e ainda não têm as câmaras; alguns não quiseram
+      esperar e começaram pelo próprio corpo.
+    habitat: [ae_camara_seca]
+    inspiracao: []
+    padrao: [defesa, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} abre a torneira do frasco no peito e estende a mão pingando para o aliado mais perto."
+    description: Um cultista da Destilação que destila o próprio sangue por tubos de vidro enfiados nas veias e o pinga, já Éter, nos aliados.
+    perigo: Médio
+    lore: >-
+      Os Cultistas da Destilação buscam em Aethelgard o processo que refinava Éter de almas. Ainda não
+      têm as câmaras nem os voluntários, e alguns não quiseram esperar: enfiaram tubos de vidro nas
+      próprias veias e passaram a destilar o próprio sangue. O sangue sobe pela serpentina nas costas e
+      pinga, já Éter, num frasco no peito. Eles dão as gotas aos irmãos de culto e ficam mais cinzentos a
+      cada uma.
+    aparencia: >-
+      Homem curvado de pele cinzenta e lábios brancos, tubos de vidro enfiados nas veias dos antebraços
+      e do pescoço, serpentina de vidro presa às costas com tiras de couro, frasco de Éter escuro
+      pendurado no peito, mãos trêmulas.
+    como_se_luta: >-
+      Dá aos aliados gotas de Éter destiladas do próprio sangue e enfraquece a cada gota. Quebre o
+      frasco ou a serpentina, ou deixe-o se gastar.
+    related_entities: [ae_camara_seca, cultistas_destilacao]
+    arte:
+      visual: >-
+        Homem adulto magro e curvado, pele cinza-azulada, lábios e unhas brancos; tubos finos de vidro
+        entrando nas veias dos antebraços e do pescoço, visíveis sob a pele como cordões; nas costas, uma
+        serpentina de vidro em espiral presa às omoplatas por tiras de couro com fivelas de latão; no
+        peito, um frasco bojudo com torneira, cheio de líquido escuro de brilho azul-esverdeado; túnica de
+        cultista de linho cru manchada.
+      composicao: >-
+        Câmara seca com mesas de pedra e frascos quebrados; o Alambique atrás de um Cultista armado,
+        estendendo a mão pingando sobre o ombro dele; um explorador do mesmo tamanho entrando pela porta
+        com uma tocha. Luz da tocha refletida no vidro da serpentina.
+      evitar: Cientista louco de engrenagens, ciborgue, alquimista de cartola. São tubos de vidro e couro num homem magro; nada de engrenagem nem metal brilhante.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_aspirante_de_coral
+    vaga: 15
+    nome: Aspirante de Coral
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/races.txt:449", "lore_nova/races.txt:464", "lore_nova/timeline_completa.txt:414"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: sal_mineral
+      escala: humana
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Um mergulhador da superfície que quis o fôlego do Povo-Recife e pagou para ter coral plantado na
+        carne do pescoço. O coral pegou com o Éter do Lago e não parou: cobre a garganta, os ombros e a
+        espinha em ramos brancos e rosados, e as fendas que abriu no pescoço puxam água, mas mal. Tem
+        membrana nova entre os dedos e pele mole e pálida, de tecido que passou tempo demais molhado. O
+        coral cresce para onde dói: cada golpe faz uma crosta nova engrossar no lugar exato da pancada.
+    silhueta: "Um homem com ramos de coral subindo do pescoço e dos ombros como uma gola de galhos, de pé na água rasa."
+    comportamento: >-
+      Vive na água rasa das bordas, porque fora dela sufoca e longe dela não aguenta. Ataca quem chega
+      perto com raiva de afogado, de peito aberto, e vira para o golpe o lado onde a crosta já está
+      grossa.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_aspirante_de_coral_crosta_no_golpe
+      frase: >-
+        O coral engrossa no lugar do último golpe: quem bate de novo do mesmo jeito acerta a crosta e
+        quase não fere; quem vem de outro lado acerta carne mole.
+    contra_jogo: Revezar quem bate e de que lado, sem repetir o golpe; tirá-lo da água o faz sufocar.
+    gancho: >-
+      O Povo-Recife não sobe ao Lago, mas há quem venda na margem coral que diz ser deles, e
+      mergulhadores que pagam para tê-lo no pescoço.
+    habitat: [aethelgard]
+    inspiracao: []
+    padrao: [defesa, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} vira para você o ombro onde o coral acabou de engrossar e espera o mesmo golpe."
+    description: Um mergulhador que pagou para ter coral plantado no pescoço e ganhar o fôlego do Povo-Recife; o coral não parou de crescer e engrossa onde ele apanha.
+    perigo: Baixo
+    lore: >-
+      O Povo-Recife respira debaixo da água e tem coral crescendo na carne. Há quem venda na margem do
+      Lago coral que diz ser deles, e mergulhadores que pagam para tê-lo plantado no pescoço. Com o Éter
+      do Lago, o coral pega e não para: sobe pela garganta, pelos ombros e pela espinha, e as fendas que
+      abre no pescoço puxam água mal. Os Aspirantes vivem na água rasa, onde quase respiram. O coral
+      cresce para onde dói, e quem já brigou com um diz que não se bate duas vezes no mesmo lugar.
+    aparencia: >-
+      Homem pálido de pele mole e molhada, ramos de coral branco e rosado subindo do pescoço pelos ombros
+      e pela espinha, fendas abertas na garganta, membranas entre os dedos, crostas de coral grossas
+      onde apanhou.
+    como_se_luta: >-
+      O coral engrossa no lugar do último golpe, e repetir o golpe acerta a crosta. Revezem quem bate e
+      de que lado; fora da água, ele sufoca.
+    related_entities: [aethelgard, race_povo_recife]
+    arte:
+      visual: >-
+        Homem adulto magro, pele pálida, mole e enrugada de água; ramos de coral branco e rosa-salmão
+        crescendo da carne do pescoço, subindo em galhos pelos ombros e descendo pela espinha; três fendas
+        avermelhadas abertas de cada lado da garganta; membranas finas entre os dedos; joelhos e cotovelos
+        com crostas de coral; tanga e cinto de mergulhador.
+      composicao: >-
+        Água rasa e clara na borda do Lago, com as barracas de madeira de um mercado de margem ao fundo; o
+        Aspirante com água pelas coxas, braço erguido e rígido de coral, avançando para um pescador do
+        mesmo tamanho armado de remo. Luz do dia, reflexos na água.
+      evitar: Tritão, sereia, homem-peixe, pirata coberto de coral. É um homem comum com coral enxertado, sofrendo; nada de escamas nem cauda.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_comedor_de_alga
+    vaga: 16
+    nome: Comedor de Alga
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1369", "lore_nova/locations.txt:246"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um mergulhador que come Alga-Luminosa para ver no escuro sobre Oghma, onde a luz não desce. A
+        alga pegou por dentro: corre verde-azulada pelas veias do pescoço, do peito e dos braços, que
+        brilham sob a pele como raízes acesas. Os olhos incharam, sem pálpebras que fechem direito, de
+        pupila branca enorme. A boca e os dentes estão manchados de verde, e o hálito apaga a lamparina
+        de quem conjura. Anda curvado, de cabeça baixa, cheirando o ar.
+    silhueta: "Um homem curvado de olhos enormes e brancos, com linhas de luz verde subindo pelo pescoço."
+    comportamento: >-
+      Caça no escuro das galerias fundas e nas câmaras secas sem lamparina. Vê quem conjura antes de
+      todo mundo, porque o Éter brilha para ele, e vai nesse primeiro. O hálito de alga mastigada
+      atrapalha o feitiço de quem está perto.
+    papel_tatico: perseguidor_marca
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_comedor_de_alga_halito_de_alga
+      frase: >-
+        Marca quem conjurou por último e vai nele: o hálito de alga mastigada faz falhar a próxima Carta
+        de magia do alvo.
+    contra_jogo: Lutar com aço, e não com feitiço, enquanto ele estiver perto, ou acender uma luz forte; os olhos sem pálpebra não aguentam.
+    gancho: >-
+      A Alga-Luminosa dá visões e estraga a magia de quem a come; para quem caça no escuro sobre Oghma,
+      o que importa é que ela deixa ver.
+    habitat: [ae_camara_seca, ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "Os olhos brancos de {nome} se fixam em quem conjurou por último, e ele mastiga mais alga."
+    description: Um mergulhador que come Alga-Luminosa para ver no escuro sobre Oghma; a alga brilha nas veias dele, e o hálito estraga a magia de quem conjura perto.
+    perigo: Médio
+    lore: >-
+      Sobre o coração de Aethelgard a luz não desce, e quem quer caçar ali precisa ver de outro jeito.
+      Há mergulhadores que comem a Alga-Luminosa sabendo que ela dá visões e estraga a magia de quem a
+      come. A alga pega por dentro e acende as veias. Os olhos incham e ficam brancos, e o que eles veem
+      melhor é o Éter: quem conjura brilha. Os Comedores vão primeiro em quem brilha, e o hálito deles
+      apaga o feitiço.
+    aparencia: >-
+      Homem curvado e magro, veias do pescoço, do peito e dos braços brilhando verde-azuladas sob a pele
+      como raízes acesas, olhos inchados de pupila branca enorme, sem pálpebras que fechem, boca e dentes
+      manchados de verde.
+    como_se_luta: >-
+      Vai primeiro em quem conjura, e o hálito dele faz falhar a próxima magia. Use aço enquanto ele
+      estiver perto, ou uma luz forte nos olhos.
+    related_entities: [ae_camara_seca, ae_ruinas_submersas]
+    arte:
+      visual: >-
+        Homem adulto magro e curvado, cabeça baixa projetada à frente; pele pálida com uma rede de veias
+        verde-azuladas luminosas no pescoço, no peito nu e nos braços; olhos grandes demais, salientes,
+        de íris branca leitosa, pálpebras recolhidas; boca entreaberta com dentes e gengivas manchados de
+        verde; um maço de algas penduradas no cinto; roupa curta de couro, molhada.
+      composicao: >-
+        Câmara escura, iluminada só pelas veias dele e pela mão de uma maga ao fundo, que começa a acender
+        um feitiço; o Comedor em primeiro plano virando os olhos brancos para ela, do mesmo tamanho.
+        Escuro quase total, verde e azul frios.
+      evitar: Morto-vivo luminoso, homem-planta, druida de folhas. A alga está dentro das veias; por fora, é um homem magro de olhos errados.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_lambedor_de_aboboda
+    vaga: 17
+    nome: Lambedor de Abóbada
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_morvath
+      refs: ["lore_nova/npcs.txt:321", "lore_nova/locations.txt:265", "lore_nova/timeline_completa.txt:30"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: cera_sebo
+      escala: grande
+      locomocao: escala_paredes
+      percepcao: vibracao
+      texto: >-
+        O que sobrou nas Ruínas da satisfação de Morvath pela ruína lenta tomou carne do sebo dos afogados
+        e do musgo das abóbadas. É um corpo pálido e mole, do tamanho de um boi, de pele cerosa e morna,
+        com oito patas curtas de dedos chatos que grudam na pedra. Não tem rosto: a cabeça é uma boca
+        larga com uma língua comprida e áspera como lima, de placas de cal, que raspa a argamassa entre
+        as pedras. Vive de cabeça para baixo, preso às abóbadas, e o que lambe cai, devagar, pedra por
+        pedra.
+    silhueta: "Um corpo branco e mole do tamanho de um boi, pendurado de cabeça para baixo na abóbada, com uma língua comprida esticada até a pedra."
+    comportamento: >-
+      Fica nas abóbadas das Ruínas que ainda se sustentam, lambendo. Não desce para lutar; quando há luta
+      embaixo, lambe mais depressa, e o teto começa a vir. Ele mesmo está sempre do lado que fica de pé.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lambedor_de_aboboda_teto_que_cede
+      frase: >-
+        Lambe a argamassa da abóbada sobre a luta: a cada poucas rodadas cai pedra sobre todos os que
+        estão embaixo, e o desabamento só para quando ele cai.
+    contra_jogo: Derrubá-lo do teto com arma de arremesso ou corda, ou levar a luta para fora da sala antes que a abóbada venha.
+    gancho: >-
+      Morvath ama o que acaba devagar; nas Ruínas, as abóbadas perdem uma pedra por noite, e não é o
+      tempo que as tira.
+    habitat: [ae_ruinas_submersas, ae_camara_seca]
+    inspiracao: []
+    padrao: [defesa, ataque_multiplo, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "Lá em cima, {nome} lambe mais depressa, e um fio de areia começa a cair da abóbada."
+    description: Cria física de Morvath, a Decadência; um corpo de sebo pálido pendurado nas abóbadas das Ruínas, que lambe a argamassa até o teto ceder pedra por pedra.
+    perigo: Alto
+    lore: >-
+      Morvath, a Decadência, visita as Ruínas de Aethelgard como quem visita uma obra que ama. O que ele
+      carrega não fica só nas palavras: o que sobra da emoção no lugar toma carne do que está à mão, e
+      ali à mão havia o sebo dos afogados e o musgo das abóbadas. O Lambedor vive de cabeça para baixo
+      nas abóbadas que ainda se sustentam e lambe a argamassa com uma língua de cal. As pedras caem uma
+      por noite. Quando há luta embaixo, ele lambe mais depressa.
+    aparencia: >-
+      Corpo pálido e mole do tamanho de um boi, pele cerosa e morna, oito patas curtas de dedos chatos
+      grudadas na pedra, sem rosto, cabeça reduzida a uma boca larga com língua comprida e áspera de
+      placas de cal; vive de cabeça para baixo nas abóbadas.
+    como_se_luta: >-
+      Lambe a abóbada sobre a luta e, a cada poucas rodadas, cai pedra em todos embaixo. Derrube-o do
+      teto, ou saia da sala antes que ela venha.
+    related_entities: [ae_ruinas_submersas, ae_camara_seca, npc_morvath]
+    arte:
+      visual: >-
+        Criatura do tamanho de um boi, corpo oval branco-amarelado, mole e lustroso como sebo de vela, com
+        dobras; oito patas curtas e grossas terminando em dedos chatos com ventosas, agarradas à pedra;
+        sem olhos nem rosto: na frente, uma boca larga e úmida de onde sai uma língua de metro e meio
+        coberta de placas brancas de cal, como uma lima, encostada nas juntas entre as pedras da abóbada;
+        musgo verde-pálido nas costas.
+      composicao: >-
+        Salão élfico das Ruínas com abóbada de pedra entalhada, parte já desabada; o Lambedor pendurado de
+        cabeça para baixo no centro da abóbada, língua esticada até uma junta; embaixo, pedras caídas e
+        dois exploradores olhando para cima, um deles erguendo uma tocha que mal alcança a altura. Areia
+        caindo em fio, luz de tocha subindo.
+      evitar: Larva gigante de cinema, verme de terror, demônio de chifres. É mole, pálido e calmo, quase bonito; o perigo é o teto, não a boca.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pernalta_do_conselho
+    vaga: 18
+    nome: Pernalta do Conselho
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/timeline_completa.txt:26", "lore_nova/timeline_completa.txt:120"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        O que sobrou do Orgulho de Urath na água rasa sobre o bairro do conselho tomou carne das golas
+        altas e dos ossos dos conselheiros afogados. Anda sobre duas pernas de osso finas e compridas como
+        andas, três vezes mais altas que um homem, e o corpo lá em cima é estreito, envolto em golas de
+        tecido rígido que sobem até cobrir o rosto. Os braços descem quase até a água, longos e com juntas
+        a mais, e terminam em mãos largas de palma para baixo. Não tem olhos à vista; olha de cima, por
+        fendas na gola.
+    silhueta: "Uma figura de golas altas sobre duas pernas finas como andas, bem acima da água, com braços compridos pendendo até a superfície."
+    comportamento: >-
+      Fica de pé na água rasa sobre o antigo bairro do conselho e não deixa ninguém ficar mais alto que
+      ele. Vai sempre em quem está mais inteiro ou mais armado, põe a mão aberta sobre a cabeça dele e
+      empurra para baixo.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pernalta_do_conselho_mao_que_rebaixa
+      frase: >-
+        Vai sempre no inimigo mais inteiro e põe a mão aberta sobre a cabeça dele: rebaixado, o alvo
+        passa a agir por último na rodada, depois de todos, enquanto a mão estiver lá.
+    contra_jogo: Golpear as pernas finas, que quebram, enquanto ele se ocupa do mais forte; caído na água, fica do tamanho de qualquer um.
+    gancho: >-
+      O conselho de Aethelgard sabia quem estava acima e quem estava abaixo; Urath gosta disso, e o que
+      sobrou dele sobre o bairro do conselho continua mantendo todo mundo embaixo.
+    habitat: [aethelgard]
+    inspiracao:
+      - fonte: biologia (aves pernaltas)
+        referencia: "garças e pernilongos, aves de pernas finas e compridas que andam na água rasa olhando de cima"
+        tomou: as pernas finas como andas sobre a água rasa e o olhar de cima para baixo
+        distancia: não é ave nem tem bico; é uma cria de Urath feita de ossos e golas de conselheiro, e o que pega é a cabeça de gente
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} dobra as pernas compridas para o mais forte de vocês e abre a mão sobre a cabeça dele."
+    description: Cria física de Urath, o Orgulho; uma figura de golas altas sobre pernas de osso como andas, que põe a mão na cabeça de quem estiver mais inteiro e o faz agir por último.
+    perigo: Médio
+    lore: >-
+      Urath é o Orgulho, a necessidade de ver o outro abaixo. O conselho de Aethelgard vivia disso, e o
+      bairro onde morava afundou na água rasa da borda. O que sobrou da emoção ali tomou carne dos ossos
+      e das golas dos conselheiros afogados. A Pernalta anda sobre as ruas submersas em pernas de osso
+      finas como andas, olha de cima pelas fendas da gola e põe a mão aberta na cabeça de quem está mais
+      inteiro. Empurra para baixo.
+    aparencia: >-
+      Figura estreita e altíssima sobre duas pernas de osso finas como andas, corpo envolto em golas
+      rígidas de conselheiro que sobem e cobrem o rosto, fendas no lugar dos olhos, braços compridos com
+      juntas a mais, mãos largas de palma para baixo.
+    como_se_luta: >-
+      Põe a mão na cabeça do mais forte, que passa a agir por último. Quebre as pernas finas enquanto
+      ele se ocupa do forte; na água, fica do tamanho de qualquer um.
+    related_entities: [aethelgard, npc_urath]
+    arte:
+      visual: >-
+        Figura de uns cinco metros: duas pernas de osso branco, finas e longas como andas de pernalta,
+        joelhos para trás; tronco estreito vestido em camadas de golas altas de tecido rígido bordado,
+        verde-escuro e ouro desbotado, encharcadas, que sobem e fecham sobre a cabeça, com fendas
+        horizontais; dois braços finos que descem quase até a água, cada um com uma junta a mais, e mãos
+        largas, abertas, de palma para baixo.
+      composicao: >-
+        Rua élfica submersa na borda do Lago, telhados de casas nobres despontando da água; a Pernalta de
+        pé no centro, a mão aberta pousada na cabeça de um cavaleiro de armadura com água pelo peito,
+        empurrando-o; o cavaleiro mal chega ao joelho dela. Céu nublado, reflexo comprido na água.
+      evitar: Assombração esguia de terror da internet, espantalho, nobre fantasma. As golas são de tecido e osso molhados; não há rosto, nem terno, nem tentáculo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_veu_faminto
+    vaga: 19
+    nome: Véu Faminto
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_lyss
+      refs: ["lore_nova/timeline_completa.txt:30", "lore_nova/locations.txt:261"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: grande
+      locomocao: nada
+      percepcao: calor
+      texto: >-
+        O que sobrou da fome de Lyss nas câmaras inundadas tomou carne do cabelo e da pele das noivas e
+        dos voluntários que boiavam ali. É uma trança comprida, de dez passos, de cabelo de muitas cores
+        tecido com tiras de pele fina e seda de enxoval, que ondula na água como cauda de vestido. Não
+        tem cabeça; na ponta da frente a trança se abre numa boca macia, sem dentes, de lábios de pele.
+        Ao longo dela, presos nos nós da trama como contas, ficam à vista as coisas que tomou: anéis,
+        uma fivela, o punho de uma espada, os dedos de alguém. É bonito de olhar. Enrola-se em quem
+        tocar.
+    silhueta: "Uma trança comprida de cabelo e seda ondulando na água escura como cauda de vestido, com coisas brilhando presas nos nós."
+    comportamento: >-
+      Ondula nas câmaras inundadas, devagar, bonito. Vai até quem tem mais coisa boa: arma acesa,
+      feitiço pronto, força acumulada. Enrola-se nele da cintura ao pescoço e aperta, e o que tira dele
+      vai para um nó novo da trança, à vista.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_veu_faminto_tudo_para_dentro
+      frase: >-
+        Enrola-se no alvo e puxa para a trança tudo de bom que ele juntou: os reforços do alvo passam
+        para o Véu e ficam presos à vista, num nó novo.
+    contra_jogo: Não acumular força perto dele, gastando os reforços antes que chegue; cortar o nó onde ele guardou o que tomou devolve o que estava lá.
+    gancho: >-
+      Lyss não quer o outro, quer que não sobre nada dele; nas câmaras inundadas de Aethelgard, o que
+      sobrou dela ondula, bonito, com tudo o que já tomou preso à vista nos nós.
+    habitat: [ae_ruinas_submersas]
+    inspiracao: []
+    padrao: [mover, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} ondula devagar na sua direção, e um nó vazio se abre na trança, do tamanho do que você carrega."
+    description: Cria física de Lyss, a Lascívia; uma trança comprida de cabelo, pele e seda que se enrola em quem tem mais força e guarda nos nós, à vista, os reforços que tirou.
+    perigo: Médio
+    lore: >-
+      Lyss é a Lascívia, e não quer o outro: quer consumi-lo até não sobrar nada. O que sobrou da emoção
+      nas câmaras inundadas de Aethelgard tomou carne do que boiava ali, cabelo, pele e seda de enxoval,
+      e virou uma trança comprida que ondula como cauda de vestido. Nos nós, à vista, ficam as coisas
+      que tomou: anéis, uma fivela, o punho de uma espada, uns dedos. É bonito. Os mergulhadores que o
+      viram de perto dizem que a vontade é chegar mais perto.
+    aparencia: >-
+      Trança comprida de dez passos, de cabelo de muitas cores tecido com tiras de pele fina e seda de
+      enxoval, ondulando como cauda de vestido; sem cabeça, a ponta abre numa boca macia sem dentes;
+      anéis, uma fivela, um punho de espada e dedos presos nos nós.
+    como_se_luta: >-
+      Enrola-se no alvo e puxa para a trança os reforços dele. Gaste a força antes que ele chegue;
+      cortar o nó novo devolve o que ele tomou.
+    related_entities: [ae_ruinas_submersas, npc_lyss]
+    arte:
+      visual: >-
+        Corpo longo em forma de trança grossa, de uns dez passos, tecida com mechas de cabelo de muitas
+        cores (preto, ruivo, prata, loiro) entremeadas com tiras de pele pálida e fitas de seda de
+        enxoval esgarçadas; ondula na água como a cauda de um vestido de noiva; sem cabeça: a ponta da
+        frente se abre numa boca de lábios de pele, macia, sem dentes; presos nos nós ao longo da trança,
+        como contas, anéis de ouro, uma fivela de cinto, o punho de uma espada curta e dedos humanos.
+      composicao: >-
+        Câmara inundada com colunas élficas, água escura; o Véu enrolado da cintura ao peito de uma
+        mergulhadora do mesmo tamanho, que olha, como hipnotizada, o anel preso no nó mais perto do rosto;
+        o resto da trança some ondulando entre as colunas. Luz fria filtrada de cima, brilho dos objetos
+        nos nós.
+      evitar: Água-viva, sino ou cúpula de carne translúcida, fantasma de noiva, figura sensual, cabelo de bruxa animado. Não há corpo de mulher nem sedução física; é uma trança de cabelo, pele e seda, bonita e faminta.
+    autor: opus
+    revisor_unicidade: coordenador-revisao-cruzada
+    revisao: aprovada
+
+  - id: mon_novelo_de_anzois
+    vaga: 20
+    nome: Novelo de Anzóis
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/timeline_completa.txt:28", "lore_nova/creatures.txt:1336"]
+    anatomia:
+      plano_corporal: composto
+      material: couro_tecido
+      escala: humana
+      locomocao: rola
+      percepcao: medo_emocao
+      texto: >-
+        O que sobrou da Crueldade de Maalrek nas linhas e redes em que mergulhadores morreram presos
+        tomou carne delas e de quem estava nelas. É um bolo de linha de pesca, rede podre e anzóis do
+        tamanho de um homem encolhido, amarrado com tiras de pele e tendões dos que ficaram presos; aqui
+        e ali sai uma mão, um pé, a curva de um ombro. Os anzóis, centenas, apontam para fora, cada um com
+        a farpa limpa. Rola pelo fundo raso desenrolando linhas, e o bolo toma, aos poucos, a forma torta
+        de quem prendeu por último.
+    silhueta: "Um bolo de rede e linha do tamanho de um homem encolhido, eriçado de anzóis, com uma mão saindo de lado."
+    comportamento: >-
+      Fica enrolado no fundo raso, onde as redes se perderam, e se desenrola para quem passa. Prende um
+      só nas linhas e se enrola em volta dele até tomar a forma torta do preso. Daí em diante, quem bate
+      no Novelo bate também no que está dentro.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_novelo_de_anzois_refem_nas_linhas
+      frase: >-
+        Prende um alvo nas linhas e toma a forma dele: enquanto o alvo estiver preso, metade de todo o
+        dano que o grupo causa no Novelo vai para o preso.
+    contra_jogo: Soltar o preso antes de bater, cortando a linha ou pondo fogo nela, que a desenrola; ou bater pouco e certeiro enquanto ele estiver lá dentro.
+    gancho: >-
+      As redes perdidas no Lago continuam pescando; Maalrek gosta do que sofre devagar, e as que
+      prenderam mergulhadores aprenderam a fazer os companheiros baterem no preso.
+    habitat: [aethelgard]
+    inspiracao: []
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "As linhas de {nome} se enrolam em volta de um de vocês, e o bolo começa a tomar a forma dele."
+    description: Cria física de Maalrek, a Crueldade; um bolo de rede, linha e anzóis amarrado com a pele de quem morreu preso nele, que prende um vivo por dentro e faz o grupo ferir o preso.
+    perigo: Baixo
+    lore: >-
+      Maalrek é a Crueldade, o prazer no sofrimento do outro, e fica mais nítido quanto mais o outro
+      sofre. No fundo raso do Lago há redes perdidas em que mergulhadores morreram presos, devagar. O
+      que sobrou da emoção ali tomou carne das linhas e de quem estava nelas: um bolo de rede e anzóis
+      amarrado com pele e tendão, que rola pelo fundo e se desenrola para quem passa. Prende um e toma a
+      forma dele, e os companheiros que batem no bolo batem no amigo. Os mergulhadores levam faca de
+      linha e cortam antes de bater.
+    aparencia: >-
+      Bolo de linha de pesca, rede podre e centenas de anzóis do tamanho de um homem encolhido, amarrado
+      com tiras de pele e tendões, com uma mão, um pé e a curva de um ombro saindo do emaranhado; os
+      anzóis apontam para fora, farpas limpas.
+    como_se_luta: >-
+      Prende um alvo e toma a forma dele; enquanto ele estiver preso, metade do dano que o grupo causa no
+      Novelo vai para o preso. Solte-o antes de bater, cortando a linha ou com fogo, que a desenrola.
+    related_entities: [aethelgard, npc_maalrek]
+    arte:
+      visual: >-
+        Massa arredondada do tamanho de um homem encolhido, feita de linha de pesca marrom, rede podre
+        verde-escura e boias de cortiça, amarrada por tiras de pele pálida e tendões rosados; centenas de
+        anzóis de ferro escuro de tamanhos variados, farpas para fora; do emaranhado saem uma mão humana
+        aberta, um pé descalço e a curva de um ombro; linhas soltas se desenrolando na água.
+      composicao: >-
+        Fundo raso e claro da borda do Lago, com uma rede velha presa num arco élfico; o Novelo enrolado
+        em volta de um mergulhador preso, tomando a forma torta dele, do mesmo tamanho; um companheiro
+        ajoelhado ao lado cortando a linha com uma faca curta, em vez de bater. Luz do dia filtrada,
+        sombra das linhas no fundo.
+      evitar: Monstro de cabelo, bola de tentáculos, espantalho de redes. São redes, linhas e anzóis de pesca de verdade; o corpo é o que ficou preso nelas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_subida_de_cracas
+    vaga: 21
+    nome: Subida de Cracas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/timeline_completa.txt:30", "lore_nova/locations.txt:241", "lore_nova/locations.txt:240"]
+    anatomia:
+      plano_corporal: segmentado
+      material: sal_mineral
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: som
+      texto: >-
+        O que sobrou do Desespero de Dorrhen na noite em que a água subiu sobre Aethelgard ficou nas
+        paredes por onde todos tentaram subir, e tomou carne do que o mar trouxe depois: cracas e
+        mexilhões. É uma coluna viva de cascas brancas e pretas coladas umas às outras, da altura de dois
+        homens, em gomos que se dobram como uma espinha; cada craca abre as placas e põe para fora as
+        pernas de pena, que agarram a pedra. Sobe sempre, por qualquer parede, para qualquer abertura, e
+        nunca chega. Quando encontra alguém, cresce nele como cresce na pedra: pelas pernas, pelas
+        costas, pelos ombros.
+    silhueta: "Uma coluna de cascas brancas e pretas em gomos, subindo por uma parede para uma abertura de luz."
+    comportamento: >-
+      Sobe as paredes das Ruínas e da Câmara Seca para qualquer luz ou abertura, cai, e sobe de novo.
+      Ouve as bolhas de quem respira e vai até lá, porque quem respira está indo para cima. Cresce nele.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_subida_de_cracas_peso_de_casca
+      frase: >-
+        Cresce no alvo como numa parede: enquanto estiver agarrada, cada Carta que ele jogar custa mais
+        Fôlego, pelo peso das cascas.
+    contra_jogo: Raspar as cracas de baixo para cima com lâmina ou pá antes que subam aos ombros, ou ficar parado; ela só cresce em quem está indo para algum lugar.
+    gancho: >-
+      Na noite em que a água subiu sobre Aethelgard, todos tentaram sair pelo alto; as paredes por onde
+      subiram estão cobertas de cracas que ainda sobem.
+    habitat: [ae_ruinas_submersas, ae_camara_seca]
+    inspiracao: []
+    padrao: [enfraquecer, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "Os gomos de {nome} param de subir a parede, e as cracas abrem as placas para o lado das suas bolhas."
+    description: Cria física de Dorrhen, o Desespero; uma coluna viva de cracas e mexilhões que sobe qualquer parede atrás de uma saída e cresce em quem respira.
+    perigo: Médio
+    lore: >-
+      Dorrhen é o Desespero, o que procura a saída sabendo que ela não existe. Na noite em que a água
+      subiu sobre Aethelgard, todos procuraram o alto, pelas paredes. Depois o mar entrou no Lago, e com
+      ele as cracas e os mexilhões; o que sobrou da emoção nas paredes tomou carne deles. As Subidas são
+      colunas de cascas em gomos que sobem qualquer parede, caem e sobem de novo. Ouvem as bolhas de
+      quem respira, porque quem respira está indo para cima, e crescem nele.
+    aparencia: >-
+      Coluna viva da altura de dois homens, em gomos que se dobram, feita de cracas brancas e mexilhões
+      pretos colados uns aos outros; as cracas abrem as placas e põem para fora pernas de pena que
+      agarram a pedra.
+    como_se_luta: >-
+      Cresce no alvo, e cada Carta dele passa a custar mais Fôlego. Raspe as cracas de baixo para cima
+      antes que cheguem aos ombros, ou fique parado; ela só cresce em quem se mexe.
+    related_entities: [ae_ruinas_submersas, ae_camara_seca, npc_dorrhen]
+    arte:
+      visual: >-
+        Coluna vertical da altura de dois homens, em gomos articulados como uma espinha, inteiramente
+        formada por cracas brancas de cone e mexilhões preto-azulados colados uns aos outros; das cracas
+        saem pernas finas e plumosas, cor de âmbar, agarradas à pedra; a ponta de cima estendida para uma
+        abertura de luz.
+      composicao: >-
+        Poço vertical dentro das Ruínas, uma abertura de luz no alto; a Subida na parede, a parte de
+        baixo já crescida sobre as pernas e as costas de um mergulhador que tenta subir por uma corda, da
+        altura de um terço da coluna. Luz da abertura vindo de cima, escuro embaixo.
+      evitar: Monstro de pedra, serpente de conchas, verme de cinema. São cracas e mexilhões de verdade, organizados como uma coluna que sobe; nada de rosto nem de boca.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: mon_afogado_de_aethelgard, nome: "Afogado de Aethelgard", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: carne_exposta, escala: humana, locomocao: anda, percepcao: som, texto: "O que restou de quem estava na cidade quando o aprendiz agiu. Thessrak ainda fala através deles — e o que fala não recua."}, papel_tatico: bruto_de_linha, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: mon_mergulhadores_saqueadores, nome: "Mergulhador Saqueador", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: nada, percepcao: visao, texto: "Caça-tesouros que arrisca as partes rasas das ruínas. Corajoso até a primeira sombra errada na água."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: enemy_cultista_destilacao, nome: "Cultista da Destilação", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: eter, texto: "Mago proibido que estuda os Afogados como professores e vê pessoas como matéria-prima de almas. Brilhante, moralmente morto — e pragmático quando o ritual dá errado."}, papel_tatico: controlador, arquetipo: conjurador, categoria: elite}
+  - {id: mon_faisca_destilacao, nome: "Faísca da Destilação", status: retro, familia: legado, anatomia: {plano_corporal: radial, material: eter_cristalizado, escala: miuda, locomocao: plana_voa, percepcao: eter, texto: "Fragmento vivo do experimento que derrubou Aethelgard e ainda procura um recipiente."}, papel_tatico: artilharia, arquetipo: conjurador, categoria: lacaio}
+  - {id: mon_vigia_caco, nome: "Vigia de Caco", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: vidro_cristal, escala: humana, locomocao: anda, percepcao: som, texto: "Patrulha corredores élficos quebrados repetindo a última ordem do Conselho."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: padrao}

@@ -1,0 +1,566 @@
+# SPEC-349 Etapa 5/6: mecânica de Nova Arcádia. Fonte do gerador scripts/bestiario/gerar_mecanica.py.
+# Os números de Vitalidade/Ferimentos saem da tabela de Corpo; o dano e os efeitos das Cartas
+# respeitam o orçamento (card_lint.check_budget). Texto de Carta curto, no léxico de Valoria.
+# virtudes = [forca, agilidade, corpo, mente, carisma]. Ordem de `cartas` = ordem no bestiário
+# (a 1ª ofensiva utilizável é a que a IA joga com RPG_ENEMY_DECKS=off): ataque primeiro.
+# `sig: true` = Carta-assinatura (oculta) citada na ficha.
+criaturas:
+  mon_arame_vivo:
+    virtudes: [2, 2, 3, 1, 1]
+    ataque: {nome: Laço de Arame, dano: 1d4}
+    nao_foge: true
+    dicas: ["Arrasta o arame no chão e enrosca quem alcança; segue o sangue sem pressa.", "Vem devagar atrás de quem ainda sangra."]
+    cartas:
+      - id: cri_arame_vivo_gancho_de_arame
+        name: Gancho de Arame
+        descricao: "Os dedos travados em gancho rasgam a roupa e a pele de quem passa perto."
+        efeitos: [{kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}]
+      - id: cri_arame_vivo_enroscar
+        sig: true
+        name: Enroscar
+        descricao: "O arame se fecha no braço do alvo e bebe o fôlego enquanto dura o contato."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}
+          - {kind: cura, alvo: eu, valor: 2, se: {engajado: true}}
+  mon_fole_de_costela:
+    virtudes: [3, 2, 3, 3, 1]
+    ataque: {nome: Sopro de Fuligem, dano: 1d8}
+    dicas: ["Recua para a fumaça mais densa da rua quando ferido.", "Para na rua das Chaminés e sopra fuligem quente em quem se aproxima."]
+    cartas:
+      - id: cri_fole_de_costela_sopro_quente
+        name: Sopro Quente
+        descricao: "As costelas se abrem como fole e cospem fuligem em brasa."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: igneo}]
+      - id: cri_fole_de_costela_sopro_de_escoria
+        sig: true
+        name: Sopro de Escória
+        descricao: "Uma nuvem de escória fere de longe e cobre os olhos da fila por um instante."
+        efeitos:
+          - {kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: igneo}
+          - {kind: aplicar_condicao, condicao: cego, duracao: 1, se: {engajado: false}}
+      - id: cri_fole_de_costela_encher_o_fole
+        name: Encher o Fole
+        descricao: "O peito infla até o lenço se levantar e a escória se acumula por dentro."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 4}]
+  mon_rosario_de_vertebras:
+    virtudes: [3, 3, 3, 1, 2]
+    ataque: {nome: Mordida de Vértebras, dano: 1d8}
+    dicas: ["Solta a presa e recua para a água quando ferido.", "Morde uma vez e segue a farpa que deixou na carne."]
+    cartas:
+      - id: cri_rosario_de_vertebras_mordida_de_osso
+        name: Mordida de Osso
+        descricao: "A coluna se dobra num arco e os dentes da frente fecham sobre o alvo."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: perfurante}]
+      - id: cri_rosario_de_vertebras_farpa
+        sig: true
+        name: Farpa de Osso
+        descricao: "Uma lasca fica presa na carne, e o rio inteiro passa a saber onde o alvo está."
+        efeitos:
+          - {kind: marca, valor: 3}
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}
+      - id: cri_rosario_de_vertebras_estalar_a_fileira
+        name: Estalar a Fileira
+        descricao: "Cada vértebra estala para um lado e as pontas arranham a fila inteira."
+        frequencia: cena
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}
+          - {kind: dano, alvo: inimigos, dano_base: 2, dano_tipo: perfurante}
+  mon_fila_de_grilhoes:
+    virtudes: [2, 1, 4, 2, 1]
+    ataque: {nome: Pancada de Corrente, dano: 2d8}
+    nao_foge: true
+    dicas: ["Guarda o pátio dos contratos e nunca persegue além do portão.", "Estende a corrente e puxa para dentro da fila quem ouve passar."]
+    cartas:
+      - id: cri_fila_de_grilhoes_pancada_de_corrente
+        name: Pancada de Corrente
+        descricao: "A corrente inteira gira como um chicote de ferro e cai de uma vez."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 5, dano_tipo: impactante}]
+      - id: cri_fila_de_grilhoes_puxar_para_a_fila
+        sig: true
+        name: Puxar para a Fila
+        descricao: "A corrente enrola o alvo e o traz para dentro da fila, onde os outros corpos o cobrem."
+        efeitos:
+          - {kind: taunt, valor: 3}
+          - {kind: mover_alvo_zona, direcao: aproximar}
+          - {kind: protecao, alvo: eu, valor: 5}
+      - id: cri_fila_de_grilhoes_ombros_juntos
+        name: Ombros Juntos
+        descricao: "Os ombros soldados se fecham em muralha e a corrente estala no chão."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 4}]
+  mon_lencol_de_chamine:
+    virtudes: [2, 3, 2, 1, 0]
+    ataque: {nome: Cobrir e Apertar, dano: 1d4}
+    dicas: ["Vai para o lado mais frio quando ferido e foge do fogo aceso.", "Desce das chaminés atrás de calor e cobre o que encontra."]
+    cartas:
+      - id: cri_lencol_de_chamine_cobrir_e_apertar
+        name: Cobrir e Apertar
+        descricao: "A placa de baratas cai sobre o rosto e aperta até o ar faltar."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: igneo}]
+      - id: cri_lencol_de_chamine_rachar_brasa
+        sig: true
+        name: Rachar a Brasa
+        descricao: "A placa racha e solta a brasa presa por dentro, queimando tudo em volta."
+        palavras_chave: {sacrificio: 1}
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: igneo}
+          - {kind: dano, alvo: inimigos, dano_base: 3, dano_tipo: igneo, se: {vitalidade_max_pct: 60}}
+  mon_traca_do_sino_mudo:
+    virtudes: [2, 4, 1, 2, 1]
+    ataque: {nome: Ganchos Finos, dano: 1d4}
+    dicas: ["Foge para longe da luz e da fumaça quando ferida.", "Pousa no sino, abafa o som e rasga fino em bando."]
+    cartas:
+      - id: cri_traca_do_sino_mudo_ganchos_finos
+        name: Ganchos Finos
+        descricao: "Patas de gancho rasgam fino, muitas vezes, no silêncio que a traça trouxe."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: perfurante}]
+      - id: cri_traca_do_sino_mudo_contratempo
+        sig: true
+        name: Contratempo
+        descricao: "As asas batem em contratempo e o badalo não soa; o ar em volta fica surdo."
+        efeitos: [{kind: aplicar_condicao, condicao: silenciado, duracao: 1}]
+  mon_gralha_de_crematorio:
+    virtudes: [2, 4, 1, 2, 2]
+    ataque: {nome: Bico de Cinza, dano: 1d4}
+    dicas: ["Vira cinza e some no primeiro vento quando apanha.", "Desce para roubar o que estiver solto nas mãos."]
+    cartas:
+      - id: cri_gralha_de_crematorio_bico_seco
+        name: Bico Seco
+        descricao: "O bico de cinza prensada bica a mão que segura o anel."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: perfurante}]
+      - id: cri_gralha_de_crematorio_bicada_de_cinza
+        sig: true
+        name: Roubar da Mão
+        descricao: "A gralha desce sem bater as asas, leva a Carta da mão aberta e sobe no calor do forno."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}
+          - {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 2}
+          - {kind: reposicionar, alvo: eu, valor: 3}
+  mon_porca_da_queda:
+    virtudes: [4, 1, 4, 1, 0]
+    ataque: {nome: Focinhada de Lama, dano: 1d8}
+    nao_foge: true
+    dicas: ["Volta a deitar na poça quando a fome passa.", "Avança em linha reta, devagar, e o peso chega antes dela."]
+    cartas:
+      - id: cri_porca_da_queda_focinhada
+        name: Focinhada
+        descricao: "O focinho de lama endurecida bate de baixo para cima, sem desviar de nada."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 7, dano_tipo: impactante}]
+      - id: cri_porca_da_queda_pisar_fundo
+        sig: true
+        name: Pisar Fundo
+        descricao: "O chão cede onde ela pisa; quem está perto afunda e leva o peso em cima."
+        efeitos:
+          - {kind: dano, categoria_arma: pesada, dano_base: 8, dano_tipo: impactante}
+          - {kind: empurrao, valor: 2}
+      - id: cri_porca_da_queda_pele_de_lama
+        name: Pele de Lama
+        descricao: "A lama seca em placas grossas por cima da lama ainda mole."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  mon_centopeia_da_torre_invertida:
+    virtudes: [2, 4, 3, 2, 1]
+    ataque: {nome: Mandíbulas da Parede, dano: 2d8}
+    dicas: ["Sobe pela parede e some no poço quando ferida.", "Desce pelo lado errado da gravidade atrás de quem respira alto."]
+    cartas:
+      - id: cri_centopeia_da_torre_invertida_mandibulas_da_parede
+        name: Mandíbulas da Parede
+        descricao: "As mandíbulas caem do teto e fecham no ombro de quem respira mais alto."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 7, dano_tipo: perfurante}]
+      - id: cri_centopeia_da_torre_invertida_cair_para_cima
+        sig: true
+        name: Cair para Cima
+        descricao: "Marca o alvo com um corte, some pela parede e volta de cima pelo lado sem guarda."
+        efeitos:
+          - {kind: marca, valor: 3}
+          - {kind: reposicionar, alvo: eu, valor: 3}
+          - {kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: perfurante, se: {alvo_tem: marca}}
+      - id: cri_centopeia_da_torre_invertida_varrer_com_as_patas
+        name: Varrer com as Patas
+        descricao: "As patas da frente varrem a fila inteira num único arco."
+        frequencia: cena
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: cortante}
+          - {kind: dano, alvo: inimigos, dano_base: 2, dano_tipo: cortante}
+  mon_sorvedouro_do_codigo:
+    virtudes: [3, 2, 3, 3, 1]
+    ataque: {nome: Artigo Cravado, dano: 1d8}
+    dicas: ["Não recua diante de magia; só para quando não resta Entropia a sugar.", "Para, aponta o funil e puxa a Entropia de quem carrega Éter."]
+    nao_foge: true
+    cartas:
+      - id: cri_sorvedouro_do_codigo_artigo_cravado
+        name: Artigo Cravado
+        descricao: "O Código desce como estaca e o funil do peito faz o resto."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: arcano}]
+      - id: cri_sorvedouro_do_codigo_artigo_sugado
+        sig: true
+        name: Artigo Sugado
+        descricao: "O funil puxa a Entropia do alvo para a crosta, que endurece a cada ponto sugado."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: arcano}
+          - {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}
+          - {kind: protecao, alvo: eu, valor: 3, escala: {por: entropia, fator: 1, max: 4}}
+      - id: cri_sorvedouro_do_codigo_crosta_turva
+        name: Crosta Turva
+        descricao: "O cristal turvo sobe pela mandíbula e fecha como uma segunda armadura."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  mon_pavio_da_lista:
+    virtudes: [2, 2, 4, 4, 1]
+    ataque: {nome: Chama da Boca, dano: 2d8}
+    nao_foge: true
+    dicas: ["Nenhum dos dois pode fugir do outro; o fogo sai até a gaiola esfriar.", "Vira a cabeça vendada para o Éter mais próximo e a gaiola esquenta."]
+    cartas:
+      - id: cri_pavio_da_lista_chama_da_boca
+        name: Chama da Boca
+        descricao: "O fogo sai pela boca do mago preso, um fio de cada vez."
+        efeitos: [{kind: dano, categoria_arma: pesada, dano_base: 8, dano_tipo: igneo}]
+      - id: cri_pavio_da_lista_descarga_paga_em_dor
+        sig: true
+        name: Descarga Paga em Dor
+        descricao: "O Éter sai em fogo e atravessa a fila; a dor do mago é o combustível."
+        palavras_chave: {sacrificio: 1}
+        custo_folego: 2
+        efeitos:
+          - {kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: arcano}
+          - {kind: dano, alvo: inimigos, dano_base: 3, dano_tipo: arcano}
+      - id: cri_pavio_da_lista_gaiola_quente
+        name: Gaiola Quente
+        descricao: "As barras esquentam até o ferro cantar e o mago grita mais alto."
+        frequencia: cena
+        efeitos: [{kind: buff_dano, valor: 2}]
+  mon_enxerto_da_fornalha:
+    virtudes: [4, 3, 3, 1, 1]
+    ataque: {nome: Golpe de Ombro, dano: 1d8}
+    dicas: ["Recua para a fornalha mais próxima quando o homem cansa.", "Fareja sangue e vai direto para a armadura mais pesada."]
+    cartas:
+      - id: cri_enxerto_da_fornalha_golpe_de_ombro
+        name: Golpe de Ombro
+        descricao: "O ombro aberto empurra o braço do homem como quem arrasta um peso morto."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: cortante}]
+      - id: cri_enxerto_da_fornalha_lamina_que_puxa
+        sig: true
+        name: Lâmina que Puxa
+        descricao: "A lâmina arrasta o braço até o alvo mais blindado e racha a peça; o ombro rasga mais."
+        palavras_chave: {sacrificio: 1}
+        efeitos:
+          - {kind: dano, categoria_arma: pesada, dano_base: 8, dano_tipo: cortante}
+          - {kind: rachadura, valor: 2}
+      - id: cri_enxerto_da_fornalha_braco_dobrado
+        name: Braço Dobrado
+        descricao: "O braço do homem se dobra sobre o peito e a lâmina sobe sozinha em guarda."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 4}]
+  mon_vira_costas_da_praca:
+    virtudes: [3, 2, 3, 1, 3]
+    ataque: {nome: Cotovelo Seco, dano: 1d8}
+    dicas: ["Dá um passo para longe e some entre a plateia depois de bater.", "Espera ser tocado e responde com os cotovelos."]
+    cartas:
+      - id: cri_vira_costas_da_praca_cotovelada_seca
+        name: Cotovelada Seca
+        descricao: "Os cotovelos de trás batem duro e rápido em quem encosta nas costas."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 5, dano_tipo: impactante}]
+      - id: cri_vira_costas_da_praca_razao_para_esperar
+        sig: true
+        name: Razão para Esperar
+        descricao: "Cobre os outros com as costas enquanto ninguém o toca, e devolve em dobro o primeiro golpe."
+        efeitos:
+          - {kind: protecao, alvo: aliados, valor: 3}
+          - {kind: dano, dano_base: 5, dano_tipo: impactante, quando: ao_receber_dano}
+      - id: cri_vira_costas_da_praca_encolher_os_ombros
+        name: Encolher os Ombros
+        descricao: "Os casacos sobem até as orelhas e o corpo mole se faz de parede."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  mon_roda_de_mandibulas:
+    virtudes: [2, 2, 3, 2, 1]
+    ataque: {nome: Mordida de Cabeça, dano: 3d10}
+    nao_foge: true
+    dicas: ["Não para enquanto houver quem olhe.", "Sobe da vala quando há sangue e plateia e rola em volta da presa."]
+    cartas:
+      - id: cri_roda_de_mandibulas_mordida_de_cabeca
+        name: Mordida de Cabeça
+        descricao: "Uma das doze cabeças alcança a presa a cada volta e não solta."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: perfurante}]
+      - id: cri_roda_de_mandibulas_volta_completa
+        sig: true
+        name: Volta Completa
+        descricao: "A roda dá a volta inteira na fila, e cada ferida aberta faz a mordida seguinte pesar mais."
+        custo_folego: 1
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 2, dano_tipo: perfurante}
+          - {kind: dano, alvo: inimigos, dano_base: 1, dano_tipo: perfurante, escala: {por: ferimentos_alvo, fator: 1, max: 2}}
+      - id: cri_roda_de_mandibulas_dentes_em_roda
+        name: Dentes em Roda
+        descricao: "A roda inteira gira de uma vez e as doze bocas passam rente à fila."
+        efeitos: [{kind: dano, alvo: inimigos, dano_base: 2, dano_tipo: perfurante}]
+      - id: cri_roda_de_mandibulas_fichas_apertadas
+        name: Fichas Apertadas
+        descricao: "As mãos do cubo apertam as fichas de aposta e a roda ganha embalo."
+        frequencia: cena
+        efeitos: [{kind: buff_dano, valor: 2}]
+      - id: cri_roda_de_mandibulas_girar_mais_depressa
+        name: Girar Mais Depressa
+        descricao: "Quanto mais a presa grita, mais depressa a roda gira."
+        frequencia: cena
+        efeitos: [{kind: buff_acerto, valor: 2}]
+      - id: cri_roda_de_mandibulas_uivo_da_vala
+        name: Uivo da Vala
+        descricao: "Doze gargantas uivam juntas no fundo da vala e o chão treme sob a plateia."
+        frequencia: cena
+        efeitos: [{kind: aplicar_condicao, condicao: amedrontado, duracao: 2}]
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_roda_de_mandibulas_fichas_apertadas, cri_roda_de_mandibulas_girar_mais_depressa], padrao: [ataque, ataque_multiplo, reforco_proprio], narracao: "{nome} gira mais depressa: as cabeças já não se distinguem umas das outras."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_roda_de_mandibulas_uivo_da_vala], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_roda_de_mandibulas_uivo_da_vala, a_cada_n: 2, telegrafo: "{nome} para de girar e as doze gargantas puxam o ar ao mesmo tempo."}, narracao: "{nome} perde um raio, mas a vala inteira uiva com ela."}
+  mon_cavadeira_de_unhas:
+    virtudes: [2, 3, 2, 1, 1]
+    ataque: {nome: Unhas Rachadas, dano: 1d4}
+    dicas: ["Cava mais fundo e some quando é golpeada.", "Sai do piso por baixo, arranhando as pernas."]
+    cartas:
+      - id: cri_cavadeira_de_unhas_arranhar_o_calcanhar
+        name: Arranhar o Calcanhar
+        descricao: "Dezenas de unhas rachadas arranham o tornozelo de quem pisa no chão errado."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: cortante}]
+      - id: cri_cavadeira_de_unhas_sair_por_baixo
+        sig: true
+        name: Sair por Baixo
+        descricao: "O chão esfarela, os dedos saem por baixo das pernas e prendem o alvo no lugar."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: cortante}
+          - {kind: aplicar_condicao, condicao: enraizado, duracao: 1}
+          - {kind: esconder, alvo: eu, valor: 2}
+  mon_convidado_de_cera:
+    virtudes: [3, 2, 3, 3, 3]
+    ataque: {nome: Dedos de Cera, dano: 1d8}
+    dicas: ["Derrete devagar para o chão e some entre os convidados quando ferido.", "Encosta o rosto oco em quem deseja o que não tem."]
+    cartas:
+      - id: cri_convidado_de_cera_dedos_de_cera
+        name: Dedos de Cera
+        descricao: "Os dedos de cera escorrem para a frente e endurecem no que tocam."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: impactante}]
+      - id: cri_convidado_de_cera_por_que_ele_e_nao_voce
+        sig: true
+        name: Ele e Não Você
+        descricao: "Aponta o melhor que o alvo tem e o tranca; enquanto trancado, a cera endurece."
+        efeitos:
+          - {kind: aplicar_condicao, condicao: silenciado, duracao: 2}
+          - {kind: protecao, alvo: eu, valor: 3, se: {alvo_tem: silenciado}}
+      - id: cri_convidado_de_cera_cera_endurecida
+        name: Cera Endurecida
+        descricao: "A cera fria endurece em casca por cima do rosto oco."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  mon_escritura_rastejante:
+    virtudes: [2, 3, 1, 3, 1]
+    ataque: {nome: Borda do Rolo, dano: 1d4}
+    dicas: ["Foge do fogo como foge do prazo.", "Se desenrola até a cláusula seguinte e lê em voz baixa."]
+    cartas:
+      - id: cri_escritura_rastejante_borda_do_rolo
+        name: Borda do Rolo
+        descricao: "A borda do pergaminho corta fino como papel de contrato."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: cortante}]
+      - id: cri_escritura_rastejante_taxa_administrativa
+        sig: true
+        name: Taxa Administrativa
+        descricao: "Lê uma cláusula à distância e o alvo assina sem querer; tudo passa a custar mais."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: cortante}
+          - {kind: aplicar_condicao, condicao: desmoralizado, duracao: 2}
+          - {kind: rachadura, valor: 1}
+  mon_portao_que_morde:
+    virtudes: [3, 1, 4, 2, 0]
+    ataque: {nome: Folha de Ferro, dano: 2d8}
+    nao_foge: true
+    dicas: ["Não sai do batente; pelas dobradiças, de lado, ele não alcança.", "Espera o passo entre as folhas e fecha."]
+    cartas:
+      - id: cri_portao_que_morde_folha_de_ferro
+        name: Folha de Ferro
+        descricao: "Uma folha do portão bate de lado com o peso de uma porta de cadeia."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: impactante}]
+      - id: cri_portao_que_morde_fechar_de_vez
+        sig: true
+        name: Fechar de Vez
+        descricao: "As duas folhas fecham sobre o alvo e quebram o metal e o couro que ele veste."
+        custo_folego: 2
+        efeitos:
+          - {kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: impactante}
+          - {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}
+      - id: cri_portao_que_morde_dobradicas_inchadas
+        name: Dobradiças Inchadas
+        descricao: "As dobradiças inchadas rangem e o ferro trava como mandíbula."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 6}]
+  enemy_sentinela_ferro:
+    cartas:
+      - id: cri_pajem_de_obsidiana_lasca_das_juntas
+        name: Lasca das Juntas
+        descricao: "Uma lasca de vidro negro se solta da junta e corta o que estiver perto."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 4, dano_tipo: cortante}]
+      - id: cri_pajem_de_obsidiana_placa_que_corta
+        sig: true
+        name: Placa que Corta
+        descricao: "Fica entre o alvo e os outros, e as placas devolvem o corte a quem o golpeia de perto."
+        efeitos:
+          - {kind: taunt, valor: 3}
+          - {kind: protecao, alvo: eu, valor: 4}
+          - {kind: dano, dano_base: 3, dano_tipo: cortante, quando: ao_receber_dano}
+      - id: cri_pajem_de_obsidiana_colar_na_parede
+        name: Colar na Parede
+        descricao: "O vidro negro se cola à pedra do corredor e some na cor dela."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 3}]
+  enemy_horror_esgoto:
+    cartas:
+      - id: cri_coisa_do_esgoto_braco_de_ossos
+        name: Braço de Ossos
+        descricao: "Um braço de ossos de muitos mortos desce como um malho de lodo."
+        efeitos: [{kind: dano, categoria_arma: pesada, dano_base: 8, dano_tipo: impactante}]
+      - id: cri_coisa_do_esgoto_engolir_o_despejo
+        sig: true
+        name: Engolir o Despejo
+        descricao: "O ralo de ferro engole o que caiu, fecha um ferimento e a pancada seguinte pesa mais."
+        efeitos:
+          - {kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: corrosivo}
+          - {kind: cura, alvo: eu, valor: 3, se: {vitalidade_max_pct: 75}}
+          - {kind: buff_dano, alvo: eu, valor: 2}
+      - id: cri_coisa_do_esgoto_lodo_subindo
+        name: Lodo Subindo
+        descricao: "O lodo do ralo sobe pelas costas e cobre o que a pancada abriu."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  enemy_elemental_fogo_poluido:
+    cartas:
+      - id: cri_caido_do_cadinho_braco_de_escoria
+        name: Braço de Escória
+        descricao: "O braço inteiro cai como um lingote, com a crosta ainda quente por baixo."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 7, dano_tipo: igneo}]
+      - id: cri_caido_do_cadinho_partir_a_crosta
+        sig: true
+        name: Partir a Crosta
+        descricao: "Parte a crosta de dentro com um golpe de braço inteiro e fica em carne viva."
+        efeitos:
+          - {kind: dano, categoria_arma: pesada, dano_base: 9, dano_tipo: igneo}
+          - {kind: rachadura, alvo: eu, valor: 1}
+      - id: cri_caido_do_cadinho_crosta_fechando
+        name: Crosta Fechando
+        descricao: "Longe do fogo a escória fecha e esfria, mais dura e mais lenta."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 7}]
+  enemy_polvo_esgoto:
+    cartas:
+      - id: cri_bagre_de_varal_barbilhoes
+        name: Barbilhões de Varal
+        descricao: "Os barbilhões chicoteiam o ar úmido e agarram quem respira alto."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 7, dano_tipo: impactante}]
+      - id: cri_bagre_de_varal_cabeca_na_agua
+        sig: true
+        name: Cabeça na Água
+        descricao: "Mete a cabeça do alvo na água que carrega e o alvo luta preso, sem ar."
+        efeitos:
+          - {kind: aplicar_condicao, condicao: enraizado, duracao: 2}
+          - {kind: dot, dano_base: 2, duracao: 2, dano_tipo: impactante}
+      - id: cri_bagre_de_varal_agua_parda
+        name: Água Parda
+        descricao: "Um jato de água parda do canal cai nos olhos de quem olha."
+        frequencia: cena
+        efeitos: [{kind: aplicar_condicao, condicao: cego, duracao: 1}]
+  mon_relicario_de_osso:
+    virtudes: [1, 1, 3, 4, 1]
+    ataque: {nome: Mão de Cristal, dano: 2d8}
+    nao_foge: true
+    dicas: ["Não se move do altar; quem chega devagar pela borda seca passa.", "Atira lascas em quem agita a água da nave."]
+    cartas:
+      - id: cri_relicario_da_catedral_mao_de_cristal
+        name: Mão de Cristal
+        descricao: "A mão de Éter cristalizado desce do altar com os dedos abertos."
+        efeitos: [{kind: dano, categoria_arma: marcial, dano_base: 5, dano_tipo: perfurante}]
+      - id: cri_relicario_da_catedral_lasca_de_cristal
+        sig: true
+        name: Lasca de Cristal
+        descricao: "Lascas voam do altar e atravessam a fila; a água agitada faz as pontas crescerem de novo."
+        custo_folego: 2
+        efeitos:
+          - {kind: dano, categoria_arma: marcial, dano_base: 5, dano_tipo: perfurante}
+          - {kind: dano, alvo: inimigos, dano_base: 2, dano_tipo: perfurante}
+          - {kind: buff_dano, alvo: eu, valor: 1}
+      - id: cri_relicario_da_catedral_cristal_crescendo
+        name: Cristal Crescendo
+        descricao: "O cristal sobe pelos mortos do altar e engrossa a crosta."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 5}]
+  enemy_golem_lixo:
+    cartas:
+      - id: cri_velorio_de_sal_mao_de_sal
+        name: Mão de Sal
+        descricao: "A mão branca cai como pilão e deixa grãos nas feridas."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: impactante}]
+      - id: cri_velorio_de_sal_salgar
+        sig: true
+        name: Salgar
+        descricao: "Cobre o alvo de sal: ele fica preso no lugar e o sal conserva o que devia curar."
+        efeitos:
+          - {kind: aplicar_condicao, condicao: enraizado, duracao: 2}
+          - {kind: torpor, valor: 1}
+      - id: cri_velorio_de_sal_ajoelhar
+        name: Ajoelhar
+        descricao: "Ajoelha entre os leprosos e a crosta de sal engrossa em volta dele."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 3}]
+  mon_sangrado_da_clinica:
+    virtudes: [3, 4, 2, 1, 1]
+    ataque: {nome: Mão Branca, dano: 1d8}
+    dicas: ["Aperta os cortes abertos e recua para o muro quando ferido.", "Vai aos saltos até onde sente sangue, porque não tem nenhum."]
+    cartas:
+      - id: cri_sangrado_da_clinica_mao_branca
+        name: Mão Branca
+        descricao: "A mão sem sangue arranha antes que alguém tenha visto o braço levantar."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: cortante}]
+      - id: cri_sangrado_da_clinica_leve_demais
+        sig: true
+        name: Leve Demais
+        descricao: "Mais leve do que devia, age antes de todos; um corte no braço e o salto se perde."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: cortante}
+          - {kind: reposicionar, alvo: eu, valor: 2}
+          - {kind: buff_acerto, alvo: eu, valor: 1}
+      - id: cri_sangrado_da_clinica_fechar_os_cortes
+        name: Fechar os Cortes
+        descricao: "Os dedos apertam os cortes dos braços até a pele branca ficar rosada."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 3}]
+  mon_quebrado_de_vitrine:
+    virtudes: [2, 2, 3, 4, 3]
+    ataque: {nome: Ponta dos Dedos, dano: 1d8}
+    dicas: ["Fica sentado na cadeira da sala e recua para trás dos criados quando ferido.", "Canta com voz de vidro enquanto a luz atravessa as rachaduras."]
+    cartas:
+      - id: cri_quebrado_de_vitrine_ponta_dos_dedos
+        name: Ponta dos Dedos
+        descricao: "As pontas dos dedos de vidro riscam o peito de quem se aproxima."
+        efeitos: [{kind: dano, categoria_arma: versatil, dano_base: 6, dano_tipo: perfurante}]
+      - id: cri_quebrado_de_vitrine_cantico_de_vidro
+        sig: true
+        name: Cântico de Vidro
+        descricao: "Canta com voz de vidro; a luz que atravessa as rachaduras dá fôlego aos outros."
+        efeitos:
+          - {kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: perfurante}
+          - {kind: buff_acerto, alvo: aliados, valor: 1}
+          - {kind: cura, alvo: aliados, valor: 2}
+      - id: cri_quebrado_de_vitrine_rachaduras_piscando
+        name: Rachaduras Piscando
+        descricao: "A luz pisca nas rachaduras do rosto e quem olha de frente perde a mira."
+        frequencia: cena
+        efeitos: [{kind: protecao, valor: 4}]
+  enemy_gargula_ferro:
+    cartas:
+      - id: cri_ra_de_lotus_mordida_adiantada
+        name: Mordida Adiantada
+        descricao: "A rã morde no lugar onde o alvo ainda não chegou."
+        efeitos: [{kind: dano, categoria_arma: leve, dano_base: 3, dano_tipo: cortante}]
+      - id: cri_ra_de_lotus_coaxo_adiantado
+        sig: true
+        name: Coaxo Adiantado
+        descricao: "Coaxa antes do golpe cair; quem o ia receber já levantou a guarda."
+        efeitos:
+          - {kind: buff_defesa, alvo: aliados, valor: 2}
+          - {kind: vigilia, alvo: aliados, valor: 2}

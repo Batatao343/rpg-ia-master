@@ -1,0 +1,1657 @@
+# SPEC-349 (esteira) — Ficha de identidade da onda de Brekmar, o porto sem lei.
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da SPEC-348 (checkout principal), mesma convenção das ondas 1 e 2.
+# Slots genéricos: a curadoria (curadoria_legado.yaml) não tem nenhum `generico` com
+# regiao_onda: brekmar — as 6 entradas da região são `valoria` e entram só como retro (R6).
+regiao: brekmar
+onda: 4
+spec: SPEC-349
+nome_regiao: Brekmar
+habitat_nome:
+  brekmar: Porto de Brekmar
+  bk_docas_velhas: Docas Velhas
+paleta: >-
+  **Brekmar** — o porto sem lei da costa oeste: docas de madeira pesada e pedra avançando em
+  extensões tortas sobre água funda, cascos de alcatrão preto, cordame encharcado, osso de leviatã
+  cor de marfim velho nas quilhas do Estaleiro, sal seco esbranquiçando tudo. Luz e paleta: preto de
+  alcatrão, cinza-ardósia do mar, âmbar amarelo das lanternas de óleo que acendem a cidade à noite,
+  marfim de osso, ferrugem de corrente; o rosa-dourado quente das janelas da Casa das Marés; o
+  vermelho espesso da Maré Vermelha nas Docas Velhas.
+familias_em_jogo:            # D10 — mesmos nomes das ondas anteriores (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: chefe,  papel_tatico: bruto_de_linha,   arquetipo: predador_apice,        plano_corporal: hexapode_ou_mais,    material: osso,           escala: enorme,  locomocao: anda,          percepcao: vibracao,      habitat: [bk_docas_velhas, brekmar]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: elite,  papel_tatico: quebra_defesa,    arquetipo: bruto,                 plano_corporal: bipede_curvado,      material: osso,           escala: humana,  locomocao: anda,          percepcao: som,           habitat: [brekmar]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: sacrificial,      arquetipo: conjurador,            plano_corporal: bipede_ereto,        material: cera_sebo,      escala: humana,  locomocao: anda,          percepcao: calor,         habitat: [brekmar]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: padrao, papel_tatico: controlador,      arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado,      material: carne_exposta,  escala: humana,  locomocao: anda,          percepcao: respiracao,    habitat: [bk_docas_velhas]}
+  # --- bestas da entropia ---
+  - {vaga: 5,  familia: besta_entropia,  categoria: padrao, papel_tatico: drenador,         arquetipo: predador,              plano_corporal: composto,            material: carne_exposta,  escala: grande,  locomocao: rasteja,       percepcao: vibracao,      habitat: [bk_docas_velhas, brekmar]}
+  - {vaga: 6,  familia: besta_entropia,  categoria: lacaio, papel_tatico: guarda_protetor,  arquetipo: guardiao,              plano_corporal: quadrupede,          material: osso,           escala: pequena, locomocao: anda,          percepcao: visao,         habitat: [brekmar, bk_docas_velhas]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: lacaio, papel_tatico: suporte,          arquetipo: tatico,                plano_corporal: sessil_ancorado,     material: sal_mineral,    escala: humana,  locomocao: ancorada,      percepcao: vibracao,      habitat: [bk_docas_velhas]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: padrao, papel_tatico: emboscador,       arquetipo: emboscador,            plano_corporal: quadrupede,          material: couro_tecido,   escala: humana,  locomocao: anda,          percepcao: luz,           habitat: [bk_docas_velhas]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: controlador,      arquetipo: emboscador,            plano_corporal: serpentiforme,       material: couro_tecido,   escala: humana,  locomocao: rasteja,       percepcao: vibracao,      habitat: [bk_docas_velhas]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 11, familia: humanoide_preco, categoria: padrao, papel_tatico: guarda_protetor,  arquetipo: guardiao,              plano_corporal: bipede_ereto,        material: carne_exposta,  escala: humana,  locomocao: anda,          percepcao: sangue_cheiro, habitat: [brekmar]}
+  - {vaga: 12, familia: humanoide_preco, categoria: padrao, papel_tatico: tanque_reativo,   arquetipo: bruto,                 plano_corporal: bipede_ereto,        material: osso,           escala: humana,  locomocao: anda,          percepcao: vibracao,      habitat: [brekmar]}
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: predador,             plano_corporal: bipede_ereto,        material: ferro_ferrugem, escala: humana,  locomocao: anda,          percepcao: respiracao,    habitat: [brekmar]}
+  - {vaga: 14, familia: humanoide_preco, categoria: elite,  papel_tatico: controlador,      arquetipo: conjurador,            plano_corporal: bipede_ereto,        material: couro_tecido,   escala: grande,  locomocao: anda,          percepcao: vibracao,      habitat: [bk_docas_velhas]}
+  - {vaga: 15, familia: humanoide_preco, categoria: lacaio, papel_tatico: saqueador,        arquetipo: covarde_oportunista,   plano_corporal: bipede_curvado,      material: madeira_fibra,  escala: humana,  locomocao: anda,          percepcao: sangue_cheiro, habitat: [brekmar, bk_docas_velhas]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 16, familia: demonio_encarnado, origem_lore: {detalhe: npc_lyss},     categoria: elite,  papel_tatico: controlador,        arquetipo: predador,            plano_corporal: hospedeiro_parasita, material: carne_exposta,  escala: grande,  locomocao: anda,          percepcao: calor,         habitat: [brekmar]}
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},    categoria: elite,  papel_tatico: perseguidor_marca, arquetipo: lider_matilha,       plano_corporal: bipede_curvado,      material: madeira_fibra,  escala: grande,  locomocao: rasteja,       percepcao: visao,         habitat: [brekmar, bk_docas_velhas]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},    categoria: padrao, papel_tatico: bruto_de_linha,    arquetipo: abissal,             plano_corporal: bipede_ereto,            material: ferro_ferrugem,  escala: grande,  locomocao: anda,          percepcao: visao,         habitat: [brekmar]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen},  categoria: lacaio, papel_tatico: controlador,       arquetipo: predador,            plano_corporal: radial,              material: carne_exposta,  escala: humana,  locomocao: nada,          percepcao: calor,         habitat: [bk_docas_velhas]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},     categoria: padrao, papel_tatico: drenador,          arquetipo: tatico,              plano_corporal: segmentado,          material: quitina,        escala: grande,  locomocao: cava,          percepcao: vibracao,      habitat: [bk_docas_velhas, brekmar]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_skarath},  categoria: padrao, papel_tatico: emboscador,        arquetipo: emboscador,          plano_corporal: bipede_ereto,        material: carne_exposta,  escala: grande,  locomocao: anda,          percepcao: medo_emocao,   habitat: [brekmar]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_casco_de_costelas
+    vaga: 1
+    nome: Casco de Costelas
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:455", "lore_nova/items.txt:1333", "lore_nova/locations.txt:475"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: osso
+      escala: enorme
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um casco do Estaleiro afundado de proa nas Docas Velhas, que a quilha de osso de leviatã fez
+        crescer de novo por dentro: músculo cinza-azulado de bicho do fundo subiu pelas cavernas de
+        madeira e as transformou em costelas que se dobram como pernas, uma fileira de cada lado. O
+        tabuado podre caiu em placas; onde ficou, a carne cresceu por cima e o prende como casca. A
+        proa rachada abriu em boca, com a roda de proa servindo de mandíbula de cima, e no porão, que
+        agora é ventre, ainda se ouve a água bater. A quilha corre por baixo de tudo como espinha,
+        branca, de juntas grossas.
+    silhueta: Um navio tombado de lado que se levanta da água sobre duas fileiras de costelas dobradas e anda como bicho de muitas patas.
+    comportamento: >-
+      Fica deitado no fundo das Docas Velhas, onde o casco afundou, e sobe com a maré cheia. Anda pelas
+      docas de madeira esmagando o que estiver na frente e fecha as costelas sobre o que consegue pegar,
+      como quem guarda carga no porão. Volta para a água antes do dia, sempre ao mesmo lugar.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_casco_de_costelas_porao_fechado
+      frase: >-
+        Fecha as costelas sobre quem estiver ao alcance e o leva no porão: enquanto alguém está lá
+        dentro, todo golpe que acerta o casco bate também em quem foi engolido.
+    contra_jogo: Quebrar as costelas de um lado para soltar quem está no porão, ou atraí-lo para as docas de pedra, onde as pernas de madeira escorregam e ele tomba.
+    gancho: >-
+      Os navios de Durrak são os mais rápidos do porto e os que mais voltam com menos gente. Um que
+      afundou nas Docas Velhas não ficou no fundo: o osso da quilha lembrou do bicho de onde foi
+      cortado e usou o navio de corpo.
+    habitat: [bk_docas_velhas, brekmar]
+    inspiracao: []
+    padrao: [ataque, ataque_multiplo, defesa, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} afunda a proa rachada e as costelas de um lado se abrem como portas de porão."
+    description: Um casco afundado do Estaleiro que a quilha de osso de leviatã encheu de carne de novo e pôs para andar sobre as costelas.
+    perigo: Extremo
+    lore: >-
+      Nas Docas Velhas há um navio do Estaleiro que afundou de proa no ancoradouro, e ninguém o tirou do
+      fundo porque ninguém quis pagar. Os Osshari dizem que osso de leviatã não esquece o bicho de onde
+      foi cortado. Numa maré cheia o casco se levantou: as cavernas de madeira tinham virado costelas, a
+      proa tinha virado boca e a quilha corria por baixo como espinha. Sobe com a maré, anda pelas docas
+      de madeira, fecha as costelas sobre o que pega e volta ao mesmo lugar antes do dia. Os estivadores
+      das Docas Velhas sempre trabalharam pela tábua de marés; agora é por causa dele.
+    aparencia: >-
+      Casco de navio tombado de lado, de pé sobre duas fileiras de cavernas de madeira que viraram
+      costelas de carne cinza-azulada, tabuado podre preso por músculo, proa rachada aberta em boca,
+      quilha branca de osso de leviatã correndo por baixo como espinha.
+    como_se_luta: >-
+      Esmaga quem fica na frente e fecha as costelas sobre quem consegue pegar, levando-o no porão.
+      Quebrar as costelas de um lado solta o engolido; nas docas de pedra as pernas escorregam e ele tomba.
+    related_entities: [bk_docas_velhas, brekmar]
+    arte:
+      visual: >-
+        Casco de navio de mastros quebrados, tombado de lado a 45 graus, erguido do mar sobre duas
+        fileiras de cavernas curvas que viraram pernas de carne cinza-azulada, nuas onde o tabuado caiu.
+        Músculo úmido cobrindo o resto do tabuado como casca. A proa rachada abre em boca vertical, a
+        roda de proa como mandíbula de cima. Quilha de osso de leviatã cor de marfim, articulada,
+        visível por baixo como espinha. Água escorrendo das escotilhas.
+      composicao: >-
+        Docas Velhas de madeira à noite, maré cheia; o Casco sobe da água ao lado de um píer, mais alto
+        que os armazéns. Um estivador com lanterna no píer, do tamanho de uma das juntas das costelas,
+        dá a escala. Luz âmbar de lanternas de óleo e reflexo frio de lua na água.
+      evitar: Navio-fantasma translúcido, tripulação de esqueletos, polvo gigante, leviatã inteiro. É um casco de madeira que virou corpo de carne, não assombração nem monstro marinho clássico.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_quilhado_do_estaleiro
+    vaga: 2
+    nome: Quilhado do Estaleiro
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:455", "lore_nova/items.txt:1333"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um aprendiz das rampas do norte que serrou e lixou osso de leviatã por anos sem pano no rosto. O
+        pó entrou e fez a espinha crescer: as vértebras romperam a pele das costas numa crista branca e
+        lisa, alta como um palmo e meio, que desce da nuca ao quadril com a curva exata de uma quilha. As
+        costelas seguiram e abriram para os lados como cavernas de casco, esticando o peito até rachar.
+        Anda curvado para a frente, cabeça baixa, porque o peso está todo nas costas.
+    silhueta: Um homem curvado como quem empurra um barco, com uma lâmina branca e lisa saindo das costas, da nuca até a cintura.
+    comportamento: >-
+      Trabalha ainda, quando não está brigando: arrasta madeira nas rampas e ninguém o manda embora.
+      Quando briga, abaixa a cabeça e corre de lado, cortando com a crista das costas como uma quilha
+      corta a água. Não para no primeiro: passa através e sai do outro lado da fila.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_quilhado_do_estaleiro_corte_de_quilha
+      frase: >-
+        Investe de lado, de cabeça baixa, e atravessa: o golpe ignora a guarda do alvo, acerta também quem
+        estiver logo atrás dele na mesma linha, e o Quilhado termina a investida às costas de ambos.
+    contra_jogo: Não fazer fila na frente dele; lutar lado a lado ou de costas para uma parede, onde a investida não tem por onde sair, e bater no peito rachado quando ele para.
+    gancho: >-
+      Durrak paga adiantado e não faz perguntas. O pó de osso de leviatã das rampas do norte não faz mal
+      a quem passa por lá; faz a quem fica anos.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [mover, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} abaixa a cabeça, vira o ombro e a crista branca das costas fica de frente para você."
+    description: Aprendiz do Estaleiro das Almas cuja espinha rompeu as costas numa crista de osso em forma de quilha; corre de lado e atravessa a fila.
+    perigo: Alto
+    lore: >-
+      Nas rampas do norte, onde Durrak monta os cascos, o osso de leviatã é serrado, lixado e encaixado à
+      mão, e a poeira dele fica no ar o dia inteiro. Os aprendizes que trabalham ali anos a fio começam a
+      andar curvados, e um dia a espinha rompe as costas numa crista branca com a curva de uma quilha.
+      Ainda arrastam madeira nas rampas, e ninguém os manda embora. Quando brigam, correm de lado, de
+      cabeça baixa, e a crista abre a guarda como uma proa abre a água.
+    aparencia: >-
+      Homem curvado para a frente, crista de vértebras brancas de osso de leviatã saindo das costas da
+      nuca ao quadril como uma quilha, costelas abertas para os lados esticando e rachando o peito,
+      avental de couro de estaleiro, braços brancos de pó.
+    como_se_luta: >-
+      Corre de lado, de cabeça baixa, atravessa a guarda e quem estiver atrás, e para às costas de todos.
+      Não fazer fila diante dele; de costas para uma parede ele não atravessa, e o peito rachado cede.
+    related_entities: [brekmar]
+    arte:
+      visual: >-
+        Homem adulto robusto, inclinado para a frente quase 45 graus, cabeça baixa. Das costas nuas sai
+        uma crista contínua de vértebras fundidas cor de marfim, lisa como osso polido, alta de um palmo
+        e meio, da nuca ao quadril, curva como quilha de barco. Costelas visíveis abertas para os lados
+        sob a pele esticada, rachada em linhas vermelhas no peito. Avental de couro de estaleiro, calças
+        de lona, pó branco nos braços.
+      composicao: >-
+        Rampa de estaleiro com o esqueleto de um casco em construção ao fundo, cavernas de madeira à
+        mostra. O Quilhado arrasta uma tábua; um carpinteiro de pé ao lado, da mesma altura que ele
+        curvado, dá a escala. Luz de fim de tarde, poeira branca no ar.
+      evitar: Homem-tubarão, barbatana de peixe, homem-lagarto, armadura de osso de fantasia. A crista é a espinha dele, de osso liso, e o corpo é de trabalhador.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_odre_de_oleo
+    vaga: 3
+    nome: Odre de Óleo
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:429", "lore_nova/creatures.txt:1492"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cera_sebo
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Acendedor das lanternas que iluminam o porto à noite, um daqueles que sobem a escada com a lata
+        no ombro e provam o óleo na ponta da língua para saber se presta. O de leviatã presta: tanto que
+        a gordura do corpo dele virou óleo também. Pendem sob a pele bolsas amarelas e moles, do tamanho
+        de um punho, no pescoço, nas axilas, na barriga e atrás dos joelhos, e cada uma brilha fraco
+        quando ele passa perto de uma chama. A boca e os dedos estão sempre engordurados; o cabelo caiu
+        inteiro.
+    silhueta: Um homem de escada no ombro, inchado de bolsas penduradas pelo corpo como cachos, que acende quando passa debaixo de uma lanterna.
+    comportamento: >-
+      Continua a ronda das lanternas, de poste em poste, ao entardecer. Chega perto de quem briga como
+      quem vem ajudar, e quando apanha as bolsas estouram em óleo que pega fogo na primeira faísca.
+      Morre fácil e leva gente junto.
+    papel_tatico: sacrificial
+    arquetipo: conjurador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_odre_de_oleo_bolsa_estourada
+      frase: >-
+        Quando cai, as bolsas estouram e encharcam de óleo quem estiver junto dele: o próximo golpe de
+        fogo, de qualquer lado, queima o encharcado em dobro.
+    contra_jogo: Derrubá-lo longe de você e longe das lanternas, ou deixá-lo em pé até o fim; vivo, ele é só um homem gordo com uma escada.
+    gancho: >-
+      Brekmar se vê do mar a distância porque queima óleo em quantidade, e alguém sobe a escada de poste
+      em poste há décadas. O óleo de leviatã é mais barato no porto do que deveria.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [mover, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} encosta a escada no poste e as bolsas do pescoço começam a brilhar."
+    description: Acendedor de lanternas do porto cuja gordura virou óleo de leviatã em bolsas amarelas sob a pele; estoura em fogo quando cai.
+    perigo: Baixo
+    lore: >-
+      Brekmar acende lanternas de óleo em quantidade suficiente para ser vista do mar, e alguém tem de
+      subir a escada de poste em poste todo fim de tarde. Os acendedores velhos provam o óleo na língua
+      para saber se presta, e o de leviatã, que vem do Cemitério, presta. Em alguns a gordura do corpo
+      virou óleo também, em bolsas amarelas que pendem sob a pele e brilham quando passam por uma chama.
+      Continuam a ronda. Quem briga perto de um deles aprende a não derrubá-lo no lugar errado.
+    aparencia: >-
+      Homem gordo e careca com escada de madeira no ombro e lata de óleo, bolsas amarelas moles do
+      tamanho de punhos penduradas sob a pele do pescoço, das axilas, da barriga e dos joelhos,
+      brilhando fraco, boca e dedos sempre engordurados.
+    como_se_luta: >-
+      Chega perto como quem vem ajudar; quando cai, as bolsas estouram e encharcam de óleo quem está
+      junto, e o fogo pega fácil. Derrubá-lo longe de você e das lanternas.
+    related_entities: [brekmar]
+    arte:
+      visual: >-
+        Homem adulto baixo, muito gordo, careca e sem sobrancelhas, de camisa aberta e colete de lona
+        encerado. Bolsas de pele translúcida amarela, moles e pesadas, do tamanho de punhos, penduradas no
+        pescoço, debaixo dos braços, na barriga e atrás dos joelhos, com óleo amarelo visível dentro,
+        algumas brilhando âmbar. Escada curta de madeira no ombro, lata de óleo de bico longo na mão,
+        dedos e queixo engordurados.
+      composicao: >-
+        Rua estreita de Brekmar ao entardecer, poste de ferro com lanterna de óleo. O Odre ao pé do
+        poste; um marinheiro passando ao fundo, da mesma altura, dá a escala. A luz da lanterna acende
+        as bolsas mais próximas.
+      evitar: Bomba ambulante de desenho, homem de fogo, chamas saindo do corpo, tumores de doença. São bolsas de óleo frio; ele só queima quando estoura.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lavado_da_mare_vermelha
+    vaga: 4
+    nome: Lavado da Maré Vermelha
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1466", "lore_nova/locations.txt:475"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um pescador das Docas Velhas que entrou na água com um corte aberto num dia de Maré Vermelha. O
+        caldo da maré, entre alga e sangue, entrou pela ferida e tomou o lugar do sangue dele: as veias
+        engrossaram e escureceram, e a pele, sem sangue de verdade por baixo, se soltou em tiras
+        compridas que pendem dos braços, do peito e das costas como fitas de alga vermelha. Os olhos
+        encheram de vermelho até o branco sumir. Respira devagar, pela boca, e a cada expiração sai um
+        fio do caldo pelo nariz.
+    silhueta: Um homem curvado com o corpo pendurado de fitas compridas, que pinga um rastro escuro e vai sempre na direção da água.
+    comportamento: >-
+      Anda devagar, sempre no rumo do mar, e deixa atrás de si uma mancha vermelha e espessa que não
+      seca. A mancha puxa como a maré puxa: quem pisa nela escorrega para o lado da água. Ele não corre
+      atrás de ninguém; deixa o chão fazer isso.
+    papel_tatico: controlador
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lavado_da_mare_vermelha_rastro_que_puxa
+      frase: >-
+        Espalha o caldo da maré pelo chão: quem está na mancha é arrastado na direção da água no fim de
+        cada rodada, e quem chega à borda cai.
+    contra_jogo: Lutar de costas para a terra, não para o mar, e jogar areia ou serragem na mancha antes de pisar; sem o rastro, ele é só um homem lento.
+    gancho: >-
+      A Maré Vermelha chega de tempos em tempos e deixa as praias cobertas de peixe morto e de coisas que
+      não são peixe. Nem tudo o que ela deixa estava morto quando ela chegou.
+    habitat: [bk_docas_velhas]
+    inspiracao:
+      - fonte: biologia marinha (marés vermelhas)
+        referencia: florações de algas que tingem a costa de vermelho e matam peixes em massa
+        tomou: a água vermelha e espessa e o rastro de peixe morto
+        distancia: a Maré Vermelha já é de Valoria (creatures.txt:1466); daqui só veio a textura do caldo, e o homem que a carrega por dentro não tem paralelo na fonte
+    padrao: [enfraquecer, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} expira devagar pela boca e o vermelho no chão começa a escorrer para o lado da água."
+    description: Pescador em quem a Maré Vermelha substituiu o sangue; a pele pende em fitas de alga e o rastro que deixa puxa para o mar.
+    perigo: Médio
+    lore: >-
+      A Maré Vermelha chega às Docas Velhas de tempos em tempos, densa, entre alga e sangue, e some em
+      dias deixando peixe morto nas praias. Quem entra na água nesses dias com um corte aberto às vezes
+      sai com ela por dentro. O caldo toma o lugar do sangue, a pele se solta em fitas que pendem como
+      alga, e o homem passa a andar devagar, sempre na direção do mar. Deixa um rastro vermelho que não
+      seca e que puxa como a maré. Os estivadores jogam serragem por cima antes de passar.
+    aparencia: >-
+      Homem curvado de olhos inteiramente vermelhos, pele solta em tiras compridas que pendem dos
+      braços, do peito e das costas como fitas de alga vermelha, veias grossas e escuras por baixo, fio
+      de caldo vermelho escorrendo do nariz ao queixo.
+    como_se_luta: >-
+      Anda devagar para o mar e deixa uma mancha que arrasta quem pisa nela para a borda. Lutar de costas
+      para a terra e cobrir a mancha com areia ou serragem desfaz o perigo dele.
+    related_entities: [bk_docas_velhas]
+    arte:
+      visual: >-
+        Homem adulto magro, curvado, de calça de pescador encharcada. A pele dos braços, do peito e das
+        costas solta em tiras longas de dois palmos, finas e translúcidas, vermelho-escuras, pendendo
+        como fitas de alga. Por baixo, carne pálida com veias grossas cor de vinho. Olhos inteiramente
+        vermelhos, sem branco. Fio espesso de caldo vermelho do nariz ao queixo. Pés descalços numa poça
+        vermelha espessa.
+      composicao: >-
+        Píer das Docas Velhas numa manhã cinzenta, mar vermelho e espesso ao lado, peixes mortos boiando.
+        O Lavado anda para a borda deixando um rastro vermelho brilhante nas tábuas. Um estivador com um
+        balde de serragem, parado a dois passos, dá a escala.
+      evitar: Morto-vivo verde, homem de musgo, monstro do pântano, sangue jorrando. É um homem com a pele solta em fitas e um rastro espesso; o horror é calmo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_cardume_coagulado
+    vaga: 5
+    nome: Cardume Coagulado
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1466", "lore_nova/creatures.txt:1412"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um cardume de sardinhas e tainhas que a Maré Vermelha colou num corpo só, do comprimento de um
+        bote. As escamas de uns fundiram nas dos outros e a pele virou uma massa única, mas as cabeças
+        ficaram: dezenas, enfileiradas ao longo do flanco, cada uma com a própria boca abrindo e fechando
+        e os próprios olhos parados. Por baixo não há barbatana nenhuma, só um ventre liso e pegajoso com
+        que a coisa se arrasta pelas tábuas, e as caudas, ainda separadas, batem todas juntas na ponta.
+    silhueta: Um tronco comprido e molhado jogado no píer, com uma fileira de bocas de peixe abrindo e fechando ao longo do lado.
+    comportamento: >-
+      Sobe nas Docas Velhas quando a maré traz restos, arrastando-se pelas tábuas com o ventre. Encosta o
+      flanco em quem estiver no caminho e as bocas mordem ao mesmo tempo, pequenas, sem soltar. Fora da
+      água seca rápido, e volta antes de secar.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cardume_coagulado_fileira_de_bocas
+      frase: >-
+        Encosta o flanco e todas as bocas mordem juntas: cada mordida tira pouco, mas tira de cada um que
+        estiver encostado nele, e o que tira o mantém úmido.
+    contra_jogo: Ficar longe do flanco e bater na ponta das caudas, que viram o corpo; fora da água ele seca, e cada rodada longe do mar o enfraquece.
+    gancho: >-
+      O porto vive do peixe e não sabe o que fazer com um cardume que já não se separa. Os pescadores
+      chamam de rede que fecha sozinha.
+    habitat: [bk_docas_velhas, brekmar]
+    inspiracao: []
+    padrao: [ataque_multiplo, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} encosta o flanco nas tábuas e a fileira de bocas abre ao mesmo tempo, num estalo molhado."
+    description: Cardume que a Maré Vermelha fundiu num corpo do tamanho de um bote, com dezenas de cabeças de peixe mordendo ao longo do flanco.
+    perigo: Médio
+    lore: >-
+      Depois de uma Maré Vermelha, os pescadores das Docas Velhas às vezes acham na rede um cardume que
+      não se separa. As escamas de uns colaram nas dos outros e a pele virou uma só, do comprimento de um
+      bote, mas as cabeças ficaram, enfileiradas ao longo do flanco, cada uma abrindo a própria boca. A
+      coisa se arrasta pelas tábuas com o ventre e encosta em quem estiver no caminho. Seca rápido fora
+      da água e sabe disso. Os pescadores chamam de rede que fecha sozinha e cortam a corda quando
+      sentem o peso.
+    aparencia: >-
+      Corpo comprido e liso do tamanho de um bote, de escamas prateadas fundidas e manchadas de
+      vermelho, com dezenas de cabeças de sardinha e tainha enfileiradas ao longo do flanco, bocas
+      abrindo e fechando, caudas separadas batendo juntas na ponta.
+    como_se_luta: >-
+      Encosta o flanco e todas as bocas mordem juntas, pouco cada uma. Ficar longe do flanco e bater na
+      ponta das caudas; quanto mais tempo longe da água, mais fraco ele fica.
+    related_entities: [bk_docas_velhas, brekmar]
+    arte:
+      visual: >-
+        Massa alongada de peixe do comprimento de um bote a remo, achatada no chão, pele prateada lisa
+        de escamas fundidas, com manchas vermelho-ferrugem. Ao longo de um flanco, uma fileira de dezenas
+        de cabeças de sardinha e tainha de tamanho real, olhos redondos parados, bocas abertas em tempos
+        diferentes. Na ponta, um leque de caudas separadas. Ventre claro e pegajoso.
+      composicao: >-
+        Píer das Docas Velhas, tábuas molhadas, rede de pesca rasgada. O Cardume atravessado nas tábuas;
+        um pescador de botas recuando com uma faca de cortar corda, da altura de um terço do corpo da
+        coisa, dá a escala. Luz cinzenta de manhã e água vermelha ao fundo.
+      evitar: Serpente marinha, enguia gigante, peixe de várias cabeças de fantasia. São peixes comuns, de tamanho real, colados num corpo só.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_gato_de_lastro
+    vaga: 6
+    nome: Gato de Lastro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/daily_life.txt:249", "lore_nova/items.txt:1333"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: pequena
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Gato de porão nascido num navio com osso de leviatã na quilha. Os ossos dele engrossaram até
+        ficarem pesados como chumbo: as patas arquearam para fora com o peso, as juntas incharam em nós
+        duros e o crânio ficou largo e baixo, com a mandíbula de um cão. Afunda como pedra e anda pelo
+        fundo do porto sem nadar, de olhos abertos, e sobe pelas estacas cravando as garras na madeira.
+        Pelo curto, liso, sempre molhado.
+    silhueta: Um gato atarracado de patas tortas para fora, sentado em cima de um caixote, que pesa a tábua até ela vergar.
+    comportamento: >-
+      Escolhe a carga de um navio e senta em cima, e ninguém leva a carga enquanto ele estiver ali. Quem
+      tenta tirá-lo sente o peso: ele não sai, e a mordida quebra osso. Quando o navio parte, ele fica e
+      escolhe outra carga.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_gato_de_lastro_peso_morto
+      frase: >-
+        Senta em cima de um aliado caído ou da carga e não se move: enquanto estiver ali, ninguém pega,
+        levanta ou arrasta o que está debaixo, e quem tenta empurrá-lo perde a ação.
+    contra_jogo: Não empurrar; atraí-lo com peixe ou com barulho para longe do que guarda, ou derrubar a tábua debaixo dele, que afunda com ele.
+    gancho: >-
+      Os marinheiros dizem que a água se afasta dos navios de Durrak. Os gatos desses porões não se
+      afastaram a tempo.
+    habitat: [brekmar, bk_docas_velhas]
+    inspiracao:
+      - fonte: medicina (osteopetrose)
+        referencia: doença em que os ossos ficam densos e pesados demais
+        tomou: ossos grossos e pesados que entortam as patas
+        distancia: só a ideia do osso denso; o gato de porão, o fundo do porto e o hábito de sentar na carga são de Brekmar
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} se ajeita em cima do que guarda e a tábua debaixo dele range e verga."
+    description: Gato de porão de navio com osso de leviatã cujos ossos ficaram pesados como chumbo; senta no que guarda e não sai.
+    perigo: Baixo
+    lore: >-
+      Todo navio leva gato no porão, e os navios de Durrak também. Os gatos que nasceram num casco com
+      osso de leviatã na quilha cresceram de ossos pesados como chumbo, patas tortas, crânio largo.
+      Afundam e andam no fundo do porto sem pressa, sobem pelas estacas com as garras e escolhem uma
+      carga para sentar em cima. Ninguém tira a carga enquanto ele está ali. Os estivadores aprenderam a
+      jogar peixe para longe antes de começar a descarregar.
+    aparencia: >-
+      Gato atarracado do tamanho de um cão médio, pelo curto sempre molhado, patas arqueadas para fora
+      pelo peso dos ossos, juntas inchadas em nós duros, crânio largo e baixo com mandíbula de cão,
+      olhos amarelos parados.
+    como_se_luta: >-
+      Senta em cima do que guarda e não sai, e a mordida quebra osso. Empurrar não adianta; atraí-lo
+      para longe com peixe ou barulho, ou derrubar a tábua debaixo dele.
+    related_entities: [brekmar, bk_docas_velhas]
+    arte:
+      visual: >-
+        Gato doméstico do tamanho de um cão médio, muito mais pesado do que parece, corpo baixo e
+        compacto. Patas grossas arqueadas para fora, cotovelos e joelhos inchados em nós de osso. Crânio
+        largo e chato, mandíbula forte e quadrada que mostra dentes de cão. Pelo curto rajado cinza e
+        preto, colado ao corpo, pingando. Olhos amarelos fixos.
+      composicao: >-
+        Píer com caixotes de carga; o Gato sentado em cima de um caixote cujas tábuas vergam. Um
+        estivador de pé ao lado, com o caixote na altura da cintura, dá a escala. Luz de lanterna de
+        óleo de lado.
+      evitar: Gato-demônio de olhos de fogo, gato gigante, pantera. É um gato de porão do tamanho de um cão, pesado e torto, não um felino grande.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_craca_de_amarra
+    vaga: 7
+    nome: Craca de Amarra
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:475", "lore_nova/locations.txt:427"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: sal_mineral
+      escala: humana
+      locomocao: ancorada
+      percepcao: vibracao
+      texto: >-
+        Colônia de cracas que cresceu nas amarras grossas das Docas Velhas até formar um tronco do
+        tamanho de um homem, preso à corda e à estaca. Cada craca é um cone de casca branca de sal com uma
+        boca no alto, e de cada boca saem cirros, perninhas de pena que se abrem e se fecham no ar como
+        mãos. Quando algo bate perto, a colônia inteira estala e cospe uma nuvem de larvas que grudam e
+        endurecem em minutos sobre qualquer pele ou couro.
+    silhueta: Um tronco branco e áspero agarrado a uma corda grossa de atracar, cheio de bocas que abrem penas pequenas ao vento.
+    comportamento: >-
+      Não sai do lugar. Fica nas amarras dos navios velhos e espera que outras coisas briguem perto;
+      então cobre os que estão do lado dela com casca nova, como cobre o casco de um navio parado. Uma
+      briga perto de uma Craca dura mais do que deveria.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_craca_de_amarra_casca_nova
+      frase: >-
+        Cospe larvas sobre outra criatura: a casca endurece nela como armadura, e cada golpe nela perde
+        força até que alguém quebre a casca.
+    contra_jogo: Cortar a amarra; solta da estaca, a colônia cai na água e para de cuspir. A casca nova quebra com golpe de martelo ou de clava, não de lâmina.
+    gancho: >-
+      Os navios que ficam tempo demais nas Docas Velhas criam casca. Nas amarras de lá, a casca aprendeu
+      a escolher o lado.
+    habitat: [bk_docas_velhas]
+    inspiracao:
+      - fonte: biologia marinha (cracas, Cirripedia)
+        referencia: cracas que se fixam em cascos e cimentam as larvas em qualquer superfície
+        tomou: os cones de casca, os cirros que pescam o ar e a larva que gruda e endurece
+        distancia: a colônia que escolhe o lado e encasca aliados é invenção; nenhuma craca real cospe
+    padrao: [reforco_proprio, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} estala inteira na amarra e as bocas brancas se viram para o lado de quem está apanhando."
+    description: Colônia de cracas nas amarras das Docas Velhas que cospe larvas sobre outras criaturas e as cobre de casca.
+    perigo: Baixo
+    lore: >-
+      Nas Docas Velhas há navios que não partem há anos e amarras que ninguém troca. Nelas as cracas
+      cresceram até formar troncos do tamanho de um homem, com uma boca em cada cone e penas que se
+      abrem para comer o que passa. Quando há briga perto, a colônia cospe larvas sobre quem está do lado
+      dela, e a casca endurece em minutos. Os estivadores cortam as amarras velhas a machado quando dá.
+      Quando não dá, dão a volta.
+    aparencia: >-
+      Tronco de cracas brancas e ásperas do tamanho de um homem agarrado a uma amarra grossa e a uma
+      estaca, cada cone com uma boca no alto de onde saem perninhas de pena que se abrem e fecham no ar.
+    como_se_luta: >-
+      Não sai da amarra; cobre de casca as criaturas que lutam ao lado dela. Cortar a amarra a derruba na
+      água, e a casca nova quebra com golpe pesado.
+    related_entities: [bk_docas_velhas]
+    arte:
+      visual: >-
+        Colônia de cracas brancas e cinzentas, cones de casca calcária do tamanho de punhos e de copos,
+        empilhados num tronco irregular da altura de um homem, envolvendo uma amarra de cânhamo grossa
+        presa a uma estaca de madeira escura. Do alto de cada cone saem cirros finos como penas,
+        marrom-claros, abertos. Pequenas larvas brancas no ar.
+      composicao: >-
+        Estaca das Docas Velhas na maré baixa, casco de navio velho ao fundo coberto de casca. Um
+        marinheiro com machado parado ao lado, com a cabeça na altura do alto da colônia, dá a escala.
+        Luz cinzenta, água escura.
+      evitar: Planta, coral colorido, monstro de tentáculos. São cracas comuns de casca branca, só que em quantidade e com intenção.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pescador_de_lanterna
+    vaga: 9
+    nome: Pescador de Lanterna
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:429", "lore_nova/creatures.txt:1412"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Peixe do fundo do mar oeste que sobe às Docas Velhas nas noites sem lua. Tem o corpo largo e mole
+        como um saco de couro molhado, do tamanho de um homem agachado, e anda nas nadadeiras do peito,
+        que viraram duas mãos de dedos curtos e grossos, apoiado também nas de trás. A boca vai de um lado
+        ao outro da cabeça, cheia de dentes finos virados para dentro. Da testa sai uma vara de carne com
+        uma bolsa na ponta que brilha amarelo, igual à chama de uma lanterna de óleo.
+    silhueta: Um saco escuro agachado num canto do píer, com uma luz amarela pendurada na frente como lanterna em poste torto.
+    comportamento: >-
+      Encosta-se onde a fileira de lanternas tem um buraco e acende a isca no lugar da que falta. Bêbado
+      que volta para o barco segue a luz. Quando alguém chega perto o bastante, a boca abre de um lado ao
+      outro e engole o que couber.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pescador_de_lanterna_luz_no_buraco
+      frase: >-
+        Começa a luta escondido como uma lanterna a mais: o primeiro golpe dele vai contra quem chegou
+        mais perto e não pode ser defendido, e só depois ele aparece.
+    contra_jogo: Contar as lanternas do píer antes de andar; apagar a isca, ou cortar a vara, o deixa cego e lento fora da água.
+    gancho: >-
+      Brekmar acende lanternas para que o mar saiba que há porto. Alguma coisa no mar aprendeu.
+    habitat: [bk_docas_velhas]
+    inspiracao:
+      - fonte: biologia marinha (peixes-pescadores, Lophiiformes, e peixes-sapo que andam nas nadadeiras)
+        referencia: isca luminosa na testa e nadadeiras peitorais usadas para andar no fundo
+        tomou: a vara com isca, a boca enorme e o andar nas nadadeiras
+        distancia: a luz imita a chama das lanternas de Brekmar e a caça é de bêbados no píer; nada disso vem da fonte
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "Uma lanterna a mais acende num canto do píer, baixa demais, e {nome} abre a boca de um lado ao outro."
+    description: Peixe do fundo que anda nas nadadeiras pelas Docas Velhas e pendura na testa uma isca que imita lanterna de óleo.
+    perigo: Médio
+    lore: >-
+      Brekmar acende lanternas de óleo em quantidade para que o mar saiba que há porto, e nas Docas Velhas
+      metade delas está quebrada. Nas noites sem lua um peixe do fundo sobe pelas rampas, anda nas
+      nadadeiras do peito como em mãos e se encosta onde falta uma lanterna. A isca da testa brilha
+      amarelo, igual à chama. Bêbados que voltam para o barco seguem a luz. Os estivadores contam as
+      lanternas antes de andar, e as crianças das docas sabem quantas são.
+    aparencia: >-
+      Peixe do fundo do tamanho de um homem agachado, corpo largo e mole de couro escuro molhado,
+      nadadeiras do peito viradas mãos de dedos curtos, boca de um lado ao outro da cabeça com dentes
+      finos para dentro, vara de carne na testa com isca de luz amarela de lanterna.
+    como_se_luta: >-
+      Começa escondido como uma lanterna a mais e morde primeiro quem chega perto. Contar as lanternas
+      antes de andar e cortar a isca o deixam cego e lento fora da água.
+    related_entities: [bk_docas_velhas]
+    arte:
+      visual: >-
+        Peixe-pescador do tamanho de um homem agachado, pele marrom-arroxeada sem escamas, enrugada e
+        úmida. Nadadeiras do peito grossas como braços curtos, terminando em mãos de dedos rombudos
+        apoiadas nas tábuas. Boca enorme em meia-lua de lado a lado, dentes finos translúcidos virados
+        para dentro. Da testa sai um filamento de carne curvo como vara de pesca, com uma bolsa na ponta
+        que brilha amarelo-âmbar.
+      composicao: >-
+        Fileira de postes de lanterna num píer das Docas Velhas à noite, uma lanterna quebrada; no lugar,
+        a isca do Pescador brilha baixa. Um bêbado de casaco caminhando para a luz, a três passos, dá a
+        escala. Escuridão densa, só pontos âmbar.
+      evitar: Peixe-monstro de desenho, homem-peixe, sereia, criatura de neon. A luz é amarela de chama, não azul; o corpo é de peixe que anda, não de homem.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tripeiro_de_fundo
+    vaga: 10
+    nome: Tripeiro de Fundo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:475", "lore_nova/creatures.txt:1412"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: humana
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Pepino-do-mar do comprimento de um homem, grosso como um barril de grogue, que vive no lodo debaixo
+        das Docas Velhas e sobe nas tábuas baixas quando a maré enche. A pele é de couro grosso, cor de
+        lama, coberta de verrugas moles, e a boca numa ponta é cercada de dedos curtos que enfiam lodo
+        para dentro. Quando é pisado ou ferido, se contrai e despeja pela outra ponta um emaranhado de
+        tripas brancas e grudentas, que esticam como cola e prendem pernas e braços. Depois fica murcho
+        por dias, e as tripas voltam a crescer.
+    silhueta: Um tronco mole cor de lama deitado na tábua, que de repente espirra um bolo de fios brancos como lã molhada.
+    comportamento: >-
+      Deita-se nas tábuas baixas que a maré cobre e fica parado como lixo. Não ataca: espera ser pisado,
+      chutado ou cortado, e então despeja as tripas sobre quem estiver perto. Quem fica preso é o que as
+      outras coisas das Docas Velhas pegam primeiro.
+    papel_tatico: controlador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tripeiro_de_fundo_tripas_de_cola
+      frase: >-
+        Quando leva o primeiro golpe, despeja as tripas sobre quem bateu e quem estiver ao lado: os presos
+        não se movem nem fogem até gastar uma ação para se soltar, e ele fica murcho e sem defesa.
+    contra_jogo: Não bater nele primeiro; passar por cima, ou deixar que outra coisa o pise. Depois de despejar, ele não tem mais nada.
+    gancho: >-
+      Debaixo das Docas Velhas há lodo de décadas de lixo do porto, e o que mora no lodo engordou.
+    habitat: [bk_docas_velhas]
+    inspiracao:
+      - fonte: biologia marinha (pepinos-do-mar e os túbulos de Cuvier)
+        referencia: pepinos-do-mar que expelem filamentos pegajosos para prender predadores
+        tomou: o corpo mole e o despejar fios grudentos quando ferido
+        distancia: o tamanho, o lodo do porto e o papel de armadilha para as outras coisas das Docas Velhas são de Brekmar
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 4
+    telegrafo: "{nome} se contrai inteiro na tábua, como um punho fechando, e a ponta de trás incha."
+    description: Pepino-do-mar do tamanho de um homem que dorme nas tábuas baixas das Docas Velhas e despeja tripas grudentas em quem o fere.
+    perigo: Baixo
+    lore: >-
+      Debaixo das Docas Velhas há lodo de décadas de lixo do porto, e o que mora nele engordou. Os
+      tripeiros são pepinos-do-mar do tamanho de um homem que sobem nas tábuas baixas quando a maré enche
+      e ficam parados como lixo. Não atacam. Quem os pisa ou corta recebe um bolo de tripas brancas que
+      grudam como cola nas pernas e nos braços. Os estivadores das Docas Velhas andam olhando para baixo,
+      e quem chega novo aprende pelos sapatos.
+    aparencia: >-
+      Pepino-do-mar do comprimento de um homem e grosso como um barril, couro cor de lama coberto de
+      verrugas moles, boca cercada de dedos curtos numa ponta; da outra despeja um emaranhado de tripas
+      brancas e grudentas que esticam como cola.
+    como_se_luta: >-
+      Não ataca; quem o fere leva as tripas grudentas e fica preso até gastar tempo se soltando. Passar
+      por cima ou deixá-lo para depois; depois de despejar, não sobra nada nele.
+    related_entities: [bk_docas_velhas]
+    arte:
+      visual: >-
+        Pepino-do-mar gigante, cilíndrico e mole, do comprimento de um homem e da grossura de um barril,
+        pele de couro grosso marrom-acinzentado coberta de verrugas moles. Numa ponta, coroa de
+        tentáculos curtos e rombudos em volta da boca. Da ponta oposta, um emaranhado volumoso de
+        filamentos brancos e pegajosos, esticados em fios entre o corpo e as botas de alguém.
+      composicao: >-
+        Tábuas baixas das Docas Velhas cobertas de água rasa na maré cheia, lixo e algas. O Tripeiro
+        deitado; um marinheiro de botas com os pés presos nos fios brancos, inclinado tentando se soltar,
+        dá a escala. Luz cinzenta de dia nublado.
+      evitar: Verme gigante de dentes, lesma de desenho, tentáculos de polvo. É um pepino-do-mar realista e passivo; o perigo são as tripas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_sangria_de_aluguel
+    vaga: 11
+    nome: Sangria de Aluguel
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:137", "lore_nova/items.txt:1380"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Humano que comprou lições de sangrinomancia de quem não tinha permissão para vender, sem a pele de
+        Cinzéu que deixa um homem pagar o preço sem senti-lo. O Éter cobra em dor, e ele aprendeu primeiro
+        a não deixar o sangue sair: o sangue coagula assim que toca o ar e cresceu por cima dele em
+        crostas grossas, vermelho-escuras, quase pretas, como casca de ferida do tamanho de placas, nos
+        antebraços, no peito e num lado do rosto. Entre as crostas a pele é fina e brilhante. Sabe
+        arrancar uma crosta do próprio braço e grudá-la em outro corpo, onde ela pega.
+    silhueta: Um homem de casaco aberto com o peito e os braços cobertos de placas escuras e grossas, a mão pousada no ombro de outro.
+    comportamento: >-
+      Trabalha para quem paga, nas docas, como guarda-costas de mercador ou de capitão. Fica um passo
+      atrás do contratante e, quando o contratante é ferido, arranca uma crosta e fecha a ferida com
+      ela. Ele mesmo sangra pouco e nunca de bom grado.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_sangria_de_aluguel_crosta_emprestada
+      frase: >-
+        Arranca uma crosta do próprio corpo e fecha com ela um Ferimento já aberto do contratante; a crosta
+        não segura golpe nenhum, só remenda o que já sangrou, e ele fica com a pele fina à mostra.
+    contra_jogo: Bater nele antes do contratante; cada crosta que ele empresta deixa a pele fina à mostra, e por ali ele sangra como qualquer um.
+    gancho: >-
+      Em Brekmar a sangrinomancia é de Kahen e dos poucos que Kahen escolhe. Quem aprende por fora aprende
+      só a parte que fere, e o corpo cobra o resto.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} crava as unhas na crosta do antebraço e começa a descolá-la, sem tirar os olhos de quem protege."
+    description: Sangrinomante sem permissão cujo sangue coagula em crostas grossas sobre o corpo; arranca as crostas e fecha com elas as feridas de quem o contratou.
+    perigo: Médio
+    lore: >-
+      Em Brekmar a sangrinomancia é de Kahen e dos poucos que ele escolhe, e obtê-la sem permissão costuma
+      custar caro. Há quem aprenda assim mesmo, por fora, de gente que não deveria ensinar. O Éter cobra
+      em dor, e sem a pele de Cinzéu o aprendiz aprende primeiro a não deixar o sangue sair: ele coagula
+      ao tocar o ar e cresce em crostas grossas sobre os braços, o peito e o rosto. Alugam-se como
+      guarda-costas nas docas. Quando o contratante sangra, arrancam uma crosta e fecham a ferida, e a
+      crosta pega.
+    aparencia: >-
+      Homem magro de casaco aberto, crostas grossas vermelho-escuras quase pretas, como casca de ferida do
+      tamanho de placas, cobrindo antebraços, peito e um lado do rosto, pele fina e brilhante entre elas,
+      unhas escuras de sangue seco.
+    como_se_luta: >-
+      Fica atrás de quem o contratou e remenda os ferimentos dele com crostas arrancadas do próprio corpo,
+      depois que sangram. Bater nele primeiro: cada crosta emprestada deixa pele fina à mostra.
+    related_entities: [brekmar]
+    arte:
+      visual: >-
+        Homem adulto magro de pele clara, casaco longo de couro aberto sem camisa. Antebraços, peito e o
+        lado esquerdo do rosto cobertos de crostas espessas e irregulares, vermelho-escuro quase preto,
+        rachadas nas bordas, como placas de casca de ferida. Entre elas, pele rosada fina e brilhante. Num
+        antebraço, um lugar em carne viva de onde uma crosta foi arrancada. Unhas escuras.
+      composicao: >-
+        Cais diante de um armazém; o Sangria um passo atrás de um mercador gordo de chapéu, a mão no ombro
+        dele e uma crosta escura grudada no braço do mercador. O mercador, da mesma altura, dá a escala.
+        Luz âmbar de lanterna.
+      evitar: Mago de sangue com sangue flutuando, sugador de sangue, armadura de rubi, lâminas de sangue líquido. É casca de ferida seca e grossa, e ele não faz o sangue voar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_torcido_da_rinha
+    vaga: 12
+    nome: Torcido da Rinha
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: grupos_piratas_rivais
+      refs: ["lore_nova/races.txt:235", "lore_nova/factions.txt:283"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Cinzéu que luta por dinheiro nas rinhas da Boca do Fundo há anos. Como não sente dor, nunca soube
+        quando quebrou alguma coisa e nunca deixou nada sarar no lugar: o antebraço esquerdo colou num
+        ângulo que forma um gancho, a clavícula soldou num calombo que levanta o ombro, os dedos da mão
+        direita são um nó de juntas tortas que fecham como tenaz, e as costelas de um lado afundaram e
+        endureceram numa placa. A pele escura está riscada de cortes que ele nunca costurou, e a cauda tem
+        duas dobras onde não deveria.
+    silhueta: Um homem de cauda torta e corpo errado em tudo, um ombro alto e um braço em gancho, de pé como se nada doesse.
+    comportamento: >-
+      Entra na rinha por moeda e sai por moeda, e fora dela luta do mesmo jeito. Não recua de golpe
+      nenhum, porque não sabe que apanhou. Quanto mais o machucam, mais torto ele fica, e mais duro.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: padrao
+    faccao: grupos_piratas_rivais
+    mecanica_assinatura:
+      carta: cri_torcido_da_rinha_osso_mal_colado
+      frase: >-
+        Não sente o golpe: cada ferimento que leva vira dureza na rodada seguinte, e o golpe que devolve
+        sai do ângulo errado, por onde a guarda não espera.
+    contra_jogo: Não trocar golpe com ele; segurá-lo, derrubá-lo, prender o braço em gancho. Ele não sente dor, mas sente o chão.
+    gancho: >-
+      Cinzéus não sentem dor, e na Boca do Fundo isso tem preço. Quem paga é o corpo, que ninguém avisa.
+    habitat: [brekmar]
+    inspiracao:
+      - fonte: medicina (consolidação viciosa de fraturas)
+        referencia: ossos que soldam no ângulo errado por falta de imobilização
+        tomou: o braço em gancho, o calombo na clavícula e a mão em tenaz
+        distancia: a causa, a raça que não sente dor e a rinha da Boca do Fundo são de Valoria; nada de sobrenatural vem da fonte
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} gira o ombro alto com um estalo seco de osso e encolhe o braço em gancho."
+    description: Cinzéu de rinha da Boca do Fundo cujas fraturas soldaram tortas porque nunca doeram; quanto mais apanha, mais duro fica.
+    perigo: Médio
+    lore: >-
+      Cinzéus não sentem dor; quebram um osso e só percebem pelo ângulo errado do membro. Na Boca do
+      Fundo, onde os piratas recrutam e apostam, isso vale dinheiro, e há Cinzéus que lutam nas rinhas
+      por anos. Os ossos quebram e soldam do jeito que caíram: um antebraço vira gancho, uma clavícula
+      vira calombo, uma mão vira tenaz. Eles não param. Quem os vê de perto pela primeira vez acha que
+      estão sofrendo. Não estão.
+    aparencia: >-
+      Cinzéu de pele quase preta e cauda com dobras erradas, antebraço esquerdo soldado em gancho, ombro
+      alto num calombo de clavícula, dedos da mão direita num nó de juntas que fecha como tenaz,
+      costelas de um lado afundadas, cicatrizes de corte nunca costuradas, rosto calmo.
+    como_se_luta: >-
+      Não recua e fica mais duro a cada ferida; os golpes vêm de ângulos que a guarda não espera. Prender,
+      derrubar e imobilizar funcionam melhor que trocar golpes.
+    related_entities: [brekmar, grupos_piratas_rivais]
+    arte:
+      visual: >-
+        Cinzéu adulto, humanoide de pele cinza-escura quase preta e cauda, de calça de lona e peito nu.
+        Assimetria de fraturas mal consolidadas: antebraço esquerdo dobrado num ângulo fechado formando
+        um gancho, ombro direito alto sobre um calombo de osso na clavícula, mão direita de dedos tortos
+        fundidos em pinça, costelas do lado esquerdo afundadas numa placa dura, cauda com duas dobras
+        erradas. Rosto calmo, sem expressão. Cicatrizes brancas de corte cruzando a pele.
+      composicao: >-
+        Rinha de tábuas cercada de cordas na Boca do Fundo, apostadores ao fundo com moedas na mão. O
+        Torcido de pé no centro; um lutador humano caído ao lado, da mesma altura quando em pé, dá a
+        escala. Luz quente de lanternas penduradas, fumaça.
+      evitar: Brutamontes musculoso, membros extras, ossos furando a pele. Os ossos estão dentro, soldados errado; o horror é a calma dele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_anzolado_da_casa
+    vaga: 13
+    nome: Anzolado da Casa
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: casa_mares_dominio_lyss
+      refs: ["lore_nova/factions.txt:324", "lore_nova/daily_life.txt:261"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um frequentador antigo da Casa das Marés para quem o resto do mundo deixou de tocar. Para sentir
+        alguma coisa fora da Casa, cravou anzóis de pesca na própria carne: dezenas, nos braços, no peito,
+        nas costas e no rosto, cada um com um palmo de linha pendurada, alguns já cobertos pela pele que
+        cresceu por cima. Os anzóis enferrujaram dentro dele e a ferrugem tingiu a pele em volta. As mãos
+        tremem longe da Casa; quando prendem, não tremem.
+    silhueta: Um homem de roupa de capitão larga demais, eriçado de linhas de pesca penduradas por todo o corpo, como um fardo de anzóis.
+    comportamento: >-
+      Vaga entre a Casa das Marés e o Poço das Dívidas. Escolhe uma pessoa, a que parecer mais viva,
+      prende nela uma das linhas e não larga: anda junto, puxa, e o anzol dele entra quando ela se
+      afasta. Diz que só quer sentir o que ela sente.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: padrao
+    faccao: casa_mares_dominio_lyss
+    mecanica_assinatura:
+      carta: cri_anzolado_da_casa_linha_presa
+      frase: >-
+        Prende uma linha num alvo: enquanto a linha estiver presa, cada vez que o alvo se afasta ou ataca
+        outro, o anzol rasga, e o Anzolado vai junto aonde o alvo for.
+    contra_jogo: Cortar a linha antes de se afastar, e só então se afastar. Ficar perto e bater nele dói menos que fugir.
+    gancho: >-
+      A Casa das Marés não cobra em moeda: cobra em quanto do mundo ainda consegue tocar quem sai dela.
+      Alguns saem procurando outro jeito de ser tocados.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} enrola uma linha nos dedos e olha para você como se finalmente tivesse achado alguém."
+    description: Frequentador gasto da Casa das Marés que cravou anzóis no corpo para sentir alguma coisa; prende uma linha em quem escolhe e não larga.
+    perigo: Médio
+    lore: >-
+      Quem frequenta a Casa das Marés por tempo demais sai de madrugada para um mundo mais apagado do que
+      deixou. Alguns aceitam. Outros procuram jeito de sentir de novo e, como as docas têm anzol em todo
+      canto, começam por aí: um, depois outro, até o corpo estar eriçado de linhas. Andam entre a Casa e
+      o Poço das Dívidas. Quando um deles acha alguém que parece vivo, prende uma linha e vai junto.
+    aparencia: >-
+      Homem encolhido em roupa de capitão larga demais, dezenas de anzóis de pesca cravados nos braços,
+      no peito, nas costas e no rosto, cada um com um palmo de linha pendurada, alguns cobertos de pele
+      crescida, ferrugem tingindo a pele em volta, mãos trêmulas.
+    como_se_luta: >-
+      Prende uma linha em alguém e vai junto; o anzol rasga quando a pessoa se afasta ou bate em outro.
+      Cortar a linha antes de se afastar.
+    related_entities: [brekmar, casa_mares_dominio_lyss]
+    arte:
+      visual: >-
+        Homem adulto de rosto encovado e olhos brilhantes, casaco de capitão azul desbotado com dragonas,
+        largo demais no corpo encolhido. Dezenas de anzóis de ferro cravados na pele dos braços, do
+        pescoço, do rosto e do peito à mostra, cada um com um fio de linha de um palmo pendurado. Alguns
+        anzóis quase cobertos por pele cicatrizada; manchas de ferrugem em volta. Numa das mãos, uma linha
+        esticada para fora do quadro.
+      composicao: >-
+        Rua de Brekmar à noite, janelas rosa-douradas da Casa das Marés ao fundo. O Anzolado puxa uma
+        linha presa no braço de um marinheiro que tenta se afastar; os dois, da mesma altura, dão a
+        escala. Luz rosada atrás, âmbar de lanterna na frente.
+      evitar: Figura de pregos de filme de terror, correntes de couro, cena sensual, demônio sedutor. É um homem triste e gasto cheio de anzóis comuns; nada nele é sensual.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tambor_do_ossario
+    vaga: 14
+    nome: Tambor do Ossário
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: osshari_brekmar
+      refs: ["lore_nova/factions.txt:305", "lore_nova/creatures.txt:1470"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: grande
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Osshari que passou anos de vigília dentro do crânio do leviatã do Ossário, ouvindo os tons graves
+        com a cabeça encostada no osso. A cabeça aprendeu a responder: o crânio cresceu para trás numa
+        crista alongada e oca, do comprimento de um braço, com a mesma curva da testa do leviatã, coberta
+        pelo couro duro do rosto. Debaixo do queixo a garganta incha num saco que enche de ar. Quando ele
+        encosta a crista no chão de tábuas e solta o ar pelo saco, o tom grave sai pela crista e pelo chão,
+        e os ossos de quem está perto vibram junto.
+    silhueta: Um homem enorme de cabeça esticada para trás numa crista comprida e curva, como um chifre deitado, com um saco inchado sob o queixo.
+    comportamento: >-
+      Guarda a borda do Ossário e as Docas Velhas em volta, onde os Osshari mandam. Não corre atrás de
+      ninguém: baixa a crista até as tábuas e solta o tom, e o chão empurra, derruba e deixa as mãos dos
+      outros dormentes. Para quando o intruso sai da zona neutra.
+    papel_tatico: controlador
+    arquetipo: conjurador
+    categoria: elite
+    faccao: osshari_brekmar
+    mecanica_assinatura:
+      carta: cri_tambor_do_ossario_toque_do_cranio
+      frase: >-
+        Encosta a crista no chão e o tom grave corre pelas tábuas: todos que pisam o mesmo chão afrouxam a
+        mão na arma e são empurrados para trás; quem está em pedra, areia ou no ar só ouve.
+    contra_jogo: Tirá-lo das tábuas para a pedra ou a areia, onde o chão não ressoa, ou rachar a crista com golpe pesado; rachada, ela não soa.
+    gancho: >-
+      O crânio do leviatã responde nos rituais noturnos dos Osshari. Alguns dos que escutam de mais perto
+      passam a responder também.
+    habitat: [bk_docas_velhas]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} enche o saco da garganta e baixa devagar a crista comprida até encostar nas tábuas."
+    description: Osshari do Ossário cujo crânio cresceu numa crista oca como a do leviatã depois de anos de vigília; o tom que solta pelo chão faz vibrar os ossos de quem pisa nele.
+    perigo: Alto
+    lore: >-
+      Os Osshari guardam o Ossário do Leviatã, a carcaça trazida há três gerações, e nos rituais noturnos
+      o crânio às vezes responde em tons graves. Os que fazem vigília com o peito encostado no osso, ano
+      após ano, começam a responder também. O crânio cresce para trás numa crista oca com a curva da
+      testa do leviatã, e a garganta ganha um saco de ar. Guardam a borda da zona neutra. Encostam a
+      crista nas tábuas e soltam o tom, e quem pisa o mesmo chão sente os próprios ossos tremerem.
+    aparencia: >-
+      Osshari enorme de escamas coloridas nos braços e nas costas, crânio crescido para trás numa crista
+      oca e curva do comprimento de um braço, coberta de couro duro, saco de ar inchado sob o queixo, mãos
+      palmadas.
+    como_se_luta: >-
+      Encosta a crista nas tábuas e o tom empurra para trás e afrouxa as mãos de quem pisa o mesmo chão.
+      Levá-lo para a pedra ou a areia, ou rachar a crista, o cala.
+    related_entities: [bk_docas_velhas, osshari_brekmar]
+    arte:
+      visual: >-
+        Osshari adulto, mais alto e robusto que um humano, rosto alongado de couro duro, pupilas
+        verticais, escamas de padrão colorido nos braços, nas costas e nas pernas, pinturas corporais
+        brancas. O crânio cresce para trás numa crista oca, alongada e curva, do comprimento de um braço,
+        com a mesma curva da testa de um crânio de leviatã, coberta de couro duro e fendida por aberturas
+        finas como as de um instrumento de sopro. Saco de ar inflado sob o queixo. Mãos enormes de dedos
+        palmados.
+      composicao: >-
+        Entrada do Ossário, arco formado por costelas gigantes de leviatã, crânio enorme ao fundo com a
+        mesma curva da crista dele. O Tambor curvado, crista encostada no piso de tábuas; um forasteiro de
+        capa recuando com as mãos nos ouvidos, da altura do peito dele, dá a escala. Tochas, noite.
+      evitar: Bicho pré-histórico de crista, unicórnio, xamã tribal genérico, homem-peixe de escamas no rosto, ondas de som desenhadas. A crista é o crânio dele crescido; o som não se desenha.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_penhorado_do_poco
+    vaga: 15
+    nome: Penhorado do Poço
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tres_sindicatos_comercio
+      refs: ["lore_nova/factions.txt:270", "lore_nova/items.txt:1456"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Devedor que pagou o Poço das Dívidas com o que tinha, e o que tinha era o corpo. Há quem aceite
+        penhor de dente, de olho, de dedo e de coisa mais funda, e ele deu um pouco de cada: a boca tem
+        pinos de cavilha de madeira no lugar dos dentes, uma órbita está fechada com um tampão de cortiça,
+        três dedos de cada mão foram trocados por cavilhas de convés amarradas com arame, e uma cicatriz
+        funda atravessa a barriga onde tiraram algo de dentro. Anda curvado sobre o lado oco.
+    silhueta: Um homem curvado sobre um lado da barriga, com as mãos de dedos de pau esticadas para a frente, como quem pede.
+    comportamento: >-
+      Ainda deve, e a dívida ainda corre. Arranca o que pode de quem encontra, bolsa, anel, dente de
+      ouro, e não foge: segura a coisa como penhor e cobra o resgate, que sobe a cada rodada, como no
+      Poço. Quem o mata não recebe nada de volta.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: tres_sindicatos_comercio
+    mecanica_assinatura:
+      carta: cri_penhorado_do_poco_penhor
+      frase: >-
+        Toma de quem acerta uma coisa como penhor, um item, moedas ou uma carta preparada, e fica com ela:
+        só pagar devolve (gastar Fôlego ou uma ação ao lado dele), o preço sobe a cada rodada, e matá-lo
+        perde o penhor de vez.
+    contra_jogo: Pagar cedo, enquanto o resgate ainda é barato, ou não deixar nada preparado à mão quando ele chega perto; e não matá-lo com o penhor no bolso.
+    gancho: >-
+      Em Brekmar não há lei, mas há o Poço das Dívidas, e os sindicatos o usam para medir a força uns dos
+      outros. Quem não tem moeda paga com o que tem.
+    habitat: [brekmar, bk_docas_velhas]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} estica os dedos de pau na direção da sua bolsa e começa a contar baixinho, como quem calcula juros."
+    description: Devedor que penhorou dentes, olho e dedos no Poço das Dívidas e os trocou por peças de navio; toma o que pode como penhor e cobra o resgate.
+    perigo: Baixo
+    lore: >-
+      Brekmar não tem lei, mas tem o Poço das Dívidas, com os nomes gravados em placas, e os sindicatos o
+      usam para apertar devedores e medir a força uns dos outros. Quem não tem moeda paga com o que tem.
+      Há penhor de dente, de olho, de dedo e de coisa mais funda, e há quem faça o serviço por um preço.
+      Os penhorados andam curvados sobre o lado oco, com pinos de cavilha na boca e dedos de pau. A
+      dívida continua correndo, e eles aprenderam o ofício com quem os cobrou: tomam, guardam e cobram.
+    aparencia: >-
+      Homem magro curvado sobre um lado da barriga atravessada por cicatriz funda, pinos de cavilha de
+      madeira no lugar dos dentes, tampão de cortiça numa órbita, três dedos de cada mão trocados por
+      cavilhas de convés amarradas com arame.
+    como_se_luta: >-
+      Toma uma coisa de quem acerta como penhor e cobra resgate, mais caro a cada rodada; matá-lo perde a
+      coisa. Pagar cedo, ou não ter nada preparado à mão quando ele chega.
+    related_entities: [brekmar, bk_docas_velhas, tres_sindicatos_comercio]
+    arte:
+      visual: >-
+        Homem adulto magro, curvado para a direita, camisa rasgada aberta mostrando uma cicatriz funda e
+        costurada grosseiramente no lado da barriga, que afunda. Boca aberta com pinos de madeira clara no
+        lugar dos dentes. Uma órbita tampada com uma rolha de cortiça. Em cada mão, dois dedos de carne e
+        três cavilhas de madeira de convés amarradas aos cotos com arame enferrujado.
+      composicao: >-
+        Pátio do Poço das Dívidas: parede de pedra coberta de placas de metal gravadas com nomes, algumas
+        raspadas. O Penhorado segura uma bolsa alheia junto ao peito e estende a outra mão, de dedos de pau,
+        cobrando; um mercador de casaco, da mesma altura, procura moedas. Luz de dia nublado.
+      evitar: Pirata de perna de pau e gancho, mendigo de desenho, boneco de madeira. São peças comuns de navio substituindo partes do corpo, presas de qualquer jeito; ele continua de carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_sino_de_enlace
+    vaga: 16
+    nome: Sino de Enlace
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_lyss
+      refs: ["lore_nova/npcs.txt:291", "lore_nova/factions.txt:324", "lore_nova/items.txt:1390"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um sino de carne translúcida, mais alto que um homem, que cresce do resíduo da Casa das Marés
+        quando ele escorre para a água debaixo do cais. Dentro do sino flutua uma pessoa inteira, de olhos
+        abertos e rosto em paz, e é com as pernas dela, que saem pela borda de baixo, que o sino anda. A
+        carne é morna, levemente rosada, fina como a de uma medusa, e por ela se veem os braços do
+        hospedeiro abertos, como quem abraça. Da borda pendem filamentos que grudam na pele de quem está
+        perto e puxam para dentro. Quando entra outro, o primeiro cai pela borda, inteiro e vazio.
+    silhueta: Uma campânula alta e clara andando sobre duas pernas humanas, com uma pessoa de pé lá dentro, de braços abertos.
+    comportamento: >-
+      Anda devagar pelas ruas perto da Casa das Marés à noite, sempre na direção de quem está mais
+      sozinho. Gruda os filamentos e puxa sem pressa. Quem entra não luta para sair; anda para onde o
+      sino quer e faz o que o sino quer, inclusive contra os seus.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_sino_de_enlace_dentro_do_sino
+      frase: >-
+        Puxa um alvo para dentro e ele vira as pernas do Sino: o anterior cai pela borda, vazio, e o Sino
+        passa a jogar a Carta preparada do novo hospedeiro contra os próprios aliados dele.
+    contra_jogo: Não deixar ninguém sozinho perto dele e cortar os filamentos antes que puxem; quem estiver para ser levado larga as cartas preparadas antes de entrar, e o Sino fica de mãos vazias.
+    gancho: >-
+      Lyss não quer prazer: quer que um desapareça dentro do outro. O que escorre da Casa das Marés para a
+      água ainda quer isso.
+    habitat: [brekmar]
+    inspiracao:
+      - fonte: biologia marinha (medusas)
+        referencia: o sino translúcido e os filamentos urticantes das águas-vivas
+        tomou: a campânula de carne clara e os filamentos que pendem da borda
+        distancia: a pessoa inteira lá dentro, andando com as próprias pernas, e a troca de hospedeiro são da Casa das Marés, não da fonte
+    padrao: [enfraquecer, reforco_proprio, ataque]
+    a_cada_n: 4
+    telegrafo: "Os filamentos de {nome} se esticam devagar e a pessoa lá dentro abre mais os braços."
+    description: Sino de carne translúcida que anda nas pernas de quem está dentro dele; puxa os solitários para dentro e solta o anterior vazio.
+    perigo: Alto
+    lore: >-
+      A Casa das Marés não é um bordel: é onde Lyss se senta e consome a cidade devagar, e o que ela
+      consome deixa resíduo. Parte dele escorre para a água debaixo do cais e cresce em carne. Os sinos
+      andam à noite pelas ruas perto da Casa, nas pernas de quem levaram, com a pessoa de pé lá dentro,
+      olhos abertos, rosto em paz. Vão na direção de quem está sozinho. Quando entra outro, o anterior cai
+      pela borda, inteiro e vazio, e ninguém o reconhece de primeira.
+    aparencia: >-
+      Sino de carne translúcida e rosada, mais alto que um homem, andando sobre as pernas nuas de uma
+      pessoa que flutua de pé dentro dele, olhos abertos, rosto em paz, braços abertos; filamentos finos
+      pendendo da borda.
+    como_se_luta: >-
+      Gruda filamentos e puxa um alvo para dentro, e passa a lutar com as pernas e a Carta preparada dele
+      contra os próprios amigos. Não deixar ninguém sozinho perto dele e cortar os filamentos antes que
+      puxem.
+    related_entities: [brekmar, casa_mares_dominio_lyss, npc_lyss]
+    arte:
+      visual: >-
+        Campânula de carne translúcida em forma de sino de medusa, com cerca de dois metros e meio de
+        altura, rosa muito claro, veias finas visíveis. Dentro, flutuando de pé, um homem adulto vestido
+        de camisa aberta, olhos abertos, rosto sereno, braços abertos tocando a parede interna. As pernas
+        dele saem pela borda de baixo e andam no chão. Da borda pendem dezenas de filamentos finos, longos
+        e grudentos.
+      composicao: >-
+        Rua estreita de Brekmar à noite, janelas rosa-douradas da Casa das Marés ao fundo, chão molhado. O
+        Sino caminha na direção de uma mulher sozinha encostada num muro, que olha sem fugir; ela, da
+        altura do hospedeiro, dá a escala. Luz rosada atrás atravessando a carne do sino.
+      evitar: Medusa da mitologia, água-viva de desenho, demônia sedutora, nudez sexualizada. A pessoa de dentro está em paz, não em êxtase; o horror é a calma.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_carranca_de_proa
+    vaga: 17
+    nome: Carranca de Proa
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/npcs.txt:167", "lore_nova/locations.txt:452"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: grande
+      locomocao: rasteja
+      percepcao: visao
+      texto: >-
+        Carranca entalhada da proa de um navio cujo capitão não admitia ser ultrapassado, nem no mar nem
+        nas tavernas. O orgulho ficou na madeira, e a madeira tomou carne do que boiava perto: do busto
+        entalhado saem dois braços de homem, musculosos e longos demais, enxertados nos ombros de pau, com
+        que ela se arrasta. O rosto continua entalhado, de queixo erguido, mas os olhos pintados ganharam
+        pálpebras de verdade, e a boca de madeira abriu numa fileira de dentes humanos. Abaixo do peito é
+        só o toco do gurupés quebrado, arrastando.
+    silhueta: Um busto de madeira de queixo erguido, arrastado por dois braços humanos compridos, com um toco de mastro atrás dele como cauda.
+    comportamento: >-
+      Atravessa as docas atrás da pessoa de mais renome que encontrar, ou de quem bateu mais forte na
+      luta, e não ataca mais ninguém. Os outros podem cortá-la à vontade; ela não se vira. Só para quando
+      quem escolheu se curva.
+    papel_tatico: perseguidor_marca
+    arquetipo: lider_matilha
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_carranca_de_proa_so_o_primeiro
+      frase: >-
+        Escolhe quem mais a feriu e só ataca essa pessoa, cada vez mais forte enquanto ela não recua; as
+        criaturas que lutam ao lado da Carranca ficam mais ousadas enquanto ela não for humilhada.
+    contra_jogo: Quem foi escolhido recua ou se curva e deixa os outros baterem; ela não se vira para quem não acha digno, e o orgulho a deixa sem guarda pelas costas.
+    gancho: >-
+      Em Brekmar a estratificação é por reputação no mar, e capitão orgulhoso não falta. Urath não precisa
+      de feito nenhum para se achar merecedor; a madeira de uma proa também não.
+    habitat: [brekmar, bk_docas_velhas]
+    inspiracao:
+      - fonte: arte popular (carrancas de barco do rio São Francisco e figuras de proa europeias)
+        referencia: figuras entalhadas na proa para dar caráter e proteção ao navio
+        tomou: o busto entalhado e pintado de queixo erguido
+        distancia: os braços de carne, os dentes, o arrastar-se e o duelo com quem tem mais renome são da cria de Urath; a fonte é só o objeto
+    padrao: [ataque, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} ergue mais o queixo de madeira e vira os olhos pintados para quem bateu mais forte."
+    description: Carranca de proa de um capitão orgulhoso que ganhou braços de homem e dentes; arrasta-se atrás de quem tem mais renome e ignora o resto.
+    perigo: Alto
+    lore: >-
+      Brekmar não se divide por raça: divide-se por reputação no mar, e capitães orgulhosos são o que o
+      porto tem de sobra. Urath, o Orgulho, não precisa de feito para se saber merecedor. Uma carranca
+      entalhada na proa de um capitão que não admitia ser ultrapassado se soltou do navio quando ele
+      afundou e tomou carne do que boiava perto. Arrasta-se pelas docas atrás de quem tem mais renome e
+      não se vira para mais ninguém. Os capitães velhos tiram o chapéu quando ela passa, por via das
+      dúvidas.
+    aparencia: >-
+      Carranca de proa de madeira de pintura desbotada, busto de queixo erguido, dois braços de homem
+      compridos e musculosos enxertados nos ombros de pau, olhos pintados com pálpebras de verdade, boca
+      entalhada aberta em dentes humanos, toco de gurupés arrastando atrás.
+    como_se_luta: >-
+      Escolhe quem mais a feriu e só ataca essa pessoa, cada vez mais forte; os outros podem cortá-la
+      pelas costas. Quem foi escolhido recua e deixa os outros baterem.
+    related_entities: [brekmar, bk_docas_velhas, npc_urath]
+    arte:
+      visual: >-
+        Figura de proa de madeira entalhada, busto de cabelos esculpidos ao vento e queixo erguido, tinta
+        azul e dourada desbotada e descascando. Dos ombros de madeira saem dois braços humanos masculinos
+        reais, longos, musculosos e pálidos, a junção costurada por carne e farpas. Olhos pintados com
+        pálpebras de carne verdadeiras. Boca entalhada aberta mostrando dentes humanos. Da base sai um
+        pedaço quebrado de gurupés, arrastado no chão.
+      composicao: >-
+        Cais de pedra de Brekmar no fim da tarde. A Carranca se arrasta sobre os braços na direção de um
+        capitão de casaco e chapéu que segura um sabre; ele, de pé, tem a altura do busto dela mais um
+        braço estendido. Luz dourada baixa, mastros ao fundo.
+      evitar: Sereia, estátua viva de pedra, figura de proa que voa, mulher sensual. É madeira pintada com braços de carne enxertados; o rosto é altivo, não belo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_estivador_das_facas
+    vaga: 18
+    nome: Estivador das Facas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/factions.txt:270"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um estivador de sindicato que levou uma faca em cada noite de guerra entre os três e nunca
+        deixou que tirassem nenhuma. O Ódio não as deixou cair: a carne cresceu em volta de cada lâmina,
+        e a ferrugem delas passou para a carne, que endureceu em crostas vermelho-escuras como casco de
+        ferro velho. São dezenas de facas, ganchos de estiva e pregos, de cabo para fora, em fileiras
+        nas costas, nos ombros e nos antebraços, como uma crista de lâminas. Ficou mais alto e mais
+        largo do que era. As mãos são grossas e cheias de cortes, e ainda seguram o gancho de estiva.
+    silhueta: >-
+      Um homem largo e alto com uma crista de cabos de faca e ganchos enferrujados saindo das costas e
+      dos braços.
+    comportamento: >-
+      Anda devagar pelas ruas onde houve a briga e para onde há gente junta. Ataca quem estiver mais
+      perto, mas o pior não é o golpe dele: perto dele, quem está lado a lado começa a brigar.
+    papel_tatico: bruto_de_linha
+    arquetipo: abissal
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_estivador_das_facas_rixa_em_volta"
+      frase: >-
+        Onde ele está, a rixa pega: no fim de cada rodada, toda criatura encostada a outra perto dele,
+        herói ou inimigo, dá um golpe de raspão no vizinho; a cada golpe trocado assim, a próxima
+        pancada dele sai mais forte.
+    contra_jogo: >-
+      Lutar com espaço entre os heróis enquanto ele estiver de pé; ou levá-lo para o meio dos outros
+      inimigos, onde a rixa fere os dele e não os seus.
+    gancho: >-
+      Vhrak não cria ódio do nada: pega o que já existe entre gente próxima e o torna irreversível. Os
+      sindicatos de Brekmar têm ódio de sobra, e uma noite de guerra entre eles deixa a rua cheia de gente
+      próxima.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [ataque_multiplo, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: >-
+      Os cabos de faca nas costas de {nome} se eriçam, e quem está perto sente a mão fechar na arma sem
+      querer.
+    description: >-
+      Um estivador de sindicato de carne virada ferrugem em volta das facas que nunca tirou, que faz
+      brigar entre si todos os que estão perto dele.
+    perigo: Médio
+    lore: >-
+      Os três sindicatos de Brekmar vivem em guerra fria, e de tempos em tempos uma rua inteira vira
+      campo de batalha por uma noite. Na manhã seguinte a cidade segue como se nada fosse. Vhrak, o
+      Ódio, está onde há conflito e não deixa as brigas acabarem. Há um estivador que levou uma faca de
+      cada lado em cada uma dessas noites e não deixou tirar nenhuma, e a ferrugem passou para a carne.
+      Onde ele para, quem está lado a lado começa a brigar, e os sindicatos já perderam gente para os
+      próprios companheiros.
+    aparencia: >-
+      Estivador enorme de carne endurecida em crostas de ferrugem, dezenas de facas, ganchos e pregos
+      cravados de cabo para fora em fileiras pelas costas, ombros e antebraços, mãos grossas cortadas,
+      gancho de estiva na mão.
+    como_se_luta: >-
+      No fim de cada rodada, todos os que estão encostados perto dele trocam golpes, e ele fica mais
+      forte. Deixe espaço entre os heróis, ou leve-o para o meio dos dele.
+    related_entities: [brekmar, tres_sindicatos_comercio, npc_vhrak]
+    arte:
+      visual: >-
+        Humano adulto muito largo e alto, roupas de estivador em farrapos; pele vermelho-escura
+        endurecida em crostas de ferrugem; dezenas de facas, ganchos de estiva e pregos cravados no
+        corpo de cabo para fora, em fileiras pelas costas, ombros e antebraços, como uma crista eriçada;
+        mãos grossas cobertas de cortes segurando um gancho de estiva; rosto de raiva. Um só corpo: nada
+        de dois corpos fundidos (essa leitura é dos Chifres Travados, Pradaria).
+      composicao: >-
+        Rua de Brekmar de manhã cedo depois de uma noite de briga: barricada de barris virados, corpos no
+        chão. A Rixa anda de lado entre os barris; um estivador recuando de mãos erguidas, da altura de um
+        dos dois, dá a escala. Luz cinza, fumaça baixa.
+      evitar: Gêmeos de circo, monstro de duas cabeças num corpo só, abraço amoroso. São dois corpos inteiros colados pela briga, cada um ainda querendo matar o outro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_boia_de_bracos
+    vaga: 19
+    nome: Boia de Braços
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:276", "lore_nova/creatures.txt:1476"]
+    anatomia:
+      plano_corporal: radial
+      material: carne_exposta
+      escala: humana
+      locomocao: nada
+      percepcao: calor
+      texto: >-
+        Cria do desespero de quem caiu no mar do porto e não achou onde se agarrar. O centro é um saco de
+        carne inchada de gás, redondo e claro como uma boia de cortiça, do tamanho de um barril. Em volta
+        dele, num anel, crescem braços de afogado, oito ou nove, cada um de uma pessoa diferente, com as
+        unhas gastas de arranhar casco e as mãos abertas. Não tem cabeça; tem no alto uma boca redonda
+        que só abre para puxar ar. Boia rente às docas com os braços estendidos para os lados.
+    silhueta: Uma bola clara boiando na água, rodeada de braços abertos como uma estrela que pede ajuda.
+    comportamento: >-
+      Fica na água rente às docas e às escadas de pedra. Quando alguém se aproxima da borda ou cai, os
+      braços agarram como agarra quem se afoga, com toda a força, e o gás vaza e ela afunda junto. Não
+      larga para salvar a si mesma.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_boia_de_bracos_agarrar_quem_afoga
+      frase: >-
+        Agarra quem está na borda: o agarrado não ataca nem se move, e a cada rodada os dois afundam um
+        pouco; se ninguém o soltar logo, ele é puxado para fora da luta.
+    contra_jogo: Não lutar na borda perto dela; se alguém for agarrado, os outros cortam os braços um a um ou furam o saco de gás, e ela afunda sozinha.
+    gancho: >-
+      Os mortos de Brekmar vão para o mar sem cerimônia. Dorrhen está onde alguém procura uma saída que
+      não existe, e no porto a última saída de muita gente foi a água.
+    habitat: [bk_docas_velhas]
+    inspiracao: []
+    padrao: [defesa, enfraquecer, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} sobe rente à escada de pedra e todos os braços se abrem ao mesmo tempo, dedos esticados."
+    description: Saco de carne inchado de gás que boia no porto cercado por um anel de braços de afogado; agarra quem chega à borda e afunda junto.
+    perigo: Médio
+    lore: >-
+      Os mortos de Brekmar vão para o mar sem cerimônia, por dívida, briga ou aposta, e muitos caíram
+      vivos. Dorrhen, o Desespero, anda sempre atrás da saída que sabe não existir, e no porto essa saída
+      foi a água para muita gente. O que sobra disso boia rente às docas: um saco de carne inchada de gás
+      com um anel de braços de afogado em volta. Agarra quem chega à borda como agarra quem se afoga, com
+      toda a força. Não larga para salvar a si mesma.
+    aparencia: >-
+      Saco de carne clara e inchada de gás do tamanho de um barril, boiando, com um anel de oito ou nove
+      braços de afogado de gente diferente em volta, unhas gastas, mãos abertas, e no alto uma boca
+      redonda sem rosto que só abre para puxar ar.
+    como_se_luta: >-
+      Agarra quem chega à borda e afunda junto, devagar. Não lutar na borda perto dela; se alguém for
+      agarrado, cortar os braços ou furar o saco de gás.
+    related_entities: [bk_docas_velhas, npc_dorrhen]
+    arte:
+      visual: >-
+        Esfera de carne pálida, lisa e inchada, cor de pele afogada, do tamanho de um barril, boiando na
+        água escura. Em volta da linha da água, um anel de oito ou nove braços humanos de tamanhos e tons
+        de pele diferentes, estendidos para fora, mãos abertas, unhas quebradas. No topo, uma abertura
+        circular de lábios que lembra uma boca ofegante. Bolhas na água.
+      composicao: >-
+        Escada de pedra que desce do cais para a água, à noite. A Boia rente ao último degrau, braços se
+        esticando; um rapaz agachado no degrau de cima, a mão estendida para pegar uma corda, dá a escala.
+        Luz âmbar de lanterna refletida na água.
+      evitar: Polvo, estrela-do-mar, água-viva, monstro de tentáculos. São braços humanos de verdade, de gente diferente; o centro é um saco inchado, não um bicho do mar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_broca_de_costado
+    vaga: 20
+    nome: Broca de Costado
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/factions.txt:283"]
+    anatomia:
+      plano_corporal: segmentado
+      material: quitina
+      escala: grande
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Cria da inveja entre tripulações que disputam a mesma rota: um verme mole e pálido, do comprimento
+        de dois homens e da grossura de uma coxa, como o caruncho de navio que come casco, só que do
+        tamanho de um bote. A cabeça é um par de conchas duras e serrilhadas que giram uma contra a outra
+        e furam madeira, cravo de ferro e osso. O corpo é de anéis moles que empurram, e na ponta de trás
+        tem duas palhetas de casca com que fecha o túnel atrás de si. Os olhos são dois pontos pretos no
+        anel logo atrás das conchas.
+    silhueta: Uma mangueira grossa e pálida saindo de um furo no casco de um navio, com uma ponta dura girando.
+    comportamento: >-
+      Escolhe sempre o navio que vai melhor que o vizinho e fura o casco dele por dentro, de noite,
+      devagar, para que afunde no porto e não no mar. Na briga faz o mesmo: fura quem está mais inteiro,
+      e o furo vaza até ele ficar igual ao pior do grupo.
+    papel_tatico: drenador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_broca_de_costado_furo_no_melhor
+      frase: >-
+        Fura quem está mais inteiro no grupo, e o furo vaza: a cada rodada o furado perde Vitalidade até
+        ficar igual ao mais ferido do grupo, ou até alguém gastar uma ação tapando o furo. Ela nunca fura
+        o mais ferido.
+    contra_jogo: Tapar o furo logo, com a mão ou um pano, antes que vaze; e manter o grupo parelho, porque quando ninguém está melhor que o vizinho ela não tem o que nivelar. A carne atrás das conchas corta fácil.
+    gancho: >-
+      Três tripulações disputam a mesma rota no mar oeste, e a tensão cresce toda semana. Veth não quer o
+      que o outro tem; quer que o outro não tenha.
+    habitat: [bk_docas_velhas, brekmar]
+    inspiracao:
+      - fonte: biologia marinha (teredo, o caruncho-de-navio, Teredo navalis)
+        referencia: molusco perfurador que cava galerias na madeira dos cascos com as conchas da cabeça
+        tomou: o corpo de verme pálido, as conchas que furam e as palhetas que fecham o túnel
+        distancia: o tamanho, o furo que vaza até nivelar por baixo e a escolha do navio que vai melhor são da cria de Veth
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "As conchas de {nome} começam a girar uma contra a outra com um rangido de serra, viradas para quem está mais inteiro."
+    description: Verme pálido do tamanho de um bote com cabeça de conchas que giram e furam; fura o navio que vai melhor e quem está mais inteiro, e o furo vaza.
+    perigo: Médio
+    lore: >-
+      Três tripulações disputam a mesma rota no mar oeste, e a cada semana a tensão cresce na Boca do
+      Fundo. Veth, a Inveja, não quer o que o outro tem: quer que o outro não tenha. O que essa vontade
+      deixa na água do porto é um verme pálido do tamanho de um bote, com a cabeça de conchas que giram e
+      furam madeira, cravo e osso. Ele escolhe o navio que vai melhor que o vizinho e fura por dentro, de
+      noite, para que afunde no ancoradouro e não no mar. Os capitães que voltam com lucro dormem a bordo.
+    aparencia: >-
+      Verme mole e pálido do comprimento de dois homens e grosso como uma coxa, corpo de anéis, cabeça de
+      duas conchas duras serrilhadas que giram uma contra a outra, dois olhos pretos atrás delas,
+      palhetas de casca na ponta de trás.
+    como_se_luta: >-
+      Fura quem está mais inteiro, e o furo vaza até ele ficar igual ao mais ferido do grupo. Tapar o
+      furo logo e manter o grupo parelho; atrás das conchas a carne é mole.
+    related_entities: [bk_docas_velhas, brekmar, grupos_piratas_rivais, npc_veth]
+    arte:
+      visual: >-
+        Caruncho-de-navio gigante: corpo de verme pálido, rosado-acinzentado, mole e úmido, anelado, de
+        quase quatro metros, grosso como uma coxa. Na ponta da frente, duas valvas de concha branca
+        serrilhadas em cristas, viradas uma contra a outra como uma broca, com serragem em volta. Dois
+        olhos pequenos e pretos. Na ponta de trás, duas palhetas de casca em forma de pá.
+      composicao: >-
+        Porão escuro de um navio no ancoradouro, água entrando por um furo. A Broca sai do furo no costado
+        de madeira; um marinheiro com lanterna recua na escada do porão, e o corpo do verme tem a grossura
+        da coxa dele, o que dá a escala. Luz âmbar, serragem flutuando.
+      evitar: Verme de areia de deserto, minhoca de dentes, larva de desenho. É um molusco perfurador de navio, com conchas na cabeça, não boca de dentes.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mao_estendida
+    vaga: 21
+    nome: Mão Estendida
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_skarath
+      refs: ["lore_nova/npcs.txt:336", "lore_nova/locations.txt:445"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Cria da traição que se acumula num porto onde todo acordo é de palavra. É uma figura alta e magra,
+        de pele lisa e morna demais, com o braço direito comprido e aberto à frente, em cumprimento, a mão
+        grande e quente, as juntas sempre relaxadas. O braço esquerdo não fica onde deveria: dobra para
+        trás no ombro, corre colado às costelas e sai debaixo da axila direita, e termina em dedos longos e
+        duros como pregos. O rosto é bom de olhar, e os olhos procuram os de quem está à frente.
+    silhueta: Uma figura alta e magra de braço direito estendido em cumprimento, com um volume escondido debaixo do braço, do lado do coração.
+    comportamento: >-
+      Aparece nas negociações das docas, entre quem fecha acordo, e oferece a mão. Na briga faz o mesmo:
+      para, abaixa o braço estendido e espera. Quem aceita a trégua e se vira para outro recebe, logo
+      depois, o braço escondido entre as costelas.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mao_estendida_aperto
+      frase: >-
+        Oferece trégua e não ataca na primeira rodada; quem não a atacar nessa rodada confiou, e na rodada
+        seguinte leva o golpe do braço escondido, que ignora a guarda. Quem recusou a trégua não é traído.
+    contra_jogo: Não aceitar a trégua; bater nela na primeira rodada, quando ela não se defende, ou prender o braço escondido debaixo da axila antes que saia.
+    gancho: >-
+      Em Brekmar não há lei, e a ordem que existe é feita de reputação e de acordos de palavra. Skarath
+      está onde há confiança suficiente para ser traída, e o porto vive disso.
+    habitat: [brekmar]
+    inspiracao: []
+    padrao: [defesa, ataque, mover]
+    a_cada_n: 4
+    telegrafo: "{nome} baixa a guarda, estende a mão aberta e quente e espera que você aceite."
+    description: Figura alta de mão estendida em cumprimento e outro braço escondido debaixo da axila; aparece entre quem fecha acordo nas docas.
+    perigo: Médio
+    lore: >-
+      Brekmar não tem lei, e a ordem que tem é feita de reputação e de acordo de palavra. Skarath, a
+      Traição, está onde há confiança suficiente para ser traída, e o porto fecha acordos o dia inteiro.
+      O que sobra disso anda nas docas como uma figura alta e bem-apessoada, de braço estendido em
+      cumprimento e o outro braço escondido debaixo da axila. Aparece entre quem negocia. Os mercadores
+      velhos de Brekmar cumprimentam com a cabeça, nunca com a mão, e quem pergunta por quê ganha só um
+      olhar.
+    aparencia: >-
+      Figura alta e magra de pele lisa e morna, rosto agradável de olhar atento, braço direito longo
+      estendido em cumprimento com mão grande e aberta, braço esquerdo dobrado para trás e escondido sob a
+      axila direita, dedos longos e duros como pregos.
+    como_se_luta: >-
+      Oferece trégua na primeira rodada; quem aceita leva depois o golpe do braço escondido. Recusar a
+      trégua e bater nela logo, ou prender o braço escondido antes que saia.
+    related_entities: [brekmar, npc_skarath]
+    arte:
+      visual: >-
+        Figura humanoide alta, uns dois metros e meio, e magra, pele lisa de tom humano claro, sem pelos,
+        roupa simples de mercador. Rosto bonito e sereno, olhar atento. Braço direito longo estendido
+        para a frente, palma aberta em cumprimento. O braço esquerdo dobra para trás no ombro e corre colado
+        às costelas, com a mão saindo debaixo da axila direita, dedos longos e rígidos como pregos, quase
+        escondidos pelo casaco.
+      composicao: >-
+        Mesa de negociação num cais, caixotes e um mercador sentado; a Mão Estendida de pé diante dele,
+        mão oferecida. O mercador sentado, com a cabeça na altura da cintura dela, dá a escala. Luz âmbar
+        de lanterna, sombras fortes.
+      evitar: Homem esguio sem rosto de lenda urbana, diabo de terno, monstro de muitos braços. Tem só dois braços; o horror está em onde o segundo está e em como o primeiro é convidativo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: enemy_pirata_brekmar, nome: "Pirata de Brekmar", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Tripulante da guerra de rotas do mar oeste. Briga suja, aposta alto — e sabe exatamente quando uma luta deixou de valer o saque."}, papel_tatico: saqueador, arquetipo: conjurador, categoria: lacaio}
+  - {id: mon_capangas_do_poco, nome: "Capanga do Poço", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: som, texto: "Cobrador de dívidas dos sindicatos. Trabalha em dupla, quebra o que foi mandado quebrar, e some quando o serviço azeda."}, papel_tatico: bruto_de_linha, arquetipo: tatico, categoria: lacaio}
+  - {id: enemy_arpoador_osshari, nome: "Arpoador Osshari", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Caçador de leviatãs deslocado para as docas. Sente pouco — inclusive medo. Só recua quando a caça deixa de ser caça."}, papel_tatico: artilharia, arquetipo: conjurador, categoria: elite}
+  - {id: mon_rato_cais_brekmar, nome: "Rato de Cais de Brekmar", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: pequena, locomocao: anda, percepcao: sangue_cheiro, texto: "Reconhece moedas falsas pelo gosto e morde primeiro quem as carrega."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_cobrador_gancho, nome: "Cobrador do Gancho", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: grande, locomocao: anda, percepcao: sangue_cheiro, texto: "Uma criatura treinada pelos sindicatos para trazer devedores vivos ao Porto Sem Lei."}, papel_tatico: perseguidor_marca, arquetipo: tatico, categoria: padrao}
+  - {id: mon_capita_corda, nome: "Capitã da Corda Molhada", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: som, texto: "Pirata afogada que ainda comanda uma tripulação presa às próprias amarras."}, papel_tatico: suporte, arquetipo: lider_matilha, categoria: elite}

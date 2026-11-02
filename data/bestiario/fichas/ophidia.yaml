@@ -1,0 +1,1730 @@
+# SPEC-349 — Ficha de identidade da onda 12: Ophidia (spec-filha a reservar pelo coordenador, D8).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da SPEC-348 (main 821d17c3), mesma convenção das ondas 1 e 2;
+# só refs que também resolvem no worktree (o gate confere existência e número de linha).
+# Ophidia tem um nó só (`ophidia`, perigo 4). A lore pede mistério ("o horror é não ter
+# resposta", creatures.txt:1624): toda criatura é de carne e luta, mas o que se SABE dela vem de
+# luneta, de segunda mão, de mapa contraditório ou de quem vende. Nenhum texto público explica o
+# veneno (segredo E-14, secrets.txt); só o boato público (rumors.txt:253) e o "pagam mais por quem
+# está doente", que a própria lore libera como uso sem revelar.
+regiao: ophidia
+onda: 12
+spec: SPEC-349
+nome_regiao: Ophidia
+habitat_nome:
+  ophidia: Arquipélago de Ophidia
+paleta: >-
+  **Ophidia** — arquipélago vulcânico no oceano oeste, visto do mar e de Brekmar: basalto preto
+  molhado, areia vulcânica preta e quente, pedra-pomes cinza, água verde-garrafa que solta vapor
+  rente perto das ilhas, mar aberto cinza-chumbo. A fumaça dos vulcões é sempre de uma cor errada:
+  amarelo que não é enxofre, um vermelho que não é fogo, um magenta-esverdeado que o olho não
+  consegue fixar (pintar com leve aberração cromática, nunca como neon). Luz oblíqua de fim de
+  tarde vinda do oeste; à noite, só lanternas de barco.
+familias_em_jogo:            # D10 — mesmos nomes das ondas 1 e 2 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: bruto_de_linha,   arquetipo: predador,            plano_corporal: bipede_ereto,     material: carne_exposta,   escala: humana,  locomocao: anda,          percepcao: calor,         habitat: [ophidia]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: predador,            plano_corporal: bipede_curvado,   material: cinza,           escala: humana,  locomocao: nada,          percepcao: som,           habitat: [ophidia]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: elite,  papel_tatico: tanque_reativo,   arquetipo: bruto,               plano_corporal: bipede_ereto,     material: vidro_cristal,   escala: grande,  locomocao: anda,          percepcao: vibracao,      habitat: [ophidia]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: padrao, papel_tatico: guarda_protetor,  arquetipo: guardiao,            plano_corporal: bipede_ereto,     material: sal_mineral,     escala: humana,  locomocao: anda,          percepcao: respiracao,    habitat: [ophidia]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: emboscador,       arquetipo: emboscador,          plano_corporal: bipede_ereto,     material: carne_exposta,   escala: humana,  locomocao: nada,          percepcao: vibracao,      habitat: [ophidia]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,  categoria: padrao, papel_tatico: quebra_defesa,    arquetipo: predador,            plano_corporal: serpentiforme,    material: carne_exposta,   escala: grande,  locomocao: cava,          percepcao: vibracao,      habitat: [ophidia]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: elite,  papel_tatico: controlador,      arquetipo: emboscador,          plano_corporal: composto,         material: couro_tecido,    escala: enorme,  locomocao: nada,          percepcao: luz,           habitat: [ophidia]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: lacaio, papel_tatico: artilharia,       arquetipo: covarde_oportunista, plano_corporal: quadrupede,       material: sal_mineral,     escala: pequena, locomocao: escala_paredes, percepcao: visao,         habitat: [ophidia]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: padrao, papel_tatico: sacrificial,      arquetipo: guardiao,            plano_corporal: segmentado,       material: carne_exposta,   escala: grande,  locomocao: rasteja,       percepcao: vibracao,      habitat: [ophidia]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: drenador,         arquetipo: covarde_oportunista, plano_corporal: serpentiforme,    material: couro_tecido,    escala: humana,  locomocao: nada,          percepcao: sangue_cheiro, habitat: [ophidia]}
+  - {vaga: 11, familia: besta_entropia,  categoria: lacaio, papel_tatico: emboscador,       arquetipo: emboscador,          plano_corporal: quadrupede,       material: cinza,           escala: pequena, locomocao: rasteja,       percepcao: vibracao,      habitat: [ophidia]}
+  - {vaga: 12, familia: besta_entropia,  categoria: lacaio, papel_tatico: perseguidor_marca, arquetipo: lider_matilha,      plano_corporal: hexapode_ou_mais, material: quitina,         escala: pequena, locomocao: rola,          percepcao: sangue_cheiro, habitat: [ophidia]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: artilharia,       arquetipo: conjurador,          plano_corporal: bipede_ereto,     material: ferro_ferrugem,  escala: humana,  locomocao: anda,          percepcao: som,           habitat: [ophidia]}
+  - {vaga: 14, familia: humanoide_preco, categoria: elite,  papel_tatico: controlador,      arquetipo: tatico,              plano_corporal: bipede_curvado,   material: ferro_ferrugem,  escala: humana,  locomocao: anda,          percepcao: eter,          habitat: [ophidia]}
+  - {vaga: 15, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,          arquetipo: tatico,              plano_corporal: bipede_ereto,     material: couro_tecido,    escala: humana,  locomocao: escala_paredes, percepcao: luz,          habitat: [ophidia]}
+  - {vaga: 16, familia: humanoide_preco, categoria: elite,  papel_tatico: saqueador,        arquetipo: tatico,              plano_corporal: bipede_ereto,     material: vidro_cristal,   escala: humana,  locomocao: anda,          percepcao: sangue_cheiro, habitat: [ophidia]}
+  # --- crias de apetite (demônios encarnados) — itinerantes; os de lugar fixo ficam nas suas ondas ---
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},   categoria: padrao, papel_tatico: quebra_defesa,  arquetipo: bruto,               plano_corporal: radial,           material: osso,          escala: pequena, locomocao: salta,          percepcao: sangue_cheiro, habitat: [ophidia]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_daruun}  , categoria: padrao, papel_tatico: emboscador,     arquetipo: tatico,              plano_corporal: sessil_ancorado,  material: carne_exposta, escala: grande,  locomocao: ancorada,       percepcao: calor,         habitat: [ophidia]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: chefe,  papel_tatico: tanque_reativo, arquetipo: predador_apice,      plano_corporal: composto,         material: sal_mineral, escala: enorme,  locomocao: escala_paredes, percepcao: respiracao,    habitat: [ophidia]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},    categoria: lacaio, papel_tatico: saqueador,      arquetipo: emboscador,          plano_corporal: serpentiforme,    material: carne_exposta, escala: pequena, locomocao: salta,          percepcao: calor,         habitat: [ophidia]}
+  # Sem slot genérico: a curadoria (curadoria_legado.yaml) não pôs nenhum `generico` em Ophidia;
+  # os 7 da região são `valoria` e entram abaixo como retro (R6).
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_nadador_escaldado
+    vaga: 1
+    nome: Nadador Escaldado
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/locations.txt:283", "lore_nova/creatures.txt:1621"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um homem que chegou nadando perto demais das fontes quentes das ilhas e não morreu: a pele
+        saiu inteira, em folhas, e o que ficou por cima é músculo cozido, branco e fibroso como carne
+        de panela, com os tendões amarelos saltando nos braços e no pescoço. Os olhos ferveram e
+        ficaram leitosos. As unhas caíram, e as pontas dos dedos colaram umas nas outras numa
+        membrana de cicatriz. Fora da água quente ele treme, e a carne do peito racha em gomos quando
+        seca.
+    silhueta: Um homem pálido e fumegante saindo da água até a cintura, de braços pendidos e dedos colados.
+    comportamento: >-
+      Fica nas enseadas onde a água sai quente das pedras, parado, com o vapor em volta. Avança para
+      quem chega à beira com a força de quem não sente mais nada no corpo, e volta para a água quente
+      quando começa a secar.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_nadador_escaldado_abraco_de_caldeira
+      frase: >-
+        Traz o calor do mar no corpo: enquanto está molhado, o golpe dele deixa uma queimadura que
+        continua ardendo; a cada rodada fora da água quente ele perde essa força e racha.
+    contra_jogo: Levá-lo para a pedra seca e aguentar o começo; seco, ele racha e bate como qualquer um.
+    gancho: >-
+      O mar perto de Ophidia é quente onde não devia ser. Quem chega a nado não morre afogado:
+      chega cozido, e continua.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [ataque, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} afunda até o pescoço na água fumegante e volta com o vapor saindo dos ombros."
+    description: Um náufrago de pele cozida que vive nas águas quentes de Ophidia e bate com o calor do mar no corpo.
+    perigo: Alto
+    lore: >-
+      Nas enseadas de Ophidia a água sai quente das pedras, mais quente desde que a guerra do céu
+      vermelho acordou os vulcões, e quem chega a nado não se afoga: cozinha. Alguns continuam. Ficam
+      nas poças fumegantes da costa, sem pele nenhuma, e vêm para a beira quando alguém desembarca.
+      Fora da água quente eles tremem e racham. Garfo-de-Sal diz que viu um pela luneta, de pé na
+      arrebentação, e que não quis ver o segundo.
+    aparencia: >-
+      Homem sem pele, de músculo cozido branco e fibroso, tendões amarelos saltando no pescoço e nos
+      braços, olhos leitosos de fervidos, dedos colados por membrana de cicatriz, vapor saindo dos
+      ombros; a carne do peito racha em gomos quando seca.
+    como_se_luta: >-
+      Sai da água quente e bate com uma queimadura que continua ardendo. Na pedra seca perde a força a
+      cada rodada e racha: aguentar o começo e tirá-lo da água.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Homem adulto magro, sem pele: musculatura inteira exposta, cozida até o branco-acinzentado e
+        fibroso, tendões amarelados salientes no pescoço e nos antebraços, olhos brancos leitosos, sem
+        unhas, dedos fundidos por membrana de cicatriz rosada. Vapor sobe dos ombros. Rachaduras finas
+        em gomos no peito, onde a carne secou.
+      composicao: >-
+        Enseada de basalto preto em Ophidia, água verde-garrafa soltando vapor rente; ele sai da água
+        até a cintura em primeiro plano; ao fundo, um bote encalhado e um marinheiro de Brekmar
+        recuando na pedra seca, da mesma altura, dá a escala. Fumaça amarela-errada no vulcão do fundo.
+      evitar: >-
+        Zumbi verde, esfolado de filme com sangue vermelho vivo, criatura de lava brilhante. A carne é
+        cozida, branca e seca, nem sangrenta nem incandescente.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ossada_de_pomes
+    vaga: 2
+    nome: Ossada de Pomes
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:150", "lore_nova/locations.txt:283"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: cinza
+      escala: humana
+      locomocao: nada
+      percepcao: som
+      texto: >-
+        Um tripulante cujos ossos viraram pedra-pomes: cinzentos, porosos e leves a ponto de o corpo
+        inteiro boiar de pé, com a água pela cintura, sem esforço nenhum. Onde o osso encosta na pele,
+        a pele furou junto, e nas maçãs do rosto e na clavícula há buracos por onde se vê a luz. O
+        vento entra pelas costelas e sai assobiando. As mãos são leves demais para bater forte e
+        rápidas demais para se ver chegando.
+    silhueta: Um homem magro boiando de pé na água como uma rolha, com furos de luz no rosto.
+    comportamento: >-
+      Andam em bando pelas águas rasas, boiando, e se ouvem antes de se ver: o assobio das costelas
+      vem pela água. Chegam rápido, batem e se afastam, e quebram com qualquer golpe firme.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ossada_de_pomes_assobio_na_agua
+      frase: >-
+        Ataca antes de ser visto, porque o assobio chega primeiro e ele já está em cima; mas o osso
+        de pomes estala com qualquer golpe que acerte, e o primeiro golpe firme o desmonta.
+    contra_jogo: Esperar o assobio e responder com um golpe só, firme; ele não consegue afundar para fugir.
+    gancho: >-
+      Os primeiros relatos de Ophidia falam de sons que chegavam pela água antes de qualquer ilha
+      aparecer. Uma das explicações que correm em Brekmar é esta, e não é a pior.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: geologia vulcânica
+        referencia: "pedra-pomes, rocha vulcânica tão porosa que boia"
+        tomou: o osso poroso e leve que faz o corpo boiar
+        distancia: só o material; o assobio e o bando vêm dos sons que chegam pela água nos relatos de Ophidia
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "Um assobio fino corre pela água, e {nome} já está mais perto do que estava."
+    description: Um tripulante de ossos de pedra-pomes que boia de pé e chega assobiando pelas costelas.
+    perigo: Médio
+    lore: >-
+      Desde os primeiros barcos, quem passou perto de Ophidia fala de sons que chegam pela água antes
+      de qualquer ilha aparecer. Em Brekmar há quem jure que são eles: tripulantes de ossos virados
+      pedra-pomes, tão leves que boiam de pé, com o vento assobiando pelas costelas. Andam em bando
+      pelas águas rasas e chegam rápido. Quebram fácil. Nenhum dos que juram já segurou um pedaço.
+    aparencia: >-
+      Homem magro de pele cinzenta furada, ossos de pedra-pomes porosos aparecendo nas maçãs do rosto
+      e na clavícula com luz atravessando, costelas furadas onde o vento assobia; boia de pé na água,
+      pela cintura, como uma rolha.
+    como_se_luta: >-
+      Chega em bando, antes de ser visto, e bate rápido. Qualquer golpe firme o quebra: esperar o
+      assobio e responder com força, sem espalhar golpes.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Homem adulto muito magro, pele cinza-pálida esticada e perfurada; nos pontos onde o osso
+        encosta, furos redondos atravessados de luz (maçãs do rosto, clavícula, costelas). Osso
+        exposto cinza-claro, poroso como pedra-pomes. Boia ereto na água até a cintura, sem nadar,
+        braços leves e abertos.
+      composicao: >-
+        Água rasa e quente junto a uma praia de areia preta de Ophidia; três deles boiando em linha a
+        distâncias diferentes, o da frente em foco; um remador de Brekmar num escaler pequeno à
+        esquerda, da mesma altura, dá a escala; contraluz de fim de tarde vindo do oeste, luz passando
+        pelos furos.
+      evitar: >-
+        Esqueleto, fantasma, homem de pedra maciça. É gente magra de carne e pele, com o osso leve e
+        furado aparecendo; não brilha.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cabeleira_de_vidro
+    vaga: 3
+    nome: Cabeleira de Vidro
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:286", "lore_nova/items.txt:1618"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: grande
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um náufrago que deitou nas encostas ao vento das fumarolas e levantou com cabelo de vidro:
+        fios finos e duros, da grossura de uma crina, saem da cabeça, dos ombros e das costas e chegam
+        ao chão, e o vento puxa todos para o mesmo lado. Cada fio nasce de um poro, e a pele em volta é
+        uma ferida que não fecha. O corpo cresceu para aguentar o peso: o pescoço engrossou, os ombros
+        subiram, os joelhos dobram para trás quando ele se firma contra o vento. A crina se quebra na
+        ponta sem parar, e o vento leva os pedaços como uma chuva de agulhas.
+    silhueta: Um homem alto com uma crina brilhante que o vento estica para o lado, comprida como uma bandeira.
+    comportamento: >-
+      Fica de costas para o vento nas encostas e sente pela crina cada passo em volta. Não corre
+      atrás: anda de lado, devagar, até pôr quem chega do lado para onde o vento sopra, e aguenta os
+      golpes firmado contra o vento enquanto a crina faz o trabalho.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cabeleira_de_vidro_crina_de_agulhas
+      frase: >-
+        O perigo vem do vento, não do toque: quem fica do lado para onde o vento sopra leva os fios
+        soltos toda rodada, perto ou longe, sem que ele precise atacar; ele gasta o turno andando de
+        lado para pôr o jogador nessa faixa.
+    contra_jogo: Ficar do lado de onde o vento vem e chegar por ali; de perto e a favor do vento, a crina voa para longe e o corpo fica descoberto.
+    gancho: >-
+      As encostas de Ophidia soltam um vidro fino que o vento leva em fios. Quem dorme ali não acorda
+      coberto de cinza: acorda vestido.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: vulcanologia
+        referencia: "cabelo de Pele, fios de vidro vulcânico soprados pelo vento em ilhas vulcânicas"
+        tomou: os fios finos de vidro levados pelo vento
+        distancia: só o material; o corpo que cresce para carregá-los e a chuva de agulhas a favor do vento são de Ophidia
+    padrao: [defesa, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} vira de costas para o vento e a crina inteira se abre em leque, tinindo."
+    description: Um náufrago alto de crina de vidro vulcânico que o vento desfia em agulhas sobre quem fica do lado errado.
+    perigo: Alto
+    lore: >-
+      Das encostas de Ophidia o vento traz fios de vidro tão finos que parecem cabelo. Nos mapas
+      contraditórios vendidos em Brekmar há um desenho que se repete em mais mapas do que deveria: um homem alto, firme
+      contra o vento, com uma crina que chega ao chão e brilha na cor que o vulcão estiver soltando
+      naquele dia. Ao lado do desenho, quase sempre, uma seta para o lado de onde o vento vem, e
+      nenhuma explicação. Os marinheiros de Brekmar entendem a seta sem precisar dela.
+    aparencia: >-
+      Homem alto de ombros subidos, crina de fios finos de vidro vulcânico saindo da cabeça, dos
+      ombros e das costas até o chão, puxada pelo vento para um lado; pele em ferida aberta na raiz de
+      cada fio; joelhos que dobram para trás.
+    como_se_luta: >-
+      O vento leva a crina em agulhas sobre quem fica do lado para onde sopra, toda rodada. Chegar
+      pelo lado de onde o vento vem; dali a crina voa para longe e o corpo fica descoberto.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Homem alto, ombros e pescoço engrossados, nu da cintura para cima. Da cabeça, dos ombros e das
+        costas saem milhares de fios finíssimos de vidro vulcânico, translúcidos, levemente dourados
+        com reflexos de cor errada, longos até o chão e todos soprados para o mesmo lado. Pele
+        vermelha, em carne viva, na base dos fios. Joelhos dobrando para trás.
+      composicao: >-
+        Encosta de cinza preta varrida pelo vento, fumarola ao fundo soltando fumaça amarela-errada;
+        ele de perfil, crina estendida como bandeira; um marinheiro de lança baixa a três passos, da
+        altura do peito dele, dá a escala; fios de vidro voando em primeiro plano.
+      evitar: >-
+        Leão, cabelo comum, anjo de luz, homem de cristal maciço. A crina é vidro fino e duro como
+        fibra; o corpo é carne viva, não pedra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vazado_da_mare
+    vaga: 4
+    nome: Vazado da Maré
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/items.txt:1625", "lore_nova/locations.txt:291"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: sal_mineral
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um marinheiro de barco sumido que a água de perto das ilhas levou aos pedaços, e não inteiro.
+        Furos redondos e limpos atravessam o corpo dele: um no peito, do tamanho de um punho, outro na
+        coxa, um terceiro na mão, e pelos três se vê o mar do outro lado. A carne na borda dos furos
+        ficou lisa e dura, polida como seixo de rio, com uma crosta fina de sal. Não sangra por eles,
+        e o coração bate de lado, empurrado para onde ainda havia lugar.
+    silhueta: Um marinheiro parado de frente, com um buraco redondo no peito por onde se vê o mar atrás.
+    comportamento: >-
+      Fica na frente dos outros e não sai de lá. Escuta a respiração de quem se aproxima e espera o
+      golpe de peito aberto; o que entra pelo furo não encontra nada para cortar e às vezes fica preso
+      na borda.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vazado_da_mare_furo_que_prende
+      frase: >-
+        Põe o corpo furado na frente de um aliado: o golpe que mira o protegido passa por ele, e
+        quando passa pelo furo a arma prende na borda de sal e o golpe seguinte do jogador perde força.
+    contra_jogo: Não mirar o peito; os furos não têm carne, a borda tem. Golpe baixo, nas pernas, ou contorná-lo.
+    gancho: >-
+      Em Brekmar se vende, como lenda, a água de perto de Ophidia, que dissolve ou leva o que nela
+      mergulha. Ele é o que um homem vira se a água levar só um pouco.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} dá um passo para a frente do outro e vira o peito furado para você."
+    description: Um marinheiro atravessado por furos limpos que se põe na frente dos outros e prende a arma na borda de sal.
+    perigo: Alto
+    lore: >-
+      Os barcos que chegam perto de Ophidia somem sem destroços, e o mercado de Brekmar vende, como
+      lenda, a água daquele trecho de mar, que dissolve ou leva o que nela mergulha. Os poucos que
+      dizem ter visto um destes juram que a água não leva tudo de uma vez. O que sobra anda: furado
+      de lado a lado, liso nas bordas, sem sangue. Fica na frente dos companheiros, como se ainda
+      soubesse qual é o seu posto.
+    aparencia: >-
+      Marinheiro de roupa desbotada atravessado por furos redondos e limpos, um no peito do tamanho de
+      um punho, outro na coxa, outro na mão, com o mar visível através; bordas lisas e polidas como
+      seixo, crosta fina de sal, sem sangue.
+    como_se_luta: >-
+      Põe-se na frente dos outros; o golpe no peito atravessa o furo e prende a arma na borda de sal.
+      Mirar as pernas, ou contorná-lo.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Marinheiro adulto de calças de lona e camisa rasgada, de pé, de frente. Furos perfeitamente
+        circulares atravessam o corpo: no centro do peito (do tamanho de um punho), na coxa esquerda e
+        na palma da mão direita; através deles, o mar e o horizonte do fundo. Bordas dos furos lisas e
+        brilhantes, cor de pele clara polida, com crosta branca de sal. Nenhum sangue.
+      composicao: >-
+        Praia de seixos pretos de Ophidia; ele de pé à frente de outras figuras desfocadas, o horizonte
+        oeste visível pelo furo do peito; um saqueador de Brekmar de faca curta a dois passos, da mesma
+        altura, dá a escala; luz baixa e fria.
+      evitar: >-
+        Ferida sangrenta, fantasma translúcido, corpo de pedra. Os furos são limpos e polidos, sem
+        gore; o resto do corpo é carne comum.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_desbotado_da_nevoa
+    vaga: 5
+    nome: Desbotado da Névoa
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1634", "lore_nova/locations.txt:291"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Um tripulante que atravessou a névoa colorida e saiu dela sem cor e sem firmeza. A cor saiu da
+        pele e o osso amoleceu: o corpo inteiro ficou branco e encharcado como pão deixado na água,
+        inchado ao dobro, de carne mole que afunda ao toque e não volta. Os dedos das mãos cresceram
+        compridos e grossos, de juntas frouxas, e fecham como laço. Os olhos ficaram vermelhos, a única
+        cor do corpo. Deitado de costas no fundo do raso, ele parece um tronco claro, e sente pela
+        barriga cada passo que entra na água.
+    silhueta: >-
+      Um corpo branco e inchado deitado de costas no fundo do raso, com dois olhos vermelhos abertos e
+      dedos compridos fechados em laço.
+    comportamento: >-
+      Fica deitado de costas no fundo do raso, parado, e é tomado por tronco claro até se mexer; sente
+      pela barriga quem entra na água. Segura quem vem buscar um bote ou um corpo e não larga sozinho.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_desbotado_da_nevoa_tornozelo_no_fundo"
+      frase: >-
+        Deitado no fundo do raso, segura pelo tornozelo quem pisa perto e pesa como afogado: enquanto
+        segura, o preso luta com água pela cintura, não troca de lugar e seus golpes saem fracos; um
+        segundo herói puxando junto solta o preso na hora.
+    contra_jogo: >-
+      Andar pela areia seca em vez do raso; se alguém for preso, outro herói gasta a ação puxando junto,
+      ou corta os dedos frouxos, que soltam como massa.
+    gancho: >-
+      Uma das teorias de Brekmar diz que as cores da fumaça de Ophidia não vêm do vulcão: vêm de tudo
+      o que ela atravessou. Ninguém sabe para onde as cores vão.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia
+        referencia: "rãs-de-vidro (Centrolenidae), de ventre transparente que mostra coração e vísceras"
+        tomou: o corpo transparente com os órgãos à vista
+        distancia: só a transparência; a origem na névoa de cor errada e a emboscada na água rasa são de Ophidia
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: >-
+      A água rasa perto de você fica turva de um branco leitoso, e dois pontos vermelhos se abrem no
+      fundo.
+    description: >-
+      Um tripulante que a névoa de Ophidia deixou branco, inchado e mole como pão na água, que fica
+      deitado no fundo do raso e segura o tornozelo de quem pisa nele.
+    perigo: Médio
+    lore: >-
+      Os que viram barcos sumirem perto de Ophidia falam, às vezes, de uma névoa de cor estranha que se
+      desfez com o barco junto. Há tripulantes, diz-se, que atravessaram essa névoa e saíram sem cor
+      nenhuma: brancos e moles como pão deixado na água, inchados, de olhos vermelhos. No fundo do raso
+      parecem troncos. Em Brekmar contam que a fumaça das ilhas tem as cores que tem porque leva as dos
+      outros. É uma teoria. Como todas.
+    aparencia: >-
+      Corpo humano branco e encharcado, inchado ao dobro e mole como pão na água, sem cor nenhuma além
+      dos olhos vermelhos; dedos compridos e grossos de juntas frouxas; deitado de costas no fundo do
+      raso.
+    como_se_luta: >-
+      Segura pelo tornozelo quem pisa no raso e o deixa preso, de golpes fracos. Ande pela areia seca;
+      preso, um companheiro puxa junto ou corta os dedos.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Humano adulto deitado de costas sob um palmo de água clara sobre areia escura; pele branca
+        opaca, encharcada e inchada, carne mole com marcas de dedos que não voltam; sem cabelo; olhos
+        vermelhos abertos olhando para cima; mãos de dedos longos e grossos abertos em garra para a
+        superfície. Nada transparente, sem coração nem órgãos visíveis (essa leitura é do Nadador
+        Transparente, Aethelgard).
+      composicao: >-
+        Água rasa e clara sobre areia preta, na beira de Ophidia; ele de pé até os joelhos, quase
+        invisível, o coração vermelho como ponto focal da imagem e os olhos como os únicos outros
+        pontos de cor; à direita, um marinheiro
+        debruçado sobre um bote encalhado, sem vê-lo, dá a escala. Névoa de cor errada ao longe.
+      evitar: >-
+        Fantasma, espírito brilhante, homem de cristal facetado, água-viva. É carne sem cor, molhada,
+        com órgãos de verdade; não emite luz.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_turu_de_casco
+    vaga: 6
+    nome: Turu de Casco
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:291", "lore_nova/creatures.txt:1621"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: grande
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Um verme de madeira do tamanho de um homem deitado, de carne mole, branca e úmida, que termina
+        numa cabeça com duas conchas pequenas e duras, serrilhadas, que ele gira como uma broca. O
+        corpo inteiro é estômago: o que a cabeça raspa, a carne de trás digere, madeira, corda, lona,
+        couro e o que estiver dentro deles, e nada sai do outro lado, nem serragem, nem resto, e ele
+        não engorda um dedo. Na ponta da cauda há duas palhetas de casca com que tampa o buraco por
+        onde entrou. Cava em casco de barco como cava em escudo, e no escudo é mais rápido.
+    silhueta: Um cano branco e mole saindo de um furo redondo num casco de barco, com uma ponta dura que gira.
+    comportamento: >-
+      Vivem em colônia na água quente das ilhas e sobem nos cascos que chegam, guiados pelo tremor
+      dos remos. Um barco com eles não afunda: é comido por dentro até não sobrar casco para afundar.
+      Contra gente, procuram primeiro o que é de madeira e de couro.
+    papel_tatico: quebra_defesa
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_turu_de_casco_broca_de_conchas
+      frase: >-
+        Fura o que protege: escudo, armadura de couro, a madeira de uma barricada. Cada golpe dele
+        tira um pouco da defesa do jogador até a rodada seguinte, e quanto mais madeira e couro, mais
+        rápido.
+    contra_jogo: Metal e pedra o atrasam; arrancá-lo antes que entre inteiro, porque dentro do furo ele tampa a entrada com a cauda.
+    gancho: >-
+      Ninguém acha destroços dos barcos que somem perto de Ophidia. Os velhos calafates do Cais têm
+      a sua explicação: não sobra madeira para boiar.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: biologia marinha
+        referencia: "turu ou busano (Teredo navalis), molusco que perfura e digere a madeira dos cascos"
+        tomou: o corpo mole com conchas de broca na cabeça e as palhetas que tampam o furo
+        distancia: escala e apetite trocados; a ligação com os barcos que somem sem destroços é de Ophidia
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} encosta a cabeça no seu escudo, e as conchas começam a girar com um ranger de serra."
+    description: Um verme de madeira do tamanho de um homem que come casco, escudo e couro de dentro para fora.
+    perigo: Alto
+    lore: >-
+      Ninguém acha destroços dos barcos que somem perto de Ophidia, e no Cais da Transparência cada um
+      tem a sua explicação. A dos velhos calafates é esta: um verme de madeira do tamanho de um homem,
+      de corpo branco e mole e cabeça de conchas que gira como broca, vivendo em colônia na água
+      quente das ilhas. Um barco com eles não afunda; é comido até não sobrar o que afundar, e o que
+      eles comem não sai deles nem como serragem, para onde quer que vá. Os
+      calafates mostram, como prova, um pedaço de quilha cheio de furos redondos. Ninguém sabe de onde
+      veio o pedaço.
+    aparencia: >-
+      Verme do tamanho de um homem deitado, corpo branco, mole e úmido como estômago, cabeça com duas
+      conchas pequenas serrilhadas que giram como broca, duas palhetas de casca na ponta da cauda;
+      sai de furos redondos na madeira.
+    como_se_luta: >-
+      Fura escudo, couro e madeira e tira a defesa a cada golpe. Metal e pedra o atrasam; arrancá-lo
+      antes que entre no furo e tampe a entrada.
+    related_entities: [ophidia, brekmar]
+    arte:
+      visual: >-
+        Verme marinho de 1,8 m, corpo cilíndrico mole branco-acinzentado, translúcido e úmido; na
+        cabeça, duas valvas de concha pequenas e duras, com sulcos serrilhados, abertas como broca; na
+        cauda, duas palhetas calcárias em forma de pá. Em volta dos furos, madeira limpa: nenhuma
+        serragem, nenhum resto.
+      composicao: >-
+        Casco de um barco de pesca de Brekmar encalhado na praia preta de Ophidia, a madeira crivada de
+        furos redondos; um verme saindo de um furo pela metade, outro entrando; à frente, um marinheiro
+        de pé com escudo de madeira já furado dá a escala. Luz cinza de fim de tarde.
+      evitar: >-
+        Minhoca de desenho, verme de areia gigante de deserto, boca circular cheia de dentes. A cabeça
+        é de duas conchas pequenas que giram, não uma boca.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vela_sem_barco
+    vaga: 7
+    nome: Vela sem Barco
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:291", "lore_nova/locations.txt:286"]
+    anatomia:
+      plano_corporal: composto
+      material: couro_tecido
+      escala: enorme
+      locomocao: nada
+      percepcao: luz
+      texto: >-
+        Uma colônia de bichos de mar colados num só corpo: em cima, uma bolsa de gás comprida e alta,
+        de pele fina esticada, que o vento enche como uma vela e que, cheia, anda contra ele; embaixo, cordões de
+        tentáculos que descem trinta braças na água. A bolsa é da cor que a fumaça das ilhas tiver
+        naquele dia. Cada tentáculo é coberto de ferrões miúdos, e cada ferrão gruda na pele e queima
+        como corda em brasa. Os cordões puxam o que pegam para cima, para a boca pendurada embaixo da
+        bolsa.
+    silhueta: Uma vela triangular de cor errada no horizonte, inclinada, sem casco nenhum embaixo.
+    comportamento: >-
+      Veleja em grupos de duas ou três, e contra o vento, como nenhum bicho de mar e nenhum barco
+      sabe fazer; de longe, é tomada por barco bem governado. Quem rema para ela pensando em socorro
+      entra nos cordões, e quem foge a favor do vento é alcançado. À noite, vai atrás das lanternas.
+    papel_tatico: controlador
+    arquetipo: emboscador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vela_sem_barco_cordoes_de_brasa
+      frase: >-
+        Prende todos de uma vez: os cordões caem sobre quem estiver perto, e cada preso perde o
+        movimento e queima até cortar o cordão; fugir dela não adianta, porque ela vem contra o
+        vento atrás de quem foge.
+    contra_jogo: Cortar os cordões perto da bolsa, não perto de si; furada a bolsa, ela tomba e para de puxar. À noite, apagar as lanternas.
+    gancho: >-
+      Há quem tenha visto um barco se aproximar de Ophidia, virar e sumir pelo horizonte como
+      qualquer barco. Há quem diga que o que se viu não era o barco.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: biologia marinha
+        referencia: "caravela-portuguesa (Physalia physalis), colônia com flutuador de gás e tentáculos longos"
+        tomou: a bolsa de gás que veleja e os tentáculos de ferrão
+        distancia: velejar contra o vento, a cor errada, a atração pelas lanternas e o engano de parecer barco ao longe são de Ophidia
+    padrao: [enfraquecer, ataque_multiplo, defesa]
+    a_cada_n: 3
+    telegrafo: "A bolsa de {nome} se enche de vento de repente, e os cordões debaixo da água se esticam para você."
+    description: Uma colônia de mar com bolsa de gás que veleja como barco e cordões de ferrão que prendem quem chega perto.
+    perigo: Alto
+    lore: >-
+      Os que viram barcos se aproximar de Ophidia não concordam no que viram: uns dizem que o barco
+      virou e sumiu pelo horizonte como qualquer barco. Garfo-de-Sal diz que nem sempre era barco.
+      Conta de bolsas de gás altas como velas, da cor da fumaça das ilhas, que andam contra o vento
+      como nenhum barco anda e, de longe, parecem um casco bem governado. Embaixo delas descem cordões
+      de ferrão até o fundo. Quem rema em socorro de uma vela sozinha no mar oeste rema para dentro
+      deles, e quem vê uma vela vindo contra o vento já não tem para onde fugir.
+    aparencia: >-
+      Bolsa de gás alta e comprida como uma vela triangular, de pele fina esticada na cor da fumaça
+      de Ophidia, inclinada contra o vento; embaixo, cordões de tentáculos de ferrão que descem fundo na água
+      e uma boca pendurada sob a bolsa.
+    como_se_luta: >-
+      Larga os cordões sobre todos os que estão perto e os prende queimando. Cortar perto da bolsa ou
+      furá-la; à noite, apagar as lanternas.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Colônia marinha flutuante: flutuador de gás de 3 m, translúcido, em forma de vela triangular
+        inclinada, pele fina com veios, amarelo-doente com reflexos impossíveis de magenta e verde;
+        crista ondulada no topo. Embaixo, dezenas de tentáculos azul-escuros em cordões longos que
+        somem na água, com pólipos-boca pendurados logo abaixo do flutuador.
+      composicao: >-
+        Mar aberto cinza-chumbo perto de Ophidia, vulcões no horizonte; a vela em primeiro plano à
+        direita, avançando contra o vento (cristas das ondas e fumaça dos vulcões soprando no sentido
+        oposto ao dela); à esquerda, um bote com dois homens de Brekmar remando na
+        direção dela, da altura do flutuador, dá a escala; cordões visíveis sob a água clara.
+      evitar: >-
+        Água-viva redonda de aquário, vela de navio de verdade, barco fantasma. É bicho vivo e
+        molhado, de bolsa de pele e tentáculos; não há madeira nem pano.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lagarto_espirrador
+    vaga: 8
+    nome: Lagarto Espirrador
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/items.txt:1611", "lore_nova/locations.txt:283"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: sal_mineral
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: visao
+      texto: >-
+        Um lagarto de rocha do tamanho de um cão, de escamas pretas e ásperas como lava fria, que
+        pasta a crosta de cor errada das encostas e não consegue engolir o que pastou. O sal e o pó da
+        pedra se juntam numa glândula acima do focinho, e ele os expele num espirro forte, que sai
+        quente e arde nos olhos como cal, e o pó não assenta: fica parado no ar onde saiu, como uma
+        cortina, até a noite. A crista das costas é de espinhos curtos e brancos de sal. As
+        patas têm garras longas, feitas para se agarrar em pedra molhada.
+    silhueta: Um bando de lagartos pretos colados num paredão, cabeças erguidas na mesma direção, nuvenzinhas brancas saindo do focinho.
+    comportamento: >-
+      Vivem em bando, agarrados às pedras da costa, aquecendo-se. Não atacam por fome: espirram em
+      quem se aproxima das pedras deles e fogem pelas frestas quando o intruso chega perto.
+    papel_tatico: artilharia
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lagarto_espirrador_espirro_de_cal
+      frase: >-
+        Espirra entre si e o intruso, e o pó fica parado no ar como cortina: quem atravessa a faixa
+        erra mais na rodada seguinte, e a cada espirro do bando a cortina engrossa e se alarga.
+    contra_jogo: Dar a volta pela cortina, não atravessá-la, ou cobrir os olhos e passar de uma vez; de perto eles fogem pelas frestas em vez de lutar.
+    gancho: >-
+      A crosta das encostas de Ophidia é de uma cor que não corresponde a mineral nenhum. Alguma
+      coisa a come, e espirra o que não serve.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia (ilhas Galápagos)
+        referencia: "iguana-marinha, que expele o excesso de sal num espirro pelas glândulas do focinho"
+        tomou: o espirro de sal pelo focinho e o bando colado às pedras
+        distancia: o que sai é pó quente de pedra de cor errada que não assenta e vira cortina no ar; a artilharia em bando e a fuga são do jogo
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "O bando de {nome} ergue as cabeças ao mesmo tempo e enche o peito, olhando para você."
+    description: Um lagarto de rocha das encostas de Ophidia que espirra nos olhos o pó quente da pedra de cor errada.
+    perigo: Médio
+    lore: >-
+      Nas pedras da costa de Ophidia, dizem os poucos que chegaram perto o bastante para ver, vivem
+      bandos de lagartos pretos que pastam a crosta das encostas, aquela de uma cor que não
+      corresponde a mineral nenhum. Não conseguem engolir tudo. O que sobra, espirram: um pó quente e
+      salgado que arde nos olhos como cal e não cai no chão: fica no ar, parado, até a noite. Os alquimistas de Brekmar pagam caro por esse pó, e quase
+      tudo o que compram é cal de verdade.
+    aparencia: >-
+      Lagarto de rocha do tamanho de um cão, escamas pretas ásperas como lava fria, crista de espinhos
+      curtos de sal branco nas costas, garras longas de agarrar pedra, focinho manchado de um pó de
+      cor errada, soltando uma nuvenzinha quente.
+    como_se_luta: >-
+      Espirra em bando um pó quente que fica parado no ar como cortina e tira a mira de quem a
+      atravessa. Dar a volta, ou cobrir os olhos e passar de uma vez; de perto, eles fogem.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Lagarto robusto de 1 m, cabeça curta e larga, escamas negras foscas e rugosas, crista dorsal
+        de espinhos curtos brancos de sal cristalizado, garras longas e curvas. Focinho e queixo
+        manchados de pó numa cor indefinível (amarelo-esverdeado que parece mudar). Nuvem branca
+        saindo das narinas.
+      composicao: >-
+        Paredão de basalto preto molhado sobre o mar, uns doze lagartos agarrados em alturas
+        diferentes, um espirrando em primeiro plano; à esquerda, um homem de Brekmar subindo pelas
+        pedras com a mão diante dos olhos dá a escala; respingo de onda e fumaça de cor errada ao fundo.
+      evitar: >-
+        Dragão, salamandra de fogo, lagarto que cospe chamas. É lagarto de pedra que espirra pó, não
+        fogo nem ácido.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bucho_de_praia
+    vaga: 9
+    nome: Bucho de Praia
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1621", "lore_nova/locations.txt:283"]
+    anatomia:
+      plano_corporal: segmentado
+      material: carne_exposta
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um bicho de praia mole e comprido, do tamanho de um homem encolhido, de couro grosso e pardo
+        coberto de verrugas, com uma coroa de tentáculos curtos em volta da boca que peneira a areia
+        preta. O corpo é feito de anéis que se fecham um sobre o outro. Quando é pisado ou atacado,
+        ele se contrai e solta pela ponta de trás as próprias tripas: fios brancos, compridos e
+        grudentos, que se enrolam em quem estiver perto e fazem o contrário de corda: encurtam quando
+        puxados e afrouxam sozinhos se o preso ficar quieto. Depois o bicho fica vazio, mole
+        como um saco, e leva semanas para refazer o que jogou fora, se não morrer antes.
+    silhueta: Um tronco mole e pardo deitado na areia preta, com um tufo de dedos curtos numa das pontas.
+    comportamento: >-
+      Deitam aos montes nas praias de areia preta, imóveis, comendo areia, e sentem pelo chão quem
+      pisa perto. Não caçam: se defendem, e o jeito de se defender é amarrar o atacante com as tripas
+      e deixar que o resto do bando, ou a maré, faça o resto.
+    papel_tatico: sacrificial
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bucho_de_praia_tripas_de_cola
+      frase: >-
+        Joga as tripas em quem o feriu: os fios encurtam a cada ação do preso e apertam mais, e
+        afrouxam sozinhos se ele passar uma rodada inteira quieto; o bucho, depois, fica vazio e mole
+        e não aguenta mais nada.
+    contra_jogo: Preso, não lutar contra os fios; ficar quieto uma rodada e eles soltam. Não bater na ponta de trás, ou fazê-lo gastar as tripas em outra coisa.
+    gancho: >-
+      As praias de Ophidia são de areia preta e quente, e o que está deitado nelas parece tronco
+      trazido pelo mar. Quem desembarca pisa num.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: biologia marinha
+        referencia: "pepino-do-mar e os túbulos de Cuvier que ele expele para enredar predadores"
+        tomou: expelir as próprias tripas como fios grudentos de defesa
+        distancia: fios que encurtam quando puxados e soltam com a quietude, a escala, o couro e as praias pretas são de Ophidia
+    padrao: [defesa, defesa, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} se encolhe inteiro de uma vez, e a ponta de trás vira na sua direção."
+    description: Um bicho mole de praia que joga as próprias tripas grudentas em quem o fere e fica vazio depois.
+    perigo: Médio
+    lore: >-
+      Quem desembarca em Ophidia, diz a pouca gente que diz ter desembarcado, pisa primeiro na areia
+      preta e nos troncos moles deitados nela. Não são troncos. São bichos de couro pardo, compridos
+      como um homem encolhido, que comem areia e não se mexem. Pisados, se contraem e soltam pela
+      ponta de trás as próprias tripas, em fios brancos e grudentos que amarram quem estiver perto,
+      apertam quando a pessoa se debate e soltam quando ela para. Depois ficam vazios. Selune, a Que Voltou, conta isso com uma precisão que ninguém sabe se é de
+      quem viu ou de quem ensaiou.
+    aparencia: >-
+      Bicho mole e comprido do tamanho de um homem encolhido, couro grosso pardo coberto de verrugas,
+      corpo de anéis, coroa de tentáculos curtos em volta da boca; pisado, solta pela ponta de trás
+      fios brancos grudentos, as próprias tripas.
+    como_se_luta: >-
+      Amarra quem o fere com tripas grudentas que apertam a cada ação do preso e soltam se ele ficar
+      quieto uma rodada. Não bater na ponta de trás; depois de jogar as tripas, ele fica vazio.
+    related_entities: [ophidia]
+    arte:
+      visual: >-
+        Pepino-do-mar gigante de 1,6 m, corpo cilíndrico mole em anéis, couro marrom-acinzentado
+        espesso coberto de papilas e verrugas; numa ponta, coroa de tentáculos curtos ramificados; da
+        outra ponta, um jorro de dezenas de fios brancos pegajosos se espalhando no ar.
+      composicao: >-
+        Praia de areia vulcânica preta de Ophidia, vários deles deitados como troncos; em primeiro
+        plano, um expele os fios sobre as pernas de um marinheiro de Brekmar que tropeça, de pé, do
+        comprimento do bicho; vapor subindo da areia, mar cinza ao fundo.
+      evitar: >-
+        Lesma de desenho, verme com dentes, monstro de tentáculos de polvo. É um bicho mole, sem olhos
+        e sem dentes; a arma são fios brancos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cobra_de_sangria
+    vaga: 10
+    nome: Cobra de Sangria
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/rumors.txt:253", "lore_nova/creatures.txt:1621"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: humana
+      locomocao: nada
+      percepcao: sangue_cheiro
+      texto: >-
+        Uma cobra de mar de dois metros, de escamas lisas listradas de cinza e de um amarelo que cansa
+        a vista, com a cauda achatada como remo. As presas são ocas e viradas ao contrário do que
+        deviam: em vez de pôr veneno, puxam. Atrás da cabeça, sob a pele do pescoço, há uma bolsa que
+        se enche de sangue a cada mordida e fica dura e escura quando cheia. Cheia, a cobra vai embora
+        e nada para oeste.
+    silhueta: Uma cobra listrada nadando de lado, com um papo escuro e inchado logo atrás da cabeça.
+    comportamento: >-
+      Aparecem em grupo nas águas de perto das ilhas e, às vezes, muito longe delas, no porto de
+      Brekmar. Acham sangue na água de longe. Mordem, enchem a bolsa e partem; não voltam para matar.
+    papel_tatico: drenador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cobra_de_sangria_bolsa_cheia
+      frase: >-
+        Morde e puxa sangue em vez de pôr veneno: cada mordida tira Vitalidade e enche a bolsa, e
+        quando a bolsa está cheia ela sai da luta levando o que tirou.
+    contra_jogo: Furar a bolsa do pescoço; furada, a cobra fica e luta até morrer, mas não leva nada.
+    gancho: >-
+      Os mercadores que negociam na borda do arquipélago dizem que os de Ophidia querem sangue,
+      catalogado por região. Esta é uma das coisas que, dizem, vai buscá-lo sozinha.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia
+        referencia: "cobras-marinhas do gênero Laticauda, listradas e de cauda achatada em remo"
+        tomou: o corpo listrado e a cauda achatada
+        distancia: a presa que puxa sangue em vez de injetar, a bolsa e a volta para o oeste são de Ophidia
+    padrao: [ataque, mover, ataque]
+    a_cada_n: 2
+    telegrafo: "A bolsa no pescoço de {nome} está quase cheia, e ela já vira a cabeça para o oeste."
+    description: Uma cobra de mar listrada que, em vez de envenenar, puxa sangue para uma bolsa no pescoço e nada para o oeste.
+    perigo: Médio
+    lore: >-
+      Mercadores que negociam na borda de Ophidia, sem nunca entrar, dizem que os de lá querem
+      sangue, cabelo e osso, catalogados por região. As cobras listradas que aparecem nas águas do
+      oeste, e às vezes no porto de Brekmar, fazem coisa parecida sem ninguém pedir. Mordem com presas
+      ocas que puxam em vez de envenenar, enchem uma bolsa no pescoço e vão embora nadando para o
+      oeste. Os pescadores dizem que elas preferem os doentes. Os pescadores dizem muita coisa.
+    aparencia: >-
+      Cobra de mar de dois metros, escamas lisas listradas de cinza e de um amarelo que cansa a vista,
+      cauda achatada como remo, presas ocas viradas para dentro e, atrás da cabeça, uma bolsa de pele
+      inchada e escura de sangue.
+    como_se_luta: >-
+      Morde, puxa sangue e foge para o oeste quando a bolsa enche. Furar a bolsa do pescoço faz que
+      fique e não leve nada.
+    related_entities: [ophidia, brekmar]
+    arte:
+      visual: >-
+        Serpente marinha de 2 m, corpo cilíndrico com cauda achatada vertical em remo, anéis
+        alternados cinza-chumbo e amarelo-esverdeado doentio; cabeça pequena, boca aberta com duas
+        presas longas, ocas e curvadas para dentro; logo atrás da cabeça, uma bolsa de pele esticada,
+        inchada, vermelho-escura e translúcida.
+      composicao: >-
+        Água verde-escura junto ao costado de um barco de Brekmar; três cobras nadando para fora do
+        quadro à esquerda (oeste); uma em primeiro plano, de bolsa cheia; o braço de um marinheiro
+        debruçado na amurada, com duas marcas de mordida, dá a escala. Vulcões fumegando em cor errada
+        no horizonte.
+      evitar: >-
+        Naja de desenho, serpente gigante de lenda, cobra que cospe veneno verde. É cobra de tamanho
+        real que tira sangue; a bolsa é o detalhe.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_escorpena_de_basalto
+    vaga: 11
+    nome: Escorpena de Basalto
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/items.txt:1338", "lore_nova/rumors.txt:253"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: cinza
+      escala: pequena
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um peixe de pedra do tamanho de um gato, que sai da água nas poças da maré e se arrasta pelas
+        pedras sobre quatro nadadeiras grossas como patas. A pele é cinzenta e cheia de verrugas e
+        buracos, igual à lava fria em volta, e ele passa dias imóvel nela, de boca virada para cima.
+        Ao longo das costas corre uma fileira de espinhos curtos e ocos que se erguem quando algo pisa
+        perto, e o que escorre deles nunca é o mesmo duas vezes: cada espinho, numa cor de baba
+        diferente, faz uma coisa diferente. Os olhos são pequenos e ficam no alto da cabeça.
+    silhueta: Uma pedra cinzenta e esburacada numa poça, com uma fileira de agulhas que se levanta de repente.
+    comportamento: >-
+      Fica nas poças e entre as pedras da costa, parado como pedra, sentindo pelo chão quem se
+      aproxima. Não persegue ninguém; espera que pisem perto, ergue os espinhos e crava. Depois se
+      arrasta devagar para a poça mais próxima.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_escorpena_de_basalto_espinho_pisado
+      frase: >-
+        Fica parado até ser pisado: quem avança para o lado dele leva o espinho, e o veneno nunca é o
+        mesmo duas vezes; cada ferroada sorteia (de forma determinística, pela semente da luta) um
+        efeito diferente entre sono, febre, cãibra e dor que continua, e o mesmo efeito não se repete
+        seguido.
+    contra_jogo: Olhar onde pisa e tocar as pedras com a ponta da lança antes de avançar; descoberto, ele é lento e mole por baixo.
+    gancho: >-
+      Os frascos de veneno de Ophidia que circulam em Brekmar têm efeitos que não concordam. Pelo
+      menos um deles, juram os vendedores, sai das costas de um peixe que parece pedra.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia
+        referencia: "peixe-pedra (Synanceia) e escorpenas, de espinhos dorsais venenosos e camuflagem de rocha"
+        tomou: a camuflagem de pedra e os espinhos de veneno erguidos ao ser pisado
+        distancia: o veneno que nunca se repete, o arrastar sobre nadadeiras pela costa de lava e o boato do veneno de Ophidia são de Valoria
+    padrao: [defesa, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "Uma das pedras perto do seu pé tem uma fileira de agulhas que não estava ali, e {nome} as ergue."
+    description: Um peixe de pedra que se arrasta pelas poças da costa e crava espinhos de veneno em quem pisa perto.
+    perigo: Médio
+    lore: >-
+      Os frascos de veneno de Ophidia que passam pelo Cais da Transparência não concordam entre si:
+      uns fazem dormir, uns matam, uns não fazem nada. Os vendedores mais velhos têm um argumento
+      pronto para isso: o veneno sai das costas de um peixe de pedra das poças da costa das ilhas, e
+      o peixe nunca dá o mesmo duas vezes. É um bom argumento para vender frasco que não funciona.
+      Dizem também que ele mata humano e só dá febre nos outros. Os que dizem isso, quase sempre, não
+      são humanos.
+    aparencia: >-
+      Peixe de pedra do tamanho de um gato, pele cinzenta cheia de verrugas e buracos igual à lava
+      fria, boca larga virada para cima, olhos pequenos no alto da cabeça, quatro nadadeiras grossas
+      como patas e uma fileira de espinhos ocos nas costas.
+    como_se_luta: >-
+      Espera parado até alguém pisar perto e crava espinhos de um veneno que nunca é o mesmo duas
+      vezes. Tocar as pedras antes de avançar; descoberto, é lento.
+    related_entities: [ophidia, brekmar]
+    arte:
+      visual: >-
+        Peixe-pedra de 50 cm, corpo atarracado e largo, pele cinza-escura rugosa com verrugas e
+        cavidades idênticas a basalto vesicular, boca larga virada para cima, olhos pequenos e
+        salientes no topo; quatro nadadeiras grossas apoiadas na rocha como patas; treze espinhos
+        dorsais curtos e ocos erguidos.
+      composicao: >-
+        Poça de maré entre rochas de basalto preto em Ophidia; o peixe quase indistinguível das pedras
+        em primeiro plano, espinhos erguidos; a bota e a canela de um marinheiro de Brekmar entrando no
+        quadro pelo alto, prestes a pisar, dão a escala; céu de fumaça amarela-errada refletido na poça.
+      evitar: >-
+        Peixe colorido de recife, monstro de mandíbula enorme, escorpião. É peixe feio e pequeno que
+        parece pedra; o perigo está nos espinhos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tatuzinho_de_afogado
+    vaga: 12
+    nome: Tatuzinho de Afogado
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:291", "lore_nova/creatures.txt:1621"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: rola
+      percepcao: sangue_cheiro
+      texto: >-
+        Um bicho de casca do tamanho de um pão, achatado e cinzento, de sete pares de patas curtas sob
+        placas sobrepostas que vão da cabeça à cauda. Na frente, duas antenas grossas que provam a água
+        e mandíbulas pequenas que raspam a carne até o osso e o osso até nada. Ameaçado, ele se fecha
+        numa bola dura do tamanho de um punho e rola, mas rola para cima, contra a maré e praia
+        acima, como se o chão pendesse para o outro lado. Vivem aos milhares, e onde há sangue na água
+        chegam em minutos.
+    silhueta: Uma mancha cinzenta e viva cobrindo a areia em volta de um corpo, com bolas duras rolando na borda.
+    comportamento: >-
+      Vivem no fundo raso das ilhas e sobem para a praia atrás do cheiro de sangue. Não escolhem
+      entre morto e ferido. Seguem quem sangra pela água e pela areia até alcançar.
+    papel_tatico: perseguidor_marca
+    arquetipo: lider_matilha
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tatuzinho_de_afogado_mare_de_cascas
+      frase: >-
+        Persegue quem sangra: o jogador com Ferimento aberto é sempre o alvo, e a cada rodada chegam
+        mais cascas enquanto o sangue não for estancado.
+    contra_jogo: Estancar o sangue apaga o rastro; fogo ou água doce os dispersa, e fechados em bola eles não mordem.
+    gancho: >-
+      Dos barcos que somem perto de Ophidia não volta um corpo. Alguém no Cais achou uma resposta
+      possível, e ninguém quis saber se é a certa.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia
+        referencia: "isópodes marinhos gigantes (Bathynomus) e o tatuzinho-de-jardim que se fecha em bola"
+        tomou: o corpo de placas sobre muitas patas, a limpeza de carcaças no fundo e o fechar-se em bola
+        distancia: a bola que rola para cima, o tamanho, a perseguição de quem sangra e a teoria dos corpos que não voltam são de Ophidia
+    padrao: [ataque_multiplo, ataque]
+    a_cada_n: 2
+    telegrafo: "O cheiro do seu sangue chegou à água, e a areia em volta de {nome} começa a se mexer."
+    description: Um bicho de casca que vive aos milhares no fundo raso de Ophidia e segue pela praia quem estiver sangrando.
+    perigo: Médio
+    lore: >-
+      Dos barcos que somem perto de Ophidia não volta um corpo, nem inchado nem pela metade. Os
+      pescadores do Cais da Transparência acharam, numa rede que passou perto demais das ilhas, uns
+      bichos de casca cinzenta do tamanho de um pão, de sete pares de patas, que se fecham em bola
+      quando tocados e rolam para cima, contra a maré. A rede tinha ido com isca de carne. Voltou com
+      os bichos, sem isca e com os nós de couro roídos. Desde então, no Cais, há quem diga que é por
+      isso que os corpos não voltam, e há quem diga que uma rede roída não explica um barco inteiro.
+      Os dois lados param de discutir antes de chegar a alguma coisa.
+    aparencia: >-
+      Bicho de casca do tamanho de um pão, achatado e cinzento, sete pares de patas curtas sob placas
+      sobrepostas, antenas grossas e mandíbulas pequenas de raspar; fecha-se numa bola dura do tamanho
+      de um punho que rola praia acima, contra a maré; vem aos milhares.
+    como_se_luta: >-
+      Vem em quantidade atrás de quem sangra. Estancar o sangue apaga o rastro; fogo e água doce os
+      dispersam, e em bola não mordem.
+    related_entities: [ophidia, brekmar]
+    arte:
+      visual: >-
+        Isópode marinho de 25 cm, corpo oval achatado de placas segmentadas sobrepostas cinza-chumbo
+        com bordas claras, sete pares de patas curtas, antenas grossas, olhos compostos escuros nos
+        lados da cabeça; alguns fechados em bola, mostrando as placas.
+      composicao: >-
+        Faixa de areia preta molhada na beira da água, dezenas deles cobrindo uma bota e uma luva
+        abandonadas, outros saindo da espuma; em primeiro plano, um aberto de frente, mandíbulas
+        visíveis; a mão de um homem com uma tocha, à direita, dá a escala. Luz quente da tocha contra o
+        azul frio do anoitecer.
+      evitar: >-
+        Inseto gigante de ficção, escaravelho, barata. É crustáceo marinho, de placas e muitas patas;
+        aparece em quantidade, nunca um só bicho grande.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_doente_de_encomenda
+    vaga: 13
+    nome: Doente de Encomenda
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: tres_sindicatos_comercio
+      refs: ["lore_nova/rumors.txt:253", "lore_nova/timeline_completa.txt:394"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um homem que se deixou adoecer de propósito, porque na borda de Ophidia sangue doente vale
+        mais, e o sindicato que o comprou escolheu a Ferrugem do Sangue por ser a doença que Brekmar
+        tem mais à mão. As veias dos braços, do pescoço e das têmporas endureceram em cordões cor de
+        ferrugem que saltam sob a pele, e o sindicato que o compra cravou nelas torneiras de latão: uma
+        em cada punho, uma no pescoço. A pele em volta das torneiras está verde de azinhavre e nunca
+        fecha. É magro, anda devagar e respira pela boca, de dentes manchados de vermelho.
+    silhueta: Um homem magro de braços abertos, com três bicas de metal brilhando nos punhos e no pescoço.
+    comportamento: >-
+      Viaja nos barcos que vão à borda, guardado como carga, e escuta o convés para saber quando é
+      abordado. Quando o barco é tomado, o dono abre as torneiras dele, e ele sabe o que fazer:
+      aponta os punhos e espirra.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: tres_sindicatos_comercio
+    mecanica_assinatura:
+      carta: cri_doente_de_encomenda_torneira_aberta
+      frase: >-
+        Abre as torneiras e espirra sangue doente de longe: quem é atingido ganha um Ferimento que não
+        fecha enquanto a luta durar, e cada espirro também o deixa mais fraco.
+    contra_jogo: Fechar a distância e torcer as torneiras; ele não luta de perto, e cada espirro custa o sangue dele.
+    gancho: >-
+      Os emissários de Ophidia, dizem os mercadores de borda, compram o mesmo sangue em lugares
+      diferentes e pagam mais por quem está doente. Em Brekmar, isso virou ofício.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, defesa]
+    a_cada_n: 4
+    telegrafo: "{nome} gira com os dentes a torneira do punho e aponta o braço para você."
+    description: Um homem que se deixou adoecer para vender o sangue na borda de Ophidia e luta espirrando-o por torneiras de latão.
+    perigo: Alto
+    lore: >-
+      Na borda de Ophidia, onde os mercadores negociam sem nunca entrar, os emissários das ilhas
+      compram sangue e pagam mais pelo doente, sem dizer de quê. Em Brekmar isso virou ofício. Há
+      homens que se deixam comprar por um dos sindicatos, e o sindicato os adoece com o que tem mais
+      à mão, que em Brekmar é a Ferrugem do Sangue. Viajam guardados
+      como carga, com torneiras de latão cravadas nas veias endurecidas. Quando o barco é abordado, o
+      dono abre as torneiras. O espirro passa a doença adiante, e os doentes de encomenda sabem disso
+      melhor que ninguém.
+    aparencia: >-
+      Homem magro de veias endurecidas em cordões cor de ferrugem saltando nos braços, no pescoço e
+      nas têmporas, torneiras de latão cravadas nos punhos e no pescoço, pele verde de azinhavre em
+      volta, boca aberta de dentes manchados de vermelho.
+    como_se_luta: >-
+      Espirra de longe sangue doente, que deixa um Ferimento que não fecha. Chegar perto e torcer as
+      torneiras; cada espirro também o enfraquece.
+    related_entities: [ophidia, brekmar, tres_sindicatos_comercio]
+    arte:
+      visual: >-
+        Homem adulto magro e pálido, camisa aberta, veias dos braços, do pescoço e das têmporas
+        endurecidas em relevo como cordões de ferro oxidado alaranjado sob a pele; três torneiras
+        pequenas de latão (de barril) cravadas, uma em cada punho e uma no lado do pescoço; pele em
+        volta manchada de verde-azinhavre e úmida; dentes avermelhados.
+      composicao: >-
+        Convés de um barco de sindicato de Brekmar, caixotes amarrados; o homem acorrentado pelo
+        tornozelo a um deles, braços estendidos, espirrando um jato fino vermelho-escuro; à direita,
+        um pirata de gancho abordando, da mesma altura, recua; mar cinza e Ophidia fumegando no
+        horizonte.
+      evitar: >-
+        Vampiro, morto-vivo, mago de sangue com runas. É um doente vivo e explorado; as torneiras são
+        de barril, de latão comum.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_puxado_do_oeste
+    vaga: 14
+    nome: Puxado do Oeste
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: mercadores_curiosidades
+      refs: ["lore_nova/items.txt:1655", "lore_nova/factions.txt:562"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um homem que pagou a um Mercador de seis dedos pelo caminho de Ophidia e recebeu o caminho no
+        corpo. Do osso do peito saiu uma agulha de ferro da grossura de um dedo e do comprimento de um
+        antebraço, que aponta sempre para o oeste, e o resto do corpo se torceu em volta dela: a
+        espinha entortou, um ombro subiu, os pés viraram para o mesmo lado. Ele anda inclinado como
+        quem empurra uma porta pesada, e a pele em volta da agulha está esticada e brilhante,
+        enferrujada nas bordas.
+    silhueta: Um homem torto, inclinado para a frente como contra um vento forte, com uma vara de ferro saindo do peito.
+    comportamento: >-
+      Anda sempre para o oeste, até a beira da água, e depois fica ali. A agulha sente o Éter do mar
+      e treme quando algo vivo passa diante dela. Quem se põe entre ele e o oeste é empurrado; quem o
+      segura é arrastado junto, um passo de cada vez.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: elite
+    faccao: mercadores_curiosidades
+    mecanica_assinatura:
+      carta: cri_puxado_do_oeste_agulha_firme
+      frase: >-
+        Empurra para o oeste: a cada golpe dele o jogador perde a posição e recua um passo na direção
+        da água, e quem luta de costas para o mar apanha mais.
+    contra_jogo: Ficar a leste dele e de lado, nunca entre ele e a água; quebrar a agulha não o mata, mas o deixa parado, sem saber para onde ir.
+    gancho: >-
+      Em Brekmar há uma bússola que aponta firme para Ophidia e ninguém sabe por quê. Os Mercadores
+      de Curiosidades vendem coisa parecida, e o preço é o de sempre.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "A agulha no peito de {nome} treme e gira um dedo, e ele inteiro gira junto, para você."
+    description: Um homem que comprou dos Mercadores o caminho de Ophidia e carrega no peito uma agulha de ferro que o puxa para o oeste.
+    perigo: Alto
+    lore: >-
+      Em Brekmar se guarda uma bússola achada num dos raros destroços que voltaram, que aponta firme
+      para Ophidia. Os Mercadores de Curiosidades vendem o mesmo, mas não em caixa de latão. Quem lhes
+      paga o caminho de Ophidia recebe o caminho no corpo: uma agulha de ferro que sai do osso do
+      peito e aponta para o oeste, e o resto do homem se torce em volta dela. Ele não lembra mais onde
+      fica a própria casa. Os Mercadores disseram o preço, e ele achou razoável.
+    aparencia: >-
+      Homem torto, espinha entortada e um ombro subido, inclinado para a frente como contra vento
+      forte, com uma agulha de ferro da grossura de um dedo saindo do osso do peito e apontando para
+      longe, pele esticada e enferrujada em volta.
+    como_se_luta: >-
+      Empurra quem estiver na frente dele em direção à água. Ficar a leste e de lado; quebrada a
+      agulha, ele para, sem saber para onde ir.
+    related_entities: [ophidia, brekmar, mercadores_curiosidades]
+    arte:
+      visual: >-
+        Homem adulto de roupas de viajante gastas, corpo torcido: coluna em S, ombro direito alto, pés
+        virados para o mesmo lado; do centro do esterno sai uma barra de ferro fina de 40 cm, escura e
+        um pouco enferrujada, perfeitamente reta, apontando para fora do quadro; pele em volta
+        repuxada e brilhante, bordas laranja de ferrugem. Expressão de quem esqueceu alguma coisa.
+      composicao: >-
+        Cais de pedra de Brekmar ao entardecer, mar a oeste; ele de perfil, inclinado para o mar, a
+        agulha apontando para Ophidia no horizonte; um estivador da mesma altura tentando segurá-lo
+        pelo braço, sendo arrastado; poça refletindo o céu.
+      evitar: >-
+        Ciborgue, homem-máquina, estaca cravada. A agulha é uma só, fina e reta; o corpo é de carne
+        torcida, sem engrenagens.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vigia_de_cor_errada
+    vaga: 15
+    nome: Vigia de Cor Errada
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: grupos_piratas_rivais
+      refs: ["lore_nova/factions.txt:292", "lore_nova/locations.txt:286"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: luz
+      texto: >-
+        Um vigia de tripulação pirata que passou anos no alto do mastro olhando a fumaça das ilhas
+        para saber por onde não ir. Os olhos incharam até o dobro do tamanho, leitosos, e dentro de
+        cada um a cor da fumaça ficou presa, girando devagar. O pescoço esticou um palmo, de tanto
+        se inclinar para a frente para ver melhor. Os dedos dos pés se alongaram e se curvaram como ganchos, e ele já não
+        desce do cordame: dorme, come e luta lá em cima, pendurado pelos pés, de mãos livres.
+    silhueta: Um homem pendurado de cabeça para baixo no cordame, preso pelos pés, com dois olhos grandes e claros brilhando.
+    comportamento: >-
+      Fica no alto do mastro e vê o que ninguém vê: quem se esconde, quem prepara um golpe, por onde
+      a água esquenta. Grita para a tripulação dele e joga arpões curtos em quem aponta.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: padrao
+    faccao: grupos_piratas_rivais
+    mecanica_assinatura:
+      carta: cri_vigia_de_cor_errada_grito_do_cesto
+      frase: >-
+        Aponta e grita do alto: o alvo que ele marca não consegue se esconder nem guardar Reação, e os
+        aliados dele batem mais forte nesse alvo na rodada seguinte.
+    contra_jogo: Derrubá-lo primeiro, cortando o cordame onde os pés se prendem; no chão, ele vê demais e não sabe para onde olhar.
+    gancho: >-
+      A rota que os piratas de Brekmar disputam passa perto do horizonte de Ophidia. Alguém precisa
+      olhar para lá o dia inteiro, e paga com o que olha.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "Lá do alto, {nome} estica o pescoço, gira os olhos para você e grita o seu lugar para a tripulação."
+    description: Um vigia pirata de olhos inchados da cor da fumaça de Ophidia, que vive pendurado no cordame e aponta os alvos.
+    perigo: Alto
+    lore: >-
+      A rota que as tripulações de Brekmar disputam passa perto do horizonte de Ophidia, e o único
+      jeito de navegar ali é saber para onde a fumaça está indo. Cada tripulação tem um vigia que
+      olha para ela o dia inteiro. Com os anos, os olhos deles incham e a cor fica dentro, o pescoço
+      estica e os pés viram ganchos no cordame. Garfo-de-Sal tem dois. Tormenta Ruíva
+      diz que não tem nenhum, e ninguém acredita.
+    aparencia: >-
+      Pirata magro preso pelos pés no cordame, pescoço comprido demais, esticado para a frente, dois olhos
+      inchados ao dobro do tamanho, leitosos, com uma cor de fumaça girando dentro, dedos dos pés
+      longos e curvos como ganchos.
+    como_se_luta: >-
+      Do alto, marca quem não pode mais se esconder e chama a tripulação. Derrubá-lo primeiro,
+      cortando o cordame dos pés.
+    related_entities: [ophidia, brekmar, grupos_piratas_rivais]
+    arte:
+      visual: >-
+        Homem adulto magro, roupa de marinheiro rasgada, pendurado de cabeça para baixo no cordame,
+        preso pelos pés de dedos alongados e curvos; pescoço longo, esticado para a frente; olhos enormes e
+        esbugalhados, branco-leitosos, com um redemoinho de cor amarelo-magenta impossível dentro da
+        íris; arpões curtos num cinto.
+      composicao: >-
+        Mastro e cordame de um navio pirata de Brekmar contra um céu de fumaça de cor errada; ele
+        pendurado no alto à direita, apontando para baixo; no convés, pequenos, um marinheiro e um
+        viajante olhando para cima; a vela de lona ao lado dá a escala.
+      evitar: >-
+        Coruja, morcego, criatura de muitos olhos. Ele tem só dois olhos, grandes e doentes; é um
+        homem, não um bicho.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_trepano_de_borda
+    vaga: 16
+    nome: Trépano de Borda
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/rumors.txt:253", "lore_nova/locations.txt:298"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um intermediário da borda que tira amostras para os emissários de Ophidia e guarda cada uma no
+        próprio corpo. A pele do peito e da barriga foi furada em fileiras, e em cada furo vai um
+        frasco de vidro do tamanho de um dedo, com sangue, cabelo ou um cilindro de osso, e uma
+        etiqueta costurada embaixo com o nome da região. O frio de Éter que mantém as amostras frescas
+        sai do corpo dele: os lábios estão roxos, as unhas brancas, há geada nas sobrancelhas no
+        verão. Na mão direita leva o trépano, uma serra redonda que tira um cilindro de quem toca.
+    silhueta: Um homem de casaco aberto com o peito inteiro brilhando de frascos pequenos, como um mostruário de vidros.
+    comportamento: >-
+      Trabalha nos barcos que vão à borda e nos becos de Brekmar, e sabe pelo cheiro qual sangue os
+      emissários pagam melhor. Não quer matar: quer a amostra. Fura, enche um frasco, etiqueta, e se
+      retira para trás dos outros.
+    papel_tatico: saqueador
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_trepano_de_borda_amostra_etiquetada
+      frase: >-
+        Tira uma amostra de quem toca: o trépano arranca um cilindro de carne e osso, e o que ele leva
+        não volta com curativo; a Vitalidade máxima do jogador cai até o próximo descanso, e o Trépano
+        fica mais frio e mais duro a cada frasco cheio.
+    contra_jogo: Quebrar os frascos do peito; cada um que quebra devolve o frio para ele, e com poucos inteiros ele não aguenta o próprio Éter.
+    gancho: >-
+      Os mercadores de borda dizem que os de Ophidia querem amostras catalogadas por região, e não
+      ouro. Alguém precisa catalogar.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: medicina antiga
+        referencia: "trepanação e o trépano de coroa, serra cilíndrica de tirar disco de osso"
+        tomou: a serra redonda que tira um cilindro
+        distancia: o mostruário de frascos no peito, o frio de Éter e as amostras para Ophidia são do jogo
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} escolhe um frasco vazio no peito, tira a rolha com os dentes e gira o trépano."
+    description: Um intermediário da borda que tira amostras de sangue e osso para os emissários de Ophidia e as guarda em frascos cravados no próprio peito.
+    perigo: Alto
+    lore: >-
+      Os mercadores que negociam com os emissários de Ophidia dizem que eles não querem ouro nem
+      especiarias: querem amostras, catalogadas por região. Alguém tem de catalogar. Os trépanos de
+      borda tiram sangue, cabelo e cilindros de osso com uma serra redonda e guardam tudo em frascos
+      cravados na pele do próprio peito, com etiqueta costurada. O frio de Éter que conserva as
+      amostras sai do corpo deles, e há geada nas sobrancelhas no verão. O buraco que a serra deixa
+      fecha por fora em poucos dias, e por dentro só quando quer.
+    aparencia: >-
+      Homem de casaco aberto, peito e barriga cravejados em fileiras de frascos de vidro do tamanho de
+      um dedo, com sangue, cabelo ou cilindros de osso, etiquetas costuradas na pele, lábios roxos,
+      geada nas sobrancelhas, trépano de osso na mão.
+    como_se_luta: >-
+      Arranca uma amostra de quem toca, e a Vitalidade máxima cai até o próximo descanso. Quebrar os
+      frascos do peito o enfraquece pelo próprio frio.
+    related_entities: [ophidia, brekmar]
+    arte:
+      visual: >-
+        Homem de meia-idade, casaco longo de couro aberto, peito e barriga nus perfurados em fileiras
+        regulares; em cada furo, um frasco de vidro de 6 cm com rolha (sangue escuro, mechas de
+        cabelo, cilindros de osso), etiquetas de pano costuradas na pele logo abaixo. Pele pálida e
+        azulada, lábios roxos, geada fina nas sobrancelhas e na barba. Na mão direita, um trépano de
+        cabo de osso e serra cilíndrica dentada.
+      composicao: >-
+        Popa de um barco de borda ancorado no mar cinza perto de Ophidia, mesa de caixotes com balança
+        e etiquetas; ele de frente, casaco aberto; um marinheiro de Brekmar sentado, de manga
+        arregaçada, estendendo o braço, da mesma altura, dá a escala; vapor frio saindo do peito dele.
+      evitar: >-
+        Médico da peste de máscara de bico, cientista louco de laboratório, alquimista de manto. É um
+        negociante de cais com frascos no próprio corpo; nada de máscara de bico.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_arpeu_de_bracos
+    vaga: 17
+    nome: Arpéu de Braços
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/factions.txt:292"]
+    anatomia:
+      plano_corporal: radial
+      material: osso
+      escala: pequena
+      locomocao: salta
+      percepcao: sangue_cheiro
+      texto: >-
+        Uma coisa do tamanho de uma âncora pequena, feita do que as abordagens na rota de Ophidia
+        deixaram no fundo: quatro antebraços de homem soldados pelos cotovelos num nó de osso, abertos
+        em cruz, cada mão virada para dentro, com os dedos crescidos em ganchos de osso. Do nó sai o
+        cabo de cânhamo de uma abordagem, comprido como três homens, que a carne engoliu: a pele
+        cresceu por cima da corda, e ela agora pulsa, se enrola e se estica sozinha. Não tem cabeça; no nó há uma boca sem dentes que se abre quando as mãos fecham.
+    silhueta: Uma âncora de quatro braços abertos voando por cima da amurada, puxando uma corda que se mexe sozinha.
+    comportamento: >-
+      Fica no fundo da rota disputada e sobe quando há sangue de briga na água. Joga-se sobre quem
+      está mais exaltado, crava as quatro mãos e encurta a corda até o alvo não poder mais recuar.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_arpeu_de_bracos_corda_curta
+      frase: >-
+        Crava as quatro mãos e encurta a corda: enquanto preso, o jogador não pode se defender nem
+        recuar, só atacar, e cada ataque que dá aperta mais o gancho.
+    contra_jogo: Cortar o cabo encarnado antes das mãos; sem ele, as mãos se soltam sozinhas. Não bater com raiva no que está preso.
+    gancho: >-
+      As abordagens na rota de Ophidia são mais rancorosas que em qualquer outro trecho do mar oeste.
+      O que sobra da raiva também afunda, e não fica parado lá embaixo.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "A corda de {nome} se enrola no chão como bicho pronto, e as quatro mãos se abrem viradas para você."
+    description: Uma âncora de quatro antebraços com dedos de gancho, presa a um cabo de abordagem que a carne engoliu, que prende o alvo e não o deixa se defender.
+    perigo: Alto
+    lore: >-
+      A rota que as tripulações de Brekmar disputam passa perto do horizonte de Ophidia, e ali as
+      abordagens são mais rancorosas do que em qualquer outro trecho do mar oeste. O Ódio passou por
+      lá e não precisou fazer nada: só tirou os freios. O que sobrou dele no fundo tomou a carne dos
+      que caíram agarrados uns nos outros, e não é ele: são quatro antebraços soldados num nó, de
+      dedos virados em gancho, e o cabo da abordagem, que a pele engoliu e agora se mexe sozinho. Sobem quando há briga em
+      cima e escolhem quem está com mais raiva.
+    aparencia: >-
+      Quatro antebraços humanos soldados pelos cotovelos num nó de osso, abertos em cruz como uma
+      âncora, dedos crescidos em ganchos de osso, boca sem dentes no nó e um cabo de cânhamo saindo
+      dele, coberto de pele que cresceu por cima e pulsa.
+    como_se_luta: >-
+      Prende o alvo com as quatro mãos e encurta o cabo: preso, não se defende nem recua. Cortar o
+      cabo encarnado solta as mãos.
+    related_entities: [ophidia, brekmar, grupos_piratas_rivais, npc_vhrak]
+    arte:
+      visual: >-
+        Criatura de 1 m: quatro antebraços humanos musculosos fundidos pelos cotovelos num nó central
+        de osso nodoso, dispostos em X como um arpéu de abordagem; mãos voltadas para dentro, de dedos
+        alongados terminando em ganchos de osso amarelado; no nó, uma boca circular sem dentes. Do nó
+        sai um cabo de cânhamo grosso de navio, com a trama ainda visível por baixo de uma pele rosada
+        e fina que cresceu por cima dele, úmida, com veias.
+      composicao: >-
+        Abordagem num convés de Brekmar sob chuva, Ophidia no horizonte; o arpéu no ar em primeiro
+        plano, entre a amurada e um pirata de facão erguido, a corda serpenteando atrás; o pirata, de
+        pé, dá a escala; respingos e luz cinza.
+      evitar: >-
+        Âncora de metal, aranha, mão gigante, corda de tendões. São quatro antebraços de gente com
+        dedos de osso e um cabo de navio de verdade engolido pela pele; nada de metal.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ninho_dos_mergulhadores
+    vaga: 18
+    nome: Ninho dos Mergulhadores
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_daruun
+      refs: ["lore_nova/npcs.txt:197", "lore_nova/items.txt:1611"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: carne_exposta
+      escala: grande
+      locomocao: ancorada
+      percepcao: calor
+      texto: >-
+        Um ninho do tamanho de uma carroça preso ao recife raso, feito dos pulmões dos mergulhadores
+        que desceram antes: dezenas de sacos rosados e inchados, de pele fina com veias, presos à rocha
+        pela traqueia e cheios do último fôlego de cada um. Ficam em roda, encostados uns nos outros, em
+        volta de uma pedra de cor errada do tamanho de um punho, que brilha no fundo, à vista. Quando
+        alguém mete a cabeça ou o braço entre eles, os pulmões se fecham sobre a carne quente como uma
+        boca de muitos lábios e puxam, e o que puxam é o ar do peito de quem está preso. Apertam mais
+        quanto mais valioso é o que o preso carrega, e se abrem para quem larga tudo ali dentro.
+    silhueta: Um monte de bolsas rosadas e inchadas preso ao recife, em roda, com uma pedra de cor errada brilhando no fundo.
+    comportamento: >-
+      Fica no recife raso onde os mergulhadores de Brekmar descem atrás de pedra e coral de cor
+      errada. Não caça nem se mexe: espera que venham, porque quem vem já decidiu o que quer. Sente o
+      calor do braço que entra, e o peso do que o braço traz.
+    papel_tatico: emboscador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ninho_dos_mergulhadores_largar_para_sair
+      frase: >-
+        Fecha-se sobre quem estende a mão para a pedra e suga o ar do preso; o aperto cresce com o que
+        ele carrega de valor (ouro, relíquias, a melhor arma), e quem larga o que tem dentro do ninho
+        sai na hora. Quem o mata leva a pedra, e a pedra é de verdade.
+    contra_jogo: Não meter a mão; se preso, largar o que tem e sair, ou entrar já de mãos vazias. Para levar a pedra, furar os pulmões de fora, pela borda, um por um.
+    gancho: >-
+      O mercado de Brekmar paga fortunas por pedra e coral de cor errada de Ophidia, e quase tudo o
+      que vende é fraude. A pedra do fundo deste ninho não é, e isso é o pior dele.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "Os pulmões de {nome} incham todos ao mesmo tempo, e a pedra de cor errada no fundo fica à vista, ao alcance da mão."
+    description: Um ninho de pulmões de mergulhadores preso ao recife em volta de uma pedra de cor errada, que suga o ar de quem estende a mão e só solta quem larga o que tem.
+    perigo: Alto
+    lore: >-
+      O mercado de Brekmar paga fortunas por qualquer pedra ou coral de cor errada que diga ter vindo
+      de Ophidia, e quase tudo o que vende é fraude. Por isso há mergulhadores que vão buscar de
+      verdade, nos recifes rasos da borda. A Cobiça não precisou chamá-los: espera, porque quem vem
+      já decidiu o que quer. O que ela deixou nesses recifes não é ela; é um ninho feito dos pulmões
+      dos que desceram antes, inchados com o último fôlego deles, em roda de uma pedra de cor errada.
+      Os que voltaram dali voltaram de mãos vazias, e não contam o que largaram lá dentro.
+    aparencia: >-
+      Ninho do tamanho de uma carroça preso ao recife, feito de dezenas de pulmões humanos inchados,
+      rosados e de veias finas, presos à rocha pela traqueia, em roda de uma pedra de cor errada do
+      tamanho de um punho, brilhando no fundo.
+    como_se_luta: >-
+      Fecha-se sobre quem estende a mão para a pedra e suga o ar, mais forte quanto mais valor o preso
+      carrega. Largar o que tem para sair, ou furar os pulmões de fora, pela borda.
+    related_entities: [ophidia, brekmar, npc_daruun]
+    arte:
+      visual: >-
+        Estrutura de 2,5 m presa à rocha do recife: dezenas de pulmões humanos inflados, do tamanho de
+        um tronco de criança cada, rosados e translúcidos, com veias vermelhas e bolhas de ar presas
+        dentro, cada um preso à rocha por um tubo de traqueia; dispostos em roda, encostados, deixando
+        uma abertura no meio; no fundo, uma pedra do tamanho de um punho numa cor impossível
+        (amarelo-magenta que parece mudar), luminosa.
+      composicao: >-
+        Recife raso de água clara e verde perto de Ophidia, luz entrando pela superfície; o ninho no
+        fundo; um mergulhador de Brekmar de faca nos dentes, com um saco de moedas no cinto,
+        estendendo a mão para a pedra, da altura do ninho até o peito, dá a escala; bolhas e raios
+        de luz.
+      evitar: >-
+        Ostra, pérola, concha, baú do tesouro, mímico, anêmona, polvo. Nada de braços, mãos ou corpos:
+        são só pulmões inchados em roda de uma pedra que brilha.
+    autor: opus
+    revisor_unicidade: coordenador-revisao-cruzada
+    revisao: aprovada
+
+  - id: mon_mastro_dos_ultimos
+    vaga: 19
+    nome: Mastro dos Últimos
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:276", "lore_nova/locations.txt:296"]
+    anatomia:
+      plano_corporal: composto
+      material: sal_mineral
+      escala: enorme
+      locomocao: escala_paredes
+      percepcao: respiracao
+      texto: >-
+        Uma coluna de gente da altura de um mastro de navio: vinte, trinta tripulantes agarrados uns aos
+        outros, cada um com as mãos fechadas nos tornozelos de quem está acima, braços e pernas fundidos
+        aos do vizinho onde apertaram mais forte. A base é feita dos que chegaram primeiro, encrostados
+        de sal até a cintura, a pele virada crosta branca e dura de anos de borrifo, de costas largas
+        como raiz; o topo, dos últimos, ainda de unhas quebradas de subir e boca aberta para o céu. A
+        coluna inteira respira junto, num arquejo só. Para andar, ela se deixa cair para a frente, e os
+        de baixo largam e sobem pelos outros até o topo.
+    silhueta: Um mastro sem vela feito de gente agarrada até o topo, inclinado, prestes a cair sobre a praia.
+    comportamento: >-
+      Fica de pé nas praias e nos recifes onde os barcos sumiram, balançando, e sobe por paredões
+      como subiu o mastro. Quando ouve alguém respirar perto, cai sobre ele, levanta-se de novo um
+      pouco adiante e cai outra vez. Os corpos que se soltam na queda agarram o que estiver no chão.
+    papel_tatico: tanque_reativo
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mastro_dos_ultimos_queda_do_mastro
+      frase: >-
+        Cai inteiro sobre um alvo e se ergue de novo; cada golpe que leva solta corpos da coluna, que
+        agarram as pernas de quem está perto, e os que sobem de volta o refazem.
+    contra_jogo: Cortar a base, não o topo; os de baixo sustentam, e sem eles a coluna não se levanta depois de cair. Sair da linha da queda.
+    gancho: >-
+      As expedições a Ophidia levam quem fugia de algo, capitães em dívida, quem achou que pior não
+      ficava. Quando o barco começa a sumir, todos sobem o mastro.
+    habitat: [ophidia]
+    inspiracao: []
+    padrao: [ataque_multiplo, defesa, reforco_proprio, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} balança, se inclina sobre você, e os de cima soltam as mãos todos ao mesmo tempo."
+    description: Uma coluna da altura de um mastro feita de tripulantes agarrados uns nos outros, que anda caindo sobre quem respira perto.
+    perigo: Extremo
+    lore: >-
+      As expedições a Ophidia levam sempre o mesmo tipo de gente: quem fugia de algo, capitães em
+      dívida, quem achou que pior não ficava. Quando o barco começa a sumir, todos sobem o mastro,
+      porque é o que resta para subir. O Desespero passou por esses barcos muitas vezes, e o que,
+      dizem, ele teria deixado de pé nas praias das ilhas não seria ele: seria uma coluna da altura de
+      um mastro feita dos que subiram, agarrados aos tornozelos uns dos outros, respirando juntos, que
+      anda caindo. Dos mapas do
+      mercado de Brekmar à síntese de Albrecht, todos os desenhos de Ophidia têm, numa praia, um
+      mastro sem vela. Ninguém desenhou barco embaixo.
+    aparencia: >-
+      Coluna da altura de um mastro de navio, feita de vinte ou trinta tripulantes agarrados aos
+      tornozelos uns dos outros, membros fundidos onde apertaram; base encrostada de sal branco e duro,
+      de costas largas, topo de unhas quebradas e bocas abertas para o céu.
+    como_se_luta: >-
+      Cai inteiro sobre quem respira perto e se levanta de novo; os corpos que se soltam agarram as
+      pernas. Cortar a base, que sustenta, e sair da linha da queda.
+    related_entities: [ophidia, npc_dorrhen]
+    arte:
+      visual: >-
+        Coluna vertical de 9 m formada por 20 a 30 corpos humanos em farrapos de marinheiro, empilhados
+        agarrando os tornozelos uns dos outros, braços e pernas parcialmente fundidos nas junções; base
+        larga de corpos cobertos de crosta de sal branco, curvados como raízes; topo de figuras magras
+        de bocas abertas e mãos estendidas para o céu; a coluna levemente inclinada.
+      composicao: >-
+        Praia de areia preta de Ophidia, recife ao fundo e vulcão fumegando em cor errada; a coluna
+        inclinada em primeiro plano no terço direito, caindo; três exploradores de Brekmar pequenos na
+        base, um olhando para cima, dão a escala; nenhum barco, só marcas de quilha na areia.
+      evitar: >-
+        Pilha de cadáveres de campo de batalha, totem, árvore. São corpos que sobem, agarrados e
+        vivos, formando um mastro; não há madeira nem pedra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_remora_de_conves
+    vaga: 20
+    nome: Rêmora de Convés
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/locations.txt:298"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: pequena
+      locomocao: salta
+      percepcao: calor
+      texto: >-
+        Um peixe chato e cinzento do comprimento de um antebraço, de pele lisa e fria, que pula da água
+        para o convés e gruda nas costas de quem estiver mais bem equipado. No alto da cabeça, em vez
+        de ventosa, tem o céu de uma boca humana, com as rugas duras do palato viradas para fora, e é
+        com ele que gruda. Não morde e não come: pelo palato, puxa para si tudo o que a pessoa ganha
+        enquanto ela está grudada, o fôlego que volta, o calor de um curativo, a força de um grito de
+        coragem. O corpo pulsa a cada coisa que tira, e engorda com o que não era dela.
+    silhueta: Um peixe chato colado de lado nas costas de alguém, batendo a cauda devagar.
+    comportamento: >-
+      Aparece nos barcos das expedições rivais, que se sabotam na corrida para Ophidia. Escolhe pelo
+      calor do corpo quem tem mais, nunca quem tem menos, e gruda. Não quer o que tira: quer que o
+      outro não fique com aquilo.
+    papel_tatico: saqueador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_remora_de_conves_palato_grudado
+      frase: >-
+        Gruda nas costas e nega ganhos: enquanto estiver grudada, toda cura, reforço e Fôlego que o
+        jogador receberia vão para ela, e ela cresce com eles.
+    contra_jogo: Arrancá-la com lâmina por baixo do palato, ou encostar as costas em brasa; quem luta de costas para um companheiro não é escolhido.
+    gancho: >-
+      Na corrida para Ophidia, as expedições de Brekmar se sabotam mais do que o mar as afunda. A
+      Inveja não queria chegar: queria que os outros não chegassem.
+    habitat: [ophidia]
+    inspiracao:
+      - fonte: zoologia
+        referencia: "rêmora (Echeneidae), peixe que se prende a outros por um disco de lamelas no alto da cabeça"
+        tomou: o corpo chato e o grudar-se em quem é maior
+        distancia: o disco é um palato humano e ela não come nada, só tira do outro o que ele ganharia; isso vem de Veth, a Inveja
+    padrao: [mover, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "Algo pula da água para o convés, e {nome} escorrega de lado na direção de quem tem mais."
+    description: Um peixe chato que gruda nas costas por um palato humano e toma para si tudo o que a pessoa ganharia.
+    perigo: Médio
+    lore: >-
+      As expedições que saem de Brekmar para Ophidia não são uma só: são várias, de financiadores
+      rivais, e se sabotam no porto e no caminho com mais empenho do que o mar emprega em afundá-las.
+      A Inveja não quer o que o outro tem; quer que o outro não tenha. O que ela deixa nos conveses
+      dessas corridas não é ela: é um peixe chato que pula da água e gruda nas costas de quem tem
+      mais, pelo céu de uma boca humana virado para fora. Não come. Enquanto está grudada, o que a
+      pessoa ganharia vai para ela, e ela engorda.
+    aparencia: >-
+      Peixe chato e cinzento do comprimento de um antebraço, pele lisa e fria, colado nas costas de
+      alguém pelo alto da cabeça, onde há o céu de uma boca humana com as rugas duras do palato
+      viradas para fora; o corpo inchado e pulsando.
+    como_se_luta: >-
+      Gruda nas costas de quem tem mais e toma para si toda cura, reforço e Fôlego que a pessoa
+      receberia. Arrancar com lâmina por baixo do palato antes de se curar; lutar de costas para um
+      companheiro.
+    related_entities: [ophidia, brekmar, npc_veth]
+    arte:
+      visual: >-
+        Peixe alongado e achatado de 45 cm, pele cinza-azulada lisa, cauda bifurcada; no alto da
+        cabeça, no lugar do disco de ventosa, um palato humano rosado de rugas transversais duras,
+        aderido às costas de um homem; o corpo do peixe inchado, com veias aparentes, pulsando. O
+        homem tem um curativo novo no braço, já sem cor, como se nada tivesse chegado a ele.
+      composicao: >-
+        Convés molhado de um barco de expedição de Brekmar; o homem de costas, ombros encolhidos,
+        tentando alcançar o peixe preso entre as omoplatas, dá a escala; outra rêmora no ar, saltando
+        da água pela amurada; ao fundo, um barco rival e Ophidia no horizonte.
+      evitar: >-
+        Sanguessuga, parasita alienígena de filme, peixe de dentes. Ela não morde nem chupa sangue; o
+        detalhe é o palato humano e o corpo que engorda com o que era do outro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: mon_sereia_de_ophidia, nome: "Sereia de Ophidia", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: carne_exposta, escala: humana, locomocao: nada, percepcao: som, texto: "O que canta nas águas ao redor do arquipélago. Quem ouve de perto descreve o canto de formas que não são consistentes entre si. Ninguém descreve duas vezes."}, papel_tatico: controlador, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: mon_fumaca_de_cor_errada, nome: "Fumaça de Cor Errada", status: retro, familia: legado, anatomia: {plano_corporal: composto, material: cinza, escala: enorme, locomocao: plana_voa, percepcao: respiracao, texto: "A névoa que os vulcões de Ophidia produzem — em cores que não têm referência fora dali. Envolve. Não persegue: já está em toda parte."}, papel_tatico: controlador, arquetipo: bruto, categoria: elite}
+  - {id: mon_os_que_voltaram_e_nao_eram_eles, nome: "Os Que Voltaram (e não eram eles)", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Marinheiros de barcos que sumiram perto de Ophidia — devolvidos à costa, exatamente iguais, exceto por tudo. Não fogem: para onde fugiriam?"}, papel_tatico: perseguidor_marca, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: mon_caranguejo_cinza, nome: "Caranguejo de Cinza", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: cinza, escala: pequena, locomocao: anda, percepcao: vibracao, texto: "Reveste a carapaça com cinza das ilhas vulcânicas de Ophidia."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: lacaio}
+  - {id: mon_moreia_vulcanica, nome: "Moreia Vulcânica", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: couro_tecido, escala: grande, locomocao: nada, percepcao: calor, texto: "Vive em tubos de lava inundados e ataca barcos pelo calor dos remos."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: padrao}
+  - {id: mon_oraculo_coral, nome: "Oráculo de Coral", status: retro, familia: legado, anatomia: {plano_corporal: sessil_ancorado, material: sal_mineral, escala: grande, locomocao: ancorada, percepcao: som, texto: "Uma colônia que responde perguntas com correntes capazes de afogar o consulente."}, papel_tatico: controlador, arquetipo: conjurador, categoria: elite}
+  - {id: mon_leviata_caldeira, nome: "Leviatã da Caldeira Azul", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: couro_tecido, escala: enorme, locomocao: nada, percepcao: calor, texto: "Dorme sob uma caldeira vulcânica de Ophidia e desperta quando a chama fica azul."}, papel_tatico: bruto_de_linha, arquetipo: predador_apice, categoria: chefe}

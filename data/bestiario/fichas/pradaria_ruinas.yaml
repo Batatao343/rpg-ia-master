@@ -1,0 +1,1770 @@
+# Bestiário de Valoria — onda 3: Pradaria das Ruínas (spec-filha da SPEC-349, D8).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto,
+# também contra os eixos das 11 fichas retro da região.
+# Refs de lore: linhas da lore da SPEC-348 (checkout principal), mesma convenção das ondas 1–2.
+regiao: pradaria_ruinas
+onda: 3
+spec: SPEC-349
+nome_regiao: Pradaria das Ruínas
+habitat_nome:
+  pradaria_ruinas: Pradaria aberta
+  pr_vaelorn: Vaelorn
+  pr_solvhen: Solvhen
+  pr_ruinas_assombradas: Ruínas Assombradas
+paleta: >-
+  **Pradaria das Ruínas** — planície aberta de capim alto que o vento nunca deixa parado, com
+  fundações de cidades-estado Élficas e Cinzéus aflorando da grama: pedra clara esculpida em
+  relevo para os dedos, paredes Cinzéu lisas cobertas de frases pretas sobre cinza, colunas
+  partidas, morros queimados com areia fundida em vidro verde-garrafa. Luz e
+  paleta: ocre de capim seco, cinza-pedra, verde-acinzentado, céu enorme e branco de vento; poeira
+  dourada no contraluz; Éter violeta e azul-esverdeado, fosco, só nas Ruínas Assombradas.
+familias_em_jogo:            # D10 — mesmos nomes das ondas 1–2 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: batedor_rapido,    arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,     material: cinza,             escala: humana,  locomocao: anda,           percepcao: calor,         habitat: [pr_ruinas_assombradas, pr_vaelorn]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: elite,  papel_tatico: tanque_reativo,    arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: vidro_cristal,     escala: grande,  locomocao: anda,           percepcao: luz,           habitat: [pradaria_ruinas]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: padrao, papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: bipede_curvado,   material: sal_mineral,       escala: grande,  locomocao: rasteja,        percepcao: vibracao,      habitat: [pr_ruinas_assombradas]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: elite,  papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: quitina,           escala: grande,  locomocao: anda,           percepcao: calor,         habitat: [pradaria_ruinas]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: padrao, papel_tatico: drenador,          arquetipo: predador,              plano_corporal: quadrupede,       material: carne_exposta,     escala: grande,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [pradaria_ruinas, pr_ruinas_assombradas]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,  categoria: padrao, papel_tatico: emboscador,        arquetipo: emboscador,            plano_corporal: quadrupede,       material: carne_exposta,     escala: pequena, locomocao: cava,           percepcao: vibracao,      habitat: [pr_ruinas_assombradas]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: padrao, papel_tatico: controlador,       arquetipo: predador,              plano_corporal: serpentiforme,    material: couro_tecido,      escala: enorme,  locomocao: rasteja,        percepcao: vibracao,      habitat: [pradaria_ruinas]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: lacaio, papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: quadrupede,       material: osso,              escala: pequena, locomocao: rola,           percepcao: som,           habitat: [pradaria_ruinas]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: padrao, papel_tatico: artilharia,        arquetipo: emboscador,            plano_corporal: alado,            material: couro_tecido,      escala: enorme,  locomocao: anda,           percepcao: vibracao,      habitat: [pr_ruinas_assombradas]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: sacrificial,       arquetipo: covarde_oportunista,   plano_corporal: quadrupede,       material: couro_tecido,      escala: humana,  locomocao: escala_paredes, percepcao: calor,         habitat: [pr_ruinas_assombradas, pradaria_ruinas]}
+  - {vaga: 11, familia: besta_entropia,  categoria: lacaio, papel_tatico: quebra_defesa,     arquetipo: bruto,                 plano_corporal: hexapode_ou_mais, material: quitina,           escala: pequena, locomocao: anda,           percepcao: vibracao,      habitat: [pradaria_ruinas, pr_ruinas_assombradas]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: elite,  papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: anda,           percepcao: vibracao,      habitat: [pradaria_ruinas]}
+  - {vaga: 13, familia: humanoide_preco, categoria: elite,  papel_tatico: drenador,          arquetipo: conjurador,            plano_corporal: bipede_ereto,     material: quitina,           escala: humana,  locomocao: anda,           percepcao: som,           habitat: [pradaria_ruinas]}
+  - {vaga: 14, familia: humanoide_preco, categoria: padrao, papel_tatico: saqueador,         arquetipo: covarde_oportunista,   plano_corporal: bipede_curvado,   material: eter_cristalizado, escala: humana,  locomocao: cava,           percepcao: luz,           habitat: [pr_ruinas_assombradas, pr_vaelorn]}
+  - {vaga: 15, familia: humanoide_preco, categoria: lacaio, papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: bipede_ereto,     material: osso,              escala: humana,  locomocao: salta,          percepcao: respiracao,    habitat: [pradaria_ruinas, pr_solvhen]}
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: bruto_de_linha,    arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: carne_exposta,     escala: humana,  locomocao: salta,          percepcao: visao,         habitat: [pr_ruinas_assombradas, pr_vaelorn]}
+  - {vaga: 17, familia: humanoide_preco, categoria: lacaio, papel_tatico: artilharia,        arquetipo: tatico,                plano_corporal: bipede_ereto,     material: eter_cristalizado, escala: humana,  locomocao: anda,           percepcao: luz,           habitat: [pradaria_ruinas, pr_vaelorn]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_solvhara}, categoria: padrao, papel_tatico: controlador,    arquetipo: guardiao,            plano_corporal: quadrupede,   material: couro_tecido,  escala: grande, locomocao: anda, percepcao: medo_emocao,   habitat: [pradaria_ruinas]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},    categoria: elite,  papel_tatico: tanque_reativo, arquetipo: tatico,              plano_corporal: bipede_ereto, material: osso,          escala: enorme, locomocao: anda, percepcao: visao,         habitat: [pr_ruinas_assombradas]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},    categoria: chefe,  papel_tatico: bruto_de_linha, arquetipo: predador_apice,      plano_corporal: acoplado,     material: carne_exposta, escala: enorme, locomocao: anda, percepcao: sangue_cheiro, habitat: [pradaria_ruinas]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},     categoria: lacaio, papel_tatico: quebra_defesa,  arquetipo: covarde_oportunista, plano_corporal: composto,     material: carne_exposta, escala: humana, locomocao: anda, percepcao: medo_emocao,   habitat: [pr_vaelorn, pradaria_ruinas]}
+  # --- slot genérico reinventado (R24; não conta nas 20–25) ---
+  - {vaga: 22, slot: enemy_esqueleto_legiao_antiga, status: reinventada, familia: corpo_reescrito, categoria: lacaio, papel_tatico: bruto_de_linha, arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado, material: madeira_fibra, escala: humana, locomocao: anda, percepcao: som, habitat: [pradaria_ruinas, pr_ruinas_assombradas]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_vertedor_de_areia
+    vaga: 1
+    nome: Vertedor de Areia
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/races.txt:41", "lore_nova/races.txt:45", "lore_nova/creatures.txt:476"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um Elfo alto, de pele violeta rachada como porcelana velha, que morreu na hora da ampulheta e não
+        caiu. O Éter das ruínas segurou o corpo de pé, mas por dentro ele seca: das rachaduras do peito,
+        dos cotovelos e da nuca escorre sem parar uma areia cinza e fina, e a pele afunda onde a areia
+        sai. Os olhos ficaram leitosos; as mãos de quatro dedos longos tremem de pressa. Quanto mais vazio,
+        mais leve e mais rápido ele anda, até que as pernas, ocas, dobram.
+    silhueta: Um vulto alto e magro que corre curvado para a frente deixando atrás um rastro de areia que escorre dos braços.
+    comportamento: >-
+      Vaga pelas ruínas élficas com a pressa de quem sabe que o fim vem e corre atrás de qualquer calor
+      vivo. Golpeia muitas vezes, sem guarda, como quem tenta caber tudo no tempo que sobra. Quando a
+      areia acaba, desaba sozinho e não se levanta.
+    papel_tatico: batedor_rapido
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vertedor_de_areia_ultimos_graos
+      frase: >-
+        Tem rodadas contadas: ataca em rajada cada vez mais rápida enquanto a areia escorre e desaba sozinho
+        quando ela acaba, sem precisar ser derrubado.
+    contra_jogo: Aguentar em vez de trocar golpes; quem se fecha na defesa e o faz correr atrás sobrevive até a areia acabar.
+    gancho: >-
+      Os Elfos sabem que a ampulheta para sem aviso; nas ruínas onde o Éter se acumula, às vezes ela para
+      e o corpo continua, e os de Vaelorn evitam olhar para quem conhecem.
+    habitat: [pr_ruinas_assombradas, pr_vaelorn]
+    inspiracao: []
+    padrao: [ataque_multiplo, ataque]
+    a_cada_n: 2
+    telegrafo: "A areia escorre mais grossa dos cotovelos de {nome}, e ele se inclina para a frente."
+    description: Um Elfo que morreu na hora da ampulheta e ficou de pé, de pele rachada como porcelana, de onde escorre areia cinza enquanto ele ataca cada vez mais depressa.
+    perigo: Médio
+    lore: >-
+      Todo Elfo morre de repente, entre os sessenta e os setenta, quando a areia da ampulheta acaba. Nas
+      ruínas onde o Éter se acumula, às vezes a morte vem e o corpo não cai. Fica de pé e corre, e das
+      rachaduras da pele escorre uma areia cinza que ninguém sabe de onde vem. Os de Vaelorn dizem que é o
+      tempo que faltava saindo de uma vez. Quem o encontra só precisa aguentar: quando a areia acaba, ele
+      desaba como uma roupa vazia.
+    aparencia: >-
+      Elfo alto de pele violeta rachada como porcelana velha, olhos leitosos, quatro dedos longos e
+      trêmulos em cada mão; das rachaduras do peito, dos cotovelos e da nuca escorre areia cinza fina, e a
+      pele afunda onde ela sai.
+    como_se_luta: >-
+      Ataca em rajadas cada vez mais rápidas enquanto a areia escorre e desaba sozinho quando ela acaba.
+      Defender e ganhar tempo vale mais do que trocar golpes com ele.
+    related_entities: [pr_ruinas_assombradas, pr_vaelorn]
+    arte:
+      visual: >-
+        Elfo adulto muito alto e magro, orelhas longas, pele violeta-pálida com rachaduras finas de
+        porcelana em todo o corpo; dos cortes no peito, nos cotovelos e na nuca escorrem fios de areia
+        cinza que caem como numa ampulheta; nos pontos de onde a areia saiu a pele está afundada como
+        couro vazio. Olhos brancos leitosos. Vestes élficas finas, de veludo puído. Corpo inclinado para a
+        frente, a meio passo de corrida.
+      composicao: >-
+        Rua de uma cidade élfica tomada pelo capim, paredes de pedra clara com relevos para os dedos; o
+        Vertedor em primeiro plano correndo na direção de um Desenterrado com uma pá, do mesmo tamanho; atrás
+        dele, um rastro de areia cinza sobre as lajes. Luz baixa de entardecer, um brilho violeta fosco de
+        Éter numa fresta da parede.
+      evitar: Esqueleto, múmia de faixas, fantasma translúcido, homem de areia que se desfaz no vento. É um corpo inteiro de pele rachada, que se esvazia pelas rachaduras.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vidrado_do_morro
+    vaga: 2
+    nome: Vidrado do Morro
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:378", "lore_nova/npcs.txt:35"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: grande
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um soldado humano que estava de guarda no alto de um morro quando Malagor passou sobre a Pradaria. O
+        calor fundiu a areia do morro sobre ele numa crosta grossa de vidro verde-garrafa, cheia de bolhas,
+        que cobre os ombros, o peito e a cabeça como uma garrafa moldada no corpo. Por dentro do vidro se vê
+        a carne escura e seca, os dentes à mostra, as mãos ainda fechadas no cabo da lança derretida. A
+        crosta do peito é lisa e curva como espelho de lanterna.
+    silhueta: Um soldado largo e brilhante de ombros arredondados, sem rosto, com uma lança torta grudada nas mãos.
+    comportamento: >-
+      Fica de pé no topo e nas encostas do morro queimado, de frente para o lugar de onde o fogo veio, e se
+      volta devagar para quem sobe. Não persegue para longe do morro. Gira o tronco para pegar o sol no
+      peito de vidro e o joga nos olhos de quem vem, e bate na hora em que a pessoa pisca.
+    papel_tatico: tanque_reativo
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vidrado_do_morro_sol_no_peito
+      frase: >-
+        Vira o peito de vidro para o sol e ofusca quem está de frente: o próximo golpe do ofuscado sai fraco
+        e o dele entra cheio. À noite, sob nuvem ou de costas para o sol, o reflexo não pega.
+    contra_jogo: Chegar com o sol nas costas, ou lutar à noite e em dia nublado; sem o reflexo, é só uma casca pesada e lenta.
+    gancho: >-
+      Ninguém voltou para enterrar quem estava no alto dos morros quando Malagor passou; os nômades contornam
+      um deles, onde o capim cresce preto, e chamam os vultos verdes de garrafas.
+    habitat: [pradaria_ruinas]
+    inspiracao:
+      - fonte: geologia (fulgurito e vidro de trinitita)
+        referencia: "areia fundida em vidro por raio ou calor extremo, com bolhas e formas de raiz"
+        tomou: a crosta de areia fundida em vidro verde, cheia de bolhas, moldada no que estava em cima
+        distancia: só o material; a criatura, o morro e o fogo de Malagor são de Valoria
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} gira o tronco de vidro para o sol, e a luz bate cheia nos seus olhos."
+    description: Um soldado de guarda num morro da Pradaria com a areia fundida sobre o corpo numa crosta de vidro verde pelo fogo de Malagor, que joga o sol nos olhos de quem sobe.
+    perigo: Alto
+    lore: >-
+      Quando Malagor passou sobre a Pradaria, havia guardas no alto de alguns morros, e ninguém voltou para
+      enterrá-los. O calor fundiu a areia sobre eles, e os vultos ficaram de pé dentro do vidro, de frente
+      para o lugar de onde o fogo veio. Alguns ainda se viram para quem sobe e jogam o sol do peito nos
+      olhos de quem vem. Os nômades contornam o morro de dia. Os que subiram à noite contam que lá em cima
+      é só uma garrafa pesada.
+    aparencia: >-
+      Soldado de ombros largos coberto por uma crosta grossa de vidro verde-garrafa cheia de bolhas,
+      moldada no corpo como uma garrafa, com o peito liso e curvo como espelho; por dentro, carne escura e
+      seca e dentes à mostra; uma lança derretida grudada nas mãos.
+    como_se_luta: >-
+      Joga o sol do peito de vidro nos olhos de quem está de frente e bate quando a pessoa pisca. Com o sol
+      nas costas, à noite ou sob nuvem, o reflexo não pega.
+    related_entities: [pradaria_ruinas]
+    arte:
+      visual: >-
+        Figura humana de ombros largos inteiramente encapsulada numa crosta de vidro verde-garrafa turvo,
+        grossa, cheia de bolhas e escorridos, com a forma arredondada de garrafa sobre a cabeça e os ombros;
+        o peito liso e curvo refletindo o sol num clarão; através do vidro, um corpo escuro e seco, dentes à
+        mostra, restos de cota de malha; as duas mãos fundidas a uma lança torta e derretida.
+      composicao: >-
+        Topo de um morro queimado na pradaria, terra preta e capim novo ralo, restos de uma paliçada
+        carbonizada; o Vidrado de frente para o espectador, o sol baixo batendo no peito e espalhando um
+        clarão; um cavaleiro nômade a pé, no sopé, protegendo os olhos com a mão, dá a escala. Paleta de
+        verde-garrafa, ocre e preto de carvão.
+      evitar: Golem de cristal, estátua de gelo, armadura brilhante de paladino, fantasma verde. É vidro de areia fundida sobre um corpo morto, turvo e cheio de bolhas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_costas_de_alicerce
+    vaga: 3
+    nome: Costas de Alicerce
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:527", "lore_nova/locations.txt:410"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: sal_mineral
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um saqueador que dormiu num porão de ruína, encostado numa laje de fundação, e acordou com ela
+        crescida nas costas. A pedra clara, esculpida em relevo élfico, tomou toda a espinha e os ombros
+        como um casco de tartaruga feito de parede; entre a pedra e a carne corre uma costura de pele
+        inchada e roxa. Os braços engrossaram para aguentar o peso e as mãos racharam nas palmas de tanto
+        apoiar no chão. A cabeça fica baixa, debaixo da borda da laje, e só os olhos aparecem.
+    silhueta: Um pedaço de parede esculpida que se arrasta sobre dois braços grossos, com uma cabeça escondida por baixo.
+    comportamento: >-
+      Arrasta-se pelos porões e passagens das ruínas, sempre sentindo o tremor do chão. Quando há luta, se
+      põe de lado entre o golpe e os outros e deixa a laje levar a pancada. Raramente ataca; empurra com a
+      borda da pedra.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_costas_de_alicerce_parede_que_anda
+      frase: >-
+        Põe a laje das costas na frente de um aliado e leva por ele o golpe seguinte; enquanto a laje
+        estiver inteira, quem está atrás dela não é alcançado.
+    contra_jogo: Rachar a laje com pancada ou ir por trás, na costura de carne entre a pedra e a espinha, onde ela não protege.
+    gancho: >-
+      Algumas cidades élficas foram erguidas sobre coisas que dormiam, e quem dorme encostado nos
+      alicerces dessas ruínas às vezes acorda carregando um pedaço delas.
+    habitat: [pr_ruinas_assombradas]
+    inspiracao: []
+    padrao: [defesa, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} gira de lado e firma os braços no chão, a laje virada para você."
+    description: Um saqueador que acordou com uma laje de fundação élfica crescida nas costas e se arrasta pelas ruínas pondo a pedra entre o golpe e os outros.
+    perigo: Médio
+    lore: >-
+      Algumas cidades élficas foram erguidas sobre coisas que a terra havia coberto, e a queda das cidades
+      rachou os alicerces. Quem dorme encostado numa dessas lajes às vezes acorda com ela presa nas costas,
+      e na semana seguinte já não a separa da espinha. Os Desenterrados conhecem o risco e dormem de pé. Os
+      que carregam a pedra não saem mais dos porões; protegem quem estiver por perto, como uma parede
+      protege, sem escolher.
+    aparencia: >-
+      Corpo humano curvado sob uma laje de pedra clara esculpida em relevo élfico, crescida na espinha e
+      nos ombros como um casco; costura de pele roxa e inchada entre a pedra e a carne; braços grossos,
+      palmas rachadas, cabeça baixa sob a borda da laje.
+    como_se_luta: >-
+      Põe a laje entre o golpe e os aliados e leva a pancada por eles. Rachar a pedra ou atacar pela
+      costura de carne, por trás, abre caminho.
+    related_entities: [pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Humano adulto curvado de quatro, as costas inteiramente cobertas por uma laje de pedra clara de um
+        metro e meio, com relevos élficos de folhas e rostos gastos, fundida à espinha; nas bordas da laje,
+        uma faixa de pele roxa, inchada e repuxada como cicatriz; braços muito grossos, mãos de palmas
+        rachadas apoiadas no chão; só os olhos visíveis debaixo da borda da pedra.
+      composicao: >-
+        Porão de ruína élfica, raízes de capim descendo pelas frestas do teto, poeira no feixe de luz; a
+        criatura de lado, a laje virada para um saqueador com uma tocha que tenta alcançar outro atrás dela;
+        a porta baixa ao fundo dá a escala. Luz quente de tocha, sombras cinza.
+      evitar: Tartaruga, golem de pedra, gárgula, estátua viva. É uma pessoa com um pedaço de parede crescido nas costas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vestido_de_gafanhotos
+    vaga: 4
+    nome: Vestido de Gafanhotos
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:430", "lore_nova/creatures.txt:535"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: quitina
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um lavrador que ficou caído no campo durante uma praga de Gafanhotos-de-Bronze e não foi comido
+        inteiro: o enxame entrou nele e ficou. Os gafanhotos de casca de bronze se agarraram em camadas sobre
+        o peito, os braços e as costas como escamas de uma armadura viva, e por baixo deles o músculo está
+        exposto, roído em sulcos. As asas zumbem sob as cascas o tempo todo. O rosto é só a boca e os olhos;
+        o resto está coberto de bichos que se mexem.
+    silhueta: Um homem largo e curvado coberto de escamas de bronze que se mexem, com uma névoa de asas em volta dos ombros.
+    comportamento: >-
+      Anda devagar pelos campos que o enxame já comeu, atrás de calor, e bate com os braços cobertos de
+      cascas. Quando ele cai, o enxame não morre com ele: levanta de uma vez e procura o corpo vivo mais
+      perto, e se agarra nele em camadas, como se agarrou no lavrador.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vestido_de_gafanhotos_enxame_muda_de_corpo
+      frase: >-
+        Quando ele cai, o enxame se agarra ao inimigo vivo mais próximo e lhe dá a armadura de cascas: o
+        aliado mais perto dele fica mais duro de ferir pelo resto da luta.
+    contra_jogo: Fogo ou fumaça no corpo caído antes que o enxame levante; derrubá-lo longe dos outros também serve.
+    gancho: >-
+      As pragas de Gafanhotos-de-Bronze condenam vilas inteiras à fome; os nômades leem os sinais e se movem
+      antes, e quem não se move às vezes fica com o enxame.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [ataque, ataque_multiplo, ataque]
+    a_cada_n: 3
+    telegrafo: "O zumbido debaixo das cascas de {nome} sobe de tom, e o enxame se vira para quem está ao lado dele."
+    description: Um lavrador que o enxame de Gafanhotos-de-Bronze não terminou de comer, coberto de gafanhotos vivos em camadas como armadura sobre o músculo roído, que passam a outro corpo quando ele cai.
+    perigo: Alto
+    lore: >-
+      As pragas de Gafanhotos-de-Bronze vêm em ciclos e comem tudo o que é verde. Os nômades se movem antes;
+      os lavradores das vilas fixas não têm para onde. De vez em quando o enxame encontra alguém caído no
+      campo e não termina. Entra nele e fica, agarrado em camadas como escamas, roendo devagar o que está por
+      baixo. O homem continua de pé, e anda pelos campos comidos atrás de calor. Quando enfim cai, o enxame
+      levanta e procura outro corpo. Os Andarilhos queimam o caído na mesma hora, antes de qualquer outra
+      coisa.
+    aparencia: >-
+      Homem largo e curvado coberto de gafanhotos de casca de bronze agarrados em camadas como escamas no
+      peito, nos braços e nas costas, com o músculo roído em sulcos aparecendo entre eles; asas zumbindo sob
+      as cascas; só a boca e os olhos livres no rosto.
+    como_se_luta: >-
+      Quando cai, o enxame passa ao inimigo vivo mais próximo e lhe dá a armadura de cascas. Fogo ou fumaça
+      no corpo caído impedem a passagem.
+    related_entities: [pradaria_ruinas]
+    arte:
+      visual: >-
+        Humano grande e curvado, inteiramente coberto por centenas de gafanhotos de carapaça cor de bronze
+        polido e esverdeado, agarrados em camadas sobrepostas como escamas de armadura; nos braços e no
+        flanco, frestas onde os insetos saíram mostram músculo vermelho-escuro roído em sulcos rasos, sem
+        sangue escorrendo; asas translúcidas meio abertas sob as cascas; rosto coberto de insetos, exceto a
+        boca e os olhos; alguns gafanhotos levantando voo dos ombros.
+      composicao: >-
+        Campo de lavoura comido até a terra, talos secos e cercas de vara caídas; o Vestido de Gafanhotos
+        avançando em direção a um lavrador que ergue uma tocha acesa, os dois quase da mesma altura; uma
+        nuvem fina de gafanhotos no ar entre eles. Luz de entardecer amarela, poeira.
+      evitar: Homem-inseto de quadrinho, demônio de moscas, cavaleiro de armadura de bronze, gore. São gafanhotos vivos agarrados sobre um corpo, e o músculo aparece só nas frestas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fucador_da_semente
+    vaga: 5
+    nome: Fuçador da Semente
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:535", "lore_nova/creatures.txt:448"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um javali de presa longa que fuçou até o centro de um círculo morto da pradaria e engoliu o que
+        estava enterrado lá. O flanco esquerdo se abriu num buraco preto e seco, que não sangra, por onde
+        se vê a costela escurecida; a pele cai em anéis ao redor do buraco e o pelo solta em tufos. As presas
+        amarelaram e cresceram tortas, e a carne do focinho apodrece e cresce de novo no mesmo dia. Onde ele
+        se deita, o capim morre num círculo.
+    silhueta: Um javali enorme de costas eriçadas com um buraco escuro aberto no flanco e presas curvas como ganchos.
+    comportamento: >-
+      Fareja sangue de longe e investe contra o ferido. Não foge da dor, porque já apodrece por dentro.
+      Tudo o que ele rasga com as presas começa a apodrecer, e a ferida piora depois que ele vai embora.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fucador_da_semente_presa_podre
+      frase: >-
+        A ferida que as presas abrem apodrece: continua tirando Vitalidade nas rodadas seguintes, e piora se
+        ele acertar de novo no mesmo lugar.
+    contra_jogo: Limpar a ferida cedo e não deixar que ele acerte duas vezes; fogo no capim seco à volta o faz desviar.
+    gancho: >-
+      Os nômades sabem que nada cresce no círculo onde a grama morreu e não deixam os animais pastarem lá;
+      os javalis fuçam onde querem.
+    habitat: [pradaria_ruinas, pr_ruinas_assombradas]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} raspa o chão e o buraco do flanco solta um bafo frio e sem cheiro."
+    description: Um javali de presa longa que engoliu o que estava enterrado num círculo morto da pradaria, com um buraco preto no flanco, cujas presas fazem apodrecer o que rasgam.
+    perigo: Médio
+    lore: >-
+      Há pontos da pradaria onde a grama morre num círculo perfeito, e os nômades não deixam os animais
+      pastarem ali. Os javalis de presa longa reviram o que querem. Um deles fuçou até o centro e engoliu o
+      que estava enterrado, e desde então tem um buraco seco no flanco que não sangra nem fecha. Apodrece e
+      cresce de novo, todo dia. O que ele rasga apodrece também, e onde ele se deita o capim morre em roda.
+    aparencia: >-
+      Javali enorme de presas amarelas, longas e tortas; no flanco um buraco preto e seco mostrando a
+      costela escurecida; pele caindo em anéis ao redor, pelo solto em tufos, focinho de carne meio podre e
+      meio nova.
+    como_se_luta: >-
+      Investe contra quem sangra, e a ferida que as presas abrem continua apodrecendo depois. Tratar a
+      ferida cedo e não deixar que ele acerte duas vezes.
+    related_entities: [pradaria_ruinas, pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Javali selvagem do tamanho de um boi pequeno, pelo escuro e eriçado no dorso, presas amarelas longas
+        e curvas para cima; no flanco esquerdo uma cavidade escura, seca e sem sangue, com as costelas
+        enegrecidas visíveis, a pele ao redor descascando em anéis concêntricos; o focinho com manchas de
+        carne cinza-podre ao lado de carne rosada nova. Um círculo de capim morto e cinzento ao redor das
+        patas.
+      composicao: >-
+        Pradaria aberta, capim alto dourado, e no meio um círculo perfeito de grama morta e cinza; o Fuçador
+        no centro, cabeça baixa, de frente para um pastor nômade com um bastão na borda do círculo, do mesmo
+        tamanho do animal até a cernelha. Céu branco de vento, luz chapada de meio-dia.
+      evitar: Javali-demônio de olhos de fogo, zumbi animal com vísceras, porco de chifres. O buraco é seco e escuro, sem gore; o horror é o apodrecer que volta.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_nadador_de_pedra
+    vaga: 6
+    nome: Nadador de Pedra
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:430", "lore_nova/creatures.txt:527"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: pequena
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Um bicho do tamanho de um porco, sem pelos e sem olhos, de pele rosada e enrugada cheia de grãos de
+        pedra encravados. As patas da frente são largas como pás, de garras chatas, e o focinho é uma placa
+        dura de raspar. Atravessa a pedra das fundações como se ela fosse água: a parede ondula em volta
+        do corpo e fecha atrás dele sem marca. Os dentes da frente são largos e planos, de moer.
+    silhueta: Uma cabeça cega e enrugada saindo de uma parede que ondula em volta dela como água.
+    comportamento: >-
+      Vive dentro das fundações das ruínas e sente pelo tremor quem anda em cima. Mergulha na pedra, nada
+      por baixo dos pés e sai de uma parede ao lado. Quando entra ou sai, o chão em volta ondula e derruba
+      quem está perto.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_nadador_de_pedra_onda_no_chao
+      frase: >-
+        Ao mergulhar ou sair da pedra, faz o chão ondular e empurra todos os que estão perto para fora do
+        lugar; dentro da pedra, não pode ser alvejado.
+    contra_jogo: Ficar fora das lajes e paredes, no capim e na terra solta, onde ele não nada; quieto, ele não sente onde você está.
+    gancho: >-
+      As ruínas mais antigas são pedra sobre pedra, e alguma coisa da pradaria aprendeu a viver dentro
+      delas como peixe dentro do rio.
+    habitat: [pr_ruinas_assombradas]
+    inspiracao: []
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "As lajes sob {nome} ondulam como água de poço, e a parede ao seu lado estremece."
+    description: Um bicho cego de pele rosada e enrugada que nada dentro das fundações das ruínas como se a pedra fosse água e sai pela parede ao lado.
+    perigo: Médio
+    lore: >-
+      Nas fundações das cidades caídas vive um bicho que atravessa a pedra como peixe atravessa o rio. A
+      parede ondula em volta dele e fecha sem marca. É cego, sente pelo tremor de quem anda em cima e sai de
+      uma parede ao lado da vítima. Os Desenterrados escutam o chão antes de entrar num porão, e cavam pela
+      terra, não pela pedra, sempre que podem.
+    aparencia: >-
+      Bicho do tamanho de um porco, sem pelos e sem olhos, de pele rosada e enrugada com grãos de pedra
+      encravados, patas da frente largas como pás, focinho em placa dura e dentes largos de moer.
+    como_se_luta: >-
+      Nada dentro da pedra e sai ao lado; ao entrar e sair, faz o chão ondular e derruba quem está perto.
+      Na terra solta e no capim ele não nada.
+    related_entities: [pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Animal escavador do tamanho de um porco, corpo atarracado, pele nua rosada-acinzentada muito
+        enrugada, com grãos de pedra e areia encravados nas dobras; sem olhos, só pele lisa onde eles
+        estariam; patas dianteiras largas como pás, garras chatas; focinho em placa córnea; dentes
+        incisivos largos e amarelos. Metade do corpo saindo de uma parede de pedra lavrada que ondula em
+        anéis em volta dele, como água.
+      composicao: >-
+        Corredor de ruína élfica com paredes de pedra clara esculpida; o Nadador emergindo da parede lateral
+        na altura do joelho de um saqueador que segura uma lanterna, os anéis de pedra ondulando ao redor;
+        poeira suspensa. Luz de lanterna quente e sombras frias.
+      evitar: Toupeira fofa, verme gigante, monstro de terra. A pedra fica sólida e esculpida, só ondula onde ele passa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cobra_de_legua
+    vaga: 7
+    nome: Cobra de Légua
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:452", "lore_nova/locations.txt:381"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: enorme
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Uma cobra cinza-esverdeada da grossura de uma coxa, de escamas gastas e chatas de tanto arrastar,
+        com a cabeça larga e achatada como uma pá. O corpo não afina: tem a mesma grossura em todo o
+        comprimento que se vê, e nunca se vê a cauda. Quando ela aperta uma volta, outra já vem saindo do
+        capim, e mais outra. A boca sem dentes de veneno abre em ângulo de dobradiça.
+    silhueta: Voltas e voltas de um corpo grosso saindo do capim alto sem que se veja onde ele acaba.
+    comportamento: >-
+      Fica estendida sob o capim ao longo das ruas das cidades mortas e sente o passo de quem anda nelas.
+      Enlaça uma perna e vai acrescentando voltas, sem pressa, porque sempre tem mais corpo. Os nômades
+      contam que já seguiram uma do começo da manhã até a tarde sem achar o fim.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cobra_de_legua_mais_uma_volta
+      frase: >-
+        Prende e, a cada rodada que a presa continua presa, aperta mais uma volta tirada do capim; o aperto
+        só cresce, nunca diminui sozinho.
+    contra_jogo: Cortar a cabeça e não as voltas; sair do aperto cedo, antes da segunda volta, custa muito menos que depois.
+    gancho: >-
+      Os Andarilhos cortam a cabeça e não procuram o resto: um pastor que seguiu o corpo de uma pelo capim
+      saiu de manhã e voltou à tarde sem ter chegado à cauda.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "O capim em volta de {nome} se mexe longe dali, como se mais corpo estivesse chegando."
+    description: Uma cobra grossa como uma coxa, escondida no capim alto das ruas mortas, cujo corpo nunca afina e nunca acaba, e que aperta mais uma volta a cada momento.
+    perigo: Médio
+    lore: >-
+      Há cobras de veneno na grama alta, e há esta, que não tem veneno. Tem corpo, da grossura de uma coxa,
+      e ninguém nunca viu onde ele acaba. Fica estendida sob o capim das ruas das cidades mortas e enlaça a
+      perna de quem pisa. Depois é só esperar, porque sempre vem mais uma volta. Os Andarilhos cortam a
+      cabeça e vão embora sem procurar o resto.
+    aparencia: >-
+      Cobra cinza-esverdeada da grossura de uma coxa, escamas gastas e chatas, cabeça larga e achatada como
+      pá, corpo da mesma grossura em todo o comprimento visível, saindo do capim em voltas sem fim.
+    como_se_luta: >-
+      Prende e aperta mais a cada rodada, porque sempre tem mais corpo. Soltar-se cedo e mirar a cabeça,
+      não as voltas.
+    related_entities: [pradaria_ruinas]
+    arte:
+      visual: >-
+        Serpente gigante da grossura de uma coxa humana, cinza-esverdeada, escamas opacas e gastas, cabeça
+        larga, chata e sem presas; o corpo tem exatamente a mesma grossura em todas as voltas visíveis, sem
+        afinar; várias voltas enroladas e mais corpo saindo do capim em direções diferentes, sem cauda à
+        vista.
+      composicao: >-
+        Rua de cidade morta tomada pelo capim, soleiras de pedra aparecendo; um viajante com uma perna presa
+        por duas voltas, a cabeça da cobra na altura do peito dele; mais trechos de corpo emergindo do capim
+        ao longe, até a borda do quadro. Vento deitando o capim, céu branco, luz de fim de tarde.
+      evitar: Hidra, serpente marinha, cobra-demônio de olhos vermelhos, naja com capuz. Uma cobra só, sem cauda à vista, comprida demais.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_rodante_de_espinhos
+    vaga: 8
+    nome: Rodante de Espinhos
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/daily_life.txt:235", "lore_nova/creatures.txt:430"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: pequena
+      locomocao: rola
+      percepcao: som
+      texto: >-
+        Um bicho do tamanho de um cão, de dorso coberto de espinhos de osso que nasceram em anéis através
+        da própria pele, com a barriga mole e cinza. Quando se enrola, vira uma bola de espinhos com capim
+        seco e restos de ossos enfiados entre eles. Rola contra o vento e morro acima sem perder velocidade,
+        como se o chão inclinasse sempre para o lado dele. As patas são curtas, de unhas gastas; as orelhas,
+        enormes, em concha, e sempre viradas para o último barulho.
+    silhueta: Uma bola de espinhos e capim seco subindo a encosta contra o vento.
+    comportamento: >-
+      Fica enrolado e quieto no capim até ouvir alguma coisa. Rola sempre na direção do último barulho,
+      contra o vento ou morro acima, e passa por cima de quem o fez. Quem fica parado e calado, ele não acha.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_rodante_de_espinhos_atras_do_barulho
+      frase: >-
+        Rola sempre para cima de quem fez barulho por último: quem atacou ou correu na rodada vira o alvo e
+        leva o golpe cheio; quem ficou parado e se defendeu em silêncio, ele não acha.
+    contra_jogo: Ficar quieto e firme uma rodada, defendendo, e deixar que ele role para o barulho de outro; parado, ele é um bicho pequeno de barriga mole.
+    gancho: >-
+      O vento da Pradaria nunca para, e tudo o que rola vai com ele; isto aqui rola contra, para o lado de
+      onde veio o barulho.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "As orelhas de {nome} se viram para o barulho que você acabou de fazer, e ele se enrola."
+    description: Um bicho do tamanho de um cão, de espinhos de osso nascidos em anéis pela pele, que se enrola numa bola e rola contra o vento para cima de quem fez barulho.
+    perigo: Baixo
+    lore: >-
+      O vento da Pradaria nunca para, dia e noite, e tudo o que rola na planície rola com ele. Estes rolam
+      contra, e sobem a encosta sem perder o embalo, sempre para o lado do último barulho. Os pastores
+      aprenderam a ficar quietos quando ouvem o estalo dos espinhos no capim, e a deixar que eles passem por
+      cima de outra coisa. Quem corre é quem eles acham.
+    aparencia: >-
+      Bicho do tamanho de um cão, dorso de espinhos de osso nascidos em anéis através da pele, barriga mole
+      e cinza, orelhas enormes em concha; enrolado, uma bola de espinhos com capim seco e lascas de osso
+      presos.
+    como_se_luta: >-
+      Rola para cima de quem atacou ou correu por último. Ficar parado e defender em silêncio o faz rolar
+      para outro lado.
+    related_entities: [pradaria_ruinas]
+    arte:
+      visual: >-
+        Animal do tamanho de um cão médio, corpo arredondado, dorso coberto de espinhos de osso
+        branco-amarelado que saem da pele em anéis concêntricos, com a pele repuxada em volta de cada um;
+        barriga cinza mole, patas curtas, orelhas enormes em concha. Um segundo exemplar enrolado em bola
+        de espinhos, com tufos de capim seco e lascas de osso presos entre eles.
+      composicao: >-
+        Encosta da pradaria com o capim inteiro deitado pelo vento para um lado; três bolas de espinhos
+        subindo a encosta no sentido contrário, deixando trilhas no capim, rumo a um pastor que bate um
+        cajado numa pedra; outro pastor imóvel e agachado ao lado, ignorado. Céu branco riscado, luz fria.
+      evitar: Porco-espinho fofo, tatu de desenho, ouriço do mar. Os espinhos são de osso nascido da pele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pernalta_das_colunas
+    vaga: 9
+    nome: Pernalta das Colunas
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:444", "lore_nova/locations.txt:410"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: enorme
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Uma ave cinza de pernas mais finas que um dedo e mais altas que uma coluna, que a sustentam a
+        quatro metros do chão sem dobrar. O pescoço é nu, de couro cinza, e o bico é uma lança reta e
+        pesada. As asas ficam fechadas e coladas ao corpo como capa. Os joelhos, ao contrário, dobram para
+        a frente, e as pernas sentem o tremor do chão como antenas.
+    silhueta: Uma ave parada sobre duas pernas finas como varetas, alta como as colunas partidas, com um bico de lança apontado para baixo.
+    comportamento: >-
+      Fica parada entre as colunas partidas das Ruínas, tão imóvel e cinza que parece mais uma coluna, e
+      sente pelos pés quem anda embaixo. Desce o bico do alto, de longe, sem sair do lugar. Nunca vem ao
+      chão; quem a quer, tem de ir até as pernas.
+    papel_tatico: artilharia
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pernalta_das_colunas_bico_do_alto
+      frase: >-
+        Fere do alto quem está a distância, sem sair do lugar; quem chega às pernas a obriga a recuar, e
+        uma perna quebrada a derruba inteira.
+    contra_jogo: Ir direto às pernas, que quebram fácil, em vez de tentar alcançar o corpo lá em cima.
+    gancho: >-
+      As colunas das cidades élficas ainda se erguem no capim; os Desenterrados contam as colunas antes de
+      entrar, e às vezes contam uma a mais.
+    habitat: [pr_ruinas_assombradas]
+    inspiracao:
+      - fonte: zoologia (pernaltas e garças)
+        referencia: "garças e socós que esperam imóveis e arpoam com o bico"
+        tomou: a espera imóvel e o golpe de bico de cima para baixo
+        distancia: a escala, as pernas impossíveis e o disfarce de coluna são da física quebrada das Ruínas
+    padrao: [ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "Uma das colunas acima de você inclina a ponta, e {nome} recolhe o pescoço."
+    description: Uma ave cinza de pernas finas como varetas e altas como colunas, parada entre as colunas partidas das Ruínas, que arpoa com o bico de lá de cima.
+    perigo: Médio
+    lore: >-
+      As colunas das cidades élficas ainda se erguem no capim das Ruínas, e entre elas há uma ave que parece
+      mais uma. Fica a quatro metros do chão sobre pernas mais finas que um dedo, que não deveriam aguentar
+      nem o peso de uma galinha. Não desce nunca. Desce o bico, que é uma lança. Os Desenterrados contam as
+      colunas antes de entrar numa praça, e quando a conta não bate, entram por outro lado.
+    aparencia: >-
+      Ave cinza imóvel sobre duas pernas finas como varetas e altas como colunas, joelhos que dobram para a
+      frente, pescoço nu de couro cinza, bico reto e pesado como lança, asas fechadas como capa.
+    como_se_luta: >-
+      Fere de cima e de longe sem sair do lugar. As pernas finas quebram fácil, e caída ela não se levanta.
+    related_entities: [pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Ave enorme, cinza-pedra, corpo do tamanho de um homem encolhido no alto de duas pernas finíssimas,
+        quase fios, com quatro metros de altura, joelhos dobrando para a frente; asas fechadas e coladas ao
+        corpo como capa de pedra; pescoço longo e nu, de pele cinza enrugada; bico reto, grosso, de lança,
+        apontado para baixo.
+      composicao: >-
+        Praça de ruína élfica com uma fileira de colunas partidas da mesma altura da ave, capim alto na base;
+        a Pernalta é a quarta coluna da fileira, quase indistinguível; um saqueador com uma mochila de
+        ferramentas passa entre elas, à altura dos joelhos da ave. Luz cinza de céu encoberto, poeira dourada.
+      evitar: Garça bonita de cartão-postal, ave de rapina, grifo, ave-demônio. Pernas impossivelmente finas e altas são o ponto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lagarto_de_mudas
+    vaga: 10
+    nome: Lagarto de Mudas
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:430", "lore_nova/locations.txt:381"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Um lagarto do comprimento de um homem que troca de pele o tempo todo, por isso está sempre em carne
+        viva rosada, com a pele nova ainda úmida. As mudas que larga são cascas inteiras e transparentes, com
+        olhos, dedos e língua, e não ficam paradas: andam sozinhas um pouco, mordem uma vez e desmancham. A
+        cauda é grossa e curta, as patas de unhas longas sobem parede.
+    silhueta: Um lagarto subindo a parede, seguido por duas cascas vazias e transparentes do mesmo lagarto que andam atrás dele.
+    comportamento: >-
+      Esquenta-se nas paredes das ruínas e foge de quem chega, deixando uma muda em cada lugar onde levou
+      um golpe. As mudas avançam e mordem enquanto ele sobe para longe. Se ninguém o encurrala, não volta.
+    papel_tatico: sacrificial
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lagarto_de_mudas_casca_que_anda
+      frase: >-
+        Quando leva um golpe, larga a pele: a casca vazia fica no lugar dele, recebe o próximo ataque e
+        morde uma vez antes de desmanchar.
+    contra_jogo: Ignorar as cascas e encurralá-lo contra o chão; sem parede para subir, ele não tem tempo de largar outra.
+    gancho: >-
+      Nas paredes das Ruínas se acham peles de lagarto inteiras, com olhos; os Andarilhos as queimam antes
+      de acampar, porque às vezes elas ainda andam.
+    habitat: [pr_ruinas_assombradas, pradaria_ruinas]
+    inspiracao: []
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "A pele das costas de {nome} se solta inteira, e a casca vazia se vira para você."
+    description: Um lagarto do tamanho de um homem, sempre em carne viva, cujas peles trocadas são cascas inteiras que andam, mordem uma vez e desmancham.
+    perigo: Baixo
+    lore: >-
+      Nas paredes das Ruínas se acham peles de lagarto inteiras, transparentes, com os olhos e os dedos no
+      lugar. Os Andarilhos as queimam antes de acampar, porque às vezes elas ainda andam. O lagarto que as
+      larga troca de pele sem parar e está sempre em carne viva. Quando apanha, deixa a pele para trás e
+      foge pela parede, e a casca morde quem ficou.
+    aparencia: >-
+      Lagarto do comprimento de um homem, em carne viva rosada e úmida de pele recém-trocada, unhas longas
+      de subir parede, cauda grossa e curta; atrás dele, cascas inteiras e transparentes do próprio corpo.
+    como_se_luta: >-
+      Cada golpe que leva deixa uma casca vazia no lugar, que recebe o ataque seguinte e morde. Encurralá-lo
+      longe das paredes antes que largue outra.
+    related_entities: [pr_ruinas_assombradas, pradaria_ruinas]
+    arte:
+      visual: >-
+        Lagarto-monitor do comprimento de um homem, corpo inteiro de pele nova rosada e úmida, sem escamas
+        maduras, unhas longas cravadas na pedra; atrás e abaixo dele, duas mudas inteiras, translúcidas como
+        papel encerado, com olhos vazios, dedos e língua, de pé sobre as patas como se o seguissem.
+      composicao: >-
+        Parede de pedra clara de uma casa élfica sem teto, iluminada de lado pelo sol; o lagarto no alto da
+        parede, as duas cascas no chão de frente para um Andarilho que segura uma tocha baixa, a casca na
+        altura do joelho dele. Sombras longas, luz quente.
+      evitar: Dragão, salamandra de fogo, réptil-demônio. A carne viva é rosada e úmida, sem sangue; as cascas são vazias e transparentes.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_besouro_de_alavanca
+    vaga: 11
+    nome: Besouro de Alavanca
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:430", "lore_nova/creatures.txt:440"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um besouro do tamanho de um cão, de carapaça preta fosca, com um único chifre chato e comprido como um
+        pé de cabra que sai da testa e passa da cabeça. O chifre é fino como uma régua e levanta o que nenhum
+        bicho daquele tamanho levantaria: lajes de rua, tampas de túmulo, pedaços de coluna. As seis patas
+        têm esporões que se cravam no chão quando ele força, e a carapaça das costas é rachada de tanto
+        aguentar peso.
+    silhueta: Um besouro baixo com um chifre reto e chato erguendo uma laje inteira acima das costas.
+    comportamento: >-
+      Vive nas ruas das cidades mortas virando lajes e tampas para comer o que mora por baixo. Contra quem
+      chega, enfia o chifre na junta da armadura e levanta, como levanta uma pedra, e a placa sai torta e
+      só volta ao lugar se o dono parar para encaixá-la.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_besouro_de_alavanca_placa_torta
+      frase: >-
+        Enfia o chifre na junta da armadura e entorta a placa: a armadura do alvo fica aberta até ele gastar
+        uma ação para encaixá-la de volta, e enquanto não encaixa cada besouro abre mais; o golpe quase não fere.
+    contra_jogo: Gastar a vez para encaixar a placa antes que o segundo besouro chegue, ou virá-lo de costas, que a barriga é mole.
+    gancho: >-
+      As lajes das ruas élficas aparecem viradas de manhã, uma por uma, como se alguém tivesse procurado
+      alguma coisa embaixo de cada uma.
+    habitat: [pradaria_ruinas, pr_ruinas_assombradas]
+    inspiracao:
+      - fonte: zoologia (besouros-rinoceronte e escaravelhos)
+        referencia: "besouros que erguem muitas vezes o próprio peso com o chifre"
+        tomou: o chifre como alavanca e a força desproporcional ao tamanho
+        distancia: o chifre chato de pé de cabra, as lajes élficas e a física impossível são da Pradaria
+    padrao: [enfraquecer, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} crava os esporões no chão e encaixa a ponta do chifre na junta da sua armadura."
+    description: Um besouro do tamanho de um cão, de chifre chato como pé de cabra, que levanta lajes de rua e tampas de túmulo e entorta as placas da armadura de quem enfrenta.
+    perigo: Baixo
+    lore: >-
+      As lajes das ruas élficas aparecem viradas de manhã, uma por uma. É o besouro, que levanta com um
+      chifre fino como régua o que três homens não levantariam e come o que mora por baixo. Não morde nem
+      envenena. Contra gente, faz o mesmo que faz com a pedra: enfia o chifre na junta da armadura e levanta.
+      Os Desenterrados os viram de costas com a pá e seguem.
+    aparencia: >-
+      Besouro do tamanho de um cão, de carapaça preta fosca rachada nas costas, com um chifre único, chato e
+      comprido como pé de cabra saindo da testa, e seis patas de esporões cravados no chão.
+    como_se_luta: >-
+      Entorta as placas da armadura, que ficam abertas até o alvo gastar a vez para encaixá-las, e cada
+      besouro abre mais. Fere pouco; de costas, a barriga é mole.
+    related_entities: [pradaria_ruinas, pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Besouro do tamanho de um cão médio, corpo baixo e largo, carapaça preta fosca com rachaduras finas no
+        dorso; da testa sai um único chifre reto, chato e comprido como um pé de cabra de ferro, com a ponta
+        bifurcada; seis patas com esporões cravados na terra; erguendo com o chifre uma laje de pedra
+        esculpida maior que ele.
+      composicao: >-
+        Rua de cidade élfica morta, lajes de pedra clara em fileira, algumas já viradas; o besouro erguendo
+        uma laje; um Desenterrado de pá na mão a dois passos, a laje na altura do joelho dele. Luz de manhã
+        cedo, orvalho no capim.
+      evitar: Escaravelho egípcio sagrado, besouro gigante de filme, inseto-demônio. Pequeno, baixo, com uma força que não cabe nele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_carregador_de_ganchos
+    vaga: 12
+    nome: Carregador de Ganchos
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: mercadores_escravos_pradaria
+      refs: ["lore_nova/factions.txt:387", "lore_nova/races.txt:232", "lore_nova/creatures.txt:518"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um Cinzéu comprado pelos Mercadores de Groth, de pele cinza-escura coberta de tatuagens pretas, com
+        dezenas de ganchos de açougue cravados na pele das costas, dos ombros e dos braços, cada um com uma
+        corrente. Como não sente dor, carrega o peso todo curvado e sem reclamar, e a pele em volta de cada
+        gancho virou um calo esticado. Tem três dedos em cada mão e a cauda enrola as correntes soltas.
+        Sente pela vibração das correntes quando alguma coisa fisgou.
+    silhueta: Um homem curvado de onde pendem dezenas de correntes, como um salgueiro de ferro, com uma cauda enrolada nelas.
+    comportamento: >-
+      Anda atrás dos caçadores de Groth e entra quando a presa se afasta do grupo. Atira um gancho, fisga e
+      dá um tranco só, que arrasta a presa para o meio dos caçadores, e solta a corrente para atirar outra.
+      Não segura ninguém: entrega.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: elite
+    faccao: mercadores_escravos_pradaria
+    mecanica_assinatura:
+      carta: cri_carregador_de_ganchos_tranco
+      frase: >-
+        Fisga quem está longe e o arrasta de um tranco para junto dos outros caçadores, que batem primeiro;
+        não prende: o gancho solta no mesmo tranco e ele já gira outro.
+    contra_jogo: Ficar perto dele e longe dos outros, ou de costas para um muro; puxado para o lugar onde já está, o tranco não faz nada.
+    gancho: >-
+      Groth caça Elfos, que valem mais; para trazer a presa até a carroça, comprou um Cinzéu, que não sente o
+      peso nem o ferro.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} gira uma corrente em roda acima da cabeça, e o gancho assobia."
+    description: Um Cinzéu comprado pelos Mercadores de Groth, com dezenas de ganchos cravados na pele e uma corrente em cada um, que fisga quem se afasta e o arrasta de um tranco para o meio dos caçadores.
+    perigo: Alto
+    lore: >-
+      Os Cinzéus não sentem dor, e muitos atravessam correntes nas costas por enfeite. Os Mercadores de
+      Groth Algema-Fria compraram um e foram além: cravaram ganchos de açougue em toda a pele dele, cada um
+      com uma corrente, para trazer a presa até a carroça. Ele atira, fisga e dá um tranco só, e quem estava
+      longe cai no meio dos caçadores. As vilas pequenas da Pradaria ouvem o barulho das correntes de longe e
+      fecham as portas.
+    aparencia: >-
+      Cinzéu curvado de pele cinza-escura tatuada de preto, com dezenas de ganchos de açougue cravados nas
+      costas, nos ombros e nos braços, cada um com uma corrente pendente; pele calejada e esticada em volta
+      de cada gancho; três dedos nas mãos; cauda enrolada nas correntes.
+    como_se_luta: >-
+      Fisga quem está longe e o arrasta de um tranco para junto dos outros caçadores. Ficar perto dele e
+      longe do grupo, ou com um muro nas costas, tira a força do tranco.
+    related_entities: [pradaria_ruinas, mercadores_escravos_pradaria]
+    arte:
+      visual: >-
+        Cinzéu adulto, menor que um humano, pele cinza-carvão sem pelos, coberta de tatuagens pretas
+        geométricas; olhos de íris branca e o resto vermelho-escuro; dezenas de ganchos de açougue de ferro
+        cravados na pele das costas, dos ombros e dos braços, a pele esticada em volta de cada um, sem
+        sangue; de cada gancho pende uma corrente até o chão; três dedos em cada mão; a cauda sem pelos, com
+        ponta óssea, enrolada num feixe de correntes.
+      composicao: >-
+        Estrada de terra na pradaria, uma carroça-jaula dos Mercadores parada atrás com dois caçadores
+        armados ao lado; o Carregador dando o tranco numa corrente esticada; um viajante sendo arrastado pelo
+        capim na direção dos caçadores, o gancho preso no cinto; a roda da carroça dá a escala. Luz de fim de
+        tarde, poeira, céu branco.
+      evitar: Pinhead, demônio de correntes, carcereiro de masmorra encapuzado, gore. A pele não sangra; é o calo esticado de quem não sente.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_leitor_de_cativos
+    vaga: 13
+    nome: Leitor de Cativos
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: bandos_nomades
+      refs: ["lore_nova/creatures.txt:502", "lore_nova/npcs.txt:1042", "lore_nova/factions.txt:370"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: quitina
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um Vrel do agrupamento de Vesh que leu cativos demais. A carapaça da cabeça rachou e cresceu para
+        os lados, e do queixo nasceu um segundo par de palpos longos e articulados, que se fecham em volta
+        da cabeça de quem ele lê, como dedos em volta de uma fruta. O abdômen inchou e ficou translúcido,
+        cheio de um líquido escuro que se mexe sozinho. As antenas são curtas e as placas do peito, de cores
+        trocadas, não combinam umas com as outras.
+    silhueta: Um insetoide magro de cabeça larga demais e abdômen inchado, com dois braços finos abertos na frente do rosto.
+    comportamento: >-
+      Fica atrás dos Saqueadores Vrel, com as antenas viradas para quem luta, e não se mexe. Lê no corpo do
+      inimigo o que ele vai fazer, e o que ele lê o agrupamento inteiro sabe na mesma hora: os Vrel se
+      afastam do golpe antes de ele sair. Quando alguém cai perto, fecha os palpos na cabeça e lê o resto.
+    papel_tatico: drenador
+    arquetipo: conjurador
+    categoria: elite
+    faccao: bandos_nomades
+    mecanica_assinatura:
+      carta: cri_leitor_de_cativos_o_bando_sabe
+      frase: >-
+        Lê a próxima jogada do alvo e a passa ao agrupamento: o presságio dos Vrel ao lado passa a mostrar a
+        resposta deles a essa jogada; ele não desfaz nada nem dá defesa de graça, só conta.
+    contra_jogo: Matá-lo primeiro, ou trocar de plano depois do presságio; o que ele leu é a jogada que você ia fazer, não a que você faz.
+    gancho: >-
+      Os Saqueadores Vrel levam viajantes para ler, e não só bens; quem faz a leitura para o agrupamento paga
+      no corpo cada memória que engole.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "As antenas de {nome} param apontadas para você, e os Vrel ao lado mudam de lugar ao mesmo tempo."
+    description: Um Vrel dos Saqueadores que leu cativos demais, de cabeça rachada e larga, abdômen inchado e um segundo par de palpos, que lê o que você vai fazer e o passa ao agrupamento.
+    perigo: Alto
+    lore: >-
+      Os Saqueadores Vrel saqueiam bens e memórias, e capturam viajantes para ler. A leitura é feita por um
+      só, e o que ele lê o agrupamento inteiro sabe. Quem lê demais paga no corpo: a cabeça racha e alarga, e
+      nasce um segundo par de palpos para segurar crânios. O abdômen incha com o que ele engoliu. Em luta,
+      ele fica atrás, quieto, e os outros Vrel se desviam de golpes que ainda não foram dados.
+    aparencia: >-
+      Vrel magro de carapaça de placas coloridas desencontradas, cabeça rachada e larga demais, um segundo
+      par de palpos longos e articulados saindo do queixo, abdômen inchado e translúcido com um líquido
+      escuro que se mexe, antenas curtas.
+    como_se_luta: >-
+      Lê a próxima jogada e os Vrel ao lado já a esperam. Derrubá-lo primeiro, ou mudar de plano depois de
+      ver a resposta deles.
+    related_entities: [pradaria_ruinas, bandos_nomades]
+    arte:
+      visual: >-
+        Humanoide insetoide do tamanho de um homem, magro, carapaça de placas de quitina de cores
+        desencontradas (azul-acinzentado, ocre, verde-sujo); cabeça larga demais, com uma rachadura no
+        meio da carapaça; olhos totalmente escuros; antenas curtas; do queixo saem dois palpos longos,
+        articulados, terminados em pontas curvas; abdômen inchado, translúcido, com um líquido escuro
+        rodando dentro.
+      composicao: >-
+        Ruína baixa na pradaria ao anoitecer; o Leitor imóvel atrás de dois Saqueadores Vrel, as antenas
+        apontadas para um viajante de espada erguida; os dois Vrel já desviando para o lado para onde a
+        espada vai descer. Luz de lua fria e uma fogueira baixa.
+      evitar: Devorador de mentes de tentáculos, alienígena, aranha humanoide. É um Vrel de Valoria, com o corpo deformado pela leitura.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_profanador_cravejado
+    vaga: 14
+    nome: Profanador Cravejado
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:510", "lore_nova/creatures.txt:476"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: eter_cristalizado
+      escala: humana
+      locomocao: cava
+      percepcao: luz
+      texto: >-
+        Um Desenterrado humano que usou por anos as joias élficas que roubava das sepulturas, até o Éter delas
+        o tomar. Os anéis afundaram nos dedos e a carne fechou por cima; fivelas, broches e pedras de diadema
+        entraram no peito, nos ombros e na testa, e em volta de cada peça a pele ficou dura, escura e lisa
+        como casca de ferida velha. Do peito para cima ele é mais metal e pedra que pele, e o que brilha fosco
+        nas pedras é o que o mantém de pé. As mãos estão gastas de cavar.
+    silhueta: Um homem curvado de pá na mão, com o peito e os ombros cravejados de pontos de luz fosca.
+    comportamento: >-
+      Cava de sepultura em sepultura e sai de dentro da terra quando ouve gente nas ruínas. Luta com a pá e
+      com o peito para a frente, porque as peças cravadas aparam o golpe. Quando alguém arranca uma delas,
+      ele grita como quem perde um dente, e tenta cavar para longe.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_profanador_cravejado_peca_arrancada
+      frase: >-
+        As relíquias cravadas na pele são armadura; quem arranca uma delas no lugar de bater o fere fundo,
+        tira essa parte da armadura e fica com a peça.
+    contra_jogo: Arrancar as relíquias em vez de golpear a pele dura; cada peça tirada o deixa mais mole e paga a luta.
+    gancho: >-
+      Os Desenterrados vendem as relíquias das sepulturas élficas para os colecionadores; alguns guardam
+      demais para si, e as relíquias acabam guardando eles.
+    habitat: [pr_ruinas_assombradas, pr_vaelorn]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} estufa o peito cravejado para a frente, e as pedras clareiam todas juntas."
+    description: Um Desenterrado que usou tanto as joias élficas roubadas que o Éter delas o tomou, de anéis afundados na carne e o peito cravejado de relíquias que lhe servem de armadura.
+    perigo: Médio
+    lore: >-
+      Os Desenterrados saqueiam as sepulturas élficas e vendem as relíquias em Nova Arcádia e Brekmar.
+      Alguns não vendem. Usam. O Éter das joias de túmulo afunda as peças na carne, e a pele fecha por cima
+      dura e escura, como casca de ferida. Esses não saem mais das Ruínas e vivem de cavar, e cada peça nova
+      que acham vai para o corpo. Quem os enfrenta aprende a arrancar as peças em vez de bater: sai com a
+      relíquia, e ele sai menor.
+    aparencia: >-
+      Homem curvado com anéis élficos afundados nos dedos sob a carne e fivelas, broches e pedras de diadema
+      cravados no peito, nos ombros e na testa, cada um cercado de pele dura, escura e lisa; pedras brilhando
+      fosco; mãos gastas de cavar.
+    como_se_luta: >-
+      As relíquias cravadas na pele o protegem como armadura. Arrancar uma delas o fere fundo, tira essa
+      proteção e deixa a peça com quem arrancou.
+    related_entities: [pr_ruinas_assombradas, pr_vaelorn]
+    arte:
+      visual: >-
+        Humano magro e curvado, roupas de saqueador de couro sujo de terra, uma pá curta na mão; o peito nu,
+        os ombros e a testa cravejados de relíquias élficas (fivelas, broches de folha, pedras de diadema),
+        cada uma afundada na carne e cercada por um anel de pele escura, dura e lustrosa; anéis afundados
+        nos dedos com só a pedra à mostra; as pedras com brilho violeta fosco.
+      composicao: >-
+        Sepultura élfica aberta ao lado de uma lápide esculpida tomada pelo capim; o Profanador saindo pela
+        metade da cova, peito para a frente, enquanto um viajante com uma lanterna estende a mão para um
+        broche cravado no ombro dele, ambos do mesmo tamanho. Noite, luz de lanterna e o brilho violeta
+        fosco das pedras.
+      evitar: Lich coberto de joias, ladrão de capa e máscara, morto-vivo, pele de porcelana. É um homem vivo, de pele endurecida em volta das relíquias.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cauda_emendada
+    vaga: 15
+    nome: Cauda Emendada
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: bandos_nomades
+      refs: ["lore_nova/races.txt:232", "lore_nova/races.txt:217", "lore_nova/locations.txt:400"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: humana
+      locomocao: salta
+      percepcao: respiracao
+      texto: >-
+        Um Cinzéu Andarilho que, por não sentir dor, deixou emendar à própria cauda as vértebras de outros
+        Cinzéus mortos, até ela passar de três metros. As emendas são anéis de couro cru e pino de osso, e a
+        ponta óssea da cauda foi limada em gancho. O corpo é pequeno e seco, de pele cinza tatuada, e os
+        quadris engrossaram para aguentar o peso; ele salta apoiado na cauda como num terceiro pé. Três dedos
+        em cada mão, e nenhum cuidado com os ossos que quebra.
+    silhueta: Um vulto pequeno e cinza com uma cauda longa demais varrendo o capim em arco atrás dele.
+    comportamento: >-
+      Anda com os bandos mistos e entra pelo capim baixo, varrendo com a cauda a altura dos tornozelos.
+      Derruba e não fica: salta para longe apoiado na cauda e varre de novo quem se levantou. Sente pela
+      respiração onde a pessoa caiu.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: bandos_nomades
+    mecanica_assinatura:
+      carta: cri_cauda_emendada_varrida
+      frase: >-
+        Varre os tornozelos com a cauda e derruba quem está de pé; não prende nem segura: o derrubado perde
+        a próxima ação de se levantar, e ele já saltou para longe.
+    contra_jogo: Pular a varrida ficando parado com a guarda baixa, ou pisar na cauda; presa no chão, ela o deixa sem saltar.
+    gancho: >-
+      Guerreiros Cinzéus aprendem a usar a cauda como membro de combate; um Andarilho que não sente dor achou
+      que a cauda podia ser mais comprida do que nasceu.
+    habitat: [pradaria_ruinas, pr_solvhen]
+    inspiracao: []
+    padrao: [mover, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "A cauda de {nome} recua em arco pelo capim, rente ao chão, na altura dos seus tornozelos."
+    description: Um Cinzéu Andarilho que emendou à cauda as vértebras de outros mortos até ela passar de três metros, que varre os tornozelos, derruba e salta para longe.
+    perigo: Baixo
+    lore: >-
+      Os Cinzéus não sentem dor, e os guerreiros deles usam a cauda como mais um membro. Alguns Andarilhos
+      Cinzéus foram mais longe: emendaram à própria cauda as vértebras de mortos da mesma raça, com couro cru
+      e pino de osso, até ela passar de três metros. Varrem o capim na altura dos tornozelos, derrubam e
+      saltam para longe apoiados nela. Os nômades humanos dos bandos mistos andam um passo atrás deles.
+    aparencia: >-
+      Cinzéu pequeno e seco, de pele cinza tatuada e quadris grossos, com uma cauda de mais de três metros
+      feita de vértebras emendadas por anéis de couro cru e pinos de osso, a ponta óssea limada em gancho;
+      três dedos nas mãos.
+    como_se_luta: >-
+      Varre os tornozelos com a cauda, derruba quem está de pé e salta para longe. Ficar firme e baixo, ou
+      pisar na cauda, o deixa sem salto.
+    related_entities: [pradaria_ruinas, pr_solvhen, bandos_nomades]
+    arte:
+      visual: >-
+        Cinzéu adulto pequeno e magro, pele cinza-clara com tatuagens pretas, olhos de íris branca, quadris
+        largos e musculosos; uma cauda de pele cinza sem pelos, contínua como a de qualquer Cinzéu, só que
+        longa demais, com mais de três metros, com poucas emendas discretas de couro cru onde a pele muda de
+        tom, e a ponta óssea limada em gancho; corpo no ar, a meio salto, apoiado só na ponta da cauda.
+      composicao: >-
+        Capim baixo na pradaria, uma trilha de caravana; o Cinzéu saltando apoiado na cauda enquanto um
+        caravaneiro cai de lado com os tornozelos varridos; um carro de boi ao fundo dá a escala. Luz forte de
+        meio-dia, sombras curtas, vento no capim.
+      evitar: Homem-lagarto, demônio de cauda com ponta de flecha, ninja de fantasia, colar ou rosário de vértebras soltas. Deve ler como a cauda de pele de um Cinzéu, longa demais, não como uma fileira de ossos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_desfiado_de_vaelorn
+    vaga: 16
+    nome: Desfiado de Vaelorn
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: cidades_estado_sobreviventes_vaelorn_solvhen
+      refs: ["lore_nova/races.txt:75", "lore_nova/races.txt:50", "lore_nova/factions.txt:350"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: salta
+      percepcao: visao
+      texto: >-
+        Um sentinela élfico de Vaelorn que pagou a um mago para lhe tirarem a dor. Os braços e as pernas
+        foram abertos ao comprido e os nervos puxados para fora, e as pontas ficaram atadas em nós
+        esbranquiçados nos pulsos e nos tornozelos, sob as fendas costuradas. A pele violeta não sente mais
+        nada: os dedos estão tortos de fraturas que ele não percebeu, um joelho dobra para o lado, e ele
+        luta assim mesmo. Os olhos se movem o tempo todo, porque só pelos olhos ele sabe onde está o corpo.
+    silhueta: Um Elfo magro saltando do alto de um muro com um braço torto e uma lança, sem amortecer a queda.
+    comportamento: >-
+      Guarda as ruínas élficas contra Desenterrados e qualquer um que entre nelas. Salta de muros e colunas
+      em cima do intruso sem amortecer, e continua lutando com o osso partido. Cada salto o quebra um pouco
+      mais, e ele não sabe.
+    papel_tatico: bruto_de_linha
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: cidades_estado_sobreviventes_vaelorn_solvhen
+    mecanica_assinatura:
+      carta: cri_desfiado_de_vaelorn_salto_sem_dor
+      frase: >-
+        Ferimentos não o atrasam: salta do alto e bate com força cheia mesmo partido; mas cada salto que ele
+        dá o fere a ele também, sem que perceba.
+    contra_jogo: Fazê-lo saltar; fique perto dos muros e recue de altura em altura, e o corpo dele se quebra sozinho.
+    gancho: >-
+      Os Elfos sentem a dor como nenhuma raça e invejam, sem dizer, os Cinzéus que não a sentem; alguns
+      sentinelas de Vaelorn pagaram para não sentir.
+    habitat: [pr_ruinas_assombradas, pr_vaelorn]
+    inspiracao: []
+    padrao: [ataque, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} sobe ao alto do muro e dobra o joelho torto para saltar."
+    description: Um sentinela élfico de Vaelorn que pagou para não sentir dor, de nervos puxados para fora dos braços e das pernas, que salta e luta com os ossos partidos sem perceber.
+    perigo: Médio
+    lore: >-
+      Os Elfos sentem a dor como nenhuma outra raça, e invejam sem dizer os Cinzéus, que não sentem nenhuma.
+      Alguns sentinelas de Vaelorn pagaram a um mago para não sentir. Os nervos dos braços e das pernas foram
+      puxados para fora e atados nos pulsos, e desde então eles saltam de qualquer altura e lutam com o osso
+      partido. Guardam as ruínas contra os Desenterrados e contra qualquer um que entre. O corpo se quebra aos
+      poucos, e eles só sabem olhando.
+    aparencia: >-
+      Elfo magro de pele violeta, braços e pernas abertos ao comprido e costurados, com nós esbranquiçados de
+      nervos atados nos pulsos e tornozelos; dedos tortos de fraturas antigas, um joelho dobrado para o
+      lado, olhos sempre se movendo.
+    como_se_luta: >-
+      Não se atrasa com ferimentos e salta do alto com força cheia; cada salto o fere também. Recuar de
+      altura em altura e deixá-lo saltar.
+    related_entities: [pr_ruinas_assombradas, pr_vaelorn, cidades_estado_sobreviventes_vaelorn_solvhen]
+    arte:
+      visual: >-
+        Elfo adulto alto e magro, orelhas muito longas, pele violeta com veias claras; nos braços e nas
+        pernas, cicatrizes retas e longas de corte costurado ao comprido; nos pulsos e tornozelos, nós
+        esbranquiçados de cordão fino amarrados por fora da pele; dedos tortos, um joelho torto para o lado;
+        armadura leve élfica de couro gravado; lança de haste esculpida.
+      composicao: >-
+        Muralha baixa de uma ruína élfica com relevos de folhas, capim alto no pé; o Desfiado saltando do
+        alto do muro, de lança apontada para baixo, sobre um Desenterrado que ergue a pá; a altura do muro é
+        de dois homens. Luz de amanhecer, céu branco, poeira.
+      evitar: Elfo elegante de fantasia, morto-vivo costurado, monstro de Frankenstein, gore. Sem sangue nem vísceras; as costuras estão fechadas e velhas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_arqueiro_de_tendao
+    vaga: 17
+    nome: Arqueiro de Tendão
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: bandos_nomades
+      refs: ["lore_nova/creatures.txt:506", "lore_nova/factions.txt:348"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um arqueiro dos Cavaleiros-Cinza que, no mercado de Vaelorn, trocou o arco de madeira por um
+        enxerto. O antebraço esquerdo foi aberto do cotovelo ao punho: os dois ossos cresceram em hastes
+        curvas de Éter cristalizado, translúcidas e foscas, que saem da carne em cima e embaixo como as
+        pontas de um arco. A corda é o próprio tendão do braço, puxado para fora da carne e preso nas
+        duas pontas; a pele em volta do corte nunca fechou e tem crostas de cristal. Cada disparo puxa o
+        tendão um pouco mais para fora. A mão direita, a da puxada, tem os dedos calejados até o osso.
+    silhueta: >-
+      Um arqueiro de capa cinza sem arco nas mãos, com o próprio antebraço esquerdo aberto em arco de
+      cristal e a corda saindo da carne.
+    comportamento: >-
+      Fica para trás, a pé, no capim alto, enquanto os outros Cavaleiros-Cinza cobram a passagem, e
+      atira sem parar até o tendão estalar; então recua para amarrá-lo de novo.
+    papel_tatico: artilharia
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: bandos_nomades
+    mecanica_assinatura:
+      carta: "cri_arqueiro_de_tendao_corda_de_carne"
+      frase: >-
+        Cada disparo puxa o tendão mais para fora: o primeiro tiro é fraco e cada um seguinte bate mais
+        forte; no quarto o tendão estala, e ele passa a rodada seguinte sem atirar, sangrando do braço.
+    contra_jogo: >-
+      Aguentar os primeiros tiros abrigado e chegar perto na rodada em que o tendão estala; ou cortar a
+      corda de tendão de perto, com qualquer lâmina.
+    gancho: >-
+      Os Cavaleiros-Cinza são o bando mais organizado das rotas; os mais velhos dizem que os arqueiros
+      deles não perdem o arco desde que passaram a comprá-lo em Vaelorn, dentro do próprio braço.
+    habitat: [pradaria_ruinas, pr_vaelorn]
+    inspiracao: []
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} puxa o tendão até a orelha, e o braço-arco range e solta lascas de cristal."
+    description: >-
+      Um arqueiro dos Cavaleiros-Cinza de antebraço aberto em arco de cristal e corda de tendão, cujos
+      tiros ficam mais fortes a cada disparo até o tendão estalar.
+    perigo: Baixo
+    lore: >-
+      Os Cavaleiros-Cinza cobram proteção nas rotas entre as vilas e são o bando mais organizado da
+      Pradaria. Alguns arqueiros deles trocaram o arco, no mercado de Vaelorn, por um enxerto: o
+      antebraço aberto, os ossos crescidos em hastes de Éter cristalizado, o tendão puxado para fora
+      como corda. O tiro fica mais forte a cada disparo, até o tendão estalar. Os que escaparam contaram
+      os tiros.
+    aparencia: >-
+      Arqueiro de capa cinza cujo antebraço esquerdo virou arco: duas hastes curvas de cristal de Éter
+      saindo da carne aberta, o tendão do braço esticado como corda entre elas, crostas de cristal em
+      volta do corte, dedos da mão direita calejados até o osso.
+    como_se_luta: >-
+      Atira mais forte a cada disparo e, no quarto, o tendão estala e ele fica uma rodada sem arco.
+      Abrigue-se dos primeiros e chegue perto no estalo, ou corte o tendão.
+    related_entities: [pradaria_ruinas, pr_vaelorn, bandos_nomades]
+    arte:
+      visual: >-
+        Humano adulto magro de capa cinza esfarrapada dos Cavaleiros-Cinza, de pé no capim alto; o
+        antebraço esquerdo, erguido à frente, está aberto do cotovelo ao punho, e dele saem duas hastes
+        curvas de cristal translúcido e fosco formando um arco; entre as pontas, uma corda de tendão
+        vermelho-pálido que sai de dentro da carne; crostas de cristal nas bordas do corte; a mão
+        direita puxa o tendão até a orelha, com um estilhaço de cristal por flecha. Olhos humanos
+        comuns, sem enxerto no rosto.
+      composicao: >-
+        Capim alto até o peito na pradaria, fumaça de uma carroça queimando ao fundo; o Atirador de pé no
+        capim, mirando através da fumaça; um cavalo cinza sem cavaleiro ao lado dele dá a escala. Luz de fim
+        de tarde, o brilho frio das pedras como único ponto azul.
+      evitar: Ciborgue, olhos de laser, elfo arqueiro de fantasia, cavaleiro de armadura. Pedras turvas e foscas, sem brilho neon.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_egua_de_costas
+    vaga: 18
+    nome: Égua de Costas
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_solvhara
+      refs: ["lore_nova/npcs.txt:244", "lore_nova/creatures.txt:456"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Uma égua cinza da Pradaria, viva, que ficou dias ao lado do dono morto no capim e não saiu dali. O
+        pescoço torceu para trás e assim ficou: a cabeça repousa virada sobre as próprias costas, olhando
+        sempre para o lugar onde ele caiu. O couro afundou entre as costelas, a crina caiu em tufos e os
+        cascos de trás cresceram grossos e rachados, de tanto escoicear o que passava. Os olhos são escuros e
+        úmidos e não piscam.
+    silhueta: Uma égua magra andando para a frente com a cabeça virada inteira para trás, sobre as próprias costas.
+    comportamento: >-
+      Fica parada junto de um monte de capim onde há um corpo, de cabeça virada para ele, e deixa que se
+      aproximem pela frente. Quem tenta passar por trás dela, ou se afastar depois de chegar, leva o coice;
+      ela vê para trás, e só para trás.
+    papel_tatico: controlador
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_egua_de_costas_coice_em_quem_vai
+      frase: >-
+        Escoiceia quem se afasta dela ou passa por trás: recuar, contornar ou fugir custa um coice cheio;
+        quem fica e luta de frente, não leva nenhum.
+    contra_jogo: Lutar de frente e não recuar; ela não enxerga para a frente e erra quem não sai do lugar.
+    gancho: >-
+      Roubar cavalos é a ofensa mais comum da Pradaria, e os Andarilhos choram os cavalos como gente; às vezes
+      é o cavalo que chora o Andarilho.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [defesa, ataque, defesa]
+    a_cada_n: 4
+    telegrafo: "{nome} firma as patas da frente e os cascos de trás se erguem na direção de quem recua."
+    description: Uma cria da Tristeza na Pradaria, uma égua cinza que ficou ao lado do dono morto até o pescoço torcer para trás, e escoiceia quem se afasta ou passa por trás dela.
+    perigo: Médio
+    lore: >-
+      Os Andarilhos choram os cavalos como gente, e às vezes é o contrário. A Tristeza não é coisa que ande,
+      mas onde o luto é muito ela deixa um resíduo, e o resíduo toma a carne que estiver à mão. Uma égua que
+      ficou dias ao lado do dono morto no capim tem carne de sobra. O pescoço torceu para trás, para o lugar
+      onde ele caiu, e não voltou. Ela deixa que cheguem pela frente. Quem vai embora leva o coice.
+    aparencia: >-
+      Égua cinza magra de couro afundado entre as costelas, crina caída em tufos, cascos de trás grossos e
+      rachados, pescoço torcido para trás com a cabeça repousada sobre as próprias costas e olhos escuros e
+      úmidos que não piscam.
+    como_se_luta: >-
+      Escoiceia quem recua, contorna ou foge, porque só vê para trás. Ficar e lutar de frente não custa
+      coice.
+    related_entities: [pradaria_ruinas, npc_solvhara]
+    arte:
+      visual: >-
+        Égua cinza da pradaria, viva, magra, couro afundado entre as costelas, crina rala caindo em tufos;
+        o pescoço dobrado e torcido para trás de forma impossível, a cabeça repousando virada sobre o próprio
+        dorso, olhos grandes, escuros e úmidos; cascos traseiros grossos e rachados erguidos num coice.
+      composicao: >-
+        Pradaria aberta ao entardecer, capim alto; um monte baixo de capim com uma sela e uma lança caídas ao
+        lado; a égua parada junto dele, a cabeça virada para o monte; um viajante que tentava contorná-la
+        sendo atingido pelo coice, do tamanho da égua até a cernelha. Luz alaranjada, vento, céu branco.
+      evitar: Cavalo-fantasma translúcido, cavalo de fogo do apocalipse, pesadelo de olhos vermelhos, gore. É uma égua viva, de carne, triste.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cabeca_acima
+    vaga: 19
+    nome: Cabeça Acima
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/npcs.txt:167", "lore_nova/races.txt:18"]
+    anatomia:
+      plano_corporal: segmentado
+      material: osso
+      escala: enorme
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Uma cria do Orgulho que tomou os ossos de um duelista élfico enterrado na arena da sua cidade. A
+        espinha do morto não parou de crescer: virou uma corrente de vértebras grossas, comprida como
+        três homens deitados, e de cada vértebra saem duas costelas curvas que pisam o chão como patas.
+        A metade de trás se arrasta baixa no capim; a da frente se ergue reta no ar, e no alto dela vai
+        o crânio, com o diadema do morto fundido ao osso da testa. Os braços do duelista ficaram presos
+        logo abaixo do crânio, compridos, de quatro dedos de osso polido. Entre as vértebras há pouca
+        carne, pálida e esticada, e tendões grossos que puxam a frente para cima. Nunca abaixa a cabeça.
+    silhueta: >-
+      Uma corrente comprida de vértebras sobre patas de costela, com a metade da frente erguida no ar e
+      um crânio coroado no alto.
+    comportamento: >-
+      Fica nas arenas e praças das ruínas élficas, com a frente erguida acima de tudo, e não se digna a
+      sentir golpe fraco. Cada golpe de verdade o faz baixar a cabeça, e baixar a cabeça é o que ele não
+      suporta.
+    papel_tatico: tanque_reativo
+    arquetipo: tatico
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_cabeca_acima_cabeca_baixa"
+      frase: >-
+        Golpes fracos não o ferem; só o golpe forte entra, e cada golpe forte faz a frente erguida
+        descer um anel; com três, a cabeça toca o chão, e ele passa a rodada seguinte se reerguendo, sem
+        atacar e sem defesa.
+    contra_jogo: >-
+      Guardar força e bater pouco e forte, três vezes, até a cabeça tocar o chão, e então bater no
+      crânio; golpes miúdos se perdem nas vértebras.
+    gancho: >-
+      Os Elfos foram a primeira presa do Orgulho, antes de existir cidade; as cidades caíram, mas as arenas
+      onde os Elfos se mediam continuam de pé.
+    habitat: [pr_ruinas_assombradas]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue mais um anel de vértebras, e o diadema sobe acima de todos vocês."
+    description: >-
+      Uma cria do Orgulho nas arenas élficas em ruína, uma corrente de vértebras sobre patas de costela
+      com a frente erguida e a cabeça coroada acima de todas, que nem sente golpe fraco.
+    perigo: Alto
+    lore: >-
+      Os Elfos foram a primeira presa do Orgulho, muito antes de terem cidade. O Orgulho está selado
+      longe daqui, mas o que ele deixa não precisa dele: nas arenas das cidades-estado, onde os Elfos se
+      mediam uns contra os outros, o resíduo tomou os ossos de um duelista enterrado. A espinha não
+      parou de crescer, as costelas viraram patas, e a cabeça fica acima de tudo. Golpe fraco não o
+      ofende; só o forte o faz baixar a cabeça, e isso ele não perdoa.
+    aparencia: >-
+      Corrente de vértebras grossas de três homens de comprimento sobre pares de costelas curvas, metade
+      da frente erguida reta, crânio élfico com diadema fundido no alto, dois braços longos de quatro
+      dedos de osso polido logo abaixo, pouca carne pálida esticada entre as vértebras.
+    como_se_luta: >-
+      Só o golpe forte o fere, e cada um baixa a cabeça dele um anel; com três, ela toca o chão e ele
+      perde a rodada. Bata pouco e forte.
+    related_entities: [pr_ruinas_assombradas, npc_urath]
+    arte:
+      visual: >-
+        Criatura de osso enorme: uma coluna vertebral grossa de uns seis metros, cada vértebra com um
+        par de costelas curvas fazendo de patas; a metade de trás rente ao capim, a metade da frente
+        erguida na vertical; no topo, um crânio élfico de traços angulosos com um diadema de ouro
+        fundido no osso da testa, voltado para o horizonte; logo abaixo do crânio, dois braços humanos
+        muito longos terminando em quatro dedos de osso polido; carne pálida e escassa e tendões grossos
+        esticados entre as vértebras. Nada de figura humana alta de pé (essa leitura é da Pernalta do
+        Conselho).
+      composicao: >-
+        Arena élfica em ruína, degraus de pedra tomados pelo capim; a Cabeça Acima de pé no centro, olhando
+        de cima um duelista nômade com uma espada curta, cuja cabeça chega ao peito dela; sombra longa sobre
+        os degraus. Luz dourada de fim de tarde.
+      evitar: Demônio de chifres, rei-esqueleto de manto, girafa, slender man de terno. É osso élfico esticado, altivo e frio.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_chifres_travados
+    vaga: 20
+    nome: Chifres Travados
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/creatures.txt:440"]
+    anatomia:
+      plano_corporal: acoplado
+      material: carne_exposta
+      escala: enorme
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Dois touros auroques que brigaram pela mesma manada até os chifres travarem, e que o Ódio fundiu ali.
+        Os dois crânios cresceram um para dentro do outro num nó de osso e chifre, e dos dois lados saem os
+        pescoços, os ombros e os corpos inteiros, cada um empurrando para um lado. Onde os couros se
+        encontram a pele rasgou e o músculo ficou exposto e vermelho, sempre em esforço. As oito patas
+        cavam o chão em direções contrárias.
+    silhueta: Dois touros enormes de cabeças fundidas num só nó de chifre, um corpo para cada lado, num cabo de guerra.
+    comportamento: >-
+      Os dois corpos se empurram sem parar, e o nó de chifre anda para o lado do que está mais inteiro,
+      arrastando o outro. É desse lado que vem o golpe, com o peso dos dois. Odeia quem estiver entre ou
+      perto, sem escolha. Bandos inteiros já se mataram por causa da manada que ele guarda.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_chifres_travados_cabo_de_guerra
+      frase: >-
+        O nó de chifre vai para o lado do corpo menos ferido, que bate com o peso dos dois; ferir os dois
+        corpos por igual trava o nó, e ele passa uma rodada empurrando a si mesmo sem atacar.
+    contra_jogo: Alternar os golpes entre os dois corpos até ficarem iguais e atacar o nó travado; ferir só um lado dá força ao outro.
+    gancho: >-
+      A disputa por uma manada de auroques já causou guerra entre bandos; numa delas, os dois touros
+      brigaram junto com os homens, e o Ódio ficou com os dois.
+    habitat: [pradaria_ruinas]
+    inspiracao: []
+    padrao: [ataque_multiplo, ataque, defesa, ataque_multiplo]
+    a_cada_n: 4
+    telegrafo: "O nó de chifre de {nome} escorrega para um lado, e o corpo de lá finca as quatro patas."
+    description: "Chefe da Pradaria: uma cria do Ódio, dois touros auroques de crânios fundidos no nó dos chifres travados, cada corpo puxando para um lado, que bate com o peso dos dois pelo lado mais inteiro."
+    perigo: Extremo
+    lore: >-
+      A disputa por uma manada de auroques já levou bandos à guerra. O Ódio não cria rancor do nada; pega o
+      que existe e aperta até não ter volta. Numa dessas guerras, dois touros brigaram junto com os homens
+      até os chifres travarem, e o resíduo do Ódio os fundiu ali, crânio dentro de crânio. Hoje são uma
+      coisa só, de dois corpos num cabo de guerra que não acaba. O nó vai para o lado do mais forte, e é de
+      lá que vem o golpe. Os nômades contam que ele só para quando os dois cansam igual.
+    aparencia: >-
+      Dois touros auroques enormes com os crânios fundidos num só nó de osso e chifre, um corpo inteiro para
+      cada lado, oito patas cavando em sentidos contrários, músculo vermelho exposto onde os couros se
+      rasgaram.
+    como_se_luta: >-
+      O nó vai para o lado do corpo mais inteiro, que bate com o peso dos dois. Ferir os dois por igual trava
+      o nó e o deixa uma rodada empurrando a si mesmo.
+    related_entities: [pradaria_ruinas, npc_vhrak]
+    arte:
+      visual: >-
+        Dois touros auroques gigantes, pelagem escura e curta, ligados pela cabeça: os dois crânios fundidos
+        num único nó maciço de osso e chifres entrelaçados; os dois corpos completos saem desse nó em
+        direções opostas, em tensão de cabo de guerra, um deles visivelmente mais ferido e sendo arrastado;
+        no ponto de junção dos pescoços, o couro rasgado mostra músculo vermelho tenso, sem vísceras; patas
+        cravadas no chão em sentidos contrários, sulcos de terra revirada atrás de cada uma.
+      composicao: >-
+        Pradaria aberta com uma manada de auroques ao fundo, pastando; dois sulcos longos de terra revirada
+        mostrando o arrasto; dois nômades a cavalo à distância, as lanças baixas, um cavalo que mal chega à
+        altura do ombro de um dos touros. Céu branco de vento, poeira dourada.
+      evitar: Minotauro, touro-demônio de fogo, cérbero, animal de duas cabeças simétrico. São dois corpos inteiros opostos, ligados só no nó dos chifres.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_retalho_das_duas_cidades
+    vaga: 21
+    nome: Retalho das Duas Cidades
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/races.txt:75"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Uma cria da Inveja feita de duas metades que não eram do mesmo corpo, costuradas ao comprido do alto
+        da cabeça ao meio das pernas: um lado é de Elfo, de pele violeta, orelha longa e mão de quatro dedos;
+        o outro é de Cinzéu, de pele cinza tatuada, mão de três dedos e meia cauda. A costura é uma crista de
+        carne inchada, e cada lado puxa a pele do outro com a própria mão. Os dois olhos, um de cada raça,
+        nunca olham para o mesmo ponto.
+    silhueta: Uma figura partida ao comprido em duas cores, com uma orelha longa de um lado e um toco de cauda do outro, as mãos puxando a própria costura.
+    comportamento: >-
+      Aparece nas estradas entre Vaelorn e Solvhen. Não quer o que o outro tem; quer que o outro não
+      tenha. Perto dele, a ajuda que um dá ao outro se desfaz antes de chegar.
+    papel_tatico: quebra_defesa
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_retalho_das_duas_cidades_cada_um_por_si"
+      frase: >-
+        Desfaz a ajuda: a defesa, a cura ou a Reação que um herói joga em favor de outro se desfaz antes
+        de valer enquanto ele estiver de pé; o que cada herói joga para si mesmo vale inteiro.
+    contra_jogo: >-
+      Cada um se proteger sozinho enquanto ele vive, e derrubá-lo primeiro pela costura do meio, onde as
+      duas metades se repelem e a carne rasga.
+    gancho: >-
+      Os Elfos invejam os Cinzéus pela falta de dor, e os Cinzéus não dizem o que invejam; entre as duas
+      cidades que sobraram, o resíduo da Inveja teve material para os dois lados.
+    habitat: [pr_vaelorn, pradaria_ruinas]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: >-
+      As duas mãos de {nome} se esticam ao mesmo tempo, cada uma para um de vocês, uma de cada cor.
+    description: >-
+      Uma cria da Inveja entre Vaelorn e Solvhen, um corpo de dois lados costurados, um de Elfo e outro
+      de Cinzéu, que desfaz a ajuda que um companheiro dá ao outro.
+    perigo: Baixo
+    lore: >-
+      A Inveja não quer o que o outro tem; quer que o outro não tenha. Não anda, porque não é coisa que
+      ande; mas onde há dois povos que se medem, ela deixa resíduo, e o resíduo toma a carne que achar.
+      Entre Vaelorn e Solvhen achou de dois tipos. O que se encontra nessas estradas é um corpo
+      costurado ao comprido, metade de cada raça, cada lado puxando a pele do outro. Perto dele, o que
+      um faz pelo outro se desfaz na mão, e cada um fica sozinho.
+    aparencia: >-
+      Corpo partido ao comprido por uma costura de carne inchada: um lado élfico de pele violeta, orelha
+      longa e quatro dedos; o outro Cinzéu, de pele cinza tatuada, três dedos e um toco de cauda; cada mão
+      puxando a pele do lado oposto; olhos que não olham para o mesmo ponto.
+    como_se_luta: >-
+      Desfaz o que um herói joga para proteger ou curar outro. Cada um se cuida sozinho até derrubá-lo
+      pela costura do meio.
+    related_entities: [pr_vaelorn, pradaria_ruinas, npc_veth]
+    arte:
+      visual: >-
+        Figura humanoide de altura humana dividida verticalmente ao comprido por uma costura grossa e
+        inchada de carne: o lado esquerdo é élfico, pele violeta com veias claras, orelha muito longa, mão
+        de quatro dedos; o lado direito é Cinzéu, pele cinza-escura com tatuagens pretas, olho de íris
+        branca, mão de três dedos e um toco de cauda sem pelo; cada mão agarra e repuxa a pele do outro lado.
+      composicao: >-
+        Estrada de terra na pradaria com um marco de pedra partido que aponta para duas direções; a Costura
+        no meio da estrada, de frente para uma viajante que segura um escudo de madeira, as duas da mesma
+        altura. Luz chapada de céu branco, vento no capim.
+      evitar: Arlequim, Duas-Caras de quadrinho, monstro de Frankenstein, gore. A costura é velha e fechada; o horror é a assimetria.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= SLOT GENÉRICO REINVENTADO (R24) =======================
+  - id: enemy_esqueleto_legiao_antiga
+    vaga: 22
+    nome: Capim de Couraça
+    status: reinventada
+    substitui: enemy_esqueleto_legiao_antiga
+    ataques: ["Lâmina Enferrujada"]
+    acoes: ["Avança com a rajada contra quem estiver no campo; não foge, não se rende."]
+    substitui_generico: Esqueleto da Legião Antiga
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:484", "lore_nova/creatures.txt:630", "lore_nova/daily_life.txt:235"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um morto da Guerra do Céu Vermelho que ficou caído na Pradaria, por onde o capim cresceu. As raízes
+        entraram pelas juntas e seguraram os ossos no lugar de tendões, e o capim saiu pelas órbitas, pela
+        boca e pelas frestas da couraça enferrujada, como palha saindo de um espantalho. O que sobrou de
+        pele é fibra seca. Não anda por vontade: quando o vento sopra forte, o capim enche como vela e o
+        corpo dá o passo, e o vento da Pradaria nunca para.
+    silhueta: Um soldado curvado de couraça enferrujada, com capim saindo da cabeça e dos braços, inclinado na direção do vento.
+    comportamento: >-
+      Fica deitado onde caiu, coberto pelo mato, até o vento virar para o lado de alguém. Então se levanta
+      com o capim, dá os passos que a rajada lhe dá e bate com a lâmina que ainda segura. Entre uma rajada e
+      outra fica parado, curvado, à espera.
+    papel_tatico: bruto_de_linha
+    arquetipo: morto_vivo_implacavel
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_capim_de_couraca_passo_do_vento
+      frase: >-
+        Só avança e bate nas rodadas em que o vento vira a favor dele, com a força da rajada; entre as
+        rajadas fica parado, curvado, e não se defende.
+    contra_jogo: Bater entre as rajadas, quando ele está parado, e recuar quando o capim das costas enche; fogo no capim seco o derruba de vez.
+    gancho: >-
+      Os Andarilhos não armam acampamento a favor do vento de um campo onde houve guerra, e quando o vento
+      vira de noite, levantam e mudam de lugar sem explicar.
+    habitat: [pradaria_ruinas, pr_ruinas_assombradas]
+    inspiracao: []
+    padrao: [ataque, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "O vento vira, o capim nas costas de {nome} enche como vela, e ele dá o primeiro passo."
+    description: Um morto da guerra contra Malagor por onde o capim da Pradaria cresceu, com raízes no lugar dos tendões e capim saindo da couraça, que só avança quando a rajada vem a favor dele.
+    perigo: Baixo
+    lore: >-
+      As batalhas da Guerra do Céu Vermelho foram travadas no capim da Pradaria, e ninguém recolheu todos os
+      mortos. O capim recolheu. Cresceu por dentro deles, as raízes seguraram os ossos onde antes havia
+      tendão, e a palha saiu pelas frestas das couraças. Não andam por vontade: andam quando o vento enche o
+      capim das costas, e param quando ele cai. Os Andarilhos não acampam a favor do vento de um campo
+      antigo, e quando o vento vira de noite, mudam de lugar.
+    aparencia: >-
+      Soldado curvado de couraça enferrujada da velha guerra, com capim seco saindo pelas órbitas, pela boca
+      e pelas frestas da armadura; raízes enroladas nas juntas segurando os ossos; pele de fibra seca.
+    como_se_luta: >-
+      Só avança e bate quando a rajada vem a favor dele; entre as rajadas fica parado e aberto. Fogo no capim
+      seco o derruba de vez.
+    related_entities: [pradaria_ruinas, pr_ruinas_assombradas]
+    arte:
+      visual: >-
+        Corpo humano de soldado, curvado e inclinado para a frente, vestindo uma couraça de ferro corroída e
+        um elmo amassado; por todas as frestas da armadura, pelas órbitas do crânio e pela boca sai capim
+        seco dourado, longo, que balança; raízes finas e escuras enroladas nos cotovelos e joelhos como
+        tendões; pele marrom de fibra seca; uma lâmina enferrujada na mão.
+      composicao: >-
+        Campo de batalha antigo na pradaria, capim alto deitado pelo vento, elmos e lanças quebradas
+        aparecendo no chão; o Capim de Couraça levantando-se do mato, o capim das costas inflado pelo vento;
+        um Andarilho com uma tocha acesa a poucos passos, da mesma altura. Céu branco riscado, luz fria.
+      evitar: Esqueleto limpo de armadura, zumbi verde, espantalho de chapéu, homem-planta de folhas verdes. É um morto da guerra segurado por raízes, com capim seco saindo dele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: enemy_necromante_renegado, nome: "Necromante Renegado", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: eter, texto: "Mago expulso da Torre, agora pratica nas criptas."}, papel_tatico: controlador, arquetipo: covarde_oportunista, categoria: elite}
+  - {id: enemy_espectro_lamento, nome: "Espectro do Lamento", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: cinza, escala: humana, locomocao: plana_voa, percepcao: medo_emocao, texto: "Espírito de uma vítima da peste, intangível."}, papel_tatico: drenador, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: enemy_assassino_cinzeu, nome: "Assassino Cinzéu", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: escala_paredes, percepcao: som, texto: "Humanoide sem olhos dos túneis profundos."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: elite}
+  - {id: enemy_nomade_canibal, nome: "Nômade Canibal", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: sangue_cheiro, texto: "Guerreiro do deserto enlouquecido pela fome."}, papel_tatico: bruto_de_linha, arquetipo: lider_matilha, categoria: lacaio}
+  - {id: enemy_bandido_capitao, nome: "Capitão dos Bandidos", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Líder carismático e perigoso de um bando de estrada."}, papel_tatico: suporte, arquetipo: lider_matilha, categoria: elite}
+  - {id: mon_espectro_elfico, nome: "Espectro Élfico", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: eter_cristalizado, escala: humana, locomocao: plana_voa, percepcao: eter, texto: "Alma élfica ancorada no Éter das ruínas: perturbadoramente belo e mortalmente perigoso ao mesmo tempo. Não foge — já não há para onde."}, papel_tatico: controlador, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: mon_lobo_da_pradaria, nome: "Lobo da Pradaria", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: pequena, locomocao: anda, percepcao: sangue_cheiro, texto: "Caçador da grama alta. A matilha cerca, morde e recua — e volta quando a presa cansa."}, papel_tatico: perseguidor_marca, arquetipo: tatico, categoria: lacaio}
+  - {id: enemy_capturador_groth, nome: "Capturador de Groth", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: humana, locomocao: anda, percepcao: visao, texto: "Mercador de escravos da rede de Groth Algema-Fria. Trata pessoas como inventário; luta como quem protege carga, não como quem tem causa."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: elite}
+  - {id: mon_gafanhoto_runa, nome: "Gafanhoto de Runa", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: quitina, escala: miuda, locomocao: salta, percepcao: eter, texto: "Devora inscrições das cidades caídas e carrega fragmentos de magia no casco."}, papel_tatico: saqueador, arquetipo: tatico, categoria: lacaio}
+  - {id: mon_cavaleiro_sem_rosto, nome: "Cavaleiro sem Rosto", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: humana, locomocao: anda, percepcao: vibracao, texto: "Ainda patrulha a fronteira de uma cidade-estado cujo nome foi apagado."}, papel_tatico: tanque_reativo, arquetipo: morto_vivo_implacavel, categoria: padrao}
+  - {id: mon_auroque_ruinas, nome: "Auroque das Ruínas", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: enorme, locomocao: anda, percepcao: visao, texto: "Seu rebanho derruba colunas antigas para lamber o sal das fundações."}, papel_tatico: bruto_de_linha, arquetipo: lider_matilha, categoria: elite}

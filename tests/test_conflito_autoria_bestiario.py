@@ -22,11 +22,12 @@ DANO_VALIDO = set(gamedata.DANO_FISICO + gamedata.DANO_SOBRENATURAL)
 
 
 def _hidden_card_ids():
+    from services import card_lint
+
     ids = set()
-    for fn in os.listdir(os.path.join("data", "cards")):
-        if not fn.endswith(".json"):
-            continue
-        with open(os.path.join("data", "cards", fn), encoding="utf-8") as f:
+    # recursivo (SPEC-349 R33)
+    for path in card_lint.iter_card_files(os.path.join("data", "cards")):
+        with open(path, encoding="utf-8") as f:
             for c in json.load(f).get("cards") or []:
                 if c.get("oculta"):
                     ids.add(c["id"])

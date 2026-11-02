@@ -1245,8 +1245,8 @@
       "entities": [
         "enemy_mumia_de_po"
       ],
-      "creature_label": "múmia de Pó",
-      "creature_article": "uma",
+      "creature_label": "carregador de Liteira",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1254,7 +1254,7 @@
     },
     "rumor_avist_enemy_hospedeiro_fungico": {
       "family": "avistamento",
-      "source": "data/bestiary.json:726",
+      "source": "data/bestiary.json:745",
       "regions": [
         "selva_xylos"
       ],
@@ -1271,7 +1271,7 @@
     },
     "rumor_avist_enemy_vinha_estranguladora": {
       "family": "avistamento",
-      "source": "data/bestiary.json:812",
+      "source": "data/bestiary.json:831",
       "regions": [
         "selva_xylos",
         "floresta_sussurros"
@@ -1280,7 +1280,7 @@
       "entities": [
         "enemy_vinha_estranguladora"
       ],
-      "creature_label": "vinha Estranguladora",
+      "creature_label": "serpente Cipó Constritora",
       "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1289,7 +1289,7 @@
     },
     "rumor_avist_enemy_guerreiro_bjorn": {
       "family": "avistamento",
-      "source": "data/bestiary.json:915",
+      "source": "data/bestiary.json:953",
       "regions": [
         "skallgard"
       ],
@@ -1306,7 +1306,7 @@
     },
     "rumor_avist_enemy_lobo_invernal": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1012",
+      "source": "data/bestiary.json:1050",
       "regions": [
         "skallgard"
       ],
@@ -1314,7 +1314,7 @@
       "entities": [
         "enemy_lobo_invernal"
       ],
-      "creature_label": "lobo das Geleiras",
+      "creature_label": "pulga de Forquilha",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1323,7 +1323,7 @@
     },
     "rumor_avist_enemy_sentinela_ferro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1111",
+      "source": "data/bestiary.json:1165",
       "regions": [
         "nova_arcadia",
         "montanhas_afiadas"
@@ -1332,8 +1332,8 @@
       "entities": [
         "enemy_sentinela_ferro"
       ],
-      "creature_label": "sentinela de Ferro",
-      "creature_article": "uma",
+      "creature_label": "pajem de Obsidiana",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1341,7 +1341,7 @@
     },
     "rumor_avist_enemy_horror_esgoto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1221",
+      "source": "data/bestiary.json:1295",
       "regions": [
         "nova_arcadia"
       ],
@@ -1349,8 +1349,8 @@
       "entities": [
         "enemy_horror_esgoto"
       ],
-      "creature_label": "horror do Esgoto",
-      "creature_article": "um",
+      "creature_label": "coisa do Esgoto",
+      "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1358,7 +1358,7 @@
     },
     "rumor_avist_enemy_necromante_renegado": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1325",
+      "source": "data/bestiary.json:1419",
       "regions": [
         "pradaria_ruinas",
         "pantano_melancolia"
@@ -1376,7 +1376,7 @@
     },
     "rumor_avist_enemy_esqueleto_legiao_antiga": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1451",
+      "source": "data/bestiary.json:1545",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -1384,7 +1384,7 @@
       "entities": [
         "enemy_esqueleto_legiao_antiga"
       ],
-      "creature_label": "esqueleto da Legião Antiga",
+      "creature_label": "capim de Couraça",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1393,7 +1393,7 @@
     },
     "rumor_avist_enemy_espectro_lamento": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1524",
+      "source": "data/bestiary.json:1635",
       "regions": [
         "pradaria_ruinas",
         "pantano_melancolia"
@@ -1411,7 +1411,7 @@
     },
     "rumor_avist_enemy_gargula_ferro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1621",
+      "source": "data/bestiary.json:1732",
       "regions": [
         "nova_arcadia"
       ],
@@ -1419,7 +1419,7 @@
       "entities": [
         "enemy_gargula_ferro"
       ],
-      "creature_label": "gárgula de Ferro",
+      "creature_label": "rã de Lótus",
       "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1428,7 +1428,7 @@
     },
     "rumor_avist_enemy_assassino_cinzeu": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1701",
+      "source": "data/bestiary.json:1829",
       "regions": [
         "pradaria_ruinas",
         "nova_arcadia"
@@ -1446,7 +1446,7 @@
     },
     "rumor_avist_enemy_urso_coruja_mutante": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1811",
+      "source": "data/bestiary.json:1939",
       "regions": [
         "floresta_sussurros"
       ],
@@ -1454,7 +1454,7 @@
       "entities": [
         "enemy_urso_coruja_mutante"
       ],
-      "creature_label": "urso-Coruja Mutante",
+      "creature_label": "casuar de Elmo Fundo",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1463,7 +1463,7 @@
     },
     "rumor_avist_enemy_elemental_fogo_poluido": {
       "family": "avistamento",
-      "source": "data/bestiary.json:1925",
+      "source": "data/bestiary.json:2072",
       "regions": [
         "nova_arcadia"
       ],
@@ -1471,7 +1471,7 @@
       "entities": [
         "enemy_elemental_fogo_poluido"
       ],
-      "creature_label": "elemental de Fogo Poluído",
+      "creature_label": "caído do Cadinho",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1480,7 +1480,7 @@
     },
     "rumor_avist_enemy_mimico_bau": {
       "family": "avistamento",
-      "source": "data/bestiary.json:2853",
+      "source": "data/bestiary.json:3039",
       "regions": [
         "montanhas_afiadas",
         "aethelgard"
@@ -1489,7 +1489,7 @@
       "entities": [
         "enemy_mimico_bau"
       ],
-      "creature_label": "mímico",
+      "creature_label": "morador do Caldeirão",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1498,7 +1498,7 @@
     },
     "rumor_avist_enemy_basilisco_caverna": {
       "family": "avistamento",
-      "source": "data/bestiary.json:2957",
+      "source": "data/bestiary.json:3161",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -1506,7 +1506,7 @@
       "entities": [
         "enemy_basilisco_caverna"
       ],
-      "creature_label": "basilisco da Caverna",
+      "creature_label": "caramujo de Estalagmite",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1515,7 +1515,7 @@
     },
     "rumor_avist_enemy_troll_ponte": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3043",
+      "source": "data/bestiary.json:3265",
       "regions": [
         "montanhas_afiadas",
         "pradaria_ruinas"
@@ -1524,7 +1524,7 @@
       "entities": [
         "enemy_troll_ponte"
       ],
-      "creature_label": "troll de Ponte",
+      "creature_label": "ponte de Ombros",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1533,7 +1533,7 @@
     },
     "rumor_avist_enemy_golem_lixo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3131",
+      "source": "data/bestiary.json:3374",
       "regions": [
         "nova_arcadia"
       ],
@@ -1541,7 +1541,7 @@
       "entities": [
         "enemy_golem_lixo"
       ],
-      "creature_label": "golem de Lixo",
+      "creature_label": "velório de Sal",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1550,7 +1550,7 @@
     },
     "rumor_avist_enemy_sombra_espreitadora": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3212",
+      "source": "data/bestiary.json:3474",
       "regions": [
         "floresta_sussurros",
         "pradaria_ruinas"
@@ -1559,7 +1559,7 @@
       "entities": [
         "enemy_sombra_espreitadora"
       ],
-      "creature_label": "sombra Espreitadora",
+      "creature_label": "sombra Deitada",
       "creature_article": "uma",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1568,7 +1568,7 @@
     },
     "rumor_avist_enemy_verme_areia_jovem": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3307",
+      "source": "data/bestiary.json:3585",
       "regions": [
         "deserto_zhur"
       ],
@@ -1576,7 +1576,7 @@
       "entities": [
         "enemy_verme_areia_jovem"
       ],
-      "creature_label": "verme da Areia",
+      "creature_label": "verme de Vidro",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1585,7 +1585,7 @@
     },
     "rumor_avist_enemy_djinn_menor": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3392",
+      "source": "data/bestiary.json:3690",
       "regions": [
         "deserto_zhur"
       ],
@@ -1593,7 +1593,7 @@
       "entities": [
         "enemy_djinn_menor"
       ],
-      "creature_label": "djinn Menor",
+      "creature_label": "pipa de Costelas",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1602,7 +1602,7 @@
     },
     "rumor_avist_enemy_esqueleto_mago": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3480",
+      "source": "data/bestiary.json:3795",
       "regions": [
         "aethelgard",
         "pradaria_ruinas"
@@ -1611,7 +1611,7 @@
       "entities": [
         "enemy_esqueleto_mago"
       ],
-      "creature_label": "esqueleto Arcanista",
+      "creature_label": "iniciado Refratado",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1620,7 +1620,7 @@
     },
     "rumor_avist_enemy_nomade_canibal": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3560",
+      "source": "data/bestiary.json:3893",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -1637,7 +1637,7 @@
     },
     "rumor_avist_enemy_yeti": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3651",
+      "source": "data/bestiary.json:3984",
       "regions": [
         "skallgard",
         "montanhas_afiadas"
@@ -1646,7 +1646,7 @@
       "entities": [
         "enemy_yeti"
       ],
-      "creature_label": "yeti das Cavernas",
+      "creature_label": "corcova Fervente",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1655,7 +1655,7 @@
     },
     "rumor_avist_enemy_wyvern_jovem": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3740",
+      "source": "data/bestiary.json:4091",
       "regions": [
         "montanhas_afiadas",
         "skallgard"
@@ -1664,7 +1664,7 @@
       "entities": [
         "enemy_wyvern_jovem"
       ],
-      "creature_label": "wyvern Jovem",
+      "creature_label": "leque de Costelas",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1673,7 +1673,7 @@
     },
     "rumor_avist_enemy_bandido_capitao": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3827",
+      "source": "data/bestiary.json:4197",
       "regions": [
         "pradaria_ruinas",
         "brekmar"
@@ -1691,7 +1691,7 @@
     },
     "rumor_avist_enemy_morcego_vampiro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:3924",
+      "source": "data/bestiary.json:4294",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -1699,7 +1699,7 @@
       "entities": [
         "enemy_morcego_vampiro"
       ],
-      "creature_label": "morcego Vampiro Gigante",
+      "creature_label": "lenço do Desfiladeiro",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1708,7 +1708,7 @@
     },
     "rumor_avist_enemy_aranha_lobo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4019",
+      "source": "data/bestiary.json:4404",
       "regions": [
         "floresta_sussurros"
       ],
@@ -1716,8 +1716,8 @@
       "entities": [
         "enemy_aranha_lobo"
       ],
-      "creature_label": "aranha Lobo",
-      "creature_article": "uma",
+      "creature_label": "saltão Desbotado",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -1725,7 +1725,7 @@
     },
     "rumor_avist_enemy_zumbi_blindado": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4114",
+      "source": "data/bestiary.json:4514",
       "regions": [
         "pantano_melancolia",
         "aethelgard"
@@ -1734,7 +1734,7 @@
       "entities": [
         "enemy_zumbi_blindado"
       ],
-      "creature_label": "zumbi Blindado",
+      "creature_label": "curtido da Turfeira",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1743,7 +1743,7 @@
     },
     "rumor_avist_enemy_polvo_esgoto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4189",
+      "source": "data/bestiary.json:4605",
       "regions": [
         "nova_arcadia"
       ],
@@ -1751,7 +1751,7 @@
       "entities": [
         "enemy_polvo_esgoto"
       ],
-      "creature_label": "polvo do Esgoto",
+      "creature_label": "bagre de Varal",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1760,7 +1760,7 @@
     },
     "rumor_avist_enemy_fantasma": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4277",
+      "source": "data/bestiary.json:4712",
       "regions": [
         "aethelgard",
         "pradaria_ruinas"
@@ -1769,7 +1769,7 @@
       "entities": [
         "enemy_fantasma"
       ],
-      "creature_label": "fantasma",
+      "creature_label": "nadador Transparente",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1778,7 +1778,7 @@
     },
     "rumor_avist_enemy_observador_menor": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4352",
+      "source": "data/bestiary.json:4805",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -1786,7 +1786,7 @@
       "entities": [
         "enemy_observador_menor"
       ],
-      "creature_label": "observador Menor",
+      "creature_label": "olhos em Volta",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1795,7 +1795,7 @@
     },
     "rumor_avist_enemy_minotauro_esqueleto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4446",
+      "source": "data/bestiary.json:4914",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -1803,7 +1803,7 @@
       "entities": [
         "enemy_minotauro_esqueleto"
       ],
-      "creature_label": "minotauro Esqueleto",
+      "creature_label": "boi de Canga",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1812,7 +1812,7 @@
     },
     "rumor_avist_enemy_golem_carne": {
       "family": "avistamento",
-      "source": "data/bestiary.json:4519",
+      "source": "data/bestiary.json:5006",
       "regions": [
         "aethelgard"
       ],
@@ -1820,7 +1820,7 @@
       "entities": [
         "enemy_golem_carne"
       ],
-      "creature_label": "golem de Carne",
+      "creature_label": "encomenda Costurada",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -1829,7 +1829,7 @@
     },
     "rumor_avist_mon_lobo_de_vidro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5393",
+      "source": "data/bestiary.json:5917",
       "regions": [
         "skallgard"
       ],
@@ -1846,7 +1846,7 @@
     },
     "rumor_avist_mon_verme_do_gelo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5490",
+      "source": "data/bestiary.json:6014",
       "regions": [
         "skallgard"
       ],
@@ -1863,7 +1863,7 @@
     },
     "rumor_avist_enemy_renegado_ermo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5585",
+      "source": "data/bestiary.json:6109",
       "regions": [
         "skallgard"
       ],
@@ -1880,7 +1880,7 @@
     },
     "rumor_avist_mon_sanguessuga_braco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5680",
+      "source": "data/bestiary.json:6204",
       "regions": [
         "pantano_melancolia"
       ],
@@ -1897,7 +1897,7 @@
     },
     "rumor_avist_mon_sapo_boi_acido": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5767",
+      "source": "data/bestiary.json:6291",
       "regions": [
         "pantano_melancolia"
       ],
@@ -1914,7 +1914,7 @@
     },
     "rumor_avist_mon_afogado_da_batalha": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5862",
+      "source": "data/bestiary.json:6386",
       "regions": [
         "pantano_melancolia"
       ],
@@ -1931,7 +1931,7 @@
     },
     "rumor_avist_enemy_druida_renegado": {
       "family": "avistamento",
-      "source": "data/bestiary.json:5942",
+      "source": "data/bestiary.json:6466",
       "regions": [
         "pantano_melancolia"
       ],
@@ -1948,7 +1948,7 @@
     },
     "rumor_avist_mon_urso_de_espinha": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6044",
+      "source": "data/bestiary.json:6568",
       "regions": [
         "floresta_sussurros"
       ],
@@ -1965,7 +1965,7 @@
     },
     "rumor_avist_mon_serpente_raiz": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6136",
+      "source": "data/bestiary.json:6660",
       "regions": [
         "floresta_sussurros"
       ],
@@ -1982,7 +1982,7 @@
     },
     "rumor_avist_mon_vipera_flora": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6232",
+      "source": "data/bestiary.json:6756",
       "regions": [
         "selva_xylos"
       ],
@@ -1999,7 +1999,7 @@
     },
     "rumor_avist_mon_predador_crescido": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6318",
+      "source": "data/bestiary.json:6842",
       "regions": [
         "selva_xylos"
       ],
@@ -2016,7 +2016,7 @@
     },
     "rumor_avist_mon_sentinela_hospedeiro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6410",
+      "source": "data/bestiary.json:6934",
       "regions": [
         "selva_xylos"
       ],
@@ -2033,7 +2033,7 @@
     },
     "rumor_avist_mon_afogado_de_aethelgard": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6498",
+      "source": "data/bestiary.json:7022",
       "regions": [
         "aethelgard"
       ],
@@ -2050,7 +2050,7 @@
     },
     "rumor_avist_mon_mergulhadores_saqueadores": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6578",
+      "source": "data/bestiary.json:7102",
       "regions": [
         "aethelgard"
       ],
@@ -2067,7 +2067,7 @@
     },
     "rumor_avist_enemy_cultista_destilacao": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6673",
+      "source": "data/bestiary.json:7197",
       "regions": [
         "aethelgard"
       ],
@@ -2084,7 +2084,7 @@
     },
     "rumor_avist_mon_sereia_de_ophidia": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6768",
+      "source": "data/bestiary.json:7292",
       "regions": [
         "ophidia"
       ],
@@ -2101,7 +2101,7 @@
     },
     "rumor_avist_mon_fumaca_de_cor_errada": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6848",
+      "source": "data/bestiary.json:7372",
       "regions": [
         "ophidia"
       ],
@@ -2118,7 +2118,7 @@
     },
     "rumor_avist_mon_os_que_voltaram_e_nao_eram_eles": {
       "family": "avistamento",
-      "source": "data/bestiary.json:6928",
+      "source": "data/bestiary.json:7452",
       "regions": [
         "ophidia",
         "brekmar"
@@ -2136,7 +2136,7 @@
     },
     "rumor_avist_mon_tubarao_de_casco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7009",
+      "source": "data/bestiary.json:7533",
       "regions": [
         "costa_negra"
       ],
@@ -2153,7 +2153,7 @@
     },
     "rumor_avist_mon_caranguejo_mare": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7097",
+      "source": "data/bestiary.json:7621",
       "regions": [
         "costa_negra"
       ],
@@ -2170,7 +2170,7 @@
     },
     "rumor_avist_mon_gaivota_ladra": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7183",
+      "source": "data/bestiary.json:7707",
       "regions": [
         "costa_negra"
       ],
@@ -2187,7 +2187,7 @@
     },
     "rumor_avist_enemy_pirata_brekmar": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7441",
+      "source": "data/bestiary.json:7965",
       "regions": [
         "brekmar",
         "costa_negra"
@@ -2205,7 +2205,7 @@
     },
     "rumor_avist_mon_capangas_do_poco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7537",
+      "source": "data/bestiary.json:8061",
       "regions": [
         "brekmar"
       ],
@@ -2222,7 +2222,7 @@
     },
     "rumor_avist_enemy_arpoador_osshari": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7632",
+      "source": "data/bestiary.json:8156",
       "regions": [
         "brekmar",
         "costa_negra"
@@ -2240,7 +2240,7 @@
     },
     "rumor_avist_enemy_orc_saidas_baixas": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7728",
+      "source": "data/bestiary.json:8252",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2257,7 +2257,7 @@
     },
     "rumor_avist_mon_cabra_navalha": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7823",
+      "source": "data/bestiary.json:8347",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2274,7 +2274,7 @@
     },
     "rumor_avist_mon_anao_eco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7918",
+      "source": "data/bestiary.json:8442",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2291,7 +2291,7 @@
     },
     "rumor_avist_mon_espectro_elfico": {
       "family": "avistamento",
-      "source": "data/bestiary.json:7992",
+      "source": "data/bestiary.json:8516",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2308,7 +2308,7 @@
     },
     "rumor_avist_mon_lobo_da_pradaria": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8073",
+      "source": "data/bestiary.json:8597",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2325,7 +2325,7 @@
     },
     "rumor_avist_enemy_capturador_groth": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8168",
+      "source": "data/bestiary.json:8692",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2342,7 +2342,7 @@
     },
     "rumor_avist_mon_rato_caldeira": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8256",
+      "source": "data/bestiary.json:8780",
       "regions": [
         "nova_arcadia"
       ],
@@ -2359,7 +2359,7 @@
     },
     "rumor_avist_mon_cao_rebite": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8346",
+      "source": "data/bestiary.json:8870",
       "regions": [
         "nova_arcadia"
       ],
@@ -2376,7 +2376,7 @@
     },
     "rumor_avist_mon_automato_fundicao": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8435",
+      "source": "data/bestiary.json:8959",
       "regions": [
         "nova_arcadia"
       ],
@@ -2393,7 +2393,7 @@
     },
     "rumor_avist_mon_mosquito_eter": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8517",
+      "source": "data/bestiary.json:9041",
       "regions": [
         "pantano_melancolia"
       ],
@@ -2410,7 +2410,7 @@
     },
     "rumor_avist_mon_viuva_lodo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8613",
+      "source": "data/bestiary.json:9137",
       "regions": [
         "pantano_melancolia"
       ],
@@ -2427,7 +2427,7 @@
     },
     "rumor_avist_mon_cervo_afogado": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8704",
+      "source": "data/bestiary.json:9228",
       "regions": [
         "pantano_melancolia"
       ],
@@ -2444,7 +2444,7 @@
     },
     "rumor_avist_mon_escaravelho_vidro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8781",
+      "source": "data/bestiary.json:9305",
       "regions": [
         "deserto_zhur"
       ],
@@ -2461,7 +2461,7 @@
     },
     "rumor_avist_mon_hiena_sol": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8865",
+      "source": "data/bestiary.json:9389",
       "regions": [
         "deserto_zhur"
       ],
@@ -2478,7 +2478,7 @@
     },
     "rumor_avist_mon_colosso_duna": {
       "family": "avistamento",
-      "source": "data/bestiary.json:8954",
+      "source": "data/bestiary.json:9478",
       "regions": [
         "deserto_zhur"
       ],
@@ -2495,7 +2495,7 @@
     },
     "rumor_avist_mon_mariposa_sussurro": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9036",
+      "source": "data/bestiary.json:9560",
       "regions": [
         "floresta_sussurros"
       ],
@@ -2512,7 +2512,7 @@
     },
     "rumor_avist_mon_cacador_casca": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9132",
+      "source": "data/bestiary.json:9656",
       "regions": [
         "floresta_sussurros"
       ],
@@ -2529,7 +2529,7 @@
     },
     "rumor_avist_mon_ent_dormindo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9221",
+      "source": "data/bestiary.json:9745",
       "regions": [
         "floresta_sussurros"
       ],
@@ -2537,7 +2537,7 @@
       "entities": [
         "mon_ent_dormindo"
       ],
-      "creature_label": "ent que Sonha Acordado",
+      "creature_label": "preguiça da Pradaria",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -2546,7 +2546,7 @@
     },
     "rumor_avist_mon_larva_hospedeira": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9303",
+      "source": "data/bestiary.json:9839",
       "regions": [
         "selva_xylos"
       ],
@@ -2563,7 +2563,7 @@
     },
     "rumor_avist_mon_macaco_esporo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9392",
+      "source": "data/bestiary.json:9928",
       "regions": [
         "selva_xylos"
       ],
@@ -2580,7 +2580,7 @@
     },
     "rumor_avist_mon_rainha_cipo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9488",
+      "source": "data/bestiary.json:10024",
       "regions": [
         "selva_xylos"
       ],
@@ -2597,7 +2597,7 @@
     },
     "rumor_avist_mon_corvo_gelo": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9577",
+      "source": "data/bestiary.json:10113",
       "regions": [
         "skallgard"
       ],
@@ -2614,7 +2614,7 @@
     },
     "rumor_avist_mon_lobo_aurora": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9676",
+      "source": "data/bestiary.json:10212",
       "regions": [
         "skallgard"
       ],
@@ -2631,7 +2631,7 @@
     },
     "rumor_avist_mon_jotun_cinza": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9765",
+      "source": "data/bestiary.json:10301",
       "regions": [
         "skallgard"
       ],
@@ -2639,7 +2639,7 @@
       "entities": [
         "mon_jotun_cinza"
       ],
-      "creature_label": "jötunn de Cinza",
+      "creature_label": "crescido do Clã",
       "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
@@ -2648,7 +2648,7 @@
     },
     "rumor_avist_mon_faisca_destilacao": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9847",
+      "source": "data/bestiary.json:10396",
       "regions": [
         "aethelgard"
       ],
@@ -2665,7 +2665,7 @@
     },
     "rumor_avist_mon_vigia_caco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:9936",
+      "source": "data/bestiary.json:10485",
       "regions": [
         "aethelgard"
       ],
@@ -2682,7 +2682,7 @@
     },
     "rumor_avist_mon_quimera_cristal": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10018",
+      "source": "data/bestiary.json:10567",
       "regions": [
         "aethelgard"
       ],
@@ -2690,8 +2690,8 @@
       "entities": [
         "mon_quimera_cristal"
       ],
-      "creature_label": "quimera de Cristal Destilado",
-      "creature_article": "uma",
+      "creature_label": "ariranha de Arcada",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
@@ -2699,7 +2699,7 @@
     },
     "rumor_avist_mon_caranguejo_cinza": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10109",
+      "source": "data/bestiary.json:10671",
       "regions": [
         "ophidia"
       ],
@@ -2716,7 +2716,7 @@
     },
     "rumor_avist_mon_moreia_vulcanica": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10191",
+      "source": "data/bestiary.json:10753",
       "regions": [
         "ophidia"
       ],
@@ -2733,7 +2733,7 @@
     },
     "rumor_avist_mon_oraculo_coral": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10280",
+      "source": "data/bestiary.json:10842",
       "regions": [
         "ophidia"
       ],
@@ -2750,7 +2750,7 @@
     },
     "rumor_avist_mon_carrapato_osso": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10369",
+      "source": "data/bestiary.json:10931",
       "regions": [
         "costa_negra"
       ],
@@ -2767,7 +2767,7 @@
     },
     "rumor_avist_mon_saqueador_marfim": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10458",
+      "source": "data/bestiary.json:11020",
       "regions": [
         "costa_negra"
       ],
@@ -2784,7 +2784,7 @@
     },
     "rumor_avist_mon_baleia_ossario": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10554",
+      "source": "data/bestiary.json:11116",
       "regions": [
         "costa_negra"
       ],
@@ -2801,7 +2801,7 @@
     },
     "rumor_avist_mon_goblin_eco": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10636",
+      "source": "data/bestiary.json:11198",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2818,7 +2818,7 @@
     },
     "rumor_avist_mon_cabra_labirinto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10734",
+      "source": "data/bestiary.json:11296",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2835,7 +2835,7 @@
     },
     "rumor_avist_mon_guardiao_basalto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10823",
+      "source": "data/bestiary.json:11385",
       "regions": [
         "montanhas_afiadas"
       ],
@@ -2852,7 +2852,7 @@
     },
     "rumor_avist_mon_gafanhoto_runa": {
       "family": "avistamento",
-      "source": "data/bestiary.json:10905",
+      "source": "data/bestiary.json:11467",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2869,7 +2869,7 @@
     },
     "rumor_avist_mon_cavaleiro_sem_rosto": {
       "family": "avistamento",
-      "source": "data/bestiary.json:11001",
+      "source": "data/bestiary.json:11563",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2886,7 +2886,7 @@
     },
     "rumor_avist_mon_auroque_ruinas": {
       "family": "avistamento",
-      "source": "data/bestiary.json:11076",
+      "source": "data/bestiary.json:11638",
       "regions": [
         "pradaria_ruinas"
       ],
@@ -2903,7 +2903,7 @@
     },
     "rumor_avist_mon_rato_cais_brekmar": {
       "family": "avistamento",
-      "source": "data/bestiary.json:11165",
+      "source": "data/bestiary.json:11727",
       "regions": [
         "brekmar"
       ],
@@ -2920,7 +2920,7 @@
     },
     "rumor_avist_mon_cobrador_gancho": {
       "family": "avistamento",
-      "source": "data/bestiary.json:11262",
+      "source": "data/bestiary.json:11824",
       "regions": [
         "brekmar"
       ],
@@ -2937,7 +2937,7 @@
     },
     "rumor_avist_mon_capita_corda": {
       "family": "avistamento",
-      "source": "data/bestiary.json:11358",
+      "source": "data/bestiary.json:11920",
       "regions": [
         "brekmar"
       ],
@@ -2947,6 +2947,4061 @@
       ],
       "creature_label": "capitã da Corda Molhada",
       "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_doador_inacabado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12373",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_doador_inacabado"
+      ],
+      "creature_label": "doador Inacabado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_dentado_de_eras": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12466",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_dentado_de_eras"
+      ],
+      "creature_label": "dentado de Eras",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_avesso_de_oghma": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12562",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_avesso_de_oghma"
+      ],
+      "creature_label": "avesso de Oghma",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fervido_da_corrente": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12655",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fervido_da_corrente"
+      ],
+      "creature_label": "fervido da Corrente",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_bigua_de_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12846",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bigua_de_vidro"
+      ],
+      "creature_label": "biguá de Vidro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_aranha_de_bolha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:12939",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_aranha_de_bolha"
+      ],
+      "creature_label": "aranha de Bolha",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lesma_de_penacho": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13032",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lesma_de_penacho"
+      ],
+      "creature_label": "lesma de Penacho",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ourico_de_lajedo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13125",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ourico_de_lajedo"
+      ],
+      "creature_label": "ouriço de Lajedo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cupinzeiro_de_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13219",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cupinzeiro_de_vidro"
+      ],
+      "creature_label": "cupinzeiro de Vidro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_camarao_faxineiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13313",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_camarao_faxineiro"
+      ],
+      "creature_label": "camarão Faxineiro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_peito_de_sino": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13406",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_peito_de_sino"
+      ],
+      "creature_label": "peito de Sino",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mao_de_oghma": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13499",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mao_de_oghma"
+      ],
+      "creature_label": "mão de Oghma",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_alambique_de_carne": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13595",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_alambique_de_carne"
+      ],
+      "creature_label": "alambique de Carne",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_aspirante_de_coral": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13689",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_aspirante_de_coral"
+      ],
+      "creature_label": "aspirante de Coral",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_comedor_de_alga": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13783",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_comedor_de_alga"
+      ],
+      "creature_label": "comedor de Alga",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lambedor_de_aboboda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13877",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lambedor_de_aboboda"
+      ],
+      "creature_label": "lambedor de Abóbada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pernalta_do_conselho": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:13973",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pernalta_do_conselho"
+      ],
+      "creature_label": "pernalta do Conselho",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_veu_faminto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14066",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_veu_faminto"
+      ],
+      "creature_label": "véu Faminto",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_novelo_de_anzois": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14159",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_novelo_de_anzois"
+      ],
+      "creature_label": "novelo de Anzóis",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_subida_de_cracas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14252",
+      "regions": [
+        "aethelgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_subida_de_cracas"
+      ],
+      "creature_label": "subida de Cracas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_quilhado_do_estaleiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14445",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_quilhado_do_estaleiro"
+      ],
+      "creature_label": "quilhado do Estaleiro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_odre_de_oleo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14541",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_odre_de_oleo"
+      ],
+      "creature_label": "odre de Óleo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lavado_da_mare_vermelha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14634",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lavado_da_mare_vermelha"
+      ],
+      "creature_label": "lavado da Maré Vermelha",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cardume_coagulado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14728",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cardume_coagulado"
+      ],
+      "creature_label": "cardume Coagulado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_gato_de_lastro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14821",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_gato_de_lastro"
+      ],
+      "creature_label": "gato de Lastro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_craca_de_amarra": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:14915",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_craca_de_amarra"
+      ],
+      "creature_label": "craca de Amarra",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pescador_de_lanterna": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15008",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pescador_de_lanterna"
+      ],
+      "creature_label": "pescador de Lanterna",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tripeiro_de_fundo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15101",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tripeiro_de_fundo"
+      ],
+      "creature_label": "tripeiro de Fundo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sangria_de_aluguel": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15194",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sangria_de_aluguel"
+      ],
+      "creature_label": "sangria de Aluguel",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_torcido_da_rinha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15288",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_torcido_da_rinha"
+      ],
+      "creature_label": "torcido da Rinha",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_anzolado_da_casa": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15383",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_anzolado_da_casa"
+      ],
+      "creature_label": "anzolado da Casa",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tambor_do_ossario": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15478",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tambor_do_ossario"
+      ],
+      "creature_label": "tambor do Ossário",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_penhorado_do_poco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15575",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_penhorado_do_poco"
+      ],
+      "creature_label": "penhorado do Poço",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sino_de_enlace": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15669",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sino_de_enlace"
+      ],
+      "creature_label": "sino de Enlace",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_carranca_de_proa": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15765",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_carranca_de_proa"
+      ],
+      "creature_label": "carranca de Proa",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_estivador_das_facas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15861",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_estivador_das_facas"
+      ],
+      "creature_label": "estivador das Facas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_boia_de_bracos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:15955",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_boia_de_bracos"
+      ],
+      "creature_label": "boia de Braços",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_broca_de_costado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16049",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_broca_de_costado"
+      ],
+      "creature_label": "broca de Costado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mao_estendida": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16143",
+      "regions": [
+        "brekmar"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mao_estendida"
+      ],
+      "creature_label": "mão Estendida",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_escama_revirada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16237",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_escama_revirada"
+      ],
+      "creature_label": "escama Revirada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ferida_de_coral": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16330",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ferida_de_coral"
+      ],
+      "creature_label": "ferida de Coral",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_compassado_do_trono": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16423",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_compassado_do_trono"
+      ],
+      "creature_label": "compassado do Trono",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_forrado_de_leviata": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16519",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_forrado_de_leviata"
+      ],
+      "creature_label": "forrado de Leviatã",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_barata_das_costelas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16712",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_barata_das_costelas"
+      ],
+      "creature_label": "barata das Costelas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_estrela_de_alavanca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16806",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_estrela_de_alavanca"
+      ],
+      "creature_label": "estrela de Alavanca",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_andarilho_de_cracas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16899",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_andarilho_de_cracas"
+      ],
+      "creature_label": "andarilho de Cracas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_touro_de_banha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:16995",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_touro_de_banha"
+      ],
+      "creature_label": "touro de Banha",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_saltador_de_poca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17090",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_saltador_de_poca"
+      ],
+      "creature_label": "saltador de Poça",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_bruxa_de_carcaca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17183",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bruxa_de_carcaca"
+      ],
+      "creature_label": "bruxa de Carcaça",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_petrel_de_papo_cheio": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17276",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_petrel_de_papo_cheio"
+      ],
+      "creature_label": "petrel de Papo Cheio",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_esfolado_de_sal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17369",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_esfolado_de_sal"
+      ],
+      "creature_label": "esfolado de Sal",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_contrabandista_vitreo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17462",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_contrabandista_vitreo"
+      ],
+      "creature_label": "contrabandista Vítreo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_caldeireiro_de_oleo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17557",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_caldeireiro_de_oleo"
+      ],
+      "creature_label": "caldeireiro de Óleo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_acendedor_de_naufragios": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17651",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_acendedor_de_naufragios"
+      ],
+      "creature_label": "acendedor de Naufrágios",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_remo_acorrentado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17746",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_remo_acorrentado"
+      ],
+      "creature_label": "remo Acorrentado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ventre_partilhado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17843",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ventre_partilhado"
+      ],
+      "creature_label": "ventre Partilhado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_balsa_de_ultimo_dia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:17939",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_balsa_de_ultimo_dia"
+      ],
+      "creature_label": "balsa de Último Dia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_gancho_de_esfola": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18032",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_gancho_de_esfola"
+      ],
+      "creature_label": "gancho de Esfola",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_raspadeira_de_barbatana": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18125",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_raspadeira_de_barbatana"
+      ],
+      "creature_label": "raspadeira de Barbatana",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rancor_de_pincas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18218",
+      "regions": [
+        "costa_negra"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rancor_de_pincas"
+      ],
+      "creature_label": "rancor de Pinças",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_andarilho_de_duas_idades": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18312",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_andarilho_de_duas_idades"
+      ],
+      "creature_label": "andarilho de Duas Idades",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_esfolado_da_tempestade": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18408",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_esfolado_da_tempestade"
+      ],
+      "creature_label": "esfolado da Tempestade",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_provador_da_borda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18501",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_provador_da_borda"
+      ],
+      "creature_label": "provador da Borda",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_peito_de_geodo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18595",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_peito_de_geodo"
+      ],
+      "creature_label": "peito de Geodo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fervente_de_ferrugem": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18691",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fervente_de_ferrugem"
+      ],
+      "creature_label": "fervente de Ferrugem",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_varano_vidrado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18784",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_varano_vidrado"
+      ],
+      "creature_label": "varano Vidrado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tatu_de_navalha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18880",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tatu_de_navalha"
+      ],
+      "creature_label": "tatu de Navalha",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lambedor_de_halito": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:18973",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lambedor_de_halito"
+      ],
+      "creature_label": "lambedor de Hálito",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lastreiro_da_cratera": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19067",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lastreiro_da_cratera"
+      ],
+      "creature_label": "lastreiro da Cratera",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cavador_de_funil": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19161",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cavador_de_funil"
+      ],
+      "creature_label": "cavador de Funil",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_saltador_de_palafita": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19254",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_saltador_de_palafita"
+      ],
+      "creature_label": "saltador de Palafita",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_costurado_de_lentes": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19347",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_costurado_de_lentes"
+      ],
+      "creature_label": "costurado de Lentes",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_couro_pegado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19442",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_couro_pegado"
+      ],
+      "creature_label": "couro Pegado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_maos_de_cinzel": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19536",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_maos_de_cinzel"
+      ],
+      "creature_label": "mãos de Cinzel",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_aguadeiro_de_bucho": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19630",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_aguadeiro_de_bucho"
+      ],
+      "creature_label": "aguadeiro de Bucho",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cacador_sem_calor": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19724",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cacador_sem_calor"
+      ],
+      "creature_label": "caçador Sem Calor",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_altivo_do_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19819",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_altivo_do_vidro"
+      ],
+      "creature_label": "altivo do Vidro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_despenseiro_de_espinhos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:19915",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_despenseiro_de_espinhos"
+      ],
+      "creature_label": "despenseiro de Espinhos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lacrador_de_saidas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20009",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lacrador_de_saidas"
+      ],
+      "creature_label": "lacrador de Saídas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_furador_de_odres": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20103",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_furador_de_odres"
+      ],
+      "creature_label": "furador de Odres",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_guia_avesso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20197",
+      "regions": [
+        "deserto_zhur"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_guia_avesso"
+      ],
+      "creature_label": "guia Avesso",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lixado_da_fronteira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20293",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lixado_da_fronteira"
+      ],
+      "creature_label": "lixado da Fronteira",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_abafador_de_candeias": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20387",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_abafador_de_candeias"
+      ],
+      "creature_label": "abafador de Candeias",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fechado_de_escapulas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20481",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fechado_de_escapulas"
+      ],
+      "creature_label": "fechado de Escápulas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_virado_do_avesso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20578",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_virado_do_avesso"
+      ],
+      "creature_label": "virado do Avesso",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_calado_das_guelras": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20672",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_calado_das_guelras"
+      ],
+      "creature_label": "calado das Guelras",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_morcego_rasteiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20765",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_morcego_rasteiro"
+      ],
+      "creature_label": "morcego Rasteiro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_besouro_do_estalo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20858",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_besouro_do_estalo"
+      ],
+      "creature_label": "besouro do Estalo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_onca_vazada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:20951",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_onca_vazada"
+      ],
+      "creature_label": "onça Vazada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lagarta_de_visgo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21047",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lagarta_de_visgo"
+      ],
+      "creature_label": "lagarta de Visgo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vespa_coveira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21239",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vespa_coveira"
+      ],
+      "creature_label": "vespa Coveira",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono",
+      "public_names": [
+        "Vespa"
+      ]
+    },
+    "rumor_avist_mon_bugio_invertido": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21335",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bugio_invertido"
+      ],
+      "creature_label": "bugio Invertido",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_dedos_de_colheita": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21428",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_dedos_de_colheita"
+      ],
+      "creature_label": "dedos de Colheita",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_olho_de_petala": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21521",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_olho_de_petala"
+      ],
+      "creature_label": "olho de Pétala",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mapa_de_cicatrizes": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21616",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mapa_de_cicatrizes"
+      ],
+      "creature_label": "mapa de Cicatrizes",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ressecado_da_travessia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21710",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ressecado_da_travessia"
+      ],
+      "creature_label": "ressecado da Travessia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mascador_de_raiz": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21804",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mascador_de_raiz"
+      ],
+      "creature_label": "mascador de Raiz",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ermitao_de_carcaca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21898",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ermitao_de_carcaca"
+      ],
+      "creature_label": "ermitão de Carcaça",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_desafiante_rubro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:21992",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_desafiante_rubro"
+      ],
+      "creature_label": "desafiante Rubro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_enrolado_da_clareira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22088",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_enrolado_da_clareira"
+      ],
+      "creature_label": "enrolado da Clareira",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_picanco_de_espinheiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22182",
+      "regions": [
+        "floresta_sussurros"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_picanco_de_espinheiro"
+      ],
+      "creature_label": "picanço de Espinheiro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_deitado_na_parede": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22278",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_deitado_na_parede"
+      ],
+      "creature_label": "deitado na Parede",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_geodo_da_praga": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22371",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_geodo_da_praga"
+      ],
+      "creature_label": "geodo da Praga",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cauda_de_atalaia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22465",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cauda_de_atalaia"
+      ],
+      "creature_label": "cauda de Atalaia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_queimado_de_frio": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22559",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_queimado_de_frio"
+      ],
+      "creature_label": "queimado de Frio",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_bexiga_de_respiro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22652",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bexiga_de_respiro"
+      ],
+      "creature_label": "bexiga de Respiro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_saltao_de_galeria": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22745",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_saltao_de_galeria"
+      ],
+      "creature_label": "saltão de Galeria",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rolador_de_escarpa": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22839",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rolador_de_escarpa"
+      ],
+      "creature_label": "rolador de Escarpa",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_chicote_de_fenda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:22933",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_chicote_de_fenda"
+      ],
+      "creature_label": "chicote de Fenda",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ladrao_de_lume": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23026",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ladrao_de_lume"
+      ],
+      "creature_label": "ladrão de Lume",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_bracos_de_tenaz": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23119",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bracos_de_tenaz"
+      ],
+      "creature_label": "braços de Tenaz",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_marco_que_aponta": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23216",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_marco_que_aponta"
+      ],
+      "creature_label": "marco que Aponta",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_armador_de_fosso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23310",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_armador_de_fosso"
+      ],
+      "creature_label": "armador de Fosso",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vedado_de_piche": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23405",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vedado_de_piche"
+      ],
+      "creature_label": "vedado de Piche",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tampao_da_camara": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23599",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tampao_da_camara"
+      ],
+      "creature_label": "tampão da Câmara",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tesoura_de_cordada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23692",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tesoura_de_cordada"
+      ],
+      "creature_label": "tesoura de Cordada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mastro_de_trofeus": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23786",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mastro_de_trofeus"
+      ],
+      "creature_label": "mastro de Troféus",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mao_da_borda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23882",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mao_da_borda"
+      ],
+      "creature_label": "mão da Borda",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lingua_de_lima": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:23975",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lingua_de_lima"
+      ],
+      "creature_label": "língua de Lima",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pisador_do_salao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24068",
+      "regions": [
+        "montanhas_afiadas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pisador_do_salao"
+      ],
+      "creature_label": "pisador do Salão",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_arame_vivo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24163",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_arame_vivo"
+      ],
+      "creature_label": "arame Vivo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fole_de_costela": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24257",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fole_de_costela"
+      ],
+      "creature_label": "fole de Costela",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rosario_de_vertebras": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24354",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rosario_de_vertebras"
+      ],
+      "creature_label": "rosário de Vértebras",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fila_de_grilhoes": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24450",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fila_de_grilhoes"
+      ],
+      "creature_label": "fila de Grilhões",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lencol_de_chamine": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24547",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lencol_de_chamine"
+      ],
+      "creature_label": "lençol de Chaminé",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_traca_do_sino_mudo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24641",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_traca_do_sino_mudo"
+      ],
+      "creature_label": "traça do Sino Mudo",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_gralha_de_crematorio": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24735",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_gralha_de_crematorio"
+      ],
+      "creature_label": "gralha de Crematório",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_porca_da_queda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24829",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_porca_da_queda"
+      ],
+      "creature_label": "porca da Queda",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_centopeia_da_torre_invertida": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:24926",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_centopeia_da_torre_invertida"
+      ],
+      "creature_label": "centopeia da Torre Invertida",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sorvedouro_do_codigo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25023",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sorvedouro_do_codigo"
+      ],
+      "creature_label": "sorvedouro do Código",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pavio_da_lista": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25120",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pavio_da_lista"
+      ],
+      "creature_label": "pavio da Lista",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_enxerto_da_fornalha": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25218",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_enxerto_da_fornalha"
+      ],
+      "creature_label": "enxerto da Fornalha",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vira_costas_da_praca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25316",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vira_costas_da_praca"
+      ],
+      "creature_label": "vira-Costas da Praça",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cavadeira_de_unhas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25512",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cavadeira_de_unhas"
+      ],
+      "creature_label": "cavadeira de Unhas",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_convidado_de_cera": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25606",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_convidado_de_cera"
+      ],
+      "creature_label": "convidado de Cera",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_escritura_rastejante": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25702",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_escritura_rastejante"
+      ],
+      "creature_label": "escritura Rastejante",
+      "creature_article": "uma",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_portao_que_morde": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25796",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_portao_que_morde"
+      ],
+      "creature_label": "portão que Morde",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_relicario_de_osso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25892",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_relicario_de_osso"
+      ],
+      "creature_label": "relicário da Catedral",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_sangrado_da_clinica": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:25988",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_sangrado_da_clinica"
+      ],
+      "creature_label": "sangrado da Clínica",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_quebrado_de_vitrine": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26085",
+      "regions": [
+        "nova_arcadia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_quebrado_de_vitrine"
+      ],
+      "creature_label": "quebrado de Vitrine",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_nadador_escaldado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26181",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_nadador_escaldado"
+      ],
+      "creature_label": "nadador Escaldado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ossada_de_pomes": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26275",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ossada_de_pomes"
+      ],
+      "creature_label": "ossada de Pomes",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cabeleira_de_vidro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26368",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cabeleira_de_vidro"
+      ],
+      "creature_label": "cabeleira de Vidro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vazado_da_mare": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26463",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vazado_da_mare"
+      ],
+      "creature_label": "vazado da Maré",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_desbotado_da_nevoa": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26556",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_desbotado_da_nevoa"
+      ],
+      "creature_label": "desbotado da Névoa",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono",
+      "public_names": [
+        "Névoa"
+      ]
+    },
+    "rumor_avist_mon_turu_de_casco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26649",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_turu_de_casco"
+      ],
+      "creature_label": "turu de Casco",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vela_sem_barco": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26742",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vela_sem_barco"
+      ],
+      "creature_label": "vela sem Barco",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lagarto_espirrador": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26838",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lagarto_espirrador"
+      ],
+      "creature_label": "lagarto Espirrador",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_bucho_de_praia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:26931",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_bucho_de_praia"
+      ],
+      "creature_label": "bucho de Praia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cobra_de_sangria": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27025",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cobra_de_sangria"
+      ],
+      "creature_label": "cobra de Sangria",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_escorpena_de_basalto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27119",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_escorpena_de_basalto"
+      ],
+      "creature_label": "escorpena de Basalto",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tatuzinho_de_afogado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27213",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tatuzinho_de_afogado"
+      ],
+      "creature_label": "tatuzinho de Afogado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_doente_de_encomenda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27306",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_doente_de_encomenda"
+      ],
+      "creature_label": "doente de Encomenda",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_puxado_do_oeste": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27401",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_puxado_do_oeste"
+      ],
+      "creature_label": "puxado do Oeste",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vigia_de_cor_errada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27498",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vigia_de_cor_errada"
+      ],
+      "creature_label": "vigia de Cor Errada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_trepano_de_borda": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27593",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_trepano_de_borda"
+      ],
+      "creature_label": "trépano de Borda",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_arpeu_de_bracos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27688",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_arpeu_de_bracos"
+      ],
+      "creature_label": "arpéu de Braços",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ninho_dos_mergulhadores": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27782",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ninho_dos_mergulhadores"
+      ],
+      "creature_label": "ninho dos Mergulhadores",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_remora_de_conves": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:27976",
+      "regions": [
+        "ophidia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_remora_de_conves"
+      ],
+      "creature_label": "rêmora de Convés",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_estaqueiro_afogado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28069",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_estaqueiro_afogado"
+      ],
+      "creature_label": "estaqueiro Afogado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_romeiro_de_ambar": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28163",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_romeiro_de_ambar"
+      ],
+      "creature_label": "romeiro de Âmbar",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_banhado_do_centro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28257",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_banhado_do_centro"
+      ],
+      "creature_label": "banhado do Centro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_castor_de_estacas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28353",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_castor_de_estacas"
+      ],
+      "creature_label": "castor de Estacas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_patinador_de_oleo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28448",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_patinador_de_oleo"
+      ],
+      "creature_label": "patinador de Óleo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cagado_de_geada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28541",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cagado_de_geada"
+      ],
+      "creature_label": "cágado de Geada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fundeiro_da_poca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28635",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fundeiro_da_poca"
+      ],
+      "creature_label": "fundeiro da Poça",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tritao_de_sobra": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28732",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tritao_de_sobra"
+      ],
+      "creature_label": "tritão de Sobra",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_musaranho_de_dente_vermelho": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:28828",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_musaranho_de_dente_vermelho"
+      ],
+      "creature_label": "musaranho de Dente Vermelho",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_podador_do_ciclo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29020",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_podador_do_ciclo"
+      ],
+      "creature_label": "podador do Ciclo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_jardineiro_de_tumores": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29116",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_jardineiro_de_tumores"
+      ],
+      "creature_label": "jardineiro de Tumores",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mula_de_lagrimas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29211",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mula_de_lagrimas"
+      ],
+      "creature_label": "mula de Lágrimas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_casaco_de_sanguessugas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29304",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_casaco_de_sanguessugas"
+      ],
+      "creature_label": "casaco de Sanguessugas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_turno_vencido": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29398",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_turno_vencido"
+      ],
+      "creature_label": "turno Vencido",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_regaco_da_margem": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29492",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_regaco_da_margem"
+      ],
+      "creature_label": "regaço da Margem",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cordao_de_medida": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29588",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cordao_de_medida"
+      ],
+      "creature_label": "cordão de Medida",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_maos_no_rosto": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29683",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_maos_no_rosto"
+      ],
+      "creature_label": "mãos no Rosto",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cisne_de_patina": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29778",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cisne_de_patina"
+      ],
+      "creature_label": "cisne de Pátina",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_arraia_de_lodo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29874",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_arraia_de_lodo"
+      ],
+      "creature_label": "arraia de Lodo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fardo_de_espolio": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:29968",
+      "regions": [
+        "pantano_melancolia"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fardo_de_espolio"
+      ],
+      "creature_label": "fardo de Espólio",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vertedor_de_areia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30062",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vertedor_de_areia"
+      ],
+      "creature_label": "vertedor de Areia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vidrado_do_morro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30155",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vidrado_do_morro"
+      ],
+      "creature_label": "vidrado do Morro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_costas_de_alicerce": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30251",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_costas_de_alicerce"
+      ],
+      "creature_label": "costas de Alicerce",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vestido_de_gafanhotos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30344",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vestido_de_gafanhotos"
+      ],
+      "creature_label": "vestido de Gafanhotos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_fucador_da_semente": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30440",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_fucador_da_semente"
+      ],
+      "creature_label": "fuçador da Semente",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_nadador_de_pedra": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30533",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_nadador_de_pedra"
+      ],
+      "creature_label": "nadador de Pedra",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cobra_de_legua": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30626",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cobra_de_legua"
+      ],
+      "creature_label": "cobra de Légua",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_rodante_de_espinhos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30720",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_rodante_de_espinhos"
+      ],
+      "creature_label": "rodante de Espinhos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pernalta_das_colunas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30813",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pernalta_das_colunas"
+      ],
+      "creature_label": "pernalta das Colunas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lagarto_de_mudas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30906",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lagarto_de_mudas"
+      ],
+      "creature_label": "lagarto de Mudas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_besouro_de_alavanca": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:30999",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_besouro_de_alavanca"
+      ],
+      "creature_label": "besouro de Alavanca",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_carregador_de_ganchos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31092",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_carregador_de_ganchos"
+      ],
+      "creature_label": "carregador de Ganchos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_leitor_de_cativos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31189",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_leitor_de_cativos"
+      ],
+      "creature_label": "leitor de Cativos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_profanador_cravejado": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31285",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_profanador_cravejado"
+      ],
+      "creature_label": "profanador Cravejado",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cauda_emendada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31379",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cauda_emendada"
+      ],
+      "creature_label": "cauda Emendada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_desfiado_de_vaelorn": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31473",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_desfiado_de_vaelorn"
+      ],
+      "creature_label": "desfiado de Vaelorn",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_arqueiro_de_tendao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31567",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_arqueiro_de_tendao"
+      ],
+      "creature_label": "arqueiro de Tendão",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_egua_de_costas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31661",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_egua_de_costas"
+      ],
+      "creature_label": "égua de Costas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_cabeca_acima": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31755",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_cabeca_acima"
+      ],
+      "creature_label": "cabeça Acima",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_retalho_das_duas_cidades": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:31949",
+      "regions": [
+        "pradaria_ruinas"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_retalho_das_duas_cidades"
+      ],
+      "creature_label": "retalho das Duas Cidades",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lamelas_de_ferrugem": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32043",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lamelas_de_ferrugem"
+      ],
+      "creature_label": "lamelas de Ferrugem",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ariete_de_medula": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32137",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ariete_de_medula"
+      ],
+      "creature_label": "aríete de Medula",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lacado_de_hifas": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32231",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lacado_de_hifas"
+      ],
+      "creature_label": "laçado de Hifas",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_recusado_do_ciclo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32324",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_recusado_do_ciclo"
+      ],
+      "creature_label": "recusado do Ciclo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_remendado_de_osso": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32420",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_remendado_de_osso"
+      ],
+      "creature_label": "remendado de Osso",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tamandua_de_ponte": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32516",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tamandua_de_ponte"
+      ],
+      "creature_label": "tamanduá de Ponte",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lagarta_da_hora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32609",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lagarta_da_hora"
+      ],
+      "creature_label": "lagarta da Hora",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_preguica_de_pomar": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32705",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_preguica_de_pomar"
+      ],
+      "creature_label": "preguiça de Pomar",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_coandu_de_rebrota": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32801",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_coandu_de_rebrota"
+      ],
+      "creature_label": "coandu de Rebrota",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_vespa_oleira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:32895",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_vespa_oleira"
+      ],
+      "creature_label": "vespa Oleira",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono",
+      "public_names": [
+        "Vespa"
+      ]
+    },
+    "rumor_avist_mon_viuvo_do_esporo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33087",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_viuvo_do_esporo"
+      ],
+      "creature_label": "viúvo do Esporo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_surdo_da_colmeia": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33181",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_surdo_da_colmeia"
+      ],
+      "creature_label": "surdo da Colmeia",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mascador_de_nectar": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33276",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mascador_de_nectar"
+      ],
+      "creature_label": "mascador de Néctar",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_enxertadora_da_uniao": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33373",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_enxertadora_da_uniao"
+      ],
+      "creature_label": "enxertadora da União",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_pressa_da_seiva": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33470",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_pressa_da_seiva"
+      ],
+      "creature_label": "pressa da Seiva",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_provador_de_cores": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33563",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_provador_de_cores"
+      ],
+      "creature_label": "provador de Cores",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_monte_de_alheios": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33658",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_monte_de_alheios"
+      ],
+      "creature_label": "monte de Alheios",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_isca_amarrada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33751",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_isca_amarrada"
+      ],
+      "creature_label": "isca Amarrada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_oco_da_fronteira": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33844",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_oco_da_fronteira"
+      ],
+      "creature_label": "oco da Fronteira",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_tropel_sem_saida": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:33938",
+      "regions": [
+        "selva_xylos"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_tropel_sem_saida"
+      ],
+      "creature_label": "tropel Sem Saída",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_parado_do_sopro": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34034",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_parado_do_sopro"
+      ],
+      "creature_label": "parado do Sopro",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_levantado_de_rubi": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34128",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_levantado_de_rubi"
+      ],
+      "creature_label": "levantado de Rubi",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_queimado_de_breu": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34221",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_queimado_de_breu"
+      ],
+      "creature_label": "queimado de Breu",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_parelha_carmesim": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34315",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_parelha_carmesim"
+      ],
+      "creature_label": "parelha Carmesim",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_desfiado_da_aurora": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34411",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_desfiado_da_aurora"
+      ],
+      "creature_label": "desfiado da Aurora",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ermitao_de_elmo": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34505",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ermitao_de_elmo"
+      ],
+      "creature_label": "ermitão de Elmo",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_carrapato_de_mamute": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34598",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_carrapato_de_mamute"
+      ],
+      "creature_label": "carrapato de Mamute",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lagarta_sete_invernos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34691",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lagarta_sete_invernos"
+      ],
+      "creature_label": "lagarta de Sete Invernos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_mandriao_dois_bicos": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34784",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_mandriao_dois_bicos"
+      ],
+      "creature_label": "mandrião de Dois Bicos",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_montaria_cravada": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34877",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_montaria_cravada"
+      ],
+      "creature_label": "montaria Cravada",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ferreiro_chama_fria": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:34974",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ferreiro_chama_fria"
+      ],
+      "creature_label": "ferreiro de Chama Fria",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_lascador_morno": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35069",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_lascador_morno"
+      ],
+      "creature_label": "lascador Morno",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_escuta_do_sinal": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35162",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_escuta_do_sinal"
+      ],
+      "creature_label": "escuta do Sinal",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_caldeira_de_peito": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35256",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_caldeira_de_peito"
+      ],
+      "creature_label": "caldeira de Peito",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_andas_de_caribu": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35353",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_andas_de_caribu"
+      ],
+      "creature_label": "andas de Caribu",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_ticao_do_juramento": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35447",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_ticao_do_juramento"
+      ],
+      "creature_label": "tição do Juramento",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_feltro_do_ventre": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35639",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_feltro_do_ventre"
+      ],
+      "creature_label": "feltro do Ventre",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_aperto_da_tregua": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35732",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_aperto_da_tregua"
+      ],
+      "creature_label": "aperto da Trégua",
+      "creature_article": "um",
+      "confiabilidade": "media",
+      "truth_mode": "regional",
+      "quest_eligible": true,
+      "review": "dono"
+    },
+    "rumor_avist_mon_enegrecido_que_espera": {
+      "family": "avistamento",
+      "source": "data/bestiary.json:35825",
+      "regions": [
+        "skallgard"
+      ],
+      "subject": "criatura",
+      "entities": [
+        "mon_enegrecido_que_espera"
+      ],
+      "creature_label": "enegrecido que Espera",
+      "creature_article": "um",
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,

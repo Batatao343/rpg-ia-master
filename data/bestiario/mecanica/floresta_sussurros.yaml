@@ -1,0 +1,126 @@
+# SPEC-349 Etapa 5: mecânica da Floresta dos Sussurros (onda 8). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_lixado_da_fronteira:
+    cartas:
+      - {n: Toco de Pó, t: "O toco de mão em pó cinza bate e desfaz a manga em poeira.", e: ["d:marcial:impactante"]}
+      - {n: Toco que Desfaz, sig: 1, t: "Agarra a peça de defesa e a desfaz no aperto, e a poeira não volta.", e: ["d:marcial:impactante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}, {kind: rachadura, valor: 1}], fol: 2}
+    aprox: "a Defesa agarrada nunca volta nesta luta e os tocos gastam a cada agarrão -> armadura_comprometida 3 rodadas + rachadura"
+  mon_abafador_de_candeias:
+    cartas:
+      - {n: Garra de Feltro, t: "A garra de feltro preto sai da escuridão e rasga em silêncio.", e: ["d:marcial:cortante"]}
+      - {n: Abraço de Feltro, sig: 1, t: "Desce sobre quem carrega a luz e a apaga no abraço de feltro.", e: ["c:cego:2", "d:leve:cortante", {kind: esconder, alvo: eu, valor: 1}], fol: 2}
+  mon_fechado_de_escapulas:
+    cartas:
+      - {n: Placa de Osso, t: "A escápula crescida bate de plano como uma porta pesada.", e: ["d:versatil:impactante"]}
+      - {n: Duas Portas, sig: 1, fol: 2, t: "Fecha as escápulas diante de outro e recebe nas placas o que ia para ele.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: taunt, valor: 2}, {kind: protecao, valor: 2}]}
+      - {n: Músculo à Mostra, t: "Abre as placas para bater e o músculo vermelho aparece entre elas.", e: ["d:pesada:impactante"], fol: 2}
+  mon_virado_do_avesso:
+    cartas:
+      - {n: Soco de Nervo, t: "O punho de músculo à mostra bate com o nervo vibrando junto.", e: ["d:marcial:impactante"]}
+      - {n: Dor que Acelera, sig: 1, t: "A dor o acelera e ele bate de novo, desesperado, antes de o golpe cair.", e: ["d:marcial:impactante", {kind: buff_dano, alvo: eu, valor: 2}, {kind: buff_iniciativa, alvo: eu, valor: 2}]}
+    aprox: "cada golpe recebido dá uma ação a mais na rodada seguinte -> buff de dano e iniciativa"
+  mon_calado_das_guelras:
+    cartas:
+      - {n: Corrida Muda, t: "Corre sem som pela pele selada da boca e bate de ombro.", e: ["d:marcial:impactante"]}
+      - {n: Golpe sem Som, sig: 1, t: "O bando inteiro corre para o mais cansado e cada um bate mais forte que o anterior.", e: ["d:marcial:impactante", {kind: buff_dano, alvo: aliados, valor: 1}]}
+    aprox: "bando corre para o herói com menos Fôlego e cada Calado soma -> buff de dano em aliados"
+  enemy_aranha_lobo:
+    cartas:
+      - {n: Pata de Salto, t: "A pata de salto bate de baixo para cima no queixo.", e: ["d:marcial:impactante"]}
+      - {n: Salto nas Costas, sig: 1, t: "Salta por cima da linha da frente, cai nas costas e já salta de volta.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  enemy_urso_coruja_mutante:
+    cartas:
+      - {n: Elmo de Osso, t: "A ave baixa a cabeça com o capacete de osso e cabeceia de lado.", e: ["d:versatil:impactante"]}
+      - {n: Unha de Adaga, sig: 1, t: "Salta por cima do escudo e chuta com a unha de adaga quem se mexeu.", e: ["d:pesada:cortante"], fol: 2}
+      - {n: Escuta do Chão, f: cena, t: "Encolhe uma perna e para, escutando o chão pelo elmo.", e: [{kind: protecao, valor: 4}, {kind: buff_acerto, valor: 2}]}
+    aprox: "só chuta quem se mexeu na rodada -> sem condição de movimento"
+  mon_ent_dormindo:
+    cartas:
+      - {n: Garra de Gancho, t: "A garra de gancho do bicho de pasto desce devagar e pesada.", e: ["d:versatil:cortante"]}
+      - {n: Gancho de Sono, sig: 1, t: "Puxa quem passa contra o peito e o usa de escudo contra os companheiros.", e: ["d:marcial:cortante", {kind: mover_alvo_zona, direcao: aproximar}, {kind: protecao, valor: 4}], fol: 2}
+      - {n: Suspiro de Sono, f: cena, t: "Solta um suspiro longo e a pele se abre em dobras que absorvem o golpe.", e: [{kind: protecao, valor: 6}]}
+    aprox: "o puxado vira escudo e leva os golpes dos companheiros -> proteção própria + aproximar"
+  mon_morcego_rasteiro:
+    cartas:
+      - {n: Dentinho Rasteiro, t: "O dentinho do morcego morde o punho e a orelha estala.", e: ["d:leve:perfurante"]}
+      - {n: Estalo que Aponta, sig: 1, t: "Estala no punho do mais barulhento e todos os outros o acham primeiro.", e: [{kind: marca, valor: 3}, "d:leve:perfurante"]}
+  mon_besouro_do_estalo:
+    cartas:
+      - {n: Estalo do Ventre, t: "A ponta do ventre estala e cospe um fio de vapor.", e: ["d:marcial:igneo"]}
+      - {n: Jato Fervente, sig: 1, t: "O estalo marca o chão e o vapor fervente cai sobre quem não saiu do lugar.", e: ["a:3:igneo"], fol: 2}
+  mon_onca_vazada:
+    cartas:
+      - {n: Bote de Roseta, t: "Salta de dentro da luz manchada e cai de garras abertas.", e: ["d:versatil:cortante"]}
+      - {n: Luz que Atravessa, sig: 1, t: "Sem sombra, a luz passa pelos furos e o bote sai sem aviso.", e: ["d:pesada:cortante", {kind: esconder, alvo: eu, valor: 2}], fol: 2}
+      - {n: Rosetas Vazadas, f: cena, t: "As rosetas furadas deixam a luz passar e a onça some no manchado.", e: [{kind: esconder, alvo: eu, valor: 3}, {kind: protecao, valor: 3}]}
+  mon_lagarta_de_visgo:
+    cartas:
+      - {n: Mordida de Veludo, t: "A boca de veludo morde e solta um fio de visgo.", e: ["d:leve:perfurante"]}
+      - {n: Leque de Cola, sig: 1, t: "Cola o herói a quem está do lado dele e os dois só se movem juntos.", e: ["c:enraizado:2", "d:leve:perfurante"]}
+  mon_toldo_das_clareiras:
+    cartas:
+      - {n: Garra de Membrana, t: "A ponta da membrana chicoteia como vela solta de navio.", e: ["d:pesada:cortante"]}
+      - {n: Céu que Cai, sig: 1, t: "Cai de membrana aberta sobre todos no centro e quem está embaixo perde a jogada.", e: ["a:3:impactante", "c:atordoado:1"], fol: 3}
+      - {n: Rasante, t: "Passa rente ao chão da clareira com as bordas cortando.", e: ["a:3:cortante", {kind: reposicionar, alvo: eu, valor: 2}], fol: 2}
+      - {n: Galhos Soltos, f: cena, t: "Solta os galhos de um lado e a membrana se enche de vento.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 2}]}
+      - {n: Noite na Clareira, f: cena, t: "A membrana fecha o céu da clareira e a luz some de uma vez.", e: ["a:4:impactante", "c:cego:2"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_toldo_das_clareiras_galhos_soltos], padrao: [mover, ataque_multiplo, enfraquecer, ataque], narracao: "{nome} solta os galhos de um lado e a membrana enche de vento."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_toldo_das_clareiras_noite_na_clareira], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_toldo_das_clareiras_noite_na_clareira, a_cada_n: 2, telegrafo: "O céu da clareira escurece inteiro quando {nome} abre a membrana por cima de vocês."}, narracao: "{nome} rasga a borda, e a clareira inteira fica sem luz."}
+    aprox: "quem fica embaixo perde a jogada até cortarem a membrana por dentro -> atordoado 1 rodada"
+  mon_vespa_coveira:
+    cartas:
+      - {n: Ferrão de Cova, t: "O ferrão curvo entra rápido e o veneno escorre amarelo.", e: ["d:versatil:perfurante"]}
+      - {n: Ferrão que Amolece, sig: 1, t: "Ferroa quem já sangra e o deixa mole, pronto para ser arrastado ao buraco.", e: ["d:marcial:perfurante", "c:atordoado:1", {kind: sangria, valor: 1}], fol: 2}
+      - {n: Voo Baixo, f: cena, t: "Voa baixo e devagar, arrastando a presa pelas patas.", e: [{kind: reposicionar, alvo: eu, valor: 2}, {kind: protecao, valor: 3}]}
+    aprox: "paralisa o herói ferido e o arrasta para fora da luta -> atordoado + sangria"
+  mon_bugio_invertido:
+    cartas:
+      - {n: Braço Ruivo, t: "O braço comprido e ruivo desce do galho e arrasta pelo ombro.", e: ["d:marcial:impactante"]}
+      - {n: Queda para Cima, sig: 1, t: "Agarra o último da fila e o solta para cima; o herói cai de volta no meio deles.", e: ["d:leve:impactante", {kind: mover_alvo_zona, direcao: aproximar}, {kind: marca, valor: 2}]}
+  mon_dedos_de_colheita:
+    cartas:
+      - {n: Talo Vermelho, t: "Um dedo de talo vermelho espeta a mão que se estende.", e: ["d:leve:perfurante"]}
+      - {n: Nuvem Vermelha, sig: 1, t: "Crava e quebra os dedos no rosto do herói e uma nuvem vermelha sobe.", e: ["d:marcial:corrosivo", {kind: marca_do_abismo, valor: 1}, "c:cego:1"], fol: 2, pc: {sacrificio: 2}}
+    aprox: "talos na pele dão Entropia a cada Carta até serem arrancados -> marca_do_abismo + cego, ao custo de Vitalidade"
+  mon_olho_de_petala:
+    cartas:
+      - {n: Virote de Flor, t: "O virote voa na escuridão com um estalo de besta.", e: ["d:marcial:perfurante"]}
+      - {n: Tiro no Escuro, sig: 1, t: "Atira de onde não há luz e acerta como se houvesse luz.", e: ["d:versatil:perfurante", {kind: marca, valor: 2}], fol: 2}
+  mon_mapa_de_cicatrizes:
+    cartas:
+      - {n: Faca de Rota, t: "A cicatriz da mão aponta e a faca vem junto.", e: ["d:marcial:cortante"]}
+      - {n: Trilha na Pele, sig: 1, t: "Lê a trilha no braço e aponta as outras criaturas pelo flanco.", e: ["d:leve:cortante", {kind: buff_acerto, alvo: aliados, valor: 3}, {kind: reposicionar, alvo: aliados, valor: 2}]}
+    aprox: "reposiciona as outras criaturas para o flanco -> buff de acerto + reposicionar aliados"
+  mon_ressecado_da_travessia:
+    cartas:
+      - {n: Placa Rachada, t: "A placa seca do ombro rasga a pele como cerâmica quebrada.", e: ["d:marcial:cortante"]}
+      - {n: Boca Rachada, sig: 1, t: "Bebe da ferida aberta e as placas secas amolecem por cima da carne.", e: ["d:leve:cortante", {kind: cura, alvo: eu, valor: 3, se: {engajado: true}}], fol: 1}
+  mon_mascador_de_raiz:
+    cartas:
+      - {n: Cusparada de Raiz, t: "Cospe a raiz mascada em um jato fibroso e amargo.", e: ["d:leve:corrosivo"]}
+      - {n: O que se Esconde, sig: 1, t: "Masca a raiz e vê o que se esconde: ninguém fica oculto aos olhos dele.", e: ["d:leve:corrosivo", {kind: revelar, campo: intencao}, {kind: buff_acerto, alvo: aliados, valor: 2}]}
+    aprox: "enquanto masca nenhum herói fica escondido e nenhuma emboscada pega -> revelar + buff de acerto em aliados"
+  enemy_sombra_espreitadora:
+    cartas:
+      - {n: Boca de Meia-Lua, t: "A cabeça em meia-lua morde de baixo para cima na canela.", e: ["d:leve:perfurante"]}
+      - {n: Tubo do Ventre, sig: 1, t: "Sobe pela perna e bebe pelo tubo da barriga cada vez mais fundo.", e: ["d:leve:perfurante", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: perfurante}, {kind: cura, alvo: eu, valor: 2}], fol: 2}
+  mon_ermitao_de_carcaca:
+    cartas:
+      - {n: Dedo Branco, t: "O dedo branco sai de dentro da carcaça e bate seco nas costelas.", e: ["d:marcial:impactante"]}
+      - {n: Troca de Casca, sig: 1, t: "Aperta as costelas por dentro e a carcaça nova se levanta no lugar da velha.", e: [{kind: protecao, valor: 5}, {kind: cura, alvo: eu, valor: 3}]}
+    aprox: "entra no corpo caído mais próximo quando a carcaça é destruída -> proteção + cura própria"
+  mon_desafiante_rubro:
+    cartas:
+      - {n: Punho de Vidro, t: "O punho coberto de placas de vidro vermelho bate duro.", e: ["d:versatil:impactante"]}
+      - {n: Peito de Vidro, sig: 1, t: "Bate no peito, escolhe o mais forte e só luta com ele; os outros batem no vidro.", e: ["d:marcial:impactante", {kind: taunt, valor: 3}, {kind: protecao, valor: 3}], fol: 2}
+      - {n: Rugido de Vidro, f: cena, t: "O rugido bate no peito de vidro e o som volta entre as árvores.", e: [{kind: buff_dano, valor: 2}, {kind: protecao, valor: 4}]}
+  mon_enrolado_da_clareira:
+    cartas:
+      - {n: Cabeçada de Placas, t: "A cabeça de tatuzinho com as placas abertas bate de baixo.", e: ["d:marcial:impactante"]}
+      - {n: Bola que Foge, sig: 1, t: "Fecha as placas quando a luz o acha e rola por toda a linha para longe dela.", e: ["a:3:impactante", {kind: protecao, valor: 3}], fol: 2}
+  mon_picanco_de_espinheiro:
+    cartas:
+      - {n: Bico Curvo, t: "O bico curvo arranca um naco do ombro e volta ao galho.", e: ["d:versatil:perfurante"]}
+      - {n: Despensa, sig: 1, t: "Espeta o herói num galho afiado e ele sangra até se soltar.", e: ["d:marcial:perfurante", "c:enraizado:2", {kind: sangria, valor: 2}], fol: 2}
+      - {n: Limpar o Bico, f: cena, t: "Limpa o bico na casca, olhando o espetado com paciência.", e: [{kind: protecao, valor: 4}, {kind: buff_dano, valor: 1}]}

@@ -995,11 +995,12 @@ def validate_bestiary(
     # ids de Carta ocultas conhecidas (varre data/cards)
     hidden_cards, all_card_ids = set(), set()
     if os.path.isdir(cards_dir):
-        for fn in sorted(os.listdir(cards_dir)):
-            if not fn.endswith(".json"):
-                continue
+        # SPEC-349 R33: recursivo (Cartas de criatura vivem em subpastas); ignora `_*`.
+        from services import card_lint
+
+        for card_path in card_lint.iter_card_files(cards_dir):
             try:
-                with open(os.path.join(cards_dir, fn), encoding="utf-8") as f:
+                with open(card_path, encoding="utf-8") as f:
                     for c in json.load(f).get("cards") or []:
                         all_card_ids.add(c.get("id"))
                         if c.get("oculta"):
@@ -1132,7 +1133,9 @@ def validate_bestiary(
                     "bestiary", "error", p, cid, "sem Carta assinatura OCULTA (conflito-08 R7-R9)"
                 )
             )
-        if cre.get("origem") == "conflito-17":
+        if cre.get("origem") == "conflito-17" or str(cre.get("origem") or "").startswith(
+            "bestiario-"
+        ):
             signature = creature_signature(cre)
             previous = volume_signatures.get(signature)
             if previous:
@@ -1186,6 +1189,51 @@ def validate_bestiary(
                     )
                 )
     return findings
+
+
+def validate_bestiary_identity(
+    bestiary_path: str = os.path.join("data", "bestiary.json"),
+    codex_dir: str = CODEX_DIR,
+) -> list[Finding]:
+    """SPEC-349: gate de unicidade de criatura (fichas em data/bestiario/fichas/*.yaml).
+
+    Sem fichas, devolve vazio. A lógica mora em ``services/bestiary_lint`` (fonte única)."""
+    from services import bestiary_lint as bl
+
+    fichas = bl.load_fichas()
+    if not fichas:
+        return []
+    try:
+        with open(bestiary_path, encoding="utf-8") as f:
+            best = json.load(f)
+    except Exception as exc:
+        return [Finding("bestiary_identity", "error", bestiary_path, "", str(exc))]
+    docs = [
+        {
+            "id": str(fm.get("id") or ""),
+            "name": str(fm.get("name") or ""),
+            "tags": list(fm.get("tags") or []),
+            "body": body,
+        }
+        for _, fm, body in _parse_codex(codex_dir)
+        if fm.get("type") == "monster"
+    ]
+    por_regiao: dict[str, list[dict]] = {}
+    for f in fichas.values():
+        por_regiao.setdefault(str(f.get("regiao")), []).append(f)
+    issues = []
+    for regiao, fs in por_regiao.items():
+        for f in fs:
+            issues += bl.lint_ficha(f)
+        issues += bl.lint_regiao(regiao, fs, bestiary=best, codex_docs=docs)
+    issues += bl.lint_global(por_regiao)
+    return [
+        Finding(
+            "bestiary_identity", "error" if i.level == "error" else "warning", bestiary_path, "",
+            f"{i.code}: {i.message}",
+        )
+        for i in issues
+    ]
 
 
 def validate_visual_assets(
@@ -1788,6 +1836,7 @@ def validate_all(
         findings.extend(validate_encoding())
         findings.extend(validate_cards())
         findings.extend(validate_bestiary())
+        findings.extend(validate_bestiary_identity())
         findings.extend(validate_visual_assets())
         findings.extend(validate_race_attitudes())
         findings.extend(validate_merchant_keepers())

@@ -237,6 +237,21 @@
     "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer": {
       "fonte_label": "uma mulher que pariu em casa dela",
       "gist": "a parteira do Anel de Lama ensina a costurar quem a Praga quer"
+    },
+    "rumor_avist_mon_vespa_coveira": {
+      "public_names": [
+        "Vespa"
+      ]
+    },
+    "rumor_avist_mon_vespa_oleira": {
+      "public_names": [
+        "Vespa"
+      ]
+    },
+    "rumor_avist_mon_desbotado_da_nevoa": {
+      "public_names": [
+        "Névoa"
+      ]
     }
   }
 }

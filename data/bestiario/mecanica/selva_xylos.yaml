@@ -1,0 +1,114 @@
+# SPEC-349 Etapa 5: mecânica da Selva de Xylos (onda 9). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_lamelas_de_ferrugem:
+    cartas:
+      - {n: Costas de Prateleira, t: "As prateleiras duras das costas batem de lado como tábuas de ferro velho.", e: ["d:versatil:impactante"]}
+      - {n: Pó das Prateleiras, sig: 1, t: "O golpe sacode as prateleiras e o pó de ferrugem pesa no sangue de quem bateu.", e: ["a:2:corrosivo", {kind: torpor, valor: 1}], fol: 2}
+    aprox: "cada golpe levado de perto solta pó que encarece o próximo golpe de quem bateu -> dano em área + torpor"
+  mon_ariete_de_medula:
+    cartas:
+      - {n: Testada de Cunha, t: "Baixa a cunha de osso e bate em linha reta, sem desviar.", e: ["d:versatil:impactante"]}
+      - {n: Cunha de Osso, sig: 1, t: "Corre em linha reta e a cunha parte a guarda erguida, empurrando quem a segurou.", e: ["d:pesada:impactante", {kind: empurrao, valor: 2}, {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+  mon_lacado_de_hifas:
+    cartas:
+      - {n: Laço de Hifa, t: "Os cordões brancos esticam e chicoteiam junto com o ombro rasgado.", e: ["d:marcial:cortante"]}
+      - {n: Laço Rompido, sig: 1, t: "O respingo escuro de um cordão rompido marca o rosto de quem o cortou.", e: ["d:leve:cortante", {kind: marca, valor: 3}, {kind: taunt, valor: 2}]}
+  mon_recusado_do_ciclo:
+    cartas:
+      - {n: Mão Seca, t: "A mão seca e cinzenta bate sem som, como quem apaga uma vela.", e: ["d:versatil:impactante"]}
+      - {n: Chão Nu, sig: 1, t: "Onde ele pisa o ciclo da selva não entra: nenhum reforço se fixa dentro do círculo.", e: ["d:marcial:impactante", {kind: purga_condicao, valor: 1}, {kind: torpor, valor: 1}], fol: 2}
+      - {n: Cinza Parada, f: cena, t: "A cinza do corpo se assenta e as folhas em volta viram de lado, todas juntas.", e: [{kind: protecao, valor: 5}]}
+    aprox: "nenhuma cura nem fôlego vale dentro do chão nu -> purga_condicao + torpor (sem anular cura)"
+  mon_remendado_de_osso:
+    cartas:
+      - {n: Placa Nova, t: "A placa recém-rompida do peito bate úmida e dura.", e: ["d:versatil:impactante"]}
+      - {n: Camada Nova, sig: 1, t: "A pele fecha sobre a placa partida e o osso rompe de novo, mais grosso.", e: [{kind: protecao, valor: 5}, {kind: cura, alvo: eu, valor: 3}]}
+      - {n: Pulo da Placa, t: "Salta em cima do alvo e cai com as placas abertas.", e: ["a:3:cortante"], fol: 2}
+    aprox: "recupera a defesa a cada rodada, salvo dois golpes seguidos no mesmo ponto -> proteção + cura própria"
+  mon_tamandua_de_ponte:
+    cartas:
+      - {n: Garra de Ponte, t: "A garra comprida sobe pelas tábuas e rasga de baixo.", e: ["d:versatil:cortante"]}
+      - {n: Língua de Carretel, sig: 1, t: "A língua de dez metros cola no mais distante e o arrasta até as garras.", e: ["d:leve:cortante", {kind: mover_alvo_zona, direcao: aproximar}, "c:enraizado:1"], fol: 2}
+  mon_lagarta_da_hora:
+    cartas:
+      - {n: Mastigada, t: "As mandíbulas largas mastigam a trilha e quem estiver nela.", e: ["d:versatil:impactante"]}
+      - {n: Casulo de Minuto, sig: 1, t: "Fecha o casulo duro em volta de si e quase nada o fere por uma rodada.", e: [{kind: protecao, valor: 6}, {kind: cura, alvo: eu, valor: 2}]}
+      - {n: Asas Novas, t: "Sai alada do casulo e bate em todos de uma vez com o vento.", e: ["a:3:cortante"], fol: 2}
+    aprox: "metamorfose em três fases dentro da luta -> proteção/cura e golpe em área alternados pelo padrão"
+  mon_preguica_de_pomar:
+    cartas:
+      - {n: Garra Lenta, t: "A garra lentíssima sobe e desce com a força de um galho caindo.", e: ["d:pesada:cortante"]}
+      - {n: Pomar que Amortece, sig: 1, fol: 2, t: "O golpe dado em quem está perto bate no pomar das costas e as frutas caem.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: protecao, valor: 3}, {kind: taunt, valor: 2}]}
+      - {n: Fruta Madura, f: cena, t: "O pomar das costas floresce de novo e a casca se fecha em volta.", e: [{kind: protecao, valor: 6}, {kind: cura, alvo: eu, valor: 2}]}
+  mon_coandu_de_rebrota:
+    cartas:
+      - {n: Espinho de Quitina, t: "Um espinho de quitina sai do lombo e voa rente.", e: ["d:marcial:perfurante"]}
+      - {n: Leque de Espinhos, sig: 1, t: "Atira um leque de espinhos e se esconde enquanto eles rebrotam.", e: ["a:2:perfurante", {kind: esconder, alvo: eu, valor: 1}], fol: 2}
+  mon_vespa_oleira:
+    cartas:
+      - {n: Ferrão de Barro, t: "O ferrão pequeno de vespa fura o cotovelo e solta barro ácido.", e: ["d:leve:corrosivo"]}
+      - {n: Pote na Junta, sig: 1, t: "Fecha um pote de barro duro numa junta e a mão presa não segura reação.", e: [{kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}, "d:leve:corrosivo"]}
+  mon_escavador_das_camaras:
+    cartas:
+      - {n: Garra de Câmara, t: "A garra branca desce das raízes e abre o chão como arado.", e: ["d:pesada:cortante"]}
+      - {n: Bola de Escamas, sig: 1, t: "Enrola-se em bola de escamas que quase nada fere e rola sobre a linha.", e: ["a:3:impactante", {kind: protecao, valor: 5}], fol: 2}
+      - {n: Escamas Fechadas, t: "As escamas fecham sobre a cabeça cega com um som de telhas caindo.", e: ["d:versatil:impactante", {kind: protecao, valor: 3}]}
+      - {n: Escamas de Luz, f: cena, t: "A luz forte arde nos olhos que não tem; ele desenrola e mostra a barriga mole.", e: [{kind: buff_dano, valor: 3}, {kind: protecao, valor: 3}]}
+      - {n: Câmara Abaixo, f: cena, t: "Cava por baixo e o chão desaba em câmara sobre quem estiver ali.", e: ["a:4:impactante", "c:enraizado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_escavador_das_camaras_escamas_de_luz], padrao: [defesa, ataque_multiplo, mover, ataque], narracao: "{nome} desenrola a barriga, furioso com a luz, e golpeia mais fundo."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_escavador_das_camaras_camara_abaixo], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_escavador_das_camaras_camara_abaixo, a_cada_n: 2, telegrafo: "O chão sob você treme quando {nome} cava por baixo, e a terra desce."}, narracao: "{nome} perde a casca de escamas, mas cava por baixo e o chão desaba."}
+    aprox: "só luz forte ou fogo desenrola o escavador; desenrolado mostra a barriga mole -> proteção e padrões por fase"
+  enemy_vinha_estranguladora:
+    cartas:
+      - {n: Laço de Copa, t: "A cabeça fina chicoteia de cima e dá um bote seco.", e: ["d:versatil:perfurante"]}
+      - {n: Queda da Copa, sig: 1, t: "Cai da copa sobre quem passa embaixo e o envolve em voltas de músculo.", e: ["d:marcial:impactante", "c:enraizado:2", {kind: sangria, valor: 1}], fol: 2}
+      - {n: Cabeça Fina, f: cena, t: "Recolhe a cabeça fina entre as voltas e fecha o corpo todo em cipó.", e: [{kind: protecao, valor: 5}]}
+  mon_viuvo_do_esporo:
+    cartas:
+      - {n: Braço de Coral, t: "O braço de coral dela bate primeiro, sozinho, como que de saudade.", e: ["d:marcial:cortante"]}
+      - {n: Os Dois Tempos, sig: 1, t: "O braço dela golpeia antes e o dele depois, em tempos diferentes.", e: ["d:marcial:cortante", "d:leve:impactante"], fol: 2}
+  mon_surdo_da_colmeia:
+    cartas:
+      - {n: Soco de Tábua, t: "Bate com o punho como quem bate numa tábua para ouvir.", e: ["d:marcial:impactante"]}
+      - {n: Ouvido na Casca, sig: 1, t: "Sente pela madeira a jogada que vem e cai sobre ela antes de valer.", e: ["d:leve:impactante", {kind: revelar, campo: intencao}, {kind: torpor, valor: 1}]}
+  mon_mascador_de_nectar:
+    cartas:
+      - {n: Lâmina de Quitina, t: "A lâmina de quitina amarrada ao coto rasga de baixo para cima.", e: ["d:versatil:cortante"]}
+      - {n: Mais um Pouco, sig: 1, t: "Mascando a pasta preta, cada ferida o deixa mais furioso.", e: ["d:marcial:cortante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+      - {n: Gengiva Preta, f: cena, t: "Esfrega a pasta na gengiva e ri sem som; o sangue pinga mas ele não sente.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+    aprox: "quando a Vitalidade acaba, ainda luta uma rodada inteira -> sem rodada extra"
+  mon_enxertadora_da_uniao:
+    cartas:
+      - {n: Agulha de Osso, t: "A agulha de osso fura a mão de quem a alcança.", e: ["d:marcial:perfurante"]}
+      - {n: Retalho Costurado, sig: 1, t: "Costura na carne do alvo um retalho de fungo que cresce e bebe dele.", e: ["d:leve:perfurante", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: corrosivo}, {kind: cura, alvo: eu, valor: 2}], fol: 2}
+      - {n: Ponto Firme, f: cena, t: "Fecha o ponto no próprio ombro com agulha de osso e fio vivo.", e: [{kind: protecao, valor: 5}, {kind: cura, alvo: eu, valor: 2}]}
+    aprox: "retalho só sai cortado e cortar custa um Ferimento -> dot corrosivo 3 rodadas + cura própria"
+  mon_pressa_da_seiva:
+    cartas:
+      - {n: Soco de Idade, t: "O punho de moço bate rápido; o de velho, depois, bate como pedra.", e: ["d:marcial:impactante"]}
+      - {n: Hora de Cada Idade, sig: 1, t: "Pula de moço a velho em uma rodada, mais pesado e mais lento a cada vez.", e: ["d:versatil:impactante", {kind: buff_dano, alvo: eu, valor: 1}]}
+    aprox: "idade muda a cada rodada: moço rápido/frágil, velho lento/forte -> buff de dano"
+  mon_provador_de_cores:
+    cartas:
+      - {n: Cuspe Pintado, t: "Cospe um fio colorido de veneno que arde na pele.", e: ["d:marcial:corrosivo"]}
+      - {n: Cuspe de Cor, sig: 1, t: "A cor que acende no pescoço anuncia o veneno que vem no cuspe.", e: ["d:marcial:corrosivo", "c:cego:1", {kind: torpor, valor: 1}], fol: 2}
+    aprox: "a cor anunciada define o efeito do cuspe -> cego + torpor fixos (sem seleção por cor)"
+  mon_monte_de_alheios:
+    cartas:
+      - {n: Mãos de Colar, t: "Mãos de baixo do monte de colares puxam e arrancam o brilho.", e: ["d:marcial:impactante"]}
+      - {n: Nada ao Outro, sig: 1, t: "Apaga o reforço mais forte que o outro tiver aceso, sem usá-lo para nada.", e: ["d:leve:impactante", {kind: purga_condicao, valor: 1}, {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}]}
+  mon_isca_amarrada:
+    cartas:
+      - {n: Gemido de Isca, t: "O gemido alto e o sangue que pinga arrepiam a pele de quem escuta.", e: ["d:leve:impactante"]}
+      - {n: Sangue que Chama, sig: 1, t: "O sangue pinga mais grosso e a fauna em volta responde mais furiosa.", e: [{kind: buff_dano, alvo: aliados, valor: 2}, {kind: buff_acerto, alvo: aliados, valor: 2}]}
+  mon_oco_da_fronteira:
+    cartas:
+      - {n: Galho Oco, t: "Um galho do tronco morto desce com o som de madeira seca.", e: ["d:versatil:impactante"]}
+      - {n: Guardar Dentro, sig: 1, t: "Abre a racha do peito e guarda o aliado mais ferido dentro da casca.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: cura, alvo: aliados, valor: 3}], fol: 2}
+    aprox: "aliado guardado fica intocável e se recupera dentro do tronco -> proteção e cura em aliados"
+  mon_tropel_sem_saida:
+    cartas:
+      - {n: Pisada de Tropel, t: "As pernas de muitos bichos pisam juntas, cada uma para um lado.", e: ["d:versatil:impactante"]}
+      - {n: Correr Junto, sig: 1, t: "Atravessa a cena pisoteando e arrasta com a corrida quem estava ao lado.", e: ["a:4:impactante", {kind: empurrao, valor: 2}, {kind: reposicionar, alvo: eu, valor: 2}], fol: 2}
+      - {n: Rebanho de Pernas, f: cena, t: "As duas cabeças olham para trás e as pernas se juntam num arranque só.", e: [{kind: buff_dano, valor: 2}, {kind: protecao, valor: 4}]}

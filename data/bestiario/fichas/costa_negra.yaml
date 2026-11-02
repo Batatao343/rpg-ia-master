@@ -1,0 +1,1865 @@
+# Ficha de identidade da onda: Costa Negra — Cemitério de Leviatãs (esteira da SPEC-349, D8).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da main (pós-SPEC-348), mesma convenção das ondas 1 e 2.
+regiao: costa_negra
+onda: 6
+spec: SPEC-349
+nome_regiao: Costa Negra
+habitat_nome:
+  costa_negra: Cemitério de Leviatãs
+  cn_o_trono: O Trono
+paleta: >-
+  **Costa Negra** — quilômetros de praia escura sob ossadas de leviatãs do tamanho de castelos:
+  costelas em arcos de vinte metros, crânios com câmaras do tamanho de casas, vértebras que viraram
+  colinas; maré baixa que deixa poças oleosas entre os ossos, névoa de Éter perto das carcaças
+  velhas, Ophidia fumegando no horizonte. Luz e paleta: branco-osso queimado de sol, areia
+  negra-úmida, cinza-âmbar, amarelo sujo de óleo de leviatã e banha, verde-azulado frio do Éter nos
+  canais dos ossos; dentro do Trono, escuro rosado de carne velha e um pulso de luz baixa.
+familias_em_jogo:            # D10 — mesmos nomes das ondas anteriores (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: bruto,                 plano_corporal: bipede_ereto,        material: quitina,           escala: humana,  locomocao: nada,           percepcao: vibracao,      habitat: [costa_negra]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: bipede_curvado,      material: sal_mineral,       escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [costa_negra]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: elite,  papel_tatico: quebra_defesa,     arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,        material: carne_exposta,     escala: humana,  locomocao: anda,           percepcao: som,           habitat: [cn_o_trono]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: padrao, papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: bipede_curvado,      material: osso,              escala: grande,  locomocao: anda,           percepcao: calor,         habitat: [costa_negra, cn_o_trono]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: chefe,  papel_tatico: drenador,          arquetipo: predador_apice,        plano_corporal: hospedeiro_parasita, material: carne_exposta,     escala: grande,  locomocao: rasteja,        percepcao: respiracao,    habitat: [cn_o_trono]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,  categoria: padrao, papel_tatico: batedor_rapido,    arquetipo: bruto,                 plano_corporal: segmentado,          material: quitina,           escala: grande,  locomocao: rola,           percepcao: vibracao,      habitat: [costa_negra, cn_o_trono]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: padrao, papel_tatico: quebra_defesa,     arquetipo: predador,              plano_corporal: radial,              material: osso,              escala: humana,  locomocao: escala_paredes, percepcao: luz,           habitat: [costa_negra]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: elite,  papel_tatico: controlador,       arquetipo: guardiao,              plano_corporal: hospedeiro_parasita, material: sal_mineral,       escala: humana,  locomocao: anda,           percepcao: vibracao,      habitat: [costa_negra]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: elite,  papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: quadrupede,          material: carne_exposta,     escala: enorme,  locomocao: rasteja,        percepcao: som,           habitat: [costa_negra]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: emboscador,        arquetipo: covarde_oportunista,   plano_corporal: serpentiforme,       material: couro_tecido,      escala: pequena, locomocao: salta,          percepcao: visao,         habitat: [costa_negra]}
+  - {vaga: 11, familia: besta_entropia,  categoria: lacaio, papel_tatico: emboscador,        arquetipo: emboscador,            plano_corporal: serpentiforme,       material: carne_exposta,     escala: humana,  locomocao: rasteja,        percepcao: sangue_cheiro, habitat: [costa_negra, cn_o_trono]}
+  - {vaga: 12, familia: besta_entropia,  categoria: lacaio, papel_tatico: artilharia,        arquetipo: covarde_oportunista,   plano_corporal: alado,          material: couro_tecido,      escala: pequena, locomocao: escala_paredes, percepcao: calor,         habitat: [costa_negra]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: bipede_ereto,        material: carne_exposta,     escala: humana,  locomocao: nada,           percepcao: calor,         habitat: [costa_negra]}
+  - {vaga: 14, familia: humanoide_preco, categoria: padrao, papel_tatico: artilharia,        arquetipo: conjurador,            plano_corporal: bipede_ereto,        material: vidro_cristal,     escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [costa_negra]}
+  - {vaga: 15, familia: humanoide_preco, categoria: lacaio, papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: bipede_curvado,      material: cera_sebo,         escala: humana,  locomocao: anda,           percepcao: calor,         habitat: [costa_negra]}
+  - {vaga: 16, familia: humanoide_preco, categoria: lacaio, papel_tatico: emboscador,        arquetipo: emboscador,            plano_corporal: bipede_ereto,        material: eter_cristalizado, escala: humana,  locomocao: anda,           percepcao: luz,           habitat: [costa_negra]}
+  - {vaga: 17, familia: humanoide_preco, categoria: elite,  papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: bipede_curvado,      material: ferro_ferrugem,    escala: grande,  locomocao: anda,           percepcao: som,           habitat: [costa_negra]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_lyss},    categoria: elite,  papel_tatico: controlador,       arquetipo: predador,              plano_corporal: acoplado,         material: carne_exposta,  escala: grande,  locomocao: anda,           percepcao: medo_emocao, habitat: [cn_o_trono, costa_negra]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: padrao, papel_tatico: sacrificial,       arquetipo: morto_vivo_implacavel, plano_corporal: composto,         material: madeira_fibra,  escala: grande,  locomocao: nada,           percepcao: medo_emocao, habitat: [costa_negra]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: tatico,                plano_corporal: hexapode_ou_mais, material: ferro_ferrugem, escala: humana,  locomocao: escala_paredes, percepcao: medo_emocao, habitat: [costa_negra, cn_o_trono]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},    categoria: lacaio, papel_tatico: saqueador,         arquetipo: covarde_oportunista,   plano_corporal: quadrupede,       material: madeira_fibra,  escala: pequena, locomocao: anda,           percepcao: visao,       habitat: [costa_negra]}
+  - {vaga: 22, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},   categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: guardiao,              plano_corporal: composto,         material: quitina,        escala: grande,  locomocao: anda,           percepcao: medo_emocao, habitat: [costa_negra]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_escama_revirada
+    vaga: 1
+    nome: Escama Revirada
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/races.txt:284", "lore_nova/locations.txt:318"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: quitina
+      escala: humana
+      locomocao: nada
+      percepcao: vibracao
+      texto: >-
+        Um Osshari em quem as escamas dos braços e das costas cresceram de ponta para cima: a borda que
+        devia deitar sobre a escama de baixo se ergueu, e cada uma ficou presa só pela raiz, solta como
+        telha num telhado sem pregos. Por baixo, a pele inchou e ficou roxa, e as escamas, grossas como
+        unha de cavalo, rangem umas nas outras quando ele mexe os ombros. Um golpe faz a pele ceder e
+        dezenas delas saltam de uma vez. O rosto de couro, que nunca teve escama, ficou intacto, e a
+        membrana entre os dedos rasgou e cicatrizou em franjas.
+    silhueta: >-
+      Um vulto alto e eriçado como uma pinha de pé, que derrama uma chuva de lascas na água
+      quando alguém o acerta.
+    comportamento: >-
+      Fica nos canais de água rasa entre as costelas das carcaças antigas, sentindo pela água
+      o passo de quem vem. Sobe devagar e deixa que batam primeiro. Cada golpe que leva solta
+      escamas que caem no raso em volta, e o raso vira um chão de lascas; depois de pelado,
+      recua para a água funda e espera crescerem de novo.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_escama_revirada_raso_de_lascas
+      frase: >-
+        Cada golpe que leva derruba escamas na água em volta; na rodada seguinte, quem se
+        mexer naquele raso corta os pés nas lascas. Ele fica mais mole a cada chuva.
+    contra_jogo: >-
+      Tirá-lo do raso para a areia seca, onde as lascas não se escondem, ou ficar parado na
+      rodada em que elas caem.
+    gancho: >-
+      Osshari que passam tempo demais nos canais das carcaças antigas voltam com as escamas arrepiadas;
+      o povo deles diz que o Éter os penteou ao contrário e não os deixa voltar para as palafitas.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: veterinária de peixes (hidropisia)
+        referencia: "hidropisia em peixes, a 'pinha': o corpo incha e as escamas se levantam da pele"
+        tomou: as escamas eriçadas pelo inchaço da pele
+        distancia: no peixe é doença que mata; aqui é um Osshari de pé e as escamas soltas viram projétil quando ele é atingido
+    padrao: [defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} encolhe os ombros e as escamas das costas se levantam todas de uma vez, chiando."
+    description: >-
+      Um Osshari de escamas arrepiadas e soltas, presas só pela raiz, que a cada golpe sofrido
+      enche o raso em volta de lascas cortantes.
+    perigo: Médio
+    lore: >-
+      Os Osshari da costa conhecem o mal e não lhe dão nome. Quem fica tempo demais nos canais
+      das carcaças antigas, onde o Éter assenta na água, começa a sentir as escamas
+      levantarem. Primeiro uma, depois as costas inteiras. Os que voltam assim não voltam para
+      as palafitas: ficam no Cemitério, de pé na água rasa, e quem os acerta descobre depois,
+      nos pés, o que eles tinham nas costas.
+    aparencia: >-
+      Osshari alto de pé na água rasa, braços e costas cobertos de escamas grossas eriçadas de ponta para
+      cima como uma pinha, pele inchada e roxa por baixo, rosto de couro liso sem escama, membranas dos
+      dedos rasgadas em franjas.
+    como_se_luta: >-
+      Cada golpe que leva solta escamas no raso, e quem se mexer ali na rodada seguinte corta
+      os pés. Tire-o para a areia seca ou fique parado quando elas caem; depois de pelado ele
+      amolece.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Osshari adulto, mais alto e robusto que um humano, de pé com água pelos joelhos. Escamas
+        cinza-esverdeadas do tamanho de unhas de cavalo cobrem braços, ombros e costas, todas levantadas
+        de ponta para cima, presas só pela raiz, como uma pinha aberta; algumas soltas no ar, saltando.
+        Pele por baixo inchada, arroxeada. Rosto alongado de couro escuro sem escamas, pupilas verticais.
+        Membranas entre os dedos rasgadas em franjas.
+      composicao: >-
+        Canal de água rasa entre duas costelas de leviatã que sobem como arcos; um coletor de âmbar de
+        capuz, à esquerda, acaba de golpear com um pé-de-cabra e recua olhando os pés, as escamas caindo
+        no raso em volta; os dois do mesmo tamanho. Luz fria da manhã, névoa baixa, reflexo verde-azulado de Éter
+        na água.
+      evitar: Homem-peixe de manual, tritão com tridente, criatura de lagoa negra. É um Osshari com as escamas viradas, não um monstro marinho.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ferida_de_coral
+    vaga: 2
+    nome: Ferida de Coral
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1582", "lore_nova/creatures.txt:1550"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: sal_mineral
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um coletor que se cortou no Coral-de-Osso das costelas submersas e não lavou a ferida a tempo. O
+        coral pegou no corte do antebraço e cresceu para fora em galhos brancos e rosados, duros como
+        pedra, que hoje saem do cotovelo, do ombro e das costas em leque. A carne em volta de cada galho
+        é vermelha e quente, sempre aberta. A mão sumiu dentro de um feixe de ramos de ponta afiada, e o
+        peso do braço curvou a espinha para o lado do coral.
+    silhueta: Um homem torto para um lado, puxado por um braço que é um leque de galhos de coral arrastando na areia.
+    comportamento: >-
+      Anda pela linha da maré baixa farejando sangue, porque o coral dele pega melhor em carne
+      aberta. Corta de raspão perto das juntas e se afasta, e volta sempre para o mesmo
+      ferido.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ferida_de_coral_junta_de_coral
+      frase: >-
+        O corte dele deixa uma muda de coral na junta; enquanto ninguém a arrancar, o coral
+        endurece a junta: na primeira rodada o alvo perde a Reação, na seguinte a Carta de
+        arma daquele braço.
+    contra_jogo: Arrancar a muda logo, gastando a ação, ou quebrar o braço de coral pela junta do cotovelo, onde a carne é mole.
+    gancho: >-
+      Todo coletor do Cemitério sabe que corte de coral infecciona depressa; os que ignoraram o aviso
+      andam pela linha da maré com o aviso crescendo no braço.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: medicina de mergulho (cortes de coral)
+        referencia: "cortes de coral infeccionam e custam a fechar por causa dos fragmentos que ficam na carne"
+        tomou: o fragmento que fica na ferida e não deixa fechar
+        distancia: aqui o fragmento pega e cresce como galho, e o homem planta o coral nos outros
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} raspa os galhos do braço na areia molhada e cheira o ar na sua direção."
+    description: >-
+      Um coletor com um braço tomado por galhos de Coral-de-Osso, que deixa mudas de coral nas
+      juntas que corta e as trava.
+    perigo: Baixo
+    lore: >-
+      Corte de coral no Cemitério infecciona com uma pressa que assusta até os coletores
+      velhos. A maior parte perde o braço ou a vida. Alguns ficam com o coral, que pega no
+      osso e cresce para fora em galhos. Esses andam pela linha da maré com o braço puxando o
+      corpo para o lado, e cortam os outros de raspão perto do cotovelo e do joelho, onde o
+      coral pega e endurece a junta.
+    aparencia: >-
+      Coletor curvado para um lado, o braço direito tomado do cotovelo ao ombro e às costas por galhos
+      ramificados de coral branco e rosado, carne vermelha e aberta na base de cada galho, a mão sumida
+      num feixe de ramos pontudos.
+    como_se_luta: >-
+      Corta de raspão e deixa uma muda de coral na junta, que trava primeiro a Reação e depois
+      a arma daquele braço. Arranque a muda cedo ou quebre o braço de coral pela junta do
+      cotovelo.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Homem magro de roupas de lona salgada, curvado para a direita pelo peso do braço: do antebraço ao
+        ombro e espalhando pelas costas, galhos ramificados de coral branco-rosado, duros, com pontas
+        afiadas, em forma de leque; a carne em volta de cada base é vermelha, inchada e úmida. A mão é um
+        feixe de ramos. Olhos fundos, lábios rachados de sal.
+      composicao: >-
+        Linha da maré baixa sob costelas brancas; o Ferida de Coral arrasta o braço de coral deixando um
+        sulco na areia negra; ao fundo, um coletor de âmbar segura o próprio antebraço sangrando, de
+        joelhos, do mesmo tamanho dele. Luz cinza de fim de tarde, poças que refletem o céu.
+      evitar: Homem-planta, druida de galhos, corpo de madeira. É coral mineral, branco e rosado, crescendo de uma ferida aberta.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_compassado_do_trono
+    vaga: 3
+    nome: Compassado do Trono
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1530", "data/world_map.json:585"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um explorador que dormiu dentro do Trono e acordou com o coração preso ao Canto. O
+        esterno partiu ao meio e as costelas da frente se abriram como duas portas; entre
+        elas o coração, inchado até o tamanho de uma cabeça, bate exposto, roxo e lento. As
+        veias do pescoço e dos braços engrossaram como cordas. O coração bate devagar
+        demais, uma vez a cada tanto, no compasso lento que o Canto lhe deixou: entre uma
+        batida e outra o corpo fica de pé, frio, de olhos abertos; na batida, o músculo
+        inteiro estremece de uma vez e ele dispara.
+    silhueta: Um homem de peito aberto em duas abas, com uma massa que pulsa entre as abas, imóvel como estátua e de repente em disparada.
+    comportamento: >-
+      Vaga devagar pelos corredores do Trono. Entre as batidas, não sente nada nem reage. Na
+      batida, avança com tudo que o coração inchado manda de uma vez, e esse golpe atravessa
+      escudo e guarda.
+    papel_tatico: quebra_defesa
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_compassado_do_trono_batida_do_trono
+      frase: >-
+        Alterna rodadas de coração parado, em que fica aberto e não reage, com a batida do
+        coração lento, em que o golpe ignora a Guarda; o coração bate no compasso dele, não
+        no da luta.
+    contra_jogo: Contar o compasso; gastar a força nas rodadas paradas e estar fora do alcance na batida.
+    gancho: >-
+      O Canto-do-Trono sincroniza o coração de quem fica tempo demais lá dentro; a maioria morre quando o
+      Trono expira. Este morreu e não deitou.
+    habitat: [cn_o_trono]
+    inspiracao:
+      - fonte: medicina (ectopia cordis)
+        referencia: "ectopia cordis, o coração formado fora da caixa torácica"
+        tomou: o coração exposto fora do peito
+        distancia: >-
+          aqui o peito se abriu depois, à força, e o coração bate no compasso lento que o
+          Canto-do-Trono lhe deixou
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "As costelas do {nome} se abrem mais um palmo: o coração vai bater."
+    description: >-
+      Um explorador de peito aberto cujo coração exposto, deixado lento pelo Canto-do-Trono,
+      bate de tempos em tempos: imóvel entre as batidas e brutal nelas.
+    perigo: Alto
+    lore: >-
+      Os Osshari não entram no Trono, e quem entra aprende o motivo no corpo. O som baixo da
+      carcaça que respira entra pelo peito e acerta o passo do coração. Quase todos morrem
+      quando o Trono expira. Alguns não deitam: ficam de pé nos corredores de osso, de peito
+      aberto, e só se mexem quando o coração, lento como o Canto o deixou, bate.
+    aparencia: >-
+      Homem de pé com o esterno partido e as costelas da frente abertas como duas portas, um coração
+      roxo do tamanho de uma cabeça batendo exposto entre elas, veias grossas como cordas no pescoço e
+      nos braços, olhos abertos e parados.
+    como_se_luta: >-
+      Fica imóvel entre as batidas e golpeia através da guarda quando o coração bate. Conte o
+      compasso: bata nas rodadas paradas e saia do alcance na batida.
+    related_entities: [cn_o_trono]
+    arte:
+      visual: >-
+        Homem adulto de roupas de explorador rasgadas, de pé, ereto, perfeitamente imóvel. O esterno
+        partido ao meio e as costelas da frente dobradas para fora como duas portas de osso; entre elas
+        um coração roxo-escuro, inchado, do tamanho de uma cabeça, brilhando de umidade. Veias grossas
+        saltadas no pescoço, nos antebraços. Olhos abertos, fixos, pele cinzenta.
+      composicao: >-
+        Corredor dentro do Trono: paredes curvas de osso velho e carne seca, rosadas no escuro, luz baixa
+        que pulsa; o Compassado parado no meio do corredor; à frente, um explorador com tocha, do mesmo
+        tamanho, recuando um passo ao ver o coração se contrair. Poeira no ar suspensa.
+      evitar: >-
+        Zumbi de peito aberto com vísceras, coração em chamas, gore explícito; nem o
+        Sorvedouro do Código de Nova Arcádia, porque aqui não há boca nem sucção. Só o
+        coração e as costelas abertas, limpos de sangue, e a imobilidade.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_forrado_de_leviata
+    vaga: 4
+    nome: Forrado de Leviatã
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:336", "lore_nova/items.txt:1333"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um coletor que costurou placas cruas de osso de leviatã sobre o couro para entrar nas carcaças
+        protegido. O Éter do osso não aceitou ficar por cima: os canais das placas grudaram nos ossos
+        dele e elas cresceram. Hoje as costas são uma carapaça de placas brancas e porosas, desencontradas,
+        e nas bordas a pele rasgou e mostra o músculo vermelho por baixo. O antebraço esquerdo sumiu
+        dentro de uma placa larga como porta de barco, e o peso dobrou o pescoço para a frente.
+    silhueta: Um homem largo e corcunda coberto de placas brancas desencontradas, com um braço que virou um escudo de osso.
+    comportamento: >-
+      Vive nas carcaças grandes, onde o calor da decomposição o conforta. Fica entre os outros e quem
+      chega, e põe o braço-placa na frente do golpe que ia para outro. Não persegue; só não sai do caminho.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_forrado_de_leviata_placa_que_cresce
+      frase: >-
+        Põe a placa do braço na frente do golpe dirigido a outra criatura e o recebe no lugar dela; cada
+        golpe que segura faz a placa crescer mais um dedo.
+    contra_jogo: Atacar pela borda das placas, onde o músculo está exposto, ou derrubá-lo primeiro para chegar aos que ele cobre.
+    gancho: >-
+      O osso de leviatã é o material mais resistente de Valoria; o Estaleiro das Almas paga por ele. Os coletores
+      que o vestiram cru aprenderam que é também o mais teimoso.
+    habitat: [costa_negra, cn_o_trono]
+    inspiracao: []
+    padrao: [defesa, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} planta os pés e levanta a placa do braço diante de quem está atrás dele."
+    description: Um coletor que vestiu placas cruas de osso de leviatã e foi tomado por elas, e que se põe na frente dos golpes dirigidos aos outros.
+    perigo: Médio
+    lore: >-
+      Durrak paga bem pelo osso de leviatã, o mais resistente de Valoria, e os coletores aprenderam a usá-lo
+      também como armadura, costurado cru sobre o couro. O Éter que ainda corre nos canais do osso tem
+      outra ideia. As placas grudam, enraízam e crescem por anos. Os Forrados acabam nas carcaças
+      grandes, mais placa que gente, parados na frente do que quer que esteja atrás deles.
+    aparencia: >-
+      Homem largo e corcunda de costas cobertas por placas brancas e porosas de osso de leviatã,
+      desencontradas, com músculo vermelho exposto nas bordas rasgadas, o antebraço esquerdo sumido numa
+      placa larga como porta de barco, pescoço dobrado para a frente.
+    como_se_luta: >-
+      Recebe no braço-placa os golpes dirigidos a outras criaturas. Ataque pela borda das placas, onde o
+      músculo está à mostra, ou derrube-o antes para alcançar os de trás.
+    related_entities: [costa_negra, cn_o_trono]
+    arte:
+      visual: >-
+        Homem grande e corcunda, pescoço dobrado para a frente; as costas, ombros e um lado do peito
+        cobertos de placas de osso branco-amarelado e poroso, com canais visíveis, cada placa de um
+        tamanho, encavaladas e crescendo para fora; nas bordas a pele rasgada mostra músculo vermelho
+        úmido. O antebraço esquerdo termina numa placa larga e curva como porta de barco. Restos de
+        pontos de costura de couro presos nas placas.
+      composicao: >-
+        Entrada de uma câmara de carcaça grande, costelas em arco atrás; o Forrado de pé na abertura, a
+        placa erguida; atrás dele, uma Barata das Costelas enrolada. Um coletor com lanterna e arpão de
+        osso, do tamanho de um homem comum, mal chega ao ombro dele. Luz quente de lanterna, sombras de
+        costela.
+      evitar: Cavaleiro de armadura de osso, esqueleto com escudo, Lycan. As placas são de baleia, grudadas e crescendo; o corpo é de homem.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_hospede_do_estomago
+    vaga: 5
+    nome: Hóspede do Estômago
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["data/world_map.json:585", "lore_nova/locations.txt:343"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: carne_exposta
+      escala: grande
+      locomocao: rasteja
+      percepcao: respiracao
+      texto: >-
+        Um arpoador Osshari que desceu ao fundo do Trono e ficou preso num estômago novo,
+        um dos pedaços que o Coração-Que-Bate-Ainda refaz na tentativa de voltar a ter corpo. O estômago fechou em volta dele como um saco e não o digeriu: alimenta-o, e ele o carrega. É uma
+        bolsa de parede rosada e grossa, da altura de dois homens, cheia de pregas úmidas e de muco ácido,
+        que se arrasta sobre as dobras. Os dois braços escamados dele saem por rasgos na frente, e a cabeça
+        aparece às vezes por uma fenda no alto, de olhos brancos. Tudo que os braços puxam para dentro, a
+        bolsa digere.
+    silhueta: Um saco de carne rosada da altura de dois homens que se arrasta, com dois braços escamados saindo de rasgos na frente.
+    comportamento: >-
+      Vive no fundo do Trono e sobe aos corredores quando sente respiração de gente. Os braços agarram
+      e puxam para dentro das pregas; enquanto a vítima está lá dentro, o saco aperta, e o Osshari que
+      ele guarda se fortalece com o que o saco derrete.
+    papel_tatico: drenador
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_hospede_do_estomago_dobra_que_digere
+      frase: >-
+        Puxa o alvo para dentro das pregas do estômago; a cada rodada lá dentro o alvo perde Vitalidade e
+        o Hóspede a recupera, até alguém cortar a parede por fora ou o alvo sair rasgando.
+    contra_jogo: Cortar os braços para que não agarrem; se alguém for engolido, rasgar a parede de fora, onde ela é fina entre as pregas.
+    gancho: >-
+      O Coração no fundo do Trono tenta refazer um corpo com o que acha; o primeiro pedaço que
+      saiu andando foi um estômago, com o arpoador que desceu para provar que a carcaça estava
+      morta dentro.
+    habitat: [cn_o_trono]
+    inspiracao:
+      - fonte: Bíblia e relatos de baleeiros
+        referencia: "Jonas no ventre do peixe; a lenda de James Bartley, baleeiro que teria saído vivo de um cachalote (1891)"
+        tomou: o homem engolido que sobrevive dentro do estômago
+        distancia: aqui ninguém sai; o homem e o estômago viraram uma criatura só, e o estômago anda porque ele anda
+    padrao: [ataque, enfraquecer, ataque_multiplo, reforco_proprio]
+    a_cada_n: 4
+    telegrafo: "As pregas do {nome} se abrem de cima a baixo e um bafo quente e azedo enche o corredor."
+    description: Um arpoador Osshari preso dentro de um estômago vivo do Trono, que se arrasta com ele e digere quem os braços puxam para dentro.
+    perigo: Extremo
+    lore: >-
+      Há uma geração, um arpoador Osshari desceu ao fundo do Trono para provar aos mais velhos
+      que a carcaça estava morta. Não voltou. Lá embaixo, o Coração-Que-Bate-Ainda tenta
+      refazer um corpo com ossos, carniça e exploradores, e um estômago refeito fechou-se
+      sobre o arpoador. Os coletores que se arriscam nos corredores de baixo falam de uma
+      bolsa de carne do tamanho de dois homens que sobe quando sente fôlego, com braços de
+      Osshari saindo pela frente. Os Osshari repetem só que o Trono não terminou de morrer.
+    aparencia: >-
+      Bolsa de carne rosada e grossa da altura de dois homens, coberta de pregas úmidas e muco, que se
+      arrasta; dois braços escamados de Osshari saem por rasgos na frente, e uma cabeça de olhos brancos
+      aparece por uma fenda no alto.
+    como_se_luta: >-
+      Os braços puxam o alvo para dentro das pregas, onde o estômago o digere e o Hóspede se recupera.
+      Corte os braços primeiro; se alguém for engolido, rasgue a parede por fora, entre as pregas.
+    related_entities: [cn_o_trono, mon_coracao_que_bate_ainda]
+    arte:
+      visual: >-
+        Massa de parede de estômago, rosada e cinza, grossa, com pregas fundas e brilhantes de muco
+        amarelado, do tamanho de dois homens de pé, apoiada no chão como um saco cheio. Na frente, dois
+        rasgos de onde saem braços longos de Osshari, escamados, com membranas entre os dedos, um ainda
+        segurando um arpão de osso partido. No alto, uma fenda e, nela, o rosto alongado de um Osshari de
+        olhos leitosos.
+      composicao: >-
+        Fundo do Trono, câmara de osso e carne seca com teto de costelas que sobem para a escuridão; luz
+        de uma única lanterna caída no chão; um explorador humano de pé, à direita, com a lanterna
+        derrubada aos pés, chega à metade da altura do Hóspede. Vapor fino saindo das pregas.
+      evitar: Blob ou massa de gosma, Jabba, monstro de tentáculos, gore de entranhas. É um estômago reconhecível, com um homem dentro, e braços humanos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_barata_das_costelas
+    vaga: 6
+    nome: Barata das Costelas
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1492", "lore_nova/locations.txt:313"]
+    anatomia:
+      plano_corporal: segmentado
+      material: quitina
+      escala: grande
+      locomocao: rola
+      percepcao: vibracao
+      texto: >-
+        Um bicho de fundo de mar que subiu agarrado às carcaças e ficou: o corpo é feito de placas
+        cinza-pérola sobrepostas, do tamanho de um barril, com catorze patas curtas por baixo e duas
+        antenas mais longas que o corpo. O Éter das ossadas engrossou as bordas das placas até virarem
+        lâminas. Quando se assusta, enrola-se numa bola perfeita, com a cabeça e as patas para dentro, e
+        as placas fecham sem fresta; os olhos são duas manchas foscas de facetas na frente da carapaça.
+    silhueta: Uma bola de placas do tamanho de um barril que desce a encosta de ossos aos saltos e se abre em catorze patas.
+    comportamento: >-
+      Vive no alto das encostas de vértebras e sente o chão tremer com os passos. Enrola-se e se deixa
+      cair na direção do tremor, quicando nas costelas, e bate como barril de pedra. Depois do golpe fica
+      de barriga para cima um instante, desenrolando, e sobe de novo.
+    papel_tatico: batedor_rapido
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_barata_das_costelas_ricochete"
+      frase: >-
+        Rola e quica entre as costelas: acerta um alvo, ricocheteia no osso e acerta outro, até três, e
+        para de barriga para cima onde terminar, aberta por uma rodada.
+    contra_jogo: >-
+      Lutar em areia aberta, longe das costelas, onde ela não tem em que quicar; e bater na rodada em
+      que ela para virada.
+    gancho: >-
+      Nada do fundo do mar devia sobreviver numa praia; no Cemitério, o Éter das ossadas segura em terra o
+      que subiu com elas e o faz crescer.
+    habitat: [costa_negra, cn_o_trono]
+    inspiracao:
+      - fonte: biologia marinha (isópode gigante)
+        referencia: "Bathynomus giganteus, isópode do fundo do mar que vive de carcaças e se enrola"
+        tomou: o corpo de placas sobrepostas, as catorze patas e o hábito de comer carcaças
+        distancia: aqui vive em terra, do tamanho de um barril, e usa o rolamento como arma de encosta
+    padrao: [mover, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: "Lá no alto das vértebras, {nome} se fecha numa bola e as placas estalam."
+    description: >-
+      Um isópode do fundo do mar do tamanho de um barril, de placas afiadas, que se enrola e quica entre
+      as costelas batendo em quem estiver no caminho.
+    perigo: Médio
+    lore: >-
+      Subiram com as carcaças, agarrados à carne, de um fundo de mar que ninguém viu. Deviam ter morrido
+      no sol. No Cemitério, o Éter os segurou e os fez crescer até o tamanho de barris. Moram no alto das
+      colinas de vértebras e escutam o chão; quem passa embaixo ouve as placas estalarem um instante
+      antes de a bola cair.
+    aparencia: >-
+      Bicho segmentado do tamanho de um barril, de placas sobrepostas cinza-pérola com bordas afiadas,
+      catorze patas curtas por baixo, duas antenas longas e olhos foscos de facetas; enrola-se numa bola
+      perfeita.
+    como_se_luta: >-
+      Rola e quica entre as costelas, acertando até três alvos, e para virada uma rodada. Lute longe das
+      costelas e bata quando ela estiver de barriga para cima.
+    related_entities: [costa_negra, cn_o_trono]
+    arte:
+      visual: >-
+        Isópode gigante, corpo oval achatado de placas segmentadas sobrepostas cinza-pérola com reflexo
+        lilás, bordas grossas e cortantes; catorze patas curtas articuladas; duas antenas longas e
+        flexíveis; olhos compostos foscos. Na mesma imagem, um segundo, enrolado em bola, descendo.
+      composicao: >-
+        Encosta de vértebras de leviatã empilhadas como degraus; uma bola de placas no meio da descida,
+        poeira de osso levantando; embaixo um coletor de âmbar com saco nas costas, do tamanho de uma
+        pessoa, pulando para o lado. A barata desenrolada, no alto, mostra a escala: do tamanho de um
+        barril.
+      evitar: Barata doméstica gigante, tatu, besouro de armadura. É isópode marinho, de placas largas e muitas patas curtas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_estrela_de_alavanca
+    vaga: 7
+    nome: Estrela de Alavanca
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1582", "lore_nova/locations.txt:313"]
+    anatomia:
+      plano_corporal: radial
+      material: osso
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: luz
+      texto: >-
+        Uma estrela-do-mar de cinco braços que, crescendo nas costelas submersas, trocou o esqueleto mole
+        por vértebras de leviatã: cada braço é uma fileira de vértebras pequenas fundidas, nodosa e dura,
+        e a envergadura chega à altura de um homem. Por baixo, centenas de pés-ventosa transparentes
+        prendem em qualquer superfície. Na ponta de cada braço há um olho vermelho, uma mancha que só vê
+        luz e sombra. No centro, a boca põe o estômago para fora, mole e branco.
+    silhueta: Uma estrela de cinco braços nodosos do tamanho de um homem, colada a um escudo e puxando as bordas para lados opostos.
+    comportamento: >-
+      Escala as costelas e cai sobre o que faz sombra. Abre mariscos do tamanho de baús puxando as duas
+      conchas com os braços até cansarem; trata escudo e couraça do mesmo jeito: gruda dos dois lados e
+      puxa, devagar, até abrir.
+    papel_tatico: quebra_defesa
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_estrela_de_alavanca_concha_aberta
+      frase: >-
+        Gruda no escudo ou na armadura e puxa por várias rodadas; quando abre, arranca a Guarda preparada
+        e põe o estômago para dentro da fresta.
+    contra_jogo: Arrancá-la com fogo ou água doce nos pés-ventosa, ou largar o escudo antes de ela abrir; sem concha, ela não tem o que puxar.
+    gancho: >-
+      Nas costelas submersas, o Coral-de-Osso cresce sobre o osso; a estrela fez o contrário e deixou o
+      osso crescer nela.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia marinha (estrelas-do-mar)
+        referencia: "estrelas-do-mar abrem mexilhões puxando as conchas com os pés ambulacrários e evertem o estômago"
+        tomou: abrir a concha pela força contínua e o estômago que sai pela boca
+        distancia: aqui os braços são de vértebras de leviatã e a concha que ela abre é escudo e armadura
+    padrao: [mover, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "Os cinco olhos vermelhos de {nome} se viram para a sombra do seu escudo."
+    description: Uma estrela-do-mar de braços de vértebras fundidas, da altura de um homem, que gruda em escudos e couraças e os abre como conchas.
+    perigo: Médio
+    lore: >-
+      As costelas que a maré cobre viraram jardins de coral, e nos jardins vivem estrelas do tamanho de
+      gente, de braços de vértebra. Os Osshari as afastam com fogo. Os coletores aprenderam a temer a
+      sombra que faz um escudo levantado: é a sombra que elas procuram, e uma estrela grudada num escudo
+      não solta antes de abri-lo.
+    aparencia: >-
+      Estrela-do-mar de cinco braços nodosos feitos de vértebras pequenas fundidas, branco-amareladas,
+      envergadura da altura de um homem, pés-ventosa transparentes por baixo, um olho vermelho na ponta de
+      cada braço e estômago branco saindo da boca central.
+    como_se_luta: >-
+      Gruda no escudo ou na armadura e puxa até abrir, levando a Guarda. Solte-a com fogo ou água doce
+      nos pés-ventosa, ou largue o escudo antes que ela termine.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Estrela-do-mar enorme de cinco braços grossos e nodosos, cada braço uma fileira de vértebras
+        pequenas fundidas, cor de osso velho com manchas de coral rosado; a face de baixo coberta de
+        pés-ventosa translúcidos; ponta de cada braço com um ponto vermelho; estômago branco e mole saindo
+        do centro.
+      composicao: >-
+        Poça de maré entre costelas cobertas de coral; a Estrela grudada no escudo redondo de madeira e
+        ferro de um mercenário humano de joelhos, os braços dela puxando as bordas do escudo para os
+        lados; a envergadura dela é igual à altura dele. Luz de céu nublado, água brilhante.
+      evitar: Monstro estelar cósmico, estrela com rosto, aranha de cinco pernas. É estrela-do-mar de verdade, com braços de vértebra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_andarilho_de_cracas
+    vaga: 8
+    nome: Andarilho de Cracas
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1582", "lore_nova/locations.txt:318"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: sal_mineral
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Por baixo havia um lobo-marinho; hoje é uma colônia de cracas que anda nele. Os cones de pedra
+        branca cobrem o dorso, a cabeça e os olhos, colados uns nos outros numa crosta da grossura de um
+        punho, e só as nadadeiras da frente ainda aparecem, cinzentas e gastas. De cada cone sai um leque
+        de pernas finas como penas que se abre e fecha no ar, sentindo o vento e o tremor. A colônia puxa o
+        bicho por onde quer; ele não vê nada há anos.
+    silhueta: Um bicho baixo e corcunda feito de cones de pedra branca, com franjas finas se abrindo e fechando por todo o dorso.
+    comportamento: >-
+      Anda devagar pela linha da arrebentação, guiado pela colônia, na direção do que vibra. Perto de uma
+      presa, as cracas soltam nuvens de larvas que grudam e endurecem em minutos sobre couro, ferro e pele.
+      Quem fica perto demais começa a andar para onde a crosta quer.
+    papel_tatico: controlador
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_andarilho_de_cracas_terceira_camada
+      frase: >-
+        Cimenta larvas no alvo a cada rodada; na terceira camada a colônia passa a guiá-lo e
+        o move na rodada seguinte para onde ela quer. Raspar antes zera a contagem.
+    contra_jogo: >-
+      Raspar as cracas jovens antes da terceira camada, ou ficar fora do alcance da nuvem e
+      bater de longe na nadadeira, que é a única carne exposta.
+    gancho: >-
+      No Cemitério, o Éter acelera tudo que cresce sobre outra coisa; as cracas cresceram tão depressa
+      sobre um lobo-marinho que agora mandam nele.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia marinha (cracas e Sacculina)
+        referencia: "cracas (Balanidae) que cimentam as larvas sobre qualquer superfície; Sacculina, craca parasita que controla o caranguejo"
+        tomou: o cimento das larvas e a ideia de uma craca que dirige o hospedeiro
+        distancia: aqui a colônia cobre por fora um lobo-marinho cego e cimenta larvas na armadura de quem luta
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "As franjas de {nome} param todas de uma vez, e uma poeira branca sobe da crosta."
+    description: >-
+      Um lobo-marinho cego coberto e guiado por uma colônia de cracas, que cimenta larvas em
+      quem chega perto e, com camadas bastantes, passa a guiá-lo também.
+    perigo: Alto
+    lore: >-
+      O Éter do Cemitério acelera tudo que cresce sobre outra coisa. Coral sobre osso, fungo
+      sobre carne, craca sobre bicho. Os lobos-marinhos que se deitam muito tempo nas pedras
+      da costa acordam pesados, depois cegos, depois guiados. Os coletores contam que, perto
+      deles, a crosta branca pega em minutos e que, depois da terceira camada, a pessoa anda
+      para onde a crosta quer.
+    aparencia: >-
+      Corpo baixo de lobo-marinho inteiramente coberto por cones brancos de cracas colados numa crosta
+      grossa, olhos cobertos, só as nadadeiras da frente cinzentas à mostra, leques de pernas finas como
+      penas se abrindo e fechando em cada cone.
+    como_se_luta: >-
+      Cimenta larvas no alvo a cada rodada; na terceira camada a colônia o move para onde
+      quer. Raspe as cracas antes disso, ou fique fora da nuvem e bata nas nadadeiras, a única
+      carne exposta.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Animal do tamanho de um homem deitado, com o volume de um lobo-marinho, quase todo coberto por
+        cracas: cones de calcário branco-acinzentado colados uns nos outros numa crosta grossa e irregular,
+        cobrindo a cabeça e os olhos. Só as duas nadadeiras dianteiras, cinzentas e gastas, aparecem. De
+        cada cone, leques de cirros finos e dourados abertos no ar.
+      composicao: >-
+        Pedras escuras na linha da arrebentação, espuma, uma costela branca caída ao fundo; o Andarilho
+        avança; ao lado, um coletor humano de pé tenta raspar com faca uma crosta branca que já cobre o
+        próprio ombro e o braço; o coletor e o bicho na mesma altura. Luz cinzenta, borrifo.
+      evitar: Golem de pedra, tartaruga, monstro de recife com olhos. É um lobo-marinho debaixo de uma colônia de cracas, e as cracas parecem cracas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_touro_de_banha
+    vaga: 9
+    nome: Touro de Banha
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:334", "lore_nova/creatures.txt:1492"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: enorme
+      locomocao: rasteja
+      percepcao: som
+      texto: >-
+        Um elefante-marinho macho que passou a vida comendo banha de carcaça. Ficou do tamanho de uma
+        carroça, e a pele não acompanhou: racha em sulcos no pescoço e nos flancos e mostra a gordura
+        amarela por baixo, em dobras que tremem. O Éter endureceu o nariz pendurado até virar um aríete de
+        cartilagem com nódulos de osso na ponta. O peito é um escudo de cicatrizes de brigas, e as
+        nadadeiras da frente têm unhas grossas como cascos.
+    silhueta: Um monte de banha do tamanho de uma carroça que se ergue sobre o peito, com um nariz pendurado como um aríete.
+    comportamento: >-
+      Domina um trecho de praia ao pé de uma carcaça e ruge pelo nariz contra tudo que faz barulho. Antes
+      de investir, ergue o peito e ruge; depois se joga para a frente com o peso inteiro e esmaga o que
+      está na linha.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_touro_de_banha_peso_da_praia
+      frase: >-
+        Ergue o peito e ruge numa rodada, e na seguinte se joga sobre a linha inteira: acerta todos que
+        estão na frente dele e derruba quem não tem chão firme.
+    contra_jogo: Sair da frente na rodada do rugido e atacar pelos flancos rachados, onde a banha está exposta; ele custa a virar.
+    gancho: >-
+      O óleo de leviatã sai da banha das carcaças; alguém mais chegou nela antes dos coletores, e não
+      gosta de dividir.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia (elefante-marinho)
+        referencia: "Mirounga, os machos dominantes de praia com probóscide inflável e brigas de peito"
+        tomou: o macho de praia, o nariz pendurado, o peito de cicatrizes e a investida com o peso
+        distancia: aqui vive de banha de leviatã, do tamanho de uma carroça, a pele racha sobre a gordura e o nariz virou aríete
+    padrao: [reforco_proprio, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue o peito da areia e ruge pelo nariz; a banha dos flancos treme."
+    description: Um elefante-marinho do tamanho de uma carroça, gordo de banha de leviatã, de pele rachada e nariz de aríete, que esmaga a linha inteira.
+    perigo: Alto
+    lore: >-
+      Os coletores de óleo de leviatã chegam às carcaças novas sabendo que não são os primeiros. Os
+      elefantes-marinhos da costa descobriram a banha antes deles e cresceram com ela até o tamanho de
+      carroças. Cada macho guarda o pé de uma carcaça. Ruge antes de vir; quem ouve o rugido e fica onde
+      está, fica embaixo.
+    aparencia: >-
+      Elefante-marinho do tamanho de uma carroça, pele cinza rachada em sulcos no pescoço e nos flancos
+      mostrando dobras de gordura amarela, nariz pendurado endurecido em aríete com nódulos de osso,
+      peito coberto de cicatrizes.
+    como_se_luta: >-
+      Ruge numa rodada e se joga na seguinte sobre todos que estão à frente. Saia da linha no rugido e
+      ataque os flancos rachados; ele custa a virar.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Elefante-marinho macho colossal, erguido sobre as nadadeiras da frente e o peito, cabeça para
+        trás, boca aberta num rugido; o nariz pendurado longo e grosso, endurecido, com nódulos de osso
+        na ponta; pele cinza-chumbo rachada em sulcos fundos no pescoço e nos flancos, gordura amarela
+        aparecendo nas rachaduras; peito branco de cicatrizes.
+      composicao: >-
+        Praia negra ao pé de uma carcaça recente, com tonéis de óleo de coletores tombados; o Touro
+        erguido; dois coletores com ganchos de esfola correndo para os lados, do tamanho de uma pessoa,
+        chegam ao peito dele. Luz baixa de tarde, vapor saindo da carcaça.
+      evitar: Morsa com presas, monstro marinho de presas e chifres, foca fofa. É elefante-marinho, pesado e feio, com a pele rachando.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_saltador_de_poca
+    vaga: 10
+    nome: Saltador de Poça
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:318", "lore_nova/creatures.txt:1492"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: pequena
+      locomocao: salta
+      percepcao: visao
+      texto: >-
+        Um peixe do tamanho de um gato grande que vive fora da água a maior parte do tempo, andando sobre
+        as barbatanas do peito como sobre muletas. O Éter das poças empurrou os olhos para cima, em duas
+        hastes de osso que giram cada uma para um lado. A pele é couro pardo que racha quando seca, e a
+        boca larga tem fileiras de dentes finos como agulha. A cauda é curta e grossa, uma mola.
+    silhueta: Um peixe de olhos espetados no alto da cabeça que se ergue nas barbatanas na borda de uma poça e salta como mola.
+    comportamento: >-
+      Vive aos bandos nas poças que a maré deixa entre os ossos. Vigia de longe com os olhos em haste,
+      salta da água para morder um tornozelo e volta para a poça antes do troco.
+    papel_tatico: emboscador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_saltador_de_poca_volta_para_agua
+      frase: >-
+        Morde e volta para a poça na mesma rodada; na seguinte não pode ser alcançado por quem não está
+        com os pés na água.
+    contra_jogo: Entrar na poça com ele, ou secar a poça a pancadas; fora da água ele racha e fica lento.
+    gancho: >-
+      As poças da maré baixa no Cemitério ficam carregadas de Éter das carcaças; o que vive nelas aprende
+      a ver longe.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia (saltador-do-lodo)
+        referencia: "Periophthalmus, peixe que anda e salta fora da água nos mangues, com olhos no alto da cabeça"
+        tomou: o peixe que anda nas barbatanas e salta, com olhos levantados
+        distancia: aqui os olhos estão em hastes de osso que giram, e ele caça gente pelo tornozelo e foge para a poça
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "Os dois olhos em haste de {nome} param de girar e apontam para os seus pés."
+    description: Um peixe do tamanho de um gato que anda nas barbatanas, de olhos em hastes de osso, que salta da poça para morder e volta.
+    perigo: Baixo
+    lore: >-
+      Na maré baixa, as poças entre os ossos ficam cheias de olhos. Os saltadores andam nas barbatanas
+      pela borda da água, cada olho girando para um lado. Não atacam quem está longe. Esperam o passo
+      perto da poça, mordem o tornozelo e somem na água antes que alguém abaixe a lâmina.
+    aparencia: >-
+      Peixe pardo do tamanho de um gato grande, apoiado nas barbatanas do peito como muletas, dois olhos
+      no alto da cabeça em hastes de osso que giram, pele de couro rachada, boca larga cheia de dentes de
+      agulha.
+    como_se_luta: >-
+      Salta da poça, morde e volta para a água, onde não é alcançado da margem. Entre na poça atrás dele
+      ou seque-a; fora da água ele racha e fica lento.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Peixe atarracado, couro pardo-esverdeado rachado como lama seca, apoiado nas duas barbatanas do
+        peito; dois olhos redondos e úmidos no alto da cabeça, cada um na ponta de uma haste curta de osso,
+        olhando para lados diferentes; boca larga aberta com fileiras de dentes finos.
+      composicao: >-
+        Poças de maré entre vértebras, céu refletido; uma dúzia de saltadores na borda; um em pleno salto,
+        boca aberta, na direção da bota de um coletor de pé na lama; a bota e o peixe mostram a escala: o
+        peixe do tamanho de um gato. Luz clara de manhã.
+      evitar: Sapo, girino gigante, peixe com pernas humanas. É peixe que anda nas barbatanas, pequeno, de olhos em haste.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bruxa_de_carcaca
+    vaga: 11
+    nome: Bruxa de Carcaça
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:313", "lore_nova/creatures.txt:1492"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: humana
+      locomocao: rasteja
+      percepcao: sangue_cheiro
+      texto: >-
+        Um peixe sem mandíbula, rosado e cego, do comprimento de um homem, que mora dentro da carne podre
+        das carcaças recentes. A pele é solta como uma meia grande demais e desliza sobre a carne de
+        dentro. Em volta da boca redonda há seis barbilhões que farejam, e dentro dela duas placas de
+        dentes que raspam como lixa. Ao longo dos flancos, uma fileira de poros solta muco, e o Éter fez o
+        muco render: um só bicho enche baldes.
+    silhueta: Uma enguia cega e rosada do comprimento de um homem saindo de dentro de uma carcaça, arrastando cordas de muco.
+    comportamento: >-
+      Fica dentro da carcaça, enterrada na carne, e sai pelo buraco mais próximo quando sente cheiro de
+      sangue fresco. Prende-se ao corpo da presa e raspa; ameaçada, despeja muco que entope boca e nariz
+      e não sai com a mão.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bruxa_de_carcaca_muco_na_boca
+      frase: >-
+        Sai de dentro da carcaça no primeiro ataque e cobre o rosto do alvo de muco: enquanto ele não
+        limpar, cada rodada custa Fôlego para respirar.
+    contra_jogo: Não ficar ferido perto da carne aberta; quem é coberto deve gastar a ação limpando o rosto antes que o muco engrosse.
+    gancho: >-
+      As carcaças novas ainda têm tecido entre os ossos; quem enfia o braço nelas atrás de âmbar descobre
+      que a carne não está vazia.
+    habitat: [costa_negra, cn_o_trono]
+    inspiracao:
+      - fonte: biologia marinha (peixe-bruxa)
+        referencia: "Myxini, peixe sem mandíbula que entra nas carcaças no fundo do mar e solta litros de muco quando atacado"
+        tomou: viver dentro da carcaça, as placas de dentes e o muco que sufoca
+        distancia: aqui é do tamanho de um homem, em terra, dentro das carcaças da praia, e o muco é arma contra o fôlego de quem luta
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "A carne podre ao lado de você estremece; {nome} vira dentro dela, farejando."
+    description: Um peixe-bruxa cego do tamanho de um homem que vive dentro da carne podre das carcaças e afoga a presa em muco.
+    perigo: Baixo
+    lore: >-
+      Os coletores que enfiam o braço numa carcaça nova atrás de âmbar contam histórias de mãos que
+      voltaram cheias de gosma e às vezes não voltaram. Dentro da carne vivem peixes cegos e rosados do
+      comprimento de um homem, que raspam em vez de morder. Ameaçados, enchem o ar de muco. Já morreu
+      coletor afogado em terra seca, de boca cheia.
+    aparencia: >-
+      Peixe cego, rosado e sem mandíbula, do comprimento de um homem, de pele solta como meia, seis
+      barbilhões em volta da boca redonda, placas de dentes de lixa, poros nos flancos soltando cordas de
+      muco.
+    como_se_luta: >-
+      Sai da carcaça para cobrir o rosto do alvo de muco, que custa Fôlego enquanto não for limpo. Gaste a
+      ação limpando cedo, e não fique sangrando perto da carne aberta.
+    related_entities: [costa_negra, cn_o_trono]
+    arte:
+      visual: >-
+        Peixe longo como uma enguia, rosado-acinzentado, sem olhos visíveis, pele frouxa e enrugada; boca
+        redonda com seis barbilhões curtos; fileira de poros ao longo do corpo soltando fios grossos e
+        transparentes de muco que pendem até o chão.
+      composicao: >-
+        Lateral de uma carcaça recente, carne escura entre costelas; a Bruxa saindo de um buraco na carne
+        até a metade do corpo; um coletor ajoelhado, braço ainda enfiado em outro buraco, rosto já coberto
+        de gosma transparente; o comprimento do peixe é o do coletor. Luz amarela de lanterna.
+      evitar: "Verme de areia gigante, lampreia de boca de ventosa dentada, enguia elétrica. É peixe-bruxa: cego, mole, de barbilhões, coberto de muco."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_petrel_de_papo_cheio
+    vaga: 12
+    nome: Petrel de Papo Cheio
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1492", "lore_nova/locations.txt:313"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Uma ave do mar do tamanho de um gato, de penas cinza coladas pelo próprio óleo, que faz ninho
+        nas frestas das costelas do Cemitério. O Éter da água que ela bebe a vida inteira inchou a bolsa
+        de óleo do estômago, que cresceu para fora do pescoço num saco de pele fina e amarelada, maior
+        que a cabeça, onde se vê o óleo balançando. Pesada demais para voar longe, anda pelos ossos
+        agarrada com garras compridas e o bico em gancho, de asas abertas só para se equilibrar. O peito
+        é careca de tanto óleo escorrer por ele.
+    silhueta: >-
+      Aves cinzentas agarradas às costelas brancas, cada uma com um saco amarelo de óleo pendurado do
+      pescoço, quase do tamanho da cabeça.
+    comportamento: >-
+      Ficam agarradas no alto das costelas, junto aos ninhos. Quando alguém chega perto, esvaziam o papo
+      em quem está embaixo e esperam que ele encha de novo. Não descem para brigar.
+    papel_tatico: artilharia
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_petrel_de_papo_cheio_oleo_do_papo"
+      frase: >-
+        Esvazia o papo num jato de óleo fedido sobre um alvo à distância: o óleo gruda nas mãos, e até o
+        alvo gastar uma ação esfregando-as com areia, a próxima Carta de defesa dele vale metade, porque
+        a arma e a proteção escorregam.
+    contra_jogo: >-
+      Esfregar as mãos com areia seca logo depois do jato; o papo vazio leva duas rodadas para encher, e
+      uma ave de papo vazio cai do osso com qualquer pancada.
+    gancho: >-
+      No Cemitério até a água é carregada de Éter; as aves que a bebem a vida inteira guardam no papo
+      mais do que óleo de peixe.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia (iguana-marinha)
+        referencia: "Amblyrhynchus cristatus, a iguana-marinha que espirra o excesso de sal pelas glândulas nasais"
+        tomou: o lagarto negro que se aquece em pilhas e espirra sal
+        distancia: aqui as glândulas viraram bolsas de cristal e o espirro é arma que cega, de cima das costelas
+    padrao: [enfraquecer, mover]
+    a_cada_n: 3
+    telegrafo: "O papo de {nome} incha e balança, e a ave estica o pescoço na sua direção."
+    description: >-
+      Uma ave do mar de papo inchado de óleo pelo Éter do Cemitério, pesada demais para voar, que cospe
+      óleo fedido em quem chega perto do ninho.
+    perigo: Baixo
+    lore: >-
+      Fazem ninho nas frestas das costelas, cinzentas sobre o osso branco, e daqui de baixo parecem
+      musgo. Quem passa embaixo descobre que não são. O óleo que cospem fede por dias e faz a mão
+      escorregar no cabo. Os Osshari andam com as mãos enroladas em pano sob as costelas por causa
+      delas.
+    aparencia: >-
+      Ave do mar cinzenta do tamanho de um gato, penas coladas de óleo, saco de pele fina e amarelada
+      pendurado do pescoço com óleo balançando dentro, garras compridas agarradas ao osso, bico em
+      gancho, peito careca.
+    como_se_luta: >-
+      Cospe óleo nas mãos do alvo, e a próxima defesa dele escorrega. Esfregue as mãos com areia; de
+      papo vazio ela cai do osso com uma pancada.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Bando de aves marinhas do porte de um gato, plumagem cinza empapada e colada, agarradas com
+        garras longas a uma costela branca de leviatã; de cada pescoço pende um papo inchado,
+        translúcido e amarelado, maior que a cabeça, com líquido oleoso visível; bicos curvos em gancho;
+        asas meio abertas para equilíbrio; peito sem penas. Não é lagarto: sem focinho encrostado nem
+        espirro (essa leitura é do Lagarto Espirrador, Ophidia).
+      composicao: >-
+        Uma costela de leviatã em arco, branca, com uma pilha de iguanas negras no alto; embaixo, um
+        Osshari de cabeça baixa protege o rosto com o antebraço, coberto de pó branco; o braço dele e as
+        iguanas mostram a escala. Sol duro da manhã, sombras curtas.
+      evitar: Dragão-de-komodo, lagarto cuspidor de fogo, dinossauro. É iguana-marinha negra, pequena, com sal no focinho.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_esfolado_de_sal
+    vaga: 13
+    nome: Esfolado de Sal
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/races.txt:272", "lore_nova/locations.txt:318"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: nada
+      percepcao: calor
+      texto: >-
+        Um Osshari que arrancou as próprias escamas para sentir o sal do Cemitério na carne. Os braços, os
+        ombros e as costas estão em carne viva, vermelha por baixo de uma crosta branca de sal que ele
+        esfrega de novo toda manhã. As escamas arrancadas pendem de um cordão no pescoço como contas. As
+        mãos, com as membranas cortadas, são as únicas partes que ainda têm escama, e os olhos de pupila
+        vertical estão sempre úmidos.
+    silhueta: Um Osshari em carne viva coberto de crosta branca, com um colar de escamas soltas, de pé na arrebentação.
+    comportamento: >-
+      Fica na arrebentação, onde a água salgada arde mais. Procura o calor de quem sangra e chega perto
+      para agarrar. Quando abre uma ferida em alguém, esfrega sal nela e fecha os olhos, como quem sente pelos dois.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_esfolado_de_sal_sal_na_ferida
+      frase: >-
+        Esfrega sal no Ferimento que abre: enquanto arder, a ferida salgada conta como dois
+        Ferimentos; lavar com água doce, gastando a ação, devolve a um.
+    contra_jogo: Lavar a ferida com água doce para apagar o sal, e não deixar que ele chegue ao corpo a corpo depois do primeiro corte.
+    gancho: >-
+      O Osshari nasceu com o mundo chegando amortecido. Alguns acham, no sal do Cemitério e na carne viva,
+      a única coisa que chega inteira.
+    habitat: [costa_negra]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} esfrega um punhado de sal no próprio braço e sorri sem som."
+    description: >-
+      Um Osshari que arranca as próprias escamas para sentir o sal na carne viva e esfrega o
+      mesmo sal nas feridas que abre, que passam a pesar em dobro.
+    perigo: Médio
+    lore: >-
+      Os Osshari sentem o mundo amortecido desde que abriram os olhos na areia da costa, e caçam
+      leviatãs para sentir alguma coisa. Alguns acham que o sal do Cemitério na carne viva chega mais
+      perto. Arrancam as escamas uma por uma e guardam todas num cordão. Os outros Osshari não os
+      expulsam; só param de falar com eles.
+    aparencia: >-
+      Osshari alto em carne viva nos braços, ombros e costas, crosta branca de sal sobre a carne vermelha,
+      colar de escamas arrancadas no pescoço, escamas só nas mãos, membranas dos dedos cortadas, olhos de
+      pupila vertical úmidos.
+    como_se_luta: >-
+      Esfrega sal na ferida que abre, e ela conta como duas enquanto arder. Lave com água
+      doce, gastando a ação, e não o deixe chegar perto de novo.
+    related_entities: [costa_negra]
+    arte:
+      visual: >-
+        Osshari adulto, alto e forte, rosto alongado de couro escuro e pupilas verticais; braços, ombros e
+        costas sem escamas, carne vermelha viva coberta por uma crosta branca e granulada de sal, rachada
+        nas dobras; no pescoço um cordão comprido com dezenas de escamas furadas; mãos ainda escamadas,
+        membranas dos dedos cortadas em tiras.
+      composicao: >-
+        Arrebentação na praia negra, espuma até as coxas, uma costela caída atrás; o Esfolado de pé de
+        braços abertos para a onda que vem; mais perto, um arpoador Osshari ainda escamado observa de
+        lado, da mesma altura. Luz branca de céu fechado, borrifo.
+      evitar: Zumbi esfolado, demônio vermelho, gore de carne pendurada. A carne viva está coberta de sal branco; o horror é ele ter feito isso de propósito.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_contrabandista_vitreo
+    vaga: 14
+    nome: Contrabandista Vítreo
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: mao_sombria
+      refs: ["lore_nova/locations.txt:467", "lore_nova/factions.txt:39"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um provador de venenos da Mão Sombria que provou tanto do que vem de Ophidia que o corpo parou
+        de aceitar remédio. A pele do rosto, do pescoço e das mãos virou vidro em placas lisas, e por
+        baixo delas o sangue engrossou e escureceu até brilhar como piche com areia. As duas palmas
+        estão abertas em talhos fundos que nunca fecham, de bordas de vidro, de tanto ele cortá-las para
+        pingar o próprio sangue na língua e saber o que comprou. A língua é preta e rachada, as unhas
+        caíram, e as veias dos antebraços saltam duras como arame.
+    silhueta: >-
+      Um homem magro de pele em placas de vidro, de palmas abertas para a frente, pingando um sangue
+      preto e brilhante.
+    comportamento: >-
+      Trabalha entre a carga que vem de Brekmar e os coletores do Cemitério, e luta como prova: de
+      longe, cuspindo. Não cospe: sacode o sangue das palmas, e onde ele cai nenhum remédio pega.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: mao_sombria
+    mecanica_assinatura:
+      carta: "cri_contrabandista_vitreo_sangue_que_corta"
+      frase: >-
+        Sacode o sangue das palmas abertas sobre um alvo à distância: o sangue gruda e corta o remédio,
+        e na rodada seguinte nenhuma cura vale no atingido; quem já estava sob um efeito de cura o
+        perde.
+    contra_jogo: >-
+      Curar antes de ele sacudir as palmas, ou limpar o sangue com água e areia, gastando a ação; de
+      perto ele não tem tempo de abrir as mãos e luta só com a faca.
+    gancho: >-
+      Os venenos de Ophidia que circulam no Beco do Sussurro chegam via Brekmar; alguém precisa saber o
+      que há em cada frasco antes de a Mão Sombria pagar.
+    habitat: [costa_negra]
+    inspiracao: []
+    padrao: [ataque, ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} abre as duas palmas para você, e o sangue preto escorre até a ponta dos dedos."
+    description: >-
+      Um provador de venenos da Mão Sombria de pele virada vidro e sangue preto e espesso, que sacode o
+      sangue das palmas e corta o efeito de qualquer remédio.
+    perigo: Médio
+    lore: >-
+      Ninguém que chega perto de Ophidia volta, mas o que vem de lá passa por Brekmar e acaba no Beco do
+      Sussurro. A Mão Sombria paga provadores para saber o que compra. Os bons duram anos, e a pele
+      deles vai virando vidro, com o sangue cada vez mais preto por baixo. Não se sabe de nenhum que
+      tenha se aposentado.
+    aparencia: >-
+      Homem magro de pele virada vidro em placas lisas no rosto, no pescoço e nas mãos, sangue preto e
+      espesso brilhando por baixo, palmas abertas em talhos fundos de borda de vidro, língua preta
+      rachada, dedos sem unhas, veias saltadas nos antebraços.
+    como_se_luta: >-
+      Sacode de longe o sangue das palmas, e o atingido não se cura na rodada seguinte. Limpe o sangue
+      com água e areia, cure antes, ou feche a distância.
+    related_entities: [costa_negra, mao_sombria]
+    arte:
+      visual: >-
+        Humano adulto magro em roupas escuras de contrabandista; rosto, pescoço e mãos cobertos de
+        placas de vidro translúcido e liso, com sangue escuro quase preto visível por baixo; as duas
+        palmas voltadas para a frente, abertas em cortes fundos de bordas vítreas, pingando gotas pretas
+        e brilhantes; língua preta à mostra; dedos sem unhas; veias grossas saltadas nos antebraços. Sem
+        manchas coloridas na pele nem bochechas infladas (essa leitura é do Provador de Cores, Selva).
+      composicao: >-
+        Esconderijo de contrabando dentro do crânio de um leviatã, caixas e frascos sobre o chão de osso;
+        o Provador ergue um frasco contra a luz de uma abertura; ao fundo, Ophidia fumega no horizonte em
+        cores erradas, enquadrada pela órbita do crânio; um carregador humano ao lado dá a escala. Luz
+        fria e colorida.
+      evitar: Alquimista de capa e chapéu, homem de vidro inteiro, feiticeiro com orbes. Só a pele virou vidro, em placas, e as cores estão nas veias.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_caldeireiro_de_oleo
+    vaga: 15
+    nome: Caldeireiro de Óleo
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: tres_sindicatos_comercio
+      refs: ["lore_nova/locations.txt:334", "lore_nova/factions.txt:260"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: cera_sebo
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um derretedor de banha que trabalhou anos debruçado sobre os caldeirões onde a
+        gordura dos leviatãs vira óleo. Os respingos fizeram nos antebraços, no peito e no
+        rosto uma crosta de sebo cozido, amarela e brilhante, grossa como um dedo, que
+        endurece por cima da pele cozida. Não tem sobrancelhas nem cílios, e os dedos,
+        colados pelo sebo, só abrem em dois. Perto do fogo a crosta amolece e escorre dos
+        braços em fios de óleo fervente, e volta a crescer da pele de baixo quando esfria. A
+        espinha ficou dobrada de tantos anos sobre o caldeirão.
+    silhueta: >-
+      Um homem curvado de braços grossos e reluzentes como velas, erguidos sobre uma fogueira,
+      pingando fios de óleo fumegante.
+    comportamento: >-
+      Trabalha para quem paga pelo óleo e defende o que derreteu. Não avança: enfia os
+      antebraços na fogueira de banha, sacode o sebo derretido em volta e espera que o chão
+      faça o resto. Sente o calor de quem chega antes de vê-lo.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: tres_sindicatos_comercio
+    mecanica_assinatura:
+      carta: cri_caldeireiro_de_oleo_sebo_que_escorre
+      frase: >-
+        Derrete no fogo o sebo dos próprios braços e cobre o chão em volta de óleo fervente;
+        quem entra ou fica naquele chão escorrega e se queima até a poça esfriar.
+    contra_jogo: >-
+      Lutar fora da poça ou apagar a fogueira dele; longe do fogo o sebo endurece e ele só tem
+      os punhos.
+    gancho: >-
+      Os Osshari controlam a maior parte da extração do óleo e vendem o excesso; os Sindicatos de Brekmar
+      compram, e quem derrete para eles derrete por baixo das próprias mãos.
+    habitat: [costa_negra]
+    inspiracao: []
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} enfia os antebraços na fogueira e o sebo começa a escorrer em fios."
+    description: >-
+      Um derretedor de banha de leviatã dos Sindicatos, de braços crostados de sebo cozido,
+      cujo sebo derrete no fogo e cobre o chão em volta de óleo fervente.
+    perigo: Baixo
+    lore: >-
+      O óleo de leviatã queima limpo e por muito tempo, e Skallgard paga caro por ele. Alguém
+      tem de derreter a banha. Os Sindicatos de Brekmar mantêm caldeirões na beira do
+      Cemitério, e os homens que trabalham neles anos a fio ficam com a pele dos braços
+      coberta de sebo cozido. Perto do fogo, o sebo deles derrete e pinga, e é com isso que
+      defendem o que derreteram.
+    aparencia: >-
+      Homem curvado de antebraços, peito e rosto cobertos de crosta de sebo cozido amarela e
+      brilhante, que escorre em fios de óleo quando ele chega perto do fogo, sem sobrancelhas
+      nem cílios, dedos colados pelo sebo.
+    como_se_luta: >-
+      Derrete no fogo o sebo dos braços e cobre o chão em volta de óleo fervente, onde quem
+      pisa escorrega e se queima. Lute fora da poça ou apague a fogueira; longe do fogo ele
+      seca.
+    related_entities: [costa_negra, tres_sindicatos_comercio]
+    arte:
+      visual: >-
+        Homem de meia-idade curvado para a frente, roupas de lona manchadas de gordura.
+        Antebraços, peito e rosto cobertos de uma crosta grossa de sebo amarelo-âmbar, lisa
+        e brilhante como cera de vela, com bolhas; nos antebraços a crosta está amolecendo e
+        escorre em fios grossos e fumegantes até o chão. Sem sobrancelhas nem cílios; dedos
+        colados dois a dois.
+      composicao: >-
+        Beira de uma carcaça recente com tonéis e um caldeirão de cobre ao fundo; o
+        Caldeireiro com os antebraços enfiados numa fogueira de banha, cercado por uma poça
+        de óleo brilhante que fumega; um pirata de Brekmar escorregando na borda da poça, do
+        mesmo tamanho. Luz laranja de fogo baixo e fumaça gordurosa.
+      evitar: >-
+        Ferreiro de avental, homem em chamas, homem de cera derretendo inteiro. O fogo não
+        está nele: é o sebo da crosta que escorre, e o corpo está inteiro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_acendedor_de_naufragios
+    vaga: 16
+    nome: Acendedor de Naufrágios
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: grupos_piratas_rivais
+      refs: ["lore_nova/factions.txt:279", "lore_nova/creatures.txt:1554"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um raqueiro dos piratas do mar oeste que trocou o olho esquerdo por uma lasca de Éter cristalizado
+        tirada de uma carcaça, para ver navios no escuro. O cristal pegou na órbita: cresceu em agulhas
+        turvas que saem pela pálpebra e pela maçã do rosto, e a luz dele vaza azul-esverdeada pelas veias
+        da têmpora. O olho bom ficou branco de tanto encarar lanternas. Os dedos da mão da lanterna estão
+        queimados de óleo, e a outra mão segura um croque.
+    silhueta: Um vulto numa encosta de ossos com uma lanterna erguida e um olho que brilha mais que ela, de croque na outra mão.
+    comportamento: >-
+      Acende lanternas falsas nas encostas de ossos nas noites de névoa, para que os barcos tomem a costa
+      por porto. Na terra, faz o mesmo: mostra a luz num lugar e ataca de outro, e puxa com o croque quem
+      foi atrás dela.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: grupos_piratas_rivais
+    mecanica_assinatura:
+      carta: cri_acendedor_de_naufragios_lanterna_falsa
+      frase: >-
+        Põe a lanterna num lugar e o olho de cristal em outro: quem mira na luz erra, e o croque vem do
+        escuro e arrasta o alvo para fora da formação.
+    contra_jogo: Mirar no olho de cristal, que brilha mais e não engana, ou apagar a lanterna; no escuro, o cristal o denuncia.
+    gancho: >-
+      Muitos dos náufragos do Cemitério não bateram na costa por azar; alguém acendeu uma luz onde não
+      havia porto.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: folclore costeiro da Cornualha
+        referencia: "os wreckers, saqueadores que atraíam navios para as pedras com lanternas falsas"
+        tomou: a lanterna falsa na costa para fazer o navio naufragar
+        distancia: aqui ele paga com um olho de Éter que cresce na cara, e a mentira da luz vira tática de luta
+    padrao: [enfraquecer, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "Uma lanterna se acende longe, à direita; o olho de {nome} brilha à esquerda."
+    description: Um raqueiro dos piratas com um cristal de Éter crescendo no lugar do olho, que atrai com uma lanterna falsa e puxa com o croque.
+    perigo: Baixo
+    lore: >-
+      Nem todo náufrago do Cemitério bateu na costa por azar. Os grupos piratas que disputam a rota do
+      mar oeste pagam raqueiros para acender luzes nas encostas de ossos em noites de névoa. Os melhores
+      trocaram um olho por uma lasca de Éter cristalizado, que vê os barcos no escuro e depois cresce na
+      cara. Quem os segue na terra procura a lanterna e acha o croque.
+    aparencia: >-
+      Homem magro de capa de lona com uma lanterna de óleo erguida, o olho esquerdo trocado por cristal de
+      Éter turvo que cresce em agulhas pela pálpebra e pela maçã do rosto, veias azuis-esverdeadas na
+      têmpora, olho direito branco, croque na outra mão.
+    como_se_luta: >-
+      Mostra a lanterna de um lado e ataca de outro, e o croque arrasta o alvo para longe dos aliados.
+      Mire no olho de cristal, que não engana, ou apague a lanterna.
+    related_entities: [costa_negra, grupos_piratas_rivais]
+    arte:
+      visual: >-
+        Homem magro de capa de lona encerada e capuz caído; no lugar do olho esquerdo um cristal turvo de
+        Éter que cresce em agulhas finas para fora da pálpebra e da maçã do rosto, brilhando
+        azul-esverdeado por dentro; veias da têmpora iluminadas; olho direito leitoso. Mão esquerda
+        queimada erguendo uma lanterna de óleo; mão direita com um croque de ferro de cabo comprido.
+      composicao: >-
+        Noite de névoa numa encosta de vértebras de frente para o mar; o Acendedor de perfil com a
+        lanterna erguida; no mar, longe, as luzes de um barco virando na direção da costa; uma vértebra ao
+        lado dele chega à cintura de um homem e dá a escala. Duas luzes no quadro: a lanterna quente e o
+        olho frio.
+      evitar: Pirata de chapéu tricórnio, capitão fantasma, olho de pirata com tapa-olho. É um homem de capa de lona, com um cristal no lugar do olho.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_remo_acorrentado
+    vaga: 17
+    nome: Remo Acorrentado
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: grupos_piratas_rivais
+      refs: ["lore_nova/factions.txt:279", "lore_nova/creatures.txt:1554"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um remador das galés piratas do mar oeste, acorrentado ao banco por tanto tempo que o corpo virou
+        o remo. Os ombros e as costas cresceram desmedidos, com músculos em nós, e o peito ficou estreito
+        por baixo. As argolas de ferro dos pulsos afundaram e a carne fechou por cima da ferrugem; a
+        corrente sai de dentro dos dois braços e prende um remo partido. Os joelhos dobraram para sempre na
+        posição do banco, e ele anda curvado, com os braços à frente.
+    silhueta: Um homem enorme de ombros desmedidos, com um remo partido acorrentado aos dois pulsos, girando-o como mangual.
+    comportamento: >-
+      Veio dar no Cemitério com o casco da galé e a corrente presa ao remo. Ainda bate no
+      ritmo do tambor de bordo, que ele ouve sozinho e que acelera enquanto ele rema. Escolhe
+      um alvo e bate nele, e não solta a corrente, porque não pode.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: grupos_piratas_rivais
+    mecanica_assinatura:
+      carta: cri_remo_acorrentado_tambor_que_acelera
+      frase: >-
+        Bate num alvo só no compasso de um tambor que só ele ouve, e o tambor acelera: a
+        cada rodada seguida em que bate, o golpe sobe um grau, até alguém quebrar o
+        compasso.
+    contra_jogo: >-
+      Quebrar o compasso com barulho fora do ritmo, que zera o tambor, ou fazê-lo perder uma
+      rodada de golpe.
+    gancho: >-
+      A guerra pelas rotas do mar oeste afunda galés todo mês; os remadores afundam junto, presos ao banco,
+      e um ou outro chega à praia ainda preso.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: história naval (galés a remo)
+        referencia: "remadores acorrentados aos bancos das galés, com o ritmo dado por tambor"
+        tomou: o remador preso ao remo e o compasso do tambor
+        distancia: aqui o ferro entrou na carne, o corpo se deformou para o remo e o compasso virou a cadência da luta
+    padrao: [ataque, ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} bate o pé no compasso, mais rápido que da última vez."
+    description: >-
+      Um remador de galé pirata que naufragou acorrentado, de ombros desmedidos e argolas
+      afundadas nos pulsos, que bate num alvo só, mais forte a cada batida seguida do tambor
+      que só ele ouve.
+    perigo: Alto
+    lore: >-
+      Os três grupos piratas que disputam a rota do mar oeste perdem galés todo mês na Boca do Fundo e na
+      costa. Os remadores afundam presos ao banco. Às vezes o banco solta e o casco encalha no Cemitério
+      com um deles ainda preso ao remo, vivo. Esses não sabem mais parar. Batem no compasso de um tambor
+      que ninguém mais toca.
+    aparencia: >-
+      Homem enorme e curvado de ombros e costas desmedidos e peito estreito, joelhos dobrados, argolas de
+      ferro enferrujadas afundadas na carne dos pulsos, corrente saindo dos dois braços presa a um remo
+      partido.
+    como_se_luta: >-
+      Bate num alvo só no compasso de um tambor que acelera, e cada golpe seguido sobe um
+      grau. Quebre o compasso com barulho fora do ritmo, que o faz recomeçar.
+    related_entities: [costa_negra, grupos_piratas_rivais]
+    arte:
+      visual: >-
+        Homem gigantesco, curvado, ombros e trapézios desmedidos com músculos em nós, peito estreito,
+        joelhos dobrados como sentado; pele queimada de sol e sal; nos dois pulsos argolas de ferro
+        enferrujadas afundadas, com a carne fechada por cima; uma corrente grossa sai de cada pulso e prende
+        um remo de madeira partido ao meio, que ele segura como mangual. Barba e cabelo duros de sal.
+      composicao: >-
+        Casco de galé encalhado entre costelas de leviatã, bancos de remo à mostra; o Remo Acorrentado no
+        primeiro plano girando o remo; dois piratas de Brekmar recuando, um deles com um tambor pendurado;
+        os piratas chegam ao ombro dele. Luz cinza de tempestade passando.
+      evitar: Gladiador, escravo de arena, ogro de corrente. É um remador que virou o próprio remo, com o ferro dentro da carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_ventre_partilhado
+    vaga: 18
+    nome: Ventre Partilhado
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_lyss
+      refs: ["lore_nova/npcs.txt:291", "lore_nova/creatures.txt:1554"]
+    anatomia:
+      plano_corporal: acoplado
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Dois náufragos que a maré trouxe abraçados, e que o resíduo de Lyss achou assim. O de baixo cresceu
+        até a altura de um homem e meio e anda; o de cima afunda na barriga dele: as pernas e o quadril já
+        estão dentro, e do ventre aberto saem o tronco, os ombros e os braços, estendidos para a frente. A
+        pele dos dois virou uma só na costura da cintura, lisa e inchada. A cabeça do de dentro pende sobre
+        o peito do de fora, e as quatro mãos procuram.
+    silhueta: >-
+      De longe, um homem grande carregando outro no colo; de perto, o de cima sai da barriga
+      do de baixo.
+    comportamento: >-
+      Anda pela praia sentindo quem deseja alguma coisa com força, e vai na direção desse desejo. Agarra
+      a presa e encosta a pele dela na sua; onde encostou, a pele cola e costura. Quem fica costurado
+      vai sendo puxado para dentro, um pouco a cada rodada.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_ventre_partilhado_carta_a_carta"
+      frase: >-
+        Costura a pele do alvo à sua e o consome devagar: a cada rodada costurado, uma Carta da mão do
+        alvo some até o fim da luta e a criatura fecha um Ferimento próprio; cortar a costura custa um
+        Ferimento ao próprio alvo.
+    contra_jogo: >-
+      Cortar a costura cedo e aceitar a ferida, antes de a mão esvaziar; ou não deixar que encoste,
+      porque ela é lenta e só costura quem toca.
+    gancho: >-
+      Lyss quer o consumo total, um que desaparece dentro do outro; no Cemitério, a maré trouxe dois que já
+      tinham morrido assim, e o resto o resíduo fez.
+    habitat: [cn_o_trono, costa_negra]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, reforco_proprio]
+    a_cada_n: 4
+    telegrafo: "{nome} abre os braços como quem vai abraçar, e a pele do peito se afrouxa."
+    description: >-
+      Uma cria de Lyss feita de dois náufragos, um afundando na barriga do outro, que costura a própria
+      pele à da presa e a consome, Carta a Carta.
+    perigo: Alto
+    lore: >-
+      Lyss é o apetite de consumir o outro até que um dos dois desapareça. O que sobra dela pelo mundo
+      toma carne do que encontra. Na Costa Negra encontrou dois náufragos que a maré trouxe abraçados. Os
+      coletores que os viram contam que, de longe, parece um homem carregando outro no colo, e que de
+      perto não há colo. Os Osshari de Brekmar, quando ouvem falar disso, fazem o sinal da maré e mudam de assunto.
+    aparencia: >-
+      Corpo grande de náufrago, pele lisa e inchada, com outro corpo afundado na barriga até a cintura,
+      como um homem carregando outro no colo: tronco e braços do de cima saindo do ventre aberto, a
+      pele dos dois fundida numa costura.
+    como_se_luta: >-
+      Costura a pele do alvo à sua e lhe come uma Carta da mão a cada rodada. Corte a costura cedo, ao
+      custo de uma ferida, ou não a deixe encostar.
+    related_entities: [cn_o_trono, costa_negra, npc_lyss]
+    arte:
+      visual: >-
+        Figura humana grande, uma vez e meia a altura de um homem, pele lisa, pálida e inchada de afogado;
+        do ventre aberto sai o tronco de uma segunda pessoa, de cintura para cima, com a pele das duas
+        fundida numa costura irregular; a cabeça do segundo pende sobre o peito do primeiro; os braços do
+        de cima pousados nos ombros do de baixo, como quem é carregado no colo. Trapos de roupa de
+        marinheiro.
+      composicao: >-
+        Praia negra ao entardecer, névoa baixa, costelas ao fundo; o Ventre avança devagar; à frente, um
+        coletor humano recua de costas, tropeçando numa vértebra, com a altura no peito da criatura.
+        Luz rosada e fraca, sem sangue à vista.
+      evitar: Erotismo, nudez sexualizada, gore de entranhas, aranha de membros humanos. É um corpo dentro do outro, de pele fundida, e o horror é a costura e as mãos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_balsa_de_ultimo_dia
+    vaga: 19
+    nome: Balsa de Último Dia
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:276", "lore_nova/creatures.txt:1554"]
+    anatomia:
+      plano_corporal: composto
+      material: madeira_fibra
+      escala: grande
+      locomocao: nada
+      percepcao: medo_emocao
+      texto: >-
+        Uma jangada de tábuas de casco desmontado, barris e costelas humanas, amarradas com corda, cabelo
+        e tendões secos, que a maré traz e que se levanta sozinha na arrebentação. Dois mastros quebrados
+        lhe servem de pernas, e de remos rachados fez os braços. No meio da amarração ainda se veem as mãos
+        dos náufragos presas às cordas, de dedos fechados. Cada vez que bate, arranca uma das próprias
+        tábuas para bater com ela.
+    silhueta: Uma jangada de tábuas e ossos amarrados que se ergue da arrebentação sobre dois mastros quebrados como pernas de pau.
+    comportamento: >-
+      Chega com a maré onde há gente sem saída e vai na direção do desespero mais forte. Bate com o que
+      tem, e o que tem é ela mesma: arranca tábuas, barris, ossos, e se desfaz batendo, até não sobrar
+      jangada.
+    papel_tatico: sacrificial
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_balsa_de_ultimo_dia_tabua_arrancada
+      frase: >-
+        Cada golpe arranca uma tábua do próprio corpo: bate mais forte que qualquer coisa do tamanho
+        dela e perde Vitalidade a cada golpe, até se desfazer.
+    contra_jogo: Aguentar e se defender; ela se desmonta sozinha. Quem a ataca apressa o fim, mas leva as tábuas de volta.
+    gancho: >-
+      Sob Dorrhen as pessoas destroem o que têm antes de pedir ajuda; os náufragos do Cemitério
+      desmontaram o próprio barco para fazer a jangada, e a jangada aprendeu com eles.
+    habitat: [costa_negra]
+    inspiracao: []
+    padrao: [ataque, ataque_multiplo]
+    a_cada_n: 2
+    telegrafo: "{nome} arranca a tábua do próprio peito com um estalo; os nós das cordas rangem."
+    description: Uma cria de Dorrhen feita da jangada desesperada de náufragos, de tábuas e ossos amarrados, que arranca as próprias tábuas para bater até se desfazer.
+    perigo: Médio
+    lore: >-
+      Dorrhen é o desespero que destrói o que ainda se tem quando não se vê saída. Náufragos presos no
+      Cemitério desmontam o barco para fazer uma jangada, e a jangada não os leva a lugar nenhum. O que
+      sobra de Dorrhen pelo mundo toma o que está à mão. Às vezes a maré traz uma dessas jangadas de pé,
+      de mastros como pernas, e ela vem bater em quem está na praia com o que tem: ela mesma.
+    aparencia: >-
+      Jangada de pé de tábuas de casco, barris e costelas humanas amarradas com corda, cabelo e tendões,
+      dois mastros quebrados como pernas, remos rachados como braços, mãos de náufragos presas nas cordas.
+    como_se_luta: >-
+      Arranca as próprias tábuas para bater forte e se desmonta a cada golpe. Aguente e se defenda: ela
+      termina sozinha.
+    related_entities: [costa_negra, npc_dorrhen]
+    arte:
+      visual: >-
+        Estrutura de pé, mais alta que um homem, feita de tábuas de casco escurecidas, dois barris, varas e
+        costelas humanas amarradas com corda grossa, cordões de cabelo e tendões secos; dois mastros
+        quebrados como pernas de pau, dois remos rachados como braços; mãos humanas secas presas nas
+        amarrações, dedos fechados; uma tábua sendo arrancada do próprio tronco.
+      composicao: >-
+        Arrebentação ao amanhecer, espuma, costelas de leviatã ao fundo; a Balsa saindo da água; um
+        náufrago maltrapilho na areia, de joelhos, chega à altura do primeiro barril. Tábuas soltas
+        boiando em volta. Luz fria, cinza-azulada.
+      evitar: Barco-fantasma, navio assombrado, espantalho de palha, ent. É uma jangada de sobrevivente feita de pé, com as amarrações à vista.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_gancho_de_esfola
+    vaga: 20
+    nome: Gancho de Esfola
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:214", "lore_nova/locations.txt:310"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: medo_emocao
+      texto: >-
+        Seis ganchos de esfolar baleia, de ferro curvo e enferrujado, cada um do comprimento de um braço,
+        que servem de pernas e se prendem nas costelas das carcaças. No centro, onde as pernas se juntam,
+        um nó de tiras de couro e banha seca, apertado como punho, de onde pendem fitas de pele que
+        balançam. Sangue velho escurece a ponta de cada gancho. Quanto mais sofrimento há perto, mais o nó
+        fica firme e a carne nas tiras parece fresca.
+    silhueta: Um feixe de ganchos de ferro curvos pendurado de uma costela como aranha, com tiras de couro balançando por baixo.
+    comportamento: >-
+      Anda pelo alto das costelas, de gancho em gancho, sobre quem trabalha embaixo. Desce um gancho
+      numa corda de tendão e crava na presa, e o gancho fica. Depois puxa devagar, para sentir.
+    papel_tatico: perseguidor_marca
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_gancho_de_esfola_rasgar_ou_parar
+      frase: >-
+        Crava um gancho preso a uma corda de tendão: enquanto ele estiver no alvo, mexer-se
+        rasga a carne e abre Ferimento, e ficar parado custa Fôlego; cortar a corda acaba
+        com o dilema.
+    contra_jogo: >-
+      Cortar a corda de tendão, que é fina e está ao alcance, antes de escolher entre se
+      rasgar e ficar parado.
+    gancho: >-
+      As carcaças são esfoladas em terra há gerações; os ganchos ficaram pendurados nas costelas, e o que
+      sobra de Maalrek gostou do que eles faziam.
+    habitat: [costa_negra, cn_o_trono]
+    inspiracao:
+      - fonte: história da caça à baleia
+        referencia: "ganchos de esfola (flensing hooks) usados para arrancar a camada de banha das baleias"
+        tomou: os ganchos de ferro curvos e as tiras de banha
+        distancia: aqui os ganchos viram pernas de uma cria de Maalrek que esfola gente devagar
+    padrao: [enfraquecer, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "Lá em cima, nas costelas, os ganchos do {nome} rangem; uma corda de tendão desce."
+    description: Uma cria de Maalrek feita de seis ganchos de esfolar baleia e tiras de banha, que anda pelas costelas e crava um gancho que não sai.
+    perigo: Médio
+    lore: >-
+      Maalrek gosta do sofrimento pelo sofrimento, e fica mais nítida quanto mais dor houver em volta. No
+      Cemitério as carcaças são esfoladas em terra há gerações, e os ganchos de esfola ficam pendurados
+      nas costelas depois que os homens vão embora. O resíduo de Maalrek tomou seis deles. Os coletores
+      que trabalham embaixo das costelas olham para cima de tempos em tempos.
+    aparencia: >-
+      Seis ganchos de esfolar baleia, de ferro curvo enferrujado, como pernas presas numa costela, unidos
+      no centro por um nó de tiras de couro e banha seca, fitas de pele pendendo, pontas escuras de
+      sangue velho.
+    como_se_luta: >-
+      Crava um gancho preso por uma corda: mexer-se rasga a carne, ficar parado custa Fôlego.
+      Corte a corda de tendão.
+    related_entities: [costa_negra, cn_o_trono, npc_maalrek]
+    arte:
+      visual: >-
+        Seis ganchos de ferro enormes, curvos como pontos de interrogação, enferrujados, cada um do
+        comprimento de um braço, dispostos como pernas de aranha agarradas a uma costela branca; no
+        centro um nó apertado de tiras de couro e banha amarela seca; fitas de pele pendendo e balançando;
+        uma corda de tendão descendo com um gancho na ponta.
+      composicao: >-
+        Embaixo de um arco de costelas, coletores trabalhando numa carcaça com facas e baldes; no alto, o
+        Gancho agarrado à costela, quase escondido; a corda descendo atrás do ombro de um dos coletores,
+        que não viu; o coletor dá a escala: a envergadura dos ganchos é a altura dele. Luz baixa e
+        enfumaçada.
+      evitar: Aranha mecânica, armadilha de caçador, demônio de correntes com espinhos. São ganchos de esfola de baleia, reconhecíveis, e as tiras são de banha.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_raspadeira_de_barbatana
+    vaga: 21
+    nome: Raspadeira de Barbatana
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/creatures.txt:1550"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: madeira_fibra
+      escala: pequena
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um bicho do tamanho de um cão pequeno feito das barbas de uma baleia: as placas córneas e franjadas
+        que o leviatã tinha na boca em vez de dentes. Quatro placas longas fazem as patas, e ele anda na
+        ponta delas, raspando. O dorso é um pente de placas menores, e a cabeça é uma fenda entre duas
+        placas cheias de fios duros, com dois olhos de âmbar sujo, sempre virados para o que brilha.
+    silhueta: Um bicho baixo como um cão pequeno feito de pentes de franja dura, que anda na ponta das placas e raspa o que brilha.
+    comportamento: >-
+      Segue os coletores que acharam alguma coisa boa. Não rouba: gruda no achado, na lâmina mais
+      afiada, na peça mais bonita, e raspa com as franjas até estragar. Depois foge para o próximo que
+      tiver mais.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_raspadeira_de_barbatana_fio_raspado
+      frase: >-
+        Gruda na melhor arma do alvo e raspa o fio: a cada rodada os golpes com ela perdem
+        um grau, até o alvo gastar uma ação limpando e afiando; aí ela pula para quem tiver
+        arma melhor.
+    contra_jogo: >-
+      Gastar a ação afiando cedo, ou pisá-la antes que chegue à arma; é frágil e foge na
+      primeira pancada.
+    gancho: >-
+      Veth não quer o que o outro tem, quer que o outro não tenha; entre coletores que dividem carcaças,
+      o resíduo dela achou serviço e uma boca de baleia à mão.
+    habitat: [costa_negra]
+    inspiracao:
+      - fonte: biologia (barbas de baleia)
+        referencia: "as barbas das baleias de barbatana, placas de queratina franjadas que filtram a comida"
+        tomou: as placas córneas e franjadas
+        distancia: aqui as placas são o corpo inteiro de uma cria de Veth, e as franjas raspam o que brilha
+    padrao: [enfraquecer, mover]
+    a_cada_n: 2
+    telegrafo: "Os olhos de âmbar de {nome} se fixam na sua melhor arma; as franjas começam a vibrar."
+    description: >-
+      Uma cria de Veth feita das barbas córneas de uma baleia, do tamanho de um cão pequeno,
+      que gruda na melhor arma do alvo e raspa o fio até ela não cortar.
+    perigo: Baixo
+    lore: >-
+      Veth não quer o que o outro tem. Quer que o outro não tenha. Entre coletores que dividem as mesmas
+      carcaças, o resíduo dela encontrou serviço e, na boca de uma baleia, as placas de que precisava. O
+      que fez delas segue quem achou âmbar bom e raspa o achado até virar pó. Os coletores velhos escondem
+      a melhor faca quando ouvem o raspar.
+    aparencia: >-
+      Bicho baixo do tamanho de um cão pequeno feito de placas de barba de baleia, córneas e franjadas,
+      quatro placas longas como patas, dorso em pente, cabeça de fenda cheia de fios duros com dois olhos
+      de âmbar sujo.
+    como_se_luta: >-
+      Raspa o fio da melhor arma do alvo, que perde força a cada rodada até ser afiada de
+      novo. Gaste a ação afiando ou pise nela antes; é frágil e foge.
+    related_entities: [costa_negra, npc_veth]
+    arte:
+      visual: >-
+        Pequeno quadrúpede montado de placas de barba de baleia, lâminas córneas cinza-escuras e
+        amareladas com franjas de fios duros nas bordas; quatro placas longas como patas finas; dorso em
+        fileira de placas como pente; cabeça em fenda vertical franjada, dois olhos de âmbar opaco. Ele
+        raspa com as franjas o fio de uma espada caída.
+      composicao: >-
+        Chão de osso dentro de uma câmara de carcaça; uma espada e um saco de âmbar no chão; a Raspadeira
+        sobre a espada; a bota e a mão de um coletor estendida para pegar a arma mostram a escala: do
+        tamanho de um cão pequeno. Luz quente de lanterna.
+      evitar: Cão de madeira, brinquedo, ouriço. São barbas de baleia reconhecíveis, franjadas, montadas num corpo baixo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_rancor_de_pincas
+    vaga: 22
+    nome: Rancor de Pinças
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/creatures.txt:1496"]
+    anatomia:
+      plano_corporal: composto
+      material: quitina
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        As carapaças vazias dos mortos de uma guerra de Caranguejeiros por uma carcaça, dos dois lados,
+        grudadas umas nas outras num monte da altura de um homem. Não tem cabeça nem frente: as pinças dos
+        mortos apontam para todos os lados, abertas, e por baixo andam pernas de tamanhos diferentes, cada
+        uma de um bicho. As junções das carapaças estão seladas por uma crosta escura, e as pinças do lado
+        atingido fecham sozinhas.
+    silhueta: Um monte de carapaças vazias grudadas umas nas outras, sem cabeça, com pinças abertas apontando para todos os lados.
+    comportamento: >-
+      Fica onde a guerra foi, sobre a carcaça disputada, e não ataca primeiro. Guarda quem o acerta: cada
+      golpe faz as pinças daquele lado se fecharem de volta sobre quem bateu, e só sobre ele, até um dos
+      dois cair.
+    papel_tatico: tanque_reativo
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_rancor_de_pincas_rancor_de_lado
+      frase: >-
+        Devolve cada golpe a quem bateu, e só a ele, com força que cresce a cada golpe recebido desse
+        mesmo atacante; os outros, ele ignora.
+    contra_jogo: "Dividir os golpes entre vários atacantes, para que nenhum acumule o rancor, ou não atacá-lo: ele não persegue."
+    gancho: >-
+      Dois bandos de Caranguejeiros disputando uma carcaça lutam com garras que cortam osso; o ódio de
+      Vhrak transforma uma disputa dessas numa guerra até o último, e o último foi isto.
+    habitat: [costa_negra]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 4
+    telegrafo: "Todas as pinças de {nome} do lado de quem o feriu se viram de uma vez, rangendo."
+    description: Uma cria de Vhrak feita das carapaças dos mortos de uma guerra de Caranguejeiros, sem cabeça, que devolve cada golpe só a quem bateu.
+    perigo: Médio
+    lore: >-
+      Quando dois bandos de Caranguejeiros disputam uma carcaça, a luta é rápida e cortante, e termina.
+      Vhrak não deixa terminar: torna o ódio entre vizinhos irracional e sem volta. No Cemitério há
+      carcaças onde a guerra foi até o último, e em cima de uma delas o que sobrou de Vhrak juntou as
+      carapaças dos dois lados. Não ataca ninguém. Só não esquece quem o acerta.
+    aparencia: >-
+      Monte da altura de um homem de carapaças vazias de Caranguejeiros grudadas por uma crosta escura,
+      sem cabeça nem frente, pinças abertas apontando para todos os lados, pernas de tamanhos diferentes
+      por baixo.
+    como_se_luta: >-
+      Devolve cada golpe a quem bateu, mais forte a cada golpe do mesmo atacante. Divida os golpes entre
+      vários, ou deixe-o: ele não persegue.
+    related_entities: [costa_negra, npc_vhrak]
+    arte:
+      visual: >-
+        Amontoado da altura de um homem de carapaças de caranguejo vazias, de tamanhos e cores diferentes
+        (ferrugem, cinza, creme), coladas por uma crosta escura e brilhante; nenhuma cabeça, nenhum olho;
+        pinças de todos os tamanhos saindo em todas as direções, abertas; por baixo pernas desiguais,
+        algumas compridas, outras curtas.
+      composicao: >-
+        Topo de um crânio de leviatã, câmara aberta, âmbar cinza no chão; o Rancor parado sobre o âmbar;
+        um coletor de âmbar recua segurando o braço, as pinças de um lado inteiro viradas para ele; o
+        coletor da mesma altura do monte. Céu pesado, luz lateral.
+      evitar: "Caranguejo gigante, rei-caranguejo, golem de conchas. Não tem corpo de caranguejo: é um monte de cascas vazias de muitos, sem cabeça."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: mon_tubarao_de_casco, nome: "Tubarão de Casco", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: couro_tecido, escala: grande, locomocao: nada, percepcao: sangue_cheiro, texto: "Predador da maré entre as ossadas, couro grosso como madeira de quilha. Ataca tudo que sangra."}, papel_tatico: perseguidor_marca, arquetipo: predador, categoria: elite}
+  - {id: mon_caranguejo_mare, nome: "Caranguejeiro da Maré", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: quitina, escala: pequena, locomocao: anda, percepcao: vibracao, texto: "Crustáceo do tamanho de um cão que habita os crânios dos leviatãs. Territorial: garras que cortam osso quando a carcaça é disputada."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: lacaio}
+  - {id: mon_gaivota_ladra, nome: "Gaivota-Ladra", status: retro, familia: legado, anatomia: {plano_corporal: alado, material: couro_tecido, escala: pequena, locomocao: plana_voa, percepcao: visao, texto: "Ave de rapina de envergadura anormal que mergulha sobre qualquer coisa que se mova entre as carcaças — e desiste na primeira resistência séria."}, papel_tatico: batedor_rapido, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_o_que_come_nas_praias, nome: "O Que Come nas Praias", status: retro, familia: legado, anatomia: {plano_corporal: segmentado, material: carne_exposta, escala: enorme, locomocao: nada, percepcao: sangue_cheiro, texto: "A coisa sob as docas e entre as ossadas que se alimenta dos corpos. Os Osshari sabem que existe. Não explicam."}, papel_tatico: drenador, arquetipo: predador_apice, categoria: chefe}
+  - {id: mon_carrapato_osso, nome: "Carrapato de Osso", status: retro, familia: legado, anatomia: {plano_corporal: hexapode_ou_mais, material: osso, escala: miuda, locomocao: cava, percepcao: calor, texto: "Escava as ossadas titânicas da Costa Negra e veste fragmentos dos antigos donos."}, papel_tatico: tanque_reativo, arquetipo: predador, categoria: lacaio}
+  - {id: mon_saqueador_marfim, nome: "Saqueador de Marfim", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Segue mapas Osshari gravados em presas que ninguém admite ter vendido."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: padrao}
+  - {id: mon_baleia_ossario, nome: "Filhote de Baleia-Ossário", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: osso, escala: enorme, locomocao: cava, percepcao: vibracao, texto: "Nada sob areia e ossos, emergindo quando o Éter faz a maré recuar."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: elite}

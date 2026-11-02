@@ -1,0 +1,115 @@
+# SPEC-349 Etapa 5: mecânica da Costa Negra (onda 6). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_escama_revirada:
+    cartas:
+      - {n: Escama Arrepiada, t: "As escamas soltas das costas arranham o rosto de quem se aproxima.", e: ["d:marcial:cortante"]}
+      - {n: Raso de Lascas, sig: 1, t: "As escamas caem todas na água e quem se mexer ali corta os pés nas lascas.", e: ["a:2:cortante", {kind: protecao, valor: 3}], fol: 2}
+    aprox: "cada golpe levado enche o raso de lascas e quem se mexer corta os pés -> dano em área + proteção"
+  mon_ferida_de_coral:
+    cartas:
+      - {n: Galho de Coral, t: "O braço de galhos de coral corta fino a manga e a carne.", e: ["d:marcial:cortante"]}
+      - {n: Junta de Coral, sig: 1, t: "O corte deixa uma muda de coral na junta, que endurece e trava o braço.", e: ["d:leve:cortante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}, {kind: torpor, valor: 1}]}
+    aprox: "muda trava a Reação e depois a Carta de arma do braço -> desarmado_risco 3 rodadas + torpor"
+  mon_compassado_do_trono:
+    cartas:
+      - {n: Punho de Batida, t: "O punho desce no compasso de um coração lento que ninguém mais ouve.", e: ["d:versatil:impactante"]}
+      - {n: Batida do Trono, sig: 1, t: "O coração exposto bate uma vez e o golpe passa por cima da guarda.", e: ["d:pesada:impactante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+      - {n: Coração Parado, f: cena, t: "O coração para entre as batidas e o corpo inteiro endurece em espera.", e: [{kind: protecao, valor: 5}]}
+    aprox: "rodadas de coração parado alternadas com batidas -> ritmo pelo padrão e pela assinatura"
+  mon_forrado_de_leviata:
+    cartas:
+      - {n: Placa Crua, t: "A placa crua de osso do braço bate de plano como uma porta.", e: ["d:versatil:impactante"]}
+      - {n: Placa que Cresce, sig: 1, t: "Põe a placa do braço na frente do golpe de outro e a recebe: ela cresce um dedo.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: taunt, valor: 2}, {kind: buff_defesa, valor: 1}]}
+    aprox: "recebe o golpe dirigido a outro; a placa cresce a cada golpe -> proteção em aliados + provocação"
+  mon_hospede_do_estomago:
+    cartas:
+      - {n: Braço de Arpoador, t: "O arpoador preso por dentro empurra um braço comprido pela prega e agarra.", e: ["d:pesada:impactante"]}
+      - {n: Dobra que Digere, sig: 1, t: "Puxa o alvo para dentro das pregas e a cada vez que passa o estômago o come.", e: ["d:marcial:corrosivo", "c:enraizado:2", {kind: cura, alvo: eu, valor: 4}], fol: 2}
+      - {n: Ácido da Prega, t: "As pregas expelem o caldo azedo do fundo em quem está em frente.", e: ["a:3:corrosivo"], fol: 2}
+      - {n: Estômago Fechado, f: cena, t: "As pregas se fecham ao redor do arpoador e a parede engrossa por fora.", e: [{kind: protecao, valor: 6}, {kind: cura, alvo: eu, valor: 3}]}
+      - {n: Vômito de Maré, f: cena, t: "O estômago inteiro vira do avesso e a maré azeda cobre o corredor.", e: ["a:2:corrosivo", "c:cego:1"], fol: 2}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_hospede_do_estomago_estomago_fechado], padrao: [ataque, enfraquecer, ataque_multiplo, reforco_proprio], narracao: "{nome} se fecha em volta do arpoador e a parede engrossa."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_hospede_do_estomago_vomito_de_mare], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_hospede_do_estomago_vomito_de_mare, a_cada_n: 2, telegrafo: "{nome} se contrai inteiro e o cheiro azedo sobe até a garganta."}, narracao: "{nome} vira do avesso, e o arpoador preso dentro grita junto com ele."}
+    aprox: "alvo engolido perde Vitalidade por rodada e só sai cortando a parede por fora -> enraizar + cura própria"
+  mon_barata_das_costelas:
+    cartas:
+      - {n: Placa Afiada, t: "Uma placa afiada do dorso bate de lado e arranca a pele.", e: ["d:marcial:cortante"]}
+      - {n: Ricochete, sig: 1, t: "Rola entre as costelas, bate num, quica e bate em outro.", e: ["d:marcial:cortante", "a:2:cortante"], fol: 2}
+  mon_estrela_de_alavanca:
+    cartas:
+      - {n: Braço de Vértebras, t: "Um dos braços de vértebras fundidas bate seco no escudo.", e: ["d:marcial:impactante"]}
+      - {n: Concha Aberta, sig: 1, t: "Gruda no escudo, puxa e abre a concha; a guarda sai junto com a madeira.", e: ["d:leve:impactante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}, {kind: rachadura, valor: 1}], fol: 2}
+  mon_andarilho_de_cracas:
+    cartas:
+      - {n: Nadadeira de Crosta, t: "A nadadeira cheia de cracas bate pesada de lado.", e: ["d:versatil:impactante"]}
+      - {n: Terceira Camada, sig: 1, t: "Cimenta larvas no alvo; na terceira camada a colônia o move para onde quer.", e: ["d:leve:impactante", "c:enraizado:2", {kind: mover_alvo_zona, direcao: aproximar}], fol: 2}
+      - {n: Crosta Nova, f: cena, t: "Uma crosta nova de cracas cresce rápido pelas costas do lobo-marinho.", e: [{kind: protecao, valor: 5}]}
+    aprox: "três camadas guiam o alvo; raspar zera a contagem -> enraizar + aproximar de zona"
+  mon_touro_de_banha:
+    cartas:
+      - {n: Cabeçada de Aríete, t: "O nariz de aríete bate no peito com o peso de uma carroça.", e: ["d:pesada:impactante"]}
+      - {n: Peso da Praia, sig: 1, t: "Ergue o peito, ruge e se joga sobre a linha inteira de uma vez.", e: ["a:4:impactante", {kind: empurrao, valor: 2}], fol: 2}
+      - {n: Banha Grossa, f: cena, t: "A banha de leviatã dos flancos treme e engrossa por cima das rachaduras.", e: [{kind: protecao, valor: 6}]}
+  mon_saltador_de_poca:
+    cartas:
+      - {n: Dentada de Haste, t: "Salta da poça e morde o tornozelo antes de os olhos em haste voltarem.", e: ["d:marcial:perfurante"]}
+      - {n: Volta para a Água, sig: 1, t: "Morde e volta de um pulo para a poça, onde ninguém de pé o alcança.", e: ["d:leve:perfurante", {kind: esconder, alvo: eu, valor: 2}]}
+  mon_bruxa_de_carcaca:
+    cartas:
+      - {n: Sucção de Muco, t: "A boca sem dentes suga a pele e deixa um muco frio.", e: ["d:leve:impactante"]}
+      - {n: Muco na Boca, sig: 1, t: "Sai da carcaça e cobre o rosto do alvo de muco, que custa o fôlego para respirar.", e: ["c:cego:2", "d:leve:impactante", {kind: torpor, valor: 1}]}
+    aprox: "cada rodada de muco custa Fôlego para respirar -> cego + torpor"
+  mon_petrel_de_papo_cheio:
+    cartas:
+      - {n: Bicada de Ninho, t: "O bico de ave do mar espeta a mão que se aproxima do ninho.", e: ["d:leve:perfurante"]}
+      - {n: Óleo do Papo, sig: 1, t: "Cospe óleo fedido no alvo e a arma e a defesa escorregam das mãos dele.", e: [{kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}, "d:leve:corrosivo"]}
+    aprox: "próxima Carta de defesa do alvo vale metade -> armadura_comprometida 2 rodadas"
+  mon_esfolado_de_sal:
+    cartas:
+      - {n: Garra de Escama, t: "A garra feita de escamas arrancadas rasga a manga e a pele.", e: ["d:marcial:cortante"]}
+      - {n: Sal na Ferida, sig: 1, t: "Esfrega sal na ferida aberta e o corte arde como se fossem dois.", e: ["d:leve:cortante", {kind: sangria, valor: 2}, {kind: rachadura, valor: 1}], fol: 2}
+    aprox: "ferida salgada conta como dois Ferimentos até lavar -> sangria + rachadura"
+  mon_contrabandista_vitreo:
+    cartas:
+      - {n: Faca de Vidro, t: "A faca curta de vidro passa rente à palma aberta.", e: ["d:marcial:cortante"]}
+      - {n: Sangue que Corta, sig: 1, t: "Sacode o sangue preto das palmas e ele gruda e corta o remédio de quem for atingido.", e: ["d:marcial:corrosivo", {kind: aplicar_condicao, condicao: enfraquecido, duracao: 2}], fol: 2}
+    aprox: "nenhuma cura vale no atingido na rodada seguinte -> enfraquecido 2 rodadas"
+  mon_caldeireiro_de_oleo:
+    cartas:
+      - {n: Soco de Sebo, t: "O braço crostado de sebo cozido bate como uma panela quente.", e: ["d:marcial:igneo"]}
+      - {n: Sebo que Escorre, sig: 1, t: "O sebo derretido cobre o chão e quem fica nele escorrega e queima.", e: ["a:2:igneo", "c:enraizado:1"], fol: 2}
+  mon_acendedor_de_naufragios:
+    cartas:
+      - {n: Croque do Escuro, t: "O croque sai do escuro e enrosca no braço de quem mira a luz.", e: ["d:marcial:perfurante"]}
+      - {n: Lanterna Falsa, sig: 1, t: "Acende a luz num lugar e o olho em outro: quem mira na luz erra.", e: [{kind: esconder, alvo: eu, valor: 2}, "c:cego:1", "d:leve:perfurante"], fol: 2}
+  mon_remo_acorrentado:
+    cartas:
+      - {n: Remo no Compasso, t: "Bate no compasso de um tambor que só ele ouve.", e: ["d:versatil:impactante"]}
+      - {n: Tambor que Acelera, sig: 1, t: "O tambor acelera e cada golpe seguido sobe um grau sobre o alvo.", e: ["d:versatil:impactante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+      - {n: Argola no Pulso, f: cena, t: "As argolas afundadas nos pulsos batem uma na outra e o compasso fecha.", e: [{kind: protecao, valor: 5}, {kind: buff_acerto, valor: 2}]}
+    aprox: "cada rodada seguida de batida sobe um grau até quebrarem o compasso -> buff de dano"
+  mon_ventre_partilhado:
+    cartas:
+      - {n: Braço de Náufrago, t: "O braço de náufrago desce pesado e fica no ombro do alvo.", e: ["d:versatil:impactante"]}
+      - {n: Carta a Carta, sig: 1, t: "Costura a pele do alvo à sua e o consome devagar, e a ferida dele fecha na sua.", e: ["d:leve:impactante", "c:enraizado:2", {kind: cura, alvo: eu, valor: 3}, {kind: torpor, valor: 1}], fol: 2}
+      - {n: Pele Afrouxada, f: cena, t: "A pele do peito se afrouxa e os dois corpos respiram juntos.", e: [{kind: protecao, valor: 5}, {kind: cura, alvo: eu, valor: 2}]}
+    aprox: "a cada rodada costurado some uma Carta da mão do alvo -> enraizado + torpor + cura própria"
+  mon_balsa_de_ultimo_dia:
+    cartas:
+      - {n: Pancada de Tábua, t: "Arranca uma tábua do próprio corpo e bate com ela inteira.", e: ["d:pesada:impactante"]}
+      - {n: Tábua de Fundo, sig: 1, t: "Arranca a tábua do fundo e a mastiga contra o alvo, e a balsa rangente cai um palmo.", e: ["d:pesada:impactante", {kind: buff_dano, alvo: eu, valor: 1}], fol: 2, pc: {sacrificio: 2}}
+  mon_gancho_de_esfola:
+    cartas:
+      - {n: Gancho de Esfolar, t: "O gancho de esfolar baleia passa rente e arranca tira de carne.", e: ["d:marcial:cortante"]}
+      - {n: Rasgar ou Parar, sig: 1, t: "Crava o gancho numa corda de tendão e cada passo do alvo rasga a carne.", e: ["d:leve:cortante", {kind: sangria, valor: 2}, {kind: marca, valor: 2}], fol: 2}
+  mon_raspadeira_de_barbatana:
+    cartas:
+      - {n: Franja de Barba, t: "As franjas córneas se fecham como pente sobre o pulso.", e: ["d:leve:cortante"]}
+      - {n: Fio Raspado, sig: 1, t: "Gruda na melhor arma e raspa o fio até ela não cortar mais.", e: ["d:leve:cortante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}]}
+    aprox: "golpes com a arma perdem um grau por rodada até afiar de novo -> desarmado_risco 3 rodadas"
+  mon_rancor_de_pincas:
+    cartas:
+      - {n: Pinça de Lado, t: "Uma pinça do lado de quem bateu fecha como cepo no pulso.", e: ["d:versatil:cortante"]}
+      - {n: Rancor de Lado, sig: 1, t: "Devolve cada golpe só a quem bateu, e cada vez com mais força.", e: [{kind: contra_ataque, dano_base: 5}, {kind: protecao, valor: 4}], fol: 2}
+    aprox: "devolve só a quem bateu, com força crescente por atacante -> contra-ataque + proteção"

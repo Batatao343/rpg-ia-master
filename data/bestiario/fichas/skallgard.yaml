@@ -1,0 +1,1894 @@
+# SPEC-349 (esteira) — Ficha de identidade da onda Skallgard e o Ermo Branco.
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore pós-SPEC-348 (checkout principal), mesma convenção das ondas 1 e 2.
+# Segredos fora do público: a ligação Farol → Rede (secrets.txt:79-90) e o paradeiro da Landship
+# que falta (secrets.txt:368-373) não aparecem como fato em nenhum campo público desta ficha.
+regiao: skallgard
+onda: 10
+spec: SPEC-349
+nome_regiao: Skallgard e o Ermo Branco
+habitat_nome:
+  skallgard: Skallgard e o Ermo
+  sk_fortaleza_vorr: Fortaleza de Vorr
+  sk_farol_chama_negra: Farol da Chama Negra
+  sk_salao_do_jarl: Salão do Juramento
+paleta: >-
+  **Skallgard e o Ermo Branco** — noite de seis meses sobre tundra e gelo azul-sujo; uma cidade de
+  túneis aquecidos com bocas de vapor e janelas laranja; aurora verde-tóxica num ritmo regular demais;
+  afloramentos vermelho-escuro de Cristal-Sanguíneo, mornos na neve; ruínas de escala gigante na
+  Fortaleza de Vorr; perto do Farol, uma luz preta e fosca que come as outras. Luz e paleta:
+  branco-sujo e azul-gelo, verde da aurora nos reflexos, laranja de fornalha nos túneis,
+  vermelho-sangue seco do cristal, e o preto sem brilho da anti-luz.
+familias_em_jogo:            # D10 — mesmos nomes das ondas 1 e 2 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: quebra_defesa,     arquetipo: bruto,                 plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: anda,      percepcao: vibracao,      habitat: [skallgard]}
+  - {vaga: 2,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: suporte,           arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,     material: eter_cristalizado, escala: humana,  locomocao: anda,      percepcao: calor,         habitat: [skallgard]}
+  - {vaga: 3,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: bipede_ereto,     material: cinza,             escala: humana,  locomocao: anda,      percepcao: luz,           habitat: [sk_farol_chama_negra, skallgard]}
+  - {vaga: 4,  familia: corpo_reescrito,   categoria: elite,  papel_tatico: batedor_rapido,    arquetipo: lider_matilha,         plano_corporal: composto,         material: carne_exposta,     escala: grande,  locomocao: anda,      percepcao: sangue_cheiro, habitat: [skallgard]}
+  - {vaga: 5,  familia: corpo_reescrito,   categoria: lacaio, papel_tatico: artilharia,        arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: carne_exposta,     escala: humana,  locomocao: rasteja,   percepcao: luz,           habitat: [skallgard, sk_farol_chama_negra]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,    categoria: lacaio, papel_tatico: controlador,       arquetipo: guardiao,              plano_corporal: hexapode_ou_mais, material: ferro_ferrugem,    escala: pequena, locomocao: anda,      percepcao: calor,         habitat: [skallgard]}
+  - {vaga: 7,  familia: besta_entropia,    categoria: lacaio, papel_tatico: drenador,          arquetipo: covarde_oportunista,   plano_corporal: hexapode_ou_mais, material: quitina,           escala: pequena, locomocao: rasteja,   percepcao: sangue_cheiro, habitat: [skallgard]}
+  - {vaga: 8,  familia: besta_entropia,    categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: guardiao,              plano_corporal: segmentado,       material: couro_tecido,      escala: grande,  locomocao: rasteja,   percepcao: vibracao,      habitat: [skallgard, sk_fortaleza_vorr]}
+  - {vaga: 9,  familia: besta_entropia,    categoria: lacaio, papel_tatico: emboscador,        arquetipo: covarde_oportunista,   plano_corporal: alado,            material: couro_tecido,      escala: humana,  locomocao: plana_voa, percepcao: sangue_cheiro, habitat: [sk_fortaleza_vorr, skallgard]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 10, familia: humanoide_preco,   categoria: elite,  papel_tatico: perseguidor_marca, arquetipo: tatico,                plano_corporal: acoplado,         material: couro_tecido,      escala: enorme,  locomocao: anda,      percepcao: visao,         habitat: [skallgard, sk_farol_chama_negra]}
+  - {vaga: 11, familia: humanoide_preco,   categoria: padrao, papel_tatico: controlador,       arquetipo: conjurador,            plano_corporal: bipede_curvado,   material: ferro_ferrugem,    escala: humana,  locomocao: anda,      percepcao: eter,          habitat: [skallgard]}
+  - {vaga: 12, familia: humanoide_preco,   categoria: padrao, papel_tatico: artilharia,        arquetipo: covarde_oportunista,   plano_corporal: bipede_ereto,     material: carne_exposta,     escala: humana,  locomocao: anda,      percepcao: medo_emocao,   habitat: [skallgard]}
+  - {vaga: 13, familia: humanoide_preco,   categoria: lacaio, papel_tatico: suporte,           arquetipo: covarde_oportunista,   plano_corporal: bipede_ereto,     material: ferro_ferrugem,    escala: pequena, locomocao: anda,      percepcao: som,           habitat: [skallgard, sk_salao_do_jarl]}
+  - {vaga: 14, familia: humanoide_preco,   categoria: elite,  papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: ferro_ferrugem,    escala: grande,  locomocao: anda,      percepcao: calor,         habitat: [skallgard]}
+  - {vaga: 15, familia: humanoide_preco,   categoria: padrao, papel_tatico: batedor_rapido,       arquetipo: covarde_oportunista,   plano_corporal: bipede_ereto,     material: osso,              escala: grande,  locomocao: anda,      percepcao: respiracao,    habitat: [skallgard]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 16, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},   categoria: lacaio, papel_tatico: suporte,         arquetipo: tatico,              plano_corporal: bipede_curvado,   material: madeira_fibra, escala: pequena, locomocao: rasteja,       percepcao: calor,       habitat: [sk_salao_do_jarl, sk_farol_chama_negra]}
+  - {vaga: 17, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: chefe,  papel_tatico: controlador,     arquetipo: predador_apice,      plano_corporal: composto,         material: vidro_cristal, escala: enorme,  locomocao: anda,          percepcao: medo_emocao, habitat: [sk_fortaleza_vorr]}
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},    categoria: padrao, papel_tatico: saqueador,       arquetipo: covarde_oportunista, plano_corporal: serpentiforme,    material: couro_tecido,  escala: humana,  locomocao: escala_paredes, percepcao: calor,      habitat: [skallgard]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_skarath}, categoria: padrao, papel_tatico: emboscador,      arquetipo: tatico,              plano_corporal: acoplado,         material: carne_exposta, escala: humana,  locomocao: anda,          percepcao: som,         habitat: [sk_farol_chama_negra, sk_salao_do_jarl]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: padrao, papel_tatico: controlador, arquetipo: guardiao,            plano_corporal: quadrupede,       material: carne_exposta, escala: grande,  locomocao: rasteja,       percepcao: medo_emocao, habitat: [skallgard]}
+  # --- slots genéricos reinventados (R24; não contam nas 20–25) ---
+  - {vaga: 21, slot: enemy_lobo_invernal, status: reinventada, familia: besta_entropia,  categoria: lacaio, papel_tatico: batedor_rapido, arquetipo: tatico, plano_corporal: hexapode_ou_mais, material: quitina,       escala: pequena, locomocao: salta, percepcao: vibracao, habitat: [skallgard]}
+  - {vaga: 22, slot: enemy_yeti,          status: reinventada, familia: besta_entropia,  categoria: elite,  papel_tatico: bruto_de_linha, arquetipo: predador,    plano_corporal: quadrupede,       material: cera_sebo,     escala: grande,  locomocao: anda,  percepcao: calor,    habitat: [skallgard]}
+  - {vaga: 23, slot: mon_jotun_cinza,     status: reinventada, familia: corpo_reescrito, categoria: elite,  papel_tatico: tanque_reativo, arquetipo: bruto,    plano_corporal: bipede_curvado,   material: osso,          escala: enorme,  locomocao: anda,  percepcao: calor,    habitat: [skallgard, sk_fortaleza_vorr]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_parado_do_sopro
+    vaga: 1
+    nome: Parado do Sopro
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: npc_vorrnak
+      refs: ["lore_nova/creatures.txt:112", "lore_nova/npcs.txt:391", "lore_nova/locations.txt:228"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um caçador que a borda de um Sopro-Errante pegou de lado. O ombro, o braço e as costelas do
+        lado esquerdo pararam no dia em que o vento passou e não mudaram mais: a pele segue rosada e
+        jovem, a geada não pousa nela, e o corte que ele tinha no antebraço continua aberto e fresco,
+        com o músculo vermelho à vista e o sangue parado na boca da ferida, sem coagular nem escorrer.
+        O braço ficou erguido no fim de um golpe. O lado direito seguiu vivo e envelheceu por dois: a mão
+        direita é de velho, os dentes daquele lado caíram, e a perna arrasta o peso do que não se mexe.
+    silhueta: Um homem torto que carrega o próprio braço erguido e duro, como se um golpe tivesse ficado preso no ar.
+    comportamento: >-
+      Anda pelo Ermo sem destino, voltando sempre ao lugar onde o vento o pegou. Não grita nem corre;
+      chega devagar, arrastando o lado que não se mexe, e o golpe vem do braço que nunca baixou.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_parado_do_sopro_golpe_ja_dado
+      frase: >-
+        O braço parado já está no fim do golpe: o Parado age sempre primeiro na rodada, e esse golpe
+        não pode ser respondido com Reação.
+    contra_jogo: Ficar fora do arco do braço erguido e bater pelo lado vivo, que é lento e velho; o braço parado não gira para trás.
+    gancho: >-
+      O Sopro-Errante faz estátuas de quem pega por inteiro. O Parado é o que ele pegou só de raspão,
+      e ninguém em Skallgard sabe dizer se isso foi mais sorte ou menos.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [ataque, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} não se mexe; só o braço erguido, que já está no fim do golpe, desce."
+    description: Caçador que um Sopro-Errante pegou de lado; o braço e o ombro esquerdos pararam no tempo, jovens e com a ferida ainda fresca, e o resto do corpo envelheceu por dois.
+    perigo: Médio
+    lore: >-
+      Os Nascidos do Gelo contam como mortos os apanhados pelo Sopro-Errante, porque quem ele pega por
+      inteiro vira estátua consciente no meio da tundra. Este voltou pela metade. O lado que o vento
+      pegou não envelhece, não fecha a ferida que tinha e não baixa o braço; o outro lado pagou a conta e
+      ficou velho em poucos invernos. Anda pelo Ermo voltando sempre ao mesmo lugar. O golpe dele chega
+      antes de qualquer outro, porque começou muito antes da luta.
+    aparencia: >-
+      Caçador do Norte torto para a direita; ombro, braço esquerdo e costelas desse lado jovens e
+      rosados, sem geada, com um corte fresco no antebraço e o sangue parado na boca da ferida; braço
+      erguido no fim de um golpe; lado direito envelhecido, mão de velho, perna arrastada.
+    como_se_luta: >-
+      Golpeia antes de todos com o braço parado, e esse golpe não aceita Reação. Fique fora do arco do
+      braço erguido e bata pelo lado vivo, que é lento e velho.
+    related_entities: [skallgard, npc_vorrnak]
+    arte:
+      visual: >-
+        Caçador humano de peles grossas, curvado para a direita. O lado esquerdo — ombro, braço erguido
+        com uma faca de osso e as costelas — é de um homem de vinte anos: pele rosada, sem uma gota de
+        geada, um corte aberto e fresco no antebraço com músculo vermelho à vista e sangue parado na
+        borda. O lado direito é de um velho: pele flácida, barba branca só desse lado, mão nodosa, perna
+        arrastando um rastro na neve. A divisa entre os dois corre pelo meio do rosto.
+      composicao: >-
+        Tundra aberta sob neve fina, à noite; o Parado em primeiro plano, de três quartos, o braço
+        esquerdo erguido e imóvel enquanto a neve cai em volta sem pousar nele; ao fundo, um caçador de
+        tamanho humano recua com a lança baixa. Luz fria azulada, nenhum som sugerido.
+      evitar: Homem de gelo, cristal, estátua, casca transparente, armadura de gelo. É carne viva parada no tempo, colada a um corpo que envelheceu.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_levantado_de_rubi
+    vaga: 2
+    nome: Levantado de Rubi
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:25", "lore_nova/creatures.txt:116", "lore_nova/items.txt:66"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: eter_cristalizado
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um morto do Ermo que a Rede Carmesim levantou. O frio conservou a carne, cinzenta e dura, mas as
+        costelas da frente se abriram para fora como uma porta arrombada, e do esterno cresce uma flor
+        de Cristal-Sanguíneo vermelho-escuro do tamanho de duas mãos juntas. O cristal é morno: a neve
+        derrete sobre o peito, escorre pela barriga e congela de novo nas pernas, cobertas de pingentes.
+        A mandíbula pende solta, e os dedos estão pretos de geada até a segunda falange.
+    silhueta: Um morto em pé com o peito aberto, um brilho vermelho lá dentro e um fio de vapor subindo do buraco.
+    comportamento: >-
+      Anda até onde muitos morreram, como os afloramentos de cristal, e fica perto dos outros mortos da
+      cena. Quando um deles cai, o rubi no peito pulsa até o caído se mexer de novo.
+    papel_tatico: suporte
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_levantado_de_rubi_rubi_no_peito
+      frase: >-
+        Enquanto o rubi no peito estiver inteiro, o primeiro inimigo que cair na cena se levanta de novo,
+        mais fraco; quebrar o cristal desfaz isso.
+    contra_jogo: Quebrar o rubi antes de derrubar os outros; um golpe pesado no peito aberto basta, e derrubado o Levantado primeiro, quem cai fica no chão.
+    gancho: >-
+      A Rede Carmesim não tem mente; cresce e reanima o que morreu no seu alcance. No Levantado, o
+      cristal cresceu dentro de um morto, e o alcance passou a andar com ele.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque]
+    a_cada_n: 2
+    telegrafo: "O rubi no peito de {nome} esquenta, e a neve em volta derrete num círculo."
+    description: Morto do Ermo levantado pela Rede Carmesim, com as costelas abertas e uma flor morna de Cristal-Sanguíneo crescendo do esterno.
+    perigo: Médio
+    lore: >-
+      Quem toca um afloramento de Cristal-Sanguíneo vê a morte que o fez, e os clãs tecnológicos
+      estudam essas pedras de longe. O Levantado é o que acontece quando o cristal nasce dentro de um
+      morto em vez de nascer no gelo ao lado. Ele se levanta, anda até onde há mais mortos e fica por
+      perto. Os caçadores que voltaram de uma luta com ele contam uma coisa só: o companheiro que tinham
+      derrubado se levantou outra vez. Desde então a regra do Ermo é bater no peito vermelho antes de
+      bater em qualquer outro.
+    aparencia: >-
+      Morto do Ermo de carne cinzenta e dura, costelas da frente abertas para fora, flor de
+      Cristal-Sanguíneo vermelho-escuro crescendo do esterno, vapor subindo do peito, pingentes de gelo
+      nas pernas, mandíbula solta e dedos pretos de geada.
+    como_se_luta: >-
+      Enquanto o cristal no peito estiver inteiro, o primeiro inimigo que cai se levanta de novo. Quebre
+      o rubi primeiro, com um golpe pesado no peito aberto.
+    related_entities: [skallgard, mon_rede_carmesim]
+    arte:
+      visual: >-
+        Cadáver humano em pé, de peles rasgadas, carne cinza-azulada e dura de frio. As costelas da
+        frente quebradas para fora, abertas como portas; do esterno sai uma flor de cristal
+        vermelho-escuro, facetada, com brilho morno por dentro. Vapor fino subindo do peito; a água do
+        degelo escorreu pela barriga e congelou em pingentes nas coxas. Mandíbula solta, olhos brancos de
+        geada, dedos pretos.
+      composicao: >-
+        Tundra noturna com aurora verde ao fundo; o Levantado de pé ao lado de dois corpos semienterrados
+        na neve, um deles erguendo a cabeça; um caçador de lança, do mesmo tamanho do morto, recua à
+        esquerda. A única luz quente da cena vem do peito; um círculo de neve derretida em volta dos pés.
+      evitar: Zumbi verde, esqueleto, necromante, coração brilhando de desenho animado. É um morto conservado pelo frio com uma pedra nascida de dentro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_queimado_de_breu
+    vaga: 3
+    nome: Queimado de Breu
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:230", "lore_nova/factions.txt:191", "lore_nova/creatures.txt:64"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um caçador que atravessou a encosta do Farol, chegou perto demais da chama negra e voltou. Onde a
+        anti-luz bateu, a pele não queimou: perdeu a cor e a luz e virou uma crosta preta e fosca, fina
+        como fuligem assentada, que não devolve brilho nenhum. O rosto, as mãos e o peito que ficaram
+        virados para a torre são assim. Os olhos viraram dois discos pretos e largos, sem branco, que
+        enxergam no escuro e só veem luz: uma brasa, uma lanterna, o vapor quente de quem respira. Os
+        dentes parecem brancos demais contra o preto.
+    silhueta: Um caçador de capuz com o rosto, as mãos e o peito recortados em preto liso, como um buraco no formato de gente.
+    comportamento: >-
+      Voltou do Farol para as trilhas do Ermo e caça de noite, indo direto para a luz que vê. Onde chega,
+      a luz morre devagar: primeiro as tochas, depois o brilho da neve.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_queimado_de_breu_bebe_a_luz"
+      frase: >-
+        Bebe a luz: ataca uma vez por rodada para cada luz acesa na cena (tocha, lanterna, fogueira),
+        sempre em quem a carrega ou está mais perto dela; sem luz nenhuma, fica cego e só bate em quem
+        encosta nele.
+    contra_jogo: >-
+      Apagar as luzes antes que ele chegue e lutar no escuro, de perto; com uma só luz acesa ele bate
+      uma vez só.
+    gancho: >-
+      O Farol emite anti-luz e ninguém sabe para quê. Quem chega perto demais aprende, na pele, pelo
+      menos o que ela faz, e volta trazendo um pouco dela.
+    habitat: [sk_farol_chama_negra, skallgard]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, defesa]
+    a_cada_n: 3
+    telegrafo: >-
+      As lanternas perto de {nome} se inclinam para ele, e a crosta preta do peito começa a brilhar
+      fosco.
+    description: >-
+      Caçador que chegou perto demais da chama negra do Farol e voltou; onde a anti-luz bateu, a pele
+      virou uma crosta preta e fosca, e cada luz acesa perto dele é mais um golpe.
+    perigo: Médio
+    lore: >-
+      O Farol da Chama Negra emite anti-luz, e a aurora muda de ritmo em volta dele. Os caçadores
+      contornam a encosta de longe. Alguns cortam caminho, chegam perto demais e voltam com o rosto, as
+      mãos e o peito pretos, de um preto que não brilha nem sob tocha, e com olhos que só enxergam o que
+      tem luz. Não voltam para dentro de Skallgard: ficam nas trilhas e caçam à noite, indo direto para a
+      fogueira de quem acampou. Perto deles as lanternas encolhem até apagar.
+    aparencia: >-
+      Caçador de capuz e peles; rosto, mãos e peito cobertos de crosta preta e fosca que não reflete luz,
+      recortada como uma sombra; olhos em dois discos pretos e largos, sem branco; dentes brancos demais
+      contra o preto.
+    como_se_luta: >-
+      Bate uma vez para cada luz acesa na cena, em quem a carrega. Apague as luzes e lute de perto, no
+      escuro.
+    related_entities: [sk_farol_chama_negra, skallgard]
+    arte:
+      visual: >-
+        Humano adulto em peles e capuz de caçador, lança curta na mão. Rosto, mãos e peito num preto
+        absoluto e fosco, sem nenhum reflexo, de contorno nítido, como se a figura tivesse sido recortada
+        do papel; dentro do preto, só dois discos de olhos pretos e largos, um pouco mais escuros, e uma
+        fileira de dentes brancos. A cabeça virada para uma luz fora do quadro.
+      composicao: >-
+        Trilha do Ermo à noite, a torre do Farol como silhueta alta e distante; o Queimado em primeiro
+        plano, de perfil, avançando para um acampamento com uma fogueira pequena; uma lanterna de óleo
+        pendurada numa estaca, da altura do ombro dele, com a chama encolhida a um ponto. A neve perde o
+        brilho num raio em volta dele.
+      evitar: Sombra viva, espectro, demônio de piche, queimadura de fogo com bolhas e carne vermelha. É pele sem luz, seca e fosca, num homem de carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_parelha_carmesim
+    vaga: 4
+    nome: Parelha Carmesim
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:25", "lore_nova/creatures.txt:198"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Seis cães de trenó que morreram atrelados numa nevasca e que a Rede levantou sem desatrelar. O
+        couro dos arreios afundou na carne com o gelo, e onde o arreio passa a pele rasgou e mostra
+        músculo vermelho, cristalizado nas bordas da ferida. As patas ficaram duras, e eles correm sem
+        dobrar os joelhos. As bocas abertas não têm mais língua, só dentes e gengiva preta. Atrás vem o
+        trenó vazio, com as rédeas presas ao osso do ombro do cão da frente.
+    silhueta: Seis cães em fila atrelados a um trenó vazio, correndo com as pernas duras como estacas.
+    comportamento: >-
+      Corre sempre a rota da última viagem e passa por cima de quem estiver nela. Depois de atravessar a
+      fila, faz a volta larga e vem de novo, guiada pelo cheiro de sangue.
+    papel_tatico: batedor_rapido
+    arquetipo: lider_matilha
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_parelha_carmesim_atropelo
+      frase: >-
+        Atropela a fila inteira de uma vez e para do outro lado; cortar o tirante do cão da frente faz a
+        parelha girar em falso por uma rodada.
+    contra_jogo: Sair da rota e cortar o tirante do cão da frente, que guia os outros; sem guia, a parelha gira em volta do trenó.
+    gancho: >-
+      Muitos nomes da Parede dos Mortos morreram a poucos passos de casa. A Parelha é de um deles:
+      chegou sem o dono e nunca mais parou.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [ataque_multiplo, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "Os tirantes de {nome} esticam de uma vez, e o trenó vazio começa a ganhar velocidade."
+    description: Seis cães de trenó mortos e atrelados, levantados pela Rede Carmesim sem desatrelar; correm a última rota com o trenó vazio atrás.
+    perigo: Alto
+    lore: >-
+      Nas nevascas fortes, quem perde o rumo morre a poucos passos de casa, e os cães morrem atrelados.
+      Alguns se levantam. A Rede Carmesim não desata os nós: os seis cães correm juntos, presos pelos
+      arreios que o gelo enterrou na carne, puxando um trenó sem ninguém. Fazem sempre a mesma rota, a da
+      última viagem, e passam por cima do que estiver no caminho. Os condutores de Skallgard cortam os
+      tirantes dos próprios cães mortos antes de enterrá-los, por via das dúvidas.
+    aparencia: >-
+      Seis cães de trenó mortos em fila, couro dos arreios afundado na carne rasgada, bordas das feridas
+      em cristal vermelho, patas rígidas, bocas abertas sem língua, puxando um trenó vazio coberto de
+      gelo.
+    como_se_luta: >-
+      Atropela todos de uma vez e faz a volta. Saia da rota e corte o tirante do cão da frente, que guia
+      os outros.
+    related_entities: [skallgard, mon_rede_carmesim]
+    arte:
+      visual: >-
+        Parelha de seis cães grandes de pelo cinza, mortos, atrelados em fila dupla a um trenó de madeira
+        vazio. Arreios de couro cravados na carne, com faixas de músculo vermelho expostas onde o couro
+        cortou, bordas cristalizadas em vermelho-escuro. Patas esticadas e duras, como pernas de mesa;
+        bocas abertas sem língua; olhos brancos de geada. A rédea entra no ombro do cão da frente.
+      composicao: >-
+        Planície de neve sob nevasca leve, à noite; a parelha vem em diagonal na direção do observador,
+        em velocidade, levantando neve; à direita, um caçador se joga para fora da rota, de tamanho
+        humano ao lado do cão da frente. Luz da aurora verde por trás, recortando as silhuetas.
+      evitar: Lobos, cães fantasmas translúcidos, cães de fogo, matilha selvagem. São cães de trabalho mortos e atrelados, presos a um trenó.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_desfiado_da_aurora
+    vaga: 5
+    nome: Desfiado da Aurora
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:128", "lore_nova/locations.txt:224"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: rasteja
+      percepcao: luz
+      texto: >-
+        Um caçador que tocou a Aurora-Viva e não morreu de vez. A carne ficou luminosa em faixas verdes e
+        se desfaz em luz pelas bordas: das coxas para baixo já não há pernas, só dois cotos que soltam
+        fiapos de luz no ar frio. Arrasta-se nos braços, com os ombros altos e a coluna curvada. Por baixo
+        da carne acesa se veem os ossos do antebraço e das costelas, escuros contra o brilho. Arranca
+        tiras da própria pele com os dedos, e elas continuam brilhando na mão.
+    silhueta: Um tronco de gente que se arrasta nos braços, com as pernas trocadas por dois rastros de luz verde.
+    comportamento: >-
+      Arrasta-se pela tundra nas noites de aurora forte, procurando o fragmento que o tocou. Quando vê
+      gente, arranca tiras da pele acesa e atira.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_desfiado_da_aurora_tira_acesa
+      frase: >-
+        Atira tiras da própria carne acesa: a tira gruda no alvo e queima a cada rodada até ele passar uma
+        rodada na neve funda ou na sombra.
+    contra_jogo: Apagar a tira rolando na neve; e chegar perto, porque ele se arrasta devagar e não tem com que fugir.
+    gancho: >-
+      A Aurora-Viva é sinal de que o despertar acelera. O Desfiado é o sinal de que ela tocou alguém e o
+      deixou ir.
+    habitat: [skallgard, sk_farol_chama_negra]
+    inspiracao: []
+    padrao: [ataque, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} arranca do próprio ombro uma tira de carne que brilha verde."
+    description: Caçador tocado pela Aurora-Viva; a carne acesa em faixas verdes se desfaz em luz, as pernas já foram, e ele atira tiras da própria pele.
+    perigo: Baixo
+    lore: >-
+      Tocar a Aurora-Viva é exposição direta à magia da Rede, e a carne fica luminosa e começa a se
+      desfazer em luz. Quase todos morrem ali. Os que não morrem se arrastam pela tundra, perdendo o
+      corpo de baixo para cima, e voltam às noites de aurora forte como quem procura alguém. Têm medo de
+      gente e raiva de gente; atiram o que têm, e o que têm é a própria pele acesa. Os caçadores apagam as
+      tiras na neve e não seguem o rastro verde.
+    aparencia: >-
+      Tronco humano que se arrasta nos braços; carne luminosa em faixas verdes como a aurora, desfeita em
+      fiapos de luz nas bordas; cotos no lugar das pernas soltando luz; ossos escuros visíveis sob a
+      carne acesa; tiras de pele brilhando na mão.
+    como_se_luta: >-
+      Atira tiras da própria carne acesa, que grudam e queimam até serem apagadas na neve ou na sombra.
+      De perto é lento e frágil.
+    related_entities: [skallgard, sk_farol_chama_negra]
+    arte:
+      visual: >-
+        Humano adulto da cintura para cima, de rosto magro e boca aberta, arrastando-se apoiado nos
+        braços. A carne é translúcida e acende em faixas verde-tóxicas, como a aurora; nas bordas do
+        corpo ela se desfia em fios de luz que flutuam. No lugar das pernas, dois cotos que soltam rastros
+        de luz verde no chão. Ossos do antebraço e das costelas visíveis, escuros, por dentro. Na mão
+        erguida, uma tira de pele luminosa.
+      composicao: >-
+        Tundra à noite sob aurora verde forte; o Desfiado em primeiro plano, baixo, no chão, com dois
+        rastros de luz atrás dele riscando a neve; ao fundo, um caçador agachado atrás de um trenó tombado,
+        de tamanho humano, protegendo o rosto. A luz verde do corpo ilumina a neve de baixo para cima.
+      evitar: Fantasma, espírito de luz, fada, anjo. É carne de gente que está virando luz e acabando, não um ser de energia.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_ermitao_de_elmo
+    vaga: 6
+    nome: Ermitão de Elmo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:25", "lore_nova/creatures.txt:64"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: ferro_ferrugem
+      escala: pequena
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um bicho de seis pernas finas, do tamanho de um cão pequeno, que vive dentro de um elmo de guerra
+        das batalhas antigas entre Cinzéus e Anões nas passagens: ferro grosso e amassado, viseira de
+        fendas estreitas, crista partida. A carne cresceu para dentro do ferro e não sai mais, e a viseira
+        abre e fecha como uma boca, movida por um músculo que passa por dentro das fendas. Por elas saem
+        duas garras grossas. As pernas são de carne mole e branca, marcadas de frio na ponta, e no fundo
+        do elmo, onde ficava a cabeça do dono, há um olho só, inchado.
+    silhueta: Um elmo de guerra amassado, de viseira fechada, andando sobre seis pernas finas na neve.
+    comportamento: >-
+      Vive em bandos nas encostas que descem das passagens, onde o degelo solta o ferro das batalhas
+      velhas, e procura o calor das fendas. Quando alguém encosta, sobe pelo braço e fecha a viseira no
+      pulso, e fica pendurado ali.
+    papel_tatico: controlador
+    arquetipo: guardiao
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ermitao_de_elmo_viseira_no_pulso
+      frase: >-
+        Fecha a viseira no pulso de quem o golpeia de perto e fica pendurado no braço: enquanto estiver
+        preso, ocupa um espaço da mão do jogador, que joga com uma Carta a menos.
+    contra_jogo: Bater no elmo com coisa pesada antes que ele suba pelo braço; um golpe na crista amassa a viseira e ela não fecha mais.
+    gancho: >-
+      As passagens do norte foram campo de batalha de Cinzéus e Anões por gerações, e o gelo guardou o
+      ferro. Os Ermitões são o que o Abismo fez morar dentro dele.
+    habitat: [skallgard]
+    inspiracao:
+      - fonte: zoologia (caranguejo-ermitão)
+        referencia: caranguejos-ermitões, que vivem em conchas que não fizeram e as trocam quando crescem
+        tomou: o bicho que mora dentro de uma casca alheia
+        distancia: a casca é um elmo de guerra de que a carne não sai mais; tem seis pernas de carne mole, não é crustáceo, e a viseira que prende o pulso é de Valoria
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "A viseira de {nome} range e abre uma fresta, e duas garras aparecem pelas fendas."
+    description: Bicho de seis pernas que vive dentro de um elmo de guerra das batalhas antigas nas passagens do norte; fecha a viseira no pulso de quem encosta.
+    perigo: Baixo
+    lore: >-
+      As passagens que descem das Montanhas Afiadas para o Ermo foram campo de batalha de Cinzéus e
+      Anões por gerações, e o gelo guardou o que ficou: ossos, lâminas, elmos. Quando o degelo solta o
+      ferro, os Ermitões sobem nele. Cresceram dentro dos elmos até a carne prender no metal, e andam com
+      a casa nas costas, procurando o calor das fendas. Os caçadores aprenderam a amassar a viseira com o
+      cabo do machado antes de pôr a mão perto.
+    aparencia: >-
+      Elmo de guerra de ferro grosso, amassado e enferrujado, viseira de fendas estreitas e crista
+      partida, sobre seis pernas finas de carne branca; pelas fendas, duas garras grossas; no fundo do
+      elmo, um olho inchado.
+    como_se_luta: >-
+      Fecha a viseira no pulso de quem o golpeia de perto e fica pendurado, ocupando um espaço da mão.
+      Amasse a crista com algo pesado antes que ele suba pelo braço.
+    related_entities: [skallgard]
+    arte:
+      visual: >-
+        Elmo de guerra antigo, do tamanho de um caldeirão pequeno, de ferro grosso, amassado e
+        enferrujado, com viseira de fendas estreitas e uma crista partida no alto; gelo nas dobras do
+        metal. Por baixo, seis pernas finas e compridas de carne branca e mole, pontas arroxeadas de frio.
+        Pelas fendas da viseira saem duas garras grossas cinza; no fundo escuro do elmo, um único olho
+        grande e úmido.
+      composicao: >-
+        Encosta de pedra e gelo saindo de uma passagem de montanha; lâminas e ossos velhos aflorando do
+        degelo; um Ermitão pendurado pela viseira no pulso de um caçador, outros dois subindo a encosta;
+        o caçador, de tamanho humano, tenta bater nele com o cabo do machado. Luz baixa azulada.
+      evitar: Caranguejo, robô, autômato, armadura animada, cavaleiro fantasma. É carne mole presa dentro de um elmo velho que não fez.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_carrapato_de_mamute
+    vaga: 7
+    nome: Carrapato de Mamute
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:90", "lore_nova/creatures.txt:64"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: rasteja
+      percepcao: sangue_cheiro
+      texto: >-
+        Carrapato do tamanho de um gato que vive enterrado na carapaça de geada do Mamute-da-Névoa. Não
+        tem traseira: o corpo termina, nas duas pontas, numa cabeça em cone de dentes virados para trás,
+        e as oito pernas curtas de ganchos finos dobram para os dois lados. Uma boca bebe; a outra devolve.
+        A carapaça é de quitina parda e rachada, e entre as duas cabeças a barriga incha, esticada e
+        translúcida, com o sangue escuro correndo de uma ponta para a outra.
+    silhueta: Uma bolha escura do tamanho de um gato com uma cabeça de dentes em cada ponta, sobre oito pernas curtas.
+    comportamento: >-
+      Vive aos montes no pelo dos mamutes, bebendo de um e passando para o filhote ao lado, e a manada
+      inteira carrega o mesmo sangue. Fora da manada, crava uma boca em quem achar e corre para cravar a
+      outra no bicho grande mais perto.
+    papel_tatico: drenador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_carrapato_de_mamute_sangue_passado
+      frase: >-
+        Crava uma boca no alvo e bebe; cheio, corre e crava a outra no inimigo mais forte da cena, e o
+        sangue que bebeu cura esse inimigo.
+    contra_jogo: Arrancá-lo antes de inchar; se já inchou, matá-lo no caminho, porque cheio ele estoura com um golpe só.
+    gancho: >-
+      O Mamute-da-Névoa alimenta Skallgard por uma estação inteira. O Carrapato de Mamute é a razão
+      de os caçadores lavarem a carne com neve e fogo antes de levá-la à Sala Fria.
+    habitat: [skallgard]
+    inspiracao:
+      - fonte: zoologia (carrapato-de-inverno do alce)
+        referencia: Dermacentor albipictus, que se junta aos milhares num único animal grande no inverno
+        tomou: o parasita que vive da montaria grande
+        distancia: a segunda boca na traseira, que devolve o sangue a outro corpo, é de Valoria
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} solta-se inchado e vira a outra boca para o bicho grande da cena."
+    description: Carrapato do tamanho de um gato com uma cabeça de dentes em cada ponta; bebe por uma boca e devolve o sangue por outra, a outro bicho.
+    perigo: Baixo
+    lore: >-
+      Os mamutes-da-névoa carregam na carapaça de geada uma praga que os caçadores conhecem bem. O
+      Carrapato de Mamute não tem traseira: tem uma cabeça em cada ponta, bebe por uma e devolve pela
+      outra. Passa de um bicho a outro, e a manada inteira termina com o mesmo sangue. Fora da manada, faz
+      o mesmo com quem estiver perto: bebe de um e cura o outro. Os caçadores queimam a carne antes de
+      guardá-la e esmagam os carrapatos cheios antes que achem onde devolver.
+    aparencia: >-
+      Carrapato do tamanho de um gato, carapaça de quitina parda e rachada, uma cabeça em cone de dentes
+      virados para trás em cada ponta do corpo, oito pernas curtas de ganchos finos; barriga esticada e
+      translúcida de sangue escuro.
+    como_se_luta: >-
+      Crava, bebe e, cheio, corre para curar o inimigo mais forte da cena com a outra boca. Arranque-o
+      antes de inchar ou mate-o no caminho.
+    related_entities: [skallgard]
+    arte:
+      visual: >-
+        Carrapato gigante do tamanho de um gato doméstico, corpo oval de quitina parda com rachaduras,
+        oito pernas curtas terminando em ganchos finos, e uma cabeça pequena em cone de dentes voltados
+        para trás em CADA ponta do corpo, sem traseira. Abdômen central inchado, liso, quase
+        transparente, com sangue escuro visível dentro.
+      composicao: >-
+        Close no flanco de um Mamute-da-Névoa, pelagem carregada de geada como uma carapaça; um carrapato
+        cravado por uma boca no mamute e pela outra no braço de um caçador que tenta arrancá-lo; a mão
+        enluvada do caçador dá a escala. Luz fria, vapor da respiração do mamute.
+      evitar: Aranha, inseto de seis pernas, besouro, monstro de duas cabeças com olhos. É um carrapato com uma boca em cada ponta, nada mais.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lagarta_sete_invernos
+    vaga: 8
+    nome: Lagarta de Sete Invernos
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:64", "lore_nova/locations.txt:224"]
+    anatomia:
+      plano_corporal: segmentado
+      material: couro_tecido
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Lagarta do comprimento de dois homens, de corpo em doze anéis de pele grossa coberto de pelo
+        pardo e comprido que junta geada. Cada anel tem um par de patas curtas e grossas por baixo, e a
+        cabeça é uma placa dura com mandíbulas que trituram líquen e osso. Quando o frio aperta, congela
+        por inteiro: o sangue vira gelo, o coração para, e o corpo fica duro como tronco. Quando esquenta,
+        degela, menos sete anéis do fim do corpo, pretos, pelados e mortos, que não degelam mais, um por
+        inverno, e que ela arrasta atrás como uma cauda de pedra.
+    silhueta: Um tronco peludo e segmentado deitado na neve, coberto de geada, com uma cauda preta e pelada que de repente se dobra.
+    comportamento: >-
+      Pasta o líquen sob a neve e não liga para quem passa. Mexida, congela onde está e espera; quando a
+      ameaça chega perto, degela de uma vez e se debate, batendo com a cabeça e com os anéis.
+    papel_tatico: tanque_reativo
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lagarta_sete_invernos_degelo
+      frase: >-
+        Alterna: numa rodada congela por inteiro e nenhum golpe a fere; na seguinte degela e se debate
+        contra todos em volta. Fogo na rodada congelada a racha.
+    contra_jogo: Esperar o degelo para bater, ou usar fogo enquanto ela está congelada; nunca ficar colado nela na rodada em que degela.
+    gancho: >-
+      No Ermo, o frio que mata tudo é o mesmo que conserva. A Lagarta atravessa sete invernos parando e
+      voltando, e o Abismo a fez do tamanho de um tronco.
+    habitat: [skallgard, sk_fortaleza_vorr]
+    inspiracao:
+      - fonte: zoologia (lagarta-lanosa-do-ártico)
+        referencia: Gynaephora groenlandica, que congela e degela por vários anos antes de virar mariposa
+        tomou: o corpo que para no gelo e volta a viver
+        distancia: o tamanho, as mandíbulas de osso e o debate no degelo são de Valoria; ela não vira mariposa
+    padrao: [defesa, ataque_multiplo]
+    a_cada_n: 2
+    telegrafo: "O pelo de {nome} estala de gelo; ela fica dura como pedra, e a geada racha em cima."
+    description: Lagarta peluda do comprimento de dois homens que congela por inteiro e degela no meio da luta, debatendo-se contra tudo em volta.
+    perigo: Médio
+    lore: >-
+      Os caçadores conhecem a Lagarta de Sete Invernos porque ela não foge: congela onde está e fica,
+      dura como tronco caído, por uma hora ou por um inverno. Contam que vive sete invernos assim, parando
+      e voltando, e que cada inverno a deixa mais comprida. Quem tenta cortá-la congelada quebra a lâmina;
+      quem espera ao lado leva o degelo na cara, quando ela se debate inteira de uma vez. Os clãs a caçam
+      com fogo, pela lã.
+    aparencia: >-
+      Lagarta do comprimento de dois homens, sete anéis do fim pretos, pelados e mortos, os outros de pele grossa sob pelo pardo comprido cheio de
+      geada, patas curtas e grossas por baixo, cabeça em placa dura com mandíbulas laterais; congelada,
+      parece um tronco peludo caído.
+    como_se_luta: >-
+      Alterna: congelada, nenhum golpe a fere; no degelo, debate-se contra todos em volta. Espere o
+      degelo para bater, ou use fogo enquanto está congelada.
+    related_entities: [skallgard, sk_fortaleza_vorr]
+    arte:
+      visual: >-
+        Lagarta gigante de uns quatro metros, segmentada em doze anéis, coberta de pelo pardo e comprido,
+        com cristais de geada presos nas pontas, exceto os sete últimos anéis, pretos, pelados e
+        rachados como pedra morta; patas curtas e grossas por baixo; cabeça marrom-escura
+        em placa dura, mandíbulas laterais abertas. Metade do corpo dobrada para cima em arco, no instante
+        do degelo, soltando lascas de gelo; o resto ainda rígido e branco de geada.
+      composicao: >-
+        Encosta da tundra junto aos degraus gigantes da Fortaleza de Vorr; a Lagarta atravessada no
+        caminho; um caçador com uma tocha a três passos, recuando, o corpo dele da altura de dois anéis
+        dela. Lascas de gelo no ar, luz alaranjada da tocha contra o azul da neve.
+      evitar: Verme da areia, centopeia, minhoca de monstro, larva gosmenta. É uma lagarta de pelo, viva e lanosa, que congela.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mandriao_dois_bicos
+    vaga: 9
+    nome: Mandrião de Dois Bicos
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:228", "lore_nova/creatures.txt:86"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: humana
+      locomocao: plana_voa
+      percepcao: sangue_cheiro
+      texto: >-
+        Ave de rapina das escadarias de Vorr, de asas tão largas quanto os braços de um homem abertos, com
+        penas pardas e duras. O bico rachou na raiz e cresceu em dois, um sobre o outro, cada um com sua
+        ponta curva e sua língua, e as duas metades mordem juntas como uma tesoura. Os pés são de pele
+        grossa e cinza, com garras pretas, e a cabeça gira quase inteira sobre o pescoço.
+    silhueta: Uma ave parda de asas largas com dois bicos, um sobre o outro, abertos como uma tesoura.
+    comportamento: >-
+      Aninha nos degraus da Fortaleza de Vorr, altos como a cintura de um homem. Não ataca quem está
+      inteiro; segue as lutas de cima e desce sobre quem acabou de ser ferido por outro.
+    papel_tatico: emboscador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mandriao_dois_bicos_bicada_dupla
+      frase: Só ataca quem já foi ferido nesta rodada, e os dois bicos abrem a ferida em duas.
+    contra_jogo: Não sangrar à vista dele; derrubar primeiro quem fere, e o Mandrião fica rodando no alto sem descer.
+    gancho: >-
+      Os corvos do Ermo esperam os mortos. O Mandrião não espera: desce na primeira ferida e toma a presa
+      de quem a abriu.
+    habitat: [sk_fortaleza_vorr, skallgard]
+    inspiracao:
+      - fonte: zoologia (mandriões)
+        referencia: as aves do gênero Stercorarius, que perseguem outras aves até elas largarem a presa
+        tomou: o hábito de descer sobre o trabalho dos outros
+        distancia: o bico dobrado e o ataque só a quem já sangra são de Valoria; ele não rouba comida, abre feridas
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} desce em círculo largo sobre quem já está sangrando."
+    description: Ave de rapina das escadarias de Vorr com o bico rachado em dois; só desce sobre quem acabou de ser ferido.
+    perigo: Baixo
+    lore: >-
+      Os degraus da Fortaleza de Vorr são altos como a cintura de um homem, e os Mandriões fazem ninho
+      neles. Seguem as caçadas e as brigas do alto, sem pressa. Não atacam quem está inteiro; esperam o
+      primeiro sangue, de quem quer que seja, e descem. Os caçadores dizem que o bico rachou em dois de
+      tanto morder ferida alheia. Quem luta perto da Fortaleza aprende a olhar para cima depois de cada
+      golpe que leva.
+    aparencia: >-
+      Ave de rapina parda de asas largas como os braços de um homem abertos, penas duras, bico rachado na
+      raiz em dois bicos curvos sobrepostos como uma tesoura, pés grossos cinzentos com garras pretas,
+      cabeça virada quase para trás.
+    como_se_luta: >-
+      Só ataca quem já foi ferido nesta rodada e abre a ferida em duas. Derrube primeiro quem fere, e ele
+      fica rodando no alto.
+    related_entities: [sk_fortaleza_vorr, skallgard]
+    arte:
+      visual: >-
+        Ave marinha de rapina, corpulenta, de penas pardo-escuras e duras, asas abertas de quase dois
+        metros. O bico é duplo: dois bicos curvos e escuros saindo da mesma raiz, um sobre o outro,
+        ligeiramente desencontrados, abertos como lâminas de tesoura. Olhos claros e frios, pés cinzentos
+        de pele grossa com garras pretas.
+      composicao: >-
+        Degraus gigantes de pedra da Fortaleza de Vorr, cada um da altura da cintura de um caçador que
+        está ajoelhado no degrau de baixo, segurando o braço ferido; o Mandrião descendo em diagonal sobre
+        ele, asas abertas. Céu escuro com aurora fraca, neve fina caindo.
+      evitar: Grifo, harpia, águia heráldica, ave de duas cabeças. É uma ave de uma cabeça só, com o bico partido em dois.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_montaria_cravada
+    vaga: 10
+    nome: Montaria Cravada
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: clas_combate
+      refs: ["lore_nova/creatures.txt:70", "lore_nova/races.txt:344", "lore_nova/factions.txt:179"]
+    anatomia:
+      plano_corporal: acoplado
+      material: couro_tecido
+      escala: enorme
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um cavaleiro dos clãs de combate e o Urso-Titã que monta, presos um ao outro pelos ganchos de
+        osso. Com os anos os ganchos criaram raiz: entraram pela carne do urso até as costelas e saíram
+        pelas coxas do cavaleiro, e a carne dos dois cresceu em volta, de modo que ninguém os separa sem
+        matar os dois. O urso tem pelagem branca-azulada e presas para fora do lábio; o cavaleiro já não
+        tem pernas que se distingam do lombo, só o tronco, os braços e o arpão. Sangram pelo mesmo corte.
+    silhueta: Um urso imenso com um homem crescido no lombo, sem sela, apontando um arpão para a frente.
+    comportamento: >-
+      Caçam juntos no Ermo e voltam a Skallgard só na noite do Juramento. O cavaleiro escolhe e o urso
+      derruba; separados à força, nenhum dos dois sabe mais caçar.
+    papel_tatico: perseguidor_marca
+    arquetipo: tatico
+    categoria: elite
+    faccao: clas_combate
+    mecanica_assinatura:
+      carta: cri_montaria_cravada_ganchos_vivos
+      frase: >-
+        O cavaleiro marca um alvo e o urso só ataca o marcado, com força dobrada; derrubado o cavaleiro,
+        o urso perde o rumo e ataca o mais perto.
+    contra_jogo: Derrubar o cavaleiro primeiro, de longe ou subindo pelo flanco; sem ele, o urso bate a esmo e se cansa.
+    gancho: >-
+      Os Nascidos do Gelo domam o Urso-Titã cravando ganchos de osso na carne. Num cavaleiro que não
+      desmontou por tempo demais, o vínculo de dor virou um corpo só.
+    habitat: [skallgard, sk_farol_chama_negra]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "O cavaleiro de {nome} aponta o arpão, e o urso vira a cabeça para onde ele aponta."
+    description: Cavaleiro dos clãs de combate e Urso-Titã presos pelos ganchos de osso, que criaram raiz; a carne dos dois cresceu junta e sangra pelo mesmo corte.
+    perigo: Alto
+    lore: >-
+      Os clãs de combate domam o Urso-Titã cravando ganchos de osso na carne, um vínculo de dor e de
+      respeito. O costume manda desmontar e soltar os ganchos ao fim de cada caçada. Alguns cavaleiros
+      deixaram de desmontar. Com os anos os ganchos criaram raiz nos dois, e a carne cresceu em volta,
+      até não haver mais onde terminar o homem e começar o urso. Os clãs não os expulsam, mas também não
+      os deixam dormir dentro das muralhas; voltam só na noite do Juramento, e todos abrem caminho.
+    aparencia: >-
+      Urso-Titã de pelagem branca-azulada e presas fora do lábio com um cavaleiro crescido no lombo, sem
+      sela; ganchos de osso entram pela carne do urso e saem pelas coxas do homem, a carne dos dois
+      fundida em volta; o cavaleiro aponta um arpão.
+    como_se_luta: >-
+      O cavaleiro marca um alvo e o urso só ataca o marcado, com força dobrada. Derrube o cavaleiro
+      primeiro; sem ele, o urso bate a esmo.
+    related_entities: [skallgard, sk_farol_chama_negra, clas_combate, mon_urso_tita]
+    arte:
+      visual: >-
+        Urso imenso de pelagem branca-azulada, presas curvas saindo do lábio inferior, cicatrizes em volta
+        de uma dúzia de ganchos de osso cravados no lombo e nos ombros. Sobre ele, sem sela, um caçador do
+        Norte de peles e tatuagens, cujo quadril e coxas se fundem à carne do urso: os ganchos atravessam
+        os dois, e a pele de um vira a pele do outro numa faixa de cicatriz rosada. O homem ergue um
+        arpão de osso, apontando.
+      composicao: >-
+        Neve funda perto de Skallgard, à noite; a Montaria vem de frente, baixa, o cavaleiro inclinado
+        para a frente; à esquerda, um portão de madeira da cidade com um guarda de lança, que mal chega ao
+        ombro do urso, dando a escala. Vapor da respiração dos dois saindo em sincronia.
+      evitar: Centauro, cavaleiro de armadura medieval, urso com sela e rédeas, montaria fantástica. São dois corpos de carne crescidos um no outro pelos ganchos.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ferreiro_chama_fria
+    vaga: 11
+    nome: Ferreiro de Chama Fria
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: clas_tecnologicos
+      refs: ["lore_nova/creatures.txt:124", "lore_nova/factions.txt:206", "lore_nova/factions.txt:202"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um ferreiro da Fornalha de Vorr que trabalhou anos entre as chamas-fátuas azuis, que queimam de
+        frio. As mãos e os antebraços ficaram pretos e azuis de queimadura de frio, e a liga da forja
+        entrou na pele: há veios de metal fosco correndo pelos dedos, soldados ao osso, e as unhas viraram
+        lascas de ferro. É pequeno, de cabeça grande e dedos finos, como os da sua linhagem, e curvado de
+        anos sobre a bigorna. Em volta dos pulsos acendem e apagam chamas azuis miúdas, e a geada sobe
+        pela manga.
+    silhueta: Um homem pequeno e curvado de avental de couro, com as mãos pretas envoltas em chamas azuis miúdas.
+    comportamento: >-
+      Não sai da Fornalha e não pega em arma, como manda o costume dos tecnológicos. Agarra a mão de
+      quem entra armado, e a mão fica azul e presa ao cabo.
+    papel_tatico: controlador
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: clas_tecnologicos
+    mecanica_assinatura:
+      carta: "cri_ferreiro_chama_fria_mao_no_cabo"
+      frase: >-
+        Agarra a mão de quem segura metal, e a chama fria a gela no cabo: até descongelar perto de fogo,
+        o alvo não larga nem troca o que segura e só pode jogar Cartas daquela arma ou daquele escudo.
+    contra_jogo: >-
+      Quem foi pego aquece a mão numa chama, a sua ou a de um companheiro; e ele não larga a Fornalha:
+      atraído para longe dela, as chamas dos pulsos se apagam.
+    gancho: >-
+      Os tecnológicos nunca pegam em arma. Na Fornalha, o Ferreiro achou um jeito de lutar que cabe na
+      regra: desfaz as armas dos outros.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "As chamas azuis nos pulsos de {nome} crescem, e ele estende a mão para a sua."
+    description: >-
+      Ferreiro da Fornalha de Vorr com as mãos pretas da chama-fátua azul e veios de liga nos dedos;
+      gela no cabo a mão de quem segura metal.
+    perigo: Médio
+    lore: >-
+      Perto da Fornalha de Vorr nascem chamas azuis que congelam o que tocam, da liga reagindo com o
+      Éter do norte. Os ferreiros aprendem a conviver com elas, e alguns convivem demais. O Ferreiro de
+      Chama Fria trabalhou tantos anos entre elas que a liga entrou nas mãos dele. Não pega em arma,
+      como manda o costume dos tecnológicos; agarra a mão de quem entra, e ela fica azul e presa ao cabo
+      até ver fogo. Os clãs de combate dizem que é o único tecnológico que já fez um deles largar a luta
+      sem largar a arma.
+    aparencia: >-
+      Homem pequeno de cabeça grande e dedos finos, curvado, de avental de couro; mãos e antebraços pretos
+      e azuis de queimadura de frio, veios de metal fosco nos dedos, unhas de lasca de ferro; chamas
+      azuis miúdas nos pulsos e geada na manga.
+    como_se_luta: >-
+      Gela a mão do alvo no cabo da arma, que fica presa até descongelar no fogo. Aqueça a mão numa
+      chama e afaste-o da Fornalha.
+    related_entities: [skallgard, clas_tecnologicos]
+    arte:
+      visual: >-
+        Homem baixo, de cabeça grande e dedos longos e finos, costas curvadas, avental grosso de couro
+        chamuscado. Mãos e antebraços pretos com manchas azul-arroxeadas de queimadura de frio; veios de
+        metal cinza-fosco correndo dos nós dos dedos até o pulso; unhas como lascas de ferro. Pequenas
+        chamas azuis pálidas acendem em volta dos pulsos, e geada branca sobe pela manga da camisa.
+      composicao: >-
+        Interior da Fornalha de Vorr: bigorna escura, foles, brasas laranja ao fundo e chamas azuis
+        dançando no chão; o Ferreiro em primeiro plano agarrando pela lâmina a espada de um caçador alto, o
+        aço ficando azul e rachando da mão para a ponta; o caçador, uma cabeça e meia mais alto, dá a
+        escala.
+      evitar: Mago de gelo, ferreiro anão, homem de fogo azul, armadura de cristal. É um artesão de carne com as mãos estragadas pelo ofício.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lascador_morno
+    vaga: 12
+    nome: Lascador Morno
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:116", "lore_nova/items.txt:66"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Um garimpeiro clandestino de Cristal-Sanguíneo que lascou os afloramentos com as mãos nuas, porque
+        luva de couro não aguenta. As mãos viraram cristal vermelho-escuro até o pulso, mornas, e acima
+        delas a pele dos braços se soltou em tiras secas e deixou a carne viva à mostra. Cada lasca que
+        tocou lhe deu a morte que a fez, e ele as viu todas: tem os olhos sempre úmidos, as pálpebras
+        vermelhas, e a boca mexe sem som, contando. O alforje de lascas que traz no peito puxa o ombro para
+        baixo.
+    silhueta: Um homem magro com as duas mãos vermelhas e translúcidas, encolhido sob um alforje de pedras que brilham fraco.
+    comportamento: >-
+      Vende lascas a quem paga e mata quem chega perto do afloramento dele. Atira as lascas de longe, e
+      cada uma carrega uma morte que não é de quem a recebe.
+    papel_tatico: artilharia
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lascador_morno_morte_alheia
+      frase: >-
+        Atira lascas de Cristal-Sanguíneo; quem é atingido revive a morte de outro e, na rodada seguinte,
+        a Carta que escolher é trocada por outra da mão, ao acaso.
+    contra_jogo: Chegar perto; de perto ele não atira, e as mãos de cristal racham num golpe.
+    gancho: >-
+      Extrair Cristal-Sanguíneo acelera o despertar local da Rede, e os clãs tecnológicos só o estudam de
+      longe. O Lascador é quem tira assim mesmo e vende no escuro.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} bate duas lascas vermelhas uma na outra, e as duas soltam um gemido de gente."
+    description: Garimpeiro clandestino de Cristal-Sanguíneo com as mãos viradas cristal até o pulso; atira lascas que fazem quem é atingido reviver a morte de outro.
+    perigo: Médio
+    lore: >-
+      Quem toca Cristal-Sanguíneo vê a morte que o fez, e extrair as pedras acelera o despertar da Rede
+      no lugar. Os clãs tecnológicos as estudam de longe. Os Lascadores não: lascam os afloramentos com as
+      mãos nuas e vendem as pedras a quem paga, no sul e nos túneis. Cada lasca lhes dá uma morte, e
+      depois de algumas centenas as mãos viram pedra também. Choram o tempo todo, sem tristeza, e atiram
+      as lascas em quem chega perto.
+    aparencia: >-
+      Homem magro de capa remendada; mãos de cristal vermelho-escuro até o pulso, translúcidas e mornas;
+      pele dos braços solta em tiras sobre a carne viva; olhos úmidos de pálpebras vermelhas; alforje de
+      lascas brilhando fraco no peito.
+    como_se_luta: >-
+      Atira lascas que fazem o alvo reviver a morte de outro e jogar a Carta errada na rodada seguinte.
+      Chegue perto: de perto ele não atira, e as mãos racham.
+    related_entities: [skallgard, mon_cristal_sanguineo]
+    arte:
+      visual: >-
+        Homem magro e curvado de capa de pele remendada e capuz caído. As duas mãos são de cristal
+        vermelho-escuro, facetado e translúcido até o pulso, com um brilho morno por dentro; acima delas
+        a pele dos antebraços está solta em tiras secas, mostrando carne vermelha. Olhos marejados de
+        pálpebras inchadas, lágrimas congeladas no rosto. Um alforje de couro cheio de lascas vermelhas
+        pende no peito.
+      composicao: >-
+        Afloramento de Cristal-Sanguíneo saindo do gelo como dentes vermelhos, numa encosta à noite; o
+        Lascador ajoelhado junto dele, virando-se para atirar uma lasca; ao fundo, dois caçadores com
+        lanternas se aproximando, de tamanho humano. A única cor quente é o vermelho do cristal.
+      evitar: Mago de sangue, golem de rubi, homem de cristal inteiro, joalheiro rico. É um garimpeiro pobre com as mãos perdidas para a pedra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_escuta_do_sinal
+    vaga: 13
+    nome: Escuta do Sinal
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: clas_tecnologicos
+      refs: ["lore_nova/factions.txt:206", "lore_nova/creatures.txt:251", "lore_nova/daily_life.txt:208"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: pequena
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um leitor da Câmara do Sinal, pequeno, de cabeça grande e dedos finos, que mandou abrir os ouvidos
+        para escutar melhor o gelo. Atrás das orelhas, duas cornetas de latão estão aparafusadas no osso
+        do crânio, e a pele em volta dos parafusos é rosada e mal fechada. Não dorme direito há anos: as
+        olheiras são fundas e os ombros tremem. Pelo mesmo latão ele chama por baixo do gelo, e a
+        mandíbula vibra com um zumbido grave quando sopra.
+    silhueta: Um homem pequeno de cabeça grande com duas cornetas de metal saindo de trás das orelhas, agachado com o rosto no chão.
+    comportamento: >-
+      Fica longe da luta, deitado com a corneta no gelo, ouvindo. Quando ouve passos que não conhece,
+      sopra, e o som corre por baixo da neve até os outros. Se alguém o alcança, bate com a chave de latão
+      que traz no cinto.
+    papel_tatico: suporte
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: clas_tecnologicos
+    mecanica_assinatura:
+      carta: cri_escuta_do_sinal_chamado_sob_o_gelo
+      frase: Chama pelo gelo; a cada duas rodadas em que ninguém o derruba, um lacaio novo entra na cena.
+    contra_jogo: Calar o Escuta antes de tudo; é pequeno e não pega em arma, e uma corneta quebrada já corta o chamado.
+    gancho: >-
+      A Câmara do Sinal ouve o que se mexe sob o gelo, e alguns leitores ouviram uma frequência que não
+      deviam. O Escuta é o que não parou de ouvir.
+    habitat: [skallgard, sk_salao_do_jarl]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} encosta a corneta do crânio no gelo e sopra um zumbido grave."
+    description: Leitor da Câmara do Sinal com duas cornetas de latão aparafusadas no crânio; deitado no gelo, chama os outros por baixo da neve.
+    perigo: Baixo
+    lore: >-
+      A Câmara do Sinal mede o que se mexe sob o gelo de Skallgard, e os leitores fazem turnos de escuta
+      que não acabam. Alguns quiseram ouvir melhor e mandaram aparafusar cornetas no osso do crânio. Os
+      que fizeram isso ouviram coisas que os outros não ouvem, e alguns ouviram uma frequência mais grave
+      que não corresponde à aurora. Não dormem mais direito. Na rua, deitam-se com o ouvido no chão, e
+      quando sopram pelas cornetas, alguém sempre vem.
+    aparencia: >-
+      Homem pequeno de cabeça grande e dedos finos, olheiras fundas, ombros trêmulos; duas cornetas de
+      latão aparafusadas no crânio atrás das orelhas, pele rosada e mal fechada em volta dos parafusos;
+      chave de latão no cinto.
+    como_se_luta: >-
+      Chama pelo gelo, e a cada duas rodadas de pé um lacaio novo entra na cena. Cale-o primeiro; quebrar
+      uma corneta já corta o chamado.
+    related_entities: [skallgard, sk_salao_do_jarl, clas_tecnologicos]
+    arte:
+      visual: >-
+        Homem baixo e franzino, cabeça desproporcionalmente grande, dedos longos e finos, roupa de lã
+        acolchoada dos tecnológicos. Atrás de cada orelha, uma corneta curva de latão, do tamanho de um
+        antebraço, presa ao crânio por três parafusos, com a pele em volta inflamada. Olheiras escuras,
+        boca entreaberta, mandíbula tensa. Uma chave de latão pesada pendurada no cinto.
+      composicao: >-
+        Rua estreita de túnel aquecido em Skallgard, chão de gelo e pedra; o Escuta deitado de lado com a
+        corneta encostada no chão, olhos abertos; ao fundo, na boca do túnel, sombras de dois vultos
+        chegando; um cano de vapor na parede, da altura dele em pé, dá a escala. Luz laranja dos túneis.
+      evitar: Robô, autômato, músico de corneta, mago de som. É um homem pequeno com metal aparafusado na cabeça para ouvir.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_caldeira_de_peito
+    vaga: 14
+    nome: Caldeira de Peito
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: clas_tecnologicos
+      refs: ["lore_nova/factions.txt:206", "lore_nova/locations.txt:226"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um tecnológico que, proibido de pegar em arma, mandou pôr uma caldeira do Ventre dentro do próprio
+        peito para vestir uma armação de ferro movida a vapor. O esterno foi serrado e as costelas abertas
+        para caber a fornalha, e a pele em volta cozinhou e cicatrizou lisa e brilhante. Canos saem do
+        peito e correm pelos ombros e braços até os pistões da armação, que dobra o tamanho dele. Dentro
+        dela se vê o corpo pequeno, de dedos finos, preso por correias, e o rosto vermelho de calor.
+    silhueta: Uma armação de ferro alta com um homem pequeno preso dentro e uma fornalha acesa no lugar do peito, soltando vapor pelos ombros.
+    comportamento: >-
+      Fica de guarda na entrada dos túneis aquecidos. Não ataca primeiro; segura a passagem, e quem tenta
+      passar leva o jato de vapor e é jogado de volta.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: clas_tecnologicos
+    mecanica_assinatura:
+      carta: cri_caldeira_de_peito_alivio_de_pressao
+      frase: >-
+        Solta a pressão: todos em contato com ele e com quem ele guarda são empurrados para longe, e quem
+        volta para perto passa pelo vapor e se queima.
+    contra_jogo: Esperar o apito das válvulas e sair do alcance; depois do jato, a caldeira leva uma rodada para encher, e o homem dentro da armação fica à mostra.
+    gancho: >-
+      A regra é que os tecnológicos nunca pegam em arma. A Caldeira não pega: é a arma, e o Ventre é quem
+      o mantém vivo.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [defesa, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "As válvulas no peito de {nome} começam a apitar, uma depois da outra."
+    description: Tecnológico com uma caldeira do Ventre no lugar do esterno, dentro de uma armação de ferro a vapor; guarda a entrada dos túneis com jatos que empurram.
+    perigo: Alto
+    lore: >-
+      Os clãs tecnológicos mantêm Skallgard viva com o calor do Ventre e nunca pegam em arma. Isso não
+      quer dizer que não se defendam. Alguns mandaram pôr uma caldeira dentro do peito, com o esterno
+      serrado e a fornalha entre as costelas, para vestir as armações de ferro que a Fornalha de Vorr
+      faz. Não vivem longe dos túneis: a caldeira precisa de carvão e o corpo precisa da caldeira. Ficam
+      nas entradas, e quem quer passar por eles leva vapor.
+    aparencia: >-
+      Armação de ferro a vapor com o dobro da altura de um homem; dentro, preso por correias, um homem
+      pequeno de dedos finos com o esterno aberto e uma fornalha acesa entre as costelas, pele cozida e
+      lisa em volta; canos do peito aos pistões; vapor pelos ombros.
+    como_se_luta: >-
+      Guarda a passagem e, com um jato de vapor, empurra para longe quem encosta nele ou em quem ele
+      protege. Saia no apito das válvulas e ataque enquanto a caldeira enche.
+    related_entities: [skallgard, clas_tecnologicos]
+    arte:
+      visual: >-
+        Exoesqueleto de ferro escuro e rebitado, de quase três metros, com pistões nos joelhos e cotovelos
+        e válvulas de latão nos ombros soltando vapor. Dentro dele, preso por correias de couro, um homem
+        pequeno e magro de cabeça grande; o peito dele está aberto e no lugar do esterno há a boca de uma
+        pequena fornalha com brasas laranja, emoldurada por pele lisa e brilhante de cicatriz de queimadura.
+        Canos de cobre saem do peito para os braços da armação.
+      composicao: >-
+        Entrada de um túnel aquecido de Skallgard, arco de pedra com neve do lado de fora e luz laranja
+        do lado de dentro; a Caldeira de pé no arco, de frente, braços abertos; um caçador de peles diante
+        dela, que chega à altura do peito da armação, sendo empurrado por um jato de vapor. Contraluz
+        laranja, vapor ocupando a metade de cima do quadro.
+      evitar: Robô, golem de ferro, mecha, cavaleiro de armadura. É um homem de carne pequeno, aberto no peito, dentro de uma armação.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_andas_de_caribu
+    vaga: 15
+    nome: Andas de Caribu
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: renegados_ermo
+      refs: ["lore_nova/creatures.txt:166", "lore_nova/factions.txt:219", "lore_nova/creatures.txt:82"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um Renegado do Ermo que perdeu os dois pés para o frio e anda sobre andas de osso de caribu,
+        cravadas nas canelas abaixo do joelho e presas com tiras de couro cru que entraram na carne. Fica
+        da altura de dois homens. As pernas de osso terminam em pontas largas como pás, que não afundam na
+        neve funda. Os braços são compridos e secos, as mãos têm os dedos pretos de geada, e ele veste uma
+        capa de pele de caribu com a cabeça do bicho de capuz.
+    silhueta: Um vulto de capuz com galhada, alto como dois homens, andando a passos largos sobre duas pernas finas de osso.
+    comportamento: >-
+      Segue as expedições de longe pela neve funda, onde ninguém mais anda depressa, e acha a presa pelo
+      vapor da respiração. Chega, chuta de cima, por cima do escudo, e se afasta em três passos para onde
+      a neve engole quem o segue.
+    papel_tatico: batedor_rapido
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: renegados_ermo
+    mecanica_assinatura:
+      carta: cri_andas_de_caribu_chute_do_alto
+      frase: >-
+        Chuta de cima com a ponta de osso: o golpe passa por cima da defesa preparada.
+    contra_jogo: Derrubar as andas; um golpe nas tiras da canela o põe de joelhos na neve, onde ele não anda.
+    gancho: >-
+      Os Renegados conhecem as rotas porque já foram caçadores. O das Andas aprendeu que na neve funda
+      manda quem tem perna comprida, e o frio já tinha levado os pés mesmo.
+    habitat: [skallgard]
+    inspiracao:
+      - fonte: costume pastoril (andas dos pastores das Landes, França)
+        referencia: os pastores que cruzavam os charcos das Landes sobre pernas de pau altas
+        tomou: andar alto sobre terreno onde os outros afundam
+        distancia: as andas são de osso cravado nas canelas de quem perdeu os pés, e ele as usa para chutar de cima e fugir pela neve funda; nada do pastor sobrou
+    padrao: [ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} ergue uma das andas de osso acima da sua cabeça, equilibrado na outra."
+    description: Renegado do Ermo sem os pés, sobre andas de osso de caribu cravadas nas canelas; alto como dois homens, chuta de cima por cima do escudo e se afasta pela neve funda.
+    perigo: Médio
+    lore: >-
+      Os Renegados do Ermo sobrevivem fora de Skallgard e atacam expedições por suprimentos. O frio leva
+      os pés de muitos. Um deles cravou ossos de caribu nas canelas e aprendeu a andar de novo, alto como
+      dois homens, sobre a neve funda onde todo mundo afunda até a cintura. Outros copiaram. Seguem as
+      expedições de longe pelo vapor da respiração, chutam de cima e se afastam pela neve. Os caçadores miram as
+      tiras da canela, porque de joelhos na neve um Andas não vai a lugar nenhum.
+    aparencia: >-
+      Renegado magro de capa de pele de caribu com a cabeça e a galhada do bicho como capuz, alto como dois
+      homens sobre andas de osso de caribu cravadas nas canelas, tiras de couro cru afundadas na carne,
+      pontas largas como pás, dedos pretos de geada.
+    como_se_luta: >-
+      Chuta de cima com a ponta de osso, por cima da defesa preparada. Acerte as tiras da
+      canela e ele fica de joelhos.
+    related_entities: [skallgard, renegados_ermo]
+    arte:
+      visual: >-
+        Homem magro e de braços compridos, vestido com uma capa de pele de caribu cuja cabeça, com a
+        galhada, serve de capuz. Abaixo dos joelhos, em vez de pés, duas andas de osso longo e claro, da
+        altura de um homem, cravadas nas canelas e amarradas com tiras de couro cru que afundaram na carne;
+        as pontas das andas terminam em pás largas de osso. Mãos de dedos pretos de geada segurando uma
+        lança curta; uma das andas erguida no ar, no meio de um chute.
+      composicao: >-
+        Neve funda e fofa ao entardecer azul; o Andas de perfil, chutando de cima por sobre o escudo erguido de um caçador; atrás
+        dele, outro caçador afundado na neve até a cintura, e a cabeça do caçador fica na
+        altura do joelho de osso do Andas. Rastro de buracos espaçados na neve.
+      evitar: Homem-cervo, wendigo, espírito da floresta, palhaço de pernas de pau. É um homem mutilado sobre ossos de caribu, de capa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_ticao_do_juramento
+    vaga: 16
+    nome: Tição do Juramento
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:229", "lore_nova/factions.txt:191", "lore_nova/locations.txt:232"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: pequena
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Uma coisa pequena e curvada feita do que sobra da fogueira do Fogo Alto: lenha queimada que não
+        virou cinza, gordura pingada dos assados e osso roído. Tem braços e pernas de tição, rachados, com
+        brasa viva nas rachaduras, e uma cabeça de crânio de caribu queimado com dois carvões acesos nas
+        órbitas. A barriga é uma bola de sebo derretido que escorre e torna a pegar fogo. Rasteja de
+        quatro, apoiada nas mãos de carvão, e deixa uma risca preta no chão.
+    silhueta: Uma coisinha curvada de lenha queimada com brasas nas juntas e um crânio de caribu no lugar da cabeça.
+    comportamento: >-
+      Sai da fogueira do Salão depois que o Juramento é feito diante do assento vazio, e circula entre as
+      mesas soprando a própria brasa. Onde passa, quem estava ferido lembra quem o feriu.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ticao_do_juramento_rancor_atiçado
+      frase: Atiça o rancor; o inimigo que o jogador ferir por último revida no golpe seguinte com força dobrada.
+    contra_jogo: Apagá-lo primeiro, com neve ou água; e não deixar inimigo ferido de pé enquanto ele sopra.
+    gancho: >-
+      Uma noite por ano, os dois clãs juram a trégua e bebem sob o mesmo teto, odiando-se. Vhrak não cria
+      ódio; o Tição é o que esse ódio deixa na fogueira.
+    habitat: [sk_salao_do_jarl, sk_farol_chama_negra]
+    inspiracao: []
+    padrao: [reforco_proprio, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} sopra a própria brasa, e os inimigos feridos rosnam ao mesmo tempo."
+    description: Cria de Vhrak feita de lenha queimada, sebo e crânio de caribu da fogueira do Fogo Alto; atiça o rancor de quem foi ferido.
+    perigo: Baixo
+    lore: >-
+      Uma noite por ano, sob o Farol, os clãs de combate e os tecnológicos renovam a trégua do Fogo Alto
+      diante de um assento vazio e bebem sob o mesmo teto, odiando-se. Vhrak não cria ódio; aumenta o que
+      já existe entre os que estão perto. O resto desse ódio fica na fogueira, e às vezes toma corpo do que
+      encontra ali: lenha, sebo e os ossos do banquete. O Tição sai das brasas quando o salão esvazia,
+      e quem ainda está ferido da noite lembra, de repente, quem o feriu.
+    aparencia: >-
+      Coisinha curvada de lenha queimada, braços e pernas de tição rachados com brasa viva nas rachaduras,
+      cabeça de crânio de caribu queimado com carvões acesos nas órbitas, barriga de sebo derretido
+      pingando fogo, risca preta atrás.
+    como_se_luta: >-
+      Atiça o rancor: o último inimigo que você feriu revida com força dobrada. Apague-o primeiro, com neve
+      ou água, e não deixe inimigos feridos de pé.
+    related_entities: [sk_salao_do_jarl, sk_farol_chama_negra, npc_vhrak]
+    arte:
+      visual: >-
+        Criatura do tamanho de um cão pequeno, de quatro, feita de achas de lenha carbonizadas como
+        membros, com rachaduras laranja de brasa viva nas juntas. A cabeça é um crânio de caribu
+        enegrecido, com tocos de galhada serrada, e dois carvões acesos nas órbitas. O ventre é uma bola de sebo
+        amarelado que escorre e pinga chamas pequenas. Ossos roídos de banquete enfiados no corpo.
+      composicao: >-
+        Salão de madeira negra depois do Juramento: mesas compridas vazias, canecas tombadas, fogueira
+        alta baixando ao fundo; uma cadeira grande e vazia no centro, em destaque; o Tição saindo das
+        brasas em primeiro plano, pequeno; um caçador dormindo debruçado na mesa, com o braço enfaixado,
+        dá a escala. Luz só da fogueira.
+      evitar: Diabrete, demônio de fogo, elemental de brasa, salamandra. É lenha, sebo e osso do banquete, juntos num corpo pequeno e torto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_colecionador_de_poses
+    vaga: 17
+    nome: Colecionador de Poses
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:214", "lore_nova/locations.txt:228", "lore_nova/npcs.txt:391"]
+    anatomia:
+      plano_corporal: composto
+      material: vidro_cristal
+      escala: enorme
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Um corpo enorme montado com pedaços das estátuas da Fortaleza de Vorr: braços, pernas e troncos
+        de aventureiros presos pelo Sopro, ainda conscientes, arrancados das bases e encaixados uns nos
+        outros em volta de um tronco de carne preta e úmida que pulsa. A carne de cada pedaço é de vidro
+        limpo, e dentro dela os músculos estão parados no gesto em que o Sopro os pegou: um braço erguendo
+        espada, uma mão tapando o rosto, uma perna em pleno passo. Os olhos das cabeças que ele carrega se
+        mexem. Anda sobre quatro pernas de estátua desiguais, e cada passo tilinta.
+    silhueta: Um monte alto de estátuas quebradas encaixadas umas nas outras, andando sobre pernas desiguais, com braços parados em gestos diferentes.
+    comportamento: >-
+      Vive nos salões altos da Fortaleza e gosta das estátuas porque elas sentem tudo e não se mexem.
+      Arranca as que quer, encaixa no corpo e as leva consigo. Com gente viva, faz o mesmo: tira a pose.
+    papel_tatico: controlador
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_colecionador_de_poses_pose_guardada
+      frase: >-
+        Guarda a pose do alvo: na rodada seguinte, o alvo é obrigado a repetir a última Carta que jogou, se
+        ela ainda estiver na mão.
+    contra_jogo: Jogar uma Carta barata antes da forte, para que a pose guardada seja a barata; e quebrar as pernas de estátua, que são de vidro.
+    gancho: >-
+      As estátuas da Fortaleza estão conscientes há gerações. A crueldade de Maalrek gosta disso mais do
+      que de qualquer outra coisa no Norte, e o que ela deixou ali tomou carne das próprias estátuas.
+    habitat: [sk_fortaleza_vorr]
+    inspiracao: []
+    padrao: [enfraquecer, ataque_multiplo, ataque, defesa]
+    a_cada_n: 4
+    telegrafo: "{nome} estende um dos braços de vidro e copia a postura de quem está diante dele."
+    description: Cria de Maalrek montada com estátuas conscientes da Fortaleza de Vorr, encaixadas em volta de um tronco de carne preta; guarda a pose de quem enfrenta.
+    perigo: Extremo
+    lore: >-
+      As estátuas da Fortaleza de Vorr são aventureiros e Gigantes que o Sopro pegou, presos num instante
+      e ainda conscientes. Maalrek gosta do sofrimento que se vê, e nenhum lugar do Norte tem tanto
+      sofrimento parado à vista. O que ele deixou ali tomou carne das próprias estátuas: arranca as que
+      quer das bases e as encaixa no corpo, e anda com elas pelos salões. Os olhos das cabeças que leva
+      ainda se mexem. Os poucos que voltaram dizem que ele não tem pressa de matar ninguém; prefere
+      guardar.
+    aparencia: >-
+      Corpo enorme de estátuas de vidro limpo encaixadas em volta de um tronco de carne preta e úmida;
+      dentro de cada pedaço, músculos parados num gesto, braços erguendo armas, mãos tapando rostos;
+      cabeças de olhos vivos; quatro pernas de estátua desiguais.
+    como_se_luta: >-
+      Guarda a pose do alvo e o obriga a repetir a última Carta que jogou. Jogue uma Carta barata antes
+      da forte e quebre as pernas de vidro.
+    related_entities: [sk_fortaleza_vorr, npc_maalrek]
+    arte:
+      visual: >-
+        Criatura de seis metros feita de corpos humanos e pedaços de corpos gigantes de vidro
+        transparente, encaixados de qualquer jeito em volta de um tronco central de carne preta, úmida e
+        pulsante. Dentro de cada pedaço de vidro se veem músculos e veias parados no meio de um gesto: um
+        braço erguendo uma espada, uma mão tapando um rosto, uma perna dando um passo. Várias cabeças de
+        vidro presas ao corpo, com olhos vivos que se mexem. Quatro pernas de estátua de tamanhos diferentes.
+      composicao: >-
+        Salão imenso da Fortaleza de Vorr, porta de vinte metros ao fundo, bases de estátuas vazias ao
+        longo das paredes; o Colecionador no centro, arrancando uma estátua inteira da base com dois
+        braços; um aventureiro de tamanho humano em primeiro plano, de costas, espada erguida, na mesma
+        pose de um dos braços da criatura. Luz fria vinda de cima.
+      evitar: Golem de cristal, gigante de gelo, elemental, monte de cadáveres comuns. É feito de estátuas conscientes de vidro em volta de carne viva.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_feltro_do_ventre
+    vaga: 18
+    nome: Feltro do Ventre
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:261", "lore_nova/creatures.txt:184", "lore_nova/factions.txt:206"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Uma coisa comprida e chata, do tamanho de um homem deitado, feita do feltro cinzento que forra os
+        canos do Ventre, enrolada em volta deles como uma faixa. Não tem patas nem mãos: as bordas se
+        desfiam em franjas grossas, e cada fio termina numa farpa de cobre arrancada dos rebites, que
+        crava no que toca. Por dentro do feltro corre uma espinha de pinos de cobre emendados, e ela se
+        dobra como uma cobra. Não tem rosto; tem uma boca vertical no meio do corpo, com dentes de
+        arruela. Onde se enrola, o cano fica frio e se cobre de geada: não se esquenta, só tira.
+    silhueta: Uma faixa cinzenta e comprida enrolada num cano, com franjas espetadas soltas pelas bordas.
+    comportamento: >-
+      Vive nos túneis do Ventre, enrolado nos canos mais quentes, e as Doninhas-Térmicas fogem de onde
+      ele está. Os clãs de combate dizem que é dos tecnológicos; os tecnológicos dizem que é dos clãs.
+      Quer o calor que os outros têm, para que não o tenham.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_feltro_do_ventre_o_vizinho_paga"
+      frase: >-
+        Enrola-se num herói e faz o vizinho pagar: todo Fôlego que o enrolado recuperar sai do herói
+        mais perto dele; o Feltro não fica com nada.
+    contra_jogo: >-
+      Afastar-se de quem está enrolado até soltá-lo, e queimar ou cortar o feltro rente ao corpo;
+      sozinho, o enrolado não tem de quem tirar.
+    gancho: >-
+      Skallgard se divide entre quem tem o calor do Ventre e quem morre caçando lá fora. Veth não quer o
+      calor para si; quer que o outro não o tenha.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} desenrola-se do cano e sacode as franjas na direção do seu calor."
+    description: >-
+      Cria de Veth feita do feltro dos canos do Ventre, com franjas de farpas de cobre; esfria o que
+      envolve e faz o vizinho pagar pelo calor de quem envolve.
+    perigo: Médio
+    lore: >-
+      O Ventre aquece Skallgard, e os clãs tecnológicos o controlam. Os clãs de combate morrem lá fora e
+      voltam para dormir no calor dos outros. Veth não quer o que o outro tem; quer que o outro não tenha.
+      Nos túneis, o resto dessa inveja tomou corpo do que havia à mão: o feltro dos canos e o cobre dos
+      rebites. O Feltro do Ventre se enrola nos canos mais quentes e os esfria sem se aquecer. Cada clã
+      jura que ele é do outro.
+    aparencia: >-
+      Faixa comprida e chata de feltro cinzento, do tamanho de um homem deitado, enrolada num cano;
+      bordas desfiadas em franjas grossas com farpas de cobre na ponta; espinha de pinos de cobre por
+      dentro; boca vertical com dentes de arruela; geada onde se enrola.
+    como_se_luta: >-
+      Enrolado num herói, tira do vizinho todo Fôlego que o enrolado recupera. Afaste-se do enrolado e
+      queime o feltro.
+    related_entities: [skallgard, npc_veth, clas_tecnologicos]
+    arte:
+      visual: >-
+        Criatura comprida e achatada como uma faixa de feltro cinzento grosso, do tamanho de um homem
+        deitado, enrolada em espiral num cano de cobre. As bordas se desfiam em franjas grossas, cada fio
+        terminando numa farpa de cobre esverdeado. Sob o feltro, o relevo de uma espinha de pinos de
+        cobre emendados. No meio do corpo, uma fenda vertical de boca com dentes de arruela. Geada branca
+        se espalhando pelo cano a partir de onde ele se enrola.
+      composicao: >-
+        Túnel do Ventre com canos grossos de cobre correndo pela parede, alguns soltando vapor; o Feltro
+        enrolado num cano acima da cabeça, metade da tubulação já branca de geada; um engenheiro pequeno
+        de lanterna na mão, de pé no chão do túnel, dá a escala, olhando para cima. Luz laranja dos canos
+        contra o branco da geada.
+      evitar: Tapete voador, rolo, pergaminho, cobra, sombra, mãos, cera. É feltro de cano com farpas de cobre, que esfria em vez de aquecer.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_aperto_da_tregua
+    vaga: 19
+    nome: Aperto da Trégua
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_skarath
+      refs: ["lore_nova/npcs.txt:336", "lore_nova/factions.txt:191", "lore_nova/locations.txt:232"]
+    anatomia:
+      plano_corporal: acoplado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Dois braços de homem, arrancados no ombro, que nunca soltaram o aperto de mãos. Um é grosso e
+        tatuado, de caçador dos clãs de combate; o outro é fino, de dedos longos, de tecnológico. As mãos
+        cresceram palma contra palma, os polegares travados por cima, e entre elas se abre uma boca de dentes miúdos.
+        Os dois braços andam apoiados nos ombros arrancados, onde a carne nua virou sola
+        dura, e os cotovelos dobram como joelhos. Cada braço puxa para um lado, e o aperto nunca se solta.
+    silhueta: Dois braços presos num aperto de mãos, andando sobre os ombros, com uma boca aberta entre as palmas.
+    comportamento: >-
+      Aparece perto do Salão nas noites de trégua, entre os que bebem juntos. Chega devagar, de mãos
+      dadas consigo mesmo, como quem vem fazer as pazes, e espera que alguém lhe aperte a mão.
+    papel_tatico: emboscador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_aperto_da_tregua_pacto_de_um_lado"
+      frase: >-
+        Agarra um herói pelo pulso num aperto de clã e o põe em paz com ele: enquanto o aperto durar,
+        esse herói não pode atacar o Aperto, e o Aperto o ataca à vontade; outro herói que golpeie as
+        mãos unidas desfaz o pacto.
+    contra_jogo: >-
+      Um companheiro golpeia o aperto das mãos, de preferência com fogo, que racha a carne; e ninguém
+      aperta a mão que ele estende.
+    gancho: >-
+      O Juramento do Fogo Alto é uma trégua entre gente que se odeia, renovada com um aperto de mãos
+      diante de um assento vazio. Skarath gosta mais das tréguas que das guerras.
+    habitat: [sk_farol_chama_negra, sk_salao_do_jarl]
+    inspiracao: []
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} estende o aperto das mãos para você, aberto, como quem oferece paz."
+    description: >-
+      Cria de Skarath feita de dois braços de clãs rivais presos num aperto de mãos; prende quem lhe
+      aperta a mão num pacto que só vale para um lado.
+    perigo: Médio
+    lore: >-
+      Skarath é a satisfação de virar contra quem confia, e no Norte nada se confia tanto, nem tão mal,
+      quanto a trégua do Fogo Alto. Uma noite por ano, um caçador e um tecnológico apertam as mãos diante
+      do assento vazio. O que Skarath deixou perto do Salão tomou carne desse gesto: dois braços que não
+      se soltam, um de cada lado, com uma boca no lugar onde as palmas se encontram. Chega como quem vem
+      fazer as pazes. Os velhos dos clãs mandam os jovens nunca apertar a mão de ninguém depois da
+      meia-noite do Juramento, e não explicam por quê.
+    aparencia: >-
+      Dois braços humanos arrancados no ombro, um grosso e tatuado, outro fino de dedos longos, presos
+      num aperto de palma contra palma que não se solta; boca de dentes miúdos entre as palmas; anda
+      sobre os ombros, com os cotovelos dobrando como joelhos.
+    como_se_luta: >-
+      Prende um herói num aperto que o impede de atacá-lo, e bate nele à vontade. Outro herói desfaz o
+      pacto golpeando as mãos unidas, de preferência com fogo.
+    related_entities: [sk_farol_chama_negra, sk_salao_do_jarl, npc_skarath, clas_combate, clas_tecnologicos]
+    arte:
+      visual: >-
+        Criatura da altura de um homem formada por dois braços humanos inteiros, arrancados no ombro:
+        um musculoso e tatuado com marcas de clã, outro magro de dedos longos e finos. No alto, as duas
+        mãos fundidas num aperto de palma contra palma, polegares cruzados por cima, com uma boca vertical de dentes
+        miúdos se abrindo entre as palmas. Os ombros arrancados, de carne calejada, servem de pés; os
+        cotovelos dobram para trás como joelhos de ave.
+      composicao: >-
+        Exterior do Salão do Juramento à noite, porta aberta com luz de fogueira saindo; um caçador de pé
+        com a caneca na mão, de tamanho humano; o Aperto diante dele, da mesma altura, com o aperto das mãos
+        estendido como quem oferece um cumprimento. Neve caindo, a silhueta do Farol ao longe.
+      evitar: Mão gigante, dedos entrelaçados, demônio com chifres, zumbi, monstro de muitos braços. São só dois braços de rivais presos num aperto que não se solta.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_enegrecido_que_espera
+    vaga: 20
+    nome: Enegrecido que Espera
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_fehk
+      refs: ["lore_nova/npcs.txt:306", "lore_nova/creatures.txt:198", "lore_nova/races.txt:344"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: grande
+      locomocao: rasteja
+      percepcao: medo_emocao
+      texto: >-
+        Um caçador que perdeu as mãos e os pés para o frio e foi deixado nas bordas de Skallgard, e que
+        não morreu. Os quatro cotos pretos de gangrena cresceram em vez de cair: viraram quatro tocos
+        grossos de carne morta, do tamanho de troncos, sobre os quais o corpo se arrasta de bruços, inchado
+        até o tamanho de um urso. A pele das costas rachou e mostra a espinha e as costelas, escuras. A
+        cabeça ficou pequena, enfiada entre os ombros, e a boca não fecha. Cheira a carne queimada de frio.
+    silhueta: Um corpo inchado do tamanho de um urso, de bruços sobre quatro tocos pretos, deitado atravessado numa porta.
+    comportamento: >-
+      Fica onde os amputados do frio são deixados para trás, nas bordas de Skallgard, deitado e calmo.
+      Não corre atrás de ninguém: quem chega perto para, e ele morde quem ficou parado.
+    papel_tatico: controlador
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_enegrecido_que_espera_hora_certa"
+      frase: >-
+        O herói mais perto dele começa cada rodada parado: não se move nem recua, e acha que foi
+        escolha; quem o ataca nessa rodada se solta para a seguinte, e quem só se defende continua
+        parado.
+    contra_jogo: >-
+      Atacar em vez de esperar: quem bate nele sacode o torpor. E fogo, que a carne morta de geada não
+      aguenta.
+    gancho: >-
+      No Norte o fraco não sobrevive ao inverno, e isso é tido por correto; ninguém volta para buscar os
+      que ficaram. Fehk é a razão excelente para não voltar.
+    habitat: [skallgard]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: >-
+      {nome} ergue a cabeça devagar para quem está mais perto, e a respiração dele fica calma, quase
+      sensata.
+    description: >-
+      Cria de Fehk num caçador que o frio deixou sem mãos e sem pés porque ficou parado esperando a hora
+      certa; os cotos pretos cresceram em tocos, e quem chega perto dele também para.
+    perigo: Médio
+    lore: >-
+      Os Nascidos do Gelo acham correto que o fraco não sobreviva ao inverno. Quem perde as mãos e os
+      pés para o frio é deixado nas bordas da cidade, e ninguém volta para buscá-lo, por razões que
+      todos acham sensatas. Fehk, a Covardia, vive dessas razões. O que ele deixou ali tomou um desses
+      corpos antes da morte: um caçador que, numa nevasca, achou mais sensato esperar a hora certa do
+      que andar, e esperou até as mãos e os pés ficarem pretos. Os cotos cresceram em vez de cair, e o
+      corpo inchou até o tamanho de um urso. O Enegrecido não persegue. Quem chega perto dele começa a
+      achar que o melhor é não se mexer.
+    aparencia: >-
+      Homem inchado até o tamanho de um urso, de bruços sobre quatro tocos grossos de carne preta de
+      gangrena no lugar das mãos e dos pés; costas rachadas mostrando espinha e costelas escuras; cabeça
+      pequena entre os ombros, boca aberta.
+    como_se_luta: >-
+      Deixa parado o herói mais perto dele; quem o ataca se solta, quem só se defende fica. Bata em vez
+      de esperar, e use fogo.
+    related_entities: [skallgard, npc_dorrhen]
+    arte:
+      visual: >-
+        Corpo humano inchado até o tamanho de um urso, de bruços, apoiado em quatro tocos enormes de carne
+        preta e gangrenada no lugar das mãos e dos pés, sem dedos, grossos como troncos. A pele das costas
+        rachada em fendas largas mostra a coluna e as costelas escurecidas. A cabeça pequena demais,
+        afundada entre os ombros, de cabelo ralo e boca aberta.
+      composicao: >-
+        Porta baixa de madeira de uma casa nas bordas de Skallgard, à noite; o Enegrecido deitado
+        atravessado na soleira, ocupando a passagem inteira; do lado de dentro, um caçador com uma tocha,
+        de pé, com o batente na altura da cabeça dele, dá a escala. Neve na soleira, luz laranja da tocha
+        no preto da carne.
+      evitar: Monte de cadáveres, amálgama de mãos, zumbi, golem de carne. É um homem só, mutilado pelo frio, em que os cotos cresceram.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= SLOTS GENÉRICOS REINVENTADOS (R24) =======================
+  - id: enemy_lobo_invernal
+    vaga: 21
+    nome: Pulga de Forquilha
+    status: reinventada
+    substitui: enemy_lobo_invernal
+    substitui_generico: Lobo das Geleiras
+    ataques: ["Salto da Forquilha"]
+    acoes: ["Salta por cima de quem guarda e morde o que está atrás."]
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:64", "lore_nova/creatures.txt:184"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: salta
+      percepcao: vibracao
+      texto: >-
+        Bicho de neve do tamanho de um cão pequeno, de corpo mole e cinza-azulado, sem asas, com seis
+        pernas curtas e duas antenas grossas. Debaixo da barriga traz uma forquilha de quitina dobrada e
+        travada, que cresceu além do que o corpo aguenta: as pontas atravessaram a própria barriga, que
+        fica aberta mostrando as tripas azuladas, e a mola solta de uma vez e lança o corpo inteiro a dez
+        passos. A boca tem mandíbulas de
+        quitina com dentes finos nos lados. A pele é coberta de escamas miúdas que soltam pó azul quando ele
+        cai no chão.
+    silhueta: Um bicho de seis pernas, mole e cinza, no ar em pleno salto, com uma haste dobrada sob a barriga.
+    comportamento: >-
+      Vive aos milhares na neve das bordas de Skallgard, comendo o que apodrece. Os grandes caçam em bando
+      curto e saltam por cima de quem está na frente para morder quem está atrás.
+    papel_tatico: batedor_rapido
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pulga_de_forquilha_salto
+      frase: Salta por cima de quem guarda e morde o que está protegido; guarda e escudo não a barram.
+    contra_jogo: Pisar a forquilha quando ela trava para saltar; no chão, sem a mola, é mole e lenta.
+    gancho: >-
+      O pó azul nas bordas de Skallgard é vivo. Junto às saídas de vapor do Ventre, alguns cresceram do tamanho de
+      um cão, e o salto cresceu junto.
+    habitat: [skallgard]
+    inspiracao:
+      - fonte: zoologia (colêmbolos, as pulgas-da-neve)
+        referencia: os colêmbolos, que saltam com uma fúrcula dobrada sob o abdômen e cobrem a neve aos milhares
+        tomou: o salto de mola por baixo da barriga
+        distancia: o tamanho de cão, as mandíbulas de quitina e a caça que pula a guarda são de Valoria
+    padrao: [mover, ataque, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} dobra a forquilha embaixo da barriga e trava, tremendo."
+    description: Bicho de neve do tamanho de um cão pequeno, mole e cinza-azulado, que salta com uma forquilha de quitina por cima de quem guarda.
+    perigo: Baixo
+    lore: >-
+      A neve das bordas de Skallgard fica azul em alguns dias, e o azul se mexe: são bichos miúdos que
+      pulam aos milhares. Perto das paredes quentes do Ventre, alguns cresceram do tamanho de um cão, e o
+      salto cresceu junto. Caçam em bandos curtos e pulam por cima de quem está na frente para morder quem
+      está atrás. Os caçadores aprenderam a pisar a forquilha quando ela trava, antes do salto.
+    aparencia: >-
+      Bicho de neve do tamanho de um cão pequeno, corpo mole cinza-azulado sem asas, seis pernas curtas,
+      antenas grossas, forquilha de quitina comprida demais que atravessa a barriga aberta, mandíbulas finas, pó azul soltando das
+      escamas.
+    como_se_luta: >-
+      Salta por cima de quem guarda e morde o que está protegido. Pise a forquilha quando ela trava; no
+      chão, é mole e lenta.
+    related_entities: [skallgard]
+    arte:
+      visual: >-
+        Artrópode sem asas do tamanho de um cão pequeno, corpo mole, segmentado e cinza-azulado, coberto
+        de escamas miúdas que soltam pó azul; seis pernas curtas, duas antenas grossas e curtas, cabeça
+        pequena com mandíbulas finas. Sob o abdômen, uma forquilha longa de quitina, dobrada para a frente
+        e travada; num segundo exemplar, a forquilha solta, o corpo em pleno salto.
+      composicao: >-
+        Neve azulada ao pé de uma muralha de Skallgard com bocas de vapor; um caçador de escudo erguido em
+        primeiro plano; duas Pulgas passando por cima do escudo, no ar, rumo a um carregador agachado atrás
+        dele. A Pulga chega à altura do joelho do caçador. Pó azul suspenso no ar.
+      evitar: Pulga de desenho, gafanhoto, aranha, lobo. É um colêmbolo crescido, mole e sem asas, que salta com uma mola embaixo do corpo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_yeti
+    vaga: 22
+    nome: Corcova Fervente
+    status: reinventada
+    substitui: enemy_yeti
+    substitui_generico: Yeti das Cavernas
+    ataques: ["Investida da Corcova"]
+    acoes: ["Investe de cabeça baixa; ferido na corcova, espirra gordura fervente em todos em volta."]
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:64", "lore_nova/locations.txt:224"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: cera_sebo
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Bisão de pelo ruivo e duro, de cabeça baixa e enorme, com uma corcova alta sobre os ombros que é
+        uma bolsa de gordura derretida. A pele da corcova é fina e quase transparente, e por baixo se vê a
+        gordura laranja que ferve devagar, guardando o calor que o frio tira de todo o resto. A neve derrete
+        onde ele passa, e as patas deixam poças que congelam atrás. Os chifres são curtos e grossos,
+        virados para baixo, e os dentes da frente são largos como pás.
+    silhueta: Um bisão de cabeça baixa com uma corcova alta que brilha laranja por dentro, soltando vapor na neve.
+    comportamento: >-
+      Anda sozinho pelo Ermo atrás de líquen e não foge do frio, porque leva o calor nas costas. Ameaçado,
+      investe de cabeça baixa; ferido na corcova, fica furioso e espirra gordura fervente.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_corcova_fervente_corcova_furada
+      frase: >-
+        Furar a corcova solta gordura fervente que queima todos em contato com ele, inclusive outros
+        inimigos; depois disso ele bate mais forte e anda mais devagar.
+    contra_jogo: Furar a corcova de longe e deixá-lo cansar; quem está colado nele quando ela fura se queima.
+    gancho: >-
+      O frio do Ermo é o Abismo tirando calor do mundo. A Corcova guarda o que tira, e é por isso que os
+      caçadores a querem e a temem.
+    habitat: [skallgard]
+    inspiracao:
+      - fonte: zoologia (corcova de bisão e de camelo)
+        referencia: a corcova de músculo do bisão e a reserva de gordura do camelo
+        tomou: o animal grande que leva a reserva nas costas
+        distancia: a gordura ferve e guarda calor, a pele da corcova é translúcida, e o golpe nela fere todos em volta; é de Valoria
+    padrao: [ataque, ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "A corcova de {nome} acende por dentro, laranja, e a neve em volta começa a chiar."
+    description: Bisão do Ermo com uma corcova de gordura translúcida que ferve e guarda calor; furada, espirra gordura fervente em todos em volta.
+    perigo: Alto
+    lore: >-
+      O frio do Ermo não é clima: é o Abismo tirando calor de tudo. A Corcova Fervente guarda o que tira.
+      É um bisão ruivo de cabeça enorme, e a corcova sobre os ombros é uma bolsa de gordura que ferve
+      devagar por baixo de uma pele quase transparente. A neve derrete onde ele passa. Os caçadores querem
+      a gordura, que queima uma estação inteira, e sabem o preço: quem fura a corcova de perto se queima
+      junto.
+    aparencia: >-
+      Bisão grande de pelo ruivo e duro, cabeça baixa e enorme, chifres curtos virados para baixo; corcova
+      alta de pele fina e translúcida com gordura laranja fervendo dentro; vapor subindo e neve derretida
+      em volta das patas.
+    como_se_luta: >-
+      Investe de cabeça baixa; furada a corcova, espirra gordura fervente em todos em volta e fica mais
+      forte e mais lento. Fure-a de longe.
+    related_entities: [skallgard]
+    arte:
+      visual: >-
+        Bisão massivo de pelo ruivo-escuro, grosso e emaranhado, cabeça enorme e baixa, chifres curtos e
+        grossos curvados para baixo. Sobre os ombros, uma corcova alta e arredondada de pele fina e
+        translúcida, através da qual se vê gordura laranja-dourada borbulhando, com brilho próprio. Vapor
+        subindo da corcova; neve derretida e lama em volta das patas, gelo novo nas poças atrás.
+      composicao: >-
+        Ermo aberto ao crepúsculo azul, neve até os joelhos; a Corcova de perfil, cabeça baixa, prestes a
+        investir; dois caçadores com lanças longas à distância, de tamanho humano, um deles mirando a
+        corcova. A corcova é a fonte de luz quente da cena.
+      evitar: Yeti, macaco das neves, mamute, boi-almiscarado negro em círculo. É um bisão ruivo sozinho com uma corcova que ferve.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_jotun_cinza
+    vaga: 23
+    nome: Crescido do Clã
+    status: reinventada
+    substitui: mon_jotun_cinza
+    substitui_generico: Jötunn de Cinza
+    ataques: ["Pancada de Cima"]
+    acoes: ["Avança devagar, sustentado pelas talas; quando elas cedem, cada golpe também o fere; não foge."]
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/factions.txt:179", "lore_nova/races.txt:163", "lore_nova/creatures.txt:90"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: osso
+      escala: enorme
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um caçador dos clãs de combate em quem a especiação não parou. Passou de quatro metros, e o
+        esqueleto continua crescendo mais depressa que a pele: nos joelhos, nos cotovelos e ao longo da
+        espinha o osso rompeu a carne e ficou exposto em cristas brancas, com músculo vermelho aparecendo
+        nas fendas. O peito não acompanhou, e ele respira curto, em chiados. O clã o mantém de pé com talas
+        de osso de mamute presas às pernas, aos braços e às costas por correias de couro cru encharcado,
+        que encolhem no frio e apertam. As mãos têm o tamanho de uma porta pequena.
+    silhueta: Um homem alto como uma casa, curvado, com as pernas e as costas entaladas em ossos longos amarrados, e cristas de osso saindo dos joelhos.
+    comportamento: >-
+      Fica nos limites de Skallgard, onde ainda cabe, e sai com as caçadas grandes. Não corre; avança e
+      bate de cima para baixo. Quando as talas cedem, cai de joelhos e continua batendo, e cada golpe abre
+      mais a pele.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_crescido_do_cla_talas
+      frase: >-
+        Enquanto as talas aguentam, nenhum golpe o derruba nem o faz recuar; quando elas cedem, cada golpe
+        que ele dá rasga a própria pele e o fere também.
+    contra_jogo: Cortar as correias das talas nos joelhos; sem elas, ele se fere a cada golpe e cansa sozinho.
+    gancho: >-
+      A especiação dividiu os Nascidos do Gelo em dois povos. O Crescido é o que acontece quando ela não
+      sabe parar, e o clã que diz que o fraco não passa do inverno amarra o seu com osso de mamute para
+      que ele passe.
+    habitat: [skallgard, sk_fortaleza_vorr]
+    inspiracao: []
+    padrao: [defesa, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "As correias das talas de {nome} estalam no frio, e ele ergue os dois braços juntos."
+    description: Caçador dos clãs em quem a especiação não parou; passou de quatro metros, o osso rompe a pele em cristas, e talas de osso de mamute o mantêm de pé.
+    perigo: Alto
+    lore: >-
+      O Abismo acelerou a especiação no Norte e dividiu os Nascidos do Gelo em dois povos: os grandes, que
+      caçam, e os pequenos, que constroem. Em alguns dos grandes, ela não parou. Crescem até não caberem
+      nos túneis, e o esqueleto cresce mais depressa que a pele e a rasga. Os clãs de combate os entalam
+      com ossos de mamute e couro cru, como se faz com uma perna quebrada, e os levam às caçadas grandes.
+      Dizem que o fraco não passa do inverno; o Crescido é o único fraco que eles carregam.
+    aparencia: >-
+      Caçador do Norte de mais de quatro metros, curvado; cristas de osso branco rompendo a pele nos
+      joelhos, cotovelos e espinha, músculo vermelho nas fendas; talas de osso de mamute amarradas com
+      couro cru nas pernas, braços e costas; mãos do tamanho de uma porta pequena.
+    como_se_luta: >-
+      Enquanto as talas aguentam, nada o derruba. Corte as correias nos joelhos; sem as talas, cada golpe
+      que ele dá também o fere.
+    related_entities: [skallgard, sk_fortaleza_vorr, clas_combate]
+    arte:
+      visual: >-
+        Humano gigantesco de mais de quatro metros, de peles e tatuagens de clã, curvado para a frente sob o
+        próprio peso. Cristas de osso branco e pontiagudo rompem a pele nos joelhos, nos cotovelos e ao longo
+        da coluna, com músculo vermelho visível nas fendas da pele rasgada. Peito estreito demais para o
+        corpo. Talas feitas de ossos longos de mamute, amarelados, presas às pernas, aos antebraços e às
+        costas por voltas e voltas de correia de couro cru escuro. Mãos enormes.
+      composicao: >-
+        Portão de pedra de Skallgard aberto para o Ermo; o Crescido saindo curvado sob o arco, que mal o
+        comporta; ao lado do pé dele, um caçador do clã aperta uma correia da tala com os dentes e as mãos,
+        da altura do joelho do gigante. Luz laranja dos túneis por trás, neve azul à frente.
+      evitar: Gigante de gelo, jötunn de mitologia, ogro, troll, homem de pedra, armadura de ferro. É um homem que não parou de crescer, com osso rompendo a pele e osso de mamute amarrado por fora.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: enemy_guerreiro_bjorn, nome: "Guerreiro Bjorn", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: osso, escala: humana, locomocao: anda, percepcao: visao, texto: "Bárbaro do Norte vestindo ossos de baleia e peles."}, papel_tatico: bruto_de_linha, arquetipo: bruto, categoria: lacaio}
+  - {id: enemy_gigante_gelo_norte, nome: "Titã de Gelo (Norte)", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: vidro_cristal, escala: enorme, locomocao: anda, percepcao: vibracao, texto: "Um antigo gigante adormecido sob Skallgard."}, papel_tatico: artilharia, arquetipo: predador_apice, categoria: chefe}
+  - {id: mon_urso_tita, nome: "Urso-Titã", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: enorme, locomocao: anda, percepcao: sangue_cheiro, texto: "Colosso do Ermo Branco, pelagem branca sobre músculo antigo. Não conhece o conceito de fuga: luta até a morte porque nada no gelo jamais o fez recuar."}, papel_tatico: bruto_de_linha, arquetipo: predador_apice, categoria: chefe}
+  - {id: mon_lobo_de_vidro, nome: "Lobo de Vidro", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: vidro_cristal, escala: pequena, locomocao: anda, percepcao: som, texto: "Predador do Ermo com pelagem translúcida que confunde o olho na neve. Caça em matilha; quando a matilha quebra, dispersa."}, papel_tatico: batedor_rapido, arquetipo: lider_matilha, categoria: lacaio}
+  - {id: mon_verme_do_gelo, nome: "Verme do Gelo", status: retro, familia: legado, anatomia: {plano_corporal: segmentado, material: carne_exposta, escala: grande, locomocao: cava, percepcao: calor, texto: "Escava sob a neve compacta e ataca de baixo. O frio dentro dele é condição do Abismo, não temperatura."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: elite}
+  - {id: enemy_renegado_ermo, nome: "Renegado do Ermo", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Ex-caçador exilado de Skallgard que sobreviveu ao Ermo e voltou selvagem."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_corvo_gelo, nome: "Corvo de Gelo Negro", status: retro, familia: legado, anatomia: {plano_corporal: alado, material: couro_tecido, escala: pequena, locomocao: plana_voa, percepcao: visao, texto: "Rouba lascas de memória dos mortos deixados na noite eterna de Skallgard."}, papel_tatico: saqueador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_lobo_aurora, nome: "Lobo da Aurora Morta", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: eter_cristalizado, escala: humana, locomocao: anda, percepcao: luz, texto: "Caça sob uma aurora que os clãs tecnológicos juram ter desligado décadas atrás."}, papel_tatico: perseguidor_marca, arquetipo: predador, categoria: padrao}

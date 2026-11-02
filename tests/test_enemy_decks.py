@@ -301,6 +301,8 @@ def test_no_new_card_used_by_more_than_15_bestiary_creatures(monkeypatch):
 
     use = collections.Counter()
     for bid, entry in load_bestiary().items():
+        if entry.get("origem") == "bestiario-349":
+            continue  # SPEC-349: o teto de 15 é da população da 332; a esteira tem teste próprio
         deck = edk.build_enemy_deck({**entry, "id": bid}, 0)
         use.update(c for c in deck if c.startswith("inf_"))
     assert use and max(use.values()) <= 15, use.most_common(3)
@@ -361,6 +363,8 @@ def test_usage_limit_with_instance_ids_and_real_seeds(monkeypatch):
 
     use = collections.Counter()
     for bid, entry in load_bestiary().items():
+        if entry.get("origem") == "bestiario-349":
+            continue  # SPEC-349: o teto de 15 é da população da 332; a esteira tem teste próprio
         seed = zlib.crc32(f"game-x|3|{bid}".encode())
         deck = edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed)
         use.update(c for c in deck if c.startswith("inf_"))
@@ -456,6 +460,8 @@ def test_legacy_shared_card_is_curated_only_with_on_and_nothing_passes_15():
         for seed in range(12):
             use = collections.Counter()
             for bid, entry in load_bestiary().items():
+                if entry.get("origem") == "bestiario-349":
+                    continue  # SPEC-349: teto de 15 só para a população da 332
                 use.update(edk.build_enemy_deck({**entry, "id": f"{bid}_1"}, seed))
             assert use[shared] <= 15, (seed, use[shared])
             sobe = {k: v for k, v in use.items() if k.startswith("inf_") and v > 15}

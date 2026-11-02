@@ -209,7 +209,7 @@ def test_all_twelve_bosses_have_two_authored_phases_with_valid_cards():
     from services import enemy_decks as edk
 
     bosses = [b for b, e in load_bestiary().items() if e.get("categoria") == "chefe"]
-    assert len(bosses) == 12
+    assert len(bosses) >= 12  # SPEC-349: a esteira acrescenta chefes; todos têm 2 fases
     fases = edk._meta()["fases"]
     for bid in bosses:
         fs = fases[bid]

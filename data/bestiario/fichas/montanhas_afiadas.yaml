@@ -1,0 +1,2283 @@
+# SPEC-349 (esteira, onda das Montanhas Afiadas) — Ficha de identidade da região.
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore atualizada do checkout principal (pós-SPEC-348), como na onda 2.
+regiao: montanhas_afiadas
+onda: 7
+spec: SPEC-349
+nome_regiao: Montanhas Afiadas
+habitat_nome:
+  montanhas_afiadas: Passagens
+  ma_saidas_baixas: Saídas Baixas
+  ma_boca: A Boca
+  ma_forja_profunda: Forja Profunda
+paleta: >-
+  **Montanhas Afiadas** — picos que rasgaram o chão na Era 2, verticais demais e cortantes, neve
+  permanente no alto, rocha exposta sem vegetação, trilhas da largura de dois pés e meio, cordas e
+  pontes de corda sobre fendas; embaixo, o Reino perdido dos Anões: câmaras polidas e idênticas,
+  trilhos, respiros de ventilação, bigornas. Luz e paleta: branco-azulado de neve e céu frio,
+  cinza-ardósia, ferrugem de trilho, laranja baixo de Brasa-Profunda e Líquen-de-Brasa no escuro,
+  breu de galeria; o Éter aparece só como cristal turvo nos veios.
+familias_em_jogo:            # D10 — mesmos nomes da onda 1 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: emboscador,       arquetipo: emboscador,           plano_corporal: bipede_ereto,     material: carne_exposta,  escala: humana,  locomocao: escala_paredes, percepcao: som,           habitat: [ma_boca, montanhas_afiadas]}
+  - {vaga: 2,  familia: corpo_reescrito,   categoria: lacaio, papel_tatico: bruto_de_linha,      arquetipo: covarde_oportunista,  plano_corporal: bipede_curvado,     material: vidro_cristal,  escala: humana,  locomocao: anda,           percepcao: calor,         habitat: [ma_saidas_baixas, montanhas_afiadas]}
+  - {vaga: 3,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: artilharia,       arquetipo: guardiao,             plano_corporal: bipede_ereto,     material: osso,           escala: humana,  locomocao: ancorada,       percepcao: vibracao,      habitat: [montanhas_afiadas]}
+  - {vaga: 4,  familia: corpo_reescrito,   categoria: padrao, papel_tatico: controlador,         arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado,  material: cera_sebo, escala: humana, locomocao: rasteja,        percepcao: calor,    habitat: [montanhas_afiadas]}
+  # --- bestas da entropia ---
+  - {vaga: 11, familia: besta_entropia,    categoria: lacaio, papel_tatico: controlador,      arquetipo: conjurador,           plano_corporal: radial,           material: carne_exposta,  escala: pequena, locomocao: plana_voa,      percepcao: calor,         habitat: [ma_forja_profunda, ma_boca]}
+  - {vaga: 12, familia: besta_entropia,    categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: predador,             plano_corporal: hexapode_ou_mais, material: carne_exposta,  escala: humana,  locomocao: salta,          percepcao: vibracao,    habitat: [ma_boca]}
+  - {vaga: 13, familia: besta_entropia,    categoria: padrao, papel_tatico: quebra_defesa,    arquetipo: bruto,                plano_corporal: quadrupede,       material: osso,           escala: humana,  locomocao: rola,           percepcao: som,           habitat: [montanhas_afiadas, ma_saidas_baixas]}
+  - {vaga: 14, familia: besta_entropia,    categoria: padrao, papel_tatico: emboscador,       arquetipo: emboscador,           plano_corporal: hexapode_ou_mais, material: quitina,        escala: humana,  locomocao: escala_paredes, percepcao: vibracao,      habitat: [montanhas_afiadas]}
+  - {vaga: 15, familia: besta_entropia,    categoria: lacaio, papel_tatico: saqueador,        arquetipo: covarde_oportunista,  plano_corporal: quadrupede,       material: carne_exposta,  escala: pequena, locomocao: escala_paredes, percepcao: luz,           habitat: [ma_boca, ma_saidas_baixas]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 17, familia: humanoide_preco,   categoria: elite,  papel_tatico: quebra_defesa,    arquetipo: tatico,               plano_corporal: bipede_ereto,   material: ferro_ferrugem, escala: humana,  locomocao: anda,           percepcao: calor,         habitat: [ma_forja_profunda]}
+  - {vaga: 18, familia: humanoide_preco,   categoria: padrao, papel_tatico: controlador,       arquetipo: tatico,              plano_corporal: bipede_ereto,     material: couro_tecido,   escala: humana,  locomocao: escala_paredes, percepcao: eter,          habitat: [montanhas_afiadas]}
+  - {vaga: 19, familia: humanoide_preco,   categoria: lacaio, papel_tatico: artilharia,       arquetipo: emboscador,           plano_corporal: bipede_curvado,   material: ferro_ferrugem, escala: pequena, locomocao: anda,           percepcao: vibracao,      habitat: [ma_boca, ma_saidas_baixas]}
+  - {vaga: 20, familia: humanoide_preco,   categoria: padrao, papel_tatico: perseguidor_marca, arquetipo: predador,            plano_corporal: bipede_ereto,     material: carne_exposta,  escala: grande,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [ma_boca, ma_saidas_baixas]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_vhrak},   categoria: chefe,  papel_tatico: bruto_de_linha, arquetipo: predador_apice,      plano_corporal: acoplado,         material: carne_exposta,  escala: enorme,  locomocao: anda,           percepcao: medo_emocao,   habitat: [ma_saidas_baixas]}
+  - {vaga: 22, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen}, categoria: padrao, papel_tatico: controlador,    arquetipo: tatico,              plano_corporal: composto,         material: carne_exposta,  escala: grande,  locomocao: ancorada,       percepcao: medo_emocao,   habitat: [ma_boca]}
+  - {vaga: 23, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},    categoria: lacaio, papel_tatico: saqueador,      arquetipo: covarde_oportunista, plano_corporal: hexapode_ou_mais,    material: osso,           escala: pequena, locomocao: escala_paredes, percepcao: som,           habitat: [montanhas_afiadas]}
+  - {vaga: 24, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek}, categoria: elite,  papel_tatico: drenador,       arquetipo: abissal,             plano_corporal: composto,         material: osso,           escala: grande,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [ma_saidas_baixas]}
+  - {vaga: 25, familia: demonio_encarnado, origem_lore: {detalhe: npc_skarath}, categoria: padrao, papel_tatico: emboscador,     arquetipo: emboscador,          plano_corporal: radial,           material: couro_tecido,   escala: grande,  locomocao: escala_paredes, percepcao: calor,         habitat: [montanhas_afiadas]}
+  - {vaga: 26, familia: demonio_encarnado, origem_lore: {detalhe: npc_veleth},  categoria: lacaio, papel_tatico: quebra_defesa,  arquetipo: tatico,              plano_corporal: quadrupede,       material: sal_mineral,    escala: pequena, locomocao: escala_paredes, percepcao: medo_emocao,   habitat: [ma_boca, ma_forja_profunda]}
+  - {vaga: 27, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},   categoria: elite,  papel_tatico: guarda_protetor, arquetipo: guardiao,           plano_corporal: quadrupede,       material: osso,           escala: enorme,  locomocao: anda,           percepcao: visao,         habitat: [ma_boca]}
+  # --- slots genéricos reinventados (R24; não contam nas 20–25) ---
+  - {vaga: 5,  slot: enemy_observador_menor,    status: reinventada, familia: corpo_reescrito, categoria: lacaio, papel_tatico: suporte,         arquetipo: conjurador,          plano_corporal: bipede_curvado,   material: couro_tecido,  escala: humana,  locomocao: anda,       percepcao: luz,         habitat: [ma_boca, ma_saidas_baixas]}
+  - {vaga: 6,  slot: enemy_wyvern_jovem,        status: reinventada, familia: besta_entropia,  categoria: elite,  papel_tatico: batedor_rapido,  arquetipo: predador,            plano_corporal: alado,            material: osso,          escala: grande,  locomocao: plana_voa,  percepcao: visao,       habitat: [montanhas_afiadas]}
+  - {vaga: 7,  slot: enemy_minotauro_esqueleto, status: reinventada, familia: besta_entropia,  categoria: elite,  papel_tatico: bruto_de_linha,  arquetipo: morto_vivo_implacavel,               plano_corporal: quadrupede,       material: couro_tecido,  escala: grande,  locomocao: anda,       percepcao: vibracao,    habitat: [ma_boca, ma_forja_profunda]}
+  - {vaga: 8,  slot: enemy_mimico_bau,          status: reinventada, familia: besta_entropia,  categoria: elite,  papel_tatico: tanque_reativo,  arquetipo: bruto,               plano_corporal: hexapode_ou_mais, material: quitina,       escala: grande,  locomocao: anda,       percepcao: calor,       habitat: [ma_forja_profunda]}
+  - {vaga: 9,  slot: enemy_basilisco_caverna,   status: reinventada, familia: besta_entropia,  categoria: elite,  papel_tatico: controlador,     arquetipo: predador,            plano_corporal: serpentiforme,    material: sal_mineral,   escala: grande,  locomocao: rasteja,    percepcao: vibracao,    habitat: [ma_boca]}
+  - {vaga: 10, slot: enemy_morcego_vampiro,     status: reinventada, familia: besta_entropia,  categoria: lacaio, papel_tatico: emboscador,        arquetipo: covarde_oportunista, plano_corporal: alado,            material: couro_tecido,  escala: pequena, locomocao: plana_voa,  percepcao: respiracao,  habitat: [montanhas_afiadas, ma_saidas_baixas]}
+  - {vaga: 16, slot: enemy_troll_ponte,         status: reinventada, familia: humanoide_preco, categoria: elite,  papel_tatico: guarda_protetor, arquetipo: predador,            plano_corporal: bipede_ereto,     material: couro_tecido,  escala: enorme,  locomocao: ancorada,   percepcao: vibracao,    habitat: [ma_saidas_baixas]}
+criaturas:
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: enemy_orc_saidas_baixas, nome: "Orc das Saídas Baixas", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: couro_tecido, escala: humana, locomocao: anda, percepcao: visao, texto: "Refugiado do Reino Subterrâneo que nunca voltou às profundezas. Embosca grupos pequenos, foge de grupos grandes — Gruumsha entende números."}, papel_tatico: emboscador, arquetipo: conjurador, categoria: lacaio}
+  - {id: mon_cabra_navalha, nome: "Cabra-Navalha", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: pequena, locomocao: escala_paredes, percepcao: visao, texto: "Herbívoro das encostas com chifres que cortam corda e couro. Ataca se encurralada, foge quando pode."}, papel_tatico: batedor_rapido, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_anao_eco, nome: "Anão-Eco", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: ferro_ferrugem, escala: pequena, locomocao: anda, percepcao: som, texto: "Morto do Reino que não partiu: ainda 'trabalha' nas galerias, martelo fantasma em ritmo de turno. Interrompê-lo é virar parte do serviço."}, papel_tatico: guarda_protetor, arquetipo: morto_vivo_implacavel, categoria: elite}
+  - {id: mon_goblin_eco, nome: "Goblin de Eco", status: retro, familia: legado, anatomia: {plano_corporal: segmentado, material: sal_mineral, escala: pequena, locomocao: cava, percepcao: som, texto: "Mineradores goblins o criaram para encontrar túneis; ele aprendeu a fechá-los."}, papel_tatico: controlador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_cabra_labirinto, nome: "Cabra do Labirinto", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: humana, locomocao: escala_paredes, percepcao: vibracao, texto: "Conhece passagens nas Montanhas Afiadas que não existem no mesmo lugar duas vezes."}, papel_tatico: perseguidor_marca, arquetipo: predador, categoria: padrao}
+  - {id: mon_guardiao_basalto, nome: "Guardião de Basalto", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: sal_mineral, escala: grande, locomocao: anda, percepcao: vibracao, texto: "Uma sentinela anã sem mestre protege a estrada para o reino subterrâneo perdido."}, papel_tatico: guarda_protetor, arquetipo: guardiao, categoria: elite}
+
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_deitado_na_parede
+    vaga: 1
+    nome: Deitado na Parede
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:306", "lore_nova/locations.txt:370"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: som
+      texto: >-
+        Um explorador que dormiu numa câmara onde o peso puxa de lado e acordou pertencendo a ela. O
+        corpo inteiro cai para a esquerda: o cabelo, a barba e as alças da mochila pendem de lado, e o
+        sangue juntou no flanco esquerdo, roxo e inchado. Os músculos do lado de baixo engrossaram como
+        cabo de navio para segurar o corpo na parede; os do lado de cima secaram até a pele colar nas
+        costelas. Vive tombado contra a parede, pendurado de lado como roupa num prego torto, com os dedos das mãos abertos em garra contra a pedra.
+    silhueta: Um corpo tombado de lado contra a parede, como roupa pendurada num prego torto, com o cabelo, os braços e a mochila caindo para o mesmo lado.
+    comportamento: >-
+      Espera nas paredes das câmaras idênticas, tombado de lado, e quem entra olhando para a
+      frente não o vê. Cai sobre o viajante de lado, como uma porta que se abre, e volta para a parede
+      quando é ferido. No chão é lento e torto, e sabe disso.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_deitado_na_parede_queda_de_lado
+      frase: >-
+        Ataca saindo da parede, pelo lado que a guarda não cobre; enquanto está na parede, quem luta
+        de frente não o alcança.
+    contra_jogo: Tirá-lo da parede; derrubado no chão, o peso dele puxa para o lado errado e ele não consegue se levantar.
+    gancho: >-
+      Os guias Cinzéus contam nos dedos as câmaras onde cair é cair para o lado; quem dorme numa delas
+      acorda torto, e alguns nunca mais acham o chão.
+    habitat: [ma_boca, montanhas_afiadas]
+    inspiracao: []
+    padrao: [mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} desce um pé da parede e inclina o corpo inteiro para o lado de quem passa."
+    description: Um explorador que dormiu numa câmara de peso torto e acordou caindo para o lado; anda pelas paredes do Reino e ataca de onde ninguém olha.
+    perigo: Médio
+    lore: >-
+      Abaixo da Boca há câmaras em que o peso não puxa para baixo, e os guias Cinzéus as contam nos
+      dedos para não entrar nelas. Quem dorme numa dessas câmaras acorda pertencendo a ela. O corpo
+      inteiro passa a cair para um lado: o cabelo pende de lado, o sangue junta num flanco, e os
+      músculos de baixo engrossam para segurar o resto na parede. Os Deitados vivem tombados nas paredes das câmaras idênticas, como roupa pendurada de lado. No chão, coitados, não sabem ficar de pé.
+    aparencia: >-
+      Explorador humano tombado de lado contra uma parede, pendurado como roupa num prego torto; cabelo, barba, mochila e roupa
+      pendendo de lado; flanco esquerdo roxo de sangue acumulado e músculos grossos como cabo; o lado
+      de cima seco, pele colada às costelas; dedos abertos em garra contra a pedra.
+    como_se_luta: >-
+      Sai da parede e golpeia pelo lado que a guarda não cobre, e volta para a parede quando ferido.
+      Derrubado no chão, não consegue se levantar.
+    related_entities: [ma_boca, montanhas_afiadas]
+    arte:
+      visual: >-
+        Homem adulto magro em roupa de explorador gasta, tombado de lado contra uma parede vertical, pendurado como roupa num prego torto.
+        Tudo nele cai para o mesmo lado da imagem: cabelo comprido, barba, alças da mochila, a capa.
+        Assimetria forte: o lado de baixo do corpo com músculos inchados e roxos de sangue acumulado, o
+        de cima seco, pele colada às costelas. Dedos das mãos abertos contra a pedra, rosto calmo.
+      composicao: >-
+        Câmara anã polida, igual às outras em sequência ao fundo; o Deitado na parede da direita,
+        horizontal para quem olha; no chão, um viajante com lanterna, de costas para ele, dá a escala
+        e a tensão. Luz baixa de lanterna, sombras compridas que caem para o lado errado.
+      evitar: >-
+        Contorcionista de terror, aranha humana de membros quebrados, fantasma flutuando. Não flutua
+        nem se dobra; está de pé, normal, só que para o lado.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_geodo_da_praga
+    vaga: 2
+    nome: Geodo da Praga
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:394", "lore_nova/creatures.txt:356"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: vidro_cristal
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um refugiado do Anel de Lama que atravessou as passagens com a Praga de Ferro no sangue. No frio
+        do alto, o ferro do sangue não enferrujou: cristalizou. Debaixo da pele dos braços e dos punhos
+        crescem nós duros do tamanho de um ovo, e perto do fogo eles incham e amadurecem. Maduro, ele
+        parte o nó com os dentes ou contra uma pedra, e a pele do punho se abre numa cavidade forrada de
+        cristais vermelho-escuros, pontudos e cortantes. Anda curvado sobre as mãos, com os punhos
+        abertos em cacos e os dedos tortos para não se cortar.
+    silhueta: Um homem curvado sobre as próprias mãos, de punhos inchados e abertos em cacos vermelhos como uma romã partida.
+    comportamento: >-
+      Vive nas Saídas Baixas com os outros fugidos, sempre colado a uma fogueira, porque o calor
+      amadurece os nós. Quando briga, parte um nó por vez e soca com a cavidade de cristal; quanto mais
+      tempo a luta dura perto do fogo, mais punhos de caco ele tem.
+    papel_tatico: bruto_de_linha
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_geodo_da_praga_no_maduro
+      frase: >-
+        Perto de calor, um nó amadurece por rodada; ele parte o nó e soca com a cavidade de cristal, e o
+        golpe cresce com o número de nós abertos.
+    contra_jogo: "Golpear o nó que está inchando antes que amadureça: partido verde, ele só sangra e não vira caco; quem o parte assim tira dele um punho."
+    gancho: >-
+      Gente do Anel de Lama atravessa as Montanhas fugindo da Praga de Ferro; no frio do alto, o ferro
+      do sangue não vira ferrugem, vira pedra, e o fogo a faz crescer.
+    habitat: [ma_saidas_baixas, montanhas_afiadas]
+    inspiracao:
+      - fonte: geologia (geodos)
+        referencia: "geodos e drusas, pedras ocas que, partidas, mostram uma cavidade forrada de cristais"
+        tomou: o nódulo redondo que, rachado, mostra cristais por dentro
+        distancia: só a forma do nódulo; a causa (a Praga de Ferro no frio), o amadurecer no fogo e o soco de caco são de Valoria
+    padrao: [reforco_proprio, ataque, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} morde um nó do próprio punho até ele estalar, e cacos vermelhos aparecem na carne."
+    description: Refugiado da Praga de Ferro em quem o ferro do sangue, no frio das passagens, virou nós de cristal; perto do fogo eles amadurecem e ele soca com os cacos.
+    perigo: Baixo
+    lore: >-
+      A Praga de Ferro mineraliza o sangue, e em Nova Arcádia isso é ferrugem. Os doentes que fogem
+      pelas Montanhas descobrem outra coisa: no frio do alto, o ferro cristaliza em nós redondos sob a
+      pele dos braços, e perto do fogo os nós incham e amadurecem. Maduros, eles os partem, e o punho
+      vira uma cavidade de cristal vermelho que corta como vidro de janela. Os Goblins compram os nós dos
+      mortos. Os vivos não saem de perto das fogueiras, e quem os encontra ali encontra os punhos já
+      abertos.
+    aparencia: >-
+      Homem magro e curvado em trapos de refugiado, braços cobertos de nós duros do tamanho de um ovo
+      sob a pele; os punhos partidos abertos em cavidades forradas de cristais vermelho-escuros pontudos,
+      como romãs; dedos tortos afastados dos cacos.
+    como_se_luta: >-
+      Perto do fogo, parte um nó por rodada e soca com o punho de cristal, cada vez mais forte. Tirá-lo
+      do calor ou apagar a fogueira o deixa sem nós maduros.
+    related_entities: [ma_saidas_baixas, montanhas_afiadas]
+    arte:
+      visual: >-
+        Homem adulto esquelético em trapos de lã, curvado; sob a pele dos antebraços, nódulos redondos e
+        duros como ovos de pedra, alguns inchados e brilhantes de calor; os dois punhos partidos, a pele
+        aberta numa cavidade forrada de cristais vermelho-escuros pontudos, como geodos ou romãs
+        quebradas; os dedos tortos, afastados dos cacos. Olhos fundos de febre.
+      composicao: >-
+        Fogueira de fugitivos nas Saídas Baixas, neve suja em volta; o Geodo agachado junto ao fogo,
+        mordendo um nó do braço; um viajante de capa de pé do outro lado da fogueira, da mesma altura, dá
+        a escala. Luz laranja do fogo de baixo; o vermelho dos cristais é o ponto mais quente.
+      evitar: >-
+        Homem de pedra inteiro, homem de lava, cristais em neon, explosão. É um doente magro que faz arma
+        da própria doença.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_cauda_de_atalaia
+    vaga: 3
+    nome: Cauda de Atalaia
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/races.txt:217", "lore_nova/races.txt:230"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: humana
+      locomocao: ancorada
+      percepcao: vibracao
+      texto: >-
+        O corpo de um guerreiro Cinzéu morto nas passagens na guerra contra os Anões, que o frio e o
+        Éter não deixaram ir embora. O tronco secou até a pele cinzenta colar nas costelas, e os três
+        dedos de cada mão endureceram em ganchos. A cauda, que em vida tinha osso só na ponta, não parou
+        de crescer: são séculos de osso novo, cinco metros de chicote branco e nu, enrolado três vezes
+        numa ponta de rocha. Pendurado por ela de cabeça para baixo sobre a trilha, o corpo balança
+        devagar no vento.
+    silhueta: Um corpo pendurado de cabeça para baixo numa ponta de pedra, preso por uma corda branca e comprida que é dele.
+    comportamento: >-
+      Fica pendurado nos penhascos sobre as trilhas mais estreitas, imóvel por dias, como os Cinzéus
+      vivos ficam. Quando alguém passa embaixo, desenrola duas voltas da cauda e açoita de cima, de um
+      alcance que ninguém espera. Não desce: a cauda está presa à rocha, e ele também.
+    papel_tatico: artilharia
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_cauda_de_atalaia_acoite_do_alto
+      frase: >-
+        Açoita de cima, pendurado pela própria cauda, de uma distância que só ele alcança; quem está na
+        trilha embaixo não tem como devolver o golpe.
+    contra_jogo: Subir até a ponta de pedra e cortar a cauda na volta que a prende, ou passar fora da trilha, rente ao paredão.
+    gancho: >-
+      Os Cinzéus atravessaram as passagens dos Anões porque não recuavam quando feridos; alguns dos que
+      morreram nelas ainda não recuaram.
+    habitat: [montanhas_afiadas]
+    inspiracao: []
+    padrao: [ataque, enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} solta duas voltas da cauda e o corpo seco desce um palmo sobre a trilha."
+    description: O corpo seco de um guerreiro Cinzéu da guerra das passagens, pendurado de cabeça para baixo pela cauda de osso que não parou de crescer.
+    perigo: Médio
+    lore: >-
+      Na Era 4 os Cinzéus tomaram as passagens dos Anões porque não recuavam quando feridos. Os que
+      morreram nelas ficaram no frio, e o frio e o Éter guardaram o que devia ter ido embora. A cauda,
+      que nos Cinzéus vivos tem osso na ponta, continuou crescendo nos mortos por séculos. Hoje há
+      corpos secos pendurados de cabeça para baixo nos penhascos sobre as trilhas, presos pela própria
+      cauda a uma ponta de rocha. Os guias Cinzéus passam por baixo deles sem olhar para cima.
+    aparencia: >-
+      Corpo seco de Cinzéu de pele cinzenta colada às costelas, três dedos endurecidos em ganchos,
+      pendurado de cabeça para baixo por uma cauda de osso nu de cinco metros enrolada numa ponta de
+      rocha; balança no vento sobre a trilha.
+    como_se_luta: >-
+      Açoita de cima com a cauda, de um alcance que ninguém espera, e não desce. Cortar a cauda na volta
+      que a prende à pedra, ou passar rente ao paredão.
+    related_entities: [montanhas_afiadas]
+    arte:
+      visual: >-
+        Cadáver seco de um Cinzéu (humanoide esguio, pele cinzenta, três dedos por mão) pendurado de
+        cabeça para baixo, braços caídos com os dedos em gancho; restos de uma armadura de couro antiga.
+        A cauda é um chicote longo de osso branco e nu, segmentado, que sobe cinco metros e dá três
+        voltas numa ponta de rocha. Vento puxando o que sobrou da roupa.
+      composicao: >-
+        Penhasco vertical sobre uma trilha de dois pés de largura com neve; o corpo pende acima da
+        trilha, uma volta da cauda desenrolando; embaixo, um guia com uma corda no ombro passa de cabeça
+        baixa, dando a escala. Céu branco-azulado, rocha cinza-ardósia.
+      evitar: >-
+        Diabo de cauda pontuda, enforcado em corda, colar de vértebras solto. A cauda nasce do corpo e
+        prende o corpo à rocha; é a única coisa viva nele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_queimado_de_frio
+    vaga: 4
+    nome: Queimado de Frio
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:355", "lore_nova/locations.txt:360"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: cera_sebo
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Um viajante que a geada pegou na subida e não terminou de matar. A pele inteira ficou branca,
+        cerosa e translúcida, e por baixo dela vê-se o azul das veias paradas. Bolhas grandes de líquido
+        turvo cobrem as mãos, os pés, o rosto e os joelhos, e algumas pendem como uvas. Os cílios, a
+        barba e os cabelos estão presos num bloco de gelo que não derrete, e só as pontas dos dedos são
+        pretas. Rasteja de joelhos e cotovelos, devagar, com o corpo duro de frio.
+    silhueta: Uma figura branca e cerosa de quatro na neve, com a barba presa num bloco de gelo e bolhas penduradas nas mãos.
+    comportamento: >-
+      Rasteja pela neve atrás de quem descansa, de quem se agacha junto ao fogo, de quem para. Não
+      alcança quem anda. Quando chega, agarra as pernas de quem está parado, e o frio do corpo dele entra nas juntas da vítima até ela não conseguir erguer a guarda.
+    papel_tatico: controlador
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_queimado_de_frio_abraco_de_quem_para
+      frase: "Pune quem para: quem se defende ou espera na rodada tem as pernas agarradas e endurece de frio, e na rodada seguinte não pode jogar Carta de defesa nem de Reação; quem se move não é alcançado."
+    contra_jogo: Não parar perto dele e não se defender parado; quem se mexe o deixa para trás, e as bolhas estouram com fogo.
+    gancho: >-
+      O clima das passagens mata quem sobe sem equipamento e quem para para descansar; com alguns, a
+      geada começou o serviço e o Abismo não deixou que terminasse.
+    habitat: [montanhas_afiadas]
+    inspiracao:
+      - fonte: medicina (geladura)
+        referencia: "a geladura profunda, com pele branca e cerosa, bolhas de líquido turvo e pontas dos dedos pretas"
+        tomou: a pele cerosa e as bolhas de quem foi pego pelo frio
+        distancia: só o aspecto do ferimento; o que segue vivo e caça quem para é o Abismo das passagens
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} se arrasta até os pés de quem está parado e estende as mãos brancas devagar."
+    description: Um viajante que a geada começou a matar e não terminou; branco, ceroso e cheio de bolhas, rasteja atrás de quem para e o congela num abraço.
+    perigo: Médio
+    lore: >-
+      Nas passagens altas o frio mata quem não tem equipamento e, mais ainda, quem para. Os guias Cinzéus
+      não deixam ninguém sentar na subida. Alguns dos que sentaram não terminaram de morrer: ficaram
+      brancos e cerosos, de bolhas nas mãos e no rosto e a barba presa num bloco de gelo. Esses rastejam
+      pela neve atrás de quem descansa e agarram as pernas. Quem anda os deixa para trás. Quem para,
+      endurece.
+    aparencia: >-
+      Viajante humano de quatro na neve, pele branca, cerosa e translúcida com veias azuis paradas, bolhas
+      grandes de líquido turvo nas mãos, pés, rosto e joelhos, cílios e barba presos num bloco de gelo,
+      só as pontas dos dedos pretas.
+    como_se_luta: >-
+      Agarra as pernas de quem se defende ou espera parado, e a vítima endurece de frio e não ergue a guarda na rodada seguinte. Não
+      parar perto dele; fogo estoura as bolhas.
+    related_entities: [montanhas_afiadas]
+    arte:
+      visual: >-
+        Humano adulto de quatro na neve funda, restos de casaco de lã; pele inteira branca, cerosa e meio
+        translúcida, veias azuladas por baixo; bolhas grandes e turvas nas mãos, nos joelhos e no rosto,
+        algumas pendendo; barba, cílios e cabelo presos num bloco irregular de gelo; só as pontas dos dedos
+        pretas. Olhos abertos, calmos.
+      composicao: >-
+        Passo alto com neve batida e um marco de pedras empilhadas; dois viajantes sentados encostados no
+        marco, descansando; o Queimado rastejando na direção deles, já perto, enquanto um terceiro, de pé,
+        segue andando sem ver; os viajantes dão a escala. Luz azul fria, crepúsculo.
+      evitar: >-
+        Homem de gelo azul brilhante, morto-vivo verde apodrecido, cadáver enfaixado, placas de carvão. É
+        carne viva sob pele cerosa de frio, com bolhas, sem podridão.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ---- slot genérico reinventado: enemy_observador_menor ----
+  - id: enemy_observador_menor
+    vaga: 5
+    nome: Olhos em Volta
+    status: reinventada
+    substitui: enemy_observador_menor
+    ataques: ["Dedo no Olho", "Mordida Curta"]
+    acoes:
+      - Engajado, recua de costas sem virar o corpo e grita de onde vem o golpe.
+      - Foge para o escuro quando os outros caem; vê o caminho em todas as direções.
+      - Fica atrás dos outros e grita o que o inimigo prepara antes que ele faça.
+    substitui_generico: Observador Menor (Gazer)
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:370", "lore_nova/daily_life.txt:226"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: couro_tecido
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um explorador que passou dias perdido nas câmaras de baixo, sentindo a coisa imensa em qualquer
+        direção que olhasse. O corpo respondeu abrindo mais olhos: há olhos na linha do cabelo, atrás
+        das orelhas, na nuca, no pescoço e nas costas das mãos, cada um com a sua pálpebra de pele, todos
+        úmidos e vermelhos de não fechar. A cabeça foi raspada pelo próprio dono para não cobrir nenhum.
+        Anda curvado, com os braços colados ao corpo, e nunca vira o pescoço.
+    silhueta: Um homem curvado de cabeça raspada pontilhada de manchas claras em volta, que nunca vira o pescoço.
+    comportamento: >-
+      Anda com os grupos de saqueadores e Goblins que descem a Boca, sempre no fundo da fila. Vê tudo ao
+      mesmo tempo e grita o que o inimigo vai fazer antes que ele faça: a mão que vai à faca, o pé que
+      vai firmar. Sozinho não luta; acompanhado, o grupo dele sabe o golpe antes do golpe.
+    papel_tatico: suporte
+    arquetipo: conjurador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_olhos_em_volta_mao_a_mostra
+      frase: >-
+        Vê em todas as direções e grita o que vê: enquanto ele estiver de pé, a Carta que o jogador
+        preparou fica à mostra para os inimigos, que se armam contra ela.
+    contra_jogo: Derrubá-lo primeiro; uma luz forte e súbita nos olhos que não fecham o cega por um instante.
+    gancho: >-
+      Quem volta do fundo do Reino fala de algo imenso presente em qualquer direção que se olhe; alguns
+      voltaram com olhos para todas elas.
+    habitat: [ma_boca, ma_saidas_baixas]
+    inspiracao: []
+    padrao: [enfraquecer, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} arregala de uma vez todos os olhos da cabeça e aponta sem virar o pescoço."
+    description: Explorador que voltou do fundo do Reino com olhos abertos em volta da cabeça raspada, no pescoço e nas mãos; vê tudo e grita para os outros.
+    perigo: Baixo
+    lore: >-
+      Quem desce longe demais na Boca passa horas no escuro com algo imenso que não ataca, presente em
+      qualquer direção que se olhe. Alguns voltam sem conseguir contar o que viram. Outros voltam com o
+      corpo mudado para ver: olhos abertos na linha do cabelo, na nuca, no pescoço, nas costas das
+      mãos, que nunca mais fecham. Os Goblins e os saqueadores pagam bem para levar um deles no fim da
+      fila. Contra um grupo que tem um Olhos em Volta, ninguém guarda um golpe em segredo.
+    aparencia: >-
+      Explorador humano curvado de cabeça raspada, olhos abertos na linha do cabelo, atrás das orelhas,
+      na nuca, no pescoço e nas costas das mãos, cada um com pálpebra própria, úmidos e vermelhos;
+      braços colados ao corpo; nunca vira o pescoço.
+    como_se_luta: >-
+      Fica atrás dos outros e grita o que o jogador preparou; com ele de pé, os inimigos sabem o golpe
+      antes do golpe. Derrubá-lo primeiro, ou cegá-lo com luz súbita.
+    related_entities: [ma_boca, ma_saidas_baixas]
+    arte:
+      visual: >-
+        Homem adulto magro e curvado, cabeça raspada e pálida; olhos humanos verdadeiros abertos em
+        lugares errados: uma fileira na linha do cabelo, dois atrás das orelhas, três na nuca, um de cada
+        lado do pescoço, um nas costas de cada mão; cada um com pálpebra de pele e cílios, úmidos, com o
+        branco avermelhado. Roupa de couro de explorador gasta, braços colados ao corpo.
+      composicao: >-
+        Fim de uma fila de saqueadores descendo uma escadaria anã escura; o Olhos em Volta por último,
+        de costas para quem olha, a nuca cheia de olhos encarando o espectador; um Goblin-mineiro à
+        frente dele, na altura da cintura, dá a escala. Luz de uma única lanterna lá na frente.
+      evitar: >-
+        Esfera flutuante de olhos, olho único gigante, raios saindo dos olhos. É um homem comum com olhos
+        a mais, de pé, cansado.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  # ---- slot genérico reinventado: enemy_wyvern_jovem ----
+  - id: enemy_wyvern_jovem
+    vaga: 6
+    nome: Leque de Costelas
+    status: reinventada
+    substitui: enemy_wyvern_jovem
+    ataques: ["Fio das Costelas"]
+    acoes:
+      - Volta numa segunda passada sobre quem já sangra na trilha.
+      - Ferido, foge: fecha o leque e cai como pedra na fenda, para longe.
+      - Solta-se do paredão e passa rente à trilha com o leque aberto, na altura do peito.
+    substitui_generico: Wyvern Jovem
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:268", "lore_nova/locations.txt:355"]
+    anatomia:
+      plano_corporal: alado
+      material: osso
+      escala: grande
+      locomocao: plana_voa
+      percepcao: visao
+      texto: >-
+        Um lagarto do tamanho de um cavalo magro, de couro cinza-ardósia, que vive colado às paredes dos
+        picos. As costelas da barriga se soltaram da coluna e cresceram para fora, longas e finas, e
+        entre elas a pele se esticou como a vela de um leque. Aberto, o leque passa de três metros; as
+        pontas das costelas, sem pele, foram afiadas pelo vento e pela rocha até virarem lâminas de
+        foice. A cabeça é pequena e chata, de olhos dourados virados para baixo.
+    silhueta: Um leque cinzento aberto no céu entre dois picos, com um corpo de lagarto pendurado embaixo dele.
+    comportamento: >-
+      Fica colado ao paredão com o leque fechado, quase invisível na rocha. Quando vê alguém na trilha,
+      solta-se, abre as costelas com um estalo e plana em linha reta rente à altura do peito, e sobe de
+      novo no vento do outro lado. Não briga no chão; no chão é só um lagarto.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_leque_de_costelas_passada_rente
+      frase: >-
+        Passa rente com o leque aberto e corta todos que estão na mesma linha da trilha, e já está do
+        outro lado antes do troco.
+    contra_jogo: Abaixar-se ou deitar na trilha quando ele abre o leque; pousado, depois da passada, é um lagarto lento.
+    gancho: >-
+      Nas passagens altas não há onde se esconder; os lagartos das paredes aprenderam a cortar na altura
+      do peito de quem anda em fila.
+    habitat: [montanhas_afiadas]
+    inspiracao:
+      - fonte: zoologia (lagartos do gênero Draco)
+        referencia: "lagartos voadores do Sudeste Asiático, que planam abrindo costelas alongadas cobertas de pele"
+        tomou: a vela de pele esticada entre costelas que se abrem
+        distancia: só o mecanismo do planeio; o tamanho, as pontas afiadas pelo vento e a caça rente às trilhas são das Montanhas
+    padrao: [mover, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} se solta do paredão e abre as costelas com o estalo seco de uma vela."
+    description: Lagarto dos picos cujas costelas cresceram para fora em leque de pele; plana rente às trilhas e corta com as pontas afiadas pelo vento.
+    perigo: Alto
+    lore: >-
+      Os lagartos das paredes das Montanhas Afiadas têm a cor da rocha e ficam dias sem se mexer. Alguns
+      cresceram errado: as costelas se soltaram da coluna e se abriram para fora, com pele entre elas, e
+      o bicho aprendeu a cair do paredão e planar. O vento das passagens afiou as pontas das costelas.
+      Eles passam rente às trilhas na altura do peito, e uma fila inteira de viajantes leva o mesmo
+      corte. Os guias mandam andar abaixado quando o vento para de repente.
+    aparencia: >-
+      Lagarto cinza-ardósia do tamanho de um cavalo magro, costelas soltas da coluna abertas para fora em
+      leque de três metros com pele esticada entre elas, pontas nuas afiadas como foice, cabeça pequena
+      e chata de olhos dourados.
+    como_se_luta: >-
+      Passa planando rente à trilha, na altura do peito, e corta todos na mesma linha. Abaixar-se quando
+      ele abre o leque; pousado, é lento.
+    related_entities: [montanhas_afiadas]
+    arte:
+      visual: >-
+        Lagarto grande, corpo esguio do tamanho de um cavalo magro, pele cinza-ardósia granulosa;
+        costelas longas saindo dos flancos e abertas em leque, membrana de pele fina e translúcida entre
+        elas, com veias; as pontas das costelas nuas, brancas, afiadas como lâminas curvas. Pernas curtas
+        recolhidas, cauda longa de leme, cabeça pequena e chata, olhos dourados.
+      composicao: >-
+        Desfiladeiro entre dois picos com neve; o Leque planando em diagonal, rente a uma trilha onde três
+        viajantes em fila se abaixam, o último ainda de pé, dando a escala. Céu branco-azulado, a sombra
+        do leque cruzando a trilha.
+      evitar: >-
+        Dragão, réptil de asas de morcego, pterossauro. Não tem asas nem dedos de asa: são as costelas,
+        abertas, e ele não bate nada, só plana.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ---- slot genérico reinventado: enemy_minotauro_esqueleto ----
+  - id: enemy_minotauro_esqueleto
+    vaga: 7
+    nome: Boi de Canga
+    status: reinventada
+    substitui: enemy_minotauro_esqueleto
+    ataques: ["Testada de Canga"]
+    acoes:
+      - Segue o trilho e arremete contra o que estiver nele; não foge, não desvia, não para.
+    substitui_generico: Minotauro Esqueleto
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:368", "lore_nova/timeline_completa.txt:314"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Descendente dos bois de tração que os Anões usavam nos trilhos das minas e deixaram para trás
+        quando perderam o Reino. Gerações no escuro tiraram o pelo e a cor: a pele é branca e grossa, de
+        veias azuis, e os olhos são duas bolas leitosas sem uso. A canga de ferro dos avós ficou, e a
+        carne do pescoço cresceu por cima dela, de modo que o ferro sai do couro só nas pontas. Os chifres
+        gastaram de raspar o teto das galerias e viraram duas placas chatas e lisas na frente da cabeça,
+        e os ombros incharam de puxar o que não existe mais.
+    silhueta: Um boi branco e sem pelo, de cabeça baixa sobre um trilho, com uma barra de ferro atravessada no pescoço.
+    comportamento: >-
+      Percorre ainda as linhas de transporte dos Anões, de trilho em trilho, sentindo pelos cascos o
+      tremor do ferro. O que estiver no trilho é carga ou obstáculo, e ele arremete de cabeça baixa.
+      Fora do trilho fica parado e perdido, mugindo baixo.
+    papel_tatico: bruto_de_linha
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_boi_de_canga_arremetida_no_trilho
+      frase: >-
+        Arremete pelo trilho e leva junto tudo que está na linha; fora do trilho, perde o rumo e o
+        ímpeto.
+    contra_jogo: Sair do trilho e lutar de lado, porque ele sente o ferro e não a pessoa; arrancar um trilho ou travá-lo com pedra o deixa parado.
+    gancho: >-
+      Os Anões perderam o Reino de uma vez e não levaram os animais; os bois de tração ainda puxam pelas
+      linhas que ninguém usa.
+    habitat: [ma_boca, ma_forja_profunda]
+    inspiracao:
+      - fonte: história da mineração (pôneis de mina)
+        referencia: "cavalos mantidos a vida inteira no fundo das minas de carvão, que aprendiam os trilhos no escuro"
+        tomou: o animal de tração que vive e morre no subterrâneo seguindo trilhos
+        distancia: só a ideia do bicho de mina; a canga crescida na carne, os chifres gastos e o ataque pelo trilho são do Reino perdido
+    padrao: [ataque, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} raspa o casco no trilho e baixa as placas da testa até o ferro."
+    description: Boi de tração dos Anões deixado no Reino perdido, branco e cego, com a canga de ferro coberta pela carne do pescoço; arremete pelos trilhos.
+    perigo: Alto
+    lore: >-
+      Quando os Anões perderam o Reino Subterrâneo, saíram com o que cabia nas costas. Os bois de tração
+      das minas ficaram. Gerações no escuro tiraram deles o pelo, a cor e os olhos, e a canga de ferro
+      dos avós ficou presa no pescoço dos netos, coberta de carne. Eles ainda andam pelas linhas de
+      transporte do Reino, de trilho em trilho, e o que estiver no caminho vai junto. Os Goblins-mineiros
+      sabem onde os trilhos passam e não dormem perto deles.
+    aparencia: >-
+      Boi grande, branco e sem pelo, pele grossa de veias azuis, olhos leitosos, canga de ferro coberta
+      pela carne do pescoço com as pontas para fora, chifres gastos em duas placas chatas na testa,
+      ombros inchados.
+    como_se_luta: >-
+      Arremete pelo trilho e leva tudo que está na linha. Fora do trilho, lutando de lado, ele perde o
+      rumo; travar o trilho o deixa parado.
+    related_entities: [ma_boca, ma_forja_profunda]
+    arte:
+      visual: >-
+        Boi de tração grande e musculoso, inteiramente sem pelo, pele branca grossa com veias azuladas
+        aparentes; olhos brancos leitosos; uma canga de ferro forjado atravessada no pescoço, a carne
+        crescida por cima dela e só as pontas de ferro aparecendo; os chifres gastos até virarem duas
+        placas lisas e chatas sobre a testa; ombros enormes, cascos rachados.
+      composicao: >-
+        Galeria anã com dois trilhos de ferro enferrujados e um carrinho de minério tombado; o Boi vem pelo
+        trilho de cabeça baixa; um Goblin-mineiro pula para fora da linha, na altura do joelho do boi,
+        dando a escala. Luz laranja fraca de Líquen-de-Brasa nas paredes.
+      evitar: >-
+        Homem com cabeça de touro, esqueleto de touro, boi infernal de olhos em chamas. É um animal de
+        carga cego e velho, sem nada de humano.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ---- slot genérico reinventado: enemy_mimico_bau ----
+  - id: enemy_mimico_bau
+    vaga: 8
+    nome: Morador do Caldeirão
+    status: reinventada
+    substitui: enemy_mimico_bau
+    ataques: ["Pinça de Bigorna"]
+    acoes:
+      - Ferido e frio, recua para junto da bigorna e se encosta nas brasas para reaquecer o ferro.
+      - Anda pela Forja com o caldeirão em brasa e encosta o ferro quente em quem se aproxima.
+    substitui_generico: Mímico (Baú)
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:310", "data/world_map.json:930"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um bicho de casca mole que mora dentro de um caldeirão de forja anão de ferro fundido, do tamanho de
+        uma banheira, como o ermitão da praia mora numa concha. O caldeirão está cheio de brasa e escória do
+        fogão de pedra, e o ventre branco, cozido de calor, fundiu-se ao ferro do fundo: ele não sai mais
+        dali nem troca de casa. Seis patas grossas de quitina vermelho-escura carregam o caldeirão rubro, e
+        duas pinças desiguais saem da borda, a maior do tamanho de uma bigorna pequena. Os olhos ficam em
+        hastes curtas, chamuscadas nas pontas.
+    silhueta: Um caldeirão rubro de brasa andando sobre seis patas pela forja, soltando fumaça pela borda.
+    comportamento: >-
+      Anda pela Forja Profunda carregando o calor das bigornas no caldeirão. Se recolhe quando é atacado, e cada pancada no ferro sacode brasa para fora da borda. Longe das bigornas o caldeirão esfria e escurece; ele
+      volta para junto delas, encosta nas brasas e espera o ferro avermelhar de novo.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_morador_do_caldeirao_ferro_em_brasa
+      frase: "Recolhido no caldeirão, aguenta o golpe; cada golpe no ferro derrama brasa no chão em volta, e quem estiver ao lado dele na rodada seguinte se queima. Longe das bigornas a brasa acaba e a defesa cai."
+    contra_jogo: "Afastá-lo das bigornas e golpeá-lo de longe ou com haste, sem ficar ao lado dele; frio, o caldeirão escurece e o ventre preso ao fundo fica sem defesa."
+    gancho: >-
+      As bigornas da Forja Profunda ainda estão quentes; o que vive do calor delas não pode se afastar
+      muito.
+    habitat: [ma_forja_profunda]
+    inspiracao:
+      - fonte: zoologia (caranguejo-ermitão)
+        referencia: "crustáceos que protegem o abdômen mole numa concha alheia e trocam de concha quando crescem"
+        tomou: o bicho que mora num objeto que não fez
+        distancia: só a casa emprestada; o caldeirão em brasa, o ventre fundido ao ferro e a dependência das bigornas são da Forja
+    padrao: [defesa, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} se encolhe dentro do caldeirão, e a borda de ferro fica rubra e começa a fumegar."
+    description: Bicho de ventre mole fundido a um caldeirão de forja anão cheio de brasa; cada golpe no ferro derrama brasa em volta, e longe das bigornas ele esfria.
+    perigo: Alto
+    lore: >-
+      A Forja Profunda, perto da Boca, tem bigornas que nunca esfriaram, e o calor delas sustenta mais
+      coisas do que os Anões. Há bichos de ventre mole e seis patas de quitina que entraram nos caldeirões
+      de ferro cheios de brasa e não saíram: o calor cozinhou o ventre e o colou ao fundo. Eles andam pela
+      Forja carregando a brasa e, golpeados, sacodem brasa no chão em volta. Longe das bigornas, o ferro
+      esfria, e eles voltam. Os ferreiros da Forja os deixam passar.
+    aparencia: >-
+      Caldeirão de forja anão de ferro fundido, do tamanho de uma banheira, rubro e cheio de brasa e
+      escória, carregado por seis patas grossas de quitina vermelho-escura; duas pinças desiguais na
+      borda, a maior do tamanho de uma bigorna pequena; olhos em hastes chamuscadas.
+    como_se_luta: >-
+      Recolhido, aguenta o golpe e derrama brasa no chão em volta, queimando quem fica ao lado. Longe das bigornas ele esfria e se defende pior; golpeá-lo de longe ou com haste.
+    related_entities: [ma_forja_profunda]
+    arte:
+      visual: >-
+        Grande caldeirão de ferro fundido anão com rebites e alças, a borda e o bojo avermelhados de calor,
+        brasa e escória brilhando dentro, fumaça saindo; carregado por seis patas articuladas de crustáceo,
+        vermelho-escuras e cascudas; duas pinças desiguais, uma enorme; olhos pretos em hastes curtas
+        chamuscadas. Pelo vão da borda, o ventre branco colado ao ferro.
+      composicao: >-
+        Chão da Forja Profunda entre duas bigornas e um fogão de pedra; o Morador atravessa o chão
+        deixando marcas de queimado; um aventureiro recua de uma poça de brasa derramada, da altura do
+        caldeirão mais as patas, dando a escala. Luz laranja de brasa vinda de baixo.
+      evitar: >-
+        Baú com dentes e língua, objeto disfarçado que morde, caldeirão de bruxa. Não se esconde: o
+        caldeirão é a casa quente dele, e o bicho é um crustáceo de verdade.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ---- slot genérico reinventado: enemy_basilisco_caverna ----
+  - id: enemy_basilisco_caverna
+    vaga: 9
+    nome: Caramujo de Estalagmite
+    status: reinventada
+    substitui: enemy_basilisco_caverna
+    ataques: ["Gosma que Endurece"]
+    acoes:
+      - Vai primeiro até quem ficou com a arma presa na crosta.
+      - Ferido, recua para a casca de pedra e deixa a gosma escorrer pelo pé.
+      - Avança devagar, coberto de gosma, e espera o golpe de lâmina.
+    substitui_generico: Basilisco da Caverna
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:368", "lore_nova/creatures.txt:268"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: sal_mineral
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um caramujo do tamanho de uma carroça que vive nas câmaras úmidas onde a água pinga do teto. A
+        casca é uma estalagmite: camadas de pedra calcária que ele mesmo deposita, cônica, amarelada, com
+        escorridos como cera de vela. O pé é largo e branco, coberto de uma gosma tão carregada de pedra
+        que endurece em instantes em volta do que entra nela. Dois pares de tentáculos curtos tateiam o
+        chão na frente da boca, uma fenda mole e sem dentes.
+    silhueta: Uma estalagmite amarelada no chão da caverna que, de perto, está mais longe da parede do que estava.
+    comportamento: >-
+      Avança devagar pelas câmaras de gotejo, coberto de gosma. Quem o golpeia com lâmina enfia o ferro na
+      gosma, e a gosma vira pedra em volta da arma. Ou o dono larga a arma, ou o caramujo o puxa até o pé. O rastro dele
+      é cheio de ferramentas e lanternas anãs presas na pedra, de cabo para fora.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_caramujo_de_estalagmite_lamina_presa
+      frase: "A gosma vira pedra em volta da lâmina que o golpeia: o dono larga a arma, que fica na pedra até o fim da luta, ou é arrastado até o pé dele na rodada seguinte."
+    contra_jogo: Golpear com pancada ou com haste, nunca com lâmina; a casca é pedra, mas o pé branco é mole e cede ao porrete.
+    gancho: >-
+      O rastro dos caramujos nas câmaras de gotejo é cheio de picaretas e lanternas anãs presas na pedra,
+      de cabo para fora; ninguém voltou para buscá-las.
+    habitat: [ma_boca]
+    inspiracao:
+      - fonte: geologia (poço petrificante de Knaresborough)
+        referencia: "fonte inglesa de água tão carregada de calcário que cobre de pedra, em meses, os objetos pendurados nela"
+        tomou: a água que transforma em pedra o que toca
+        distancia: só a pedra que cresce; o caramujo, a casca de estalagmite e a arma presa na gosma são das câmaras do Reino
+    padrao: [defesa, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} incha o pé branco e a gosma escorre grossa, brilhando à espera do golpe."
+    description: Caramujo do tamanho de uma carroça com casca de estalagmite; a gosma do pé vira pedra em volta da lâmina que o golpeia.
+    perigo: Alto
+    lore: >-
+      Nas câmaras de gotejo do Reino Subterrâneo há estalagmites que mudam de lugar, devagar. São
+      caramujos do tamanho de uma carroça que depositam a própria casca em camadas de pedra calcária, como
+      a água faz no teto. A gosma do pé deles endurece em volta do que entra nela, e quem os golpeia com
+      espada fica com a espada presa na pedra. O rastro deles é cheio de picaretas e lanternas anãs de
+      cabo para fora. Os Goblins-mineiros os enfrentam com porrete.
+    aparencia: >-
+      Caramujo enorme de pé largo e branco coberto de gosma, casca em forma de estalagmite cônica
+      amarelada de camadas calcárias com escorridos de cera, dois pares de tentáculos curtos, boca mole
+      sem dentes, ferramentas presas na pedra do rastro.
+    como_se_luta: >-
+      A gosma vira pedra em volta da lâmina que o golpeia: largar a arma ou ser arrastado até ele. Usar pancada ou haste e mirar
+      no pé mole.
+    related_entities: [ma_boca]
+    arte:
+      visual: >-
+        Caramujo do tamanho de uma carroça; a casca é uma estalagmite alta e cônica, amarelo-creme, em
+        camadas de calcário com escorridos como cera de vela derretida; pé largo, branco e úmido de gosma
+        grossa; quatro tentáculos curtos à frente; atrás, um rastro de pedra clara com picaretas e uma
+        lanterna anã presas de cabo para fora.
+      composicao: >-
+        Câmara do Reino com o teto cheio de estalactites pingando; o caramujo entre estalagmites de verdade;
+        um explorador puxa com as duas mãos uma espada presa numa crosta clara no flanco do bicho, dando a
+        escala. Luz de lanterna refletida na água, tons creme, ocre e cinza.
+      evitar: >-
+        Lagarto de olhar que petrifica, serpente coroada, jardim de estátuas. Não há olhar nem magia: é
+        pedra que cresce, depressa, de uma gosma.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ---- slot genérico reinventado: enemy_morcego_vampiro ----
+  - id: enemy_morcego_vampiro
+    vaga: 10
+    nome: Lenço do Desfiladeiro
+    status: reinventada
+    substitui: enemy_morcego_vampiro
+    ataques: ["Abraço na Cara"]
+    acoes:
+      - Sozinho, solta-se e vai embora com o vento.
+      - Ferido, desgruda da cara e some na corrente de ar.
+      - Desce na cara de quem está na beira mais estreita da trilha.
+      - Dança no vento sobre a trilha até alguém olhar para cima.
+    substitui_generico: Morcego Vampiro Gigante
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/daily_life.txt:222", "lore_nova/locations.txt:355"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: pequena
+      locomocao: plana_voa
+      percepcao: respiracao
+      texto: >-
+        Um bicho chato e comprido como um cachecol, de couro fino da cor de neve suja, que vive no vento dos
+        desfiladeiros. Não tem asas: o corpo inteiro é uma membrana com uma fileira de mãozinhas de três
+        dedos ao longo das duas bordas, que se agarram em pano e em pele. A cabeça é só uma boca redonda e
+        mole numa das pontas, que se encaixa sobre os olhos e o nariz da presa e a deixa cega. As mãozinhas
+        das bordas puxam a cabeça para o lado do vento.
+    silhueta: Um pano comprido e claro dançando no vento sobre a trilha, sem ninguém segurando.
+    comportamento: >-
+      Voa nas correntes dos desfiladeiros como um trapo perdido. Desce sobre o rosto de quem está na beira
+      da trilha, gruda as bordas nas orelhas e no pescoço e cobre os olhos, e as mãozinhas puxam a cabeça
+      para o lado do vento. Quem anda cego numa trilha de dois pés de largura cai.
+    papel_tatico: emboscador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lenco_do_desfiladeiro_venda_na_beira
+      frase: >-
+        Cobre os olhos de quem está na trilha: quem estiver coberto e atacar ou se mover na rodada arrisca
+        cair, perdendo a rodada e levando a queda; quem fica parado perde só a ação.
+    contra_jogo: Ficar parado e deixar um companheiro arrancá-lo pela ponta sem cabeça; andar amarrado em corda tira o risco da queda; fogo o faz soltar na hora.
+    gancho: >-
+      Nas passagens, o fôlego é dinheiro e a trilha tem dois pés de largura; há bichos que vivem de quem
+      cai dela.
+    habitat: [montanhas_afiadas, ma_saidas_baixas]
+    inspiracao:
+      - fonte: bestiários de jogos de fantasia (a "capa" voadora que envolve a vítima)
+        referencia: "o monstro-manto de RPG de mesa que se enrola na cabeça da vítima"
+        tomou: o pano vivo que cobre o rosto
+        distancia: não é arraia nem manto escuro de masmorra; é uma faixa de couro com mãos nas bordas que vive do vento das trilhas e mata pela queda, sem morder nem drenar
+    padrao: [ataque, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} baixa no vento, e as bordas se abrem como dedos sobre os olhos de quem está na beira."
+    description: Bicho chato como um cachecol, de bordas cheias de mãozinhas, que desce no vento sobre os olhos de quem está na beira da trilha para que caia.
+    perigo: Baixo
+    lore: >-
+      No alto das passagens a trilha tem dois pés de largura e o vento nunca para. Os Lenços vivem nele.
+      Parecem trapos perdidos até descerem sobre o rosto de alguém na beira: as mãozinhas das bordas se
+      agarram nas orelhas e no pescoço, a ponta mole cobre os olhos, e o resto puxa a cabeça para o lado
+      do vento. Não mordem. Comem embaixo, depois. Os guias Cinzéus mandam quem foi coberto ficar parado e
+      esperar, e quem não obedece não é visto de novo.
+    aparencia: >-
+      Bicho chato e comprido como um cachecol de couro fino cor de neve suja, uma fileira de mãozinhas de
+      três dedos ao longo das duas bordas, uma boca redonda e mole numa das pontas; dança no vento.
+    como_se_luta: >-
+      Cobre os olhos de quem está na trilha, e quem ataca ou anda coberto pode cair. Ficar parado e deixar
+      um companheiro arrancá-lo; corda amarrada tira o risco.
+    related_entities: [montanhas_afiadas, ma_saidas_baixas]
+    arte:
+      visual: >-
+        Criatura plana e longa como um cachecol de dois metros, couro fino e translúcido, cinza-claro como
+        neve suja; ao longo das duas bordas, dezenas de mãozinhas pálidas de três dedos, abertas; numa das
+        pontas, uma boca redonda, mole, como uma ventosa sem dentes. Sem olhos, sem asas, sem ossos à vista.
+      composicao: >-
+        Trilha de dois pés de largura num paredão sobre o vazio; o Lenço colado ao rosto de um viajante que
+        tateia a parede com uma mão, as mãozinhas puxando o capuz para o lado do abismo; atrás dele, um guia
+        agarra a ponta solta do bicho, dando a escala. Neve soprada, céu branco.
+      evitar: >-
+        Morcego, fantasma de pano, arraia voadora, manto escuro de masmorra. Não tem asas nem dentes: é uma
+        faixa de couro com mãos na borda que cega e deixa o vento fazer o resto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bexiga_de_respiro
+    vaga: 11
+    nome: Bexiga de Respiro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/locations.txt:368", "lore_nova/creatures.txt:310"]
+    anatomia:
+      plano_corporal: radial
+      material: carne_exposta
+      escala: pequena
+      locomocao: plana_voa
+      percepcao: calor
+      texto: >-
+        Uma bexiga de pele fina e translúcida do tamanho de uma cabeça, cheia do ar quente que sobe das
+        forjas, que flutua nos respiros de ventilação dos Anões. Por dentro se vê o coração pequeno
+        batendo e um emaranhado de nervos rosados. Na borda de baixo há uma coroa de olhos pretos e
+        miúdos, e da coroa pendem dezenas de fios de carne finos como linha, de três metros, que queimam e
+        amortecem onde tocam a pele.
+    silhueta: Uma bola pálida parada no ar de um poço de ventilação, com uma cortina de fios caindo até o chão.
+    comportamento: >-
+      Sobe e desce pelos respiros com o ar quente das bigornas e se junta onde há calor de corpo. Não
+      caça: deriva. Quem passa por baixo leva os fios no rosto e nos braços, e os músculos amortecem e
+      pesam.
+    papel_tatico: controlador
+    arquetipo: conjurador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bexiga_de_respiro_fios_que_amortecem
+      frase: >-
+        Os fios pendurados amortecem o braço que tocam: quem passa por baixo dela golpeia mais fraco até o
+        formigamento passar.
+    contra_jogo: Furá-la de longe, que ela murcha e cai; não passar por baixo dos fios; esfriar o ar do respiro a faz descer.
+    gancho: >-
+      Os respiros dos Anões ainda puxam o ar quente da Forja para cima; o que flutua nele vai até onde o
+      ar vai.
+    habitat: [ma_forja_profunda, ma_boca]
+    inspiracao:
+      - fonte: zoologia (caravela-portuguesa)
+        referencia: "animal marinho de flutuador cheio de gás e tentáculos longos que queimam"
+        tomou: o flutuador e os fios pendurados que queimam
+        distancia: só o desenho; vive no ar quente dos respiros, não no mar, e amortece em vez de envenenar
+    padrao: [enfraquecer, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} desce um palmo no ar quente, e a cortina de fios encosta no chão."
+    description: Bexiga translúcida cheia de ar quente que flutua nos respiros dos Anões, com uma cortina de fios que amortecem o braço que tocam.
+    perigo: Baixo
+    lore: >-
+      Os Anões construíram respiros que levam o ar das câmaras fundas até a superfície, e eles ainda
+      funcionam. O ar quente da Forja Profunda sobe por eles e leva junto as Bexigas: sacos de pele fina
+      do tamanho de uma cabeça, cheios de ar morno, com uma coroa de olhinhos e uma cortina de fios
+      pendurados. Elas se juntam onde há calor de corpo. Quem passa por baixo sente o braço formigar e
+      pesar, e só percebe por quê quando vê os fios.
+    aparencia: >-
+      Bexiga de pele translúcida do tamanho de uma cabeça, coração e nervos rosados visíveis por dentro,
+      coroa de olhos pretos miúdos na borda de baixo, dezenas de fios de carne finos de três metros
+      pendurados.
+    como_se_luta: >-
+      Deriva no ar quente e os fios amortecem quem passa por baixo, que golpeia mais fraco. Furá-la de
+      longe ou esfriar o respiro.
+    related_entities: [ma_forja_profunda, ma_boca]
+    arte:
+      visual: >-
+        Saco de pele fina e translúcida, redondo, do tamanho de uma cabeça humana, cor de leite com um
+        brilho morno; por dentro, um coração pequeno e uma rede de nervos rosados; na borda de baixo, uma
+        coroa de olhinhos pretos; pendurados dela, dezenas de fios finíssimos de carne rosada, longos,
+        descendo três metros. Sem asas, sem boca visível.
+      composicao: >-
+        Poço de ventilação anão, vertical, de pedra lavrada com grade de ferro; três Bexigas paradas no ar
+        quente que sobe, fios pendurados até o chão; um mineiro com capacete de couro passa por baixo e
+        olha para cima, dando a escala. Luz laranja vindo de baixo, do fundo do poço.
+      evitar: >-
+        Água-viva de mar, olho flutuante, bolha de magia brilhante. É um bicho de carne fina cheio de ar
+        morno, opaco e frágil.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_saltao_de_galeria
+    vaga: 12
+    nome: Saltão de Galeria
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:368", "lore_nova/creatures.txt:306"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: carne_exposta
+      escala: humana
+      locomocao: salta
+      percepcao: vibracao
+      texto: >-
+        Um grilo de caverna do tamanho de um cão grande, sem cor nenhuma: a carne aparece pela casca fina,
+        rosada e translúcida, e dá para ver os músculos das patas de trás se armando. As antenas têm quatro
+        vezes o comprimento do corpo e arrastam pelo chão, sentindo os passos. Os olhos sumiram. O corpo pesa ao contrário e cai para cima: o salto termina no teto, onde ele pousa de patas
+        para o alto e fica, como se o teto fosse o chão.
+    silhueta: Um bicho de pernas altas e dobradas pousado de patas no teto da galeria, com duas linhas finíssimas pendendo até o chão.
+    comportamento: >-
+      Vive em bando no teto das galerias de cima da Boca. As antenas pendem até o chão e sentem os passos;
+      quando alguém passa, os grilos se soltam do teto, caem para baixo sobre ele e se agarram. Cada um que
+      se agarra pesa mais, e com três nas costas a vítima vai ao chão.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_saltao_de_galeria_peso_do_bando
+      frase: >-
+        Agarra-se no alvo e fica; cada Saltão já agarrado torna o próximo mais pesado, e com três a vítima
+        cai e perde a rodada.
+    contra_jogo: Sacudir ou queimar os que estão agarrados antes do terceiro; andar devagar e leve, longe das antenas que pendem, não os acorda.
+    gancho: "Nas galerias da Boca há grilos que caem para cima; vivem no teto e caem em cima da gente, um por vez, até ser demais."
+    habitat: [ma_boca]
+    inspiracao:
+      - fonte: zoologia (grilos de caverna, Rhaphidophoridae)
+        referencia: "insetos de caverna sem asas, de antenas e patas traseiras enormes"
+        tomou: o corpo pálido, as antenas longas e o salto
+        distancia: o tamanho, o pouso de patas no teto e o bando que derruba pelo peso são do Reino
+    padrao: [mover, ataque, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} recolhe as antenas do chão de uma vez, e o teto inteiro da galeria estala."
+    description: Grilo de caverna pálido do tamanho de um cão grande que vive pousado de patas no teto; cai em bando sobre quem passa e derruba pelo peso.
+    perigo: Baixo
+    lore: >-
+      Nas galerias de cima da Boca há grilos de caverna que pesam ao contrário: o corpo deles cai para cima, e eles vivem de patas no teto. São do tamanho de cães, cegos, com antenas que
+      pendem até o chão e sentem os passos. Quando alguém passa, soltam-se e caem em cima, e se agarram.
+      Um não derruba ninguém; três derrubam. Os Goblins-mineiros atravessam essas galerias devagar, de
+      tocha erguida.
+    aparencia: >-
+      Grilo de caverna do tamanho de um cão grande pousado de patas no teto, casca fina rosada e
+      translúcida mostrando os músculos, sem olhos, antenas quatro vezes o comprimento do corpo pendendo
+      até o chão, patas traseiras longas dobradas.
+    como_se_luta: >-
+      Cai do teto e se agarra; cada um a mais pesa mais, e três derrubam a vítima. Sacudir ou queimar os
+      agarrados antes do terceiro.
+    related_entities: [ma_boca]
+    arte:
+      visual: >-
+        Inseto de caverna grande, do tamanho de um cão, sem asas, casca fina rosada e translúcida com os
+        músculos aparecendo; patas traseiras muito longas e dobradas; pousado de patas no teto como se
+        fosse o chão; antenas finíssimas e longuíssimas pendendo até o piso; cabeça lisa sem olhos.
+      composicao: >-
+        Galeria anã de teto baixo com dezenas de grilos pousados no teto, as antenas pendendo como cortina
+        de fios; um minerador já com dois grilos agarrados nas costas, curvado, e um terceiro caindo; outro
+        minerador recua com uma tocha, dando a escala. Luz de tocha, o resto em breu.
+      evitar: >-
+        Gafanhoto gigante verde, aranha, barata. É pálido, cego, e o errado é estar no teto como no chão.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_rolador_de_escarpa
+    vaga: 13
+    nome: Rolador de Escarpa
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:355", "lore_nova/locations.txt:360"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: humana
+      locomocao: rola
+      percepcao: som
+      texto: >-
+        Um bicho de quatro patas do tamanho de um javali, coberto de placas de osso que se sobrepõem como
+        telhas, cada uma com a borda lascada e afiada como pederneira. O focinho é comprido, sem dentes,
+        de comer formiga de pedra nas frestas. Quando assustado ou caçando, enrola-se numa bola com a
+        cabeça e as patas para dentro e se deixa cair pela encosta de cascalho; as placas abertas cortam o
+        que encontram no caminho.
+    silhueta: Uma pedra redonda e eriçada descendo a encosta aos saltos, mais rápida que as outras pedras.
+    comportamento: >-
+      Vive nas encostas de cascalho acima das trilhas. Ouve os passos, sobe um pouco, enrola-se e desce
+      a encosta como uma pedra solta, contra as pernas de quem está na trilha. Depois se desenrola
+      embaixo e sobe de novo para repetir.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_rolador_de_escarpa_rolagem
+      frase: >-
+        Desce a encosta enrolado e bate contra a guarda: escudo e postura não seguram uma pedra afiada que
+        rola.
+    contra_jogo: Sair da linha da encosta ou subir acima dele; desenrolado e de barriga para cima, é mole.
+    gancho: >-
+      Os deslizamentos das Montanhas mudam as rotas toda semana; nem toda pedra que desce caiu sozinha.
+    habitat: [montanhas_afiadas, ma_saidas_baixas]
+    inspiracao:
+      - fonte: zoologia (pangolim e tatu-bola)
+        referencia: "mamíferos de escamas ou carapaça que se enrolam em bola para se defender"
+        tomou: o corpo de placas que vira bola
+        distancia: só o enrolar; usar a encosta como arma e as placas afiadas como pederneira são das escarpas das Montanhas
+    padrao: [mover, ataque_multiplo, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} some acima da trilha, e um barulho de cascalho começa a descer."
+    description: Bicho de placas de osso afiadas como pederneira que se enrola em bola e desce as encostas de cascalho contra quem está na trilha.
+    perigo: Médio
+    lore: >-
+      As encostas de cascalho das Montanhas Afiadas estão sempre descendo um pouco. Algumas pedras descem
+      de propósito. O Rolador é um bicho do tamanho de um javali, coberto de placas de osso com bordas
+      lascadas como pederneira, que se enrola em bola e se deixa cair na trilha, contra as pernas de quem
+      passa. Depois se desenrola, sobe e desce de novo. Os guias contam as pedras que descem; quando o
+      número não fecha, mandam encostar no paredão.
+    aparencia: >-
+      Bicho do tamanho de um javali coberto de placas de osso sobrepostas como telhas, de bordas lascadas
+      e afiadas como pederneira, focinho comprido sem dentes; enrolado, é uma bola eriçada de pedra.
+    como_se_luta: >-
+      Desce a encosta enrolado e quebra a guarda de quem está na trilha. Sair da linha da encosta;
+      desenrolado e de barriga para cima, é mole.
+    related_entities: [montanhas_afiadas, ma_saidas_baixas]
+    arte:
+      visual: >-
+        Quadrúpede atarracado do tamanho de um javali, coberto de placas de osso cinza-ardósia sobrepostas
+        como telhas, cada borda lascada em fio de pederneira; focinho comprido e fino, olhos pequenos,
+        patas curtas com garras de cavar. Mostrar também o bicho enrolado: uma bola eriçada de placas.
+      composicao: >-
+        Encosta íngreme de cascalho acima de uma trilha estreita; um Rolador enrolado descendo aos saltos,
+        outro desenrolado no alto, olhando; na trilha, um viajante com escudo de madeira se encolhe,
+        dando a escala. Poeira de pedra, céu frio.
+      evitar: >-
+        Tatu fofo de desenho, ouriço, bola de espinhos de metal, roda com bocas. As placas de pederneira de
+        bordas lascadas dominam a imagem; o bicho é feio e prático.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_chicote_de_fenda
+    vaga: 14
+    nome: Chicote de Fenda
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:355", "lore_nova/daily_life.txt:224"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: vibracao
+      texto: >-
+        Um bicho achatado como uma tábua, da largura de um homem, que mora nas fendas verticais da rocha.
+        O corpo de quitina parda é tão fino que cabe numa rachadura de dois dedos. Tem oito patas: seis
+        curtas para andar de lado, e duas da frente tão compridas e finas que viraram chicotes de tatear,
+        de três metros. Embaixo da cabeça, um par de braços dobrados cheios de espinhos se fecha como uma
+        armadilha de caçador.
+    silhueta: Uma rachadura na rocha de onde saem dois fios compridos que tateiam a trilha.
+    comportamento: >-
+      Fica dentro da fenda, de lado, e estica os chicotes para fora, tocando a trilha devagar. Quando um
+      deles toca uma perna, os braços de espinhos saem da fenda de uma vez e puxam para dentro o que
+      conseguirem. Volta para a fenda ao primeiro corte.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_chicote_de_fenda_abraco_de_espinhos
+      frase: >-
+        Toca primeiro com o chicote; quem foi tocado leva na rodada seguinte o bote dos braços de espinhos,
+        que o puxa contra a parede, de dentro da pedra.
+    contra_jogo: Cortar os chicotes quando tocarem, ou passar longe da parede; fora da fenda, achatado, ele vira de costas com uma pancada.
+    gancho: >-
+      Os guias Cinzéus escolhem a fenda estreita em vez da passagem larga; escolhem também em qual parede
+      não encostar.
+    habitat: [montanhas_afiadas]
+    inspiracao:
+      - fonte: zoologia (amblipígios)
+        referencia: "aracnídeos achatados de patas da frente longas como antenas e braços de espinhos"
+        tomou: o corpo achatado, as patas-chicote que tateiam e os braços de espinhos
+        distancia: só a anatomia; o tamanho e a vida nas fendas verticais são das Montanhas; não tece teia nem se camufla na pedra
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} encosta a ponta de um chicote na perna de alguém e para de mexer."
+    description: Bicho achatado como uma tábua que mora nas fendas da rocha; tateia a trilha com dois chicotes de três metros e puxa com braços de espinhos.
+    perigo: Médio
+    lore: >-
+      As Montanhas rasgaram o chão em vez de crescer dele, e as paredes das passagens são cheias de
+      fendas verticais finas como uma lâmina. Em algumas mora um bicho achatado como uma tábua, que fica
+      de lado lá dentro e estica para fora duas patas longas como chicotes, tateando a trilha. Quando
+      toca uma perna, os braços de espinhos saem da pedra. Os guias Cinzéus não encostam nas paredes e
+      cobram mais caro de quem encosta.
+    aparencia: >-
+      Bicho achatado da largura de um homem, quitina parda, seis patas curtas para andar de lado, duas
+      patas da frente finas e longas como chicotes de três metros, e sob a cabeça dois braços dobrados
+      cheios de espinhos.
+    como_se_luta: >-
+      Toca primeiro com o chicote e depois dá o bote com os braços de espinhos, de dentro da fenda.
+      Cortar os chicotes ou passar longe da parede.
+    related_entities: [montanhas_afiadas]
+    arte:
+      visual: >-
+        Artrópode achatado, quase uma placa, da largura de um homem, quitina parda e fosca; seis patas
+        curtas e abertas para os lados; duas patas dianteiras finíssimas e muito longas, segmentadas,
+        estendidas como chicotes; sob a cabeça, dois braços dobrados e grossos cobertos de espinhos
+        curvos, recolhidos como lâminas de canivete. Muitos olhos pequenos no alto da cabeça.
+      composicao: >-
+        Parede de rocha de uma passagem estreita, rachada de alto a baixo; o bicho meio dentro da fenda,
+        de lado, os chicotes tocando a bota de um viajante que passa com uma mochila, dando a escala. Luz
+        lateral fria, sombra funda na fenda.
+      evitar: >-
+        Aranha com teia, escorpião, louva-a-deus. Não tece, não pica com cauda: é chato, tateia e
+        abraça de dentro da pedra.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ladrao_de_lume
+    vaga: 15
+    nome: Ladrão de Lume
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:310", "lore_nova/daily_life.txt:226"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: luz
+      texto: >-
+        Um bicho pequeno e pelado do tamanho de um gato, de pele rosada e enrugada, que vive no escuro do
+        Reino. Os olhos são enormes, redondos e úmidos, maiores que a boca, e a luz dói neles; mesmo assim
+        ele vai atrás dela. Os braços são longos, lentos e fortes, com mãos de dedos grossos que fecham em
+        gancho e não abrem. A mordida tem uma peçonha nos dentes de baixo que amortece a carne.
+    silhueta: Um bichinho de olhos enormes agarrado a uma lanterna acesa, subindo uma parede no escuro.
+    comportamento: >-
+      Segue os grupos pela luz, de longe, pelo teto e pelas paredes. Quando o grupo para, desce devagar e
+      agarra a lanterna, o pote de Brasa ou a tocha, e sobe com ela para o escuro, abraçado à luz que
+      dói. Quem vai atrás dele vai para longe do grupo.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ladrao_de_lume_leva_a_luz
+      frase: >-
+        Rouba a luz do grupo e foge para o alto; sem ela, todos lutam às cegas até recuperá-la.
+    contra_jogo: Guardar a luz no corpo, não no chão, e cobri-la de repente; no escuro súbito ele larga tudo e se encolhe.
+    gancho: >-
+      A Brasa-Profunda dá luz e calor preciosos no fundo e atrai o que mora no escuro; nem tudo que vem
+      quer comer.
+    habitat: [ma_boca, ma_saidas_baixas]
+    inspiracao:
+      - fonte: zoologia (lóris-lento)
+        referencia: "primata noturno de olhos enormes, movimentos lentos e mordida venenosa"
+        tomou: os olhos enormes, o agarrar lento e a mordida que amortece
+        distancia: o corpo pelado, a fome de luz e o roubo das lanternas são do Reino perdido
+    padrao: [mover, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} desce do teto devagar, e os olhos dele refletem a lanterna inteira."
+    description: Bicho pelado de olhos enormes que segue os grupos no escuro do Reino e foge para o alto com a lanterna, a tocha ou o pote de Brasa.
+    perigo: Baixo
+    lore: >-
+      Os guias Cinzéus carregam Brasa-Profunda num pote de ferro, porque no fundo das Montanhas a luz e
+      o calor valem mais que comida. O Ladrão de Lume sabe disso. É um bicho pelado do tamanho de um
+      gato, de olhos enormes que a luz machuca, e mesmo assim vai atrás dela. Desce do teto quando o
+      grupo para, agarra a lanterna com as mãos que não abrem e sobe com ela para o escuro. Quem corre
+      atrás da luz corre para longe dos outros.
+    aparencia: >-
+      Bicho pelado do tamanho de um gato, pele rosada e enrugada, olhos enormes redondos e úmidos maiores
+      que a boca, braços longos com mãos de dedos grossos fechadas em gancho, agarrado a uma lanterna.
+    como_se_luta: >-
+      Rouba a luz do grupo e foge para o alto, e todos lutam às cegas. Guardar a luz no corpo e cobri-la
+      de repente o faz largar tudo.
+    related_entities: [ma_boca, ma_saidas_baixas]
+    arte:
+      visual: >-
+        Bicho pequeno do tamanho de um gato, sem pelo, pele rosada enrugada com manchas cinza; olhos
+        redondos enormes, úmidos, que refletem a luz; braços longos e magros com mãos de dedos grossos
+        fechadas em gancho; abraçado a uma lanterna de ferro acesa, encolhendo o rosto contra a luz.
+      composicao: >-
+        Parede alta de uma câmara do Reino; o Ladrão subindo pela pedra com a lanterna, a luz batendo de
+        baixo no rosto dele; lá embaixo, no escuro, um grupo de três viajantes olha para cima, pequenos,
+        dando a escala. Só a lanterna ilumina a cena.
+      evitar: >-
+        Macaco fofo de desenho, duende, gremlin. É um animal feio e frágil que sofre com a luz que
+        carrega.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  # ---- slot genérico reinventado: enemy_troll_ponte ----
+  - id: enemy_troll_ponte
+    vaga: 16
+    nome: Ponte de Ombros
+    status: reinventada
+    substitui: enemy_troll_ponte
+    ataques: ["Sacudida de Ombros"]
+    acoes:
+      - Sacode as costas sob quem está ferido e o joga na fenda.
+      - Ferido, não foge: enrijece o corpo e aguenta; não larga as bordas.
+      - Deixa passar quem pagou o pedágio ao bando; quem não pagou, ele sacode.
+    substitui_generico: Troll de Ponte
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: bandos_orc_saidas_baixas
+      refs: ["lore_nova/factions.txt:409", "lore_nova/locations.txt:365"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: enorme
+      locomocao: ancorada
+      percepcao: vibracao
+      texto: >-
+        Um Orc dos bandos de Gruumsha que se deitou atravessado sobre a fenda mais estreita das Saídas
+        Baixas e virou a passagem. As mãos e os pés ficaram enfiados em buracos que ele mesmo cavou nas
+        duas bordas, e a pele dos punhos e dos tornozelos cresceu para dentro da pedra. As costas
+        achataram em anos de gente passando por cima: a coluna endureceu reta, a pele virou um couro
+        córneo grosso, liso como degrau gasto, e os ombros incharam como vigas. O rosto fica de lado,
+        encostado no braço, e acompanha cada passo.
+    silhueta: Um corpo enorme de bruços atravessado sobre uma fenda, com gente andando por cima das costas.
+    comportamento: >-
+      Não sai dali. O bando de Gruumsha cobra de quem quer atravessar, e quem paga passa por cima dele.
+      Quem não paga, ou briga no caminho, sente as costas se mexerem debaixo dos pés, e a fenda é funda.
+    papel_tatico: guarda_protetor
+    arquetipo: predador
+    categoria: elite
+    faccao: bandos_orc_saidas_baixas
+    mecanica_assinatura:
+      carta: cri_ponte_de_ombros_sacudida
+      frase: >-
+        Quem luta em cima dele luta no chão que ele é: a cada sacudida, quem está nas costas pode cair na
+        fenda.
+    contra_jogo: Não lutar em cima dele; atravessar por outro lado, ou atacar as mãos e os pés presos nas bordas, onde a pele entrou na pedra.
+    gancho: >-
+      O bando de Gruumsha cobra pedágio em bens ou em sangue; na fenda mais estreita, cobra com o corpo de
+      um dos seus.
+    habitat: [ma_saidas_baixas]
+    inspiracao: []
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} enche os ombros de ar, e as costas se arqueiam debaixo de quem está em cima."
+    description: Um Orc dos bandos de Gruumsha deitado sobre a fenda mais estreita das Saídas Baixas, com mãos e pés presos na pedra; o pedágio é passar por cima dele.
+    perigo: Alto
+    lore: >-
+      Os bandos de Gruumsha cobram pedágio nas Saídas Baixas, em bens ou em sangue. Na fenda mais
+      estreita não há ponte de corda: há um Orc. Ele se deitou atravessado sobre o vão há tantos anos que
+      a pele das mãos e dos pés entrou na pedra das bordas, e as costas viraram um couro liso como degrau
+      gasto. Quem paga passa por cima. Quem não paga, ou começa uma briga no caminho, descobre que a
+      ponte tem ombros.
+    aparencia: >-
+      Orc enorme de bruços atravessado sobre uma fenda, mãos e pés enfiados na pedra das bordas, pele dos
+      punhos crescida para dentro da rocha, costas achatadas num couro córneo liso como degrau gasto,
+      ombros como vigas, rosto de lado sobre o braço.
+    como_se_luta: >-
+      Quem luta em cima dele pode cair na fenda a cada sacudida. Atravessar por outro lado ou atacar as
+      mãos e os pés presos nas bordas.
+    related_entities: [ma_saidas_baixas, bandos_orc_saidas_baixas]
+    arte:
+      visual: >-
+        Orc gigantesco, pele verde-acinzentada, deitado de bruços e esticado sobre uma fenda funda; mãos e
+        pés afundados em buracos nas duas bordas de rocha, a pele dos punhos e tornozelos fundida à pedra;
+        as costas planas, de couro grosso e córneo, gasto e liso no centro como um degrau; ombros enormes;
+        o rosto virado de lado, apoiado no antebraço, olhos abertos.
+      composicao: >-
+        Fenda estreita e funda nas Saídas Baixas, com neve suja nas bordas; um mercador com um fardo
+        atravessa andando sobre as costas do Orc, pequeno perto dele, dando a escala; dois Orcs do bando
+        recebem moedas na borda. Céu cinza, fumaça de acampamento.
+      evitar: >-
+        Gigante de pedra, ogro de ponte com porrete, troll verde regenerando. É um Orc que virou chão, e o
+        horror é estar em cima dele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bracos_de_tenaz
+    vaga: 17
+    nome: Braços de Tenaz
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: ultimos_anoes_reino
+      refs: ["lore_nova/races.txt:111", "lore_nova/factions.txt:437", "data/world_map.json:930"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um ferreiro dos Últimos Anões que ficou na Forja Profunda e parou de usar luva. O calor das bigornas
+        cobrou o preço nos antebraços: a pele deles virou uma escória vitrificada, preta e vidrada como
+        borra de fornalha, que segura ferro em brasa sem queimar. Dos punhos saem duas tenazes de forja
+        rebitadas ao osso, curtas, na medida dos braços anões que já chegam ao chão, e vivem rubras de
+        tanto ficar no fogo. O peito é um barril largo marcado de faíscas, e a barba trançada com fio de
+        cobre está chamuscada até o queixo.
+    silhueta: Um anão largo e quadrado de antebraços pretos e vidrados, com duas tenazes rubras no lugar das mãos, soltando fumaça.
+    comportamento: >-
+      Trabalha na Forja e não fala do que forja. Intruso é peça fora do lugar: fecha a tenaz na espada ou
+      no escudo dele e esquenta o ferro até ninguém conseguir segurar. O que é largado no chão da Forja,
+      ele recolhe.
+    papel_tatico: quebra_defesa
+    arquetipo: tatico
+    categoria: elite
+    faccao: ultimos_anoes_reino
+    mecanica_assinatura:
+      carta: cri_bracos_de_tenaz_ferro_que_queima_a_mao
+      frase: >-
+        Fecha a tenaz rubra na arma ou no escudo do alvo e o esquenta: o item fica inútil até esfriar, duas
+        rodadas, ou até ser largado no chão.
+    contra_jogo: Lutar com cabo de madeira e escudo de couro, que esquentam devagar; largar o item quente e pegar outro, ou molhar as tenazes, que racham com água fria.
+    gancho: >-
+      As bigornas da Forja Profunda estão quentes, as marcas nos martelos são anãs, e o tamanho das peças
+      não é.
+    habitat: [ma_forja_profunda]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} enfia as duas tenazes nas brasas e as tira rubras, pingando escória."
+    description: Ferreiro dos Últimos Anões de antebraços vitrificados pelo calor e tenazes rubras rebitadas nos punhos; esquenta a arma de quem entra na Forja até ela cair da mão.
+    perigo: Alto
+    lore: >-
+      Alguns dos Últimos Anões do Reino ficaram na Forja Profunda, perto da Boca, onde as bigornas nunca
+      esfriaram. Nenhum deles diz o que forja. Os ferreiros mais antigos pararam de usar luva, e o calor
+      vitrificou a pele dos antebraços até ela segurar ferro em brasa; nos punhos rebitaram tenazes que
+      nunca saem do fogo. Pelo Protocolo, intruso na Forja é peça fora do lugar. A tenaz esquenta a arma
+      dele até ela cair, e o que cai na Forja fica na Forja.
+    aparencia: >-
+      Anão largo e quase quadrado, peito de barril marcado de faíscas, barba trançada com fio de cobre
+      chamuscada, antebraços de pele preta vitrificada como escória, tenazes de forja curtas e rubras
+      rebitadas nos punhos, fumegando.
+    como_se_luta: >-
+      Esquenta a arma ou o escudo do alvo, que fica inútil até esfriar ou ser largado. Cabo de madeira e
+      couro aguentam mais; água fria racha as tenazes.
+    related_entities: [ma_forja_profunda, ultimos_anoes_reino]
+    arte:
+      visual: >-
+        Anão adulto quase quadrado, ombros mais largos que a altura, avental de couro queimado, peito largo
+        coberto de pontinhos de queimadura; barba trançada com fio de cobre, chamuscada; antebraços de pele
+        preta, vidrada e rachada como escória de fornalha; no lugar das mãos, tenazes de ferreiro curtas,
+        rebitadas no punho, incandescentes nas pontas; fumaça subindo dos braços.
+      composicao: >-
+        Interior da Forja Profunda: bigornas grandes demais para anões, brasas vermelhas, peças de ferro
+        enormes encostadas na parede, sem forma reconhecível; o ferreiro segurando com uma tenaz a lâmina
+        de uma espada que fumega, o dono humano soltando o cabo, mais alto que ele, dando a escala. Luz
+        laranja de brasa, fumaça.
+      evitar: >-
+        Anão de fantasia alegre de capacete com chifres, braço mecânico de engrenagens, braços esticados de
+        ferro. São braços anões de tamanho normal, queimados até virarem escória.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_marco_que_aponta
+    vaga: 18
+    nome: Marco que Aponta
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/daily_life.txt:222", "lore_nova/locations.txt:362"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: eter
+      texto: >-
+        Um guia Cinzéu que tatuou rotas demais. As tatuagens de rota dos guias latejam sob a pele com tinta
+        de Éter; nele, as rotas foram todas tatuadas no braço que aponta, e cada deslizamento mudou o
+        desenho por cima do anterior. A pele do braço cicatrizou camada sobre camada até virar um cordame
+        duro e alto de cicatriz cinzenta, e o braço endureceu reto, sem dobrar no cotovelo, estendido para
+        a frente como um marco de estrada. Os três dedos da mão ficaram tortos de tanto apontar. A cauda,
+        nua, encosta na rocha a cada passo e treme quando a pedra mexe.
+    silhueta: Um guia magro de cauda no chão, com um braço duro e grosso como um galho seco estendido para a frente, sempre apontando.
+    comportamento: >-
+      Ainda guia. Cobra pouco, anda na frente, aponta a fenda certa e sabe o caminho melhor que qualquer
+      vivo, porque o mapa dele muda com a montanha. Leva os clientes para onde o mapa manda, e o mapa já
+      não manda para a saída. Em luta, aponta: quem segue o dedo dele pisa onde a pedra cede.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_marco_que_aponta_passo_errado"
+      frase: >-
+        Aponta o lugar certo de pisar e é mentira: quem se move na rodada seguinte vai para onde ele quer,
+        e não para onde queria.
+    contra_jogo: Não seguir o dedo dele e ficar parado no lugar firme; cortar o cordão de cicatriz da mão que aponta faz o mapa parar de latejar.
+    gancho: >-
+      Os guias Cinzéus leem as paredes com as tatuagens de rota latejando sob a pele; numa montanha que
+      muda toda semana, o desenho nunca termina.
+    habitat: [montanhas_afiadas]
+    inspiracao: []
+    padrao: [mover, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} estende o braço de três dedos e aponta, e os cordões do mapa latejam juntos."
+    description: Guia Cinzéu cujas tatuagens de rota viraram cordões de cicatriz em relevo de tanto mudar; ainda guia, e o mapa já não leva à saída.
+    perigo: Médio
+    lore: >-
+      Os guias Cinzéus tatuam as rotas das passagens com tinta de Éter, e as tatuagens latejam sob a pele
+      quando eles leem as paredes. A montanha muda a cada deslizamento, e o guia tatua por cima. Em
+      alguns, as camadas viraram um cordame de cicatriz no braço que aponta, que endureceu reto, e o
+      mapa passou a mudar sozinho. Esses ainda guiam, cobram pouco e conhecem cada fenda. Os clientes deles chegam a
+      algum lugar; raramente ao que pagaram.
+    aparencia: >-
+      Guia Cinzéu magro de pele cinzenta, um braço rígido e reto estendido para a frente, coberto de um
+      cordame alto de cicatriz cinzenta que lateja como um mapa em relevo, três dedos tortos apontando,
+      cauda nua encostada na rocha.
+    como_se_luta: >-
+      Aponta o caminho errado, e quem se move vai para onde ele quer. Ficar parado no lugar firme; cortar
+      o cordão da mão que aponta.
+    related_entities: [montanhas_afiadas]
+    arte:
+      visual: >-
+        Cinzéu adulto (humanoide esguio, pele cinzenta, três dedos por mão, cauda sem pelo com ponta de
+        osso), capa curta de lã; o resto do corpo liso e comum, mas um braço inteiro, do ombro aos dedos,
+        coberto de cordões de cicatriz em alto relevo, grossos e cruzados como trilhas e curvas de nível,
+        com leve brilho frio azul-esverdeado por baixo; esse braço rígido e reto, estendido, dedo torto
+        apontando.
+      composicao: >-
+        Bifurcação de duas passagens estreitas entre paredões; o Mapa de pé na pedra, apontando a passagem
+        da esquerda; atrás dele, dois clientes com mochilas, da mesma altura, hesitam. Neve leve, luz de
+        fim de dia.
+      evitar: >-
+        Tatuagem tribal decorativa, homem coberto de runas brilhantes, mago de pele escrita. São cicatrizes
+        em relevo, grossas e feias, e o brilho é fraco e frio.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_armador_de_fosso
+    vaga: 19
+    nome: Armador de Fosso
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: goblins_mineiros
+      refs: ["lore_nova/factions.txt:428", "lore_nova/creatures.txt:348"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: pequena
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um Goblin-mineiro que desarma e rearma as armadilhas dos Anões há mais tempo do que os outros
+        vivem. Perdeu os dedos um a um nos mecanismos e pôs no lugar o que achou: nos tocos das duas mãos
+        há ganchos, molas e pontas de picareta anãs costurados na pele com arame, enferrujados e cascudos
+        de sangue velho. As orelhas grandes estão cheias de furos onde guarda pinos. Anda curvado, com o
+        peso das ferragens puxando os ombros, e sente pelas solas o estalo de uma trava.
+    silhueta: Um vulto pequeno e curvado com as mãos cheias de ganchos e molas, mexendo em alguma coisa no chão.
+    comportamento: >-
+      Anda na frente dos bandos de Goblins e prepara o terreno: arma laços, travas e lâminas de mola
+      antigas nos corredores por onde o inimigo vai recuar. Em luta fica longe e solta as armadilhas uma
+      a uma, puxando os arames com os ganchos.
+    papel_tatico: artilharia
+    arquetipo: emboscador
+    categoria: lacaio
+    faccao: goblins_mineiros
+    mecanica_assinatura:
+      carta: cri_armador_de_fosso_trava_armada
+      frase: >-
+        Arma uma trava anã no chão em vez de atacar; na rodada seguinte, quem se mexe na direção dele ou
+        para trás dispara a armadilha.
+    contra_jogo: Avançar reto e rápido sobre ele, pelo caminho que ele acabou de pisar; sem as mãos de ferragem, ele não arma mais nada.
+    gancho: >-
+      Os Goblins-mineiros conhecem cada armadilha que os Anões deixaram no Reino; alguns pagaram cada uma
+      com um dedo.
+    habitat: [ma_boca, ma_saidas_baixas]
+    inspiracao: []
+    padrao: [enfraquecer, enfraquecer, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} se agacha e mexe no chão com os ganchos, e algo estala baixinho."
+    description: Goblin-mineiro que trocou os dedos perdidos nas armadilhas anãs por ganchos e molas costurados nos tocos; arma travas no caminho da luta.
+    perigo: Baixo
+    lore: >-
+      Os Goblins-mineiros conhecem cada armadilha que os Anões deixaram no Reino, e conhecem porque
+      desarmaram uma por uma. Os que fazem isso há muito tempo não têm mais dedos: nos tocos costuram com
+      arame o que acharam nos mecanismos, ganchos, molas e pontas de picareta. Andam na frente dos bandos
+      e preparam os corredores. Quem luta com Goblins no Reino aprende a não recuar pelo caminho de onde
+      veio.
+    aparencia: >-
+      Goblin pequeno e curvado, ganchos, molas e pontas de picareta anãs costurados com arame nos tocos
+      dos dedos das duas mãos, enferrujados e cascudos de sangue, orelhas grandes furadas cheias de pinos,
+      ombros puxados pelo peso das ferragens.
+    como_se_luta: >-
+      Arma travas no chão e solta as armadilhas de longe; quem recua ou corre na direção dele dispara uma.
+      Avançar reto pelo caminho que ele pisou.
+    related_entities: [ma_boca, ma_saidas_baixas, goblins_mineiros]
+    arte:
+      visual: >-
+        Goblin adulto pequeno e magro, pele cinza-esverdeada, curvado; as duas mãos sem dedos, com ganchos
+        de ferro, molas espirais e pontas de picareta costurados nos tocos com arame, a pele inchada em
+        volta; orelhas grandes furadas com pinos de metal espetados; colete de couro cheio de bolsos com
+        peças. Ajoelhado, armando uma trava de mola anã no chão.
+      composicao: >-
+        Corredor do Reino com piso de lajes; o Armador agachado sobre uma laje levantada, arames esticados
+        até as paredes; ao fundo, um anão de pedra quebrado de uma estátua antiga, e um aventureiro de
+        bota parado a dois passos, muito mais alto, dá a escala. Luz de vela no chão.
+      evitar: >-
+        Goblin cômico de nariz grande, inventor maluco com engenhocas, gremlin. É um trabalhador mutilado,
+        sério, que vive do ofício que o mutilou.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vedado_de_piche
+    vaga: 20
+    nome: Vedado de Piche
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: bandos_orc_saidas_baixas
+      refs: ["lore_nova/factions.txt:405", "lore_nova/creatures.txt:344"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um Orc grande do bando de Gruumsha que fechou os próprios olhos com piche quente para descer onde os
+        Orcs não descem. O piche endureceu numa máscara preta e lisa do nariz à testa, colada à pele, e a
+        pele em volta ficou queimada e repuxada. A boca fica sempre entreaberta, puxando o ar, e as narinas
+        rasgaram de tanto farejar até a carne do focinho ficar aberta e úmida. Os braços são compridos e
+        grossos, e ele anda com uma mão aberta tocando a parede e a outra no cabo do machado.
+    silhueta: Um Orc enorme de cabeça erguida com uma faixa preta e lisa no lugar dos olhos, uma mão aberta tocando a parede.
+    comportamento: >-
+      Gruumsha manda os Vedados ao fundo quando precisa de algo de lá, porque os outros Orcs não vão.
+      Farejam sangue de longe e não largam um rastro. Não se assustam com o escuro nem com o que mora
+      nele, e quem tenta sumir na sombra está fazendo o que o Vedado mais gosta.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: padrao
+    faccao: bandos_orc_saidas_baixas
+    mecanica_assinatura:
+      carta: cri_vedado_de_piche_faro_de_sangue
+      frase: >-
+        Fareja quem sangra e não larga: o alvo ferido não consegue se esconder nem fugir dele, nem no
+        escuro.
+    contra_jogo: Estancar o sangue antes de fugir; fumaça forte ou o cheiro de Líquen-de-Brasa queimando deixa o faro dele perdido.
+    gancho: >-
+      Os Orcs das Saídas Baixas não voltam às profundezas e nunca disseram por quê; quando Gruumsha
+      precisa de algo de lá, manda os que fecharam os olhos com piche.
+    habitat: [ma_boca, ma_saidas_baixas]
+    inspiracao: []
+    padrao: [ataque, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} vira a máscara de piche para o lado de quem sangra e puxa o ar fundo, três vezes."
+    description: Orc do bando de Gruumsha que fechou os olhos com piche para descer ao Reino; fareja o sangue e não larga quem está ferido, nem no escuro.
+    perigo: Médio
+    lore: >-
+      Os Orcs das Saídas Baixas saíram do Reino quando o Rei despertou e nunca voltaram, e não explicam
+      por quê. Gruumsha às vezes precisa de algo lá de baixo. Os que ele manda derramam piche quente sobre
+      os próprios olhos antes de descer: sem ver o escuro, dizem, dá para andar nele. Voltam com o focinho
+      rasgado de farejar e com o que foram buscar. Quem sangra perto de um Vedado não se esconde dele em
+      lugar nenhum.
+    aparencia: >-
+      Orc grande e de braços compridos, uma máscara preta e lisa de piche endurecido colada do nariz à
+      testa no lugar dos olhos, pele queimada em volta, boca entreaberta, narinas rasgadas com o focinho
+      aberto e úmido, uma mão na parede e outra no cabo de um machado.
+    como_se_luta: >-
+      Fareja quem sangra e persegue até o fim, sem precisar de luz. Estancar o sangue; fumaça forte
+      confunde o faro.
+    related_entities: [ma_boca, ma_saidas_baixas, bandos_orc_saidas_baixas]
+    arte:
+      visual: >-
+        Orc grande e musculoso, pele verde-acinzentada cheia de cicatrizes, cabeça erguida; uma faixa de
+        piche preto, liso e brilhante, endurecido do nariz à testa no lugar dos olhos, com a pele em volta
+        queimada e repuxada; narinas rasgadas, focinho aberto e úmido; boca entreaberta; braços longos, uma
+        mão espalmada na parede de pedra, a outra num machado de cabo curto; peles e couro como roupa.
+      composicao: >-
+        Galeria escura do Reino; o Vedado avança tocando a parede, o rosto virado para uma gota de sangue no
+        chão à frente; ao longe, um aventureiro ferido se encolhe atrás de uma coluna, mais baixo que ele,
+        dando a escala. Quase sem luz, um ponto laranja de Líquen-de-Brasa.
+      evitar: >-
+        Orc de fantasia genérico de presas e armadura de espinhos, vendado de pano, monge cego sábio. É um
+        Orc que pagou com os olhos por coragem, sujo e decidido.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_peso_dos_vencidos
+    vaga: 21
+    nome: Peso dos Vencidos
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_vhrak
+      refs: ["lore_nova/npcs.txt:226", "lore_nova/factions.txt:430"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: enorme
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        O resíduo do Ódio toma carne do que encontra nas Saídas Baixas, e o que mais há lá são mortos da
+        guerra entre Orcs e Goblins. Esta cria é um Orc enorme da cintura para cima, de pele rasgada, e da
+        cintura para baixo um amontoado de corpos de Goblins, braços, pernas e cabeças, costurados uns nos
+        outros com tendão grosso, que servem de patas. As costuras não fecham nunca: a carne do Orc e a
+        dos Goblins se repele, e onde se tocam a pele fica em carne viva. As mãos de baixo agarram e
+        arranham o tronco de cima, e os punhos de cima socam para baixo.
+    silhueta: Um Orc enorme montado num monte de corpos pequenos que andam por ele e se viram para socá-lo.
+    comportamento: >-
+      Avança pelas Saídas Baixas atrás da briga mais perto, e onde passa as rixas entre os bandos viram
+      matança. Luta com o tronco de Orc e anda com os Goblins; o Orc soca para baixo com o peso de
+      todos, e as mãos de baixo o carregam aonde ele quer, odiando-o.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_peso_dos_vencidos_soco_de_cima"
+      frase: >-
+        O Orc soca de cima com o peso do monte inteiro: o golpe acerta um alvo e derruba quem estiver de
+        pé logo ao lado dele. Cada pata de Goblin cortada tomba o monte para aquele lado; com três
+        cortadas do mesmo lado, ele cai e passa a rodada seguinte se levantando, sem golpe.
+    contra_jogo: >-
+      Cortar as patas de Goblin sempre do mesmo lado até o monte tombar, e então bater no Orc caído;
+      quem fica de frente e colado ao vizinho leva o soco e a queda.
+    gancho: >-
+      Orcs e Goblins se odeiam nas Saídas Baixas; o que o Ódio deixa ali costura os dois de volta num
+      corpo só, e eles não se suportam dentro dele.
+    habitat: [ma_saidas_baixas]
+    inspiracao: []
+    padrao: [ataque_multiplo, ataque, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: >-
+      O Orc de {nome} ergue os dois punhos, e todas as mãos de baixo se fincam no chão ao mesmo tempo.
+    description: >-
+      Cria do Ódio nas Saídas Baixas, um tronco de Orc costurado sobre um monte de Goblins mortos que
+      lhe servem de patas e o carregam odiando-o.
+    perigo: Extremo
+    lore: >-
+      Orcs e Goblins se odeiam nas Saídas Baixas, e o Ódio, onde passa, não cria nada: só aumenta o que
+      já havia. O resíduo que ele deixou ali tomou carne dos mortos dessa guerra e fez uma coisa só de
+      um Orc e de muitos Goblins, costurados com tendão. Dizem nos acampamentos que Orcs e Goblins já
+      foram um povo só, nascido destas montanhas, e que por isso a costura pega tão fácil. A coisa anda
+      atrás de briga, e os de baixo a carregam porque não conseguem largá-la.
+    aparencia: >-
+      Tronco de Orc enorme de pele rasgada sobre um amontoado de corpos de Goblins costurados com tendão
+      grosso que servem de patas; costuras abertas em carne viva; as mãos de baixo arranhando o tronco de
+      cima, os punhos de cima socando para baixo.
+    como_se_luta: >-
+      Soca de cima e derruba quem está ao lado do alvo. Corte as patas de um lado só: com três cortadas
+      ele tomba e perde uma rodada.
+    related_entities: [ma_saidas_baixas, npc_vhrak, bandos_orc_saidas_baixas, goblins_mineiros]
+    arte:
+      visual: >-
+        Criatura enorme: da cintura para cima, um Orc musculoso de pele verde-acinzentada rasgada, rosto
+        torcido de ódio; da cintura para baixo, um monte de corpos de Goblins menores, de pele mais
+        escura, costurados uns nos outros com tendão grosso, os braços e pernas deles fazendo de patas.
+        Costuras abertas e vermelhas onde as peles se tocam; mãos de Goblins agarrando o tronco do Orc,
+        o Orc socando para baixo.
+      composicao: >-
+        Acampamento destruído nas Saídas Baixas, barracas de couro caídas, mastros tombados; a Costura
+        avança entre dois bandos que recuam; um Orc de pé e um Goblin dão a escala, os dois menores que
+        ela. Fumaça, neve suja, luz cinza.
+      evitar: >-
+        Centauro, quimera de partes de animais, monstro de carne de ficção científica. São Orcs e Goblins
+        reconhecíveis, e o horror é que eles se odeiam dentro do mesmo corpo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tampao_da_camara
+    vaga: 22
+    nome: Tampão da Câmara
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:273", "lore_nova/locations.txt:360"]
+    anatomia:
+      plano_corporal: composto
+      material: carne_exposta
+      escala: grande
+      locomocao: ancorada
+      percepcao: medo_emocao
+      texto: >-
+        Quando o teto de uma câmara começa a vir abaixo, todos correm para a mesma porta, e alguns grupos
+        ficam esmagados no vão, empurrando e empurrados. O Desespero deixa resíduo ali, e o resíduo toma a
+        carne dos que ficaram presos na porta. Esta cria é um tampão de corpos espremidos no vão, uns por
+        cima dos outros, ombro contra costas, rosto contra joelho, apertados até não sobrar ar entre eles.
+        Dezenas de braços saem para os dois lados, com as mãos inchadas e roxas de esmagamento. Quando
+        respira, o tampão inteiro incha e aperta as bordas do vão.
+    silhueta: Uma porta de galeria entupida de gente espremida, com braços saindo dos dois lados.
+    comportamento: >-
+      Aparece na porta por onde se entrou. Não persegue: incha e aperta. Os braços agarram quem chega
+      perto e puxam contra o tampão, como os de trás puxavam os da frente. Quem fica preso na câmara com
+      ele começa a achar que não há outra saída, e quase sempre tem razão.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_tampao_da_camara_aperto_do_vao"
+      frase: >-
+        Respira e aperta: a cada duas rodadas o tampão incha e esmaga todos os que estão encostados nele
+        ou nas bordas do vão, e os braços puxam para junto dele quem chega perto; quem fica a dois
+        passos não é alcançado.
+    contra_jogo: >-
+      Ficar fora do alcance dos braços e bater de longe ou com haste; cortar os braços das bordas faz
+      ele escorregar do vão e parar de inchar.
+    gancho: >-
+      Nas câmaras do Reino onde o teto cedeu, os mortos não estão debaixo das pedras: estão na porta, todos
+      juntos.
+    habitat: [ma_boca]
+    inspiracao: []
+    padrao: [defesa, enfraquecer]
+    a_cada_n: 4
+    telegrafo: "{nome} incha com um gemido de muitas bocas e aperta as bordas do vão."
+    description: >-
+      Cria do Desespero feita dos corpos esmagados na porta quando o teto cedeu; entope a porta e esmaga
+      contra as bordas quem chega perto.
+    perigo: Médio
+    lore: >-
+      No Reino Subterrâneo os tetos ainda cedem, e quando cedem todos correm para a mesma porta. O
+      Desespero, que vive procurando uma saída que sabe não existir, deixa resíduo onde um grupo inteiro
+      ficou esmagado no vão, cada um empurrando o da frente. O resíduo toma a carne deles. A coisa que sai
+      disso é uma porta entupida de gente, com braços para os dois lados, e ela aparece na saída por onde
+      você entrou.
+    aparencia: >-
+      Vão de porta ou de túnel entupido de corpos humanos espremidos, ombro contra costas e rosto contra
+      joelho, dezenas de braços saindo para os dois lados com mãos inchadas e roxas; o conjunto incha
+      quando respira.
+    como_se_luta: >-
+      Incha a cada duas rodadas e esmaga quem está encostado; os braços puxam quem chega perto. Fique a
+      dois passos e corte os braços das bordas.
+    related_entities: [ma_boca, npc_dorrhen]
+    arte:
+      visual: >-
+        O vão de uma porta de pedra anã completamente preenchido por corpos humanos acinzentados de poeira,
+        espremidos em todas as posições, encaixados como pedras de um muro; rostos de lado, joelhos,
+        costas, ombros; dezenas de braços saindo para a frente, mãos inchadas e roxas. Sem sangue à vista,
+        só pó de pedra e pedaços de teto caídos.
+      composicao: >-
+        Câmara do Reino vista de dentro, teto rachado e pedras caídas no chão; a única porta tapada pela
+        cria; dois aventureiros recuam para o centro da câmara, da altura de um terço da porta, dando a
+        escala. Luz de uma tocha caída no chão.
+      evitar: >-
+        Muro de crânios de ossário, monstro de carne derretida, gore explícito. Os corpos estão inteiros e
+        reconhecíveis; o horror é o aperto e a porta fechada.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tesoura_de_cordada
+    vaga: 23
+    nome: Tesoura de Cordada
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:258", "lore_nova/locations.txt:362"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: osso
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: som
+      texto: >-
+        O resíduo da Inveja aparece onde dois grupos sobem a mesma parede e cada um torce pela queda do
+        outro, e toma os ossos dos que caíram nas fendas. O corpo é curto, do tamanho de um cão: duas
+        escápulas e dois maxilares articulados no centro como as lâminas de uma tesoura de tosquia aberta,
+        afiados no fio. Embaixo, seis patas finas de costela cravam as pontas na pedra. Não tem cabeça nem
+        olhos; as lâminas abrem e fecham sozinhas, e os ossos rangem baixo quando a corda perto vibra.
+    silhueta: Uma tesoura de tosquia aberta do tamanho de um cão, presa na parede ao lado de uma corda esticada.
+    comportamento: >-
+      Vive nas paredes onde as cordadas sobem. Não morde gente: corta o que segura gente. Corda, alça,
+      fivela, correia de escudo, a mão que segura a mão do companheiro. Some numa fenda quando é visto e
+      volta quando alguém está pendurado.
+    papel_tatico: saqueador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tesoura_de_cordada_corte_da_correia
+      frase: >-
+        Corta o que o outro tem: correia, corda e alça; a cada corte, uma proteção do jogador deixa de valer
+        até ser amarrada de novo.
+    contra_jogo: Não ficar pendurado; esmagá-la contra a pedra com a lâmina fechada, porque as patas de costela quebram com pancada.
+    gancho: >-
+      Nas paredes das Montanhas, dois grupos que sobem juntos raramente chegam juntos.
+    habitat: [montanhas_afiadas]
+    inspiracao: []
+    padrao: [enfraquecer, mover, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} crava as patas ao lado da corda de quem sobe, e as lâminas se abrem com um rangido."
+    description: Cria da Inveja em forma de tesoura de tosquia feita de escápulas e maxilares, sobre patas de costela; corta corda, alça e correia de quem sobe.
+    perigo: Baixo
+    lore: >-
+      A Inveja não quer o que o outro tem: quer que o outro não tenha. Nas paredes das Montanhas, onde duas
+      cordadas sobem ao mesmo tempo, ela deixa resíduo, e o resíduo toma os ossos dos que caíram nas
+      fendas. A coisa parece uma tesoura de tosquia aberta, presa na pedra ao lado da corda. Não morde.
+      Corta corda, alça, fivela e correia, e de preferência a de quem está pendurado. Os guias contam que
+      ela some quando alguém olha e volta quando alguém precisa de ajuda.
+    aparencia: >-
+      Corpo curto do tamanho de um cão feito de duas escápulas e dois maxilares articulados como as
+      lâminas de uma tesoura de tosquia aberta, fio afiado, sobre seis patas finas de costela cravadas na
+      pedra; sem cabeça nem olhos.
+    como_se_luta: >-
+      Corta correias, cordas e alças, e as proteções deixam de valer. Não ficar pendurado; esmagá-la
+      contra a pedra quando as lâminas fecham.
+    related_entities: [montanhas_afiadas, npc_veth]
+    arte:
+      visual: >-
+        Criatura do tamanho de um cão feita de ossos branco-amarelados: duas escápulas largas e dois
+        maxilares longos articulados num pino central, abertos em X como as lâminas de uma tesoura de
+        tosquia, com fio de lâmina; seis patas finas de costelas, pontudas, cravadas na rocha. Sem cabeça,
+        sem olhos.
+      composicao: >-
+        Paredão vertical com duas cordadas subindo lado a lado; a Tesoura presa na pedra ao lado da corda de
+        uma delas, as lâminas abertas sobre a corda um palmo acima da mão de um escalador; o companheiro
+        abaixo dá a escala. Vento, neve fina, céu branco.
+      evitar: >-
+        Serpente de ossos, centopeia de vértebras, caranguejo de praia. É um par de lâminas de osso sobre
+        patas finas, quieto, que quer a corda e não a carne.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mastro_de_trofeus
+    vaga: 24
+    nome: Mastro de Troféus
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:211", "lore_nova/factions.txt:411"]
+    anatomia:
+      plano_corporal: composto
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Nos acampamentos das Saídas Baixas, quem trai um acordo com os Orcs vira troféu, pregado num
+        mastro na boca da passagem. A Crueldade que sobra disso tomou a carne dos mastros. Esta cria é
+        um feixe de ossos compridos amarrados com tendão e couro, alto como duas lanças, e ao longo dele
+        estão pregados maxilares, dentes, tranças e cintos de traidores, que batem uns nos outros. Anda
+        cravando a estaca da base no chão e puxando o feixe atrás dela, aos trancos, e as tiras de
+        tendão de cima balançam soltas, batendo nos troféus. No alto, onde os Orcs pregavam a cabeça do
+        traidor, há sempre um rosto: o de quem está sofrendo mais perto, copiado em carne.
+    silhueta: Um mastro alto cheio de coisas pregadas que avança aos trancos, cravando a própria ponta no chão, com um rosto no topo.
+    comportamento: >-
+      Fica de pé na boca das passagens entre os mastros de verdade e só se mexe quando alguém já sangra.
+      Não laça nem segura: põe-se diante do ferido, e o rosto no alto vai ficando mais nítido, igual ao
+      dele, enquanto ele sofre.
+    papel_tatico: drenador
+    arquetipo: abissal
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_mastro_de_trofeus_rosto_do_ferido"
+      frase: >-
+        No alto aparece o rosto do herói mais ferido: enquanto o rosto estiver lá, os golpes desse herói
+        no Mastro saem pela metade, e cada Ferimento aberto que ele tiver deixa o Mastro mais duro
+        contra os outros.
+    contra_jogo: >-
+      Fechar as feridas do copiado, ou tirá-lo de perto, apaga o rosto; os inteiros batem na estaca da
+      base, que é o que o sustenta.
+    gancho: >-
+      Gruumsha respeita acordo, e quem trai vira troféu na boca da passagem; há mais mastros lá do que os
+      Orcs se lembram de ter fincado.
+    habitat: [ma_saidas_baixas]
+    inspiracao: []
+    padrao: [ataque, enfraquecer, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "O rosto no alto de {nome} se mexe e fica parecido com o de quem mais sangra."
+    description: >-
+      Cria da Crueldade nas Saídas Baixas, um mastro de troféus que avança cravando a própria estaca e
+      mostra no alto o rosto do ferido, ficando mais duro quanto mais ele sofre.
+    perigo: Alto
+    lore: >-
+      Nas Saídas Baixas, quem trai um acordo com os bandos de Gruumsha vira troféu: maxilares, tranças e
+      cinto pregados num mastro na boca da passagem. A Crueldade segue o sofrimento, e ali o sofrimento
+      ficou pregado. O resíduo dela tomou a carne de um dos mastros. Ele anda cravando a estaca da base
+      e no topo, onde ficava a cabeça do traidor, mostra o rosto de quem está sofrendo mais perto. Os
+      Orcs contam os mastros toda manhã e não gostam do número.
+    aparencia: >-
+      Feixe de ossos compridos amarrados com tendão e couro, alto como duas lanças, com maxilares, dentes,
+      tranças e cintos pregados ao longo dele, a base afiada em estaca, tiras de tendão soltas no alto como
+      laços; no topo, um rosto de carne que copia o de quem sofre mais perto.
+    como_se_luta: >-
+      Mostra no alto o rosto do mais ferido; os golpes desse herói saem fracos e cada ferida dele o
+      endurece. Feche as feridas do copiado e deixe os inteiros baterem na estaca.
+    related_entities: [ma_saidas_baixas, npc_maalrek, bandos_orc_saidas_baixas]
+    arte:
+      visual: >-
+        Um mastro alto feito de ossos longos amarrados em feixe com tiras de couro e tendão; pregados ao
+        longo dele com pregos de ferro, maxilares humanos e de Goblin, dentes, tranças de cabelo, cintos; a
+        base afiada em estaca, cravada na neve; tiras de tendão soltas no alto, como laços; no topo, um rosto humano de carne, recém-feito,
+        com a expressão de dor de alguém que está fora do quadro.
+      composicao: >-
+        Boca de passagem nas Saídas Baixas com uma fileira de mastros de troféus fincados na neve; um deles,
+        o maior, inclinado sobre um viajante ferido caído; um Orc do bando, ao fundo, recua, menor que o
+        mastro, dando a escala. Luz cinza, vento.
+      evitar: >-
+        Totem tribal de madeira entalhada, gore explícito, cabeças empaladas em close. Inquietante pela
+        forma e pelo rosto que muda, sem vísceras.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mao_da_borda
+    vaga: 25
+    nome: Mão da Borda
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_skarath
+      refs: ["lore_nova/npcs.txt:333", "lore_nova/locations.txt:362"]
+    anatomia:
+      plano_corporal: radial
+      material: couro_tecido
+      escala: grande
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Há guias que cobram a travessia inteira e largam o cliente numa borda no meio da descida, dizendo
+        que voltam. A Traição se demora na confiança de quem esperou, e o resíduo toma carne do que ficou
+        na borda. É um corpo chato e redondo como uma mesa de taverna, de couro cinzento e duro, que vive
+        agarrado de bruços sob a beira das trilhas, com cinco braços compridos saindo do centro como raios.
+        Quatro braços têm ventosas e seguram a rocha. O quinto termina numa mão humana perfeita, limpa, de
+        unhas aparadas, e é essa que aparece na borda.
+    silhueta: Uma mão limpa agarrada à beira do penhasco, como de alguém que está caindo.
+    comportamento: >-
+      Espera sob a borda das trilhas mais altas. Quando alguém passa, a mão aparece agarrada à pedra,
+      tremendo. Quem segura a mão é segurado, e os outros quatro braços soltam a rocha ao mesmo tempo.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mao_da_borda_a_mao_que_puxa
+      frase: >-
+        Ataca quem ajuda: quem estende a mão ou socorre um aliado na rodada é agarrado e puxado para a
+        borda.
+    contra_jogo: Não segurar mão nenhuma na beira sem ver o braço; pisar na mão contra a pedra faz os braços de ventosa soltarem a rocha.
+    gancho: >-
+      Nas passagens há guias que cobram a travessia e largam o cliente numa borda, dizendo que voltam; a
+      borda ficou com alguns desses clientes.
+    habitat: [montanhas_afiadas]
+    inspiracao:
+      - fonte: zoologia (ofiuroides, estrelas-serpente)
+        referencia: "parentes das estrelas-do-mar de braços longos e finos que saem de um disco central"
+        tomou: o disco central com braços compridos
+        distancia: só a planta do corpo; o tamanho, as ventosas na rocha e a mão humana de isca são das Montanhas
+    padrao: [defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} tateia a beira da trilha com a mão limpa, devagar, procurando outra mão."
+    description: Cria da Traição agarrada sob a beira das trilhas, um disco de couro com braços de ventosa e uma mão humana limpa que pede ajuda sem falar.
+    perigo: Médio
+    lore: >-
+      Nem todo guia das passagens é Cinzéu, e nem todo guia volta. Há os que cobram a travessia inteira e
+      deixam o cliente numa borda no meio da descida, dizendo que vão buscar corda. A Traição gosta mais
+      do instante antes do que do ato, e se demora na confiança de quem esperou. O resíduo toma carne do
+      que ficou na borda e passa a morar debaixo dela. Só se vê uma mão limpa segurando a pedra. Os guias
+      Cinzéus ensinam a nunca segurar uma mão na beira sem ver o braço inteiro.
+    aparencia: >-
+      Disco chato de couro cinzento e duro do tamanho de uma mesa, agarrado sob a borda, com cinco braços
+      longos saindo do centro; quatro com ventosas na rocha, o quinto terminando numa mão humana perfeita,
+      limpa, de unhas aparadas.
+    como_se_luta: >-
+      Agarra e puxa para a borda quem tenta ajudar alguém. Não segurar mão nenhuma sem ver o braço; pisar
+      na mão contra a pedra faz os braços soltarem a rocha.
+    related_entities: [montanhas_afiadas, npc_skarath]
+    arte:
+      visual: >-
+        Criatura em forma de disco chato, couro cinzento e áspero, do tamanho de uma mesa, agarrada de
+        bruços na face de rocha logo abaixo da borda de uma trilha; cinco braços longos e grossos saem do
+        centro, quatro com fileiras de ventosas presas à pedra; o quinto sobe até a borda e termina numa mão
+        humana perfeita, pálida e limpa, de unhas aparadas, agarrada à beira.
+      composicao: >-
+        Corte lateral de um penhasco: em cima, a trilha estreita com um viajante ajoelhado estendendo a mão
+        para a mão na borda; embaixo, visível só para quem olha a cena, o disco e os braços. O viajante dá
+        a escala. Abismo de névoa embaixo, luz fria.
+      evitar: >-
+        Polvo, estrela-do-mar de praia, mão fantasma solta. A mão é presa a um braço que é parte do bicho,
+        e o bicho é de pedra e couro, não de mar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lingua_de_lima
+    vaga: 26
+    nome: Língua de Lima
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veleth
+      refs: ["lore_nova/npcs.txt:348", "lore_nova/factions.txt:443", "lore_nova/timeline_completa.txt:312"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: sal_mineral
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: medo_emocao
+      texto: >-
+        Os Anões não têm palavra para a perda do Reino, e a Vergonha que não se diz deixa resíduo nas
+        câmaras onde o Reino registrou em pedra a própria queda. A cria tomou carne do pó das paredes: é um
+        bicho baixo de quatro patas, do tamanho de um cão, de pele áspera e cinzenta coberta por uma crosta
+        de pó de pedra. A cabeça é chata e quase toda boca, e da boca sai uma língua comprida e dura como a
+        lima de um ferreiro, coberta de dentes miúdos. As patas têm dedos chatos que se grudam na parede.
+    silhueta: Um bicho chato colado a uma parede escrita, de cabeça encostada na pedra, raspando.
+    comportamento: >-
+      Lambe as paredes das câmaras de registro e apaga as inscrições letra por letra, sempre as que falam
+      da queda. Quando há gente, lambe gente, e o que a pessoa tinha acabado de ganhar some com a
+      lambida, como some a última linha da parede; depois ele foge para o alto da parede.
+    papel_tatico: quebra_defesa
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lingua_de_lima_apaga_o_ultimo
+      frase: >-
+        Cada lambida apaga o último efeito ativo a favor do alvo, como apaga a última linha escrita na
+        parede.
+    contra_jogo: Pegá-lo no chão, longe da parede; a língua é dura, mas a garganta atrás dela não é.
+    gancho: >-
+      Durgrim Último-Martelo procura os Registros Perdidos do Reino; há quem os esteja apagando antes que
+      ele chegue.
+    habitat: [ma_boca, ma_forja_profunda]
+    inspiracao:
+      - fonte: zoologia (rádula dos caramujos)
+        referencia: "a língua em fita coberta de dentes miúdos com que caramujos e lesmas raspam a comida"
+        tomou: a língua que raspa como uma lima
+        distancia: só a língua; o bicho de quatro patas, o pó de pedra e o apagar das inscrições são do Reino
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} desenrola a língua de lima até o chão, e o raspar na pedra para."
+    description: Cria da Vergonha anã que apaga, lambendo, as inscrições sobre a queda do Reino; em luta, apaga o último efeito a favor de quem lambe.
+    perigo: Baixo
+    lore: >-
+      Os Anões registraram em pedra tudo o que fizeram no Reino, e não têm palavra para o que perderam. A
+      Vergonha sussurra de dentro, e o que não se diz deixa resíduo. Nas câmaras de registro há bichos
+      baixos, cinzentos de pó, que lambem as paredes com uma língua dura como lima e apagam as
+      inscrições, letra por letra, sempre as que falam da queda. Durgrim Último-Martelo procura os
+      Registros Perdidos. Alguém está chegando antes dele.
+    aparencia: >-
+      Bicho baixo de quatro patas do tamanho de um cão, pele áspera cinzenta com crosta de pó de pedra,
+      cabeça chata quase toda boca, língua comprida e dura como lima de ferreiro coberta de dentes
+      miúdos, dedos chatos grudados na parede.
+    como_se_luta: >-
+      Cada lambida apaga o último efeito a favor do alvo. Guardar o reforço para depois que ele cair;
+      pegá-lo no chão, longe da parede, porque a garganta é mole.
+    related_entities: [ma_boca, ma_forja_profunda, npc_veleth, ultimos_anoes_reino]
+    arte:
+      visual: >-
+        Bicho baixo e chato de quatro patas, do tamanho de um cão médio, pele cinzenta áspera coberta de
+        pó de pedra como farinha; cabeça larga e achatada quase toda boca; uma língua longa, rígida, cinza
+        de ferro, com dentinhos em fileiras como uma lima de ferreiro; dedos largos colados na parede.
+      composicao: >-
+        Parede de câmara de registro anã coberta de inscrições em linhas retas; um trecho no meio já
+        raspado e liso; o bicho colado à parede, língua estendida sobre as letras; um escriba anão com uma
+        lanterna, na altura do bicho, observa de lado, dando a escala. Luz fria, pó no ar.
+      evitar: >-
+        Camaleão, lagarto de língua grudenta, cão demoníaco. A língua não gruda, raspa; e o bicho é de pó
+        e vergonha, quieto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pisador_do_salao
+    vaga: 27
+    nome: Pisador do Salão
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/npcs.txt:164", "lore_nova/races.txt:96", "lore_nova/races.txt:111"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: enorme
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        O Reino dos Anões mediu tudo de cima para baixo, e o Orgulho deixou resíduo nas câmaras altas de
+        onde os capatazes olhavam os turnos lá embaixo. A cria tomou carne dos ossos dos Anões mortos na
+        queda: quatro pernas altíssimas feitas de ossos de braço anão, compridos, emendados nas juntas três
+        a três, sustentam um tronco pequeno de costelas e uma cabeça de crânio largo que fica perto do teto.
+        Cada perna termina num crânio anão, largo e chato, que bate no chão polido como um casco. A cabeça
+        olha sempre para baixo.
+    silhueta: Uma coisa de quatro pernas finas como andaimes, alta até o teto do salão, com uma cabeça pequena olhando para baixo.
+    comportamento: >-
+      Ocupa os salões altos do Reino e não deixa ninguém ficar acima dele. Pisa primeiro em quem caiu, em
+      quem se ajoelhou, em quem está mais baixo; quem sobe numa escada ou num degrau leva o golpe mais
+      forte, para descer.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pisador_do_salao_pisa_quem_esta_baixo
+      frase: >-
+        Pisa com mais força em quem está no chão ou ajoelhado, e derruba quem tenta ficar mais alto que
+        ele.
+    contra_jogo: Ficar de pé e colado às pernas, onde ele não alcança sem se dobrar; as emendas das pernas quebram de lado.
+    gancho: >-
+      O Reino dos Anões se organizava de cima para baixo; nas câmaras altas, a altura ainda manda.
+    habitat: [ma_boca]
+    inspiracao: []
+    padrao: [ataque_multiplo, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} dobra uma perna de cada vez e baixa a cabeça até a altura de quem caiu."
+    description: Cria do Orgulho nos salões altos do Reino, sobre quatro pernas de ossos de braço anão emendados; pisa em quem está mais baixo.
+    perigo: Alto
+    lore: >-
+      Os Anões chegaram ao mundo dominando: em semanas tomaram a primeira cidade dos Elfos que tentaram
+      dominá-los, e o Reino se organizou de cima para baixo, com capatazes nas câmaras altas olhando os
+      turnos. O Orgulho, que precisa ver o outro abaixo, deixou resíduo nesses salões, e o resíduo tomou
+      os ossos dos Anões mortos na queda. A coisa anda sobre quatro pernas altas como andaimes, feitas de
+      ossos de braço emendados, e olha sempre para baixo. Pisa primeiro em quem está no chão.
+    aparencia: >-
+      Criatura alta até o teto sobre quatro pernas finas de ossos de braço anão emendados nas juntas três a
+      três, cada pé um crânio anão largo batendo no chão como casco, tronco pequeno de costelas e cabeça
+      de crânio largo sempre voltada para baixo.
+    como_se_luta: >-
+      Pisa com mais força em quem está no chão e derruba quem sobe mais alto. Ficar de pé e colado às
+      pernas; as emendas quebram de lado.
+    related_entities: [ma_boca, npc_urath]
+    arte:
+      visual: >-
+        Criatura muito alta e magra: quatro pernas longuíssimas de ossos de antebraço emendados, três a
+        três por junta, amarrados com tendão seco, como pernas de pau; cada pé é um crânio anão largo e
+        chato apoiado no chão como um casco; no alto, um tronco pequeno de costelas e uma cabeça de crânio largo e baixo,
+        sem olhos visíveis, inclinada para baixo.
+      composicao: >-
+        Salão alto do Reino, colunas polidas, uma galeria de capatazes no alto da parede; o Pisador ocupa
+        o salão, a cabeça na altura da galeria; embaixo, um aventureiro caído no chão e outro de pé entre
+        as pernas, chegando ao joelho dele, dão a escala. Luz fria vinda de cima, sombras longas para baixo.
+      evitar: >-
+        Aranha gigante, cavalo-esqueleto, criatura de pernas finas surrealista de quadro famoso. É feito de
+        ossos de braço anão, rústico, e olha para baixo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada

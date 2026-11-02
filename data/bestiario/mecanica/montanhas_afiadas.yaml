@@ -1,0 +1,134 @@
+# SPEC-349 Etapa 5: mecânica das Montanhas Afiadas (onda 7). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_deitado_na_parede:
+    cartas:
+      - {n: Chute de Parede, t: "Desce um pé da parede e chuta de lado, por onde a guarda não cobre.", e: ["d:marcial:impactante"]}
+      - {n: Queda de Lado, sig: 1, t: "Cai da parede inclinado e acerta pelo lado que ninguém cobre.", e: ["d:versatil:impactante", {kind: esconder, alvo: eu, valor: 2}], fol: 2}
+  mon_geodo_da_praga:
+    cartas:
+      - {n: Soco de Geodo, t: "O punho de cristal vermelho estala no queixo.", e: ["d:marcial:cortante"]}
+      - {n: Nó Maduro, sig: 1, t: "Morde um nó do punho até estalar e soca com os cacos de cristal.", e: ["d:versatil:cortante", {kind: sangria, valor: 1}]}
+    aprox: "golpe cresce com o número de nós abertos pelo calor -> dano maior + sangria"
+  mon_cauda_de_atalaia:
+    cartas:
+      - {n: Açoite de Cauda, t: "A cauda de osso solta duas voltas e açoita de cima.", e: ["d:marcial:cortante"]}
+      - {n: Açoite do Alto, sig: 1, t: "Pendurado pela cauda, açoita de uma altura que só ele alcança.", e: ["d:versatil:cortante", {kind: marca, valor: 2}], fol: 2}
+  mon_queimado_de_frio:
+    cartas:
+      - {n: Mão Cerosa, t: "As mãos brancas e cerosas se fecham frias no tornozelo.", e: ["d:marcial:gelido"]}
+      - {n: Abraço de Quem Para, sig: 1, t: "Agarra as pernas de quem parou e o frio sobe, endurecendo tudo.", e: ["d:leve:gelido", "c:enraizado:2", {kind: torpor, valor: 1}], fol: 2}
+    aprox: "pune quem se defende/espera; quem se move não é alcançado -> enraizado + torpor sem condição de parada"
+  enemy_observador_menor:
+    cartas:
+      - {n: Olho de Mão, t: "Um olho aberto na palma pisca e a mão bate no rosto.", e: ["d:leve:impactante"]}
+      - {n: Mão à Mostra, sig: 1, t: "Grita o que vê e os inimigos leem a jogada do herói e se armam.", e: [{kind: revelar, campo: cartas}, {kind: buff_acerto, alvo: aliados, valor: 2}, "d:leve:impactante"]}
+    aprox: "a Carta preparada do jogador fica à mostra -> revelar cartas + buff de acerto em aliados"
+  enemy_wyvern_jovem:
+    cartas:
+      - {n: Ponta de Costela, t: "Uma ponta de costela afiada pelo vento corta rente à trilha.", e: ["d:versatil:cortante"]}
+      - {n: Passada Rente, sig: 1, t: "Passa rente com o leque aberto e corta toda a linha da trilha.", e: ["a:4:cortante", {kind: reposicionar, alvo: eu, valor: 2}], fol: 2}
+      - {n: Vela de Pele, f: cena, t: "As costelas se abrem no vento como uma vela e o corpo sobe.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 3}]}
+  enemy_minotauro_esqueleto:
+    cartas:
+      - {n: Chifrada de Canga, t: "A cabeça de boi com a canga de ferro bate de lado.", e: ["d:versatil:impactante"]}
+      - {n: Arremetida no Trilho, sig: 1, t: "Raspa o casco no trilho e arremete levando tudo que estiver na linha.", e: ["d:pesada:impactante", {kind: empurrao, valor: 2}], fol: 2}
+      - {n: Placas da Testa, f: cena, t: "Baixa as placas da testa até o ferro e espera a carga.", e: [{kind: protecao, valor: 5}]}
+  enemy_mimico_bau:
+    cartas:
+      - {n: Borda de Caldeirão, t: "A borda de ferro rubro bate de cima e deixa a marca de brasa.", e: ["d:versatil:igneo"]}
+      - {n: Ferro em Brasa, sig: 1, t: "Cada golpe no ferro derrama brasa no chão e queima quem estiver ao lado.", e: [{kind: protecao, valor: 4}, {kind: contra_ataque, dano_base: 3}], fol: 2}
+      - {n: Brasa no Chão, t: "Derrama a brasa do caldeirão em arco sobre o chão em volta.", e: ["a:3:igneo"], fol: 2}
+    aprox: "brasa derramada pelo golpe queima quem está ao lado; longe das bigornas a defesa cai -> proteção + contra-ataque"
+  enemy_basilisco_caverna:
+    cartas:
+      - {n: Pé Branco, t: "O pé branco e mole se alonga e bate de plano como um remo.", e: ["d:versatil:impactante"]}
+      - {n: Lâmina Presa, sig: 1, t: "A gosma vira pedra em volta da lâmina e o dono perde a arma na pedra.", e: ["d:leve:impactante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}, "c:enraizado:1"], fol: 2}
+      - {n: Casca de Estalagmite, f: cena, t: "A casca de estalagmite fecha em torno do pé e a gosma endurece.", e: [{kind: protecao, valor: 5}]}
+    aprox: "lâmina fica presa na pedra até o fim da luta -> desarmado_risco 3 rodadas + enraizado"
+  enemy_morcego_vampiro:
+    cartas:
+      - {n: Mãozinha de Cachecol, t: "As mãozinhas das bordas arranham o rosto de quem está na beira.", e: ["d:leve:cortante"]}
+      - {n: Venda na Beira, sig: 1, t: "Desce no vento e cobre os olhos de quem está na beira da trilha.", e: ["c:cego:2", "d:leve:cortante"]}
+    aprox: "quem cobrir e agir arrisca cair da trilha -> cego 2 rodadas"
+  mon_bexiga_de_respiro:
+    cartas:
+      - {n: Fio Quente, t: "Um fio da cortina chicoteia e queima de leve onde toca.", e: ["d:leve:igneo"]}
+      - {n: Fios que Amortecem, sig: 1, t: "A cortina de fios toca o braço e o formigamento tira a força da pancada.", e: ["d:leve:igneo", {kind: torpor, valor: 2}]}
+  mon_saltao_de_galeria:
+    cartas:
+      - {n: Salto de Teto, t: "Cai do teto com as seis patas abertas sobre os ombros.", e: ["d:marcial:perfurante"]}
+      - {n: Peso do Bando, sig: 1, t: "Agarra-se no alvo e fica; cada um já agarrado faz o próximo pesar mais.", e: ["d:leve:perfurante", "c:enraizado:1", {kind: torpor, valor: 1}]}
+    aprox: "com três agarrados a vítima cai e perde a rodada -> enraizado + torpor"
+  mon_rolador_de_escarpa:
+    cartas:
+      - {n: Rolagem de Pederneira, t: "Desce a encosta enrolado e bate com as placas afiadas.", e: ["d:marcial:cortante"]}
+      - {n: Rolagem, sig: 1, t: "A bola de placas bate contra a guarda e nenhum escudo segura a pedra que rola.", e: ["d:versatil:cortante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}]}
+  mon_chicote_de_fenda:
+    cartas:
+      - {n: Chicote de Fenda, t: "A ponta do chicote toca a perna sem barulho e some de volta na rocha.", e: ["d:leve:cortante"]}
+      - {n: Abraço de Espinhos, sig: 1, t: "O bote dos braços de espinhos puxa o tocado contra a parede.", e: ["d:marcial:perfurante", {kind: mover_alvo_zona, direcao: aproximar}, "c:enraizado:1"], fol: 2}
+  mon_ladrao_de_lume:
+    cartas:
+      - {n: Unha de Lume, t: "As unhas finas arrancam a tocha da mão e queimam a palma.", e: ["d:leve:cortante"]}
+      - {n: Leva a Luz, sig: 1, t: "Rouba a luz do grupo e foge para o alto; no escuro todos lutam às cegas.", e: ["c:cego:2", {kind: esconder, alvo: eu, valor: 2}]}
+  enemy_troll_ponte:
+    cartas:
+      - {n: Punho de Ponte, t: "O braço preso na pedra se estica e bate como um tronco.", e: ["d:versatil:impactante"]}
+      - {n: Sacudida, sig: 1, t: "Enche os ombros de ar e sacode as costas, derrubando quem está em cima.", e: ["a:3:impactante", {kind: empurrao, valor: 2}], fol: 2}
+      - {n: Ombros de Pedra, f: cena, t: "Os ombros endurecem contra a fenda e a pele entra na pedra.", e: [{kind: protecao, valor: 6}]}
+  mon_bracos_de_tenaz:
+    cartas:
+      - {n: Tenaz Rubra, t: "A tenaz rubra bate no peito e deixa a marca de ferro em brasa.", e: ["d:versatil:igneo"]}
+      - {n: Ferro na Mão Viva, sig: 1, t: "Fecha a tenaz na arma do alvo e a esquenta até ele largar.", e: ["d:leve:igneo", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 2}], fol: 2}
+      - {n: Escória nas Brasas, f: cena, t: "Enfia as tenazes nas brasas e sopra a escória sobre os antebraços.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+  mon_marco_que_aponta:
+    cartas:
+      - {n: Dedo de Cicatriz, t: "O dedo de três pontas bate duro no peito.", e: ["d:marcial:impactante"]}
+      - {n: Passo Errado, sig: 1, t: "Aponta o lugar certo de pisar e é mentira: o passo vai para onde ele quer.", e: ["d:leve:impactante", {kind: mover_alvo_zona, direcao: aproximar}, {kind: marca, valor: 1}]}
+  mon_armador_de_fosso:
+    cartas:
+      - {n: Gancho de Mola, t: "O gancho costurado ao toco dispara como mola.", e: ["d:marcial:perfurante"]}
+      - {n: Trava Armada, sig: 1, t: "Arma uma trava anã no chão e quem se mexe na direção dele a dispara.", e: ["d:marcial:perfurante", "c:enraizado:1", {kind: esconder, alvo: eu, valor: 1}], fol: 2}
+  mon_vedado_de_piche:
+    cartas:
+      - {n: Machado Vedado, t: "O machado cego de piche desce no escuro sobre quem sangra.", e: ["d:versatil:cortante"]}
+      - {n: Faro de Sangue, sig: 1, t: "Fareja quem sangra e o marca, sem deixar escapar pelo escuro.", e: ["d:marcial:cortante", {kind: marca, valor: 3}, {kind: sangria, valor: 1}], fol: 2}
+  mon_peso_dos_vencidos:
+    cartas:
+      - {n: Punho do Orc, t: "O Orc do alto desce o punho com o peso do monte inteiro.", e: ["d:pesada:impactante"]}
+      - {n: Soco de Cima, sig: 1, t: "O soco de cima derruba quem estiver ao lado do alvo.", e: ["d:pesada:impactante", "a:2:impactante"], fol: 3}
+      - {n: Patas de Goblin, t: "Os Goblins mortos de baixo pisam todos juntos e arrastam o monte.", e: ["a:3:perfurante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Monte Firme, f: cena, t: "As mãos de baixo se fincam no chão e o monte se ancora.", e: [{kind: protecao, valor: 6}, {kind: buff_dano, valor: 2}]}
+      - {n: Monte Tombado, f: cena, t: "O monte tomba de lado e leva tudo que estava na linha.", e: ["a:2:impactante", "c:desmoralizado:1"], fol: 2}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_peso_dos_vencidos_monte_firme], padrao: [ataque_multiplo, ataque, reforco_proprio, ataque], narracao: "{nome} se ancora nas patas de baixo, e os Goblins mortos seguram o Orc no alto."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_peso_dos_vencidos_monte_tombado], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_peso_dos_vencidos_monte_tombado, a_cada_n: 2, telegrafo: "O monte de {nome} se inclina para um lado e as patas de baixo escorregam."}, narracao: "{nome} perde patas de Goblin e tomba, arrastando tudo com ele."}
+    aprox: "cada pata cortada tomba o monte para aquele lado; três do mesmo lado o derrubam -> fases por Vitalidade"
+  mon_tampao_da_camara:
+    cartas:
+      - {n: Braço da Borda, t: "Um braço das bordas do vão puxa o alvo pelo ombro.", e: ["d:versatil:impactante"]}
+      - {n: Aperto do Vão, sig: 1, t: "Incha com um gemido de muitas bocas e esmaga quem está encostado nas bordas.", e: ["a:3:impactante", {kind: mover_alvo_zona, direcao: aproximar}], fol: 2}
+  mon_tesoura_de_cordada:
+    cartas:
+      - {n: Lâmina de Escápula, t: "A lâmina de escápula abre e fecha rente ao braço.", e: ["d:leve:cortante"]}
+      - {n: Corte da Correia, sig: 1, t: "Corta a correia, a corda e a alça: a proteção do alvo cai da pele.", e: ["d:leve:cortante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}]}
+  mon_mastro_de_trofeus:
+    cartas:
+      - {n: Estaca da Base, t: "A estaca da base desce no pé do alvo e prende o couro.", e: ["d:versatil:perfurante"]}
+      - {n: Rosto do Ferido, sig: 1, t: "Mostra no alto o rosto do mais ferido e os golpes dele saem pela metade.", e: ["d:marcial:perfurante", {kind: torpor, valor: 2}, {kind: protecao, valor: 3}], fol: 2}
+      - {n: Troféu Cravado, f: cena, t: "Crava mais um troféu na estaca e o mastro endurece contra os outros.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+    aprox: "golpes do copiado saem pela metade e Ferimentos o endurecem -> torpor + proteção"
+  mon_mao_da_borda:
+    cartas:
+      - {n: Ventosa da Borda, t: "Um braço de ventosa gruda no tornozelo e puxa para a beira.", e: ["d:marcial:impactante"]}
+      - {n: A Mão que Puxa, sig: 1, t: "A mão limpa pede ajuda e puxa para a borda quem a segura.", e: ["d:marcial:impactante", {kind: mover_alvo_zona, direcao: aproximar}, "c:enraizado:1"], fol: 2}
+  mon_lingua_de_lima:
+    cartas:
+      - {n: Lambida de Lima, t: "A língua de lima raspa a pele e a pedra ao mesmo tempo.", e: ["d:leve:cortante"]}
+      - {n: Apaga o Último, sig: 1, t: "Cada lambida apaga o último reforço ativo a favor do alvo.", e: ["d:leve:cortante", {kind: purga_condicao, valor: 1}]}
+    aprox: "apaga o último efeito ativo a favor do alvo -> purga_condicao (aproximada, sem efeito se o alvo não tem condição)"
+  mon_pisador_do_salao:
+    cartas:
+      - {n: Pisada de Osso, t: "A perna de ossos de braço pisa fundo no chão.", e: ["d:versatil:impactante"]}
+      - {n: Pisa Quem Está Baixo, sig: 1, t: "Dobra uma perna de cada vez e pisa mais forte em quem já caiu.", e: ["a:4:impactante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Perna Dobrada, f: cena, t: "Dobra as pernas de osso até a altura de quem caiu e firma o corpo.", e: [{kind: protecao, valor: 5}]}

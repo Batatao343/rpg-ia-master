@@ -1,0 +1,1784 @@
+# Ficha de identidade da onda da Selva de Xylos (esteira da SPEC-349, D8).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto.
+# Refs de lore: linhas da lore da SPEC-348 (checkout principal), mesma convenção das ondas 1 e 2.
+regiao: selva_xylos
+onda: 9
+spec: SPEC-349
+nome_regiao: Selva de Xylos
+habitat_nome:
+  selva_xylos: Selva de Xylos
+  sx_cidades_hospedeiros: Cidades nas Copas
+  sx_profundezas: Profundezas de Morrakh
+paleta: >-
+  **Selva de Xylos** — selva de ciclo acelerado no leste, além da Floresta dos Sussurros: árvores
+  gigantes com cidades suspensas nas copas, pontes de madeira e cipó tratado, plataformas de quitina,
+  fungos que brilham fraco, chão ácido que incorpora o que para, fruta que amadurece e apodrece numa
+  hora. Abaixo do chão, as câmaras de raízes de Morrakh, onde a luz nunca chegou. Luz e paleta: verde
+  saturado e úmido, ocre de podridão doce, coral e âmbar dos fungos dos Hospedeiros, dourado filtrado
+  pelas copas; nas Profundezas, preto molhado, branco de fungo morto e pulsos de luz negra.
+familias_em_jogo:            # D10 — mesmos nomes da onda 1 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: bruto,                 plano_corporal: bipede_curvado,     material: ferro_ferrugem,  escala: humana,  locomocao: anda,           percepcao: respiracao,    habitat: [selva_xylos]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: padrao, papel_tatico: quebra_defesa,     arquetipo: bruto,                 plano_corporal: quadrupede,         material: osso,            escala: grande,  locomocao: anda,           percepcao: vibracao,      habitat: [sx_profundezas, selva_xylos]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: perseguidor_marca, arquetipo: predador,              plano_corporal: bipede_curvado,     material: carne_exposta,   escala: humana,  locomocao: anda,           percepcao: sangue_cheiro, habitat: [selva_xylos]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: elite,  papel_tatico: controlador,       arquetipo: morto_vivo_implacavel, plano_corporal: bipede_ereto,       material: cinza,           escala: humana,  locomocao: anda,           percepcao: vibracao,      habitat: [sx_profundezas]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: elite,  papel_tatico: tanque_reativo,    arquetipo: predador,              plano_corporal: bipede_ereto,       material: osso,            escala: grande,  locomocao: salta,          percepcao: sangue_cheiro, habitat: [sx_profundezas, selva_xylos]}
+  # --- bestas da entropia ---
+  - {vaga: 6,  familia: besta_entropia,  categoria: padrao, papel_tatico: emboscador,        arquetipo: emboscador,            plano_corporal: quadrupede,         material: couro_tecido,    escala: grande,  locomocao: escala_paredes, percepcao: som,           habitat: [sx_cidades_hospedeiros, selva_xylos]}
+  - {vaga: 7,  familia: besta_entropia,  categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: predador,              plano_corporal: segmentado,         material: couro_tecido,    escala: grande,  locomocao: rasteja,        percepcao: vibracao,      habitat: [selva_xylos]}
+  - {vaga: 8,  familia: besta_entropia,  categoria: elite,  papel_tatico: guarda_protetor,   arquetipo: guardiao,              plano_corporal: quadrupede,         material: madeira_fibra,   escala: grande,  locomocao: escala_paredes, percepcao: vibracao,      habitat: [sx_cidades_hospedeiros, selva_xylos]}
+  - {vaga: 9,  familia: besta_entropia,  categoria: lacaio, papel_tatico: artilharia,        arquetipo: covarde_oportunista,   plano_corporal: quadrupede,         material: quitina,         escala: pequena, locomocao: anda,           percepcao: som,           habitat: [selva_xylos, sx_cidades_hospedeiros]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: controlador,       arquetipo: tatico,                plano_corporal: alado,              material: lama_turfa,      escala: miuda,   locomocao: plana_voa,      percepcao: visao,         habitat: [sx_cidades_hospedeiros]}
+  - {vaga: 11, familia: besta_entropia,  categoria: chefe,  papel_tatico: bruto_de_linha,    arquetipo: predador_apice,        plano_corporal: quadrupede,         material: quitina,         escala: enorme,  locomocao: cava,           percepcao: vibracao,      habitat: [sx_profundezas, selva_xylos]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 12, familia: humanoide_preco, categoria: padrao, papel_tatico: emboscador,        arquetipo: tatico,                plano_corporal: bipede_ereto,       material: madeira_fibra,   escala: humana,  locomocao: anda,           percepcao: som,           habitat: [sx_cidades_hospedeiros]}
+  - {vaga: 13, familia: humanoide_preco, categoria: padrao, papel_tatico: quebra_defesa,     arquetipo: emboscador,            plano_corporal: bipede_curvado,     material: carne_exposta,   escala: humana,  locomocao: escala_paredes, percepcao: vibracao,      habitat: [sx_cidades_hospedeiros, selva_xylos]}
+  - {vaga: 14, familia: humanoide_preco, categoria: elite,  papel_tatico: bruto_de_linha,    arquetipo: bruto,                 plano_corporal: bipede_ereto,       material: carne_exposta,   escala: grande,  locomocao: anda,           percepcao: visao,         habitat: [selva_xylos, sx_profundezas]}
+  - {vaga: 15, familia: humanoide_preco, categoria: elite,  papel_tatico: drenador,          arquetipo: conjurador,            plano_corporal: bipede_curvado,     material: quitina,         escala: humana,  locomocao: anda,           percepcao: eter,          habitat: [selva_xylos]}
+  - {vaga: 16, familia: humanoide_preco, categoria: lacaio, papel_tatico: batedor_rapido,    arquetipo: covarde_oportunista,   plano_corporal: bipede_ereto,       material: couro_tecido,    escala: humana,  locomocao: salta,          percepcao: calor,         habitat: [selva_xylos]}
+  - {vaga: 17, familia: humanoide_preco, categoria: padrao, papel_tatico: artilharia,        arquetipo: conjurador,            plano_corporal: bipede_ereto,       material: couro_tecido,    escala: humana,  locomocao: anda,           percepcao: visao,         habitat: [sx_cidades_hospedeiros, selva_xylos]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 18, familia: demonio_encarnado, origem_lore: {detalhe: npc_veth},      categoria: lacaio, papel_tatico: saqueador,       arquetipo: abissal,       plano_corporal: composto,            material: couro_tecido,  escala: humana, locomocao: rasteja,  percepcao: luz,         habitat: [sx_cidades_hospedeiros]}
+  - {vaga: 19, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek},   categoria: lacaio, papel_tatico: suporte,         arquetipo: tatico,        plano_corporal: sessil_ancorado,     material: carne_exposta, escala: humana, locomocao: ancorada, percepcao: som,         habitat: [selva_xylos]}
+  - {vaga: 20, familia: demonio_encarnado, origem_lore: {detalhe: npc_thessavar}, categoria: padrao, papel_tatico: guarda_protetor, arquetipo: guardiao,      plano_corporal: hospedeiro_parasita, material: madeira_fibra, escala: grande, locomocao: anda,     percepcao: medo_emocao, habitat: [selva_xylos]}
+  - {vaga: 21, familia: demonio_encarnado, origem_lore: {detalhe: npc_dorrhen},   categoria: elite,  papel_tatico: batedor_rapido,  arquetipo: lider_matilha, plano_corporal: hexapode_ou_mais,    material: carne_exposta, escala: grande, locomocao: anda,     percepcao: medo_emocao, habitat: [selva_xylos, sx_profundezas]}
+  # --- slot genérico adotado (R24; não conta nas 20–25) ---
+  - {vaga: 22, slot: enemy_vinha_estranguladora, status: adotada, familia: besta_entropia, categoria: elite, papel_tatico: emboscador, arquetipo: bruto, plano_corporal: serpentiforme, material: couro_tecido, escala: enorme, locomocao: escala_paredes, percepcao: vibracao, habitat: [selva_xylos, sx_cidades_hospedeiros]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_lamelas_de_ferrugem
+    vaga: 1
+    nome: Lamelas de Ferrugem
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ferro
+      detalhe: null
+      refs: ["lore_nova/secrets.txt:100", "lore_nova/races.txt:405", "lore_nova/creatures.txt:984"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: ferro_ferrugem
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Um doente da Praga de Ferro que subiu de Nova Arcádia atrás da cura que dizem morar nos
+        Hospedeiros. No calor úmido a doença mudou de jeito: da espinha e das costelas das costas
+        nasceram prateleiras duras, cor de ferrugem, em degraus, como as que crescem num tronco caído,
+        e o peso delas dobrou o corpo na cintura até as costas ficarem retas como uma mesa. Entre um
+        degrau e outro a pele rachou até o músculo. A barriga de cada prateleira é forrada de lâminas
+        finas e paralelas que soltam um pó alaranjado quando ele respira fundo.
+    silhueta: Um homem dobrado na cintura em ângulo reto, com as costas chatas cobertas de prateleiras em degraus, como um tronco caído que anda.
+    comportamento: >-
+      Anda devagar pelas trilhas da borda, em direção ao fundo, sempre na direção de onde vem a
+      umidade. Não ataca primeiro; quando apanha, as prateleiras sacodem de uma vez e soltam o pó. Segue quem
+      respira o pó até essa pessoa parar.
+    papel_tatico: tanque_reativo
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lamelas_de_ferrugem_po_das_prateleiras
+      frase: >-
+        Cada golpe que leva de perto sacode as prateleiras e solta um pó de ferrugem que pesa no sangue de
+        quem bateu: o próximo golpe dele custa mais Fôlego.
+    contra_jogo: Bater de longe ou de uma vez só, com força; quem fica trocando golpes curtos com ele respira o pó a cada um.
+    gancho: >-
+      Os doentes da Praga sobem até a borda porque ouviram que os Hospedeiros não sentem dor nem morrem
+      de ferida; alguns chegam, e o calor faz com a doença deles uma coisa que ninguém em Nova Arcádia
+      viu.
+    habitat: [selva_xylos]
+    inspiracao:
+      - fonte: micologia (orelhas-de-pau)
+        referencia: "fungos de prateleira que crescem em degraus em troncos caídos, com lâminas ou poros por baixo"
+        tomou: as prateleiras duras em degraus e o pó que cai de baixo delas
+        distancia: só a forma; o corpo é de um doente da Praga de Ferro de Valoria, dobrado como mesa, e a cor e a dureza são de ferrugem
+    padrao: [defesa, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} enche o peito devagar e as prateleiras das costas estalam, uma depois da outra."
+    description: Um doente da Praga de Ferro que veio à selva atrás de cura e cujas costas cresceram em prateleiras duras cor de ferrugem, que soltam pó quando ele apanha.
+    perigo: Médio
+    lore: >-
+      Em Nova Arcádia a Praga de Ferro endurece o sangue até a pessoa parar. Os que ainda andam ouvem
+      falar dos Hospedeiros, que não sentem dor nem morrem de ferida, e sobem até a borda da selva com o
+      que sobrou. O calor não os cura. Das costas deles nascem prateleiras duras cor de ferrugem, em
+      degraus, e o peso as dobra até andarem como mesas; o pó que cai de baixo delas pesa no sangue de
+      quem respira perto. Os garimpeiros os deixam passar e não os tocam. Ninguém em Nova Arcádia sabe
+      que eles mudam assim, porque nenhum volta.
+    aparencia: >-
+      Homem magro dobrado na cintura em ângulo reto, costas chatas cobertas de prateleiras duras cor de
+      ferrugem em degraus, pele rachada até o músculo entre elas, lâminas finas sob cada prateleira,
+      poeira alaranjada no ar em volta.
+    como_se_luta: >-
+      Aguenta golpes e devolve a cada um uma nuvem de pó de ferrugem que pesa no sangue de quem bateu.
+      Lutar de longe ou acabar com ele em poucos golpes fortes evita respirar o pó.
+    related_entities: [selva_xylos, nova_arcadia]
+    arte:
+      visual: >-
+        Homem adulto, magro, dobrado na cintura em ângulo reto, o tronco paralelo ao chão, roupas de operário
+        de Nova Arcádia em farrapos. Das costas, da espinha às costelas, sobem prateleiras semicirculares
+        duras, cor de ferrugem e laranja queimado, empilhadas em degraus como num tronco caído; a pele entre
+        elas rachada, músculo vermelho no fundo. Por baixo de cada prateleira, lâminas finas e claras. Uma
+        poeira laranja caindo delas.
+      composicao: >-
+        Trilha da borda da selva, raízes gigantes e folhas largas, luz verde filtrada; o Lamelas de perfil,
+        andando dobrado, as costas à altura da cintura de um homem; um garimpeiro de lenço no rosto, de pé ao
+        lado, recuando com a mão no nariz. Poeira laranja no feixe de luz.
+      evitar: "Zumbi apodrecido, homem-cogumelo de desenho com chapéu na cabeça, armadura de ferro. As prateleiras nascem das costas de um homem dobrado; são duras como casca e cor de ferrugem, não metal."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ariete_de_medula
+    vaga: 2
+    nome: Aríete de Medula
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ossos
+      detalhe: null
+      refs: ["lore_nova/races.txt:522", "lore_nova/creatures.txt:1032", "lore_nova/npcs.txt:476"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Uma queixada do fundo da selva, do tamanho de um boi, que pegou a Praga dos Ossos na beira do
+        território de Morrakh. O osso do crânio cresceu para a frente e se fundiu com as presas numa cunha
+        branca e lisa, maior que a cabeça, e placas de osso romperam o couro do pescoço e do lombo, com
+        músculo vermelho aparecendo nas frestas entre elas. As patas da frente engrossaram como colunas.
+        Os olhos ficaram enterrados no osso; ela sente o chão pelos cascos.
+    silhueta: Um porco enorme com uma cunha branca no lugar da cara, abaixado, correndo em linha reta.
+    comportamento: >-
+      A cunha cresce um pouco a cada dia e aperta os olhos e o focinho por dentro. Ela investe contra
+      troncos, pilares de ponte e o que estiver de pé, tentando partir o osso que a sufoca. Não desvia de
+      gente; quando bate e para, sacode a cabeça, escolhe outra coisa dura e corre de novo.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ariete_de_medula_cunha_de_cranio
+      frase: >-
+        Corre em linha reta e bate com a cunha de osso: a investida quebra a guarda erguida e empurra quem
+        a segurou para fora da linha.
+    contra_jogo: Sair da linha em vez de segurar a guarda; ela não vira, e depois de bater fica de lado, com as frestas do lombo à mostra.
+    gancho: >-
+      Os pilares das pontes baixas das cidades amanhecem rachados na altura do peito de um boi; os
+      Hospedeiros já sabem o que procurar no chão em volta.
+    habitat: [sx_profundezas, selva_xylos]
+    inspiracao:
+      - fonte: zoologia (queixadas)
+        referencia: "queixada (Tayassu pecari), porco-do-mato que anda em bando e bate as presas"
+        tomou: o corpo atarracado de porco-do-mato e o bater de presas
+        distancia: o crânio em cunha e as placas são a Praga dos Ossos de Valoria; é um bicho só, fugindo, não um bando
+    padrao: [mover, ataque, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} baixa a cunha até tocar o chão e raspa os cascos da frente, olhando para você."
+    description: Uma queixada do tamanho de um boi, com o crânio crescido numa cunha de osso e placas sobre o músculo, que investe contra tudo o que é duro para partir o osso que a sufoca.
+    perigo: Médio
+    lore: >-
+      A Praga dos Ossos não pega só em gente. Perto do território de Morrakh as queixadas das câmaras
+      fundas também a carregam, e nelas o osso cresce para a frente: o crânio vira uma cunha lisa, maior
+      que a cabeça, e placas rompem o couro do lombo. A cunha não para de crescer, e dói. Elas investem contra troncos e
+      pilares para quebrá-la, e o que estiver entre a queixada e o tronco fica quebrado no lugar dela.
+    aparencia: >-
+      Queixada do tamanho de um boi, crânio crescido numa cunha de osso branco e liso fundida com as
+      presas, placas de osso rompendo o couro do pescoço e do lombo com músculo vermelho nas frestas,
+      patas da frente grossas como colunas, olhos enterrados no osso.
+    como_se_luta: >-
+      Investe em linha reta e quebra a guarda de quem a segura. Sair da linha faz a cunha passar; depois do
+      choque ela fica de lado, com as frestas do lombo expostas.
+    related_entities: [sx_profundezas, selva_xylos]
+    arte:
+      visual: >-
+        Porco-do-mato enorme, do tamanho de um boi, pelagem escura e eriçada, corpo baixo e pesado. No lugar
+        do focinho e da testa, uma cunha de osso branco e liso, maior que a cabeça, fundida com duas presas
+        curvas. Placas irregulares de osso rompendo o couro do pescoço e do lombo, músculo vermelho e úmido
+        entre elas. Patas dianteiras grossas, cascos rachados. Olhos pequenos fundos no osso.
+      composicao: >-
+        Trilha estreita entre raízes gigantes, poeira e folhas voando; a queixada vindo de frente, em
+        investida, levemente de lado para mostrar a cunha; uma ponte baixa de cipó partida atrás dela; um
+        garimpeiro saltando para fora da trilha, da altura do lombo dela. Luz verde, sombra funda atrás.
+      evitar: Javali de fantasia com chifres, rinoceronte, armadura de metal. A cunha é osso que cresceu da cara, não chifre nem elmo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lacado_de_hifas
+    vaga: 3
+    nome: Laçado de Hifas
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:474", "lore_nova/creatures.txt:1032", "lore_nova/races.txt:388"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: sangue_cheiro
+      texto: >-
+        Um garimpeiro mordido por um bicho tocado por Morrakh. As feridas da mordida não fecharam e não
+        apodreceram: ficaram abertas, com a carne viva no fundo pulsando uma luz escura. O fungo que vive no
+        ar da selva entrou nelas e as costurou do jeito que sabe, com cordões brancos de hifa passados de
+        uma borda à outra como os laços de uma bota, no ombro, no flanco e nas duas coxas. Quando ele se
+        dobra, os cordões esticam e os rasgos abrem por baixo.
+    silhueta: Um homem dobrado com o corpo amarrado por laços brancos cruzados, como uma bota mal fechada.
+    comportamento: >-
+      Anda farejando sangue com a boca aberta. Vai atrás de quem tem ferida, mas prefere quem rompeu um dos
+      cordões dele: esse ele segue para onde for, aberto, sem se importar com o que mais apanha.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lacado_de_hifas_laco_rompido
+      frase: >-
+        Quem corta um dos cordões abre a ferida por baixo e leva no rosto o respingo escuro: fica marcado, e
+        o Laçado só ataca essa pessoa até cair.
+    contra_jogo: Bater com pancada, que não rompe os laços, ou matá-lo com o primeiro corte; quem só arranha fica marcado.
+    gancho: >-
+      Perto do fundo, onde a mordida de Morrakh chega, nenhuma ferida fecha; o fungo da selva fecha do
+      jeito que pode, e não é o jeito de um curandeiro.
+    habitat: [selva_xylos]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} encolhe o ombro rasgado e os laços brancos rangem, esticados até o limite."
+    description: Um garimpeiro mordido perto de Morrakh cujas feridas abertas o fungo da selva costurou com cordões brancos, que vai atrás de quem lhe rompe os laços.
+    perigo: Baixo
+    lore: >-
+      Perto do fundo da selva, o que é mordido por um bicho tocado por Morrakh não fecha a ferida. A carne
+      fica viva e aberta, com uma luz escura no fundo. O fungo que está no ar de toda a selva entra nessas
+      feridas e as costura com cordões brancos, de borda a borda, como laço de bota. Os garimpeiros que
+      voltam assim não voltam inteiros: andam farejando sangue e vão atrás de quem lhes rompe um laço.
+    aparencia: >-
+      Homem magro e dobrado, roupas de garimpeiro rasgadas, feridas abertas no ombro, no flanco e nas
+      coxas, com carne viva e uma luz escura no fundo, costuradas por cordões brancos de fungo cruzados como
+      laços de bota.
+    como_se_luta: >-
+      Romper um dos laços abre a ferida por baixo e marca quem cortou, que vira o único alvo dele. Pancada
+      não rompe os laços; um corte só, bem dado, acaba com ele antes.
+    related_entities: [selva_xylos, npc_morrakh]
+    arte:
+      visual: >-
+        Homem adulto magro, curvado para a frente, boca aberta farejando. Roupas de garimpeiro de couro
+        rasgadas, sem botas. Feridas longas e abertas no ombro esquerdo, no flanco e nas duas coxas, a carne
+        viva vermelho-escura no fundo com um brilho negro pulsando, e por cima de cada ferida cordões finos
+        e brancos de fungo passados em zigue-zague de uma borda à outra, como laços de bota, esticados.
+      composicao: >-
+        Acampamento de garimpeiros abandonado na selva, panela virada e lona rasgada; o Laçado entrando em
+        cena, curvado, com uma mão estendida; uma garimpeira com faca curta do mesmo tamanho dele, de costas
+        para a lona. Luz verde-dourada de tarde, sombra preta nas feridas.
+      evitar: Zumbi costurado de laboratório, monstro de Frankenstein com pontos de linha preta, múmia de faixas. Os laços são fios brancos de fungo, e a carne por baixo está viva.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_recusado_do_ciclo
+    vaga: 4
+    nome: Recusado do Ciclo
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: null
+      refs: ["lore_nova/locations.txt:213", "lore_nova/rumors.txt:335", "lore_nova/creatures.txt:984"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: anda
+      percepcao: vibracao
+      texto: >-
+        Um Hospedeiro que morreu na linha do território de Morrakh. O fungo que o habitava saiu do corpo de
+        uma vez, deixando na pele cinzenta furos pequenos e redondos onde antes havia crescimentos, como
+        uma tábua comida por cupim. A carne não apodreceu: secou, firme, da cor de cinza fria, e os músculos
+        dos braços ficaram duros como corda velha. Os olhos dourados dos Hospedeiros viraram duas pedras
+        opacas. Anda descalço, e o chão que os pés tocam fica nu.
+    silhueta: Um homem cinzento e seco, de pé num círculo de chão limpo cercado de mato fechado.
+    comportamento: >-
+      Caminha devagar do fundo para as bordas, como se fosse para casa. Onde ele para, a selva se afasta:
+      as folhas viram de lado, os cipós recolhem, a fruta não cai. Ataca o que respira dentro do círculo,
+      sem pressa, até o círculo estar vazio.
+    papel_tatico: controlador
+    arquetipo: morto_vivo_implacavel
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_recusado_do_ciclo_chao_nu
+      frase: >-
+        Onde ele pisa, o ciclo da selva não entra: nenhuma cura e nenhum fôlego recuperado valem dentro do
+        círculo de chão nu enquanto ele estiver de pé.
+    contra_jogo: Sair do círculo para se cuidar e voltar para bater; ele é lento e não persegue além do chão nu.
+    gancho: >-
+      A selva está recuando de alguma coisa que vem do fundo; quem vê um destes entende de quê, porque a
+      selva recua dele do mesmo jeito.
+    habitat: [sx_profundezas]
+    inspiracao:
+      - fonte: hagiografia (corpos incorruptos)
+        referencia: "relatos de corpos de santos que não se decompuseram"
+        tomou: o corpo morto que não apodrece e assusta por isso
+        distancia: não há santidade; é a selva de Valoria recusando um corpo que Morrakh tocou, e o morto anda e luta
+    padrao: [enfraquecer, ataque, defesa]
+    a_cada_n: 4
+    telegrafo: "{nome} para e encosta os pés no chão; as folhas em volta viram de lado, todas juntas."
+    description: Um Hospedeiro morto na linha de Morrakh, seco e cinzento, que o fungo abandonou e a selva se recusa a comer; onde ele pisa, nada cresce nem se cura.
+    perigo: Alto
+    lore: >-
+      Na selva tudo o que para é comido numa hora. Por isso os Hospedeiros temem os mortos que não são
+      comidos. Os que morrem na linha do território de Morrakh perdem o fungo de uma vez, como se ele
+      fugisse, e a carne seca em vez de apodrecer. Depois de um tempo eles se levantam e caminham para as
+      bordas, devagar, e a selva abre espaço diante deles. Dentro desse espaço nada fecha. Os Hospedeiros
+      não os tocam e mudam as pontes de lugar quando um passa por baixo.
+    aparencia: >-
+      Hospedeiro morto de pele cinzenta, seca e firme, cheia de furos pequenos e redondos onde havia
+      crescimentos de fungo, braços de músculo duro como corda velha, olhos de pedra opaca, descalço, num
+      círculo de chão nu.
+    como_se_luta: >-
+      Dentro do chão nu em volta dele nenhuma cura vale. É lento e não sai do círculo atrás de ninguém:
+      quem se cuida fora dele e volta para bater o vence.
+    related_entities: [sx_profundezas, npc_morrakh]
+    arte:
+      visual: >-
+        Humanoide adulto magro, de pé, nu da cintura para cima, pele cinza fosco, seca e firme como couro
+        curtido ao sol, coberta de furos pequenos e redondos, do tamanho de um dedo, em grupos nos ombros, no
+        pescoço e atrás das orelhas. Músculos dos braços duros, marcados como cordas. Olhos opacos, sem
+        brilho. Descalço. À volta dos pés, um círculo de terra limpa e seca.
+      composicao: >-
+        Mata fechada e escura das Profundezas, raízes enormes e fungos claros; no centro, o Recusado parado
+        num círculo de chão nu de três passos, com as folhas e os cipós da borda do círculo virados para
+        fora, afastando-se dele; uma Hospedeira na plataforma acima, do tamanho dele, puxando uma ponte de
+        corda para longe. Luz baixa, verde-negra; o círculo mais claro.
+      evitar: "Zumbi apodrecido, múmia de faixas, fantasma. Não há podridão nem luz saindo dele: é um corpo seco, inteiro e cinzento, e o que assusta é a selva se afastando."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_remendado_de_osso
+    vaga: 5
+    nome: Remendado de Osso
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: praga_ossos
+      detalhe: null
+      refs: ["lore_nova/races.txt:522", "lore_nova/races.txt:405", "lore_nova/faction_perspectives.txt:133"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: grande
+      locomocao: salta
+      percepcao: sangue_cheiro
+      texto: >-
+        Um Hospedeiro que pegou a Praga dos Ossos. Ele não sente a dor da transformação e o fungo não deixa a
+        ferida aberta: cada vez que uma placa de osso rompe a pele, o fungo fecha a pele por cima, e a
+        próxima placa rompe essa pele nova. O peito, os ombros e as coxas viraram camadas de osso e pele
+        remendada, como as folhas de um livro molhado, com músculo vermelho à vista nas bordas. O rosto
+        continuou de gente, liso e calmo, de olhos dourados, e ainda tem atrás das orelhas os crescimentos
+        de fungo da juventude.
+    silhueta: Um homem alto e largo, de peito em camadas como um livro inchado, agachado num galho para saltar.
+    comportamento: >-
+      As camadas repuxam a cada movimento, e só sangue fresco amolece a pele nova por um tempo. Caça
+      saltando de galho em galho atrás do que sangra. Não grita quando é golpeado; olha para a placa
+      partida e espera ela crescer de novo.
+    papel_tatico: tanque_reativo
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_remendado_de_osso_camada_nova
+      frase: >-
+        A placa que o golpe parte, o fungo cobre de pele e o osso rompe de novo: no começo de cada rodada
+        ele recupera a defesa perdida, a não ser que tenha levado dois golpes seguidos no mesmo lugar.
+    contra_jogo: Bater duas vezes seguidas no mesmo ponto, antes de a camada fechar; golpes espalhados só alimentam as camadas.
+    gancho: >-
+      O druida do Ciclo escreveu que o fungo está aprendendo dentro de quem não morre. Os Hospedeiros que
+      pegam a Praga dos Ossos são a prova que ele não queria ter.
+    habitat: [sx_profundezas, selva_xylos]
+    inspiracao:
+      - fonte: medicina (fibrodisplasia ossificante progressiva)
+        referencia: "doença em que músculo e tendão viram osso depois de cada lesão"
+        tomou: a ideia de cada ferida curar em osso novo, camada sobre camada
+        distancia: a causa e o corpo são a Praga dos Ossos de Valoria num Hospedeiro; a doença real não tem crânio de bicho nem salto
+    padrao: [reforco_proprio, ataque, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} encolhe os ombros e uma placa nova rasga a pele do peito, ainda úmida."
+    description: Um Hospedeiro com a Praga dos Ossos em quem o fungo fecha a pele sobre cada placa que rompe, até o corpo virar camadas de osso e pele, que salta e não sente dor.
+    perigo: Alto
+    lore: >-
+      A Praga dos Ossos rompe a pele de dentro para fora. Num Hospedeiro, o fungo fecha a pele por cima de
+      cada placa que rompe, e a placa seguinte rompe a pele nova, e assim sem fim, sem dor nenhuma. Ficam
+      com o peito em camadas, como um livro que molhou, e as camadas repuxam. Só sangue fresco as amolece,
+      e por isso caçam o que sangra. O rosto continua calmo, de olhos dourados, como o de quem não sente
+      nada.
+    aparencia: >-
+      Hospedeiro alto e largo, peito, ombros e coxas em camadas de placas de osso e pele remendada como
+      folhas de livro molhado, músculo vermelho nas bordas, rosto humano calmo de olhos dourados,
+      crescimentos de fungo coral atrás das orelhas.
+    como_se_luta: >-
+      As placas partidas crescem de novo a cada rodada. Dois golpes seguidos no mesmo ponto, antes de a pele
+      fechar, abrem caminho; golpes espalhados não.
+    related_entities: [sx_profundezas, selva_xylos, race_hospedeiros_xylos]
+    arte:
+      visual: >-
+        Humanoide alto e largo, agachado sobre um galho grosso, pronto para saltar. Peito, ombros e coxas
+        cobertos de placas de osso branco-amarelado sobrepostas em camadas, cada camada separada por uma
+        tira de pele clara e nova, recém-fechada, como folhas de um livro inchado de água; nas bordas, músculo
+        vermelho e úmido. Rosto humano liso e calmo, olhos dourados; atrás das orelhas,
+        crescimentos de fungo cor de coral, pequenos, como resto de outra vida.
+      composicao: >-
+        Galhos gigantes abaixo das cidades das copas, plataforma de quitina ao fundo; o Remendado agachado
+        num galho, de perfil, uma placa partida pendendo do ombro; um Hospedeiro sentinela na plataforma, do
+        tamanho de um homem, segurando uma lança e olhando para ele sem atacar. Luz dourada filtrada, sombra
+        verde.
+      evitar: "Lobisomem, lobo de pé, homem-fera, armadura de placas de metal. O rosto é de gente e calmo; o osso está só nas camadas do corpo."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: mon_tamandua_de_ponte
+    vaga: 6
+    nome: Tamanduá de Ponte
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:172", "lore_nova/races.txt:418"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: grande
+      locomocao: escala_paredes
+      percepcao: som
+      texto: >-
+        Um tamanduá do tamanho de um cavalo, de pelo grosso e cinzento, que vive pendurado sob as
+        plataformas das cidades das copas, preso pelas garras da frente, curvas como ganchos de açougue. O
+        focinho é um tubo comprido e fino; dentro dele a língua cresceu no ciclo acelerado até passar de dez
+        metros, um chicote rosado e pegajoso que fica enrolado no peito como corda num carretel. A cauda
+        larga serve de contrapeso. Ouve os passos nas tábuas acima.
+    silhueta: Um bicho de focinho de tubo pendurado de cabeça para baixo debaixo de uma ponte, com uma corda rosada saindo da boca até o alto.
+    comportamento: >-
+      Fica sob as pontes e as plataformas, imóvel, ouvindo os passos. Quando alguém pisa perto da borda, a
+      língua sobe, cola e puxa: a pessoa cai no vão entre as tábuas e as garras a recebem embaixo. Come
+      cupim e formiga, mas aprendeu que gente na borda é mais fácil.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tamandua_de_ponte_lingua_de_carretel
+      frase: >-
+        A língua de dez metros cola em quem está mais longe dos outros e o arrasta até as garras, tirando a
+        pessoa do lugar onde estava.
+    contra_jogo: Ficar perto dos outros e longe da borda; cortar a língua quando ela cola, que ele leva uma rodada para enrolar outra vez.
+    gancho: >-
+      As pontes das cidades das copas são de cipó tratado e madeira, e entre as tábuas há vão; os
+      Hospedeiros andam no centro sem pensar, e os forasteiros aprendem a fazer o mesmo.
+    habitat: [sx_cidades_hospedeiros, selva_xylos]
+    inspiracao:
+      - fonte: zoologia (tamanduá-bandeira e camaleão)
+        referencia: "língua longa e pegajosa do tamanduá; disparo da língua do camaleão"
+        tomou: o focinho de tubo, a língua que se enrola no peito e o disparo que cola e puxa
+        distancia: o tamanho, a vida sob as pontes e a caça de gente vêm do ciclo acelerado de Xylos
+    padrao: [mover, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} some debaixo das tábuas; ouve-se um carretel se desenrolando sob os seus pés."
+    description: Um tamanduá do tamanho de um cavalo que vive sob as pontes das cidades das copas e puxa quem pisa na borda com uma língua de dez metros.
+    perigo: Médio
+    lore: >-
+      No ciclo acelerado tudo cresce além da conta, e a língua dos tamanduás cresceu mais que o resto. Os
+      que vivem sob as plataformas das cidades das copas passam o dia pendurados pelas garras, ouvindo os
+      passos. Quem anda na borda de uma ponte sente a língua colar no tornozelo antes de ver de onde veio.
+      Os Hospedeiros andam no centro das pontes desde crianças, e não explicam por quê.
+    aparencia: >-
+      Tamanduá do tamanho de um cavalo, pelo grosso e cinzento, focinho em tubo comprido e fino, garras da
+      frente curvas como ganchos de açougue, cauda larga, língua rosada de mais de dez metros enrolada no
+      peito como corda num carretel.
+    como_se_luta: >-
+      Cola a língua em quem está mais isolado e o puxa até as garras. Ficar junto dos outros e cortar a
+      língua quando ela cola deixa o bicho uma rodada sem alcance.
+    related_entities: [sx_cidades_hospedeiros, selva_xylos]
+    arte:
+      visual: >-
+        Tamanduá enorme, do tamanho de um cavalo, pendurado de cabeça para baixo sob uma plataforma de
+        madeira, preso pelas garras da frente em gancho. Pelo grosso, cinzento, com faixa escura no ombro;
+        cauda larga e peluda pendendo como bandeira. Focinho de tubo comprido. A língua rosada, fina e
+        brilhante, saindo da boca e subindo reta até uma brecha entre as tábuas, enrolada no tornozelo de
+        alguém.
+      composicao: >-
+        Ponte de cipó e tábuas entre duas árvores gigantes de uma cidade das copas, vão de vinte metros até
+        o chão de névoa; o tamanduá sob a ponte, em primeiro plano; acima, um mercador forasteiro com um
+        cesto, do tamanho de meio corpo dele, tropeçando com a língua no tornozelo; Hospedeiros andando no
+        centro da ponte ao fundo. Luz dourada filtrada, verdes úmidos.
+      evitar: Monstro de língua de sapo de desenho, criatura de tentáculos, tamanduá fofo. É um tamanduá real em tamanho errado, com garras de verdade.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lagarta_da_hora
+    vaga: 7
+    nome: Lagarta da Hora
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:172", "lore_nova/creatures.txt:984"]
+    anatomia:
+      plano_corporal: segmentado
+      material: couro_tecido
+      escala: grande
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Uma lagarta do comprimento de um barco, de pele aveludada verde e preta, com tufos de pelo urticante
+        nos anéis das costas e uma cabeça dura de mandíbulas largas que corta galho como tesoura. Vive a
+        vida inteira em uma hora: come, fecha a casca do casulo em volta de si em minutos e sai dele com
+        asas úmidas de dois metros, pernas finas e o ventre ainda mole. O casulo é duro como couro fervido.
+        Sente o chão tremer pelas patas curtas da barriga.
+    silhueta: Uma lagarta do tamanho de um barco que, um minuto depois, é um casulo pendurado, e depois uma mariposa de asas molhadas.
+    comportamento: >-
+      Come tudo o que está em volta, depressa, inclusive quem fica perto. Quando para de comer, fecha o
+      casulo onde estiver, e o casulo não se abre a golpes. O que sai dele voa baixo e bate as asas sobre
+      quem estiver por perto, soltando o pelo urticante; morre antes do fim da hora.
+    papel_tatico: tanque_reativo
+    arquetipo: predador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lagarta_da_hora_casulo_de_minuto
+      frase: >-
+        Vive a metamorfose dentro da luta: come e cresce, fecha o casulo e quase nada a fere, e na terceira
+        fase sai alada e bate em todos de uma vez.
+    contra_jogo: Matar enquanto ainda é lagarta ou esperar o fim da hora longe dela; atacar o casulo é perder golpes.
+    gancho: >-
+      Na selva uma fruta amadurece e apodrece em uma hora; a lagarta que come essa fruta vive no mesmo
+      tempo, e quem a encontra entra na hora dela.
+    habitat: [selva_xylos]
+    inspiracao:
+      - fonte: entomologia (metamorfose das mariposas)
+        referencia: "ciclo de lagarta, pupa e adulto das mariposas, com lagartas de pelo urticante"
+        tomou: as três fases e o pelo que queima
+        distancia: a metamorfose inteira numa luta é o ciclo acelerado de Xylos; o tamanho e a fome também
+    padrao: [reforco_proprio, defesa, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} para de mastigar e começa a se enrolar; a pele das costas endurece e escurece."
+    description: Uma lagarta do tamanho de um barco que vive a vida inteira em uma hora, come, fecha um casulo duro e sai alada no meio da luta.
+    perigo: Médio
+    lore: >-
+      O ciclo acelerado da selva vale para os bichos também. Estas lagartas nascem, comem, fecham o casulo e
+      voam no espaço de uma hora, e nessa hora comem o que estiver perto. Os garimpeiros aprenderam a
+      correr quando veem uma parar de comer, porque o casulo não se quebra e o que sai dele bate asas
+      cheias de pelo que queima. A mariposa morre antes de anoitecer. Outra lagarta já está comendo.
+    aparencia: >-
+      Lagarta do comprimento de um barco, pele aveludada verde e preta, tufos de pelo urticante nos anéis
+      das costas, cabeça dura de mandíbulas largas; ou o casulo escuro e duro dela; ou a mariposa de asas
+      úmidas de dois metros que sai dele.
+    como_se_luta: >-
+      Come e cresce, fecha um casulo que quase nada fere e sai alada para bater em todos. Matá-la ainda
+      lagarta ou esperar longe o fim da hora são os dois caminhos.
+    related_entities: [selva_xylos]
+    arte:
+      visual: >-
+        Três fases na mesma cena: em primeiro plano, a lagarta enorme, do comprimento de um barco, de pele
+        aveludada verde-escura com faixas pretas e tufos de pelo urticante amarelo nos anéis, cabeça dura
+        marrom de mandíbulas largas; atrás, um casulo escuro e lustroso do tamanho de um homem preso a um
+        galho; no alto, uma mariposa de asas úmidas e amassadas, cor de musgo e ferrugem, saindo de outro
+        casulo rachado.
+      composicao: >-
+        Clareira de folhas comidas até os talos, frutas caídas apodrecendo; a lagarta comendo um arbusto
+        inteiro; uma garimpeira de cócoras atrás de uma raiz, do tamanho de um terço da lagarta, segurando
+        um facão. Luz verde intensa, poeira de pelo no ar.
+      evitar: Lagarta fofa de desenho, borboleta colorida de conto de fadas, inseto de armadura metálica. É um bicho real em tamanho errado, com pelo que queima.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_preguica_de_pomar
+    vaga: 8
+    nome: Preguiça de Pomar
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:174", "lore_nova/creatures.txt:1083"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: madeira_fibra
+      escala: grande
+      locomocao: escala_paredes
+      percepcao: vibracao
+      texto: >-
+        Uma preguiça do tamanho de uma carroça, a única coisa lenta da selva. É tão devagar que o ciclo
+        acelerado cresceu um pomar inteiro sobre ela: o pelo das costas virou terra, e ali sobem arbustos,
+        cipós e três árvores pequenas que dão fruto, amadurecem e apodrecem em cima dela a cada hora. As
+        garras dos braços têm o comprimento de uma foice e prendem o galho como gancho. O rosto pequeno e
+        cansado mal aparece entre as raízes que descem do ombro.
+    silhueta: Um morro de mato e árvores frutíferas pendurado de um galho gigante, com duas garras longas segurando tudo.
+    comportamento: >-
+      Leva o dia inteiro para atravessar um galho. Os bichos pequenos e os Hospedeiros jovens se escondem
+      no pomar das costas dela. Quando alguém ameaça o que está escondido ali, ela solta um braço, devagar,
+      e o golpe da garra, quando chega, derruba uma ponte.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_preguica_de_pomar_pomar_que_amortece
+      frase: >-
+        O golpe dado num aliado perto dela bate no pomar das costas, que amortece e cresce de novo a cada
+        rodada; e de tempos em tempos ela solta uma garra, devagar e muito forte.
+    contra_jogo: "Queimar ou cortar o pomar das costas primeiro, que é o que amortece; e sair de baixo quando a garra sobe."
+    gancho: >-
+      Na selva, o que para é incorporado ao chão; ela para o tempo todo, e a selva a incorporou sem matá-la,
+      como se ela fosse uma árvore que anda.
+    habitat: [sx_cidades_hospedeiros, selva_xylos]
+    inspiracao:
+      - fonte: zoologia (preguiças)
+        referencia: "preguiças-de-três-dedos com algas e mariposas vivendo no pelo"
+        tomou: a lentidão, as garras de gancho e o pelo que hospeda outra vida
+        distancia: o pomar inteiro nas costas e o papel de guarda vêm do ciclo acelerado de Xylos
+    padrao: [defesa, defesa, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} solta um braço do galho, muito devagar, e as frutas das costas começam a cair."
+    description: Uma preguiça do tamanho de uma carroça, tão lenta que o ciclo da selva cresceu um pomar inteiro nas costas dela, que recebe os golpes dados nos que estão perto.
+    perigo: Alto
+    lore: >-
+      Tudo na selva é rápido, menos as preguiças. São tão lentas que o chão da selva, que come o que para,
+      as come sem matar: a terra sobe pelo pelo, e nas costas delas crescem arbustos, cipós e árvores de
+      fruto que amadurecem e caem a cada hora. Os bichos pequenos vivem nesse pomar. Os Hospedeiros
+      deixam as crianças subirem nelas e dizem que nada ataca uma criança escondida ali.
+    aparencia: >-
+      Preguiça do tamanho de uma carroça pendurada de um galho gigante, garras longas como foices, rosto
+      pequeno e cansado entre raízes, e nas costas um pomar de terra, cipós, arbustos e três árvores
+      pequenas com frutos maduros e podres.
+    como_se_luta: >-
+      Recebe no pomar das costas os golpes dados nos aliados perto dela, e o pomar volta a crescer.
+      Queimar ou cortar o pomar primeiro deixa os outros sem proteção.
+    related_entities: [sx_cidades_hospedeiros, selva_xylos]
+    arte:
+      visual: >-
+        Preguiça gigante, do tamanho de uma carroça, pendurada de costas para baixo num galho grosso pelas
+        quatro garras longas e curvas. Pelo marrom-esverdeado coberto de terra; sobre as costas, que ficam
+        para cima, um pequeno pomar: arbustos, cipós e três árvores baixas carregadas de frutos laranja,
+        alguns maduros, outros pretos de podres, pingando. Raízes finas descendo dos ombros. Rosto pequeno,
+        cansado, com a mancha escura em volta dos olhos.
+      composicao: >-
+        Galho gigante perto de uma cidade das copas, plataformas de quitina ao fundo; a preguiça ocupando o
+        quadro, em diagonal; uma criança Hospedeira espiando de dentro do pomar das costas; um garimpeiro na
+        ponte embaixo, do tamanho de uma das garras, olhando para cima. Luz dourada da manhã, frutas caindo.
+      evitar: Bicho de pelúcia, preguiça fofa sorrindo, homem-árvore. É um animal real, cansado e enorme, com plantas de verdade crescendo nele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_coandu_de_rebrota
+    vaga: 9
+    nome: Coandu de Rebrota
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:182", "lore_nova/creatures.txt:984"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: quitina
+      escala: pequena
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um porco-espinho de cauda preênsil do tamanho de um cão, de focinho rosado e olhos pretos de bicho
+        noturno. Os espinhos das costas são de quitina escura e rebrotam em segundos: o ciclo acelerado faz
+        cada espinho que cai crescer de novo enquanto o próximo ainda está voando. Os músculos das costas
+        estalam e disparam os espinhos em leque. A pele embaixo deles é cheia de furos que fecham e reabrem.
+    silhueta: Uma bola baixa de espinhos com um focinho rosado, que se eriça de novo logo depois de cada tiro.
+    comportamento: >-
+      Vive em bando nas árvores baixas da borda e se assusta com qualquer barulho. Assustado, vira as costas
+      e atira, foge para trás de uma raiz enquanto os espinhos rebrotam, e atira de novo. Nunca chega perto.
+    papel_tatico: artilharia
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_coandu_de_rebrota_leque_de_espinhos
+      frase: >-
+        Atira um leque de espinhos e se esconde; os espinhos rebrotam no tempo de uma rodada, e o tiro
+        seguinte sai com o dobro.
+    contra_jogo: Chegar perto antes de os espinhos rebrotarem; de perto ele só sabe fugir.
+    gancho: >-
+      Na borda da selva até um bicho medroso tem munição sem fim, porque o que ele perde cresce de volta
+      antes de cair no chão.
+    habitat: [selva_xylos, sx_cidades_hospedeiros]
+    inspiracao:
+      - fonte: zoologia (coandu)
+        referencia: "coandu (Coendou), porco-espinho de cauda preênsil das matas da América do Sul"
+        tomou: o corpo, a cauda preênsil e os espinhos
+        distancia: espinhos que se disparam e rebrotam em segundos vêm do ciclo acelerado; o bicho real não atira
+    padrao: [ataque, ataque, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} vira as costas e os espinhos se levantam todos com um estalo seco."
+    description: Um porco-espinho do tamanho de um cão cujos espinhos de quitina rebrotam em segundos, e que atira leques deles das árvores baixas antes de se esconder.
+    perigo: Baixo
+    lore: >-
+      O ciclo acelerado devolve ao bicho tudo o que ele perde. Os coandus da borda descobriram isso com os
+      espinhos: atiram, o espinho que saiu já cresce de novo, e atiram outra vez. São medrosos e não chegam
+      perto de ninguém, mas um bando deles numa árvore baixa fecha uma trilha por uma tarde. Os garimpeiros
+      andam com tábuas nas costas por causa deles.
+    aparencia: >-
+      Porco-espinho do tamanho de um cão, cauda preênsil enrolada num galho, focinho rosado e olhos pretos,
+      costas cobertas de espinhos de quitina escura que rebrotam, pele furada que fecha e reabre.
+    como_se_luta: >-
+      Atira leques de espinhos de longe e se esconde enquanto eles rebrotam. Quem chega perto antes da
+      rebrota o põe para correr.
+    related_entities: [selva_xylos, sx_cidades_hospedeiros]
+    arte:
+      visual: >-
+        Porco-espinho de árvore do tamanho de um cão, pendurado pela cauda preênsil num galho baixo, de
+        costas para o observador. Focinho rosado, olhos pretos e redondos olhando por cima do ombro. Espinhos
+        de quitina escura, quase preta, eriçados em leque; alguns voando, e no lugar de cada um que saiu, um
+        espinho novo e mais claro crescendo da pele.
+      composicao: >-
+        Árvores baixas da borda da selva, folhas largas; três coandus em galhos diferentes, um atirando;
+        uma tábua de madeira cravada de espinhos na mão de um garimpeiro agachado embaixo, de tamanho
+        humano, protegendo o rosto. Luz verde e manchas de sol.
+      evitar: Ouriço fofo de desenho, espinhos de metal, bicho com olhos brilhando. É um bicho tímido de verdade, com espinhos que crescem rápido demais.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vespa_oleira
+    vaga: 10
+    nome: Vespa Oleira
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:984", "lore_nova/races.txt:418"]
+    anatomia:
+      plano_corporal: alado
+      material: lama_turfa
+      escala: miuda
+      locomocao: plana_voa
+      percepcao: visao
+      texto: >-
+        Uma vespa do tamanho de uma mão aberta, de cintura fina e corpo preto com faixas cor de barro, que
+        carrega na boca bolotas de lama misturada com a seiva ácida da selva. Com as mandíbulas e as patas da
+        frente ela molda potes redondos e pequenos, e no ciclo acelerado o barro seca em segundos e fica duro
+        como telha. Faz os potes onde o corpo dobra: na junta do cotovelo, no joelho, nos dedos de quem
+        passa. O ferrão é curto e quase não dói.
+    silhueta: Uma vespa de cintura fina carregando uma bolota de barro, e atrás dela um homem com potinhos de barro grudados nas juntas.
+    comportamento: >-
+      Vive nas cidades das copas, sob os beirais. Escolhe quem para e molda os potes nas juntas, um atrás do
+      outro, com uma paciência de artesã. Põe um ovo em cada pote. Os Hospedeiros quebram os potes com uma
+      batida de dedo; forasteiros não sabem onde bater.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vespa_oleira_pote_na_junta
+      frase: >-
+        Fecha um pote de barro duro numa junta de quem está parado: a mão presa não segura Carta de
+        Reação até o pote ser quebrado.
+    contra_jogo: Não ficar parado e gastar um movimento para quebrar o pote na batida certa, como os Hospedeiros fazem.
+    gancho: >-
+      As cidades das copas são feitas de coisa que cresce; a vespa é a única que constrói com barro ali, e
+      constrói em gente.
+    habitat: [sx_cidades_hospedeiros]
+    inspiracao:
+      - fonte: entomologia (vespas-oleiras)
+        referencia: "vespas oleiras (Eumeninae), que moldam potinhos de barro para pôr os ovos"
+        tomou: o pote redondo de barro moldado pela vespa
+        distancia: os potes nas juntas de gente e o barro que endurece em segundos vêm de Xylos
+    padrao: [enfraquecer, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} pousa no seu cotovelo com uma bolota de barro na boca e começa a girar."
+    description: Uma vespa do tamanho de uma mão que molda potes de barro ácido nas juntas de quem para, e o barro seca em segundos duro como telha.
+    perigo: Baixo
+    lore: >-
+      Debaixo dos beirais das cidades das copas vivem vespas que fazem potes de barro. No resto do mundo elas
+      os fazem em galhos. Aqui o barro seca em segundos e elas aprenderam a fazê-los nas juntas de quem fica
+      parado: no cotovelo, no joelho, entre os dedos. Um forasteiro que dorme numa plataforma acorda com as
+      mãos fechadas em barro. Os Hospedeiros quebram os potes com uma batida de dedo e riem.
+    aparencia: >-
+      Vespa do tamanho de uma mão aberta, cintura fina, corpo preto com faixas cor de barro, bolota de lama
+      na boca, e potes pequenos e redondos de barro seco grudados nas juntas das vítimas.
+    como_se_luta: >-
+      Fecha potes de barro duro nas juntas de quem está parado e trava a mão que defende. Quebrar o pote e
+      não ficar parado desfaz o trabalho dela.
+    related_entities: [sx_cidades_hospedeiros]
+    arte:
+      visual: >-
+        Vespa grande, do tamanho de uma mão aberta, cintura muito fina, corpo preto lustroso com faixas cor
+        de terracota, asas âmbar transparentes, mandíbulas segurando uma bolota de barro marrom molhado. Ao
+        lado, close de um cotovelo humano com três potinhos redondos de barro seco, rachado, grudados na
+        dobra do braço.
+      composicao: >-
+        Beiral de uma casa crescida das cidades das copas, telhas de casca e quitina; potinhos de barro em
+        fileira no beiral; a vespa em voo, em primeiro plano; atrás, um forasteiro sentado numa plataforma,
+        de tamanho humano, olhando o próprio braço travado. Luz dourada, poeira de barro.
+      evitar: Vespa gigante do tamanho de um cachorro, enxame de desenho, inseto de metal. É pequena, paciente e real.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_escavador_das_camaras
+    vaga: 11
+    nome: Escavador das Câmaras
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/locations.txt:209", "lore_nova/rumors.txt:335", "lore_nova/creatures.txt:1069"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: quitina
+      escala: enorme
+      locomocao: cava
+      percepcao: vibracao
+      texto: >-
+        Um bicho das câmaras de raízes debaixo da selva, do tamanho de uma casa, que nunca tinha subido. É
+        coberto de escamas de quitina sobrepostas, brancas como fungo morto, do focinho à cauda; nunca viu
+        luz e não tem olhos, só duas covas lisas na cabeça. As garras da frente são pás largas que rasgam
+        raiz e pedra, e a língua comprida é para formigueiros das câmaras. Enrolado, vira uma bola de
+        escamas que nenhuma lança atravessa; desenrolado, a barriga é pele rosada e mole.
+    silhueta: Uma bola enorme de escamas brancas saindo do chão entre as raízes, com duas pás no lugar das mãos.
+    comportamento: >-
+      Está subindo. Rasga o chão debaixo das trilhas e das árvores, fugindo de alguma coisa no fundo, e
+      derruba o que estiver em cima. Não caça; esmaga o que trava o caminho dele e se enrola quando é
+      atacado. A luz do dia o deixa parado e confuso por um momento.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_escavador_das_camaras_bola_de_escamas
+      frase: >-
+        Enrola-se numa bola de escamas que quase nada fere e rola sobre quem está na frente; só luz forte
+        ou fogo na cara o faz desenrolar, e desenrolado ele mostra a barriga mole.
+    contra_jogo: "Levar luz forte ou fogo à cara dele para que desenrole, e então bater na barriga; contra a bola, o golpe se perde."
+    gancho: >-
+      Os bichos estão fugindo do fundo da selva para as bordas, e alguns dos que fogem nunca tinham saído
+      das câmaras de raízes; ninguém sabia que existiam.
+    habitat: [sx_profundezas, selva_xylos]
+    inspiracao:
+      - fonte: zoologia (pangolins e fauna de caverna)
+        referencia: "escamas sobrepostas e o enrolar do pangolim; animais de caverna sem pigmento e sem olhos"
+        tomou: as escamas, a bola, as garras de cavar e a pele branca e cega
+        distancia: o tamanho, a fuga das câmaras de Morrakh e o chão que cede são de Xylos
+    padrao: [defesa, ataque_multiplo, mover, ataque]
+    a_cada_n: 4
+    telegrafo: "{nome} encolhe a cabeça cega e as escamas fecham sobre ela com um som de telhas caindo."
+    description: Um bicho do tamanho de uma casa, de escamas brancas e sem olhos, que vivia nas câmaras de raízes sob a selva e agora sobe, cavando por baixo de tudo.
+    perigo: Extremo
+    lore: >-
+      Os Hospedeiros sabiam das câmaras de raízes debaixo da selva, mas não do que vivia nelas. Agora
+      sabem. Um bicho do tamanho de uma casa, branco como fungo morto e sem olhos, rasgou o chão de uma
+      trilha da borda e saiu à luz pela primeira vez. Não caçava ninguém; estava subindo. Desde então os
+      garimpeiros sentem a terra tremer à noite e não acampam sobre chão mole. O que o tirou das câmaras,
+      ninguém foi lá ver.
+    aparencia: >-
+      Bicho do tamanho de uma casa, coberto de escamas de quitina sobrepostas brancas como fungo morto,
+      sem olhos, duas covas lisas na cabeça, garras da frente como pás largas, língua comprida, barriga de
+      pele rosada e mole.
+    como_se_luta: >-
+      Enrola-se numa bola de escamas que quase nada fere e rola sobre quem está na frente. Luz forte ou
+      fogo na cara o faz desenrolar e mostrar a barriga mole.
+    related_entities: [sx_profundezas, selva_xylos, npc_morrakh]
+    arte:
+      visual: >-
+        Animal enorme, do tamanho de uma casa, de corpo de pangolim: coberto do focinho à cauda de escamas
+        largas e sobrepostas de quitina branca-acinzentada, foscas, com terra preta nas frestas. Cabeça
+        pequena e alongada sem olhos, com duas covas lisas. Garras dianteiras como pás largas e curvas.
+        Barriga de pele rosada e enrugada à mostra, meio desenrolado.
+      composicao: >-
+        Borda da selva, chão rasgado em cratera, raízes gigantes partidas e árvores tombando; o Escavador
+        saindo da terra de lado, cabeça erguida contra a luz, uma garra apoiada na borda da cratera; um
+        Hospedeiro e um garimpeiro na borda oposta, minúsculos ao lado da garra. Luz do dia forte de cima,
+        poeira, sombra funda na cratera.
+      evitar: Dragão, tatu de desenho, monstro de cristal brilhante. É um bicho cego e pálido, assustado com a luz, só que imenso.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_vinha_estranguladora
+    vaga: 22
+    nome: Serpente Cipó Constritora
+    status: adotada
+    substitui: enemy_vinha_estranguladora
+    ataques: ["Laço da Copa"]
+    acoes: ["Cai da copa sobre quem passa e aperta até parar; quando os macacos gritam, já está em cima; ferida, recua para a copa."]
+    substitui_generico: Vinha Estranguladora (planta carnívora)
+    codex_id: mon_serpente_cipo_constritora
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1109", "lore_nova/creatures.txt:1012"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: couro_tecido
+      escala: enorme
+      locomocao: escala_paredes
+      percepcao: vibracao
+      texto: >-
+        Uma cobra de vinte metros que cresceu no ciclo acelerado até ter a grossura de um tronco jovem. As
+        escamas do dorso são pardas e fibrosas, com sulcos que imitam a casca de um cipó, e ao longo do dorso
+        crescem saliências finas que imitam raízes aéreas. A cabeça é estreita e sem pescoço marcado, igual à ponta de um
+        cipó. Os músculos de todo o corpo apertam como corda molhada secando. Sente pelo galho quem pisa
+        embaixo.
+    silhueta: Um cipó grosso pendurado da copa que, de repente, tem cabeça.
+    comportamento: >-
+      Fica pendurada entre os cipós de verdade, imóvel, e se deixa cair sobre quem passa. Enrola, aperta e
+      engole inteiro. Os Macacos-Quitina a temem e gritam quando a veem; onde os macacos gritam, há uma.
+    papel_tatico: emboscador
+    arquetipo: bruto
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_serpente_cipo_constritora_queda_da_copa
+      frase: Cai da copa sobre quem estiver embaixo e o envolve; a vítima apertada perde a ação até se soltar ou ser solta.
+    contra_jogo: Ouvir os macacos e olhar para cima; quem não é pego primeiro pode cortar a cabeça fina dela, que é o único lugar sem músculo grosso.
+    gancho: >-
+      Na selva os cipós crescem metros por hora e mudam de lugar; nenhum caminho tem os mesmos cipós de
+      ontem, e nem todos os de hoje são cipós.
+    habitat: [selva_xylos, sx_cidades_hospedeiros]
+    inspiracao: []
+    padrao: [ataque, defesa, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} some entre os cipós da copa; os macacos, ao longe, começam a gritar."
+    description: Uma cobra de vinte metros, da grossura de um tronco, que imita os cipós da copa e cai sobre quem passa para apertar e engolir.
+    perigo: Alto
+    lore: >-
+      Diferente da Vipera-Flora, que drena, estas apertam e engolem. São indistinguíveis dos cipós até se
+      moverem e se deixam cair das copas sobre a presa. No ciclo acelerado crescem rápido e grande. Os
+      Macacos-Quitina as temem e dão o alarme: onde os macacos gritam, há uma.
+    aparencia: >-
+      Cobra de vinte metros e grossura de tronco jovem, escamas pardas e fibrosas com sulcos de casca de
+      cipó, saliências finas no dorso como raízes aéreas, cabeça estreita igual à ponta de um
+      cipó.
+    como_se_luta: >-
+      Cai da copa e aperta quem pega, tirando-lhe a ação. Ouvir os macacos e olhar para cima evita a queda;
+      a cabeça fina é o único ponto sem músculo grosso.
+    related_entities: [selva_xylos, sx_cidades_hospedeiros]
+    arte:
+      visual: >-
+        Serpente enorme, de vinte metros, grossa como um tronco jovem, pendurada em laço de um galho alto
+        entre cipós de verdade. Escamas pardas e foscas com sulcos longitudinais que imitam casca de cipó;
+        saliências finas no dorso como raízes aéreas. Cabeça estreita e afilada, quase sem distinção do
+        corpo, boca entreaberta.
+      composicao: >-
+        Trilha sob a copa, cortina de cipós pendurados; um dos cipós com a cabeça da serpente descendo sobre
+        um garimpeiro que olha para o lado errado, de tamanho humano; um Macaco-Quitina gritando num galho ao
+        fundo. Luz verde filtrada, contraluz nos cipós.
+      evitar: Planta carnívora com boca, tentáculos verdes, serpente brilhante de fantasia. É uma cobra real que parece um cipó, e só a cabeça a entrega.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_viuvo_do_esporo
+    vaga: 12
+    nome: Viúvo do Esporo
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: colmeia_hospedeiros
+      refs: ["lore_nova/races.txt:413", "lore_nova/races.txt:398"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: madeira_fibra
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um forasteiro que se casou com uma Hospedeira no ritual da flor e respirou os esporos dela. Ela
+        morreu, e o fungo da metade dela continuou crescendo nele, só do lado esquerdo: o lado esquerdo do
+        rosto, o ombro e o braço estão cobertos de crescimentos ramificados cor de coral, duros como galho
+        seco, no desenho exato dos que ela tinha. O olho esquerdo ficou dourado e o direito é o dele. A mão
+        esquerda se mexe um instante antes da direita.
+    silhueta: Um homem magro com metade do corpo coberta de ramos de coral, a cabeça inclinada como quem escuta alguém ao lado.
+    comportamento: >-
+      Vive nas plataformas das bordas das cidades, aceito e não aceito. Fala com o lado esquerdo em voz
+      baixa. Na luta, o lado esquerdo vê o golpe que vem antes dele, e os dois braços batem em tempos
+      diferentes, um dele e um dela.
+    papel_tatico: emboscador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: colmeia_hospedeiros
+    mecanica_assinatura:
+      carta: cri_viuvo_do_esporo_os_dois_tempos
+      frase: >-
+        Golpeia duas vezes em tempos diferentes, o braço dela antes do dele: o primeiro golpe vem antes da
+        Reação do jogador e o segundo depois.
+    contra_jogo: Guardar a defesa para o segundo golpe, o dele, que é o mais lento; ou atacar pela direita, onde ela não vê.
+    gancho: >-
+      No casamento dos Hospedeiros os dois carregam pedaços da consciência um do outro para sempre; ninguém
+      perguntou o que acontece quando um dos dois é forasteiro e o outro morre primeiro.
+    habitat: [sx_cidades_hospedeiros]
+    inspiracao: []
+    padrao: [ataque_multiplo, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} inclina a cabeça para a esquerda, escutando; o braço de coral se ergue sozinho."
+    description: Um forasteiro casado no ritual com uma Hospedeira que morreu, com metade do corpo coberta pelos crescimentos dela, que golpeia em dois tempos.
+    perigo: Médio
+    lore: >-
+      Os Hospedeiros se casam respirando os esporos da mesma flor, e depois disso cada um carrega um pedaço
+      do outro para sempre. Alguns forasteiros se casaram assim. Quando a Hospedeira morre, a metade dela
+      continua crescendo no marido, no desenho exato do corpo dela, do lado esquerdo. Eles ficam nas bordas
+      das cidades, falando baixo com o próprio ombro. A colmeia não sabe se os conta.
+    aparencia: >-
+      Homem magro, forasteiro, com o lado esquerdo do rosto, o ombro e o braço cobertos de crescimentos de
+      fungo ramificados cor de coral, duros como galho seco; olho esquerdo dourado, o direito castanho;
+      cabeça inclinada para a esquerda.
+    como_se_luta: >-
+      Golpeia duas vezes em tempos diferentes, e o primeiro golpe vem antes da defesa. Guardar a defesa para
+      o segundo e atacar pelo lado direito, onde a metade dela não vê, o desarma.
+    related_entities: [sx_cidades_hospedeiros, colmeia_hospedeiros, race_hospedeiros_xylos]
+    arte:
+      visual: >-
+        Homem adulto magro, roupa de viajante gasta. O lado esquerdo do rosto, do pescoço, do ombro e do
+        braço inteiro coberto de crescimentos de fungo ramificados como coral, cor de coral e salmão, duros
+        e secos; o lado direito limpo, pele queimada de sol. Olho esquerdo dourado, olho direito castanho. A
+        cabeça inclinada para a esquerda, como quem escuta. O braço esquerdo levantado um pouco antes do
+        direito.
+      composicao: >-
+        Plataforma na borda de uma cidade das copas, lanternas de fungo azulado; o Viúvo de pé, de frente,
+        uma flor grande e murcha presa no cinto; um casal de Hospedeiros ao fundo, de mãos dadas, olhando
+        para ele do mesmo jeito. Luz de fim de tarde, âmbar.
+      evitar: "Homem-árvore, ciborgue de meia face, fantasma de esposa ao lado. Não há aparição: o que há dela é o fungo no corpo dele."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_surdo_da_colmeia
+    vaga: 13
+    nome: Surdo da Colmeia
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: colmeia_hospedeiros
+      refs: ["lore_nova/races.txt:398", "lore_nova/daily_life.txt:268"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: vibracao
+      texto: >-
+        Um Hospedeiro que passou anos fora da selva e voltou tarde: a voz da colmeia tinha sumido. Tentou
+        ouvi-la de novo arrancando os crescimentos velhos para que nascessem outros, e os arrancou até a
+        carne. Os ombros, as costas e a nuca são placas de carne viva e úmida onde havia fungo, e nada mais
+        cresceu: a pele fecha lisa em horas, e ele a arranca de novo. Encosta a orelha e as mãos abertas nos troncos o tempo todo; as pontas dos dedos ficaram
+        calejadas e chatas como as de quem escala.
+    silhueta: Um homem colado a um tronco, de orelha encostada na casca, com as costas em carne viva.
+    comportamento: >-
+      Sobe e desce os troncos das cidades com o ouvido na casca, sentindo pela madeira o que a colmeia sente
+      por dentro. Não suporta os que ouvem: ataca quem anda em sincronia com os outros, quem se move junto,
+      e desfaz o que eles combinaram.
+    papel_tatico: quebra_defesa
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: colmeia_hospedeiros
+    mecanica_assinatura:
+      carta: cri_surdo_da_colmeia_ouvido_na_casca
+      frase: >-
+        Sente pela madeira a jogada que vem e cai sobre ela: a primeira Reação do jogador na rodada é
+        desfeita antes de valer.
+    contra_jogo: Lutar longe dos troncos e do tablado, onde ele não sente nada; no chão de terra ele luta às cegas.
+    gancho: >-
+      Os Hospedeiros que saem da selva por muito tempo perdem a voz da colmeia aos poucos, e quase todos
+      voltam a tempo; os que não voltam a tempo não a recuperam.
+    habitat: [sx_cidades_hospedeiros, selva_xylos]
+    inspiracao: []
+    padrao: [enfraquecer, ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} encosta a orelha no tronco e fecha os olhos; as tábuas sob você vibram."
+    description: Um Hospedeiro que perdeu a voz da colmeia e arrancou os próprios crescimentos tentando ouvi-la de novo, e que escuta a luta pela madeira.
+    perigo: Médio
+    lore: >-
+      Fora da selva a colmeia fica distante, como perder a audição aos poucos, e os Hospedeiros que saem
+      voltam antes de ela sumir. Alguns voltam tarde. Não ouvem mais nada, e arrancam os crescimentos velhos
+      na esperança de nascerem outros que ouçam. Não nascem. A pele fecha lisa e sem fungo, e eles a arrancam outra vez. Ficam com as costas em carne viva, colados aos
+      troncos das cidades, escutando pela madeira o que os outros ouvem por dentro. Não suportam os que
+      andam juntos.
+    aparencia: >-
+      Hospedeiro magro e curvado, ombros, costas e nuca em carne viva e úmida onde os crescimentos de fungo
+      foram arrancados, orelha e mãos abertas encostadas num tronco, pontas dos dedos calejadas e chatas,
+      olhos dourados fechados.
+    como_se_luta: >-
+      Sente pela madeira a jogada que vem e desfaz a primeira defesa da rodada. Longe dos troncos e das
+      tábuas, sobre terra, ele luta às cegas.
+    related_entities: [sx_cidades_hospedeiros, colmeia_hospedeiros, race_hospedeiros_xylos]
+    arte:
+      visual: >-
+        Humanoide magro e curvado, de pele clara, agarrado a um tronco gigante com as duas mãos abertas e a
+        orelha direita encostada na casca. Nuca, ombros e costas em carne viva, vermelha e úmida, em manchas
+        irregulares onde havia crescimentos de fungo; um ou dois tocos de fungo cor de coral restantes,
+        arrancados pela metade. Olhos dourados fechados. Pontas dos dedos largas e calejadas.
+      composicao: >-
+        Tronco gigante de uma cidade das copas, uma ponte de tábuas passando ao lado; o Surdo colado ao
+        tronco, de costas para o observador, virado para a ponte; dois Hospedeiros atravessando a ponte em
+        passo igual, do tamanho dele, sem olhar para ele. Luz dourada, sombra no tronco.
+      evitar: Zumbi, homem esfolado de horror explícito, monge em prece. As feridas são de quem arrancou o próprio fungo, e o gesto é de escutar.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mascador_de_nectar
+    vaga: 14
+    nome: Mascador de Néctar
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: clas_combate
+      refs: ["lore_nova/creatures.txt:1010", "lore_nova/items.txt:991"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um guerreiro dos clãs de combate do norte que veio à selva atrás do Néctar da Fúria e ficou para
+        mascá-lo direto do besouro. As gengivas caíram e os dentes ficaram soltos na boca, presos num
+        tutano preto e grudento. Perdeu a mão esquerda e o braço direito até o cotovelo, e não parou: amarrou
+        nos cotos duas lâminas de quitina com tendão de bicho. A pele do peito está aberta em cortes velhos
+        que ele não deixou fechar. Os olhos não piscam.
+    silhueta: Um homem enorme e nu da cintura para cima, com lâminas compridas no lugar das duas mãos e a boca preta aberta.
+    comportamento: >-
+      Fica perto dos troncos onde o Besouro-da-Fúria vive, e ataca quem chega perto, garimpeiro ou bicho. A
+      cada golpe que leva, bate mais forte; quando devia cair, não cai, e luta mais um pouco.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: elite
+    faccao: clas_combate
+    mecanica_assinatura:
+      carta: cri_mascador_de_nectar_mais_um_pouco
+      frase: >-
+        Cada Ferimento que leva deixa o próximo golpe dele mais forte; e quando a Vitalidade acaba, ainda
+        luta uma rodada inteira antes de cair.
+    contra_jogo: Ferir pouco e acabar de uma vez, ou recuar na rodada em que ele devia ter caído.
+    gancho: >-
+      O Néctar da Fúria vale fortunas em Brekmar e Nova Arcádia porque deixa um guerreiro lutar sem os
+      braços; alguns vieram buscar e não precisaram mais de braço nenhum.
+    habitat: [selva_xylos, sx_profundezas]
+    inspiracao:
+      - fonte: etnografia (mascar de folhas estimulantes)
+        referencia: "o hábito de mascar folhas e nozes estimulantes, que escurece e destrói as gengivas"
+        tomou: a boca escurecida e os dentes soltos de quem masca por anos
+        distancia: o estimulante é o Néctar da Fúria de Valoria, e o efeito é lutar com membros decepados, não cansaço
+    padrao: [ataque, reforco_proprio, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} esfrega a pasta preta na gengiva com o coto e ri sem som."
+    description: Um guerreiro dos clãs de combate que mascou Néctar da Fúria até a gengiva cair, luta com lâminas de quitina amarradas aos cotos e bate mais forte quanto mais sangra.
+    perigo: Alto
+    lore: >-
+      O Néctar da Fúria deixa um guerreiro lutar com os membros decepados, e os clãs de combate do norte
+      pagam por ele o que pagam por pouca coisa. Alguns não esperam o mercador e vêm à selva mascar direto
+      do besouro. A gengiva cai, os dentes ficam soltos numa pasta preta, e eles perdem uma mão e um braço
+      sem perceber. Amarram lâminas nos cotos e ficam perto dos troncos onde o besouro vive. Não voltam
+      para o norte.
+    aparencia: >-
+      Homem enorme dos clãs de combate do norte, nu da cintura para cima, peito aberto em cortes velhos,
+      boca de gengiva caída e dentes soltos em pasta preta, lâminas de quitina amarradas com tendão nos cotos
+      da mão esquerda e do braço direito.
+    como_se_luta: >-
+      Bate mais forte a cada ferida que leva e luta mais uma rodada quando devia cair. Ferir pouco e acabar
+      de uma vez, ou recuar na última rodada dele, evita o pior.
+    related_entities: [selva_xylos, sx_profundezas, clas_combate]
+    arte:
+      visual: >-
+        Homem enorme, pele clara de norte queimada de sol e de ácido, barba ruiva emaranhada, nu da cintura
+        para cima. Peito largo com cortes velhos abertos, sem sangrar. Boca aberta mostrando gengivas
+        retraídas e dentes soltos numa pasta preta. Mão esquerda e antebraço direito amputados, e nos cotos
+        duas lâminas compridas de quitina escura, amarradas com tendão em voltas apertadas. Olhos fixos,
+        sem piscar.
+      composicao: >-
+        Base de um tronco gigante coberto de besouros pretos e brilhantes; o Mascador de pé entre as raízes,
+        braços-lâmina abertos; um garimpeiro com um saco de coleta recuando, de tamanho humano, uma cabeça
+        mais baixo. Luz verde-amarelada, pasta preta escorrendo do queixo.
+      evitar: Bárbaro de fantasia com machado, ciborgue com braços de metal, berserker com elmo de chifres. As lâminas são quitina amarrada à mão, e ele é um homem doente.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_enxertadora_da_uniao
+    vaga: 15
+    nome: Enxertadora da União
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: cultos_despertar_dispersos
+      refs: ["lore_nova/npcs.txt:1689", "lore_nova/creatures.txt:1056"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: quitina
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Uma seguidora d'A Que Quer a União que desistiu de esperar a infecção pegar sozinha. Costurou em si
+        placas de quitina e retalhos de pele com fungo tirados de Hospedeiros mortos, com agulha de osso e
+        fio de cipó: no peito, nos antebraços, nas costas. A pele dela rejeita os enxertos e incha vermelha
+        em volta de cada ponto. Leva à cintura um estojo de agulhas e retalhos, e os dedos estão furados até
+        o osso de tanto costurar.
+    silhueta: Uma mulher curvada coberta de placas costuradas de tamanhos diferentes, com um rolo de agulhas aberto na cintura.
+    comportamento: >-
+      Captura viajantes na borda para "libertá-los" do crânio sozinho. Na luta, tenta costurar um retalho
+      de fungo na carne de quem enfrenta, com a calma de quem faz um favor. Fala o tempo todo, baixo, da
+      solidão de cada um.
+    papel_tatico: drenador
+    arquetipo: conjurador
+    categoria: elite
+    faccao: cultos_despertar_dispersos
+    mecanica_assinatura:
+      carta: cri_enxertadora_da_uniao_retalho_costurado
+      frase: >-
+        Costura na carne do jogador um retalho de fungo que cresce e drena a cada rodada; só sai cortado, e
+        cortar custa um Ferimento.
+    contra_jogo: Pagar o Ferimento cedo e arrancar o retalho antes de ele crescer, ou acabar com ela antes do segundo ponto.
+    gancho: >-
+      A maioria dos que vêm à selva atrás da união morre antes de a infecção pegar; os que se cansam de
+      esperar aprendem a costurar.
+    habitat: [selva_xylos]
+    inspiracao: []
+    padrao: [enfraquecer, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} tira do estojo uma agulha de osso e um retalho que ainda brilha, e sorri para você."
+    description: Uma seguidora d'A Que Quer a União que costurou em si placas e retalhos de Hospedeiros mortos e tenta costurar um nos viajantes que captura.
+    perigo: Alto
+    lore: >-
+      A Que Quer a União prega que a solidão do crânio é a maldição de todas as raças. Seus seguidores
+      tentam se infectar, e quase todos morrem antes. Alguns se cansam de esperar: costuram em si placas de
+      quitina e retalhos de pele com fungo tirados de Hospedeiros mortos, com agulha de osso e fio de cipó.
+      A carne rejeita, incha, e eles costuram mais. Na borda, capturam viajantes para fazer o mesmo neles, e
+      chamam isso de cura.
+    aparencia: >-
+      Mulher curvada e febril, peito, antebraços e costas cobertos de placas de quitina e retalhos de pele
+      com fungo costurados com fio de cipó, pele inchada e vermelha em volta de cada ponto, dedos furados,
+      estojo de agulhas de osso na cintura.
+    como_se_luta: >-
+      Costura na carne de quem enfrenta um retalho de fungo que cresce e drena a cada rodada. Arrancá-lo
+      cedo custa um Ferimento e evita um custo maior.
+    related_entities: [selva_xylos, npc_a_que_quer_a_uniao, cultos_despertar_dispersos]
+    arte:
+      visual: >-
+        Mulher adulta, magra e curvada, olhos febris e sorriso calmo. Peito, antebraços e costas cobertos de
+        placas de quitina âmbar e marrom de tamanhos diferentes e retalhos de pele clara com fungo coral,
+        costurados com pontos grossos de fio verde de cipó; em volta de cada ponto, pele inchada e vermelha.
+        Dedos furados e enfaixados. Na cintura, um estojo de couro aberto com agulhas de osso e retalhos.
+      composicao: >-
+        Acampamento de cultistas na borda da selva, redes de dormir e uma mesa de casca; a Enxertadora
+        sentada, costurando um retalho no antebraço de um viajante amarrado, de tamanho humano, que olha para
+        o observador. Luz de lanterna de fungo, verde e coral.
+      evitar: Bruxa de chapéu, cirurgiã de horror com sangue espirrando, mulher-inseto. Os enxertos são grosseiros e inflamados, e ela é gentil.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_pressa_da_seiva
+    vaga: 16
+    nome: Pressa da Seiva
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:1024", "lore_nova/items.txt:911", "lore_nova/creatures.txt:1052"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: humana
+      locomocao: salta
+      percepcao: calor
+      texto: >-
+        Um garimpeiro de Resina-Viva que bebeu a resina dissolvida em água quente para fechar um corte, e
+        o corte fechou em minutos. Desde então vive no ritmo da selva: o cabelo cresce e cai em tufos numa
+        hora, as unhas das mãos viram garras curvas antes do meio-dia e quebram, a pele dos braços envelhece
+        e se renova em manchas, umas lisas de rapaz, outras enrugadas de velho. Os joelhos tremem sem parar.
+        Pula de um lado para outro sem pousar.
+    silhueta: Um homem magro que nunca está parado, com tufos de cabelo caindo atrás dele como penas.
+    comportamento: >-
+      Rouba resina dos outros garimpeiros para mais um gole. Na luta muda de idade de uma rodada para a
+      outra: moço, pula e corta; velho, fica plantado e bate com o peso do corpo. Os tufos de cabelo que
+      caem dizem em que hora ele está.
+    papel_tatico: batedor_rapido
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_pressa_da_seiva_hora_de_cada_idade
+      frase: >-
+        A cada rodada ele pula de idade: moço, é rápido e quebra fácil; velho, é lento e bate como quem não
+        tem mais nada a perder. A idade da rodada vem anunciada no corpo.
+    contra_jogo: "Guardar os golpes para a rodada em que ele está moço e frágil, e a defesa para a rodada em que está velho."
+    gancho: >-
+      A Resina-Viva carrega as propriedades da selva, e os Hospedeiros não explicam de onde vem nem para
+      que serve; os garimpeiros descobrem um uso por conta própria.
+    habitat: [selva_xylos]
+    inspiracao: []
+    padrao: [ataque_multiplo, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} estremece; um tufo de cabelo cai, e a pele do rosto muda de idade diante de você."
+    description: Um garimpeiro que bebeu Resina-Viva para fechar um corte e passou a viver no ritmo da selva, mudando de moço para velho e de volta no correr de uma luta.
+    perigo: Baixo
+    lore: >-
+      A Resina-Viva fecha feridas, dizem os garimpeiros, e é verdade. Os que bebem a resina dissolvida
+      fecham o corte em minutos e passam a viver no ritmo da selva: o cabelo cresce e cai numa hora, as
+      unhas viram garras e quebram, a pele envelhece e se renova em manchas. Num minuto são moços e leves, no outro velhos e pesados. Morrem
+      cedo, e até lá roubam resina dos outros para mais um gole.
+    aparencia: >-
+      Homem magro de roupas de garimpeiro, cabelo em tufos que caem, unhas crescidas em garras curvas e
+      quebradas, pele dos braços em manchas de rapaz e de velho, joelhos trêmulos, sempre em movimento.
+    como_se_luta: >-
+      Muda de idade a cada rodada: moço, rápido e frágil; velho, lento e de golpe pesado. Bater no moço e
+      se defender do velho é o caminho.
+    related_entities: [selva_xylos]
+    arte:
+      visual: >-
+        Homem magro, idade impossível de dizer, roupas de garimpeiro de couro manchadas de resina âmbar.
+        Cabelo ralo em tufos, alguns caindo no ar atrás dele. Unhas compridas e curvas como garras, algumas
+        quebradas. A pele dos braços e do rosto em manchas: umas lisas e jovens, outras enrugadas e cheias
+        de manchas de velhice. Numa mão, um frasco de resina âmbar pela metade.
+      composicao: >-
+        Trilha de garimpo com sacos de resina e um garimpeiro caído; o Pressa em salto, borrado nas pernas
+        pelo movimento, olhando para trás; outro garimpeiro de tamanho humano tentando agarrá-lo e pegando só
+        um tufo de cabelo. Luz verde, poeira dourada de resina.
+      evitar: Velocista de quadrinhos com rastro de raio, velho de conto de fadas, mago. É um homem doente que vive depressa demais.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_provador_de_cores
+    vaga: 17
+    nome: Provador de Cores
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: mercadores_curiosidades
+      refs: ["lore_nova/creatures.txt:1107", "lore_nova/npcs.txt:1721"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: humana
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um boticário de fora que quis aprender o código das Rãs-Veneno-de-Cor e o aprendeu do jeito errado:
+        lambendo-as, uma de cada cor. Cada veneno deixou uma mancha que não saiu, e a pele inteira, do
+        rosto ao pescoço e às mãos, virou um mapa de cores fortes, azul, amarelo, vermelho e verde, em
+        manchas de bordas nítidas. A boca e a língua ficaram pretas. As manchas mudam de brilho com o veneno que corre por baixo, e as
+        bochechas incham como bolsas quando ele vai cuspir.
+    silhueta: Um homem de capa aberta com a pele pintada em manchas de cores fortes, as bochechas inchadas como de sapo.
+    comportamento: >-
+      Coleciona as rãs em gaiolinhas de cipó presas no casaco e vive de vender o que sabe aos mercadores da
+      borda. Na luta, uma das cores da pele acende antes de ele cuspir, e a cor diz o que vem; ele mesmo já
+      não lembra todas.
+    papel_tatico: artilharia
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: mercadores_curiosidades
+    mecanica_assinatura:
+      carta: cri_provador_de_cores_cuspe_de_cor
+      frase: >-
+        A cor que acende na pele anuncia o veneno do próximo cuspe, e cada cor faz uma coisa: quem lê a cor
+        sabe qual defesa usar.
+    contra_jogo: Ler a cor que acende antes do cuspe e responder com a defesa certa; errar a leitura sai caro.
+    gancho: >-
+      As Rãs-Veneno-de-Cor trazem o efeito escrito na pele, mas só os Hospedeiros conhecem o código; quem
+      tenta aprender sem eles aprende na própria pele.
+    habitat: [sx_cidades_hospedeiros, selva_xylos]
+    inspiracao:
+      - fonte: zoologia (rãs de cores de aviso)
+        referencia: "rãs dendrobatídeas, cujas cores fortes avisam o veneno"
+        tomou: as cores de aviso como código de veneno
+        distancia: o homem que virou o mapa das cores e o cuspe anunciado pela cor são de Valoria
+    padrao: [enfraquecer, ataque, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} incha as bochechas; uma das manchas do pescoço acende, mais forte que as outras."
+    description: Um boticário que aprendeu o código das Rãs-Veneno-de-Cor lambendo-as, com a pele virada num mapa de cores, e que cospe o veneno anunciado pela cor que acende.
+    perigo: Médio
+    lore: >-
+      As Rãs-Veneno-de-Cor trazem o efeito na cor, e só os Hospedeiros sabem ler. Alguns boticários de fora
+      quiseram aprender sem eles e lamberam uma rã de cada cor. Os que sobreviveram ficaram com cada veneno
+      na pele, em manchas que não saem, e com a língua preta. Vendem aos mercadores da borda o que sabem e
+      cospem o que carregam. A cor acende antes do cuspe. Eles mesmos já não lembram todas.
+    aparencia: >-
+      Homem de casaco aberto cheio de gaiolinhas de cipó com rãs, pele inteira em manchas de bordas nítidas
+      azuis, amarelas, vermelhas e verdes, lábios e língua pretos, bochechas inchadas como bolsas.
+    como_se_luta: >-
+      A cor que acende na pele anuncia o veneno do próximo cuspe. Quem lê a cor escolhe a defesa certa;
+      quem erra paga.
+    related_entities: [sx_cidades_hospedeiros, selva_xylos, mercadores_curiosidades]
+    arte:
+      visual: >-
+        Homem adulto de casaco longo de lona aberto, sem camisa por baixo; a pele inteira, do rosto às mãos,
+        em manchas grandes de bordas nítidas, azul-cobalto, amarelo-ouro, vermelho e verde, como o mapa de um
+        reino. Lábios e língua pretos. Bochechas inchadas como bolsas. Uma das manchas do pescoço mais clara,
+        acesa. No casaco, gaiolinhas de cipó com rãs pequenas de cores fortes.
+      composicao: >-
+        Banca de mercador na borda de uma cidade das copas, potes e frascos; o Provador de pé atrás da banca,
+        de perfil, bochechas cheias; um mercador forasteiro do mesmo tamanho recuando com a mão no rosto. Luz
+        dourada, cores das rãs saturadas contra o verde.
+      evitar: Palhaço, homem-sapo, pintura tribal. As cores são manchas de veneno, nítidas como mapa, e ele é um homem comum doente.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: mon_monte_de_alheios
+    vaga: 18
+    nome: Monte de Alheios
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veth
+      refs: ["lore_nova/npcs.txt:257", "lore_nova/races.txt:423", "lore_nova/races.txt:402"]
+    anatomia:
+      plano_corporal: composto
+      material: couro_tecido
+      escala: humana
+      locomocao: rasteja
+      percepcao: luz
+      texto: >-
+        Na borda das cidades, forasteiros compram crescimentos de fungo arrancados de Hospedeiros mortos para
+        usar no pescoço e parecer um deles. A inveja que fica nesses mercados tomou carne dos colares que
+        sobram: centenas de cordões de couro e de fibra, carregados de crescimentos de todas as cores, contas
+        e amuletos, emaranhados num monte do tamanho de um homem. Por baixo do monte, braços finos de
+        comprimentos diferentes, cada um com a mão de outra pessoa. Não tem rosto; o monte inteiro se inclina
+        para o que brilha mais.
+    silhueta: "Um monte de colares e cordões emaranhados do tamanho de um homem, arrastando-se pelo chão com mãos saindo de baixo."
+    comportamento: >-
+      Arrasta-se pelas plataformas atrás de qualquer coisa que brilhe mais do que ela: um fungo aceso, uma
+      lanterna, uma lâmina polida, uma Virtude acesa. Não quer o brilho para si: apaga, quebra, cobre de
+      lama. Depois procura outra coisa que brilhe.
+    papel_tatico: saqueador
+    arquetipo: abissal
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_monte_de_alheios_que_o_outro_nao_tenha
+      frase: >-
+        Apaga o reforço mais forte que o jogador tiver em jogo, sem usá-lo para nada; e bate mais forte em
+        quem tem mais reforços acesos.
+    contra_jogo: "Lutar com pouco aceso perto dele e acender o reforço maior só depois de derrubá-lo."
+    gancho: >-
+      Nas bordas das cidades das copas, forasteiros compram crescimentos de Hospedeiros mortos para parecer
+      que pertencem; a inveja de quem não pertence fica ali, e toma carne do que sobra.
+    habitat: [sx_cidades_hospedeiros]
+    inspiracao: []
+    padrao: [enfraquecer, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} se inclina para o que brilha em você; as mãos de baixo se abrem, todas ao mesmo tempo."
+    description: "Um monte de colares de crescimentos de fungo comprados, nascido da inveja dos forasteiros, que se arrasta para apagar tudo o que brilha mais do que ele."
+    perigo: Médio
+    lore: >-
+      Na borda das cidades das copas há quem venda crescimentos de fungo arrancados de Hospedeiros mortos, e
+      há forasteiros que os compram para pendurar no pescoço e parecer da colmeia. A inveja dessas compras
+      fica no lugar. Junta os colares que sobram, os fungos que perderam o dono, e se levanta
+      como um monte que se arrasta. Vai atrás do que brilha mais do que ele e o apaga. Não quer o brilho
+      para si; quer que ninguém o tenha.
+    aparencia: >-
+      Monte do tamanho de um homem de cordões de couro e fibra emaranhados, carregados de crescimentos de
+      fungo de todas as cores, contas e amuletos, sem rosto, braços finos de comprimentos diferentes
+      saindo de baixo, cada um com a mão de outra pessoa.
+    como_se_luta: >-
+      Apaga o reforço mais forte do jogador e bate mais em quem tem mais aceso. Lutar com pouco aceso perto
+      dele e acender o maior depois de derrubá-lo é o caminho.
+    related_entities: [sx_cidades_hospedeiros, npc_veth]
+    arte:
+      visual: >-
+        Monte do tamanho de um homem, inclinado para a frente, feito de centenas de colares e cordões de
+        couro e fibra emaranhados; pendurados neles, crescimentos de fungo coral, âmbar, azulados e verdes,
+        alguns acesos, contas de osso, amuletos de metal baratos. Sem cabeça nem rosto. De baixo do monte
+        saem seis braços finos de comprimentos e peles diferentes, mãos abertas no chão.
+      composicao: >-
+        Mercado de borda de uma cidade das copas ao entardecer, bancas com fungos à venda em cordões;
+        o monte avançando na direção de uma lanterna de fungo na mão de uma Hospedeira, de tamanho humano, que
+        a afasta com uma vara. Luz âmbar, brilhos coloridos na capa.
+      evitar: "Fantasma de lençol, mago de capa, espantalho, monstro de retalhos costurados. Não há rosto nem costura; é um monte de colares com mãos."
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_isca_amarrada
+    vaga: 19
+    nome: Isca Amarrada
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:210", "lore_nova/creatures.txt:1052"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: carne_exposta
+      escala: humana
+      locomocao: ancorada
+      percepcao: som
+      texto: >-
+        Os garimpeiros que disputam uma veia de resina amarram um colega ferido num galho, de cabeça para
+        baixo, para a fauna ir nele e não neles. A crueldade de amarrar fica no galho e toma carne do que
+        sobra das iscas: uma trouxa do tamanho de um homem, de corda de cipó apertada sobre carne viva e
+        cortada, pendurada pelos tornozelos. Pelas frestas da corda saem quatro braços, e a cabeça, embaixo,
+        tem a boca aberta. Pinga sangue o tempo todo, e não seca.
+    silhueta: Uma trouxa de corda pendurada de cabeça para baixo de um galho, pingando, com braços saindo pelas frestas.
+    comportamento: >-
+      Fica pendurada sobre as trilhas de garimpo. Geme alto quando alguém passa, e o sangue que pinga chama
+      os bichos da selva. Quando é golpeada, sangra mais, e os bichos chegam mais depressa e mais bravos. Os
+      braços agarram quem tenta cortar a corda.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_isca_amarrada_sangue_que_chama
+      frase: >-
+        Cada golpe que leva a faz sangrar e gemer, e os outros inimigos em cena ficam mais fortes enquanto
+        ela pinga; quem a deixa por último luta contra uma fauna enfurecida.
+    contra_jogo: Cortar a corda do galho de uma vez, sem bater no corpo; no chão ela para de pingar e de chamar.
+    gancho: >-
+      Os garimpeiros de resina matam uns aos outros pela colheita e às vezes usam os outros de isca; os
+      galhos onde fizeram isso nunca ficam vazios.
+    habitat: [selva_xylos]
+    inspiracao: []
+    padrao: [reforco_proprio, defesa]
+    a_cada_n: 2
+    telegrafo: "{nome} geme alto e balança na corda; o sangue pinga mais grosso, e a selva em volta se cala."
+    description: Uma trouxa de corda e carne viva pendurada de cabeça para baixo sobre as trilhas de garimpo, nascida da crueldade de usar gente como isca, que sangra para chamar os bichos.
+    perigo: Médio
+    lore: >-
+      Os garimpeiros de resina disputam as veias até a morte e às vezes amarram um colega ferido num galho
+      para a fauna ir nele. O demônio da crueldade gosta desses galhos. O que fica neles toma carne do que
+      sobra das iscas e vira uma trouxa de corda e carne pendurada pelos tornozelos, que geme e pinga para
+      chamar os bichos. Os Hospedeiros cortam esses galhos quando os acham. Os garimpeiros passam por baixo
+      correndo.
+    aparencia: >-
+      Trouxa do tamanho de um homem pendurada de cabeça para baixo de um galho, corda de cipó apertada
+      sobre carne viva e cortada, quatro braços saindo pelas frestas, cabeça embaixo de boca aberta,
+      sangue pingando sem secar.
+    como_se_luta: >-
+      Cada golpe a faz sangrar e chamar, e os outros inimigos ficam mais fortes. Cortar a corda do galho de
+      uma vez, sem bater no corpo, a cala.
+    related_entities: [selva_xylos, npc_maalrek]
+    arte:
+      visual: >-
+        Volume do tamanho de um homem, pendurado de cabeça para baixo por uma corda grossa de cipó amarrada a
+        um galho. Envolto em voltas apertadas de cipó verde-escuro sobre carne viva e cortada, vermelha. Pelas
+        frestas das voltas saem quatro braços humanos magros, pendendo. Embaixo, uma cabeça de cabelo
+        comprido com a boca aberta. Gotas de sangue escuro caindo num poço pequeno no chão.
+      composicao: >-
+        Trilha de garimpo estreita, sacos de resina abandonados; a Isca pendurada no centro do quadro sobre a
+        trilha; folhas se mexendo nos dois lados, olhos de bichos no escuro; um garimpeiro com facão estendido
+        para a corda, de tamanho humano, na ponta dos pés. Luz verde de meio-dia, sombra densa.
+      evitar: Casulo de aranha, enforcado de cena de forca, gore explícito. É uma trouxa de corda e carne, de braços pendendo; o horror é o gemido, não as tripas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_oco_da_fronteira
+    vaga: 20
+    nome: Oco da Fronteira
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_thessavar
+      refs: ["lore_nova/npcs.txt:178", "lore_nova/locations.txt:155", "lore_nova/locations.txt:164"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: madeira_fibra
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Na fronteira onde a floresta seca encontra a selva úmida, o que se esconde de si mesmo fica no lugar,
+        e o Oculto tomou carne de um tronco morto da floresta que atravessou a linha. É um tronco oco e
+        escuro, mais alto que dois homens, que anda sobre raízes grossas como pernas curtas. Por uma racha
+        do peito da casca vê-se, dentro, outro corpo encolhido: um braço, um joelho, um olho que pisca. Das
+        bordas da racha saem lascas compridas como dedos, que se fecham sobre ela.
+    silhueta: Um tronco morto e escuro andando sobre raízes, com uma racha no peito e alguém encolhido lá dentro.
+    comportamento: >-
+      Anda devagar pela linha da fronteira, sem cruzar para nenhum dos lados. Quando um aliado está ferido,
+      abre a racha e o guarda dentro de si, e a casca fecha. Diz, com a voz de quem está dentro, alguma coisa
+      que quem o enfrenta escondia de si mesmo.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_oco_da_fronteira_guardar_dentro
+      frase: >-
+        Abre a racha e guarda dentro de si o aliado mais ferido: enquanto o Oco estiver de pé, quem está
+        dentro não pode ser atingido e se recupera.
+    contra_jogo: Derrubar o Oco antes, ou abrir a racha com machado; quem estava dentro cai fora, ainda ferido.
+    gancho: >-
+      As criaturas da floresta e as da selva não cruzam a fronteira, e ninguém sabe o que ambas temem; o que
+      anda na linha não é de nenhum dos lados.
+    habitat: [selva_xylos]
+    inspiracao: []
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre a racha do peito com um estalo de madeira; lá dentro alguém sussurra o seu nome."
+    description: Um tronco morto e oco da floresta que anda na linha da fronteira com a selva, com alguém escondido dentro, e que guarda os feridos na própria casca.
+    perigo: Médio
+    lore: >-
+      A Selva de Xylos nasceu na borda da floresta do Oculto, e na fronteira entre as duas as criaturas não
+      cruzam de um lado para o outro. O que anda na linha é dele. São troncos mortos da floresta seca que
+      atravessaram até a metade, ocos, com alguém encolhido dentro, visível pela racha do peito. Guardam ali
+      quem precisa se esconder. Os garimpeiros que passaram perto contam que a voz de dentro disse a cada
+      um uma coisa que ele não tinha contado a ninguém.
+    aparencia: >-
+      Tronco morto, oco e escuro da floresta, mais alto que dois homens, andando sobre raízes grossas, com
+      uma racha no peito da casca e, dentro, um corpo encolhido, um braço, um joelho e um olho que pisca;
+      lascas compridas como dedos na borda da racha.
+    como_se_luta: >-
+      Guarda dentro da casca o aliado mais ferido, que não pode ser atingido ali. Derrubar o Oco primeiro,
+      ou abrir a racha a machado, joga o escondido para fora.
+    related_entities: [selva_xylos, fs_fronteira_xylos, npc_thessavar]
+    arte:
+      visual: >-
+        Tronco morto de árvore de floresta fria, casca cinza-escura e seca, mais alto que dois homens, de pé
+        sobre quatro raízes grossas e curtas como pernas. No peito, uma racha vertical aberta com lascas
+        compridas nas bordas como dedos; dentro, na sombra, um corpo humano encolhido: um joelho, um braço
+        dobrado e um olho aberto refletindo a luz. Musgo seco no topo, sem folhas.
+      composicao: >-
+        A fronteira: à esquerda, floresta escura, seca e silenciosa; à direita, selva verde e úmida; o Oco no
+        limite exato entre as duas, de frente; um garimpeiro de tamanho humano parado diante dele, ouvindo,
+        com o machado abaixado. Luz cinza à esquerda, verde-dourada à direita.
+      evitar: Árvore com rosto, homem-árvore de fantasia, casa de bruxa. O tronco não tem cara; o rosto é o de quem está dentro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_tropel_sem_saida
+    vaga: 21
+    nome: Tropel Sem Saída
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_dorrhen
+      refs: ["lore_nova/npcs.txt:272", "lore_nova/rumors.txt:335"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: carne_exposta
+      escala: grande
+      locomocao: anda
+      percepcao: medo_emocao
+      texto: >-
+        Os bichos estão fugindo do fundo da selva, e os que morrem pisoteados nas trilhas de saída ficam ali.
+        O desespero da fuga tomou carne deles num corpo só, do tamanho de uma carroça: um tronco comprido de
+        couro rasgado e carne aberta, com pernas de anta, de veado, de queixada e de onça saindo de todos os
+        lados, cada uma correndo para uma direção. Tem uma cabeça em cada ponta, de bichos diferentes, e as
+        duas olham para trás. Os cascos e as patas nunca param.
+    silhueta: Um corpo comprido com pernas de vários bichos correndo para todos os lados e uma cabeça virada para trás em cada ponta.
+    comportamento: >-
+      Corre, e não chega. Atravessa a luta em linha torta, para um lado e depois para o outro, pisoteando o
+      que está no caminho, e arrasta quem fica perto para dentro da corrida. Não ataca de propósito; quem o
+      vê sente vontade de correr junto, para qualquer lado.
+    papel_tatico: batedor_rapido
+    arquetipo: lider_matilha
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_tropel_sem_saida_correr_junto
+      frase: >-
+        Atravessa a cena pisoteando e muda todos de lugar; quem estava ao lado dele é arrastado na corrida e
+        perde a próxima ação tentando sair.
+    contra_jogo: "Ficar firme em vez de correr: quem não se move na rodada do tropel não é arrastado, só pisoteado de raspão."
+    gancho: >-
+      Os bichos fogem para as bordas e os Hospedeiros mudam de árvore; o desespero dessa fuga fica nas
+      trilhas de saída, e as trilhas não levam a lugar nenhum.
+    habitat: [selva_xylos, sx_profundezas]
+    inspiracao: []
+    padrao: [mover, ataque_multiplo, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} para por um instante, todas as pernas no ar; as duas cabeças olham para trás."
+    description: Um corpo do tamanho de uma carroça feito dos bichos pisoteados na fuga do fundo da selva, com pernas de vários animais correndo para lados diferentes, nascido do desespero.
+    perigo: Alto
+    lore: >-
+      A selva está recuando de alguma coisa que vem do fundo, e os bichos fogem primeiro. Nas trilhas de
+      saída os que caem são pisoteados pelos que vêm atrás. O demônio do desespero passa por essas trilhas,
+      e o que ele deixa toma carne dos pisoteados: um corpo só, de pernas de muitos bichos, que corre para
+      todos os lados e não chega a nenhum. Quem o vê sente vontade de correr junto. Os garimpeiros que
+      correram não voltaram.
+    aparencia: >-
+      Corpo comprido do tamanho de uma carroça, couro rasgado e carne aberta, pernas de anta, de veado, de
+      queixada e de onça saindo de todos os lados em direções diferentes, uma cabeça de bicho diferente em
+      cada ponta, as duas viradas para trás.
+    como_se_luta: >-
+      Atravessa a cena pisoteando e arrasta quem está perto, que perde a próxima ação. Ficar firme, sem se
+      mover na rodada dele, evita ser levado.
+    related_entities: [selva_xylos, sx_profundezas, npc_dorrhen]
+    arte:
+      visual: >-
+        Corpo longo e baixo do tamanho de uma carroça, couro de várias cores rasgado, carne vermelha à mostra
+        nas emendas. Pernas de animais diferentes saindo de todos os lados: cascos de anta, patas finas de
+        veado, cascos de queixada, patas de onça, todas em plena corrida em direções diferentes. Uma cabeça
+        de veado numa ponta e uma de anta na outra, ambas viradas para trás, olhos brancos de pânico.
+      composicao: >-
+        Trilha larga de saída da selva, chão revolvido de cascos, carcaças pisoteadas nas margens; o Tropel
+        atravessando o quadro em diagonal, poeira e folhas; um Hospedeiro firme de lado, de tamanho humano,
+        segurando um garimpeiro pelo braço para não correr. Luz verde e dourada, borrão nas pernas.
+      evitar: Centauro, quimera de partes de leão e bode, monstro de muitas pernas de aranha. São bichos da selva costurados por medo, em pânico, não um predador.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: mon_vipera_flora, nome: "Vipera-Flora", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: madeira_fibra, escala: grande, locomocao: escala_paredes, percepcao: calor, texto: "Cipó muscular que enrola no pescoço, puxa para a copa e drena fluidos por dias. Nem planta nem animal — e nenhuma das duas metades sabe fugir."}, papel_tatico: drenador, arquetipo: predador, categoria: elite}
+  - {id: mon_predador_crescido, nome: "Predador Crescido", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: couro_tecido, escala: grande, locomocao: anda, percepcao: sangue_cheiro, texto: "Mamífero de caça que o ciclo acelerado alimentou além do tamanho possível. A fome cresceu junto."}, papel_tatico: bruto_de_linha, arquetipo: predador, categoria: elite}
+  - {id: mon_sentinela_hospedeiro, nome: "Sentinela Hospedeiro", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: quitina, escala: humana, locomocao: anda, percepcao: medo_emocao, texto: "Hospedeiro dedicado à defesa do território da colmeia. Luta com coordenação de muitos; recua quando a colmeia decide que o custo não vale."}, papel_tatico: guarda_protetor, arquetipo: tatico, categoria: elite}
+  - {id: mon_larva_hospedeira, nome: "Larva Hospedeira", status: retro, familia: legado, anatomia: {plano_corporal: segmentado, material: carne_exposta, escala: pequena, locomocao: rasteja, percepcao: calor, texto: "Procura um corpo para levar até as cidades suspensas da Colmeia."}, papel_tatico: sacrificial, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_macaco_esporo, nome: "Macaco de Esporo", status: retro, familia: legado, anatomia: {plano_corporal: bipede_curvado, material: couro_tecido, escala: pequena, locomocao: escala_paredes, percepcao: visao, texto: "Aprendeu a imitar os sinais manuais dos Hospedeiros e arma emboscadas nas copas."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: padrao}
+  - {id: mon_rainha_cipo, nome: "Rainha-Cipó", status: retro, familia: legado, anatomia: {plano_corporal: sessil_ancorado, material: madeira_fibra, escala: grande, locomocao: ancorada, percepcao: luz, texto: "Uma planta consciente que negocia corpos com a Colmeia em troca de luz."}, papel_tatico: controlador, arquetipo: conjurador, categoria: elite}
+  - {id: mon_mae_micelio, nome: "Mãe do Micélio Errante", status: retro, familia: legado, anatomia: {plano_corporal: composto, material: madeira_fibra, escala: enorme, locomocao: rasteja, percepcao: eter, texto: "A memória coletiva da Colmeia rejeitou esta matriz, que agora cria hospedeiros próprios."}, papel_tatico: suporte, arquetipo: conjurador, categoria: chefe}
+  - {id: enemy_hospedeiro_fungico, nome: "Hospedeiro Fúngico (Xylos)", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: carne_exposta, escala: humana, locomocao: anda, percepcao: calor, texto: "Humano cujos órgãos foram substituídos por micélio. Não sente dor."}, papel_tatico: tanque_reativo, arquetipo: morto_vivo_implacavel, categoria: lacaio}

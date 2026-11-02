@@ -1,0 +1,1344 @@
+{
+  "_meta": "SPEC-349: Cartas próprias das criaturas de ophidia (gerado por scripts/bestiario/gerar_mecanica.py a partir de data/bestiario/mecanica/).",
+  "cards": [
+    {
+      "id": "cri_nadador_escaldado_soco_escaldante",
+      "name": "Soco Escaldante",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_nadador_escaldado",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "O punho de pele cozida bate e deixa uma marca vermelha que arde.",
+      "oculta": false
+    },
+    {
+      "id": "cri_nadador_escaldado_abraco_de_caldeira",
+      "name": "Abraço de Caldeira",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_nadador_escaldado",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "igneo"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 5,
+          "dano_tipo": "igneo"
+        },
+        {
+          "kind": "dot",
+          "dano_base": 2,
+          "duracao": 2,
+          "dano_tipo": "igneo"
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Traz o calor do mar no corpo e a queimadura continua a arder depois do golpe.",
+      "oculta": true
+    },
+    {
+      "id": "cri_ossada_de_pomes_costela_de_pedra",
+      "name": "Costela de Pedra",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_ossada_de_pomes",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "A costela de pedra-pomes bate leve e estala ao primeiro choque.",
+      "oculta": false
+    },
+    {
+      "id": "cri_ossada_de_pomes_assobio_na_agua",
+      "name": "Assobio na Água",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_ossada_de_pomes",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "reposicionar",
+          "alvo": "eu",
+          "valor": 2
+        }
+      ],
+      "descricao": "O assobio chega primeiro e a ossada já está em cima, rasgando.",
+      "oculta": true
+    },
+    {
+      "id": "cri_cabeleira_de_vidro_crina_de_vidro",
+      "name": "Crina de Vidro",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_cabeleira_de_vidro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "A crina de vidro vulcânico chicoteia rente ao rosto.",
+      "oculta": false
+    },
+    {
+      "id": "cri_cabeleira_de_vidro_crina_de_agulhas",
+      "name": "Crina de Agulhas",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_cabeleira_de_vidro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 3,
+        "dano_tipo": "cortante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 3,
+          "dano_tipo": "cortante"
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "O vento desfia a crina em agulhas que caem sobre quem está do lado errado.",
+      "oculta": true
+    },
+    {
+      "id": "cri_cabeleira_de_vidro_costas_ao_vento",
+      "name": "Costas ao Vento",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_cabeleira_de_vidro",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "descricao": "Vira de costas para o vento e a crina inteira se abre em leque, tinindo.",
+      "oculta": false
+    },
+    {
+      "id": "cri_vazado_da_mare_borda_de_sal",
+      "name": "Borda de Sal",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vazado_da_mare",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A borda de sal do furo bate seca contra o pulso.",
+      "oculta": false
+    },
+    {
+      "id": "cri_vazado_da_mare_furo_que_prende",
+      "name": "Furo que Prende",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vazado_da_mare",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "alvo": "aliados",
+        "valor": 4
+      },
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "alvo": "aliados",
+          "valor": 4
+        },
+        {
+          "kind": "taunt",
+          "valor": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Põe o corpo furado na frente do outro; a arma passa pelo furo e prende no sal.",
+      "oculta": true
+    },
+    {
+      "id": "cri_desbotado_da_nevoa_mao_de_pao",
+      "name": "Mão de Pão",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_desbotado_da_nevoa",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A mão mole como pão molhado agarra e pesa.",
+      "oculta": false
+    },
+    {
+      "id": "cri_desbotado_da_nevoa_tornozelo_no_fundo",
+      "name": "Tornozelo no Fundo",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_desbotado_da_nevoa",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "descricao": "Deitado no raso segura o tornozelo e pesa como afogado.",
+      "oculta": true
+    },
+    {
+      "id": "cri_turu_de_casco_conchas_girando",
+      "name": "Conchas Girando",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_turu_de_casco",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "As conchas da cabeça giram contra a madeira e a carne.",
+      "oculta": false
+    },
+    {
+      "id": "cri_turu_de_casco_broca_de_conchas",
+      "name": "Broca de Conchas",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_turu_de_casco",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 6,
+          "dano_tipo": "cortante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "armadura_comprometida",
+          "duracao": 3
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Fura o escudo e o couro de dentro para fora e a defesa vai embora em lascas.",
+      "oculta": true
+    },
+    {
+      "id": "cri_vela_sem_barco_cordao_de_ferrao",
+      "name": "Cordão de Ferrão",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vela_sem_barco",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 9,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "Um cordão de ferrão sobe da água e chicoteia no rosto.",
+      "oculta": false
+    },
+    {
+      "id": "cri_vela_sem_barco_cordoes_de_brasa",
+      "name": "Cordões de Brasa",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vela_sem_barco",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 4,
+        "dano_tipo": "igneo"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 4,
+          "dano_tipo": "igneo"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        }
+      ],
+      "custo_folego": 3,
+      "descricao": "Os cordões caem sobre todos de uma vez e queimam até serem cortados.",
+      "oculta": true
+    },
+    {
+      "id": "cri_vela_sem_barco_bolsa_de_vento",
+      "name": "Bolsa de Vento",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vela_sem_barco",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 1
+        }
+      ],
+      "descricao": "A bolsa de gás se enche de vento e a colônia inteira vira contra o vento.",
+      "oculta": false
+    },
+    {
+      "id": "cri_lagarto_espirrador_dente_de_pedra",
+      "name": "Dente de Pedra",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_lagarto_espirrador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O lagarto de rocha morde de lado, rápido.",
+      "oculta": false
+    },
+    {
+      "id": "cri_lagarto_espirrador_espirro_de_cal",
+      "name": "Espirro de Cal",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_lagarto_espirrador",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "corrosivo"
+        },
+        {
+          "kind": "buff_acerto",
+          "alvo": "aliados",
+          "valor": 1
+        }
+      ],
+      "descricao": "O espirro lança o pó quente de cal e o bando inteiro responde em coro.",
+      "oculta": true
+    },
+    {
+      "id": "cri_bucho_de_praia_corpo_mole",
+      "name": "Corpo Mole",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_bucho_de_praia",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O corpo mole e comprido bate de lado como saco molhado.",
+      "oculta": false
+    },
+    {
+      "id": "cri_bucho_de_praia_tripas_de_cola",
+      "name": "Tripas da Praia",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_bucho_de_praia",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "descricao": "Joga as tripas em quem o feriu e os fios apertam a cada gesto do preso.",
+      "oculta": true
+    },
+    {
+      "id": "cri_cobra_de_sangria_dente_listrado",
+      "name": "Dente Listrado",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_cobra_de_sangria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "A cobra listrada morde e solta de volta, sem veneno.",
+      "oculta": false
+    },
+    {
+      "id": "cri_cobra_de_sangria_bolsa_cheia",
+      "name": "Bolsa Cheia",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_cobra_de_sangria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "cura",
+          "alvo": "eu",
+          "valor": 2
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Puxa o sangue para a bolsa do pescoço e fica mais cheia a cada gole.",
+      "oculta": true
+    },
+    {
+      "id": "cri_escorpena_de_basalto_espinho_de_basalto",
+      "name": "Espinho de Basalto",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_escorpena_de_basalto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Uma fileira de agulhas sobe da pedra e crava no pé.",
+      "oculta": false
+    },
+    {
+      "id": "cri_escorpena_de_basalto_espinho_pisado",
+      "name": "Espinho Pisado",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_escorpena_de_basalto",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 2
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 3,
+          "dano_tipo": "corrosivo"
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "O espinho pisado solta um veneno novo a cada vez: sono, febre ou cãibra.",
+      "oculta": true
+    },
+    {
+      "id": "cri_tatuzinho_de_afogado_mordida_de_casca",
+      "name": "Mordida de Casca",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_tatuzinho_de_afogado",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Os tatuzinhos rolam contra o tornozelo e mordem juntos.",
+      "oculta": false
+    },
+    {
+      "id": "cri_tatuzinho_de_afogado_mare_de_cascas",
+      "name": "Maré de Cascas",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_tatuzinho_de_afogado",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 4,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "marca",
+          "valor": 2
+        }
+      ],
+      "descricao": "A maré de cascas rola atrás do cheiro de sangue e morde quem sangra.",
+      "oculta": true,
+      "custo_folego": 2
+    },
+    {
+      "id": "cri_doente_de_encomenda_torneira_de_latao",
+      "name": "Torneira de Latão",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_doente_de_encomenda",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "A torneira do punho espirra um jato de sangue doente.",
+      "oculta": false
+    },
+    {
+      "id": "cri_doente_de_encomenda_torneira_aberta",
+      "name": "Torneira Aberta",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_doente_de_encomenda",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "corrosivo"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 5,
+          "dano_tipo": "corrosivo"
+        },
+        {
+          "kind": "sangria",
+          "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enfraquecido",
+          "duracao": 2
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Abre as torneiras e o sangue doente atinge de longe e não fecha a ferida.",
+      "oculta": true
+    },
+    {
+      "id": "cri_puxado_do_oeste_punho_de_agulha",
+      "name": "Punho de Agulha",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_puxado_do_oeste",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 12,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "A agulha do peito gira e o punho bate para o lado do mar.",
+      "oculta": false
+    },
+    {
+      "id": "cri_puxado_do_oeste_agulha_firme",
+      "name": "Agulha Firme",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_puxado_do_oeste",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 10,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 10,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 2
+        },
+        {
+          "kind": "mover_alvo_zona",
+          "direcao": "afastar"
+        }
+      ],
+      "custo_folego": 3,
+      "descricao": "A agulha aponta o oeste e cada golpe empurra o alvo um passo para a água.",
+      "oculta": true
+    },
+    {
+      "id": "cri_puxado_do_oeste_oeste_puxando",
+      "name": "Oeste Puxando",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_puxado_do_oeste",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5
+        },
+        {
+          "kind": "buff_dano",
+          "valor": 1
+        }
+      ],
+      "descricao": "A agulha treme e gira um dedo; o corpo inteiro gira junto.",
+      "oculta": false
+    },
+    {
+      "id": "cri_vigia_de_cor_errada_cesto_de_gavea",
+      "name": "Cesto de Gávea",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vigia_de_cor_errada",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 8,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Atira da gávea uma pedra que bate no ombro.",
+      "oculta": false
+    },
+    {
+      "id": "cri_vigia_de_cor_errada_grito_do_cesto",
+      "name": "Grito do Cesto",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_vigia_de_cor_errada",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 8,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 8,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "marca",
+          "valor": 3
+        },
+        {
+          "kind": "buff_acerto",
+          "alvo": "aliados",
+          "valor": 2
+        }
+      ],
+      "descricao": "Aponta e grita do alto e a tripulação inteira acha o alvo.",
+      "oculta": true,
+      "custo_folego": 3
+    },
+    {
+      "id": "cri_trepano_de_borda_trepano_girando",
+      "name": "Trépano Girando",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_trepano_de_borda",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O trépano gira e arranca um naco redondo da manga e da carne.",
+      "oculta": false
+    },
+    {
+      "id": "cri_trepano_de_borda_amostra_etiquetada",
+      "name": "Amostra Etiquetada",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_trepano_de_borda",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 4,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "rachadura",
+          "valor": 2
+        },
+        {
+          "kind": "sangria",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Tira uma amostra de carne e osso e o que ele leva não volta com curativo.",
+      "oculta": true
+    },
+    {
+      "id": "cri_trepano_de_borda_frasco_cheio",
+      "name": "Frasco Cheio",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_trepano_de_borda",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 5
+        },
+        {
+          "kind": "cura",
+          "alvo": "eu",
+          "valor": 2
+        }
+      ],
+      "descricao": "Rolha um frasco cheio de volta no peito e o Éter dele esfria um grau.",
+      "oculta": false
+    },
+    {
+      "id": "cri_arpeu_de_bracos_gancho_de_dedos",
+      "name": "Gancho de Dedos",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_arpeu_de_bracos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Os dedos em gancho do arpéu sobem pela perna e puxam.",
+      "oculta": false
+    },
+    {
+      "id": "cri_arpeu_de_bracos_corda_curta",
+      "name": "Corda Curta",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_arpeu_de_bracos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 5,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "armadura_comprometida",
+          "duracao": 2
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Crava as quatro mãos e encurta a corda; o preso só pode atacar.",
+      "oculta": true
+    },
+    {
+      "id": "cri_ninho_dos_mergulhadores_pulmao_apertado",
+      "name": "Pulmão Apertado",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_ninho_dos_mergulhadores",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 7,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Um pulmão do ninho se contrai e empurra o ar para fora de quem o toca.",
+      "oculta": false
+    },
+    {
+      "id": "cri_ninho_dos_mergulhadores_largar_para_sair",
+      "name": "Largar para Sair",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_ninho_dos_mergulhadores",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 5,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "marcial",
+          "dano_base": 5,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 2
+        },
+        {
+          "kind": "torpor",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Fecha-se sobre a mão estendida e suga o ar; só solta quem larga o que tem.",
+      "oculta": true
+    },
+    {
+      "id": "cri_ninho_dos_mergulhadores_pulmoes_cheios",
+      "name": "Pulmões Cheios",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_ninho_dos_mergulhadores",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Todos os pulmões incham ao mesmo tempo em torno da pedra no fundo.",
+      "oculta": false
+    },
+    {
+      "id": "cri_mastro_dos_ultimos_braco_de_mastro",
+      "name": "Braço de Mastro",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_mastro_dos_ultimos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 1,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Os braços agarrados uns nos outros caem juntos sobre quem está embaixo.",
+      "oculta": false
+    },
+    {
+      "id": "cri_mastro_dos_ultimos_queda_do_mastro",
+      "name": "Queda do Mastro",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_mastro_dos_ultimos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 1,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 1,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "enraizado",
+          "duracao": 1
+        }
+      ],
+      "custo_folego": 1,
+      "descricao": "Cai inteiro sobre um alvo e depois se ergue de novo, corpo por corpo.",
+      "oculta": true
+    },
+    {
+      "id": "cri_mastro_dos_ultimos_pes_de_afogado",
+      "name": "Pés de Afogado",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_mastro_dos_ultimos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 2,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 2,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "empurrao",
+          "valor": 1
+        }
+      ],
+      "custo_folego": 2,
+      "descricao": "Os corpos da base agarram as pernas de quem está perto.",
+      "oculta": false
+    },
+    {
+      "id": "cri_mastro_dos_ultimos_coluna_refeita",
+      "name": "Coluna Refeita",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_mastro_dos_ultimos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 6
+      },
+      "efeitos": [
+        {
+          "kind": "protecao",
+          "valor": 6
+        },
+        {
+          "kind": "cura",
+          "alvo": "eu",
+          "valor": 3
+        }
+      ],
+      "descricao": "Os corpos que subiram de volta refazem a coluna inteira e ela se endireita.",
+      "oculta": true
+    },
+    {
+      "id": "cri_mastro_dos_ultimos_ultimo_mastro",
+      "name": "Último Mastro",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_mastro_dos_ultimos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "alvo": "inimigos",
+        "dano_base": 1,
+        "dano_tipo": "impactante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "alvo": "inimigos",
+          "dano_base": 1,
+          "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "atordoado",
+          "duracao": 1
+        }
+      ],
+      "custo_folego": 3,
+      "descricao": "O mastro inteiro tomba sobre a linha com todos os braços abertos.",
+      "oculta": true
+    },
+    {
+      "id": "cri_remora_de_conves_palato_humano",
+      "name": "Palato Humano",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_remora_de_conves",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O palato humano da rêmora arranha as costas ao grudar.",
+      "oculta": false
+    },
+    {
+      "id": "cri_remora_de_conves_palato_grudado",
+      "name": "Palato Grudado",
+      "origem": "bestiario-349",
+      "classe": "Inimigo",
+      "subclasse": "mon_remora_de_conves",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 3,
+        "dano_tipo": "perfurante"
+      },
+      "efeitos": [
+        {
+          "kind": "dano",
+          "categoria_arma": "leve",
+          "dano_base": 3,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "purga_condicao",
+          "valor": 1
+        },
+        {
+          "kind": "cura",
+          "alvo": "eu",
+          "valor": 2
+        }
+      ],
+      "descricao": "Gruda nas costas e passa a tomar o que o hospedeiro ganharia.",
+      "oculta": true
+    }
+  ]
+}

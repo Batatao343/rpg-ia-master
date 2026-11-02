@@ -1,0 +1,2071 @@
+# Bestiário de Valoria — ficha de identidade da onda da Floresta dos Sussurros (SPEC-349, esteira §3.10).
+# Fonte única da identidade de cada criatura (R5). Codex, doc de arte e `appearance` do
+# bestiário são GERADOS daqui por scripts/bestiario/gerar_docs.py; os números (Etapa 5) não.
+# Eixos antes da prosa (R8): o tabuleiro `vagas:` passou em U2/U3/U12 antes de qualquer texto,
+# também contra as 4 fichas retro da região.
+# Refs de lore: linhas da lore da SPEC-348 (main), mesma convenção das ondas 1 e 2.
+regiao: floresta_sussurros
+onda: 8
+spec: SPEC-349
+nome_regiao: Floresta dos Sussurros
+habitat_nome:
+  floresta_sussurros: Floresta dos Sussurros
+  fs_fronteira_xylos: Fronteira com Xylos
+paleta: >-
+  **Floresta dos Sussurros** — floresta seca e escura de Thessavar: troncos antigos e retos que
+  fecham a luz dos andares de baixo com precisão, chão de folhas mortas negras, quase nenhum céu.
+  Luz e paleta: preto-verde e cinza-carvão, pouca luz fria filtrada de cima, pontos quentes só de
+  tocha e lanterna, o vermelho vivo do Pó de Sonho no pé das árvores. Na Fronteira com Xylos, o seco
+  encontra o úmido: metade do quadro em folhas mortas e casca preta, metade em verde molhado e
+  brilhante, névoa amarelada baixa ao longe.
+familias_em_jogo:            # D10 — mesmos nomes das ondas 1 e 2 (story_corpos_do_abismo.md)
+  corpo_reescrito: Reescrito
+  besta_entropia: Besta Torta
+  humanoide_preco: Cobrado
+  demonio_encarnado: Cria de Apetite
+vagas:
+  # --- corpos reescritos ---
+  - {vaga: 1,  familia: corpo_reescrito, categoria: padrao, papel_tatico: quebra_defesa,    arquetipo: bruto,                 plano_corporal: bipede_ereto,     material: cinza,         escala: humana,  locomocao: anda,          percepcao: calor,         habitat: [fs_fronteira_xylos]}
+  - {vaga: 2,  familia: corpo_reescrito, categoria: padrao, papel_tatico: saqueador,        arquetipo: emboscador,            plano_corporal: bipede_curvado,   material: couro_tecido,  escala: humana,  locomocao: escala_paredes, percepcao: luz,          habitat: [floresta_sussurros]}
+  - {vaga: 3,  familia: corpo_reescrito, categoria: elite,  papel_tatico: guarda_protetor,  arquetipo: guardiao,              plano_corporal: bipede_ereto,     material: osso,          escala: humana,  locomocao: anda,          percepcao: som,           habitat: [floresta_sussurros]}
+  - {vaga: 4,  familia: corpo_reescrito, categoria: padrao, papel_tatico: tanque_reativo,   arquetipo: morto_vivo_implacavel, plano_corporal: bipede_curvado,   material: carne_exposta, escala: humana,  locomocao: anda,          percepcao: calor,         habitat: [floresta_sussurros]}
+  - {vaga: 5,  familia: corpo_reescrito, categoria: lacaio, papel_tatico: batedor_rapido,   arquetipo: predador,              plano_corporal: bipede_ereto,     material: carne_exposta, escala: humana,  locomocao: anda,          percepcao: respiracao,    habitat: [floresta_sussurros, fs_fronteira_xylos]}
+  # --- bestas da entropia ---
+  - {vaga: 9,  familia: besta_entropia,  categoria: lacaio, papel_tatico: perseguidor_marca, arquetipo: covarde_oportunista,  plano_corporal: alado,            material: couro_tecido,  escala: pequena, locomocao: escala_paredes, percepcao: som,           habitat: [floresta_sussurros]}
+  - {vaga: 10, familia: besta_entropia,  categoria: lacaio, papel_tatico: artilharia,       arquetipo: covarde_oportunista,   plano_corporal: hexapode_ou_mais, material: quitina,       escala: pequena, locomocao: anda,          percepcao: calor,         habitat: [floresta_sussurros, fs_fronteira_xylos]}
+  - {vaga: 11, familia: besta_entropia,  categoria: elite,  papel_tatico: emboscador,       arquetipo: emboscador,            plano_corporal: quadrupede,       material: carne_exposta, escala: humana,  locomocao: anda,          percepcao: visao,         habitat: [fs_fronteira_xylos]}
+  - {vaga: 12, familia: besta_entropia,  categoria: lacaio, papel_tatico: controlador,      arquetipo: predador,              plano_corporal: hexapode_ou_mais, material: couro_tecido,  escala: pequena, locomocao: rasteja,       percepcao: vibracao,      habitat: [floresta_sussurros]}
+  - {vaga: 13, familia: besta_entropia,  categoria: chefe,  papel_tatico: emboscador,       arquetipo: predador_apice,        plano_corporal: alado,            material: couro_tecido,  escala: enorme,  locomocao: plana_voa,     percepcao: calor,         habitat: [floresta_sussurros]}
+  - {vaga: 14, familia: besta_entropia,  categoria: elite,  papel_tatico: saqueador,        arquetipo: predador,              plano_corporal: alado,            material: quitina,       escala: humana,  locomocao: plana_voa,     percepcao: sangue_cheiro, habitat: [floresta_sussurros, fs_fronteira_xylos]}
+  - {vaga: 15, familia: besta_entropia,  categoria: padrao, papel_tatico: controlador,      arquetipo: tatico,                plano_corporal: quadrupede,       material: couro_tecido,  escala: humana,  locomocao: escala_paredes, percepcao: calor,        habitat: [floresta_sussurros]}
+  # --- humanoides que pagaram o preço ---
+  - {vaga: 16, familia: humanoide_preco, categoria: padrao, papel_tatico: sacrificial,      arquetipo: covarde_oportunista,   plano_corporal: bipede_curvado,   material: madeira_fibra, escala: humana,  locomocao: anda,          percepcao: eter,          habitat: [floresta_sussurros]}
+  - {vaga: 17, familia: humanoide_preco, categoria: padrao, papel_tatico: artilharia,       arquetipo: tatico,                plano_corporal: hospedeiro_parasita, material: carne_exposta, escala: humana, locomocao: anda,       percepcao: luz,           habitat: [floresta_sussurros]}
+  - {vaga: 18, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,          arquetipo: tatico,                plano_corporal: bipede_ereto,     material: couro_tecido,  escala: humana,  locomocao: anda,          percepcao: eter,          habitat: [floresta_sussurros]}
+  - {vaga: 19, familia: humanoide_preco, categoria: lacaio, papel_tatico: drenador,         arquetipo: predador,              plano_corporal: bipede_curvado,   material: madeira_fibra, escala: humana,  locomocao: rasteja,       percepcao: sangue_cheiro, habitat: [fs_fronteira_xylos]}
+  - {vaga: 20, familia: humanoide_preco, categoria: padrao, papel_tatico: suporte,          arquetipo: conjurador,            plano_corporal: sessil_ancorado,  material: madeira_fibra, escala: humana,  locomocao: ancorada,      percepcao: eter,          habitat: [floresta_sussurros]}
+  # --- crias de apetite (demônios encarnados) ---
+  - {vaga: 22, familia: demonio_encarnado, origem_lore: {detalhe: npc_thessavar}, categoria: padrao, papel_tatico: tanque_reativo,    arquetipo: covarde_oportunista, plano_corporal: hospedeiro_parasita, material: osso,       escala: grande,  locomocao: anda,     percepcao: calor,  habitat: [floresta_sussurros]}
+  - {vaga: 23, familia: demonio_encarnado, origem_lore: {detalhe: npc_urath},     categoria: elite,  papel_tatico: perseguidor_marca, arquetipo: predador_apice,      plano_corporal: quadrupede,          material: vidro_cristal, escala: grande, locomocao: anda,    percepcao: visao,  habitat: [fs_fronteira_xylos]}
+  - {vaga: 24, familia: demonio_encarnado, origem_lore: {detalhe: npc_veleth},    categoria: padrao, papel_tatico: bruto_de_linha,    arquetipo: bruto,               plano_corporal: segmentado,          material: quitina,    escala: grande,  locomocao: rola,     percepcao: luz,    habitat: [floresta_sussurros]}
+  - {vaga: 25, familia: demonio_encarnado, origem_lore: {detalhe: npc_maalrek},   categoria: elite,  papel_tatico: perseguidor_marca, arquetipo: predador,            plano_corporal: alado,               material: osso,       escala: humana,  locomocao: plana_voa, percepcao: visao, habitat: [floresta_sussurros, fs_fronteira_xylos]}
+  # --- slots genéricos reinventados (R24; não contam nas 20–25) ---
+  - {vaga: 6,  slot: enemy_aranha_lobo,         status: reinventada, familia: besta_entropia,    categoria: lacaio, papel_tatico: batedor_rapido,  arquetipo: covarde_oportunista,    plano_corporal: hexapode_ou_mais, material: quitina,       escala: pequena, locomocao: salta,   percepcao: vibracao, habitat: [floresta_sussurros]}
+  - {vaga: 7,  slot: enemy_urso_coruja_mutante, status: reinventada, familia: besta_entropia,    categoria: elite,  papel_tatico: bruto_de_linha,  arquetipo: predador,       plano_corporal: bipede_ereto,     material: osso,          escala: grande,  locomocao: salta,   percepcao: vibracao, habitat: [fs_fronteira_xylos]}
+  - {vaga: 8,  slot: mon_ent_dormindo,          status: reinventada, familia: besta_entropia,    categoria: elite,  papel_tatico: guarda_protetor, arquetipo: guardiao,    plano_corporal: quadrupede,       material: couro_tecido,  escala: enorme,  locomocao: anda,    percepcao: som,      habitat: [floresta_sussurros]}
+  - {vaga: 21, slot: enemy_sombra_espreitadora, status: reinventada, familia: demonio_encarnado, origem_lore: {detalhe: npc_thessavar}, categoria: lacaio, papel_tatico: drenador, arquetipo: covarde_oportunista, plano_corporal: serpentiforme, material: carne_exposta, escala: humana, locomocao: rasteja, percepcao: calor, habitat: [floresta_sussurros]}
+criaturas:
+  # ======================= CORPOS REESCRITOS (Reescritos) =======================
+  - id: mon_lixado_da_fronteira
+    vaga: 1
+    nome: Lixado da Fronteira
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: dragao
+      detalhe: npc_solveth
+      refs: ["lore_nova/npcs.txt:402", "lore_nova/timeline_completa.txt:198"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: cinza
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um homem que estava na borda quando a névoa de Solveth passou e saiu do outro lado gasto como
+        pedra de rio. O lado esquerdo do corpo foi lixado até o osso, e o osso até um pó cinza e liso
+        que se segura no lugar como areia molhada; a orelha, o ombro e metade das costelas daquele
+        lado terminam numa curva macia. As duas mãos não têm mais dedos: acabam em tocos de pó
+        cinzento que continuam se desfazendo, e o que elas apertam se desfaz junto. Deixa um rastro
+        de poeira fina por onde anda.
+    silhueta: Um homem torto de perfil, como uma estátua gasta pela chuva de um lado só, com fumaça cinza escorrendo das mãos.
+    comportamento: >-
+      Vaga na faixa da fronteira por onde a névoa passou, sempre de volta ao mesmo trecho, atrás do
+      calor de quem chega. Não morde nem golpeia: agarra. Segura o escudo, a couraça, o cabo da arma,
+      e segura até aquilo virar pó entre os tocos das mãos, que ficam um pouco mais curtas a cada vez.
+    papel_tatico: quebra_defesa
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lixado_da_fronteira_toco_que_desfaz
+      frase: >-
+        Agarra a peça de defesa do herói e a desfaz no aperto: a Defesa perdida não volta nesta luta,
+        mas cada agarrão também gasta as mãos dele, que apertam menos da vez seguinte.
+    contra_jogo: Manter distância ou largar o escudo antes que vire pó; depois de alguns agarrões os tocos chegam aos punhos e ele não segura mais nada.
+    gancho: >-
+      A névoa de Solveth passa pela borda entre a floresta e a selva quando quer, e quem estava no
+      caminho e não morreu ficou com o corpo gasto como pedra de rio.
+    habitat: [fs_fronteira_xylos]
+    inspiracao: []
+    padrao: [ataque, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} abre os tocos das mãos, e a poeira cinza começa a escorrer mais depressa."
+    description: Um homem gasto até o osso de um lado pela névoa de Solveth, de mãos em tocos de pó cinza que desfazem o que seguram.
+    perigo: Médio
+    lore: >-
+      Na borda entre a Floresta dos Sussurros e a Selva de Xylos, a névoa de Solveth passa quando
+      quer, e o que ela toca vira pó. Quase sempre. Alguns viajantes que estavam no caminho saíram do
+      outro lado vivos e gastos, com um lado do corpo lixado até o osso e o osso até a areia. Não
+      falam e não voltam para casa; ficam na faixa da fronteira, andando de volta ao mesmo trecho.
+      Agarram o que o viajante usa para se proteger e seguram até virar pó, e as mãos deles encurtam a
+      cada vez. Os caçadores da fronteira contam os agarrões.
+    aparencia: >-
+      Homem de corpo gasto de um lado só, ombro, orelha e costelas esquerdos lixados até uma curva lisa
+      de pó cinza, mãos sem dedos terminando em tocos de poeira que se desfaz, rastro de pó fino nos pés.
+    como_se_luta: >-
+      Agarra escudo e couraça e os desfaz no aperto; manter distância ou soltar a peça a tempo. As mãos
+      se gastam a cada agarrão, e depois de alguns ele não segura mais.
+    related_entities: [fs_fronteira_xylos, npc_solveth]
+    arte:
+      visual: >-
+        Homem adulto de pé, roupas de viajante desbotadas e esfiapadas. Todo o lado esquerdo do corpo
+        erodido como arenito: ombro, orelha e metade da caixa torácica reduzidos a superfícies curvas,
+        lisas, cinza-claras, granulosas como pedra-pomes, com o osso aparente gasto. Antebraços
+        terminando em tocos de pó cinza que se esfarelam em fiapos de poeira caindo. Olhos abertos,
+        cansados.
+      composicao: >-
+        Faixa da fronteira: à esquerda troncos escuros e secos da floresta, à direita folhagem úmida e
+        brilhante da selva, névoa baixa amarelada ao longe. O Lixado segura com os tocos a borda de um
+        escudo redondo de madeira que se esfarela, diante de um soldado do mesmo tamanho que puxa o
+        escudo de volta. Luz cinza lateral.
+      evitar: Estátua de pedra animada, múmia, esqueleto, fantasma de névoa. É um homem vivo e gasto, não feito de pedra; a névoa não aparece no corpo, só o que ela fez.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_abafador_de_candeias
+    vaga: 2
+    nome: Abafador de Candeias
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:146", "lore_nova/creatures.txt:828"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: luz
+      texto: >-
+        Um perdido que passou anos no escuro dos andares de baixo da floresta, até o corpo deixar de
+        precisar de luz. Os olhos fecharam e a pele cresceu lisa por cima das órbitas; as orelhas
+        abriram em duas conchas de pele fina do tamanho de mãos. A pele das costas, dos braços e do
+        peito engrossou num feltro preto, curto e denso, que bebe a claridade como pano seco bebe água.
+        Os dedos são longos, de unhas grossas, feitos para subir em tronco. Uma chama, ele sente na pele
+        do rosto como quem sente sol, a vinte passos.
+    silhueta: Uma mancha mais escura que o escuro colada ao tronco, descendo de cabeça para baixo com duas orelhas abertas como folhas.
+    comportamento: >-
+      Vive alto nos troncos e só desce quando alguém acende fogo. Desce de cabeça para baixo, sem
+      barulho, e cai sobre quem carrega a luz: abraça a lanterna ou a tocha contra o peito de feltro e a
+      apaga. No escuro que fica, ele ouve melhor do que qualquer um.
+    papel_tatico: saqueador
+    arquetipo: emboscador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_abafador_de_candeias_abraco_de_feltro
+      frase: >-
+        Vai sempre em quem carrega a luz do grupo e a apaga no abraço; até alguém gastar uma jogada para
+        reacender, os ataques de longe do grupo não têm em quem mirar.
+    contra_jogo: Lutar com a luz no chão, longe de quem combate, ou com duas luzes; reacender logo devolve a mira, e sem luz para seguir ele se guia pelo ouvido.
+    gancho: >-
+      A floresta fecha a luz dos andares de baixo com precisão, e quem se perde ali por anos acaba com
+      um corpo que não precisa dela e não a suporta.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [mover, ataque, enfraquecer]
+    a_cada_n: 2
+    telegrafo: "{nome} vira as orelhas para a chama e desce o tronco um palmo, depois outro."
+    description: Um perdido de olhos cobertos de pele e corpo de feltro preto que desce dos troncos e apaga no abraço a luz de quem a carrega.
+    perigo: Médio
+    lore: >-
+      Os colhedores de Pó de Sonho não acendem fogo depois da primeira fileira de árvores, e ensinam
+      isso antes de ensinar o caminho. Lá dentro há gente perdida há tanto tempo que o corpo desistiu da
+      luz: os olhos fecharam por baixo da pele e as costas criaram um feltro preto que bebe a claridade.
+      Ficam alto nos troncos. Quando alguém acende uma tocha, descem de cabeça para baixo e a abraçam
+      contra o peito até ela morrer. O que vem depois acontece no escuro, e quem estava lá não sabe
+      contar direito.
+    aparencia: >-
+      Humano magro e curvado, sem olhos, pele lisa sobre as órbitas, orelhas enormes em concha de pele
+      fina, costas, braços e peito cobertos de feltro preto curto e fosco que não reflete luz, dedos
+      longos de unhas grossas.
+    como_se_luta: >-
+      Vai sempre em quem carrega a luz e a apaga num abraço; lutar com a luz no chão, longe de quem
+      combate, ou com duas. Sem luz para seguir ele se guia pelo ouvido, e quem fica parado sai do
+      alcance dele.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Humano adulto magro e curvado, preso de cabeça para baixo a um tronco escuro pelos dedos longos
+        de unhas grossas. Sem olhos: pele lisa e pálida esticada sobre as órbitas. Orelhas enormes,
+        finas, translúcidas contra a luz, abertas como duas folhas. Costas, braços e peito cobertos de
+        um feltro preto curto, absolutamente fosco, que parece um buraco na imagem; rosto, mãos e pés
+        de pele pálida acinzentada.
+      composicao: >-
+        Andar baixo da floresta, quase negro. Uma colhedora ergue uma lanterna de latão, de costas para o
+        tronco; acima dela, o Abafador desce de cabeça para baixo, do tamanho dela, de orelhas viradas
+        para a chama. A única luz é a da lanterna, quente e pequena; o feltro do corpo não devolve
+        nenhum brilho.
+      evitar: Vampiro, homem-morcego, sombra viva, criatura de olhos brilhantes. Não tem olhos nem asas; é um homem de pele grossa e orelhas grandes, e o preto do corpo é pelo fosco, não névoa.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_fechado_de_escapulas
+    vaga: 3
+    nome: Fechado de Escápulas
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:182", "lore_nova/timeline_completa.txt:146"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: humana
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um homem cujas omoplatas cresceram até virar duas placas de osso branco do tamanho de portas de
+        armário, presas às costas por tendões grossos como cordas. Quando ele se fecha, as placas vêm
+        por cima dos ombros e se encontram diante do peito e do rosto, como as duas metades de uma
+        concha. Entre as placas e as costelas fica o músculo vermelho, sem pele, que puxa e solta. Os
+        braços ficaram curtos e fortes, de antebraços grossos, e só trabalham com as placas abertas.
+    silhueta: Um vulto de ombros altíssimos, como um armário fechado de duas portas brancas, com dois braços curtos saindo de baixo.
+    comportamento: >-
+      Passa os dias fechado entre as raízes, parecendo uma pedra clara. Quando há luta perto, anda até
+      ficar na frente de quem está mais ferido do lado dele e se fecha ali. Só abre para bater, e abre
+      pouco.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_fechado_de_escapulas_duas_portas
+      frase: >-
+        Fecha as escápulas diante de outra criatura e recebe nas placas os golpes que iam para ela;
+        quando abre para bater, o músculo vermelho fica exposto até a rodada seguinte.
+    contra_jogo: Esperar que ele abra para bater e golpear o músculo entre as placas; ou ir primeiro, pelo lado, em quem ele protege, antes que ele chegue lá.
+    gancho: >-
+      A floresta foi feita para que nada seja visto, e o que vive no escuro de Thessavar tempo demais
+      aprende a se fechar com o próprio corpo.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [defesa, ataque, defesa, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "{nome} trava as duas placas de osso diante do peito com um estalo de porta pesada."
+    description: Um homem de omoplatas crescidas em duas placas de osso que se fecham como portas diante de quem ele protege.
+    perigo: Alto
+    lore: >-
+      Entre as raízes do fundo há pedras claras que não são pedras. São homens fechados: as omoplatas
+      cresceram até virar duas placas de osso que se juntam diante do peito, e quem vive assim aprende a
+      não abrir. A floresta de Thessavar ensina isso a tudo o que fica nela tempo demais. Quando há luta
+      perto, um deles caminha até ficar na frente do mais ferido e se fecha ali. Só abre para bater, e o
+      que se vê na fresta é carne vermelha sem pele.
+    aparencia: >-
+      Homem de ombros enormes, duas omoplatas crescidas em placas de osso branco do tamanho de portas de
+      armário que se fecham diante do peito e do rosto, músculo vermelho sem pele visível na fresta,
+      braços curtos de antebraços grossos.
+    como_se_luta: >-
+      Fecha as placas na frente de outra criatura e recebe os golpes dela; quando abre para bater, o
+      músculo entre as placas fica exposto. Ou ir primeiro, pelo lado, em quem ele protege.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Humano adulto de altura normal, de pé. Das costas saem duas placas de osso branco-amarelado,
+        planas, ovais, da altura do tronco, presas por tendões vermelhos grossos; aqui entreabertas como
+        portas de armário, deixando ver entre elas o peito de músculo vermelho sem pele e o rosto magro
+        de olhos fundos. Braços curtos e musculosos saindo de baixo das placas, mãos grandes fechadas.
+        Restos de uma camisa rasgada.
+      composicao: >-
+        Clareira escura entre raízes enormes; o Fechado em primeiro plano, placas entreabertas, diante de
+        um Abafador caído; à frente dele, um caçador de lança, do mesmo tamanho, procura a fresta. Luz
+        de tocha baixa vinda da esquerda; o branco do osso é o único claro forte.
+      evitar: Tartaruga humanoide, cavaleiro de escudo, armadura de placas, asas de osso. As placas são as omoplatas dele, presas por tendão; não há metal nem casco.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_virado_do_avesso
+    vaga: 4
+    nome: Virado do Avesso
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:260", "lore_nova/creatures.txt:874"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um viciado em Pó de Sonho que foi colher onde a floresta é mais escura e comeu do que colhia. O
+        corpo virou do avesso devagar, como uma luva puxada: a pele enrolou para dentro e o músculo
+        ficou por fora, vermelho e úmido, com os tendões brancos à vista no pescoço e nos punhos. Os
+        lábios e as pálpebras viraram para trás e não fecham. Os nervos ficaram na superfície, e
+        qualquer toque nele dói como ferida aberta. As unhas caíram; as pontas dos dedos são carne viva.
+    silhueta: Um homem vermelho e brilhante de umidade, sem pele, com os braços já erguidos como quem espera o golpe.
+    comportamento: >-
+      Anda devagar e sem rumo pelo fundo da floresta, gemendo baixo a cada passo, atrás do calor de
+      gente. Não começa a briga. Mas sente tudo, e cada golpe que o acerta o faz se mexer mais depressa,
+      de dor.
+    papel_tatico: tanque_reativo
+    arquetipo: morto_vivo_implacavel
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: "cri_virado_do_avesso_dor_que_acelera"
+      frase: >-
+        Sente tudo, e a dor o acelera: cada golpe que leva lhe dá uma ação a mais na rodada seguinte,
+        até três; uma rodada inteira sem levar golpe o acalma e zera a conta.
+    contra_jogo: >-
+      Bater uma vez por rodada, forte, ou deixá-lo uma rodada sem golpe para que se acalme; fogo e frio
+      nos nervos à flor o fazem encolher e perder a rodada.
+    gancho: >-
+      O Pó de Sonho mostra o que está escondido, e quem come demais dele onde a floresta é mais funda
+      acaba mostrando o que estava escondido dentro de si.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [reforco_proprio, ataque, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} se encolhe inteiro, e todos os tendões do pescoço saltam ao mesmo tempo."
+    description: >-
+      Um viciado em Pó de Sonho de corpo virado do avesso, músculo por fora e nervos à flor, que a cada
+      golpe recebido fica mais rápido e mais desesperado.
+    perigo: Médio
+    lore: >-
+      Vestra Mão-vermelha diz que há um limite seguro para colher, e que quem passa dele não volta.
+      Alguns voltam, mas não inteiros. Comeram do Pó onde a floresta é mais funda, e o fungo mostrou o
+      que estava escondido, como sempre faz: neles, o que estava escondido era o lado de dentro. Andam
+      pelo fundo gemendo a cada passo, com o músculo por fora e os nervos na superfície. Não atacam
+      primeiro, mas cada golpe que levam os faz ir mais depressa, e os colhedores aprenderam a passar
+      longe.
+    aparencia: >-
+      Humano de corpo virado do avesso, músculo vermelho e úmido por fora, tendões brancos à vista no
+      pescoço e nos punhos, lábios e pálpebras virados para trás, sem unhas, pontas dos dedos em carne
+      viva, restos de pó vermelho nas mãos.
+    como_se_luta: >-
+      Cada golpe que leva lhe dá mais uma ação na rodada seguinte. Bata uma vez e forte, ou deixe-o se
+      acalmar; fogo e frio nos nervos o fazem encolher.
+    related_entities: [floresta_sussurros, npc_vestra_mao_vermelha]
+    arte:
+      visual: >-
+        Humano adulto magro, de pé, levemente encolhido, corpo inteiro de musculatura exposta como prancha
+        de anatomia, vermelho-escuro e úmido, tendões brancos e nacarados no pescoço, punhos e
+        tornozelos. Lábios e pálpebras repuxados para trás mostrando dentes e olhos inteiros, sem cílios.
+        Pontas dos dedos sem unhas. Manchas de pó vermelho vivo nas mãos e na boca. Braços semierguidos
+        em defesa.
+      composicao: >-
+        Fundo da floresta, chão de folhas negras, manchas de fungo vermelho brilhando no pé das árvores.
+        O Virado diante de uma colhedora de capuz que recua com uma faca curta, do mesmo tamanho. Luz
+        fria de cima, rara, que faz a carne brilhar de umidade.
+      evitar: Zumbi apodrecido, esfolado de filme de terror com sangue jorrando, demônio de pele vermelha. É anatomia limpa e viva, sem pele; não sangra em cascata e não tem chifres.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_calado_das_guelras
+    vaga: 5
+    nome: Calado das Guelras
+    status: nova
+    substitui: null
+    familia: corpo_reescrito
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:149", "lore_nova/creatures.txt:828"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: respiracao
+      texto: >-
+        Gente que ficou calada tempo demais na floresta, até a boca fechar sozinha: os lábios cresceram
+        um para dentro do outro e a pele selou por cima, lisa, com uma cicatriz fina onde era a fenda.
+        Para respirar, o pescoço abriu de cada lado três fendas compridas de bordas vermelhas, que abrem
+        e fecham como guelras de peixe fora d'água. As costelas sobem e descem depressa. São magros, de
+        pernas longas, e correm descalços, de calcanhar duro, sem fazer barulho.
+    silhueta: Um corredor magro de cabeça lisa onde devia haver boca, com o pescoço aberto em listras que se mexem.
+    comportamento: >-
+      Andam em grupos de três ou quatro pela borda da floresta e pela fronteira, sem som nenhum. Sentem
+      o ar que os outros soltam: o bando inteiro corre para quem arfa mais, o mais cansado, e bate nele
+      junto, com as mãos de unhas duras, cada um mais forte que o anterior. Como não têm boca, não comem
+      do que matam.
+    papel_tatico: batedor_rapido
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_calado_das_guelras_golpe_sem_som
+      frase: >-
+        O bando inteiro corre para o herói com menos Fôlego sobrando, e cada Calado a mais no mesmo alvo
+        bate mais forte que o anterior.
+    contra_jogo: Não deixar ninguém chegar ao fim do Fôlego quando eles estão perto, ou pôr o mais cansado atrás de quem aguenta; as fendas do pescoço são moles, e um golpe ali os derruba.
+    gancho: >-
+      O silêncio da floresta não é falta de som, é presença que escolheu calar; quem fica tempo bastante
+      dentro dele acaba calado no corpo.
+    habitat: [floresta_sussurros, fs_fronteira_xylos]
+    inspiracao: []
+    padrao: [mover, ataque]
+    a_cada_n: 2
+    telegrafo: "As fendas do pescoço de {nome} abrem todas de uma vez, num assobio fino."
+    description: Gente da floresta de boca selada pela pele, que respira por fendas no pescoço e corre em silêncio atrás de quem arfa.
+    perigo: Baixo
+    lore: >-
+      Na Floresta dos Sussurros o silêncio não é falta de som, e quem fica calado tempo bastante dentro
+      dele acaba calado no corpo. Os lábios crescem um para dentro do outro e a pele fecha por cima;
+      para respirar, o pescoço se abre em fendas que batem como guelras. Correm em grupos pequenos pela
+      borda, descalços e sem som, e vão todos juntos em quem respira mais forte, porque o mais cansado é o
+      que cai primeiro. Quem caçou perto deles diz que o único aviso é um assobio fino das fendas.
+    aparencia: >-
+      Humanos magros e descalços de pernas longas, boca selada por pele lisa com uma cicatriz fina, três
+      fendas compridas de bordas vermelhas de cada lado do pescoço, costelas à vista, unhas grossas e
+      duras.
+    como_se_luta: >-
+      O bando inteiro vai no mais cansado, e cada um bate mais forte que o anterior; não deixar ninguém
+      sem fôlego perto deles. As fendas do pescoço são moles e um golpe ali os derruba.
+    related_entities: [floresta_sussurros, fs_fronteira_xylos]
+    arte:
+      visual: >-
+        Três humanos adultos magros, pele acinzentada, descalços, roupas reduzidas a trapos. Rostos sem
+        boca: a pele lisa cobre o lugar da boca, com uma cicatriz fina horizontal. Cada lado do pescoço
+        com três fendas paralelas de bordas vermelhas, abertas, como guelras. Peito de costelas
+        marcadas, braços longos de mãos com unhas grossas e escuras. O da frente em plena corrida,
+        inclinado, com um pé no ar.
+      composicao: >-
+        Borda da floresta, troncos escuros e retos; os Calados correndo em fila diagonal na direção de um
+        caçador ofegante de arco na mão, que ainda não se virou e tem a altura do da frente. Luz cinza
+        filtrada de cima, neblina rente ao chão.
+      evitar: Homem-peixe, sereia, monstro de escamas, alienígena. Não há escamas nem barbatanas; são gente magra com o pescoço aberto e a boca fechada pela pele.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= BESTAS DA ENTROPIA (Bestas Tortas) =======================
+  - id: enemy_aranha_lobo
+    vaga: 6
+    nome: Saltão Desbotado
+    status: reinventada
+    substitui: enemy_aranha_lobo
+    ataques: ["Salto nas Costas"]
+    acoes:
+      - "Salta por cima de quem está na frente e morde as costas de quem está atrás."
+      - "Recua com um salto para longe logo depois da mordida, antes do revide."
+      - "Tateia o ar com as antenas atrás do próximo que se mexer."
+      - "Sem as antenas, salta às cegas para qualquer lado."
+    substitui_generico: Aranha Lobo
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:146", "lore_nova/creatures.txt:828"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: salta
+      percepcao: vibracao
+      texto: >-
+        Um grilo das tocas do fundo que o escuro da floresta engordou até o tamanho de um cão. Não tem
+        cor: a carapaça é branca e translúcida, e por baixo se vê o ventre mole e as pernas por dentro.
+        Não tem olhos. Tem duas antenas finas três vezes mais compridas que o corpo, sempre tateando o
+        ar à frente, e as pernas de trás são enormes, dobradas acima das costas como dois arcos armados.
+        As mandíbulas são curtas e cortam como tesoura de poda.
+    silhueta: Um bicho corcunda e claro como cera, de pernas de trás dobradas mais altas que as costas e dois fios compridos à frente.
+    comportamento: >-
+      Vivem em bando nos ocos de raiz e saem quando sentem o ar e o chão tremerem. Não perseguem
+      andando: saltam. Um salto longo até as costas de quem passa, uma mordida, outro salto para longe
+      antes do revide, e já estão de antena erguida para o próximo.
+    papel_tatico: batedor_rapido
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_saltao_desbotado_salto_nas_costas
+      frase: >-
+        Salta por cima da linha de frente direto nas costas de quem está atrás e salta de volta; nunca
+        fica onde bateu.
+    contra_jogo: Ficar de costas para um tronco ou para outro do grupo; um corte nas antenas e ele salta às cegas, para qualquer lado.
+    gancho: >-
+      Quando a floresta cresceu, o Abismo concentrado nela chamou de volta bichos que tinham cedido o
+      espaço às raças; os que vieram das tocas engordaram no escuro sem cor nenhuma.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (grilos-de-caverna)
+        referencia: "Rhaphidophoridae, grilos de caverna sem asas, pálidos, de antenas e pernas de salto desproporcionais"
+        tomou: o corpo corcunda e descorado, as antenas longas e o salto
+        distancia: tamanho de cão, cegueira total e a caça de salto nas costas são da floresta; não canta nem vive de restos
+    padrao: [ataque, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} dobra as pernas de trás até o ventre tocar o chão, e as antenas param no ar."
+    description: Um grilo cego e sem cor do tamanho de um cão, de antenas longas e pernas de salto, que pula nas costas de quem passa.
+    perigo: Baixo
+    lore: >-
+      Quando a Floresta dos Sussurros cresceu, a fauna que tinha cedido terreno às raças voltou atrás do
+      escuro. Alguns bichos vieram de tocas e ocos de raiz e engordaram sem luz até o tamanho de cães,
+      sem cor e sem olhos. Os colhedores os chamam de saltões. Vivem em bando e não correm atrás de
+      ninguém: saltam por cima da frente, mordem as costas e saltam para longe. Quem anda na floresta
+      aprende a parar de costas para um tronco.
+    aparencia: >-
+      Grilo do tamanho de um cão, carapaça branca translúcida sem cor que deixa ver o ventre e as pernas
+      por dentro, sem olhos, antenas três vezes mais longas que o corpo, pernas de trás enormes dobradas
+      acima das costas, mandíbulas curtas.
+    como_se_luta: >-
+      Salta por cima da frente nas costas de quem está atrás e salta de volta; ficar de costas para um
+      tronco ou para outro. Sem as antenas ele salta às cegas.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Grilo-de-caverna gigante, corpo do tamanho de um cão médio, corcunda alta, carapaça branco-leitosa
+        translúcida mostrando o ventre amarelado e as estruturas internas das pernas. Sem olhos. Duas
+        antenas finíssimas, longas como uma lança, curvadas no ar. Pernas traseiras enormes, de coxas
+        grossas e espinhosas, dobradas acima das costas. Mandíbulas curtas e escuras.
+      composicao: >-
+        Oco entre raízes, quase escuro; um saltão em pleno salto no alto do quadro, outros dois de antena
+        erguida no chão; abaixo, de costas para eles, um viajante de mochila e bastão, maior que cada
+        bicho. Luz única de uma lanterna no chão, que atravessa a carapaça e faz o corpo brilhar por dentro.
+      evitar: Aranha, gafanhoto verde de lavoura, louva-a-deus. É claro, cego e corcunda; sem teia, sem oito patas, sem cor.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: enemy_urso_coruja_mutante
+    vaga: 7
+    nome: Casuar de Elmo Fundo
+    status: reinventada
+    substitui: enemy_urso_coruja_mutante
+    ataques: ["Unha de Adaga", "Golpe de Elmo"]
+    acoes:
+      - "Salta e chuta de cima para baixo quem se mexeu, por cima do escudo."
+      - "Ferido, abaixa a cabeça e recua com o elmo de osso na frente, sem dar as costas."
+      - "Fica imóvel numa perna só, escutando o chão, até alguém pisar."
+    substitui_generico: Urso-Coruja Mutante
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:155", "lore_nova/timeline_completa.txt:198"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: osso
+      escala: grande
+      locomocao: salta
+      percepcao: vibracao
+      texto: >-
+        Uma ave grande demais para voar, da altura de um homem, que veio do lado úmido e ficou no lado
+        seco. O capacete de osso que essas aves têm no alto da cabeça cresceu para a frente e para baixo
+        até cobrir os olhos inteiros, como um elmo de viseira fechada. As penas são pretas, duras e
+        compridas como crina. As pernas são grossas e escamosas, e o dedo de dentro de cada pé termina
+        numa unha reta do comprimento de uma adaga.
+    silhueta: Uma ave alta e negra de pescoço reto e cabeça de capacete inclinada para a frente, numa perna só.
+    comportamento: >-
+      Fica parada na fronteira, cabeça baixa, sentindo os passos pelo chão. Quando alguém pisa perto,
+      salta e chuta de cima para baixo com a unha de adaga, e salta para trás. Não enxerga o que chuta,
+      e chuta tudo o que se move.
+    papel_tatico: bruto_de_linha
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_casuar_de_elmo_fundo_unha_de_adaga
+      frase: >-
+        Salta e chuta por cima do escudo quem se mexeu na rodada, mesmo que seja outra criatura do lado
+        dela; quem ficou parado não é chutado.
+    contra_jogo: Ficar parado quando ela está perto e deixar outro se mexer; ela não vê, e o elmo pesado a desequilibra quando erra o chute.
+    gancho: >-
+      As criaturas de um lado da fronteira não cruzam para o outro; as poucas que cruzaram não voltaram,
+      e o corpo delas mudou para o lado onde ficaram.
+    habitat: [fs_fronteira_xylos]
+    inspiracao:
+      - fonte: zoologia (casuar)
+        referencia: "Casuarius, ave sem voo das florestas tropicais, de casco ósseo na cabeça e garra interna em adaga"
+        tomou: o porte, o casco da cabeça e a unha de adaga do pé
+        distancia: o casco crescido sobre os olhos, a cegueira e o chute em quem se move são da fronteira; perdeu as cores e não come fruta
+    padrao: [ataque, ataque_multiplo, ataque]
+    a_cada_n: 3
+    telegrafo: "{nome} encolhe uma perna até o peito e fica imóvel, de elmo baixo, escutando o chão."
+    description: Uma ave sem voo da altura de um homem, de capacete de osso crescido sobre os olhos, que chuta com uma unha de adaga quem se move.
+    perigo: Alto
+    lore: >-
+      Na fronteira com Xylos, as criaturas de um lado não cruzam para o outro, e ninguém sabe o que
+      temem. Algumas cruzaram. As grandes aves sem voo da selva que passaram para o escuro seco não
+      voltaram, e o capacete de osso que trazem na cabeça cresceu sobre os olhos até fechá-los. Ficam
+      paradas, de cabeça baixa, ouvindo o chão, e chutam o que se move, de cima para baixo, com uma unha
+      do tamanho de uma adaga. Quem sabe disso fica imóvel, e às vezes ela chuta o companheiro que se
+      mexeu.
+    aparencia: >-
+      Ave sem voo da altura de um homem, penas pretas duras como crina, capacete de osso crescido para a
+      frente e para baixo cobrindo os olhos como um elmo fechado, pernas grossas escamosas, uma unha reta
+      de adaga em cada pé.
+    como_se_luta: >-
+      Chuta quem se moveu, por cima do escudo, mesmo que seja outra criatura; ficar parado quando ela
+      está perto. Quando erra, o elmo pesado a desequilibra.
+    related_entities: [fs_fronteira_xylos]
+    arte:
+      visual: >-
+        Ave sem voo semelhante a um casuar, da altura de um homem, corpo coberto de penas negras longas e
+        duras como crina. Pescoço nu de pele cinza-azulada apagada, sem cores vivas. O casco ósseo do
+        alto da cabeça cresceu e desce sobre os olhos como uma viseira de elmo, cor de marfim rachado.
+        Pernas grossas cinzentas e escamosas; em cada pé, o dedo interno com uma garra reta e longa como
+        adaga.
+      composicao: >-
+        Fronteira: chão seco de folhas mortas de um lado, verde úmido do outro, ao fundo. A ave em pé
+        numa perna, a outra encolhida, de elmo baixo; a dois passos, um caçador congelado no começo de
+        um passo, da mesma altura que ela. Luz baixa e verde vinda do lado da selva.
+      evitar: Urso-coruja, grifo, dinossauro, galinha gigante cômica. É uma ave sem voo de penas de crina, sem bico de coruja nem patas de urso; o perigo é o pé.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ent_dormindo
+    vaga: 8
+    nome: Preguiça da Pradaria
+    status: reinventada
+    substitui: mon_ent_dormindo
+    ataques: ["Garra de Gancho"]
+    acoes:
+      - "Dorme de pé no caminho antigo e puxa para o peito quem passa na frente, usando-o de escudo; ferido, não foge, só acorda mais devagar."
+      - "Anda dormindo o caminho por onde pastava e engancha o que estiver na frente."
+    substitui_generico: Ent que Sonha Acordado
+    familia: besta_entropia
+    origem_lore:
+      fonte: outro
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:146", "lore_nova/creatures.txt:921"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: enorme
+      locomocao: anda
+      percepcao: som
+      texto: >-
+        Um bicho de pasto da Era 0, de quando ali era pradaria, maior que um boi e de pé sobre as patas
+        de trás quando quer, que dormiu quando a floresta cresceu em volta e não acordou direito desde
+        então. O pelo é comprido, cinza-esverdeado de bolor, embaraçado de folhas e raízes finas que
+        cresceram nele enquanto dormia. As patas da frente terminam em três garras curvas, cada uma do
+        comprimento de um braço, que nunca se gastaram porque ele não cava há eras. Os olhos ficam
+        fechados; a cabeça pequena pende sobre o peito largo.
+    silhueta: Um monte peludo encostado num tronco, mais alto que um homem, com três foices curvas pendendo de cada braço.
+    comportamento: >-
+      Dorme em pé, encostado a uma árvore, no caminho por onde pastava quando ali era campo aberto. Às
+      vezes anda dormindo esse caminho, devagar, e o que estiver na frente leva um gancho das garras.
+      Quem cruza o caminho na frente dele é enganchado e puxado para o peito, e fica ali, apertado
+      contra o pelo, entre as garras e quem vier bater nele.
+    papel_tatico: guarda_protetor
+    arquetipo: guardiao
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_preguica_da_pradaria_gancho_de_sono
+      frase: >-
+        Guarda o caminho onde dorme: quem passa à frente dele é puxado contra o peito, e enquanto estiver
+        ali é escudo dele, levando os golpes que os companheiros mandarem na Preguiça.
+    contra_jogo: Rodear o caminho, em silêncio; ele é lento e não persegue. Quem foi puxado se solta cortando os tendões dos dedos, por baixo das garras.
+    gancho: >-
+      A floresta engoliu a pradaria da Era 0 sem pedir passagem, e um dos bichos que pastavam ali
+      dormiu de pé e ainda anda o caminho do campo aberto.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: paleontologia (preguiça-gigante)
+        referencia: "Megatherium, preguiça terrestre extinta das Américas, capaz de ficar de pé e de garras enormes"
+        tomou: o porte, a postura de pé e as garras em gancho
+        distancia: o sono de eras, o bolor e as raízes no pelo, e o caminho que ele guarda dormindo são da pradaria engolida por Thessavar
+    padrao: [defesa, ataque_multiplo]
+    a_cada_n: 3
+    telegrafo: "{nome} solta um suspiro longo de sono e abre os braços devagar, garras para fora."
+    description: Um bicho de pasto da Era 0, maior que um boi, que dorme de pé no caminho antigo e puxa para o peito, com garras de gancho, quem passa na frente.
+    perigo: Alto
+    lore: >-
+      Antes de Thessavar, ali era pradaria, e a floresta a engoliu em semanas. Nem tudo o que pastava ali
+      saiu. Há um bicho maior que um boi que dormiu de pé encostado numa árvore e nunca acordou direito:
+      o pelo criou bolor e raízes, as garras cresceram por eras sem gastar. Às vezes ele anda dormindo o
+      caminho por onde pastava, e o que está na frente leva um gancho. Os colhedores dizem que ele sonha
+      com o campo aberto, porque anda como quem não vê árvore nenhuma. Quem passa em silêncio,
+      rodeando, não o acorda.
+    aparencia: >-
+      Bicho de pasto enorme, maior que um boi, de pé encostado a um tronco, pelo longo cinza-esverdeado
+      de bolor embaraçado de folhas e raízes finas, cabeça pequena pendendo de olhos fechados, três
+      garras curvas do comprimento de um braço em cada pata da frente.
+    como_se_luta: >-
+      Guarda o caminho onde dorme e puxa para o peito quem passa na frente, e o puxado vira escudo
+      dele; rodear o caminho. Quem foi puxado se solta cortando os tendões por baixo das garras.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Preguiça-gigante terrestre pré-histórica, de pé sobre as patas traseiras grossas, encostada a um
+        tronco escuro, com o dobro da altura de um homem. Pelo longo e desgrenhado, cinza-esverdeado de
+        bolor, com folhas secas e raízes finas crescendo entrelaçadas nele. Cabeça pequena e comprida
+        pendendo sobre o peito, olhos fechados. Braços longos pendentes, cada mão com três garras curvas
+        enormes, amareladas, como foices.
+      composicao: >-
+        Trilha antiga e reta no fundo da floresta, onde as árvores parecem ter crescido em volta de um
+        caminho; a Preguiça dormindo de pé ao lado da trilha; um viajante encolhido passando rente a ela
+        na ponta dos pés, com a cabeça na altura do joelho dela. Luz cinza fraca vinda de cima.
+      evitar: Homem-árvore de casca com rosto, urso, gorila. É um bicho de pelo, não de madeira; as raízes só crescem no pelo, e a cara é de bicho dormindo.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_morcego_rasteiro
+    vaga: 9
+    nome: Morcego Rasteiro
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:828", "lore_nova/locations.txt:149"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: pequena
+      locomocao: escala_paredes
+      percepcao: som
+      texto: >-
+        Um morcego do tamanho de um gato que o silêncio da floresta fez ouvir demais. As orelhas
+        cresceram mais que as asas: duas conchas de pele fina e rosada, cada uma do tamanho da cabeça de
+        um homem, que ele carrega dobradas sobre as costas. Com esse peso não voa direito; anda no chão e
+        sobe nos troncos apoiado nos punhos das asas dobradas e nos pés de unhas curvas. O focinho é
+        achatado, de dentes finos e muitos.
+    silhueta: Um bicho pequeno andando de quatro sobre os cotovelos, com duas orelhas enormes erguidas como velas.
+    comportamento: >-
+      Vivem em bando nos ocos altos e descem quando o silêncio se quebra. Estalam a língua sem parar e
+      seguem o som de volta até quem fez o barulho. Mordem pouco: grudam no mais barulhento e estalam
+      alto, e o resto da floresta vem atrás desse estalo.
+    papel_tatico: perseguidor_marca
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_morcego_rasteiro_estalo_que_aponta
+      frase: >-
+        Gruda em quem fez mais barulho e o marca com o estalo: enquanto estiver grudado, os golpes das
+        outras criaturas acham esse herói primeiro.
+    contra_jogo: Arrancar e matar o que está grudado antes que o resto chegue; ou lutar em silêncio, sem metal batendo, e ele não acha quem marcar.
+    gancho: >-
+      A floresta alterna silêncio total e ruídos curtos e fortes; os bichos que ouvem nesse silêncio
+      ouviram tanto que o corpo virou orelha.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (morcegos)
+        referencia: "Desmodus rotundus, que anda e salta no chão apoiado nos punhos; Plecotus, de orelhas quase do tamanho do corpo"
+        tomou: o andar sobre os punhos e as orelhas desproporcionais
+        distancia: não bebe sangue nem voa bem; o que faz é marcar o barulhento para as outras criaturas da floresta
+    padrao: [enfraquecer, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} abre as orelhas por inteiro e para de estalar; tudo fica quieto um instante."
+    description: Um morcego de orelhas maiores que as asas, que anda nos punhos, gruda no mais barulhento e estala até o resto da floresta vir.
+    perigo: Baixo
+    lore: >-
+      A floresta passa horas em silêncio total e depois solta um ruído curto e forte, e os bichos que
+      vivem nela aprenderam a ouvir esse silêncio. Os morcegos dos ocos altos ouviram tanto que as
+      orelhas cresceram mais que as asas, e já não voam direito: descem os troncos de punho em punho.
+      Grudam em quem fez barulho e estalam sem parar, e o que vem atrás desse estalo é pior que eles.
+      Caçadores andam com o arco envolto em pano.
+    aparencia: >-
+      Morcego do tamanho de um gato, orelhas de pele fina rosada do tamanho de uma cabeça humana dobradas
+      sobre as costas, asas pequenas dobradas usadas como patas, focinho achatado de dentes finos e
+      muitos, pelo marrom curto.
+    como_se_luta: >-
+      Gruda em quem fez mais barulho e o marca para as outras criaturas; arrancar e matar o que está
+      grudado primeiro, ou lutar sem metal batendo.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Morcego terrestre do tamanho de um gato, andando de quatro sobre os punhos das asas dobradas e
+        os pés, como um morcego-vampiro no chão. Orelhas desproporcionais, de pele fina rosada com veias
+        visíveis, cada uma do tamanho de uma cabeça humana, erguidas como velas. Focinho curto e
+        achatado, boca aberta com muitos dentes finos. Pelo marrom-escuro curto, olhos minúsculos.
+      composicao: >-
+        Tronco escuro vertical; quatro morcegos descendo de cabeça para baixo; um deles agarrado ao ombro
+        de um soldado de cota de malha que leva a mão ao pescoço; o soldado, em tamanho humano, ocupa
+        metade do quadro. Luz de uma tocha caída no chão.
+      evitar: Vampiro, morcego gigante voando de asas abertas, gárgula. É pequeno, anda no chão, e as orelhas são o que se vê primeiro.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_besouro_do_estalo
+    vaga: 10
+    nome: Besouro do Estalo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:828", "lore_nova/timeline_completa.txt:146"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: quitina
+      escala: pequena
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Um besouro do tamanho de um cão pequeno, de carapaça preta lisa e cabeça vermelha, que guarda no
+        fim do ventre duas bolsas de líquido que não se misturam. Quando ameaçado, aperta as duas numa
+        câmara de casca grossa na ponta do abdômen, e a mistura ferve e sai num jato quente. Nele a ordem
+        das coisas cedeu: o estouro seco, como porta batida, sai da câmara antes do jato, e o vapor só cai
+        no chão onde o estouro foi ouvido um bom tempo depois, como trovão ao contrário. A ponta do ventre
+        gira para mirar por baixo das patas, curtas e fortes, e a carapaça das costas é queimada de
+        manchas pardas de vapor que caiu nele mesmo.
+    silhueta: Um besouro preto do tamanho de um cão pequeno, de traseiro erguido e virado para a frente por baixo das patas.
+    comportamento: >-
+      Andam em grupos pelo chão de folhas, comendo o que o resto deixa. Quando sentem o calor de alguém
+      perto, viram o traseiro e estalam, e o chão em volta de quem está ali fica marcado por um círculo
+      úmido. Correm. O vapor fervente cai no círculo depois, sobre quem não saiu dele.
+    papel_tatico: artilharia
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_besouro_do_estalo_jato_fervente
+      frase: >-
+        O estalo chega antes do jato e marca o chão onde os heróis estão; na rodada seguinte o vapor
+        fervente cai ali, em todos os que não saíram do lugar.
+    contra_jogo: Sair do chão marcado assim que ouvir o estalo; virá-lo de costas expõe o ventre mole, e as bolsas se esgotam depois de alguns disparos.
+    gancho: >-
+      No Abismo concentrado da floresta, até o vapor de um besouro perdeu a ordem: o estouro vem primeiro
+      e a queimadura depois, e os colhedores aprenderam a correr do som, não do jato.
+    habitat: [floresta_sussurros, fs_fronteira_xylos]
+    inspiracao:
+      - fonte: zoologia (besouro-bombardeiro)
+        referencia: "Brachinus, besouro que mistura dois químicos numa câmara do abdômen e dispara um jato fervente com estalo"
+        tomou: a câmara de mistura, o jato fervente com estalo e a mira por baixo das patas
+        distancia: o estouro que vem antes do jato e o vapor que cai depois no chão marcado são da física torta da floresta; não há fogo nem magia
+    padrao: [ataque_multiplo, mover]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue o traseiro e vira a ponta do ventre para a frente, por baixo das patas."
+    description: Um besouro do tamanho de um cão pequeno cujo estouro sai antes do jato fervente, que cai depois no chão marcado.
+    perigo: Médio
+    lore: >-
+      Há um besouro na floresta, do tamanho de um cão pequeno, que guarda no ventre dois líquidos que,
+      juntos, fervem. O jato dele saiu da ordem: primeiro vem o estouro seco de porta batida e um círculo
+      úmido no chão, e só depois, quando quem estava ali já se esqueceu do susto, cai o vapor fervente no
+      círculo. Os colhedores aprenderam a correr do som e não do jato. Quem leva queimadura de besouro não
+      conta na taverna, porque ninguém acredita que foi besouro.
+    aparencia: >-
+      Besouro do tamanho de um cão pequeno, carapaça preta lisa manchada de queimaduras pardas, cabeça
+      vermelha, patas curtas e fortes, ponta do ventre de casca grossa que gira para mirar por baixo das
+      patas.
+    como_se_luta: >-
+      O estalo marca o chão, e o vapor fervente cai ali depois, em quem não saiu; correr do som. De
+      costas, o ventre é mole, e as bolsas se esgotam.
+    related_entities: [floresta_sussurros, fs_fronteira_xylos]
+    arte:
+      visual: >-
+        Besouro-bombardeiro gigante do tamanho de um cão pequeno, carapaça preta brilhante com manchas
+        pardas de queimado, cabeça e tórax vermelho-tijolo, patas curtas e grossas. Abdômen virado para a
+        frente por baixo do corpo, a ponta da câmara ainda fumegando, sem jato.
+      composicao: >-
+        Chão de folhas mortas, escuro; o besouro já correndo para fora do quadro; no chão, um círculo
+        úmido e escuro em volta das botas de um viajante de tamanho humano, cortado na altura do joelho;
+        acima do círculo, suspensa no ar, uma nuvem de vapor branco começando a descer. Luz fria.
+      evitar: Besouro de fogo mágico, escaravelho dourado, inseto blindado de guerra. O jato é vapor fervente, não chama, e a imagem mostra o vapor caindo depois do besouro ter ido embora.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_onca_vazada
+    vaga: 11
+    nome: Onça Vazada
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/locations.txt:155", "lore_nova/timeline_completa.txt:198"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Uma onça da selva que cruzou para a borda seca e voltou, e voltou errada. Onde deviam estar as
+        rosetas do pelo há buracos: buracos redondos que atravessam o corpo de um lado ao outro, de
+        bordas lisas de pele e músculo, do tamanho de uma moeda grande até o de um punho. Pelos buracos
+        se vê o que está atrás dela, e num deles, no flanco, o coração batendo. O resto é onça: ombros
+        largos, patas grossas, mandíbula que quebra osso.
+    silhueta: Uma onça parada na folhagem, com o fundo da mata aparecendo através do corpo em dezenas de furos redondos.
+    comportamento: >-
+      Caça na faixa da fronteira, onde a luz chega aos pedaços pelas copas. Na sombra manchada, os furos
+      do corpo deixam passar a mesma luz que cai no chão, e ela some. Espera parada até a presa estar
+      perto e salta no pescoço.
+    papel_tatico: emboscador
+    arquetipo: emboscador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_onca_vazada_luz_que_atravessa
+      frase: >-
+        Na luz manchada da fronteira ela não é vista até atacar: o primeiro bote sai sem presságio, de
+        dentro da sombra.
+    contra_jogo: Luz inteira, sem manchas, de fogo alto ou clareira; e o coração fica à vista num dos furos do flanco.
+    gancho: >-
+      Na fronteira com Xylos, as criaturas de um lado não cruzam para o outro; uma onça que cruzou e
+      voltou trouxe o lado seco no corpo, em furos.
+    habitat: [fs_fronteira_xylos]
+    inspiracao: []
+    padrao: [mover, mover, ataque]
+    a_cada_n: 3
+    telegrafo: "A luz das copas para de mexer no chão e passa pelo corpo de {nome} sem fazer sombra."
+    description: Uma onça da fronteira cujas rosetas viraram furos que atravessam o corpo, invisível na luz manchada, com o coração à vista no flanco.
+    perigo: Alto
+    lore: >-
+      Na fronteira entre a floresta e a selva há uma onça que cruzou e voltou. O lado seco a deixou cheia
+      de furos: onde deviam estar as rosetas há buracos redondos que atravessam o corpo, e por eles passa
+      a luz. Na sombra manchada da fronteira ela não se distingue do chão. Os caçadores dos dois lados
+      evitam a faixa onde ela anda. Os que a viram de perto falam do coração batendo num dos furos do
+      flanco, como quem fala de uma janela.
+    aparencia: >-
+      Onça grande de pelo dourado sem rosetas, com dezenas de furos redondos no lugar delas atravessando
+      o corpo de lado a lado, bordas lisas de pele e músculo, o fundo visível através dela, o coração
+      batendo num furo do flanco.
+    como_se_luta: >-
+      Na luz manchada ataca sem ser vista; lutar sob fogo alto ou numa clareira. O coração fica à vista
+      num dos furos do flanco.
+    related_entities: [fs_fronteira_xylos]
+    arte:
+      visual: >-
+        Onça-pintada adulta, musculosa, pelo dourado-escuro. No lugar de cada roseta, um furo redondo e
+        limpo que atravessa o corpo de lado a lado, de tamanhos variados, bordas de pele e músculo rosado
+        liso, sem sangue; através dos furos vê-se a folhagem atrás. Num furo grande do flanco, o coração
+        vermelho visível. Olhos amarelos.
+      composicao: >-
+        Fronteira na hora em que a luz entra aos pedaços pelas copas; a onça agachada sobre um galho
+        baixo, a luz manchada passando pelos furos e caindo no chão; abaixo, um caçador de tamanho humano
+        que não a vê. Verde úmido à direita, preto seco à esquerda.
+      evitar: Onça fantasma translúcida, felino de cristal, animal esquelético. O corpo é sólido e vivo; só os furos deixam ver através.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_lagarta_de_visgo
+    vaga: 12
+    nome: Lagarta de Visgo
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:828", "lore_nova/timeline_completa.txt:146"]
+    anatomia:
+      plano_corporal: hexapode_ou_mais
+      material: couro_tecido
+      escala: pequena
+      locomocao: rasteja
+      percepcao: vibracao
+      texto: >-
+        Um verme de corpo mole e aveludado, comprido como um braço, com duas fileiras de patinhas
+        grossas e curtas embaixo, uma a cada palmo. A pele é coberta de pequenas papilas que lhe dão o
+        aspecto de veludo cinza-azulado. Dos dois lados da cabeça saem duas papilas maiores, como tubos,
+        que disparam fios de cola branca num leque. A boca, embaixo da cabeça, tem dois ganchos que cortam
+        como lâmina. Os olhos não servem; sente pelo chão.
+    silhueta: Uma lagarta gorda e cinza de veludo, de cabeça erguida, cuspindo um leque de fios brancos dos dois lados.
+    comportamento: >-
+      Vive debaixo das folhas mortas, onde é mais úmido, em pequenos grupos. Quando sente passos, ergue
+      a cabeça e dispara a cola num leque largo, que pega quem está na frente e o que estiver do lado
+      dele, companheiro ou tronco, e endurece colando um ao outro. Depois chega devagar e morde.
+    papel_tatico: controlador
+    arquetipo: predador
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_lagarta_de_visgo_leque_de_cola
+      frase: >-
+        Cola o herói a quem estiver do lado dele, outro herói ou um tronco: os dois colados dividem os
+        golpes que levam e só se movem juntos, até alguém desfazer a cola.
+    contra_jogo: Não andar ombro a ombro perto das folhas; fogo ou água quente amolecem a cola, e ela demora a refazer a reserva depois do primeiro leque.
+    gancho: >-
+      Na floresta de Thessavar quem tem medo anda colado ao companheiro, e um verme de veludo debaixo das
+      folhas aprendeu a fazer disso uma armadilha.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (onicóforos)
+        referencia: "Peripatus e outros vermes-de-veludo, que capturam presas com jatos de cola disparados por papilas da cabeça"
+        tomou: o corpo aveludado de patinhas curtas e o leque de cola
+        distancia: o tamanho e a cola que junta duas presas numa só são da floresta; é caça de emboscada contra gente, não de insetos
+    padrao: [enfraquecer, ataque]
+    a_cada_n: 2
+    telegrafo: "{nome} ergue a cabeça e incha as duas papilas dos lados, que ficam brancas."
+    description: Um verme aveludado do comprimento de um braço que cola quem passa a quem está do lado, num leque de cola, e depois morde.
+    perigo: Baixo
+    lore: >-
+      Na Floresta dos Sussurros quem tem medo anda colado ao companheiro, e debaixo das folhas mortas
+      vive um verme de veludo, do comprimento de um braço, que se aproveita disso. Quando sente passos,
+      ergue a cabeça e dispara dois leques de cola branca que pegam dois de uma vez e os colam um no
+      outro, ou num tronco, e depois chega devagar. Os colhedores levam uma panela de água quente por causa dele, e é a primeira
+      coisa que ensinam a não esquecer.
+    aparencia: >-
+      Verme do comprimento de um braço, corpo mole de pele aveludada cinza-azulada coberta de papilas,
+      duas fileiras de patinhas curtas e grossas, duas papilas em tubo dos lados da cabeça, ganchos de
+      boca embaixo.
+    como_se_luta: >-
+      Cola o herói a quem está do lado, e os dois dividem os golpes e só se movem juntos; não andar
+      ombro a ombro. Fogo ou água quente amolecem a cola, e ela demora a disparar de novo.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Verme-de-veludo gigante (onicóforo), do comprimento de um braço humano, corpo cilíndrico mole,
+        pele aveludada cinza-azulada de textura fina, duas fileiras de pernas curtas e grossas sem
+        articulação. Cabeça erguida com duas antenas carnudas e duas papilas laterais disparando um leque
+        de fios brancos pegajosos que se espalham no ar.
+      composicao: >-
+        Chão de folhas mortas úmidas levantado; a lagarta emergindo; os fios brancos colando o braço de uma
+        colhedora ao ombro do companheiro ao lado, os dois de tamanho humano, puxando em direções
+        opostas. Luz baixa de lanterna no chão.
+      evitar: Lagarta de borboleta colorida, centopeia, verme de areia gigante. É mole, aveludada, de patinhas grossas; a cola é o centro da imagem.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_toldo_das_clareiras
+    vaga: 13
+    nome: Toldo das Clareiras
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/timeline_completa.txt:146", "lore_nova/locations.txt:149"]
+    anatomia:
+      plano_corporal: alado
+      material: couro_tecido
+      escala: enorme
+      locomocao: plana_voa
+      percepcao: calor
+      texto: >-
+        Um bicho de membrana do tamanho de uma vela de navio, que vive pendurado no alto das poucas
+        clareiras da floresta. Uma pele escura e fina, quase sem pelo, estica-se do pescoço às pontas dos
+        dedos das mãos e dos pés e até a ponta do rabo, e entre as quatro patas ela fecha o céu de uma
+        clareira inteira. A cabeça é pequena, de olhos grandes e úmidos e dentes da frente em pente. Os
+        dedos são longos, de unhas curvas, presos aos galhos das bordas; o ventre tem a cor da casca de
+        baixo das copas.
+    silhueta: Um teto de pele escura esticado entre as copas, de onde pendem quatro patas compridas e uma cabeça pequena de olhos grandes.
+    comportamento: >-
+      Estende-se de borda a borda sobre as poucas clareiras e passa dias assim, e por isso nem as
+      clareiras têm céu. Quando alguém chega ao centro achando que achou a saída, ele solta as patas de um dos
+      lados e cai inteiro, de membrana aberta, sobre quem está embaixo. Embrulha e morde pelo tecido.
+    papel_tatico: emboscador
+    arquetipo: predador_apice
+    categoria: chefe
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_toldo_das_clareiras_ceu_que_cai
+      frase: >-
+        Cai de membrana aberta sobre todos os que estão no centro: quem fica embaixo perde a jogada
+        seguinte, até que alguém corte a pele por dentro.
+    contra_jogo: Não atravessar clareira pelo centro; a membrana é fina, quem cortar por dentro abre caminho para os outros, e as bordas presas aos galhos são o ponto fraco.
+    gancho: >-
+      As árvores de Thessavar fecham a luz com uma precisão que nenhuma selva tem; onde as copas falham,
+      um bicho de pele fecha o buraco.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (colugo)
+        referencia: "Dermoptera, os colugos ou lêmures-voadores, de membrana que vai do pescoço aos dedos e à ponta da cauda"
+        tomou: a membrana inteira esticada entre as quatro patas e o rabo, a cara de olhos grandes e os dentes em pente
+        distancia: o tamanho de vela de navio, o hábito de fechar o céu das clareiras e a queda sobre a presa são da floresta de Thessavar
+    padrao: [mover, ataque_multiplo, enfraquecer, ataque]
+    a_cada_n: 3
+    telegrafo: "O céu da clareira afunda um palmo, e {nome} solta os galhos de um dos lados."
+    description: Um bicho de membrana do tamanho de uma vela de navio que fecha o céu das clareiras e cai sobre quem chega ao centro.
+    perigo: Extremo
+    lore: >-
+      Os que se perdem na Floresta dos Sussurros procuram clareira, porque clareira é céu e céu é
+      direção. Quase não há clareiras, e as que há têm teto. Um bicho de pele escura, esticada do
+      pescoço à ponta do rabo, fica pendurado de borda a borda sobre elas, e debaixo dele a luz não
+      passa. Quando alguém chega ao centro, ele cai inteiro. Os poucos que saíram de baixo da pele
+      cortaram por dentro, e falam do cheiro de leite azedo e do calor.
+    aparencia: >-
+      Bicho de membrana do tamanho de uma vela de navio, pele escura e fina esticada do pescoço aos dedos
+      e à ponta do rabo, quatro patas longas de dedos e unhas curvas, cabeça pequena de olhos grandes e
+      úmidos e dentes em pente.
+    como_se_luta: >-
+      Cai sobre todos os que estão no centro da clareira e os prende embaixo da pele; não atravessar
+      pelo centro. De dentro, cortar a membrana abre caminho para todos, e as bordas presas aos galhos
+      são o ponto fraco.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Colugo (lêmure-voador) colossal, membrana de pele fina marrom-escura quase negra, com veias
+        visíveis contra a pouca luz, esticada entre as quatro patas longas e o rabo, com a envergadura
+        de uma vela de navio. Cabeça pequena, olhos enormes úmidos e escuros, focinho curto, dentes da
+        frente em pente. Dedos longos de unhas curvas agarrados aos galhos das copas.
+      composicao: >-
+        Vista de baixo, do centro de uma clareira pequena: o Toldo cobrindo todo o céu, só frestas de luz
+        cinza nas bordas; no chão, no centro, três viajantes pequenos olhando para cima, um deles com uma
+        tocha erguida; a membrana começando a cair de um lado. Escala: cada viajante tem o tamanho de um
+        dedo da pata.
+      evitar: Dragão, morcego gigante, manta voadora, demônio alado. Tem cara de bicho manso de olhos grandes; o horror é o tamanho da pele e a queda.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_vespa_coveira
+    vaga: 14
+    nome: Vespa Coveira
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:828", "lore_nova/timeline_completa.txt:146"]
+    anatomia:
+      plano_corporal: alado
+      material: quitina
+      escala: humana
+      locomocao: plana_voa
+      percepcao: sangue_cheiro
+      texto: >-
+        Uma vespa do tamanho de um cão de caça, de corpo preto-azulado e asas cor de ferrugem que batem
+        com um zumbido grave. As patas são longas, de espinhos e ganchos nas pontas, feitas para arrastar
+        peso. O ferrão, na ponta do abdômen, é do comprimento de um dedo e não mata: o veneno deixa a
+        carne mole e o corpo imóvel por horas, ainda vivo. O peso não vale para ela: carrega um homem
+        adulto pelo tornozelo como quem leva uma folha seca, sem baixar o voo. As antenas, curvas e
+        sempre em movimento, batem no chão atrás de cheiro de sangue.
+    silhueta: Uma vespa negra de asas cor de ferrugem, voando baixo e arrastando um corpo pelo tornozelo.
+    comportamento: >-
+      Caça sozinha e voa baixo, entre os troncos. Ferroa quem está ferido e sangrando, espera o veneno
+      pegar e arrasta o corpo para um buraco no chão, onde põe um ovo. Não tem pressa e não larga o que
+      pegou.
+    papel_tatico: saqueador
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_vespa_coveira_ferrao_que_amolece
+      frase: >-
+        Ferroa e paralisa um herói que já está ferido e o arrasta para fora da luta: enquanto ela não for
+        derrubada, ele não volta.
+    contra_jogo: Proteger quem está sangrando e ir nela quando arrasta, que é quando voa baixo e devagar; as asas rasgam fácil.
+    gancho: >-
+      Os colhedores contam os buracos frescos no chão antes de acampar; perto de cada um, em geral, há
+      alguém que se perdeu na véspera.
+    habitat: [floresta_sussurros, fs_fronteira_xylos]
+    inspiracao:
+      - fonte: zoologia (vespas-caçadoras)
+        referencia: "Pepsis, a vespa-caçadora-de-tarântulas, que paralisa a presa viva e a arrasta para a toca do ovo"
+        tomou: a paralisia sem morte, o arrasto e o ovo no buraco
+        distancia: o tamanho de cão de caça, o peso que não vale para ela, o faro de sangue e a presa humana são da floresta; não é enxame nem colmeia
+    padrao: [ataque, enfraquecer, mover]
+    a_cada_n: 3
+    telegrafo: "{nome} pousa e passa as antenas no chão, devagar, seguindo o rastro de sangue."
+    description: Uma vespa do tamanho de um cão de caça que ferroa quem sangra, o deixa imóvel e vivo e o arrasta para um buraco.
+    perigo: Alto
+    lore: >-
+      Os colhedores contam os buracos frescos no chão antes de acampar. São de uma vespa do tamanho de
+      um cão de caça que voa baixo entre os troncos atrás de sangue. O ferrão não mata: deixa a carne
+      mole e o corpo imóvel, e ela arrasta o que ferroou para o buraco e põe um ovo. Quem é tirado a
+      tempo fica dias sem sentir as pernas. Quem não é tirado não volta para contar.
+    aparencia: >-
+      Vespa do tamanho de um cão de caça, corpo preto-azulado brilhante, asas cor de ferrugem, patas
+      longas com espinhos e ganchos, ferrão do comprimento de um dedo, antenas curvas sempre em
+      movimento.
+    como_se_luta: >-
+      Ferroa quem já está ferido, o paralisa e o arrasta para fora da luta; proteger quem sangra. Quando
+      arrasta voa baixo e devagar, e as asas rasgam fácil.
+    related_entities: [floresta_sussurros, fs_fronteira_xylos]
+    arte:
+      visual: >-
+        Vespa-caçadora gigante do tamanho de um cão de caça, corpo esguio preto-azulado metálico, asas
+        translúcidas cor de ferrugem em movimento, pernas longas com espinhos, antenas curvas. Ferrão
+        estendido. As patas de trás seguram pelo tornozelo um homem inerte em roupas de viajante.
+      composicao: >-
+        Entre troncos escuros, a vespa voando baixo e arrastando pelo chão de folhas o homem, que é maior
+        que ela, na direção de um buraco recém-cavado; atrás, uma colhedora corre com uma faca. Luz
+        fraca, poeira no ar.
+      evitar: Vespa de colmeia em enxame, inseto alienígena, mosquito gigante. É uma só, de asas ferrugem, e o centro da cena é o arrasto.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_bugio_invertido
+    vaga: 15
+    nome: Bugio Invertido
+    status: nova
+    substitui: null
+    familia: besta_entropia
+    origem_lore:
+      fonte: abismo
+      detalhe: null
+      refs: ["lore_nova/creatures.txt:828", "lore_nova/timeline_completa.txt:146"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: couro_tecido
+      escala: humana
+      locomocao: escala_paredes
+      percepcao: calor
+      texto: >-
+        Um macaco grande, de pelo ruivo escuro e barba sob o queixo, para quem o chão fica no alto. Vive
+        na face de baixo dos galhos e anda por ela como se andasse no chão, e o pelo dele cai para cima,
+        para as copas; o que ele larga também cai para cima. Os braços são compridos, de mãos fortes, e a
+        cauda grossa, nua na ponta, se enrola nos galhos como uma mão a mais. A garganta é inchada numa
+        bolsa de osso oco, mas ele não uiva nunca.
+    silhueta: Um macaco de cabeça para baixo debaixo de um galho, de pelos e cauda erguidos para o céu, como um reflexo na água.
+    comportamento: >-
+      Vive em bando na face de baixo das copas, onde ninguém olha. Escolhe quem anda sozinho no fim da
+      fila, desce o braço comprido, agarra pelo colarinho e solta: quem ele solta cai para cima, bate nos
+      galhos e, quando a física volta para ele, despenca do alto na frente da fila, no meio do bando que
+      desceu para esperar.
+    papel_tatico: controlador
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_bugio_invertido_queda_para_cima
+      frase: >-
+        Agarra quem está no fim da linha e o solta para cima; na rodada seguinte o herói cai de volta na
+        frente da linha, no meio das criaturas, longe da proteção de quem estava atrás.
+    contra_jogo: Andar junto, sem ninguém sozinho no fim da fila; um golpe na cauda o faz largar o galho, e ele mesmo cai para cima, para longe da luta.
+    gancho: >-
+      Na floresta de Thessavar nada quer ser visto, e um bando de macacos foi parar no único lugar onde
+      ninguém olha, a face de baixo dos galhos, e lá o chão virou céu.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [mover, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} desce do galho um braço comprido e ruivo, de mão aberta, sobre o último da fila."
+    description: Um macaco ruivo que vive de cabeça para baixo na face de baixo dos galhos, para quem o chão fica no alto, e solta para cima quem agarra.
+    perigo: Médio
+    lore: >-
+      Há um bando de macacos ruivos na Floresta dos Sussurros para quem o chão é o céu. Andam na face de
+      baixo dos galhos, de pelo erguido, e o que largam cai para as copas: frutas, pedras, gente.
+      Escolhem o último da fila, descem um braço comprido, agarram pelo colarinho e soltam, e quem sobe
+      despenca depois na frente de todos, onde o bando espera. Os guias
+      amarram os viajantes uns aos outros com corda curta nas trilhas onde se vê pelo ruivo no alto.
+    aparencia: >-
+      Macaco grande de pelo ruivo escuro e barba, de cabeça para baixo sob um galho com o pelo caindo
+      para cima, braços compridos de mãos fortes, cauda grossa de ponta nua enrolada no galho, garganta
+      inchada numa bolsa de osso.
+    como_se_luta: >-
+      Solta para cima quem está no fim da linha, e o herói despenca depois na frente, no meio das
+      criaturas; andar junto. Um golpe na cauda o faz largar o galho, e ele cai para cima, longe da luta.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Bugio (macaco uivador) grande, pelo ruivo-escuro longo, barba espessa sob o queixo, garganta
+        inchada. Pendurado de cabeça para baixo sob um galho grosso, mas em pose de quem anda no chão,
+        com o pelo, a barba e a cauda caindo para cima, na direção das copas, contra a gravidade. Cauda
+        grossa de ponta nua enrolada no galho. Um braço estendido para baixo.
+      composicao: >-
+        Trilha estreita vista de lado; acima, a face de baixo dos galhos com três bugios andando
+        invertidos; um deles acaba de soltar uma viajante que sobe no ar, de braços abertos, na direção
+        dos galhos; na trilha, dois companheiros dela olham para cima. Escala: a viajante tem o dobro do
+        tamanho do bugio.
+      evitar: Macaco demoníaco de presas, gorila, macaco alado. O estranho é só a gravidade ao contrário no corpo e no pelo; a cara é de macaco comum.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= HUMANOIDES QUE PAGARAM O PREÇO (Cobrados) =======================
+  - id: mon_dedos_de_colheita
+    vaga: 16
+    nome: Dedos de Colheita
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/items.txt:770", "lore_nova/npcs.txt:1546"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um colhedor que passou anos colhendo Pó de Sonho com as mãos nuas, até o fungo subir por baixo
+        das unhas. Os dedos cresceram finos e compridos como talos, de um vermelho de ferrugem molhada,
+        fibrosos e quebradiços, com cabeças de esporos inchadas nas pontas; as unhas caíram há muito. O
+        vermelho sobe pelos pulsos em veios até os cotovelos. Os olhos são vermelhos inteiros, da marca
+        do vício, e o nariz e a boca têm crostas de pó.
+    silhueta: Um homem curvado de capuz com as mãos abertas à frente, de dedos longos e finos demais, como dois molhos de varetas.
+    comportamento: >-
+      Trabalham para quem compra o Pó e defendem a mancha de fungo onde colhem. Quando a luta aperta,
+      não fogem: correm para quem está mais perto, cravam os dedos no rosto dele e os quebram ali, e os
+      talos ficam espetados na pele, soltando pó. Depois disso, sem dedos, ficam sentados chorando.
+    papel_tatico: sacrificial
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_dedos_de_colheita_nuvem_vermelha
+      frase: >-
+        Crava e quebra os próprios dedos no rosto do herói e sai da luta: enquanto os talos ficarem na
+        pele, cada Carta que o herói jogar lhe dá Entropia, até ele gastar uma jogada para arrancá-los.
+    contra_jogo: Derrubá-lo antes que chegue perto; quem foi pego deve arrancar os talos logo, antes de jogar as Cartas caras.
+    gancho: >-
+      O Pó de Sonho das bordas sai das mãos de quem o colhe, e as mãos de quem colhe há tempo demais já
+      são parte do fungo.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [ataque, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} abre os dedos compridos diante do rosto, e as cabeças vermelhas das pontas incham."
+    description: Um colhedor de Pó de Sonho de dedos crescidos em talos vermelhos de fungo, que os crava e quebra no rosto do inimigo.
+    perigo: Médio
+    lore: >-
+      Vestra Mão-vermelha, que tem os dedos vermelhos do fungo, manda colher de luvas. Nem todos
+      obedecem, porque a luva rasga o fungo e o fungo rasgado vale menos. Os que colhem anos de mãos nuas ficam com os dedos
+      tomados: finos e compridos como talos, vermelhos, de cabeças inchadas nas pontas. Quando a briga
+      aperta, cravam os dedos no rosto de quem está perto e os quebram ali, e os talos ficam na pele,
+      soltando pó a cada esforço. Depois, sem dedos, sentam e choram, e Vestra paga a eles assim mesmo.
+    aparencia: >-
+      Homem curvado de capuz, olhos inteiramente vermelhos, crostas de pó vermelho no nariz e na boca,
+      dedos longos e finos como talos vermelho-ferrugem de cabeças de esporos inchadas nas pontas, sem
+      unhas, veios vermelhos subindo dos pulsos aos cotovelos.
+    como_se_luta: >-
+      Crava e quebra os dedos no rosto de quem está perto e sai da luta; os talos que ficam na pele
+      cobram Entropia a cada Carta até serem arrancados. Derrubá-lo antes que chegue.
+    related_entities: [floresta_sussurros, npc_vestra_mao_vermelha]
+    arte:
+      visual: >-
+        Homem adulto magro e curvado, capa de capuz marrom remendada, cesto de vime às costas com fungos
+        vermelhos. Olhos inteiramente vermelhos, sem branco. Mãos estendidas à frente: dedos longos e
+        finos como talos de cogumelo, vermelho-ferrugem úmido, quebradiços, com pequenas cabeças
+        arredondadas inchadas nas pontas; veios vermelhos subindo pelos antebraços nus. Crosta de pó
+        vermelho sob o nariz.
+      composicao: >-
+        Mancha de fungo vermelho ao pé de árvores escuras; o colhedor avançando de mãos abertas para o
+        rosto de uma mercenária que ergue o braço, do mesmo tamanho; as pontas dos dedos já tocando a face
+        dela, um pó vermelho escapando. Luz vermelha refletida do chão de fungo.
+      evitar: Druida-planta, homem-cogumelo, Hospedeiro de Xylos. O fungo está só nas mãos e nos braços; o resto é um homem viciado de capuz.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_olho_de_petala
+    vaga: 17
+    nome: Olho de Pétala
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: mercadores_curiosidades
+      refs: ["lore_nova/items.txt:796", "lore_nova/creatures.txt:943", "lore_nova/factions.txt:562"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: carne_exposta
+      escala: humana
+      locomocao: anda
+      percepcao: luz
+      texto: >-
+        Um caçador dos Mercadores de Curiosidades que perdeu um olho e pôs no lugar o centro úmido de uma
+        Flor-Olho, comprado de quem colhe. A flor pegou. Da órbita direita saem pétalas grossas, pálidas e
+        carnudas, que se abrem e fecham em volta de um olho molhado sem pálpebra; raízes brancas e finas
+        descem pela têmpora e pela bochecha por baixo da pele, como veias, e se agarram ao osso do rosto.
+        O olho de flor enxerga no escuro dos andares de baixo com o mínimo de claridade, como se fosse
+        dia. O outro olho, o dele, ficou leitoso de não ser usado, e a mão que segura a besta treme.
+    silhueta: Um besteiro magro de chapéu, com uma flor aberta no lugar de um dos olhos, mirando para o escuro.
+    comportamento: >-
+      Caça na floresta para quem paga por coisas raras, e acerta no escuro o que os outros nem veem.
+      Prefere ficar longe, atrás de tronco, e atirar de onde não chega luz. Não gosta de ser olhado de
+      volta: quando a flor pisca, ele muda de lugar.
+    papel_tatico: artilharia
+    arquetipo: tatico
+    categoria: padrao
+    faccao: mercadores_curiosidades
+    mecanica_assinatura:
+      carta: cri_olho_de_petala_tiro_no_escuro
+      frase: >-
+        Atira de onde não há luz e acerta como se houvesse: escuro e cobertura não protegem o herói dos
+        virotes dele.
+    contra_jogo: Luz forte no rosto fecha as pétalas e o deixa só com o olho leitoso; e quem chega perto o pega sem besta, que de perto ele não sabe lutar.
+    gancho: >-
+      As Flores-Olho são os olhos de Thessavar, e quem colhe uma diz que ela continua olhando; os
+      Mercadores pagam bem por elas, e alguns as usam.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [ataque, ataque, mover]
+    a_cada_n: 2
+    telegrafo: "As pétalas no rosto de {nome} se abrem por inteiro, e o olho do centro para de mexer."
+    description: Um caçador dos Mercadores de Curiosidades com uma Flor-Olho enraizada na órbita, que enxerga e atira no escuro dos andares de baixo.
+    perigo: Médio
+    lore: >-
+      As Flores-Olho são os olhos de Thessavar espalhados pela floresta, e colhê-las fere a mata
+      inteira. Os Mercadores de Curiosidades compram o centro úmido delas assim mesmo, e alguns caçadores
+      deles, que perderam um olho, puseram o olho de flor no lugar. A flor pega. Raízes finas descem pela
+      têmpora, e o olho de pétalas enxerga no escuro como de dia; eles atiram de onde não chega luz e
+      acertam. Ninguém sabe se mais alguém olha pelo mesmo olho, e eles não gostam da pergunta.
+    aparencia: >-
+      Caçador magro de chapéu de aba larga e besta leve, uma Flor-Olho enraizada na órbita direita com
+      pétalas grossas e pálidas em volta de um olho molhado sem pálpebra, raízes brancas finas sob a pele
+      da têmpora e da bochecha, o outro olho leitoso.
+    como_se_luta: >-
+      Atira do escuro e acerta como se houvesse luz; cobertura não o atrapalha. Luz forte no rosto fecha
+      as pétalas, e de perto ele não sabe lutar.
+    related_entities: [floresta_sussurros, mercadores_curiosidades]
+    arte:
+      visual: >-
+        Homem adulto magro, casaco de couro longo de viajante rico já gasto, chapéu de aba larga, besta
+        leve. Na órbita direita, uma flor carnuda de pétalas grossas branco-rosadas abertas, com um olho
+        humano úmido e sem pálpebra no centro; raízes finas e brancas visíveis sob a pele, descendo pela
+        têmpora e pela bochecha. Olho esquerdo leitoso, branco-azulado.
+      composicao: >-
+        Escuro quase total no fundo da floresta; o caçador agachado atrás de uma raiz, mirando a besta
+        para fora do quadro; a flor no rosto é o único ponto claro; ao lado dele, um saco de couro com
+        etiquetas de mercador. Escala humana, em primeiro plano.
+      evitar: Druida com flores no cabelo, elfo da floresta, monstro-planta. É um homem comum com uma flor no olho; nada mais nele é planta.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mapa_de_cicatrizes
+    vaga: 18
+    nome: Mapa de Cicatrizes
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/npcs.txt:1619", "lore_nova/items.txt:876"]
+    anatomia:
+      plano_corporal: bipede_ereto
+      material: couro_tecido
+      escala: humana
+      locomocao: anda
+      percepcao: eter
+      texto: >-
+        Um ajudante de cartógrafo que desistiu do papel e passou a marcar as trilhas na própria pele, a
+        faca, porque o papel muda na floresta. A pele também mudou. O peito, as costas e os braços estão
+        cobertos de cicatrizes em linhas e cruzes, e as cicatrizes andam devagar por baixo da pele,
+        refazendo o desenho; algumas ainda abertas e rosadas, outras de um branco duro. As mãos têm cortes
+        frescos todos os dias. Os olhos são de quem não dorme.
+    silhueta: Um homem sem camisa, coberto de linhas claras como um mapa, de braço esticado apontando para um lado.
+    comportamento: >-
+      Anda à frente dos outros, de olho na própria pele. Quando as cicatrizes mudam, ele grita e aponta,
+      e as criaturas em volta vão para onde ele aponta, como se a trilha fosse delas. Não luta bem; luta
+      com a faca de marcar.
+    papel_tatico: suporte
+    arquetipo: tatico
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mapa_de_cicatrizes_trilha_na_pele
+      frase: >-
+        Lê a trilha na pele e reposiciona as outras criaturas: na rodada seguinte, quem ele apontou ataca
+        pelo flanco.
+    contra_jogo: Derrubá-lo primeiro desfaz a manobra dos outros; ou cortar a cicatriz que ele está lendo, e ele perde a trilha por uma rodada.
+    gancho: >-
+      O Estudioso Quell veio mapear a floresta e os mapas dele se contradizem; alguns dos que andaram com
+      ele resolveram que o problema era o papel.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [reforco_proprio, mover, defesa]
+    a_cada_n: 3
+    telegrafo: "{nome} arranca a camisa, olha o próprio braço e estica o dedo para um lado do campo."
+    description: Um ajudante de cartógrafo com as trilhas da floresta cortadas na pele, de cicatrizes que se movem, que guia as outras criaturas pelo flanco.
+    perigo: Médio
+    lore: >-
+      O Estudioso Quell veio de Nova Arcádia mapear a floresta, e os mapas dele se contradizem de uma
+      semana para outra. Alguns dos que andaram com ele concluíram que o problema era o papel e passaram
+      a cortar as trilhas na própria pele. A pele também muda: as cicatrizes andam devagar por baixo dela,
+      refazendo o caminho, e quem as lê sabe por onde a floresta vai abrir. Lutam mal, mas apontam, e o
+      que está em volta vai para onde eles apontam.
+    aparencia: >-
+      Homem magro sem camisa, peito, costas e braços cobertos de cicatrizes em linhas e cruzes como um
+      mapa, umas abertas e rosadas, outras brancas e duras, que se movem sob a pele; cortes frescos nas
+      mãos, faca curta de marcar, olhos fundos de quem não dorme.
+    como_se_luta: >-
+      Lê as cicatrizes e manda as outras criaturas atacarem pelo flanco; derrubá-lo primeiro desfaz a
+      manobra. Cortar a cicatriz que ele lê o deixa sem trilha por um tempo.
+    related_entities: [floresta_sussurros, npc_estudioso_quell]
+    arte:
+      visual: >-
+        Homem adulto magro, torso nu, calças de lona de expedição e botas, cinto com faca curta e um
+        tinteiro vazio. Pele do peito, das costas e dos braços coberta de cicatrizes em relevo formando
+        linhas, setas, cruzes e curvas de nível, como um mapa topográfico entalhado; linhas recentes
+        rosadas, antigas brancas. Óculos rachados pendurados no pescoço. Braço esticado, apontando.
+      composicao: >-
+        Trilha no fundo da floresta, pouca luz; o Mapa no centro, olhando o próprio antebraço e apontando
+        para a esquerda; atrás dele, desfocados, dois Calados já correndo na direção apontada; um caderno
+        de papel rasgado caído no chão. Escala humana.
+      evitar: Tatuagem tribal, runas mágicas brilhantes, xamã. As marcas são cicatrizes de faca, sem tinta e sem brilho; é um homem de expedição.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ressecado_da_travessia
+    vaga: 19
+    nome: Ressecado da Travessia
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: faccao
+      detalhe: colmeia_hospedeiros
+      refs: ["lore_nova/races.txt:379", "lore_nova/factions.txt:496", "lore_nova/locations.txt:155"]
+    anatomia:
+      plano_corporal: bipede_curvado
+      material: madeira_fibra
+      escala: humana
+      locomocao: rasteja
+      percepcao: sangue_cheiro
+      texto: >-
+        Um Hospedeiro de Xylos mandado pela Colmeia para o lado seco da fronteira, onde o fungo dele não
+        sobrevive. O fungo morreu na pele e secou em placas duras, pardas e fibrosas, rachadas como casca
+        de pão velho, que se levantam nas bordas e mostram por baixo a carne cinzenta e encolhida. Os
+        crescimentos atrás das orelhas murcharam em leques secos. Os lábios racharam até as gengivas, a
+        língua está grossa e escura, e os dedos ficaram secos e pontudos como gravetos.
+    silhueta: Uma pessoa encolhida, rastejando de joelhos, coberta de placas pardas levantadas como escamas de pinha.
+    comportamento: >-
+      Rasteja pela faixa da fronteira atrás de qualquer umidade: poça, cantil, ferida. Quando acha
+      alguém sangrando, agarra e bebe da ferida com a boca rachada, e as placas amolecem e fecham por um
+      tempo. A Colmeia não os chama de volta.
+    papel_tatico: drenador
+    arquetipo: predador
+    categoria: lacaio
+    faccao: colmeia_hospedeiros
+    mecanica_assinatura:
+      carta: cri_ressecado_da_travessia_boca_rachada
+      frase: >-
+        Bebe das feridas abertas: tira Vitalidade de quem já está ferido e, a cada gole, as placas secas
+        amolecem e fecham por cima da carne.
+    contra_jogo: Fechar as feridas antes que ele chegue; seco, as placas racham e se partem fácil, e fogo o desmancha.
+    gancho: >-
+      As criaturas de um lado da fronteira não cruzam para o outro; a Colmeia dos Hospedeiros manda gente
+      cruzar para saber por quê, e quem vai não volta igual.
+    habitat: [fs_fronteira_xylos]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 2
+    telegrafo: "{nome} levanta o rosto rachado e fareja o ar, de boca aberta, para o lado de quem sangra."
+    description: Um Hospedeiro de Xylos ressecado no lado seco da fronteira, de fungo morto em placas rachadas, que rasteja para beber das feridas.
+    perigo: Baixo
+    lore: >-
+      A Colmeia dos Hospedeiros quer saber o que há no escuro seco do outro lado da fronteira, e manda
+      gente. O fungo deles não vive ali: morre na pele e seca em placas pardas que racham e se levantam,
+      e quem foi rasteja atrás de qualquer umidade, poça, cantil ou ferida. Bebem do sangue de quem
+      acham, e as placas amolecem por um tempo. A Colmeia não os chama de volta, e os Hospedeiros do lado
+      úmido fingem que não os ouvem.
+    aparencia: >-
+      Humano encolhido e rastejante, pele coberta de placas pardas de fungo seco rachadas e levantadas
+      nas bordas sobre carne cinzenta encolhida, leques secos murchos atrás das orelhas, lábios rachados
+      até as gengivas, dedos secos e pontudos como gravetos.
+    como_se_luta: >-
+      Bebe das feridas abertas e endurece a cada gole; fechar as feridas antes que ele chegue. Seco, as
+      placas se partem fácil, e fogo o desmancha.
+    related_entities: [fs_fronteira_xylos, colmeia_hospedeiros]
+    arte:
+      visual: >-
+        Humano adulto magro, de joelhos e mãos no chão, rastejando. Pele coberta de placas de fungo morto
+        pardas e cinzentas, rachadas em polígonos, de bordas levantadas como escamas de pinha; nas
+        frestas, carne acinzentada e enrugada. Atrás das orelhas, leques de fungo murchos e secos. Lábios
+        rachados até as gengivas, língua escura. Restos de roupa de fibra trançada.
+      composicao: >-
+        Fronteira: chão de folhas secas e quebradiças; atrás, a parede úmida e verde da selva; o
+        Ressecado rastejando na direção de um soldado sentado que enfaixa a própria perna ensanguentada,
+        do mesmo tamanho. Luz seca e amarelada.
+      evitar: Múmia, morto-vivo seco, homem-árvore, Hospedeiro saudável de fungo verde. O fungo está morto e pardo; a tragédia é a sede.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_mascador_de_raiz
+    vaga: 20
+    nome: Mascador de Raiz
+    status: nova
+    substitui: null
+    familia: humanoide_preco
+    origem_lore:
+      fonte: eter
+      detalhe: null
+      refs: ["lore_nova/items.txt:830", "lore_nova/creatures.txt:933"]
+    anatomia:
+      plano_corporal: sessil_ancorado
+      material: madeira_fibra
+      escala: humana
+      locomocao: ancorada
+      percepcao: eter
+      texto: >-
+        Um mago de revelação que veio mascar a Raiz-Que-Lembra onde ela nasce, porque o galho cortado
+        perde a força. Mascou tempo demais. A mandíbula ficou presa à raiz: fibras dela entraram pelas
+        gengivas e pelos cantos da boca, e os dentes da frente cresceram compridos e amarelos em volta
+        dela, como os de um roedor. Está ajoelhado há anos, de joelhos afundados no solo e costas
+        curvadas, com o pescoço esticado e grosso de tendões. Os olhos se mexem rápido.
+    silhueta: Um homem ajoelhado e curvado sobre uma raiz grossa, com a boca grudada nela como quem bebe de uma fonte.
+    comportamento: >-
+      Não sai do lugar, e não pode. Quando há luta perto, masca mais forte e vê onde quem chega está:
+      atrás da árvore, no escuro, nas costas das criaturas. E conta, entre os dentes, às criaturas em
+      volta, o que viu.
+    papel_tatico: suporte
+    arquetipo: conjurador
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_mascador_de_raiz_o_que_se_esconde
+      frase: >-
+        Masca a raiz e vê o que se esconde: enquanto ele mascar, nenhum herói fica escondido, nenhuma
+        emboscada pega e nenhum ataque vem pelas costas das criaturas em volta dele.
+    contra_jogo: >-
+      Cortar a raiz entre ele e o chão o cala por uma rodada; ou derrubá-lo de longe, que ele não sai do
+      lugar, antes de tentar surpreender alguém.
+    gancho: >-
+      A Raiz-Que-Lembra escapa do ocultamento de Thessavar, e quem quer ver através da floresta vai até
+      onde ela nasce e não sai mais.
+    habitat: [floresta_sussurros]
+    inspiracao: []
+    padrao: [enfraquecer, defesa, enfraquecer]
+    a_cada_n: 3
+    telegrafo: "{nome} masca mais depressa, e os olhos dele vão direto para onde você está escondido."
+    description: >-
+      Um mago de revelação de mandíbula presa à Raiz-Que-Lembra, ajoelhado há anos, que vê quem se
+      esconde e o sopra às criaturas.
+    perigo: Médio
+    lore: >-
+      A Raiz-Que-Lembra guarda o mundo de antes de Thessavar e escapa do ocultamento dela, e por isso os
+      magos de revelação a querem. O galho cortado perde a força, e alguns vão até onde a raiz nasce e
+      mascam ali. A dor de ver através da floresta é a dos dentes: crescem em volta da raiz, as fibras
+      entram pela gengiva, e o mago fica. Os que ficaram veem onde quem chega se esconde e contam, entre
+      os dentes, às coisas que vivem em volta.
+    aparencia: >-
+      Homem magro ajoelhado e curvado, joelhos afundados no solo, boca presa a uma raiz grossa por fibras
+      que entram nas gengivas, dentes compridos e amarelos de roedor em volta da raiz, pescoço esticado e
+      grosso de tendões, olhos rápidos e úmidos.
+    como_se_luta: >-
+      Enquanto masca, ninguém se esconde nem pega uma criatura de surpresa. Corte a raiz para calá-lo,
+      ou derrube-o de longe.
+    related_entities: [floresta_sussurros]
+    arte:
+      visual: >-
+        Homem adulto magro, ajoelhado e curvado para a frente, roupas de mago reduzidas a farrapos
+        acinzentados. A boca aberta presa a uma raiz grossa e retorcida de casca clara: fibras finas da
+        raiz entram pelas gengivas e pelos cantos da boca; dentes da frente longos e amarelos crescidos em
+        volta da raiz. Joelhos afundados na terra, mãos agarradas à raiz, pescoço esticado de tendões
+        saltados. Olhos virados para cima, para o observador.
+      composicao: >-
+        Base de uma árvore enorme e antiga, raízes à mostra; o Mascador debruçado sobre uma raiz pálida,
+        diferente das outras; em volta, desfocadas, silhuetas de criaturas da floresta atentas a ele; um
+        aventureiro de tamanho humano na borda do quadro, de mão no bolso. Luz cinza fria.
+      evitar: Druida unido à árvore, homem-árvore, eremita santo. A raiz só entra na boca; o corpo é de homem, magro e preso.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= CRIAS DE APETITE (demônios encarnados) =======================
+  - id: enemy_sombra_espreitadora
+    vaga: 21
+    nome: Sombra Deitada
+    status: reinventada
+    substitui: enemy_sombra_espreitadora
+    ataques: ["Boca do Ventre"]
+    acoes:
+      - "Fica deitada atravessada na trilha, no lugar de uma sombra, até alguém pisar."
+      - "Sobe pela perna de quem pisou e enrola a canela."
+      - "Cola o tubo da boca na pele e bebe enquanto houver calor."
+      - "Cortada na cabeça, solta tudo e foge escorrendo para baixo das folhas."
+    substitui_generico: Sombra Espreitadora
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_thessavar
+      refs: ["lore_nova/npcs.txt:182", "data/codex/world_story/story_corpos_do_abismo.md:38"]
+    anatomia:
+      plano_corporal: serpentiforme
+      material: carne_exposta
+      escala: humana
+      locomocao: rasteja
+      percepcao: calor
+      texto: >-
+        Um verme chato de carne preta, comprido como dois homens deitados e fino como couro de cinto, em
+        que o resíduo de Thessavar tomou corpo a partir de uma lesma de chão da floresta. A cabeça se abre
+        em meia-lua, larga e achatada como lâmina de machado, e sente o calor pela borda. A boca fica na
+        barriga, e dela sai um tubo branco de carne que se cola à pele da presa e bebe. O corpo é úmido e
+        liso e se deita rente ao chão como sombra de galho.
+    silhueta: Uma faixa preta e comprida deitada atravessada na trilha, como a sombra de um galho onde não há galho.
+    comportamento: >-
+      Deita-se onde a sombra devia estar, atravessada nas trilhas, e espera. Quando alguém pisa ou para
+      em cima, sobe pelo tornozelo, enrola a perna e cola o tubo da boca na pele. Bebe devagar e não
+      solta enquanto houver calor.
+    papel_tatico: drenador
+    arquetipo: covarde_oportunista
+    categoria: lacaio
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_sombra_deitada_tubo_do_ventre
+      frase: >-
+        Sobe pela perna de quem pisou nela e bebe pelo tubo da barriga: a cada rodada grudada tira
+        Vitalidade, e tira mais quanto mais tempo fica.
+    contra_jogo: Olhar o chão antes de pisar, porque sombra sem galho em cima é ela; e a cabeça em meia-lua é mole, cortá-la faz o resto soltar.
+    gancho: >-
+      Os guias da floresta olham para cima antes de pisar numa sombra, porque nas trilhas de Thessavar
+      há uma sombra que é carne de verme e bebe de quem pisa nela.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (planárias terrestres)
+        referencia: "Bipalium, a planária cabeça-de-martelo, verme chato terrestre que caça com a faringe saída do ventre"
+        tomou: o corpo chato e comprido, a cabeça em meia-lua e a boca na barriga
+        distancia: a cor de sombra, o tamanho e o hábito de se deitar no lugar da sombra são do resíduo de Thessavar
+    padrao: [ataque, reforco_proprio]
+    a_cada_n: 3
+    telegrafo: "A sombra atravessada na trilha se mexe sem que nada se mexa em cima dela: é {nome}."
+    description: Um verme chato e preto de cabeça em meia-lua, comprido como dois homens, que se deita como sombra na trilha e bebe de quem pisa nele.
+    perigo: Baixo
+    lore: >-
+      Thessavar não quer ser vista, e o que sobra dessa vontade nas trilhas tomou a carne do que estava à
+      mão: um verme de chão, chato e úmido, que cresceu até o comprimento de dois homens. Ele se deita
+      onde a sombra devia estar. Quem pisa nele sente o frio subir pela perna, e depois o tubo da boca,
+      que sai da barriga e bebe. Os guias olham para cima antes de pisar numa sombra: se não há galho, não
+      é sombra.
+    aparencia: >-
+      Verme chato de carne preta úmida e lisa, comprido como dois homens e fino como couro de cinto,
+      cabeça larga em meia-lua como lâmina de machado, boca na barriga de onde sai um tubo branco de
+      carne.
+    como_se_luta: >-
+      Sobe pela perna de quem pisa nele e bebe pela barriga; olhar o chão, porque sombra sem galho em
+      cima é ele. A cabeça em meia-lua é mole, e cortada faz o resto soltar.
+    related_entities: [floresta_sussurros, npc_thessavar]
+    arte:
+      visual: >-
+        Planária terrestre gigante de cabeça em martelo, corpo achatado de três metros, fino como uma
+        tira de couro, preto brilhante e úmido com uma listra mais fosca no dorso. Cabeça larga em forma
+        de meia-lua. Um tubo de carne branca saindo da barriga.
+      composicao: >-
+        Trilha de terra escura; a Sombra Deitada atravessada na trilha como sombra de galho, menos uma
+        parte que já sobe e enrola a bota e a canela de um viajante de tamanho humano, que olha para a
+        frente sem ter percebido. Luz cinza filtrada, com sombras de galhos reais ao lado para comparar.
+      evitar: Sombra viva, espírito, cobra, sanguessuga. É um verme chato de carne, sem olhos e sem escamas; nada nele é fumaça.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_ermitao_de_carcaca
+    vaga: 22
+    nome: Ermitão de Carcaça
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_thessavar
+      refs: ["lore_nova/npcs.txt:182", "data/codex/world_story/story_corpos_do_abismo.md:38"]
+    anatomia:
+      plano_corporal: hospedeiro_parasita
+      material: osso
+      escala: grande
+      locomocao: anda
+      percepcao: calor
+      texto: >-
+        Uma larva pálida e mole, comprida como um homem, de anéis brancos e muitas patinhas curtas, que
+        nunca fica à vista: mora dentro de carcaças. Esvazia por dentro o corpo de um cervo ou de um
+        javali morto, encaixa-se no lugar das tripas e anda com ele. As patas do bicho morto se arrastam,
+        a cabeça pende de lado, e por entre as costelas abertas saem os dedos brancos e compridos da
+        larva, segurando o couro por dentro. O couro e os ossos da carcaça são a casca dela.
+    silhueta: Um cervo morto andando de lado, de cabeça caída, com dedos brancos saindo por entre as costelas.
+    comportamento: >-
+      Anda devagar dentro da carcaça e se deita junto dos bichos mortos da floresta, para não ser vista.
+      Quando a carcaça racha, sai num arrasto rápido e entra no corpo caído mais perto, seja de bicho,
+      seja de gente, e se levanta com ele.
+    papel_tatico: tanque_reativo
+    arquetipo: covarde_oportunista
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_ermitao_de_carcaca_troca_de_casca
+      frase: >-
+        Quando a carcaça que veste é destruída, entra no corpo caído mais perto, inclusive o de outra
+        criatura derrubada nesta luta, e se levanta com ele.
+    contra_jogo: Acertá-la no instante da troca, quando está nua e mole entre uma carcaça e outra; depois disso, afastar os corpos caídos dela.
+    gancho: >-
+      Caçador da floresta desconfia de bicho morto que não fede; o resíduo de Thessavar achou a carne de
+      uma larva que mora dentro das carcaças e anda com elas.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (caranguejo-ermitão)
+        referencia: "Paguroidea, crustáceos de abdômen mole que vivem dentro de conchas alheias e trocam de concha ao crescer"
+        tomou: o corpo mole que veste uma casca alheia e troca de casca
+        distancia: a casca é um bicho morto que ela faz andar, e a troca acontece no meio da luta, para o corpo caído mais perto
+    padrao: [defesa, reforco_proprio, ataque]
+    a_cada_n: 3
+    telegrafo: "A carcaça de {nome} para, e os dedos brancos apertam as costelas por dentro."
+    description: Uma larva pálida do tamanho de um homem que veste carcaças de bichos mortos e, quando uma se parte, entra no corpo caído mais perto.
+    perigo: Médio
+    lore: >-
+      Os caçadores da floresta desconfiam de bicho morto que não fede. Há uma larva branca, do tamanho de
+      um homem, que mora dentro das carcaças: esvazia o corpo de um cervo e anda com ele, de cabeça
+      caída, e por entre as costelas se veem os dedos dela segurando o couro. É do resíduo de Thessavar,
+      que quer não ser visto e achou o lugar onde ninguém olha. Quando a carcaça se parte, ela troca de
+      corpo, e depois de uma luta há sempre um mais fresco.
+    aparencia: >-
+      Carcaça de cervo morto andando de lado, cabeça pendendo, patas arrastadas, costelas abertas por onde
+      saem dedos longos e brancos de uma larva pálida de anéis moles que mora dentro.
+    como_se_luta: >-
+      Veste carcaças e, quando uma se parte, entra no corpo caído mais perto; não deixar corpos por
+      perto, e acertá-la na troca, quando está nua e mole.
+    related_entities: [floresta_sussurros, npc_thessavar]
+    arte:
+      visual: >-
+        Carcaça de cervo adulto, pelagem marrom opaca, cabeça pendurada de lado com os olhos secos, patas
+        dianteiras arrastando, caminhando de modo errado. A caixa torácica aberta mostra, dentro, um corpo
+        pálido e anelado de larva, branco-amarelado e úmido; por entre as costelas saem vários dedos
+        longos, finos e brancos, agarrando o couro por dentro.
+      composicao: >-
+        Clareira escura com outros bichos mortos espalhados; a carcaça andando entre eles; um caçador de
+        tamanho humano, de arco baixado, olha para um cervo caído mais perto, sem ver o que se aproxima.
+        Luz cinza de cima.
+      evitar: Cervo morto-vivo, cervo branco luminoso de muitos chifres, aranha. O cervo está morto e é só casca; o que se mexe é a larva de dentro, e só os dedos aparecem.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_desafiante_rubro
+    vaga: 23
+    nome: Desafiante Rubro
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_urath
+      refs: ["lore_nova/timeline_completa.txt:196", "lore_nova/npcs.txt:163"]
+    anatomia:
+      plano_corporal: quadrupede
+      material: vidro_cristal
+      escala: grande
+      locomocao: anda
+      percepcao: visao
+      texto: >-
+        Um macaco grande da selva, de braços longos e ombros de carregador, em quem o resíduo de Urath
+        subiu pelas raízes da borda e tomou carne. O peito e os ombros se cobriram de placas de vidro
+        vermelho-escuro, grossas como telha, que crescem do osso do esterno para fora e se sobrepõem como
+        uma couraça; nas frestas aparece o músculo cru. O vidro da cara cresceu numa crista sobre a
+        testa, e os olhos, embaixo dela, não piscam. Os nós dos dedos, de tanto bater, estão em carne viva.
+    silhueta: Um macaco enorme sentado nas patas de trás, de peito estufado e brilhante, com uma crista vermelha sobre a testa e os punhos erguidos.
+    comportamento: >-
+      Fica no alto de uma pedra ou de um tronco caído, na fronteira, e olha os que chegam. Escolhe o mais
+      forte, bate no peito de vidro com os punhos até o som ecoar e vai só nele. Os outros não existem
+      para ele, e ele não recua.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador_apice
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_desafiante_rubro_peito_de_vidro
+      frase: >-
+        Bate no peito e escolhe o herói mais forte: só ataca esse, e os golpes dos outros, que ele não
+        reconhece, batem no vidro e fazem pouco.
+    contra_jogo: Deixar o escolhido segurá-lo enquanto os outros acertam as frestas do vidro, onde o músculo está à vista; ou o escolhido recuar, e ele, que não recua, se expõe para seguir.
+    gancho: >-
+      A magia de sangue que sobe do Deserto de Zhur pelas raízes da borda leste é resíduo de Urath, e
+      onde ela toma carne, a carne não aceita nada acima dela.
+    habitat: [fs_fronteira_xylos]
+    inspiracao: []
+    padrao: [ataque, reforco_proprio, ataque_multiplo]
+    a_cada_n: 4
+    telegrafo: "{nome} bate no peito de vidro com os dois punhos, e o som vai e volta entre as árvores."
+    description: Um macaco da fronteira de peito coberto de placas de vidro vermelho, cria do orgulho, que escolhe o mais forte e só luta com ele.
+    perigo: Alto
+    lore: >-
+      Na borda leste, a magia de sangue que sobe do Deserto de Zhur entra pelas raízes, e é resíduo de
+      Urath, o Orgulho. Onde ela tomou carne, tomou a de um macaco grande da selva. O peito dele se cobriu
+      de placas de vidro vermelho, e ele passa os dias no alto de uma pedra olhando quem chega. Escolhe o
+      mais forte, bate no peito até o som ecoar e vai só nele; os outros, para ele, não estão ali. Não
+      recua, e quem vive na fronteira diz que nunca o viu comer.
+    aparencia: >-
+      Macaco grande de braços longos e ombros largos, peito e ombros cobertos de placas sobrepostas de
+      vidro vermelho-escuro como telhas, músculo cru nas frestas, crista de vidro sobre a testa, olhos
+      que não piscam, nós dos dedos em carne viva.
+    como_se_luta: >-
+      Escolhe o herói mais forte e só luta com ele; os golpes dos outros pouco fazem no vidro, mas as
+      frestas mostram o músculo. Ele não recua, e se o escolhido recua ele se expõe para seguir.
+    related_entities: [fs_fronteira_xylos, npc_urath]
+    arte:
+      visual: >-
+        Primata grande semelhante a um gorila de braços mais longos, pelo negro-avermelhado nos braços e
+        nas costas. Peito, ombros e antebraços cobertos de placas grossas sobrepostas de vidro
+        vermelho-escuro translúcido, como telhas, crescendo do esterno; nas frestas, músculo vermelho cru.
+        Crista de vidro vermelho sobre a testa. Olhos amarelos fixos. Nós dos dedos em carne viva.
+      composicao: >-
+        Fronteira: tronco caído enorme, o Desafiante sentado sobre ele batendo no peito; abaixo, um grupo
+        de quatro aventureiros, e ele olhando só para o maior, um guerreiro de armadura que tem metade do
+        tamanho dele. Luz quente avermelhada atravessando o vidro do peito.
+      evitar: Gorila de armadura de metal, gigante de cristal, macaco colossal de cinema. O vidro cresce do osso dele, vermelho e escuro; é um bicho vivo e orgulhoso, não uma estátua.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_enrolado_da_clareira
+    vaga: 24
+    nome: Enrolado da Clareira
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_veleth
+      refs: ["lore_nova/npcs.txt:351", "data/codex/world_story/story_corpos_do_abismo.md:38"]
+    anatomia:
+      plano_corporal: segmentado
+      material: quitina
+      escala: grande
+      locomocao: rola
+      percepcao: luz
+      texto: >-
+        Um tatuzinho de folha, desses que se enrolam, que o resíduo da vergonha fez crescer até o tamanho
+        de um barril deitado. As costas são de catorze placas cinza-chumbo sobrepostas, lisas e duras;
+        por baixo, o ventre é claro e mole, de muitas patas curtas e de duas antenas que tremem. Quando a
+        luz o acha, as placas fecham sobre o ventre e ele vira uma bola perfeita, sem frente nem cara. Rola
+        assim, pesado, por cima do que estiver no caminho.
+    silhueta: Uma bola cinza de placas, do tamanho de um barril, parada numa clareira como uma pedra lavada.
+    comportamento: >-
+      Vive debaixo da folhagem e pasta o que apodrece. Não aguenta luz em cima de si: quando a luz o
+      acha, se fecha numa bola e rola para longe dela, e o que estiver no caminho é esmagado. No escuro
+      desenrola e fica quieto, de ventre exposto.
+    papel_tatico: bruto_de_linha
+    arquetipo: bruto
+    categoria: padrao
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_enrolado_da_clareira_bola_que_foge
+      frase: >-
+        Quando a luz o acha, fecha as placas e rola pela linha inteira para longe dela, esmagando quem
+        estiver no caminho; no escuro fica aberto e mole.
+    contra_jogo: Baixar a luz e atacar o ventre mole enquanto ele está aberto; quem precisa de luz deve mantê-la do lado do grupo, para que ele role para longe.
+    gancho: >-
+      A vergonha quer esconder a cara, e o resíduo dela que caiu na floresta tomou a carne de um bicho
+      que já sabia se fechar.
+    habitat: [floresta_sussurros]
+    inspiracao:
+      - fonte: zoologia (tatuzinho-de-jardim)
+        referencia: "Armadillidium, isópode terrestre que se enrola numa bola perfeita quando ameaçado"
+        tomou: as placas cinza sobrepostas e o enrolar em bola
+        distancia: o tamanho de barril, a fuga da luz e o esmagamento ao rolar são do resíduo da vergonha
+    padrao: [defesa, ataque_multiplo, defesa]
+    a_cada_n: 2
+    telegrafo: "As placas de {nome} estalam uma a uma, da cabeça para a cauda, e ele começa a se fechar."
+    description: Um tatuzinho do tamanho de um barril, cria da vergonha, que se fecha em bola quando a luz o acha e rola por cima de quem está no caminho.
+    perigo: Médio
+    lore: >-
+      A vergonha quer esconder a cara, e o resíduo de Veleth que caiu na floresta achou um bicho que já
+      sabia fazer isso. Um tatuzinho de folha cresceu até o tamanho de um barril e não aguenta
+      luz em cima de si: quando a tocha o acha, ele se fecha em bola e rola para longe, e esmaga quem está
+      no caminho. No escuro, abre e fica quieto, de ventre mole para cima. Os colhedores andam com a luz
+      do lado deles por causa disso.
+    aparencia: >-
+      Tatuzinho do tamanho de um barril, catorze placas cinza-chumbo lisas e sobrepostas nas
+      costas, ventre claro e mole de muitas patas curtas, duas antenas trêmulas; fechado, uma bola
+      perfeita sem cara.
+    como_se_luta: >-
+      Quando a luz o acha, fecha-se e rola pela linha inteira esmagando quem está no caminho; manter a
+      luz do lado do grupo. No escuro fica aberto, e o ventre é mole.
+    related_entities: [floresta_sussurros, npc_veleth]
+    arte:
+      visual: >-
+        Isópode terrestre gigante (tatuzinho-de-jardim) do tamanho de um barril, quase
+        enrolado: placas dorsais cinza-chumbo, lisas, como ardósia molhada, começando a se fechar;
+        ventre pálido amarelado com muitas patinhas curtas e duas antenas finas. Sem olhos visíveis.
+      composicao: >-
+        Clareira escura coberta de folhas podres; uma tocha erguida por um viajante à direita ilumina o
+        bicho, que se fecha; à esquerda, outro viajante no caminho da rolagem, de tamanho humano, com a
+        bola na altura da cintura. Luz quente da tocha contra o escuro.
+      evitar: Tatu mamífero, besouro blindado, pedra viva. É um isópode cinza e liso, de placas como ardósia; fechado, parece pedra, mas tem patas.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  - id: mon_picanco_de_espinheiro
+    vaga: 25
+    nome: Picanço de Espinheiro
+    status: nova
+    substitui: null
+    familia: demonio_encarnado
+    origem_lore:
+      fonte: demonio
+      detalhe: npc_maalrek
+      refs: ["lore_nova/npcs.txt:214", "data/codex/world_story/story_corpos_do_abismo.md:38"]
+    anatomia:
+      plano_corporal: alado
+      material: osso
+      escala: humana
+      locomocao: plana_voa
+      percepcao: visao
+      texto: >-
+        Um pássaro de bico curvo, desses que espetam a caça em espinhos para comer depois, que o resíduo
+        da crueldade fez crescer até o tamanho de um abutre. O bico virou um gancho de osso branco,
+        comprido como faca de esfolar, com um dente na ponta. As penas são cinza e pretas, com uma
+        máscara preta sobre os olhos, e o peito é claro. As patas são fortes demais para um pássaro desses,
+        de dedos grossos que seguram peso. Os olhos são escuros e atentos, e acompanham o que sangra.
+    silhueta: Um pássaro cinza do tamanho de um abutre, de máscara preta, pousado num galho cheio de coisas espetadas.
+    comportamento: >-
+      Faz despensas nos espinheiros da borda: galhos afiados onde espeta bichos e gente ainda vivos, para
+      voltar depois. Não mata de uma vez. Pega quem está sozinho, leva até o galho e espeta, e volta ao
+      mesmo corpo, com gosto, cada vez que ele se mexe.
+    papel_tatico: perseguidor_marca
+    arquetipo: predador
+    categoria: elite
+    faccao: null
+    mecanica_assinatura:
+      carta: cri_picanco_de_espinheiro_despensa
+      frase: >-
+        Espeta um herói num galho afiado: preso, ele sangra a cada rodada até se soltar, e o pássaro volta
+        sempre a ele primeiro.
+    contra_jogo: Soltar logo o espetado, que é quando o pássaro desce; ele não larga a presa que escolheu, então fica previsível.
+    gancho: >-
+      A crueldade segue o sofrimento, e na floresta onde tanta gente se perde há sempre alguém sofrendo;
+      o resíduo dela tomou a carne de um pássaro que já guardava a presa viva.
+    habitat: [floresta_sussurros, fs_fronteira_xylos]
+    inspiracao:
+      - fonte: zoologia (picanços)
+        referencia: "Lanius, pássaros canoros de bico em gancho que espetam presas em espinhos e arame, as 'despensas'"
+        tomou: o bico em gancho, a máscara preta e a despensa de presas espetadas
+        distancia: o tamanho de abutre, a presa humana mantida viva e o retorno à mesma vítima são do resíduo de Maalrek
+    padrao: [ataque, mover, enfraquecer]
+    a_cada_n: 4
+    telegrafo: "{nome} pousa no galho afiado, limpa o bico na casca e inclina a cabeça para o espetado."
+    description: Um pássaro de bico curvo do tamanho de um abutre, cria da crueldade, que espeta gente viva nos galhos e volta sempre ao mesmo corpo.
+    perigo: Alto
+    lore: >-
+      Nos espinheiros da borda da floresta há galhos com coisas espetadas: lagartos, ratos, às vezes uma
+      bota com o pé dentro. São despensas de um pássaro de bico curvo do tamanho de um abutre, que espeta
+      vivo e volta depois, muitas vezes. Maalrek segue o sofrimento, e o resíduo dele achou um bicho que
+      já sabia guardar a presa sofrendo. Quem foi espetado e solto diz que o pássaro inclinava a cabeça, a
+      cada volta, como quem escuta.
+    aparencia: >-
+      Pássaro do tamanho de um abutre, penas cinza e pretas, máscara preta sobre os olhos, peito claro,
+      bico em gancho de osso branco comprido como faca de esfolar com dente na ponta, patas grossas e
+      fortes de dedos que seguram peso.
+    como_se_luta: >-
+      Espeta um herói num galho afiado, onde ele sangra até se soltar, e volta sempre a ele primeiro;
+      soltar logo o espetado, que é quando o pássaro desce.
+    related_entities: [floresta_sussurros, fs_fronteira_xylos, npc_maalrek]
+    arte:
+      visual: >-
+        Picanço tornado enorme, do tamanho de um abutre, plumagem cinza-perolada nas costas, asas e cauda
+        pretas com manchas brancas, máscara preta atravessando os olhos, peito branco-sujo. Bico em gancho
+        longo, de osso branco, com um dente na ponta. Patas grossas cinzentas com garras fortes.
+      composicao: >-
+        Espinheiro seco na borda da floresta, galhos afiados com pequenos bichos espetados; o picanço
+        pousado no galho mais alto, inclinando a cabeça para um soldado espetado pelo ombro num galho
+        grosso abaixo, vivo, do tamanho de um homem; um companheiro corre para soltá-lo. Céu cinza por
+        trás.
+      evitar: Corvo, águia heroica, ave-monstro de rosto humano, fênix. É um pássaro canoro de bico curvo, cinza e de máscara; o horror está na despensa, não num tamanho monstruoso.
+    autor: opus
+    revisor_unicidade: opus-spec-reviewer
+    revisao: aprovada
+
+  # ======================= RETRO (R6) — legado da região, só eixos =======================
+  - {id: mon_urso_de_espinha, nome: "Urso-de-Espinha", status: retro, familia: legado, anatomia: {plano_corporal: quadrupede, material: osso, escala: grande, locomocao: anda, percepcao: sangue_cheiro, texto: "Predador alfa da floresta: pelagem caída, pele purulenta, espinhos de osso. Suas garras fazem feridas que não fecham."}, papel_tatico: bruto_de_linha, arquetipo: predador_apice, categoria: elite}
+  - {id: mon_serpente_raiz, nome: "Serpente-Raiz", status: retro, familia: legado, anatomia: {plano_corporal: serpentiforme, material: madeira_fibra, escala: grande, locomocao: rasteja, percepcao: vibracao, texto: "Indistinguível das raízes até se mover. O veneno carrega um eco do escuro de Thessavar."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: lacaio}
+  - {id: mon_mariposa_sussurro, nome: "Mariposa do Sussurro", status: retro, familia: legado, anatomia: {plano_corporal: alado, material: quitina, escala: miuda, locomocao: plana_voa, percepcao: som, texto: "Repete em suas asas palavras que Thessavar ainda não pronunciou."}, papel_tatico: controlador, arquetipo: covarde_oportunista, categoria: lacaio}
+  - {id: mon_cacador_casca, nome: "Caçador de Casca", status: retro, familia: legado, anatomia: {plano_corporal: bipede_ereto, material: madeira_fibra, escala: humana, locomocao: anda, percepcao: vibracao, texto: "Fica imóvel entre troncos até a floresta decidir quem atravessou sem permissão."}, papel_tatico: emboscador, arquetipo: emboscador, categoria: padrao}

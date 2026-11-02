@@ -1,0 +1,127 @@
+# SPEC-349 Etapa 5: mecânica do Pântano da Melancolia (onda 2). Fonte do gerador
+# scripts/bestiario/gerar_mecanica.py. Chaves: n=nome, t=texto (<=140, sem número), e=efeitos
+# (atalhos d:/a:/c: ou dict da SPEC-330), sig=assinatura (id vem da ficha), f=frequência,
+# fol=Fôlego, pc=palavras-chave, aprox=efeito ideal da ficha -> aproximação da gramática atual.
+# A 1ª Carta é o ataque básico (a que a IA joga com RPG_ENEMY_DECKS=off).
+criaturas:
+  mon_estaqueiro_afogado:
+    cartas:
+      - {n: Estaca de Frente, t: "A estaca sai de dentro do braço e empurra quem encosta na fila.", e: ["d:marcial:perfurante"]}
+      - {n: Fileira de Estacas, sig: 1, t: "Mais uma estaca na lama, rente à anterior; quem chega aos de trás passa por ela.", e: [{kind: protecao, valor: 4}, {kind: taunt, valor: 2}]}
+    aprox: "fileira que fere quem a atravessa -> proteção própria + provocação"
+  mon_romeiro_de_ambar:
+    cartas:
+      - {n: Soco de Placa, t: "O punho coberto de resina cor de chá desce como um martelo de âmbar.", e: ["d:versatil:impactante"]}
+      - {n: Resina que Prende, sig: 1, t: "A resina corre das placas para os pés do alvo e endurece na hora.", e: ["d:leve:impactante", "c:enraizado:2"]}
+  mon_banhado_do_centro:
+    cartas:
+      - {n: Punho de Ferrugem, t: "O braço encharcado de suor negro bate com o peso de um malho velho.", e: ["d:versatil:impactante"]}
+      - {n: Suor de Ferrugem, sig: 1, t: "O suor negro sobe pela lâmina que o feriu e come o fio dela.", e: ["d:leve:corrosivo", "c:desarmado_risco:2"]}
+      - {n: Lama do Sangue, f: cena, t: "Passa as mãos pretas pelo peito e a lama do sangue fecha as feridas por cima.", e: [{kind: protecao, valor: 4}]}
+    aprox: "arma enferrujada até o descanso e cada golpe tira menos -> desarmado_risco por 2 rodadas"
+  mon_castor_de_estacas:
+    cartas:
+      - {n: Rabo de Represa, t: "A cauda chata bate como tábua molhada na altura dos joelhos.", e: ["d:versatil:impactante"]}
+      - {n: Represa, sig: 1, t: "As estacas e os ossos se cruzam na água e partem a cena em dois lados.", e: [{kind: protecao, valor: 4}, {kind: mover_alvo_zona, direcao: afastar}]}
+    aprox: "cena partida em dois lados -> proteção própria + afastar o alvo de zona"
+  mon_patinador_de_oleo:
+    cartas:
+      - {n: Ferrão de Junco, t: "A pata comprida de junco fura e some antes de a película parar de tremer.", e: ["d:marcial:perfurante"]}
+      - {n: Furar e Voltar, sig: 1, t: "Corre sobre a película, fura e volta para longe na mesma volta da água.", e: ["d:leve:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  mon_cagado_de_geada:
+    cartas:
+      - {n: Casco de Geada, t: "O casco coberto de gelo bate de lado contra quem avança sobre o poço.", e: ["d:versatil:gelido"]}
+      - {n: Mordida que Gela, sig: 1, t: "A geada sobe pela mordida e o braço de quem foi pego trava de frio.", e: ["d:leve:gelido", {kind: torpor, valor: 1}]}
+    aprox: "alvo mordido não joga Carta de ataque na rodada seguinte -> torpor (menos dano causado)"
+  mon_fundeiro_da_poca:
+    cartas:
+      - {n: Cuspe de Poça, t: "O tubo da boca cospe água oleosa dura como pedra.", e: ["d:versatil:impactante"]}
+      - {n: Jato de Pedra, sig: 1, t: "Um jato de água oleosa bate como pedra e leva da mão a guarda preparada.", e: ["d:marcial:impactante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+      - {n: Afundar de Novo, f: cena, t: "Desce de volta ao fundo da poça e some da vista de quem ficou na beira.", e: [{kind: esconder, alvo: eu, valor: 2}]}
+    aprox: "arranca a Carta de defesa preparada do alvo -> armadura_comprometida"
+  mon_tritao_de_sobra:
+    cartas:
+      - {n: Pata Extra, t: "Uma pata nascida da ferida bate com a mão aberta, rosada e mole.", e: ["d:versatil:impactante"]}
+      - {n: Brotar, sig: 1, t: "O toco rosado cresce na ferida aberta e vira uma pata de volta ao combate.", e: [{kind: cura, alvo: eu, valor: 3}, {kind: buff_dano, alvo: eu, valor: 1}]}
+      - {n: Cauda de Boi, t: "A cauda larga varre a lama e derruba quem está na frente.", e: ["d:marcial:impactante", {kind: empurrao, valor: 1}]}
+    aprox: "cada Ferimento brota como golpe a mais; fogo/pancada fecham sem brotar -> cura própria + buff de dano"
+  mon_musaranho_de_dente_vermelho:
+    cartas:
+      - {n: Dente de Ferro, t: "Os dentes vermelhos de ferro fecham no tornozelo e rasgam de lado.", e: ["d:marcial:perfurante"]}
+      - {n: Fome que Não Fecha, sig: 1, t: "A mordida bebe do alvo o que o musaranho não consegue guardar.", e: ["d:leve:perfurante", {kind: cura, alvo: eu, valor: 2, se: {engajado: true}}]}
+    aprox: "tira Fôlego e perde Vitalidade quando não morde -> dano com cura própria engajada"
+  mon_borda_que_anda:
+    cartas:
+      - {n: Pata de Turfa, t: "A pata de lodo e raiz cai como um barranco inteiro sobre quem está em frente.", e: ["d:pesada:impactante"]}
+      - {n: Chão que Cede, sig: 1, t: "A faixa de terra firme vira pântano e quem está nela afunda até os joelhos.", e: ["d:marcial:impactante", "c:enraizado:2"], fol: 2}
+      - {n: Estaca Cravada, t: "Uma estaca da crista se solta e é lançada como lança de barro.", e: ["d:versatil:perfurante", {kind: rachadura, valor: 1}], fol: 2}
+      - {n: Lama Funda, f: cena, t: "Mais um ano de turfa sobe pela espinha e o pântano ao redor inteiro responde.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 2}]}
+      - {n: Maré da Borda, f: cena, t: "A borda inteira vira lama de uma vez e a água sobe por cima do chão.", e: ["a:3:impactante", "c:enraizado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_borda_que_anda_lama_funda], padrao: [mover, ataque_multiplo, enfraquecer, ataque], narracao: "{nome} afunda as patas e o barro ao redor sobe até a altura dos tornozelos."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_borda_que_anda_mare_da_borda], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_borda_que_anda_mare_da_borda, a_cada_n: 2, telegrafo: "{nome} range inteira e a água do pântano começa a subir pelas pernas dela."}, narracao: "{nome} perde um ano de turfa por estaca arrancada, mas a borda inteira vira lama."}
+    aprox: "chão firme vira pântano por rodada -> enraizar + afastar; estacas arrancadas recuam a chefe -> fase de 35 %"
+  mon_podador_do_ciclo:
+    cartas:
+      - {n: Podão de Osso, t: "O antebraço curvo de osso desce como foice de jardineiro.", e: ["d:marcial:cortante"]}
+      - {n: Poda, sig: 1, t: "Escolhe o ponto podre da ferida e corta fora o galho, e leva a melhor jogada junto.", e: ["d:marcial:cortante", {kind: rachadura, valor: 1, se: {alvo_tem: sangramento}}, {kind: torpor, valor: 1}], fol: 2}
+      - {n: Passo de Jardim, t: "Recua um passo medido, olhando a ferida como quem escolhe onde cortar.", f: cena, e: [{kind: reposicionar, alvo: eu, valor: 2}, {kind: vantagem, alvo: eu, valor: 1}]}
+    aprox: "corta o Ferimento e a melhor Carta da mão do alvo fica perdida -> rachadura condicional + torpor"
+  mon_jardineiro_de_tumores:
+    cartas:
+      - {n: Esporo Quente, t: "Um esporo dos tumores das costas sai estourando contra o rosto.", e: ["d:versatil:corrosivo"]}
+      - {n: Semear na Ferida, sig: 1, t: "O esporo cai na ferida aberta e pega, e a carne ao redor começa a inchar.", e: ["d:leve:corrosivo", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: corrosivo}], fol: 2}
+    aprox: "ferida semeada não fecha no descanso e vira Cicatriz -> dot corrosivo por 3 rodadas"
+  mon_mula_de_lagrimas:
+    nf: false
+    cartas:
+      - {n: Joelhada de Mula, t: "A barriga esticada balança e o joelho bate onde a carga pesa.", e: ["d:marcial:impactante"]}
+      - {n: Carga que Racha, sig: 1, t: "A lágrima engolida racha por dentro e a tristeza escorre para fora, sobre todos.", e: ["a:2:arcano", "c:desmoralizado:2"], fol: 2, pc: {sacrificio: 1}}
+    aprox: "ao cair, todos perto perdem Fôlego -> dano em área + desmoralizado, ao custo de Vitalidade (sacrifício)"
+  mon_casaco_de_sanguessugas:
+    cartas:
+      - {n: Mão no Casaco, t: "Tira a mão de dentro do casaco já fechada em torno de uma sanguessuga.", e: ["d:marcial:perfurante"]}
+      - {n: Arremesso de Sanguessuga, sig: 1, t: "A sanguessuga voa e gruda; enquanto bebe, o casaco sabe onde está o alvo.", e: ["d:leve:perfurante", {kind: marca, valor: 2}, {kind: sangria, valor: 1}], fol: 2}
+    aprox: "sanguessuga bebe Fôlego a cada rodada -> marca + sangria"
+  mon_turno_vencido:
+    cartas:
+      - {n: Cabeçada de Casca, t: "A casca de argila cinza do crânio bate como pedra de moer.", e: ["d:marcial:impactante"]}
+      - {n: Argila dos Outros, sig: 1, t: "Passa a argila cinza nos outros e a casca deles aguenta o que a dele aguenta.", e: [{kind: protecao, alvo: aliados, valor: 3}, {kind: protecao, valor: 2}]}
+    aprox: "aliados imunes a torpor/medo/silêncio por 1 rodada -> proteção em aliados"
+  mon_regaco_da_margem:
+    cartas:
+      - {n: Braço de Turfa, t: "Um dos quatro braços compridos desce morno e pesado sobre as costas do alvo.", e: ["d:versatil:impactante"]}
+      - {n: Acolher, sig: 1, t: "Os braços fecham o alvo no colo e o embalam até o corpo esquecer de lutar.", e: ["c:atordoado:1", {kind: cura, alvo: eu, valor: 3}], fol: 2}
+      - {n: Colo Fundo, f: cena, t: "A turfa do colo fica funda e morna e o corpo inteiro dela afunda na margem.", e: [{kind: protecao, valor: 5}]}
+    aprox: "alvo preso recupera Fôlego e não age enquanto durar -> atordoado 1 rodada + cura própria"
+  mon_cordao_de_medida:
+    cartas:
+      - {n: Laço de Tendão, t: "O cordão se enrola no pulso do alvo e puxa como corda-guia que mente.", e: ["d:leve:cortante", {kind: empurrao, valor: 1}]}
+      - {n: Devolver, sig: 1, t: "Devolve a jogada: o que o alvo fez a ele, o cordão faz de volta puxando.", e: ["d:marcial:cortante", {kind: empurrao, valor: 1}]}
+    aprox: "devolve a última Carta de ataque do alvo -> golpe cortante + empurrão"
+  mon_maos_no_rosto:
+    cartas:
+      - {n: Palma no Rosto, t: "Uma das mãos a mais se solta do rosto e bate de palma aberta.", e: ["d:marcial:impactante"]}
+      - {n: Virtude Calada, sig: 1, t: "Cobre o rosto de vergonha e o alvo, olhado por um olho só, se cala.", e: ["c:silenciado:2", "d:leve:impactante"], fol: 2}
+    aprox: "alvo joga sem bônus de Virtude -> silenciado 2 rodadas"
+  mon_cisne_de_patina:
+    cartas:
+      - {n: Bico de Cobre, t: "O bico de cobre verde desce como uma picareta curta no ombro.", e: ["d:versatil:perfurante"]}
+      - {n: Envelhecer, sig: 1, t: "O que o bico toca criva e apodrece, e a defesa do alvo perde um grau.", e: ["d:marcial:perfurante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}], fol: 2}
+      - {n: Leque de Seda, f: cena, t: "As penas de seda podre se abrem em leque e cobrem o próprio pescoço.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
+    aprox: "defesa perde um grau por rodada de contato -> armadura_comprometida por 3 rodadas"
+  mon_arraia_de_lodo:
+    cartas:
+      - {n: Cauda de Lodo, t: "A cauda fina chicoteia de baixo da água e rasga o tornozelo.", e: ["d:leve:cortante"]}
+      - {n: Nuvem Parda, sig: 1, t: "Sopra lodo pelas guelras e a nuvem parda tapa o que os outros vão fazer.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, alvo: aliados, valor: 2}]}
+    aprox: "presságio dos outros inimigos fica turvo -> esconder + proteção em aliados"
+  mon_fardo_de_espolio:
+    cartas:
+      - {n: Pinça de Mão, t: "Uma das oito mãos agarra o pulso e não larga.", e: ["d:leve:impactante"]}
+      - {n: Pedágio, sig: 1, t: "Estende a mão aberta: o alvo paga com o fôlego ou o fardo cobra com o que já pegou.", e: ["d:leve:impactante", {kind: cura, alvo: eu, valor: 2, se: {engajado: true}}]}
+    aprox: "alvo escolhe pagar Fôlego ou o Fardo cura um Ferimento -> dano com cura própria engajada"
+  enemy_zumbi_blindado:
+    cartas:
+      - {n: Sacada de Couro, t: "O corpo curtido se joga para a frente como um saco de areia molhada.", e: ["d:marcial:impactante"]}
+      - {n: Couro que Escorrega, sig: 1, t: "Dobra-se sobre si e a lâmina escorrega pelas costas de couro de sela.", e: ["d:leve:impactante", {kind: protecao, valor: 4}, {kind: reposicionar, alvo: eu, valor: 2}]}
+    aprox: "lâmina escorrega e não abre Ferimento; só pancada o amassa -> proteção própria"

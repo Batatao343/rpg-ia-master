@@ -1,0 +1,111 @@
+# SPEC-349 Etapa 5: mecânica de Brekmar (onda 4). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_casco_de_costelas:
+    cartas:
+      - {n: Costela de Proa, t: "A proa rachada desce como um aríete de osso sobre quem está à frente.", e: ["d:pesada:impactante"]}
+      - {n: Porão Fechado, sig: 1, t: "As costelas se fecham sobre o alvo e o levam para o porão, onde todo golpe no casco o alcança.", e: ["d:marcial:impactante", "c:enraizado:2", {kind: protecao, valor: 4}], fol: 2}
+      - {n: Perna de Mastro, t: "Uma perna de madeira de mastro varre a doca e derruba quem está na linha.", e: ["a:3:impactante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Quilha Aberta, f: cena, t: "A quilha de osso range e as costelas de um lado se abrem como portas de porão.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 2}]}
+      - {n: Naufrágio em Pé, f: cena, t: "O casco inteiro tomba para a frente num rolar de tábuas, costelas e ferro velho.", e: ["a:4:impactante", "c:amedrontado:1"], fol: 3}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_casco_de_costelas_quilha_aberta], padrao: [ataque, ataque_multiplo, reforco_proprio, mover], narracao: "{nome} afunda a proa rachada e as costelas de um lado se abrem como portas de porão."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_casco_de_costelas_naufragio_em_pe], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_casco_de_costelas_naufragio_em_pe, a_cada_n: 2, telegrafo: "{nome} inclina o casco inteiro para a frente e as tábuas rangem todas juntas."}, narracao: "{nome} perde as costelas de um lado e tomba em avanço, mais perto do chão e pior."}
+    aprox: "quem está no porão sofre todo golpe que acerta o casco -> enraizar + proteção própria (sem 'engolido')"
+  mon_quilhado_do_estaleiro:
+    cartas:
+      - {n: Crista de Quilha, t: "A crista de osso das costas corta de lado como a proa de um casco velho.", e: ["d:versatil:cortante"]}
+      - {n: Corte de Quilha, sig: 1, t: "Investe de cabeça baixa, atravessa a guarda e acerta também quem está logo atrás.", e: ["d:marcial:cortante", "a:2:cortante", {kind: rachadura, valor: 1}], fol: 2}
+      - {n: Costa de Osso, f: cena, t: "Gira o ombro e deixa a crista branca de frente, dura como casco.", e: [{kind: protecao, valor: 5}]}
+    aprox: "golpe ignora a guarda e atravessa a linha -> rachadura + dano em área"
+  mon_odre_de_oleo:
+    cartas:
+      - {n: Escada na Cara, t: "A escada de acendedor gira e bate de ponta em quem está perto.", e: ["d:marcial:impactante"]}
+      - {n: Bolsa Estourada, sig: 1, t: "A bolsa do pescoço estoura e o óleo de leviatã encharca quem estiver junto.", e: ["a:2:igneo", "c:exposto:2"], fol: 2, pc: {sacrificio: 1}}
+    aprox: "ao cair encharca e o próximo fogo queima em dobro -> dano em área + exposto, com sacrifício"
+  mon_lavado_da_mare_vermelha:
+    cartas:
+      - {n: Mão de Alga, t: "A mão de alga molhada acerta em cheio e puxa a pele.", e: ["d:marcial:impactante"]}
+      - {n: Rastro que Puxa, sig: 1, t: "O caldo da maré escorre pelo chão e arrasta quem pisou nele rumo à água.", e: ["d:leve:impactante", {kind: mover_alvo_zona, direcao: afastar}, "c:enraizado:1"], fol: 2}
+    aprox: "mancha arrasta todos para a água a cada rodada -> afastar de zona + enraizar"
+  mon_cardume_coagulado:
+    cartas:
+      - {n: Mordida de Flanco, t: "Duas ou três cabeças de peixe mordem juntas o braço mais próximo.", e: ["d:versatil:perfurante"]}
+      - {n: Fileira de Bocas, sig: 1, t: "O flanco encosta e todas as bocas mordem juntas, e a mordida o mantém úmido.", e: ["a:3:perfurante", {kind: cura, alvo: eu, valor: 2}], fol: 2}
+    aprox: "tira de cada um encostado e o mantém úmido -> dano em área + cura própria"
+  mon_gato_de_lastro:
+    cartas:
+      - {n: Patada de Chumbo, t: "A pata de osso pesado cai como um peso de balança.", e: ["d:marcial:impactante"]}
+      - {n: Assentar o Peso, sig: 1, t: "Senta em cima do que guarda e a tábua verga: ninguém empurra aquele peso.", e: [{kind: protecao, valor: 5}, {kind: taunt, valor: 2}]}
+    aprox: "ninguém pega ou arrasta o que ele guarda -> proteção própria + provocação"
+  mon_craca_de_amarra:
+    cartas:
+      - {n: Cusparada de Larva, t: "A craca estala e cospe uma larva branca que arde no rosto.", e: ["d:leve:corrosivo"]}
+      - {n: Casca Nova, sig: 1, t: "Cospe larvas sobre um aliado e a casca endurece nele como armadura.", e: ["d:leve:corrosivo", {kind: protecao, alvo: aliados, valor: 4}, {kind: buff_defesa, alvo: aliados, valor: 1}]}
+    aprox: "casca endurece no aliado até alguém quebrá-la -> proteção + defesa em aliados (sem quebra por martelo)"
+  mon_pescador_de_lanterna:
+    cartas:
+      - {n: Bocarra de Peixe, t: "A boca se abre de um lado ao outro do rosto e fecha com todos os dentes.", e: ["d:versatil:perfurante"]}
+      - {n: Luz no Buraco, sig: 1, t: "A isca acende como lanterna num canto escuro e a boca vem junto, sem aviso.", e: ["d:marcial:perfurante", {kind: esconder, alvo: eu, valor: 2}, "c:cego:1"], fol: 2}
+    aprox: "primeiro golpe escondido e não defendível -> esconder + cego"
+  mon_tripeiro_de_fundo:
+    cartas:
+      - {n: Chicote de Tripa, t: "A ponta de trás incha e chicoteia a canela com um estalo úmido.", e: ["d:leve:impactante"]}
+      - {n: Tripas de Cola, sig: 1, t: "Despeja as tripas sobre quem bateu e os presos não saem do lugar.", e: ["c:enraizado:2", "d:leve:impactante"]}
+    aprox: "tripas prendem quem bateu e quem está ao lado até gastarem uma ação -> enraizado 2 rodadas"
+  mon_sangria_de_aluguel:
+    cartas:
+      - {n: Crosta na Cara, t: "A mão cheia de crosta seca bate como uma pedra áspera.", e: ["d:marcial:impactante"]}
+      - {n: Crosta Emprestada, sig: 1, t: "Arranca uma crosta do próprio corpo e a cola na ferida aberta do contratante.", e: [{kind: cura, alvo: aliados, valor: 3}, {kind: protecao, alvo: aliados, valor: 2}]}
+    aprox: "crosta só remenda Ferimento já aberto do contratante -> cura + proteção em aliados"
+  mon_torcido_da_rinha:
+    cartas:
+      - {n: Gancho do Osso Torto, t: "O braço encolhido em gancho sai do ângulo errado e bate no queixo.", e: ["d:versatil:impactante"]}
+      - {n: Osso Mal Colado, sig: 1, t: "Não sente o golpe: a fratura mal colada vira dureza e devolve de onde ninguém espera.", e: ["d:leve:impactante", {kind: protecao, valor: 4}, {kind: buff_dano, alvo: eu, valor: 2}]}
+    aprox: "cada Ferimento que leva vira dureza na rodada seguinte -> proteção + dano próprio"
+  mon_anzolado_da_casa:
+    cartas:
+      - {n: Anzol na Mão, t: "Um anzol de ferro velho rasga a manga e a carne embaixo.", e: ["d:marcial:perfurante"]}
+      - {n: Linha Presa, sig: 1, t: "Prende a linha no alvo e o anzol rasga cada vez que ele se afasta.", e: ["d:leve:perfurante", {kind: marca, valor: 2}, {kind: sangria, valor: 1}], fol: 2}
+    aprox: "linha rasga quando o alvo se afasta ou ataca outro -> marca + sangria"
+  mon_tambor_do_ossario:
+    cartas:
+      - {n: Maça de Crista, t: "A crista oca vibra e bate seca no ombro de quem chega.", e: ["d:versatil:impactante"]}
+      - {n: Toque do Crânio, sig: 1, t: "A crista baixa nas tábuas e o tom grave afrouxa as mãos e empurra para trás.", e: ["a:2:impactante", {kind: empurrao, valor: 2}, {kind: torpor, valor: 1}], fol: 2}
+      - {n: Garganta Cheia, f: cena, t: "Enche o saco da garganta e o tom ressoa nos ossos do próprio crânio.", e: [{kind: protecao, valor: 5}]}
+    aprox: "tom só pega quem pisa o mesmo chão de tábuas -> sem dependência de piso"
+  mon_penhorado_do_poco:
+    cartas:
+      - {n: Dedo de Pau, t: "O dedo de pau, duro como cabo de remo, bate no pulso.", e: ["d:leve:impactante"]}
+      - {n: Penhor, sig: 1, t: "Toma uma coisa de quem acerta e cobra o resgate com o preço subindo.", e: ["d:leve:impactante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}], fol: 1}
+    aprox: "toma item/moeda/carta e só devolve se pagarem -> desarmado_risco 3 rodadas"
+  mon_sino_de_enlace:
+    cartas:
+      - {n: Borda de Carne, t: "A borda do sino de carne balança e bate pesada de lado.", e: ["d:versatil:impactante"]}
+      - {n: Dentro do Sino, sig: 1, t: "Os filamentos puxam o alvo para dentro e as pernas dele passam a ser as do sino.", e: ["c:enraizado:2", "d:leve:impactante", {kind: marca, valor: 2}], fol: 2}
+      - {n: Corda de Filamento, f: cena, t: "Os filamentos se esticam devagar, e a pessoa lá dentro abre mais os braços.", e: [{kind: protecao, valor: 4}, {kind: buff_acerto, valor: 2}]}
+    aprox: "alvo vira hospedeiro e o Sino joga a Carta preparada dele contra os aliados -> enraizar + marca"
+  mon_carranca_de_proa:
+    cartas:
+      - {n: Dentada de Madeira, t: "Os dentes de madeira pintada mordem fundo o braço de quem a feriu.", e: ["d:versatil:perfurante"]}
+      - {n: Só o Primeiro, sig: 1, t: "Vira os olhos pintados para quem bateu mais forte e só ataca essa pessoa.", e: ["d:marcial:perfurante", {kind: taunt, valor: 2}, {kind: buff_dano, alvo: eu, valor: 1}], fol: 2}
+      - {n: Queixo Erguido, f: cena, t: "Ergue o queixo de madeira, e os que lutam ao lado dela ficam mais ousados.", e: [{kind: buff_acerto, alvo: aliados, valor: 2}, {kind: protecao, valor: 4}]}
+  mon_estivador_das_facas:
+    cartas:
+      - {n: Cabo de Faca, t: "Um cabo de faca saído das costas é usado como martelo.", e: ["d:versatil:cortante"]}
+      - {n: Rixa em Volta, sig: 1, t: "A rixa pega em volta e cada um perto dá um golpe de raspão no vizinho.", e: ["a:2:cortante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2}
+    aprox: "quem está encostado em outro dá raspão no vizinho, herói ou inimigo -> dano em área + buff próprio"
+  mon_boia_de_bracos:
+    cartas:
+      - {n: Braço de Afogado, t: "Um braço de afogado sobe da água e agarra o tornozelo.", e: ["d:leve:impactante"]}
+      - {n: Agarrar quem Afoga, sig: 1, t: "Agarra quem está na borda e os dois afundam um pouco a cada vez.", e: ["c:enraizado:2", "d:leve:impactante", {kind: sangria, valor: 1}], fol: 2}
+    aprox: "agarrado não age e é puxado para fora da luta -> enraizado + sangria (sem remoção da cena)"
+  mon_broca_de_costado:
+    cartas:
+      - {n: Conchas Giratórias, t: "As conchas giram uma contra a outra e serram o braço do alvo.", e: ["d:versatil:cortante"]}
+      - {n: Furo no Melhor, sig: 1, t: "Fura o mais inteiro do grupo e o furo vaza a cada rodada.", e: ["d:marcial:perfurante", {kind: sangria, valor: 2}, {kind: marca, valor: 1}], fol: 2}
+    aprox: "furo vaza até o alvo igualar o mais ferido do grupo -> sangria"
+  mon_mao_estendida:
+    cartas:
+      - {n: Mão Aberta e Quente, t: "A mão estendida se fecha em punho de súbito, por baixo da guarda.", e: ["d:versatil:impactante"]}
+      - {n: Aperto, sig: 1, t: "O braço escondido sai de baixo da axila e acerta por onde a guarda não cobre.", e: ["d:pesada:impactante", {kind: rachadura, valor: 1}], fol: 2}
+    aprox: "trégua oferecida: golpe só em quem não atacou na 1ª rodada -> sem condição de traição"

@@ -1,0 +1,142 @@
+# SPEC-349 Etapa 5: mecânica do Deserto de Zhur (onda 5). Formato em pantano_melancolia.yaml.
+criaturas:
+  mon_andarilho_de_duas_idades:
+    cartas:
+      - {n: Mão Velha, t: "O braço velhíssimo cai devagar e com todo o peso de muitos anos.", e: ["d:versatil:impactante"]}
+      - {n: Anos Emprestados, sig: 1, t: "A mão de criança segura o alvo e o tempo dele passa para o outro lado do corpo.", e: ["d:leve:impactante", "c:desmoralizado:2", {kind: cura, alvo: eu, valor: 3}], fol: 2}
+      - {n: Idade Dobrada, f: cena, t: "O lado velho se recolhe contra o peito e o lado de criança respira por dois.", e: [{kind: protecao, valor: 5}]}
+    aprox: "toma o tempo do alvo e o deixa entorpecido na rodada seguinte -> desmoralizado + cura própria"
+  mon_esfolado_da_tempestade:
+    cartas:
+      - {n: Lixa de Antebraço, t: "O antebraço de escamas de vidro raspa a pele e deixa um rastro de lascas.", e: ["d:marcial:cortante"]}
+      - {n: Abraço de Lixa, sig: 1, t: "Esfrega o antebraço escamado no alvo e as lascas levam a proteção que ele tinha.", e: ["d:marcial:cortante", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 3}, {kind: rachadura, valor: 1}], fol: 2}
+  mon_provador_da_borda:
+    cartas:
+      - {n: Pinça de Queixo, t: "As duas metades do queixo fecham em pinça sobre o pulso.", e: ["d:marcial:perfurante"]}
+      - {n: Gosto do Gesto, sig: 1, t: "A língua comprida prova o gesto antes de sair e o alvo perde a cabeça do que ia fazer.", e: ["d:leve:perfurante", {kind: revelar, campo: cartas}, {kind: torpor, valor: 1}], fol: 2}
+    aprox: "revela uma Carta da mão do alvo e a deixa mais cara na rodada -> revelar cartas + torpor"
+  mon_peito_de_geodo:
+    cartas:
+      - {n: Ponta Violeta, t: "Uma ponta de cristal violeta sai do peito aberto e voa em linha reta.", e: ["d:versatil:perfurante"]}
+      - {n: Estouro Violeta, sig: 1, t: "As costelas se abrem e todas as pontas do peito saem de uma vez sobre quem está à frente.", e: ["a:4:perfurante"], fol: 2}
+      - {n: Peito Oco, f: cena, t: "O peito fica vazio e o coração à mostra; o geodo se fecha por cima.", e: [{kind: protecao, valor: 5}]}
+    aprox: "depois do disparo o peito fica oco até a 3ª rodada -> sem janela de vulnerabilidade"
+  mon_fervente_de_ferrugem:
+    cartas:
+      - {n: Picareta de Zhur, t: "A picareta de mineiro doente desce com força de quem não sente mais o braço.", e: ["d:marcial:perfurante"]}
+      - {n: Veias Rebentadas, sig: 1, t: "Abraça o alvo e rebenta as veias do pescoço: o sangue ferve e queima quem está perto.", e: ["a:3:igneo", "c:exposto:1"], fol: 2, pc: {sacrificio: 2}}
+  enemy_mumia_de_po:
+    cartas:
+      - {n: Varal da Liteira, t: "Um dos varais dos ombros gira e bate como um tronco de madeira seca.", e: ["d:versatil:impactante"]}
+      - {n: Pertence ao Rei, sig: 1, t: "Marca quem carrega o que saiu da câmara e o segue pelo campo sem nunca errar.", e: ["d:marcial:impactante", {kind: marca, valor: 3}], fol: 2}
+      - {n: Voz de Liteira, f: cena, t: "Os varais rangem como liteira que levanta e ele endireita as costas.", e: [{kind: buff_dano, valor: 3}, {kind: protecao, valor: 3}]}
+    aprox: "segue o portador do objeto real pelo campo -> marca"
+  mon_varano_vidrado:
+    cartas:
+      - {n: Mordida de Brasa, t: "A mordida queima como pedra posta no fogo e solta fumaça pelas narinas.", e: ["d:versatil:igneo"]}
+      - {n: Tomar Calor, sig: 1, t: "Deita na areia e as costas vidradas ardem: quem o golpeia de perto se queima.", e: [{kind: protecao, valor: 5}, {kind: contra_ataque, dano_base: 3}]}
+      - {n: Rabo de Vidro, t: "O rabo de vidro fundido varre a duna e arranca a pele de quem estiver atrás.", e: ["d:marcial:cortante", {kind: empurrao, valor: 1}], fol: 2}
+    aprox: "costas queimam quem golpeia de perto na rodada seguinte -> proteção + contra-ataque"
+  mon_tatu_de_navalha:
+    cartas:
+      - {n: Casco de Lâminas, t: "Uma cinta do casco, cravejada de lâminas, passa rente e corta.", e: ["d:marcial:cortante"]}
+      - {n: Rolada, sig: 1, t: "Rola duna abaixo através da linha e sai do outro lado cortando quem atravessou.", e: ["d:marcial:cortante", {kind: reposicionar, alvo: eu, valor: 2}]}
+  mon_lambedor_de_halito:
+    cartas:
+      - {n: Tromba Fina, t: "A tromba fina espeta na boca e puxa o ar para fora do peito.", e: ["d:leve:perfurante"]}
+      - {n: Beber o Fôlego, sig: 1, t: "Põe a tromba na boca do alvo e bebe o hálito, e fica pesado de água.", e: ["d:leve:perfurante", {kind: torpor, valor: 1}, {kind: cura, alvo: eu, valor: 2}], fol: 2}
+    aprox: "alvo perde Fôlego e o Lambedor fica pesado -> torpor + cura própria"
+  mon_lastreiro_da_cratera:
+    cartas:
+      - {n: Tripa de Lastro, t: "A tripa comprida chicoteia de cima e enrola no pulso.", e: ["d:marcial:impactante"]}
+      - {n: Solta o Lastro, sig: 1, t: "Solta a pedra do lastro sobre o alvo e o iça pela tripa, longe do chão.", e: ["d:versatil:impactante", {kind: mover_alvo_zona, direcao: afastar}, "c:enraizado:1"], fol: 2}
+    aprox: "alvo suspenso até se soltar -> afastar de zona + enraizado"
+  mon_cavador_de_funil:
+    cartas:
+      - {n: Mandíbula do Funil, t: "As mandíbulas do fundo do funil fecham de uma vez em quem escorregou.", e: ["d:versatil:perfurante"]}
+      - {n: Parede que Desce, sig: 1, t: "Joga areia na parede do funil e o alvo escorrega para dentro, sem passo firme.", e: ["d:pesada:perfurante", {kind: mover_alvo_zona, direcao: aproximar}, "c:enraizado:1"], fol: 2}
+  mon_saltador_de_palafita:
+    cartas:
+      - {n: Dentada de Lebre, t: "Salta sobre as varetas de vidro e fecha os dentes no braço.", e: ["d:marcial:perfurante"]}
+      - {n: Grito Fino, sig: 1, t: "Um grito agudo corta a noite e o bando responde de longe, num salto.", e: ["d:leve:perfurante", {kind: buff_acerto, alvo: aliados, valor: 2}]}
+    aprox: "chama outro Saltador para o combate -> buff de acerto em aliados (sem convocação)"
+  enemy_verme_areia_jovem:
+    cartas:
+      - {n: Boca de Vidro, t: "A boca de vidro fundido sobe da duna e fecha de uma vez.", e: ["d:versatil:perfurante"]}
+      - {n: Bote do Fundo, sig: 1, t: "Some na areia, sobe embaixo do alvo e o engole até ele se soltar.", e: ["d:marcial:perfurante", "c:enraizado:2", {kind: esconder, alvo: eu, valor: 1}], fol: 2}
+      - {n: Rastro de Vidro, t: "Ao passar deixa um rastro de vidro fundido que corta a sola de quem pisa.", e: ["a:2:cortante"], fol: 1}
+  enemy_djinn_menor:
+    cartas:
+      - {n: Rajada de Papo, t: "O papo de vidro esvazia uma rajada curta de areia fina sobre o alvo.", e: ["d:versatil:cortante"]}
+      - {n: Saraiva do Papo, sig: 1, t: "Esvazia o papo inteiro numa rajada sobre todos de um lado.", e: ["a:4:cortante"], fol: 2}
+      - {n: Vento da Borda, f: cena, t: "A pipa se deixa levar pelo vento da borda e sobe para fora do alcance.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 3}]}
+    aprox: "precisa descer às dunas para encher o papo de novo -> carta de cena como recarga"
+  enemy_aranha_de_cristal:
+    cartas:
+      - {n: Mão de Mastro, id: cri_braceiro_da_borda_sul_mao_de_mastro, t: "Um dos braços compridos como mastros desce de cima e esmaga o chão.", e: ["d:pesada:impactante"]}
+      - {n: Beirada Quebrada, sig: 1, t: "Bate as mãos na beirada até ela ceder e quem estava nela fica pendurado.", e: ["d:versatil:impactante", {kind: mover_alvo_zona, direcao: afastar}, "c:enraizado:1"], fol: 2}
+      - {n: Dedos na Pedra, id: cri_braceiro_da_borda_sul_dedos_na_pedra, t: "Os dedos compridos cravam na pedra e a puxam para dentro da queda.", e: ["a:3:impactante", {kind: empurrao, valor: 1}], fol: 2}
+      - {n: Beirada Inteira, id: cri_braceiro_da_borda_sul_beirada_inteira, f: cena, t: "A beirada inteira estala e cede, e o braceiro se segura no vazio.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 2}]}
+      - {n: Queda de Cotovelo, id: cri_braceiro_da_borda_sul_queda_de_cotovelo, f: cena, t: "O cotovelo comprido cai de cima do vazio com o peso de uma torre.", e: ["a:2:impactante"], fol: 2}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_braceiro_da_borda_sul_beirada_inteira], padrao: [enfraquecer, ataque_multiplo, ataque, defesa], narracao: "{nome} firma os dois cotovelos na beirada e a borda inteira treme."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_braceiro_da_borda_sul_queda_de_cotovelo], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_braceiro_da_borda_sul_queda_de_cotovelo, a_cada_n: 2, telegrafo: "{nome} ergue o cotovelo comprido por cima da borda e a sombra cobre você."}, narracao: "{nome} perde um dedo e solta a parede: a queda toda vem junto com ele."}
+    aprox: "a zona mais perto da queda some do campo -> afastar de zona + enraizar"
+  mon_costurado_de_lentes:
+    cartas:
+      - {n: Lasca de Obsidiana, t: "Um disco de obsidiana da mão voa e corta rente.", e: ["d:marcial:cortante"]}
+      - {n: Palma Apontada, sig: 1, t: "A palma de obsidiana aponta e o alvo vira o centro de todas as lentes.", e: ["d:leve:cortante", {kind: marca, valor: 3}, {kind: buff_acerto, alvo: aliados, valor: 1}], fol: 2}
+  mon_couro_pegado:
+    cartas:
+      - {n: Antebraço de Porta, t: "O antebraço de escamas largo como porta bate de lado.", e: ["d:versatil:impactante"]}
+      - {n: Braço de Escamas, sig: 1, t: "Ergue o antebraço de escamas na frente de um dos seus e o golpe bate nele.", e: [{kind: protecao, alvo: aliados, valor: 4}, {kind: taunt, valor: 2}]}
+    aprox: "o próximo golpe contra o aliado bate nas escamas -> proteção em aliados + provocação"
+  mon_maos_de_cinzel:
+    cartas:
+      - {n: Cunha Azul, t: "A mão em cunha azul de cristal bate seca no ombro.", e: ["d:marcial:perfurante"]}
+      - {n: Linha da Racha, sig: 1, t: "Escuta onde o chão racha e bate: a proteção do alvo rachada fica assim.", e: ["d:marcial:perfurante", {kind: rachadura, valor: 2}, {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+  mon_aguadeiro_de_bucho:
+    cartas:
+      - {n: Odre na Cara, t: "O odre inchado do antebraço bate como um saco cheio.", e: ["d:leve:impactante"]}
+      - {n: Tirar a Rolha, sig: 1, t: "Tira a rolha do pulso e dá de beber a um dos seus; a água fecha a ferida dele.", e: [{kind: cura, alvo: aliados, valor: 3}, {kind: protecao, alvo: aliados, valor: 1}]}
+  mon_cacador_sem_calor:
+    cartas:
+      - {n: Faca de Cinza, t: "A faca de cinza e barro entra pelas costas e gela a carne.", e: ["d:marcial:cortante"]}
+      - {n: Entre as Miragens, sig: 1, t: "Imóvel entre as miragens, só aparece quando o primeiro golpe já entrou.", e: ["d:versatil:cortante", {kind: esconder, alvo: eu, valor: 2}], fol: 2}
+  mon_altivo_do_vidro:
+    cartas:
+      - {n: Soco de Peito Estufado, t: "O peito de osso estufado empurra e bate num só movimento.", e: ["d:versatil:impactante"]}
+      - {n: Ofensa Cobrada, sig: 1, t: "Recebe o golpe inteiro de queixo erguido e devolve outro igual e mais forte.", e: [{kind: protecao, valor: 4}, {kind: contra_ataque, dano_base: 5}], fol: 2}
+      - {n: Espinha Arqueada, f: cena, t: "A espinha arqueia para trás e o peito de osso fica em escudo de carne.", e: [{kind: protecao, valor: 6}]}
+    aprox: "devolve o golpe recebido em dobro no mesmo instante -> proteção + contra-ataque"
+  mon_despenseiro_de_espinhos:
+    cartas:
+      - {n: Bico de Corredora, t: "O bico desce como um machado curto sobre a mão que carrega.", e: ["d:marcial:perfurante"]}
+      - {n: Passa Adiante, sig: 1, t: "Arranca o melhor que o alvo tem à mão e o espeta nas costas para dar a outro.", e: ["d:leve:perfurante", {kind: aplicar_condicao, condicao: desarmado_risco, duracao: 3}, {kind: buff_dano, alvo: aliados, valor: 2}], fol: 2}
+    aprox: "toma o consumível/arma e o passa a outra criatura -> desarmado_risco no alvo + buff de dano em aliados"
+  mon_lacrador_de_saidas:
+    cartas:
+      - {n: Cuspe de Escória, t: "Cospe um fio de vidro mole que gruda e queima.", e: ["d:marcial:igneo"]}
+      - {n: Parede Cuspida, sig: 1, t: "Cospe vidro mole numa passagem e o alvo não recua nem foge até quebrar a parede.", e: ["d:leve:igneo", "c:enraizado:2", {kind: sangria, valor: 1}], fol: 2}
+  mon_furador_de_odres:
+    cartas:
+      - {n: Dente de Sovela, t: "O único dente comprido e oco fura a coxa de quem carrega mais.", e: ["d:leve:perfurante"]}
+      - {n: Sovela no Cantil, sig: 1, t: "Fura o cantil e o odre de quem carrega mais; a água cai e leva o fôlego.", e: ["d:leve:perfurante", "c:desmoralizado:2", {kind: torpor, valor: 1}]}
+    aprox: "alvo perde um consumível e não recupera Fôlego -> desmoralizado + torpor"
+  mon_guia_avesso:
+    cartas:
+      - {n: Mão no Ombro, t: "A mão aberta de sal pesa no ombro e gela os ossos.", e: ["d:versatil:impactante"]}
+      - {n: Mão que Vira, sig: 1, t: "Toca o ombro de quem confia: o golpe seguinte dele cai no companheiro mais perto.", e: ["d:leve:impactante", "c:desmoralizado:2", {kind: marca, valor: 2}], fol: 2}
+      - {n: Rosto para Trás, f: cena, t: "O rosto virado para trás sorri, e a pele de sal cobre as costas.", e: [{kind: protecao, valor: 5}]}
+    aprox: "a 1ª Carta de ataque do tocado acerta o companheiro -> desmoralizado + marca (sem desvio de alvo)"
+  enemy_boss_general_escorpiao:
+    cartas:
+      - {n: Mão do Alto, id: cri_trono_de_ajoelhados_mao_do_alto, t: "A mão do corpo ereto no alto aponta e o monte inteiro desce de uma vez.", e: ["d:pesada:impactante"]}
+      - {n: Peso da Reverência, sig: 1, t: "O de cima aponta e os alvos à frente caem de joelhos, sem passo e sem defesa.", e: ["d:versatil:impactante", "c:enraizado:2", {kind: aplicar_condicao, condicao: armadura_comprometida, duracao: 2}], fol: 2}
+      - {n: Joelhos Fundidos, id: cri_trono_de_ajoelhados_joelhos_fundidos, t: "Os ajoelhados fundidos pelo vidro se levantam juntos e varrem o chão.", e: ["a:3:cortante"], fol: 2}
+      - {n: Costas dos Ajoelhados, id: cri_trono_de_ajoelhados_costas_dos_ajoelhados, f: cena, t: "Os de baixo encostam a testa no chão e fazem do monte uma muralha para o de cima.", e: [{kind: protecao, valor: 6}, {kind: taunt, valor: 2}]}
+      - {n: Monte de Joelhos, id: cri_trono_de_ajoelhados_monte_de_joelhos, f: cena, t: "O monte inteiro se ergue e cai de joelhos de uma vez, e o chão afunda sob quem estava perto.", e: ["a:2:impactante", "c:desmoralizado:1"], fol: 2}
+    fases:
+      - {ate_vitalidade_pct: 60, baralho_extra: [cri_trono_de_ajoelhados_costas_dos_ajoelhados], padrao: [defesa, enfraquecer, ataque_multiplo, reforco_proprio], narracao: "{nome} fecha as costas dos ajoelhados ao redor do corpo ereto, que fica ainda mais alto."}
+      - {ate_vitalidade_pct: 40, baralho_extra: [cri_trono_de_ajoelhados_monte_de_joelhos], padrao: [ataque_multiplo, ataque, ataque], assinatura: {carta: cri_trono_de_ajoelhados_monte_de_joelhos, a_cada_n: 2, telegrafo: "{nome} ergue o monte todo, e os ajoelhados começam a tremer juntos."}, narracao: "{nome} perde ajoelhados pelo caminho, e os que restam desabam com ele."}
+    aprox: "alvos à frente ficam de joelhos sem passo nem defesa -> enraizado + armadura_comprometida"

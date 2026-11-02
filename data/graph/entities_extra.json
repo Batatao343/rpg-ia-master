@@ -310,7 +310,7 @@
   "enemy_mumia_de_po": {
     "id": "enemy_mumia_de_po",
     "type": "monster",
-    "name": "Múmia de Pó",
+    "name": "Carregador de Liteira",
     "aliases": [],
     "tags": [
       "deserto_zhur",
@@ -334,7 +334,7 @@
   "enemy_vinha_estranguladora": {
     "id": "enemy_vinha_estranguladora",
     "type": "monster",
-    "name": "Vinha Estranguladora",
+    "name": "Serpente Cipó Constritora",
     "aliases": [],
     "tags": [
       "selva_xylos",
@@ -359,7 +359,7 @@
   "enemy_lobo_invernal": {
     "id": "enemy_lobo_invernal",
     "type": "monster",
-    "name": "Lobo das Geleiras",
+    "name": "Pulga de Forquilha",
     "aliases": [],
     "tags": [
       "skallgard",
@@ -371,7 +371,7 @@
   "enemy_sentinela_ferro": {
     "id": "enemy_sentinela_ferro",
     "type": "monster",
-    "name": "Sentinela de Ferro (Constructo)",
+    "name": "Pajem de Obsidiana",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -384,7 +384,7 @@
   "enemy_horror_esgoto": {
     "id": "enemy_horror_esgoto",
     "type": "monster",
-    "name": "Horror do Esgoto (Ooze)",
+    "name": "Coisa do Esgoto",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -409,7 +409,7 @@
   "enemy_esqueleto_legiao_antiga": {
     "id": "enemy_esqueleto_legiao_antiga",
     "type": "monster",
-    "name": "Esqueleto da Legião Antiga",
+    "name": "Capim de Couraça",
     "aliases": [],
     "tags": [
       "pradaria_ruinas",
@@ -434,7 +434,7 @@
   "enemy_gargula_ferro": {
     "id": "enemy_gargula_ferro",
     "type": "monster",
-    "name": "Gárgula de Ferro",
+    "name": "Rã de Lótus",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -459,7 +459,7 @@
   "enemy_urso_coruja_mutante": {
     "id": "enemy_urso_coruja_mutante",
     "type": "monster",
-    "name": "Urso-Coruja Mutante",
+    "name": "Casuar de Elmo Fundo",
     "aliases": [],
     "tags": [
       "floresta_sussurros",
@@ -471,7 +471,7 @@
   "enemy_elemental_fogo_poluido": {
     "id": "enemy_elemental_fogo_poluido",
     "type": "monster",
-    "name": "Elemental de Fogo Poluído",
+    "name": "Caído do Cadinho",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -507,7 +507,7 @@
   "enemy_boss_general_escorpiao": {
     "id": "enemy_boss_general_escorpiao",
     "type": "monster",
-    "name": "General Escorpião",
+    "name": "Trono de Ajoelhados",
     "aliases": [],
     "tags": [
       "deserto_zhur",
@@ -544,7 +544,7 @@
   "enemy_mimico_bau": {
     "id": "enemy_mimico_bau",
     "type": "monster",
-    "name": "Mímico (Baú)",
+    "name": "Morador do Caldeirão",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -557,7 +557,7 @@
   "enemy_basilisco_caverna": {
     "id": "enemy_basilisco_caverna",
     "type": "monster",
-    "name": "Basilisco da Caverna",
+    "name": "Caramujo de Estalagmite",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -569,7 +569,7 @@
   "enemy_troll_ponte": {
     "id": "enemy_troll_ponte",
     "type": "monster",
-    "name": "Troll de Ponte",
+    "name": "Ponte de Ombros",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -582,7 +582,7 @@
   "enemy_golem_lixo": {
     "id": "enemy_golem_lixo",
     "type": "monster",
-    "name": "Golem de Lixo",
+    "name": "Velório de Sal",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -594,7 +594,7 @@
   "enemy_sombra_espreitadora": {
     "id": "enemy_sombra_espreitadora",
     "type": "monster",
-    "name": "Sombra Espreitadora",
+    "name": "Sombra Deitada",
     "aliases": [],
     "tags": [
       "floresta_sussurros",
@@ -607,7 +607,7 @@
   "enemy_verme_areia_jovem": {
     "id": "enemy_verme_areia_jovem",
     "type": "monster",
-    "name": "Verme da Areia (Jovem)",
+    "name": "Verme de Vidro",
     "aliases": [],
     "tags": [
       "deserto_zhur",
@@ -619,7 +619,7 @@
   "enemy_djinn_menor": {
     "id": "enemy_djinn_menor",
     "type": "monster",
-    "name": "Djinn Menor",
+    "name": "Pipa de Costelas",
     "aliases": [],
     "tags": [
       "deserto_zhur",
@@ -631,7 +631,7 @@
   "enemy_esqueleto_mago": {
     "id": "enemy_esqueleto_mago",
     "type": "monster",
-    "name": "Esqueleto Arcanista",
+    "name": "Iniciado Refratado",
     "aliases": [],
     "tags": [
       "aethelgard",
@@ -656,7 +656,7 @@
   "enemy_yeti": {
     "id": "enemy_yeti",
     "type": "monster",
-    "name": "Yeti das Cavernas",
+    "name": "Corcova Fervente",
     "aliases": [],
     "tags": [
       "skallgard",
@@ -669,7 +669,7 @@
   "enemy_wyvern_jovem": {
     "id": "enemy_wyvern_jovem",
     "type": "monster",
-    "name": "Wyvern Jovem",
+    "name": "Leque de Costelas",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -695,7 +695,7 @@
   "enemy_morcego_vampiro": {
     "id": "enemy_morcego_vampiro",
     "type": "monster",
-    "name": "Morcego Vampiro Gigante",
+    "name": "Lenço do Desfiladeiro",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -707,7 +707,7 @@
   "enemy_aranha_lobo": {
     "id": "enemy_aranha_lobo",
     "type": "monster",
-    "name": "Aranha Lobo",
+    "name": "Saltão Desbotado",
     "aliases": [],
     "tags": [
       "floresta_sussurros",
@@ -719,7 +719,7 @@
   "enemy_zumbi_blindado": {
     "id": "enemy_zumbi_blindado",
     "type": "monster",
-    "name": "Zumbi Blindado",
+    "name": "Curtido da Turfeira",
     "aliases": [],
     "tags": [
       "pantano_melancolia",
@@ -732,7 +732,7 @@
   "enemy_polvo_esgoto": {
     "id": "enemy_polvo_esgoto",
     "type": "monster",
-    "name": "Polvo do Esgoto",
+    "name": "Bagre de Varal",
     "aliases": [],
     "tags": [
       "nova_arcadia",
@@ -744,7 +744,7 @@
   "enemy_fantasma": {
     "id": "enemy_fantasma",
     "type": "monster",
-    "name": "Fantasma",
+    "name": "Nadador Transparente",
     "aliases": [],
     "tags": [
       "aethelgard",
@@ -757,7 +757,7 @@
   "enemy_observador_menor": {
     "id": "enemy_observador_menor",
     "type": "monster",
-    "name": "Observador Menor (Gazer)",
+    "name": "Olhos em Volta",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -769,7 +769,7 @@
   "enemy_minotauro_esqueleto": {
     "id": "enemy_minotauro_esqueleto",
     "type": "monster",
-    "name": "Minotauro Esqueleto",
+    "name": "Boi de Canga",
     "aliases": [],
     "tags": [
       "montanhas_afiadas",
@@ -781,7 +781,7 @@
   "enemy_golem_carne": {
     "id": "enemy_golem_carne",
     "type": "monster",
-    "name": "Golem de Carne",
+    "name": "Encomenda Costurada",
     "aliases": [],
     "tags": [
       "aethelgard",
@@ -793,7 +793,7 @@
   "enemy_aranha_de_cristal": {
     "id": "enemy_aranha_de_cristal",
     "type": "monster",
-    "name": "Aranha de Cristal",
+    "name": "Braceiro da Borda Sul",
     "aliases": [],
     "tags": [
       "deserto_zhur",
@@ -1305,5 +1305,3281 @@
       "home_location_id": "na_anel_dourado",
       "role": "lavadeira élfica dos criados do Anel Dourado"
     }
+  },
+  "mon_doador_inacabado": {
+    "id": "mon_doador_inacabado",
+    "type": "monster",
+    "name": "Doador Inacabado",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_dentado_de_eras": {
+    "id": "mon_dentado_de_eras",
+    "type": "monster",
+    "name": "Dentado de Eras",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_avesso_de_oghma": {
+    "id": "mon_avesso_de_oghma",
+    "type": "monster",
+    "name": "Avesso de Oghma",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fervido_da_corrente": {
+    "id": "mon_fervido_da_corrente",
+    "type": "monster",
+    "name": "Fervido da Corrente",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cacao_de_lastro": {
+    "id": "mon_cacao_de_lastro",
+    "type": "monster",
+    "name": "Cação de Lastro",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bigua_de_vidro": {
+    "id": "mon_bigua_de_vidro",
+    "type": "monster",
+    "name": "Biguá de Vidro",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aranha_de_bolha": {
+    "id": "mon_aranha_de_bolha",
+    "type": "monster",
+    "name": "Aranha de Bolha",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lesma_de_penacho": {
+    "id": "mon_lesma_de_penacho",
+    "type": "monster",
+    "name": "Lesma de Penacho",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ourico_de_lajedo": {
+    "id": "mon_ourico_de_lajedo",
+    "type": "monster",
+    "name": "Ouriço de Lajedo",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cupinzeiro_de_vidro": {
+    "id": "mon_cupinzeiro_de_vidro",
+    "type": "monster",
+    "name": "Cupinzeiro de Vidro",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_camarao_faxineiro": {
+    "id": "mon_camarao_faxineiro",
+    "type": "monster",
+    "name": "Camarão Faxineiro",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_quimera_cristal": {
+    "id": "mon_quimera_cristal",
+    "type": "monster",
+    "name": "Ariranha de Arcada",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_peito_de_sino": {
+    "id": "mon_peito_de_sino",
+    "type": "monster",
+    "name": "Peito de Sino",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mao_de_oghma": {
+    "id": "mon_mao_de_oghma",
+    "type": "monster",
+    "name": "Mão de Oghma",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_alambique_de_carne": {
+    "id": "mon_alambique_de_carne",
+    "type": "monster",
+    "name": "Alambique de Carne",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aspirante_de_coral": {
+    "id": "mon_aspirante_de_coral",
+    "type": "monster",
+    "name": "Aspirante de Coral",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_comedor_de_alga": {
+    "id": "mon_comedor_de_alga",
+    "type": "monster",
+    "name": "Comedor de Alga",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lambedor_de_aboboda": {
+    "id": "mon_lambedor_de_aboboda",
+    "type": "monster",
+    "name": "Lambedor de Abóbada",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pernalta_do_conselho": {
+    "id": "mon_pernalta_do_conselho",
+    "type": "monster",
+    "name": "Pernalta do Conselho",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_veu_faminto": {
+    "id": "mon_veu_faminto",
+    "type": "monster",
+    "name": "Véu Faminto",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_novelo_de_anzois": {
+    "id": "mon_novelo_de_anzois",
+    "type": "monster",
+    "name": "Novelo de Anzóis",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_subida_de_cracas": {
+    "id": "mon_subida_de_cracas",
+    "type": "monster",
+    "name": "Subida de Cracas",
+    "aliases": [],
+    "tags": [
+      "aethelgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_casco_de_costelas": {
+    "id": "mon_casco_de_costelas",
+    "type": "monster",
+    "name": "Casco de Costelas",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_quilhado_do_estaleiro": {
+    "id": "mon_quilhado_do_estaleiro",
+    "type": "monster",
+    "name": "Quilhado do Estaleiro",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_odre_de_oleo": {
+    "id": "mon_odre_de_oleo",
+    "type": "monster",
+    "name": "Odre de Óleo",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lavado_da_mare_vermelha": {
+    "id": "mon_lavado_da_mare_vermelha",
+    "type": "monster",
+    "name": "Lavado da Maré Vermelha",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cardume_coagulado": {
+    "id": "mon_cardume_coagulado",
+    "type": "monster",
+    "name": "Cardume Coagulado",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gato_de_lastro": {
+    "id": "mon_gato_de_lastro",
+    "type": "monster",
+    "name": "Gato de Lastro",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_craca_de_amarra": {
+    "id": "mon_craca_de_amarra",
+    "type": "monster",
+    "name": "Craca de Amarra",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pescador_de_lanterna": {
+    "id": "mon_pescador_de_lanterna",
+    "type": "monster",
+    "name": "Pescador de Lanterna",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tripeiro_de_fundo": {
+    "id": "mon_tripeiro_de_fundo",
+    "type": "monster",
+    "name": "Tripeiro de Fundo",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sangria_de_aluguel": {
+    "id": "mon_sangria_de_aluguel",
+    "type": "monster",
+    "name": "Sangria de Aluguel",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_torcido_da_rinha": {
+    "id": "mon_torcido_da_rinha",
+    "type": "monster",
+    "name": "Torcido da Rinha",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_anzolado_da_casa": {
+    "id": "mon_anzolado_da_casa",
+    "type": "monster",
+    "name": "Anzolado da Casa",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tambor_do_ossario": {
+    "id": "mon_tambor_do_ossario",
+    "type": "monster",
+    "name": "Tambor do Ossário",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_penhorado_do_poco": {
+    "id": "mon_penhorado_do_poco",
+    "type": "monster",
+    "name": "Penhorado do Poço",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sino_de_enlace": {
+    "id": "mon_sino_de_enlace",
+    "type": "monster",
+    "name": "Sino de Enlace",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carranca_de_proa": {
+    "id": "mon_carranca_de_proa",
+    "type": "monster",
+    "name": "Carranca de Proa",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_estivador_das_facas": {
+    "id": "mon_estivador_das_facas",
+    "type": "monster",
+    "name": "Estivador das Facas",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_boia_de_bracos": {
+    "id": "mon_boia_de_bracos",
+    "type": "monster",
+    "name": "Boia de Braços",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_broca_de_costado": {
+    "id": "mon_broca_de_costado",
+    "type": "monster",
+    "name": "Broca de Costado",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mao_estendida": {
+    "id": "mon_mao_estendida",
+    "type": "monster",
+    "name": "Mão Estendida",
+    "aliases": [],
+    "tags": [
+      "brekmar",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escama_revirada": {
+    "id": "mon_escama_revirada",
+    "type": "monster",
+    "name": "Escama Revirada",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ferida_de_coral": {
+    "id": "mon_ferida_de_coral",
+    "type": "monster",
+    "name": "Ferida de Coral",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_compassado_do_trono": {
+    "id": "mon_compassado_do_trono",
+    "type": "monster",
+    "name": "Compassado do Trono",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_forrado_de_leviata": {
+    "id": "mon_forrado_de_leviata",
+    "type": "monster",
+    "name": "Forrado de Leviatã",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_hospede_do_estomago": {
+    "id": "mon_hospede_do_estomago",
+    "type": "monster",
+    "name": "Hóspede do Estômago",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_barata_das_costelas": {
+    "id": "mon_barata_das_costelas",
+    "type": "monster",
+    "name": "Barata das Costelas",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_estrela_de_alavanca": {
+    "id": "mon_estrela_de_alavanca",
+    "type": "monster",
+    "name": "Estrela de Alavanca",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_andarilho_de_cracas": {
+    "id": "mon_andarilho_de_cracas",
+    "type": "monster",
+    "name": "Andarilho de Cracas",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_touro_de_banha": {
+    "id": "mon_touro_de_banha",
+    "type": "monster",
+    "name": "Touro de Banha",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saltador_de_poca": {
+    "id": "mon_saltador_de_poca",
+    "type": "monster",
+    "name": "Saltador de Poça",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bruxa_de_carcaca": {
+    "id": "mon_bruxa_de_carcaca",
+    "type": "monster",
+    "name": "Bruxa de Carcaça",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_petrel_de_papo_cheio": {
+    "id": "mon_petrel_de_papo_cheio",
+    "type": "monster",
+    "name": "Petrel de Papo Cheio",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_esfolado_de_sal": {
+    "id": "mon_esfolado_de_sal",
+    "type": "monster",
+    "name": "Esfolado de Sal",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_contrabandista_vitreo": {
+    "id": "mon_contrabandista_vitreo",
+    "type": "monster",
+    "name": "Contrabandista Vítreo",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caldeireiro_de_oleo": {
+    "id": "mon_caldeireiro_de_oleo",
+    "type": "monster",
+    "name": "Caldeireiro de Óleo",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_acendedor_de_naufragios": {
+    "id": "mon_acendedor_de_naufragios",
+    "type": "monster",
+    "name": "Acendedor de Naufrágios",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_remo_acorrentado": {
+    "id": "mon_remo_acorrentado",
+    "type": "monster",
+    "name": "Remo Acorrentado",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ventre_partilhado": {
+    "id": "mon_ventre_partilhado",
+    "type": "monster",
+    "name": "Ventre Partilhado",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_balsa_de_ultimo_dia": {
+    "id": "mon_balsa_de_ultimo_dia",
+    "type": "monster",
+    "name": "Balsa de Último Dia",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gancho_de_esfola": {
+    "id": "mon_gancho_de_esfola",
+    "type": "monster",
+    "name": "Gancho de Esfola",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_raspadeira_de_barbatana": {
+    "id": "mon_raspadeira_de_barbatana",
+    "type": "monster",
+    "name": "Raspadeira de Barbatana",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rancor_de_pincas": {
+    "id": "mon_rancor_de_pincas",
+    "type": "monster",
+    "name": "Rancor de Pinças",
+    "aliases": [],
+    "tags": [
+      "costa_negra",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_andarilho_de_duas_idades": {
+    "id": "mon_andarilho_de_duas_idades",
+    "type": "monster",
+    "name": "Andarilho de Duas Idades",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_esfolado_da_tempestade": {
+    "id": "mon_esfolado_da_tempestade",
+    "type": "monster",
+    "name": "Esfolado da Tempestade",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_provador_da_borda": {
+    "id": "mon_provador_da_borda",
+    "type": "monster",
+    "name": "Provador da Borda",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_peito_de_geodo": {
+    "id": "mon_peito_de_geodo",
+    "type": "monster",
+    "name": "Peito de Geodo",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fervente_de_ferrugem": {
+    "id": "mon_fervente_de_ferrugem",
+    "type": "monster",
+    "name": "Fervente de Ferrugem",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_varano_vidrado": {
+    "id": "mon_varano_vidrado",
+    "type": "monster",
+    "name": "Varano Vidrado",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tatu_de_navalha": {
+    "id": "mon_tatu_de_navalha",
+    "type": "monster",
+    "name": "Tatu de Navalha",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lambedor_de_halito": {
+    "id": "mon_lambedor_de_halito",
+    "type": "monster",
+    "name": "Lambedor de Hálito",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lastreiro_da_cratera": {
+    "id": "mon_lastreiro_da_cratera",
+    "type": "monster",
+    "name": "Lastreiro da Cratera",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cavador_de_funil": {
+    "id": "mon_cavador_de_funil",
+    "type": "monster",
+    "name": "Cavador de Funil",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saltador_de_palafita": {
+    "id": "mon_saltador_de_palafita",
+    "type": "monster",
+    "name": "Saltador de Palafita",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_costurado_de_lentes": {
+    "id": "mon_costurado_de_lentes",
+    "type": "monster",
+    "name": "Costurado de Lentes",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_couro_pegado": {
+    "id": "mon_couro_pegado",
+    "type": "monster",
+    "name": "Couro Pegado",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_maos_de_cinzel": {
+    "id": "mon_maos_de_cinzel",
+    "type": "monster",
+    "name": "Mãos de Cinzel",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aguadeiro_de_bucho": {
+    "id": "mon_aguadeiro_de_bucho",
+    "type": "monster",
+    "name": "Aguadeiro de Bucho",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cacador_sem_calor": {
+    "id": "mon_cacador_sem_calor",
+    "type": "monster",
+    "name": "Caçador Sem Calor",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_altivo_do_vidro": {
+    "id": "mon_altivo_do_vidro",
+    "type": "monster",
+    "name": "Altivo do Vidro",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_despenseiro_de_espinhos": {
+    "id": "mon_despenseiro_de_espinhos",
+    "type": "monster",
+    "name": "Despenseiro de Espinhos",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lacrador_de_saidas": {
+    "id": "mon_lacrador_de_saidas",
+    "type": "monster",
+    "name": "Lacrador de Saídas",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_furador_de_odres": {
+    "id": "mon_furador_de_odres",
+    "type": "monster",
+    "name": "Furador de Odres",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_guia_avesso": {
+    "id": "mon_guia_avesso",
+    "type": "monster",
+    "name": "Guia Avesso",
+    "aliases": [],
+    "tags": [
+      "deserto_zhur",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lixado_da_fronteira": {
+    "id": "mon_lixado_da_fronteira",
+    "type": "monster",
+    "name": "Lixado da Fronteira",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_abafador_de_candeias": {
+    "id": "mon_abafador_de_candeias",
+    "type": "monster",
+    "name": "Abafador de Candeias",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fechado_de_escapulas": {
+    "id": "mon_fechado_de_escapulas",
+    "type": "monster",
+    "name": "Fechado de Escápulas",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_virado_do_avesso": {
+    "id": "mon_virado_do_avesso",
+    "type": "monster",
+    "name": "Virado do Avesso",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_calado_das_guelras": {
+    "id": "mon_calado_das_guelras",
+    "type": "monster",
+    "name": "Calado das Guelras",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ent_dormindo": {
+    "id": "mon_ent_dormindo",
+    "type": "monster",
+    "name": "Preguiça da Pradaria",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_morcego_rasteiro": {
+    "id": "mon_morcego_rasteiro",
+    "type": "monster",
+    "name": "Morcego Rasteiro",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_besouro_do_estalo": {
+    "id": "mon_besouro_do_estalo",
+    "type": "monster",
+    "name": "Besouro do Estalo",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_onca_vazada": {
+    "id": "mon_onca_vazada",
+    "type": "monster",
+    "name": "Onça Vazada",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarta_de_visgo": {
+    "id": "mon_lagarta_de_visgo",
+    "type": "monster",
+    "name": "Lagarta de Visgo",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_toldo_das_clareiras": {
+    "id": "mon_toldo_das_clareiras",
+    "type": "monster",
+    "name": "Toldo das Clareiras",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vespa_coveira": {
+    "id": "mon_vespa_coveira",
+    "type": "monster",
+    "name": "Vespa Coveira",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bugio_invertido": {
+    "id": "mon_bugio_invertido",
+    "type": "monster",
+    "name": "Bugio Invertido",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_dedos_de_colheita": {
+    "id": "mon_dedos_de_colheita",
+    "type": "monster",
+    "name": "Dedos de Colheita",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_olho_de_petala": {
+    "id": "mon_olho_de_petala",
+    "type": "monster",
+    "name": "Olho de Pétala",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mapa_de_cicatrizes": {
+    "id": "mon_mapa_de_cicatrizes",
+    "type": "monster",
+    "name": "Mapa de Cicatrizes",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ressecado_da_travessia": {
+    "id": "mon_ressecado_da_travessia",
+    "type": "monster",
+    "name": "Ressecado da Travessia",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mascador_de_raiz": {
+    "id": "mon_mascador_de_raiz",
+    "type": "monster",
+    "name": "Mascador de Raiz",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ermitao_de_carcaca": {
+    "id": "mon_ermitao_de_carcaca",
+    "type": "monster",
+    "name": "Ermitão de Carcaça",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_desafiante_rubro": {
+    "id": "mon_desafiante_rubro",
+    "type": "monster",
+    "name": "Desafiante Rubro",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enrolado_da_clareira": {
+    "id": "mon_enrolado_da_clareira",
+    "type": "monster",
+    "name": "Enrolado da Clareira",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_picanco_de_espinheiro": {
+    "id": "mon_picanco_de_espinheiro",
+    "type": "monster",
+    "name": "Picanço de Espinheiro",
+    "aliases": [],
+    "tags": [
+      "floresta_sussurros",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_deitado_na_parede": {
+    "id": "mon_deitado_na_parede",
+    "type": "monster",
+    "name": "Deitado na Parede",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_geodo_da_praga": {
+    "id": "mon_geodo_da_praga",
+    "type": "monster",
+    "name": "Geodo da Praga",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cauda_de_atalaia": {
+    "id": "mon_cauda_de_atalaia",
+    "type": "monster",
+    "name": "Cauda de Atalaia",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_queimado_de_frio": {
+    "id": "mon_queimado_de_frio",
+    "type": "monster",
+    "name": "Queimado de Frio",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bexiga_de_respiro": {
+    "id": "mon_bexiga_de_respiro",
+    "type": "monster",
+    "name": "Bexiga de Respiro",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_saltao_de_galeria": {
+    "id": "mon_saltao_de_galeria",
+    "type": "monster",
+    "name": "Saltão de Galeria",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rolador_de_escarpa": {
+    "id": "mon_rolador_de_escarpa",
+    "type": "monster",
+    "name": "Rolador de Escarpa",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_chicote_de_fenda": {
+    "id": "mon_chicote_de_fenda",
+    "type": "monster",
+    "name": "Chicote de Fenda",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ladrao_de_lume": {
+    "id": "mon_ladrao_de_lume",
+    "type": "monster",
+    "name": "Ladrão de Lume",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bracos_de_tenaz": {
+    "id": "mon_bracos_de_tenaz",
+    "type": "monster",
+    "name": "Braços de Tenaz",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_marco_que_aponta": {
+    "id": "mon_marco_que_aponta",
+    "type": "monster",
+    "name": "Marco que Aponta",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_armador_de_fosso": {
+    "id": "mon_armador_de_fosso",
+    "type": "monster",
+    "name": "Armador de Fosso",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vedado_de_piche": {
+    "id": "mon_vedado_de_piche",
+    "type": "monster",
+    "name": "Vedado de Piche",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_peso_dos_vencidos": {
+    "id": "mon_peso_dos_vencidos",
+    "type": "monster",
+    "name": "Peso dos Vencidos",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tampao_da_camara": {
+    "id": "mon_tampao_da_camara",
+    "type": "monster",
+    "name": "Tampão da Câmara",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tesoura_de_cordada": {
+    "id": "mon_tesoura_de_cordada",
+    "type": "monster",
+    "name": "Tesoura de Cordada",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mastro_de_trofeus": {
+    "id": "mon_mastro_de_trofeus",
+    "type": "monster",
+    "name": "Mastro de Troféus",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mao_da_borda": {
+    "id": "mon_mao_da_borda",
+    "type": "monster",
+    "name": "Mão da Borda",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lingua_de_lima": {
+    "id": "mon_lingua_de_lima",
+    "type": "monster",
+    "name": "Língua de Lima",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pisador_do_salao": {
+    "id": "mon_pisador_do_salao",
+    "type": "monster",
+    "name": "Pisador do Salão",
+    "aliases": [],
+    "tags": [
+      "montanhas_afiadas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_arame_vivo": {
+    "id": "mon_arame_vivo",
+    "type": "monster",
+    "name": "Arame Vivo",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fole_de_costela": {
+    "id": "mon_fole_de_costela",
+    "type": "monster",
+    "name": "Fole de Costela",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rosario_de_vertebras": {
+    "id": "mon_rosario_de_vertebras",
+    "type": "monster",
+    "name": "Rosário de Vértebras",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fila_de_grilhoes": {
+    "id": "mon_fila_de_grilhoes",
+    "type": "monster",
+    "name": "Fila de Grilhões",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lencol_de_chamine": {
+    "id": "mon_lencol_de_chamine",
+    "type": "monster",
+    "name": "Lençol de Chaminé",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_traca_do_sino_mudo": {
+    "id": "mon_traca_do_sino_mudo",
+    "type": "monster",
+    "name": "Traça do Sino Mudo",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_gralha_de_crematorio": {
+    "id": "mon_gralha_de_crematorio",
+    "type": "monster",
+    "name": "Gralha de Crematório",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_porca_da_queda": {
+    "id": "mon_porca_da_queda",
+    "type": "monster",
+    "name": "Porca da Queda",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_centopeia_da_torre_invertida": {
+    "id": "mon_centopeia_da_torre_invertida",
+    "type": "monster",
+    "name": "Centopeia da Torre Invertida",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sorvedouro_do_codigo": {
+    "id": "mon_sorvedouro_do_codigo",
+    "type": "monster",
+    "name": "Sorvedouro do Código",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pavio_da_lista": {
+    "id": "mon_pavio_da_lista",
+    "type": "monster",
+    "name": "Pavio da Lista",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enxerto_da_fornalha": {
+    "id": "mon_enxerto_da_fornalha",
+    "type": "monster",
+    "name": "Enxerto da Fornalha",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vira_costas_da_praca": {
+    "id": "mon_vira_costas_da_praca",
+    "type": "monster",
+    "name": "Vira-Costas da Praça",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_roda_de_mandibulas": {
+    "id": "mon_roda_de_mandibulas",
+    "type": "monster",
+    "name": "Roda de Mandíbulas",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cavadeira_de_unhas": {
+    "id": "mon_cavadeira_de_unhas",
+    "type": "monster",
+    "name": "Cavadeira de Unhas",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_convidado_de_cera": {
+    "id": "mon_convidado_de_cera",
+    "type": "monster",
+    "name": "Convidado de Cera",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escritura_rastejante": {
+    "id": "mon_escritura_rastejante",
+    "type": "monster",
+    "name": "Escritura Rastejante",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_portao_que_morde": {
+    "id": "mon_portao_que_morde",
+    "type": "monster",
+    "name": "Portão que Morde",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_relicario_de_osso": {
+    "id": "mon_relicario_de_osso",
+    "type": "monster",
+    "name": "Relicário da Catedral",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_sangrado_da_clinica": {
+    "id": "mon_sangrado_da_clinica",
+    "type": "monster",
+    "name": "Sangrado da Clínica",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_quebrado_de_vitrine": {
+    "id": "mon_quebrado_de_vitrine",
+    "type": "monster",
+    "name": "Quebrado de Vitrine",
+    "aliases": [],
+    "tags": [
+      "nova_arcadia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nadador_escaldado": {
+    "id": "mon_nadador_escaldado",
+    "type": "monster",
+    "name": "Nadador Escaldado",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ossada_de_pomes": {
+    "id": "mon_ossada_de_pomes",
+    "type": "monster",
+    "name": "Ossada de Pomes",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cabeleira_de_vidro": {
+    "id": "mon_cabeleira_de_vidro",
+    "type": "monster",
+    "name": "Cabeleira de Vidro",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vazado_da_mare": {
+    "id": "mon_vazado_da_mare",
+    "type": "monster",
+    "name": "Vazado da Maré",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_desbotado_da_nevoa": {
+    "id": "mon_desbotado_da_nevoa",
+    "type": "monster",
+    "name": "Desbotado da Névoa",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_turu_de_casco": {
+    "id": "mon_turu_de_casco",
+    "type": "monster",
+    "name": "Turu de Casco",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vela_sem_barco": {
+    "id": "mon_vela_sem_barco",
+    "type": "monster",
+    "name": "Vela sem Barco",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarto_espirrador": {
+    "id": "mon_lagarto_espirrador",
+    "type": "monster",
+    "name": "Lagarto Espirrador",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_bucho_de_praia": {
+    "id": "mon_bucho_de_praia",
+    "type": "monster",
+    "name": "Bucho de Praia",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cobra_de_sangria": {
+    "id": "mon_cobra_de_sangria",
+    "type": "monster",
+    "name": "Cobra de Sangria",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escorpena_de_basalto": {
+    "id": "mon_escorpena_de_basalto",
+    "type": "monster",
+    "name": "Escorpena de Basalto",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tatuzinho_de_afogado": {
+    "id": "mon_tatuzinho_de_afogado",
+    "type": "monster",
+    "name": "Tatuzinho de Afogado",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_doente_de_encomenda": {
+    "id": "mon_doente_de_encomenda",
+    "type": "monster",
+    "name": "Doente de Encomenda",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_puxado_do_oeste": {
+    "id": "mon_puxado_do_oeste",
+    "type": "monster",
+    "name": "Puxado do Oeste",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vigia_de_cor_errada": {
+    "id": "mon_vigia_de_cor_errada",
+    "type": "monster",
+    "name": "Vigia de Cor Errada",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_trepano_de_borda": {
+    "id": "mon_trepano_de_borda",
+    "type": "monster",
+    "name": "Trépano de Borda",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_arpeu_de_bracos": {
+    "id": "mon_arpeu_de_bracos",
+    "type": "monster",
+    "name": "Arpéu de Braços",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ninho_dos_mergulhadores": {
+    "id": "mon_ninho_dos_mergulhadores",
+    "type": "monster",
+    "name": "Ninho dos Mergulhadores",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mastro_dos_ultimos": {
+    "id": "mon_mastro_dos_ultimos",
+    "type": "monster",
+    "name": "Mastro dos Últimos",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_remora_de_conves": {
+    "id": "mon_remora_de_conves",
+    "type": "monster",
+    "name": "Rêmora de Convés",
+    "aliases": [],
+    "tags": [
+      "ophidia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_estaqueiro_afogado": {
+    "id": "mon_estaqueiro_afogado",
+    "type": "monster",
+    "name": "Estaqueiro Afogado",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_romeiro_de_ambar": {
+    "id": "mon_romeiro_de_ambar",
+    "type": "monster",
+    "name": "Romeiro de Âmbar",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_banhado_do_centro": {
+    "id": "mon_banhado_do_centro",
+    "type": "monster",
+    "name": "Banhado do Centro",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_castor_de_estacas": {
+    "id": "mon_castor_de_estacas",
+    "type": "monster",
+    "name": "Castor de Estacas",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_patinador_de_oleo": {
+    "id": "mon_patinador_de_oleo",
+    "type": "monster",
+    "name": "Patinador de Óleo",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cagado_de_geada": {
+    "id": "mon_cagado_de_geada",
+    "type": "monster",
+    "name": "Cágado de Geada",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fundeiro_da_poca": {
+    "id": "mon_fundeiro_da_poca",
+    "type": "monster",
+    "name": "Fundeiro da Poça",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tritao_de_sobra": {
+    "id": "mon_tritao_de_sobra",
+    "type": "monster",
+    "name": "Tritão de Sobra",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_musaranho_de_dente_vermelho": {
+    "id": "mon_musaranho_de_dente_vermelho",
+    "type": "monster",
+    "name": "Musaranho de Dente Vermelho",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_borda_que_anda": {
+    "id": "mon_borda_que_anda",
+    "type": "monster",
+    "name": "Borda que Anda",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_podador_do_ciclo": {
+    "id": "mon_podador_do_ciclo",
+    "type": "monster",
+    "name": "Podador do Ciclo",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_jardineiro_de_tumores": {
+    "id": "mon_jardineiro_de_tumores",
+    "type": "monster",
+    "name": "Jardineiro de Tumores",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mula_de_lagrimas": {
+    "id": "mon_mula_de_lagrimas",
+    "type": "monster",
+    "name": "Mula de Lágrimas",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_casaco_de_sanguessugas": {
+    "id": "mon_casaco_de_sanguessugas",
+    "type": "monster",
+    "name": "Casaco de Sanguessugas",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_turno_vencido": {
+    "id": "mon_turno_vencido",
+    "type": "monster",
+    "name": "Turno Vencido",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_regaco_da_margem": {
+    "id": "mon_regaco_da_margem",
+    "type": "monster",
+    "name": "Regaço da Margem",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cordao_de_medida": {
+    "id": "mon_cordao_de_medida",
+    "type": "monster",
+    "name": "Cordão de Medida",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_maos_no_rosto": {
+    "id": "mon_maos_no_rosto",
+    "type": "monster",
+    "name": "Mãos no Rosto",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cisne_de_patina": {
+    "id": "mon_cisne_de_patina",
+    "type": "monster",
+    "name": "Cisne de Pátina",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_arraia_de_lodo": {
+    "id": "mon_arraia_de_lodo",
+    "type": "monster",
+    "name": "Arraia de Lodo",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fardo_de_espolio": {
+    "id": "mon_fardo_de_espolio",
+    "type": "monster",
+    "name": "Fardo de Espólio",
+    "aliases": [],
+    "tags": [
+      "pantano_melancolia",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vertedor_de_areia": {
+    "id": "mon_vertedor_de_areia",
+    "type": "monster",
+    "name": "Vertedor de Areia",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vidrado_do_morro": {
+    "id": "mon_vidrado_do_morro",
+    "type": "monster",
+    "name": "Vidrado do Morro",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_costas_de_alicerce": {
+    "id": "mon_costas_de_alicerce",
+    "type": "monster",
+    "name": "Costas de Alicerce",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vestido_de_gafanhotos": {
+    "id": "mon_vestido_de_gafanhotos",
+    "type": "monster",
+    "name": "Vestido de Gafanhotos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_fucador_da_semente": {
+    "id": "mon_fucador_da_semente",
+    "type": "monster",
+    "name": "Fuçador da Semente",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_nadador_de_pedra": {
+    "id": "mon_nadador_de_pedra",
+    "type": "monster",
+    "name": "Nadador de Pedra",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cobra_de_legua": {
+    "id": "mon_cobra_de_legua",
+    "type": "monster",
+    "name": "Cobra de Légua",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_rodante_de_espinhos": {
+    "id": "mon_rodante_de_espinhos",
+    "type": "monster",
+    "name": "Rodante de Espinhos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pernalta_das_colunas": {
+    "id": "mon_pernalta_das_colunas",
+    "type": "monster",
+    "name": "Pernalta das Colunas",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarto_de_mudas": {
+    "id": "mon_lagarto_de_mudas",
+    "type": "monster",
+    "name": "Lagarto de Mudas",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_besouro_de_alavanca": {
+    "id": "mon_besouro_de_alavanca",
+    "type": "monster",
+    "name": "Besouro de Alavanca",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carregador_de_ganchos": {
+    "id": "mon_carregador_de_ganchos",
+    "type": "monster",
+    "name": "Carregador de Ganchos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_leitor_de_cativos": {
+    "id": "mon_leitor_de_cativos",
+    "type": "monster",
+    "name": "Leitor de Cativos",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_profanador_cravejado": {
+    "id": "mon_profanador_cravejado",
+    "type": "monster",
+    "name": "Profanador Cravejado",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cauda_emendada": {
+    "id": "mon_cauda_emendada",
+    "type": "monster",
+    "name": "Cauda Emendada",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_desfiado_de_vaelorn": {
+    "id": "mon_desfiado_de_vaelorn",
+    "type": "monster",
+    "name": "Desfiado de Vaelorn",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_arqueiro_de_tendao": {
+    "id": "mon_arqueiro_de_tendao",
+    "type": "monster",
+    "name": "Arqueiro de Tendão",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_egua_de_costas": {
+    "id": "mon_egua_de_costas",
+    "type": "monster",
+    "name": "Égua de Costas",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_cabeca_acima": {
+    "id": "mon_cabeca_acima",
+    "type": "monster",
+    "name": "Cabeça Acima",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_chifres_travados": {
+    "id": "mon_chifres_travados",
+    "type": "monster",
+    "name": "Chifres Travados",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_retalho_das_duas_cidades": {
+    "id": "mon_retalho_das_duas_cidades",
+    "type": "monster",
+    "name": "Retalho das Duas Cidades",
+    "aliases": [],
+    "tags": [
+      "pradaria_ruinas",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lamelas_de_ferrugem": {
+    "id": "mon_lamelas_de_ferrugem",
+    "type": "monster",
+    "name": "Lamelas de Ferrugem",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ariete_de_medula": {
+    "id": "mon_ariete_de_medula",
+    "type": "monster",
+    "name": "Aríete de Medula",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lacado_de_hifas": {
+    "id": "mon_lacado_de_hifas",
+    "type": "monster",
+    "name": "Laçado de Hifas",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_recusado_do_ciclo": {
+    "id": "mon_recusado_do_ciclo",
+    "type": "monster",
+    "name": "Recusado do Ciclo",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_remendado_de_osso": {
+    "id": "mon_remendado_de_osso",
+    "type": "monster",
+    "name": "Remendado de Osso",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tamandua_de_ponte": {
+    "id": "mon_tamandua_de_ponte",
+    "type": "monster",
+    "name": "Tamanduá de Ponte",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarta_da_hora": {
+    "id": "mon_lagarta_da_hora",
+    "type": "monster",
+    "name": "Lagarta da Hora",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_preguica_de_pomar": {
+    "id": "mon_preguica_de_pomar",
+    "type": "monster",
+    "name": "Preguiça de Pomar",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_coandu_de_rebrota": {
+    "id": "mon_coandu_de_rebrota",
+    "type": "monster",
+    "name": "Coandu de Rebrota",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_vespa_oleira": {
+    "id": "mon_vespa_oleira",
+    "type": "monster",
+    "name": "Vespa Oleira",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escavador_das_camaras": {
+    "id": "mon_escavador_das_camaras",
+    "type": "monster",
+    "name": "Escavador das Câmaras",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_viuvo_do_esporo": {
+    "id": "mon_viuvo_do_esporo",
+    "type": "monster",
+    "name": "Viúvo do Esporo",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_surdo_da_colmeia": {
+    "id": "mon_surdo_da_colmeia",
+    "type": "monster",
+    "name": "Surdo da Colmeia",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mascador_de_nectar": {
+    "id": "mon_mascador_de_nectar",
+    "type": "monster",
+    "name": "Mascador de Néctar",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enxertadora_da_uniao": {
+    "id": "mon_enxertadora_da_uniao",
+    "type": "monster",
+    "name": "Enxertadora da União",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_pressa_da_seiva": {
+    "id": "mon_pressa_da_seiva",
+    "type": "monster",
+    "name": "Pressa da Seiva",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_provador_de_cores": {
+    "id": "mon_provador_de_cores",
+    "type": "monster",
+    "name": "Provador de Cores",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_monte_de_alheios": {
+    "id": "mon_monte_de_alheios",
+    "type": "monster",
+    "name": "Monte de Alheios",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_isca_amarrada": {
+    "id": "mon_isca_amarrada",
+    "type": "monster",
+    "name": "Isca Amarrada",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_oco_da_fronteira": {
+    "id": "mon_oco_da_fronteira",
+    "type": "monster",
+    "name": "Oco da Fronteira",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_tropel_sem_saida": {
+    "id": "mon_tropel_sem_saida",
+    "type": "monster",
+    "name": "Tropel Sem Saída",
+    "aliases": [],
+    "tags": [
+      "selva_xylos",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_parado_do_sopro": {
+    "id": "mon_parado_do_sopro",
+    "type": "monster",
+    "name": "Parado do Sopro",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_levantado_de_rubi": {
+    "id": "mon_levantado_de_rubi",
+    "type": "monster",
+    "name": "Levantado de Rubi",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_queimado_de_breu": {
+    "id": "mon_queimado_de_breu",
+    "type": "monster",
+    "name": "Queimado de Breu",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_parelha_carmesim": {
+    "id": "mon_parelha_carmesim",
+    "type": "monster",
+    "name": "Parelha Carmesim",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_desfiado_da_aurora": {
+    "id": "mon_desfiado_da_aurora",
+    "type": "monster",
+    "name": "Desfiado da Aurora",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ermitao_de_elmo": {
+    "id": "mon_ermitao_de_elmo",
+    "type": "monster",
+    "name": "Ermitão de Elmo",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_carrapato_de_mamute": {
+    "id": "mon_carrapato_de_mamute",
+    "type": "monster",
+    "name": "Carrapato de Mamute",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lagarta_sete_invernos": {
+    "id": "mon_lagarta_sete_invernos",
+    "type": "monster",
+    "name": "Lagarta de Sete Invernos",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_mandriao_dois_bicos": {
+    "id": "mon_mandriao_dois_bicos",
+    "type": "monster",
+    "name": "Mandrião de Dois Bicos",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "besta_entropia"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_montaria_cravada": {
+    "id": "mon_montaria_cravada",
+    "type": "monster",
+    "name": "Montaria Cravada",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ferreiro_chama_fria": {
+    "id": "mon_ferreiro_chama_fria",
+    "type": "monster",
+    "name": "Ferreiro de Chama Fria",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_lascador_morno": {
+    "id": "mon_lascador_morno",
+    "type": "monster",
+    "name": "Lascador Morno",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_escuta_do_sinal": {
+    "id": "mon_escuta_do_sinal",
+    "type": "monster",
+    "name": "Escuta do Sinal",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_caldeira_de_peito": {
+    "id": "mon_caldeira_de_peito",
+    "type": "monster",
+    "name": "Caldeira de Peito",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_andas_de_caribu": {
+    "id": "mon_andas_de_caribu",
+    "type": "monster",
+    "name": "Andas de Caribu",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "humanoide_preco"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_ticao_do_juramento": {
+    "id": "mon_ticao_do_juramento",
+    "type": "monster",
+    "name": "Tição do Juramento",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_colecionador_de_poses": {
+    "id": "mon_colecionador_de_poses",
+    "type": "monster",
+    "name": "Colecionador de Poses",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_feltro_do_ventre": {
+    "id": "mon_feltro_do_ventre",
+    "type": "monster",
+    "name": "Feltro do Ventre",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_aperto_da_tregua": {
+    "id": "mon_aperto_da_tregua",
+    "type": "monster",
+    "name": "Aperto da Trégua",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_enegrecido_que_espera": {
+    "id": "mon_enegrecido_que_espera",
+    "type": "monster",
+    "name": "Enegrecido que Espera",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "demonio_encarnado"
+    ],
+    "visibility": "public",
+    "components": {}
+  },
+  "mon_jotun_cinza": {
+    "id": "mon_jotun_cinza",
+    "type": "monster",
+    "name": "Crescido do Clã",
+    "aliases": [],
+    "tags": [
+      "skallgard",
+      "bestiario",
+      "corpo_reescrito"
+    ],
+    "visibility": "public",
+    "components": {}
   }
 }
