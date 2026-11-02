@@ -1,14 +1,14 @@
 {
-  "commit_sha": "468d2af8716415c20434ce8bd30e43bc95381076",
+  "commit_sha": "37427459353c8504944f22746645efd645ccd46d",
   "edges": [
     {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7726
+        "line": 7727
       },
-      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:7727",
+      "source": "endpoint:DELETE:/game/save/{game_id}:api.py:7728",
       "target": "symbol:api.delete_save_endpoint",
       "type": "route_to"
     },
@@ -182,9 +182,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7853
+        "line": 7854
       },
-      "source": "endpoint:GET:/game/chronicle/export:api.py:7854",
+      "source": "endpoint:GET:/game/chronicle/export:api.py:7855",
       "target": "symbol:api.export_chronicle",
       "type": "route_to"
     },
@@ -237,9 +237,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7718
+        "line": 7719
       },
-      "source": "endpoint:GET:/game/saves:api.py:7719",
+      "source": "endpoint:GET:/game/saves:api.py:7720",
       "target": "symbol:api.get_saves",
       "type": "route_to"
     },
@@ -490,9 +490,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7341
+        "line": 7342
       },
-      "source": "endpoint:POST:/game/action/stream:api.py:7342",
+      "source": "endpoint:POST:/game/action/stream:api.py:7343",
       "target": "symbol:api.game_action_stream",
       "type": "route_to"
     },
@@ -501,9 +501,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6867
+        "line": 6868
       },
-      "source": "endpoint:POST:/game/action:api.py:6868",
+      "source": "endpoint:POST:/game/action:api.py:6869",
       "target": "symbol:api.game_action",
       "type": "route_to"
     },
@@ -523,9 +523,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7433
+        "line": 7434
       },
-      "source": "endpoint:POST:/game/cards/prepare:api.py:7434",
+      "source": "endpoint:POST:/game/cards/prepare:api.py:7435",
       "target": "symbol:api.game_cards_prepare",
       "type": "route_to"
     },
@@ -534,9 +534,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7809
+        "line": 7810
       },
-      "source": "endpoint:POST:/game/chronicle/search:api.py:7810",
+      "source": "endpoint:POST:/game/chronicle/search:api.py:7811",
       "target": "symbol:api.search_chronicle_endpoint",
       "type": "route_to"
     },
@@ -567,9 +567,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6887
+        "line": 6888
       },
-      "source": "endpoint:POST:/game/death:api.py:6888",
+      "source": "endpoint:POST:/game/death:api.py:6889",
       "target": "symbol:api.game_death",
       "type": "route_to"
     },
@@ -578,9 +578,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7373
+        "line": 7374
       },
-      "source": "endpoint:POST:/game/equip:api.py:7374",
+      "source": "endpoint:POST:/game/equip:api.py:7375",
       "target": "symbol:api.game_equip",
       "type": "route_to"
     },
@@ -589,9 +589,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7547
+        "line": 7548
       },
-      "source": "endpoint:POST:/game/espolio:api.py:7548",
+      "source": "endpoint:POST:/game/espolio:api.py:7549",
       "target": "symbol:api.game_espolio",
       "type": "route_to"
     },
@@ -600,9 +600,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7575
+        "line": 7576
       },
-      "source": "endpoint:POST:/game/forja:api.py:7576",
+      "source": "endpoint:POST:/game/forja:api.py:7577",
       "target": "symbol:api.game_forja",
       "type": "route_to"
     },
@@ -611,9 +611,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7596
+        "line": 7597
       },
-      "source": "endpoint:POST:/game/levelup:api.py:7597",
+      "source": "endpoint:POST:/game/levelup:api.py:7598",
       "target": "symbol:api.game_levelup",
       "type": "route_to"
     },
@@ -622,9 +622,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7561
+        "line": 7562
       },
-      "source": "endpoint:POST:/game/loja-cartas:api.py:7562",
+      "source": "endpoint:POST:/game/loja-cartas:api.py:7563",
       "target": "symbol:api.game_loja_cartas",
       "type": "route_to"
     },
@@ -40706,7 +40706,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6881
+        "line": 6882
       },
       "source": "module:api",
       "target": "symbol:api.DeathChoiceRequest",
@@ -40871,7 +40871,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7706
+        "line": 7707
       },
       "source": "module:api",
       "target": "symbol:api.SaveSummary",
@@ -41025,7 +41025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5551
+        "line": 5552
       },
       "source": "module:api",
       "target": "symbol:api._action_already_processed",
@@ -41047,7 +41047,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5541
+        "line": 5542
       },
       "source": "module:api",
       "target": "symbol:api._append_player_input",
@@ -41058,7 +41058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6111
+        "line": 6112
       },
       "source": "module:api",
       "target": "symbol:api._apply_action_options",
@@ -41069,7 +41069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6041
+        "line": 6042
       },
       "source": "module:api",
       "target": "symbol:api._apply_play_list",
@@ -41135,7 +41135,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6679
+        "line": 6680
       },
       "source": "module:api",
       "target": "symbol:api._await_projection_db",
@@ -41146,7 +41146,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5833
+        "line": 5834
       },
       "source": "module:api",
       "target": "symbol:api._begin_create_operation",
@@ -41157,7 +41157,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5762
+        "line": 5763
       },
       "source": "module:api",
       "target": "symbol:api._begin_state_mutation",
@@ -41168,7 +41168,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5687
+        "line": 5688
       },
       "source": "module:api",
       "target": "symbol:api._begin_turn_operation",
@@ -41179,7 +41179,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6857
+        "line": 6858
       },
       "source": "module:api",
       "target": "symbol:api._bind_corr",
@@ -41256,7 +41256,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7488
+        "line": 7489
       },
       "source": "module:api",
       "target": "symbol:api._card_reward_mutation",
@@ -41377,7 +41377,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5891
+        "line": 5892
       },
       "source": "module:api",
       "target": "symbol:api._commit_state_mutation",
@@ -41388,7 +41388,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5950
+        "line": 5951
       },
       "source": "module:api",
       "target": "symbol:api._commit_turn",
@@ -41542,7 +41542,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6745
+        "line": 6746
       },
       "source": "module:api",
       "target": "symbol:api._drain_projection",
@@ -41553,7 +41553,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6711
+        "line": 6712
       },
       "source": "module:api",
       "target": "symbol:api._drain_projection_db",
@@ -41564,7 +41564,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6406
+        "line": 6407
       },
       "source": "module:api",
       "target": "symbol:api._early_event",
@@ -41597,7 +41597,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6277
+        "line": 6278
       },
       "source": "module:api",
       "target": "symbol:api._emit_turn_latency_metrics",
@@ -41685,7 +41685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6762
+        "line": 6763
       },
       "source": "module:api",
       "target": "symbol:api._execute_action",
@@ -41707,7 +41707,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5939
+        "line": 5940
       },
       "source": "module:api",
       "target": "symbol:api._fail_operation",
@@ -41718,7 +41718,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5738
+        "line": 5739
       },
       "source": "module:api",
       "target": "symbol:api._failed_pending_operation",
@@ -41839,7 +41839,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6195
+        "line": 6196
       },
       "source": "module:api",
       "target": "symbol:api._latency_log_fields",
@@ -41894,7 +41894,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6644
+        "line": 6645
       },
       "source": "module:api",
       "target": "symbol:api._load_unlocked_or_locked",
@@ -41927,7 +41927,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6296
+        "line": 6297
       },
       "source": "module:api",
       "target": "symbol:api._log_turn",
@@ -41938,7 +41938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7035
+        "line": 7036
       },
       "source": "module:api",
       "target": "symbol:api._log_turn_delivery",
@@ -41949,7 +41949,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5555
+        "line": 5556
       },
       "source": "module:api",
       "target": "symbol:api._mark_action_processed",
@@ -42037,7 +42037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5639
+        "line": 5640
       },
       "source": "module:api",
       "target": "symbol:api._op_rejected",
@@ -42048,7 +42048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5656
+        "line": 5657
       },
       "source": "module:api",
       "target": "symbol:api._op_replayed",
@@ -42059,7 +42059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5631
+        "line": 5632
       },
       "source": "module:api",
       "target": "symbol:api._operation_hash",
@@ -42147,7 +42147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6665
+        "line": 6666
       },
       "source": "module:api",
       "target": "symbol:api._pre_drain_in_turn",
@@ -42158,7 +42158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5572
+        "line": 5573
       },
       "source": "module:api",
       "target": "symbol:api._prepare_checkpoint",
@@ -42169,7 +42169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5592
+        "line": 5593
       },
       "source": "module:api",
       "target": "symbol:api._prepare_chronicle_derivatives",
@@ -42191,7 +42191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6656
+        "line": 6657
       },
       "source": "module:api",
       "target": "symbol:api._projection_owner",
@@ -42235,7 +42235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6845
+        "line": 6846
       },
       "source": "module:api",
       "target": "symbol:api._publish_timeline",
@@ -42312,7 +42312,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6346
+        "line": 6347
       },
       "source": "module:api",
       "target": "symbol:api._record_audit_trace",
@@ -42334,7 +42334,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7015
+        "line": 7016
       },
       "source": "module:api",
       "target": "symbol:api._record_early_delivery",
@@ -42378,7 +42378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5922
+        "line": 5923
       },
       "source": "module:api",
       "target": "symbol:api._release_failed",
@@ -42433,7 +42433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5567
+        "line": 5568
       },
       "source": "module:api",
       "target": "symbol:api._require_saved",
@@ -42499,7 +42499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6376
+        "line": 6377
       },
       "source": "module:api",
       "target": "symbol:api._run_turn",
@@ -42510,7 +42510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6420
+        "line": 6421
       },
       "source": "module:api",
       "target": "symbol:api._run_turn_collected",
@@ -42543,7 +42543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5609
+        "line": 5610
       },
       "source": "module:api",
       "target": "symbol:api._schedule_chronicle_jobs",
@@ -42642,7 +42642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6952
+        "line": 6953
       },
       "source": "module:api",
       "target": "symbol:api._sse",
@@ -42653,7 +42653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6998
+        "line": 6999
       },
       "source": "module:api",
       "target": "symbol:api._sse_log",
@@ -42664,7 +42664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6959
+        "line": 6960
       },
       "source": "module:api",
       "target": "symbol:api._stream_turn",
@@ -42675,7 +42675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7069
+        "line": 7070
       },
       "source": "module:api",
       "target": "symbol:api._stream_turn_events",
@@ -42719,7 +42719,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6290
+        "line": 6291
       },
       "source": "module:api",
       "target": "symbol:api._turn_route",
@@ -42785,7 +42785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5671
+        "line": 5672
       },
       "source": "module:api",
       "target": "symbol:api._validated_receipt",
@@ -42818,7 +42818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7007
+        "line": 7008
       },
       "source": "module:api",
       "target": "symbol:api._worker_done",
@@ -43126,7 +43126,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7727
+        "line": 7728
       },
       "source": "module:api",
       "target": "symbol:api.delete_save_endpoint",
@@ -43159,7 +43159,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7854
+        "line": 7855
       },
       "source": "module:api",
       "target": "symbol:api.export_chronicle",
@@ -43181,7 +43181,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6868
+        "line": 6869
       },
       "source": "module:api",
       "target": "symbol:api.game_action",
@@ -43192,7 +43192,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7342
+        "line": 7343
       },
       "source": "module:api",
       "target": "symbol:api.game_action_stream",
@@ -43214,7 +43214,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7434
+        "line": 7435
       },
       "source": "module:api",
       "target": "symbol:api.game_cards_prepare",
@@ -43225,7 +43225,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6888
+        "line": 6889
       },
       "source": "module:api",
       "target": "symbol:api.game_death",
@@ -43236,7 +43236,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7374
+        "line": 7375
       },
       "source": "module:api",
       "target": "symbol:api.game_equip",
@@ -43247,7 +43247,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7548
+        "line": 7549
       },
       "source": "module:api",
       "target": "symbol:api.game_espolio",
@@ -43258,7 +43258,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7576
+        "line": 7577
       },
       "source": "module:api",
       "target": "symbol:api.game_forja",
@@ -43280,7 +43280,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7597
+        "line": 7598
       },
       "source": "module:api",
       "target": "symbol:api.game_levelup",
@@ -43291,7 +43291,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7562
+        "line": 7563
       },
       "source": "module:api",
       "target": "symbol:api.game_loja_cartas",
@@ -43390,7 +43390,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7719
+        "line": 7720
       },
       "source": "module:api",
       "target": "symbol:api.get_saves",
@@ -43511,7 +43511,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7810
+        "line": 7811
       },
       "source": "module:api",
       "target": "symbol:api.search_chronicle_endpoint",
@@ -94188,7 +94188,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 40
+        "line": 41
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.ThreadMenu",
@@ -94199,7 +94199,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 69
+        "line": 214
+      },
+      "source": "module:services.opening_threads",
+      "target": "symbol:services.opening_threads._anchor_has_race",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 70
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._clip",
@@ -94210,7 +94221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 400
+        "line": 427
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._door_name",
@@ -94221,7 +94232,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 204
+        "line": 222
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._doors_350",
@@ -94232,7 +94243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 118
+        "line": 119
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._eligible_npc",
@@ -94243,7 +94254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 63
+        "line": 64
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._estimate",
@@ -94254,7 +94265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 157
+        "line": 158
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._fallback_doors",
@@ -94265,7 +94276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 54
+        "line": 55
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._fold",
@@ -94276,7 +94287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 200
+        "line": 203
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._get",
@@ -94287,7 +94298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 311
+        "line": 338
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._menu_text",
@@ -94298,7 +94309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 76
+        "line": 77
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._population_api",
@@ -94309,7 +94320,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 107
+        "line": 108
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._public_entity",
@@ -94320,7 +94331,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 245
+        "line": 207
+      },
+      "source": "module:services.opening_threads",
+      "target": "symbol:services.opening_threads._race_keys",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 271
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._rank",
@@ -94331,7 +94353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 101
+        "line": 102
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._secret_entity_ids",
@@ -94342,7 +94364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 59
+        "line": 60
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads._tokens",
@@ -94353,7 +94375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 421
+        "line": 450
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.active_thread",
@@ -94364,7 +94386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 140
+        "line": 141
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.codex_role",
@@ -94375,7 +94397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 462
+        "line": 491
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.consume_thread",
@@ -94386,7 +94408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 432
+        "line": 461
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.door_names",
@@ -94397,7 +94419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 340
+        "line": 367
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.lore_block",
@@ -94408,7 +94430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 325
+        "line": 352
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.menu_block",
@@ -94419,7 +94441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 48
+        "line": 49
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.mode",
@@ -94430,7 +94452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 436
+        "line": 465
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.planner_thread_block",
@@ -94441,7 +94463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 370
+        "line": 397
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.plot_npc_sheet",
@@ -94452,7 +94474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 85
+        "line": 86
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.region_of_location",
@@ -94463,7 +94485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 91
+        "line": 92
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.start_of_region",
@@ -94474,7 +94496,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 256
+        "line": 282
       },
       "source": "module:services.opening_threads",
       "target": "symbol:services.opening_threads.thread_menu",
@@ -95871,7 +95893,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 288
+        "line": 295
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._apply_menu",
@@ -95904,7 +95926,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 342
+        "line": 349
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._legacy_rules",
@@ -95937,7 +95959,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 375
+        "line": 382
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._roll_pool_seed",
@@ -95948,7 +95970,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 510
+        "line": 518
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._template",
@@ -95970,7 +95992,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 351
+        "line": 358
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._thread_rules",
@@ -95981,7 +96003,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 525
+        "line": 533
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._token_payload",
@@ -96003,7 +96025,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 518
+        "line": 526
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.build_start_scenario",
@@ -96014,7 +96036,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 398
+        "line": 405
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.build_start_scenario_ctx",
@@ -96036,7 +96058,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 591
+        "line": 599
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.looks_hostile",
@@ -96047,7 +96069,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 562
+        "line": 570
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.personal_pool_document",
@@ -96058,7 +96080,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 328
+        "line": 335
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.revalidate_scenario",
@@ -96069,7 +96091,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 643
+        "line": 651
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.scenario_to_state_seed",
@@ -96080,7 +96102,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 535
+        "line": 543
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.sign_for_client",
@@ -96091,7 +96113,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 596
+        "line": 604
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.submit_personal_npc",
@@ -96102,7 +96124,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 544
+        "line": 552
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.verified_seed",
@@ -213142,6 +213164,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec351_menu.py",
+        "line": 296
+      },
+      "source": "module:tests.test_spec351_menu",
+      "target": "symbol:tests.test_spec351_menu.test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_menu.py",
         "line": 236
       },
       "source": "module:tests.test_spec351_menu",
@@ -213740,6 +213773,17 @@
       },
       "source": "module:tests.test_spec351_state",
       "target": "symbol:tests.test_spec351_state._state",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 181
+      },
+      "source": "module:tests.test_spec351_state",
+      "target": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
       "type": "defines"
     },
     {
@@ -237034,7 +237078,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6122
+        "line": 6123
       },
       "source": "symbol:api._apply_action_options",
       "target": "symbol:api._apply_play_list",
@@ -237155,7 +237199,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6704
+        "line": 6705
       },
       "source": "symbol:api._await_projection_db",
       "target": "symbol:api._resolve_save_file",
@@ -237166,7 +237210,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6707
+        "line": 6708
       },
       "source": "symbol:api._await_projection_db",
       "target": "symbol:observability.telemetry.log_event",
@@ -237177,7 +237221,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6704
+        "line": 6705
       },
       "source": "symbol:api._await_projection_db",
       "target": "symbol:persistence.load_game_state",
@@ -237188,7 +237232,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5858
+        "line": 5859
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._begin_create_operation.receipt_fn",
@@ -237199,7 +237243,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5834
+        "line": 5835
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._database_profile",
@@ -237210,7 +237254,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5886
+        "line": 5887
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._op_rejected",
@@ -237221,7 +237265,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5870
+        "line": 5871
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._op_replayed",
@@ -237232,7 +237276,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5884
+        "line": 5885
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._op_replayed",
@@ -237243,7 +237287,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5859
+        "line": 5860
       },
       "source": "symbol:api._begin_create_operation",
       "target": "symbol:api._validated_receipt",
@@ -237254,7 +237298,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5859
+        "line": 5860
       },
       "source": "symbol:api._begin_create_operation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -237265,7 +237309,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5784
+        "line": 5785
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._begin_state_mutation.receipt_fn",
@@ -237276,7 +237320,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5765
+        "line": 5766
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._database_profile",
@@ -237287,7 +237331,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5799
+        "line": 5800
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._failed_pending_operation",
@@ -237298,7 +237342,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5801
+        "line": 5802
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._op_rejected",
@@ -237309,7 +237353,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5828
+        "line": 5829
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._op_rejected",
@@ -237320,7 +237364,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5796
+        "line": 5797
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._op_replayed",
@@ -237331,7 +237375,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5826
+        "line": 5827
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._op_replayed",
@@ -237342,7 +237386,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5785
+        "line": 5786
       },
       "source": "symbol:api._begin_state_mutation",
       "target": "symbol:api._validated_receipt",
@@ -237353,7 +237397,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5785
+        "line": 5786
       },
       "source": "symbol:api._begin_state_mutation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -237364,7 +237408,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5702
+        "line": 5703
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._begin_turn_operation.receipt_fn",
@@ -237375,7 +237419,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5689
+        "line": 5690
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._database_profile",
@@ -237386,7 +237430,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5733
+        "line": 5734
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._op_rejected",
@@ -237397,7 +237441,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5714
+        "line": 5715
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._op_replayed",
@@ -237408,7 +237452,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5728
+        "line": 5729
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._op_replayed",
@@ -237419,7 +237463,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5700
+        "line": 5701
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._operation_hash",
@@ -237430,7 +237474,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5703
+        "line": 5704
       },
       "source": "symbol:api._begin_turn_operation",
       "target": "symbol:api._validated_receipt",
@@ -237441,7 +237485,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5703
+        "line": 5704
       },
       "source": "symbol:api._begin_turn_operation.receipt_fn",
       "target": "symbol:api._validated_receipt",
@@ -237540,7 +237584,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7507
+        "line": 7508
       },
       "source": "symbol:api._card_reward_mutation",
       "target": "symbol:api._begin_state_mutation",
@@ -237551,7 +237595,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7500
+        "line": 7501
       },
       "source": "symbol:api._card_reward_mutation",
       "target": "symbol:api._bind_corr",
@@ -237562,7 +237606,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7540
+        "line": 7541
       },
       "source": "symbol:api._card_reward_mutation",
       "target": "symbol:api._card_reward_blocks",
@@ -237573,87 +237617,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7542
+        "line": 7543
       },
       "source": "symbol:api._card_reward_mutation",
       "target": "symbol:api._card_reward_blocks",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7538
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._cards_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7544
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._commit_state_mutation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7501
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7521
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7524
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7528
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7501
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._game_lock",
       "type": "calls"
     },
     {
@@ -237664,7 +237631,7 @@
         "line": 7539
       },
       "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._prepared_slots",
+      "target": "symbol:api._cards_block",
       "type": "calls"
     },
     {
@@ -237672,10 +237639,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7516
+        "line": 7545
       },
       "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._reject_archived",
+      "target": "symbol:api._commit_state_mutation",
       "type": "calls"
     },
     {
@@ -237683,10 +237650,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7517
+        "line": 7502
       },
       "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._reject_memorial",
+      "target": "symbol:api._database_profile",
       "type": "calls"
     },
     {
@@ -237694,21 +237661,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7503
+        "line": 7522
       },
       "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:api._resolve_save_file",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7504
-      },
-      "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:persistence.load_game_state",
+      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -237719,7 +237675,7 @@
         "line": 7525
       },
       "source": "symbol:api._card_reward_mutation",
-      "target": "symbol:services.error_codes.api_error",
+      "target": "symbol:api._fail_operation",
       "type": "calls"
     },
     {
@@ -237728,6 +237684,94 @@
         "extractor": "python_ast",
         "file": "api.py",
         "line": 7529
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7502
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7540
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._prepared_slots",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7517
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7518
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7504
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7505
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:persistence.load_game_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7526
+      },
+      "source": "symbol:api._card_reward_mutation",
+      "target": "symbol:services.error_codes.api_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7530
       },
       "source": "symbol:api._card_reward_mutation",
       "target": "symbol:services.error_codes.api_error",
@@ -237958,7 +238002,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5916
+        "line": 5917
       },
       "source": "symbol:api._commit_state_mutation",
       "target": "symbol:api._release_failed",
@@ -237969,20 +238013,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5895
+        "line": 5896
       },
       "source": "symbol:api._commit_state_mutation",
-      "target": "symbol:api._require_saved",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 5980
-      },
-      "source": "symbol:api._commit_turn",
       "target": "symbol:api._require_saved",
       "type": "calls"
     },
@@ -237994,7 +238027,7 @@
         "line": 5981
       },
       "source": "symbol:api._commit_turn",
-      "target": "symbol:api._schedule_chronicle_jobs",
+      "target": "symbol:api._require_saved",
       "type": "calls"
     },
     {
@@ -238002,7 +238035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6038
+        "line": 5982
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._schedule_chronicle_jobs",
@@ -238013,7 +238046,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5991
+        "line": 6039
+      },
+      "source": "symbol:api._commit_turn",
+      "target": "symbol:api._schedule_chronicle_jobs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 5992
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:api._usage_attempts",
@@ -238024,7 +238068,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5979
+        "line": 5980
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:observability.telemetry.log_event",
@@ -238035,7 +238079,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5990
+        "line": 5991
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -238046,7 +238090,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5997
+        "line": 5998
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -238057,7 +238101,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6018
+        "line": 6019
       },
       "source": "symbol:api._commit_turn",
       "target": "symbol:services.usage_metering.operation_cost",
@@ -238101,7 +238145,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5510
+        "line": 5511
       },
       "source": "symbol:api._create_game",
       "target": "symbol:api._captured_usage",
@@ -238112,7 +238156,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5466
+        "line": 5467
       },
       "source": "symbol:api._create_game",
       "target": "symbol:api._prologue_owner",
@@ -238145,7 +238189,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5496
+        "line": 5497
       },
       "source": "symbol:api._create_game",
       "target": "symbol:api.format_response",
@@ -238200,7 +238244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5537
+        "line": 5538
       },
       "source": "symbol:api._create_game",
       "target": "symbol:observability.telemetry.log_event",
@@ -238211,7 +238255,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5514
+        "line": 5515
       },
       "source": "symbol:api._create_game",
       "target": "symbol:persistence.save_game_state",
@@ -238244,7 +238288,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5469
+        "line": 5470
       },
       "source": "symbol:api._create_game",
       "target": "symbol:services.prologue.scenario_to_state_seed",
@@ -238266,7 +238310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5494
+        "line": 5495
       },
       "source": "symbol:api._create_game",
       "target": "symbol:services.visual_catalog.resolve_turn_visual_state",
@@ -238354,7 +238398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6753
+        "line": 6754
       },
       "source": "symbol:api._drain_projection",
       "target": "symbol:api._require_saved",
@@ -238365,7 +238409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6756
+        "line": 6757
       },
       "source": "symbol:api._drain_projection",
       "target": "symbol:observability.telemetry.log_event",
@@ -238376,7 +238420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6740
+        "line": 6741
       },
       "source": "symbol:api._drain_projection_db",
       "target": "symbol:observability.telemetry.log_event",
@@ -238387,7 +238431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6415
+        "line": 6416
       },
       "source": "symbol:api._early_event",
       "target": "symbol:observability.telemetry.log_fallback",
@@ -238497,7 +238541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6804
+        "line": 6805
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._action_already_processed",
@@ -238508,7 +238552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6812
+        "line": 6813
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._apply_action_options",
@@ -238519,7 +238563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6795
+        "line": 6796
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._await_projection_db",
@@ -238530,7 +238574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6796
+        "line": 6797
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._begin_turn_operation",
@@ -238541,7 +238585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6781
+        "line": 6782
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._bind_corr",
@@ -238552,7 +238596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6771
+        "line": 6772
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._database_profile",
@@ -238563,175 +238607,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6782
+        "line": 6783
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6790
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6793
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6797
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6816
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6819
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._drain_projection",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6841
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._drain_projection",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6839
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._drain_projection_db",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6811
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._enforce_owner_budget",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6782
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6815
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._projection_owner",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6807
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6806
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._reject_memorial",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6787
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._resolve_save_file",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6822
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api._run_turn",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6805
-      },
-      "source": "symbol:api._execute_action",
-      "target": "symbol:api.format_response",
       "type": "calls"
     },
     {
@@ -238742,6 +238621,171 @@
         "line": 6791
       },
       "source": "symbol:api._execute_action",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6794
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6798
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6817
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6820
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._drain_projection",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6842
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._drain_projection",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6840
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._drain_projection_db",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6812
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._enforce_owner_budget",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6783
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6816
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._projection_owner",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6808
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6807
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6788
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6823
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api._run_turn",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6806
+      },
+      "source": "symbol:api._execute_action",
+      "target": "symbol:api.format_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6792
+      },
+      "source": "symbol:api._execute_action",
       "target": "symbol:persistence.ensure_synthetic_checkpoint",
       "type": "calls"
     },
@@ -238750,7 +238794,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6773
+        "line": 6774
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.get_latest_save_file",
@@ -238761,7 +238805,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6787
+        "line": 6788
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.load_game_state",
@@ -238772,7 +238816,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6777
+        "line": 6778
       },
       "source": "symbol:api._execute_action",
       "target": "symbol:persistence.save_path",
@@ -238816,7 +238860,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5947
+        "line": 5948
       },
       "source": "symbol:api._fail_operation",
       "target": "symbol:api._release_failed",
@@ -239256,7 +239300,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6232
+        "line": 6233
       },
       "source": "symbol:api._latency_log_fields",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -239388,7 +239432,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6650
+        "line": 6651
       },
       "source": "symbol:api._load_unlocked_or_locked",
       "target": "symbol:api._database_profile",
@@ -239399,7 +239443,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6651
+        "line": 6652
       },
       "source": "symbol:api._load_unlocked_or_locked",
       "target": "symbol:api._game_lock",
@@ -239410,7 +239454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6649
+        "line": 6650
       },
       "source": "symbol:api._load_unlocked_or_locked",
       "target": "symbol:persistence.load_game_state",
@@ -239421,7 +239465,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6652
+        "line": 6653
       },
       "source": "symbol:api._load_unlocked_or_locked",
       "target": "symbol:persistence.load_game_state",
@@ -239432,7 +239476,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6339
+        "line": 6340
       },
       "source": "symbol:api._log_turn",
       "target": "symbol:api._llm_log_fields",
@@ -239619,7 +239663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6675
+        "line": 6676
       },
       "source": "symbol:api._pre_drain_in_turn",
       "target": "symbol:observability.telemetry.log_event",
@@ -239630,7 +239674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5580
+        "line": 5581
       },
       "source": "symbol:api._prepare_checkpoint",
       "target": "symbol:api._database_profile",
@@ -239641,7 +239685,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5594
+        "line": 5595
       },
       "source": "symbol:api._prepare_chronicle_derivatives",
       "target": "symbol:api._database_profile",
@@ -239806,7 +239850,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6362
+        "line": 6363
       },
       "source": "symbol:api._record_audit_trace",
       "target": "symbol:api._latency_log_fields",
@@ -239817,7 +239861,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6373
+        "line": 6374
       },
       "source": "symbol:api._record_audit_trace",
       "target": "symbol:observability.telemetry.log_event",
@@ -239861,7 +239905,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7032
+        "line": 7033
       },
       "source": "symbol:api._record_early_delivery",
       "target": "symbol:api._sse_log",
@@ -239894,7 +239938,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5568
+        "line": 5569
       },
       "source": "symbol:api._require_saved",
       "target": "symbol:persistence.save_game_state",
@@ -239916,7 +239960,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6393
+        "line": 6394
       },
       "source": "symbol:api._run_turn",
       "target": "symbol:api._run_turn_collected",
@@ -239927,7 +239971,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6452
+        "line": 6453
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._append_player_input",
@@ -239938,7 +239982,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6536
+        "line": 6537
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._commit_turn",
@@ -239949,7 +239993,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6476
+        "line": 6477
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._early_event",
@@ -239960,7 +240004,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6574
+        "line": 6575
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._emit_turn_latency_metrics",
@@ -239971,7 +240015,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6515
+        "line": 6516
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._enqueue_turn_art",
@@ -239982,7 +240026,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6561
+        "line": 6562
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._latency_log_fields",
@@ -239993,7 +240037,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6622
+        "line": 6623
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._latency_log_fields",
@@ -240004,7 +240048,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6551
+        "line": 6552
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._log_turn",
@@ -240015,7 +240059,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6613
+        "line": 6614
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._log_turn",
@@ -240026,7 +240070,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6516
+        "line": 6517
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._mark_action_processed",
@@ -240037,7 +240081,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6451
+        "line": 6452
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._pre_drain_in_turn",
@@ -240048,7 +240092,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6522
+        "line": 6523
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._prepare_checkpoint",
@@ -240059,7 +240103,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6523
+        "line": 6524
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._prepare_chronicle_derivatives",
@@ -240070,7 +240114,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6527
+        "line": 6528
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._record_audit_trace",
@@ -240081,7 +240125,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6612
+        "line": 6613
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._release_failed",
@@ -240092,7 +240136,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6462
+        "line": 6463
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._run_turn_collected._timeline_progress",
@@ -240103,7 +240147,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6568
+        "line": 6569
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._turn_route",
@@ -240114,7 +240158,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6584
+        "line": 6585
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._turn_route",
@@ -240125,7 +240169,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6596
+        "line": 6597
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api._usage_attempts",
@@ -240136,7 +240180,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6524
+        "line": 6525
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:api.format_response",
@@ -240147,7 +240191,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6571
+        "line": 6572
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:llm_setup.is_simulated",
@@ -240158,7 +240202,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6586
+        "line": 6587
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:llm_setup.is_simulated",
@@ -240169,7 +240213,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6632
+        "line": 6633
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:observability.telemetry.log_event",
@@ -240180,7 +240224,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6595
+        "line": 6596
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -240191,7 +240235,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6601
+        "line": 6602
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:services.usage_metering.normalize_attempts",
@@ -240202,7 +240246,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6513
+        "line": 6514
       },
       "source": "symbol:api._run_turn_collected",
       "target": "symbol:services.visual_catalog.resolve_turn_visual_state",
@@ -240213,7 +240257,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6476
+        "line": 6477
       },
       "source": "symbol:api._run_turn_collected._timeline_progress",
       "target": "symbol:api._early_event",
@@ -240224,7 +240268,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5610
+        "line": 5611
       },
       "source": "symbol:api._schedule_chronicle_jobs",
       "target": "symbol:api._database_profile",
@@ -240389,7 +240433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6994
+        "line": 6995
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._log_turn_delivery",
@@ -240400,7 +240444,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6995
+        "line": 6996
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._publish_timeline",
@@ -240411,7 +240455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6977
+        "line": 6978
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse_log",
@@ -240422,7 +240466,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6987
+        "line": 6988
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse_log",
@@ -240433,7 +240477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6993
+        "line": 6994
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._sse_log",
@@ -240444,7 +240488,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6979
+        "line": 6980
       },
       "source": "symbol:api._stream_turn",
       "target": "symbol:api._stream_turn_events",
@@ -240455,7 +240499,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7128
+        "line": 7129
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._current_request_id",
@@ -240466,7 +240510,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7239
+        "line": 7240
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._current_request_id",
@@ -240477,7 +240521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7113
+        "line": 7114
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._execute_action",
@@ -240488,7 +240532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7329
+        "line": 7330
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._record_early_delivery",
@@ -240499,7 +240543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7088
+        "line": 7089
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240510,7 +240554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7183
+        "line": 7184
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240521,7 +240565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7186
+        "line": 7187
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240532,7 +240576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7201
+        "line": 7202
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240543,7 +240587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7204
+        "line": 7205
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240554,7 +240598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7218
+        "line": 7219
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240565,7 +240609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7231
+        "line": 7232
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240576,7 +240620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7243
+        "line": 7244
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240587,7 +240631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7261
+        "line": 7262
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240598,7 +240642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7270
+        "line": 7271
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240609,7 +240653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7290
+        "line": 7291
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240620,7 +240664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7292
+        "line": 7293
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240631,7 +240675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7312
+        "line": 7313
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240642,7 +240686,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7314
+        "line": 7315
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240653,7 +240697,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7320
+        "line": 7321
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240664,18 +240708,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7323
-      },
-      "source": "symbol:api._stream_turn_events",
-      "target": "symbol:api._sse",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7326
+        "line": 7324
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240697,7 +240730,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7337
+        "line": 7328
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse",
@@ -240708,7 +240741,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7134
+        "line": 7338
+      },
+      "source": "symbol:api._stream_turn_events",
+      "target": "symbol:api._sse",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7135
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -240719,7 +240763,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7147
+        "line": 7148
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -240730,7 +240774,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7211
+        "line": 7212
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -240741,7 +240785,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7299
+        "line": 7300
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._sse_log",
@@ -240752,7 +240796,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7178
+        "line": 7179
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._stream_turn_events._emit_early",
@@ -240763,7 +240807,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7195
+        "line": 7196
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._stream_turn_events._finish_tokens",
@@ -240774,7 +240818,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7163
+        "line": 7164
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._stream_turn_events._observe_delivery",
@@ -240785,7 +240829,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7100
+        "line": 7101
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._stream_turn_events._worker",
@@ -240796,7 +240840,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7156
+        "line": 7157
       },
       "source": "symbol:api._stream_turn_events",
       "target": "symbol:api._worker_done",
@@ -240807,7 +240851,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7183
+        "line": 7184
       },
       "source": "symbol:api._stream_turn_events._emit_early",
       "target": "symbol:api._sse",
@@ -240818,7 +240862,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7186
+        "line": 7187
       },
       "source": "symbol:api._stream_turn_events._emit_early",
       "target": "symbol:api._sse",
@@ -240829,7 +240873,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7201
+        "line": 7202
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -240840,7 +240884,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7204
+        "line": 7205
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -240851,7 +240895,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7218
+        "line": 7219
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse",
@@ -240862,7 +240906,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7211
+        "line": 7212
       },
       "source": "symbol:api._stream_turn_events._finish_tokens",
       "target": "symbol:api._sse_log",
@@ -240873,7 +240917,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7128
+        "line": 7129
       },
       "source": "symbol:api._stream_turn_events._worker",
       "target": "symbol:api._current_request_id",
@@ -240884,7 +240928,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7113
+        "line": 7114
       },
       "source": "symbol:api._stream_turn_events._worker",
       "target": "symbol:api._execute_action",
@@ -240895,7 +240939,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7134
+        "line": 7135
       },
       "source": "symbol:api._stream_turn_events._worker",
       "target": "symbol:api._sse_log",
@@ -240906,7 +240950,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7147
+        "line": 7148
       },
       "source": "symbol:api._stream_turn_events._worker",
       "target": "symbol:api._sse_log",
@@ -240917,7 +240961,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7156
+        "line": 7157
       },
       "source": "symbol:api._stream_turn_events._worker",
       "target": "symbol:api._worker_done",
@@ -241005,7 +241049,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 5683
+        "line": 5684
       },
       "source": "symbol:api._validated_receipt",
       "target": "symbol:api._op_rejected",
@@ -241038,7 +241082,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7012
+        "line": 7013
       },
       "source": "symbol:api._worker_done",
       "target": "symbol:api._sse_log",
@@ -242061,7 +242105,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7731
+        "line": 7732
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._database_profile",
@@ -242072,7 +242116,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7797
+        "line": 7798
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._fail_operation",
@@ -242083,7 +242127,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7800
+        "line": 7801
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._game_lock",
@@ -242094,7 +242138,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7794
+        "line": 7795
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._op_rejected",
@@ -242105,7 +242149,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7792
+        "line": 7793
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._op_replayed",
@@ -242116,7 +242160,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7750
+        "line": 7751
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._validated_receipt",
@@ -242127,7 +242171,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7780
+        "line": 7781
       },
       "source": "symbol:api.delete_save_endpoint",
       "target": "symbol:api._validated_receipt",
@@ -242237,7 +242281,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7858
+        "line": 7859
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:api._resolve_save_file",
@@ -242248,7 +242292,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7859
+        "line": 7860
       },
       "source": "symbol:api.export_chronicle",
       "target": "symbol:persistence.load_game_state",
@@ -242270,7 +242314,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6874
+        "line": 6875
       },
       "source": "symbol:api.game_action",
       "target": "symbol:api._execute_action",
@@ -242281,7 +242325,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6878
+        "line": 6879
       },
       "source": "symbol:api.game_action",
       "target": "symbol:api._publish_timeline",
@@ -242292,7 +242336,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7353
+        "line": 7354
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._database_profile",
@@ -242303,7 +242347,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7357
+        "line": 7358
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._database_profile",
@@ -242314,7 +242358,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7350
+        "line": 7351
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._load_unlocked_or_locked",
@@ -242325,7 +242369,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7349
+        "line": 7350
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._resolve_save_file",
@@ -242336,7 +242380,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7362
+        "line": 7363
       },
       "source": "symbol:api.game_action_stream",
       "target": "symbol:api._stream_turn",
@@ -242369,7 +242413,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7445
+        "line": 7446
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._begin_state_mutation",
@@ -242380,76 +242424,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7438
+        "line": 7439
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:api._bind_corr",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7477
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._cards_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7480
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._commit_state_mutation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7439
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._database_profile",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7462
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7468
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7439
-      },
-      "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._game_lock",
       "type": "calls"
     },
     {
@@ -242460,7 +242438,7 @@
         "line": 7478
       },
       "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._prepared_slots",
+      "target": "symbol:api._cards_block",
       "type": "calls"
     },
     {
@@ -242468,10 +242446,65 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7457
+        "line": 7481
       },
       "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._reject_archived",
+      "target": "symbol:api._commit_state_mutation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7440
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._database_profile",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7463
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7469
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7440
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7479
+      },
+      "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._prepared_slots",
       "type": "calls"
     },
     {
@@ -242482,7 +242515,7 @@
         "line": 7458
       },
       "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._reject_memorial",
+      "target": "symbol:api._reject_archived",
       "type": "calls"
     },
     {
@@ -242490,10 +242523,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7441
+        "line": 7459
       },
       "source": "symbol:api.game_cards_prepare",
-      "target": "symbol:api._resolve_save_file",
+      "target": "symbol:api._reject_memorial",
       "type": "calls"
     },
     {
@@ -242504,6 +242537,17 @@
         "line": 7442
       },
       "source": "symbol:api.game_cards_prepare",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7443
+      },
+      "source": "symbol:api.game_cards_prepare",
       "target": "symbol:persistence.load_game_state",
       "type": "calls"
     },
@@ -242512,7 +242556,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7471
+        "line": 7472
       },
       "source": "symbol:api.game_cards_prepare",
       "target": "symbol:services.error_codes.api_error",
@@ -242523,7 +242567,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6899
+        "line": 6900
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._begin_state_mutation",
@@ -242534,7 +242578,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6892
+        "line": 6893
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._bind_corr",
@@ -242545,7 +242589,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6934
+        "line": 6935
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._commit_state_mutation",
@@ -242556,7 +242600,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6893
+        "line": 6894
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._database_profile",
@@ -242567,7 +242611,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6927
+        "line": 6928
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._error_response",
@@ -242578,7 +242622,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6919
+        "line": 6920
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._fail_operation",
@@ -242589,7 +242633,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6926
+        "line": 6927
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._fail_operation",
@@ -242600,7 +242644,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6893
+        "line": 6894
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._game_lock",
@@ -242611,7 +242655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6911
+        "line": 6912
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._reject_archived",
@@ -242622,32 +242666,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 6913
+        "line": 6914
       },
       "source": "symbol:api.game_death",
       "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6895
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api._resolve_save_file",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 6933
-      },
-      "source": "symbol:api.game_death",
-      "target": "symbol:api.format_response",
       "type": "calls"
     },
     {
@@ -242658,6 +242680,28 @@
         "line": 6896
       },
       "source": "symbol:api.game_death",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6934
+      },
+      "source": "symbol:api.game_death",
+      "target": "symbol:api.format_response",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 6897
+      },
+      "source": "symbol:api.game_death",
       "target": "symbol:persistence.load_game_state",
       "type": "calls"
     },
@@ -242666,7 +242710,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7385
+        "line": 7386
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._begin_state_mutation",
@@ -242677,7 +242721,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7378
+        "line": 7379
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._bind_corr",
@@ -242688,7 +242732,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7425
+        "line": 7426
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._commit_state_mutation",
@@ -242699,7 +242743,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7379
+        "line": 7380
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._database_profile",
@@ -242710,87 +242754,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7407
+        "line": 7408
       },
       "source": "symbol:api.game_equip",
       "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7410
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._fail_operation",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7379
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._game_lock",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7422
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._inventory_block",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7397
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._reject_archived",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7398
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._reject_memorial",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7381
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:api._resolve_save_file",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "api.py",
-        "line": 7382
-      },
-      "source": "symbol:api.game_equip",
-      "target": "symbol:persistence.load_game_state",
       "type": "calls"
     },
     {
@@ -242801,6 +242768,83 @@
         "line": 7411
       },
       "source": "symbol:api.game_equip",
+      "target": "symbol:api._fail_operation",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7380
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._game_lock",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7423
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._inventory_block",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7398
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._reject_archived",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7399
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._reject_memorial",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7382
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:api._resolve_save_file",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7383
+      },
+      "source": "symbol:api.game_equip",
+      "target": "symbol:persistence.load_game_state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "api.py",
+        "line": 7412
+      },
+      "source": "symbol:api.game_equip",
       "target": "symbol:services.error_codes.api_error",
       "type": "calls"
     },
@@ -242809,7 +242853,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7552
+        "line": 7553
       },
       "source": "symbol:api.game_espolio",
       "target": "symbol:api._card_reward_mutation",
@@ -242820,7 +242864,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7587
+        "line": 7588
       },
       "source": "symbol:api.game_forja",
       "target": "symbol:api._card_reward_mutation",
@@ -242831,7 +242875,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7580
+        "line": 7581
       },
       "source": "symbol:api.game_forja",
       "target": "symbol:api.game_forja.apply",
@@ -242875,7 +242919,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7610
+        "line": 7611
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._begin_state_mutation",
@@ -242886,7 +242930,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7603
+        "line": 7604
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._bind_corr",
@@ -242897,7 +242941,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7690
+        "line": 7691
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._cards_block",
@@ -242908,7 +242952,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7695
+        "line": 7696
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._commit_state_mutation",
@@ -242919,7 +242963,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7604
+        "line": 7605
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._database_profile",
@@ -242930,7 +242974,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7639
+        "line": 7640
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._fail_operation",
@@ -242941,7 +242985,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7604
+        "line": 7605
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._game_lock",
@@ -242952,7 +242996,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7692
+        "line": 7693
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._levelup_block",
@@ -242963,7 +243007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7622
+        "line": 7623
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._reject_archived",
@@ -242974,7 +243018,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7623
+        "line": 7624
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._reject_memorial",
@@ -242985,7 +243029,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7606
+        "line": 7607
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:api._resolve_save_file",
@@ -242996,7 +243040,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7607
+        "line": 7608
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:persistence.load_game_state",
@@ -243007,7 +243051,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7627
+        "line": 7628
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.apply_choice",
@@ -243018,7 +243062,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7654
+        "line": 7655
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.eligible_subclasses",
@@ -243029,7 +243073,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7688
+        "line": 7689
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:progression.xp_to_next",
@@ -243040,7 +243084,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7640
+        "line": 7641
       },
       "source": "symbol:api.game_levelup",
       "target": "symbol:services.error_codes.api_error",
@@ -243051,7 +243095,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7566
+        "line": 7567
       },
       "source": "symbol:api.game_loja_cartas",
       "target": "symbol:api._card_reward_mutation",
@@ -243513,7 +243557,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7818
+        "line": 7819
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._database_profile",
@@ -243524,7 +243568,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7826
+        "line": 7827
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._meter_auxiliary_operation",
@@ -243535,7 +243579,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7811
+        "line": 7812
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:api._resolve_save_file",
@@ -243546,7 +243590,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "api.py",
-        "line": 7811
+        "line": 7812
       },
       "source": "symbol:api.search_chronicle_endpoint",
       "target": "symbol:persistence.load_game_state",
@@ -293475,7 +293519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/smoke/spec351_opening.py",
-        "line": 99
+        "line": 101
       },
       "source": "symbol:scripts.smoke.spec351_opening.main",
       "target": "symbol:scripts.smoke.spec351_opening._hostile",
@@ -293486,7 +293530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/smoke/spec351_opening.py",
-        "line": 212
+        "line": 220
       },
       "source": "symbol:scripts.smoke.spec351_opening.main",
       "target": "symbol:scripts.smoke.spec351_opening.main.tally",
@@ -353821,7 +353865,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 417
+        "line": 219
+      },
+      "source": "symbol:services.opening_threads._anchor_has_race",
+      "target": "symbol:services.opening_threads._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 218
+      },
+      "source": "symbol:services.opening_threads._anchor_has_race",
+      "target": "symbol:services.opening_threads._public_entity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 444
       },
       "source": "symbol:services.opening_threads._door_name",
       "target": "symbol:observability.telemetry.log_event",
@@ -353832,7 +353898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 406
+        "line": 433
       },
       "source": "symbol:services.opening_threads._door_name",
       "target": "symbol:services.opening_threads._clip",
@@ -353843,7 +353909,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 409
+        "line": 436
       },
       "source": "symbol:services.opening_threads._door_name",
       "target": "symbol:services.opening_threads._clip",
@@ -353854,7 +353920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 415
+        "line": 442
       },
       "source": "symbol:services.opening_threads._door_name",
       "target": "symbol:services.opening_threads._clip",
@@ -353865,7 +353931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 410
+        "line": 437
       },
       "source": "symbol:services.opening_threads._door_name",
       "target": "symbol:services.opening_threads._population_api",
@@ -353876,7 +353942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 214
+        "line": 232
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:observability.telemetry.log_event",
@@ -353887,7 +353953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 241
+        "line": 267
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:observability.telemetry.log_event",
@@ -353898,7 +353964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 229
+        "line": 250
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads.ThreadDoor",
@@ -353909,7 +353975,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 232
+        "line": 242
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._anchor_has_race",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 262
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._anchor_has_race",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 253
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads._clip",
@@ -353920,7 +354008,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 233
+        "line": 254
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads._clip",
@@ -353931,95 +354019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 211
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 219
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 220
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 222
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 228
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 230
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 233
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 234
-      },
-      "source": "symbol:services.opening_threads._doors_350",
-      "target": "symbol:services.opening_threads._get",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 235
+        "line": 229
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads._get",
@@ -354041,7 +354041,117 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 216
+        "line": 239
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 241
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 242
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 249
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 251
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 254
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 255
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 256
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 260
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._get",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 235
+      },
+      "source": "symbol:services.opening_threads._doors_350",
+      "target": "symbol:services.opening_threads._race_keys",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 234
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads._tokens",
@@ -354052,32 +354162,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 222
+        "line": 241
       },
       "source": "symbol:services.opening_threads._doors_350",
       "target": "symbol:services.opening_threads._tokens",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 133
-      },
-      "source": "symbol:services.opening_threads._eligible_npc",
-      "target": "symbol:services.opening_threads._clip",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 123
-      },
-      "source": "symbol:services.opening_threads._eligible_npc",
-      "target": "symbol:services.opening_threads._public_entity",
       "type": "calls"
     },
     {
@@ -354088,6 +354176,28 @@
         "line": 134
       },
       "source": "symbol:services.opening_threads._eligible_npc",
+      "target": "symbol:services.opening_threads._clip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 124
+      },
+      "source": "symbol:services.opening_threads._eligible_npc",
+      "target": "symbol:services.opening_threads._public_entity",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 135
+      },
+      "source": "symbol:services.opening_threads._eligible_npc",
       "target": "symbol:services.opening_threads.codex_role",
       "type": "calls"
     },
@@ -354096,7 +354206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 129
+        "line": 130
       },
       "source": "symbol:services.opening_threads._eligible_npc",
       "target": "symbol:services.opening_threads.region_of_location",
@@ -354107,7 +354217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 169
+        "line": 170
       },
       "source": "symbol:services.opening_threads._fallback_doors",
       "target": "symbol:services.opening_threads.ThreadDoor",
@@ -354118,21 +354228,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 187
+        "line": 189
       },
       "source": "symbol:services.opening_threads._fallback_doors",
       "target": "symbol:services.opening_threads.ThreadDoor",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/opening_threads.py",
-        "line": 172
-      },
-      "source": "symbol:services.opening_threads._fallback_doors",
-      "target": "symbol:services.opening_threads._clip",
       "type": "calls"
     },
     {
@@ -354151,7 +354250,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 190
+        "line": 174
       },
       "source": "symbol:services.opening_threads._fallback_doors",
       "target": "symbol:services.opening_threads._clip",
@@ -354162,7 +354261,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 184
+        "line": 192
+      },
+      "source": "symbol:services.opening_threads._fallback_doors",
+      "target": "symbol:services.opening_threads._clip",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 186
       },
       "source": "symbol:services.opening_threads._fallback_doors",
       "target": "symbol:services.opening_threads._public_entity",
@@ -354173,10 +354283,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 113
+        "line": 114
       },
       "source": "symbol:services.opening_threads._public_entity",
       "target": "symbol:services.opening_threads._secret_entity_ids",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 208
+      },
+      "source": "symbol:services.opening_threads._race_keys",
+      "target": "symbol:services.opening_threads._fold",
       "type": "calls"
     },
     {
@@ -354184,7 +354305,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 249
+        "line": 275
       },
       "source": "symbol:services.opening_threads._rank",
       "target": "symbol:services.opening_threads._rank.key",
@@ -354195,7 +354316,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 247
+        "line": 273
       },
       "source": "symbol:services.opening_threads._rank",
       "target": "symbol:services.opening_threads._tokens",
@@ -354206,7 +354327,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 250
+        "line": 276
       },
       "source": "symbol:services.opening_threads._rank",
       "target": "symbol:services.opening_threads._tokens",
@@ -354217,7 +354338,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 250
+        "line": 276
       },
       "source": "symbol:services.opening_threads._rank.key",
       "target": "symbol:services.opening_threads._tokens",
@@ -354228,7 +354349,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 60
+        "line": 61
       },
       "source": "symbol:services.opening_threads._tokens",
       "target": "symbol:services.opening_threads._fold",
@@ -354239,7 +354360,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 427
+        "line": 456
       },
       "source": "symbol:services.opening_threads.active_thread",
       "target": "symbol:services.opening_threads.region_of_location",
@@ -354250,7 +354371,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 153
+        "line": 154
       },
       "source": "symbol:services.opening_threads.codex_role",
       "target": "symbol:services.opening_threads._clip",
@@ -354261,7 +354382,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 464
+        "line": 500
+      },
+      "source": "symbol:services.opening_threads.consume_thread",
+      "target": "symbol:services.opening_threads._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 503
+      },
+      "source": "symbol:services.opening_threads.consume_thread",
+      "target": "symbol:services.opening_threads._fold",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 493
       },
       "source": "symbol:services.opening_threads.consume_thread",
       "target": "symbol:services.opening_threads.active_thread",
@@ -354272,7 +354415,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 433
+        "line": 499
+      },
+      "source": "symbol:services.opening_threads.consume_thread",
+      "target": "symbol:services.opening_threads.door_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/opening_threads.py",
+        "line": 462
       },
       "source": "symbol:services.opening_threads.door_names",
       "target": "symbol:services.opening_threads._door_name",
@@ -354283,7 +354437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 359
+        "line": 386
       },
       "source": "symbol:services.opening_threads.lore_block",
       "target": "symbol:observability.telemetry.log_event",
@@ -354294,7 +354448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 362
+        "line": 389
       },
       "source": "symbol:services.opening_threads.lore_block",
       "target": "symbol:services.opening_threads._estimate",
@@ -354305,7 +354459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 328
+        "line": 355
       },
       "source": "symbol:services.opening_threads.menu_block",
       "target": "symbol:services.opening_threads._estimate",
@@ -354316,7 +354470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 331
+        "line": 358
       },
       "source": "symbol:services.opening_threads.menu_block",
       "target": "symbol:services.opening_threads._estimate",
@@ -354327,7 +354481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 327
+        "line": 354
       },
       "source": "symbol:services.opening_threads.menu_block",
       "target": "symbol:services.opening_threads._menu_text",
@@ -354338,7 +354492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 330
+        "line": 357
       },
       "source": "symbol:services.opening_threads.menu_block",
       "target": "symbol:services.opening_threads._menu_text",
@@ -354349,7 +354503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 336
+        "line": 363
       },
       "source": "symbol:services.opening_threads.menu_block",
       "target": "symbol:services.opening_threads._menu_text",
@@ -354360,7 +354514,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 451
+        "line": 480
       },
       "source": "symbol:services.opening_threads.planner_thread_block",
       "target": "symbol:services.opening_threads._clip",
@@ -354371,7 +354525,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 438
+        "line": 467
       },
       "source": "symbol:services.opening_threads.planner_thread_block",
       "target": "symbol:services.opening_threads.active_thread",
@@ -354382,7 +354536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 441
+        "line": 470
       },
       "source": "symbol:services.opening_threads.planner_thread_block",
       "target": "symbol:services.opening_threads.door_names",
@@ -354393,7 +354547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 444
+        "line": 473
       },
       "source": "symbol:services.opening_threads.planner_thread_block",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -354404,7 +354558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 451
+        "line": 480
       },
       "source": "symbol:services.opening_threads.planner_thread_block",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -354415,7 +354569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 393
+        "line": 420
       },
       "source": "symbol:services.opening_threads.plot_npc_sheet",
       "target": "symbol:services.opening_threads._clip",
@@ -354426,7 +354580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 97
+        "line": 98
       },
       "source": "symbol:services.opening_threads.start_of_region",
       "target": "symbol:services.opening_threads.region_of_location",
@@ -354437,7 +354591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 292
+        "line": 319
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:observability.telemetry.log_event",
@@ -354448,7 +354602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 299
+        "line": 326
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads.ThreadMenu",
@@ -354459,7 +354613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 272
+        "line": 299
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._doors_350",
@@ -354470,7 +354624,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 288
+        "line": 315
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._eligible_npc",
@@ -354481,7 +354635,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 295
+        "line": 322
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._eligible_npc",
@@ -354492,7 +354646,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 276
+        "line": 303
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._fallback_doors",
@@ -354503,7 +354657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 269
+        "line": 296
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._population_api",
@@ -354514,7 +354668,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 277
+        "line": 304
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._rank",
@@ -354525,7 +354679,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/opening_threads.py",
-        "line": 298
+        "line": 325
       },
       "source": "symbol:services.opening_threads.thread_menu",
       "target": "symbol:services.opening_threads._rank",
@@ -356659,28 +356813,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 294
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 299
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
         "line": 301
       },
       "source": "symbol:services.prologue._apply_menu",
@@ -356692,43 +356824,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 305
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue.PersonalNPC",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 325
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._derive_seed_npcs",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
         "line": 306
       },
       "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._trim",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 307
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._trim",
+      "target": "symbol:observability.telemetry.log_event",
       "type": "calls"
     },
     {
@@ -356739,7 +356838,7 @@
         "line": 308
       },
       "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._trim",
+      "target": "symbol:observability.telemetry.log_event",
       "type": "calls"
     },
     {
@@ -356747,7 +356846,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 309
+        "line": 312
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue.PersonalNPC",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 332
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._derive_seed_npcs",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 313
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:services.prologue._trim",
@@ -356758,7 +356879,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 310
+        "line": 314
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:services.prologue._trim",
@@ -356769,7 +356890,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 311
+        "line": 315
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._trim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 316
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._trim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 317
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._trim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 318
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:services.prologue._trim",
@@ -356802,7 +356956,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 284
+        "line": 291
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue.StartScenario",
@@ -356813,7 +356967,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 285
+        "line": 292
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue.StartScenario",
@@ -356824,7 +356978,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 285
+        "line": 292
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._apply_menu",
@@ -356835,7 +356989,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 273
+        "line": 280
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._trim",
@@ -356846,7 +357000,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 274
+        "line": 281
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._trim",
@@ -356890,7 +357044,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 514
+        "line": 522
       },
       "source": "symbol:services.prologue._template",
       "target": "symbol:observability.telemetry.log_event",
@@ -356901,7 +357055,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 515
+        "line": 523
       },
       "source": "symbol:services.prologue._template",
       "target": "symbol:services.prologue.fallback_scenario",
@@ -356912,7 +357066,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 520
+        "line": 528
       },
       "source": "symbol:services.prologue.build_start_scenario",
       "target": "symbol:services.prologue.build_start_scenario_ctx",
@@ -356923,7 +357077,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 406
+        "line": 413
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:llm_setup.get_llm",
@@ -356934,7 +357088,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 424
+        "line": 432
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:observability.telemetry.log_event",
@@ -356945,7 +357099,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 496
+        "line": 504
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:observability.telemetry.log_event",
@@ -356956,7 +357110,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 499
+        "line": 507
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:observability.telemetry.log_event",
@@ -356967,7 +357121,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 413
+        "line": 420
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._class_context",
@@ -356978,7 +357132,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 460
+        "line": 468
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._legacy_rules",
@@ -356989,7 +357143,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 494
+        "line": 502
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._normalize",
@@ -357000,7 +357154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 412
+        "line": 419
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._region_context",
@@ -357011,7 +357165,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 429
+        "line": 437
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._roll_pool_seed",
@@ -357022,7 +357176,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 493
+        "line": 501
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._template",
@@ -357033,7 +357187,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 497
+        "line": 505
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._template",
@@ -357044,7 +357198,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 460
+        "line": 468
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._thread_rules",
@@ -357055,7 +357209,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 473
+        "line": 481
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -357066,7 +357220,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 479
+        "line": 487
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -357110,7 +357264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 332
+        "line": 339
       },
       "source": "symbol:services.prologue.revalidate_scenario",
       "target": "symbol:services.prologue._apply_menu",
@@ -357121,7 +357275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 330
+        "line": 337
       },
       "source": "symbol:services.prologue.revalidate_scenario",
       "target": "symbol:services.prologue._thread_on",
@@ -357132,7 +357286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 664
+        "line": 672
       },
       "source": "symbol:services.prologue.scenario_to_state_seed",
       "target": "symbol:services.chronicle.default_chapter_title",
@@ -357143,7 +357297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 540
+        "line": 548
       },
       "source": "symbol:services.prologue.sign_for_client",
       "target": "symbol:services.prologue._token_payload",
@@ -357154,7 +357308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 616
+        "line": 624
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -357165,7 +357319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 623
+        "line": 631
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -357176,7 +357330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 637
+        "line": 645
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -357187,7 +357341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 639
+        "line": 647
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -357198,7 +357352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 614
+        "line": 622
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:services.prologue.looks_hostile",
@@ -357209,7 +357363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 629
+        "line": 637
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:services.prologue.personal_pool_document",
@@ -357220,7 +357374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 555
+        "line": 563
       },
       "source": "symbol:services.prologue.verified_seed",
       "target": "symbol:services.prologue._token_payload",
@@ -616281,6 +616435,28 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec351_menu.py",
+        "line": 304
+      },
+      "source": "symbol:tests.test_spec351_menu.test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first",
+      "target": "symbol:services.opening_threads.thread_menu",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_menu.py",
+        "line": 310
+      },
+      "source": "symbol:tests.test_spec351_menu.test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first",
+      "target": "symbol:services.opening_threads.thread_menu",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_menu.py",
         "line": 252
       },
       "source": "symbol:tests.test_spec351_menu.test_real_350_elfo_nova_arcadia_menu",
@@ -617550,6 +617726,61 @@
       },
       "source": "symbol:tests.test_spec351_state._seeded",
       "target": "symbol:services.prologue.scenario_to_state_seed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 189
+      },
+      "source": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "target": "symbol:services.opening_threads.consume_thread",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 192
+      },
+      "source": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "target": "symbol:services.opening_threads.consume_thread",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 184
+      },
+      "source": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "target": "symbol:services.opening_threads.door_names",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 182
+      },
+      "source": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "target": "symbol:tests.test_spec351_state._seeded",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec351_state.py",
+        "line": 183
+      },
+      "source": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "target": "symbol:tests.test_spec351_state._state",
       "type": "calls"
     },
     {
@@ -644524,9 +644755,9 @@
       "qualified_name": null
     },
     {
-      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:7727",
+      "id": "endpoint:DELETE:/game/save/{game_id}:api.py:7728",
       "kind": "endpoint",
-      "line": 7726,
+      "line": 7727,
       "path": "api.py",
       "qualified_name": "DELETE /game/save/{game_id}"
     },
@@ -644636,9 +644867,9 @@
       "qualified_name": "GET /data/options"
     },
     {
-      "id": "endpoint:GET:/game/chronicle/export:api.py:7854",
+      "id": "endpoint:GET:/game/chronicle/export:api.py:7855",
       "kind": "endpoint",
-      "line": 7853,
+      "line": 7854,
       "path": "api.py",
       "qualified_name": "GET /game/chronicle/export"
     },
@@ -644671,9 +644902,9 @@
       "qualified_name": "GET /game/map"
     },
     {
-      "id": "endpoint:GET:/game/saves:api.py:7719",
+      "id": "endpoint:GET:/game/saves:api.py:7720",
       "kind": "endpoint",
-      "line": 7718,
+      "line": 7719,
       "path": "api.py",
       "qualified_name": "GET /game/saves"
     },
@@ -644832,16 +645063,16 @@
       "qualified_name": "POST /finops"
     },
     {
-      "id": "endpoint:POST:/game/action/stream:api.py:7342",
+      "id": "endpoint:POST:/game/action/stream:api.py:7343",
       "kind": "endpoint",
-      "line": 7341,
+      "line": 7342,
       "path": "api.py",
       "qualified_name": "POST /game/action/stream"
     },
     {
-      "id": "endpoint:POST:/game/action:api.py:6868",
+      "id": "endpoint:POST:/game/action:api.py:6869",
       "kind": "endpoint",
-      "line": 6867,
+      "line": 6868,
       "path": "api.py",
       "qualified_name": "POST /game/action"
     },
@@ -644853,16 +645084,16 @@
       "qualified_name": "POST /game/art/brief"
     },
     {
-      "id": "endpoint:POST:/game/cards/prepare:api.py:7434",
+      "id": "endpoint:POST:/game/cards/prepare:api.py:7435",
       "kind": "endpoint",
-      "line": 7433,
+      "line": 7434,
       "path": "api.py",
       "qualified_name": "POST /game/cards/prepare"
     },
     {
-      "id": "endpoint:POST:/game/chronicle/search:api.py:7810",
+      "id": "endpoint:POST:/game/chronicle/search:api.py:7811",
       "kind": "endpoint",
-      "line": 7809,
+      "line": 7810,
       "path": "api.py",
       "qualified_name": "POST /game/chronicle/search"
     },
@@ -644881,44 +645112,44 @@
       "qualified_name": "POST /game/combat/preview"
     },
     {
-      "id": "endpoint:POST:/game/death:api.py:6888",
+      "id": "endpoint:POST:/game/death:api.py:6889",
       "kind": "endpoint",
-      "line": 6887,
+      "line": 6888,
       "path": "api.py",
       "qualified_name": "POST /game/death"
     },
     {
-      "id": "endpoint:POST:/game/equip:api.py:7374",
+      "id": "endpoint:POST:/game/equip:api.py:7375",
       "kind": "endpoint",
-      "line": 7373,
+      "line": 7374,
       "path": "api.py",
       "qualified_name": "POST /game/equip"
     },
     {
-      "id": "endpoint:POST:/game/espolio:api.py:7548",
+      "id": "endpoint:POST:/game/espolio:api.py:7549",
       "kind": "endpoint",
-      "line": 7547,
+      "line": 7548,
       "path": "api.py",
       "qualified_name": "POST /game/espolio"
     },
     {
-      "id": "endpoint:POST:/game/forja:api.py:7576",
+      "id": "endpoint:POST:/game/forja:api.py:7577",
       "kind": "endpoint",
-      "line": 7575,
+      "line": 7576,
       "path": "api.py",
       "qualified_name": "POST /game/forja"
     },
     {
-      "id": "endpoint:POST:/game/levelup:api.py:7597",
+      "id": "endpoint:POST:/game/levelup:api.py:7598",
       "kind": "endpoint",
-      "line": 7596,
+      "line": 7597,
       "path": "api.py",
       "qualified_name": "POST /game/levelup"
     },
     {
-      "id": "endpoint:POST:/game/loja-cartas:api.py:7562",
+      "id": "endpoint:POST:/game/loja-cartas:api.py:7563",
       "kind": "endpoint",
-      "line": 7561,
+      "line": 7562,
       "path": "api.py",
       "qualified_name": "POST /game/loja-cartas"
     },
@@ -664938,7 +665169,7 @@
     {
       "id": "symbol:api.DeathChoiceRequest",
       "kind": "class",
-      "line": 6881,
+      "line": 6882,
       "path": "api.py",
       "qualified_name": "api.DeathChoiceRequest"
     },
@@ -665050,7 +665281,7 @@
     {
       "id": "symbol:api.SaveSummary",
       "kind": "class",
-      "line": 7706,
+      "line": 7707,
       "path": "api.py",
       "qualified_name": "api.SaveSummary"
     },
@@ -665190,7 +665421,7 @@
     {
       "id": "symbol:api._action_already_processed",
       "kind": "function",
-      "line": 5551,
+      "line": 5552,
       "path": "api.py",
       "qualified_name": "api._action_already_processed"
     },
@@ -665204,21 +665435,21 @@
     {
       "id": "symbol:api._append_player_input",
       "kind": "function",
-      "line": 5541,
+      "line": 5542,
       "path": "api.py",
       "qualified_name": "api._append_player_input"
     },
     {
       "id": "symbol:api._apply_action_options",
       "kind": "function",
-      "line": 6111,
+      "line": 6112,
       "path": "api.py",
       "qualified_name": "api._apply_action_options"
     },
     {
       "id": "symbol:api._apply_play_list",
       "kind": "function",
-      "line": 6041,
+      "line": 6042,
       "path": "api.py",
       "qualified_name": "api._apply_play_list"
     },
@@ -665260,56 +665491,56 @@
     {
       "id": "symbol:api._await_projection_db",
       "kind": "function",
-      "line": 6679,
+      "line": 6680,
       "path": "api.py",
       "qualified_name": "api._await_projection_db"
     },
     {
       "id": "symbol:api._begin_create_operation",
       "kind": "function",
-      "line": 5833,
+      "line": 5834,
       "path": "api.py",
       "qualified_name": "api._begin_create_operation"
     },
     {
       "id": "symbol:api._begin_create_operation.receipt_fn",
       "kind": "function",
-      "line": 5858,
+      "line": 5859,
       "path": "api.py",
       "qualified_name": "api._begin_create_operation.receipt_fn"
     },
     {
       "id": "symbol:api._begin_state_mutation",
       "kind": "function",
-      "line": 5762,
+      "line": 5763,
       "path": "api.py",
       "qualified_name": "api._begin_state_mutation"
     },
     {
       "id": "symbol:api._begin_state_mutation.receipt_fn",
       "kind": "function",
-      "line": 5784,
+      "line": 5785,
       "path": "api.py",
       "qualified_name": "api._begin_state_mutation.receipt_fn"
     },
     {
       "id": "symbol:api._begin_turn_operation",
       "kind": "function",
-      "line": 5687,
+      "line": 5688,
       "path": "api.py",
       "qualified_name": "api._begin_turn_operation"
     },
     {
       "id": "symbol:api._begin_turn_operation.receipt_fn",
       "kind": "function",
-      "line": 5702,
+      "line": 5703,
       "path": "api.py",
       "qualified_name": "api._begin_turn_operation.receipt_fn"
     },
     {
       "id": "symbol:api._bind_corr",
       "kind": "function",
-      "line": 6857,
+      "line": 6858,
       "path": "api.py",
       "qualified_name": "api._bind_corr"
     },
@@ -665358,7 +665589,7 @@
     {
       "id": "symbol:api._card_reward_mutation",
       "kind": "function",
-      "line": 7488,
+      "line": 7489,
       "path": "api.py",
       "qualified_name": "api._card_reward_mutation"
     },
@@ -665449,14 +665680,14 @@
     {
       "id": "symbol:api._commit_state_mutation",
       "kind": "function",
-      "line": 5891,
+      "line": 5892,
       "path": "api.py",
       "qualified_name": "api._commit_state_mutation"
     },
     {
       "id": "symbol:api._commit_turn",
       "kind": "function",
-      "line": 5950,
+      "line": 5951,
       "path": "api.py",
       "qualified_name": "api._commit_turn"
     },
@@ -665554,21 +665785,21 @@
     {
       "id": "symbol:api._drain_projection",
       "kind": "function",
-      "line": 6745,
+      "line": 6746,
       "path": "api.py",
       "qualified_name": "api._drain_projection"
     },
     {
       "id": "symbol:api._drain_projection_db",
       "kind": "function",
-      "line": 6711,
+      "line": 6712,
       "path": "api.py",
       "qualified_name": "api._drain_projection_db"
     },
     {
       "id": "symbol:api._early_event",
       "kind": "function",
-      "line": 6406,
+      "line": 6407,
       "path": "api.py",
       "qualified_name": "api._early_event"
     },
@@ -665589,7 +665820,7 @@
     {
       "id": "symbol:api._emit_turn_latency_metrics",
       "kind": "function",
-      "line": 6277,
+      "line": 6278,
       "path": "api.py",
       "qualified_name": "api._emit_turn_latency_metrics"
     },
@@ -665652,7 +665883,7 @@
     {
       "id": "symbol:api._execute_action",
       "kind": "function",
-      "line": 6762,
+      "line": 6763,
       "path": "api.py",
       "qualified_name": "api._execute_action"
     },
@@ -665666,14 +665897,14 @@
     {
       "id": "symbol:api._fail_operation",
       "kind": "function",
-      "line": 5939,
+      "line": 5940,
       "path": "api.py",
       "qualified_name": "api._fail_operation"
     },
     {
       "id": "symbol:api._failed_pending_operation",
       "kind": "function",
-      "line": 5738,
+      "line": 5739,
       "path": "api.py",
       "qualified_name": "api._failed_pending_operation"
     },
@@ -665750,7 +665981,7 @@
     {
       "id": "symbol:api._latency_log_fields",
       "kind": "function",
-      "line": 6195,
+      "line": 6196,
       "path": "api.py",
       "qualified_name": "api._latency_log_fields"
     },
@@ -665785,7 +666016,7 @@
     {
       "id": "symbol:api._load_unlocked_or_locked",
       "kind": "function",
-      "line": 6644,
+      "line": 6645,
       "path": "api.py",
       "qualified_name": "api._load_unlocked_or_locked"
     },
@@ -665806,21 +666037,21 @@
     {
       "id": "symbol:api._log_turn",
       "kind": "function",
-      "line": 6296,
+      "line": 6297,
       "path": "api.py",
       "qualified_name": "api._log_turn"
     },
     {
       "id": "symbol:api._log_turn_delivery",
       "kind": "function",
-      "line": 7035,
+      "line": 7036,
       "path": "api.py",
       "qualified_name": "api._log_turn_delivery"
     },
     {
       "id": "symbol:api._mark_action_processed",
       "kind": "function",
-      "line": 5555,
+      "line": 5556,
       "path": "api.py",
       "qualified_name": "api._mark_action_processed"
     },
@@ -665876,21 +666107,21 @@
     {
       "id": "symbol:api._op_rejected",
       "kind": "function",
-      "line": 5639,
+      "line": 5640,
       "path": "api.py",
       "qualified_name": "api._op_rejected"
     },
     {
       "id": "symbol:api._op_replayed",
       "kind": "function",
-      "line": 5656,
+      "line": 5657,
       "path": "api.py",
       "qualified_name": "api._op_replayed"
     },
     {
       "id": "symbol:api._operation_hash",
       "kind": "function",
-      "line": 5631,
+      "line": 5632,
       "path": "api.py",
       "qualified_name": "api._operation_hash"
     },
@@ -665946,21 +666177,21 @@
     {
       "id": "symbol:api._pre_drain_in_turn",
       "kind": "function",
-      "line": 6665,
+      "line": 6666,
       "path": "api.py",
       "qualified_name": "api._pre_drain_in_turn"
     },
     {
       "id": "symbol:api._prepare_checkpoint",
       "kind": "function",
-      "line": 5572,
+      "line": 5573,
       "path": "api.py",
       "qualified_name": "api._prepare_checkpoint"
     },
     {
       "id": "symbol:api._prepare_chronicle_derivatives",
       "kind": "function",
-      "line": 5592,
+      "line": 5593,
       "path": "api.py",
       "qualified_name": "api._prepare_chronicle_derivatives"
     },
@@ -665974,7 +666205,7 @@
     {
       "id": "symbol:api._projection_owner",
       "kind": "function",
-      "line": 6656,
+      "line": 6657,
       "path": "api.py",
       "qualified_name": "api._projection_owner"
     },
@@ -666002,7 +666233,7 @@
     {
       "id": "symbol:api._publish_timeline",
       "kind": "function",
-      "line": 6845,
+      "line": 6846,
       "path": "api.py",
       "qualified_name": "api._publish_timeline"
     },
@@ -666051,7 +666282,7 @@
     {
       "id": "symbol:api._record_audit_trace",
       "kind": "function",
-      "line": 6346,
+      "line": 6347,
       "path": "api.py",
       "qualified_name": "api._record_audit_trace"
     },
@@ -666065,7 +666296,7 @@
     {
       "id": "symbol:api._record_early_delivery",
       "kind": "function",
-      "line": 7015,
+      "line": 7016,
       "path": "api.py",
       "qualified_name": "api._record_early_delivery"
     },
@@ -666093,7 +666324,7 @@
     {
       "id": "symbol:api._release_failed",
       "kind": "function",
-      "line": 5922,
+      "line": 5923,
       "path": "api.py",
       "qualified_name": "api._release_failed"
     },
@@ -666128,7 +666359,7 @@
     {
       "id": "symbol:api._require_saved",
       "kind": "function",
-      "line": 5567,
+      "line": 5568,
       "path": "api.py",
       "qualified_name": "api._require_saved"
     },
@@ -666170,21 +666401,21 @@
     {
       "id": "symbol:api._run_turn",
       "kind": "function",
-      "line": 6376,
+      "line": 6377,
       "path": "api.py",
       "qualified_name": "api._run_turn"
     },
     {
       "id": "symbol:api._run_turn_collected",
       "kind": "function",
-      "line": 6420,
+      "line": 6421,
       "path": "api.py",
       "qualified_name": "api._run_turn_collected"
     },
     {
       "id": "symbol:api._run_turn_collected._timeline_progress",
       "kind": "function",
-      "line": 6462,
+      "line": 6463,
       "path": "api.py",
       "qualified_name": "api._run_turn_collected._timeline_progress"
     },
@@ -666205,7 +666436,7 @@
     {
       "id": "symbol:api._schedule_chronicle_jobs",
       "kind": "function",
-      "line": 5609,
+      "line": 5610,
       "path": "api.py",
       "qualified_name": "api._schedule_chronicle_jobs"
     },
@@ -666268,56 +666499,56 @@
     {
       "id": "symbol:api._sse",
       "kind": "function",
-      "line": 6952,
+      "line": 6953,
       "path": "api.py",
       "qualified_name": "api._sse"
     },
     {
       "id": "symbol:api._sse_log",
       "kind": "function",
-      "line": 6998,
+      "line": 6999,
       "path": "api.py",
       "qualified_name": "api._sse_log"
     },
     {
       "id": "symbol:api._stream_turn",
       "kind": "function",
-      "line": 6959,
+      "line": 6960,
       "path": "api.py",
       "qualified_name": "api._stream_turn"
     },
     {
       "id": "symbol:api._stream_turn_events",
       "kind": "function",
-      "line": 7069,
+      "line": 7070,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events"
     },
     {
       "id": "symbol:api._stream_turn_events._emit_early",
       "kind": "function",
-      "line": 7178,
+      "line": 7179,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events._emit_early"
     },
     {
       "id": "symbol:api._stream_turn_events._finish_tokens",
       "kind": "function",
-      "line": 7195,
+      "line": 7196,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events._finish_tokens"
     },
     {
       "id": "symbol:api._stream_turn_events._observe_delivery",
       "kind": "function",
-      "line": 7163,
+      "line": 7164,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events._observe_delivery"
     },
     {
       "id": "symbol:api._stream_turn_events._worker",
       "kind": "function",
-      "line": 7100,
+      "line": 7101,
       "path": "api.py",
       "qualified_name": "api._stream_turn_events._worker"
     },
@@ -666345,7 +666576,7 @@
     {
       "id": "symbol:api._turn_route",
       "kind": "function",
-      "line": 6290,
+      "line": 6291,
       "path": "api.py",
       "qualified_name": "api._turn_route"
     },
@@ -666387,7 +666618,7 @@
     {
       "id": "symbol:api._validated_receipt",
       "kind": "function",
-      "line": 5671,
+      "line": 5672,
       "path": "api.py",
       "qualified_name": "api._validated_receipt"
     },
@@ -666408,7 +666639,7 @@
     {
       "id": "symbol:api._worker_done",
       "kind": "function",
-      "line": 7007,
+      "line": 7008,
       "path": "api.py",
       "qualified_name": "api._worker_done"
     },
@@ -666604,7 +666835,7 @@
     {
       "id": "symbol:api.delete_save_endpoint",
       "kind": "function",
-      "line": 7727,
+      "line": 7728,
       "path": "api.py",
       "qualified_name": "api.delete_save_endpoint"
     },
@@ -666625,7 +666856,7 @@
     {
       "id": "symbol:api.export_chronicle",
       "kind": "function",
-      "line": 7854,
+      "line": 7855,
       "path": "api.py",
       "qualified_name": "api.export_chronicle"
     },
@@ -666639,14 +666870,14 @@
     {
       "id": "symbol:api.game_action",
       "kind": "function",
-      "line": 6868,
+      "line": 6869,
       "path": "api.py",
       "qualified_name": "api.game_action"
     },
     {
       "id": "symbol:api.game_action_stream",
       "kind": "function",
-      "line": 7342,
+      "line": 7343,
       "path": "api.py",
       "qualified_name": "api.game_action_stream"
     },
@@ -666660,42 +666891,42 @@
     {
       "id": "symbol:api.game_cards_prepare",
       "kind": "function",
-      "line": 7434,
+      "line": 7435,
       "path": "api.py",
       "qualified_name": "api.game_cards_prepare"
     },
     {
       "id": "symbol:api.game_death",
       "kind": "function",
-      "line": 6888,
+      "line": 6889,
       "path": "api.py",
       "qualified_name": "api.game_death"
     },
     {
       "id": "symbol:api.game_equip",
       "kind": "function",
-      "line": 7374,
+      "line": 7375,
       "path": "api.py",
       "qualified_name": "api.game_equip"
     },
     {
       "id": "symbol:api.game_espolio",
       "kind": "function",
-      "line": 7548,
+      "line": 7549,
       "path": "api.py",
       "qualified_name": "api.game_espolio"
     },
     {
       "id": "symbol:api.game_forja",
       "kind": "function",
-      "line": 7576,
+      "line": 7577,
       "path": "api.py",
       "qualified_name": "api.game_forja"
     },
     {
       "id": "symbol:api.game_forja.apply",
       "kind": "function",
-      "line": 7580,
+      "line": 7581,
       "path": "api.py",
       "qualified_name": "api.game_forja.apply"
     },
@@ -666709,14 +666940,14 @@
     {
       "id": "symbol:api.game_levelup",
       "kind": "function",
-      "line": 7597,
+      "line": 7598,
       "path": "api.py",
       "qualified_name": "api.game_levelup"
     },
     {
       "id": "symbol:api.game_loja_cartas",
       "kind": "function",
-      "line": 7562,
+      "line": 7563,
       "path": "api.py",
       "qualified_name": "api.game_loja_cartas"
     },
@@ -666779,7 +667010,7 @@
     {
       "id": "symbol:api.get_saves",
       "kind": "function",
-      "line": 7719,
+      "line": 7720,
       "path": "api.py",
       "qualified_name": "api.get_saves"
     },
@@ -666856,7 +667087,7 @@
     {
       "id": "symbol:api.search_chronicle_endpoint",
       "kind": "function",
-      "line": 7810,
+      "line": 7811,
       "path": "api.py",
       "qualified_name": "api.search_chronicle_endpoint"
     },
@@ -683838,7 +684069,7 @@
     {
       "id": "symbol:scripts.smoke.spec351_opening.main.tally",
       "kind": "function",
-      "line": 212,
+      "line": 220,
       "path": "scripts/smoke/spec351_opening.py",
       "qualified_name": "scripts.smoke.spec351_opening.main.tally"
     },
@@ -701807,196 +702038,210 @@
     {
       "id": "symbol:services.opening_threads.ThreadMenu",
       "kind": "class",
-      "line": 40,
+      "line": 41,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.ThreadMenu"
     },
     {
+      "id": "symbol:services.opening_threads._anchor_has_race",
+      "kind": "function",
+      "line": 214,
+      "path": "services/opening_threads.py",
+      "qualified_name": "services.opening_threads._anchor_has_race"
+    },
+    {
       "id": "symbol:services.opening_threads._clip",
       "kind": "function",
-      "line": 69,
+      "line": 70,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._clip"
     },
     {
       "id": "symbol:services.opening_threads._door_name",
       "kind": "function",
-      "line": 400,
+      "line": 427,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._door_name"
     },
     {
       "id": "symbol:services.opening_threads._doors_350",
       "kind": "function",
-      "line": 204,
+      "line": 222,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._doors_350"
     },
     {
       "id": "symbol:services.opening_threads._eligible_npc",
       "kind": "function",
-      "line": 118,
+      "line": 119,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._eligible_npc"
     },
     {
       "id": "symbol:services.opening_threads._estimate",
       "kind": "function",
-      "line": 63,
+      "line": 64,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._estimate"
     },
     {
       "id": "symbol:services.opening_threads._fallback_doors",
       "kind": "function",
-      "line": 157,
+      "line": 158,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._fallback_doors"
     },
     {
       "id": "symbol:services.opening_threads._fold",
       "kind": "function",
-      "line": 54,
+      "line": 55,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._fold"
     },
     {
       "id": "symbol:services.opening_threads._get",
       "kind": "function",
-      "line": 200,
+      "line": 203,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._get"
     },
     {
       "id": "symbol:services.opening_threads._menu_text",
       "kind": "function",
-      "line": 311,
+      "line": 338,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._menu_text"
     },
     {
       "id": "symbol:services.opening_threads._population_api",
       "kind": "function",
-      "line": 76,
+      "line": 77,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._population_api"
     },
     {
       "id": "symbol:services.opening_threads._public_entity",
       "kind": "function",
-      "line": 107,
+      "line": 108,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._public_entity"
     },
     {
+      "id": "symbol:services.opening_threads._race_keys",
+      "kind": "function",
+      "line": 207,
+      "path": "services/opening_threads.py",
+      "qualified_name": "services.opening_threads._race_keys"
+    },
+    {
       "id": "symbol:services.opening_threads._rank",
       "kind": "function",
-      "line": 245,
+      "line": 271,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._rank"
     },
     {
       "id": "symbol:services.opening_threads._rank.key",
       "kind": "function",
-      "line": 249,
+      "line": 275,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._rank.key"
     },
     {
       "id": "symbol:services.opening_threads._secret_entity_ids",
       "kind": "function",
-      "line": 101,
+      "line": 102,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._secret_entity_ids"
     },
     {
       "id": "symbol:services.opening_threads._tokens",
       "kind": "function",
-      "line": 59,
+      "line": 60,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads._tokens"
     },
     {
       "id": "symbol:services.opening_threads.active_thread",
       "kind": "function",
-      "line": 421,
+      "line": 450,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.active_thread"
     },
     {
       "id": "symbol:services.opening_threads.codex_role",
       "kind": "function",
-      "line": 140,
+      "line": 141,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.codex_role"
     },
     {
       "id": "symbol:services.opening_threads.consume_thread",
       "kind": "function",
-      "line": 462,
+      "line": 491,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.consume_thread"
     },
     {
       "id": "symbol:services.opening_threads.door_names",
       "kind": "function",
-      "line": 432,
+      "line": 461,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.door_names"
     },
     {
       "id": "symbol:services.opening_threads.lore_block",
       "kind": "function",
-      "line": 340,
+      "line": 367,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.lore_block"
     },
     {
       "id": "symbol:services.opening_threads.menu_block",
       "kind": "function",
-      "line": 325,
+      "line": 352,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.menu_block"
     },
     {
       "id": "symbol:services.opening_threads.mode",
       "kind": "function",
-      "line": 48,
+      "line": 49,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.mode"
     },
     {
       "id": "symbol:services.opening_threads.planner_thread_block",
       "kind": "function",
-      "line": 436,
+      "line": 465,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.planner_thread_block"
     },
     {
       "id": "symbol:services.opening_threads.plot_npc_sheet",
       "kind": "function",
-      "line": 370,
+      "line": 397,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.plot_npc_sheet"
     },
     {
       "id": "symbol:services.opening_threads.region_of_location",
       "kind": "function",
-      "line": 85,
+      "line": 86,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.region_of_location"
     },
     {
       "id": "symbol:services.opening_threads.start_of_region",
       "kind": "function",
-      "line": 91,
+      "line": 92,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.start_of_region"
     },
     {
       "id": "symbol:services.opening_threads.thread_menu",
       "kind": "function",
-      "line": 256,
+      "line": 282,
       "path": "services/opening_threads.py",
       "qualified_name": "services.opening_threads.thread_menu"
     },
@@ -702878,7 +703123,7 @@
     {
       "id": "symbol:services.prologue._apply_menu",
       "kind": "function",
-      "line": 288,
+      "line": 295,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._apply_menu"
     },
@@ -702899,7 +703144,7 @@
     {
       "id": "symbol:services.prologue._legacy_rules",
       "kind": "function",
-      "line": 342,
+      "line": 349,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._legacy_rules"
     },
@@ -702920,14 +703165,14 @@
     {
       "id": "symbol:services.prologue._roll_pool_seed",
       "kind": "function",
-      "line": 375,
+      "line": 382,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._roll_pool_seed"
     },
     {
       "id": "symbol:services.prologue._template",
       "kind": "function",
-      "line": 510,
+      "line": 518,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._template"
     },
@@ -702941,14 +703186,14 @@
     {
       "id": "symbol:services.prologue._thread_rules",
       "kind": "function",
-      "line": 351,
+      "line": 358,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._thread_rules"
     },
     {
       "id": "symbol:services.prologue._token_payload",
       "kind": "function",
-      "line": 525,
+      "line": 533,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._token_payload"
     },
@@ -702962,14 +703207,14 @@
     {
       "id": "symbol:services.prologue.build_start_scenario",
       "kind": "function",
-      "line": 518,
+      "line": 526,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.build_start_scenario"
     },
     {
       "id": "symbol:services.prologue.build_start_scenario_ctx",
       "kind": "function",
-      "line": 398,
+      "line": 405,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.build_start_scenario_ctx"
     },
@@ -702983,49 +703228,49 @@
     {
       "id": "symbol:services.prologue.looks_hostile",
       "kind": "function",
-      "line": 591,
+      "line": 599,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.looks_hostile"
     },
     {
       "id": "symbol:services.prologue.personal_pool_document",
       "kind": "function",
-      "line": 562,
+      "line": 570,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.personal_pool_document"
     },
     {
       "id": "symbol:services.prologue.revalidate_scenario",
       "kind": "function",
-      "line": 328,
+      "line": 335,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.revalidate_scenario"
     },
     {
       "id": "symbol:services.prologue.scenario_to_state_seed",
       "kind": "function",
-      "line": 643,
+      "line": 651,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.scenario_to_state_seed"
     },
     {
       "id": "symbol:services.prologue.sign_for_client",
       "kind": "function",
-      "line": 535,
+      "line": 543,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.sign_for_client"
     },
     {
       "id": "symbol:services.prologue.submit_personal_npc",
       "kind": "function",
-      "line": 596,
+      "line": 604,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.submit_personal_npc"
     },
     {
       "id": "symbol:services.prologue.verified_seed",
       "kind": "function",
-      "line": 544,
+      "line": 552,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.verified_seed"
     },
@@ -774654,6 +774899,13 @@
       "qualified_name": "tests.test_spec351_menu.test_population_api_preferred_when_present"
     },
     {
+      "id": "symbol:tests.test_spec351_menu.test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first",
+      "kind": "test",
+      "line": 296,
+      "path": "tests/test_spec351_menu.py",
+      "qualified_name": "tests.test_spec351_menu.test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first"
+    },
+    {
       "id": "symbol:tests.test_spec351_menu.test_real_350_elfo_nova_arcadia_menu",
       "kind": "test",
       "line": 236,
@@ -775030,6 +775282,13 @@
       "line": 78,
       "path": "tests/test_spec351_state.py",
       "qualified_name": "tests.test_spec351_state._state"
+    },
+    {
+      "id": "symbol:tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it",
+      "kind": "test",
+      "line": 181,
+      "path": "tests/test_spec351_state.py",
+      "qualified_name": "tests.test_spec351_state.test_consume_thread_forces_title_into_beats_when_model_ignores_it"
     },
     {
       "id": "symbol:tests.test_spec351_state.test_old_save_without_thread_loads",
@@ -782838,5 +783097,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:ce13cd27b89886d16c65e708eb057f60ff08dd66c2a8285768ab80150066137e"
+  "source_tree_hash": "sha256:69fbae63b91580228070f6c4d806267bc1b6bd4da041bc259a856595d2b7d7e6"
 }
