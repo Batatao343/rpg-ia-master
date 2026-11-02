@@ -23,3 +23,23 @@ export function portraitErrorBanner(status: number | undefined, code: string | u
   if (status === 503) return { msg: "Geração de imagem indisponível agora.", kind: "warn" };
   return { msg: fallback, kind: "warn" };
 }
+
+/** SPEC-363 R4: a cotação recusou (503) — esconde a oferta DAQUELE inimigo até o próximo estado do servidor. */
+export function shouldHidePortraitOffer(status: number | undefined, code: string | undefined): boolean {
+  return status === 503 && (code === "image_generation_disabled" || code === "image_pricing_unavailable" || code === undefined);
+}
+
+interface WithEnemies { combat?: { enemies?: Array<{ id: string; retrato?: { gerar?: unknown } | null }> } | null }
+
+/** Devolve o estado sem `retrato.gerar` do inimigo (imutável; mesmo objeto se nada muda). */
+export function withoutPortraitOffer<T extends WithEnemies>(data: T, enemyId: string): T {
+  const enemies = data.combat?.enemies;
+  if (!enemies || !enemies.some((e) => e.id === enemyId && e.retrato?.gerar)) return data;
+  return {
+    ...data,
+    combat: {
+      ...data.combat,
+      enemies: enemies.map((e) => (e.id === enemyId && e.retrato ? { ...e, retrato: { ...e.retrato, gerar: null } } : e)),
+    },
+  };
+}

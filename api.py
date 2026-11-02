@@ -2859,6 +2859,33 @@ def _creature_art_live() -> bool:
     )
 
 
+def _image_effect_open() -> bool:
+    """SPEC-363 R2: mesmo portão da cotação (`_guard_image_effect`) como predicado sem exceção.
+
+    Oferta `retrato.gerar` só existe se a cotação não vai responder 503."""
+    from services.finops_alerts import require_paid_effect
+    from services.kill_switches import IMAGE, get_switches
+    from services.shard_pricing import PricingUnavailable
+
+    try:
+        if not get_switches().is_enabled(IMAGE):
+            return False
+        require_paid_effect("image")
+    except PricingUnavailable:
+        return False
+    except Exception as exc:  # leitura do store falhou: sem oferta (fail-closed)
+        log_fallback("creature_portrait", "image_gate_failed", exc)
+        return False
+    return True
+
+
+def _portrait_offer_price() -> int | None:
+    """SPEC-363 R2: preço da oferta paga; `None` quando a cotação seria recusada."""
+    if not _image_effect_open():
+        return None
+    return _portrait_price_estilhas()
+
+
 def _portrait_price_estilhas() -> int | None:
     """R11: teto da cotação em Estilhas INTEIRAS (arredonda p/ cima), só leitura, cache de 60 s."""
     now = time.monotonic()
@@ -2964,7 +2991,7 @@ def _enemy_portrait(
             game_id=str(state.get("game_id") or ""),
             npc_entity_id=npc_entity_id,
             registry=registry,
-            quote_price=_portrait_price_estilhas() if registry is not None else None,
+            quote_price=_portrait_offer_price() if registry is not None else None,
             sign=_portrait_sign if registry is not None else None,
         )
     )

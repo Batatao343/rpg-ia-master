@@ -113,7 +113,7 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
     ? spent ? `Alvo: ${p.name}, sem Vitalidade — o próximo golpe fere`
       : `Alvo: ${p.name}${p.vit != null ? `, Vitalidade ${p.vit} de ${p.max}` : ""}`
     : `${p.name}: alvo inválido${aim.reason ? ` — ${aim.reason}` : ""}`) + (omen ? `. Presságio: ${omen.spoken}` : "");
-  return (
+  const button = (
     <button type="button" className={cls} data-target={p.id} data-aim-safe aria-label={label}
       data-effect="target.valid" data-effect-state={effectState}
       aria-disabled={!aim.valid || undefined} title={aim.valid ? undefined : aim.reason}
@@ -121,4 +121,14 @@ export function TargetChip({ p, aim, onPick, omen, onGenerate, genDisabled }: {
       {body}
     </button>
   );
+  // SPEC-363 R3: a oferta paga aparece também com mira, como IRMÃ do botão do alvo (sem aninhar botões).
+  if (p.retrato?.gerar && onGenerate) {
+    return (
+      <div className="tchip-wrap" data-participant={p.id}>
+        {button}
+        <PortraitOffer p={p} onGenerate={onGenerate} disabled={genDisabled} />
+      </div>
+    );
+  }
+  return button;
 }

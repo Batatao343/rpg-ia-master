@@ -23,7 +23,7 @@ import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
-import { portraitErrorBanner, withinShownPrice } from "./lib/portraitOrder";
+import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer } from "./lib/portraitOrder";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
@@ -397,6 +397,7 @@ export function App() {
       if (session.current === generation) {
         const status = error instanceof api.HttpError ? error.status : undefined;
         const code = error instanceof api.HttpError ? error.code : undefined;
+        if (shouldHidePortraitOffer(status, code)) setData(prev => (prev?.game_id === gameId ? withoutPortraitOffer(prev, enemyId) : prev));
         setBanner({ ...portraitErrorBanner(status, code, "Cotação indisponível: " + errMsg(error)), requestId: errRequestId(error) });
       }
     } finally { if (session.current === generation) setImageBusy(false); }

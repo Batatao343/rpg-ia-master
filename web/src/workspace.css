@@ -483,6 +483,7 @@ details.scene-strip { display: block; }
 .tchip__portrait-icon { color: var(--muted); inline-size: 60%; block-size: 60%; display: grid; place-items: center; }
 .tchip__portrait-icon svg { inline-size: 100%; block-size: 100%; }
 .tchip__portrait-badge { position: absolute; inset-inline: 0; bottom: 0; padding: 0.05rem 0.2rem; background: var(--bg-deep); color: var(--ink); font-size: 0.65rem; font-style: normal; text-align: center; }
+.tchip-wrap { display: grid; gap: 0.2rem; width: 100%; }
 .tchip__gen, .tchip__gen-confirm { grid-column: 1 / -1; margin-top: 0.3rem; }
 .tchip__gen-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
 .tchip__gen-confirm small { flex-basis: 100%; font-size: 0.74rem; color: var(--muted); }
