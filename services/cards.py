@@ -415,6 +415,9 @@ def set_prepared(state: dict, prepared: list[str]) -> dict:
     if not can_reorganize(state):
         return {"ok": False, "error": "Não é seguro reorganizar as Cartas agora.", "log": ""}
     player = state.get("player") or {}
+    from services import card_piles
+
+    card_piles.sync_deck_mode(player)  # SPEC-368 R1: flag `off` → sem Preparadas derivadas do baralho
     known = set(player.get("known_cards") or [])
     limite = prepare_slots_for_level(player.get("level", 1))
     prepared = list(dict.fromkeys(prepared))  # dedup preservando ordem

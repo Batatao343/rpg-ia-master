@@ -1161,6 +1161,13 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
     from services.reputation import ensure_reputation_fields
 
     ensure_reputation_fields(state)  # SPEC-298 R28: backfill idempotente
+    try:  # SPEC-368 R1: rollback `on → off` também fora de combate (idempotente)
+        from services import card_piles
+
+        if isinstance(state.get("player"), dict):
+            card_piles.sync_deck_mode(state["player"])
+    except Exception:  # pragma: no cover - nunca quebrar o load por isso
+        pass
     return state
 
 

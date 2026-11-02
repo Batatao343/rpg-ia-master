@@ -126,6 +126,15 @@ def deactivate_deck(player: dict) -> None:
         player["prepared_cards"] = list(pre)
 
 
+def sync_deck_mode(player: dict) -> bool:
+    """SPEC-368 R1: com a flag `off` e marca de baralho ativo, restaura as Preparadas de antes
+    (idempotente; no-op em `on`/`shadow` ou sem marca). Devolve True se mudou."""
+    if mode() == "off" and "prepared_cards_pre_deck" in player:
+        deactivate_deck(player)
+        return True
+    return False
+
+
 def migrate_deck(player: dict) -> bool:
     """Migracao idempotente (R3). Devolve True se montou o baralho. Com `deck` valido
     nao mexe; `prepared_cards` e re-derivado do baralho (R4) preservando passivas."""

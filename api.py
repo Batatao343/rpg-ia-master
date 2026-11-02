@@ -2544,8 +2544,11 @@ def _cards_block(player: dict, *, prepared_only: bool = False) -> list[dict[str,
     o contador já interpretado, mas o motor ainda revalida no uso.
     """
     import combat_mechanics as cm
-    from services import card_text, cards
+    from services import card_piles, card_text, cards
 
+    if card_piles.mode() == "off" and "prepared_cards_pre_deck" in player:
+        player = dict(player)  # SPEC-368 R1: view sem mutar o chamador
+        card_piles.sync_deck_mode(player)
     prepared = set(player.get("prepared_cards") or [])
     if _deck_mode_on(player):  # SPEC-353 R31: "preparada" = "está no baralho"
         prepared = set(player.get("deck") or [])
