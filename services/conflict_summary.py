@@ -452,7 +452,7 @@ _HERO_BLOOD_RE = re.compile(
     r"\b(?:teu|seu)\s+sangue\b|\bte\s+(?:atinge|acerta|rasga|fere|alcanca)\b"
 )
 _TU_RE = re.compile(
-    r"\b(?:teu|tua|teus|tuas|ti|contigo|ficas|estas|tens|es|ves|sentes|podes|queres)\b"
+    r"\b(?:teu|tua|teus|tuas|ti|contigo|ficas|tens|es|ves|sentes|podes|queres)\b"
 )
 _VOCE_RE = re.compile(r"\b(?:voce|seu|sua|seus|suas)\b")
 

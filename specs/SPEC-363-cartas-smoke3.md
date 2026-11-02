@@ -1,6 +1,6 @@
 # SPEC-363 — Cartas: correções do 3º smoke real (retrato pago coerente, texto de morte, autoria do resumo, mira, fuga, ids e cenários raros)
 
-> **Status:** `approved` (coordenador, autorização do dono 02/11 "manda bala"; D-363-3..6 aceitas; D-363-1 com o dono; D-363-2: coordenador religa o switch para o smoke)
+> **Status:** `in-progress` (coordenador, autorização do dono 02/11 "manda bala"; D-363-3..6 aceitas; D-363-1 com o dono; D-363-2: coordenador religa o switch para o smoke)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Épico:** SPEC-327
 > **Origem:** smoke 3 real de 02/11 (`main` = staging `b4f35507`, DeepSeek `deepseek-v4-flash`, 29 turnos + 3 criações, local e staging) — [docs/spec363/achados-smoke3.md](../docs/spec363/achados-smoke3.md). Evidência bruta no scratchpad do coordenador (`scratchpad/smoke3/`: `server.log`, `out/state-*.json`, `out/hist-*.json`, `out/*.png`, `stg1/`, `stg2/`).
@@ -564,4 +564,46 @@ Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider
 
 ## 9. Registro de implementação
 
-(vazio até a Etapa 0)
+(Etapas 0–8 executadas na branch `spec-363`; resultado por requisito no hand-back. Revisão independente `Sol` e §6 ficam com o coordenador.)
+
+### Etapa 0 — diagnóstico
+
+- **R1 (causa do switch):** `image_generation` está `false` no staging por ator **`system:finops`** (teto diário), última linha em
+  **2026-10-27 01:00 UTC** ("daily spend cap exceeded"); o mesmo ator o desligou em 19/10 e 23/10 e o `staging-1910` o religou
+  duas vezes. É a causa (a); (b) env, (c) fail-closed e (d) drill descartadas (o drill de 15/10 foi resetado na hora). Fonte:
+  `scripts/admin_kill_switch.py --dsn-env RPG_STAGING_DB_URL audit --limit 20` e `list` (só leitura, nada alterado). **O
+  coordenador religa** (`on image_generation --actor <coordenador> --reason "SPEC-363 smoke" --apply`) e roda
+  `scripts/staging/art_preflight.py` antes do §6. Se o chip a 390 tinha mira no print não foi verificável (evidência no
+  scratchpad do coordenador); o código mostrava mesmo a oferta só sem mira (corrigido por R3).
+- **§1.1 item 2d (perna crítica do herói):** não verificável (os `stg2/` são do coordenador). O texto de R10 agora diz de quem
+  é cada ferimento; o fallback "Você carrega…" lista só `player.ferimentos` (como antes).
+- **R30:** sem `server.log`, o caminho do "Criatura da Fogueira" não foi medido; a trava vale no loop dos grupos do scanner
+  (`_name_without_generic_head` em `_spawn_v4_enemies`), que é o único ponto onde um nome livre do LLM vira inimigo.
+- **R26:** emissor do bloco duplicado = `status_logs` (`card_status.on_start/on_round_end/on_hand_drawn`) que ia cru ao
+  registro e ao `mech_log`; `out["logs"]` já passava por `_voce`. Agora `_normalize_status_logs` normaliza uma vez para os dois.
+- **R32:** com o Baralho `on`, `deck` nasce em `card_piles.migrate_deck` (1º combate); antes disso `deck` é vazio e a compra cai
+  em Preparadas/Acervo → motivo `sem_baralho` (flag do Baralho `on`) ou `preparadas_cheias`.
+- **R34:** o p99 das chamadas CLASSIFY do DeepSeek **não foi medido** (os `server.log` dos smokes 2 e 3 estão no scratchpad do
+  coordenador). Constante provisória `DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.0` (piso da spec = 4 s; 6 s dá a meta "≈ 6–8 s" da
+  compra com o Groq). **Pendência do coordenador:** confirmar com o p99 real e ajustar a constante, se maior.
+- **R35/R36:** `enrich_node` fica **em série**: `_build_plan` monta `build_context_pack(purpose="planning")`, que lê os NPCs da
+  cena (`npcs_for_context`), e `_complete_sheet` pode renomear/fundir o stub (`merged_into`). As 6 chamadas da abertura da
+  Mirela não foram listadas (sem `server.log`).
+
+### Desvios e notas de implementação
+
+- R15: a causa fora de turno (Última Ação) agora vem antes da queda no **registro**; `mech_log` e `round_board` não emitem
+  linhas de queda (só o `round_board` tem `queda`, já depois de todos os eventos), então não mudaram.
+- R16: `blocked` do `PlayScreen` já incluía `death_pending`; a janela do print `8694215` não foi reproduzida no código. Foi
+  acrescentado `boardClosed(data, blocked)` (também `combat.active === false`) em `CombateTab`, com teste.
+- R19: `check_declared_target` passa a usar os alvos da mão **só** quando a Carta está em `pilhas.mao` e não é preparada.
+- R21: o `HttpError` reconstruído em `App.tsx` perdia `playIndex/cardId`; corrigido (achado pelo e2e).
+- R38 coberto: (a)(b)(c)(d)(e)(g)(h)(i)(j)(k)(l)(m). **Abertos:** (f) Voto Sussurrado com presságio no aliado (cobertura de
+  motor em `test_spec339_duracao_condicoes.py`/355, sem teste integrado novo) e a variante de (e) "presságio seguinte mostra o
+  nome da Carta" (só o log/`revelacoes` é afirmado). R39: (c)(d)(e) feitos; **(a) cena com 2 inimigos e aliado e (b) toast
+  da vitória a 1440 não foram escritos** (já têm `spec354-*.spec.ts`).
+- R27/R46: o invariante cobre registro, fatos do resumo, consulta do mercado e fuga; **não** há teste que monte um
+  `/game/history` de campanha completa (combate+fuga+loja).
+- Testes antigos atualizados (só expected que codificava o comportamento antigo): `test_spec346_outcome.py` (nomes com dígito
+  sobrevivem, R6), `test_spec353_registry.py` ("no seu torso", R10), `web/tests/spec347-components.test.mjs` (oferta com mira, R3).
+- Suíte: `tests/test_project_index.py` falha 2 testes até o `project_index/` ser regenerado no pouso (coordenador).
