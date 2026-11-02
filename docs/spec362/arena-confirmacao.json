@@ -1,0 +1,182 @@
+{
+ "seeds": [
+  180,
+  260
+ ],
+ "versoes": {
+  "arc1_imp_bomba_estopim": 2,
+  "arc1_imp_truque": 2,
+  "arc1_cal_pulso_medido": 2
+ },
+ "posturas": {
+  "Arcanista Cinzento": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      264,
+      320
+     ],
+     "L1 elite": [
+      165,
+      320
+     ],
+     "L3 padrao": [
+      210,
+      320
+     ],
+     "L3 elite": [
+      111,
+      320
+     ],
+     "L5 padrao": [
+      173,
+      320
+     ],
+     "L5 elite": [
+      63,
+      320
+     ]
+    },
+    "total": 0.514,
+    "padrao": 0.674,
+    "elite": 0.353
+   },
+   "calibrado": {
+    "celulas": {
+     "L1 padrao": [
+      258,
+      320
+     ],
+     "L1 elite": [
+      190,
+      320
+     ],
+     "L3 padrao": [
+      285,
+      320
+     ],
+     "L3 elite": [
+      227,
+      320
+     ],
+     "L5 padrao": [
+      125,
+      320
+     ],
+     "L5 elite": [
+      57,
+      320
+     ]
+    },
+    "total": 0.595,
+    "padrao": 0.696,
+    "elite": 0.494
+   },
+   "descoberto": {
+    "celulas": {
+     "L1 padrao": [
+      232,
+      320
+     ],
+     "L1 elite": [
+      143,
+      320
+     ],
+     "L3 padrao": [
+      216,
+      320
+     ],
+     "L3 elite": [
+      106,
+      320
+     ],
+     "L5 padrao": [
+      129,
+      320
+     ],
+     "L5 elite": [
+      39,
+      320
+     ]
+    },
+    "total": 0.451,
+    "padrao": 0.601,
+    "elite": 0.3
+   },
+   "improvisador": {
+    "celulas": {
+     "L1 padrao": [
+      257,
+      320
+     ],
+     "L1 elite": [
+      215,
+      320
+     ],
+     "L3 padrao": [
+      260,
+      320
+     ],
+     "L3 elite": [
+      185,
+      320
+     ],
+     "L5 padrao": [
+      169,
+      320
+     ],
+     "L5 elite": [
+      63,
+      320
+     ]
+    },
+    "total": 0.598,
+    "padrao": 0.715,
+    "elite": 0.482
+   }
+  }
+ },
+ "cartas": {
+  "arc1_imp_bomba_estopim": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 599,
+   "vezes_jogada": 435,
+   "taxa_uso": 0.726,
+   "vitoria_sem": 0.291,
+   "vitoria_com": 0.456,
+   "delta_pp": 16.6,
+   "lutas_por_braco": 320,
+   "dano_por_folego": 8.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": [
+    "dominante"
+   ]
+  },
+  "arc1_imp_truque": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 738,
+   "vezes_jogada": 340,
+   "taxa_uso": 0.461,
+   "vitoria_sem": 0.291,
+   "vitoria_com": 0.331,
+   "delta_pp": 4.1,
+   "lutas_por_braco": 320,
+   "dano_por_folego": 0.0,
+   "protecao_por_folego": 3.0,
+   "bandeiras": []
+  },
+  "arc1_cal_pulso_medido": {
+   "classe": "Arcanista Cinzento",
+   "vezes_na_mao": 551,
+   "vezes_jogada": 327,
+   "taxa_uso": 0.593,
+   "vitoria_sem": 0.856,
+   "vitoria_com": 0.881,
+   "delta_pp": 2.5,
+   "lutas_por_braco": 320,
+   "dano_por_folego": 4.0,
+   "protecao_por_folego": 0.0,
+   "bandeiras": []
+  }
+ }
+}

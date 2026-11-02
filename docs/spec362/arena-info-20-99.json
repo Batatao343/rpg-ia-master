@@ -13,126 +13,126 @@
    "todas": {
     "celulas": {
      "L1 padrao": [
-      250,
+      262,
       320
      ],
      "L1 elite": [
-      156,
+      183,
       320
      ],
      "L3 padrao": [
-      169,
+      202,
       320
      ],
      "L3 elite": [
-      110,
+      118,
       320
      ],
      "L5 padrao": [
-      150,
+      162,
       320
      ],
      "L5 elite": [
-      50,
+      60,
       320
      ]
     },
-    "total": 0.461,
-    "padrao": 0.593,
-    "elite": 0.329
+    "total": 0.514,
+    "padrao": 0.652,
+    "elite": 0.376
    },
    "calibrado": {
     "celulas": {
      "L1 padrao": [
-      268,
-      320
-     ],
-     "L1 elite": [
-      202,
-      320
-     ],
-     "L3 padrao": [
       279,
       320
      ],
+     "L1 elite": [
+      212,
+      320
+     ],
+     "L3 padrao": [
+      282,
+      320
+     ],
      "L3 elite": [
-      213,
+      235,
       320
      ],
      "L5 padrao": [
-      128,
+      147,
       320
      ],
      "L5 elite": [
-      36,
+      52,
       320
      ]
     },
-    "total": 0.586,
-    "padrao": 0.703,
-    "elite": 0.47
+    "total": 0.629,
+    "padrao": 0.738,
+    "elite": 0.52
    },
    "descoberto": {
     "celulas": {
      "L1 padrao": [
-      240,
+      247,
       320
      ],
      "L1 elite": [
-      151,
+      167,
       320
      ],
      "L3 padrao": [
-      185,
+      216,
       320
      ],
      "L3 elite": [
-      104,
+      129,
       320
      ],
      "L5 padrao": [
-      107,
+      125,
       320
      ],
      "L5 elite": [
-      29,
+      41,
       320
      ]
     },
-    "total": 0.425,
-    "padrao": 0.554,
-    "elite": 0.296
+    "total": 0.482,
+    "padrao": 0.613,
+    "elite": 0.351
    },
    "improvisador": {
     "celulas": {
      "L1 padrao": [
-      266,
+      286,
       320
      ],
      "L1 elite": [
-      206,
+      225,
       320
      ],
      "L3 padrao": [
-      257,
+      272,
       320
      ],
      "L3 elite": [
-      198,
+      227,
       320
      ],
      "L5 padrao": [
-      156,
+      173,
       320
      ],
      "L5 elite": [
-      44,
+      55,
       320
      ]
     },
-    "total": 0.587,
-    "padrao": 0.707,
-    "elite": 0.467
+    "total": 0.645,
+    "padrao": 0.761,
+    "elite": 0.528
    }
   }
  }
