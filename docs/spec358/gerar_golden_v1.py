@@ -186,7 +186,17 @@ def compute(sim) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sim", default=None)
+    ap.add_argument(
+        "--compute-out",
+        default=None,
+        help="só calcula (sem tocar no golden) e grava o JSON neste arquivo; usado pelos testes "
+        "em subprocesso limpo",
+    )
     args = ap.parse_args()
+    if args.compute_out:
+        with open(args.compute_out, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(compute(load_sim(args.sim)), f, ensure_ascii=False)
+        return
     sha = subprocess.run(
         ["git", "rev-parse", "main"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()

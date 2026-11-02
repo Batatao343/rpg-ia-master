@@ -30,23 +30,40 @@ def sim():
     return _load_path("cards_sim_358", os.path.join(ROOT, "scripts", "cards", "sim.py"))
 
 
-def test_v1_equivale_a_referencia_no_motor_atual(gold, sim):
+def _compute_isolado(gold, sim_path: str | None, tmp_path) -> dict:
+    """`compute` num subprocesso LIMPO (env mínimo e determinístico): o resultado da arena não
+    pode depender do que outros testes do mesmo worker xdist deixaram em memória/env."""
+    import subprocess
+
+    env = {
+        k: v
+        for k, v in os.environ.items()
+        if k in ("PATH", "SYSTEMROOT", "SYSTEMDRIVE", "TEMP", "TMP", "USERPROFILE", "HOME")
+    }
+    env.update({"PYTHONUTF8": "1", "RPG_FORCE_MOCK": "1"})
+    out = tmp_path / f"compute_{abs(hash(str(sim_path)))}.json"
+    cmd = [sys.executable, os.path.join(ROOT, "docs", "spec358", "gerar_golden_v1.py")]
+    cmd += ["--compute-out", str(out)] + (["--sim", sim_path] if sim_path else [])
+    r = subprocess.run(cmd, cwd=ROOT, env=env, capture_output=True, text=True, timeout=900)
+    assert r.returncode == 0, r.stderr[-2000:]
+    return json.loads(out.read_text(encoding="utf-8"))
+
+
+def test_v1_equivale_a_referencia_no_motor_atual(gold, tmp_path):
     """Garantia estrutural, imune a drift de motor: o ramo v1 do `sim.py` editado produz o
     MESMO resultado que a cópia congelada do `sim.py` original, rodando os dois agora."""
-    ref = gold.load_sim(
-        os.path.join(ROOT, "tests", "fixtures", "spec358_sim_v1_ref.py.txt"), "sim_ref"
-    )
-    assert gold.compute(sim) == gold.compute(ref)
+    ref = os.path.join(ROOT, "tests", "fixtures", "spec358_sim_v1_ref.py.txt")
+    assert _compute_isolado(gold, None, tmp_path) == _compute_isolado(gold, ref, tmp_path)
 
 
-def test_v1_reproduz_golden(gold, sim):
+def test_v1_reproduz_golden(gold, tmp_path):
     """Números fixos: só valem enquanto o motor é o mesmo do golden (hash dos arquivos de
     motor). Com o motor alterado por outra spec, o teste acima cobre a garantia."""
     with open(gold.GOLDEN, encoding="utf-8") as f:
         golden = json.load(f)
     if golden["_meta"].get("motor_hash") != gold.motor_hash():
         pytest.skip("motor mudou desde o golden: vale o teste estrutural (regenere o golden)")
-    atual = gold.compute(sim)
+    atual = _compute_isolado(gold, None, tmp_path)
     assert atual["simulate_batch"] == golden["simulate_batch"]
     assert atual["simulate_protocolo_lote"] == golden["simulate_protocolo_lote"]
     assert atual["main"] == golden["main"]
@@ -244,27 +261,23 @@ def test_referencia_fora_de_posicao_vira_aviso(sim, mk, monkeypatch):
     assert {"sem_referencia", "referencia_fora_de_posicao"} <= set(rep["avisos"])
 
 
-def test_v1_imune_a_log_ligado_por_outros_testes(gold, sim):
+def test_compute_imune_a_log_ligado_por_outros_testes(gold, sim):
     """Regressão (suíte `-n 2`): handler de log no stdout de outro teste sujava o stdout do
-    `main` e quebrava a comparação com a referência/golden."""
+    `main`. Com o logging ligado, o stdout medido só pode ter as linhas do relatório."""
     import logging
-
-    ref = gold.load_sim(
-        os.path.join(ROOT, "tests", "fixtures", "spec358_sim_v1_ref.py.txt"), "sim_ref_log"
-    )
-    limpo = gold.compute(ref)
 
     class _AoStdout(logging.Handler):  # resolve `sys.stdout` na hora, como o redirect do `main`
         def emit(self, record):
             sys.stdout.write(record.getMessage())
 
-    handler = _AoStdout()
-    log = logging.getLogger("rpg")
+    handler, log = _AoStdout(), logging.getLogger("rpg")
     prev = log.level
     log.setLevel(logging.INFO)
     log.addHandler(handler)
     try:
-        assert gold.compute(sim) == limpo
+        stdout = gold.compute(sim)["main"]["stdout"]
     finally:
         log.removeHandler(handler)
         log.setLevel(prev)
+    linhas = [ln for ln in stdout.splitlines() if ln]
+    assert linhas and all(ln.startswith("med_lote_") for ln in linhas)
