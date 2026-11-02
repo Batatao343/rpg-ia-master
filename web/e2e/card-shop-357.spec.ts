@@ -78,7 +78,7 @@ for (const [w, h] of [[1440, 900], [390, 844]] as const) {
     test.use({ viewport: { width: w, height: h }, hasTouch: w < 500, isMobile: w < 500 });
     test(`quest_tecnica_${w}: QuestsTab mostra a técnica entregue`, async ({ page, backend }) => {
       const st = backend.states.get("game-a")!;
-      const side = (st as { quest: { side: Array<Record<string, unknown>> } }).quest.side;
+      const side = (st as unknown as { quest: { side: Array<Record<string, unknown>> } }).quest.side;
       side[0] = { ...side[0], status: "completed", reward_hint: "justa · uma técnica", reward_card_name: "Traje Branco" };
       await page.goto("/");
       await page.getByRole("heading", { name: "Continuar jornada" }).waitFor();
