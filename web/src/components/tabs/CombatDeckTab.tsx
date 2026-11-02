@@ -1,5 +1,6 @@
 import { useMemo, useState, type KeyboardEvent } from "react";
 import type { CardView, PlayerStats } from "../../types";
+import { acervoHeader } from "../../cardRewards";
 import { DeckCard } from "./DeckCard";
 import "./tabs.css";
 
@@ -44,6 +45,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
 
   const preparedIds = optimistic ?? cards.filter((c) => c.prepared).map((c) => c.id);
   const view = (card: CardView): CardView => (optimistic ? { ...card, prepared: optimistic.includes(card.id) } : card);
+  const header = acervoHeader(stats?.baralho, preparedIds.length, slots);
   const subclasses = Array.from(new Set(cards.map((c) => c.subclass).filter(Boolean)));
   const matches = (c: CardView) => (typeFilter === "todas" || c.type === typeFilter) && (!sub || c.subclass === sub);
 
@@ -65,7 +67,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
     const error = await onPrepare(next);
     setSaving(false);
     setOptimistic(null); // o estado canônico chegou (ou a mudança foi recusada): volta ao servidor
-    setMessage(error ? `Não foi possível preparar: ${error}` : `Preparação atualizada: ${next.length} de ${slots}.`);
+    setMessage(error ? `Não foi possível preparar: ${error}` : header.updated(next.length));
   }
 
   if (!stats) return <p className="combat-empty">Carregando o Acervo…</p>;
@@ -88,7 +90,7 @@ export function CombatDeckTab({ stats, busy = false, onPrepare, onOpenLevelUp }:
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- atalho de teclado delegado: só reage a teclas que borbulham de controles focáveis internos
     <section className="deck" onKeyDown={arrowNav} aria-label="Acervo e preparação de Cartas">
       <header className="deck__head">
-        <h3 className="hud__label">Preparação <span className="muted">{preparedIds.length}/{slots || "—"}</span>
+        <h3 className="hud__label">{header.title} <span className="muted">{header.count}</span>
           {(saving || busy) && <span className="deck__sync"> · atualizando…</span>}</h3>
         {/* região viva sempre montada: erro/aplicação anunciados sem role=status */}
         <p className="deck__msg" aria-live="polite">{message}</p>

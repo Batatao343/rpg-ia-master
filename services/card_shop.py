@@ -150,6 +150,14 @@ def _planned_destino(player: dict, card_id: str) -> str:
     return card_rewards.add_to_deck(dict(player), card_id)  # copia rasa: so reatribui chaves
 
 
+def _planned_motivo(player: dict, card_id: str) -> dict:
+    """SPEC-363 R32: quando o destino é o Acervo, diz o motivo (nunca "Baralho cheio" sem estar cheio)."""
+    if _planned_destino(player, card_id) != "acervo":
+        return {}
+    why = card_rewards.acervo_reason(dict(player), card_id)
+    return {"destino_motivo": why} if why else {}
+
+
 def public_shop(state: dict) -> dict | None:
     """R8: bloco `player_stats.loja_cartas`. Puro (nao muta o state)."""
     if card_rewards.mode() != "on":
@@ -184,6 +192,7 @@ def public_shop(state: dict) -> dict | None:
                 "preco": price,
                 "conhecida": conhecida,
                 "destino": _planned_destino(player, cid),
+                **_planned_motivo(player, cid),
                 "bloqueio": bloqueio,
             }
         )
@@ -225,6 +234,7 @@ def buy(state: dict, card_id: str) -> dict:
     with card_telemetry.source_scope("loja"):
         card_telemetry.offered(ids, picked=card_id)
         card_telemetry.picked(card_id)
+    why = card_rewards.acervo_reason(player, card_id)
     where = card_rewards.add_to_deck(player, card_id)
     name = card.get("name", card_id)
     return {
@@ -233,6 +243,7 @@ def buy(state: dict, card_id: str) -> dict:
         "card_id": card_id,
         "gold": price,
         "destino": where,
+        **({"motivo": why} if where == "acervo" and why else {}),
         "log": f"{name} entra no seu Acervo" + (" e no Baralho." if where == "baralho" else "."),
     }
 

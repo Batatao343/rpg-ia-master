@@ -17,7 +17,7 @@ from collections.abc import Callable
 from typing import Any, Literal, Protocol, TypedDict
 
 from services import enemy_decks, visual_catalog
-from services.discovery import normalize_bestiary_id
+from services.discovery import _bestiary_db, normalize_bestiary_id
 from services.encounter_manifest import species_label_for
 
 FAMILY_ICON: dict[str, str] = {  # D-347-H: só ícones que já existem em web/src/design/icons.tsx
@@ -99,7 +99,13 @@ def is_important(enemy: dict[str, Any], manifest: dict[str, Any] | None) -> tupl
 
 
 def family_of(enemy: dict[str, Any]) -> str:
-    return enemy_decks.family_key(enemy) or "desconhecida"
+    """Família do retrato/ícone. SPEC-363 R29: sem `arquetipo` na instância, vale o do registro do bestiário."""
+    family = enemy_decks.family_key(enemy)
+    if family:
+        return family
+    bid = normalize_bestiary_id(enemy)
+    record = (_bestiary_db().get(bid) if bid else None) or {}
+    return enemy_decks.family_key({**record, "id": bid}) or "desconhecida"
 
 
 def _type_key(enemy: dict[str, Any]) -> str:

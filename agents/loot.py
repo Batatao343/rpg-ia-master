@@ -360,6 +360,29 @@ def _rarity_phrase(rarity: object) -> str:
     return f", {word}," if word else ""
 
 
+def _shop_complement_names(work_state: dict, state: GameState) -> list[str]:
+    """SPEC-363 R28: nomes (dobrados, sem pontuação) que podem completar "da/do/de/na/no <nome>"."""
+
+    def plain(t: str) -> str:
+        return re.sub(r"\s+", " ", re.sub(r"[^\w\s]", " ", economy._fold_key(t))).strip()
+
+    raw: list[str] = []
+    merchant = economy.MERCHANTS.get(card_shop.shelf(work_state)[0] or "") or {}
+    raw.append(str(merchant.get("name") or ""))
+    world = work_state.get("world") or {}
+    raw.append(str(world.get("current_location") or ""))
+    try:
+        from services import npc_layers
+
+        raw += [str(n) for n in npc_layers.npcs_for_context(work_state)]
+    except Exception as exc:  # noqa: BLE001 - complemento é conveniência; sem ele só o nome da Carta compra
+        from observability.telemetry import log_fallback
+
+        log_fallback("loot", "shop_complement_failed", exc)
+    names = sorted({plain(n) for n in raw if plain(n)}, key=len, reverse=True)
+    return names
+
+
 def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dict, text: str):
     """SPEC-357 R10(a): 'compro <nome exato de UMA Carta da prateleira>' resolve em Python,
     sem LLM de classificacao. Qualquer outro texto devolve None (fluxo de itens intacto)."""
@@ -387,8 +410,14 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     greet = r"(?:(?:oi|ola|ei|entao|bem|certo|ok|pois|bom dia|boa tarde|boa noite) )*"
     verb = r"(?:compro|adquiro|quero comprar|quero adquirir|vou comprar|vou adquirir)"
     tail = r"(?: (?:por favor|agora|entao))*"
+    # SPEC-363 R28: "... da <mercador | local | NPC presente>" — gramática continua fechada.
+    owners = _shop_complement_names(work_state, state)
+    complement = (
+        rf"(?: (?:da|do|de|na|no) (?:{'|'.join(re.escape(o) for o in owners)}))?" if owners else ""
+    )
     affirmative = re.fullmatch(
-        rf"{greet}(?:eu )?{verb} (?:(?:o|a|um|uma) )?{name_plain}{tail}", _plain(folded)
+        rf"{greet}(?:eu )?{verb} (?:(?:o|a|um|uma) )?{name_plain}{complement}{tail}",
+        _plain(folded),
     )
     doubtful = "?" in folded
     if not affirmative or doubtful:

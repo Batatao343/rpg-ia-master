@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { LojaCartasView } from "../../types";
 import { useGlossary } from "../../combat/useGlossary";
-import { DESTINO_LABEL, RARITY_LABEL, shopOfferState, type RewardSender } from "../../cardRewards";
+import { destinoLabel, RARITY_LABEL, shopOfferState, type RewardSender } from "../../cardRewards";
 import { RuleText } from "./KeywordTip";
 
 interface Props {
@@ -49,7 +49,7 @@ export function LojaCartasPanel({ loja, busy, onBuy }: Props) {
                 {card.texto && <p className="espolio__rules"><RuleText texto={card.texto} glossary={glossary} /></p>}
                 {card.descricao && <p className="espolio__flavor">{card.descricao}</p>}
                 <p className="loja__price" data-loja-price={card.id}>
-                  {card.preco} de ouro{!card.conhecida && ` · ${DESTINO_LABEL[card.destino] ?? card.destino}`}
+                  {card.preco} de ouro{!card.conhecida && ` · ${destinoLabel(card.destino, card.destino_motivo)}`}
                 </p>
                 <button className="btn btn--primary" type="button" disabled={locked || !st.enabled}
                   data-loja-buy={card.id} onClick={() => buy(card.id)}>

@@ -82,6 +82,8 @@ export interface PlayerStats {
   /** SPEC-209: aditivos — ausentes em servidor antigo (UI degrada para somente leitura). */
   can_reorganize?: { allowed: boolean; reason: string };
   prepared_slots?: number;
+  /** SPEC-353 R31 / SPEC-363 R33: com o Baralho `on`, o modelo que vale (12–24 cartas). */
+  baralho?: { total: number; minimo: number; maximo: number; do_acervo: number };
   subclass?: string;
   scars?: ScarView[];
   virtue_cards?: Array<{ card_id: string; name: string; type: string; description: string;
@@ -98,6 +100,8 @@ export interface PlayerStats {
 export interface LojaOferta extends EspolioOferta {
   preco: number;
   destino: "baralho" | "acervo" | "preparadas";
+  /** SPEC-363 R32: só presente quando `destino` é "acervo". */
+  destino_motivo?: "baralho_cheio" | "limite_de_copias" | "preparadas_cheias" | "sem_baralho";
   bloqueio: string | null;
 }
 export interface LojaCartasView {

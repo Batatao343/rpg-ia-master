@@ -334,6 +334,13 @@ def hint_core(text: str) -> str:
     return " ".join(kept)
 
 
+def has_generic_head(name: str) -> bool:
+    """SPEC-363 R30: "Criatura da Fogueira" — cabeça genérica seguida de complemento."""
+    words = [w for w in re.split(r"[\s,;:.!?()\"']+", str(name or "")) if w]
+    content = [w for w in words if _fold(w) not in _CORE_ARTICLES]
+    return len(content) > 1 and _fold(content[0]) in _GENERIC_HEADS
+
+
 def is_generic_hint(text: str) -> bool:
     return not name_tokens(hint_core(text))
 

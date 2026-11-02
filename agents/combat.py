@@ -643,6 +643,18 @@ def _display_enemy_name(hint: str) -> str:
     return " ".join(words).capitalize()
 
 
+def _name_without_generic_head(name: str, messages: list) -> str:
+    """SPEC-363 R30: nenhum inimigo nasce "Criatura da Fogueira": vale a espécie citada na
+    narração (bestiário); sem ela, o núcleo da dica (a cabeça sem o complemento)."""
+    from services import encounter_manifest as em
+
+    if not em.has_generic_head(name):
+        return name
+    bid = _bestiary_name_from_narration(messages)
+    species = str((em._bestiary().get(bid) or {}).get("name") or "") if bid else ""
+    return species or _display_enemy_name(name)
+
+
 def _bestiary_name_from_narration(messages: list) -> str | None:
     """SPEC-346 R25: id do bestiario cujo nome (todos os tokens) aparece na ultima narracao da IA.
 
@@ -845,6 +857,7 @@ def _spawn_v4_enemies(
                     ]
                 meta["requested_total"] = sum(int(c) for _n, c in groups)  # SPEC-346 R29
                 for name, count in groups:
+                    name = _name_without_generic_head(name, messages)  # SPEC-363 R30
                     template = _grounded_template(name, mechanical_context, encounter_level, state)
                     enemies += _instances(template, count, next_instance_by_template, _deck_seed)
                 if enemies:

@@ -137,7 +137,16 @@ def _pools(player: dict, defeated: list[dict], *, boss: bool, region_ids: set[st
         for cid in saque_ids
         if cid not in known and _eligible(cards.get_card(cid), player, boss=boss)
     )
-    return {"postura": postura, "neutra": neutra, "saque": saque}
+    # SPEC-363 R31: utilitária não age no conflito — não é oferta de espólio de conflito
+    # (loja, missão e Acervo continuam podendo).
+    def not_utility(ids: list[str]) -> list[str]:
+        return [c for c in ids if (cards.get_card(c) or {}).get("tipo") != "utilitaria"]
+
+    return {
+        "postura": not_utility(postura),
+        "neutra": not_utility(neutra),
+        "saque": not_utility(saque),
+    }
 
 
 def _weighted(rng: random.Random, weights: tuple[tuple[str, int], ...], allowed: set[str]) -> str:
@@ -296,6 +305,20 @@ def _add_to_deck(player: dict, card_id: str) -> str:
     return "acervo"
 
 
+def acervo_reason(player: dict, card_id: str) -> str | None:
+    """SPEC-363 R32: por que a Carta comprada/sorteada fica só no Acervo (None = não fica)."""
+    if player.get("deck"):
+        if len(player["deck"]) >= cards.DECK_MAX:
+            return "baralho_cheio"
+        return None if _deck_room(player, card_id) else "limite_de_copias"
+    prepared = list(player.get("prepared_cards") or [])
+    if card_id in prepared or len(prepared) < cards.prepare_slots_for_level(player.get("level", 1)):
+        return None
+    from services import card_piles
+
+    return "sem_baralho" if card_piles.mode() == "on" else "preparadas_cheias"
+
+
 add_to_deck = _add_to_deck  # SPEC-357: alias público (loja/missão não importam privado)
 
 
@@ -384,6 +407,7 @@ def accept(state: dict, card_id: str | None) -> dict:
             "destino": "ouro",
             "log": f"Você deixa o espólio e leva {gold} de ouro.",
         }
+    why = acervo_reason(player, str(card_id))
     where = _add_to_deck(player, str(card_id))
     name = (cards.get_card(str(card_id)) or {}).get("name", card_id)
     return {
@@ -392,6 +416,7 @@ def accept(state: dict, card_id: str | None) -> dict:
         "card_id": str(card_id),
         "gold": 0,
         "destino": where,
+        **({"motivo": why} if where == "acervo" and why else {}),
         "log": f"{name} entra no seu Acervo" + (" e no Baralho." if where == "baralho" else "."),
     }
 
