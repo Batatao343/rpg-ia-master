@@ -8,19 +8,19 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 76.6,
+ "elapsed_s": 214.4,
  "criaturas": {
   "mon_casco_de_costelas": {
    "nome": "Casco de Costelas",
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.625,
-    "L5|on": 0.335
+    "L5|off": 0.63,
+    "L5|on": 0.32
    },
    "ok": false,
    "motivos": [
-    "L5|on 34% fora de 45-85%"
+    "L5|on 32% fora de 45-85%"
    ]
   },
   "mon_quilhado_do_estaleiro": {
@@ -29,7 +29,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.7,
-    "L3|on": 0.645
+    "L3|on": 0.65
    },
    "ok": true,
    "motivos": []
@@ -40,7 +40,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.675,
-    "L3|on": 0.755
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -50,8 +50,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.68,
-    "L3|on": 0.75
+    "L3|off": 0.71,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -62,7 +62,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.675,
-    "L3|on": 0.78
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -72,8 +72,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.505,
-    "L3|on": 0.64
+    "L3|off": 0.52,
+    "L3|on": 0.66
    },
    "ok": true,
    "motivos": []
@@ -83,8 +83,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.675,
-    "L3|on": 0.56
+    "L3|off": 0.65,
+    "L3|on": 0.52
    },
    "ok": true,
    "motivos": []
@@ -95,7 +95,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.775,
-    "L3|on": 0.835
+    "L3|on": 0.84
    },
    "ok": true,
    "motivos": []
@@ -105,7 +105,7 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.705,
+    "L3|off": 0.72,
     "L3|on": 0.82
    },
    "ok": true,
@@ -116,8 +116,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.505,
-    "L3|on": 0.59
+    "L3|off": 0.53,
+    "L3|on": 0.63
    },
    "ok": true,
    "motivos": []
@@ -127,12 +127,12 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.39,
+    "L3|off": 0.34,
     "L3|on": 0.855
    },
    "ok": false,
    "motivos": [
-    "L3|off 39% fora de 45-85%",
+    "L3|off 34% fora de 45-85%",
     "L3|on 86% fora de 45-85%"
    ]
   },
@@ -141,7 +141,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.745,
+    "L3|off": 0.725,
     "L3|on": 0.83
    },
    "ok": true,
@@ -152,8 +152,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.745,
-    "L3|on": 0.83
+    "L3|off": 0.74,
+    "L3|on": 0.845
    },
    "ok": true,
    "motivos": []
@@ -163,8 +163,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.825,
-    "L3|on": 0.77
+    "L3|off": 0.81,
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -174,8 +174,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.63,
-    "L3|on": 0.76
+    "L3|off": 0.625,
+    "L3|on": 0.75
    },
    "ok": true,
    "motivos": []
@@ -186,7 +186,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.72,
-    "L3|on": 0.765
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -196,8 +196,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.6,
-    "L3|on": 0.61
+    "L3|off": 0.595,
+    "L3|on": 0.62
    },
    "ok": true,
    "motivos": []
@@ -207,8 +207,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.595,
-    "L3|on": 0.765
+    "L3|off": 0.605,
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -218,7 +218,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.68,
+    "L3|off": 0.67,
     "L3|on": 0.81
    },
    "ok": true,
@@ -229,8 +229,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.64,
-    "L3|on": 0.61
+    "L3|off": 0.63,
+    "L3|on": 0.6
    },
    "ok": true,
    "motivos": []

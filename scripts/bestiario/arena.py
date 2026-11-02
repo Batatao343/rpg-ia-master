@@ -69,7 +69,7 @@ def veredito(cells: dict, base: dict | None) -> tuple[bool, list[str]]:
             base
             and key in base
             and FAIXA[0] <= base[key] <= FAIXA[1]
-            and abs(w - base[key]) * 100 > DELTA_MAX_PP
+            and round(abs(w - base[key]) * 100, 1) > DELTA_MAX_PP
         ):
             motivos.append(f"{key} delta {abs(w - base[key]) * 100:.1f} pp > {DELTA_MAX_PP:.0f}")
     return (not motivos), motivos

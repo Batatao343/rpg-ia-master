@@ -1939,6 +1939,10 @@
           "kind": "vigilia",
           "alvo": "aliados",
           "valor": 2
+        },
+        {
+          "kind": "protecao",
+          "valor": 2
         }
       ],
       "descricao": "Coaxa antes do golpe cair; quem o ia receber já levantou a guarda.",

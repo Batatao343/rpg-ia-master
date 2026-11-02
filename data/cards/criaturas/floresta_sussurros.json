@@ -352,6 +352,16 @@
           "kind": "reposicionar",
           "alvo": "eu",
           "valor": 2
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        },
+        {
+          "kind": "esconder",
+          "alvo": "eu",
+          "valor": 1
         }
       ],
       "descricao": "Salta por cima da linha da frente, cai nas costas e já salta de volta.",
@@ -477,6 +487,15 @@
         {
           "kind": "protecao",
           "valor": 4
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
+        },
+        {
+          "kind": "marca",
+          "valor": 1
         }
       ],
       "custo_folego": 2,
@@ -1365,6 +1384,11 @@
           "kind": "cura",
           "alvo": "eu",
           "valor": 2
+        },
+        {
+          "kind": "esconder",
+          "alvo": "eu",
+          "valor": 1
         }
       ],
       "custo_folego": 2,

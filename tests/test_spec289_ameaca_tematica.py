@@ -1,8 +1,21 @@
 """SPEC-289 — criatura do encontro `looming_threat` ligada ao tema da ameaça (determinístico)."""
 
+import pytest
+
 import gamedata
 import world_utils as wu
 from encounter_budget import is_boss
+
+
+@pytest.fixture(autouse=True)
+def _populacao_pre_esteira(monkeypatch):
+    """SPEC-289 mede a lógica da ameaça temática sobre a população anterior à esteira 349.
+    As criaturas `bestiario-349` acrescentam temáticas legítimas na esfera (Alambique de Carne,
+    Pajem de Obsidiana, e casamentos de radical como Camarão~Câmara), o que muda "a única
+    temática" que estes testes fixam; ver §9 da SPEC-349. O teste final cobre a população cheia."""
+    antigo = {k: v for k, v in gamedata.BESTIARY.items() if v.get("origem") != "bestiario-349"}
+    monkeypatch.setattr(gamedata, "BESTIARY", antigo)
+
 
 CORVANE = next(
     f["ascension"]["threat"] for f in gamedata.seed_factions() if f["id"] == "cultistas_destilacao"
@@ -63,8 +76,7 @@ def test_corvane_in_sphere_picks_themed_creature():
     assert seen == {
         "enemy_cultista_destilacao",
         "mon_afogado_de_aethelgard",
-        "mon_quimera_cristal",
-    }
+    }  # a Quimera de Cristal virou Ariranha de Arcada (slot reinventado): sem radical do tema
 
 
 def test_chama_azul_in_sphere_prefers_faction_creature():
@@ -73,7 +85,11 @@ def test_chama_azul_in_sphere_prefers_faction_creature():
     assert enc["flavor"] == CHAMA
 
 
-def test_porte_strict_falls_back_when_no_themed_elite():
+def test_porte_strict_falls_back_when_no_themed_elite(monkeypatch):
+    # o Pajem de Obsidiana (ex-Sentinela de Ferro, slot reinventado) agora é elite temática da Chama
+    # Azul; para exercer o fallback tira-se esse slot da população
+    sem_pajem = {k: v for k, v in gamedata.BESTIARY.items() if k != "enemy_sentinela_ferro"}
+    monkeypatch.setattr(gamedata, "BESTIARY", sem_pajem)
     # porte Elite (nível 9, perigo 4) e a única temática é Minion → sorteio regional de antes
     with_theme = _enc("na_anel_dourado", CHAMA, level=9, override=4)
     legacy = _enc("na_anel_dourado", "texto sem dono", level=9, override=4)
@@ -280,3 +296,16 @@ def test_narrator_clause_overrides_canonical_name_with_short_label():
     assert "Lobo" not in clause
     known = {"filhos_chama_azul": {"known": True}}
     assert _faction_withhold_clause(manifest, facs, known) == ""
+
+
+def test_populacao_cheia_escolhe_sempre_criatura_tematica(monkeypatch):
+    """Com a esteira 349 a esfera tem mais temáticas: o sorteio continua dentro delas."""
+    monkeypatch.undo()
+    for level in (1, 9):
+        for t in range(6):
+            enc = _enc("ae_ruinas_submersas", CORVANE, level=level, turn=t)
+            entry = gamedata.BESTIARY[enc["enemy_id"]]
+            theme = wu.threat_theme_match(
+                wu.threat_faction({"looming_threat": CORVANE}, []), CORVANE
+            )
+            assert theme(entry) > 0 and "aethelgard" in entry["regions"], entry["name"]

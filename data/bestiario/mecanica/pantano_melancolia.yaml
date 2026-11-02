@@ -123,5 +123,5 @@ criaturas:
   enemy_zumbi_blindado:
     cartas:
       - {n: Sacada de Couro, t: "O corpo curtido se joga para a frente como um saco de areia molhada.", e: ["d:marcial:impactante"]}
-      - {n: Couro que Escorrega, sig: 1, t: "Dobra-se sobre si e a lâmina escorrega pelas costas de couro de sela.", e: ["d:leve:impactante", {kind: protecao, valor: 4}, {kind: reposicionar, alvo: eu, valor: 2}]}
+      - {n: Couro que Escorrega, sig: 1, t: "Dobra-se sobre si e a lâmina escorrega pelas costas de couro de sela.", e: ["d:leve:impactante", {kind: protecao, valor: 4}, {kind: reposicionar, alvo: eu, valor: 2}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: corrosivo}]}
     aprox: "lâmina escorrega e não abre Ferimento; só pancada o amassa -> proteção própria"

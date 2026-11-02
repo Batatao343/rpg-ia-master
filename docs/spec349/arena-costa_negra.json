@@ -8,15 +8,15 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 87.5,
+ "elapsed_s": 318.3,
  "criaturas": {
   "mon_escama_revirada": {
    "nome": "Escama Revirada",
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.73,
-    "L3|on": 0.815
+    "L3|off": 0.705,
+    "L3|on": 0.845
    },
    "ok": true,
    "motivos": []
@@ -26,8 +26,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.625,
-    "L3|on": 0.765
+    "L3|off": 0.65,
+    "L3|on": 0.78
    },
    "ok": true,
    "motivos": []
@@ -37,8 +37,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.61,
-    "L3|on": 0.655
+    "L3|off": 0.605,
+    "L3|on": 0.66
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.52,
-    "L3|on": 0.645
+    "L3|on": 0.625
    },
    "ok": true,
    "motivos": []
@@ -59,13 +59,13 @@
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.41,
-    "L5|on": 0.305
+    "L5|off": 0.42,
+    "L5|on": 0.325
    },
    "ok": false,
    "motivos": [
-    "L5|off 41% fora de 45-85%",
-    "L5|on 30% fora de 45-85%"
+    "L5|off 42% fora de 45-85%",
+    "L5|on 32% fora de 45-85%"
    ]
   },
   "mon_barata_das_costelas": {
@@ -73,8 +73,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.78,
-    "L3|on": 0.775
+    "L3|off": 0.775,
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -84,8 +84,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.825,
-    "L3|on": 0.79
+    "L3|off": 0.805,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -95,8 +95,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.515,
-    "L3|on": 0.64
+    "L3|off": 0.53,
+    "L3|on": 0.67
    },
    "ok": true,
    "motivos": []
@@ -106,8 +106,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.57,
-    "L3|on": 0.84
+    "L3|off": 0.6,
+    "L3|on": 0.83
    },
    "ok": true,
    "motivos": []
@@ -117,8 +117,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.65,
-    "L3|on": 0.805
+    "L3|off": 0.655,
+    "L3|on": 0.8
    },
    "ok": true,
    "motivos": []
@@ -128,7 +128,7 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.825,
+    "L3|off": 0.815,
     "L3|on": 0.85
    },
    "ok": true,
@@ -139,8 +139,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.71,
-    "L3|on": 0.76
+    "L3|off": 0.72,
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -150,8 +150,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.785,
-    "L3|on": 0.76
+    "L3|off": 0.78,
+    "L3|on": 0.775
    },
    "ok": true,
    "motivos": []
@@ -161,8 +161,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.835,
-    "L3|on": 0.755
+    "L3|off": 0.825,
+    "L3|on": 0.75
    },
    "ok": true,
    "motivos": []
@@ -172,8 +172,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.535,
-    "L3|on": 0.76
+    "L3|off": 0.55,
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -183,8 +183,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.685,
-    "L3|on": 0.65
+    "L3|off": 0.695,
+    "L3|on": 0.64
    },
    "ok": true,
    "motivos": []
@@ -194,8 +194,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.69,
-    "L3|on": 0.57
+    "L3|off": 0.67,
+    "L3|on": 0.58
    },
    "ok": true,
    "motivos": []
@@ -205,8 +205,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.62,
-    "L3|on": 0.75
+    "L3|off": 0.605,
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -216,8 +216,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.485,
-    "L3|on": 0.6
+    "L3|off": 0.48,
+    "L3|on": 0.59
    },
    "ok": true,
    "motivos": []
@@ -227,8 +227,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.595,
-    "L3|on": 0.815
+    "L3|off": 0.56,
+    "L3|on": 0.81
    },
    "ok": true,
    "motivos": []
@@ -238,8 +238,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.825,
-    "L3|on": 0.77
+    "L3|off": 0.81,
+    "L3|on": 0.755
    },
    "ok": true,
    "motivos": []
@@ -249,8 +249,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.7,
-    "L3|on": 0.765
+    "L3|off": 0.715,
+    "L3|on": 0.77
    },
    "ok": true,
    "motivos": []

@@ -7,6 +7,7 @@ Fonte: ``data/bestiario/mecanica/<regiao>.yaml`` -> ``scripts/bestiario/gerar_me
 from __future__ import annotations
 
 import json
+import os
 import random
 from pathlib import Path
 
@@ -180,8 +181,8 @@ def test_resolve_por_nome():
 
 def test_appearance_chega_ao_art_brief():
     """R18: ``appearance`` do chefe sobrevive à ficha de combate e chega à linha ``BOSS:``.
-    O slot ``enemy_aranha_de_cristal`` tem ``type`` legado ("Monstrosidade"), fora de
-    ``art_brief._BOSS_TYPES``; o campo ``type`` do slot não muda (R3)."""
+    O slot ``enemy_aranha_de_cristal`` teve o ``type`` legado ("Monstrosidade") trocado por
+    ``BOSS``, então entra em ``art_brief._BOSS_TYPES`` como os demais."""
     from services.art_brief import _boss_of
 
     for cid in CHEFES:
@@ -234,3 +235,39 @@ def test_uso_das_cartas_de_familia_escala_com_o_bestiario(monkeypatch):
         deck = edk.build_enemy_deck({**entry, "id": bid}, 0)
         use.update(c for c in deck if c.startswith("inf_"))
     assert use and max(use.values()) <= 36, use.most_common(3)
+
+
+@pytest.mark.parametrize("modo", ["off", "on"])
+def test_save_load_com_criatura_nova_e_slot_em_bestiary_knowledge(monkeypatch, modo):
+    """Critério de saves antigos: round-trip com criatura nova e o slot `enemy_gargula_ferro`
+    nos inimigos e em `bestiary_knowledge`, com `off` e `on`."""
+    import persistence
+
+    monkeypatch.setenv("RPG_ENEMY_DECKS", modo)
+    edk.reload()
+    inimigos = []
+    for cid in ("mon_roda_de_mandibulas", "enemy_gargula_ferro"):
+        e = orch.ensure_combat_sheet({**BEST[cid], "id": f"{cid}_1"}, is_player=False)
+        inimigos.append(e)
+    gid = f"pytest349-{modo}"
+    state = {
+        "game_id": gid,
+        "narrative_summary": "",
+        "archivist_last_run": 0,
+        "messages": [],
+        "npcs": {},
+        "factions": [],
+        "campaign_plan": {},
+        "player": {"name": "T", "class_name": "Devoto do Abismo", "level": 3},
+        "world": {"current_location": "Nova Arcádia", "current_location_id": "nova_arcadia"},
+        "enemies": inimigos,
+        "bestiary_knowledge": {
+            "enemy_gargula_ferro": {"revealed_cards": ["cri_ra_de_lotus_mordida_adiantada"]}
+        },
+    }
+    assert persistence.save_game_state(state)
+    loaded = persistence.load_game_state(os.path.join(persistence.SAVES_DIR, f"{gid}.json"))
+    assert loaded["bestiary_knowledge"] == state["bestiary_knowledge"]
+    for antes, depois in zip(state["enemies"], loaded["enemies"], strict=True):
+        for campo in ("cartas", "tactical_profile", "max_vitalidade", "appearance"):
+            assert depois.get(campo) == antes.get(campo), (antes["id"], campo)

@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 100.2,
+ "elapsed_s": 197.0,
  "criaturas": {
   "mon_parado_do_sopro": {
    "nome": "Parado do Sopro",
@@ -16,7 +16,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.775,
-    "L3|on": 0.77
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -26,8 +26,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.61,
-    "L3|on": 0.69
+    "L3|off": 0.64,
+    "L3|on": 0.7
    },
    "ok": true,
    "motivos": []
@@ -37,8 +37,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.64,
-    "L3|on": 0.785
+    "L3|off": 0.62,
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -48,8 +48,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.57,
-    "L3|on": 0.57
+    "L3|off": 0.555,
+    "L3|on": 0.595
    },
    "ok": true,
    "motivos": []
@@ -59,8 +59,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.8,
-    "L3|on": 0.74
+    "L3|off": 0.805,
+    "L3|on": 0.755
    },
    "ok": true,
    "motivos": []
@@ -70,7 +70,7 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.66,
+    "L3|off": 0.655,
     "L3|on": 0.825
    },
    "ok": true,
@@ -81,8 +81,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.71,
-    "L3|on": 0.73
+    "L3|off": 0.7,
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -92,8 +92,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.7,
-    "L3|on": 0.84
+    "L3|off": 0.715,
+    "L3|on": 0.81
    },
    "ok": true,
    "motivos": []
@@ -103,8 +103,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.65,
-    "L3|on": 0.615
+    "L3|off": 0.655,
+    "L3|on": 0.61
    },
    "ok": true,
    "motivos": []
@@ -114,8 +114,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.595,
-    "L3|on": 0.835
+    "L3|off": 0.575,
+    "L3|on": 0.815
    },
    "ok": true,
    "motivos": []
@@ -125,8 +125,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.765,
-    "L3|on": 0.78
+    "L3|off": 0.755,
+    "L3|on": 0.79
    },
    "ok": true,
    "motivos": []
@@ -147,8 +147,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.46,
-    "L3|on": 0.82
+    "L3|off": 0.465,
+    "L3|on": 0.83
    },
    "ok": true,
    "motivos": []
@@ -158,8 +158,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.49,
-    "L3|on": 0.52
+    "L3|off": 0.53,
+    "L3|on": 0.555
    },
    "ok": true,
    "motivos": []
@@ -170,7 +170,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.69,
-    "L3|on": 0.765
+    "L3|on": 0.795
    },
    "ok": true,
    "motivos": []
@@ -180,19 +180,21 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.465,
+    "L3|off": 0.425,
     "L3|on": 0.77
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|off 42% fora de 45-85%"
+   ]
   },
   "mon_colecionador_de_poses": {
    "nome": "Colecionador de Poses",
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.62,
-    "L5|on": 0.46
+    "L5|off": 0.63,
+    "L5|on": 0.485
    },
    "ok": true,
    "motivos": []
@@ -202,8 +204,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.73,
-    "L3|on": 0.735
+    "L3|off": 0.725,
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -214,7 +216,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.78,
-    "L3|on": 0.735
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -224,8 +226,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.48,
-    "L3|on": 0.68
+    "L3|off": 0.465,
+    "L3|on": 0.7
    },
    "ok": true,
    "motivos": []
@@ -235,13 +237,13 @@
    "categoria": "lacaio",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.425,
-    "L3|on": 0.455
+    "L3|off": 0.455,
+    "L3|on": 0.44
    },
    "ok": false,
    "motivos": [
-    "L3|off 42% fora de 45-85%",
-    "L3|on delta 12.5 pp > 8"
+    "L3|on 44% fora de 45-85%",
+    "L3|on delta 13.0 pp > 8"
    ]
   },
   "enemy_yeti": {
@@ -249,8 +251,8 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.63,
-    "L3|on": 0.55
+    "L3|off": 0.67,
+    "L3|on": 0.495
    },
    "ok": true,
    "motivos": []
@@ -260,11 +262,13 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.785,
+    "L3|off": 0.78,
     "L3|on": 0.67
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|on delta 10.0 pp > 8"
+   ]
   }
  }
 }

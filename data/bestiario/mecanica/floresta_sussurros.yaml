@@ -27,7 +27,7 @@ criaturas:
   enemy_aranha_lobo:
     cartas:
       - {n: Pata de Salto, t: "A pata de salto bate de baixo para cima no queixo.", e: ["d:marcial:impactante"]}
-      - {n: Salto nas Costas, sig: 1, t: "Salta por cima da linha da frente, cai nas costas e já salta de volta.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+      - {n: Salto nas Costas, sig: 1, t: "Salta por cima da linha da frente, cai nas costas e já salta de volta.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}, "c:desmoralizado:1", {kind: esconder, alvo: eu, valor: 1}]}
   enemy_urso_coruja_mutante:
     cartas:
       - {n: Elmo de Osso, t: "A ave baixa a cabeça com o capacete de osso e cabeceia de lado.", e: ["d:versatil:impactante"]}
@@ -37,7 +37,7 @@ criaturas:
   mon_ent_dormindo:
     cartas:
       - {n: Garra de Gancho, t: "A garra de gancho do bicho de pasto desce devagar e pesada.", e: ["d:versatil:cortante"]}
-      - {n: Gancho de Sono, sig: 1, t: "Puxa quem passa contra o peito e o usa de escudo contra os companheiros.", e: ["d:marcial:cortante", {kind: mover_alvo_zona, direcao: aproximar}, {kind: protecao, valor: 4}], fol: 2}
+      - {n: Gancho de Sono, sig: 1, t: "Puxa quem passa contra o peito e o usa de escudo contra os companheiros.", e: ["d:marcial:cortante", {kind: mover_alvo_zona, direcao: aproximar}, {kind: protecao, valor: 4}, "c:desmoralizado:1", {kind: marca, valor: 1}], fol: 2}
       - {n: Suspiro de Sono, f: cena, t: "Solta um suspiro longo e a pele se abre em dobras que absorvem o golpe.", e: [{kind: protecao, valor: 6}]}
     aprox: "o puxado vira escudo e leva os golpes dos companheiros -> proteção própria + aproximar"
   mon_morcego_rasteiro:
@@ -104,7 +104,7 @@ criaturas:
   enemy_sombra_espreitadora:
     cartas:
       - {n: Boca de Meia-Lua, t: "A cabeça em meia-lua morde de baixo para cima na canela.", e: ["d:leve:perfurante"]}
-      - {n: Tubo do Ventre, sig: 1, t: "Sobe pela perna e bebe pelo tubo da barriga cada vez mais fundo.", e: ["d:leve:perfurante", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: perfurante}, {kind: cura, alvo: eu, valor: 2}], fol: 2}
+      - {n: Tubo do Ventre, sig: 1, t: "Sobe pela perna e bebe pelo tubo da barriga cada vez mais fundo.", e: ["d:leve:perfurante", {kind: dot, dano_base: 2, duracao: 3, dano_tipo: perfurante}, {kind: cura, alvo: eu, valor: 2}, {kind: esconder, alvo: eu, valor: 1}], fol: 2}
   mon_ermitao_de_carcaca:
     cartas:
       - {n: Dedo Branco, t: "O dedo branco sai de dentro da carcaça e bate seco nas costelas.", e: ["d:marcial:impactante"]}

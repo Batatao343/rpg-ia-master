@@ -8,7 +8,7 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 122.2,
+ "elapsed_s": 236.2,
  "criaturas": {
   "mon_deitado_na_parede": {
    "nome": "Deitado na Parede",
@@ -16,7 +16,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.82,
-    "L3|on": 0.74
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -26,8 +26,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.79,
-    "L3|on": 0.63
+    "L3|off": 0.74,
+    "L3|on": 0.61
    },
    "ok": true,
    "motivos": []
@@ -37,8 +37,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.72,
-    "L3|on": 0.75
+    "L3|off": 0.755,
+    "L3|on": 0.77
    },
    "ok": true,
    "motivos": []
@@ -48,8 +48,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.57,
-    "L3|on": 0.75
+    "L3|off": 0.565,
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -59,8 +59,8 @@
    "categoria": "lacaio",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.675,
-    "L3|on": 0.6
+    "L3|off": 0.665,
+    "L3|on": 0.58
    },
    "ok": true,
    "motivos": []
@@ -70,8 +70,8 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.56,
-    "L3|on": 0.715
+    "L3|off": 0.61,
+    "L3|on": 0.72
    },
    "ok": true,
    "motivos": []
@@ -81,12 +81,12 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.82,
-    "L3|on": 0.185
+    "L3|off": 0.825,
+    "L3|on": 0.145
    },
    "ok": false,
    "motivos": [
-    "L3|on 18% fora de 45-85%"
+    "L3|on 14% fora de 45-85%"
    ]
   },
   "enemy_mimico_bau": {
@@ -94,14 +94,14 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.57,
-    "L3|on": 0.89
+    "L3|off": 0.6,
+    "L3|on": 0.87
    },
    "ok": false,
    "motivos": [
-    "L3|off delta 19.0 pp > 8",
-    "L3|on 89% fora de 45-85%",
-    "L3|on delta 19.0 pp > 8"
+    "L3|off delta 18.0 pp > 8",
+    "L3|on 87% fora de 45-85%",
+    "L3|on delta 17.0 pp > 8"
    ]
   },
   "enemy_basilisco_caverna": {
@@ -109,13 +109,13 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.505,
+    "L3|off": 0.5,
     "L3|on": 0.655
    },
    "ok": false,
    "motivos": [
-    "L3|off delta 12.0 pp > 8",
-    "L3|on delta 15.0 pp > 8"
+    "L3|off delta 18.0 pp > 8",
+    "L3|on delta 11.5 pp > 8"
    ]
   },
   "enemy_morcego_vampiro": {
@@ -123,13 +123,11 @@
    "categoria": "lacaio",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.82,
-    "L3|on": 0.72
+    "L3|off": 0.81,
+    "L3|on": 0.6
    },
-   "ok": false,
-   "motivos": [
-    "L3|on delta 9.0 pp > 8"
-   ]
+   "ok": true,
+   "motivos": []
   },
   "mon_bexiga_de_respiro": {
    "nome": "Bexiga de Respiro",
@@ -147,8 +145,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.75,
-    "L3|on": 0.74
+    "L3|off": 0.77,
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -169,8 +167,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.76,
-    "L3|on": 0.815
+    "L3|off": 0.74,
+    "L3|on": 0.8
    },
    "ok": true,
    "motivos": []
@@ -181,7 +179,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.755,
-    "L3|on": 0.825
+    "L3|on": 0.82
    },
    "ok": true,
    "motivos": []
@@ -191,19 +189,21 @@
    "categoria": "elite",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.465,
-    "L3|on": 0.545
+    "L3|off": 0.445,
+    "L3|on": 0.51
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|off 44% fora de 45-85%"
+   ]
   },
   "mon_bracos_de_tenaz": {
    "nome": "Braços de Tenaz",
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.615,
-    "L3|on": 0.745
+    "L3|off": 0.595,
+    "L3|on": 0.72
    },
    "ok": true,
    "motivos": []
@@ -213,8 +213,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.59,
-    "L3|on": 0.795
+    "L3|off": 0.57,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -224,8 +224,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.775,
-    "L3|on": 0.77
+    "L3|off": 0.785,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -235,8 +235,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.64,
-    "L3|on": 0.66
+    "L3|off": 0.63,
+    "L3|on": 0.65
    },
    "ok": true,
    "motivos": []
@@ -246,8 +246,8 @@
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.65,
-    "L5|on": 0.255
+    "L5|off": 0.665,
+    "L5|on": 0.26
    },
    "ok": false,
    "motivos": [
@@ -259,8 +259,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.59,
-    "L3|on": 0.78
+    "L3|off": 0.57,
+    "L3|on": 0.77
    },
    "ok": true,
    "motivos": []
@@ -270,8 +270,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.83,
-    "L3|on": 0.8
+    "L3|off": 0.815,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -281,8 +281,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.515,
-    "L3|on": 0.635
+    "L3|off": 0.525,
+    "L3|on": 0.64
    },
    "ok": true,
    "motivos": []
@@ -292,8 +292,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.755,
-    "L3|on": 0.675
+    "L3|off": 0.735,
+    "L3|on": 0.69
    },
    "ok": true,
    "motivos": []
@@ -303,8 +303,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.62,
-    "L3|on": 0.81
+    "L3|off": 0.635,
+    "L3|on": 0.815
    },
    "ok": true,
    "motivos": []
@@ -314,7 +314,7 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.485,
+    "L3|off": 0.51,
     "L3|on": 0.625
    },
    "ok": true,

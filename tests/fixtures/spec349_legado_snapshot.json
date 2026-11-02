@@ -59,7 +59,7 @@
   "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
-   "bst_descarga_arcana"
+   "bst_pancada_esmagadora"
   ],
   "categoria": "elite",
   "description": "Caçador de leviatãs deslocado para as docas. Sente pouco — inclusive medo. Só recua quando a caça deixa de ser caça.",
@@ -414,7 +414,7 @@
   "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
-   "bst_descarga_arcana"
+   "bst_bote_certeiro"
   ],
   "categoria": "lacaio",
   "description": "Nômade do deserto com lentes de obsidiana costuradas na pele.",
@@ -1208,7 +1208,7 @@
   "arquetipo": "emboscador",
   "behavior_profile": "tatico",
   "cartas": [
-   "bst_descarga_arcana"
+   "bst_golpe_sombras"
   ],
   "categoria": "lacaio",
   "description": "Refugiado do Reino Subterrâneo que nunca voltou às profundezas. Embosca grupos pequenos, foge de grupos grandes — Gruumsha entende números.",
@@ -1235,7 +1235,7 @@
   "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
-   "bst_descarga_arcana"
+   "bst_bote_certeiro"
   ],
   "categoria": "lacaio",
   "description": "Tripulante da guerra de rotas do mar oeste. Briga suja, aposta alto — e sabe exatamente quando uma luta deixou de valer o saque.",
@@ -1319,7 +1319,7 @@
   "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
-   "bst_descarga_arcana"
+   "bst_pancada_esmagadora"
   ],
   "categoria": "lacaio",
   "description": "Ex-caçador exilado de Skallgard que sobreviveu ao Ermo e voltou selvagem. Pensa como a cidade que o expulsou — e ataca como quem não tem mais nada a perder, até a matemática dizer o contrário.",

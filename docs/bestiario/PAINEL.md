@@ -7,15 +7,15 @@ Gerado por `scripts/bestiario/painel.py`; não edite à mão.
 | pantano_melancolia | 2 | pousada | 21 | 1 | 1 | 6 | 20/22 dentro de 45-85 % (off e on) |
 | pradaria_ruinas | 3 | pousada | 21 | 1 | 1 | 5 | 20/22 dentro de 45-85 % (off e on) |
 | brekmar | 4 | pousada | 20 | 0 | 1 | 4 | 18/20 dentro de 45-85 % (off e on) |
-| deserto_zhur | 5 | pousada | 21 | 5 | 2 | 8 | 22/26 dentro de 45-85 % (off e on) |
+| deserto_zhur | 5 | pousada | 21 | 5 | 2 | 8 | 21/26 dentro de 45-85 % (off e on) |
 | costa_negra | 6 | pousada | 22 | 0 | 1 | 5 | 21/22 dentro de 45-85 % (off e on) |
 | montanhas_afiadas | 7 | pousada | 20 | 7 | 1 | 8 | 22/27 dentro de 45-85 % (off e on) |
-| floresta_sussurros | 8 | pousada | 21 | 4 | 1 | 7 | 22/25 dentro de 45-85 % (off e on) |
-| selva_xylos | 9 | pousada | 21 | 1 | 1 | 7 | 21/22 dentro de 45-85 % (off e on) |
-| skallgard | 10 | pousada | 20 | 3 | 1 | 5 | 22/23 dentro de 45-85 % (off e on) |
+| floresta_sussurros | 8 | pousada | 21 | 4 | 1 | 7 | 19/25 dentro de 45-85 % (off e on) |
+| selva_xylos | 9 | pousada | 21 | 1 | 1 | 7 | 20/22 dentro de 45-85 % (off e on) |
+| skallgard | 10 | pousada | 20 | 3 | 1 | 5 | 20/23 dentro de 45-85 % (off e on) |
 | aethelgard | 11 | pousada | 21 | 4 | 1 | 7 | 24/25 dentro de 45-85 % (off e on) |
 | ophidia | 12 | pousada | 20 | 0 | 1 | 4 | 18/20 dentro de 45-85 % (off e on) |
-| nova_arcadia | 1 | pousada | 21 | 6 | 1 | 10 | 25/27 dentro de 45-85 % (off e on) |
+| nova_arcadia | 1 | pousada | 21 | 6 | 1 | 10 | 24/27 dentro de 45-85 % (off e on) |
 
 ## pantano_melancolia
 
@@ -62,7 +62,7 @@ Gerado por `scripts/bestiario/painel.py`; não edite à mão.
 - Família: besta_entropia 10, corpo_reescrito 5, demonio_encarnado 7, humanoide_preco 5
 - Categoria: chefe 1, elite 8, lacaio 9, padrao 9
 - Papel tático: artilharia 2, batedor_rapido 2, bruto_de_linha 3, controlador 5, drenador 1, emboscador 4, guarda_protetor 2, perseguidor_marca 1, quebra_defesa 3, saqueador 2, suporte 1, tanque_reativo 1
-- Arquétipo: abissal 1, bruto 3, conjurador 2, covarde_oportunista 4, emboscador 4, guardiao 3, morto_vivo_implacavel 1, predador 4, predador_apice 1, tatico 4
+- Arquétipo: abissal 1, bruto 2, conjurador 2, covarde_oportunista 4, emboscador 4, guardiao 2, morto_vivo_implacavel 2, predador 5, predador_apice 1, tatico 4
 - Status: nova 20, reinventada 7
 
 ## floresta_sussurros
@@ -70,7 +70,7 @@ Gerado por `scripts/bestiario/painel.py`; não edite à mão.
 - Família: besta_entropia 10, corpo_reescrito 5, demonio_encarnado 5, humanoide_preco 5
 - Categoria: chefe 1, elite 7, lacaio 7, padrao 10
 - Papel tático: artilharia 2, batedor_rapido 2, bruto_de_linha 2, controlador 2, drenador 2, emboscador 2, guarda_protetor 2, perseguidor_marca 3, quebra_defesa 1, sacrificial 1, saqueador 2, suporte 2, tanque_reativo 2
-- Arquétipo: bruto 3, conjurador 1, covarde_oportunista 4, emboscador 3, guardiao 2, morto_vivo_implacavel 1, predador 6, predador_apice 2, tatico 3
+- Arquétipo: bruto 2, conjurador 1, covarde_oportunista 6, emboscador 2, guardiao 2, morto_vivo_implacavel 1, predador 6, predador_apice 2, tatico 3
 - Status: nova 21, reinventada 4
 
 ## selva_xylos
@@ -78,7 +78,7 @@ Gerado por `scripts/bestiario/painel.py`; não edite à mão.
 - Família: besta_entropia 7, corpo_reescrito 5, demonio_encarnado 4, humanoide_preco 6
 - Categoria: chefe 1, elite 7, lacaio 6, padrao 8
 - Papel tático: artilharia 2, batedor_rapido 2, bruto_de_linha 2, controlador 2, drenador 1, emboscador 3, guarda_protetor 2, perseguidor_marca 1, quebra_defesa 2, saqueador 1, suporte 1, tanque_reativo 3
-- Arquétipo: abissal 1, bruto 3, conjurador 2, covarde_oportunista 2, emboscador 3, guardiao 2, lider_matilha 1, morto_vivo_implacavel 1, predador 3, predador_apice 1, tatico 3
+- Arquétipo: abissal 1, bruto 4, conjurador 2, covarde_oportunista 2, emboscador 2, guardiao 2, lider_matilha 1, morto_vivo_implacavel 1, predador 3, predador_apice 1, tatico 3
 - Status: adotada 1, nova 21
 
 ## skallgard
@@ -86,7 +86,7 @@ Gerado por `scripts/bestiario/painel.py`; não edite à mão.
 - Família: besta_entropia 6, corpo_reescrito 6, demonio_encarnado 5, humanoide_preco 6
 - Categoria: chefe 1, elite 5, lacaio 7, padrao 10
 - Papel tático: artilharia 2, batedor_rapido 3, bruto_de_linha 1, controlador 5, drenador 1, emboscador 2, guarda_protetor 1, perseguidor_marca 1, quebra_defesa 1, saqueador 1, suporte 3, tanque_reativo 2
-- Arquétipo: bruto 3, conjurador 2, covarde_oportunista 6, guardiao 4, lider_matilha 1, morto_vivo_implacavel 1, predador 1, predador_apice 1, tatico 4
+- Arquétipo: bruto 2, conjurador 2, covarde_oportunista 6, guardiao 4, lider_matilha 1, morto_vivo_implacavel 1, predador 1, predador_apice 1, tatico 5
 - Status: nova 20, reinventada 3
 
 ## aethelgard

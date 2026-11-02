@@ -616,51 +616,57 @@ Ondas autoradas em branches separadas e integradas por merge `--no-ff` (spec-359
 
 **Arena (40 seeds × 5 Posturas, MockLLM, L3 para lacaio/padrão/elite e L5 para chefe; `off` e `on`).** Relatórios por região em `docs/spec349/arena-<regiao>.md` e `.json`; baseline dos 32 slots em `docs/spec349/arena-slots-baseline.json` (medido antes de qualquer Carta nova).
 
-**Resultado por região (criaturas dentro de 45–85 % em cada modo; "ambos" = nos dois).**
+**Resultado por região no HEAD pós-sync, baseline dos 32 slots remedido na `main` atual (criaturas dentro de 45–85 % em cada modo; "ambos" = nos dois).**
 
 | Região | Criaturas | off em 45-85 % | on em 45-85 % | ambos | fora (id: off/on) |
 |---|---|---|---|---|---|
 | nova_arcadia | 27 | 25 | 27 | 25 | 2 |
 | pantano_melancolia | 22 | 21 | 20 | 20 | 2 |
-| pradaria_ruinas | 22 | 22 | 21 | 21 | 1 |
+| pradaria_ruinas | 22 | 22 | 20 | 20 | 2 |
 | brekmar | 20 | 19 | 18 | 18 | 2 |
-| deserto_zhur | 26 | 24 | 23 | 22 | 4 |
+| deserto_zhur | 26 | 25 | 23 | 22 | 4 |
 | costa_negra | 22 | 21 | 21 | 21 | 1 |
-| montanhas_afiadas | 27 | 27 | 24 | 24 | 3 |
-| floresta_sussurros | 25 | 25 | 23 | 23 | 2 |
-| selva_xylos | 22 | 22 | 21 | 21 | 1 |
-| skallgard | 23 | 22 | 23 | 22 | 1 |
-| aethelgard | 25 | 24 | 25 | 24 | 1 |
-| ophidia | 20 | 18 | 19 | 18 | 2 |
-| **Total** | 281 | 270 | 265 | 259 | 22 |
+| montanhas_afiadas | 27 | 26 | 24 | 23 | 4 |
+| floresta_sussurros | 25 | 24 | 21 | 20 | 5 |
+| selva_xylos | 22 | 21 | 21 | 20 | 2 |
+| skallgard | 23 | 22 | 22 | 21 | 2 |
+| aethelgard | 25 | 25 | 25 | 25 | 0 |
+| ophidia | 20 | 19 | 19 | 18 | 2 |
+| **Total** | 281 | 270 | 261 | 253 | 28 |
 
-**Fora da faixa em `off` ou `on` (22 de 281; criatura: `off`/`on`).**
+**Fora da faixa em `off` ou `on` (28 de 281; criatura: `off`/`on`).**
 
-- nova_arcadia: mon_convidado_de_cera: 44%/83%
-- nova_arcadia: enemy_polvo_esgoto: 44%/71%
-- pantano_melancolia: mon_borda_que_anda: 74%/40%
-- pantano_melancolia: enemy_zumbi_blindado: 42%/44%
-- pradaria_ruinas: mon_chifres_travados: 62%/30%
-- brekmar: mon_casco_de_costelas: 62%/34%
-- brekmar: mon_torcido_da_rinha: 39%/86%
-- deserto_zhur: mon_cavador_de_funil: 44%/89%
-- deserto_zhur: enemy_aranha_de_cristal: 54%/28%
-- deserto_zhur: mon_aguadeiro_de_bucho: 59%/86%
-- deserto_zhur: enemy_boss_general_escorpiao: 90%/57%
-- costa_negra: mon_hospede_do_estomago: 41%/30%
-- montanhas_afiadas: enemy_minotauro_esqueleto: 82%/18%
-- montanhas_afiadas: enemy_mimico_bau: 57%/89%
-- montanhas_afiadas: mon_peso_dos_vencidos: 65%/26%
-- floresta_sussurros: enemy_urso_coruja_mutante: 60%/44%
-- floresta_sussurros: mon_toldo_das_clareiras: 45%/30%
-- selva_xylos: mon_escavador_das_camaras: 64%/28%
-- skallgard: enemy_lobo_invernal: 42%/46%
-- aethelgard: enemy_esqueleto_mago: 43%/58%
-- ophidia: mon_puxado_do_oeste: 44%/85%
-- ophidia: mon_vigia_de_cor_errada: 44%/90%
+- nova_arcadia: mon_convidado_de_cera: 41%/84%
+- nova_arcadia: enemy_polvo_esgoto: 44%/72%
+- pantano_melancolia: mon_borda_que_anda: 75%/41%
+- pantano_melancolia: enemy_zumbi_blindado: 42%/33%
+- pradaria_ruinas: mon_chifres_travados: 64%/29%
+- pradaria_ruinas: enemy_esqueleto_legiao_antiga: 48%/42%
+- brekmar: mon_casco_de_costelas: 63%/32%
+- brekmar: mon_torcido_da_rinha: 34%/86%
+- deserto_zhur: mon_cavador_de_funil: 46%/88%
+- deserto_zhur: enemy_aranha_de_cristal: 53%/28%
+- deserto_zhur: mon_aguadeiro_de_bucho: 56%/88%
+- deserto_zhur: enemy_boss_general_escorpiao: 90%/56%
+- costa_negra: mon_hospede_do_estomago: 42%/32%
+- montanhas_afiadas: enemy_minotauro_esqueleto: 82%/14%
+- montanhas_afiadas: enemy_mimico_bau: 60%/87%
+- montanhas_afiadas: enemy_troll_ponte: 44%/51%
+- montanhas_afiadas: mon_peso_dos_vencidos: 66%/26%
+- floresta_sussurros: enemy_urso_coruja_mutante: 64%/40%
+- floresta_sussurros: mon_besouro_do_estalo: 75%/86%
+- floresta_sussurros: mon_toldo_das_clareiras: 47%/32%
+- floresta_sussurros: mon_mapa_de_cicatrizes: 41%/65%
+- floresta_sussurros: mon_desafiante_rubro: 70%/44%
+- selva_xylos: mon_escavador_das_camaras: 66%/30%
+- selva_xylos: mon_isca_amarrada: 43%/76%
+- skallgard: mon_ticao_do_juramento: 42%/77%
+- skallgard: enemy_lobo_invernal: 46%/44%
+- ophidia: mon_puxado_do_oeste: 41%/84%
+- ophidia: mon_vigia_de_cor_errada: 46%/91%
 
-- Leitura: 9 são chefes (`on` < 45 % em todos menos o General Escorpião, que está em 90 % no `off`): os dials chegaram ao mínimo (dano −7, força −7) e o baralho de família da 332 mais as 2 ações por rodada ainda dominam; Corpo não desce de 2 por causa do invariante de Vitalidade. 13 são criaturas em que `off` e `on` divergem (assinatura de controle/apoio que o `on` joga mais) ou que ficaram 1 a 3 pp fora; o ajuste fica no limite do orçamento da Carta.
-- Delta de 8 pp dos slots que estavam na faixa antes: 4 passam da faixa mas estouram o delta (Ent Dormindo `on` +21 pp, Basilisco `off` +12/`on` +15, Morcego Vampiro `on` +9, Esqueleto da Legião Antiga `off` +8). Total pelo veredito completo do `arena.py` (faixa e delta): **255 de 281**.
+- Leitura: 9 chefes (todos com `on` < 45 % exceto o General Escorpião, `off` 90 %): os dials chegaram ao mínimo e o baralho de família (332) mais as 2 ações por rodada dominam; Corpo não desce de 2 (invariante de Vitalidade). Os demais 19 têm `off` e `on` divergentes ou 1 a 4 pp fora. Parte da diferença vem do rebase sobre a `main` (SPEC-362 baixou a Vitalidade do Arcanista; SPEC-355/358 mexeram no motor) e das Cartas restauradas do R3 (abaixo). Não recalibrei: o critério é medir no código que pousa e registrar.
+- Delta de 8 pp dos slots que estavam na faixa antes (comparação com `round(…, 1)`, então −8,0 pp passa): 6 estouram (Quimera de Cristal `on` −9,0; Verme de Vidro `off` −8,5; Ent Dormindo `on` +18,5; Basilisco `off` −18,0/`on` −11,5; Coisa do Esgoto `on` −9,5; Jötunn `on` −10,0). Pelo veredito completo do `arena.py` (faixa e delta): **247 de 281**.
 
 **Efeitos que o motor atual NÃO suporta (efeito ideal × aproximação).** 145 das 281 criaturas têm a linha `aprox:` no yaml (`grep -n "aprox:" data/bestiario/mecanica/*.yaml`). Os pedidos pelo coordenador e as demais classes:
 
@@ -690,3 +696,5 @@ Ondas autoradas em branches separadas e integradas por merge `--no-ff` (spec-359
 6. **Slot chefe `enemy_aranha_de_cristal` (resolvido).** O `type` legado ("Monstrosidade (Gigante)") virou `BOSS`, e a linha `BOSS:` do art brief aparece; o teste cobre os 13 chefes.
 7. **Arena do slot fora da faixa antes** (ex.: Aranha de Cristal 5 %, General Escorpião 9 %): a faixa 45–85 % manda; o delta de 8 pp só vale quando o slot estava na faixa.
 8. **Follow-ups (coordenador, 02/11).** (a) O teto de 15 usos por Carta de família (332) só volta a valer para a esteira com mais Cartas de família na SPEC-336. (b) Os chefes ficam abaixo de 45 % no `on` (9 chefes), por causa do baralho de família e das 2 ações por rodada.
+9. **Revisão Sol (Etapa 8) e correções, 02/11.** (P2-1) O delta da arena compara com `round(…, 1)`. (P1-1) Baseline dos 32 slots remedido com o `bestiary.json` da `main` atual no mesmo motor e arena completa no HEAD pós-sync (números acima). (P1-2) `test_save_load_com_criatura_nova_e_slot_em_bestiary_knowledge` cobre `off` e `on`. (P2-3) Os 16 slots que perdiam um `kind` de efeito do R3 (`dot`, `marca`, `esconder`, `aplicar_condicao`, `empurrao`, `protecao`) recuperaram o `kind` como efeito secundário da assinatura (`dot` 1 × 2 rodadas, `marca` 1, `esconder` 1, `desmoralizado` 1, `empurrao` 1, `protecao` 2); nenhum ficou como desvio, e o orçamento das Cartas segue verde. (P2-4) `validate_bestiary_identity` passa `_esteira.yaml` ao `lint_global`, então o R27 roda no `validate_content`. (P2-5/6) Docstring do teste de `appearance` e `cartas` das 5 entradas SPEC-355 do snapshot atualizados.
+10. **`test_spec289_ameaca_tematica` (regressão apontada pelo executor da 360).** Os 4 testes fixavam "a única temática" da esfera. A esteira acrescentou temáticas legítimas em Aethelgard (Alambique de Carne, combatente da Destilação; Camarão Faxineiro, por coincidência de radical com "Câmara") e, nos slots reinventados, o Pajem de Obsidiana (ex-Sentinela de Ferro, radical `obsidi` da Chama Azul) entrou e a Quimera de Cristal virou Ariranha de Arcada, saindo do tema. A lógica da 289 está correta; o teste passou a medir sobre a população anterior à esteira (fixture) mais um teste novo que exige que, com a população cheia, o sorteio fique sempre dentro das temáticas da esfera. O fallback de porte estrito retira o Pajem da população do teste.

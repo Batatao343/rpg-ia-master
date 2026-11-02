@@ -28,7 +28,7 @@ criaturas:
   enemy_mumia_de_po:
     cartas:
       - {n: Varal da Liteira, t: "Um dos varais dos ombros gira e bate como um tronco de madeira seca.", e: ["d:versatil:impactante"]}
-      - {n: Pertence ao Rei, sig: 1, t: "Marca quem carrega o que saiu da câmara e o segue pelo campo sem nunca errar.", e: ["d:marcial:impactante", {kind: marca, valor: 3}], fol: 2}
+      - {n: Pertence ao Rei, sig: 1, t: "Marca quem carrega o que saiu da câmara e o segue pelo campo sem nunca errar.", e: ["d:marcial:impactante", {kind: marca, valor: 3}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: corrosivo}], fol: 2}
       - {n: Voz de Liteira, f: cena, t: "Os varais rangem como liteira que levanta e ele endireita as costas.", e: [{kind: buff_dano, valor: 3}, {kind: protecao, valor: 3}]}
     aprox: "segue o portador do objeto real pelo campo -> marca"
   mon_varano_vidrado:

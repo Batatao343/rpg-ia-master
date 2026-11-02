@@ -20,13 +20,13 @@ criaturas:
   enemy_esqueleto_mago:
     cartas:
       - {n: Raio de Prisma, t: "Um prisma do braço solta um fio de luz que corta a pele.", e: ["d:versatil:arcano"]}
-      - {n: Feixe Partido, sig: 1, t: "Junta a luz da sala nos prismas por uma rodada e a solta num feixe que corta.", e: ["d:pesada:arcano", {kind: rachadura, valor: 1}], fol: 2}
+      - {n: Feixe Partido, sig: 1, t: "Junta a luz da sala nos prismas por uma rodada e a solta num feixe que corta.", e: ["d:pesada:arcano", {kind: rachadura, valor: 1}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: corrosivo}], fol: 2}
       - {n: Prismas Virados, f: cena, t: "Os prismas das costas se viram para a lamparina e ela some no vidro.", e: [{kind: protecao, valor: 5}, {kind: buff_dano, valor: 1}]}
     aprox: "se a luz for tapada o feixe sai partido e fraco -> sem dependência de luz da cena"
   enemy_fantasma:
     cartas:
       - {n: Dedo de Afogado, t: "O dedo claro como água fecha no pescoço, por baixo, sem aviso.", e: ["d:versatil:gelido"]}
-      - {n: Abraço Frio, sig: 1, t: "Invisível na água clara, abraça por baixo e o frio entra até os ossos.", e: ["d:marcial:gelido", "c:enraizado:1", {kind: esconder, alvo: eu, valor: 2}], fol: 2}
+      - {n: Abraço Frio, sig: 1, t: "Invisível na água clara, abraça por baixo e o frio entra até os ossos.", e: ["d:marcial:gelido", "c:enraizado:1", {kind: esconder, alvo: eu, valor: 2}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: gelido}], fol: 2}
       - {n: Água Clara, f: cena, t: "Mergulha de volta na água clara, onde só o coração escuro aparece.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 4}]}
     aprox: "o que se lança contra ele antes de vê-lo erra -> esconder"
   enemy_golem_carne:
@@ -73,7 +73,7 @@ criaturas:
   mon_quimera_cristal:
     cartas:
       - {n: Bigode de Cristal, t: "Os bigodes de cristal chicoteiam o rosto como varas de vidro.", e: ["d:versatil:cortante"]}
-      - {n: Bote da Corrente, sig: 1, t: "Monta uma Corrente-de-Éter e dá o bote de longe no mais isolado.", e: ["d:pesada:perfurante", {kind: marca, valor: 2}], fol: 2}
+      - {n: Bote da Corrente, sig: 1, t: "Monta uma Corrente-de-Éter e dá o bote de longe no mais isolado.", e: ["d:pesada:perfurante", {kind: marca, valor: 2}, "c:desmoralizado:1", {kind: dot, dano_base: 1, duracao: 2, dano_tipo: perfurante}], fol: 2}
       - {n: Corrente de Éter, f: cena, t: "A corrente a leva para longe e ela volta com o Éter na pele.", e: [{kind: esconder, alvo: eu, valor: 2}, {kind: protecao, valor: 4}]}
   mon_peito_de_sino:
     cartas:

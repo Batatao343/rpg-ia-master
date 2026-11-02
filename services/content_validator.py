@@ -1226,10 +1226,18 @@ def validate_bestiary_identity(
         for f in fs:
             issues += bl.lint_ficha(f)
         issues += bl.lint_regiao(regiao, fs, bestiary=best, codex_docs=docs)
-    issues += bl.lint_global(por_regiao)
+    esteira_path = os.path.join("data", "bestiario", "_esteira.yaml")  # R27 (cobertura de demônios)
+    esteira = None
+    if os.path.isfile(esteira_path):
+        with open(esteira_path, encoding="utf-8") as fh:
+            esteira = yaml.safe_load(fh)
+    issues += bl.lint_global(por_regiao, esteira=esteira)
     return [
         Finding(
-            "bestiary_identity", "error" if i.level == "error" else "warning", bestiary_path, "",
+            "bestiary_identity",
+            "error" if i.level == "error" else "warning",
+            bestiary_path,
+            "",
             f"{i.code}: {i.message}",
         )
         for i in issues

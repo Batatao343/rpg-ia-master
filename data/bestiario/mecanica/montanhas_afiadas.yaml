@@ -21,7 +21,7 @@ criaturas:
   enemy_observador_menor:
     cartas:
       - {n: Olho de Mão, t: "Um olho aberto na palma pisca e a mão bate no rosto.", e: ["d:leve:impactante"]}
-      - {n: Mão à Mostra, sig: 1, t: "Grita o que vê e os inimigos leem a jogada do herói e se armam.", e: [{kind: revelar, campo: cartas}, {kind: buff_acerto, alvo: aliados, valor: 2}, "d:leve:impactante"]}
+      - {n: Mão à Mostra, sig: 1, t: "Grita o que vê e os inimigos leem a jogada do herói e se armam.", e: [{kind: revelar, campo: cartas}, {kind: buff_acerto, alvo: aliados, valor: 2}, "d:leve:impactante", "c:desmoralizado:1"]}
     aprox: "a Carta preparada do jogador fica à mostra -> revelar cartas + buff de acerto em aliados"
   enemy_wyvern_jovem:
     cartas:
@@ -31,7 +31,7 @@ criaturas:
   enemy_minotauro_esqueleto:
     cartas:
       - {n: Chifrada de Canga, t: "A cabeça de boi com a canga de ferro bate de lado.", e: ["d:versatil:impactante"]}
-      - {n: Arremetida no Trilho, sig: 1, t: "Raspa o casco no trilho e arremete levando tudo que estiver na linha.", e: ["d:pesada:impactante", {kind: empurrao, valor: 2}], fol: 2}
+      - {n: Arremetida no Trilho, sig: 1, t: "Raspa o casco no trilho e arremete levando tudo que estiver na linha.", e: ["d:pesada:impactante", {kind: empurrao, valor: 2}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: impactante}], fol: 2}
       - {n: Placas da Testa, f: cena, t: "Baixa as placas da testa até o ferro e espera a carga.", e: [{kind: protecao, valor: 5}]}
   enemy_mimico_bau:
     cartas:
@@ -48,7 +48,7 @@ criaturas:
   enemy_morcego_vampiro:
     cartas:
       - {n: Mãozinha de Cachecol, t: "As mãozinhas das bordas arranham o rosto de quem está na beira.", e: ["d:leve:cortante"]}
-      - {n: Venda na Beira, sig: 1, t: "Desce no vento e cobre os olhos de quem está na beira da trilha.", e: ["c:cego:2", "d:leve:cortante"]}
+      - {n: Venda na Beira, sig: 1, t: "Desce no vento e cobre os olhos de quem está na beira da trilha.", e: ["c:cego:2", "d:leve:cortante", {kind: dot, dano_base: 1, duracao: 2, dano_tipo: perfurante}, {kind: esconder, alvo: eu, valor: 1}]}
     aprox: "quem cobrir e agir arrisca cair da trilha -> cego 2 rodadas"
   mon_bexiga_de_respiro:
     cartas:

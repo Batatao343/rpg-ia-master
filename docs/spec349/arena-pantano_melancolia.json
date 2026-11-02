@@ -8,15 +8,15 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 92.0,
+ "elapsed_s": 132.3,
  "criaturas": {
   "mon_estaqueiro_afogado": {
    "nome": "Estaqueiro Afogado",
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.58,
-    "L3|on": 0.535
+    "L3|off": 0.605,
+    "L3|on": 0.57
    },
    "ok": true,
    "motivos": []
@@ -26,8 +26,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.595,
-    "L3|on": 0.81
+    "L3|off": 0.575,
+    "L3|on": 0.805
    },
    "ok": true,
    "motivos": []
@@ -38,7 +38,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.715,
-    "L3|on": 0.73
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.525,
-    "L3|on": 0.78
+    "L3|on": 0.79
    },
    "ok": true,
    "motivos": []
@@ -59,7 +59,7 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.74,
+    "L3|off": 0.76,
     "L3|on": 0.815
    },
    "ok": true,
@@ -70,7 +70,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.585,
+    "L3|off": 0.61,
     "L3|on": 0.835
    },
    "ok": true,
@@ -81,8 +81,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.64,
-    "L3|on": 0.805
+    "L3|off": 0.625,
+    "L3|on": 0.79
    },
    "ok": true,
    "motivos": []
@@ -92,7 +92,7 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.555,
+    "L3|off": 0.585,
     "L3|on": 0.76
    },
    "ok": true,
@@ -103,7 +103,7 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.73,
+    "L3|off": 0.735,
     "L3|on": 0.595
    },
    "ok": true,
@@ -114,12 +114,12 @@
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.745,
-    "L5|on": 0.4
+    "L5|off": 0.75,
+    "L5|on": 0.41
    },
    "ok": false,
    "motivos": [
-    "L5|on 40% fora de 45-85%"
+    "L5|on 41% fora de 45-85%"
    ]
   },
   "mon_podador_do_ciclo": {
@@ -127,8 +127,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.77,
-    "L3|on": 0.765
+    "L3|off": 0.75,
+    "L3|on": 0.795
    },
    "ok": true,
    "motivos": []
@@ -139,7 +139,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.735,
-    "L3|on": 0.645
+    "L3|on": 0.68
    },
    "ok": true,
    "motivos": []
@@ -149,8 +149,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.64,
-    "L3|on": 0.725
+    "L3|off": 0.62,
+    "L3|on": 0.68
    },
    "ok": true,
    "motivos": []
@@ -160,8 +160,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.6,
-    "L3|on": 0.74
+    "L3|off": 0.565,
+    "L3|on": 0.735
    },
    "ok": true,
    "motivos": []
@@ -171,8 +171,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.525,
-    "L3|on": 0.775
+    "L3|off": 0.52,
+    "L3|on": 0.76
    },
    "ok": true,
    "motivos": []
@@ -182,8 +182,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.685,
-    "L3|on": 0.645
+    "L3|off": 0.665,
+    "L3|on": 0.64
    },
    "ok": true,
    "motivos": []
@@ -193,7 +193,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.72,
+    "L3|off": 0.69,
     "L3|on": 0.805
    },
    "ok": true,
@@ -204,8 +204,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.805,
-    "L3|on": 0.66
+    "L3|off": 0.795,
+    "L3|on": 0.665
    },
    "ok": true,
    "motivos": []
@@ -215,8 +215,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.685,
-    "L3|on": 0.74
+    "L3|off": 0.67,
+    "L3|on": 0.745
    },
    "ok": true,
    "motivos": []
@@ -226,8 +226,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.685,
-    "L3|on": 0.73
+    "L3|off": 0.705,
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -237,8 +237,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.83,
-    "L3|on": 0.775
+    "L3|off": 0.815,
+    "L3|on": 0.755
    },
    "ok": true,
    "motivos": []
@@ -248,13 +248,13 @@
    "categoria": "lacaio",
    "status": "reinventada",
    "cells": {
-    "L3|off": 0.425,
-    "L3|on": 0.44
+    "L3|off": 0.415,
+    "L3|on": 0.33
    },
    "ok": false,
    "motivos": [
     "L3|off 42% fora de 45-85%",
-    "L3|on 44% fora de 45-85%"
+    "L3|on 33% fora de 45-85%"
    ]
   }
  }

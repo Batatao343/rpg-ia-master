@@ -118,5 +118,5 @@ criaturas:
   enemy_esqueleto_legiao_antiga:
     cartas:
       - {n: Haste de Capim, t: "O braço de raiz e capim cai como uma foice lenta.", e: ["d:marcial:cortante"]}
-      - {n: Passo do Vento, sig: 1, t: "O vento vira, o capim das costas enche como vela e ele avança com a rajada.", e: ["d:versatil:cortante", {kind: buff_dano, alvo: eu, valor: 1}], fol: 2}
+      - {n: Passo do Vento, sig: 1, t: "O vento vira, o capim das costas enche como vela e ele avança com a rajada.", e: ["d:versatil:cortante", {kind: buff_dano, alvo: eu, valor: 1}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: perfurante}], fol: 2}
     aprox: "só ataca nas rodadas de vento a favor e entre elas fica parado sem defesa -> buff de dano"

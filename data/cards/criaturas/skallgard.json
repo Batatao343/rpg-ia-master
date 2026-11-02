@@ -1319,6 +1319,16 @@
           "kind": "reposicionar",
           "alvo": "eu",
           "valor": 2
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "gelido"
+        },
+        {
+          "kind": "marca",
+          "valor": 1
         }
       ],
       "descricao": "Salta por cima de quem guarda e morde o que está protegido.",
@@ -1372,6 +1382,12 @@
           "kind": "buff_dano",
           "alvo": "eu",
           "valor": 1
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "igneo"
         }
       ],
       "custo_folego": 1,
@@ -1444,6 +1460,10 @@
           "kind": "buff_dano",
           "alvo": "eu",
           "valor": 2
+        },
+        {
+          "kind": "empurrao",
+          "valor": 1
         }
       ],
       "palavras_chave": {

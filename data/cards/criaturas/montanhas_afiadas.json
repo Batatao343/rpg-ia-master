@@ -269,6 +269,11 @@
           "categoria_arma": "leve",
           "dano_base": 2,
           "dano_tipo": "impactante"
+        },
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desmoralizado",
+          "duracao": 1
         }
       ],
       "descricao": "Grita o que vê e os inimigos leem a jogada do herói e se armam.",
@@ -405,6 +410,12 @@
         {
           "kind": "empurrao",
           "valor": 2
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "impactante"
         }
       ],
       "custo_folego": 1,
@@ -623,10 +634,22 @@
           "categoria_arma": "leve",
           "dano_base": 3,
           "dano_tipo": "cortante"
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "perfurante"
+        },
+        {
+          "kind": "esconder",
+          "alvo": "eu",
+          "valor": 1
         }
       ],
       "descricao": "Desce no vento e cobre os olhos de quem está na beira da trilha.",
-      "oculta": true
+      "oculta": true,
+      "custo_folego": 2
     },
     {
       "id": "cri_bexiga_de_respiro_fio_quente",

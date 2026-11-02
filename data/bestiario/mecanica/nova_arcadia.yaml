@@ -564,3 +564,4 @@ criaturas:
         efeitos:
           - {kind: buff_defesa, alvo: aliados, valor: 2}
           - {kind: vigilia, alvo: aliados, valor: 2}
+          - {kind: protecao, valor: 2}

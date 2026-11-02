@@ -1366,6 +1366,12 @@
           "kind": "buff_dano",
           "alvo": "eu",
           "valor": 1
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "perfurante"
         }
       ],
       "custo_folego": 1,

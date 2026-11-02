@@ -103,14 +103,14 @@ criaturas:
   enemy_lobo_invernal:
     cartas:
       - {n: Mordida de Forquilha, t: "A forquilha de quitina morde por baixo, de dentro da neve.", e: ["d:marcial:perfurante"]}
-      - {n: Salto de Forquilha, sig: 1, t: "Salta por cima de quem guarda e morde o que está protegido.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}]}
+      - {n: Salto de Forquilha, sig: 1, t: "Salta por cima de quem guarda e morde o que está protegido.", e: ["d:marcial:perfurante", {kind: reposicionar, alvo: eu, valor: 2}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: gelido}, {kind: marca, valor: 1}]}
   enemy_yeti:
     cartas:
       - {n: Corcova de Gordura, t: "O bisão bate de corcova com o peso de uma carroça.", e: ["d:versatil:impactante"]}
-      - {n: Corcova Furada, sig: 1, t: "A corcova fura e a gordura fervente espirra em todos em volta.", e: ["a:3:igneo", {kind: buff_dano, alvo: eu, valor: 1}], fol: 2}
+      - {n: Corcova Furada, sig: 1, t: "A corcova fura e a gordura fervente espirra em todos em volta.", e: ["a:3:igneo", {kind: buff_dano, alvo: eu, valor: 1}, {kind: dot, dano_base: 1, duracao: 2, dano_tipo: igneo}], fol: 2}
       - {n: Gordura Quente, f: cena, t: "A gordura da corcova ferve e guarda calor por inteiro.", e: [{kind: protecao, valor: 5}]}
   mon_jotun_cinza:
     cartas:
       - {n: Punho de Tala, t: "O punho preso na tala de osso de mamute bate de cima.", e: ["d:pesada:impactante"]}
-      - {n: Talas Quebradas, sig: 1, t: "Enquanto as talas aguentam ele não cede; quando elas cedem, bate rasgando a própria pele.", e: ["d:pesada:impactante", {kind: buff_dano, alvo: eu, valor: 2}], fol: 2, pc: {sacrificio: 1}}
+      - {n: Talas Quebradas, sig: 1, t: "Enquanto as talas aguentam ele não cede; quando elas cedem, bate rasgando a própria pele.", e: ["d:pesada:impactante", {kind: buff_dano, alvo: eu, valor: 2}, {kind: empurrao, valor: 1}], fol: 2, pc: {sacrificio: 1}}
       - {n: Correias Firmes, f: cena, t: "As correias das talas estalam no frio e seguram o corpo inteiro.", e: [{kind: protecao, valor: 6}]}

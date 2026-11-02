@@ -356,9 +356,15 @@
         {
           "kind": "marca",
           "valor": 3
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "corrosivo"
         }
       ],
-      "custo_folego": 1,
+      "custo_folego": 2,
       "descricao": "Marca quem carrega o que saiu da câmara e o segue pelo campo sem nunca errar.",
       "oculta": true
     },

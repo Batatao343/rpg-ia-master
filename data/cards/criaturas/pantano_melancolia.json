@@ -1425,10 +1425,17 @@
           "kind": "reposicionar",
           "alvo": "eu",
           "valor": 2
+        },
+        {
+          "kind": "dot",
+          "dano_base": 1,
+          "duracao": 2,
+          "dano_tipo": "corrosivo"
         }
       ],
       "descricao": "Dobra-se sobre si e a lâmina escorrega pelas costas de couro de sela.",
-      "oculta": true
+      "oculta": true,
+      "custo_folego": 2
     }
   ]
 }

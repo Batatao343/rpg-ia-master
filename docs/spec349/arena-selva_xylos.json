@@ -8,15 +8,15 @@
   "Arcanista Cinzento",
   "Médico de Campo"
  ],
- "elapsed_s": 96.1,
+ "elapsed_s": 208.6,
  "criaturas": {
   "mon_lamelas_de_ferrugem": {
    "nome": "Lamelas de Ferrugem",
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.7,
-    "L3|on": 0.8
+    "L3|off": 0.68,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -26,7 +26,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.635,
+    "L3|off": 0.63,
     "L3|on": 0.595
    },
    "ok": true,
@@ -37,8 +37,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.705,
-    "L3|on": 0.71
+    "L3|off": 0.71,
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -49,7 +49,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.465,
-    "L3|on": 0.625
+    "L3|on": 0.61
    },
    "ok": true,
    "motivos": []
@@ -59,8 +59,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.645,
-    "L3|on": 0.845
+    "L3|off": 0.63,
+    "L3|on": 0.82
    },
    "ok": true,
    "motivos": []
@@ -70,8 +70,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.665,
-    "L3|on": 0.78
+    "L3|off": 0.66,
+    "L3|on": 0.77
    },
    "ok": true,
    "motivos": []
@@ -81,8 +81,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.68,
-    "L3|on": 0.725
+    "L3|off": 0.675,
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -92,8 +92,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.56,
-    "L3|on": 0.705
+    "L3|off": 0.575,
+    "L3|on": 0.715
    },
    "ok": true,
    "motivos": []
@@ -103,8 +103,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.685,
-    "L3|on": 0.795
+    "L3|off": 0.695,
+    "L3|on": 0.805
    },
    "ok": true,
    "motivos": []
@@ -114,8 +114,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.76,
-    "L3|on": 0.815
+    "L3|off": 0.77,
+    "L3|on": 0.82
    },
    "ok": true,
    "motivos": []
@@ -125,12 +125,12 @@
    "categoria": "chefe",
    "status": "nova",
    "cells": {
-    "L5|off": 0.64,
-    "L5|on": 0.28
+    "L5|off": 0.665,
+    "L5|on": 0.305
    },
    "ok": false,
    "motivos": [
-    "L5|on 28% fora de 45-85%"
+    "L5|on 30% fora de 45-85%"
    ]
   },
   "enemy_vinha_estranguladora": {
@@ -138,8 +138,8 @@
    "categoria": "elite",
    "status": "adotada",
    "cells": {
-    "L3|off": 0.78,
-    "L3|on": 0.8
+    "L3|off": 0.765,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -149,7 +149,7 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.795,
+    "L3|off": 0.79,
     "L3|on": 0.785
    },
    "ok": true,
@@ -160,8 +160,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.605,
-    "L3|on": 0.785
+    "L3|off": 0.585,
+    "L3|on": 0.765
    },
    "ok": true,
    "motivos": []
@@ -171,8 +171,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.715,
-    "L3|on": 0.765
+    "L3|off": 0.695,
+    "L3|on": 0.735
    },
    "ok": true,
    "motivos": []
@@ -183,7 +183,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.845,
-    "L3|on": 0.65
+    "L3|on": 0.66
    },
    "ok": true,
    "motivos": []
@@ -193,8 +193,8 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.755,
-    "L3|on": 0.62
+    "L3|off": 0.71,
+    "L3|on": 0.585
    },
    "ok": true,
    "motivos": []
@@ -204,8 +204,8 @@
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.835,
-    "L3|on": 0.8
+    "L3|off": 0.825,
+    "L3|on": 0.785
    },
    "ok": true,
    "motivos": []
@@ -216,7 +216,7 @@
    "status": "nova",
    "cells": {
     "L3|off": 0.705,
-    "L3|on": 0.835
+    "L3|on": 0.84
    },
    "ok": true,
    "motivos": []
@@ -226,19 +226,21 @@
    "categoria": "lacaio",
    "status": "nova",
    "cells": {
-    "L3|off": 0.475,
+    "L3|off": 0.43,
     "L3|on": 0.765
    },
-   "ok": true,
-   "motivos": []
+   "ok": false,
+   "motivos": [
+    "L3|off 43% fora de 45-85%"
+   ]
   },
   "mon_oco_da_fronteira": {
    "nome": "Oco da Fronteira",
    "categoria": "padrao",
    "status": "nova",
    "cells": {
-    "L3|off": 0.59,
-    "L3|on": 0.615
+    "L3|off": 0.625,
+    "L3|on": 0.61
    },
    "ok": true,
    "motivos": []
@@ -248,8 +250,8 @@
    "categoria": "elite",
    "status": "nova",
    "cells": {
-    "L3|off": 0.555,
-    "L3|on": 0.685
+    "L3|off": 0.545,
+    "L3|on": 0.69
    },
    "ok": true,
    "motivos": []
