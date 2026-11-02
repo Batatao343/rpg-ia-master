@@ -336,3 +336,10 @@ O dono disse "abre e executa" em 28/10. As recomendações abaixo estão **adota
 - **D5 — Default da esteira continua `lote` (v1).** *Adotada.* Trocar o `promote.py`/`CARTAS.md`/scripts para o v2 é uma decisão **depois** de ler `docs/spec358/RELATORIO-arena-v2.md`, em spec própria, para não mudar o gate e o avaliador na mesma tacada.
 - **D6 — Se o R15 não confirmar** (substituição não reduz o delta do controle): o v2 fica disponível, mas não é recomendado como default. O relatório expõe isso, e o dono decide entre aceitar ou rever o desenho da referência numa spec nova. *Adotada.*
 - **D7 — `uso_alto` também vira aviso** (não só o uso baixo). *Adotada.* A evidência de artefato cobre os dois (`RELATORIO-arena-lote3.md:48`, `RELATORIO-arena-lote5.md:61`). Uma Carta forte de verdade aparece no delta por substituição.
+- **Recomendação do revisor (Sol), para a D5:** antes de qualquer troca do default da esteira para o v2, abrir **spec própria para recalibrar a referência**. O ponto médio da faixa de orçamento é forte demais para o bot (muitos deltas v2 saem negativos, e o controle R15 não confirmou), então um v2 sem bandeira não prova que a Carta é boa.
+
+## 9. Registro de execução (desvios)
+
+- **Golden regenerado (commit `1d41ae11`).** O motor (`services/`) avançou na `main` depois do 1º golden e o `test_v1_reproduz_golden` passou a falhar. O §7 proíbe regenerar o golden depois de editar o `sim.py`; por isso a regeneração usou o `sim.py` **da `main`, intocado** (`gerar_golden_v1.py --sim`), não o editado. O `sim.py` novo reproduz o golden regenerado, e a equivalência `main` × novo nos 15 arquivos (R13) foi refeita no motor atual. O commit seguinte só corrige a proveniência (`gerado_de` = SHA da `main`, `sim_fonte`).
+- **Bandeiras v1 derivadas** no reprocessamento (R14) a partir do relatório v2, conferidas contra o v1 real em `sangromante_avaro`; evita rodar o v1 duas vezes.
+- **Dados da arena v2 carimbados** com `motor_sha` (merge-base com a `main`) em `arena-v2*.json`; foram regerados no motor do pouso (revisão P2-1).
