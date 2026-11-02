@@ -1,6 +1,6 @@
 # SPEC-364 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED` (conferência final de `135d3631`: 1 P2 de teste instável + 2 P3; ver § Conferência final)
+> **Veredito:** `APPROVED` (conferência final 2 de `5242ad9a`; histórico das rodadas abaixo)
 > **Revisor:** Opus / Sol (spec-reviewer) · **Data:** 2026-11-02 · **Commit revisado:** `a6ab7d61`
 
 ## Escopo
@@ -141,5 +141,49 @@ pytest -n 2 (17 arquivos do escopo, incl. test_spec363_flee_verdict) → 201 pas
 pytest (hidden_view_contract + 409, serial) → 5 passed
 pytest -n 2 ×4 (hidden_view_contract, 409, death_api, flee_surfaces, 363_ids) → 2 verdes, 2 com death_api::test_forced_fallback_source_and_past_tense ('llm' != 'fallback_attribution')
 sonda V6 (7 frases; arquivo temporário removido) → 3 falsos negativos no sujeito herdado; 'Ao lado do Goblin, tomba o Minotauro' aceito; 'O Goblin tomba a seus pés' rejeitado
+ruff check (arquivos alterados) → All checks passed
+```
+
+## Conferência final 2 (2026-11-02, `e2603310..5242ad9a`)
+
+**Veredito:** `APPROVED`. Nenhum P0/P1/P2/P3 aberto. Uma limitação conhecida do V6 fica registrada abaixo, sem
+bloquear (só custa prosa, nunca afirma fato falso).
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P2-6 | **Fechado** | `tests/test_spec364_death_api.py` não busca mais semente: o Corvo Rubro é semeado morto no estado **e** no manifesto (`participants[*].status = "morto"`), e um spy em `round_log.authorship` exige que ele chegue a `earlier_fallen` antes de qualquer asserção de fonte. Determinístico. |
+| P3-12 | **Fechado** | O sujeito posposto só vale se for **nome de participante** fora de `earlier_fallen` (`authorship` expõe `participant_names`, `services/round_log.py:579-581`; uso em `services/conflict_summary.py:545-555`). As 3 frases da sonda anterior ("tomba a seus pés", "desaba uma última vez", "cai a poucos passos") voltaram a ser rejeitadas e estão no teste. |
+| P3-13 | **Fechado** | Mão fixa (`bas_san_golpe`, `bas_dev_golpe`) e `len(attacks) == 2`. |
+
+**(1) Clone renomeado para "Corvo Rubro".** `add_second_enemy` só é usado por `test_spec364_hidden_view_contract.py`,
+`test_spec364_death_api.py` e `test_spec364_409_play_index.py`, que se referem ao clone pelo **id** (`<id>_b`), nunca
+pelo nome; o único "Goblin B" restante no repositório é um dado próprio de `tests/test_bug_contabilidade_recompensas.py`,
+sem relação com o helper. Nenhuma dependência quebrada; os 3 arquivos passam.
+
+**(2) Epíteto ("colosso").** A troca no teste de aceitação ("…desaba o colosso." → "…desaba o Minotauro Esqueleto.")
+não era necessária: conferi por sonda que "Junto ao Goblin, desaba o colosso." e "Ao lado do Goblin, tomba o colosso."
+continuam **aceitas** (a locução de lugar tira o Goblin da posição de sujeito antes de qualquer herança). O epíteto só é
+rejeitado quando o Goblin entra por uma preposição fora de `_LOCATIVE` ("Sobre o Goblin, desaba o colosso.", "Com o
+Goblin, tomba o colosso."). Avaliação: **custo aceitável**. V6 rejeitar só manda para o fallback determinístico (que já
+conta a queda antiga no passado) e nunca deixa passar um fato falso; o lado perigoso (falso negativo) está coberto pelos
+positivos. Fica como limitação conhecida; se o §6 mostrar fallback por V6 em prosa correta, ampliar `_LOCATIVE`
+(`sobre`, `com`, `entre`, `sob`) é a correção de uma linha. Sugestão opcional: devolver "…desaba o colosso." ao
+`test_v6_accepts_post_verb_subject` como guarda dessa aceitação.
+
+**(3) Estabilidade.** Rodei eu mesmo os 6 arquivos (`death_api`, `hidden_view_contract`, `409_play_index`,
+`outcome_tense`, `flee_surfaces`, `test_spec363_ids`) 3× com `-n 2`: 3/3 verdes (rc=0). Também uma passada com `-n 2`
+no restante do escopo (`flee_trail`, `market`, `registry_voice`, `death_digit_name`, `golden_guard`, `portrait_debit`,
+`test_spec363_flee_verdict`, `test_spec346_board_no_llm`, `test_spec363_outcome_text`, `test_card_effects_grammar`,
+`test_remediacao_comerciante_real`): verde. `ruff check` limpo.
+
+Fica para o coordenador: R17 pela evidência do §6.3; smoke §6; suíte completa 1× no pouso.
+
+### Comandos rodados (conferência final 2)
+
+```text
+git diff e2603310..5242ad9a --stat → 6 arquivos, +43/−40
+pytest -n 2 ×3 (6 arquivos de API/V6/R29) → 3/3 rc=0
+pytest -n 2 (11 arquivos restantes do escopo) → rc=0 (2 skipped Postgres)
+sonda V6 epíteto (7 frases; arquivo temporário removido) → "Junto ao/Ao lado do Goblin, … o colosso" aceitas; "Sobre/Com o Goblin, … o colosso" rejeitadas (fallback); "tomba a seus pés" com sujeito herdado rejeitada
 ruff check (arquivos alterados) → All checks passed
 ```
