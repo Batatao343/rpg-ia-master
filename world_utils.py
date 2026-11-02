@@ -950,6 +950,8 @@ def pick_encounter_enemy(
     rng=None,
     theme=None,
     season: str | None = None,
+    world: dict | None = None,
+    world_sim: dict | None = None,
 ):
     """
     Fase 2.5b (R11): sorteio DETERMINÍSTICO de criatura concreta do bestiário.
@@ -974,6 +976,69 @@ def pick_encounter_enemy(
         if entry:
             return entry
 
+    prep = _encounter_pool(loc, danger, theme)
+    if prep is None:
+        return None
+    pool, regional, themed = prep
+    if bestiary_knowledge is None and projection is None:
+        return pool[int(turn) % len(pool)]  # legado: determinístico por turno
+
+    from services import ecology as eco3
+
+    args = (pool, regional, themed, loc, danger, turn, bestiary_knowledge, projection, theme)
+    fmode = _fauna_mode(world)
+    if fmode == "on":
+        cands, weights, why = _weighted_pool(*args, season, world, world_sim, fauna_on=True)
+        if why and rng is None:
+            # SPEC-360: com ecologia no pool o sorteio é determinístico (semente do turno, do
+            # local e do relógio; M7) e não consome o `random` global; sem fauna no pool, igual
+            # ao legado.
+            import hashlib as _hl
+            import random as _random
+
+            clock = (world or {}).get("world_clock") or {}
+            key = f"{turn}|{(loc or {}).get('id', '')}|{clock.get('day')}|{clock.get('period')}"
+            rng = _random.Random(int(_hl.sha256(key.encode()).hexdigest()[:12], 16))
+        return eco3.weighted_pick(cands, weights, rng)
+    cands, weights, _why = _weighted_pool(*args, season, world, world_sim, fauna_on=False)
+    picked = eco3.weighted_pick(cands, weights, rng)
+    if fmode == "shadow":  # SPEC-360 R12: escolhe o legado, registra o que a fauna escolheria
+        import hashlib as _hl
+        import random as _random
+
+        f_cands, f_weights, why = _weighted_pool(*args, season, world, world_sim, fauna_on=True)
+        key = f"{turn}|{(loc or {}).get('id', '')}"
+        seed = int(_hl.sha256(key.encode()).hexdigest()[:12], 16)
+        alt = eco3.weighted_pick(f_cands, f_weights, _random.Random(seed))
+        from observability.telemetry import log_event
+
+        alt_id = str((alt or {}).get("id") or "")
+        log_event(
+            "fauna",
+            "shadow_pick",
+            level="info",
+            legado=str((picked or {}).get("id") or ""),
+            fauna=alt_id,
+            razoes=",".join(why.get(alt_id, [])),
+        )
+    return picked
+
+
+def _fauna_mode(world: dict | None) -> str:
+    """SPEC-360: o motor de ecologia precisa do `world` (período, clima, local)."""
+    if world is None:
+        return "off"
+    from services import fauna
+
+    return fauna.mode()
+
+
+def _encounter_tier(e: dict) -> str:
+    return "elite" if "elite" in str(e.get("type", "")).lower() else "minion"
+
+
+def _encounter_pool(loc: dict, danger: int, theme=None):
+    """Pool regional (sem BOSS) no porte do perigo, com o recorte temático (SPEC-289)."""
     region_id = (loc or {}).get("region_id", "")
     if not region_id:
         return None
@@ -986,10 +1051,7 @@ def pick_encounter_enemy(
     ]
     if not pool:
         return None
-
-    def tier(e):
-        return "elite" if "elite" in str(e.get("type", "")).lower() else "minion"
-
+    tier = _encounter_tier
     if danger <= 2:
         filtered = [e for e in pool if tier(e) == "minion"]
     elif danger == 3:
@@ -1004,14 +1066,30 @@ def pick_encounter_enemy(
         if hits:
             filtered = hits
             themed = True
-    pool = sorted(filtered or pool, key=lambda e: e.get("id", ""))
+    return sorted(filtered or pool, key=lambda e: e.get("id", "")), regional, themed
 
-    if bestiary_knowledge is None and projection is None:
-        return pool[int(turn) % len(pool)]  # legado: determinístico por turno
 
-    # --- Fase 6.3: sorteio ponderado -------------------------------------
+def _weighted_pool(
+    pool,
+    regional,
+    themed,
+    loc,
+    danger,
+    turn,
+    bestiary_knowledge,
+    projection,
+    theme,
+    season,
+    world,
+    world_sim,
+    *,
+    fauna_on: bool,
+):
+    """Fase 6.3 + SPEC-289/292/303 (+ SPEC-360 R8 com `fauna_on`): candidatos, pesos e as
+    razões ecológicas por id. Sem `fauna_on` é o sorteio ponderado de antes, byte a byte."""
     from services import ecology as eco3
 
+    region_id = (loc or {}).get("region_id", "")
     loc_id = (loc or {}).get("id", "")
 
     def _base(candidates):
@@ -1036,24 +1114,88 @@ def pick_encounter_enemy(
         )  # SPEC-289: combatente da fação pesa x2 (extras SPEC-292 x1)
         for b, e in zip(base, pool)
     ]
+    pre_season = list(weights)
     if season:  # SPEC-303 R14b: estação redistribui pesos DENTRO do porte (só caminho ponderado)
         from services import world_calendar
 
         smult = world_calendar.encounter_multipliers(region_id, season)
         if smult:
             weights = [w * float(smult.get(e.get("id", ""), 1.0)) for w, e in zip(weights, pool)]
+    legacy_weights = list(weights)
+    why: dict[str, list[str]] = {}
+    if fauna_on:
+        from services import fauna
 
-    # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5)
-    avg = sum(weights) / max(1, len(weights))
+        ctx = fauna.eco_ctx(
+            world,
+            world_sim,
+            location_id=loc_id,
+            region_id=region_id,
+            bestiary_knowledge=bestiary_knowledge,
+            turn=turn,
+            season=season,
+        )
+        eco_weights = []
+        for w0, w_leg, e in zip(pre_season, legacy_weights, pool):
+            fe = fauna.entry(e.get("id", ""))
+            if not fe:
+                eco_weights.append(w_leg)  # sem fauna: fator 1,0 (a estação do calendário vale)
+                continue
+            f, reasons = fauna.eco_multiplier(
+                fe, ctx
+            )  # a estação da ficha substitui a do calendário
+            why[str(e.get("id"))] = reasons
+            eco_weights.append(w0 * f)
+        if sum(eco_weights) > 0:
+            weights = eco_weights
+
+    # fauna local rareada -> no máx. 1 migrante entra no sorteio (peso 0.5); a decisão olha os
+    # pesos sem a ecologia da SPEC-360 (o migrante não depende de horário nem de território)
+    avg = sum(legacy_weights) / max(1, len(legacy_weights))
     if not themed and avg < eco3.MIGRANT_THRESHOLD + 0.2:
         migrants = eco3.migrant_candidates(loc, gamedata.BESTIARY or {}, projection)
-        migrants = [m for m in migrants if tier(m) == "minion" or danger >= 3]
+        migrants = [m for m in migrants if _encounter_tier(m) == "minion" or danger >= 3]
         if migrants:
             m = sorted(migrants, key=lambda e: e.get("id", ""))[int(turn) % len(migrants)]
             pool = pool + [m]
             weights = weights + [eco3.MIGRANT_WEIGHT]
+    return pool, weights, why
 
-    return eco3.weighted_pick(pool, weights, rng)
+
+def encounter_distribution(
+    loc: dict,
+    danger: int,
+    turn: int = 0,
+    *,
+    bestiary_knowledge: dict | None = None,
+    projection: dict | None = None,
+    theme=None,
+    season: str | None = None,
+    world: dict | None = None,
+    world_sim: dict | None = None,
+) -> list[tuple[dict, float]]:
+    """SPEC-360 R28: `[(entrada, peso)]` exatos do sorteio ponderado regional (sem fação),
+    com a ecologia quando `RPG_FAUNA=on` e há `world`. Leitura pura (avaliador e testes)."""
+    prep = _encounter_pool(loc, danger, theme)
+    if prep is None:
+        return []
+    pool, regional, themed = prep
+    cands, weights, _why = _weighted_pool(
+        pool,
+        regional,
+        themed,
+        loc,
+        danger,
+        turn,
+        bestiary_knowledge if bestiary_knowledge is not None else {},
+        projection if projection is not None else {},
+        theme,
+        season,
+        world,
+        world_sim,
+        fauna_on=_fauna_mode(world) == "on",
+    )
+    return [(e, w) for e, w in zip(cands, weights) if w > 0]
 
 
 _APEX_TAG = "apex"
@@ -1094,6 +1236,7 @@ def check_encounter(
     exempt_factions=(),
     hunt_anchor: str = "",
     rumor_hint: dict | None = None,
+    world_sim: dict | None = None,
 ):
     """
     Gatilho DETERMINÍSTICO de encontro ao entrar/descansar num local perigoso.
@@ -1108,6 +1251,10 @@ def check_encounter(
     PREFERE a criatura no sorteio de um encontro que JÁ disparou; nunca cria gatilho.
     SPEC-315 R16: `rumor_hint` (boato verdadeiro que o motor adotou) forca UM encontro, ignorando
     o cooldown so desta vez; mesma forma/precedencia do `law_hint`, forca de `eff_danger`.
+    SPEC-360 (com `world_sim` e as flags de fauna): o sorteio usa a ecologia (R8); o encontro
+    de fauna prefere a presença do local (R15, `presence_id`), vira sinal sem combate quando não
+    há presença e a criatura é `cedo` (R16, `fauna_convert`) e troca o `flavor` pela
+    aproximação da criatura (R17). A TAXA de gatilho não muda (R9).
     Retorna {hint, flavor, reason} ou None.
     """
     world = world or {}
@@ -1145,6 +1292,9 @@ def check_encounter(
     from services import world_calendar
 
     season_id = world_calendar.active_season(world)  # SPEC-303 R14b (neutro sem calendário)
+    fauna_world = world if world_sim is not None else None  # SPEC-360: ecologia só com o sim
+    presence = _fauna_presence(world, world_sim, loc_id)
+    ptheme = hunt_theme(presence["creature_id"]) if presence else None
 
     # SPEC-233 R5: só carimba quando devolve um encontro (ver _stamp).
     def _stamp(result):
@@ -1219,7 +1369,9 @@ def check_encounter(
         tfac = threat_faction(world, factions)
         in_sphere = bool(tfac) and loc.get("region_id") in threat_sphere(tfac)
         theme = threat_theme_match(tfac, str(threat)) if in_sphere else None
-        if theme is None:
+        if ptheme is not None:  # SPEC-360 R15: a criatura que está na área vem primeiro
+            theme = ptheme
+        elif theme is None:
             theme = hunt_theme(hunt_anchor)
         entry = pick_encounter_enemy(
             loc,
@@ -1229,6 +1381,8 @@ def check_encounter(
             projection=projection,
             theme=theme,
             season=season_id,
+            world=fauna_world,
+            world_sim=world_sim,
         )
         flavor = str(threat)
         if tfac and not in_sphere:
@@ -1249,7 +1403,7 @@ def check_encounter(
         }
         if cf:
             res["concealed_faction"] = cf
-        return _stamp(res)
+        return _stamp(_fauna_encounter(res, entry, presence, world_sim))
 
     if danger >= 4:
         entry = pick_encounter_enemy(
@@ -1258,20 +1412,59 @@ def check_encounter(
             turn,
             bestiary_knowledge=bestiary_knowledge,
             projection=projection,
-            theme=hunt_theme(hunt_anchor),
+            theme=ptheme if ptheme is not None else hunt_theme(hunt_anchor),
             season=season_id,
+            world=fauna_world,
+            world_sim=world_sim,
         )
         hint = entry.get("name") if entry else f"feras/perigos de {region}"
-        return _stamp(
-            {
-                "hint": hint,
-                "enemy_id": entry.get("id", "") if entry else "",
-                "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
-                "reason": "high_danger",
-            }
-        )
+        res = {
+            "hint": hint,
+            "enemy_id": entry.get("id", "") if entry else "",
+            "flavor": f"O perigo de {region} se materializa: algo hostil avança sobre você.",
+            "reason": "high_danger",
+        }
+        return _stamp(_fauna_encounter(res, entry, presence, world_sim))
 
     return None
+
+
+def _fauna_presence(world: dict, world_sim: dict | None, loc_id: str) -> dict | None:
+    """SPEC-360 R15: presença ativa no local (só com `RPG_FAUNA_SINAIS=on` e `world_sim`)."""
+    if world_sim is None or not loc_id:
+        return None
+    from services import fauna
+
+    if fauna.sinais_mode() != "on":
+        return None
+    day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    return fauna.presence_at(world_sim, loc_id, day)
+
+
+def _fauna_encounter(res: dict, entry: dict | None, presence: dict | None, world_sim) -> dict:
+    """SPEC-360 R15-R17: presença usada, conversão em sinal e aproximação no `flavor`."""
+    if world_sim is None or not entry:
+        return res
+    from services import fauna
+
+    if fauna.sinais_mode() != "on":
+        return res
+    cid = str(entry.get("id") or "")
+    fe = fauna.entry(cid)
+    if not fe:
+        return res
+    cedo = (fe.get("sinais") or {}).get("antecedencia") == "cedo"
+    if presence and presence.get("creature_id") == cid:
+        res["presence_id"] = presence["pid"]
+        if cedo and not presence.get("sinais_mostrados") and fauna.const("ANUNCIA_PRESENCA_NOVA"):
+            res["fauna_convert"] = True  # R16 (§9): presença ainda sem sinal anuncia antes
+    elif not presence and cedo:
+        res["fauna_convert"] = True  # R16: sem presença no local, o encontro vira sinal
+    line = fauna.approach_line(cid)
+    if line:
+        res["flavor"] = line
+        res["aproximacao"] = line
+    return res
 
 
 # ---------------------------------------------------------------------------
@@ -1655,10 +1848,18 @@ def resolve_trap(
 
 
 def resolve_track(
-    state_bk: dict, loc: dict, danger: int, turn: int, rng=None, hunt_anchor: str = ""
+    state_bk: dict,
+    loc: dict,
+    danger: int,
+    turn: int,
+    rng=None,
+    hunt_anchor: str = "",
+    describe=None,
 ) -> tuple:
     """Fase 6.4 (R4): rastro — revela criatura regional no Codex (grau rumor, 3.2)
     e/ou marca pista de tesouro (próximo TREASURE da região rola banda alta).
+    SPEC-360 R22: `describe(entry) -> str | None` troca a frase que NOMEIA a criatura pelo
+    vestígio dela (o registro de rumor no Codex continua).
     Retorna (bestiary_knowledge, note, treasure_hint: bool)."""
     from services import discovery as disc
 
@@ -1667,9 +1868,14 @@ def resolve_track(
     bk = state_bk or {}
     if entry:
         bk = disc.record_rumor(bk, entry.get("id", ""), turn)
+        sign = describe(entry) if describe else None
         note = (
-            f"Rastros frescos de {entry.get('name', 'algo grande')} — "
-            "você grava os sinais na memória (Codex atualizado)."
+            f"Você encontra um rastro fresco: {sign}"
+            if sign
+            else (
+                f"Rastros frescos de {entry.get('name', 'algo grande')} — "
+                "você grava os sinais na memória (Codex atualizado)."
+            )
         )
     treasure = bool((rng or __import__("random")).randint(0, 1))
     if treasure:

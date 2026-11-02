@@ -728,11 +728,13 @@ def advance_days(
 
 def _register_default_hooks() -> None:
     """SPEC-303: calendario = hook `pre` order 10 (estacao, festas, offsets de baseline).
-    SPEC-304: NPCs off-screen = hook `post` order 10 (agenda, deserção, perigo e destino)."""
-    from services import npc_world, rumors, world_calendar
+    SPEC-304: NPCs off-screen = hook `post` order 10 (agenda, deserção, perigo e destino).
+    SPEC-360: presencas de fauna = hook `post` order 15 (antes dos rumores, que dao o boost)."""
+    from services import fauna, npc_world, rumors, world_calendar
 
     register_day_hook("calendar", world_calendar.calendar_day_hook, stage="pre", order=10)
     register_day_hook("npc_world", npc_world.day_hook, stage="post", order=10)
+    register_day_hook("fauna", fauna.day_hook, stage="post", order=15)  # SPEC-360 R13
     register_day_hook("rumors", rumors.day_hook, stage="post", order=20)  # SPEC-312
 
 

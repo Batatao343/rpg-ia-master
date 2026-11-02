@@ -233,6 +233,19 @@ def candidates(state: dict, sim: dict, region_id: str, day: int) -> list[tuple[d
         else:
             row["_truth"] = False
             adj.append((row, 1.0))
+    # SPEC-360 R21: o morador "viu algo" antes de o jogador chegar (semente da criatura presente)
+    present = _fauna_present(sim, region_id, day)
+    if present:
+        boost = _fauna_boost()
+        own = [
+            (
+                s,
+                w * boost
+                if s["family"] == "avistamento" and set(s.get("entities") or []) & present
+                else w,
+            )
+            for s, w in own
+        ]
     # AVISTAMENTO_FALSE_P: a massa dos avistamentos de regiao vizinha (falsos) e a fracao p
     own_avist = sum(w for s, w in own if s["family"] == "avistamento")
     if adj:
@@ -241,6 +254,28 @@ def candidates(state: dict, sim: dict, region_id: str, day: int) -> list[tuple[d
         scale = target / len(adj)
         adj = [(s, scale) for s, _w in adj]
     return sorted(own + adj, key=lambda sw: sw[0]["seed_id"])
+
+
+def _fauna_present(sim: dict, region_id: str, day: int) -> set[str]:
+    """SPEC-360 R21: criaturas com presenca ativa na regiao (so com `RPG_FAUNA_SINAIS=on`)."""
+    from services import fauna
+
+    if fauna.sinais_mode() != "on":
+        return set()
+    return {
+        str(p.get("creature_id"))
+        for p in ((sim or {}).get("fauna") or {}).get("presencas") or []
+        if isinstance(p, dict)
+        and p.get("region_id") == region_id
+        and p.get("status") == "ativa"
+        and int(p.get("expires_day", 0)) >= int(day)
+    }
+
+
+def _fauna_boost() -> float:
+    from services import fauna
+
+    return float(fauna.const("RUMOR_BOOST"))
 
 
 def _pick(cands: list[tuple[dict, float]], u: float) -> dict:
@@ -427,8 +462,8 @@ def trim_digest(items: list[dict], cap: int) -> list[dict]:
 # --- texto (R5/R23) ------------------------------------------------------------------
 
 
-def _template(rumor: dict) -> str:
-    opts = config()["templates"].get(f"rumor.{rumor.get('family')}") or []
+def _template(rumor: dict, key: str | None = None) -> str:
+    opts = config()["templates"].get(key or f"rumor.{rumor.get('family')}") or []
     if not opts:
         return ""
     return opts[int(_sha(rumor.get("rumor_id"))[:8], 16) % len(opts)]
@@ -438,11 +473,12 @@ def render_news(state: dict, rumor: dict) -> str:
     """Template + gist/rotulo. Nunca texto da LLM (exceto `narrador`, ja validado)."""
     from services import world_pressures as wp
 
-    tpl = _template(rumor)
-    if not tpl:
-        return ""
     family = rumor.get("family")
     seed = _all_seeds().get(str(rumor.get("seed_id") or "")) or {}
+    sinal = _sinal_rumor(family, seed)  # SPEC-360 R21: conta o que o morador viu, sem nome
+    tpl = _template(rumor, "rumor.avistamento_sinal" if sinal else None)
+    if not tpl:
+        return ""
     locs = wp._map_index()[0]
     local = str((locs.get(str(rumor.get("location_id") or "")) or {}).get("name") or "")
     values = {
@@ -452,6 +488,7 @@ def render_news(state: dict, rumor: dict) -> str:
         "criatura": str(seed.get("creature_label") or "criatura"),
         "artigo": str(seed.get("creature_article", "um")),
         "local": local or wp.region_label(region_of_row(rumor)) or "a região",
+        "sinal": sinal,
     }
     if family in ("lore", "avistamento") and not (
         values["gist"] or values["criatura"] != "criatura"
@@ -462,6 +499,14 @@ def render_news(state: dict, rumor: dict) -> str:
         text = text.replace("{" + k + "}", v)
     text = re.sub(r" {2,}", " ", text).strip()
     return text[:1].upper() + text[1:] if text else ""
+
+
+def _sinal_rumor(family: Any, seed: dict) -> str:
+    if family != "avistamento" or not seed.get("sinal_rumor"):
+        return ""
+    from services import fauna
+
+    return str(seed["sinal_rumor"]) if fauna.sinais_mode() == "on" else ""
 
 
 def text_for(state: dict, rumor_id: str) -> str:

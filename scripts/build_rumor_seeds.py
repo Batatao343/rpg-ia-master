@@ -20,6 +20,7 @@ LORE = ROOT / "lore_nova" / "rumors.txt"
 BESTIARY = ROOT / "data" / "bestiary.json"
 WORLD_MAP = ROOT / "data" / "world_map.json"
 OVERRIDES = ROOT / "data" / "world" / "rumor_seed_overrides.json"
+FAUNA = ROOT / "data" / "world" / "fauna.json"  # SPEC-360 R21: `sinais.rumor` da criatura
 OUT = ROOT / "data" / "world" / "rumor_seeds.json"
 EXPECTED_LORE = 48
 AVISTAMENTO_TYPES = ("Minion", "Standard", "Elite")
@@ -245,6 +246,7 @@ def avistamento_seeds() -> dict[str, dict]:
         if m:
             line_of[m.group(1)] = n
     out: dict[str, dict] = {}
+    fauna = (_json(FAUNA).get("criaturas") or {}) if FAUNA.exists() else {}
     for eid, mon in _json(BESTIARY).items():
         if mon.get("type") not in AVISTAMENTO_TYPES or not mon.get("regions"):
             continue
@@ -264,6 +266,9 @@ def avistamento_seeds() -> dict[str, dict]:
             "quest_eligible": True,
             "review": "dono",
         }
+        sinal = ((fauna.get(eid) or {}).get("sinais") or {}).get("rumor")
+        if sinal:  # SPEC-360 R21: o morador conta o que viu, sem o nome da criatura
+            out["rumor_avist_" + eid]["sinal_rumor"] = str(sinal)
     return out
 
 

@@ -1,7 +1,7 @@
 # SPEC-360 — Criaturas vivas no mundo: sinal antes da luta, ecologia determinística, tramas e telegrafo visível (guarda-chuva; Fase 1 executável)
 
-> **Status:** `approved`
-> **Criada:** 2026-11-01 · **Atualizada:** 2026-11-01
+> **Status:** `in-review`
+> **Criada:** 2026-11-01 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-349 onda 1 (Nova Arcádia) na `main`: fichas `data/bestiario/fichas/nova_arcadia.yaml`, entradas `mon_*` no `data/bestiary.json` e `curadoria_legado.yaml`. Também SPEC-312 (sementes de rumor, `done`), SPEC-303 (calendário, `done`), SPEC-302/304 (motor de mundo e hooks diários, `done`) e Fase 6.3/6.4 (`services/ecology.py`, `resolve_track`). As filhas têm dependências próprias (§3.10).
 > **Desbloqueia:** filhas 360-B (backfill das 11 regiões + legado), 360-C (saber do jogador: telegrafo e contra-jogo) e 360-D (criaturas de trama). Também a SPEC-361 (criatura gerada em runtime), que deve emitir o mesmo bloco de fauna.
 > **EXECUTOR_MODEL:** Opus (`claude-opus-5-5`) para a autoria do bloco de fauna (sinais, cadeia alimentar, reações); `Terra` para schema, lint, motor, integração e eval. Fable nunca (dono, 28/10). **REVIEW_MODEL:** revisor de fauna independente (`spec-reviewer`, Opus, nunca o autor) e `Sol` técnico (motor, estado, determinismo, integridade de eval). **REVIEW_REQUIRED:** `true`.
@@ -79,6 +79,7 @@
 - **R16 — Encontro sem presença.** Se o gatilho de fauna dispara num local **sem** presença:
   - criatura com `sinais.antecedencia: cedo` → o encontro **vira sinal**. Nasce uma presença (`origem: "conversao"`) com o primeiro sinal já mostrado, e o turno não tem combate (`world_note` "ENCONTRO NA ESTRADA (sinal)"). O cooldown é carimbado como se fosse encontro;
   - criatura com `antecedencia: imediato` (emboscador, artilharia oculta; teto de 30 % por região, E14) → combate no mesmo turno, com a `aproximacao` no texto de início (R17).
+  - (§9, desvio da execução) presença **ativa mas ainda sem sinal mostrado**, de criatura `cedo`, conta como "sem anúncio": o gatilho mostra o 1º sinal dela e não há combate (constante `ANUNCIA_PRESENCA_NOVA`). Sem isso uma presença nascida no dia vira luta na 1ª chegada, sem sinal antes (M1 caía para ~0,65).
 
   Esse é o único ponto em que a taxa de combate pode cair; o limite fica no M5.
 - **R17 — Narração de aproximação.** Todo combate de fauna com entrada em `fauna.json` troca o `flavor` genérico (`world_utils.py:1265`, `:1229-1236`) pela `sinais.aproximacao` da criatura. Ela vai em `COMBAT START. {flavor} {sur_txt}` (`storyteller.py:1615`) e no `combat_encounter_hint` (`storyteller.py:216-229`, campo `aproximacao`). A abertura narrada pela IA (SPEC-346) recebe a frase como contexto, **na mesma chamada**.
@@ -391,22 +392,22 @@ Smoke da §6, depois `/spec-land`. A suíte completa é do coordenador.
 ## 5. Critérios de aceite
 
 - [ ] `data/bestiario/fauna/nova_arcadia.yaml` cobre as 27 fichas e todo o legado `valoria` da região, com `revisao: aprovada` por revisor ≠ autor e parecer no handoff (R1, R2, R7)
-- [ ] `fauna_lint` E1–E16 com fixtures boas e ruins; `lint.py --regiao nova_arcadia` com 0 erro; `validate_content.py` com 0 ERRO (R4–R6)
-- [ ] `fauna.json` gerado, fresco e determinístico; `data/bestiary.json` byte-idêntico (R3)
-- [ ] Ecologia: horário, estação, território, presa/predador, `foge_de`, reações e carcaça com teste; taxa de gatilho inalterada; `shadow` só loga (R8–R12)
-- [ ] Presença: nasce, expira, tem caps e é determinística; round-trip de save; save antigo carrega (R13, R19, R24)
-- [ ] 1 sinal por cena, na ordem, sem nome; bloco ausente quando não há sinal (R14, R5)
-- [ ] Encontro prefere a presença; conversão em sinal para `cedo`; `aproximacao` em 100 % dos combates de fauna com entrada (R15–R17)
-- [ ] Bônus de detecção com ≥ 2 sinais; caça no lugar com surpresa do jogador (R18, R20)
-- [ ] Rumor de avistamento conta o sinal, sem nome; boost com presença; `rumor_seeds.json` regenerado com os overrides preservados (R21)
-- [ ] `sinais_vistos` gravado no `bestiary_knowledge` ao encontrar (R23)
-- [ ] Flags `RPG_FAUNA` e `RPG_FAUNA_SINAIS` registradas, `off` por default; golden `off` byte-idêntico (R25)
-- [ ] 0 chamada LLM nova por turno; latência dentro do teto (R26, R27)
-- [ ] Eval M1–M7 verde, com o avaliador congelado no commit da Etapa 1 e intocado depois; relatório publicado (R28)
-- [ ] Playtest `explorador` 50 turnos com as flags `on`: 0 violação `error` (R29)
+- [x] `fauna_lint` E1–E16 com fixtures boas e ruins; `lint.py --regiao nova_arcadia` com 0 erro; `validate_content.py` com 0 ERRO (R4–R6)
+- [x] `fauna.json` gerado, fresco e determinístico; `data/bestiary.json` byte-idêntico (R3)
+- [x] Ecologia: horário, estação, território, presa/predador, `foge_de`, reações e carcaça com teste; taxa de gatilho inalterada; `shadow` só loga (R8–R12)
+- [x] Presença: nasce, expira, tem caps e é determinística; round-trip de save; save antigo carrega (R13, R19, R24)
+- [x] 1 sinal por cena, na ordem, sem nome; bloco ausente quando não há sinal (R14, R5)
+- [x] Encontro prefere a presença; conversão em sinal para `cedo`; `aproximacao` em 100 % dos combates de fauna com entrada (R15–R17)
+- [x] Bônus de detecção com ≥ 2 sinais; caça no lugar com surpresa do jogador (R18, R20)
+- [x] Rumor de avistamento conta o sinal, sem nome; boost com presença; `rumor_seeds.json` regenerado com os overrides preservados (R21)
+- [x] `sinais_vistos` gravado no `bestiary_knowledge` ao encontrar (R23)
+- [x] Flags `RPG_FAUNA` e `RPG_FAUNA_SINAIS` registradas, `off` por default; golden `off` byte-idêntico (R25)
+- [x] 0 chamada LLM nova por turno; latência dentro do teto (R26, R27)
+- [x] Eval M1–M7 verde, com o avaliador congelado no commit da Etapa 1 e intocado depois; relatório publicado (R28)
+- [x] Playtest `explorador` 50 turnos com as flags `on`: 0 violação `error` (R29)
 - [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo). Se surgir algum, com guard
-- [ ] Saves antigos continuam carregando
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo). Se surgir algum, com guard
+- [x] Saves antigos continuam carregando
 - [ ] Smoke real da §6 executado e registrado na §9
 - [ ] Filhas 360-B/C/D com ID reservado e spec `draft` criada a partir de §3.10 (pelo coordenador)
 
@@ -449,7 +450,43 @@ Feito pelo coordenador, com chave (rotas `ROUTES` de hoje), `RPG_FAUNA=on` e `RP
 
 ## 9. Registro de execução
 
-(vazio, preenchido pelo executor: sondas da Etapa 0, ajustes de constantes, contagens do eval, resultado do smoke)
+**Execução da Fase 1 (02/11, executor Opus; branch `spec-360` sobre `spec-349` @ `830fb496`).**
+
+*Etapa 0 — sondas.*
+- Nova Arcádia: 27 fichas (`nova`/`reinventada`/`adotada`) mais 12 `retro` na ficha. O legado `valoria` com `regions[0] == "nova_arcadia"` (curadoria × `bestiary.json`) são **11**: `enemy_rato_peste_anel_lama`, `enemy_degolador_mao_sombria`, `enemy_soldado_legiao_ferro`, `enemy_iniciado_chama_azul`, `enemy_boss_valerius`, `enemy_boss_vibora`, `enemy_garrick,_o_silenciador`, `mon_rato_caldeira`, `mon_cao_rebite`, `mon_automato_fundicao`, `mon_locomotiva_penitente` (o `enemy_assassino_cinzeu` é retro aqui, mas `regions[0]` é a Pradaria: fica para a 360-B). Total do bloco: **38**. BOSS (5): Roda de Mandíbulas, Valerius, Víbora, Garrick, Locomotiva.
+- `rumor.avistamento` mora em `data/world/rumor_config.json` (`templates`); a variante com sinal é `rumor.avistamento_sinal`. O chamador de `record_kills` é `agents/combat.py` (~2708). O `lei_block` é montado em `agents/storyteller.py` (~1911); o bloco de fauna entra **dentro** dele (sem linha nova no prompt com as flags `off`).
+- Baseline: golden de 30 turnos do `explorador` (MockLLM, seed 0) gravado em `tests/fixtures/spec360_flags_off_golden.json` **antes** do produto (commit `0bae0f3a`). Os 4 testes de `tests/test_spec289_ameaca_tematica.py` já falham na base `830fb496` (bestiário da 349 trocou as criaturas temáticas); não são desta spec.
+
+*Etapa 1.* Avaliador e limiares congelados em `731f49ff`; proteção D6 em `fa2fefbd` (`evals/protected-paths.txt`). O avaliador não foi tocado depois.
+
+*Desvios (todos no código e nesta spec).*
+1. R16 estendido: presença ativa **sem sinal mostrado** de criatura `cedo` também vira sinal no gatilho (ver R16). Sem isso M1 ≈ 0,65.
+2. `presence_at` prefere a presença que o jogador já vem lendo (com sinal) e depois a mais nova; `scene_block` passa à próxima presença do local quando a primeira esgotou os sinais.
+3. O hook diário pesa por `TERRITORIO_OCUPADO` (0,05) a criatura cujo território já está todo coberto por outra presença: as criaturas se espalham pelos nós da região.
+4. Com `RPG_FAUNA=on` e criatura com fauna no pool, o sorteio ponderado usa um `Random` semeado por (turno, local, dia, período) em vez de `Random()` novo sem semente; sem isso o M7 falhava. Não consome o `random` global (as trajetórias `on`×`off` fora da fauna seguem iguais). `off`/`shadow` seguem byte a byte.
+5. O R11 "a carcaça que você deixou foi arrastada" (opcional, "pode ser mostrado") **não** foi feito: a carcaça só pesa no sorteio.
+6. E16: a fonte `content_validator._default_leak_phrases()` ainda não existe nesta base (vem da 350); o lint usa ela quando existir, mais `secret_signatures.SECRET_SIGNATURES` e a seção `[vazamento]` de `_lexico_sinais.txt`.
+7. A caça (R20) chega ao combate com `reason: "caca"`, surpresa forçada do jogador e o cooldown carimbado; o gatilho de rumor com `criatura_avistada` (R15) não usa presença nesta fase.
+
+*Constantes ajustadas (`fauna_config.json`, todas `[BALANCEAR]`), pelo eval:*
+
+| Constante | Default da spec | Final | Por quê |
+|---|---|---|---|
+| `TERRITORIO_FORA` | 0,4 | 0,02 | M4 = 0,47 com 0,4: com 38 criaturas em 4 nós e a criatura sem fauna (`assassino_cinzeu`, fator 1,0) o território só domina com fator baixo |
+| `HORARIO_FORA` | 0,25 | 0,2 | folga no M2 (0,34 → 0,28) |
+| `PREDADOR_FAMINTO` | 0,5 | 0,45 | folga no M3 (0,597 → 0,548) |
+| `P_PRESENCA` | — | 1,0 | cobertura dos nós antes do gatilho (M5) |
+| `MAX_PRESENCAS_REGIAO` | 2 | 4 | 1 por nó de Nova Arcádia; com 2, M5 ≈ −0,30 |
+| `TERRITORIO_OCUPADO` | (novo) | 0,05 | desvio 3 |
+| `ANUNCIA_PRESENCA_NOVA` | (novo) | `true` | desvio 1 |
+
+Conteúdo (autor, não constante): `permanencia` das não-BOSS subiu +4 dias (presença de ~1 semana; menos presenças novas sem sinal), e o legado ganhou o nó central onde é plausível (`rato_peste` no fosso da cidade, `cao_rebite` com a patrulha, `degolador` também no Anel Dourado).
+
+*Eval final* (`docs/spec360/eval-nova_arcadia.md`, 20 seeds × 60 dias): M1 0,814 precedidos e 1,0 com aproximação · M2 pior razão 0,283 · M3 presa ×1,69 (mínimo), predador ×0,548 (máximo) · M4 0,817 · M5 −0,160 (off 15,06 → on 12,65 combates/100 ações; 1200 gatilhos iguais nos dois modos) · M6 0 vazamento · M7 byte-idêntico.
+
+*Testes do escopo:* `test_spec360_{schema_lint,build,eco,presenca,sinais,caca,rumor,saves,flags_off,eval}.py` verdes; golden `off` byte-idêntico depois de todo o produto; contagem de `invoke` igual `on`×`off` em 30 turnos. Playtest `explorador` 50 turnos com as flags `on`: 0 erro, 0 violação. Mini-campanha MockLLM pelo grafo no Anel de Lama (scratch): presença nasce na virada do dia, 2 sinais em cena, "sigo o rastro" abre combate com surpresa do jogador, `sinais_vistos` gravado, 0 violação `fauna_presenca_valida`.
+
+*Pendente (fora do executor):* revisão de fauna independente (todas as 38 entradas estão `revisao: pendente`; parecer em `handoffs/SPEC-360-fauna-review-nova_arcadia.md`), revisão Sol (`handoffs/SPEC-360-sol-review.md`), smoke real da §6 e IDs das filhas 360-B/C/D.
 
 ### Aprovação do dono (02/11)
 

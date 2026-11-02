@@ -226,6 +226,8 @@ def encounter_handoff(enc: dict) -> dict:
     public = str(enc.get("public_hint") or "")
     if public and public != out["hint"]:
         out["public_hint"] = public
+    if enc.get("aproximacao"):  # SPEC-360 R17: a abertura do combate recebe a aproximação
+        out["aproximacao"] = str(enc["aproximacao"])
     return out
 
 
@@ -579,7 +581,9 @@ def _dedupe_encounter(enc, world: dict):
     2x seguidas no mesmo local — exceto reforços/controle, consequência prometida."""
     if not enc:
         return enc
-    if enc.get("reason") in ("reinforcements", "controlled", "rumor"):
+    if enc.get("reason") in ("reinforcements", "controlled", "rumor", "caca"):
+        return enc
+    if enc.get("presence_id"):  # SPEC-360: a criatura anunciada veio, não é o mesmo template
         return enc
     if (
         enc.get("hint")
@@ -1498,8 +1502,26 @@ def storyteller_node(state: GameState):
     world_note = ""
     extra_engine_events: list = list(extra_engine_events_tick)
     track_bk = None  # Fase 6.4: rastro atualiza o Codex do jogador
+    # SPEC-360 R20: "sigo o rastro" com sinal visto e presença no local = encontro no lugar.
+    from services import fauna as _fauna
+
+    _fauna_hunt = None
+    _fauna_sign_shown = False  # no máximo 1 sinal de fauna por cena (R14)
+    _fauna_day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    if not dest and rested_player is None and not law_resolved and last_user_input:
+        try:
+            _fauna_hunt = _fauna.hunt_hint(
+                {**state, **sim_updates, "world": world},
+                world,
+                int((state.get("player") or {}).get("level", 1) or 1),
+                text=str(last_user_input),
+            )
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+
+            log_fallback("storyteller", "fauna_hunt_failed", exc)
     # spec mapa-sublocais (R2): custo 0 (intra-cidade/interior) não rola encontro
-    if (dest and travel_periods >= 1) or rested_player is not None:
+    if (dest and travel_periods >= 1) or rested_player is not None or _fauna_hunt:
         turn = int(world.get("turn_count", 0))
         # R5 (fix-playtest-achados): a FORÇA do encontro escala pelo nível (apex não).
         _plevel = int((state.get("player") or {}).get("level", 1) or 1)
@@ -1522,6 +1544,9 @@ def storyteller_node(state: GameState):
         )
         if _rest_recovers:
             enc = None
+        elif _fauna_hunt:  # SPEC-360 R20: a caça escolhe a criatura (a da presença)
+            enc = dict(_fauna_hunt)
+            world["encounter_eff_danger"] = int(enc.get("eff_danger") or 1)
         else:
             # Fase 6.3: sorteio ponderado — pressão de caça/fação/migração
             _law_hint = _law_mod.hunter_encounter(
@@ -1548,6 +1573,11 @@ def storyteller_node(state: GameState):
                 exempt_factions=fm.passage_factions(_fm_view()),  # SPEC-301 perk `passagem`
                 hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
                 rumor_hint=_rumor_hint,
+                world_sim=(
+                    (sim_updates.get("world_sim") or state.get("world_sim") or {})
+                    if _fauna.mode() != "off"
+                    else None
+                ),  # SPEC-360: ecologia, presença e conversão em sinal
             )
             if enc and enc.get("reason") == "rumor":
                 from services import rumor_adoption as _ra
@@ -1563,6 +1593,29 @@ def storyteller_node(state: GameState):
         enc = _dedupe_encounter(enc, world)  # SPEC-233 R6
         if not enc:
             world.pop("encounter_eff_danger", None)  # SPEC-233 R5
+        if enc and enc.get("fauna_convert"):
+            # SPEC-360 R16: sem presença anunciada, o encontro vira sinal; cooldown carimbado.
+            world["last_encounter_turn"] = turn
+            world["last_encounter_id"] = "fauna_sinal"
+            world["last_encounter_loc"] = world.get("current_location_id")
+            world.pop("encounter_eff_danger", None)
+            _fe = _fauna.entry(str(enc.get("enemy_id") or ""))
+            _fnote, _fupd = (
+                _fauna.convert_to_signal(
+                    {**state, **sim_updates, "world": world},
+                    _fe,
+                    str(world.get("current_location_id") or ""),
+                    _fauna_day,
+                )
+                if _fe
+                else ("", {})
+            )
+            if _fupd.get("world_sim"):
+                sim_updates["world_sim"] = _fupd["world_sim"]
+            if _fnote:
+                world_note = f"ENCONTRO NA ESTRADA (sinal): {_fnote}\n{_fauna.SCENE_RULE}"
+                _fauna_sign_shown = True
+            enc = None
         if enc:
             world["last_encounter_turn"] = turn
             world["last_encounter_id"] = enc.get("hint")
@@ -1590,7 +1643,14 @@ def storyteller_node(state: GameState):
             _perc_mod = weather_effects(world).get("perception_mod", 0) + light_level(
                 world, base_p
             ).get("perception_mod", 0)
+            if enc.get("presence_id"):  # SPEC-360 R18: quem leu os sinais se prepara
+                _perc_mod += _fauna.detection_bonus(
+                    sim_updates.get("world_sim") or state.get("world_sim") or {},
+                    str(enc["presence_id"]),
+                )
             det = detection_check(base_p, danger, perception_mod=_perc_mod)
+            if enc.get("reason") == "caca":  # R20: quem caça chega primeiro
+                det = {**det, "perceived": True}
             kind = (
                 "combat"
                 if enc.get("reason") in ("reinforcements", "controlled", "bounty_hunters")
@@ -1659,6 +1719,21 @@ def storyteller_node(state: GameState):
                     updates["bestiary_knowledge"] = disc.record_rumor(
                         state.get("bestiary_knowledge", {}), enemy_id, turn
                     )
+                if enc.get("presence_id"):  # SPEC-360 R23: o sinal visto ganha dono
+                    _fsim, _shown = _fauna.mark_encountered(
+                        updates.get("world_sim") or state.get("world_sim") or {},
+                        str(enc["presence_id"]),
+                        _fauna_day,
+                        status="cacada" if enc.get("reason") == "caca" else "encontrada",
+                    )
+                    updates["world_sim"] = _fsim
+                    if enemy_id and _shown:
+                        updates["bestiary_knowledge"] = disc.record_sinais(
+                            updates.get("bestiary_knowledge") or state.get("bestiary_knowledge"),
+                            str(enemy_id),
+                            _shown,
+                            turn,
+                        )
                 return updates
 
             from gamedata import get_location
@@ -1691,16 +1766,37 @@ def storyteller_node(state: GameState):
             elif kind == "track":
                 from services import lore_quests as _lq
 
+                _track_entry: dict = {}
+
+                def _describe_track(e: dict) -> str | None:
+                    fe = _fauna.entry(str((e or {}).get("id") or ""))
+                    text = ((fe or {}).get("sinais") or {}).get("rastro")
+                    if text:
+                        _track_entry["e"] = fe
+                    return text
+
                 track_bk, note, hint = resolve_track(
                     state.get("bestiary_knowledge", {}),
                     loc_node,
                     danger,
                     turn,
                     hunt_anchor=_lq.active_hunt_anchor({**state, "world": world}),  # SPEC-313 R26
+                    describe=_describe_track if _fauna.sinais_mode() == "on" else None,
                 )
                 if hint:
                     world["treasure_hint"] = True
                 world_note = f"ENCONTRO NA ESTRADA (rastro): {note}"
+                if _track_entry:  # SPEC-360 R22: o rastro cria/reforça a presença, sem nome
+                    _tnote, _tupd = _fauna.track_signal(
+                        {**state, **sim_updates, "world": world},
+                        _track_entry["e"],
+                        str(world.get("current_location_id") or ""),
+                        _fauna_day,
+                    )
+                    if _tupd.get("world_sim"):
+                        sim_updates["world_sim"] = _tupd["world_sim"]
+                    world_note += f"\n{_fauna.SCENE_RULE}"
+                    _fauna_sign_shown = True
             else:  # social
                 world_note = (
                     "ENCONTRO NA ESTRADA (social): um grupo HOSTIL-MAS-NEGOCIÁVEL aborda o "
@@ -1912,6 +2008,19 @@ def storyteller_node(state: GameState):
     lei_block = _law_text
     if _law_mod.crime_hint_enabled(law_scene):
         lei_block = "\n".join(p for p in (lei_block, _law_mod.CRIME_CLAIM_HINT) if p)
+    # SPEC-360 R14: 1 sinal de fauna por cena, só se houver (0 token sem sinal).
+    if not _fauna_sign_shown:
+        try:
+            _fauna_text, _fauna_upd = _fauna.scene_block({**state, **sim_updates, "world": world})
+        except Exception as exc:
+            from observability.telemetry import log_fallback
+
+            log_fallback("storyteller", "fauna_scene_failed", exc)
+            _fauna_text, _fauna_upd = "", {}
+        if _fauna_upd.get("world_sim"):
+            sim_updates["world_sim"] = _fauna_upd["world_sim"]
+        if _fauna_text:
+            lei_block = "\n".join(p for p in (lei_block, _fauna_text) if p)
 
     # SPEC-317 R9: o prompt é montado em pedaços (texto, estático?) — ver prompt_layout.
     _head = f"""

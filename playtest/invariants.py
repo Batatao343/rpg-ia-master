@@ -2183,6 +2183,56 @@ def check_law(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     return out
 
 
+def check_fauna(state: dict, prev: dict | None, turn: int) -> list[Violation]:
+    """SPEC-360 R29 ``fauna_presenca_valida``: criatura existe no `fauna.json`, `locais` na
+    regiao da presenca, `sinais_mostrados` sao tipos que a criatura tem, nenhuma presenca
+    vencida segue ativa e os caps (12 presencas, 20 carcacas) valem."""
+    fauna_sim = ((state or {}).get("world_sim") or {}).get("fauna")
+    if not isinstance(fauna_sim, dict):
+        return []
+    from services import fauna
+    from services import world_pressures as wp
+
+    out: list[Violation] = []
+    day = int((((state or {}).get("world") or {}).get("world_clock") or {}).get("day", 1) or 1)
+    rows = [p for p in fauna_sim.get("presencas") or [] if isinstance(p, dict)]
+    if len(rows) > int(fauna.const("MAX_PRESENCAS")):
+        out.append(_V("fauna_presenca_valida", "error", turn, f"{len(rows)} presencas (cap)"))
+    if len(fauna_sim.get("carcacas") or []) > int(fauna.const("MAX_CARCACAS")):
+        out.append(_V("fauna_presenca_valida", "error", turn, "carcacas acima do cap"))
+    for p in rows:
+        cid = str(p.get("creature_id") or "")
+        e = fauna.entry(cid)
+        if not e:
+            out.append(
+                _V("fauna_presenca_valida", "error", turn, "criatura sem fauna", creature=cid)
+            )
+            continue
+        region = str(p.get("region_id") or "")
+        if any(wp.region_of(str(loc)) != region for loc in p.get("locais") or []):
+            out.append(
+                _V("fauna_presenca_valida", "error", turn, "local fora da regiao", creature=cid)
+            )
+        kinds = {k for k, v in (e.get("sinais") or {}).items() if v}
+        if not set(p.get("sinais_mostrados") or []) <= kinds:
+            out.append(
+                _V(
+                    "fauna_presenca_valida",
+                    "error",
+                    turn,
+                    "sinal que a criatura nao tem",
+                    creature=cid,
+                )
+            )
+        if len(set(p.get("sinais_mostrados") or [])) != len(p.get("sinais_mostrados") or []):
+            out.append(_V("fauna_presenca_valida", "error", turn, "sinal repetido", creature=cid))
+        if p.get("status") == "ativa" and int(p.get("expires_day", 0)) < day - 1:
+            out.append(
+                _V("fauna_presenca_valida", "error", turn, "presenca vencida ativa", creature=cid)
+            )
+    return out
+
+
 def check_world_quests(state: dict, prev: dict | None, turn: int) -> list[Violation]:
     """SPEC-305 R6/R9/R16/R2 (R27): quests de mundo — so do que foi percebido, teto de 3,
     nunca falham antes do prazo e o prazo nunca encurta."""
@@ -2872,6 +2922,7 @@ CHECKS: list[Check] = [
     check_rumor_adopt,
     check_companions,
     check_law,
+    check_fauna,
     check_reputation,
     check_faction_membership,
     check_vitals,

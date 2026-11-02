@@ -1147,7 +1147,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma catadora do fosso diz que os corpos amanhecem roídos e quem foi mordido tem febre no outro dia"
     },
     "rumor_avist_enemy_degolador_mao_sombria": {
       "family": "avistamento",
@@ -1165,7 +1166,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um taverneiro do Anel diz que quem acha marca de mão no batente muda de casa no mesmo dia"
     },
     "rumor_avist_enemy_soldado_legiao_ferro": {
       "family": "avistamento",
@@ -1182,7 +1184,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um vendedor ambulante conta que a patrulha passou cedo e levou quem estava sem papel"
     },
     "rumor_avist_enemy_iniciado_chama_azul": {
       "family": "avistamento",
@@ -1199,7 +1202,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma vizinha diz que o filho voltou do quintal de um amigo com as mãos queimadas e sorrindo"
     },
     "rumor_avist_enemy_devorador_sol_zhur": {
       "family": "avistamento",
@@ -1337,7 +1341,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma criada do Palácio jura que um colega que limpava os andares de baixo ainda passa por ela sem ser visto"
     },
     "rumor_avist_enemy_horror_esgoto": {
       "family": "avistamento",
@@ -1354,7 +1359,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "o vigia da madrugada diz que a grade do bueiro amanheceu arrancada e a carroça do lixo sumiu"
     },
     "rumor_avist_enemy_necromante_renegado": {
       "family": "avistamento",
@@ -1424,7 +1430,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guardas dos Jardins dizem que um coaxar avisa do golpe antes do braço levantar"
     },
     "rumor_avist_enemy_assassino_cinzeu": {
       "family": "avistamento",
@@ -1476,7 +1483,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mestre de turno manda deixar esfriar o que sai da panela de gusa e vender a sucata depois"
     },
     "rumor_avist_enemy_mimico_bau": {
       "family": "avistamento",
@@ -1546,7 +1554,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os leprosos da parte alta dizem que quem desiste de vez acorda branco e não sente mais nada"
     },
     "rumor_avist_enemy_sombra_espreitadora": {
       "family": "avistamento",
@@ -1756,7 +1765,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma mãe do Anel conta que o marido bêbado voltou para casa encharcado numa noite de chuva, e só de um lado"
     },
     "rumor_avist_enemy_fantasma": {
       "family": "avistamento",
@@ -2355,7 +2365,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um mecânico das Fundições diz que a máquina dele perdeu metade dos pinos numa noite só"
     },
     "rumor_avist_mon_cao_rebite": {
       "family": "avistamento",
@@ -2372,7 +2383,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma vendedora do Anel de Ferro diz que os cães da patrulha agora farejam óleo e sangue juntos"
     },
     "rumor_avist_mon_automato_fundicao": {
       "family": "avistamento",
@@ -2389,7 +2401,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os ladrões de sucata contam que a forja abandonada dos encapuzados ainda tem alguém de guarda"
     },
     "rumor_avist_mon_mosquito_eter": {
       "family": "avistamento",
@@ -5010,7 +5023,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma lavadeira jura que ouviu metal rangendo atrás da casa dela a noite inteira"
     },
     "rumor_avist_mon_fole_de_costela": {
       "family": "avistamento",
@@ -5027,7 +5041,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um foguista diz que tem um colega que ainda bate o ponto e não respira mais pelo nariz"
     },
     "rumor_avist_mon_rosario_de_vertebras": {
       "family": "avistamento",
@@ -5044,7 +5059,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um barqueiro conta que algo mordeu a perna do filho na margem e a ferida ainda puxa para o rio"
     },
     "rumor_avist_mon_fila_de_grilhoes": {
       "family": "avistamento",
@@ -5061,7 +5077,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um escrivão do Mercado jura que ninguém tira papel do pátio dos fundos desde que os acorrentados pararam de andar"
     },
     "rumor_avist_mon_lencol_de_chamine": {
       "family": "avistamento",
@@ -5078,7 +5095,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma vendedora de carvão diz que acordou com algo quente e pesado em cima do cobertor e não era o gato"
     },
     "rumor_avist_mon_traca_do_sino_mudo": {
       "family": "avistamento",
@@ -5095,7 +5113,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os sineiros juram que puxaram a corda a manhã toda e ninguém na rua ouviu uma só badalada"
     },
     "rumor_avist_mon_gralha_de_crematorio": {
       "family": "avistamento",
@@ -5112,7 +5131,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um carregador conta que a cinza dos fornos levou o anel da mão dele e devolveu cinza no lugar"
     },
     "rumor_avist_mon_porca_da_queda": {
       "family": "avistamento",
@@ -5129,7 +5149,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "no Beco dizem que onde ela deita o chão não volta mais, e que viciado que dorme ali acorda pesado"
     },
     "rumor_avist_mon_centopeia_da_torre_invertida": {
       "family": "avistamento",
@@ -5146,7 +5167,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um preso solto do Oubliette jura que lá embaixo aprendeu a respirar baixo, porque algo escuta do teto"
     },
     "rumor_avist_mon_sorvedouro_do_codigo": {
       "family": "avistamento",
@@ -5163,7 +5185,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um curandeiro de esquina fechou as portas depois que um inquisidor cego passou recitando na rua dele"
     },
     "rumor_avist_mon_pavio_da_lista": {
       "family": "avistamento",
@@ -5180,7 +5203,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da Rua das Chaminés contam que um mago condenado passa toda manhã nas costas de alguém, gritando"
     },
     "rumor_avist_mon_enxerto_da_fornalha": {
       "family": "avistamento",
@@ -5197,7 +5221,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um aprendiz da forja diz que um dos encapuzados treina sozinho de madrugada e geme mais que a lâmina"
     },
     "rumor_avist_mon_vira_costas_da_praca": {
       "family": "avistamento",
@@ -5214,7 +5239,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma vendedora do largo das execuções diz que tem sempre um a mais na plateia, virado para o outro lado"
     },
     "rumor_avist_mon_cavadeira_de_unhas": {
       "family": "avistamento",
@@ -5231,7 +5257,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um preso que voltou do Oubliette diz que de noite ainda ouve arranhar debaixo da cama"
     },
     "rumor_avist_mon_convidado_de_cera": {
       "family": "avistamento",
@@ -5248,7 +5275,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma dama do Anel Dourado jura que no jantar havia à mesa alguém que ninguém chamou e que levou o colar dela"
     },
     "rumor_avist_mon_escritura_rastejante": {
       "family": "avistamento",
@@ -5265,7 +5293,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um devedor do Mercado de Carne jura que o contrato dele foi lido em voz alta sem ninguém segurar o papel"
     },
     "rumor_avist_mon_portao_que_morde": {
       "family": "avistamento",
@@ -5282,7 +5311,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os guardas da passagem para o Anel de Lama pedem para trocar de posto e ninguém troca"
     },
     "rumor_avist_mon_relicario_de_osso": {
       "family": "avistamento",
@@ -5299,7 +5329,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "os da parte alta dizem que quem corre na nave alagada leva uma lasca no corpo e não sai mais"
     },
     "rumor_avist_mon_sangrado_da_clinica": {
       "family": "avistamento",
@@ -5316,7 +5347,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "um vizinho da Rua das Chaminés diz que um paciente que saiu curado volta toda noite pedindo desculpa"
     },
     "rumor_avist_mon_quebrado_de_vitrine": {
       "family": "avistamento",
@@ -5333,7 +5365,8 @@
       "confiabilidade": "media",
       "truth_mode": "regional",
       "quest_eligible": true,
-      "review": "dono"
+      "review": "dono",
+      "sinal_rumor": "uma criada do Anel Dourado diz que a casa onde trabalha tem um elfo que só se levanta para cantar"
     },
     "rumor_avist_mon_nadador_escaldado": {
       "family": "avistamento",

@@ -103,6 +103,23 @@ def record_rumor(bk: dict, creature_id: str, turn: int = 0) -> dict:
     return bk
 
 
+def record_sinais(bk: dict, creature_id: str, sinais: list[str], turn: int = 0) -> dict:
+    """SPEC-360 R23: os tipos de sinal que o jogador viu antes do encontro passam a ser da
+    criatura (`sinais_vistos`, ordem da primeira vez). Antes do encontro ele nao sabe de quem."""
+    if not creature_id or not sinais:
+        return dict(bk or {})
+    bk = dict(bk or {})
+    entry = dict(bk.get(creature_id) or {})
+    seen = list(entry.get("sinais_vistos") or [])
+    for s in sinais:
+        if s not in seen:
+            seen.append(str(s))
+    entry["sinais_vistos"] = seen
+    entry.setdefault("first_seen_turn", int(turn))
+    bk[creature_id] = entry
+    return bk
+
+
 def knowledge_tier(entry: dict) -> int:
     """Maior grau alcançado pelos contadores. 0 = não mostra no codex."""
     entry = entry or {}

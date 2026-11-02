@@ -899,6 +899,10 @@ def _world_summary(state: dict) -> dict:
     out.update(_calendar_summary(sim))
     out["npcs"] = _npc_summary(state)
     out["rumors"] = _rumor_summary(sim)
+    if isinstance(sim.get("fauna"), dict):  # SPEC-360 R29: sinal, encontro{precedido}, caca
+        from services import fauna
+
+        out["fauna"] = fauna.summary(sim)
     return out
 
 

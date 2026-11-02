@@ -33,6 +33,10 @@
       "Caçadores contam ter visto {artigo} {criatura} rondando {local}.",
       "Na taverna, alguém jura ter visto {artigo} {criatura} perto de {local}."
     ],
+    "rumor.avistamento_sinal": [
+      "Em {local}, {sinal}.",
+      "Contam por {local} que {sinal}."
+    ],
     "rumor.narrador": [
       "{text}"
     ]

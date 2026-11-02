@@ -372,6 +372,7 @@ class BestiaryKnowledge(TypedDict, total=False):
     defeated: int  # instâncias mortas pelo player
     first_seen_turn: int
     last_update_turn: int
+    sinais_vistos: list[str]  # SPEC-360 R23: tipos de sinal que o encontro revelou ser dela
 
 
 class CampaignBeat(TypedDict):

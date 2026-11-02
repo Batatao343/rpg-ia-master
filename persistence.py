@@ -983,6 +983,17 @@ def backfill_enemy_ids(raw: dict[str, Any]) -> dict[str, Any]:
     return migrated
 
 
+def _load_world_sim(raw: Any) -> dict:
+    """SPEC-360 R24: `world_sim.fauna` passa pelo normalizador (presenca de criatura que
+    sumiu do `fauna.json` cai fora); sem a chave, o sim volta igual ao salvo."""
+    sim = deepcopy(raw or {})
+    if isinstance(sim, dict) and "fauna" in sim:
+        from services.fauna import normalize_fauna_sim
+
+        sim["fauna"] = normalize_fauna_sim(sim.get("fauna"))
+    return sim
+
+
 def _normalize_combat_on_load(raw_data: dict[str, Any]) -> dict[str, Any]:
     combat = raw_data.get("combat") or {}
     if not combat:
@@ -1089,7 +1100,7 @@ def _raw_to_state(raw_data: dict[str, Any]) -> dict[str, Any]:
         "pending_world_events": raw_data.get("pending_world_events", []),
         "event_rejections": raw_data.get("event_rejections", []),
         # SPEC-302: save sem as chaves = {} (o motor inicializa no 1o dia virado).
-        "world_sim": deepcopy(raw_data.get("world_sim") or {}),
+        "world_sim": _load_world_sim(raw_data.get("world_sim")),
         "world_sim_shadow": deepcopy(raw_data.get("world_sim_shadow") or {}),
         # SPEC-304 R28: save sem as chaves = {} (init no 1o tick ligado, sem retroativo).
         "npc_sim": deepcopy(raw_data.get("npc_sim") or {}),

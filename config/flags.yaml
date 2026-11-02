@@ -364,6 +364,18 @@ RPG_EXPOSE_OPENAPI:
   default: null
   spec: SPEC-218
   note: "configuração de ambiente (nunca o valor) (expose openapi)"
+RPG_FAUNA:
+  kind: release
+  default: "off"
+  spec: SPEC-360
+  expires: 2027-03-01
+  note: "fauna viva: ecologia no sorteio de encontro (off|shadow|on)"
+RPG_FAUNA_SINAIS:
+  kind: release
+  default: "off"
+  spec: SPEC-360
+  expires: 2027-03-01
+  note: "fauna viva: presença, sinais antes da luta, aproximação, caça e rumor (exige RPG_FAUNA)"
 RPG_FINOPS_ALERT_HOURS:
   kind: ops
   default: "24"

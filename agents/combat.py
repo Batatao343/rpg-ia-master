@@ -2725,9 +2725,11 @@ def _combat_node(state: GameState):
         e["xp_awarded"] = True
     for e in dead + downed:
         e["xp_awarded"] = True
+    fauna_sim = None
     if newly_dead:
         bestiary_knowledge = disc.record_kills(bestiary_knowledge, newly_dead, turn)
         bk_changed = True
+        fauna_sim = _fauna_carcasses(state, newly_dead)  # SPEC-360 R11
 
     player_dead = bool(out.get("player_dead")) or bool(player.get("dead"))
     combat_over = bool(out.get("ended")) or hero_fled or player_dead
@@ -3060,6 +3062,8 @@ def _combat_node(state: GameState):
         result["world"] = world_out
     if bk_changed:
         result["bestiary_knowledge"] = bestiary_knowledge
+    if fauna_sim is not None:
+        result["world_sim"] = fauna_sim
     if kill_xp:
         from services.turn_outcome import record_gain
 
@@ -3248,6 +3252,33 @@ def _compose_board_narrative(
     return f"{body}\n\n{summary}"
 
 
+def _fauna_carcasses(state: dict, dead: list[dict]) -> dict | None:
+    """SPEC-360 R11: criatura de fauna morta deixa carcaça no local (writer: services.fauna)."""
+    from services import fauna as _fauna
+
+    if _fauna.mode() == "off":
+        return None
+    world = state.get("world") or {}
+    loc = str(world.get("current_location_id") or "")
+    day = int((world.get("world_clock") or {}).get("day", 1) or 1)
+    sim = state.get("world_sim") or {}
+    changed = False
+    for e in dead:
+        cid = disc.normalize_bestiary_id(e)
+        if cid and _fauna.entry(cid):
+            sim = _fauna.record_kill(sim, cid, loc, day)
+            changed = True
+    return sim if changed else None
+
+
+def _approach_context(state: dict) -> str:
+    """SPEC-360 R17: a frase de aproximação da fauna vai para a abertura, na mesma chamada."""
+    line = str(((state or {}).get("combat_encounter_hint") or {}).get("aproximacao") or "")
+    if not line:
+        return ""
+    return f"\nAPROXIMAÇÃO (o que o herói viu chegar; não contradiga): {line}"
+
+
 def _board_opening_result(
     state: dict,
     messages: list,
@@ -3318,7 +3349,8 @@ def _board_opening_result(
         pack.world_state_block
         + "\n"
         + _ambient_for_combat(world, player)
-        + _perceived_for_combat(state),
+        + _perceived_for_combat(state)
+        + _approach_context(state),
         manifest=combat_meta.get("encounter"),
         withhold=_faction_withhold_clause(
             combat_meta.get("encounter"), state.get("factions"), state.get("faction_intel")

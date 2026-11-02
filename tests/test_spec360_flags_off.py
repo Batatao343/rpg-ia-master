@@ -75,3 +75,77 @@ def test_golden_flags_off_byte_identico(monkeypatch):
         pytest.skip("golden regravado")
     golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
     assert fp == golden
+
+
+def _count_invokes(monkeypatch) -> list[int]:
+    import mock_llm
+
+    calls = [0]
+    orig, orig_s = mock_llm.MockLLM.invoke, mock_llm._StructuredMock.invoke
+
+    def _inv(self, messages):
+        calls[0] += 1
+        return orig(self, messages)
+
+    def _inv_s(self, messages):
+        calls[0] += 1
+        return orig_s(self, messages)
+
+    monkeypatch.setattr(mock_llm.MockLLM, "invoke", _inv)
+    monkeypatch.setattr(mock_llm._StructuredMock, "invoke", _inv_s)
+    return calls
+
+
+def test_zero_chamada_llm_nova(monkeypatch):
+    """R26: 30 turnos do `explorador`, flags `on` vs `off`, mesma seed: mesma contagem de invoke."""
+    calls = _count_invokes(monkeypatch)
+    _flags(monkeypatch, "off", "off")
+    _run()
+    off = calls[0]
+    calls[0] = 0
+    _flags(monkeypatch, "on", "on")
+    result = _run()
+    assert calls[0] == off
+    assert not result.errors
+
+
+def test_latencia_por_chamada(monkeypatch):
+    """R27: eco_multiplier + scene_block + day_hook < 20 ms por chamada (media); bloco <= 60
+    tokens (len/4)."""
+    import gamedata
+    import world_utils as wu
+    from services import fauna, world_engine
+
+    _flags(monkeypatch, "on", "on")
+    monkeypatch.setenv("RPG_WORLD_ENGINE", "on")
+    ctx = fauna.EcoCtx("na_anel_lama", "nova_arcadia", "Noite", "outono", {}, 10)
+    entries = list(fauna.load().values())
+    t0 = time.perf_counter()
+    for e in entries * 5:
+        fauna.eco_multiplier(e, ctx)
+    eco_ms = 1000 * (time.perf_counter() - t0) / (len(entries) * 5)
+    sim: dict = {}
+    t0 = time.perf_counter()
+    for d in range(1, 21):
+        world = {"current_location_id": "na_anel_lama", "world_clock": {"day": d}}
+        fauna.day_hook(
+            world_engine.DayContext("g", d, sim, {}, world, [], world_engine.day_rng("g", d, "x"))
+        )
+    hook_ms = 1000 * (time.perf_counter() - t0) / 20
+    state = {"world": {"current_location_id": "na_anel_lama", "world_clock": {"day": 20}}}
+    t0 = time.perf_counter()
+    blocks = []
+    for _ in range(20):
+        block, upd = fauna.scene_block({**state, "world_sim": sim})
+        if upd:
+            sim = upd["world_sim"]
+        if block:
+            blocks.append(block)
+    scene_ms = 1000 * (time.perf_counter() - t0) / 20
+    t0 = time.perf_counter()
+    loc = gamedata.get_location("na_anel_lama")
+    for t in range(20):
+        wu.encounter_distribution(loc, 3, t, world=state["world"], world_sim=sim)
+    dist_ms = 1000 * (time.perf_counter() - t0) / 20
+    assert eco_ms < 20 and hook_ms < 20 and scene_ms < 20 and dist_ms < 50
+    assert all(len(b) / 4 <= 60 for b in blocks)
