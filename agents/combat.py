@@ -1493,9 +1493,19 @@ def _flee_roll_payload(chase_state: dict | None, prev_track: str, hero_fled: boo
     """SPEC-353 R39b / SPEC-364 R1: payload `out["fuga"]`. O "de" vem de dentro da
     perseguição (`_last.de`, depois de retomar/reiniciar); `prev_track` só p/ save antigo."""
     last = (chase_state or {}).get("_last") or {}
+    de = str(last.get("de") or prev_track)
+    if last.get("sacrificio"):  # sacrifício aceito: escapa sem teste
+        return {
+            "total": None,
+            "dificuldade": None,
+            "sucesso": True,
+            "veredito": "escapou",
+            "de": de,
+            "para": "escapou",
+            "sacrificio": True,
+        }
     if last.get("total") is None:
         return None
-    de = str(last.get("de") or prev_track)
     return {
         "total": last.get("total"),
         "dificuldade": last.get("difficulty"),
@@ -3399,10 +3409,8 @@ def _attempt_flee(
     previous_track = chase_state.get("trilha")
     if force_escape:
         chase_state.update(trilha="escapou", escapou=True, alcancado=False, eligible=True)
-        chase_state["_last"] = {
-            **(chase_state.get("_last") or {}),
-            "de": previous_track,
-        }  # SPEC-364 R1
+        # SPEC-364 R1/P2-2: sem dado — o `_last` da rodada anterior não pode vazar para o mech_log
+        chase_state["_last"] = {"de": previous_track, "sacrificio": True}
         return FleeDecision(
             True,
             ["Você aproveita a brecha e FOGE do combate."],

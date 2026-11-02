@@ -321,9 +321,15 @@ def chrono_events(out: dict) -> list[tuple[str, Any]]:
 
 def _flee_line(out: dict) -> str | None:
     roll = out.get("fuga")
-    if not isinstance(roll, dict) or roll.get("total") is None:
+    if not isinstance(roll, dict):
         return None
     from services.chase import track_label
+
+    if roll.get("sacrificio"):  # SPEC-364 P2-2: sem dado, só a trilha
+        de, para = track_label(roll.get("de")), track_label(roll.get("para"))
+        return "Fuga · sacrifício aceito · escapou" + (f" ({de} → {para})" if de and para else "")
+    if roll.get("total") is None:
+        return None
 
     veredito = roll.get("veredito")
     if veredito is None:  # save antigo: só o dado
