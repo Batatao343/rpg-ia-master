@@ -7,7 +7,8 @@ import types
 
 import pytest
 
-from services import npc_world, opening_threads as ot, rumors
+from services import npc_world, rumors
+from services import opening_threads as ot
 
 BACKSTORY = "saí do Anel Dourado depois que minha irmã parou de me reconhecer"
 
@@ -90,8 +91,14 @@ def test_single_public_rag_query(monkeypatch):
 
     monkeypatch.setattr(rag, "query_rag", fake)
     prologue.build_start_scenario_ctx(
-        {"name": "A", "race": "Elfo", "class_name": "Arcanista Cinzento",
-         "region": "Nova Arcádia", "level": 1, "backstory": BACKSTORY}
+        {
+            "name": "A",
+            "race": "Elfo",
+            "class_name": "Arcanista Cinzento",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": BACKSTORY,
+        }
     )
     assert len(calls) == 1
     assert calls[0]["max_visibility"] == "public"
@@ -164,9 +171,20 @@ def test_fallback_when_350_absent_or_empty(monkeypatch):
 
 @pytest.mark.parametrize(
     "region",
-    ["aethelgard", "brekmar", "costa_negra", "deserto_zhur", "floresta_sussurros",
-     "montanhas_afiadas", "nova_arcadia", "ophidia", "pantano_melancolia",
-     "pradaria_ruinas", "selva_xylos", "skallgard"],
+    [
+        "aethelgard",
+        "brekmar",
+        "costa_negra",
+        "deserto_zhur",
+        "floresta_sussurros",
+        "montanhas_afiadas",
+        "nova_arcadia",
+        "ophidia",
+        "pantano_melancolia",
+        "pradaria_ruinas",
+        "selva_xylos",
+        "skallgard",
+    ],
 )
 def test_every_start_region_has_plot_npc(region):
     assert ot.thread_menu(region)["npcs"], region

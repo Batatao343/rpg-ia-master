@@ -890,6 +890,8 @@ export interface CreatePayload {
   generate_portrait?: boolean;
   // spec inicio-personalizado: cenário aprovado no passo de prólogo (opcional)
   scenario?: StartScenario | null;
+  // SPEC-351: selo do servidor sobre o cenário (NPC pessoal só vai ao pool se confere)
+  scenario_token?: string | null;
 }
 
 // spec inicio-personalizado: cenário de abertura (POST /game/prologue)
@@ -898,6 +900,18 @@ export interface SeedNPC {
   role: string;
   attitude: string; // "hostil" | "neutro" | "aliado"
   persona: string;
+  kind?: "personal" | "plot"; // SPEC-351
+}
+
+// SPEC-351: NPC criado para a história do personagem (camada pública + laço local)
+export interface PersonalNPC {
+  name: string;
+  role_public: string;
+  persona_public: string;
+  appearance: string;
+  legend: string;
+  bond: string;
+  attitude: string;
 }
 
 export interface StartScenario {
@@ -907,11 +921,18 @@ export interface StartScenario {
   beats: string[];
   climax: string;
   seed_npcs: SeedNPC[];
+  // SPEC-351 (opcionais: cenário antigo continua válido)
+  seeking?: string;
+  thread_refs?: string[];
+  plot_npc_id?: string;
+  plot_npc_hook?: string;
+  personal_npc?: PersonalNPC | null;
 }
 
 export interface PrologueResponse {
   scenario: StartScenario;
   mock: boolean;
+  scenario_token?: string;
 }
 
 // Grafo do mundo (GET /data/map) — data/world_map.json

@@ -66,7 +66,11 @@ def test_personal_npc_local_has_bond_and_seed_motives():
     sheet = seed["npcs"][scenario.personal_npc.name]
     assert sheet["bond"] == scenario.personal_npc.bond
     assert set(sheet["seed_motives"]) == {
-        "desire_id", "fear_id", "secret_id", "contradiction_id", "mannerism_id",
+        "desire_id",
+        "fear_id",
+        "secret_id",
+        "contradiction_id",
+        "mannerism_id",
     }
     assert sheet["in_scene"] is True and sheet["relationship"] in (2, 5, 8)
 

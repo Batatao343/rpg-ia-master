@@ -135,7 +135,9 @@ def _eligible_npc(ref: str, region_id: str) -> dict | None:
 @lru_cache(maxsize=256)
 def codex_role(ref: str) -> str:
     """Linha "Papel:" do Codex PÚBLICO do NPC; sem ela, "" (tags são ids, não texto de papel)."""
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "data", "codex", "npcs", f"{ref}.md")
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), os.pardir, "data", "codex", "npcs", f"{ref}.md"
+    )
     try:
         with open(path, encoding="utf-8") as fh:
             raw = fh.read()
@@ -228,7 +230,11 @@ def _rank(items: list, text_of, backstory: str) -> list:
 
     def key(item):
         hits = len(want & _tokens(text_of(item))) if want else 0
-        return (-hits, not item.get("playable", True), str(item.get("door_id") or item.get("entity_id") or ""))
+        return (
+            -hits,
+            not item.get("playable", True),
+            str(item.get("door_id") or item.get("entity_id") or ""),
+        )
 
     return sorted(items, key=key)
 
@@ -256,9 +262,7 @@ def thread_menu(region_id: str, *, backstory: str = "", start_location_id: str =
     seen: set[str] = set()
     pool = list(dict.fromkeys(anchors))
     if not pool:
-        pool = sorted(
-            eid for eid, ent in gr.load_entities().items() if ent.get("type") == "npc"
-        )
+        pool = sorted(eid for eid, ent in gr.load_entities().items() if ent.get("type") == "npc")
     for ref in pool:
         if ref in seen:
             continue

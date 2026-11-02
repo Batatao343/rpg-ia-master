@@ -74,6 +74,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
   const [generatePortrait, setGeneratePortrait] = useState(false);
   // spec inicio-personalizado (R9): passo 6 — prólogo confirmável
   const [scenario, setScenario] = useState<StartScenario | null>(null);
+  const [scenarioToken, setScenarioToken] = useState<string | null>(null);
   const [prologueBusy, setPrologueBusy] = useState(false);
 
   useEffect(() => {
@@ -121,9 +122,11 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
     setStep(5);
     setPrologueBusy(true);
     setScenario(null);
+    setScenarioToken(null);
     try {
       const r = await api.postPrologue(payload());
       setScenario(r.scenario);
+      setScenarioToken(r.scenario_token ?? null);
     } catch (e) {
       onError("O prólogo falhou: " + errMsg(e), errRequestId(e));
       setStep(4);
@@ -472,13 +475,24 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                 {scenario.prologue.split(/\n+/).map((p, i) => (
                   <p key={i} className="wizard__para prologue__text">{p}</p>
                 ))}
+                {scenario.seeking && (
+                  <p className="wizard__para prologue__seeking">
+                    <strong>O que você busca:</strong> {scenario.seeking}
+                  </p>
+                )}
                 {scenario.seed_npcs.length > 0 && (
                   <div className="prologue__npcs">
                     {scenario.seed_npcs.map((n) => (
                       <span key={n.name} className="chip" title={n.persona}>
                         {n.name} — {n.role}
+                        {scenario.personal_npc && n.name === scenario.personal_npc.name
+                          ? " (da sua história)"
+                          : ""}
                       </span>
                     ))}
+                    {scenario.plot_npc_id && scenario.plot_npc_hook && (
+                      <span className="chip">do mundo — {scenario.plot_npc_hook}</span>
+                    )}
                   </div>
                 )}
                 <div className="form__actions">
@@ -486,7 +500,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                     type="button"
                     className="btn btn--primary"
                     disabled={busy}
-                    onClick={() => onCreate({ ...payload(), scenario })}
+                    onClick={() => onCreate({ ...payload(), scenario, scenario_token: scenarioToken })}
                   >
                     {busy ? "Forjando…" : "Começar a jornada"}
                   </button>

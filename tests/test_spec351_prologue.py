@@ -36,7 +36,9 @@ class _Capture:
 
 
 def _menu():
-    return ot.thread_menu("nova_arcadia", backstory=CHAR["backstory"], start_location_id="nova_arcadia")
+    return ot.thread_menu(
+        "nova_arcadia", backstory=CHAR["backstory"], start_location_id="nova_arcadia"
+    )
 
 
 def test_prompt_has_doors_npcs_lore_and_no_old_rules(monkeypatch):
@@ -44,7 +46,12 @@ def test_prompt_has_doors_npcs_lore_and_no_old_rules(monkeypatch):
     monkeypatch.setattr(prologue, "get_llm", lambda *a, **k: llm)
     prologue.build_start_scenario_ctx(CHAR)
     system = llm.messages[0].content
-    for tag in ("<PORTAS_DE_TRAMA>", "<NPCS_DA_TRAMA>", "<LORE_DA_REGIAO>", "<SEMENTE_NPC_PESSOAL>"):
+    for tag in (
+        "<PORTAS_DE_TRAMA>",
+        "<NPCS_DA_TRAMA>",
+        "<LORE_DA_REGIAO>",
+        "<SEMENTE_NPC_PESSOAL>",
+    ):
         assert tag in system
     assert "não à trama global" not in system
     assert "não cite personagens nomeados" not in system
@@ -150,8 +157,13 @@ def test_flag_shadow_logs_and_keeps_legacy_prompt(monkeypatch):
 def test_personal_attitude_and_overflow_sanitised():
     menu = _menu()
     p = PersonalNPC(
-        name="  Ilva  ", role_public="r" * 200, persona_public="p", appearance="a",
-        legend="l" * 400, bond="b", attitude="Aliado cauteloso",
+        name="  Ilva  ",
+        role_public="r" * 200,
+        persona_public="p",
+        appearance="a",
+        legend="l" * 400,
+        bond="b",
+        attitude="Aliado cauteloso",
     )
     out = prologue._normalize(_raw(personal_npc=p), CHAR, menu)
     assert out.personal_npc.name == "Ilva" and out.personal_npc.attitude == "neutro"

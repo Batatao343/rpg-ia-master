@@ -767,7 +767,9 @@ def _start_scenario_threaded(model, prompt: str):
             "seeking": "descobrir a verdade sobre a conversa que corre na cidade",
             "thread_refs": [door_id],
             "plot_npc_id": plot_id,
-            "plot_npc_hook": "Cruza o caminho do herói quando ele começa a perguntar." if plot_id else "",
+            "plot_npc_hook": "Cruza o caminho do herói quando ele começa a perguntar."
+            if plot_id
+            else "",
             "personal_npc": personal,
             "seed_npcs": [] if npc_cls is None else [],
         },

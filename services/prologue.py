@@ -72,9 +72,7 @@ class StartScenario(BaseModel):
         default_factory=list, description="ids EXATOS do <PORTAS_DE_TRAMA> (1 ou 2)"
     )
     plot_npc_id: str = Field(default="", description="entity_id EXATO do <NPCS_DA_TRAMA>")
-    plot_npc_hook: str = Field(
-        default="", description="Como ele cruza o caminho do herói, 1 frase"
-    )
+    plot_npc_hook: str = Field(default="", description="Como ele cruza o caminho do herói, 1 frase")
     personal_npc: PersonalNPC | None = None
     seed_npcs: list[SeedNPC] = Field(
         default_factory=list,
@@ -663,7 +661,9 @@ def scenario_to_state_seed(
             plot_key = row["name"]
             home = row.get("home_location_id")
             if home and home != start_loc_id:
-                brief += f" Quem pode ajudar: {row['name']}, que se encontra em outro lugar da região."
+                brief += (
+                    f" Quem pode ajudar: {row['name']}, que se encontra em outro lugar da região."
+                )
         p = scenario.personal_npc
         if p is not None:
             att = p.attitude if p.attitude in ATTITUDES else "neutro"

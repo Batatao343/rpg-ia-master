@@ -287,6 +287,14 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `projection.post_response_db_failed` | `error` |
 | `projection.pre_turn_failed` | `error` |
 | `prologue.failed` | `error` |
+| `prologue.pool_submit` | `status` |
+| `prologue.pool_submit_failed` | `error` |
+| `prologue.thread.api_350_failed` | `error` |
+| `prologue.thread.downgraded` | `reason` |
+| `prologue.thread.linked` | `doors`, `personal`, `plot_npc`, `source` |
+| `prologue.thread.no_plot_npc` | — |
+| `prologue.thread.rag_failed` | `error` |
+| `prologue.thread.shadow` | `doors`, `npcs` |
 | `provider.attempt` | `attempt`, `capability`, `cost_basis`, `fell_back`, `http_status`, `latency_ms`, `model`, `outcome`, `provider` |
 | `quest.active_cap_reached` | `cap` |
 | `quest.failed` | — |
