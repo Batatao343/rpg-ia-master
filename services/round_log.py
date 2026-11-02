@@ -522,6 +522,8 @@ def authorship(
             final_lines.append(
                 f"Golpe final: {card['name'] if card else 'seu ataque'} de Você em {target}."
             )
+            if kind == "reacao":  # SPEC-355 R4 / SPEC-363 R38(i): a frase que o resumo deve usar
+                final_lines.append(f"Sua reação termina o serviço: {target} tomba.")
         else:
             final_lines.append(
                 f"Golpe final: {card['name'] if card else 'o ataque'} de {names.get(by, 'um aliado')} em {target}."

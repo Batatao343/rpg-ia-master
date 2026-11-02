@@ -665,8 +665,10 @@ export function App() {
           if (shouldClearPending(error.status, error.code)) {
             clearOwnPending(); setPending(null);
             // Preserva status/code (SPEC-205 R9: `invalid_target` refaz a mira com o estado novo).
-            throw new api.HttpError(error.status, error.code,
+            const refused = new api.HttpError(error.status, error.code,
               error.message + " A ação pendente foi descartada; você pode enviar uma nova.");
+            refused.playIndex = error.playIndex; refused.cardId = error.cardId; // SPEC-363 R21
+            throw refused;
           }
           throw error;
         }
