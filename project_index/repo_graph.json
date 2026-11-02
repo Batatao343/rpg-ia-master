@@ -1,5 +1,5 @@
 {
-  "commit_sha": "1f11f143feb4f2ec17cf8bdc62d335e05829612a",
+  "commit_sha": "15364c20ded1baa3dffb3da3a3ed87dd94b63707",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -213065,7 +213065,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 66
+        "line": 71
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista._main_versao",
@@ -213087,7 +213087,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 98
+        "line": 66
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._tem_base_fixada",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 104
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
@@ -213098,7 +213109,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 105
+        "line": 111
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
@@ -213109,7 +213120,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 125
+        "line": 131
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
@@ -213120,7 +213131,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 117
+        "line": 123
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
@@ -213131,7 +213142,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 85
+        "line": 90
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
@@ -213142,7 +213153,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 79
+        "line": 84
       },
       "source": "module:tests.test_spec362_arcanista",
       "target": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
@@ -611617,7 +611628,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 69
+        "line": 74
       },
       "source": "symbol:tests.test_spec362_arcanista._main_versao",
       "target": "symbol:tests.test_spec362_arcanista._base",
@@ -611628,7 +611639,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 69
+        "line": 74
       },
       "source": "symbol:tests.test_spec362_arcanista._main_versao",
       "target": "symbol:tests.test_spec362_arcanista._git",
@@ -611650,7 +611661,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 99
+        "line": 68
+      },
+      "source": "symbol:tests.test_spec362_arcanista._tem_base_fixada",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 105
       },
       "source": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611661,7 +611683,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 106
+        "line": 112
       },
       "source": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611672,7 +611694,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 108
+        "line": 114
       },
       "source": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611683,7 +611705,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 129
+        "line": 135
       },
       "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
       "target": "symbol:tests.test_spec362_arcanista._base",
@@ -611694,7 +611716,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 129
+        "line": 135
       },
       "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
       "target": "symbol:tests.test_spec362_arcanista._git",
@@ -611705,7 +611727,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 126
+        "line": 132
       },
       "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
       "target": "symbol:tests.test_spec362_arcanista._on_branch",
@@ -611716,7 +611738,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 118
+        "line": 124
       },
       "source": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611727,7 +611749,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 119
+        "line": 125
       },
       "source": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611738,7 +611760,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 93
+        "line": 99
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:services.card_effects.budget_error",
@@ -611749,7 +611771,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 95
+        "line": 101
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:services.card_lint.errors",
@@ -611760,7 +611782,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 94
+        "line": 100
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:services.card_lint.lint_card",
@@ -611771,7 +611793,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 88
+        "line": 93
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:services.cards._load_cards",
@@ -611782,7 +611804,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 90
+        "line": 95
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:services.cards.get_card",
@@ -611793,7 +611815,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 86
+        "line": 91
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -611804,7 +611826,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 92
+        "line": 98
       },
       "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "target": "symbol:tests.test_spec362_arcanista._main_versao",
@@ -611815,7 +611837,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 82
+        "line": 97
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:tests.test_spec362_arcanista._on_branch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 97
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:tests.test_spec362_arcanista._tem_base_fixada",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 87
       },
       "source": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
       "target": "symbol:services.cards.get_card",
@@ -611826,7 +611870,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec362_arcanista.py",
-        "line": 81
+        "line": 86
       },
       "source": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
       "target": "symbol:tests.test_spec362_arcanista._load",
@@ -760624,7 +760668,7 @@
     {
       "id": "symbol:tests.test_spec362_arcanista._main_versao",
       "kind": "test",
-      "line": 66,
+      "line": 71,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista._main_versao"
     },
@@ -760636,44 +760680,51 @@
       "qualified_name": "tests.test_spec362_arcanista._on_branch"
     },
     {
+      "id": "symbol:tests.test_spec362_arcanista._tem_base_fixada",
+      "kind": "test",
+      "line": 66,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._tem_base_fixada"
+    },
+    {
       "id": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
       "kind": "test",
-      "line": 98,
+      "line": 104,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_alteradas_fora_da_341"
     },
     {
       "id": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
       "kind": "test",
-      "line": 105,
+      "line": 111,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_arcanista_piso_e_teto"
     },
     {
       "id": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
       "kind": "test",
-      "line": 125,
+      "line": 131,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff"
     },
     {
       "id": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
       "kind": "test",
-      "line": 117,
+      "line": 123,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base"
     },
     {
       "id": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
       "kind": "test",
-      "line": 85,
+      "line": 90,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_pacote_dentro_do_limite"
     },
     {
       "id": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
       "kind": "test",
-      "line": 79,
+      "line": 84,
       "path": "tests/test_spec362_arcanista.py",
       "qualified_name": "tests.test_spec362_arcanista.test_versoes_batem_com_catalogo"
     },
@@ -766307,5 +766358,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:863b3c6df675484fb4276a3475ed895b96bdfef404eb7d42a631d222394872f2"
+  "source_tree_hash": "sha256:f47ebc0d6aa26e7988c083359abfaa0411dfe951ce1dccf54973535717686178"
 }
