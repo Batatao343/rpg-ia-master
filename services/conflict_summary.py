@@ -512,16 +512,35 @@ _PAST_MARK_RE = re.compile(
 )
 
 
+# V6 vê o singular e o plural do presente; "cai morto" é presente (o "morto" não é marca de passado)
+_V6_FALL_RE = re.compile(r"\b(?:desmoronam?|tombam?|caem|cai|morrem|morre|desabam?|sucumbem?)\b")
+_V6_FALL_DEAD_RE = re.compile(r"\b(?:cai|caem|tomba|tombam)\s+mort[oa]s?\b")
+
+
 def _v6(low: str, auth: dict) -> bool:
-    """SPEC-364 R12: queda de rodada ANTERIOR contada no presente (oração = entre .;!? e vírgulas)."""
+    """SPEC-364 R12/P3-1: queda de rodada ANTERIOR contada no presente. Oração = entre .;!? e vírgulas;
+    um verbo sem sujeito próprio ("O Goblin, ferido, tomba") herda o nome das orações anteriores sem verbo."""
     names = [_fold_text(n) for n in auth.get("earlier_fallen") or [] if str(n).strip()]
     if not names:
         return False
-    for part in re.split(r"[,.;!?:]", low):
-        if not _FALL_RE.search(part) or _PAST_MARK_RE.search(part):
-            continue
-        if any(re.search(rf"\b{re.escape(n)}\b", part) for n in names):
-            return True
+
+    def named(part: str) -> bool:
+        return any(re.search(rf"\b{re.escape(n)}s?\b", part) for n in names)
+
+    for sentence in re.split(r"[.;!?:\n]", low):
+        carried = False  # oração anterior (sem verbo, sem marca de passado) citou o nome
+        for part in sentence.split(","):
+            clause = _V6_FALL_DEAD_RE.sub(lambda m: m.group(0).split()[0], part)
+            verb = _V6_FALL_RE.search(clause)
+            past = _PAST_MARK_RE.search(clause)
+            if verb and not past:
+                bare = re.match(r"\s*(?:e\s+)?" + re.escape(verb.group(0)) + r"\b", clause)
+                if named(clause) or (carried and bare):
+                    return True
+            if verb:
+                carried = False
+            else:
+                carried = (carried or named(part)) and not past
     return False
 
 

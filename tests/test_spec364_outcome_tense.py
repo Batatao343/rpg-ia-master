@@ -97,3 +97,38 @@ def test_v6_no_earlier_no_violation():
     auth = round_log.authorship(fx.LAST_OUT, {"player": "Você", **fx.NAMES}, fx.PLAYER)
     assert auth.get("earlier_fallen", []) == []
     assert "V6" not in cs.validate_attribution(fx.REAL_BAD, auth)
+
+
+def test_unconscious_earlier_is_past_not_final_round():
+    """P2-3: nocaute da rodada 2, vitória na 4 — o inconsciente antigo não vira 'Na rodada final'."""
+    summary = {
+        "participantes": [fx.PLAYER["name"], "Goblin", "Minotauro Esqueleto"],
+        "mortos": ["Minotauro Esqueleto"],
+        "inconscientes": ["Goblin"],
+    }
+    enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}, {"id": "enemy_goblin", "name": "Goblin"}]
+    facts = round_log.outcome_facts("victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES)
+    assert "Antes do fim, Goblin já tinha perdido os sentidos." in facts
+    assert "Na rodada final, Goblin perdeu os sentidos." not in facts
+    assert "Na rodada final, Minotauro Esqueleto morreu." in facts
+
+
+def test_prefix_final_round_always_when_last_out_exists():
+    """P3-2: com `last_out`, a queda da rodada final leva o prefixo mesmo sem queda anterior."""
+    summary = {"participantes": ["Smoke4A", "Minotauro Esqueleto"], "mortos": ["Minotauro Esqueleto"]}
+    enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}]
+    facts = round_log.outcome_facts("victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES)
+    assert "Na rodada final, Minotauro Esqueleto morreu." in facts
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "O Goblin cai morto ao seu lado.",
+        "Os Goblins tombam ao seu lado.",
+        "O Goblin, ferido, tomba.",
+        "O Goblin morre sem um som.",
+    ],
+)
+def test_v6_rejects_more_present_tense_forms(text):
+    assert "V6" in cs.validate_attribution(text, _auth())

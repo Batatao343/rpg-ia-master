@@ -599,7 +599,7 @@ def fall_partition(
     now_names = {nm.get(i, i) for i in now_ids if i != "player"}
     fallen = [
         n
-        for key in ("mortos", "caidos")
+        for key in ("mortos", "caidos", "inconscientes")
         for n in ((summary or {}).get(key) or [])
         if str(n).strip() and str(n).strip() != hero
     ]
@@ -635,7 +635,7 @@ def outcome_facts(
         pnames = [str(n) for n in summ.get(key) or [] if str(n) and str(n) != player.get("name")]
         if not pnames:
             continue
-        if past and earlier_all:  # SPEC-364 R10: a queda anterior fica no passado
+        if past and last_out:  # SPEC-364 R10: a queda anterior fica no passado
             old = [n for n in pnames if n in earlier_all]
             pnames = [n for n in pnames if n not in old]
             if old:
