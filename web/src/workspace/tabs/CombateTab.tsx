@@ -127,7 +127,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const deckCard = deckMode && deckArm.armed ? combat?.pilhas?.mao[deckArm.armed.index] : undefined;
   const friendIds = people.filter((p) => p.role !== "enemy").map((p) => p.id);
   const deckTargets: string[] | null = deckCard && deckCard.alvo !== "si"
-    ? cardTargets(deckCard, cards.find((c) => c.id === deckCard.id)?.valid_targets, visibleEnemyIds(enemies), friendIds) : null;
+    ? cardTargets(deckCard, cards.find((c) => c.id === deckCard.id)?.valid_targets, visibleEnemyIds(people.filter((p) => p.role === "enemy")), friendIds)  /* SPEC-364 R22: `people` carrega o ocultamento da cena; `combat.enemies` não */ : null;
   const aimTargets: string[] | null = deckTargets ?? (aimingCard
     ? planCard(aimingCard, enemies, false).targets
     : aimingBasic ? planBasic(aimingBasic, false).targets : null);
