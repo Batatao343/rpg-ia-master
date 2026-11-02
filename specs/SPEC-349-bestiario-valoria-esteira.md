@@ -307,11 +307,14 @@ Os limiares (0,45 / 0,5 / 0,6) são calibrados na Etapa 1, com um conjunto sint�
 ```python
 def load_fichas(regiao: str | None = None) -> dict[str, dict]: ...
 def eixos_iguais(a: dict, b: dict) -> int: ...
-def nucleo_nome(nome: str) -> str: ...          # encounter_manifest.name_tokens(nome)[0]
+def nucleo_nome(nome: str) -> str: ...  # encounter_manifest.name_tokens(nome)[0]
 def lint_ficha(ficha: dict) -> list[Issue]: ...  # U5, U8–U11
-def lint_regiao(regiao: str, fichas: list[dict], *, bestiary: dict,
-                codex_docs: list[dict], embed=None) -> list[Issue]: ...  # U1–U4, U6, U7, U12, U13
-def lint_global(fichas_por_regiao: dict[str, list[dict]]) -> list[Issue]: ...  # R29, cobertura de demônios (R27)
+def lint_regiao(
+    regiao: str, fichas: list[dict], *, bestiary: dict, codex_docs: list[dict], embed=None
+) -> list[Issue]: ...  # U1–U4, U6, U7, U12, U13
+def lint_global(
+    fichas_por_regiao: dict[str, list[dict]],
+) -> list[Issue]: ...  # R29, cobertura de demônios (R27)
 ```
 
 `Issue` reaproveita o tipo de `services/card_lint.py` se o shape servir.
