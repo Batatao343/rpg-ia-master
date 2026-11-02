@@ -203,24 +203,27 @@ criaturas:
 
 ```python
 # services/fauna.py
-MODES = ("off", "shadow", "on")            # RPG_FAUNA
-SINAIS_MODES = ("off", "on")               # RPG_FAUNA_SINAIS
+MODES = ("off", "shadow", "on")  # RPG_FAUNA
+SINAIS_MODES = ("off", "on")  # RPG_FAUNA_SINAIS
+
 
 class Presenca(TypedDict):
-    pid: str                 # sha(game_id, creature_id, born_day)[:12]
+    pid: str  # sha(game_id, creature_id, born_day)[:12]
     creature_id: str
     region_id: str
-    locais: list[str]        # <= 4, subconjunto do território efetivo
+    locais: list[str]  # <= 4, subconjunto do território efetivo
     born_day: int
     expires_day: int
-    sinais_mostrados: list[str]   # tipos, na ordem em que apareceram
+    sinais_mostrados: list[str]  # tipos, na ordem em que apareceram
     origem: Literal["dia", "conversao", "rastro"]
     status: Literal["ativa", "encontrada", "dispersa", "cacada"]
 
+
 class FaunaSim(TypedDict):
-    v: int                   # 1
-    presencas: list[Presenca]    # cap 12 (ativas primeiro; depois as mais recentes)
-    carcacas: list[dict]         # {loc, day, creature_id}; cap 20
+    v: int  # 1
+    presencas: list[Presenca]  # cap 12 (ativas primeiro; depois as mais recentes)
+    carcacas: list[dict]  # {loc, day, creature_id}; cap 20
+
 
 def mode() -> str: ...
 def sinais_mode() -> str: ...
@@ -228,14 +231,16 @@ def entry(creature_id: str) -> dict | None: ...
 def eco_multiplier(entry: dict, ctx: "EcoCtx") -> tuple[float, list[str]]: ...
 def day_hook(ctx: "world_engine.DayContext") -> "world_engine.DayHookResult": ...
 def presence_at(sim: dict, location_id: str, day: int) -> Presenca | None: ...
-def scene_block(state: dict) -> tuple[str, dict]: ...          # ("<SINAIS_NA_CENA>…", {"world_sim": …})
+def scene_block(state: dict) -> tuple[str, dict]: ...  # ("<SINAIS_NA_CENA>…", {"world_sim": …})
 def convert_to_signal(state: dict, entry: dict, location_id: str, day: int) -> tuple[str, dict]: ...
-def approach_line(creature_id: str) -> str: ...                 # "" sem fauna
+def approach_line(creature_id: str) -> str: ...  # "" sem fauna
 def hunt_intent(text: str) -> bool: ...
 def hunt_hint(state: dict, world: dict, player_level: int) -> dict | None: ...  # forma do law_hint
 def detection_bonus(sim: dict, presence_id: str) -> int: ...
 def record_kill(sim: dict, creature_id: str, location_id: str, day: int) -> dict: ...
-def mark_encountered(sim: dict, presence_id: str, day: int) -> tuple[dict, list[str]]: ...  # devolve sinais_mostrados
+def mark_encountered(
+    sim: dict, presence_id: str, day: int
+) -> tuple[dict, list[str]]: ...  # devolve sinais_mostrados
 def normalize_fauna_sim(raw: Any) -> FaunaSim: ...
 ```
 
