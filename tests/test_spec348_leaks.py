@@ -23,7 +23,9 @@ from tests.spec348_helpers import (
     public_docs,
 )
 
-LEAK_PHRASES: dict[str, list[str]] = leak_phrases()  # SPEC-350: dado em data/world/leak_phrases.json
+LEAK_PHRASES: dict[str, list[str]] = (
+    leak_phrases()
+)  # SPEC-350: dado em data/world/leak_phrases.json
 
 # Fatos que precisam seguir existindo em doc oculto (R54): tuplas = termos no MESMO doc.
 HIDDEN_FACTS: dict[str, list[tuple[str, ...]]] = {

@@ -68,9 +68,7 @@ def test_e2_fails_for_leader_secret_unknown_dead_and_wrong_region():
     assert not _e2(good_scenario(plot_npc_id="npc_valerius")).ok  # secret_entities (e sem casa)
     assert not _e2(good_scenario(plot_npc_id="npc_inexistente")).ok
     assert not _e2(good_scenario(), dead_ids=[PLOT_ID]).ok
-    assert not oc.check_plot_npc_valid(
-        good_scenario(), {**MENU, "region_id": "skallgard"}
-    ).ok
+    assert not oc.check_plot_npc_valid(good_scenario(), {**MENU, "region_id": "skallgard"}).ok
     assert not _e2(good_scenario(), secret_ids=[PLOT_ID]).ok
     assert not _e2(good_scenario(), leaders=[PLOT_ID]).ok
 
@@ -91,7 +89,10 @@ def _clean_doc() -> dict:
 def test_e3_pass_clean_entry_with_validators():
     e = entry()
     r = oc.check_personal_npc_private(
-        e, character_name="Aranel", backstory="saí do anel depois que minha irmã parou", validate=True
+        e,
+        character_name="Aranel",
+        backstory="saí do anel depois que minha irmã parou",
+        validate=True,
     )
     assert r.ok, r.detail
 
@@ -104,7 +105,9 @@ def test_e3_fails_extra_key_name_token_and_shingle():
         npc_doc(persona="Conhece Aranel desde a infância."), character_name="Aranel Vento"
     ).ok
     backstory = "saí do Anel Dourado depois que minha irmã parou de me reconhecer"
-    leaky = npc_doc(persona="Ela saiu do Anel Dourado depois que minha irmã parou de me reconhecer.")
+    leaky = npc_doc(
+        persona="Ela saiu do Anel Dourado depois que minha irmã parou de me reconhecer."
+    )
     r = oc.check_personal_npc_private(leaky, character_name="Aranel", backstory=backstory)
     assert not r.ok and "shingle" in r.detail
     assert not oc.check_personal_npc_private(
@@ -139,9 +142,7 @@ def test_e4_fails_hidden_shingle_signature_and_gate():
     assert "assinatura" in oc.check_no_hidden_leak(sig, hidden_shingles=[]).detail
     # injeção de shingle sintético (sem depender do Codex)
     synth = good_scenario(climax="a verdade sobre o grande farol apagado ninguem conta")
-    assert not oc.check_no_hidden_leak(
-        synth, hidden_shingles={"a verdade sobre o grande farol"}
-    ).ok
+    assert not oc.check_no_hidden_leak(synth, hidden_shingles={"a verdade sobre o grande farol"}).ok
 
 
 def test_e4_fails_when_faction_gate_flags_beat(monkeypatch):

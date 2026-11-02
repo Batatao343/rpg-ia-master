@@ -296,9 +296,7 @@ def check_seeking_present(scenario: dict) -> CheckResult:
 
 # --- E6 --------------------------------------------------------------------- #
 def check_starts_at_edge(scenario: dict) -> CheckResult:
-    text = fold(
-        " ".join([str(scenario.get("prologue") or ""), *(scenario.get("beats") or [])])
-    )
+    text = fold(" ".join([str(scenario.get("prologue") or ""), *(scenario.get("beats") or [])]))
     for term in EDGE_FORBIDDEN:
         if term in text:
             return CheckResult("E6", False, f"termo proibido: {term}")
@@ -313,7 +311,9 @@ def check_npc_cardinality(scenario: dict, menu: dict, *, template: bool = False)
     want_plot = 1 if (menu.get("npcs") or []) else 0
     if personal != want_personal or plot != want_plot:
         return CheckResult(
-            "E7", False, f"pessoal={personal} (esperado {want_personal}), trama={plot} (esperado {want_plot})"
+            "E7",
+            False,
+            f"pessoal={personal} (esperado {want_personal}), trama={plot} (esperado {want_plot})",
         )
     return CheckResult("E7", True)
 

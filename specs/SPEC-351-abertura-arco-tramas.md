@@ -266,11 +266,14 @@ armadilha, crônica cansada, segredos como inversão, léxico próprio).
 class PersonalNPC(BaseModel):
     name: str = Field(description="Nome curto, inventado; nunca um nome escrito pelo jogador")
     role_public: str = Field(description="Quem ele é no mundo, sem citar o protagonista")
-    persona_public: str = Field(description="1-2 frases; sem citar o protagonista nem a história dele")
+    persona_public: str = Field(
+        description="1-2 frases; sem citar o protagonista nem a história dele"
+    )
     appearance: str = Field(description="1 frase concreta")
     legend: str = Field(description="O que dizem dele, 1 frase (<=160)")
     bond: str = Field(description="Laço com o protagonista (fica só nesta partida)")
     attitude: str = Field(description="EXATAMENTE uma palavra: hostil, neutro ou aliado")
+
 
 class StartScenario(BaseModel):
     prologue: str
@@ -278,16 +281,22 @@ class StartScenario(BaseModel):
     arc_title: str
     beats: list[str]
     climax: str
-    seeking: str = Field(default="", description="O que o personagem busca, 1 frase, em palavras do mundo")
-    thread_refs: list[str] = Field(default_factory=list, description="ids EXATOS do <PORTAS_DE_TRAMA>")
+    seeking: str = Field(
+        default="", description="O que o personagem busca, 1 frase, em palavras do mundo"
+    )
+    thread_refs: list[str] = Field(
+        default_factory=list, description="ids EXATOS do <PORTAS_DE_TRAMA>"
+    )
     plot_npc_id: str = Field(default="", description="entity_id EXATO do <NPCS_DA_TRAMA>")
     plot_npc_hook: str = Field(default="", description="Como ele cruza o caminho do herói, 1 frase")
     personal_npc: PersonalNPC | None = None
     seed_npcs: list[SeedNPC] = Field(default_factory=list)  # DERIVADO em _normalize (compat)
 
+
 # Borda (StartScenarioIn): seeking<=200, thread_refs<=2 itens de <=80, plot_npc_id<=80,
 # plot_npc_hook<=300, personal_npc com name<=60, role_public<=80, persona_public<=400,
 # appearance<=300, legend<=160, bond<=300; SeedNPCIn ganha kind: Literal["personal","plot"]="personal".
+
 
 # state.py
 class OpeningThread(TypedDict, total=False):
@@ -298,21 +307,23 @@ class OpeningThread(TypedDict, total=False):
     region_id: str
     arcs_left: int
 
+
 # services/opening_threads.py
 class ThreadDoor(TypedDict):
-    door_id: str        # id de rumor_seed, de entidade do grafo ou da SPEC-350
-    kind: str           # "rumor" | "entity" | "door"
-    name: str           # nome público curto
-    hook: str           # 1 frase pública (gist do rumor / tagline)
+    door_id: str  # id de rumor_seed, de entidade do grafo ou da SPEC-350
+    kind: str  # "rumor" | "entity" | "door"
+    name: str  # nome público curto
+    hook: str  # 1 frase pública (gist do rumor / tagline)
     entity_ids: list[str]
     location_id: str
+
 
 class ThreadMenu(TypedDict):
     region_id: str
     start_location_id: str
     doors: list[ThreadDoor]
-    npcs: list[dict]    # {entity_id, name, role, home_location_id}
-    source: str         # "350" | "fallback"
+    npcs: list[dict]  # {entity_id, name, role, home_location_id}
+    source: str  # "350" | "fallback"
 ```
 
 ### 3.4 Contrato esperado da SPEC-350 (não criado aqui)

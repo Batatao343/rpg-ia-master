@@ -281,33 +281,37 @@ trama. **Porta** = um jeito concreto e mundano de o jogador entrar na trama por 
 LinkKind = Literal["divida", "emprego", "testemunha", "vizinhanca", "encomenda", "achado"]
 Tier = Literal["nucleo", "ponte", "borda"]
 
+
 class QuestHint(BaseModel):
     kind: Literal["investigar_rumor", "entregar_material", "escoltar"]
     anchor_id: str  # rumor_id | route_id | npc_id (o próprio âncora)
 
+
 class PlotDoor(BaseModel, frozen=True):
-    id: str                      # "tr_na_corpos_marcados__p1"
+    id: str  # "tr_na_corpos_marcados__p1"
     anchor_npc_id: str
     location_id: str
     link_kind: LinkKind
-    hook_public: str             # <= 220
+    hook_public: str  # <= 220
     rumor_ids: tuple[str, ...] = ()
     quest_hint: QuestHint | None = None
+
 
 class InspirationRef(BaseModel):
     fonte: str
     url: str
     o_que_inspirou: str
 
+
 class PlotThread(BaseModel, frozen=True):
-    id: str                      # "tr_na_corpos_marcados"
+    id: str  # "tr_na_corpos_marcados"
     region_id: str
     title: str
-    pergunta: str                # <= 160
-    resumo_publico: str          # <= 300
-    core: tuple[str, ...]        # >= 2
-    borda: tuple[str, ...]       # >= 2
-    portas: tuple[PlotDoor, ...] # >= 3
+    pergunta: str  # <= 160
+    resumo_publico: str  # <= 300
+    core: tuple[str, ...]  # >= 2
+    borda: tuple[str, ...]  # >= 2
+    portas: tuple[PlotDoor, ...]  # >= 3
     factions: tuple[str, ...]
     locations: tuple[str, ...]
     rumor_ids: tuple[str, ...]
@@ -317,39 +321,44 @@ class PlotThread(BaseModel, frozen=True):
     postura_afinidade: tuple[str, ...] = ()
     inspiracoes: tuple[InspirationRef, ...] = ()
 
+
 class ThreadRole(BaseModel):
     thread_id: str
-    papel: str                   # <= 120, público
+    papel: str  # <= 120, público
+
 
 class Voice(BaseModel):
-    registro: str                # <= 60
-    fala: str                    # <= 120
+    registro: str  # <= 60
+    fala: str  # <= 120
+
 
 class CastSheet(BaseModel, frozen=True):
     npc_id: str
     tier: Tier
     threads: tuple[ThreadRole, ...]
-    desejo: str                  # <= 90
-    medo: str                    # <= 90
-    segredo_topico: str          # <= 60
-    segredo_doc_id: str = ""     # obrigatório p/ borda e p/ fonte == "spec350"
+    desejo: str  # <= 90
+    medo: str  # <= 90
+    segredo_topico: str  # <= 60
+    segredo_doc_id: str = ""  # obrigatório p/ borda e p/ fonte == "spec350"
     voz: Voice
     home_location_id: str
     archetype: str
-    fonte: str                   # "lore_nova/npcs.txt:1441-1449" | "spec350"
+    fonte: str  # "lore_nova/npcs.txt:1441-1449" | "spec350"
+
 
 class Wave(BaseModel):
     order: int
     regions: tuple[str, ...]
     status: Literal["pending", "in_progress", "done"]
-    spec: str = ""               # "SPEC-350" | id da spec da onda
+    spec: str = ""  # "SPEC-350" | id da spec da onda
+
 
 class PlotCatalog(BaseModel):
     version: int = 1
     threads: tuple[PlotThread, ...] = ()
     cast: dict[str, CastSheet] = {}
     waves: tuple[Wave, ...] = ()
-    excluded: dict[str, str] = {}   # npc_id -> motivo
+    excluded: dict[str, str] = {}  # npc_id -> motivo
 ```
 
 ### 3.4 Assinaturas públicas

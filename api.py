@@ -5444,7 +5444,9 @@ def _create_game(req: CreateCharacterRequest, claim):
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
     # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o
     # estado acima fica intocado (R6 — fluxo clássico byte a byte).
-    pool_pending = None  # SPEC-351 R18: (scenario, semente verificada, region_id) p/ depois de persistir
+    pool_pending = (
+        None  # SPEC-351 R18: (scenario, semente verificada, region_id) p/ depois de persistir
+    )
     if req.scenario is not None:
         from services import opening_threads
         from services.prologue import revalidate_scenario, verified_seed

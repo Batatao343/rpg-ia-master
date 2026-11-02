@@ -26,7 +26,9 @@ def _secret() -> bytes | None:
 
 
 def _canonical(payload: dict) -> str:
-    return json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"), default=str)
+    return json.dumps(
+        payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"), default=str
+    )
 
 
 def _digest(secret: bytes, payload: dict, owner: str, issued_at: int) -> str:
