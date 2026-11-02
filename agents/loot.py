@@ -469,11 +469,12 @@ def loot_node(state: GameState):
             else:
                 quotes = market_before.get("quotes") or []
                 rows = [
-                    f"- {q.get('item_name', q.get('item_id', 'item'))}: "
+                    f"- {q['item_name']}: "
                     f"compra {int(q.get('buy_price', 0) or 0)} / "
                     f"venda {int(q.get('sell_price', 0) or 0)} moedas "
                     f"(estoque {int(q.get('stock', 0) or 0)})"
                     for q in quotes[:12]
+                    if str(q.get("item_name") or "").strip()  # SPEC-363 R25: sem nome, sem linha (nunca o id)
                 ]
                 if loot_source == "SHOP":  # SPEC-357 R10(b): técnicas à venda (flag on)
                     rows += [f"- {ln}" for ln in card_shop.observe_lines(work_state)]

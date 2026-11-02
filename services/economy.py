@@ -636,20 +636,23 @@ def public_market_snapshot(
     # Um mercador visível também pode cotar publicamente os itens que o jogador
     # carrega, ainda que não os tenha em estoque. ``stock=0`` impede compra, mas
     # permite decidir a venda sem ler tabelas privadas.
-    inventory_ids = sorted(
-        {
-            str(entry.get("id") or "")
-            for entry in (work.get("player") or {}).get("inventory") or []
-            if isinstance(entry, dict) and int(entry.get("qty", 1) or 0) > 0
-        }
-        - quoted_ids
-        - {""}
-    )
-    for item_id in inventory_ids:
+    # SPEC-363 R25: o nome vem da ENTRADA (itens livres guardam `display_name`); nunca o id.
+    inventory_rows: dict[tuple[str, str], dict] = {}
+    for entry in (work.get("player") or {}).get("inventory") or []:
+        if not isinstance(entry, dict) or int(entry.get("qty", 1) or 0) <= 0:
+            continue
+        iid = str(entry.get("id") or "")
+        if not iid or iid in quoted_ids:
+            continue
+        shown = item_display(entry)
+        if shown == iid and "_" in iid:  # id cru de catálogo desconhecido: não cota (R25)
+            continue
+        inventory_rows.setdefault((iid, shown), entry)
+    for (item_id, shown_name), _entry in sorted(inventory_rows.items()):
         quotes.append(
             {
                 "item_id": item_id,
-                "item_name": item_display(make_entry(item_id)),
+                "item_name": shown_name,
                 "stock": 0,
                 "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
                 "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),

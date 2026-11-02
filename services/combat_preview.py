@@ -323,8 +323,24 @@ def _flee_line(out: dict) -> str | None:
     roll = out.get("fuga")
     if not isinstance(roll, dict) or roll.get("total") is None:
         return None
-    verdict = "escapou" if roll.get("sucesso") else "falhou"
-    return f"Fuga · total {roll['total']} vs {roll.get('dificuldade')} · {verdict}"
+    from services.chase import track_label
+
+    veredito = roll.get("veredito")
+    if veredito is None:  # save antigo: só o dado
+        veredito = "avancou" if roll.get("sucesso") else "falhou"
+    trail = (
+        f" ({track_label(roll['de'])} → {track_label(roll['para'])})"
+        if roll.get("de") and roll.get("para")
+        else ""
+    )
+    text = {
+        "escapou": "escapou",
+        "avancou": f"avança{trail}",
+        "perdeu_terreno": f"perde terreno{trail}",
+        "alcancado": "alcançado",
+        "falhou": "falhou",
+    }.get(str(veredito), "falhou")
+    return f"Fuga · total {roll['total']} vs {roll.get('dificuldade')} · {text}"
 
 
 def mech_log(

@@ -27,6 +27,13 @@ FLEE_RE = re.compile(
 
 # Trilha de perseguição (R2). Abaixo de "pressionado" = alcançado (combate volta).
 TRACK = ("pressionado", "afastado", "quase_livre", "escapou")
+TRACK_LABEL = {"pressionado": "pressionado", "afastado": "afastado", "quase_livre": "quase livre", "escapou": "livre"}
+
+
+def track_label(value: object) -> str:
+    """SPEC-363 R24: rótulo legível do estado da trilha (nunca o id cru)."""
+    return TRACK_LABEL.get(str(value or ""), str(value or "").replace("_", " "))
+
 _DISTANCE_TO_TRACK = {"proximo": "pressionado", "distante": "afastado", "separado": "quase_livre"}
 _PURSUE_TRIGGERS = frozenset({"alvo_fugindo", "fugitivo_foge", "cacar", "persegue"})
 

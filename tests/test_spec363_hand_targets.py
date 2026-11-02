@@ -39,6 +39,7 @@ def test_hand_cards_have_valid_targets(card_id):
 @pytest.mark.parametrize("card_id", BASIC_ACTIVE[:60])
 def test_view_target_implies_engine_accepts(card_id):
     state, ids = _hidden_state()
+    state["combat"]["pilhas"] = {"mao": [card_id]}
     res = ct.hand_card_targeting(state, card_id)
     for tid in res["valid_targets"]:
         assert ct.check_declared_target(state, card_id=card_id, action_kind=None, maneuver=None, target_id=tid) is None

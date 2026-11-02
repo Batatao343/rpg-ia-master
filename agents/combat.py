@@ -1458,6 +1458,24 @@ def _canonical_player_action(
 MAX_CONSECUTIVE_FLEE_ATTEMPTS = 6
 
 
+def _flee_verdict(chase_state: dict | None, previous: str, hero_fled: bool) -> str:
+    """SPEC-363 R22: escapou | avancou | perdeu_terreno | alcancado | falhou."""
+    state = chase_state or {}
+    if hero_fled or state.get("escapou"):
+        return "escapou"
+    if state.get("alcancado"):
+        return "alcancado"
+    if (state.get("_last") or {}).get("sucesso"):
+        return "avancou"
+    from services import chase as _chase
+
+    track = _chase.TRACK
+    now = str(state.get("trilha") or previous)
+    if previous in track and now in track and track.index(now) < track.index(previous):
+        return "perdeu_terreno"
+    return "perdeu_terreno" if (state.get("_last") or {}).get("total") is not None else "falhou"
+
+
 def _enforce_flee_attempt_limit(chase_state: dict, *, attempts: int) -> tuple[bool, dict]:
     """Fecha perseguições que oscilaram demais sem retirar letalidade do combate.
 
@@ -1518,6 +1536,19 @@ def _killer_identity(
     base = em._base_id(enemy.get("id", ""))
     known = base in (gamedata.BESTIARY or {})
     return em.species_label_for(enemy), (base if known else str(enemy.get("bestiary_id") or ""))
+
+
+def _normalize_status_logs(lines: list[str], player: dict) -> list[str]:
+    """SPEC-363 R26: linhas de condição na voz do jogador ("Você ganha a condição Cego."), uma vez."""
+    from services import round_log
+
+    hero = str((player or {}).get("name") or "")
+    out: list[str] = []
+    for line in lines or []:
+        text = round_log._voce(str(line), hero)
+        if text and text not in out:
+            out.append(text)
+    return out
 
 
 def _diante_de(killer: str) -> str:
@@ -2443,6 +2474,7 @@ def _combat_node(state: GameState):
     resolved_decl: TurnDeclaration | None = declaration
     flee_allowed = _can_attempt_flee(player)
     if flee_requested and flee_allowed:
+        _prev_track = str((combat_meta.get("chase") or {}).get("trilha") or "pressionado")
         hero_fled, flee_logs, chase_state = _attempt_flee(
             scene,
             player,
@@ -2468,6 +2500,10 @@ def _combat_node(state: GameState):
                 "total": _last_roll.get("total"),
                 "dificuldade": _last_roll.get("difficulty"),
                 "sucesso": bool(_last_roll.get("sucesso")),
+                # SPEC-363 R22: o veredito vem da perseguição, não do "sucesso" do dado
+                "veredito": _flee_verdict(chase_state, _prev_track, hero_fled),
+                "de": _prev_track,
+                "para": (chase_state or {}).get("trilha"),
             }
         logs += weather_logs + logs_pre_flee + flee_logs
         flee_lines = list(logs_pre_flee) + list(flee_logs)
@@ -2875,6 +2911,7 @@ def _combat_node(state: GameState):
         [player, *enemies, *allies],
         {str(e.get("id") or e.get("name")) for e in enemies},
     )  # SPEC-334 R6 (só deck on)
+    status_logs = _normalize_status_logs(status_logs, player)  # SPEC-363 R26
     if status_logs:  # SPEC-333: o jogador sabe por que a carta de status pesou
         combat_meta["last_mech_log"] = list(combat_meta.get("last_mech_log") or []) + status_logs
         # SPEC-346 R5: as linhas de status vão ao REGISTRO/mech_log, nunca coladas à prosa.
@@ -3210,6 +3247,7 @@ def _board_opening_result(
             )
         except Exception:  # cosmético: nunca derruba a abertura
             _log_event("combat", "pressagio_forecast_failed", level="warning")
+    status_logs = _normalize_status_logs(status_logs, player)  # SPEC-363 R26
     if status_logs:
         combat_meta["last_mech_log"] = list(status_logs)
     loc = world.get("current_location", "")
@@ -3324,7 +3362,7 @@ def _attempt_flee(
         chase_state.update(trilha="escapou", escapou=True, alcancado=False, eligible=True)
         return FleeDecision(
             True,
-            [f"{player.get('name', 'O herói')} aproveita a brecha e FOGE do combate."],
+            ["Você aproveita a brecha e FOGE do combate."],
             chase_state,
         )
     difficulty = chase.chase_difficulty(active[0]) if active else 12
@@ -3354,19 +3392,19 @@ def _attempt_flee(
     chase_state["eligible"] = True
     if chase_state.get("escapou"):
         return FleeDecision(
-            True, [f"{player.get('name', 'O herói')} rompe o cerco e FOGE do combate."], chase_state
+            True, ["Você rompe o cerco e FOGE do combate."], chase_state
         )
     if chase_state.get("alcancado"):
-        log = f"{player.get('name', 'O herói')} tenta fugir, mas os inimigos o alcançam."
+        log = "Você tenta fugir, mas os inimigos te alcançam."
     elif (chase_state.get("_last") or {}).get("sucesso"):
         log = (
-            f"{player.get('name', 'O herói')} avança na fuga: "
-            f"{previous_track} → {chase_state.get('trilha')}."
+            f"Você avança na fuga: {chase.track_label(previous_track)} → "
+            f"{chase.track_label(chase_state.get('trilha'))}."
         )
     else:
         log = (
-            f"{player.get('name', 'O herói')} perde terreno na fuga: "
-            f"{previous_track} → {chase_state.get('trilha')}."
+            f"Você perde terreno na fuga: {chase.track_label(previous_track)} → "
+            f"{chase.track_label(chase_state.get('trilha'))}."
         )
     return FleeDecision(False, [log], chase_state)
 
