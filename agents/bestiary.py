@@ -57,6 +57,20 @@ _VIRTUDE_TEMPLATES: dict[str, dict[str, int]] = {
     "astuto": {"forca": 1, "agilidade": 2, "corpo": 2, "mente": 3, "carisma": 2},
     "mistico": {"forca": 1, "agilidade": 2, "corpo": 1, "mente": 3, "carisma": 3},
 }
+# SPEC-361 R15: família de baralho (enemy_decks.FAMILIAS) -> template de Virtudes.
+ARQUETIPO_VIRTUDE: dict[str, str] = {
+    "predador": "agil",
+    "emboscador": "agil",
+    "covarde_oportunista": "astuto",
+    "tatico": "astuto",
+    "conjurador": "mistico",
+    "abissal": "mistico",
+    "bruto": "bruto",
+    "morto_vivo_implacavel": "bruto",
+    "predador_apice": "bruto",
+    "guardiao": "equilibrado",
+    "lider_matilha": "equilibrado",
+}
 _CATEGORY_BONUS = {"lacaio": -1, "padrao": 0, "elite": 1, "chefe": 2}
 _LEGACY_TYPE = {"lacaio": "Minion", "padrao": "Standard", "elite": "Elite", "chefe": "BOSS"}
 _ATTACK_TYPE = {
@@ -111,8 +125,12 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: i
         "padrao",
     )
     archetype = str(raw.get("arquetipo") or "equilibrado").strip().lower()
+    deck_family: str | None = None  # SPEC-361 R15: família de baralho fica no template
     if archetype not in _VIRTUDE_TEMPLATES:
-        archetype = "equilibrado"
+        if archetype in ARQUETIPO_VIRTUDE:
+            deck_family, archetype = archetype, ARQUETIPO_VIRTUDE[archetype]
+        else:
+            archetype = "equilibrado"
     style = str(raw.get("estilo_ataque") or "corpo_a_corpo").strip().lower()
     if style not in _ATTACK_TYPE:
         style = "corpo_a_corpo"
@@ -140,7 +158,7 @@ def materialize_enemy_concept(concept: dict | EnemySchema, *, encounter_level: i
         "description": str(raw.get("description") or "Uma ameaça de Valoria."),
         "type": _LEGACY_TYPE[category],
         "categoria": category,
-        "arquetipo": archetype,
+        "arquetipo": deck_family or archetype,
         "virtudes": virtues,
         "vitalidade": max_vitality,
         "max_vitalidade": max_vitality,
@@ -191,8 +209,23 @@ def _read_json(path: str) -> dict:
 
 
 def _pool_creature_template(entry) -> dict:
-    """SPEC-297 R27: o documento do pool é só CONCEITO; a ficha numérica é do motor."""
+    """SPEC-297 R27: o documento do pool é só CONCEITO; a ficha numérica é do motor.
+    SPEC-361 R24: com ``document.ficha``, a mesma ``ficha_para_template`` da geração."""
     doc = dict(entry.document)
+    if isinstance(doc.get("ficha"), dict):
+        from services.creature_gen import ficha_para_template
+
+        ficha = {**doc["ficha"], "id": str(doc.get("id") or entry.entry_id)}
+        out = ficha_para_template(ficha, encounter_level=1)
+        out["id"] = ficha["id"]
+        out["name"] = entry.name or out["name"]
+        if doc.get("appearance"):
+            out["appearance"] = str(doc["appearance"])[:300]
+        out["pool_entry_id"] = entry.entry_id
+        from services.shared_pool import estado_publico
+
+        out["geracao"] = {"caminho": "nova", "spec": 361, "estado": estado_publico(entry)}
+        return out
     concept = {
         "id": str(doc.get("id") or entry.entry_id),
         "name": entry.name,
@@ -401,6 +434,92 @@ def _submit_generated_enemy(res, data: dict, game_id: str, location_id: str, nam
         _log_event("bestiary", "pool_submit_failed", level="warning", error=type(exc).__name__)
 
 
+def _submit_generated_ficha(
+    ficha: dict, data: dict, game_id: str, location_id: str, player_inputs
+) -> str:
+    """SPEC-361 R22/R23: a ficha inteira vai ao pool (hold). Devolve o estado público.
+
+    ``name_origin`` honesto: ``player`` só se o nome final foi digitado pelo jogador; senão
+    ``engine`` (o LLM escreveu o nome e a revisão Opus guarda a entrada, R25/R26)."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    origin = (
+        "player"
+        if shared_pool.name_typed_by_player(str(ficha.get("nome") or ""), player_inputs)
+        else "engine"
+    )
+    doc = {
+        "id": str(data.get("id")),
+        "name": str(ficha.get("nome") or data.get("name")),
+        "description": str(ficha.get("description") or ""),
+        "categoria": ficha.get("categoria"),
+        "arquetipo": ficha.get("arquetipo"),
+        "estilo_ataque": ficha.get("estilo_ataque") or "corpo_a_corpo",
+        "nome_ataque": ficha.get("nome_ataque") or "Ataque",
+        "region_tags": list(ficha.get("habitat") or []),
+        "appearance": str(data.get("appearance") or "")[:300],
+        "ficha": dict(ficha),
+    }
+    region = shared_pool._region_of(location_id) or str(ficha.get("regiao") or "")
+    try:
+        entry = shared_pool.submit(
+            PoolNamespace.CREATURE,
+            doc,
+            game_id=str(game_id),
+            region_id=region,
+            name_origin=origin,
+            player_inputs=list(player_inputs or ()),
+        )
+        data["pool_entry_id"] = entry.entry_id
+        return shared_pool.estado_publico(entry)
+    except Exception as exc:
+        _log_event("bestiary", "pool_submit_failed", level="warning", error=type(exc).__name__)
+        save_enemy(dict(data))  # pool indisponível: a criatura fica local ao dono
+        return "local"
+
+
+def _generate_v361(
+    name: str,
+    context: str,
+    *,
+    db: dict,
+    encounter_level: int,
+    game_id: str,
+    location_id: str,
+    state: dict | None,
+    pool_on: bool,
+) -> dict:
+    """SPEC-361: existente -> variante -> nova -> fallback (``RPG_CREATURE_GEN=on``)."""
+    from services import creature_gen as cg
+
+    pedido = cg.PedidoCriatura.from_spawn(
+        name,
+        context,
+        state=state,
+        encounter_level=encounter_level,
+        location_id=location_id,
+        game_id=game_id,
+    )
+    res = cg.gerar(pedido, bestiary=db)
+    data = res.template
+    data.setdefault("geracao", {})["nome"] = name  # R18: trava de identidade aceita a geração
+    if res.caminho == "nova" and res.ficha is not None:
+        if pool_on and res.ficha.get("categoria") != "chefe":
+            estado = _submit_generated_ficha(
+                res.ficha, data, game_id, location_id, pedido.player_inputs
+            )
+        else:
+            save_enemy(data)  # pool off (ou chefe, barrado no pool): local ao dono
+            estado = "local"
+        data["geracao"]["estado"] = estado
+        return _scaled_copy(data, encounter_level)
+    if res.caminho == "variante":
+        save_enemy(dict(data))  # R8: variante é local ao jogo/dono, nunca vai ao pool
+        return _scaled_copy(data, encounter_level)
+    return data
+
+
 # --- GERADOR ---
 def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
@@ -425,7 +544,9 @@ def generate_new_enemy(
     game_id: str = "",
     location_id: str = "",
     name_origin: str = "player",
+    state: dict | None = None,
 ) -> dict:
+    """``state`` (SPEC-361 R30) só é lido com ``RPG_CREATURE_GEN=on`` (motivo de trama, teto)."""
     from services.prompt_guard import sanitize_entity_name
 
     pool_on = bool(game_id) and _pool_enabled()
@@ -461,6 +582,20 @@ def generate_new_enemy(
 
     # 2. GERAÇÃO
     _log_event("bestiary", "creating", level="info")
+
+    from services.creature_gen import mode as _creature_gen_mode
+
+    if _creature_gen_mode() == "on":  # SPEC-361; `legacy` segue abaixo, inalterado
+        return _generate_v361(
+            name,
+            context,
+            db=db,
+            encounter_level=encounter_level,
+            game_id=game_id,
+            location_id=location_id,
+            state=state,
+            pool_on=pool_on,
+        )
 
     lore = query_rag(f"{name} {context}", index_name="lore")
     if not lore:

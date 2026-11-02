@@ -543,6 +543,206 @@ def _enemy_schema(model, messages):
     )
 
 
+_MOCK_NUCLEOS = (
+    "Rastejador",
+    "Cardume",
+    "Ruminante",
+    "Sentinela",
+    "Ceifeiro",
+    "Escavador",
+    "Pastor",
+    "Remoedor",
+    "Batedor",
+    "Vigia",
+    "Mordedor",
+    "Bebedor",
+    "Coletor",
+    "Tecelão",
+    "Carregador",
+    "Farejador",
+)
+_MOCK_COMPLEMENTOS = (
+    "de Cinza Fria",
+    "de Sal Grosso",
+    "do Poço Seco",
+    "de Casca Parda",
+    "da Lama Funda",
+    "de Junta Torta",
+    "do Fosso",
+    "de Pele Rota",
+)
+_MOCK_PARTES = (
+    ("mandíbula", "torta"),
+    ("garras", "curtas"),
+    ("olhos", "leitosos"),
+    ("costelas", "aparentes"),
+    ("cauda", "pelada"),
+    ("dentes", "serrilhados"),
+    ("patas", "nodosas"),
+    ("ombros", "caídos"),
+    ("pescoço", "comprido"),
+    ("língua", "áspera"),
+)
+
+
+def _ficha_criatura_gerada(model, messages):
+    """SPEC-361 R31: ficha determinística (hash do pedido) que passa no gate U1-U13.
+
+    Escolhe eixos livres contra as fichas da região (mesma fonte do gate) e contra as linhas
+    de ``<ja_existem_na_regiao>`` do prompt; nunca gera número nem termo proibido."""
+    import hashlib
+    import itertools
+    import re
+
+    from services import bestiary_lint as bl
+    from services import creature_gen as cg
+    from services import enemy_decks
+    from services.encounter_manifest import name_tokens
+
+    system = next((str(m.content) for m in messages if m.__class__.__name__ == "SystemMessage"), "")
+    pedido = _last_human(messages)
+    m_reg = re.search(r"<regiao>\n[^\n]*\((\w+)\)", system)
+    regiao = m_reg.group(1) if m_reg else ""
+    h = int(hashlib.sha256(f"{pedido}|{regiao}".encode()).hexdigest(), 16)
+
+    vizinhos = cg.fichas_da_regiao(regiao)
+    bloco = re.search(r"<ja_existem_na_regiao>\n(.*?)\n</ja_existem_na_regiao>", system, re.S)
+    for linha in bloco.group(1).splitlines() if bloco else []:
+        parts = [p.strip() for p in re.split(r" — | / ", linha)]
+        if len(parts) == 5:
+            vizinhos.append(
+                {
+                    "nome": parts[0],
+                    "anatomia": {"plano_corporal": parts[2], "material": parts[3]},
+                    "papel_tatico": parts[4],
+                }
+            )
+    nucleos = {bl.nucleo_nome(v.get("nome") or "") for v in vizinhos}
+    triplas = {bl._triple(v) for v in vizinhos}
+
+    def ordenado(eixo: str, salto: int) -> list[str]:
+        vals = sorted(bl.ENUMS[eixo])
+        k = (h >> salto) % len(vals)
+        return vals[k:] + vals[:k]
+
+    escolha = None
+    combos = itertools.product(
+        ordenado("plano_corporal", 3),
+        ordenado("material", 7),
+        ordenado("papel_tatico", 11),
+        ordenado("escala", 13),
+        ordenado("locomocao", 17),
+        ordenado("percepcao", 19),
+    )
+    for plano, mat, papel, esc, loc, perc in itertools.islice(combos, 20000):
+        if plano == "sessil_ancorado" or loc == "ancorada":
+            continue
+        cand = {
+            "anatomia": {
+                "plano_corporal": plano,
+                "material": mat,
+                "escala": esc,
+                "locomocao": loc,
+                "percepcao": perc,
+            },
+            "papel_tatico": papel,
+        }
+        if bl._triple(cand) in triplas:
+            continue
+        if any(bl.eixos_iguais(cand, v) > bl.MAX_EIXOS_IGUAIS for v in vizinhos):
+            continue
+        escolha = cand
+        break
+    escolha = escolha or {
+        "anatomia": {
+            "plano_corporal": "radial",
+            "material": "cera_sebo",
+            "escala": "miuda",
+            "locomocao": "rola",
+            "percepcao": "respiracao",
+        },
+        "papel_tatico": "suporte",
+    }
+    bestiary_tokens = {
+        tuple(sorted(set(name_tokens(e.get("name", ""))))) for e in (_bestiary_db() or {}).values()
+    }
+    nome = "Coisa Parda"
+    for i in range(len(_MOCK_NUCLEOS) * len(_MOCK_COMPLEMENTOS)):
+        nucleo = _MOCK_NUCLEOS[(h + i) % len(_MOCK_NUCLEOS)]
+        comp = _MOCK_COMPLEMENTOS[(h // 7 + i) % len(_MOCK_COMPLEMENTOS)]
+        cand_nome = f"{nucleo} {comp}"
+        if bl.nucleo_nome(cand_nome) in nucleos:
+            continue
+        if tuple(sorted(set(name_tokens(cand_nome)))) in bestiary_tokens:
+            continue
+        nome = cand_nome
+        break
+    fam = cg.familia_alvo(pedido) or bl.FAMILIAS_VALORIA[h % 4]
+    fonte = {"corpo_reescrito": "abismo", "besta_entropia": "abismo", "humanoide_preco": "eter"}
+    demonio = sorted(bl.DEMONIOS)[h % len(bl.DEMONIOS)] if fam == "demonio_encarnado" else None
+    cat_m = re.search(r"<categoria_pedida>(\w+)</categoria_pedida>", system)
+    categoria = cat_m.group(1) if cat_m else "padrao"
+    a_cada_n = cg.A_CADA_N.get(categoria, 3)
+    usados = {
+        (tuple(v.get("padrao") or []), v.get("a_cada_n")) for v in vizinhos if v.get("padrao")
+    }
+    slots = sorted(enemy_decks._SLOT_LABEL)
+    padrao = ["ataque", "mover"]
+    for a, b, c in itertools.product(slots, slots, slots):
+        cand_p = [a, b, c] if (h >> 5) % 2 else [a, b]
+        if (tuple(cand_p), a_cada_n) not in usados and len(set(cand_p)) > 1:
+            padrao = cand_p
+            break
+    p = [_MOCK_PARTES[(h >> (2 * i)) % len(_MOCK_PARTES)] for i in range(6)]
+    p = list(dict.fromkeys(p))[:3]
+    while len(p) < 3:
+        p.append(_MOCK_PARTES[len(p) + 3])
+    anat = escolha["anatomia"]
+    texto = (
+        f"Corpo de {anat['material'].replace('_', ' ')} com {p[0][0]} {p[0][1]}. "
+        f"Tem {p[1][0]} {p[1][1]} e {p[2][0]} {p[2][1]}. "
+        f"Anda por {anat['locomocao'].replace('_', ' ')} e acha a presa pelo "
+        f"{anat['percepcao'].replace('_', ' ')}."
+    )
+    return _fill(
+        model,
+        {
+            "nome": nome,
+            "familia": fam,
+            "origem_fonte": fonte.get(fam, "demonio"),
+            "demonio": demonio,
+            "faccao": None,
+            **anat,
+            "anatomia_texto": texto,
+            "silhueta": f"Vulto {anat['escala']} de {p[0][0]} à mostra, rente ao chão.",
+            "comportamento": f"Ronda o lugar de onde veio e só ataca quem chega perto do {p[1][0]}.",
+            "papel_tatico": escolha["papel_tatico"],
+            "arquetipo": enemy_decks.FAMILIAS[h % len(enemy_decks.FAMILIAS)],
+            "categoria": categoria,
+            "estilo_ataque": "corpo_a_corpo",
+            "nome_ataque": f"Golpe de {p[0][0].capitalize()}",
+            "padrao": padrao,
+            "telegrafo": f"{{nome}} encolhe {'as' if p[1][0].endswith('s') else 'a'} {p[1][0]} e range.",
+            "mecanica_assinatura": "Fica firme e devolve o golpe seguinte.",
+            "contra_jogo": f"Mirar {('as' if p[2][0].endswith('s') else 'a')} {p[2][0]} antes do resto.",
+            "gancho": "Dizem na estrada que apareceu depois do último temporal.",
+            "description": f"Criatura de {anat['material'].replace('_', ' ')} que ronda o lugar.",
+            "aparencia": f"{p[0][0].capitalize()} {p[0][1]}, {p[1][0]} {p[1][1]}, couro sem brilho.",
+            "arte_visual": f"Vulto de {p[0][0]} {p[0][1]} sob luz baixa de lanterna.",
+            "arte_evitar": "Monstro de desenho animado, cores vivas.",
+        },
+    )
+
+
+def _bestiary_db() -> dict:
+    try:
+        import gamedata
+
+        return dict(gamedata.BESTIARY or {})
+    except Exception:
+        return {}
+
+
 def _encounter_scanner(model, messages):
     hint = _last_human(messages) or "Inimigo"
     name = next((n for n in _ENEMY_NAMES if n.lower() in hint.lower()), random.choice(_ENEMY_NAMES))
@@ -789,6 +989,7 @@ _DISPATCH = {
     "NPCSchema": _npc_schema,
     "NPCResponse": _npc_response,
     "EnemySchema": _enemy_schema,
+    "FichaCriaturaGerada": _ficha_criatura_gerada,  # SPEC-361 R31
     "EncounterScanner": _encounter_scanner,
     "LootSchema": _loot_schema,
     "ItemGeneration": _item_generation,

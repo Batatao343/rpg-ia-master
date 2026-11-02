@@ -265,6 +265,14 @@ def build_creature_art_brief(
     species_name, description = _bestiary_description(bestiary_id) if bestiary_id else ("", "")
     if not description and enemy.get("pool_entry_id"):
         description = sanitize_visual_text(enemy.get("description"), limit=300)
+    if enemy.get("variant_of") and enemy.get("appearance"):
+        description = ""  # SPEC-361: a variante descreve o traço de trama sobre a base
+    if not description:
+        # SPEC-361 R28: criatura gerada (overlay/variante/pool) traz a própria aparência.
+        ficha = enemy.get("ficha") if isinstance(enemy.get("ficha"), Mapping) else {}
+        description = sanitize_visual_text(
+            enemy.get("appearance") or ficha.get("aparencia"), limit=300
+        )
     species = species_name or sanitize_visual_text(species_label_for(dict(enemy)), limit=80)
     subject = species or sanitize_visual_text(enemy.get("name"), limit=80) or "creature"
     looks = description

@@ -1,0 +1,291 @@
+# SPEC-361 R5 — catálogo curado de modificadores de trama (variante = base existente + modificador).
+# Autor: opus (Etapa 2). Revisão independente: pendente (spec-reviewer Opus, registro na SPEC-361 §9).
+#
+# Uma variante NÃO é "jovem", "alfa" nem "maior" (U5 da 349): é a mesma espécie marcada pelo que
+# está acontecendo na história. O modificador vem da trama (pedido do jogador + motivo de trama),
+# nunca do acaso, e só muda campos categóricos; os números saem do Python.
+#
+# Campos:
+#   gatilhos     frases (sem acento) que detectam o modificador no pedido/motivo; primeira que
+#                aparece vence, desempate pela ordem deste arquivo; nunca repetidas entre itens
+#   afinidades   palavras no comportamento/anatomia da base que a favorecem (R6, +1 cada)
+#   familias     famílias de Valoria compatíveis (FAMILIAS_VALORIA)
+#   categorias   categorias da base compatíveis
+#   proibido_com eixos da base que impedem o modificador
+#   efeitos      categoria_delta ∈ {0, 1} (nunca passa de elite); papel_tatico/padrao (enums) ou null;
+#                contagem_min = piso do grupo no spawn
+#   texto        epiteto (vai depois do nome da base), frase ({base}), telegrafo ({nome}), aparencia
+#                — sem dígito, sem jargão de Cartas, sem marcador de variante no epíteto
+versao: 1
+modificadores:
+  - id: mente_unica
+    rotulo: ligados por uma mente só
+    gatilhos: ["mente-colmeia", "mente colmeia", "colmeia", "uma mente so", "pensam como um", "enxame", "mente unica"]
+    afinidades: [bando, enxame, ninhada, colonia, grita, chama]
+    familias: [besta_entropia, demonio_encarnado, corpo_reescrito]
+    categorias: [lacaio, padrao]
+    proibido_com: {plano_corporal: [sessil_ancorado]}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: controlador
+      padrao: [reforco_proprio, ataque_multiplo]
+      contagem_min: 3
+    texto:
+      epiteto: da Mente Única
+      frase: "Cada {base} deste bando se move como parte de um só corpo: quando um vê a presa, todos sabem onde ela está."
+      telegrafo: "{nome} congela no meio do passo, e o bando inteiro vira a cabeça para o mesmo lado."
+      aparencia: "vários deles na mesma pose, espelhados, os olhos fixos no mesmo ponto"
+    inspiracao:
+      - fonte: Caves of Qud
+        referencia: criaturas lendárias são base + mutações
+        tomou: variante como base mais modificador
+        distancia: o modificador vem da trama e é curado, não sorteado
+
+  - id: praga_terminal
+    rotulo: na última semana da Praga
+    gatilhos: ["praga terminal", "ultimo estagio", "estado terminal", "ultima semana da praga", "podre de praga"]
+    afinidades: [praga, ferrugem, ossos, veias, medula, casca]
+    familias: [corpo_reescrito, besta_entropia]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: tanque_reativo
+      padrao: [ataque, reforco_proprio, ataque]
+      contagem_min: null
+    texto:
+      epiteto: da Última Semana
+      frase: "{base} na última semana da Praga: o que a doença ainda não reescreveu está rachando para dar lugar ao que vem."
+      telegrafo: "{nome} para, e a pele das costas abre em placas como reboco secando."
+      aparencia: "pele rachada em placas soltas, o que está por baixo já endurecido, ferrugem escorrendo das juntas"
+    inspiracao:
+      - fonte: lore de Valoria
+        referencia: "Benedita, a Parteira: a diferença entre doente e Reescrito é de uma semana"
+        tomou: o estágio da doença como marca da história
+        distancia: é a base de sempre mais perto do fim, não uma espécie nova
+
+  - id: faminto_de_escassez
+    rotulo: esfaimado depois da estação magra
+    gatilhos: ["esfomeado", "esfomeada", "faminto", "faminta", "morrendo de fome", "estacao magra", "sem comida"]
+    afinidades: [fome, come, devora, carcaca, presa, morde]
+    familias: [besta_entropia, demonio_encarnado]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {plano_corporal: [sessil_ancorado]}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: bruto_de_linha
+      padrao: [ataque, ataque_multiplo]
+      contagem_min: null
+    texto:
+      epiteto: da Estação Magra
+      frase: "{base} que passou a estação magra sem comer: as costelas aparecem, e não recua de presa nenhuma."
+      telegrafo: "{nome} abaixa a cabeça, fareja o sangue, e a mandíbula começa a tremer."
+      aparencia: "costelas marcadas sob a pele frouxa, a boca sempre entreaberta, baba seca no queixo"
+
+  - id: domado_por_faccao
+    rotulo: posto no arreio por uma facção
+    gatilhos: ["domado", "domada", "domados", "adestrado", "adestrada", "com arreio", "na coleira", "de estimacao da faccao"]
+    afinidades: [arreio, corrente, coleira, dono, mestre, obedece]
+    familias: [besta_entropia, corpo_reescrito]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {plano_corporal: [sessil_ancorado, hospedeiro_parasita]}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: guarda_protetor
+      padrao: [defesa, ataque]
+      contagem_min: null
+    texto:
+      epiteto: de Arreio
+      frase: "{base} que alguém quebrou e pôs no arreio: obedece a um assobio que você não ouviu e protege quem segura a corrente."
+      telegrafo: "{nome} estica a corrente e olha para o dono antes de olhar para você."
+      aparencia: "arreio de couro gasto com fivelas de ferro, marcas de ferrão no flanco, um pedaço de corrente arrastando"
+
+  - id: ferido_de_guerra
+    rotulo: veterano coberto de cicatrizes
+    gatilhos: ["cheio de cicatrizes", "veterano", "veterana", "mutilado", "marcado de guerra", "que sobreviveu a guerra"]
+    afinidades: [cicatriz, flecha, lanca, marca, queimadura, quebra]
+    familias: [besta_entropia, corpo_reescrito, humanoide_preco]
+    categorias: [padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: quebra_defesa
+      padrao: [defesa, enfraquecer, ataque]
+      contagem_min: null
+    texto:
+      epiteto: das Cicatrizes
+      frase: "{base} que já levou de tudo e continuou de pé: aprendeu onde dói e guarda esse lado."
+      telegrafo: "{nome} vira para você o lado cheio de cicatrizes e espera o seu golpe."
+      aparencia: "corpo coberto de cicatrizes velhas, ponta de flecha quebrada ainda presa no couro, um olho leitoso"
+    inspiracao:
+      - fonte: "Middle-earth: Shadow of Mordor (Nemesis System)"
+        referencia: inimigo marcado pelo que aconteceu na história
+        tomou: a marca visível do passado no corpo
+        distancia: sem hierarquia nem promoção; é a mesma espécie, só que mais velha de briga
+
+  - id: ninho_defendido
+    rotulo: entre o intruso e o ninho
+    gatilhos: ["ninho", "covil", "defendendo a cria", "chocando", "com os ovos", "perto da ninhada"]
+    afinidades: [ninho, ovos, cria, toca, ninhada, choca]
+    familias: [besta_entropia, demonio_encarnado]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: sacrificial
+      padrao: [defesa, ataque_multiplo]
+      contagem_min: 2
+    texto:
+      epiteto: do Ninho
+      frase: "{base} entre você e o ninho: não persegue, não foge, e nada passa pelo lado de onde vem o cheiro dos ovos."
+      telegrafo: "{nome} recua até cobrir o ninho com o corpo e arrepia tudo o que tem nas costas."
+      aparencia: "de pé sobre um ninho de gravetos, ossos e trapos, ovos foscos entre os pés"
+
+  - id: saturado_de_eter
+    rotulo: encharcado de Éter de uma fornalha rachada
+    gatilhos: ["saturado de eter", "encharcado de eter", "vazando eter", "brilho de eter", "bebeu eter", "fornalha rachada"]
+    afinidades: [eter, cristal, brilho, luz, fornalha, azul]
+    familias: [corpo_reescrito, besta_entropia, humanoide_preco]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: artilharia
+      padrao: [ataque_multiplo, mover, ataque]
+      contagem_min: null
+    texto:
+      epiteto: do Éter Rachado
+      frase: "{base} que bebeu Éter de uma fornalha rachada: a luz fria vaza pelas juntas e queima o ar em volta."
+      telegrafo: "{nome} acende por dentro, e a luz azul-esverdeada sobe pela garganta."
+      aparencia: "luz fria azul-esverdeada vazando pelas juntas e pela boca, cristal turvo brotando na pele"
+
+  - id: fugido_do_abismo
+    rotulo: voltou da borda pesando demais
+    gatilhos: ["fugido do abismo", "veio do vazio", "da borda do vazio", "do fundo do abismo", "subiu do abismo"]
+    afinidades: [abismo, vazio, escuro, silencio, peso, afunda]
+    familias: [besta_entropia, corpo_reescrito, demonio_encarnado]
+    categorias: [padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: drenador
+      padrao: [enfraquecer, ataque]
+      contagem_min: null
+    texto:
+      epiteto: da Borda
+      frase: "{base} que chegou perto demais da borda e voltou pesando o dobro: onde pisa, o chão cede e o som some."
+      telegrafo: "{nome} para de se mexer, o som em volta morre, e o chão começa a ceder."
+      aparencia: "contorno borrado como se pesasse demais para a luz, poeira caindo para cima em volta do corpo"
+
+  - id: afogado_e_devolvido
+    rotulo: levado pela água e devolvido errado
+    gatilhos: ["afogado", "afogada", "afogados", "devolvido pela mare", "saiu da agua", "do fundo do rio"]
+    afinidades: [agua, lama, mare, rio, sal, lodo]
+    familias: [corpo_reescrito, besta_entropia, demonio_encarnado]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {locomocao: [plana_voa]}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: emboscador
+      padrao: [mover, ataque, ataque]
+      contagem_min: null
+    texto:
+      epiteto: da Água Funda
+      frase: "{base} que a água levou e devolveu errado: a carne incha, a pele esfria, e não tem pressa nenhuma de respirar."
+      telegrafo: "{nome} afunda na lama até os olhos e some do lado para onde você olhava."
+      aparencia: "pele inchada e esbranquiçada, lodo preso nas dobras, água escorrendo sem parar"
+
+  - id: coberto_de_fuligem
+    rotulo: criado dentro das chaminés
+    gatilhos: ["fuligem", "das chamines", "dentro da chamine", "fumaca preta", "das fundicoes"]
+    afinidades: [fuligem, cinza, chamine, fornalha, fumaca, carvao]
+    familias: [besta_entropia, corpo_reescrito]
+    categorias: [lacaio, padrao]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: controlador
+      padrao: [mover, enfraquecer, ataque]
+      contagem_min: null
+    texto:
+      epiteto: de Fuligem
+      frase: "{base} que cresceu dentro das chaminés: anda dentro da própria nuvem preta e sai dela já em cima de você."
+      telegrafo: "{nome} sacode o corpo e solta uma nuvem de fuligem que engole a luz da lanterna."
+      aparencia: "coberto de fuligem grossa, só os olhos e os dentes claros, rastro de fumaça preta atrás"
+
+  - id: tomado_de_apetite
+    rotulo: tomado pelo resíduo de uma emoção
+    gatilhos: ["possuido", "possuida", "tomado pelo apetite", "tocado pelo demonio", "marcado pelo apetite"]
+    afinidades: [medo, raiva, choro, grito, luto, tristeza]
+    familias: [besta_entropia, corpo_reescrito]
+    categorias: [lacaio, padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: perseguidor_marca
+      padrao: [enfraquecer, ataque, ataque]
+      contagem_min: null
+    texto:
+      epiteto: do Apetite
+      frase: "{base} onde uma emoção velha se demorou demais: o corpo continua ali, mas quem olha pelos olhos é o que o lugar ficou devendo."
+      telegrafo: "{nome} solta um som que não é seu, um choro ou um riso, e vem direto em quem tremeu."
+      aparencia: "o mesmo corpo de sempre com a expressão errada, olhos úmidos demais, couro arrepiado sem vento"
+
+  - id: fugido_da_jaula
+    rotulo: acabou de escapar de uma jaula de feira
+    gatilhos: ["fugido da jaula", "escapou da jaula", "contrabandeado", "da jaula do mercador", "bicho de feira"]
+    afinidades: [jaula, grade, mercador, vendido, corda, foge]
+    familias: [besta_entropia]
+    categorias: [lacaio, padrao]
+    proibido_com: {plano_corporal: [sessil_ancorado]}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: batedor_rapido
+      padrao: [mover, ataque, mover]
+      contagem_min: null
+    texto:
+      epiteto: da Jaula
+      frase: "{base} que passou meses numa jaula de feira e acabou de sair: morde tudo o que tem cheiro de gente e não para quieto."
+      telegrafo: "{nome} corre em círculo, bate na parede e volta de lado, procurando a mão mais próxima."
+      aparencia: "marcas de grade no couro, uma argola de ferro presa numa perna, o couro gasto de tanto esfregar"
+
+  - id: desperto_do_gelo
+    rotulo: guardado pelo gelo um inverno inteiro
+    gatilhos: ["desperto do gelo", "preso no gelo", "descongelado", "descongelou", "saiu do gelo"]
+    afinidades: [gelo, frio, neve, inverno, geada, congela]
+    familias: [besta_entropia, corpo_reescrito]
+    categorias: [padrao, elite]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 0
+      papel_tatico: tanque_reativo
+      padrao: [defesa, defesa, ataque]
+      contagem_min: null
+    texto:
+      epiteto: do Gelo Velho
+      frase: "{base} que o gelo guardou por um inverno inteiro e soltou de mau humor: a lentidão do primeiro passo some no terceiro, e aí não há como parar."
+      telegrafo: "{nome} estala as juntas uma por uma, e a geada racha e cai do corpo."
+      aparencia: "geada presa no couro e nos olhos, crostas de gelo sujo nas juntas, vapor saindo da boca"
+
+  - id: ultimo_do_bando
+    rotulo: o que sobrou de um bando caçado
+    gatilhos: ["ultimo do bando", "perdeu o bando", "o que sobrou do bando", "bando inteiro morto", "vingando o bando"]
+    afinidades: [bando, grupo, caca, rastro, grita, uiva]
+    familias: [besta_entropia, demonio_encarnado]
+    categorias: [lacaio, padrao]
+    proibido_com: {}
+    efeitos:
+      categoria_delta: 1
+      papel_tatico: perseguidor_marca
+      padrao: [ataque, mover, ataque]
+      contagem_min: null
+    texto:
+      epiteto: do Bando Morto
+      frase: "{base} que viu o bando inteiro cair e guardou o cheiro de quem fez isso: não caça mais para comer."
+      telegrafo: "{nome} fareja o ar devagar, acha o seu cheiro e não tira mais os olhos de você."
+      aparencia: "nenhum outro por perto, as costelas à mostra, sangue seco de outros da mesma espécie no couro"
+    inspiracao:
+      - fonte: zoologia (lobos dispersores)
+        referencia: o lobo que perde a alcateia e passa a caçar sozinho e mais perto das casas
+        tomou: o sobrevivente que muda de comportamento
+        distancia: aqui ele caça quem matou o bando, e o bando era uma Besta Torta de Valoria

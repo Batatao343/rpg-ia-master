@@ -903,6 +903,32 @@ RPG_OPENING_THREAD:
   spec: SPEC-351
   expires: 2027-01-25
   note: "abertura ligada às tramas do mundo (off = prólogo de hoje; shadow = só mede o menu)"
+RPG_CREATURE_GEN:
+  kind: release
+  default: "legacy"
+  spec: SPEC-361
+  expires: 2027-02-28
+  note: "geração de criatura em runtime com ficha da 349 (legacy = gerador antigo, on = few-shot + gate + variante)"
+RPG_CREATURE_GEN_EVAL:
+  kind: dev
+  default: null
+  spec: SPEC-361
+  note: "só eval/teste: aceita PedidoCriatura.forcar = nova|variante"
+RPG_CREATURE_GEN_DEADLINE_S:
+  kind: ops
+  default: "12"
+  spec: SPEC-361
+  note: "prazo total (s) do caminho nova; a 2ª tentativa só começa antes da metade"
+RPG_CREATURE_NEW_PER_GAME:
+  kind: ops
+  default: "6"
+  spec: SPEC-361
+  note: "teto de criaturas novas geradas por jogo"
+RPG_CREATURE_NEW_EVERY_TURNS:
+  kind: ops
+  default: "15"
+  spec: SPEC-361
+  note: "intervalo mínimo de turnos entre duas criaturas novas no mesmo jogo"
 RPG_SHARED_POOL:
   kind: release
   default: "off"

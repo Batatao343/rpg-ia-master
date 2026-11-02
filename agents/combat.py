@@ -694,6 +694,12 @@ def _grounded_template(
             "location_id": str((state.get("world") or {}).get("current_location_id", "")),
             "name_origin": "player",
         }
+    from services import creature_gen as _cg
+
+    gen_on = _cg.mode() == "on"
+    if gen_on:  # SPEC-361 R30: o gerador lê a trama e o teto do estado
+        pool_kwargs["state"] = state
+        pool_kwargs.pop("name_origin", None)  # R22: a origem do nome é decidida na geração
     template = generate_new_enemy(
         name, context=context, encounter_level=encounter_level, **pool_kwargs
     )
@@ -701,6 +707,15 @@ def _grounded_template(
         name, str(template.get("id") or "")
     ):
         return template
+    if gen_on:
+        from services.prompt_guard import sanitize_entity_name
+
+        # SPEC-361 R18: nova/variante/fallback do gerador marcam o nome pedido; o nome que o
+        # LLM escreveu ("Coro de Quitina" para "lacaio mente-colmeia") não é troca de espécie.
+        if (template.get("geracao") or {}).get("nome") == (
+            sanitize_entity_name(name) or "Criatura"
+        ):
+            return template
     _log_event("combat", "spawn_identity_mismatch", level="warning")
     from agents.bestiary import _slug, materialize_enemy_concept
 
@@ -859,6 +874,11 @@ def _spawn_v4_enemies(
                 for name, count in groups:
                     name = _name_without_generic_head(name, messages)  # SPEC-363 R30
                     template = _grounded_template(name, mechanical_context, encounter_level, state)
+                    from services.creature_variants import contagem_min as _cmin
+
+                    if _cmin(template) > count:  # SPEC-361 R7: piso do grupo da variante
+                        count = _cmin(template)
+                        protected.add(str(template.get("id")))
                     enemies += _instances(template, count, next_instance_by_template, _deck_seed)
                 if enemies:
                     meta.update(source="scanner", target_ref=str(target_hint or ""))
@@ -2164,11 +2184,22 @@ def _finish_encounter(combat_meta: dict, enemies: list[dict], outcome: str, *, l
 # ==========================================================================
 def combat_node(state: GameState):
     """SPEC-251: abre o trace mecânico do turno e emite combat.mechanics/summary."""
+    from services import creature_gen as _cg
     from services import mechanics_trace as _mt
 
-    with _mt.scope():
-        result = _combat_node(state)
-        _mt.emit_turn_logs()
+    token = _cg.CONTADOR_ATUALIZADO.set(None)
+    try:
+        with _mt.scope():
+            result = _combat_node(state)
+            _mt.emit_turn_logs()
+        contador = _cg.CONTADOR_ATUALIZADO.get()
+        if contador is not None and isinstance(result, dict):
+            # SPEC-361 R4: o spawn gerou criatura NOVA; o contador do jogo vai para o estado.
+            world = dict(result.get("world") or state.get("world") or {})
+            world["creature_gen"] = {"novas": int(contador[0]), "ultimo_turno": int(contador[1])}
+            result["world"] = world
+    finally:
+        _cg.CONTADOR_ATUALIZADO.reset(token)
     return result
 
 

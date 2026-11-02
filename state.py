@@ -278,6 +278,13 @@ class DateView(TypedDict):
     climate: Climate
 
 
+class CreatureGenCounter(TypedDict, total=False):
+    """SPEC-361 R4: criaturas NOVAS geradas neste jogo (teto por jogo e intervalo de turnos)."""
+
+    novas: int
+    ultimo_turno: int
+
+
 class WorldState(TypedDict, total=False):
     current_location: str
     current_location_id: str  # id no grafo data/world_map.json
@@ -314,6 +321,7 @@ class WorldState(TypedDict, total=False):
     ]  # Fase 2.5b: fugas viram alerta regional (ver world_utils.register_flee_alert)
     shelter: dict | None  # SPEC-298 R24: {npc_id, location_id, until_clock} (favor esconder)
     date: DateView  # SPEC-307 R15: data de Valoria (vista derivada, writer = world_calendar)
+    creature_gen: CreatureGenCounter  # SPEC-361 R4 (ausente em save antigo = zero)
 
 
 class FameEntry(TypedDict, total=False):
