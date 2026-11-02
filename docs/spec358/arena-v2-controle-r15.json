@@ -1,4 +1,8 @@
 {
+ "_meta": {
+  "sementes": "20-99",
+  "motor_sha": "b145f4ba8ade4acaf792d798cd60b55e6479eb40"
+ },
  "ctl_ferro_dano4_marcial": {
   "protocolo": "lote-v2",
   "classe": "Médico de Campo",

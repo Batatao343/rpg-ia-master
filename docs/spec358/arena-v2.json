@@ -2,6 +2,7 @@
  "_meta": {
   "sementes": "0-19",
   "protocolo": "lote-v2",
+  "motor_sha": "b145f4ba8ade4acaf792d798cd60b55e6479eb40",
   "verificacao_v1": {
    "arquivo": "sangromante_avaro.json",
    "cartas": 12,

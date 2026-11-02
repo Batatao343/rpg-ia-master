@@ -1,6 +1,7 @@
 {
  "_meta": {
   "sementes": "20-99",
+  "motor_sha": "b145f4ba8ade4acaf792d798cd60b55e6479eb40",
   "selecionados": [
    "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_rede|",
    "arquivo:arcanista_cinzento_calibrado.json|arc1_cal_segunda_medicao|",

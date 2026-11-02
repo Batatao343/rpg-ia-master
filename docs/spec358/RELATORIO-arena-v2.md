@@ -7,11 +7,13 @@ Bandeiras v1 derivadas do mesmo relatorio v2 (mesmas regras do `sim.py`). Confer
 ## 0. Leitura (escrita a mao sobre os numeros abaixo; regerar o relatorio com `--fase relatorio` a apaga)
 
 - [F] Itens: 308 (180 Cartas de subclasse + 16 de tronco x 3 subclasses + 40 neutras x 2 baralhos). O v1 recusa 76; o v2 recusa 2 (`dev1_con_cicatriz_votiva` +15,0 pp e `med1_tri_respiro_forcado` +8,8 pp, esta SEM referencia: delta por remocao).
-- [F] Das 76 recusas do v1, 40 eram `dominante` por uso e 9 `em_branco` (artefato do bot, agora aviso) e 32 eram `dominante` por delta de remocao. No total, 75 das 76 recusas do v1 passam no v2 (secao 2); 1 item entra so no v2 (`dev1_con_cicatriz_votiva`).
+- [F] Motivos das 76 recusas do v1 (um item pode ter mais de um, entao 40 + 9 + 32 nao soma 76): 40 `dominante` por uso e 9 `em_branco` (artefato do bot, agora aviso) e 32 `dominante` por delta de remocao. No total, 75 das 76 recusas do v1 passam no v2 (secao 2); 1 item entra so no v2 (`dev1_con_cicatriz_votiva`).
 - [F] Confirmacao 20-99 (320 lutas, 77 itens): os dois `dominante` do v2 caem para +3,4 e +3,1 pp (ruido); nenhum item fica `dominante` nessa rodada. [H] Ou seja, o `dominante` do v2 nas sementes 0-19 e, nesta amostra, ruido de 80 lutas, nao Carta forte.
 - [F] Muitos deltas por substituicao saem NEGATIVOS (ex.: Bencao do Aco -5,0; Corte sem Aviso 0,0; Pinca de Aco -17,5). [H] A referencia no ponto medio da faixa de orcamento e mais forte para o bot que boa parte das Cartas reais, que gastam poder em efeitos que a arena nao mede (condicoes, Chamado, Torpor...). O v2 e um filtro de "inflacao por Carta vazia", nao de "Carta fraca"; um v2 sem bandeira nao prova que a Carta e boa.
 - [F] R15 (controle `ctl_ferro_dano4_marcial`, dano 4 marcial puro, 320 lutas): remocao +10,6 pp; substituicao -11,2 pp (a referencia e dano 7). O criterio literal "|delta v2| < |delta v1|" NAO se confirma (11,2 > 10,6), embora o sinal mostre o que se queria: o controle fraco deixa de parecer forte. Por D6, o v2 fica disponivel e NAO e recomendado como default sem decisao do dono.
+- [F] Motor: todos os dados foram regerados em `motor_sha` b145f4ba8ade4acaf792d798cd60b55e6479eb40 (carimbo em `arena-v2*.json`); os numeros bateram com a rodada anterior. Equivalencia v1 refeita nesse motor (15/15).
 - [F] Verificacao interna: o delta por remocao do v2 e as bandeiras v1 derivadas bateram exatamente com o v1 real em `sangromante_avaro.json`.
+
 
 ## 1. Contagem de bandeiras
 
@@ -21,8 +23,8 @@ Itens (Carta x variante): 308.
 |---|---|---|
 | bandeiras (total) | 76 | 2 |
 | itens recusados | 76 | 2 |
-| por uso (em_branco / dominante por uso) | 9 / 40 | 0 (viram aviso) |
-| por delta (dominante) | 32 | 2 |
+| por uso (em_branco / dominante por uso; motivos se sobrepoem) | 9 / 40 | 0 (viram aviso) |
+| por delta (dominante; motivos se sobrepoem) | 32 | 2 |
 
 Itens sem referencia (reacao/passiva/etc.): 17.
 
