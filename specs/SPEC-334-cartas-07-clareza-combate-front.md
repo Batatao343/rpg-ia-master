@@ -1,6 +1,6 @@
 # SPEC-334 — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
 
-> **Status:** `in-progress` (front pousado atrás de `combat.pilhas` em 27/10 após re-revisão Sol APPROVED; falta jornada Playwright 390/1440 (EVAL_AUTHORING), R9 fila do texto livre, faixa da SPEC-331)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-328 (contrato `pilhas`/`jogadas`), SPEC-329 (`pressagios_publicos`), SPEC-330 (`_glossario.json`, `render_card_text`), SPEC-320–324 (tokens, mobile, a11y, "livro não chat")
@@ -46,7 +46,7 @@ Arte de carta por carta (usar ícone por palavra-chave/tipo). Animações além 
 ## 5. Critérios de aceite
 - [x] Preview exato (teste estatístico) e sem efeito colateral
 - [x] Um request por rodada do jogador (fila local → `jogadas`)
-- [ ] Conferido em 390 px e 1440 px no staging
+- [x] Conferido em 390 px e 1440 px no staging
 - [x] `npm run build` e pytest do escopo verdes (suíte completa: pouso)
 
 ## 6. Smoke real
@@ -64,3 +64,5 @@ Rodada completa no staging com LLM real: ler presságio → preview → fila de 
 - **R9 parcial:** o texto livre continua funcionando (caminho SPEC-328 R15), mas a UI **não** mostra a fila resultante antes de enviar (precisa de endpoint de parse) — follow-up.
 - Testes web: `node --test` (lógica pura + marcação SSR). Snapshot 390/1440 e jornadas = Playwright (EVAL_AUTHORING_REQUIRED).
 - Revisão Sol (CHANGES_REQUIRED) corrigida: classe de limite `preview` (120/IP, 60/owner); enumeração sempre com 3 dados; `ferimento_provavel` omitido sem `corpo` público; `last_mech_log` só com deck `on`; atalhos ignoram `defaultPrevented`/modal/busy; prévia valida mão e `ativa`, reusa `_damage_from`, inclui Torpor/Rachadura/Marca/tático e marca `aproximado` (passiva de gatilho, fórmula rolada); `alvo: aliado`; aviso do Pacto fora do `role=img`.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-334-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). §5 "Conferido em 390/1440": prints em `docs/spec342/` e smoke 3 (staging a 390). R9 (fila do texto livre) superado pela 346 D-dono-3.

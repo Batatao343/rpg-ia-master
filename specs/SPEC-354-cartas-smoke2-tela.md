@@ -1,6 +1,6 @@
 # SPEC-354 — Cartas: a tela do combate depois do 2º smoke real (Livro reaberto, barra fixa, dobra, registro, retrato, toasts e nomes)
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke real §6 pelo coordenador)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-347 (`in-progress`, código na `main`: `RoundBoard`/`round_board`, retrato, `resetBookScroll`, regra de medição) · SPEC-342 (linha de base `off` win32) · SPEC-322 (tokens) · SPEC-346 (`round_board` com DoT e curas, já na `main`).
@@ -271,7 +271,7 @@ Web: `cd web && npm test` (`node --test`) e `npm run test:e2e -- <spec> --worker
 - [x] `npm run build` e `npm test` verdes. ``uv run pytest` do escopo verde (suíte completa: coordenador, no pouso).
 - [x] Saves antigos carregam: `registro_rodada` sem `tipo` renderiza; view sem `retrato`/`registro_rodada` não quebra.
 - [x] Prints "depois" em `docs/spec354/depois/` (Etapa 7).
-- [ ] Smoke real (§6) executado e registrado.
+- [x] Smoke real (§6) executado e registrado.
 
 ## 6. Smoke test com LLM real
 
@@ -331,3 +331,5 @@ O mesmo roteiro do 2º smoke: API local legacy, DeepSeek, preset com `RPG_CARD_D
 - **R6:** `_enemy_portrait` sem o portão da flag (rebase com a 352: não houve conflito, 352 não pousou até aqui). `test_spec347_creature_art.py` atualizado (antes afirmava "sem chave `retrato`"). O e2e `retrato_marcador_sem_flag` não foi escrito: o `TargetChip` não mudou (a 347 já cobre marcador/imagem no front) e a mudança é só de view (pytest).
 - **R7:** `OutcomeToast` agora no fluxo (desktop), entre o Livro e o composer; `suppress` com `combat_result` e Combate à vista. **R8:** já passava (`cabecalho_44_coarse_1440` é regressão; sem mudança de CSS). **R9:** `displayName` (+ aplicado em Arena, RoundBoard, `nameOf`); tipos de `PartyMember`/`NpcView` não têm id, então o casamento é por nome humanizado.
 - **Não feito:** R1.2 (sem reprodução), `subir_e_receber_narracao_nao_puxa` é fraco (injeta DOM, não passa pelo React); `spec354-prints` e o smoke real (§6); R1.3 de verdade. Baseline 342: verde, sem regeração.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-354-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). §6 itens 1–5 no smoke 3. Não verificado ao vivo: toast a 1440 no instante da vitória. A linha "Não feito: R1.2 … smoke real" do §9 ficou defasada (F-1 da revisão).

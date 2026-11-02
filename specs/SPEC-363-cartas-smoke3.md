@@ -1,6 +1,6 @@
 # SPEC-363 — Cartas: correções do 3º smoke real (retrato pago coerente, texto de morte, autoria do resumo, mira, fuga, ids e cenários raros)
 
-> **Status:** `in-progress` (coordenador, autorização do dono 02/11 "manda bala"; D-363-3..6 aceitas; D-363-1 com o dono; D-363-2: coordenador religa o switch para o smoke)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Épico:** SPEC-327
 > **Origem:** smoke 3 real de 02/11 (`main` = staging `b4f35507`, DeepSeek `deepseek-v4-flash`, 29 turnos + 3 criações, local e staging) — [docs/spec363/achados-smoke3.md](../docs/spec363/achados-smoke3.md). Evidência bruta no scratchpad do coordenador (`scratchpad/smoke3/`: `server.log`, `out/state-*.json`, `out/hist-*.json`, `out/*.png`, `stg1/`, `stg2/`).
@@ -471,26 +471,26 @@ coordenador. Toda etapa que toca `round_log`/orquestrador roda também `tests/te
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada em §9 (causa do switch, perna do herói, nome genérico, emissor das condições, Baralho inicial,
+- [x] Etapa 0 anotada em §9 (causa do switch, perna do herói, nome genérico, emissor das condições, Baralho inicial,
       p99 CLASSIFY, chamadas da abertura, dependência do replan)
-- [ ] Retrato: R2 por propriedade (16 estados); oferta com e sem mira (R3); 503 apaga a oferta (R4); preflight
+- [x] Retrato: R2 por propriedade (16 estados); oferta com e sem mira (R3); 503 apaga a oferta (R4); preflight
       versionado e staging corrigido (R5)
-- [ ] Morte e resumo: os 3 textos reais de `spec363_smoke.py` rejeitados/corrigidos e os 3 corretos aceitos (R17);
+- [x] Morte e resumo: os 3 textos reais de `spec363_smoke.py` rejeitados/corrigidos e os 3 corretos aceitos (R17);
       nomes com dígito intactos (R6); matador = golpe final (R14); queda após a causa (R15); tabuleiro fecha junto (R16)
-- [ ] Mira: toda Carta da mão com `valid_targets` e contrato view ⇒ motor (R19); 409 tira só a jogada (R21)
-- [ ] Fuga: veredito igual em tela, `mech_log`, registro e Livro (R22)
-- [ ] Nenhum id em Livro, registro, `mech_log`, `round_board`, mercado e `/game/history` (R27, R46)
-- [ ] Compra com complemento do mercador; negativos sem débito (R28)
-- [ ] Goblin com família `bruto`; nenhum nome de cabeça genérica (R29, R30)
-- [ ] Espólio sem utilitária; destino da loja com motivo; Acervo "Baralho N/M" (R31–R33)
-- [ ] CLASSIFY DeepSeek com timeout próprio; enrich paralelo ou justificativa em §9 (R34, R35)
-- [ ] R38 (a–m) e R39 (a–e) verdes, cada um com seed/fixture explícita
-- [ ] 0 LLM por rodada (R37); golden da 330 sem diff (R47); arena dentro de ±2 pp
-- [ ] Nenhuma flag nova; evento registrado; saves antigos carregam (R40–R42)
-- [ ] Guard de FallbackLLM no resumo (sem `with_structured_output` novo) (R43)
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec363/smoke-final.md`
+- [x] Mira: toda Carta da mão com `valid_targets` e contrato view ⇒ motor (R19); 409 tira só a jogada (R21)
+- [x] Fuga: veredito igual em tela, `mech_log`, registro e Livro (R22)
+- [x] Nenhum id em Livro, registro, `mech_log`, `round_board`, mercado e `/game/history` (R27, R46)
+- [x] Compra com complemento do mercador; negativos sem débito (R28)
+- [x] Goblin com família `bruto`; nenhum nome de cabeça genérica (R29, R30)
+- [x] Espólio sem utilitária; destino da loja com motivo; Acervo "Baralho N/M" (R31–R33)
+- [x] CLASSIFY DeepSeek com timeout próprio; enrich paralelo ou justificativa em §9 (R34, R35)
+- [x] R38 (a–m) e R39 (a–e) verdes, cada um com seed/fixture explícita
+- [x] 0 LLM por rodada (R37); golden da 330 sem diff (R47); arena dentro de ±2 pp
+- [x] Nenhuma flag nova; evento registrado; saves antigos carregam (R40–R42)
+- [x] Guard de FallbackLLM no resumo (sem `with_structured_output` novo) (R43)
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec363/smoke-final.md`
 
 ## 6. Smoke test com LLM real (≤ 15 turnos; só os achados)
 
@@ -499,7 +499,7 @@ staging (`hosted-supabase`, contas sintéticas pelo caminho de `two_user_smoke`,
 Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider/modelo e custo.
 
 1. **Staging, retrato pago:** `scripts/staging/art_preflight.py` → `ok: true`. Conta nova, combate → chip com "Gerar
-   retrato" a 390 com e sem Carta armada; cotar → confirmar → geração → débito igual à cotação → retrato no chip
+   retrato" a 390 com e sem Carta armada; cotar → confirmar → geração → débito = custo liquidado ≤ cotação, reserva 0 (D-364-1) → retrato no chip
    (fecha o §6 da SPEC-352). Se o preflight der `ok: false`, conferir que **nenhum** inimigo tem `gerar` (R2) e
    anotar.
 2. **Staging, morte:** jogar até a queda → texto do Livro sem nome mutilado, herói uma vez, quedas antigas no passado,
@@ -642,3 +642,5 @@ Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider
   **P3-2:** R37 com Carta de cena, Reação declarada, fuga e passes (≥ 4 rodadas ativas) + teste da Última Ação, 0 LLM.
   **P3-3:** o evento grava códigos (`dead_alive`, `captured_free`). **P3-4:** `announceRef` no assinante do 409.
   **P3-5:** preflight lê só o `--env-file` para as flags e fecha o pool. **P3-6:** §3.3 ajustada para "diante de Minotauro Esqueleto".
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-363-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). Smoke em `docs/spec364/achados-smoke4.md` (não em `docs/spec363/smoke-final.md`). §6.1 corrigido por D-364-1 (débito = custo liquidado ≤ cotação; provado no smoke final: 8 ≤ 15 milli, reserva 0). §6.2 (morte) coberto pelo R21 da 364 por teste; §6.6 R35 (latência de viagem) não verificado ao vivo. D-363-1 (crítico em dupla abaixo da defesa) segue como decisão pendente do dono, fora do fechamento.

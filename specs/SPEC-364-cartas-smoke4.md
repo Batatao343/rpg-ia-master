@@ -1,6 +1,6 @@
 # SPEC-364 — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
 
-> **Status:** `in-progress` (implementada nas Etapas 0-6; faltam revisão `Sol` e smoke §6; era `approved`, coordenador, autorização do dono 02/11 "manda bala"; D-364-1..5 aceitas)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Épico:** SPEC-327
 > **Origem:** smoke 4 real de 02/11 (`main` `cc31a6c1`, staging `hosted-supabase` + local `legacy`, DeepSeek `deepseek-v4-flash`, 15 turnos + 2 gerações de retrato) — [docs/spec364/achados-smoke4.md](../docs/spec364/achados-smoke4.md). Evidência bruta no scratchpad do coordenador (`scratchpad/smoke4/`: `stg/stg_log.jsonl`, `stg/stg_hist_A.json`, `out/state-*.json`, `out/hist-*.json`, `out/*.png`, `server.log`, `turns.cjs`).
@@ -357,20 +357,20 @@ pelo coordenador. Toda etapa que toca `round_log`/`agents/combat.py` roda també
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada em §9
-- [ ] Fuga: mesma trilha `de → para` nas 5 superfícies nos 5 casos de R2; nenhum id da trilha (R1–R3)
-- [ ] Mercado: perguntas de catálogo viram consulta sem LLM e sem transação; venda explícita intacta; pergunta
+- [x] Etapa 0 anotada em §9
+- [x] Fuga: mesma trilha `de → para` nas 5 superfícies nos 5 casos de R2; nenhum id da trilha (R1–R3)
+- [x] Mercado: perguntas de catálogo viram consulta sem LLM e sem transação; venda explícita intacta; pergunta
       nunca transaciona item; consulta em duas seções com nome curto; narração com o nome do mercador (R4–R9)
-- [ ] Resumo: fatos com tempo; V6 rejeita o texto real e aceita o correto; corpus benigno sem disparo (R10–R13)
-- [ ] Registro: Cartas de Cena na voz do jogador; uma linha por condição; invariante de voz verde (R14–R16)
-- [ ] Retrato: débito = liquidado ≤ teto com reserva liberada; chip "até X" com plural certo; atalho em milli
+- [x] Resumo: fatos com tempo; V6 rejeita o texto real e aceita o correto; corpus benigno sem disparo (R10–R13)
+- [x] Registro: Cartas de Cena na voz do jogador; uma linha por condição; invariante de voz verde (R14–R16)
+- [x] Retrato: débito = liquidado ≤ teto com reserva liberada; chip "até X" com plural certo; atalho em milli
       (R17–R20)
-- [ ] R21, R22 (1440 e 390) e R23 (JSON, SSE e e2e com `play_index: 1`) verdes
-- [ ] 0 LLM por rodada (R24); golden da 330 sem diff (R27); sem flag nova (R26); contrato aditivo e saves (R28)
-- [ ] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo (R25)
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec364/smoke-final.md`
+- [x] R21, R22 (1440 e 390) e R23 (JSON, SSE e e2e com `play_index: 1`) verdes
+- [x] 0 LLM por rodada (R24); golden da 330 sem diff (R27); sem flag nova (R26); contrato aditivo e saves (R28)
+- [x] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo (R25)
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `lint`, `test` verdes
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec364/smoke-final.md`
 
 ## 6. Smoke test com LLM real (≤ 10 turnos; só os achados)
 
@@ -506,3 +506,5 @@ testes `image_case` seguem pulados; o revisor (ou o coordenador com Supabase de 
   no veredito `escapou`). P3-10: o R29 afirma que a consulta do mercado aconteceu (local com mercador, item longo em nome curto).
   P3-11: V6 aceita o sujeito depois do verbo e o nome só como lugar ("Ao lado do Goblin, tomba o Minotauro"), testado nos
   dois lados.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-364-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). Smoke final cobre R1–R20, R24, R29; R17 provado (8 ≤ 15 milli, reserva 0). R21–R23 por teste (decisão do §6). R10–R12 não ocorreram ao vivo (luta terminou em fuga): provados por teste. Achados A1–A7 do smoke → SPEC-367.

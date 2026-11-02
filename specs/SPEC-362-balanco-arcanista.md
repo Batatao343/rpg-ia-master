@@ -1,6 +1,6 @@
 # SPEC-362 — Balanço do Arcanista Cinzento pós-SPEC-355 (piso de 45 % com folga; exceções do Sangromante definitivas)
 
-> **Status:** `in-progress`
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-11-01 · **Atualizada:** 2026-11-01
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-341 (`done`: protocolo de balanço, `arena_spec341.py` congelado, inventário de controle), SPEC-355 (código na `main`: R11 utilitárias fora da compra, R12 Cartas 2d6 fora do pool, R17 contrapartida de emboscada; `EXCECOES_PISO`/`EXCECOES_TETO` em `tests/test_spec355_arena.py`).
@@ -276,19 +276,19 @@ Custo de máquina: a arena do Arcanista nas 0–19 são 4 braços × 6 células 
 
 ## 5. Critérios de aceite
 
-- [ ] R1/R2: diff vazio no avaliador, no orçamento, no golden, no snapshot, em `test_card_sim.py`, em `test_spec341_balanco.py` e nas legadas; `test_card_effects_grammar` verde.
-- [ ] R5: base nova 0–19 gravada e diff contra a 355 registrado.
-- [ ] R6/R7: decomposição R11 × R12 × utilitárias e atribuição na leitura total gravadas.
-- [ ] R8–R10: ≤ 3 Cartas de onda do Arcanista, ≤ 2 passos cada, só alavancas do R8, `versao` + 1, lint e orçamento limpos.
-- [ ] R11: Arcanista `todas` ≥ 46,5 % nas 0–19 (ou o caso (a) registrado); subclasses ≤ 75 % na padrão; outras Posturas idênticas à base.
+- [x] R1/R2: diff vazio no avaliador, no orçamento, no golden, no snapshot, em `test_card_sim.py`, em `test_spec341_balanco.py` e nas legadas; `test_card_effects_grammar` verde.
+- [x] R5: base nova 0–19 gravada e diff contra a 355 registrado.
+- [x] R6/R7: decomposição R11 × R12 × utilitárias e atribuição na leitura total gravadas.
+- [x] R8–R10: ≤ 3 Cartas de onda do Arcanista, ≤ 2 passos cada, só alavancas do R8, `versao` + 1, lint e orçamento limpos.
+- [x] R11: Arcanista `todas` ≥ 46,5 % nas 0–19 (ou o caso (a) registrado); subclasses ≤ 75 % na padrão; outras Posturas idênticas à base.
 - [x] R12 (regra do dono, 02/11): confirmação 180–259 `todas` 51,4 %; bandeira `dominante` em `bomba_estopim` v2 (revertida a v1, ressalva em §8).
 - [x] R13: `EXCECOES_PISO` removido em commit separado.
-- [ ] R14: nenhuma Carta do Sangromante alterada; `EXCECOES_TETO` com os mesmos valores e o comentário de aceite definitivo.
-- [ ] R15: `tests/test_spec362_arcanista.py` verde.
-- [ ] Revisão Sol sem P0/P1 aberto (`handoffs/SPEC-362-sol-review.md`).
-- [ ] `uv run pytest` verde (suíte completa, 1× no pouso, pelo coordenador).
-- [ ] Saves antigos carregam: saves guardam só ids, e o motor lê a `versao` do catálogo.
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
+- [x] R14: nenhuma Carta do Sangromante alterada; `EXCECOES_TETO` com os mesmos valores e o comentário de aceite definitivo.
+- [x] R15: `tests/test_spec362_arcanista.py` verde.
+- [x] Revisão Sol sem P0/P1 aberto (`handoffs/SPEC-362-sol-review.md`).
+- [x] `uv run pytest` verde (suíte completa, 1× no pouso, pelo coordenador).
+- [x] Saves antigos carregam: saves guardam só ids, e o motor lê a `versao` do catálogo.
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
 
 ## 6. Smoke test real
 
@@ -350,3 +350,5 @@ Ver §8 (rodada 3) e `docs/spec362/RELATORIO.md`. Desvios: atribuição só com 
 - P3-3 (decisão do coordenador): saves antigos mantêm a vitalidade gravada; nenhuma migração, o personagem não muda no meio da campanha. Só personagens novos nascem com bônus 8.
 - P3-4 (follow-up): `arc1_imp_bomba_estopim` é `dominante` mesmo na v1 (+9,4 pp, uso 55 %); balanço em spec própria.
 - Smoke §6: item 3 coberto por `tests/test_spec362_run_round.py` (run_round real + texto da Carta); item 4 (tela com flags `on`) fica para o smoke final do coordenador. A suíte completa também é do coordenador, por isso o status segue `in-progress`.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-362-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). §6 itens 1–3 por `docs/spec362/arena-confirmacao.json` e `test_spec362_run_round`; §6.4 (Carta alterada vista na tela) não verificado ao vivo. Follow-up: `bomba_estopim` dominante.

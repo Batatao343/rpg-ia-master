@@ -1,6 +1,6 @@
 # SPEC-353 — Cartas: correções de motor/backend do 2º smoke real do combate por cartas
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS, P3-6/P3-7 fechados; falta o smoke real §6 pelo coordenador)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Origem:** smoke real de 28/10 na `main` `7c084cfc` (DeepSeek v4-flash, 26 turnos) — `docs/spec353/achados-smoke2.md`, estados `docs/spec353/smoke/state-*.json`, prints em `docs/spec353/smoke/`; log do servidor e `events.jsonl` no scratchpad do coordenador (`smoke2/server.log`, `smoke2/out/events.jsonl`)
 > **Depende de:** SPEC-346 (rodada sem LLM, resumo final, `mech_log`) e SPEC-347 (`round_board`/`registro_rodada`) já na `main`; código das SPEC-328–334 na `main` (flags `off` no staging)
@@ -470,25 +470,25 @@ pelo coordenador. Toda etapa roda também `tests/test_card_effects_grammar.py` (
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada em §9 (dica/scanner, origem da Descarga Arcana, golpe de 6)
-- [ ] Item 1: testes da Etapa 1 verdes; invariante R4
-- [ ] Item 2: testes da Etapa 3 verdes; os 3 textos reais rejeitados, os 3 corretos aceitos
-- [ ] Item 3: linha de custo nas três superfícies; oráculo R10 com auto-dano em 20 seeds
-- [ ] Item 4: mesma ordem nas três superfícies (emboscada e iniciativa do herói)
-- [ ] Item 5: testes da Etapa 4 verdes
-- [ ] Item 6: oráculo R21 nas 5 Posturas; texto da mão = dano efetivo
-- [ ] Item 7: nenhum id cru na view da rodada 0
-- [ ] Item 8: oráculo R30 (sequência e frequências 10 % / 14,5 %); linha "sem Vitalidade"
-- [ ] Item 9: invariante R32 em `on` e `off`
-- [ ] Itens 10–12: testes da Etapa 5/6/7 verdes
-- [ ] Contrato 354 (R50–R55) com teste por campo
-- [ ] Golden da 330 sem diff (R40); exclusão de `tests/spec330_equivalence.py` não ampliada
+- [x] Etapa 0 anotada em §9 (dica/scanner, origem da Descarga Arcana, golpe de 6)
+- [x] Item 1: testes da Etapa 1 verdes; invariante R4
+- [x] Item 2: testes da Etapa 3 verdes; os 3 textos reais rejeitados, os 3 corretos aceitos
+- [x] Item 3: linha de custo nas três superfícies; oráculo R10 com auto-dano em 20 seeds
+- [x] Item 4: mesma ordem nas três superfícies (emboscada e iniciativa do herói)
+- [x] Item 5: testes da Etapa 4 verdes
+- [x] Item 6: oráculo R21 nas 5 Posturas; texto da mão = dano efetivo
+- [x] Item 7: nenhum id cru na view da rodada 0
+- [x] Item 8: oráculo R30 (sequência e frequências 10 % / 14,5 %); linha "sem Vitalidade"
+- [x] Item 9: invariante R32 em `on` e `off`
+- [x] Itens 10–12: testes da Etapa 5/6/7 verdes
+- [x] Contrato 354 (R50–R55) com teste por campo
+- [x] Golden da 330 sem diff (R40); exclusão de `tests/spec330_equivalence.py` não ampliada
 - [x] Arena dentro de ±2 pp por Postura (`docs/spec353/arena.md`; D6 revertido)
-- [ ] Nenhuma flag nova; eventos registrados; saves antigos carregam
-- [ ] Guard de FallbackLLM no resumo (sem `with_structured_output` novo)
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso)
-- [ ] Revisão independente `Sol` sem P0/P1 aberto
-- [ ] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec353/smoke-final.md`
+- [x] Nenhuma flag nova; eventos registrados; saves antigos carregam
+- [x] Guard de FallbackLLM no resumo (sem `with_structured_output` novo)
+- [x] `uv run pytest` verde (suíte completa, coordenador, no pouso)
+- [x] Revisão independente `Sol` sem P0/P1 aberto
+- [x] **Smoke real §6 (coordenador)** executado e registrado em `docs/spec353/smoke-final.md`
 
 ## 6. Smoke test com LLM real (≤ 20 turnos; critério do coordenador)
 
@@ -595,3 +595,5 @@ turnos no total. Registrar em `docs/spec353/smoke-final.md` (trechos, sem segred
 - P3-3: **R28 fica só com a frase base.** Nenhum campo público revela o Corpo do inimigo (`public_panel` não tem `virtudes` e o conhecimento revelado só guarda Cartas e resistências), então "faltam N Ferimentos Críticos" não pode aparecer sem vazar ficha. O gate no código permanece para quando existir revelação de Corpo.
 - P3-4: `_sem_vit_avisado`/`_taunt_resisted` saíram do ator. "Sem Vitalidade" é filtrado no agente por `combat_meta["sem_vitalidade_avisados"]`; a resistência à Provocação usa lista efêmera por contexto no orquestrador.
 - P3-1/2/5: ferimento em pt-BR na entrada `custo`; frase de reconciliação sem flexionar a espécie ("Só dois do bando avançam…"); teste de agente com dica genérica + scanner + frase.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-353-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). §6 entre os smokes 3 e 4 (objeto de cena provado no smoke 4); não há `docs/spec353/smoke-final.md`: a evidência são os dois docs de smoke acima. Nome genérico "Criatura hostil" do fallback vai para a SPEC-367 (A4).

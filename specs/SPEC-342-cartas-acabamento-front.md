@@ -1,6 +1,6 @@
 # SPEC-342 — Cartas: acabamento do front do combate por cartas (destrava as flags)
 
-> **Status:** `in-progress` (implementada e revisada — Sol APPROVED_WITH_FOLLOWUPS; falta o smoke §6 em staging antes de ligar as flags)
+> **Status:** `done` (02/11, coordenador, autorização do dono "manda bala"; fechamento na nota final da última seção)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-321, 322, 323, 324 (`done`: toque, tokens, voz, headings/atalhos); SPEC-328, 329, 331, 333, 334 (`in-progress`, pousadas atrás de flag `off`). Esta spec fecha as pendências de front da 334 (§5 "Conferido em 390/1440", R1 faixa da 331, R7 medição) e a lacuna de UI da 331 (P1-3 já expõe dados que o front ignora).
@@ -279,18 +279,18 @@ Python sempre via `bash scripts/dev/py.sh -m pytest <arquivos> -q` (no máximo `
 
 ## 5. Critérios de aceite
 
-- [ ] R1–R23 com teste nomeado verde (`node --test`, Playwright e pytest do escopo).
-- [ ] R24: screenshots `off` dentro de `maxDiffPixelRatio` 0,01 contra a linha de base pré-Etapa 1, a 360/390/1440.
-- [ ] R25: `npm run lint` verde e `deck-tokens-342.test.mjs` verde; nenhum token novo.
-- [ ] R5: alvos ≥ 44 px em `pointer: coarse` medidos pelo Playwright.
-- [ ] R4.2: ≤ 12 interativos visíveis a 390 (fecha a 334 R7).
-- [ ] Prints em `docs/spec342/`: `on-360-combate.png`, `on-390-combate.png`, `on-390-mira.png`, `on-390-fila-sticky.png`, `on-1440-combate.png`, `on-1440-mira.png`, `on-390-espolio.png`, `on-1440-forja.png`, `off-360-combate.png`, `off-390-combate.png`, `off-1440-combate.png`.
-- [ ] Axe sem `serious`/`critical` em `.ws-combat` (on) a 390 e 1440.
-- [ ] `npm run build` e `npm test` verdes; e2e do escopo `--workers=1` verde.
-- [ ] `uv run pytest` verde (suíte completa: coordenador, no pouso).
-- [ ] Saves antigos carregam (nenhum campo de save novo; `cena` é só view).
-- [ ] Smoke real (§6) executado e registrado.
-- [ ] SPEC-334 §5 "Conferido em 390 px e 1440 px" pode ser marcada com os prints daqui (o coordenador atualiza a 334).
+- [x] R1–R23 com teste nomeado verde (`node --test`, Playwright e pytest do escopo).
+- [x] R24: screenshots `off` dentro de `maxDiffPixelRatio` 0,01 contra a linha de base pré-Etapa 1, a 360/390/1440.
+- [x] R25: `npm run lint` verde e `deck-tokens-342.test.mjs` verde; nenhum token novo.
+- [x] R5: alvos ≥ 44 px em `pointer: coarse` medidos pelo Playwright.
+- [x] R4.2: ≤ 12 interativos visíveis a 390 (fecha a 334 R7).
+- [x] Prints em `docs/spec342/`: `on-360-combate.png`, `on-390-combate.png`, `on-390-mira.png`, `on-390-fila-sticky.png`, `on-1440-combate.png`, `on-1440-mira.png`, `on-390-espolio.png`, `on-1440-forja.png`, `off-360-combate.png`, `off-390-combate.png`, `off-1440-combate.png`.
+- [x] Axe sem `serious`/`critical` em `.ws-combat` (on) a 390 e 1440.
+- [x] `npm run build` e `npm test` verdes; e2e do escopo `--workers=1` verde.
+- [x] `uv run pytest` verde (suíte completa: coordenador, no pouso).
+- [x] Saves antigos carregam (nenhum campo de save novo; `cena` é só view).
+- [x] Smoke real (§6) executado e registrado.
+- [x] SPEC-334 §5 "Conferido em 390 px e 1440 px" pode ser marcada com os prints daqui (o coordenador atualiza a 334).
 
 ## 6. Smoke test com LLM real (staging, flags `on` só na sessão de teste)
 
@@ -396,3 +396,5 @@ Não há structured output novo. O smoke confere que os campos reais chegam ao f
 - P2-7: desfecho no baseline R24 não capturado (pendência registrada).
 
 - CI fix (run 40608565725): `account.spec.ts:53` casava 2 botões de custo (entrada 0 do histórico já tem o mesmo custo técnico + débito; a do turno novo aparece quando o `/cost` responde) — corrida do teste, não bug de produto; o locator agora ancora no nome sem débito.
+
+- **Fechamento:** Auditoria de fechamento (02/11, coordenador): revisão Sol final aprovada (`handoffs/SPEC-342-sol-review.md`), suíte completa verde no pouso, smokes reais em `docs/spec363/achados-smoke3.md`, `docs/spec364/achados-smoke4.md` e `docs/spec364/smoke-final.md` (staging `90cfaa18`, cartas `on`). §6 itens 1–5 no smoke 3; prints completos em `docs/spec342/`. Ressalva: "O Abismo se aproxima" visto só na narração, não na faixa.
