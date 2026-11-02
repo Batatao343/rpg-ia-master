@@ -9,12 +9,13 @@ import tseslint from "typescript-eslint";
 // eslint-plugin-jsx-a11y@6 ainda chama `require("minimatch")(nome, padrao)` (API do v3).
 // Torna o export callable ANTES de carregar o plugin (import dinamico abaixo).
 const require = createRequire(import.meta.url);
-const mm = require("minimatch");
-if (typeof mm !== "function") {
-  require.cache[require.resolve("minimatch")].exports = Object.assign(
-    (p, pattern, options) => mm.minimatch(p, pattern, options),
-    mm,
-  );
+const callable = (mm) =>
+  Object.assign((p, pattern, options) => mm.minimatch(p, pattern, options), mm);
+// Resolve a partir do caminho do proprio plugin (cobre copia aninhada) e do topo.
+const fromPlugin = createRequire(require.resolve("eslint-plugin-jsx-a11y"));
+for (const r of [fromPlugin, require]) {
+  const mm = r("minimatch");
+  if (typeof mm !== "function") r.cache[r.resolve("minimatch")].exports = callable(mm);
 }
 const { default: jsxA11y } = await import("eslint-plugin-jsx-a11y");
 

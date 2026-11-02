@@ -1,6 +1,6 @@
 # SPEC-365 — deps-eslint-minimatch
 
-> **Status:** `done` (aprovada pelo dono em bloco, "manda bala", 2026-11-02; revisão independente pendente)
+> **Status:** `done` (aprovada pelo dono em bloco, "manda bala", 2026-11-02; revisão Sol APPROVED_WITH_FOLLOWUPS, `handoffs/`, commit da326357; follow-ups P2-1/P3-1..3 fechados)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-225, SPEC-276 (job `npm-audit-full`)
 > **Desbloqueia:** CI `npm-audit-full` verde
@@ -43,5 +43,7 @@ Migrar para eslint 10 (usa minimatch ^10.2.6, ainda vulnerável) ou TypeScript 7
 N/A (somente tooling de front).
 
 ## 7. Riscos & compatibilidade
-- Shim depende de `jsx-a11y` resolver o mesmo `minimatch` hoistado em `web/node_modules`; remover quando jsx-a11y suportar minimatch ≥ 11.
+- Shim depende de `jsx-a11y` resolver o mesmo `minimatch` hoistado em `web/node_modules`; remover quando jsx-a11y suportar minimatch ≥ 11. O shim resolve o minimatch a partir do caminho do plugin e do topo (cobre cópia aninhada).
+- Prova: `web/tests/eslintJsxA11yMinimatch.test.mjs` (ESLint programático; `label-has-associated-control` e `control-has-associated-label` com `controlComponents: ["Custom*"]`).
+- O ESM do minimatch 11 não tem export default, e hoje o eslint 9 carrega `@eslint/*` como CJS (`require`, usando só `.Minimatch`). Reavaliar ao subir eslint (10+), `@eslint/config-array`/`eslintrc` ou jsx-a11y, ou se algum consumidor passar a `import minimatch from "minimatch"` (o teste e o audit pegam).
 - Override de `glob ^14` em rimraf@6 (só `npx cap`/CLI), verificado com `cap --version`.
