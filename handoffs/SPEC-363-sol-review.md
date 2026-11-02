@@ -1,7 +1,7 @@
 # SPEC-363 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus / Sol · **Data:** 2026-11-02 · **Commit revisado:** `ca9e8e14` (base `ab6ae398`)
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` — re-revisão de `20053563`, sem P0/P1 aberto (1ª rodada em `ca9e8e14`: `CHANGES_REQUIRED`)
+> **Revisor:** Opus / Sol · **Data:** 2026-11-02 · **Commits revisados:** `ca9e8e14` (base `ab6ae398`) e `8a9f8bf8..20053563`
 
 ## Escopo
 
@@ -67,13 +67,31 @@ Pontos do foco do coordenador:
 
 ## Correções aplicadas
 
-Nenhuma (revisor não edita código).
+Commit `20053563` (executor), re-revisado no diff `8a9f8bf8..20053563`:
+
+| Achado | Status | Conferência |
+|---|---|---|
+| P1-1 | **fechado** (resíduo vira P2-3) | `_v4` agora exige, na mesma oração (entre vírgulas), parte do corpo do herói **e** marca de dano (`_DAMAGE_MARK_RE`, `services/conflict_summary.py:463-480`). As 4 frases da 1ª rodada passam; escrevi mais 8 frases benignas novas: 5 passam ("…seu golpe atinge o Lobo…; seu ombro mal sente o peso", "Sua perna avança, firme, e a lâmina fere o Mímico", "…o peito arfando…", "Você ergue seu braço… recua ferido", "…crava a espada no torso do Orc, que sangra e cai"). Rejeitados de forma correta: `MIMIC_BAD`, "A garra do Lobo rasga seu braço…", "Seu ombro sangra…", "O Orc te atinge na perna… sua perna latejando". O falso positivo deixou de ser em massa; sobram 3 casos de borda (P2-3). |
+| P2-1 | **fechado** | `_cond_name` → `condition_label` em `authorship`, `final_blow_sentence`, `deterministic_outcome_text` e `_killer_identity`. Testado com `veneno_fraco`/`sangramento_profundo`: "Você tomba, consumido por Veneno fraco.", "Sangramento profundo termina o serviço…", killer `('Veneno fraco', '')`. Nenhum id sobra. A mudança em `test_spec353_registry.py` (sem "O ") é coerente com a correção. |
+| P2-2 | **fechado** | A propriedade agora varia `live × db × env × switch × fresh × preço` (64 casos) e afirma sobre `api._enemy_portrait(...)["gerar"]`: `gerar` ⇒ `_guard_image_effect()` não levanta e todas as condições estão abertas; há também o controle positivo `test_offer_present_when_everything_open`, então a propriedade não passa por vacuidade. |
+| P3-1 | fechado | `pop` no início; `fallback_narrative` quando o filtro esvazia o texto. |
+| P3-2 | fechado | O R37 foi reforçado (Carta de cena, Reação, fuga, ≥ 4 rodadas, Última Ação) e está verde. |
+| P3-3 | fechado | `validate_narrative_text` devolve `codes` (`dead_alive`, `captured_free`); o evento grava só códigos. |
+| P3-4 | fechado | `announceRef`; `eslint` do arquivo limpo. |
+| P3-5 | fechado | As flags vêm só do `--env-file`; `os.environ` só entra para o DSN; o pool é fechado. |
+| P3-6 | fechado | A §3.3 foi alinhada ao texto produzido. |
+
+## Achados da re-revisão
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-3 | P2 | `services/conflict_summary.py:463-466` | Ainda há falso positivo de V4 em 3 de 8 frases benignas que escrevi: "Seu braço acerta o Goblin em cheio e ele tomba." (`acerta`/`atinge`/`fere` com o corpo do herói como **sujeito**), "O sangue do Goblin respinga no seu braço quando ele cai." e "O Lobo rasga o ar onde estava sua cabeça…, e erra.". O custo é só prosa (o fallback é correto) e o caso não é mais em massa, por isso não bloqueia. | Contar `acerta/atinge/fere/rasga` só quando o corpo do herói é **objeto** (`<verbo> (?:o |a )?(?:seu|sua) <região>` ou `te <verbo>`) e ignorar "sangue d[oa] <outro>". Somar as 3 frases ao corpus `test_v4_never_fires_on_benign_prose`. Medir a taxa de `fallback_attribution` no §6. |
+| P3-7 | P3 | `services/round_log.py:687-688` | Sem `condition`, `final_blow_sentence` começa a frase em minúscula: "dano contínuo termina o serviço: Goblin tomba." | `cond[:1].upper() + cond[1:]` ao abrir a frase. |
 
 ## Pendências
 
-- P1-1 bloqueia o critério "Revisão independente Sol sem P0/P1 aberto"; P2-1/P2-2 corrigir nesta spec.
-- P3-1..P3-6: podem virar follow-up (coordenador decide); P3-1 e P3-3 afetam a leitura do §6 (taxa de fallback), então vale corrigir antes do smoke.
-- §9 já registra como abertos: Playwright R39(a)+(b) só por specs 354 equivalentes; 2d da perna do herói não verificável.
+- P2-3 e P3-7 ficam como follow-up desta spec ou da próxima de cartas (o coordenador decide); nenhum P0/P1 aberto.
+- Continuam fora desta revisão: Playwright `spec363-board` e a suíte completa (coordenador, no pouso), e o smoke §6.
 
 ## Comandos rodados
 
@@ -83,4 +101,13 @@ git diff ab6ae398...HEAD -- evals/ tests/spec330_equivalence.py tests/fixtures/s
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec363_{portrait_offer,outcome_text,hand_targets,flee_verdict,ids,shop_grammar,enemy_name,rewards_shop,latency,golden_guard}.py tests/test_spec346_outcome.py tests/test_spec353_registry.py tests/test_routing.py → 260 passed, 1 skipped
 node --test tests/spec363-*.test.mjs tests/spec347-components.test.mjs (web/) → 23 pass, 0 fail
 bash scripts/dev/py.sh <scratchpad>/probe_v4.py → 4 frases benignas com "seu braço/ombro/perna/peito" ⇒ ['V4'] (P1-1); humanize_ids preserva "Smoke3A"/"Goblin 2"
+```
+
+Re-revisão (`8a9f8bf8..20053563`):
+
+```text
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec363_{portrait_offer,outcome_text,rare_scenarios,ids,golden_guard}.py tests/test_spec353_registry.py tests/test_spec346_outcome.py → 236 passed (rc 0)
+node --test tests/spec363-*.test.mjs (web/) → 10 pass, 0 fail
+npx eslint src/components/combat/DeckCombat.tsx → limpo
+bash scripts/dev/py.sh <scratchpad>/probe_v4b.py → 8 benignas novas: 5 ok, 3 V4 (P2-3); 4 ruins todas V4; condições sem id
 ```
