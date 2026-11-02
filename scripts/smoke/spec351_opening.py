@@ -199,6 +199,8 @@ def main() -> int:
                 ).ok,
                 "E4": oc.check_no_hidden_leak(texts, state=state).ok,
                 "arcs_left": (plan.get("opening_thread") or {}).get("arcs_left"),
+                # SPEC-366 R4: adesão do planejador, sem a muleta "Mantenha em vista:"
+                "planner_cited": ot.planner_cited(plan, plan.get("opening_thread") or {}),
                 "beats": [b["description"] for b in plan["beats"]],
             }
 

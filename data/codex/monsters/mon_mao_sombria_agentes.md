@@ -14,4 +14,4 @@ related_entities:
 # Mão Sombria (agentes)
 
 Tipo: Humanoide Hostil | Perigo: Alto
-A rede criminosa que opera nas sombras dos três anéis, sob a Velha Magda. Informantes, assassinos, contrabandistas, ladrões. Operam por células que não se conhecem. Convertem o ilegal em moeda e a moeda em acesso. Não matam por prazer — matam por negócio, o que os torna previsíveis e por isso mais perigosos quando você vira o negócio.
+A rede criminosa que opera nas sombras dos três anéis. Informantes, assassinos, contrabandistas, ladrões. Operam por células que não se conhecem. Convertem o ilegal em moeda e a moeda em acesso. Não matam por prazer — matam por negócio, o que os torna previsíveis e por isso mais perigosos quando você vira o negócio.

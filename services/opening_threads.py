@@ -269,7 +269,11 @@ def _doors_350(
 
 
 def _rank(items: list, text_of, backstory: str) -> list:
-    """Casa tokens da descrição (≥ 5 letras) primeiro; empate mantém a ordem de entrada."""
+    """Ordenação oficial do menu (SPEC-366 R3): raça > Postura > descrição > jogável.
+
+    `race_hit` já embute raça (2 = âncora da raça com Postura compatível; 1 = âncora da raça com
+    Postura contrária; 0 = sem afinidade), então raça vence Postura; só depois entram os tokens
+    da descrição (≥ 5 letras). Empate mantém a ordem de entrada."""
     want = _tokens(backstory)
 
     def key(item):
@@ -488,6 +492,20 @@ def planner_thread_block(state: dict) -> str:
     return "\n".join(lines)
 
 
+_GLUE_PREFIX = " Mantenha em vista: "
+
+
+def planner_cited(plan: dict, thread: dict) -> bool:
+    """SPEC-366 R4: o planejador citou o título de uma trama por conta própria (sem a muleta
+    "Mantenha em vista:" que `consume_thread` cola)? Sem chamada LLM; só texto dos beats/clímax."""
+    names = door_names(thread)
+    if not names:
+        return False
+    parts = [str(b.get("description", "")).split(_GLUE_PREFIX)[0] for b in plan.get("beats") or []]
+    text = _fold(" ".join([*parts, str(plan.get("climax", ""))]))
+    return any(_fold(n) in text for n in names)
+
+
 def consume_thread(plan: dict, state: dict) -> dict:
     """Plano novo herda o fio com `arcs_left - 1` (só se o bloco foi usado)."""
     thread = active_thread(state)
@@ -497,12 +515,11 @@ def consume_thread(plan: dict, state: dict) -> dict:
     new["arcs_left"] = max(0, int(thread.get("arcs_left", 0)) - 1)
     beats = [dict(b) for b in plan.get("beats") or []]
     names = door_names(thread)
-    text = _fold(
-        " ".join([*(b.get("description", "") for b in beats), str(plan.get("climax", ""))])
-    )
-    if names and beats and not any(_fold(n) in text for n in names):
+    cited = planner_cited(plan, thread)
+    _log_event("prologue", "thread.planner_adherence", planner_cited=cited, doors=len(names))
+    if names and beats and not cited:
         # o modelo ignorou o fio: direção ao narrador (beats não vão ao jogador) mantém a trama viva
         idx = min(1, len(beats) - 1)
-        beats[idx]["description"] = f"{beats[idx]['description']} Mantenha em vista: {names[0]}."
+        beats[idx]["description"] = f"{beats[idx]['description']}{_GLUE_PREFIX}{names[0]}."
         plan = {**plan, "beats": beats}
     return {**plan, "opening_thread": new}

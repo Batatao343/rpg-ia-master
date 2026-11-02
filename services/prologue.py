@@ -267,6 +267,16 @@ def _normalize(
 
         data["beats"] = [sanitize_beat(b, {}) for b in data["beats"]]
         data["climax"] = sanitize_beat(data["climax"], {})
+        # SPEC-366 R2: prólogo (o jogador lê) e brief (vira a 1ª narração) — com acerto, o texto
+        # inteiro cai no template (não se reescreve prosa livre).
+        base = fallback_scenario(char_input, menu)
+        for key, safe in (
+            ("prologue", base.prologue),
+            ("opening_scene_brief", base.opening_scene_brief),
+        ):
+            if sanitize_beat(data[key], {}) != data[key]:
+                data[key] = safe
+                _log_event("prologue", "thread.downgraded", reason=f"{key}_leak")
     npcs = []
     for npc in data.get("seed_npcs") or []:
         att = (npc.get("attitude") or "").strip().lower()
@@ -589,16 +599,34 @@ def personal_pool_document(npc: PersonalNPC, seed) -> dict:
 
 
 _HOSTILE = re.compile(
-    r"ignor[ea]\b.{0,30}\b(regras|instru|anterior|prompt)|system prompt|prompt do sistema|"
-    r"\b(revele|registre|marque)\b.{0,40}\b(miss[ãa]o|segredo|quest|evento|json|sistema)|"
-    r"</?\w+>|\bquest_\w+|\bproposed_events\b|disregard|jailbreak",
+    # verbo de descarte + alvo de instrução explícito ("ignora as regras da guilda" é benigno)
+    r"\b(ignor\w*|esque\w*|desconsider\w*|descart\w*|forget|disregard|override)\b"
+    r".{0,40}\b(instru\w*|anterior\w*|acima|previous|prior|above|system|prompt|"
+    r"regras\s+(do|de)\s+(sistema|jogo|mestre))\b|"
+    r"system\s*prompt|prompt\s+do\s+sistema|"
+    r"\b(revele|registre|marque|reveal|record)\b.{0,40}\b(json|proposed_events|quest_\w+|sistema)\b|"
+    r"</?\w+>|\bquest_\w+|\bproposed_events\b|jailbreak|"
+    r"\byou\s+are\s+now\b|\bagora\s+voce\s+e\b|\bnovas?\s+instrucoes\b|\bdeveloper\s+mode\b",
     re.IGNORECASE | re.DOTALL,
 )
+_SPACED = re.compile(r"(?:\b\w[\s.\-_]){3,}\w\b")
+
+
+def _fold_hostile(text: str) -> tuple[str, str]:
+    """(sem acento/minúsculo/espaço colapsado, idem com letras separadas coladas: "i g n o r e")."""
+    import unicodedata
+
+    low = unicodedata.normalize("NFKD", str(text or "")).encode("ascii", "ignore").decode().lower()
+    low = re.sub(r"\s+", " ", low)
+    return low, _SPACED.sub(lambda m: re.sub(r"[\s.\-_]", "", m.group(0)), low)
 
 
 def looks_hostile(*texts: str) -> bool:
-    """Heurística barata de injeção na descrição/nome: tal prólogo nunca promove NPC ao pool."""
-    return any(_HOSTILE.search(str(t or "")) for t in texts)
+    """Heurística barata de injeção na descrição/nome: tal prólogo nunca promove NPC ao pool.
+
+    É só SINAL extra (SPEC-366 R1): o efeito é o NPC ficar local; as barreiras reais são a
+    delimitação da entrada, shingles, PII, nome digitado e o juiz."""
+    return any(_HOSTILE.search(v) for t in texts for v in _fold_hostile(t))
 
 
 def submit_personal_npc(
