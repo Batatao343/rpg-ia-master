@@ -212,3 +212,33 @@ def test_a_scene_object_card_is_played_and_resolves(monkeypatch):
     text = out["messages"][0].content
     assert "não pôde ser jogada" not in text and "nao pode ser jogada" not in text.lower()
     assert card_id not in out["combat"]["pilhas"]["mao"] or not out["combat"].get("active")
+
+
+# --- (f) Voto Sussurrado com presságio congelado mirando o aliado -------------------------------
+@pytest.mark.parametrize("ordem", ["hero_first", "enemy_first"])
+def test_f_voto_sussurrado_on_ally_targeted_omen(ordem, monkeypatch):
+    from services import conflict_orchestrator as orch
+    from services import enemy_intent as ei
+    from tests import test_spec339_duracao_condicoes as t339
+
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    monkeypatch.setattr(ei, "_fork_rng", lambda rng: t339._Rng0(0))
+    actors, scene, sides = t339._cena_devoto()
+    frozen = ei.forecast_round(scene, actors, sides, t339._Rng0(1))
+    assert frozen["e"][0]["alvo_id"] == "ally"  # o presságio congelado mira o aliado
+    logs: list[str] = []
+    for rnd in (1, 2):
+        decl = t339._voto() if rnd == 1 else t339.ct.TurnDeclaration(actor_id="player")
+        out = orch.run_round(
+            scene, actors, sides, {"player": actors["player"]},
+            declarations={"player": decl}, initiator=t339.ORDENS[ordem],
+            rng=t339._Rng0(rnd), pressagios=frozen,
+        )
+        logs += out["logs"]
+        frozen = ei.forecast_round(scene, actors, sides, t339._Rng0(rnd))  # presságio da rodada seguinte
+    text = "\n".join(logs)
+    # 355 §6.1: a Provocação diz o que fez — muda de alvo ou é resistida; nunca silêncio
+    if ordem == "hero_first":  # o Voto cai antes do ataque congelado: a linha diz que ele muda de alvo
+        assert "provocado por" in text and "muda de alvo" in text, text
+    else:  # o inimigo já agiu; na rodada seguinte o presságio recalculado mira o herói
+        assert "e → player" in text, text

@@ -60,3 +60,56 @@ def test_no_internal_ids_in_round_surfaces():
     assert find_internal_ids("\n".join(lines)) == []
     facts = round_log.outcome_facts("victory", {"mortos": ["Goblin"]}, actors["player"], [], out)
     assert find_internal_ids("\n".join(facts)) == []
+
+
+def test_no_internal_ids_in_history(monkeypatch):
+    """R27/R46: campanha curta (MockLLM, cartas on): combate, fuga, recusa, loot/mercado; varre /game/history."""
+    from fastapi.testclient import TestClient
+
+    import api
+
+    for key in (
+        "RPG_CARD_DECK", "RPG_CARD_REWARDS", "RPG_ENEMY_INTENT", "RPG_SCENE_CARDS", "RPG_ENEMY_DECKS",
+        "RPG_COMBAT_NONLETHAL",
+    ):
+        monkeypatch.setenv(key, "on")
+    monkeypatch.setenv("RPG_RATE_LIMIT", "0")
+    api._rate_hits.clear()
+    client = TestClient(api.app)
+    new = client.post(
+        "/game/new",
+        json={"name": "Camp", "race": "Humano", "class_name": "Sangromante", "region": "Nova Arcádia",
+              "level": 1, "backstory": ""},
+    )
+    assert new.status_code == 200, new.text
+    gid = new.json()["game_id"]
+    texts: list[str] = []
+
+    def act(body):
+        r = client.post("/game/action", json={"game_id": gid, **body})
+        if r.status_code == 200:
+            texts.append(str(r.json().get("message") or ""))
+        return r
+
+    act({"input_text": "Ataco o goblin"})
+    for step in range(10):
+        st = client.get("/game/state", params={"game_id": gid}).json()
+        cb = st.get("combat") or {}
+        if not cb.get("active"):
+            break
+        hand = (cb.get("pilhas") or {}).get("mao") or []
+        target = next((e["id"] for e in cb.get("enemies") or [] if not e.get("dead")), None)
+        card = next((m["id"] for m in hand if m.get("jogavel") and m.get("alvo") == "inimigo"), None)
+        if step % 3 == 2:
+            act({"input_text": "Fugir", "action_kind": "flee"})
+        elif card and target:
+            act({"input_text": "Jogo", "jogadas": [{"card_id": card, "target_id": target}]})
+        else:
+            act({"input_text": "Passo", "action_kind": "pass"})
+    for text in ("Vasculho o corpo", "Quero ver o mercado"):
+        act({"input_text": text})
+    history = client.get("/game/history", params={"game_id": gid}).json()["entries"]
+    assert len(history) >= 4 and texts
+    blob = "\n".join([*(str(e.get("text") or "") for e in history), *texts])
+    assert find_internal_ids(blob) == []
+    assert not re.search(r"\b(?:[a-z]+_)+\d+\b", blob), re.findall(r"\b(?:[a-z]+_)+\d+\b", blob)

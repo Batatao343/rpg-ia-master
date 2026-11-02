@@ -249,6 +249,23 @@ def _sem_vitalidade_line(actor: dict, name: str) -> str:
     return line
 
 
+_INSTANCE_ID_RE = re.compile(r"\b(?:[a-z]+_)+\d+\b")
+
+
+def humanize_ids(text: str, actors_by_id: dict[str, dict] | None = None) -> str:
+    """SPEC-363 R27: id de instância ("fallback_goblin_1") nunca chega ao jogador; vira o nome."""
+    names = _names(actors_by_id or {})
+
+    def sub(match: re.Match) -> str:
+        raw = match.group(0)
+        if raw in names and names[raw] != raw:
+            return names[raw]
+        words = [w for w in raw.split("_") if w not in {"fallback", "enemy", "enemigo"}]
+        return " ".join(words).capitalize()
+
+    return _INSTANCE_ID_RE.sub(sub, text)
+
+
 def round_registry(
     out: dict,
     actors_by_id: dict[str, dict],
@@ -357,7 +374,7 @@ def round_registry(
         if line and line not in seen:
             seen.add(line)
             result.append(line)
-    return _falls_after_cause(result)
+    return [humanize_ids(line, actors_by_id) for line in _falls_after_cause(result)]
 
 
 _FALL_LINE_RE = re.compile(r"^(?P<who>.+?) (?:morre|cai, à beira da morte)[.]$")

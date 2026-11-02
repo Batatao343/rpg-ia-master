@@ -3171,7 +3171,9 @@ def _compose_board_narrative(
     from services import prose_guard, round_log
 
     if out.get("action_refused"):  # recusa explicada (Carta fora da mão, Fôlego...): nada gasto
-        return "\n".join(str(x) for x in out.get("logs") or [] if x) or BOARD_FREETEXT_REFUSAL
+        return round_log.humanize_ids(
+            "\n".join(str(x) for x in out.get("logs") or [] if x), actors_by_id
+        ) or BOARD_FREETEXT_REFUSAL
     registry = round_log.round_registry(out, actors_by_id, status_logs, extra_lines=extra_lines)
     body = "\n".join(registry) or "O combate segue."
     if not combat_over:

@@ -576,7 +576,7 @@ def _open_circuit_if_permanent(provider: str, model: str, exc: BaseException) ->
 
 # SPEC-363 R34: o CLASSIFY desiste cedo do DeepSeek (parse curto; a cauda longa só atrasa o turno).
 # Parâmetro de engenharia (sem flag/env nova). `LLM_TIMEOUT_SECONDS`/`DEEPSEEK_TIMEOUT_SECONDS` vencem.
-DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.0
+DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.5  # p99 medido 6,0 s (n=22, smokes 2+3; docs/spec363/classify_latency.json), piso 4 s
 
 
 def _tier_timeout(provider: str, tier: "ModelTier | None") -> float | None:

@@ -607,3 +607,26 @@ Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider
 - Testes antigos atualizados (só expected que codificava o comportamento antigo): `test_spec346_outcome.py` (nomes com dígito
   sobrevivem, R6), `test_spec353_registry.py` ("no seu torso", R10), `web/tests/spec347-components.test.mjs` (oferta com mira, R3).
 - Suíte: `tests/test_project_index.py` falha 2 testes até o `project_index/` ser regenerado no pouso (coordenador).
+
+
+### Fechamento das pendências (pós-hand-back)
+
+- **R34 (medido):** `docs/spec363/measure_classify.py` sobre `smoke3/server.log` + `smoke2/server.log` →
+  `docs/spec363/classify_latency.json`: n=22 ok, p50 1,3 s, p95 1,7 s, **p99 6,0 s** (um outlier), 2 falhas. Constante =
+  max(4 s, p99) arredondada: `DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.5`.
+- **R38(f):** `test_f_voto_sussurrado_on_ally_targeted_omen` (`tests/test_spec363_rare_scenarios.py`, 2 ordens): presságio
+  congelado mirando o aliado; `hero_first` → "provocado por … muda de alvo."; `enemy_first` → o inimigo mira o herói na rodada seguinte.
+- **R27/R46:** `test_no_internal_ids_in_history` (`tests/test_spec363_ids.py`) joga uma campanha curta pela API (MockLLM, cartas on:
+  abre combate, cartas, fuga, recusa por alvo escondido, "Vasculho", mercado) e varre `/game/history` + mensagens. **Achou um id real**
+  ("fallback_goblin_1 sem posição conhecida", log de `conflict_turn`); corrigido sem tocar o motor com
+  `round_log.humanize_ids` (registro e recusa da rodada). A fase de loja/espólio da campanha é só consulta/recusa (o herói
+  inicial não está num mercado); o espólio e a consulta de mercado têm teste próprio (R18/R25).
+- **R39(a,b) já cobertos** (`web/e2e/`): (a) `spec354-desktop.spec.ts › mao_sem_rolar_1440_registro_dois_inimigos` (2 inimigos, 1440) e
+  `spec354-mobile.spec.ts › sem_id_cru_na_arena_390` (aliado + sem id cru, 390); (b) `spec354-desktop.spec.ts › vitoria_sem_toast_duplicado_1440`.
+  A combinação literal "2 inimigos **e** aliado na mesma cena" não tem teste único.
+- **R16:** não reproduz no código: `PlayScreen` já passava `blocked = gameOver || deathPending` e `combat.active` vem `false` na
+  resposta de morte (`api.py` zera `combat.active` com `death_pending`); o print 8694215 deve ser atraso de render/stream. `boardClosed`
+  permanece (teste `spec363-death-board` + e2e "morte pendente").
+- **R15:** `mech_log` e `round_board` já emitem a queda depois do evento que a causou (as quedas são anexadas após `chrono_events`);
+  só o registro (`round_registry`) tinha a queda antes da Última Ação — corrigido.
+- **Arena:** a base da comparação continua `docs/spec353/arena-depois.json`; regravá-la é assunto de outra spec.
