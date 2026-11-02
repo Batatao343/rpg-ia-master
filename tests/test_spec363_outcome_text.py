@@ -204,6 +204,9 @@ BENIGN = [
     "O sangue do Mímico mancha o chão, e você segue ileso.",
     "Você sente o seu peito encher de ar quando o silêncio volta.",
     "Seu ombro relaxa: a luta acabou.",
+    "Seu braço acerta o Goblin em cheio e ele recua.",
+    "O sangue do Goblin respinga no seu braço, mas você segue ileso.",
+    "A lâmina rasga o ar onde estava sua cabeça um instante antes.",
     "O Mímico fere o ar vazio, e você desvia com a sua perna esquerda firme.",
 ]
 
@@ -255,3 +258,13 @@ def test_rejection_event_logs_codes_not_sentences(monkeypatch):
     )
     ev = next(k for a, k in events if a[1] == "outcome_narrative_rejected")
     assert ev["codes"] == "dead_alive" and "Mímico" not in ev["codes"]
+
+
+def test_dot_sentence_capitalized_without_condition():
+    last = {"final_blows": [{"target_id": "e1", "kind": "dano_continuo", "by_actor_id": None, "condition": None}]}
+    sentence = round_log.final_blow_sentence(last, {"player": "Você", "e1": "Goblin"})
+    assert sentence[0].isupper() and sentence.startswith("Dano contínuo termina o serviço"), sentence
+    with_cond = round_log.final_blow_sentence(
+        {"final_blows": [{**last["final_blows"][0], "condition": "sangramento"}]}, {"e1": "Goblin"}
+    )
+    assert with_cond[0].isupper(), with_cond

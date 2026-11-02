@@ -474,13 +474,29 @@ def _v4(low: str, auth: dict) -> bool:
     return any(_v4_clause(part, auth) for part in re.split(r"[,:]", low))
 
 
+# P2-3: o corpo do herói precisa ser o ALVO do dano, não o agente ("Seu braço acerta o Goblin"), e o dano
+# não pode ser de outro ("sangue do Goblin respinga no seu braço").
+_OWNER_OTHER_RE = re.compile(
+    r"\b(?:sangu|ferid|ferimento|dor)\w*\s+d[oae]s?\s+(?!(?:seu|sua|teu|tua)\b)\w+"
+)
+_BODY_POSS = r"(?:seu|sua|teu|tua|seus|suas)\s+(" + _BODY + r")\b"
+_DAMAGE_VERB_ON_BODY_RE = re.compile(
+    r"\b(?:atinge|acerta|fere|rasg|perfur|cort|esmag|machuc|lacera|dilacer|queima|fratur)\w*(?:\s+\w+){0,2}\s+" + _BODY_POSS
+)
+_DAMAGE_NOUN_RE = re.compile(
+    r"\b(?:sangu|sangr|ferid|ferimento|escorr|latej|doem|arde|trinca|fratur)\w*|\bdor\b|\bdoi\b"
+)
+_BODY_AS_TARGET_RE = re.compile(r"\b(?:pel[oa]|n[oa]|em|ao|d[oa])\s+" + _BODY_POSS)
+
+
 def _v4_clause(low: str, auth: dict) -> bool:
-    if not _DAMAGE_MARK_RE.search(low):  # "ergue seu braço", "firma sua perna": sem dano, sem V4
-        return False
+    low = _OWNER_OTHER_RE.sub(" ", low)
+    bodies = [m.group(1) for m in _DAMAGE_VERB_ON_BODY_RE.finditer(low)]
+    if _DAMAGE_NOUN_RE.search(low):
+        bodies += [m.group(1) for m in _BODY_AS_TARGET_RE.finditer(low)]
     wounded = {_fold_text(r).split("_")[0] for r in auth["hero_wound_regions"]}
-    for match in _HERO_BODY_RE.finditer(low):
-        region = _BODY_ALIAS.get(match.group(1), match.group(1))
-        if region not in wounded:
+    for body in bodies:
+        if _BODY_ALIAS.get(body, body) not in wounded:
             return True
     if _HERO_BLOOD_RE.search(low) and auth.get("hero_state") == "ileso":
         return True
