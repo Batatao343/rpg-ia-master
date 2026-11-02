@@ -1,5 +1,5 @@
 {
-  "commit_sha": "ff8c7ec78aff4e0b6872e76fa36a78a734c5e4bf",
+  "commit_sha": "0848082a21b66b7d4c7aefdd868c879c0e60826a",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1286,6 +1286,39 @@
       },
       "source": "file:docs/spec355/arena_spec355.py",
       "target": "module:docs.spec355.arena_spec355",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 1
+      },
+      "source": "file:docs/spec358/arena_v2.py",
+      "target": "module:docs.spec358.arena_v2",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/equivalencia_v1.py",
+        "line": 1
+      },
+      "source": "file:docs/spec358/equivalencia_v1.py",
+      "target": "module:docs.spec358.equivalencia_v1",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 1
+      },
+      "source": "file:docs/spec358/gerar_golden_v1.py",
+      "target": "module:docs.spec358.gerar_golden_v1",
       "type": "contains"
     },
     {
@@ -9646,6 +9679,39 @@
       },
       "source": "file:tests/test_card_sim.py",
       "target": "module:tests.test_card_sim",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 48
+      },
+      "source": "file:tests/test_card_sim_v2.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 49
+      },
+      "source": "file:tests/test_card_sim_v2.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 1
+      },
+      "source": "file:tests/test_card_sim_v2.py",
+      "target": "module:tests.test_card_sim_v2",
       "type": "contains"
     },
     {
@@ -44302,6 +44368,303 @@
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 31
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 49
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2._imp",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 240
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2._linha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 98
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 92
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 149
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.chave",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 154
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.fase1",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 201
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.fase2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 221
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.fase3",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 389
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 83
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.motor_sha",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 261
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.relatorio",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 132
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.rodar",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 191
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.selecionar",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 108
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.unidades",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 57
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 79
+      },
+      "source": "module:docs.spec358.arena_v2",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/equivalencia_v1.py",
+        "line": 27
+      },
+      "source": "module:docs.spec358.equivalencia_v1",
+      "target": "symbol:docs.spec358.equivalencia_v1._load",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/equivalencia_v1.py",
+        "line": 35
+      },
+      "source": "module:docs.spec358.equivalencia_v1",
+      "target": "symbol:docs.spec358.equivalencia_v1.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 30
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 116
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 84
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.load_sim",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 65
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 139
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 72
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 94
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.pool_frozen",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 56
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
         "file": "encounter_budget.py",
         "line": 47
       },
@@ -59989,7 +60352,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 42
+        "line": 47
       },
       "source": "module:scripts.cards.sim",
       "target": "module:services",
@@ -60000,7 +60363,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 43
+        "line": 48
       },
       "source": "module:scripts.cards.sim",
       "target": "module:services",
@@ -60011,7 +60374,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 44
+        "line": 49
       },
       "source": "module:scripts.cards.sim",
       "target": "module:services",
@@ -60022,7 +60385,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 45
+        "line": 50
       },
       "source": "module:scripts.cards.sim",
       "target": "module:services",
@@ -60033,7 +60396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 46
+        "line": 51
       },
       "source": "module:scripts.cards.sim",
       "target": "module:services",
@@ -60044,7 +60407,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 219
+        "line": 471
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim._arms_v2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 404
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim._card_kind_of",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 224
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim._fight",
@@ -60055,7 +60440,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 130
+        "line": 135
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim._kind",
@@ -60066,7 +60451,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 283
+        "line": 493
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 288
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.batch_fights",
@@ -60077,7 +60473,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 319
+        "line": 324
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.build_arms",
@@ -60088,7 +60484,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 201
+        "line": 484
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim.build_arms_v2",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 206
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.deck_env",
@@ -60099,7 +60506,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 273
+        "line": 278
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.encounters",
@@ -60110,7 +60517,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 214
+        "line": 219
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.fight",
@@ -60121,7 +60528,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 78
+        "line": 83
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.full_deck",
@@ -60132,7 +60539,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 134
+        "line": 139
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.full_deck_decl",
@@ -60143,7 +60550,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 63
+        "line": 68
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.injected",
@@ -60154,7 +60561,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 416
+        "line": 604
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.main",
@@ -60165,7 +60572,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 296
+        "line": 301
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.per_folego",
@@ -60176,7 +60583,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 266
+        "line": 271
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.pick",
@@ -60187,7 +60594,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 334
+        "line": 408
+      },
+      "source": "module:scripts.cards.sim",
+      "target": "symbol:scripts.cards.sim.referencia",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 339
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -60198,7 +60616,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 394
+        "line": 579
       },
       "source": "module:scripts.cards.sim",
       "target": "symbol:scripts.cards.sim.simulate_protocolo_lote",
@@ -118909,6 +119327,270 @@
       },
       "source": "module:tests.test_card_sim",
       "target": "symbol:tests.test_card_sim.test_voice_sample_is_deterministic_and_at_least_one",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 48
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 49
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 57
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 13
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2._load_path",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 164
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2._write_lote",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 22
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.gold",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 53
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 29
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.sim",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 115
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 170
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 179
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 197
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 190
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_protocolo_invalido_levanta",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 76
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 215
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 61
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 88
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 97
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 33
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v1_reproduz_golden",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 105
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 138
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v2_dominante_so_por_delta",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 146
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 155
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 126
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
       "type": "defines"
     },
     {
@@ -238141,6 +238823,765 @@
       "type": "calls"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 246
+      },
+      "source": "symbol:docs.spec358.arena_v2._linha",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 155
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 168
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 170
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 187
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 162
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.chave",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 178
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.chave",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 156
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.motor_sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 165
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.rodar",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 159
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.unidades",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 184
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 174
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase1",
+      "target": "symbol:services.card_lint.load_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 202
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 203
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 215
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 218
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 207
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2.chave",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 204
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2.motor_sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 214
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2.rodar",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 208
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2.selecionar",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 207
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase2",
+      "target": "symbol:docs.spec358.arena_v2.unidades",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 222
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase3",
+      "target": "symbol:docs.spec358.arena_v2._imp",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 233
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase3",
+      "target": "symbol:docs.spec358.arena_v2._save",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 234
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase3",
+      "target": "symbol:docs.spec358.arena_v2.motor_sha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 223
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase3",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 225
+      },
+      "source": "symbol:docs.spec358.arena_v2.fase3",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 325
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._linha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 348
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._linha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 370
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._linha",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 262
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 268
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 269
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 286
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 317
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 320
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 321
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 340
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 289
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 290
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 317
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 320
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 321
+      },
+      "source": "symbol:docs.spec358.arena_v2.relatorio",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 133
+      },
+      "source": "symbol:docs.spec358.arena_v2.rodar",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 194
+      },
+      "source": "symbol:docs.spec358.arena_v2.selecionar",
+      "target": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 194
+      },
+      "source": "symbol:docs.spec358.arena_v2.selecionar",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 195
+      },
+      "source": "symbol:docs.spec358.arena_v2.selecionar",
+      "target": "symbol:docs.spec358.arena_v2.veredito",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 109
+      },
+      "source": "symbol:docs.spec358.arena_v2.unidades",
+      "target": "symbol:docs.spec358.arena_v2._imp",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 110
+      },
+      "source": "symbol:docs.spec358.arena_v2.unidades",
+      "target": "symbol:docs.spec358.arena_v2._imp",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 115
+      },
+      "source": "symbol:docs.spec358.arena_v2.unidades",
+      "target": "symbol:services.card_lint.load_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 121
+      },
+      "source": "symbol:docs.spec358.arena_v2.unidades",
+      "target": "symbol:services.card_lint.load_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/arena_v2.py",
+        "line": 126
+      },
+      "source": "symbol:docs.spec358.arena_v2.unidades",
+      "target": "symbol:services.card_lint.load_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/equivalencia_v1.py",
+        "line": 53
+      },
+      "source": "symbol:docs.spec358.equivalencia_v1.main",
+      "target": "symbol:docs.spec358.equivalencia_v1._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/equivalencia_v1.py",
+        "line": 54
+      },
+      "source": "symbol:docs.spec358.equivalencia_v1.main",
+      "target": "symbol:docs.spec358.equivalencia_v1._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 123
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 129
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 118
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.pool_frozen",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 120
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 67
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 68
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 154
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.main",
+      "target": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 146
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.main",
+      "target": "symbol:docs.spec358.gerar_golden_v1.load_sim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 152
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.main",
+      "target": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 74
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 79
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 80
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 99
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.pool_frozen",
+      "target": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 59
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 60
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 61
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -275578,7 +277019,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/promote.py",
-        "line": 189
+        "line": 200
       },
       "source": "symbol:scripts.cards.promote.main",
       "target": "symbol:scripts.cards.promote.promote",
@@ -275589,7 +277030,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/promote.py",
-        "line": 188
+        "line": 196
+      },
+      "source": "symbol:scripts.cards.promote.main",
+      "target": "symbol:services.card_lint.load_batch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/promote.py",
+        "line": 199
       },
       "source": "symbol:scripts.cards.promote.main",
       "target": "symbol:services.card_lint.load_batch",
@@ -275677,7 +277129,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 249
+        "line": 473
+      },
+      "source": "symbol:scripts.cards.sim._arms_v2",
+      "target": "symbol:scripts.cards.sim.build_arms",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 474
+      },
+      "source": "symbol:scripts.cards.sim._arms_v2",
+      "target": "symbol:scripts.cards.sim.referencia",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 405
+      },
+      "source": "symbol:scripts.cards.sim._card_kind_of",
+      "target": "symbol:services.card_effects.materialize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 254
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:scripts.cards.sim.full_deck_decl",
@@ -275688,7 +277173,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 262
+        "line": 267
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.card_piles.begin_round",
@@ -275699,7 +277184,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 238
+        "line": 243
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.card_piles.start_piles",
@@ -275710,7 +277195,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 241
+        "line": 246
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_orchestrator._can_act",
@@ -275721,7 +277206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 250
+        "line": 255
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_orchestrator.run_round",
@@ -275732,7 +277217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 236
+        "line": 241
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.freeze",
@@ -275743,7 +277228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 233
+        "line": 238
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.new_scene",
@@ -275754,7 +277239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 235
+        "line": 240
       },
       "source": "symbol:scripts.cards.sim._fight",
       "target": "symbol:services.conflict_scene.place",
@@ -275765,7 +277250,139 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 287
+        "line": 504
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim._arms_v2",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 522
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim._kind",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 507
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.batch_fights",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 508
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.batch_fights",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 512
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.batch_fights",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 494
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.encounters",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 496
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.injected",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 511
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.injected",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 563
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:scripts.cards.sim.per_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 542
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:services.card_effects.budget_band",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 546
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:services.card_effects.power_score",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 545
+      },
+      "source": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "target": "symbol:services.card_effects.primary_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 292
       },
       "source": "symbol:scripts.cards.sim.batch_fights",
       "target": "symbol:scripts.cards.sim.fight",
@@ -275776,7 +277393,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 327
+        "line": 332
       },
       "source": "symbol:scripts.cards.sim.build_arms",
       "target": "symbol:scripts.cards.sim.full_deck",
@@ -275787,7 +277404,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 323
+        "line": 328
       },
       "source": "symbol:scripts.cards.sim.build_arms",
       "target": "symbol:services.cards._load_cards",
@@ -275798,7 +277415,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 279
+        "line": 490
+      },
+      "source": "symbol:scripts.cards.sim.build_arms_v2",
+      "target": "symbol:scripts.cards.sim._arms_v2",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 284
       },
       "source": "symbol:scripts.cards.sim.encounters",
       "target": "symbol:scripts.cards.sim.pick",
@@ -275809,7 +277437,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 216
+        "line": 221
       },
       "source": "symbol:scripts.cards.sim.fight",
       "target": "symbol:scripts.cards.sim._fight",
@@ -275820,7 +277448,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 215
+        "line": 220
       },
       "source": "symbol:scripts.cards.sim.fight",
       "target": "symbol:scripts.cards.sim.deck_env",
@@ -275831,7 +277459,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 88
+        "line": 93
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.basicas_for_class",
@@ -275842,7 +277470,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 95
+        "line": 100
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.cards_for_class",
@@ -275853,7 +277481,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 121
+        "line": 126
       },
       "source": "symbol:scripts.cards.sim.full_deck",
       "target": "symbol:services.cards.get_card",
@@ -275864,7 +277492,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 177
+        "line": 182
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim._kind",
@@ -275875,7 +277503,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 181
+        "line": 186
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim._kind",
@@ -275886,7 +277514,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 184
+        "line": 189
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim._kind",
@@ -275897,7 +277525,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 190
+        "line": 195
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim._kind",
@@ -275908,7 +277536,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 162
+        "line": 167
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.play",
@@ -275919,7 +277547,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 155
+        "line": 160
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.try_add",
@@ -275930,7 +277558,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 144
+        "line": 149
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:scripts.cards.sim.full_deck_decl.usable",
@@ -275941,7 +277569,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 156
+        "line": 161
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.card_piles.plan_plays",
@@ -275952,7 +277580,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 145
+        "line": 150
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.cards.get_card",
@@ -275963,7 +277591,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 194
+        "line": 199
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnDeclaration",
@@ -275974,7 +277602,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 166
+        "line": 171
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -275985,7 +277613,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 193
+        "line": 198
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -275996,7 +277624,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 166
+        "line": 171
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.play",
       "target": "symbol:services.conflict_turn.TurnStep",
@@ -276007,7 +277635,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 156
+        "line": 161
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.try_add",
       "target": "symbol:services.card_piles.plan_plays",
@@ -276018,7 +277646,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 145
+        "line": 150
       },
       "source": "symbol:scripts.cards.sim.full_deck_decl.usable",
       "target": "symbol:services.cards.get_card",
@@ -276029,7 +277657,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 68
+        "line": 73
       },
       "source": "symbol:scripts.cards.sim.injected",
       "target": "symbol:services.card_effects.materialize",
@@ -276040,7 +277668,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 64
+        "line": 69
       },
       "source": "symbol:scripts.cards.sim.injected",
       "target": "symbol:services.cards._load_cards",
@@ -276051,7 +277679,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 437
+        "line": 627
       },
       "source": "symbol:scripts.cards.sim.main",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -276062,7 +277690,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 435
+        "line": 623
       },
       "source": "symbol:scripts.cards.sim.main",
       "target": "symbol:scripts.cards.sim.simulate_protocolo_lote",
@@ -276073,7 +277701,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 304
+        "line": 625
+      },
+      "source": "symbol:scripts.cards.sim.main",
+      "target": "symbol:scripts.cards.sim.simulate_protocolo_lote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 309
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects._formula_avg",
@@ -276084,7 +277723,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 304
+        "line": 309
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.base_value",
@@ -276095,7 +277734,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 298
+        "line": 303
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.custo_folego",
@@ -276106,7 +277745,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 301
+        "line": 306
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.gatilho",
@@ -276117,7 +277756,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 300
+        "line": 305
       },
       "source": "symbol:scripts.cards.sim.per_folego",
       "target": "symbol:services.card_effects.normalize",
@@ -276128,7 +277767,84 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 355
+        "line": 412
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:scripts.cards.sim._card_kind_of",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 446
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:scripts.cards.sim.referencia.efeito",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 454
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:services.card_effects.budget_band",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 434
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 468
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:services.card_effects.materialize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 460
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:services.card_effects.power_score",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 444
+      },
+      "source": "symbol:scripts.cards.sim.referencia",
+      "target": "symbol:services.card_effects.primary_effect",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 366
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim._kind",
@@ -276139,29 +277855,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 348
-      },
-      "source": "symbol:scripts.cards.sim.simulate_batch",
-      "target": "symbol:scripts.cards.sim.batch_fights",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
-        "line": 349
-      },
-      "source": "symbol:scripts.cards.sim.simulate_batch",
-      "target": "symbol:scripts.cards.sim.batch_fights",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "scripts/cards/sim.py",
         "line": 345
+      },
+      "source": "symbol:scripts.cards.sim.simulate_batch",
+      "target": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 359
+      },
+      "source": "symbol:scripts.cards.sim.simulate_batch",
+      "target": "symbol:scripts.cards.sim.batch_fights",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 360
+      },
+      "source": "symbol:scripts.cards.sim.simulate_batch",
+      "target": "symbol:scripts.cards.sim.batch_fights",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/cards/sim.py",
+        "line": 356
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.build_arms",
@@ -276172,7 +277899,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 335
+        "line": 346
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.encounters",
@@ -276183,7 +277910,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 337
+        "line": 348
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.injected",
@@ -276194,7 +277921,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 381
+        "line": 392
       },
       "source": "symbol:scripts.cards.sim.simulate_batch",
       "target": "symbol:scripts.cards.sim.per_folego",
@@ -276205,7 +277932,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 403
+        "line": 590
       },
       "source": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "target": "symbol:scripts.cards.sim.simulate_batch",
@@ -276216,7 +277943,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/cards/sim.py",
-        "line": 397
+        "line": 584
       },
       "source": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "target": "symbol:services.cards._load_cards",
@@ -395955,6 +397682,369 @@
       },
       "source": "symbol:tests.test_card_sim.test_voice_sample_is_deterministic_and_at_least_one",
       "target": "symbol:tests.test_card_sim._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 58
+      },
+      "source": "symbol:tests.test_card_sim_v2._ataque",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 23
+      },
+      "source": "symbol:tests.test_card_sim_v2.gold",
+      "target": "symbol:tests.test_card_sim_v2._load_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 30
+      },
+      "source": "symbol:tests.test_card_sim_v2.sim",
+      "target": "symbol:tests.test_card_sim_v2._load_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 116
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 172
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
+      "target": "symbol:tests.test_card_sim_v2._write_lote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 175
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
+      "target": "symbol:tests.test_card_sim_v2._write_lote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 180
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
+      "target": "symbol:tests.test_card_sim_v2._load_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 181
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
+      "target": "symbol:tests.test_card_sim_v2._load_path",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 209
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
+      "target": "symbol:tests.test_card_sim_v2._write_lote",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 204
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
+      "target": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 77
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 78
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 83
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 217
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 218
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 221
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 72
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 69
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 73
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 90
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 94
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 98
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 106
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
+      "target": "symbol:services.cards.all_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 159
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
+      "target": "symbol:services.cards.all_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 160
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
+      "target": "symbol:services.cards.all_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 127
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2.mk",
       "type": "calls"
     },
     {
@@ -623225,6 +625315,27 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec358/arena_v2.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/spec358/equivalencia_v1.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec358/equivalencia_v1.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:docs/spec358/gerar_golden_v1.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:encounter_budget.py",
       "kind": "file",
       "line": 1,
@@ -626708,6 +628819,13 @@
       "kind": "file",
       "line": 1,
       "path": "tests/test_card_sim.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_card_sim_v2.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_card_sim_v2.py",
       "qualified_name": null
     },
     {
@@ -632395,6 +634513,27 @@
       "qualified_name": "docs.spec355.arena_spec355"
     },
     {
+      "id": "module:docs.spec358.arena_v2",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2"
+    },
+    {
+      "id": "module:docs.spec358.equivalencia_v1",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec358/equivalencia_v1.py",
+      "qualified_name": "docs.spec358.equivalencia_v1"
+    },
+    {
+      "id": "module:docs.spec358.gerar_golden_v1",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1"
+    },
+    {
       "id": "module:encounter_budget",
       "kind": "module",
       "line": 1,
@@ -635879,6 +638018,13 @@
       "line": 1,
       "path": "tests/test_card_sim.py",
       "qualified_name": "tests.test_card_sim"
+    },
+    {
+      "id": "module:tests.test_card_sim_v2",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2"
     },
     {
       "id": "module:tests.test_card_variety",
@@ -645133,6 +647279,188 @@
       "line": 40,
       "path": "docs/spec355/arena_spec355.py",
       "qualified_name": "docs.spec355.arena_spec355.p_emb"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2._imp",
+      "kind": "function",
+      "line": 49,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2._imp"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2._linha",
+      "kind": "function",
+      "line": 240,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2._linha"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2._load",
+      "kind": "function",
+      "line": 98,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2._load"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2._save",
+      "kind": "function",
+      "line": 92,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2._save"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.chave",
+      "kind": "function",
+      "line": 149,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.chave"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.fase1",
+      "kind": "function",
+      "line": 154,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.fase1"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.fase2",
+      "kind": "function",
+      "line": 201,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.fase2"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.fase3",
+      "kind": "function",
+      "line": 221,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.fase3"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.main",
+      "kind": "function",
+      "line": 389,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.main"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.motor_sha",
+      "kind": "function",
+      "line": 83,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.motor_sha"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.relatorio",
+      "kind": "function",
+      "line": 261,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.relatorio"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.rodar",
+      "kind": "function",
+      "line": 132,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.rodar"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.selecionar",
+      "kind": "function",
+      "line": 191,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.selecionar"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.unidades",
+      "kind": "function",
+      "line": 108,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.unidades"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.v1_bandeiras",
+      "kind": "function",
+      "line": 57,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.v1_bandeiras"
+    },
+    {
+      "id": "symbol:docs.spec358.arena_v2.veredito",
+      "kind": "function",
+      "line": 79,
+      "path": "docs/spec358/arena_v2.py",
+      "qualified_name": "docs.spec358.arena_v2.veredito"
+    },
+    {
+      "id": "symbol:docs.spec358.equivalencia_v1._load",
+      "kind": "function",
+      "line": 27,
+      "path": "docs/spec358/equivalencia_v1.py",
+      "qualified_name": "docs.spec358.equivalencia_v1._load"
+    },
+    {
+      "id": "symbol:docs.spec358.equivalencia_v1.main",
+      "kind": "function",
+      "line": 35,
+      "path": "docs/spec358/equivalencia_v1.py",
+      "qualified_name": "docs.spec358.equivalencia_v1.main"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1._card",
+      "kind": "function",
+      "line": 30,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1._card"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "kind": "function",
+      "line": 116,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.compute"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.load_sim",
+      "kind": "function",
+      "line": 84,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.load_sim"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
+      "kind": "function",
+      "line": 65,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.lote_protocolo"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.main",
+      "kind": "function",
+      "line": 139,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.main"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
+      "kind": "function",
+      "line": 72,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.pool_congelado"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.pool_frozen",
+      "kind": "function",
+      "line": 94,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.pool_frozen"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "kind": "function",
+      "line": 56,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.synthetic_batch"
     },
     {
       "id": "symbol:encounter_budget.action_economy_multiplier",
@@ -658113,128 +660441,170 @@
       "qualified_name": "scripts.cards.promote.voice_sample"
     },
     {
+      "id": "symbol:scripts.cards.sim._arms_v2",
+      "kind": "function",
+      "line": 471,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim._arms_v2"
+    },
+    {
+      "id": "symbol:scripts.cards.sim._card_kind_of",
+      "kind": "function",
+      "line": 404,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim._card_kind_of"
+    },
+    {
       "id": "symbol:scripts.cards.sim._fight",
       "kind": "function",
-      "line": 219,
+      "line": 224,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim._fight"
     },
     {
       "id": "symbol:scripts.cards.sim._kind",
       "kind": "function",
-      "line": 130,
+      "line": 135,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim._kind"
     },
     {
+      "id": "symbol:scripts.cards.sim._simulate_batch_v2",
+      "kind": "function",
+      "line": 493,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim._simulate_batch_v2"
+    },
+    {
       "id": "symbol:scripts.cards.sim.batch_fights",
       "kind": "function",
-      "line": 283,
+      "line": 288,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.batch_fights"
     },
     {
       "id": "symbol:scripts.cards.sim.build_arms",
       "kind": "function",
-      "line": 319,
+      "line": 324,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.build_arms"
     },
     {
+      "id": "symbol:scripts.cards.sim.build_arms_v2",
+      "kind": "function",
+      "line": 484,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim.build_arms_v2"
+    },
+    {
       "id": "symbol:scripts.cards.sim.deck_env",
       "kind": "function",
-      "line": 201,
+      "line": 206,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.deck_env"
     },
     {
       "id": "symbol:scripts.cards.sim.encounters",
       "kind": "function",
-      "line": 273,
+      "line": 278,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.encounters"
     },
     {
       "id": "symbol:scripts.cards.sim.fight",
       "kind": "function",
-      "line": 214,
+      "line": 219,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.fight"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck",
       "kind": "function",
-      "line": 78,
+      "line": 83,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl",
       "kind": "function",
-      "line": 134,
+      "line": 139,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.play",
       "kind": "function",
-      "line": 162,
+      "line": 167,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.play"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.try_add",
       "kind": "function",
-      "line": 155,
+      "line": 160,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.try_add"
     },
     {
       "id": "symbol:scripts.cards.sim.full_deck_decl.usable",
       "kind": "function",
-      "line": 144,
+      "line": 149,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.full_deck_decl.usable"
     },
     {
       "id": "symbol:scripts.cards.sim.injected",
       "kind": "function",
-      "line": 63,
+      "line": 68,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.injected"
     },
     {
       "id": "symbol:scripts.cards.sim.main",
       "kind": "function",
-      "line": 416,
+      "line": 604,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.main"
     },
     {
       "id": "symbol:scripts.cards.sim.per_folego",
       "kind": "function",
-      "line": 296,
+      "line": 301,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.per_folego"
     },
     {
       "id": "symbol:scripts.cards.sim.pick",
       "kind": "function",
-      "line": 266,
+      "line": 271,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.pick"
     },
     {
+      "id": "symbol:scripts.cards.sim.referencia",
+      "kind": "function",
+      "line": 408,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim.referencia"
+    },
+    {
+      "id": "symbol:scripts.cards.sim.referencia.efeito",
+      "kind": "function",
+      "line": 446,
+      "path": "scripts/cards/sim.py",
+      "qualified_name": "scripts.cards.sim.referencia.efeito"
+    },
+    {
       "id": "symbol:scripts.cards.sim.simulate_batch",
       "kind": "function",
-      "line": 334,
+      "line": 339,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.simulate_batch"
     },
     {
       "id": "symbol:scripts.cards.sim.simulate_protocolo_lote",
       "kind": "function",
-      "line": 394,
+      "line": 579,
       "path": "scripts/cards/sim.py",
       "qualified_name": "scripts.cards.sim.simulate_protocolo_lote"
     },
@@ -695848,6 +698218,174 @@
       "line": 210,
       "path": "tests/test_card_sim.py",
       "qualified_name": "tests.test_card_sim.test_voice_sample_is_deterministic_and_at_least_one"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2._ataque",
+      "kind": "test",
+      "line": 57,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2._ataque"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2._load_path",
+      "kind": "test",
+      "line": 13,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2._load_path"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2._write_lote",
+      "kind": "test",
+      "line": 164,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2._write_lote"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.gold",
+      "kind": "test",
+      "line": 22,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.gold"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.mk",
+      "kind": "test",
+      "line": 53,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.mk"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.sim",
+      "kind": "test",
+      "line": 29,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.sim"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
+      "kind": "test",
+      "line": 115,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
+      "kind": "test",
+      "line": 170,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_main_v2_codigo_de_saida"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
+      "kind": "test",
+      "line": 179,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
+      "kind": "test",
+      "line": 197,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake",
+      "kind": "test",
+      "line": 204,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_protocolo_invalido_levanta",
+      "kind": "test",
+      "line": 190,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_protocolo_invalido_levanta"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "kind": "test",
+      "line": 76,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_familia_segue_o_bot"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "kind": "test",
+      "line": 215,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso",
+      "kind": "test",
+      "line": 221,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "kind": "test",
+      "line": 88,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
+      "kind": "test",
+      "line": 97,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v1_reproduz_golden",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v1_reproduz_golden"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
+      "kind": "test",
+      "line": 105,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v2_dominante_so_por_delta",
+      "kind": "test",
+      "line": 138,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v2_dominante_so_por_delta"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao",
+      "kind": "test",
+      "line": 146,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
+      "kind": "test",
+      "line": 155,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
+      "kind": "test",
+      "line": 126,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_v2_uso_vira_aviso"
     },
     {
       "id": "symbol:tests.test_card_variety.acervo",
@@ -756065,5 +758603,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:87914300a65e83912aa794013884020703ae48974f3f35a95293f50b9cb355f5"
+  "source_tree_hash": "sha256:c1d47aabd85d8dbe31b3542d046c37ef137587181b3660bd03eaa2026561192c"
 }
