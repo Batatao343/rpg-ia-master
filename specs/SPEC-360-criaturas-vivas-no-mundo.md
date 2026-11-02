@@ -524,7 +524,7 @@ Conteúdo (autor, não constante): `permanencia` das não-BOSS subiu +4 dias (pr
 - **360-C:** *X-02* (o `contra_jogo` dos 11 legados promete efeitos sem deck que os sustente; só revelar o que tiver mecânica, ou reescrever como conselho tático).
 - **Opcional, conteúdo:** *R2-02* (Víbora: `resto` e `marca` usam a mesma faca cravada em agiota; tirar a faca do `resto`).
 - **Ressalva de design:** o Degolador (`imediato`) tem o nó inicial `nova_arcadia` (seguro) no território; pode haver emboscada sem sinal no hub de partida. O porte segue o perigo (1) e a taxa de gatilho não muda, então fica na Fase 1. Se o smoke mostrar emboscada cedo demais no hub, tirar `nova_arcadia` só do território dele.
-- *R2-03* (E16 com a fonte de reserva até a 350 pousar) e o rebase sobre a `main` ficam com o coordenador; na `main`, `services.leak_phrases` existe e o import direto passa a valer.
+- *R2-03* resolvido no rebase sobre a `main` (`ba3e41db`, com 349, 350, 351 e 366): o E16 importa `services.leak_phrases.all_phrases()` direto (sem fallback), somado a `secret_signatures` e à seção `[vazamento]`; `lint.py --regiao nova_arcadia` com 0 erro.
 
 ### Aprovação do dono (02/11)
 

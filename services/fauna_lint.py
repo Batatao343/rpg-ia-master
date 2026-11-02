@@ -357,38 +357,15 @@ def _lexico_sections(path: Path = LEXICO) -> dict[str, list[str]]:
     return out
 
 
-_LEAK_WARNED = False
-
-
-def _warn_leak_source() -> None:
-    global _LEAK_WARNED
-    if _LEAK_WARNED:
-        return
-    _LEAK_WARNED = True
-    from observability.telemetry import log_event
-
-    log_event(
-        "fauna_lint",
-        "leak_phrases_fallback",
-        level="warning",
-        reason="services.leak_phrases ausente; E16 usa secret_signatures + [vazamento]",
-    )
-
-
 def leak_phrases() -> tuple[str, ...]:
-    """E16: frases de segredo. Mesma fonte do validador de conteudo quando ela existir
-    (`services.leak_phrases.all_phrases()`, SPEC-350; sem ela, log e fallback); somadas as assinaturas de
-    segredo canonicas e a secao `[vazamento]` do lexico."""
+    """E16: frases de segredo. Fonte unica do validador de conteudo
+    (`services.leak_phrases.all_phrases()`, SPEC-350), somadas as assinaturas de segredo
+    canonicas e a secao `[vazamento]` do lexico."""
     phrases: set[str] = set(_lexico_sections().get("vazamento") or [])
+    from services.leak_phrases import all_phrases
     from services.secret_signatures import SECRET_SIGNATURES
 
-    try:  # fonte unica da SPEC-350 (`services/leak_phrases.py`), que ainda falta nesta base
-        from services.leak_phrases import all_phrases
-    except ImportError:
-        all_phrases = None
-        _warn_leak_source()
-    if all_phrases is not None:
-        phrases.update(fold(p) for p in all_phrases())
+    phrases.update(fold(p) for p in all_phrases())
     for group in SECRET_SIGNATURES.values():
         phrases.update(fold(p) for p in group)
     return tuple(sorted(p for p in phrases if p))

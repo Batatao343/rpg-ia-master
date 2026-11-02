@@ -2,7 +2,7 @@
 # Uma expressao por linha, sem acento. [vagos] = proibidos (E11, casamento por substring
 # sem acento). [sensorial] = referencia do autor, nao e regra. [vazamento] = frases de segredo
 # da lore (E16) que nao podem sair num sinal; o lint soma as assinaturas de
-# services/secret_signatures.py e, quando existir, content_validator._default_leak_phrases().
+# services/secret_signatures.py e services/leak_phrases.all_phrases() (SPEC-350, fonte unica).
 [vagos]
 presenca maligna
 presenca sombria
