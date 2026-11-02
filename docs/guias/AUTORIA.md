@@ -21,7 +21,7 @@ Python valida manifesto, visibilidade e SHA antes de gerar WebP versionado.
 
 ## Fluxo A — Adicionar entidade manual (ex.: NPC novo)
 
-1. Copie o template do tipo em `docs/templates/codex/` (ex.: `npc.md`) para a
+1. Copie o template do tipo em `docs/templates/codex/` (NPC de trama: `npc_trama.md`) para a
    pasta certa do Codex (ex.: `data/codex/npcs/npc_maera_dos_sais.md`).
    - Nome do arquivo = `id` do frontmatter (lint valida).
    - **`curated: true` é OBRIGATÓRIO** — sem ele o próximo migrate APAGA o arquivo.
@@ -110,3 +110,33 @@ O wizard de criação de personagem (spec onboarding-valoria) lê `data/onboardi
    conteúdo novo em vez de extrair do lore.
 6. Região/classe/raça nova nos JSONs canônicos SEM card correspondente quebra
    a suíte (cobertura é bidirecional — drift ruidoso por construção).
+
+---
+
+## Fluxo E — Trama de região (SPEC-350)
+
+Povoa uma região com tramas: catálogo curado em `data/world/plot_threads.json`
+(tramas, portas, elenco `cast`, `waves`, `excluded`), lido por `services/plot_threads.py`
+e validado por `validate_plot_threads` (roda em `validate_content.py` e no gate do `rag.py`).
+Uma onda por spec (≤ 12–14 NPCs novos; qualidade > volume).
+
+1. **Sondas.** Seção regional de `lore_nova/npcs.txt` (Grep + Read com offset), mundo vivo
+   da região, facções, rumores (`rumor_seeds.json` por região), rotas de `lore_quests.json`.
+2. **Mapa + nomes** (tabela: trama, pergunta, núcleo, borda, ≥ 3 portas em ≥ 2 locais) →
+   aprovação antes de escrever texto.
+3. **Autoria.** Doc público curado em `data/codex/npcs/tramas/` (template
+   `docs/templates/codex/npc_trama.md`), doc de segredo em `segredos/`, entidade em
+   `entities_extra.json`, arestas em `edges.json` (aresta de facção secreta com
+   `visibility: hidden`), `agenda_by_npc` em `npc_world.json`, ficha no `cast`
+   (desejo/medo ≤ 90, tópico de segredo ≤ 60, voz com fala ≤ 120). Canônico da lore entra
+   só por ficha (campo `fonte` = arquivo:linha), sem reescrever a lore.
+4. **Regras duras do lint:** âncora de porta nunca é núcleo/líder; nada de "escolhido"
+   nem de "você" nos textos de mundo; sem termo `[proibidos]` do léxico de Valoria; sem
+   assinatura de segredo nem frase de `data/world/leak_phrases.json` em campo público;
+   palavra exclusiva do doc de segredo não pode aparecer na ficha; papéis de NPCs novos da
+   mesma região com radicais diferentes; fichas com Jaccard < 0,35.
+5. `uv run python scripts/validate_content.py` → 0 ERRO; `tests/test_spec350_*`.
+6. Revisão independente (rubrica da SPEC-350 §3.8) → `handoffs/SPEC-<NNN>-review.md`.
+7. `uv run python rag.py` (reindex) + smoke real na região; então `waves[...].status = "done"`.
+8. Ligar em jogo: `RPG_PLOT_THREADS=on` (prompt do NPC + roster da região atual).
+

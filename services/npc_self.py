@@ -346,10 +346,20 @@ def _table_label(table: str, ident: str) -> str:
     return ""
 
 
-def motive_lines(row: dict) -> list[str]:
+def _sheet_motive_lines(sheet) -> list[str]:
+    """SPEC-350 R22: motivos do NPC canônico a partir da ficha de trama (sem `seed_motives`)."""
+    out = [f"Você deseja: {sheet.desejo}.", f"Você teme: {sheet.medo}."]
+    out.append(f"Seu jeito: {sheet.voz.registro}. Fala assim: «{sheet.voz.fala}»")
+    out.append(
+        f"Há um assunto que você evita: {sheet.segredo_topico}. Desconverse se tocarem nele."
+    )
+    return out
+
+
+def motive_lines(row: dict, sheet=None) -> list[str]:
     motives = (row or {}).get("seed_motives")
     if not isinstance(motives, dict):
-        return []
+        return _sheet_motive_lines(sheet) if sheet is not None else []
     out: list[str] = []
     for key, table, fmt in (
         ("desire_id", "desires", "Você deseja: {}."),
@@ -402,6 +412,21 @@ def _knows_lines(state: dict, knowledge_id: str, exclude: Collection[str]) -> li
     return [ln for ln in block.splitlines()[1:-1] if ln.strip()]
 
 
+def _plot_sheet(state: dict, npc_key: str, row: dict):
+    """Ficha de trama do NPC (R21), só com `RPG_PLOT_THREADS=on`; senão None."""
+    from services import plot_threads
+
+    if plot_threads.mode() != "on":
+        return None
+    return plot_threads.sheet_for_row(state, npc_key, row)
+
+
+def _stake_line(sheet) -> str:
+    from services import plot_threads
+
+    return plot_threads.stake_line(sheet)
+
+
 def npc_self_blocks(
     state: dict,
     npc_key: str,
@@ -417,13 +442,15 @@ def npc_self_blocks(
         row = npc_row if isinstance(npc_row, dict) else {}
         ref = _ref(npc_key, row)
         fid = self_faction(state, npc_key, row)
+        sheet = _plot_sheet(state, npc_key, row)
         self_lines = [
             *_identity_lines(state, npc_key, row),
+            *([_stake_line(sheet)] if sheet is not None else []),
             *agenda_lines(state, npc_key, row),
             *place_lines(state),
             *relation_lines(state, ref, fid, knowledge_id or str(row.get("id") or ref)),
         ]
-        motives = motive_lines(row)
+        motives = motive_lines(row, sheet)
         knows = _knows_lines(
             state, knowledge_id or str(row.get("id") or npc_key), pack_evidence_ids
         )

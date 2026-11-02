@@ -266,6 +266,16 @@ def _is_dead(state: dict, ref: str, row: dict, sim: dict) -> bool:
     return isinstance(ent, dict) and ent.get("alive") is False
 
 
+def _plot_region_cast(state: dict) -> list[str]:
+    """SPEC-350 R24: ids do elenco de trama da região do local atual (`off` -> [])."""
+    from services import plot_threads
+
+    if plot_threads.mode() != "on":
+        return []
+    region = wp.region_of(_player_loc(state))
+    return plot_threads.region_cast(region) if region else []
+
+
 def _candidates(state: dict, sim: dict) -> list[str]:
     """Candidatos em ordem de prioridade, SEM teto (R1). Morto não entra."""
     from services.reputation import npc_tier
@@ -296,6 +306,8 @@ def _candidates(state: dict, sim: dict) -> list[str]:
         key=lambda r: (-int(rows[r].get("last_seen_turn", 0) or 0), r),
     )
     for r in rest:
+        add(r)
+    for r in _plot_region_cast(state):  # SPEC-350 R24: elenco da trama da região atual
         add(r)
     for r in _cfg().get("key_npcs", []):
         add(r)

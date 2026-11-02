@@ -17,7 +17,11 @@ NA = "nova_arcadia"
 TEMPLATE_PHRASE = "fala por imagens concretas"
 NEW_NPCS = 14
 EXCLUDED_NA = {
-    "npc_elaryin_historico", "npc_malagor", "npc_fehk", "npc_o_cego", "npc_o_corretor",
+    "npc_elaryin_historico",
+    "npc_malagor",
+    "npc_fehk",
+    "npc_o_cego",
+    "npc_o_corretor",
 }
 LORE_362 = (
     "npc_valerius npc_grum npc_velha_magda npc_doutor_silas_vane npc_comandante_thrace "
@@ -59,8 +63,13 @@ def _docs():
 def test_nova_arcadia_has_seven_threads_with_listed_members(data):
     threads = {t["id"]: t for t in data["threads"] if t["region_id"] == NA}
     assert set(threads) == {
-        "tr_na_documento_da_legiao", "tr_na_o_que_o_lorde_trocou", "tr_na_corpos_marcados",
-        "tr_na_aco_que_lembra", "tr_na_lista_de_fornalha", "tr_na_a_colecao", "tr_na_po_de_sonho",
+        "tr_na_documento_da_legiao",
+        "tr_na_o_que_o_lorde_trocou",
+        "tr_na_corpos_marcados",
+        "tr_na_aco_que_lembra",
+        "tr_na_lista_de_fornalha",
+        "tr_na_a_colecao",
+        "tr_na_po_de_sonho",
     }
     for t in threads.values():
         assert len(t["portas"]) >= 3
@@ -133,9 +142,16 @@ def test_every_na_named_npc_in_cast_or_excluded(data):
 
 
 def test_348_npcs_reused_not_redefined(data):
-    for nid in ("npc_ilsa", "npc_bertil", "npc_sennar_o_pregador_da_cicatriz", "npc_benedita_a_parteira"):
+    for nid in (
+        "npc_ilsa",
+        "npc_bertil",
+        "npc_sennar_o_pregador_da_cicatriz",
+        "npc_benedita_a_parteira",
+    ):
         assert data["cast"][nid]["fonte"].startswith("lore_nova/npcs.txt:")
-    assert not [n for n in data["cast"] if n.startswith("npc_tr_") and any(x in n for x in NAME_348)]
+    assert not [
+        n for n in data["cast"] if n.startswith("npc_tr_") and any(x in n for x in NAME_348)
+    ]
 
 
 def test_region_coverage_nova_arcadia(data):
