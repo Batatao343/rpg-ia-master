@@ -46,8 +46,15 @@ def _git(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], capture_output=True, text=True, check=False, cwd=ROOT)
 
 
+# Commit da main antes de qualquer mudanca de Carta da SPEC-362 (a spec escrita). Depois do pouso
+# o merge-base com a main e o proprio HEAD, e a comparacao de versao ficaria contra si mesma.
+BASE_PRE_362 = "96c83ac4"
+
+
 def _base() -> str:
-    """Ponto de partida da branch (main pode ter andado depois do rebase)."""
+    """Ponto de partida da SPEC-362: o commit fixado, ou o merge-base se ele nao existir."""
+    if _git("cat-file", "-e", f"{BASE_PRE_362}^{{commit}}").returncode == 0:
+        return BASE_PRE_362
     res = _git("merge-base", "main", "HEAD")
     return res.stdout.strip() or "main"
 
