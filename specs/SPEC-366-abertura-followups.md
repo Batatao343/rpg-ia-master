@@ -69,3 +69,16 @@ Próximo smoke da 351: conferir `replan.planner_cited` (informativo, sem critér
 - Falso positivo/negativo residual em `looks_hostile` (heurística; defesa em profundidade).
 - Prólogo/brief que citam segredo caem no template (perde prosa, nunca vaza).
 - Saves antigos: sem mudança de schema.
+
+## 9. Notas de pouso e follow-ups
+
+- **Revisão (ada66342) aplicada:** evento `prologue.thread.planner_adherence` registrado no catálogo
+  (`gen_event_catalog.py`); prólogo/brief usam só `find_unrevealed` + `mask_secret_names` (não o
+  `beat_leaks` por palavras soltas, que derrubava o caso Zuri do smoke 2026-11-02b); ao cair no
+  template, `seeking` também é trocado (E5); `looks_hostile` exige alvos compostos e ancora o
+  "agora você é"; o template é montado só no primeiro acerto.
+- **Hash do oráculo:** `playtest/opening_checks.py` passou de `5713a694…` para `d4c3f5e1…` por
+  `ruff format` feito em outra sessão (85870f7a); só formatação, semântica intacta.
+- **Follow-up (fora desta spec):** `scripts/migrate_lore_nova.py`, se rodado inteiro, apaga
+  `npc_*_segredo.md` e encolhe `entities.json` (drift pré-existente). Quem regerar o Codex deve
+  tratar isso antes; `mon_mao_sombria_agentes.md` regenera byte-igual.

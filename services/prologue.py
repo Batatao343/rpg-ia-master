@@ -218,6 +218,15 @@ def fallback_scenario(char_input: dict, menu: dict | None = None) -> StartScenar
     return _derive_seed_npcs(scenario, menu) if door else scenario
 
 
+def _free_text_leaks(text: str) -> bool:
+    """Detectores PRECISOS para prosa longa (prólogo/brief): assinatura de segredo ou nome de
+    fação secreta. O `faction_gate.beat_leaks` (saco de palavras) só serve a beats curtos."""
+    from services import faction_gate
+    from services.secret_signatures import find_unrevealed
+
+    return bool(find_unrevealed(text, {})) or faction_gate.mask_secret_names({}, text) != text
+
+
 def _trim(value: object, limit: int) -> str:
     return " ".join(str(value or "").split())[:limit]
 
@@ -269,13 +278,12 @@ def _normalize(
         data["climax"] = sanitize_beat(data["climax"], {})
         # SPEC-366 R2: prólogo (o jogador lê) e brief (vira a 1ª narração) — com acerto, o texto
         # inteiro cai no template (não se reescreve prosa livre).
-        base = fallback_scenario(char_input, menu)
-        for key, safe in (
-            ("prologue", base.prologue),
-            ("opening_scene_brief", base.opening_scene_brief),
-        ):
-            if sanitize_beat(data[key], {}) != data[key]:
-                data[key] = safe
+        base = None  # preguiçoso (P2-2): o template só é montado no primeiro acerto
+        for key in ("prologue", "opening_scene_brief"):
+            if _free_text_leaks(data[key]):
+                base = base or fallback_scenario(char_input, menu)
+                data[key] = getattr(base, key)
+                data["seeking"] = base.seeking  # E5: seeking precisa conversar com o texto novo
                 _log_event("prologue", "thread.downgraded", reason=f"{key}_leak")
     npcs = []
     for npc in data.get("seed_npcs") or []:
@@ -599,14 +607,20 @@ def personal_pool_document(npc: PersonalNPC, seed) -> dict:
 
 
 _HOSTILE = re.compile(
-    # verbo de descarte + alvo de instrução explícito ("ignora as regras da guilda" é benigno)
+    # verbo de descarte + alvo COMPOSTO de instrução ("esquecer as instruções do meu mestre",
+    # "ignorou um pedido anterior", "armadura acima do joelho" são benignos)
     r"\b(ignor\w*|esque\w*|desconsider\w*|descart\w*|forget|disregard|override)\b"
-    r".{0,40}\b(instru\w*|anterior\w*|acima|previous|prior|above|system|prompt|"
-    r"regras\s+(do|de)\s+(sistema|jogo|mestre))\b|"
+    r".{0,40}\b(instru\w*\s+(anteriores|previas|acima|do\s+sistema)|"
+    r"(tudo|o\s+que\s+foi\s+dito|o\s+que\s+veio)\s+(acima|antes|anteriormente)|"
+    r"regras\s+(anteriores|do\s+sistema)|"
+    r"(previous|prior|above|earlier|all)\s+(instructions|rules|prompts?|context)|"
+    r"system\s*prompt|prompt\s+do\s+sistema)|"
     r"system\s*prompt|prompt\s+do\s+sistema|"
     r"\b(revele|registre|marque|reveal|record)\b.{0,40}\b(json|proposed_events|quest_\w+|sistema)\b|"
     r"</?\w+>|\bquest_\w+|\bproposed_events\b|jailbreak|"
-    r"\byou\s+are\s+now\b|\bagora\s+voce\s+e\b|\bnovas?\s+instrucoes\b|\bdeveloper\s+mode\b",
+    r"\byou\s+are\s+now\b.{0,30}\b(dan|free|unrestricted|without|no\s+limits)\b|"
+    r"(^|[.!?:]\s*)agora\s+voce\s+e\b.{0,30}\b(dan|livre|sem\s+(limites|regras|restricoes)|assistente|ia)\b|"
+    r"\bnovas?\s+instrucoes\b|\bdeveloper\s+mode\b",
     re.IGNORECASE | re.DOTALL,
 )
 _SPACED = re.compile(r"(?:\b\w[\s.\-_]){3,}\w\b")

@@ -293,6 +293,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `prologue.thread.downgraded` | `reason` |
 | `prologue.thread.linked` | `doors`, `personal`, `plot_npc`, `source` |
 | `prologue.thread.no_plot_npc` | — |
+| `prologue.thread.planner_adherence` | `doors`, `planner_cited` |
 | `prologue.thread.rag_failed` | `error` |
 | `prologue.thread.shadow` | `doors`, `npcs` |
 | `provider.attempt` | `attempt`, `capability`, `cost_basis`, `fell_back`, `http_status`, `latency_ms`, `model`, `outcome`, `provider` |
