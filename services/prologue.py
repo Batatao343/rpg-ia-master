@@ -397,7 +397,7 @@ def _roll_pool_seed(nonce: str, start_loc_id: str):
         try:
             if not taken(npc_seed.seed_signature(seed)):
                 return seed, slot
-        except Exception:  # noqa: BLE001 — store indisponível: usa este slot
+        except Exception:  # noqa: BLE001  # silent-ok: store indisponível, usa este slot
             return seed, slot
     return seed, npc_seed.MAX_REROLLS
 
@@ -629,7 +629,7 @@ def submit_personal_npc(
             if shared_pool.signature_taken(PoolNamespace.NPC, npc_seed.seed_signature(seed)):
                 seed = None
                 _log_event("prologue", "thread.downgraded", reason="seed_reused")
-        except Exception:  # noqa: BLE001 — sem checagem, o validador de duplicata ainda barra
+        except Exception:  # noqa: BLE001  # silent-ok: sem checagem, o validador de duplicata ainda barra
             pass
     try:
         entry = shared_pool.submit(
