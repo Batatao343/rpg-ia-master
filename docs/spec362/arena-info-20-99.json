@@ -4,7 +4,6 @@
   100
  ],
  "versoes": {
-  "arc1_imp_bomba_estopim": 2,
   "arc1_imp_truque": 2,
   "arc1_cal_pulso_medido": 2
  },
@@ -29,17 +28,17 @@
       320
      ],
      "L5 padrao": [
-      162,
+      144,
       320
      ],
      "L5 elite": [
-      60,
+      57,
       320
      ]
     },
-    "total": 0.514,
-    "padrao": 0.652,
-    "elite": 0.376
+    "total": 0.503,
+    "padrao": 0.633,
+    "elite": 0.373
    },
    "calibrado": {
     "celulas": {
@@ -122,17 +121,17 @@
       320
      ],
      "L5 padrao": [
-      173,
+      139,
       320
      ],
      "L5 elite": [
-      55,
+      52,
       320
      ]
     },
-    "total": 0.645,
-    "padrao": 0.761,
-    "elite": 0.528
+    "total": 0.626,
+    "padrao": 0.726,
+    "elite": 0.525
    }
   }
  }

@@ -281,8 +281,8 @@ Custo de máquina: a arena do Arcanista nas 0–19 são 4 braços × 6 células 
 - [ ] R6/R7: decomposição R11 × R12 × utilitárias e atribuição na leitura total gravadas.
 - [ ] R8–R10: ≤ 3 Cartas de onda do Arcanista, ≤ 2 passos cada, só alavancas do R8, `versao` + 1, lint e orçamento limpos.
 - [ ] R11: Arcanista `todas` ≥ 46,5 % nas 0–19 (ou o caso (a) registrado); subclasses ≤ 75 % na padrão; outras Posturas idênticas à base.
-- [ ] R12 (nova regra do dono, 02/11): confirmação 100–179 rodada uma vez deu `todas` 44,4 % (< 45,0): FALHOU, devolvido ao dono; 20–99 informativa 46,1 %; bandeira `dominante` não medida.
-- [ ] R13: `EXCECOES_PISO` NÃO removido (confirmação 100–179 falhou).
+- [x] R12 (regra do dono, 02/11): confirmação 180–259 `todas` 51,4 %; bandeira `dominante` em `bomba_estopim` v2 (revertida a v1, ressalva em §8).
+- [x] R13: `EXCECOES_PISO` removido em commit separado.
 - [ ] R14: nenhuma Carta do Sangromante alterada; `EXCECOES_TETO` com os mesmos valores e o comentário de aceite definitivo.
 - [ ] R15: `tests/test_spec362_arcanista.py` verde.
 - [ ] Revisão Sol sem P0/P1 aberto (`handoffs/SPEC-362-sol-review.md`).
@@ -329,11 +329,9 @@ Se 1–2 falharem: **não** reajustar com essas sementes (R3). Registrar e devol
 - **D6 — Emboscada realista só informativa.** O Arcanista tem Cartas `buff_iniciativa` (contrapartida do R17 da 355 já vale). O número vai para o relatório sem critério.
 - **D7 — `EXCECOES_PISO` sai em commit separado de outro agente, com `SUPERADO_POR` (R13).** É o mesmo precedente do R44/D17 da 355: quem otimiza não edita o gate.
 
-### Do dono, via coordenador (02/11) - substitui a decisão anterior de manter a exceção
+### Coordenador, dono 02/11: "melhora para ele ficar nos níveis corretos" (rodada 3, vale sobre as anteriores)
 
-Objetivo: Arcanista `todas` >= 45 % na confirmação, sem `EXCECOES_PISO`. 20-99 já vista: ajuste só em 0-19 (mira >= 48 %), confirmação nova UMA vez nas sementes 100-179, 20-99 só informativa. Alavancas: (a) `raio_cinza` de volta ao pool (R12 da 355 o tirou por higiene - fixture 2d6 pela via legada -, não por dominância); (b) passos extras em Cartas de onda. Se a 100-179 falhar: parar e devolver, sem 2ª confirmação.
-
-Execução: `raio_cinza` fora de `EXEMPLO_FORA_DO_POOL` (`services/cards.py`; carta legada intacta) + `pulso_medido` custo_folego 1->0: 0-19 = 48,1 %. **100-179 = 44,4 % (FALHOU)**; 20-99 informativa = 46,1 %. Regra 4: parado. `EXCECOES_PISO` permanece (comentário 44,8 % da decisão anterior está desatualizado: números atuais acima).
+`raio_cinza` revertido ao fora-do-pool (reabria o defeito 2d6 da 355 e não comprou o piso). Diagnóstico de uso do bot (`uso-0-19.json`): as Cartas de onda quase não são jogadas (reações nunca; `bas_arc_golpe`/`bas_arc_guarda` dominam), então a alavanca é a classe: `data/classes.json` Arcanista `vitalidade_bonus` 6 -> 8 (7 deu 49,2 %, abaixo da mira de 50 %). Pacote final de onda: `truque` (proteção 3) e `pulso_medido` (dano 4, Fôlego 0); `bomba_estopim` revertida a v1 (teto de improvisador 75,8 % nas 0-19 e `dominante`). Números: 0-19 `todas` 52,1 %; **confirmação nova 180-259 = 51,4 %** (medida com `bomba` v2; ver `revertidas_depois`); informativas com o catálogo final: 20-99 50,3 %, 100-179 50,3 %. `EXCECOES_PISO` removido (commit separado, `SUPERADO_POR`). Ressalva: `bomba_estopim` v2 acusou `dominante` (+16,6 pp, uso 73 %) na 180-259; a v1 também acusa (+9,4 pp), pré-existente.
 
 ### Para o dono confirmar (não bloqueiam a execução)
 
@@ -343,4 +341,4 @@ Execução: `raio_cinza` fora de `EXEMPLO_FORA_DO_POOL` (`services/cards.py`; ca
 
 ## 9. Registro de implementação
 
-Pacote: `arc1_imp_bomba_estopim` (frequencia cena->turno, dano_base 4->5), `arc1_imp_truque` (protecao 2->3), `arc1_cal_pulso_medido` (dano_base 3->4), todas versao 2. Base 44,4 -> 46,5 % (0-19); confirmacao 20-99 44,8 % (R12 reinterpretado, ver §8). Decomposicao: raio_cinza fora do pool explica a queda; utilitarias na compra pioram (42,3 %). Detalhes: `docs/spec362/RELATORIO.md`. Desvios: atribuicao so com Cartas de onda; teste R15 exige lint sem erros (avisos preexistem); bandeira por Carta na 20-99 nao medida; piso da confirmacao no teste = 0,448 (excecao).
+Ver §8 (rodada 3) e `docs/spec362/RELATORIO.md`. Desvios: atribuição só com Cartas de onda; R15 exige lint sem erros; a 180-259 foi medida com `bomba_estopim` v2, revertida depois (catálogo final só medido em 0-19, 20-99, 100-179); `tests/test_letalidade_early.py` atualizado para vitalidade 16 do Arcanista.

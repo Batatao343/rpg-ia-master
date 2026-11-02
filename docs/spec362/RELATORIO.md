@@ -16,3 +16,9 @@ Opcao ao dono (D4): aceitar a excecao, ou spec com carta nova/legada (raio_cinza
 Alavancas: raio_cinza de volta ao pool (R12 da 355 era higiene, nao dominancia) + pulso_medido custo_folego 1->0. 0-19: 48,1 % (todas), descoberto 44,2, improvisador 59,4, calibrado 56,9; outras Posturas identicas a base.
 Confirmacao 100-179 (uma vez): todas **44,4 %** (cal 56,0 / des 40,8 / imp 55,8) - FALHOU. 20-99 informativa: 46,1 %.
 Leitura: queda 0-19 -> held-out de ~3,7 pp (SE ~1,1 pp por 1.920 lutas; 0-19 tem 480 lutas, SE ~2,3). Bandeira dominante nao medida. Parado (regra 4).
+
+## Rodada 3 (dono 02/11: "melhora para ele ficar nos niveis corretos")
+Uso do bot (`uso-0-19.json`): reacoes e utilitarias nunca jogadas; `bas_arc_golpe/guarda` e 1-2 cartas ativas concentram as jogadas; cartas de onda movem pouco. Alavanca: `vitalidade_bonus` 6->8 (Arcanista; 7 = 49,2 %). Pacote de onda final: truque, pulso_medido; bomba revertida a v1.
+0-19: todas 52,1 (cal 61,7 / des 44,4 / imp 60,2; padrao max 73,8); outras Posturas identicas a base.
+Confirmacao 180-259: todas 51,4 (cal 59,5 / des 45,1 / imp 59,8). Dominante: bomba v2 +16,6 pp uso 73 % (v1 tambem +9,4); truque +4,1; pulso +2,5.
+Informativas (catalogo final): 20-99 50,3 %; 100-179 50,3 %.

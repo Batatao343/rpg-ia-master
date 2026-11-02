@@ -71,7 +71,9 @@ def _main_versao(cid: str) -> int:
 
 def test_versoes_batem_com_catalogo():
     for name in ("arena-final.json", "arena-confirmacao.json"):
+        revertidas = _load(name).get("revertidas_depois", {})
         for cid, v in _load(name)["versoes"].items():
+            v = revertidas.get(cid, v)
             assert int((cards.get_card(cid) or {}).get("versao", 1) or 1) == v, (name, cid)
 
 

@@ -4,7 +4,6 @@
   20
  ],
  "versoes": {
-  "arc1_imp_bomba_estopim": 2,
   "arc1_imp_truque": 2,
   "arc1_cal_pulso_medido": 2
  },
@@ -407,17 +406,17 @@
       80
      ],
      "L5 padrao": [
-      46,
+      44,
       80
      ],
      "L5 elite": [
-      20,
+      15,
       80
      ]
     },
-    "total": 0.535,
-    "padrao": 0.696,
-    "elite": 0.375
+    "total": 0.521,
+    "padrao": 0.688,
+    "elite": 0.354
    },
    "calibrado": {
     "celulas": {
@@ -500,17 +499,17 @@
       80
      ],
      "L5 padrao": [
-      46,
+      41,
       80
      ],
      "L5 elite": [
-      11,
+      9,
       80
      ]
     },
-    "total": 0.617,
-    "padrao": 0.758,
-    "elite": 0.475
+    "total": 0.602,
+    "padrao": 0.738,
+    "elite": 0.467
    }
   },
   "Médico de Campo": {
@@ -642,5 +641,5 @@
  },
  "folga_atingida": true,
  "base": "docs/spec362/arena-base-0-19.json",
- "nota": "pacote de onda + vitalidade_bonus 8 do Arcanista (data/classes.json); raio_cinza fora do pool"
+ "nota": "truque + pulso_medido + vitalidade_bonus 8 do Arcanista; bomba_estopim revertida a v1; raio_cinza fora do pool"
 }

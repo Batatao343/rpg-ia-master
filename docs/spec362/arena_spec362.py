@@ -73,16 +73,17 @@ def atribuicao(seeds: range, legadas: bool = False) -> dict:
     for sub in SUBS:
         sub_key = sub or "todas"
         deck_by_level = {lv: set(B.sim.full_deck(CLS, lv, sub)) for lv in LEVELS}
-        base = {
-            lv: B.AP.run_arm(CLS, seeds, [lv], ["padrao", "elite"], 4, sub) for lv in LEVELS
-        }
+        base = {lv: B.AP.run_arm(CLS, seeds, [lv], ["padrao", "elite"], 4, sub) for lv in LEVELS}
         ids = sorted(set().union(*deck_by_level.values()))
         for cid in ids:
             card = cat.get(cid) or {}
             onda = cid.split("_")[0].endswith("1")
             if card.get("basica") or (not onda and not legadas) or card.get("classe") != CLS:
                 continue
-            row: dict = {"onda": onda, "no_baralho": [lv for lv in LEVELS if cid in deck_by_level[lv]]}
+            row: dict = {
+                "onda": onda,
+                "no_baralho": [lv for lv in LEVELS if cid in deck_by_level[lv]],
+            }
             tot_w = tot_n = pad_w = pad_n = 0
             bw = bn = bpw = bpn = 0
             for lv in row["no_baralho"]:
@@ -124,7 +125,9 @@ def uso(seeds: range) -> dict:
             size = B.AP.A.group_size(cat, level)
             for bid in B.sim.pick(pool[cat], 4):
                 for seed in seeds:
-                    o, _ = B.sim.fight(bid, size, CLS, level, seed, B.sim.full_deck(CLS, level, ""), "full", seen)
+                    o, _ = B.sim.fight(
+                        bid, size, CLS, level, seed, B.sim.full_deck(CLS, level, ""), "full", seen
+                    )
                     wins += o == "win"
                     n_f += 1
         rows = {}
