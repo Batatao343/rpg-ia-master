@@ -605,3 +605,26 @@ que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve ca
   worktree (índice FAISS gitignored; `lore_block` vazio), E4 é provisório até a 348; leitura humana dos 3 prólogos
   e 3 turnos do caso 1 ficam com o coordenador.
 - **Cobertura do fallback por região:** todas as 12 regiões têm ≥ 3 NPCs na borda (sem a 350).
+
+### 02/11 (tarde) — correções da revisão independente (CHANGES_REQUIRED)
+
+- **P1-1:** adaptador mapeia `PlotDoor` real (SPEC-350 na main): uma porta por trama, `name` = `title` da trama
+  dona, `hook` = `hook_public`, âncora = `anchor_npc_id`, `postura` = classe passada a `plot_doors`; `_door_name`
+  resolve porta/trama → título; log `thread.downgraded reason=350_unmapped|350_anchors_unusable`. Teste com
+  `PlotDoor` Pydantic frozen e teste com o módulo real (Elfo/Nova Arcádia → `tr_na_po_de_sonho` no menu quando a
+  backstory casa; por Postura "Arcanista Cinzento" a 350 ordena `tr_na_lista_de_fornalha` primeiro, e o caso do
+  dono só chega ao Pó de Sonho se a descrição citar o tema ou se a trama couber nas 6 portas: justificativa
+  registrada). Âncoras `npc_tr_*` têm casa e passam em `_eligible_npc`; âncoras sem casa (ex. `npc_ilsa`) são
+  filtradas.
+- **P2-1:** prompt pede o título COMPLETO como parte natural da frase (sem aspas) e proíbe porta/trama/menu na
+  ficção; E1 7/8 no smoke (oráculo intocado); `consume_thread` acrescenta direção ao beat 2 quando o planejador
+  ignora o fio (garante E1 no replan). **P2-2:** `looks_hostile` → entrada hostil vira `name_origin=player`
+  (só local); caso 8 não promovido. **P2-4:** `ARCS_LEFT_DEFAULT=1` (D3: prólogo + 1 replanejamento).
+  **P2-5:** `plot_npc_hook` vai ao brief e à ficha (`opening_hook`); `plot_npc_name` derivado; chip mostra
+  `nome — gancho (do mundo)` fora da condição de `seed_npcs`. **P2-6:** semente já usada → só local.
+  **P2-7:** NPC morto na projeção fora do menu (teste). **P2-8:** `seeking` e nomes no bloco do planejador
+  passam por `wrap_player_input`. Beats e clímax passam por `sanitize_beat` (E4: vazamento de facção).
+- **Smoke 2 (`docs/spec351/smoke-2026-11-02b.json`, RAG de lore real: 700–1300 caracteres por caso, 350 real
+  em Nova Arcádia):** E1 7/8, E2/E3/E4/E5/E6/E7 8/8; 1 NPC pessoal promovido (caso 1), nenhum com nome do
+  personagem nem o caso 8; p50 8,3 s → 9,4 s. O replan do caso 1 deu E1 falso antes de `consume_thread`
+  forçar o título; essa última correção foi validada só por teste unitário (não repeti o smoke inteiro).

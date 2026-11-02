@@ -155,6 +155,8 @@ def main() -> int:
                 "plot_npc_id": scenario.plot_npc_id,
                 "personal_npc": scenario.personal_npc.name if scenario.personal_npc else None,
                 "seeking": scenario.seeking,
+                "lore_chars": len(ot.lore_block(menu, desc)) if menu else 0,
+                "menu_source": (menu or {}).get("source"),
                 "checks": checks,
                 "new_status": resp.status_code,
                 "prologue": scenario.prologue,
@@ -183,7 +185,10 @@ def main() -> int:
                 "thread_refs": rows[0]["thread_refs"],
             }
             menu0 = ot.thread_menu(
-                "nova_arcadia", backstory=CASES[0][4], start_location_id="nova_arcadia"
+                "nova_arcadia",
+                backstory=CASES[0][4],
+                start_location_id="nova_arcadia",
+                postura=CASES[0][2],
             )
             replan = {
                 "E1": oc.check_thread_linked(

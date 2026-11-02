@@ -176,3 +176,17 @@ def test_planner_block_wraps_client_text():
     block = ot.planner_thread_block(state)
     assert block.count("</entrada_do_jogador>") == block.count("<entrada_do_jogador>")
     assert block.count("<entrada_do_jogador>") >= 2  # seeking + nomes dos NPCs
+
+
+def test_consume_thread_forces_title_into_beats_when_model_ignores_it():
+    _s, _m, seed = _seeded()
+    state = _state(seed)
+    names = ot.door_names(state["campaign_plan"]["opening_thread"])
+    plan = {
+        "beats": [{"description": "Descreva a viela.", "status": "pending"}] * 3,
+        "climax": "Um acerto de contas.",
+    }
+    out = ot.consume_thread(plan, state)
+    assert names[0] in out["beats"][1]["description"]
+    ok = {**plan, "climax": f"Tudo gira em torno de {names[0]}."}
+    assert ot.consume_thread(ok, state)["beats"] == ok["beats"]

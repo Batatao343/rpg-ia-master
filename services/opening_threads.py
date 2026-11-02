@@ -414,7 +414,9 @@ def _door_name(ref: str) -> str:
                 if ref == thr.id or any(d.id == ref for d in thr.portas):
                     return _clip(thr.title, 80)
         except Exception as exc:  # noqa: BLE001
-            _log_event("prologue", "thread.api_350_failed", level="warning", error=type(exc).__name__)
+            _log_event(
+                "prologue", "thread.api_350_failed", level="warning", error=type(exc).__name__
+            )
     return ""
 
 
@@ -451,8 +453,8 @@ def planner_thread_block(state: dict) -> str:
         lines.append(f"O herói busca: {wrap_player_input(_clip(thread['seeking'], 200))}")
     lines.append(
         "Continue esta trama pelos beats, revelando-a aos poucos e ainda na borda; "
-        "sem profecia, sem escolhido. Cite as palavras do título de uma trama de forma "
-        "natural na frase de um beat (sem aspas); nunca use os termos porta, trama ou menu "
+        "sem profecia, sem escolhido. Cite o título completo de uma trama, com as mesmas "
+        "palavras na mesma ordem, de forma natural na frase de um beat (sem aspas); nunca use os termos porta, trama ou menu "
         "na ficção."
     )
     lines.append("</FIO_DE_ABERTURA>")
@@ -466,4 +468,14 @@ def consume_thread(plan: dict, state: dict) -> dict:
         return plan
     new = dict(thread)
     new["arcs_left"] = max(0, int(thread.get("arcs_left", 0)) - 1)
+    beats = [dict(b) for b in plan.get("beats") or []]
+    names = door_names(thread)
+    text = _fold(
+        " ".join([*(b.get("description", "") for b in beats), str(plan.get("climax", ""))])
+    )
+    if names and beats and not any(_fold(n) in text for n in names):
+        # o modelo ignorou o fio: direção ao narrador (beats não vão ao jogador) mantém a trama viva
+        idx = min(1, len(beats) - 1)
+        beats[idx]["description"] = f"{beats[idx]['description']} Mantenha em vista: {names[0]}."
+        plan = {**plan, "beats": beats}
     return {**plan, "opening_thread": new}

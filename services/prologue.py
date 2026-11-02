@@ -260,6 +260,13 @@ def _normalize(
     if not beats:
         beats = [b[:MAX_BEAT_CHARS] for b in fallback_scenario(char_input).beats]
     data["beats"] = beats[:5]
+    if (
+        menu is not None
+    ):  # SPEC-351 E4: beats/clímax vão ao cliente — segredo/fação oculta vira rumor público
+        from services.secret_signatures import sanitize_beat
+
+        data["beats"] = [sanitize_beat(b, {}) for b in data["beats"]]
+        data["climax"] = sanitize_beat(data["climax"], {})
     npcs = []
     for npc in data.get("seed_npcs") or []:
         att = (npc.get("attitude") or "").strip().lower()
@@ -356,10 +363,10 @@ def _thread_rules() -> str:
         "da crise.\n"
         "4. `seeking`: o que ele busca, 1 frase, em palavras do mundo, e o prólogo diz isso. "
         "Os beats revelam a trama aos poucos: o 1º beat é pessoal e concreto, a trama "
-        "aparece pelo 2º ou 3º; o clímax do 1º arco ainda é na borda. OBRIGATÓRIO: use as "
-        "palavras do TÍTULO da porta escolhida (a parte antes do travessão) de forma natural "
-        "numa frase do `opening_scene_brief` OU do 2º beat, sem aspas e sem copiar a caixa de "
-        "título. NUNCA escreva os termos de bastidor porta, trama ou menu na ficção. Evite as "
+        "aparece pelo 2º ou 3º; o clímax do 1º arco ainda é na borda. OBRIGATÓRIO: cite o "
+        "TÍTULO COMPLETO da porta escolhida (a parte antes do travessão), com as mesmas palavras "
+        "na mesma ordem, como parte natural de uma frase do `opening_scene_brief` OU do 2º beat "
+        "(caixa livre, sem aspas, ex.: um boato ouvido na rua). NUNCA escreva os termos de bastidor porta, trama ou menu na ficção. Evite as "
         "palavras escolhido, profecia, destino e herdeiro.\n"
         "4b. NPCs: exatamente 1 `personal_npc` (NOVO, criado para a história, costurado em "
         "volta da <SEMENTE_NPC_PESSOAL>) e 1 NPC da trama: `plot_npc_id` = entity_id EXATO do "
