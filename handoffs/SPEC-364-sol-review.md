@@ -1,6 +1,6 @@
 # SPEC-364 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
+> **Veredito:** `CHANGES_REQUIRED` (re-revisão de `4c05ca40`: só P3 abertos; ver § Re-revisão)
 > **Revisor:** Opus / Sol (spec-reviewer) · **Data:** 2026-11-02 · **Commit revisado:** `a6ab7d61`
 
 ## Escopo
@@ -66,4 +66,47 @@ node --test web/tests/spec364-estilhas.test.mjs web/tests/spec347-components.tes
 tsc -p web/tsconfig.json --noEmit → 0 erros
 ruff check (arquivos Python alterados) → All checks passed
 git diff main...HEAD -- evals/ tests/fixtures/spec330_legacy_golden.json web/e2e/contracts config/flags.yaml services/conflict_orchestrator.py services/scene_cards.py → vazio
+```
+
+## Re-revisão (2026-11-02, `50fb8f12..4c05ca40`)
+
+**Veredito da re-revisão:** `CHANGES_REQUIRED`, só com P3 (nenhum P0/P1/P2 aberto). São 3 correções pequenas
+de teste/registro; nada no motor. Pela regra "zero pendência" do dono, voltam à Terra; se o coordenador aceitar
+P3-8..P3-10 como follow-up registrado, a spec pode pousar.
+
+### Achados originais
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P1-1 | **Fechado** | `tests/test_spec364_flee_surfaces.py` semeia a perseguição (`alcancado`, `distante`, `afastado`, `quase_livre`), faz a fuga pela API e dá `pytest.fail` se nenhuma semente produzir o desfecho (não é mais vácuo). O contador envolve `get_llm` de 8 módulos (o `agents.combat` importa no topo, então o patch pega) e exige `calls == []` nas rodadas que não encerram a luta. O teste vácuo saiu de `test_spec346_board_no_llm.py`. A sonda antiga não se aplica mais (o laço removido era o objeto dela); o caso (a) alcançado → avança agora é afirmado com `pressionado → afastado` no `mech_log`, na mensagem e no Livro, e passa. |
+| P2-1 | **Fechado** (ressalva em P3-9) | Mesmo arquivo: `mech_log`, mensagem e `/game/history` com a mesma trilha nos casos (a)–(c), regex de R3 em todas as superfícies, voz de R16, Carta de Cena disparando. (d) só afirma conflito encerrado e ausência de ids; (e) é unidade. `round_board` só é varrido por ids (o §9 justifica: é lista estruturada sem trilha). |
+| P2-2 | **Fechado** | `agents/combat.py:3412-3413` grava `_last = {de, sacrificio}`; `_flee_roll_payload` devolve payload sem dado; `_flee_line` (`services/combat_preview.py:328-330`) escreve "Fuga · sacrifício aceito · escapou (afastado → livre)". `out["fuga"]` só é lido por `_flee_line` (conferido), então `total: None` não quebra ninguém. Teste `test_force_escape_has_no_stale_roll`. |
+| P2-3 | **Fechado** | `fall_partition` inclui `inconscientes` (`services/round_log.py:602`); teste com nocaute antigo. Efeito colateral aceitável: no fallback determinístico o inconsciente antigo vira "já tinha tombado" (`round_log.py:806-808`), o que é verdade ("tombar" = cair). |
+| P2-4 | **Parcial** → P3-8 | `tests/test_spec364_death_api.py` prova pela API mensagem, Livro, `death_context.killer`, crônica ("Smoke4A tombou em combate" íntegro) e `mech_log`, nos dois caminhos. Falta o "inimigo caído em rodada anterior" de R21, e o motivo registrado no §9 está, ao que tudo indica, errado (ver P3-8). |
+| P2-5 | **Fechado** (ressalva em P3-10) | `test_no_internal_ids_or_hero_name_in_history_r29` com 2 fugas, Cartas de Cena, item livre longo, `quase_livre`/`alcancado` e a regra de voz. |
+| P3-1 | **Fechado** (ressalva em P3-11) | `_V6_FALL_RE` com plurais, `cai/tomba morto` tratado como presente, verbo sem sujeito herdando o nome; 4 positivos novos e os 12 benignos seguem verdes. |
+| P3-2 | **Fechado** | Prefixo "Na rodada final" sempre que há `last_out` (`round_log.py:638`). |
+| P3-3 | **Fechado** | `_BUY_ASK_RE`/`_SELL_ASK_RE` (`agents/loot.py:177-202`): pergunta de compra cota o estoque; item que o mercador não tem → "não está à venda aqui". 2 testes novos. |
+| P3-4 | **Fechado** | Saldo no singular só em 1000 milli (`AccountScreen.tsx:362`). |
+| P3-5 | **Fechado** | Teste renomeado `test_settle_above_ceiling_capped`; R17 provado pela evidência do §6.3 (decisão do coordenador). |
+| P3-6 | **Fechado** | `assert first != blow`. |
+| P3-7 | **Fechado** | Fixture com o `A_end.message` bruto do staging; V6 rejeita o real e aceita o corrigido. |
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-8 | P3 | `specs/SPEC-364-cartas-smoke4.md` §9 ("Limite honesto") e `tests/test_spec364_death_api.py:25-45` | O §9 afirma que "o inimigo morto em rodada anterior sai de `state["enemies"]` antes do resumo seguinte", o que deixaria R10/V6 **inertes em produção**. Reproduzi o sintoma com uma sonda (clone morto semeado → `build_summary` recebe só `[Smoke4A, Goblin 1]`, `mortos == []`), mas a causa é o **seed**: `add_second_enemy` cria um clone que não está no manifesto, e `em.reconcile_roster` (`agents/combat.py:2342`; `services/encounter_manifest.py:595-602`) corta todo "intruder" antes da rodada. Um inimigo que morre de verdade está no manifesto e continua em `enemies` (o nó só esvazia a lista quando `combat_over`, `agents/combat.py:3028`). Ou seja, o teste de R21 não tem o 2º inimigo caído, e o registro no §9 desinforma o coordenador. | Semear o 2º inimigo **também** em `combat["encounter"]["participants"]` (mesmo `participant_id`/`species_label`, status `morto`) e afirmar pela API que o resumo e os fatos contam a queda antiga no passado ("Antes do fim, … já tinha morrido"; texto ao jogador sem "<nome> tomba"). Corrigir o §9: o corte vem do manifesto no seed, não do motor. |
+| P3-9 | P3 | `tests/test_spec364_flee_surfaces.py:117-123` | O caso (d) "escapa" não confere trilha em nenhuma superfície, só que o conflito fechou e que não há ids. R2(d) pede o mesmo `de → para` (`quase livre → livre`) onde ele aparece (`mech_log` "Fuga · … · escapou (quase livre → livre)"). | Afirmar `"quase livre → livre" in surf["mech_log"]` quando houver linha `Fuga ·`. |
+| P3-10 | P3 | `tests/test_spec363_ids.py:201-202` | O passo "Quero ver o mercado" não verifica que a consulta aconteceu: o texto entra no blob sem asserção, então se o roteador não for à loja o item livre longo nunca é exibido e o teste passa igual. | `assert "Pelo que você carrega" in texts[-1]` (ou o nome curto "Faca de esfolar de osso de baleia") e `"Haldor usa" not in texts[-1]`. |
+| P3-11 | P3 | `services/conflict_summary.py:534-543` | A herança de sujeito do V6 gera falso positivo com sujeito posposto: "Ao lado do Goblin, tomba o Minotauro." (o Minotauro caiu na rodada final, frase correta) dispara V6, porque a 1ª oração cita o Goblin e a 2ª começa pelo verbo. Custa prosa boa (fallback), não correção. | Só herdar o nome quando a oração com verbo não tem outro sujeito nominal depois do verbo (ex.: `bare` e nada além de complemento sem nome de participante); acrescentar a frase ao corpus benigno. |
+
+### Comandos rodados (re-revisão)
+
+```text
+git diff 50fb8f12..HEAD --stat → 17 arquivos, +474/−57
+pytest -n 2 test_spec364_* (13 arquivos) + test_spec346_board_no_llm + test_spec363_ids + test_spec363_outcome_text + test_remediacao_comerciante_real + test_card_effects_grammar → 189 passed, 2 skipped (Postgres)
+sonda temporária (clone morto semeado, spy em build_summary; arquivo removido) → participantes sem o clone; causa = reconcile_roster (intruso fora do manifesto)
+tsc -p web/tsconfig.json --noEmit → 0 erros
+ruff check (arquivos alterados) → All checks passed
 ```
