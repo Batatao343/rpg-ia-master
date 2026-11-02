@@ -1,7 +1,7 @@
 # SPEC-360 — revisão sol (review)
 
-> **Veredito:** `CHANGES_REQUIRED`
-> **Revisor:** Opus 5.5 / papel Sol (técnico: motor, estado, determinismo, integridade de eval) · **Data:** 2026-11-02 · **Commit revisado:** `31fdeee1`
+> **Veredito:** rodada 1 `CHANGES_REQUIRED` (`31fdeee1`) → **rodada 2 `APPROVED_WITH_FOLLOWUPS`** (`eb5e3778`)
+> **Revisor:** Opus 5.5 / papel Sol (técnico: motor, estado, determinismo, integridade de eval) · **Data:** 2026-11-02 · **Commits revisados:** `31fdeee1`, `eb5e3778`
 
 ## Escopo
 
@@ -90,4 +90,88 @@ git log -- tests/fixtures/spec360_flags_off_golden.json → só 0bae0f3a
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec360_{schema_lint,build,eco,presenca,sinais,caca,rumor,saves,flags_off,eval}.py → 105 passed (163 s)
 scratch encounter_distribution (RPG_FAUNA=on, perigo 3, 4 nós × Manhã/Noite) → assassino_cinzeu 6–25 % por nó (P1-1)
 scratch fauna.json × main:data/world/leak_phrases.json (38 frases) → 0 ocorrência (P2-5)
+```
+
+## Rodada 2 (`32dfcc84`, `eb5e3778`): `APPROVED_WITH_FOLLOWUPS`
+
+**Integridade.** `git diff --stat 731f49ff..eb5e3778 -- scripts/fauna/eval.py tests/test_spec360_eval.py tests/fixtures/spec360_flags_off_golden.json`
+continua vazio. Os limiares e o golden estão intocados. Desta vez o executor mudou só
+constantes `[BALANCEAR]`, conteúdo (o F-01…F-15 do revisor de fauna) e código de produto.
+A edição que ele fez neste parecer se limitou à seção "Correções aplicadas" e ao nome do
+handoff de fauna, o que está ok.
+
+**P1-1 (fator neutro): resolvido, e a calibração está boa.** `world_utils.py:1138-1149`
+dá a quem não tem fauna a média dos fatores das candidatas com fauna no mesmo contexto.
+Nas contas, a fatia dele volta para ~1/(n+1), a mesma do `off`. O teste dos 4 nós × 2
+períodos (≤ 1,5× do `off`) confirma. Na simulação do eval, quem não tem fauna caiu para
+**3 de 601** combates (0,5 %), contra 6–25 % das escolhas antes. Com isso o
+`TERRITORIO_FORA` voltou de 0,02 para 0,05, e o M4 subiu para 0,854.
+Resta uma observação menor (P2-9): o migrante entra com peso fixo de 0,5, sem passar pelo
+fator neutro, então fica relativamente mais pesado quando a fauna cai fora do território.
+Em Nova Arcádia o limiar de migrante não dispara. Conferir na 360-B.
+
+**P1-2 (custo): resolvido, e a comparação é honesta.** Rodei a campanha do teste com
+sonda (cópia sem asserts, na scratchpad). Resultado:
+- `extra` vazio: nenhum turno `on` chamou a LLM mais vezes que o mesmo turno `off`;
+- 3 caças, com chamadas `on`/`off` de (4/2), (4/2) e (4/4);
+- inícios de combate comuns no `off` custaram 3 chamadas cada;
+- `fauna_presenca_valida` sem violação; 7 sinais, 3 encontros, todos precedidos.
+
+A caça custa 4 contra 3 de um início de combate comum. A chamada a mais é a do roteador,
+que classifica o texto livre "sigo o rastro". O "descanso aqui" segue o caminho
+determinístico e não passa pela LLM. No turno de caça, o próprio `off` já paga essa
+chamada do roteador (2 = roteador + narrador). Então a caça custa exatamente "texto livre
++ início de combate" e não acrescenta nenhuma chamada da fauna. O `+1` do assert
+(`max(hunts) <= max(off_starts) + 1`) é justificado, embora frouxo. Melhoria sugerida
+(P2-10): asserir `hunt_on == off_start + router`, medindo o roteador à parte.
+
+**ANUNCIA_PRESENCA_NOVA desligada: medi quantas lutas acontecem sem sinal.** Sonda na
+simulação do eval (20 seeds × 60 dias, `on`), 598 combates de criaturas com fauna:
+
+| Antecedência | Situação | Combates |
+|---|---|---|
+| `cedo` | presença com sinal antes (dia 273 + conversão 166) | 439 |
+| `cedo` | **presença nascida no dia, ainda sem sinal → luta direto** | **115** |
+| `imediato` | com sinal antes | 12 |
+| `imediato` | sem sinal (por design: emboscada) | 32 |
+
+- M1 = 451/598 = 0,754.
+- Das lutas contra criaturas `cedo`, **20,8 % (115/554) começam sem anúncio**. É
+  exatamente o caso que o desvio da R16 cobria.
+- Ligar o anúncio converteria essas 115 lutas e derrubaria o M5 para ~−0,25 (fora do piso
+  de −0,20). Ou seja, há conflito real entre dois limiares que o dono aprovou: M1 ≥ 70 %
+  ("sinal antes") e M5 ≥ −20 % ("não menos luta").
+
+Parecer: **não contraria o pilar no nível que o dono quantificou**. O D4 aprovou M1 ≥ 70 %,
+não 100 %, e o resultado fica dentro disso. Mas a folga é pequena (5,4 pp) e o pilar fica
+mais fraco do que na rodada 1 (81 %).
+
+Registro como decisão do coordenador/dono (P2-11), com três opções:
+- (a) aceitar ~21 % das lutas `cedo` sem anúncio;
+- (b) religar o anúncio e aceitar M5 ≈ −0,25. Isso exige que o coordenador reabra o
+  limiar, nunca o executor;
+- (c) alavanca intermediária: fazer o encontro cair num turno seguinte ao 1º sinal, por
+  exemplo o 1º sinal da presença nova sair na cena **antes** do gatilho na mesma chegada.
+  Isso muda a ordem do turno e pede spec.
+
+A favor de (a): nenhuma luta com presença sem sinal acontece sem a `aproximacao`
+(M1 aproximação = 1,0), então o jogador ainda vê a criatura chegar.
+
+**Demais correções conferidas:**
+- P2-2: o `game_id` entra na semente (`world_utils.py:997`), e o storyteller o passa.
+- P2-3: `sinais_mode()` exige `on`; carcaça só com `on` (`fauna.py:674`, `combat.py:3238`).
+- P2-5: import direto de `services.leak_phrases`, com fallback logado.
+- P2-6: `_presence_entry` dá preferência à criatura da presença quando ela cabe no porte, e
+  a criatura `cedo` de outra presença converte.
+- P2-1: densidade de 49 % → 25 % (29,8 % com as conversões), com `P_SINAL_CENA`
+  determinístico por (pid, turno). A spec R13/§3.6 está atualizada.
+
+**Follow-ups:** P2-4, P2-7 e P2-9 vão para a 360-B; P2-10 é teste; P2-11 é decisão do
+dono/coordenador antes de ligar a flag; P2-8 é do coordenador (avaliador protegido).
+
+```text
+git diff --stat 731f49ff..eb5e3778 -- eval.py, test_spec360_eval.py, golden → vazio
+sonda P1-2 (campanha Lama, sem asserts) → extra=[], caças (on/off)=(4/2),(4/2),(4/4), off_starts=3, 0 violação
+sonda M1 (eval on, 20×60) → 598 com fauna: 451 precedidos; 115 cedo sem sinal; 32 imediato sem sinal; 3 sem fauna
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 -q tests/test_spec360_*.py (10 arquivos) → 112 passed, exit 0
 ```
