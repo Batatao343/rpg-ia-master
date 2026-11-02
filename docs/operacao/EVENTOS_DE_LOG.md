@@ -165,6 +165,8 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `event.applied` | `event_id`, `type` |
 | `event.proposal_rejected` | `reason_code`, `source`, `target_ref`, `type` |
 | `faction_gate.fallback` | — |
+| `fauna.fallback` | — |
+| `fauna.shadow_pick` | `fauna`, `legado`, `razoes` |
 | `gamedata.artifact_save_failed` | `error` |
 | `gamedata.artifact_saved` | — |
 | `gamedata.file_missing` | `file` |

@@ -198,6 +198,8 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "event.applied": ("event_id", "type"),
     "event.proposal_rejected": ("reason_code", "source", "target_ref", "type"),
     "faction_gate.fallback": (),
+    "fauna.fallback": (),
+    "fauna.shadow_pick": ("fauna", "legado", "razoes"),
     "gamedata.artifact_save_failed": ("error",),
     "gamedata.artifact_saved": (),
     "gamedata.file_missing": ("file",),
