@@ -5,7 +5,7 @@ from __future__ import annotations
 from scripts.cards import sim
 from services import cards
 
-IDS = ("golpe_devoto", "corte_sangrento", "praga_lenta")  # raio_cinza voltou ao pool (SPEC-362, dono 02/11)
+IDS = ("golpe_devoto", "corte_sangrento", "praga_lenta", "raio_cinza")
 
 
 def test_exemplo_2d6_out_of_pool():

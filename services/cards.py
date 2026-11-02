@@ -287,7 +287,7 @@ def _apply_afiada(card: dict) -> dict:
 # SPEC-355 R12: Cartas de EXEMPLO (fixture dos testes do motor, formula 2d6 pela via legada) ficam no
 # catálogo (`all_cards`/`get_card`: golden e saves antigos), mas fora do pool jogável.
 EXEMPLO_FORA_DO_POOL: frozenset[str] = frozenset(
-    {"golpe_devoto", "corte_sangrento", "praga_lenta"}
+    {"golpe_devoto", "corte_sangrento", "praga_lenta", "raio_cinza"}
 )
 
 
