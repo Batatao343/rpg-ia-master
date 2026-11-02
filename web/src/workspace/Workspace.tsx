@@ -43,7 +43,7 @@ interface Props {
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onCardReward?: RewardSender;
   /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
-  onGeneratePortrait?: (enemyId: string, priceShards: number) => void;
+  onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
   onOpenLevelUp?: () => void;
   /** SPEC-212: desfecho do combate dispensado (elevado ao PlayScreen p/ sequenciar o modal de nível). */
   dismissedResult?: string | null;

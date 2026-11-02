@@ -8,7 +8,7 @@ import { openingAllowed } from "../turnWait";
 import { dedupeOffers } from "../artOffers";
 import type { GameResponse, LogEntry } from "../types";
 import { VisualArtwork } from "./VisualArtwork";
-import { shards } from "./AccountScreen";
+import { estilhasLabel } from "../lib/estilhas";
 import { Icon } from "../design/icons";
 
 /** Distância (px) do fim considerada "no fim" para o auto-scroll (SPEC-204 R7). */
@@ -163,7 +163,7 @@ function LogEntryItem({ entry, registerReveal }: { entry: LogEntry; registerReve
     ? `${entry.technicalCostExact ? "Custo técnico registrado" : "Estimativa de custo técnico"}: US$ ${entry.technicalCostUsd.replace(".", ",")}`
     : null;
   const settled = entry.costMilli != null
-    ? `Débito liquidado: ${shards(entry.costMilli)} Estilhas` : null;
+    ? `Débito liquidado: ${estilhasLabel(entry.costMilli)}` : null;
   const costText = [technical, settled].filter(Boolean).join(" · ");
 
   // A narração é a voz padrão do diário — não carimba "Narrador" em todo bloco

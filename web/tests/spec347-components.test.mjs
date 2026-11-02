@@ -153,12 +153,12 @@ test('targetchip_oferta_gerar_so_com_onGenerate_e_gerar', async () => {
   const { TargetChip } = await load('../src/combat/TargetChip.tsx');
   const r = portrait({ gerar: { preco_estilhas: 40, escopo: 'tipo' } });
   const withBtn = html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: undefined, onPick() {}, onGenerate() {} }));
-  assert.match(withBtn, /Gerar retrato \(40 Estilhas\)/);
+  assert.match(withBtn, /Gerar retrato \(até 40 Estilhas\)/);
   assert.doesNotMatch(html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: undefined, onPick() {} })), /Gerar retrato/);
   assert.doesNotMatch(html(h(TargetChip, { p: { ...portraitBase, retrato: portrait() }, aim: undefined, onPick() {}, onGenerate() {} })), /Gerar retrato/);
   // SPEC-363 R3: com mira a oferta continua, como IRMÃ do botão do alvo (nada interativo aninhado)
   const aimed = html(h(TargetChip, { p: { ...portraitBase, retrato: r }, aim: { valid: true }, onPick() {}, onGenerate() {} }));
-  assert.match(aimed, /Gerar retrato \(40 Estilhas\)/);
+  assert.match(aimed, /Gerar retrato \(até 40 Estilhas\)/);
   assert.doesNotMatch(aimed.match(/<button[^>]*data-target[\s\S]*?<\/button>/)[0], /Gerar retrato/);
 });
 

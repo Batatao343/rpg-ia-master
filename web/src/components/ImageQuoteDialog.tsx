@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ImageQuote } from "../api";
-import { shards } from "./AccountScreen";
+import { estilhasLabel } from "../lib/estilhas";
 
 export function ImageQuoteDialog({ quote, busy, error, onConfirm, onCancel }: {
   quote: ImageQuote; busy: boolean; error: string;
@@ -17,12 +17,12 @@ export function ImageQuoteDialog({ quote, busy, error, onConfirm, onCancel }: {
     return () => { window.clearInterval(timer); node?.close(); };
   }, [quote.quote_id]);
   const expired = now >= Date.parse(quote.expires_at);
-  const cost = shards(quote.credits_milli);
+  const cost = estilhasLabel(quote.credits_milli);
   const monster = quote.type === "monster";
   return <dialog ref={dialog} className="image-quote-dialog" aria-labelledby="image-quote-title"
     aria-describedby="image-quote-cost" onCancel={event => { event.preventDefault(); if (!busy) onCancel(); }}>
     <h2 id="image-quote-title">{monster ? "Gerar retrato" : quote.reformulation ? "Reformular imagem" : "Encomendar imagem"}</h2>
-    <p id="image-quote-cost">Custo máximo: <strong>{cost} Estilhas</strong>.</p>
+    <p id="image-quote-cost">Custo máximo: <strong>{cost}</strong>.</p>
     <p>Ao confirmar, esse saldo fica reservado para uma geração. O débito será limitado a esse valor.</p>
     {monster && <p>A imagem fica num registro compartilhado: outros jogadores poderão vê-la sem custo. Se a geração falhar antes de começar, o saldo é liberado.</p>}
     <p>Válido até {new Date(quote.expires_at).toLocaleTimeString("pt-BR")}.</p>
@@ -31,7 +31,7 @@ export function ImageQuoteDialog({ quote, busy, error, onConfirm, onCancel }: {
     <div className="image-quote-actions">
       <button type="button" className="btn btn--ghost" disabled={busy} onClick={onCancel} ref={cancelRef}>Cancelar</button>
       <button type="button" className="btn" disabled={busy || expired} onClick={onConfirm}>
-        {busy ? "Reservando…" : `Confirmar até ${cost} Estilhas`}
+        {busy ? "Reservando…" : `Confirmar até ${cost}`}
       </button>
     </div>
   </dialog>;

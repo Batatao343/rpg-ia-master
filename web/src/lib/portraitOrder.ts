@@ -1,9 +1,11 @@
 // SPEC-352 R12: regras puras do pedido de retrato pago de inimigo (testáveis sem DOM).
 
 /** O "Gerar" inline já foi o consentimento: confirma direto só se a cotação real NÃO passa do preço mostrado. */
-export function withinShownPrice(creditsMilli: string, shownShards: number): boolean {
+export function withinShownPrice(creditsMilli: string, shownShards: number, shownMilli?: string): boolean {
   try {
-    return BigInt(creditsMilli) <= BigInt(Math.max(0, Math.floor(shownShards))) * 1000n;
+    // SPEC-364 R20: com o teto exato (milli) a regra é em milli; sem ele, a de hoje (inteiro × 1000).
+    const ceiling = shownMilli ? BigInt(shownMilli) : BigInt(Math.max(0, Math.floor(shownShards))) * 1000n;
+    return BigInt(creditsMilli) <= ceiling;
   } catch {
     return false;
   }

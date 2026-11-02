@@ -76,7 +76,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   /** SPEC-333: espólio de Cartas e Forja do baralho (só quando a API trouxer os blocos). */
   onCardReward?: RewardSender;
   /** SPEC-352 R12: retrato pago de inimigo; a Arena só mostra a oferta quando o servidor mandar `retrato.gerar`. */
-  onGeneratePortrait?: (enemyId: string, priceShards: number) => void;
+  onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
   onOpenLevelUp?: () => void;
   /** SPEC-212: dispensa controlada pelo PlayScreen (sequencia o modal de nível); sem props = local. */
   dismissedResult?: string | null;
@@ -216,8 +216,8 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   }
 
   function generate(enemyId: string) {
-    const price = combat?.enemies.find((e) => e.id === enemyId)?.retrato?.gerar?.preco_estilhas;
-    if (onGeneratePortrait && price != null) onGeneratePortrait(enemyId, price);
+    const offer = combat?.enemies.find((e) => e.id === enemyId)?.retrato?.gerar;
+    if (onGeneratePortrait && offer?.preco_estilhas != null) onGeneratePortrait(enemyId, offer.preco_estilhas, offer.preco_milli);
   }
 
   function pick(targetId: string) {

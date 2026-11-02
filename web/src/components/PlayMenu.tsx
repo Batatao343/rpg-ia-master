@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { shards } from "./AccountScreen";
+import { estilhasLabel } from "../lib/estilhas";
 import { useModalFocus } from "../workspace/useModalFocus";
 
 /** SPEC-321 R2: menu "⋯" da cabeça única no celular — Conta (com saldo), Nova jornada, Sair e Laboratório.
@@ -27,7 +27,7 @@ export function PlayMenu({ busy, simulation, accountBalance, onAccount, onNew, o
           {onAccount && (
             <button type="button" className="btn playmenu__item" disabled={busy}
               onClick={() => { close(); onAccount(); }}>
-              Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+              Conta{accountBalance != null ? ` · ${estilhasLabel(accountBalance)}` : ""}
             </button>
           )}
           <button type="button" className="btn playmenu__item" disabled={busy}

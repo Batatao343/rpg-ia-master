@@ -14,7 +14,7 @@ import os
 import re
 import unicodedata
 from collections.abc import Callable
-from typing import Any, Literal, Protocol, TypedDict
+from typing import Any, Literal, NotRequired, Protocol, TypedDict
 
 from services import enemy_decks, visual_catalog
 from services.discovery import _bestiary_db, normalize_bestiary_id
@@ -38,6 +38,7 @@ FAMILY_ICON: dict[str, str] = {  # D-347-H: só ícones que já existem em web/s
 
 class GerarOffer(TypedDict):
     preco_estilhas: int
+    preco_milli: NotRequired[str]  # SPEC-364 R18: teto exato (string de inteiro, como credits_milli)
     escopo: Literal["tipo", "unico"]
 
 
@@ -202,6 +203,7 @@ def portrait_for(
     registry: PortraitRegistry | None = None,
     npc_entity_id: str | None = None,
     quote_price: int | None = None,
+    quote_milli: int | None = None,
     sign: SignFn | None = None,
 ) -> CreaturePortrait:
     """Ordem: (a) arte própria do importante -> (b) curada da criatura -> (c) registro do tipo ->
@@ -236,6 +238,8 @@ def portrait_for(
     gerar: GerarOffer | None = None
     if mode() == "on" and quote_price is not None and not pending and not has_own_art:
         gerar = {"preco_estilhas": int(quote_price), "escopo": "unico" if important else "tipo"}
+        if quote_milli:
+            gerar = {**gerar, "preco_milli": str(int(quote_milli))}
     return {
         "estado": estado,
         "src": src,

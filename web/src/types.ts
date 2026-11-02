@@ -1250,5 +1250,5 @@ export interface CreaturePortrait {
   icone: string;
   alt: string;
   proprio: boolean;
-  gerar: { preco_estilhas: number; escopo: "tipo" | "unico" } | null;
+  gerar: { preco_estilhas: number; preco_milli?: string; escopo: "tipo" | "unico" } | null;
 }

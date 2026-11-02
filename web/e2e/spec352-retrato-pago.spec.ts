@@ -37,7 +37,7 @@ for (const [label, viewport] of [["390", { width: 390, height: 844 }], ["1440", 
       });
       await openCombat(page);
       const button = page.locator('[data-gen-portrait="e1"]');
-      await expect(button).toHaveText("Gerar retrato (3 Estilhas)");
+      await expect(button).toHaveText("Gerar retrato (até 3 Estilhas)");
       expect((await measure(button)).h).toBeGreaterThanOrEqual(label === "390" ? 43.5 : 24);
       await button.click();
       await expect(page.locator("[data-gen-risk]")).toHaveText("Se a geração falhar antes de começar, o saldo é liberado.");

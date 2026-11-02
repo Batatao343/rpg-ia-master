@@ -25,7 +25,8 @@ import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
 import { publishRejectedPlay } from "./lib/rejectedPlay";
 import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer } from "./lib/portraitOrder";
-import { AccountScreen, shards } from "./components/AccountScreen";
+import { AccountScreen } from "./components/AccountScreen";
+import { estilhasLabel } from "./lib/estilhas";
 
 import { ImageQuoteDialog } from "./components/ImageQuoteDialog";
 import { GeneratedArtCard } from "./components/GeneratedArtCard";
@@ -387,7 +388,7 @@ export function App() {
 
   /** SPEC-352 R12: retrato pago de inimigo. O "Gerar" inline já foi o consentimento; se a cotação real não passa
    *  do preço mostrado, confirma direto (sem 2º modal). Cotação maior abre o diálogo da 326 com o preço real. */
-  async function handleGeneratePortrait(enemyId: string, shownShards: number) {
+  async function handleGeneratePortrait(enemyId: string, shownShards: number, shownMilli?: string) {
     const gameId = data?.game_id;
     if (!gameId || imageBusy) return;
     const generation = session.current;
@@ -396,7 +397,7 @@ export function App() {
       const quote = await api.requestImageQuote(gameId, "monster", false, undefined, enemyId);
       if (session.current !== generation) return;
       const current = { quote, gameId, session: generation, actionId: crypto.randomUUID() };
-      if (withinShownPrice(quote.credits_milli, shownShards)) await confirmImageQuote(current, true);
+      if (withinShownPrice(quote.credits_milli, shownShards, shownMilli)) await confirmImageQuote(current, true);
       else setImageQuote(current);
     } catch (error) {
       if (session.current === generation) {
@@ -992,7 +993,7 @@ export function App() {
           {screen !== "bootstrap" && (
             <button className="account-shell-link btn btn--ghost" type="button" disabled={busy}
               onClick={() => { accountReturn.current = screen; setScreen("account"); }}>
-              Conta{accountBalance !== null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+              Conta{accountBalance !== null ? ` · ${estilhasLabel(accountBalance)}` : ""}
             </button>
           )}
           <button className="session-logout btn btn--ghost" disabled={busy}

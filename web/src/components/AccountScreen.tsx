@@ -5,15 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import * as api from "../api";
 import { TurnstileChallenge } from "./TurnstileChallenge";
 import { Icon } from "../design/icons";
+import { estilhasLabel, shards } from "../lib/estilhas";
 
 const categories = ["game", "image", "voice"] as const;
 const labels = { game: "Jogo", image: "Imagem", voice: "Voz" };
-export const shards = (milli: string | number) => {
-  const value = BigInt(milli);
-  const whole = new Intl.NumberFormat("pt-BR").format(value / 1000n);
-  const fraction = (value % 1000n).toString().padStart(3, "0").replace(/0+$/, "");
-  return fraction ? `${whole},${fraction}` : whole;
-};
+export { shards };
 
 const brl = (amount: string) => new Intl.NumberFormat("pt-BR", {
   style: "currency", currency: "BRL",
@@ -364,7 +360,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
       <section className="account-card" aria-label="Saldo de Estilhas">
         <p className="account-kicker">Saldo disponível</p>
         <p className="account-balance">{shards(balance.available_milli)} <span>Estilhas</span></p>
-        {BigInt(balance.reserved_milli) > 0n && <p>{shards(balance.reserved_milli)} Estilhas reservadas</p>}
+        {BigInt(balance.reserved_milli) > 0n && <p>{estilhasLabel(balance.reserved_milli)} reservadas</p>}
         {checkoutLoading ? <p className="muted" role="status">Consultando pacotes de Estilhas…</p>
           : !checkoutAvailable && !isAndroidClient() && <p className="muted">A compra de Estilhas ainda não está disponível.</p>}
       </section>
@@ -394,7 +390,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
             : <>
               <p className="muted">O pagamento é feito pela Google Play; o saldo só muda depois da confirmação do servidor.</p>
               <ul className="checkout-packages">{playProducts.map(p => <li key={p.productId}>
-                <span>{p.shardMilli ? `${shards(p.shardMilli)} Estilhas · ` : ""}{p.displayPrice}</span>
+                <span>{p.shardMilli ? `${estilhasLabel(p.shardMilli)} · ` : ""}{p.displayPrice}</span>
                 <button className="btn btn--primary" type="button" disabled={playBusy !== null || accountAction !== null}
                   onClick={() => {
                     setPlayBusy(p.productId); setPlayError(""); setPlayNotice("");
@@ -412,7 +408,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
         <h2 id="checkout-title">Comprar Estilhas</h2>
         <p className="muted">Escolha um pacote. O pagamento abre no Checkout seguro do Stripe; seu saldo é atualizado após a confirmação pelo servidor.</p>
         <ul className="checkout-packages">{skus.map(sku => <li key={sku.sku_id}>
-          <span>{shards(sku.shard_milli)} Estilhas · {brl(sku.gross_brl)}</span>
+          <span>{estilhasLabel(sku.shard_milli)} · {brl(sku.gross_brl)}</span>
           <button className="btn btn--primary" type="button" disabled={checkoutBusy !== null || accountAction !== null}
             onClick={() => void beginCheckout(sku)}>Comprar pacote</button>
         </li>)}</ul>
@@ -428,7 +424,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
           </div>
         </div>
         <p className="muted">{periodLabel}: {categories.map(cat => `${labels[cat]} ${shards(totals[cat])}`).join(" · ")} Estilhas.</p>
-        <div className="account-chart" role="img" aria-label={`Consumo liquidado em ${periodLabel}. ${categories.map(cat => `${labels[cat]}: ${shards(totals[cat])} Estilhas`).join('. ')}`}>
+        <div className="account-chart" role="img" aria-label={`Consumo liquidado em ${periodLabel}. ${categories.map(cat => `${labels[cat]}: ${estilhasLabel(totals[cat])}`).join('. ')}`}>
           {series.map(point => <div className="account-chart__bar" key={point.start} aria-hidden="true">
             {categories.map(cat => <span key={cat} className={`account-chart__segment account-chart__segment--${cat}`}
               style={{ height: `${Number(point[cat]) / max * 100}%` }} />)}
@@ -462,7 +458,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
         <h2 id="purchases-title">Histórico de compras</h2>
         {purchases.items.length ? <ul>{purchases.items.map(item => <li key={item.id}>
           <time dateTime={item.created_at}>{new Date(item.created_at).toLocaleString("pt-BR")}</time>
-          <span>{item.kind === "purchase" ? "Compra: " : "Estorno: −"}{shards(item.amount_milli)} Estilhas</span>
+          <span>{item.kind === "purchase" ? "Compra: " : "Estorno: −"}{estilhasLabel(item.amount_milli)}</span>
         </li>)}</ul> : <p className="muted">Ainda não há compras.</p>}
         {purchases.next_cursor && <button className="btn btn--ghost" onClick={() => void morePurchases()}>Ver mais compras</button>}
       </section>

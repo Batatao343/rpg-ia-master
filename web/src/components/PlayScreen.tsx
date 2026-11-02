@@ -3,7 +3,7 @@ import type { ActionOptions, GameResponse, LogEntry } from "../types";
 import type { TurnWait } from "../turnWait";
 import type { RewardSender } from "../cardRewards";
 import { LevelUpModal, type LevelUpPick } from "./LevelUpModal";
-import { shards } from "./AccountScreen";
+import { estilhasLabel } from "../lib/estilhas";
 import { Workspace, type WorkspaceHandle } from "../workspace/Workspace";
 import { useModalFocus } from "../workspace/useModalFocus";
 import { levelUpHeldByOutcome, resultFrom } from "../combatOutcome";
@@ -28,7 +28,7 @@ interface Props {
   onPrepareCards?: (prepared: string[]) => Promise<string | null>;
   onCardReward?: RewardSender;
   /** SPEC-352 R12: pedir o retrato pago de um inimigo (id da instância, preço mostrado em Estilhas). */
-  onGeneratePortrait?: (enemyId: string, priceShards: number) => void;
+  onGeneratePortrait?: (enemyId: string, priceShards: number, priceMilli?: string) => void;
   onLogout?: () => void;
   onAccount?: () => void;
   accountBalance?: string | null;
@@ -105,7 +105,7 @@ export function PlayScreen({ data, log, thinking, turn, onRetryTurn, banner, bus
           </div>
           <div className="topbar__right">
             {onAccount && <button className="iconbtn" type="button" disabled={busy} onClick={onAccount}>
-              Conta{accountBalance != null ? ` · ${shards(accountBalance)} Estilhas` : ""}
+              Conta{accountBalance != null ? ` · ${estilhasLabel(accountBalance)}` : ""}
             </button>}
             {simulation && <span className="laboratory-flag">Laboratório</span>}
             {fighting && <span className="combat-flag"><Icon name="combat" /> Combate</span>}

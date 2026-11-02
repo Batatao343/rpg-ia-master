@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Condition, CreaturePortrait, OmenView } from "../types";
 import { Icon } from "../design/icons";
 import { familyIcon } from "./familyIcon";
+import { estilhasLabel } from "../lib/estilhas";
 
 export interface Participant {
   id: string;
@@ -41,17 +42,18 @@ function PortraitOffer({ p, onGenerate, disabled }: { p: Participant; onGenerate
   const offer = p.retrato?.gerar;
   if (!offer) return null;
   const alone = offer.escopo === "unico";
+  const price = estilhasLabel(offer.preco_milli ?? offer.preco_estilhas * 1000);
   if (!asking) {
     return (
       <button type="button" className="btn btn--ghost btn--sm tchip__gen" data-gen-portrait={p.id}
         aria-disabled={disabled || undefined} onClick={() => { if (!disabled) setAsking(true); }}>
-        {`Gerar retrato (${offer.preco_estilhas} Estilhas)`}
+        {`Gerar retrato (até ${price})`}
       </button>
     );
   }
   return (
     <span className="tchip__gen-confirm" role="group" aria-label={`Gerar o retrato de ${p.name}`}>
-      <span>{`Gerar o retrato de ${p.name} por até ${offer.preco_estilhas} Estilhas? ${alone ? `A imagem é só deste ${p.name}.` : "A imagem fica no bestiário e outros jogadores a verão."}`}</span>
+      <span>{`Gerar o retrato de ${p.name} por até ${price}? ${alone ? `A imagem é só deste ${p.name}.` : "A imagem fica no bestiário e outros jogadores a verão."}`}</span>
       <small data-gen-risk>Se a geração falhar antes de começar, o saldo é liberado.</small>
       <button type="button" className="btn btn--primary btn--sm" data-gen-go onClick={() => { setAsking(false); onGenerate(p.id); }}>Gerar</button>
       <button type="button" className="btn btn--ghost btn--sm" data-gen-no onClick={() => setAsking(false)}>Agora não</button>

@@ -2850,7 +2850,7 @@ def _chase_live_for_api(chase: object) -> bool:
     )
 
 
-_PORTRAIT_PRICE_CACHE: dict[str, Any] = {"at": 0.0, "value": None}
+_PORTRAIT_PRICE_CACHE: dict[str, Any] = {"at": 0.0, "value": None, "milli": None}
 _PORTRAIT_SIGN_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
 
 
@@ -2904,10 +2904,19 @@ def _portrait_price_estilhas() -> int | None:
 
         milli = ImageQuoteRepository(get_runtime().resources[0]).peek_ceiling("monster")
         value = -(-int(milli) // 1000) if milli else None
+        _PORTRAIT_PRICE_CACHE["milli"] = int(milli) if milli else None
     except Exception as exc:
         log_fallback("creature_portrait", "price_peek_failed", exc)
     _PORTRAIT_PRICE_CACHE.update(at=now, value=value)
     return value
+
+
+def _portrait_offer_milli(estilhas: int | None) -> int | None:
+    """SPEC-364 R18: o teto exato em milli, só se bate com o inteiro cotado (cache coerente)."""
+    milli = _PORTRAIT_PRICE_CACHE.get("milli")
+    if not milli or estilhas is None or -(-int(milli) // 1000) != int(estilhas):
+        return None
+    return int(milli)
 
 
 def _portrait_sign(store: str, key: str) -> str | None:
@@ -2990,6 +2999,7 @@ def _enemy_portrait(
     if _art.mode() != "on":
         registry = None
     manifest, npc_entity_id = _portrait_manifest_ctx(state, meta)
+    offer_price = _portrait_offer_price() if registry is not None else None
     return dict(
         _art.portrait_for(
             enemy,
@@ -2997,7 +3007,8 @@ def _enemy_portrait(
             game_id=str(state.get("game_id") or ""),
             npc_entity_id=npc_entity_id,
             registry=registry,
-            quote_price=_portrait_offer_price() if registry is not None else None,
+            quote_price=offer_price,
+            quote_milli=_portrait_offer_milli(offer_price),
             sign=_portrait_sign if registry is not None else None,
         )
     )
