@@ -97,9 +97,9 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.object_used` | — |
 | `combat.objects_shadow` | `action` |
 | `combat.outcome_attribution_rejected` | `codes` |
-| `combat.outcome_narrative_rejected` | `codes` |
 | `combat.outcome_narration_budget_exceeded` | `elapsed_ms` |
 | `combat.outcome_narration_failed` | `error`, `outcome` |
+| `combat.outcome_narrative_rejected` | `codes` |
 | `combat.parse_failed` | `error` |
 | `combat.prep_failed` | `error` |
 | `combat.prep_timeout` | `timeout_s` |
@@ -127,6 +127,7 @@ Toda linha e JSON em stdout com `event` (`area.evento`), `level`, `logger`, `ts`
 | `combat.started` | `enemies` |
 | `combat.summary` | `death_stage_reached`, `enemy_damage_dealt`, `player_damage_taken`, `reactions`, `rounds`, `target_redirects` |
 | `combat_agent.fallback` | — |
+| `combat_view.fallback` | — |
 | `companion.abandon_fate_applied` | `fate` |
 | `companion.abandon_fate_none` | — |
 | `companion.abandon_rescued` | — |
