@@ -63,6 +63,11 @@ def _on_branch() -> bool:
     return _git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() == "spec-362"
 
 
+def _tem_base_fixada() -> bool:
+    """Clone raso (CI) nao tem o commit fixado; sem ele a versao pre-362 nao e verificavel."""
+    return _git("cat-file", "-e", f"{BASE_PRE_362}^{{commit}}").returncode == 0
+
+
 def _main_versao(cid: str) -> int:
     for sub in ("tronco", "calibrado", "descoberto", "improvisador"):
         path = ARQ_ONDA.format(sub)
@@ -89,7 +94,8 @@ def test_pacote_dentro_do_limite():
     for cid in ids:
         card = cards.get_card(cid)
         assert card and card.get("classe") == CLS and cid.split("_")[0].endswith("1"), cid
-        assert int(card.get("versao", 1) or 1) == _main_versao(cid) + 1, cid
+        if _tem_base_fixada() or _on_branch():
+            assert int(card.get("versao", 1) or 1) == _main_versao(cid) + 1, cid
         assert fx.budget_error(card) is None, cid
         issues = card_lint.lint_card(card, [c for c in pool if c["id"] != cid])
         assert not card_lint.errors(issues), cid
