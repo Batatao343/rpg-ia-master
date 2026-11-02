@@ -78,17 +78,29 @@ def test_golden_flags_off_byte_identico(monkeypatch):
 
 
 def _count_invokes(monkeypatch) -> list[int]:
+    import sys
+
     import mock_llm
 
-    calls = [0]
+    calls = [0, 0]  # [todas as chamadas, so as do roteador (P2-10)]
     orig, orig_s = mock_llm.MockLLM.invoke, mock_llm._StructuredMock.invoke
+
+    def _from_router() -> bool:
+        f = sys._getframe(2)
+        while f is not None:
+            if f.f_code.co_filename.replace("\\", "/").endswith("agents/router.py"):
+                return True
+            f = f.f_back
+        return False
 
     def _inv(self, messages):
         calls[0] += 1
+        calls[1] += _from_router()
         return orig(self, messages)
 
     def _inv_s(self, messages):
         calls[0] += 1
+        calls[1] += _from_router()
         return orig_s(self, messages)
 
     monkeypatch.setattr(mock_llm.MockLLM, "invoke", _inv)
@@ -193,7 +205,7 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
         if not busy and (off_out.get("combat") or {}).get("active"):
             off_starts.append(off_calls)  # custo de um início de combate qualquer (`off`)
         _flags(monkeypatch, "on", "on")
-        calls[0] = 0
+        calls[0] = calls[1] = 0
         random.seed(1000 + t)
         state = app.invoke(state, {"recursion_limit": 60})
         # A caça (R20) troca um turno de história por um início de combate: as chamadas são as
@@ -201,7 +213,7 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
         # que classifica o texto livre. Nenhuma é da fauna.
         hunt = text == "sigo o rastro" and bool((state.get("combat") or {}).get("active"))
         if hunt:
-            hunts.append(calls[0])
+            hunts.append((calls[0], calls[1]))
         elif calls[0] > off_calls:
             extra.append((t, text, calls[0], off_calls))
         violations += check_fauna(state, None, t)
@@ -213,5 +225,8 @@ def test_campanha_na_lama_exercita_fauna_sem_chamada_extra(monkeypatch):
     assert not violations
     assert not extra, extra
     assert off_starts  # houve encontro comum para comparar
-    if hunts:
-        assert max(hunts) <= max(off_starts) + 1, (hunts, off_starts)
+    # P2-10 (Sol): sem folga. Caça = um início de combate comum + o roteador que classifica o
+    # texto livre (medido à parte); nenhuma chamada da fauna.
+    assert hunts  # a caça foi exercitada
+    for total, router in hunts:
+        assert router <= 1 and total - router in set(off_starts), (hunts, off_starts)

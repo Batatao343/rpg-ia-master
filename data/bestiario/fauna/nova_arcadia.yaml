@@ -28,7 +28,8 @@ criaturas:
     contra_jogo: "Manter distância e cortar o arame antes que feche; sem contato, não drena nada e cai depressa."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_fole_de_costela:
     fonte: ficha
@@ -50,7 +51,8 @@ criaturas:
     contra_jogo: "Fechar a distância pelo lado e golpear o fole quando ele infla; esvaziado, não sopra."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_rosario_de_vertebras:
     fonte: ficha
@@ -73,7 +75,8 @@ criaturas:
     contra_jogo: "Arrancar a farpa (gastar a ação) ou sair da água, onde ele é lento e as vértebras expõem as juntas."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_fila_de_grilhoes:
     fonte: ficha
@@ -93,7 +96,8 @@ criaturas:
     contra_jogo: "Quebrar um elo (as juntas entre dois corpos são o ponto fraco) e lutar de longe; ela não larga o pátio."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_relicario_de_osso:
     fonte: ficha
@@ -113,7 +117,8 @@ criaturas:
     contra_jogo: "Atravessar a nave devagar, pela borda seca, e quebrar a mão do alto; ele não foge nem se vira."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_sangrado_da_clinica:
     fonte: ficha
@@ -136,7 +141,8 @@ criaturas:
     contra_jogo: "Feri-lo toda rodada, mesmo de raspão; sem o fôlego dos cortes fechados, é um homem seco de pernas trêmulas."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_sentinela_ferro:
     fonte: ficha
@@ -152,11 +158,12 @@ criaturas:
       cheiro: "Um cheiro mineral, de pedra suada, que não combina com a cera dos salões."
       marca: "Na parede escura, uma mancha morna no formato de um corpo encostado, que some quando a mão chega perto."
       aproximacao: "Um vulto da cor da parede se desprende dela, a pele de placas negras que não refletem a tocha."
-      rumor: "um copeiro do Palácio garante que um colega que limpava os andares de baixo ainda passa por ela sem ser visto"
+      rumor: "um copeiro do Palácio garante que um colega que limpava os andares de baixo ainda passa por ele sem ser visto"
     contra_jogo: "Golpes de impacto, não de lâmina, e de longe; vidro negro racha com pancada, e sem o calor de um corpo perto ele não sabe para onde descer."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_elemental_fogo_poluido:
     fonte: ficha
@@ -177,7 +184,8 @@ criaturas:
     contra_jogo: "Recuar e deixá-lo esfriar, longe das fornalhas, até ele parar; ou golpear forte logo depois que ele parte a crosta, quando a carne está à mostra."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   # ============================== BESTAS DA ENTROPIA ==============================
   mon_lencol_de_chamine:
@@ -202,7 +210,8 @@ criaturas:
     contra_jogo: "Matar de longe ou empurrar para junto dos outros inimigos antes que estoure; perto de fogo aceso ele recua."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_traca_do_sino_mudo:
     fonte: ficha
@@ -223,7 +232,8 @@ criaturas:
     contra_jogo: "Luz e fogo; sem som para comer, elas voam para a próxima torre, e fumaça as derruba do badalo."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_gralha_de_crematorio:
     fonte: ficha
@@ -247,7 +257,8 @@ criaturas:
     contra_jogo: "Matá-la antes de ela sair do alcance ou não preparar nada enquanto ela ronda; ferida, se desfaz e devolve."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_porca_da_queda:
     fonte: ficha
@@ -271,7 +282,8 @@ criaturas:
     contra_jogo: "Atacar de longe e nunca de frente; ela não vira depressa e o flanco de lama racha onde já secou."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_centopeia_da_torre_invertida:
     fonte: ficha
@@ -292,7 +304,8 @@ criaturas:
     contra_jogo: "Lutar em sala de teto baixo ou encostado a uma parede; sem o poço, ela perde o lado de cima e vira um bicho comprido."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_horror_esgoto:
     fonte: ficha
@@ -316,7 +329,8 @@ criaturas:
     contra_jogo: "Não deixar nada caído perto dela e golpear os braços de osso, que são o que a mantém erguida; sem eles, só rasteja."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_polvo_esgoto:
     fonte: ficha
@@ -341,7 +355,8 @@ criaturas:
     contra_jogo: "Rasgar a água, não o peixe; um golpe pesado no bolsão o derruba no chão seco, onde ele se debate sem ar e não agarra ninguém."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_gargula_ferro:
     fonte: ficha
@@ -363,7 +378,8 @@ criaturas:
     contra_jogo: "Matar a rã primeiro, de perto (ela só vê o golpe, não o impede), ou atacar duas vezes na rodada; o aviso vale só para o primeiro golpe."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   # ============================== COBRADOS ==============================
   mon_sorvedouro_do_codigo:
@@ -387,7 +403,8 @@ criaturas:
     contra_jogo: "Chegar sem Entropia acumulada ou descarregá-la antes; sem o que sugar, o funil engasga e a crosta racha fácil."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_pavio_da_lista:
     fonte: ficha
@@ -407,7 +424,8 @@ criaturas:
     contra_jogo: "Deixar que ele se gaste, ou derrubar o carregador: com a gaiola de lado no chão o mago não acha o Éter de ninguém."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_enxerto_da_fornalha:
     fonte: ficha
@@ -428,7 +446,8 @@ criaturas:
     contra_jogo: "Esperar o puxão com o lado esquerdo dele à frente (não há lâmina ali) e deixá-lo sangrar pelo ombro; a peça rachada se troca, o ombro não."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_quebrado_de_vitrine:
     fonte: ficha
@@ -448,7 +467,8 @@ criaturas:
     contra_jogo: "Apagar a luz ou derrubá-lo primeiro; sentado e sem veios para perder, ele é a peça mais frágil da sala."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   # ============================== CRIAS DE APETITE ==============================
   mon_vira_costas_da_praca:
@@ -471,7 +491,8 @@ criaturas:
     contra_jogo: "Atacar primeiro, forte, e de uma vez; ele vive de quem hesita, e sem a Reação é só um corpo mole de casacos."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_roda_de_mandibulas:
     fonte: ficha
@@ -494,7 +515,8 @@ criaturas:
     contra_jogo: "Não deixar Ferimentos abertos e travar a roda contra uma parede; de lado ela não rola, e as mãos do cubo são frágeis."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_cavadeira_de_unhas:
     fonte: ficha
@@ -515,7 +537,8 @@ criaturas:
     contra_jogo: "Ficar sobre pedra ou madeira firme, onde ela não cava; na superfície é um bicho pequeno de osso que quebra fácil."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_convidado_de_cera:
     fonte: ficha
@@ -535,7 +558,8 @@ criaturas:
     contra_jogo: "Jogar barato e rápido; sem nada caro na mão dele não há o que invejar, e cera fria quebra com pancada."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_escritura_rastejante:
     fonte: ficha
@@ -557,7 +581,8 @@ criaturas:
     contra_jogo: "Rasgar o rolo pelo selo antes da terceira cláusula, ou gastar a Carta mais cara de uma vez enquanto só a primeira foi lida; nunca pegar o rolo com a mão."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_portao_que_morde:
     fonte: ficha
@@ -579,7 +604,8 @@ criaturas:
     contra_jogo: "Não passar pelo vão; de lado, pelas dobradiças inchadas, ele não alcança, e cada dobradiça quebrada deixa uma folha pendurada."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_golem_lixo:
     fonte: ficha
@@ -601,7 +627,8 @@ criaturas:
     contra_jogo: "Água e fogo; a crosta dissolve e racha, e ele não segue quem sai da Catedral."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   # ============================== LEGADO (valoria) ==============================
   enemy_rato_peste_anel_lama:
@@ -627,7 +654,8 @@ criaturas:
     contra_jogo: "Não se deixar morder (a mordida passa a febre) e queimar o ninho; com tocha acesa eles se espalham."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_degolador_mao_sombria:
     fonte: legado
@@ -650,7 +678,8 @@ criaturas:
     contra_jogo: "Não andar sozinho em beco de noite e manter as costas na parede; cara a cara, ele foge cedo."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_soldado_legiao_ferro:
     fonte: legado
@@ -673,7 +702,8 @@ criaturas:
     contra_jogo: "Não brigar em rua aberta nem contra a formação inteira; separados, o escudo deixa o flanco descoberto."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_iniciado_chama_azul:
     fonte: legado
@@ -697,7 +727,8 @@ criaturas:
     contra_jogo: "Chegar antes de o fogo acender e apagá-lo com terra ou água; a fé dele não aguenta dor que ele não escolheu."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_boss_valerius:
     fonte: legado
@@ -717,7 +748,8 @@ criaturas:
     contra_jogo: "Nunca trocar golpe de esgrima com ele; derrubar a guarda dele primeiro e só então atacar."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   enemy_boss_vibora:
     fonte: legado
@@ -737,7 +769,8 @@ criaturas:
     contra_jogo: "Não tentar agarrá-la: fechar o espaço, lutar com luz e de costas para a parede, e golpear quando ela aparece."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   "enemy_garrick,_o_silenciador":
     fonte: legado
@@ -757,7 +790,8 @@ criaturas:
     contra_jogo: "Fazer barulho e lutar em grupo; sozinho e calado, você é o que ele caça."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_rato_caldeira:
     fonte: legado
@@ -779,7 +813,8 @@ criaturas:
     contra_jogo: "Esfriar a área ou atacar longe das máquinas; longe do calor eles ficam lentos."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_cao_rebite:
     fonte: legado
@@ -802,7 +837,8 @@ criaturas:
     contra_jogo: "Esconder o cheiro de sangue e de óleo; um golpe nas juntas das placas o derruba."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_automato_fundicao:
     fonte: legado
@@ -822,7 +858,8 @@ criaturas:
     contra_jogo: "Não chegar perto do forno: ele não sai de lá, e longe do calor perde força."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada
 
   mon_locomotiva_penitente:
     fonte: legado
@@ -844,4 +881,5 @@ criaturas:
     contra_jogo: "Sair da frente e quebrar os engates; parada, ela não vira, e cada vagão solto pesa contra ela."
     tramas: []
     autor: opus
-    revisao: pendente
+    revisor_fauna: opus-spec-reviewer
+    revisao: aprovada

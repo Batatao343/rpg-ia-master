@@ -1,6 +1,6 @@
 # SPEC-360 — Criaturas vivas no mundo: sinal antes da luta, ecologia determinística, tramas e telegrafo visível (guarda-chuva; Fase 1 executável)
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-11-01 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-349 onda 1 (Nova Arcádia) na `main`: fichas `data/bestiario/fichas/nova_arcadia.yaml`, entradas `mon_*` no `data/bestiary.json` e `curadoria_legado.yaml`. Também SPEC-312 (sementes de rumor, `done`), SPEC-303 (calendário, `done`), SPEC-302/304 (motor de mundo e hooks diários, `done`) e Fase 6.3/6.4 (`services/ecology.py`, `resolve_track`). As filhas têm dependências próprias (§3.10).
 > **Desbloqueia:** filhas 360-B (backfill das 11 regiões + legado), 360-C (saber do jogador: telegrafo e contra-jogo) e 360-D (criaturas de trama). Também a SPEC-361 (criatura gerada em runtime), que deve emitir o mesmo bloco de fauna.
@@ -392,7 +392,7 @@ Smoke da §6, depois `/spec-land`. A suíte completa é do coordenador.
 
 ## 5. Critérios de aceite
 
-- [ ] `data/bestiario/fauna/nova_arcadia.yaml` cobre as 27 fichas e todo o legado `valoria` da região, com `revisao: aprovada` por revisor ≠ autor e parecer no handoff (R1, R2, R7)
+- [x] `data/bestiario/fauna/nova_arcadia.yaml` cobre as 27 fichas e todo o legado `valoria` da região, com `revisao: aprovada` por revisor ≠ autor e parecer no handoff (R1, R2, R7)
 - [x] `fauna_lint` E1–E16 com fixtures boas e ruins; `lint.py --regiao nova_arcadia` com 0 erro; `validate_content.py` com 0 ERRO (R4–R6)
 - [x] `fauna.json` gerado, fresco e determinístico; `data/bestiary.json` byte-idêntico (R3)
 - [x] Ecologia: horário, estação, território, presa/predador, `foge_de`, reações e carcaça com teste; taxa de gatilho inalterada; `shadow` só loga (R8–R12)
@@ -510,6 +510,21 @@ Conteúdo (autor, não constante): `permanencia` das não-BOSS subiu +4 dias (pr
 | `P_SINAL_CENA` | (novo) | 0,35 |
 
 *Eval final desta rodada* (20 seeds × 60 dias): M1 0,754 precedidos e 1,0 com aproximação · M2 0,289 · M3 presa ×1,75 (mínimo), predador ×0,555 (máximo) · M4 0,854 · M5 −0,169 (off 15,06 → on 12,52 combates/100 ações; 1200 gatilhos nos dois modos) · M6 0 · M7 byte-idêntico.
+
+**Rodada 2 das revisões (02/11): `APPROVED_WITH_FOLLOWUPS`** (fauna `54d506ca`, Sol `c10cc59a`).
+
+- *R2-01* aplicado (Pajem: "passa por ele"). As 38 entradas estão `revisao: aprovada` com `revisor_fauna: opus-spec-reviewer` (37 liberadas na rodada 2; a `enemy_sentinela_ferro` depois do R2-01). `fauna.json` e `rumor_seeds.json` regenerados.
+- *P2-10* aplicado: a campanha do Anel de Lama mede o roteador à parte e asserta, sem folga, caça = custo de um início de combate comum do `off` + no máximo 1 chamada do roteador (texto livre).
+
+*Follow-ups registrados (não bloqueiam a Fase 1):*
+- **360-B:** *P2-4* (cap global de 12 presenças descarta a recém-nascida quando há muitas regiões ativas: priorizar ativas novas ou a região atual), *P2-7* (teste de carcaça pelo `_combat_node`; a "carcaça arrastada" de R11; o R15 do encontro de rumor usando presença) e *P2-9* (o migrante entra com peso fixo 0,5, fora do fator neutro relativo; conferir quando o limiar de migrante disparar numa região).
+- **Coordenador:** *P2-8* (o M1 lê o estado do produto como oráculo e o M7 do teste roda só 3×12; mudar só no avaliador protegido).
+- **Decisão do dono antes de ligar `RPG_FAUNA_SINAIS`:** *P2-11*. Com `ANUNCIA_PRESENCA_NOVA` desligada, 115 de 554 lutas contra criaturas `cedo` (20,8 %) começam sem sinal anterior (presença nascida no dia), com a `aproximacao` sempre presente. Opções: (a) aceitar; (b) religar o anúncio e aceitar M5 ≈ −0,25, o que pede reabrir o limiar (só o coordenador); (c) mostrar o 1º sinal da presença nova antes do gatilho na mesma chegada (muda a ordem do turno; pede spec).
+- **360-B/360-D:** *F-16* (presa "social" entre humanos, Soldado → Degolador e Sorvedouro → Iniciado: hoje vale também `PREDADOR_FAMINTO`; decidir se entre humanos só a `PRESA_LIBERADA` vale ou se cria um campo `suprime`).
+- **360-C:** *X-02* (o `contra_jogo` dos 11 legados promete efeitos sem deck que os sustente; só revelar o que tiver mecânica, ou reescrever como conselho tático).
+- **Opcional, conteúdo:** *R2-02* (Víbora: `resto` e `marca` usam a mesma faca cravada em agiota; tirar a faca do `resto`).
+- **Ressalva de design:** o Degolador (`imediato`) tem o nó inicial `nova_arcadia` (seguro) no território; pode haver emboscada sem sinal no hub de partida. O porte segue o perigo (1) e a taxa de gatilho não muda, então fica na Fase 1. Se o smoke mostrar emboscada cedo demais no hub, tirar `nova_arcadia` só do território dele.
+- *R2-03* (E16 com a fonte de reserva até a 350 pousar) e o rebase sobre a `main` ficam com o coordenador; na `main`, `services.leak_phrases` existe e o import direto passa a valer.
 
 ### Aprovação do dono (02/11)
 
