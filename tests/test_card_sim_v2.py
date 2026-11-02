@@ -281,3 +281,17 @@ def test_compute_imune_a_log_ligado_por_outros_testes(gold, sim):
         log.setLevel(prev)
     linhas = [ln for ln in stdout.splitlines() if ln]
     assert linhas and all(ln.startswith("med_lote_") for ln in linhas)
+
+
+def test_compute_independe_do_historico_do_processo(gold, sim):
+    """Causa raiz do flake sob `-n 2`: `A._HEROES` (arena 285) cacheia o herói na 1ª luta do
+    processo, com as Cartas iniciais do catálogo daquele instante. Rodar o v2 antes, ou usar
+    outra instância do módulo, não pode mudar o `compute`."""
+    nunca = gold._card(
+        9, custo_entropia=99, efeitos=[{"kind": "cura", "valor": 1}], frequencia="descanso_longo"
+    )
+    sim.simulate_batch([nunca], [1, 3], ["padrao"], 2, [0, 1], protocolo="v2")
+    a = gold.compute(sim)
+    fresca = gold.load_sim(name="sim_fresca_358")  # cache de heróis vazio, como num processo novo
+    b = gold.compute(fresca)
+    assert a == b == gold.compute(sim)

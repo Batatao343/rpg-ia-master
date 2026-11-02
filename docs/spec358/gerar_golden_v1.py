@@ -147,6 +147,17 @@ def pool_frozen(sim):
 
 
 @contextlib.contextmanager
+def heroes_reais(sim):
+    """A arena da 285 guarda o herói de cada (Postura, nível) em ``A._HEROES`` na PRIMEIRA luta
+    do processo, e o herói traz as Cartas iniciais lidas do catálogo naquele momento. Sob o pool
+    congelado (``cards_for_class`` vazio) o herói nasceria SEM elas, e o resultado dependeria de
+    quem construiu o herói primeiro. Aqui o cache é aquecido com o catálogo real antes."""
+    for lv in range(1, 6):
+        sim.A.hero(CLASSE, lv)
+    yield
+
+
+@contextlib.contextmanager
 def logs_silenciados():
     """Outros testes (mesmo worker do xdist) deixam handlers/níveis de log ligados e o log
     estruturado dos eventos de Carta cairia no stdout capturado do `main`."""
@@ -162,7 +173,7 @@ def logs_silenciados():
 
 def compute(sim) -> dict:
     out: dict = {}
-    with logs_silenciados(), pool_frozen(sim):
+    with logs_silenciados(), heroes_reais(sim), pool_frozen(sim):
         out["simulate_batch"] = sim.simulate_batch(
             copy.deepcopy(synthetic_batch()), [1, 3], ["padrao"], 2, [0, 1]
         )

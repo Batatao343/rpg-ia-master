@@ -143,11 +143,11 @@
   "med_lote_11": {
    "classe": "Médico de Campo",
    "vezes_na_mao": 137,
-   "vezes_jogada": 132,
-   "taxa_uso": 0.964,
-   "vitoria_sem": 0.875,
-   "vitoria_com": 0.925,
-   "delta_pp": 5.0,
+   "vezes_jogada": 133,
+   "taxa_uso": 0.971,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.938,
+   "delta_pp": 3.7,
    "lutas_por_braco": 80,
    "dano_por_folego": 5.0,
    "protecao_por_folego": 0.0,
@@ -160,8 +160,8 @@
    "vezes_na_mao": 162,
    "vezes_jogada": 162,
    "taxa_uso": 1.0,
-   "vitoria_sem": 0.875,
-   "vitoria_com": 0.925,
+   "vitoria_sem": 0.9,
+   "vitoria_com": 0.95,
    "delta_pp": 5.0,
    "lutas_por_braco": 80,
    "dano_por_folego": 0.0,
@@ -172,8 +172,8 @@
   }
  },
  "main": {
-  "stdout": "med_lote_11: uso 96% (132/137) delta +5.0pp dano/F 5.0 prot/F 0.0 dominante\nmed_lote_12: uso 100% (162/162) delta +5.0pp dano/F 0.0 prot/F 3.0 dominante\n",
+  "stdout": "med_lote_11: uso 97% (133/137) delta +3.7pp dano/F 5.0 prot/F 0.0 dominante\nmed_lote_12: uso 100% (162/162) delta +5.0pp dano/F 0.0 prot/F 3.0 dominante\n",
   "codigo": 1,
-  "out_arquivo": "{\n \"med_lote_11\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 137,\n  \"vezes_jogada\": 132,\n  \"taxa_uso\": 0.964,\n  \"vitoria_sem\": 0.875,\n  \"vitoria_com\": 0.925,\n  \"delta_pp\": 5.0,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 5.0,\n  \"protecao_por_folego\": 0.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n },\n \"med_lote_12\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 162,\n  \"vezes_jogada\": 162,\n  \"taxa_uso\": 1.0,\n  \"vitoria_sem\": 0.875,\n  \"vitoria_com\": 0.925,\n  \"delta_pp\": 5.0,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 0.0,\n  \"protecao_por_folego\": 3.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n }\n}\n"
+  "out_arquivo": "{\n \"med_lote_11\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 137,\n  \"vezes_jogada\": 133,\n  \"taxa_uso\": 0.971,\n  \"vitoria_sem\": 0.9,\n  \"vitoria_com\": 0.938,\n  \"delta_pp\": 3.7,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 5.0,\n  \"protecao_por_folego\": 0.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n },\n \"med_lote_12\": {\n  \"classe\": \"Médico de Campo\",\n  \"vezes_na_mao\": 162,\n  \"vezes_jogada\": 162,\n  \"taxa_uso\": 1.0,\n  \"vitoria_sem\": 0.9,\n  \"vitoria_com\": 0.95,\n  \"delta_pp\": 5.0,\n  \"lutas_por_braco\": 80,\n  \"dano_por_folego\": 0.0,\n  \"protecao_por_folego\": 3.0,\n  \"bandeiras\": [\n   \"dominante\"\n  ]\n }\n}\n"
  }
 }
