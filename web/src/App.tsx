@@ -23,6 +23,7 @@ import { CombatSimulatorScreen } from "./components/CombatSimulatorScreen";
 import { AuthScreen, hasEmailActionLink } from "./components/AuthScreen";
 import { authErrorMessage } from "./lib/authErrors";
 import { errMsg, errRequestId } from "./lib/errorMessages";
+import { publishRejectedPlay } from "./lib/rejectedPlay";
 import { portraitErrorBanner, shouldHidePortraitOffer, withinShownPrice, withoutPortraitOffer } from "./lib/portraitOrder";
 import { AccountScreen, shards } from "./components/AccountScreen";
 
@@ -689,6 +690,7 @@ export function App() {
       }
       // SPEC-205 R9: alvo velho — refaz a mira com o estado novo do servidor.
       if (error instanceof api.HttpError && error.code === "invalid_target" && active()) {
+        publishRejectedPlay({ playIndex: error.playIndex, cardId: error.cardId });
         try { const fresh = await api.getState(gid); if (active()) setData(fresh); } catch { /* o banner já explica */ }
       }
     } finally {

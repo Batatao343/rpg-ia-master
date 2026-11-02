@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { CombatBlock, HandCard, OmenView } from "../../types";
 import * as api from "../../api";
-import { BLOCK_TEXT, blockReason, cardTargets, endText, enqueue, folegoState, keywordRules, move, omenView, remove, toJogadas, type QueuedPlay } from "../../combat/deck";
+import { subscribeRejectedPlay } from "../../lib/rejectedPlay";
+import { BLOCK_TEXT, blockReason, cardTargets, dropRejectedPlay, visibleEnemyIds, endText, enqueue, folegoState, keywordRules, move, omenView, remove, toJogadas, type QueuedPlay } from "../../combat/deck";
 import type { DeckArm } from "../../combat/useDeckArm";
 import { useGlossary } from "../../combat/useGlossary";
 import { FolegoPips } from "./FolegoPips";
@@ -67,12 +68,20 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roundKey]);
 
-  const enemyIds = useMemo(() => combat.enemies.map((e) => e.id), [combat.enemies]);
+  const enemyIds = useMemo(() => visibleEnemyIds(combat.enemies), [combat.enemies]);
   const reasons = piles.mao.map((c, i) => blockReason(c, piles.mao, i, queue, piles, entropy));
   const fol = folegoState(piles, queue);
   const armedCard: HandCard | null = armed ? piles.mao[armed.index] ?? null : null;
   const targetsFor = (card: HandCard): string[] =>
     cardTargets(card, combat.cards.find((c) => c.id === card.id)?.valid_targets, enemyIds, friendIds);
+  // SPEC-363 R21: o servidor recusou o alvo de UMA jogada — só ela sai da fila.
+  useEffect(() => subscribeRejectedPlay((rej) => {
+    setQueue((q) => {
+      const dropped = dropRejectedPlay(q, rej.playIndex, rej.cardId);
+      if (dropped.note) onAnnounce(dropped.note);
+      return dropped.queue;
+    });
+  }), []); // eslint-disable-line react-hooks/exhaustive-deps
   const needsTarget = !!armedCard && armedCard.alvo !== "si";
   const armedTargets = armedCard ? targetsFor(armedCard) : [];
 

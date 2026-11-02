@@ -174,8 +174,23 @@ export const clockBody = (r: SceneCardsView["relogio"]) =>
  *  carta de aliado mira o jogador e o grupo e a de inimigo, os inimigos. `si` não tem alvo. */
 export function cardTargets(card: HandCard, known: string[] | undefined, enemyIds: string[], friendIds: string[]): string[] {
   if (card.alvo === "si") return [];
+  if (card.valid_targets) return card.valid_targets; // SPEC-363 R19: o servidor conhece a carta da mão
   if (known) return known;
   return card.alvo === "aliado" ? friendIds : enemyIds;
+}
+
+/** SPEC-363 R20: o fallback (save/servidor antigo) nunca oferece inimigo escondido como alvo. */
+export function visibleEnemyIds(enemies: Array<{ id: string; concealment?: string }>): string[] {
+  return enemies.filter((e) => !e.concealment || e.concealment === "visivel").map((e) => e.id);
+}
+
+/** SPEC-363 R21: o 409 `invalid_target` tira SÓ a jogada recusada da fila (pelo índice; senão, pela 1ª da mesma carta). */
+export function dropRejectedPlay(queue: QueuedPlay[], playIndex: number | undefined, cardId: string | undefined): { queue: QueuedPlay[]; note: string } {
+  let idx = playIndex != null && queue[playIndex] && (!cardId || queue[playIndex].cardId === cardId) ? playIndex : -1;
+  if (idx < 0 && cardId) idx = queue.findIndex((p) => p.cardId === cardId);
+  if (idx < 0) return { queue, note: "" };
+  const lost = queue[idx];
+  return { queue: queue.filter((_, i) => i !== idx), note: `${lost.name} perdeu o alvo — escolha de novo.` };
 }
 
 export type RoundEntryKind = "jogada" | "dano_continuo" | "queda" | "pressagio";

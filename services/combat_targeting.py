@@ -139,6 +139,28 @@ def valid_targets_for_card(state: dict, card_id: str) -> TargetingResult:
     return result
 
 
+def hand_card_targeting(state: dict, card_id: str) -> dict:
+    """SPEC-363 R19: alvos de QUALQUER Carta da mão (básica, preparada ou de cena).
+
+    Mesma regra de alvo do motor (`_enemy_targets`/`friendly_ids`), sem o portão de "preparada" —
+    a economia da mão é o Fôlego, não a lista de preparadas."""
+    gate = _combat_gate(state)
+    if gate:
+        return TargetingResult([], gate).as_dict()
+    card = cards.get_card(card_id) or {}
+    if card.get("tipo") == "utilitaria":
+        return TargetingResult([], "fora_de_combate").as_dict()
+    if card.get("tipo") != "ativa":
+        return TargetingResult([], None).as_dict()
+    kind = str((card.get("efeito") or {}).get("kind") or "")
+    if kind in _SUPPORT_EFFECTS:
+        return TargetingResult(friendly_ids(state), None).as_dict()
+    result = _enemy_targets(state)
+    if not result.valid_targets and result.invalid_reason is None:
+        result.invalid_reason = "no_valid_target"
+    return result.as_dict()
+
+
 def basic_action_targeting(state: dict, kind: str, maneuver: str | None = None) -> TargetingResult:
     """Ataque básico, passar, fugir e manobras táticas."""
     gate = _combat_gate(state)
@@ -185,6 +207,9 @@ def check_declared_target(
         return None
     if card_id:
         result = valid_targets_for_card(state, card_id)
+        if result.invalid_reason == "not_prepared":  # SPEC-363 R19: Carta da mão (básica/de cena)
+            hand = hand_card_targeting(state, card_id)
+            result = TargetingResult(hand["valid_targets"], hand["invalid_reason"])
     elif action_kind == "attack" or (action_kind == "maneuver" and maneuver in _TARGETED_MANEUVERS):
         result = basic_action_targeting(state, action_kind, maneuver)
     else:

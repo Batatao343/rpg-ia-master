@@ -9,6 +9,9 @@ export { rateLimitNotice, STALE_PAGE_MESSAGE };
 export class HttpError extends Error {
   /** SPEC-316 R5: erro do stream DEPOIS de a narração já ter sido mostrada. */
   narrativeShown?: boolean;
+  /** SPEC-363 R21: `invalid_target` aponta a jogada recusada. */
+  playIndex?: number;
+  cardId?: string;
   constructor(public status: number, public code: string, detail: string,
     public retryAfterSeconds?: number, public requestId?: string) { super(detail); }
 }
@@ -67,13 +70,26 @@ export function formatDetail(detail: unknown, fallback: string): { code: string;
 /** SPEC-220 R10: Origin/CSRF => 403; é página desatualizada, não sessão expirada. */
 export const STALE_PAGE_CODES = new Set(['csrf_invalid', 'origin_denied']);
 
+/** SPEC-363 R21: `detail.play_index`/`detail.card_id` do 409 `invalid_target`. */
+export function playInfo(body: unknown): { playIndex?: number; cardId?: string } {
+  const detail = (body as { detail?: unknown } | null | undefined)?.detail;
+  if (!detail || typeof detail !== 'object' || Array.isArray(detail)) return {};
+  const row = detail as { play_index?: unknown; card_id?: unknown };
+  return {
+    ...(typeof row.play_index === 'number' ? { playIndex: row.play_index } : {}),
+    ...(typeof row.card_id === 'string' ? { cardId: row.card_id } : {}),
+  };
+}
+
 async function errorFor(response: Response, sentRequestId?: string): Promise<HttpError> {
   const fallback = response.statusText || 'Falha na requisição';
   let formatted = { code: fallback, message: fallback };
   let retryAfter: number | undefined;
   let requestId = response.headers?.get?.('X-Request-ID') || sentRequestId || undefined;
+  let errBody: unknown;
   try {
     const body = await response.json();
+    errBody = body;
     formatted = formatDetail(body.detail, fallback);
     // SPEC-242: ``code`` estavel do envelope; o codigo derivado do detail vence quando ja e um codigo.
     if (!isCodeLike(formatted.code) && isCodeLike(body.code)) formatted = { ...formatted, code: body.code };
@@ -93,7 +109,9 @@ async function errorFor(response: Response, sentRequestId?: string): Promise<Htt
   }
   // SPEC-243 R2: codigo cru nunca vira mensagem; prosa do servidor (pt-BR) e preservada.
   const message = messageFor(formatted.code, formatted.message, retryAfter);
-  return new HttpError(response.status, formatted.code, message, retryAfter, requestId);
+  const err = new HttpError(response.status, formatted.code, message, retryAfter, requestId);
+  Object.assign(err, playInfo(errBody));
+  return err;
 }
 
 // SPEC-193: one-shot cookie-session refresh used by the native boot (never loops).

@@ -20,7 +20,7 @@ import {
 } from "../../combat/targeting";
 import { useTargeting } from "../../combat/useTargeting";
 import { useDeckArm } from "../../combat/useDeckArm";
-import { cardTargets } from "../../combat/deck";
+import { cardTargets, visibleEnemyIds } from "../../combat/deck";
 import { objectChips, orderChips, reinforcementNote } from "../../combat/conflictChips";
 import { boardClosed } from "../../combat/boardState";
 
@@ -127,7 +127,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const deckCard = deckMode && deckArm.armed ? combat?.pilhas?.mao[deckArm.armed.index] : undefined;
   const friendIds = people.filter((p) => p.role !== "enemy").map((p) => p.id);
   const deckTargets: string[] | null = deckCard && deckCard.alvo !== "si"
-    ? cardTargets(deckCard, cards.find((c) => c.id === deckCard.id)?.valid_targets, enemies.map((e) => e.id), friendIds) : null;
+    ? cardTargets(deckCard, cards.find((c) => c.id === deckCard.id)?.valid_targets, visibleEnemyIds(enemies), friendIds) : null;
   const aimTargets: string[] | null = deckTargets ?? (aimingCard
     ? planCard(aimingCard, enemies, false).targets
     : aimingBasic ? planBasic(aimingBasic, false).targets : null);
@@ -135,7 +135,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
     const valid = aimTargets.includes(p.id);
     const supportCard = aimingCard?.target_kind === "self" || deckCard?.alvo === "aliado";
     const reason = valid ? undefined
-      : p.role === "enemy" ? (supportCard ? "Esta carta só mira você e aliados" : "Oculto ou fora de alcance")
+      : p.role === "enemy" ? (supportCard ? "Esta carta só mira você e aliados" : p.concealment && p.concealment !== "visivel" ? "escondido — fora de alcance" : "Oculto ou fora de alcance")
       : "Esta ação só mira inimigos";
     return [p.id, { valid, reason }];
   })) : undefined;

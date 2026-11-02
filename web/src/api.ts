@@ -19,7 +19,7 @@ import type {
   ArtOffer,
 } from "./types";
 
-import { formatDetail, http, HttpError, rateLimitNotice, uploadAudio } from "./http";
+import { formatDetail, http, HttpError, playInfo, rateLimitNotice, uploadAudio } from "./http";
 import { setClientLatencyReport } from "./lib/turnLatency";
 import { messageFor } from "./lib/errorMessages";
 import { reportClientError } from "./lib/clientErrors";
@@ -200,7 +200,9 @@ export async function sendActionStream(
       // SPEC-205: detail estruturado (ex.: invalid_target) preserva code/mensagem.
       if (payload.detail && typeof payload.detail === "object") {
         const formatted = formatDetail(payload.detail, "erro no stream");
-        throw fail(new HttpError(Number(payload.code || 500), formatted.code, messageFor(formatted.code, formatted.message), undefined, rid));
+        const err = fail(new HttpError(Number(payload.code || 500), formatted.code, messageFor(formatted.code, formatted.message), undefined, rid));
+        Object.assign(err, playInfo(payload));
+        throw err;
       }
       if (typeof payload.detail === "string") {
         const notice = rateLimitNotice(payload.detail, payload.retry_after_seconds);   // SPEC-219

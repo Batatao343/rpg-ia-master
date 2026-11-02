@@ -504,6 +504,9 @@ export interface HandCard {
   alvo?: "inimigo" | "aliado" | "si";
   texto?: string;
   palavras_chave?: string[];
+  /** SPEC-363 R19: alvos válidos calculados pelo servidor para QUALQUER carta da mão (motor = view). */
+  valid_targets?: string[];
+  invalid_reason?: string | null;
 }
 
 export interface PileEntry { id: string; name: string }

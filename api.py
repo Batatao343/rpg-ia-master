@@ -3231,6 +3231,11 @@ def _combat_block(state: dict) -> dict[str, Any]:
     if _piles.mode() == "on" and isinstance(meta.get("pilhas"), dict):
         # SPEC-328 R16: mão completa + contagens; nunca a ordem do monte.
         view["pilhas"] = _piles.public_view(meta["pilhas"], player)
+        for _row in view["pilhas"].get("mao") or []:  # SPEC-363 R19: alvos de TODA Carta da mão
+            try:
+                _row.update(_targeting.hand_card_targeting(state, str(_row.get("id"))))
+            except Exception as exc:  # noqa: BLE001 - alvo é dica de UI; o motor revalida
+                log_fallback("combat_view", "hand_targeting_failed", exc)
     # SPEC-353 R54 + SPEC-354 R4.1 (um só caminho): com o Baralho `on`, o registro da rodada vale durante o conflito
     # (há `pilhas`) e, depois dele, só no turno de término (`_combat_result`), não até o próximo conflito.
     _final_board = (
@@ -5994,7 +5999,7 @@ def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]
         )
     default_target = str(active_enemies[0].get("id")) if active_enemies else None
     steps: list[dict] = []
-    for play in req.jogadas or []:
+    for play_index, play in enumerate(req.jogadas or []):
         bad = _targeting.check_declared_target(
             state,
             card_id=play.card_id,
@@ -6009,6 +6014,8 @@ def _apply_play_list(state: dict, req: ActionRequest, active_enemies: list[dict]
                     "code": "invalid_target",
                     "invalid_reason": bad,
                     "message": "O alvo escolhido deixou de ser válido. Escolha de novo.",
+                    "play_index": play_index,  # SPEC-363 R21: só esta jogada sai da fila
+                    "card_id": play.card_id,
                 },
             )
         if play.card_id:
