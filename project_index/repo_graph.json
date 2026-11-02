@@ -1,5 +1,5 @@
 {
-  "commit_sha": "2adf23764d5d01e5518723594abb83cff9fa8811",
+  "commit_sha": "27f402264d25543b96515fdffa7815bb843cfcac",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -9686,7 +9686,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 61
+        "line": 78
       },
       "source": "file:tests/test_card_sim_v2.py",
       "target": "file:services/__init__.py",
@@ -9697,7 +9697,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 62
+        "line": 79
       },
       "source": "file:tests/test_card_sim_v2.py",
       "target": "file:services/__init__.py",
@@ -44589,10 +44589,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 149
+        "line": 174
       },
       "source": "module:docs.spec358.gerar_golden_v1",
       "target": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 150
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.heroes_reais",
       "type": "defines"
     },
     {
@@ -44611,6 +44622,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 161
+      },
+      "source": "module:docs.spec358.gerar_golden_v1",
+      "target": "symbol:docs.spec358.gerar_golden_v1.logs_silenciados",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
         "line": 65
       },
       "source": "module:docs.spec358.gerar_golden_v1",
@@ -44622,7 +44644,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 172
+        "line": 197
       },
       "source": "module:docs.spec358.gerar_golden_v1",
       "target": "symbol:docs.spec358.gerar_golden_v1.main",
@@ -119356,7 +119378,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 61
+        "line": 78
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "module:services",
@@ -119367,7 +119389,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 62
+        "line": 79
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "module:services",
@@ -119378,10 +119400,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 70
+        "line": 87
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 33
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2._compute_isolado",
       "type": "defines"
     },
     {
@@ -119400,7 +119433,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 177
+        "line": 194
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2._write_lote",
@@ -119422,7 +119455,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 66
+        "line": 83
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.mk",
@@ -119444,7 +119477,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 128
+        "line": 145
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
@@ -119455,7 +119488,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 183
+        "line": 264
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 286
+      },
+      "source": "module:tests.test_card_sim_v2",
+      "target": "symbol:tests.test_card_sim_v2.test_compute_independe_do_historico_do_processo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 200
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
@@ -119466,7 +119521,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 192
+        "line": 209
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
@@ -119477,7 +119532,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 210
+        "line": 227
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
@@ -119488,7 +119543,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 203
+        "line": 220
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_protocolo_invalido_levanta",
@@ -119499,7 +119554,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 89
+        "line": 106
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
@@ -119510,7 +119565,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 228
+        "line": 245
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
@@ -119521,7 +119576,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 74
+        "line": 91
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
@@ -119532,7 +119587,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 101
+        "line": 118
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
@@ -119543,7 +119598,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 110
+        "line": 127
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
@@ -119554,7 +119609,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 33
+        "line": 52
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v1_equivale_a_referencia_no_motor_atual",
@@ -119565,7 +119620,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 42
+        "line": 59
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v1_reproduz_golden",
@@ -119576,7 +119631,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 118
+        "line": 135
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
@@ -119587,7 +119642,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 151
+        "line": 168
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v2_dominante_so_por_delta",
@@ -119598,7 +119653,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 159
+        "line": 176
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao",
@@ -119609,7 +119664,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 168
+        "line": 185
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
@@ -119620,7 +119675,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 139
+        "line": 156
       },
       "source": "module:tests.test_card_sim_v2",
       "target": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
@@ -239443,7 +239498,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 156
+        "line": 176
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.heroes_reais",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 176
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "target": "symbol:docs.spec358.gerar_golden_v1.logs_silenciados",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 181
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.compute",
       "target": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
@@ -239454,7 +239531,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 162
+        "line": 187
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.compute",
       "target": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
@@ -239465,7 +239542,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 151
+        "line": 176
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.compute",
       "target": "symbol:docs.spec358.gerar_golden_v1.pool_frozen",
@@ -239476,7 +239553,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 153
+        "line": 178
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.compute",
       "target": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
@@ -239509,7 +239586,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 188
+        "line": 209
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.main",
       "target": "symbol:docs.spec358.gerar_golden_v1.compute",
@@ -239520,7 +239597,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 179
+        "line": 223
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.main",
+      "target": "symbol:docs.spec358.gerar_golden_v1.compute",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 209
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.main",
       "target": "symbol:docs.spec358.gerar_golden_v1.load_sim",
@@ -239531,7 +239619,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 185
+        "line": 214
+      },
+      "source": "symbol:docs.spec358.gerar_golden_v1.main",
+      "target": "symbol:docs.spec358.gerar_golden_v1.load_sim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec358/gerar_golden_v1.py",
+        "line": 220
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.main",
       "target": "symbol:docs.spec358.gerar_golden_v1.motor_hash",
@@ -239542,7 +239641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "docs/spec358/gerar_golden_v1.py",
-        "line": 186
+        "line": 221
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.main",
       "target": "symbol:docs.spec358.gerar_golden_v1.pool_congelado",
@@ -397744,7 +397843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 71
+        "line": 88
       },
       "source": "symbol:tests.test_card_sim_v2._ataque",
       "target": "symbol:tests.test_card_sim_v2.mk",
@@ -397777,18 +397876,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 129
+        "line": 146
       },
       "source": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
       "target": "symbol:tests.test_card_sim_v2._ataque",
       "type": "calls"
     },
     {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 269
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes",
+      "target": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 270
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout",
+      "target": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout.emit",
+      "type": "defines"
+    },
+    {
       "confidence": "static_best_effort",
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 185
+        "line": 202
       },
       "source": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
       "target": "symbol:tests.test_card_sim_v2._write_lote",
@@ -397799,7 +397920,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 188
+        "line": 205
       },
       "source": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
       "target": "symbol:tests.test_card_sim_v2._write_lote",
@@ -397810,7 +397931,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 193
+        "line": 210
       },
       "source": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
       "target": "symbol:tests.test_card_sim_v2._load_path",
@@ -397821,7 +397942,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 194
+        "line": 211
       },
       "source": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
       "target": "symbol:tests.test_card_sim_v2.mk",
@@ -397832,7 +397953,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 214
+        "line": 231
       },
       "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
       "target": "symbol:tests.test_card_sim_v2._load_path",
@@ -397843,7 +397964,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 222
+        "line": 239
       },
       "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
       "target": "symbol:tests.test_card_sim_v2._write_lote",
@@ -397854,7 +397975,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 217
+        "line": 234
       },
       "source": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
       "target": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake",
@@ -397865,174 +397986,31 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 90
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
-      "target": "symbol:tests.test_card_sim_v2._ataque",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 91
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
-      "target": "symbol:tests.test_card_sim_v2._ataque",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 92
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 94
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 96
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 230
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
-      "target": "symbol:tests.test_card_sim_v2._ataque",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 231
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_exact",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 234
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
-      "target": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso",
-      "type": "defines"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 85
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
-      "target": "symbol:services.card_effects.budget_error",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 82
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
-      "target": "symbol:services.card_effects.custo_folego",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 86
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
-      "target": "symbol:services.card_effects.normalize",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 76
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
-      "target": "symbol:tests.test_card_sim_v2._ataque",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 77
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 103
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
-        "line": 106
-      },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
-      "target": "symbol:tests.test_card_sim_v2.mk",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_card_sim_v2.py",
         "line": 107
       },
-      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 108
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 109
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
       "target": "symbol:tests.test_card_sim_v2.mk",
       "type": "calls"
     },
@@ -398043,6 +398021,149 @@
         "file": "tests/test_card_sim_v2.py",
         "line": 111
       },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 113
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 247
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 248
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 251
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
+      "target": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 102
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.custo_folego",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 103
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:services.card_effects.normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 93
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:tests.test_card_sim_v2._ataque",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 94
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 120
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 123
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 124
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
+      "target": "symbol:tests.test_card_sim_v2.mk",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 128
+      },
       "source": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
       "target": "symbol:tests.test_card_sim_v2._ataque",
       "type": "calls"
@@ -398052,7 +398173,29 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 119
+        "line": 56
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v1_equivale_a_referencia_no_motor_atual",
+      "target": "symbol:tests.test_card_sim_v2._compute_isolado",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 66
+      },
+      "source": "symbol:tests.test_card_sim_v2.test_v1_reproduz_golden",
+      "target": "symbol:tests.test_card_sim_v2._compute_isolado",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_card_sim_v2.py",
+        "line": 136
       },
       "source": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
       "target": "symbol:tests.test_card_sim_v2._ataque",
@@ -398063,7 +398206,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 169
+        "line": 186
       },
       "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
       "target": "symbol:services.cards.all_cards",
@@ -398074,7 +398217,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 172
+        "line": 189
       },
       "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
       "target": "symbol:services.cards.all_cards",
@@ -398085,7 +398228,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 173
+        "line": 190
       },
       "source": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
       "target": "symbol:services.cards.all_cards",
@@ -398096,7 +398239,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_card_sim_v2.py",
-        "line": 140
+        "line": 157
       },
       "source": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
       "target": "symbol:tests.test_card_sim_v2.mk",
@@ -647471,9 +647614,16 @@
     {
       "id": "symbol:docs.spec358.gerar_golden_v1.compute",
       "kind": "function",
-      "line": 149,
+      "line": 174,
       "path": "docs/spec358/gerar_golden_v1.py",
       "qualified_name": "docs.spec358.gerar_golden_v1.compute"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.heroes_reais",
+      "kind": "function",
+      "line": 150,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.heroes_reais"
     },
     {
       "id": "symbol:docs.spec358.gerar_golden_v1.load_sim",
@@ -647481,6 +647631,13 @@
       "line": 115,
       "path": "docs/spec358/gerar_golden_v1.py",
       "qualified_name": "docs.spec358.gerar_golden_v1.load_sim"
+    },
+    {
+      "id": "symbol:docs.spec358.gerar_golden_v1.logs_silenciados",
+      "kind": "function",
+      "line": 161,
+      "path": "docs/spec358/gerar_golden_v1.py",
+      "qualified_name": "docs.spec358.gerar_golden_v1.logs_silenciados"
     },
     {
       "id": "symbol:docs.spec358.gerar_golden_v1.lote_protocolo",
@@ -647492,7 +647649,7 @@
     {
       "id": "symbol:docs.spec358.gerar_golden_v1.main",
       "kind": "function",
-      "line": 172,
+      "line": 197,
       "path": "docs/spec358/gerar_golden_v1.py",
       "qualified_name": "docs.spec358.gerar_golden_v1.main"
     },
@@ -698291,9 +698448,16 @@
     {
       "id": "symbol:tests.test_card_sim_v2._ataque",
       "kind": "test",
-      "line": 70,
+      "line": 87,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2._ataque"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2._compute_isolado",
+      "kind": "test",
+      "line": 33,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2._compute_isolado"
     },
     {
       "id": "symbol:tests.test_card_sim_v2._load_path",
@@ -698305,7 +698469,7 @@
     {
       "id": "symbol:tests.test_card_sim_v2._write_lote",
       "kind": "test",
-      "line": 177,
+      "line": 194,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2._write_lote"
     },
@@ -698319,7 +698483,7 @@
     {
       "id": "symbol:tests.test_card_sim_v2.mk",
       "kind": "test",
-      "line": 66,
+      "line": 83,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.mk"
     },
@@ -698333,133 +698497,161 @@
     {
       "id": "symbol:tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero",
       "kind": "test",
-      "line": 128,
+      "line": 145,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_carta_identica_a_referencia_da_delta_zero"
     },
     {
+      "id": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes",
+      "kind": "test",
+      "line": 264,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout",
+      "kind": "class",
+      "line": 269,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout.emit",
+      "kind": "test",
+      "line": 270,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_compute_imune_a_log_ligado_por_outros_testes._AoStdout.emit"
+    },
+    {
+      "id": "symbol:tests.test_card_sim_v2.test_compute_independe_do_historico_do_processo",
+      "kind": "test",
+      "line": 286,
+      "path": "tests/test_card_sim_v2.py",
+      "qualified_name": "tests.test_card_sim_v2.test_compute_independe_do_historico_do_processo"
+    },
+    {
       "id": "symbol:tests.test_card_sim_v2.test_main_v2_codigo_de_saida",
       "kind": "test",
-      "line": 183,
+      "line": 200,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_main_v2_codigo_de_saida"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos",
       "kind": "test",
-      "line": 192,
+      "line": 209,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_promote_aceita_relatorio_v2_com_avisos"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo",
       "kind": "test",
-      "line": 210,
+      "line": 227,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake",
       "kind": "test",
-      "line": 217,
+      "line": 234,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_promote_main_escolhe_o_protocolo.fake"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_protocolo_invalido_levanta",
       "kind": "test",
-      "line": 203,
+      "line": 220,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_protocolo_invalido_levanta"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_familia_segue_o_bot",
       "kind": "test",
-      "line": 89,
+      "line": 106,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_familia_segue_o_bot"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso",
       "kind": "test",
-      "line": 228,
+      "line": 245,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso",
       "kind": "test",
-      "line": 234,
+      "line": 251,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_fora_de_posicao_vira_aviso.com_intruso"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento",
       "kind": "test",
-      "line": 74,
+      "line": 91,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_mesmo_custo_tier_e_dentro_do_orcamento"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas",
       "kind": "test",
-      "line": 101,
+      "line": 118,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_none_para_reacao_passiva_e_isentas"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado",
       "kind": "test",
-      "line": 110,
+      "line": 127,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_referencia_ocupa_a_mesma_posicao_no_baralho_ordenado"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v1_equivale_a_referencia_no_motor_atual",
       "kind": "test",
-      "line": 33,
+      "line": 52,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v1_equivale_a_referencia_no_motor_atual"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v1_reproduz_golden",
       "kind": "test",
-      "line": 42,
+      "line": 59,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v1_reproduz_golden"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia",
       "kind": "test",
-      "line": 118,
+      "line": 135,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v2_bracos_diferem_so_na_carta_ou_referencia"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v2_dominante_so_por_delta",
       "kind": "test",
-      "line": 151,
+      "line": 168,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v2_dominante_so_por_delta"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao",
       "kind": "test",
-      "line": 159,
+      "line": 176,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v2_reacao_sem_referencia_usa_remocao"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico",
       "kind": "test",
-      "line": 168,
+      "line": 185,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v2_restaura_catalogo_e_deterministico"
     },
     {
       "id": "symbol:tests.test_card_sim_v2.test_v2_uso_vira_aviso",
       "kind": "test",
-      "line": 139,
+      "line": 156,
       "path": "tests/test_card_sim_v2.py",
       "qualified_name": "tests.test_card_sim_v2.test_v2_uso_vira_aviso"
     },
@@ -758679,5 +758871,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:49713515cb360ed355eeb96523f886ec365263d6b6bafee7c18e9ea8807d35ac"
+  "source_tree_hash": "sha256:5dd249ba4c4c2e5a269e2e6fedb836a26ddbc50e1dc53e913717c53c895f85cd"
 }
