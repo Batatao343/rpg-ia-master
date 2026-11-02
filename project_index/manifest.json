@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "801dd2793c69389f16f3ae853c215c34c398acf4",
+  "commit_sha": "666027d5f0b1e8619d0b919dfd580a5b106b62c9",
   "edge_counts": {
-    "calls": 36438,
-    "contains": 1197,
-    "defines": 17675,
-    "imports": 2908,
-    "likely_test_for": 2102,
+    "calls": 37092,
+    "contains": 1210,
+    "defines": 17985,
+    "imports": 2947,
+    "likely_test_for": 2125,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:7d3a25059be57c4ca049dd9f3d48e13af048daee02331dc89f2b5c53cfef7ea7",
+  "graph_hash": "sha256:ba49ecf2ffac0dec350e4966ca02cae788cece23a4b7cbbc1bf1d1c20256934f",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -227,10 +227,12 @@
     "scripts/bestiario/arena.py",
     "scripts/bestiario/calibrar.py",
     "scripts/bestiario/curadoria.py",
+    "scripts/bestiario/eval_geracao.py",
     "scripts/bestiario/gerar_docs.py",
     "scripts/bestiario/gerar_mecanica.py",
     "scripts/bestiario/lint.py",
     "scripts/bestiario/painel.py",
+    "scripts/bestiario/pool_revisao.py",
     "scripts/beta_gameplay_gate.py",
     "scripts/browser_local.py",
     "scripts/build_rumor_seeds.py",
@@ -392,7 +394,11 @@
     "services/context_sources.py",
     "services/continuity.py",
     "services/creature_art.py",
+    "services/creature_gen.py",
+    "services/creature_gen_eval.py",
+    "services/creature_gen_jobs.py",
     "services/creature_portraits.py",
+    "services/creature_variants.py",
     "services/cron_internal.py",
     "services/daily_spend_cap.py",
     "services/death_flow.py",
@@ -1178,6 +1184,13 @@
     "tests/test_spec360_saves.py",
     "tests/test_spec360_schema_lint.py",
     "tests/test_spec360_sinais.py",
+    "tests/test_spec361_caminho.py",
+    "tests/test_spec361_eval.py",
+    "tests/test_spec361_gate.py",
+    "tests/test_spec361_integracao.py",
+    "tests/test_spec361_pool.py",
+    "tests/test_spec361_prompt.py",
+    "tests/test_spec361_variantes.py",
     "tests/test_spec362_arcanista.py",
     "tests/test_spec362_run_round.py",
     "tests/test_spec363_enemy_name.py",
@@ -1467,14 +1480,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1054,
+    "class": 1068,
     "endpoint": 69,
-    "file": 1413,
-    "function": 5534,
-    "method": 865,
-    "module": 1197,
-    "test": 10221
+    "file": 1426,
+    "function": 5698,
+    "method": 869,
+    "module": 1210,
+    "test": 10349
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:3fde584f125a621217dc278f901bfd3c59cc17c8f239c318db51fbe8907d9846"
+  "source_tree_hash": "sha256:0a48185ed5c43f3c2d8319a64d0bf4a36b8ce887968160aaab4ea14162020dee"
 }
