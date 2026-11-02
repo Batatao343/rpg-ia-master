@@ -131,7 +131,7 @@ for (const width of [1440, 390]) {
       expect(result.violations.filter((v) => v.impact === "critical" || v.impact === "serious")).toEqual([]);
       backend.releaseStream();
       if (width < 900) await page.getByRole("navigation", { name: "Superfícies" }).getByRole("button", { name: "Crônica", exact: true }).click();
-      await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
+      await expect(page.getByRole("region", { name: "Narrativa" }).getByText("O último saqueador cai; o combate termina.")).toBeVisible();
       expect(actions(backend)).toHaveLength(1);
     });
 

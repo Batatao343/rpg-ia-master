@@ -155,7 +155,7 @@ test("F08 combat_core", async ({ page, backend }) => {
   await expect(page.locator(".aimbar")).toContainText("Mirando Golpe do Véu: escolha um alvo");
   expect(backend.requests.filter((r) => r.path.startsWith("/game/action"))).toHaveLength(0);
   await page.getByRole("button", { name: /^Alvo: Saqueador/ }).click();
-  await expect(page.getByText("O último saqueador cai; o combate termina.")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Narrativa" }).getByText("O último saqueador cai; o combate termina.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sua mão" })).toHaveCount(0);
   const sent = backend.requests.filter((r) => r.path.startsWith("/game/action"));
   expect(sent).toHaveLength(1);
