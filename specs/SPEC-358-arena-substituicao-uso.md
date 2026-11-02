@@ -1,6 +1,6 @@
 # SPEC-358 — Arena de Cartas por substituição (`lote-v2`) e uso do bot como aviso
 
-> **Status:** `approved`
+> **Status:** `done` (revisão Sol APPROVED_WITH_FOLLOWUPS, P2 fechados; v2 opt-in, default v1 — D6)
 > **Criada:** 2026-10-28 · **Atualizada:** 2026-10-28
 > **Épico:** SPEC-327
 > **Depende de:** SPEC-336 (`sim.py`, `promote.py`, `--protocolo lote`), SPEC-339 (`done`: desempate por hash no `full_deck`, motor corrigido), SPEC-341 (`done`: sementes 0–19 de ajuste e 20–99 de confirmação).
@@ -284,16 +284,16 @@ Em `tests/test_card_sim_v2.py`:
 
 ## 5. Critérios de aceite
 
-- [ ] Golden v1 commitado antes da primeira edição do `sim.py`; `test_v1_reproduz_golden` verde.
-- [ ] `docs/spec358/equivalencia-v1.json`: 15/15 arquivos `iguais: true`.
-- [ ] `git diff --exit-code main -- data/cards services tests/fixtures/spec330_legacy_golden.json evals docs/spec335 docs/spec339 docs/spec341 tests/test_card_sim.py` vazio.
-- [ ] Constantes e `PROTOCOLO_LOTE` inalterados (`tests/test_card_sim.py:344-348` verde, sem edição).
-- [ ] Todos os testes da Etapa 1 verdes; `tests/test_card_sim.py` verde.
-- [ ] `sim.py --protocolo lote-v2` produz `bandeiras` só com `dominante` por delta, e uso só em `avisos`.
-- [ ] `promote.py` sem `--sim-report` continua no v1; com relatório v2, aviso não recusa.
-- [ ] `docs/spec358/RELATORIO-arena-v2.md` com tabelas v1 × v2, divergências, casos de controle, R15 e limitações; nenhum relatório antigo reescrito.
-- [ ] `docs/guias/CARTAS.md` documenta o v2 (R16).
-- [ ] Revisão Sol registrada (`handoffs/SPEC-358-sol-review.md`) sem P1 aberto.
+- [x] Golden v1 commitado antes da primeira edição do `sim.py`; `test_v1_reproduz_golden` verde.
+- [x] `docs/spec358/equivalencia-v1.json`: 15/15 arquivos `iguais: true`.
+- [x] `git diff --exit-code main -- data/cards services tests/fixtures/spec330_legacy_golden.json evals docs/spec335 docs/spec339 docs/spec341 tests/test_card_sim.py` vazio.
+- [x] Constantes e `PROTOCOLO_LOTE` inalterados (`tests/test_card_sim.py:344-348` verde, sem edição).
+- [x] Todos os testes da Etapa 1 verdes; `tests/test_card_sim.py` verde.
+- [x] `sim.py --protocolo lote-v2` produz `bandeiras` só com `dominante` por delta, e uso só em `avisos`.
+- [x] `promote.py` sem `--sim-report` continua no v1; com relatório v2, aviso não recusa.
+- [x] `docs/spec358/RELATORIO-arena-v2.md` com tabelas v1 × v2, divergências, casos de controle, R15 e limitações; nenhum relatório antigo reescrito.
+- [x] `docs/guias/CARTAS.md` documenta o v2 (R16).
+- [x] Revisão Sol registrada (`handoffs/SPEC-358-sol-review.md`) sem P1 aberto.
 - [ ] `uv run pytest` verde (suíte completa offline, pelo coordenador no pouso).
 - [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
 - [ ] Saves antigos: não se aplica (nada de estado de jogo muda).
