@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-BASE = "cb02071d"  # `main` sobre a qual a SPEC-364 foi escrita
+BASE = "cb02071d"  # `main` sobre a qual a SPEC-364 foi escrita (so confere que existe)
 PROTECTED = (
     "tests/spec330_equivalence.py",
     "tests/fixtures/spec330_legacy_golden.json",
@@ -31,5 +31,6 @@ def test_golden_and_engine_untouched_since_base():
     if _git("rev-parse", "--abbrev-ref", "HEAD") != "spec-364":
         pytest.skip("guard so vale na branch spec-364")
     assert _git("rev-parse", "--verify", "-q", f"{BASE}^{{commit}}"), "commit base ausente"
-    diff = _git("diff", "--name-only", BASE, "HEAD", "--", *PROTECTED)
+    # So o que a propria branch mudou: depois de rebase a `main` pode ter mexido nesses arquivos.
+    diff = _git("diff", "--name-only", "main...HEAD", "--", *PROTECTED)
     assert diff == "", f"arquivo protegido da SPEC-364 mudou: {diff}"
