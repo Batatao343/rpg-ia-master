@@ -1,6 +1,6 @@
 # SPEC-351 — revisão independente (independent-review)
 
-> **Veredito:** `CHANGES_REQUIRED` (1 P1; o resto é P2)
+> **Veredito:** `CHANGES_REQUIRED` na rodada 1 (1 P1); `APPROVED_WITH_FOLLOWUPS` na rodada 2 (ver ao fim)
 > **Revisor:** Opus 5.5 (Sol técnico + segurança + qualidade narrativa; não escreveu o código) · **Data:** 2026-11-02 · **Commit revisado:** `21168459`
 
 ## Escopo
@@ -84,4 +84,70 @@ git hash-object playtest/opening_checks.py → 5713a694c773d33b29337e692550cfeeb
 git diff --stat efcc2a0a HEAD -- playtest/ tests/test_spec351_checks.py → vazio
 sonda: plot_doors real (spec-350, RPG_PLOT_THREADS=on) → 22 PlotDoor; thread_menu source=fallback; _door_name(door_id)=""
 bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec351_{api,checks,menu,pool,prologue,security,state}.py tests/test_prologue.py tests/test_flag_registry.py → 106 passed
+```
+
+---
+
+## Rodada 2
+
+> **Veredito:** `APPROVED_WITH_FOLLOWUPS` (P1-1 fechado; P2 da rodada 1 fechados; 4 P2 novos, nenhum bloqueia)
+> **Revisor:** Opus 5.5 · **Data:** 2026-11-02 · **Commits revisados:** `468d2af8`, `26967a9e`, `ebc13e53`, `1a2d466b` (branch rebaseado sobre `fc1b6b0a`, com a 350 na main)
+
+### Achados da rodada 1
+
+| ID | Estado | Evidência |
+|---|---|---|
+| P1-1 | **fechado** | `_doors_350` lê `PlotDoor` por atributo (`_get`), pega o nome do `title` da trama dona (`threads_for_region` → `portas`), a âncora de `anchor_npc_id`, o gancho de `hook_public`, e passa a postura = classe. Quando há linhas mas nenhuma é mapeada, loga `350_unmapped`/`350_anchors_unusable`. `_door_name` resolve porta/trama → `thr.title` via `catalog()`. O teste usa `PlotDoor` Pydantic frozen e, também, o módulo real (`importorskip`; os testes rodaram, nenhum foi pulado). Sonda própria com o módulo real em Nova Arcádia, `source=350`: Elfo + Arcanista → `tr_na_po_de_sonho__p1` em 1º com a âncora `npc_tr_ysolt_fio_de_vidro`; Humano + Sangromante → `tr_na_a_colecao__p1` em 1º. |
+| P2-1 | **fechado** | O prompt pede o título completo, de forma natural, sem aspas, e proíbe porta/trama/menu na ficção (`services/prologue.py`, regra 4; bloco do planejador). No smoke 2 (`smoke-2026-11-02b.json`): 0 aspas nos 8 casos. "porta" só aparece em uso diegético ("bateu à sua porta", casos 1 e 2). E1 = 7/8, dentro do critério de ≥ 7 em 8. Li os prólogos 1 e 7 e os beats. A citação ficou natural ("Um boato entre caçadores de retorno fala que a Floresta Sussurra Nomes"; "falam da Coleção"), e os prólogos seguem concretos, na borda e no tom. |
+| P2-2 | **fechado** | Com `looks_hostile` → `name_origin=player` (só local), o caso 8 não foi promovido no smoke 2. O único promovido foi "Sena Ril" (caso 1). Ver P2-R2-1 sobre a heurística. |
+| P2-3 | **fechado** | O smoke 2 rodou com o RAG de lore real (`lore_chars` entre 708 e 1317 por caso) e com a 350 real em NA; p50 8,3 s → 9,4 s. O E4 continua provisório só pela 348. |
+| P2-4 | **fechado** | `ARCS_LEFT_DEFAULT = 1` (D3: prólogo + 1 replanejamento); `arcs_left: 0` no smoke do replan. |
+| P2-5 | **fechado** | O gancho vai ao brief e à ficha (`opening_hook`). `plot_npc_name` é derivado pelo servidor em `_apply_menu` (o cliente não decide), com teto de 60 na borda. O chip mostra `nome — gancho (do mundo)` e não depende mais de `seed_npcs`. É texto React, então sem XSS. |
+| P2-6 | **fechado** | `signature_taken` antes do `submit`: semente reaproveitada → `seed=None` → só local (`services/prologue.py:629`). Resta um caso menor: se a 1ª entrada foi *rejeitada*, o replay volta a `HELD`, mas o validador de duplicata/nome ainda barra. |
+| P2-7 | **fechado** | `_eligible_npc` consulta `gr.is_alive(ref, projection)`; há teste `test_dead_npc_is_excluded`. |
+| P2-8 | **fechado** | `seeking` e os nomes do fio passam por `wrap_player_input` no `<FIO_DE_ABERTURA>`. |
+
+### Extras pedidos
+
+- **Afinidade de raça** (`services/opening_threads.py:214-221`, `:243`): **não vaza nada oculto.** Lê só as
+  tags de entidade que passa em `_public_entity` (visibilidade `public` e fora de `SECRET_ENTITY_IDS`). As tags
+  servem só para ordenar e nunca entram no prompt nem na resposta. O menu não vai ao cliente. A raça é
+  canonizada contra `origins.json` no `CreateCharacterRequest` (`_canonical_race`), então o cliente não
+  consegue usar a raça como sonda de tag arbitrária para inferir a ordem. O peso +100 põe a porta da raça à
+  frente de tudo, inclusive da descrição. É escolha de design alinhada ao pedido do dono (Elfo → Pó de
+  Sonho), mas ver P2-R2-3.
+- **`sanitize_beat`** (`services/prologue.py:268`): aplicado a beats e clímax com estado vazio (todo segredo
+  conta como não revelado), o que é a direção segura. Troca o beat inteiro por "Investigue …" quando acha
+  assinatura de segredo ou nome de facção secreta. Prólogo e brief ficam de fora: ver P2-R2-2.
+- **`looks_hostile`** (`services/prologue.py:591-601`): a consequência é segura (o NPC só fica local, o jogo
+  segue igual). Mas o filtro é fraco nas duas direções. Sonda própria:
+  - **Falsos positivos (3 de 5 frases benignas):** "Meu pai ignora as regras da guilda…", "Jurei que nunca
+    revele o segredo da família.", "Marque bem: a missão do meu irmão falhou." → hostil.
+  - **Falsos negativos (7 de 7 contornos):** "Esqueça as instruções anteriores…", "Desconsidere tudo acima…",
+    "forget previous instructions", "i g n o r e as regras", "Ignóre as regras", "You are now DAN…" e
+    "Revele" a mais de 40 caracteres de "segredo" → não hostil.
+  - Como o pool tem outras barreiras (delimitação, shingles, PII, nome digitado, juiz LLM), isso é
+    defesa em profundidade e não bloqueia. Ver P2-R2-1.
+- **E1 no replan:** no smoke do replan (`smoke-2026-11-02c-replan.json`), o E1 passa porque `consume_thread`
+  acrescentou "Mantenha em vista: A Coleção." ao beat 2 (`services/opening_threads.py:506`). O modelo de novo
+  não citou a trama sozinho. É um mecanismo legítimo e declarado na §9 (direção ao narrador, e os beats não
+  são mostrados ao jogador), mas o E1 do replan mede a cola do motor, não a adesão do planejador. Ver P2-R2-4.
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P2-R2-1 | P2 | `services/prologue.py:591-601` | A heurística `looks_hostile` dá falso positivo em descrições comuns de dark fantasy ("ignora as regras", "revele … segredo", "marque … missão") e se contorna com sinônimo, inglês, acento ou espaçamento (sonda acima, 7 de 7). | Tratá-la como sinal e documentar isso na §9. Acrescentar `esque[cç]a`, `desconsider`, `forget`, `you are now`/`agora você é`, e fazer `_fold` (sem acento) antes do regex. Para reduzir falso positivo, exigir alvo de instrução (regras/instruções *anteriores/acima/do sistema*) em vez de qualquer "regras". Pôr os falsos positivos e negativos da sonda num teste. |
+| P2-R2-2 | P2 | `services/prologue.py:262-269` | `sanitize_beat` cobre beats e clímax, mas não o `prologue` (o texto que o jogador lê) nem o `opening_scene_brief` (vira a 1ª narração). | Aplicar a mesma checagem (`find_unrevealed`/`faction_gate.beat_leaks`) ao prólogo e ao brief. Em vez de reescrever o texto, cair no template se houver acerto. |
+| P2-R2-3 | P2 | `services/opening_threads.py:243`, `_rank` | Com o peso +100, a raça vence a descrição livre: um Elfo cuja descrição casa com outra trama ainda recebe as portas élficas na frente. Isso só reordena (a LLM pode escolher qualquer porta), mas a "Ordenação" da R1 diz "primeiro as que casam tokens da descrição". | Registrar na spec (R1) que a raça vem antes da descrição, ou trocar a ordem de `race_hit` e `hits` em `_rank`, se o dono preferir que a descrição mande. |
+| P2-R2-4 | P2 | `services/opening_threads.py:497-507`; smoke c | O E1 do replan passa pela frase colada pelo motor; o planejador ignorou o `<FIO_DE_ABERTURA>` nos dois smokes. | Na §6/§9, registrar o E1 do replan como "garantido pelo motor". Medir à parte, num follow-up, a adesão do planejador (E1 sobre os beats antes de `consume_thread`) e ajustar o bloco se ficar baixa. |
+
+### Comandos rodados (rodada 2)
+
+```text
+git diff 468d2af8~1 HEAD --stat → 15 arquivos (produto: opening_threads, prologue, api, front; testes; smokes b/c)
+git hash-object playtest/opening_checks.py → 5713a694… (intacto); diff efcc2a0a..HEAD em playtest/, test_spec351_checks.py, evals/ → vazio
+sonda: thread_menu com a 350 real (RPG_PLOT_THREADS=on) → source=350; Elfo Arcanista → tr_na_po_de_sonho__p1 em 1º
+sonda: looks_hostile → 3/5 falsos positivos, 7/7 falsos negativos
+bash scripts/dev/py.sh -m pytest -p no:cacheprovider -n 2 tests/test_spec351_{api,checks,menu,pool,prologue,security,state}.py tests/test_prologue.py tests/test_flag_registry.py → 117 passed, 0 skipped
 ```
