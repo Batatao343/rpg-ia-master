@@ -885,6 +885,12 @@ RPG_CREATURE_ART:
   spec: SPEC-347
   expires: 2027-01-25
   note: "retrato de inimigo no tabuleiro; oferta de geração paga pelo jogador e registro compartilhado (SPEC-352)"
+RPG_OPENING_THREAD:
+  kind: release
+  default: "on"
+  spec: SPEC-351
+  expires: 2027-01-25
+  note: "abertura ligada às tramas do mundo (off = prólogo de hoje; shadow = só mede o menu)"
 RPG_SHARED_POOL:
   kind: release
   default: "off"

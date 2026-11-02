@@ -682,6 +682,10 @@ def _combat_action(model, messages):
 def _start_scenario(model, messages):
     """spec inicio-personalizado (R10): fixture fixa válida em pt-BR com 1 NPC
     semeado — a suíte offline exercita endpoint e seed de ponta a ponta."""
+    prompt = "\n".join(str(getattr(m, "content", "")) for m in messages)
+    threaded = _start_scenario_threaded(model, prompt)
+    if threaded is not None:
+        return threaded
     npc_cls = _list_item_cls(model, "seed_npcs")
     npcs = []
     if npc_cls:
@@ -715,6 +719,57 @@ def _start_scenario(model, messages):
             ],
             "climax": "O confronto com o credor do passado — em aço ou em palavras.",
             "seed_npcs": npcs,
+        },
+    )
+
+
+def _start_scenario_threaded(model, prompt: str):
+    """SPEC-351: com <PORTAS_DE_TRAMA> no prompt, devolve âncoras VÁLIDAS (1ª porta, 1º NPC)
+    e 1 NPC pessoal com camada pública limpa — o offline exercita E1–E7."""
+    import re
+
+    doors = re.findall(r"^- id=(\S+) \| ([^—\n]+?)(?: —.*)?$", prompt, re.MULTILINE)
+    if not doors or "personal_npc" not in model.model_fields:
+        return None
+    door_id, door_name = doors[0]
+    npc_ids = re.findall(r"^- entity_id=(\S+) \| (.+?)(?: \(.*\))?$", prompt, re.MULTILINE)
+    npc_cls = _list_item_cls(model, "seed_npcs")
+    personal_cls = typing.get_args(model.model_fields["personal_npc"].annotation)[0]
+    personal = _fill(
+        personal_cls,
+        {
+            "name": "Mestre Aldric",
+            "role_public": "mercenário aposentado",
+            "persona_public": "Velho mercenário de fala curta, que cobra pouco e lembra de tudo.",
+            "appearance": "Ombros largos, uma cicatriz cinza atravessando a sobrancelha.",
+            "legend": "Dizem que nunca perdeu um contrato, só o sono.",
+            "bond": "Deve um favor antigo à família do herói.",
+            "attitude": "aliado",
+        },
+    )
+    plot_id = npc_ids[0][0] if npc_ids else ""
+    return _fill(
+        model,
+        {
+            "prologue": f"Você chega a esta terra carregando uma dívida que não é sua. "
+            f"Corre uma conversa baixa por aqui: {door_name.strip()}. "
+            "Você quer saber a fundo o que há de verdade nisso, e o que isso vai custar. "
+            "Alguém na cidade já sabe que você está procurando.",
+            "opening_scene_brief": "O herói chega ao local inicial no fim da tarde, ouvindo "
+            f"a conversa sobre {door_name.strip()}; um conhecido o aguarda com um aviso.",
+            "arc_title": "Dívidas de Sangue",
+            "beats": [
+                "Apresente o conhecido e o aviso que ele carrega.",
+                f"O herói encontra o primeiro sinal concreto de {door_name.strip()}.",
+                "Uma escolha: seguir o rastro ou pagar a dívida antiga.",
+            ],
+            "climax": "Um acerto de contas na borda da história, em aço ou em palavras.",
+            "seeking": "descobrir a verdade sobre a conversa que corre na cidade",
+            "thread_refs": [door_id],
+            "plot_npc_id": plot_id,
+            "plot_npc_hook": "Cruza o caminho do herói quando ele começa a perguntar." if plot_id else "",
+            "personal_npc": personal,
+            "seed_npcs": [] if npc_cls is None else [],
         },
     )
 

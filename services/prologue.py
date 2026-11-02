@@ -11,10 +11,10 @@ confirm (API continua stateless por save).
 
 from __future__ import annotations
 
-from typing import List, Tuple
+from typing import Literal
 
 from langchain_core.messages import HumanMessage, SystemMessage
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from gamedata import CLASS_THEMES, load_json_data
 from llm_setup import ModelTier, get_llm
@@ -38,6 +38,23 @@ class SeedNPC(BaseModel):
     role: str = Field(description="Papel na história pessoal, ex.: 'credor', 'irmã exilada'")
     attitude: str = Field(description="EXATAMENTE uma palavra: hostil, neutro ou aliado")
     persona: str = Field(description="1-2 frases de personalidade")
+    kind: Literal["personal", "plot"] = Field(
+        default="personal", description="DERIVADO pelo servidor; a LLM não preenche"
+    )
+
+
+class PersonalNPC(BaseModel):
+    """SPEC-351 R5.6: duas camadas — pública (pode ir ao pool) e `bond` (só local)."""
+
+    name: str = Field(description="Nome curto, inventado; nunca um nome escrito pelo jogador")
+    role_public: str = Field(description="Quem ele é no mundo, sem citar o protagonista")
+    persona_public: str = Field(
+        description="1-2 frases; sem citar o protagonista nem a história dele"
+    )
+    appearance: str = Field(description="1 frase concreta")
+    legend: str = Field(description="O que dizem dele, 1 frase (<=160)")
+    bond: str = Field(description="Laço com o protagonista (fica só nesta partida)")
+    attitude: str = Field(description="EXATAMENTE uma palavra: hostil, neutro ou aliado")
 
 
 class StartScenario(BaseModel):
@@ -48,8 +65,20 @@ class StartScenario(BaseModel):
     arc_title: str = Field(description="Título do arco, 3-6 palavras, pt-BR")
     beats: list[str] = Field(description="3 a 5 beats pessoais, 1-2 frases cada")
     climax: str = Field(description="Clímax do arco em 1-2 frases")
+    seeking: str = Field(
+        default="", description="O que o personagem busca, 1 frase, em palavras do mundo"
+    )
+    thread_refs: list[str] = Field(
+        default_factory=list, description="ids EXATOS do <PORTAS_DE_TRAMA> (1 ou 2)"
+    )
+    plot_npc_id: str = Field(default="", description="entity_id EXATO do <NPCS_DA_TRAMA>")
+    plot_npc_hook: str = Field(
+        default="", description="Como ele cruza o caminho do herói, 1 frase"
+    )
+    personal_npc: PersonalNPC | None = None
     seed_npcs: list[SeedNPC] = Field(
-        default_factory=list, description="0 a 2 NPCs novos da história pessoal"
+        default_factory=list,
+        description="0 a 2 NPCs novos da história pessoal (DERIVADO quando há personal_npc)",
     )
 
 
@@ -63,13 +92,35 @@ class SeedNPCIn(SeedNPC):
     persona: str = Field(max_length=400)
 
 
+class PersonalNPCIn(PersonalNPC):
+    name: str = Field(max_length=60)
+    role_public: str = Field(max_length=80)
+    persona_public: str = Field(max_length=400)
+    appearance: str = Field(max_length=300)
+    legend: str = Field(max_length=160)
+    bond: str = Field(max_length=300)
+    attitude: str = Field(max_length=20)
+
+
 class StartScenarioIn(StartScenario):
     prologue: str = Field(max_length=2000)
     opening_scene_brief: str = Field(max_length=1200)
     arc_title: str = Field(max_length=80)
     beats: list[str] = Field(max_length=5)
     climax: str = Field(max_length=300)
+    seeking: str = Field(default="", max_length=200)
+    thread_refs: list[str] = Field(default_factory=list, max_length=2)
+    plot_npc_id: str = Field(default="", max_length=80)
+    plot_npc_hook: str = Field(default="", max_length=300)
+    personal_npc: PersonalNPCIn | None = None
     seed_npcs: list[SeedNPCIn] = Field(default_factory=list, max_length=2)
+
+    @field_validator("thread_refs")
+    @classmethod
+    def _ref_len(cls, value: list[str]) -> list[str]:
+        if any(len(v) > 80 for v in value):
+            raise ValueError("thread_ref acima de 80 caracteres")
+        return value
 
 
 def _region_context(region_name: str) -> str:
@@ -104,40 +155,98 @@ def _class_context(class_name: str) -> str:
     return " ".join(parts)
 
 
-def fallback_scenario(char_input: dict) -> StartScenario:
-    """Template determinístico (R3) — interpola nome/classe/região, sem NPCs."""
+def _thread_on() -> bool:
+    from services import opening_threads
+
+    return opening_threads.mode() == "on"
+
+
+def fallback_scenario(char_input: dict, menu: dict | None = None) -> StartScenario:
+    """Template determinístico (R3/R9) — interpola nome/classe/região.
+
+    Com `menu` (SPEC-351): liga à 1ª porta e ao 1º NPC do menu, 0 NPC pessoal (D4)."""
     name = char_input.get("name", "Herói")
     class_name = char_input.get("class_name", "aventureiro")
     region = char_input.get("region", "Valoria")
-    return StartScenario(
-        prologue=(
-            f"Você é {name}, {class_name} em {region}. O passado que o trouxe até "
-            f"aqui não importa para mais ninguém — importa para você. O dia começa "
-            f"como todos os outros nestas terras: com trabalho perigoso para quem "
-            f"souber cobrá-lo, e com perguntas que ninguém quer responder de graça. "
-            f"O que você carrega, ninguém tira. O que você busca, ninguém entrega."
-        ),
+    doors = (menu or {}).get("doors") or []
+    npcs = (menu or {}).get("npcs") or []
+    door = doors[0] if doors else None
+    npc = npcs[0] if npcs else None
+    extra: dict = {}
+    if door:
+        extra = {
+            "seeking": f"descobrir o que há por trás de «{door['name']}»",
+            "thread_refs": [door["door_id"]],
+            "plot_npc_id": npc["entity_id"] if npc else "",
+            "plot_npc_hook": (
+                f"{npc['name']} cruza o seu caminho quando você começa a perguntar." if npc else ""
+            ),
+        }
+    prologue = (
+        f"Você é {name}, {class_name} em {region}. O passado que o trouxe até "
+        f"aqui não importa para mais ninguém — importa para você. O dia começa "
+        f"como todos os outros nestas terras: com trabalho perigoso para quem "
+        f"souber cobrá-lo, e com perguntas que ninguém quer responder de graça. "
+        f"O que você carrega, ninguém tira. O que você busca, ninguém entrega."
+    )
+    beats = [
+        f"Estabeleça a chegada de {name} e a atmosfera de {region}.",
+        "Apresente uma oportunidade ou ameaça ligada à vocação do personagem.",
+        "Uma escolha com consequência revela o que está em jogo na região.",
+    ]
+    if door:
+        prologue += f" Corre pelas ruas uma conversa baixa: {door['name']}. Você quer saber mais."
+        beats = [
+            f"Estabeleça a chegada de {name} e a atmosfera de {region}.",
+            f"Um primeiro sinal concreto de «{door['name']}» cruza o caminho do personagem.",
+            "Seguir o sinal custa algo e revela quem se move nas bordas dessa história.",
+        ]
+    scenario = StartScenario(
+        prologue=prologue,
         opening_scene_brief=(
             f"Cena de abertura em {region}: {name}, {class_name}, começa o dia no "
             f"local inicial da região. Estabeleça a atmosfera local, um detalhe "
             f"perturbador e um gancho de oportunidade imediata."
         ),
         arc_title=default_chapter_title(region),
-        beats=[
-            f"Estabeleça a chegada de {name} e a atmosfera de {region}.",
-            "Apresente uma oportunidade ou ameaça ligada à vocação do personagem.",
-            "Uma escolha com consequência revela o que está em jogo na região.",
-        ],
+        beats=beats,
         climax="Um confronto ou revelação que define o lugar do personagem nesta terra.",
         seed_npcs=[],
+        **extra,
     )
+    return _derive_seed_npcs(scenario, menu) if door else scenario
 
 
-def _normalize(scenario: StartScenario, char_input: dict) -> StartScenario:
+def _trim(value: object, limit: int) -> str:
+    return " ".join(str(value or "").split())[:limit]
+
+
+def _derive_seed_npcs(scenario: StartScenario, menu: dict | None) -> StartScenario:
+    """`seed_npcs` é DERIVADO (compat de cliente antigo): só o NPC pessoal (o da trama é `plot_npc_id`)."""
+    derived: list[SeedNPC] = []
+    p = scenario.personal_npc
+    if p is not None:
+        derived.append(
+            SeedNPC(
+                name=p.name,
+                role=p.role_public,
+                attitude=p.attitude if p.attitude in ATTITUDES else "neutro",
+                persona=p.persona_public,
+                kind="personal",
+            )
+        )
+    return scenario.model_copy(update={"seed_npcs": derived[:2]})
+
+
+def _normalize(
+    scenario: StartScenario, char_input: dict, menu: dict | None = None
+) -> StartScenario:
     """Saneamento determinístico pós-LLM (nunca confia no que veio).
 
     Trunca cada campo para os tetos de `StartScenarioIn` — o cenário devolvido
     ao client precisa passar na re-validação estrita do `/game/new`.
+    Com `menu` (SPEC-351 R8): âncoras fora do menu são descartadas; nome/papel do
+    NPC da trama vêm do grafo; no máximo 1 NPC pessoal.
     """
     data = scenario.model_dump()
     data["prologue"] = (data.get("prologue") or "").strip()[:2000]
@@ -160,16 +269,162 @@ def _normalize(scenario: StartScenario, char_input: dict) -> StartScenario:
         if npc["name"]:
             npcs.append(npc)
     data["seed_npcs"] = npcs[:2]
-    return StartScenario(**data)
+    data["seeking"] = _trim(data.get("seeking"), 200)
+    data["plot_npc_hook"] = _trim(data.get("plot_npc_hook"), 300)
+    if menu is None:  # flag off / cenário legado: campos novos ficam vazios
+        data.update(thread_refs=[], plot_npc_id="", plot_npc_hook="", seeking="", personal_npc=None)
+        return StartScenario(**data)
+    return _apply_menu(StartScenario(**data), menu)
 
 
-def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
-    """Monta contexto, chama SMART, aplica guard; retorna (scenario, mock)."""
+def _apply_menu(scenario: StartScenario, menu: dict) -> StartScenario:
+    """R8: valida as âncoras do cenário contra o menu (também na revalidação do `/game/new`)."""
+    doors = {d["door_id"] for d in menu.get("doors") or []}
+    refs = [r for r in dict.fromkeys(scenario.thread_refs or []) if r in doors][:2]
+    if not refs and menu.get("doors"):
+        refs = [menu["doors"][0]["door_id"]]
+        _log_event("prologue", "thread.downgraded", reason="refs_defaulted")
+    npcs = {n["entity_id"]: n for n in menu.get("npcs") or []}
+    plot_id = scenario.plot_npc_id if scenario.plot_npc_id in npcs else ""
+    if not plot_id and npcs:
+        plot_id = next(iter(npcs))
+        _log_event("prologue", "thread.downgraded", reason="plot_npc_defaulted")
+    if not npcs:
+        _log_event("prologue", "thread.no_plot_npc")
+    personal = scenario.personal_npc
+    if personal is not None:
+        att = (personal.attitude or "").strip().lower()
+        personal = PersonalNPC(
+            name=_trim(personal.name, 60),
+            role_public=_trim(personal.role_public, 80),
+            persona_public=_trim(personal.persona_public, 400),
+            appearance=_trim(personal.appearance, 300),
+            legend=_trim(personal.legend, 160),
+            bond=_trim(personal.bond, 300),
+            attitude=att if att in ATTITUDES else "neutro",
+        )
+        if not personal.name:
+            personal = None
+    out = scenario.model_copy(
+        update={
+            "thread_refs": refs,
+            "plot_npc_id": plot_id,
+            "plot_npc_hook": scenario.plot_npc_hook if plot_id else "",
+            "personal_npc": personal,
+        }
+    )
+    return _derive_seed_npcs(out, menu)
+
+
+def revalidate_scenario(scenario: StartScenario, menu: dict | None) -> StartScenario:
+    """Borda do `/game/new`: âncoras forjadas pelo cliente são descartadas (R8/§3.2)."""
+    if menu is None or not _thread_on():
+        return scenario
+    return _apply_menu(scenario, menu)
+
+
+_TONE = (
+    "Tom de Valoria: tudo tem custo; o poder corrói (entropia); instituições são armadilhas "
+    "educadas; a crônica é cansada, sem epopeia; segredos são inversões, não prêmios; "
+    "léxico próprio (nada de mana, buff, crítico, loot, boss)."
+)
+
+
+def _legacy_rules() -> str:
+    return (
+        "3. Os beats são PESSOAIS: ligados à descrição do jogador, não à trama "
+        "global do mundo.\n"
+        "4. NPCs (0 a 2) são NOVOS, inventados para a história pessoal do "
+        "personagem — não cite personagens nomeados do lore além da própria região.\n"
+    )
+
+
+def _thread_rules() -> str:
+    return (
+        "3. TRAMA: escolha 1 ou 2 portas do <PORTAS_DE_TRAMA> e devolva os ids EXATOS em "
+        "`thread_refs`. O personagem começa NA BORDA: busca algo pequeno e pessoal que toca "
+        "a trama sem saber — nada de escolhido, profecia, herança secreta ou começar no meio "
+        "da crise.\n"
+        "4. `seeking`: o que ele busca, 1 frase, em palavras do mundo, e o prólogo diz isso. "
+        "Os beats revelam a trama aos poucos: o 1º beat é pessoal e concreto, a trama "
+        "aparece pelo 2º ou 3º; o clímax do 1º arco ainda é na borda. Use o nome público "
+        "da porta escolhida no texto.\n"
+        "4b. NPCs: exatamente 1 `personal_npc` (NOVO, criado para a história, costurado em "
+        "volta da <SEMENTE_NPC_PESSOAL>) e 1 NPC da trama: `plot_npc_id` = entity_id EXATO do "
+        "<NPCS_DA_TRAMA> (nome e papel vêm do mundo) e `plot_npc_hook` = como ele cruza o "
+        "caminho do herói. O `personal_npc` tem duas camadas: `bond` (relação com o "
+        "protagonista, fica só nesta partida) e `persona_public`/`role_public`/`appearance`/"
+        "`legend` (quem ele é no mundo, SEM citar o protagonista, o nome dele ou a história "
+        "dele). Nunca use um nome escrito pelo jogador.\n"
+        f"4c. {_TONE}\n"
+    )
+
+
+def _roll_pool_seed(nonce: str, start_loc_id: str):
+    """R14: semente do motor ANTES da LLM; `game_id` sintético, determinístico por nonce+slot."""
+    from services import npc_seed, shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    taken = (
+        (lambda sig: shared_pool.signature_taken(PoolNamespace.NPC, sig))
+        if shared_pool.pool_mode() != "off"
+        else (lambda sig: False)
+    )
+    seed = None
+    for slot in range(npc_seed.MAX_REROLLS + 1):
+        seed = npc_seed.roll_npc_seed(
+            game_id=f"prologue:{nonce}", turn=0, location_id=start_loc_id, slot=slot
+        )
+        try:
+            if not taken(npc_seed.seed_signature(seed)):
+                return seed, slot
+        except Exception:  # noqa: BLE001 — store indisponível: usa este slot
+            return seed, slot
+    return seed, npc_seed.MAX_REROLLS
+
+
+def build_start_scenario_ctx(char_input: dict) -> tuple[StartScenario, bool, dict]:
+    """Monta contexto, chama SMART, aplica guard; retorna (scenario, mock, ctx).
+
+    `ctx` = {menu, seed, slot, nonce, template}: o `/game/prologue` assina com ele."""
+    import uuid
+
+    from services import opening_threads as ot
+
     llm = get_llm(temperature=0.7, tier=ModelTier.SMART)
     mock = bool(getattr(llm, "is_mock", False))
+    flag = ot.mode()
+    ctx: dict = {"menu": None, "seed": None, "slot": 0, "nonce": "", "template": False}
 
+    raw_backstory = (char_input.get("backstory") or "").strip()
     region_ctx = _region_context(char_input.get("region", ""))
     class_ctx = _class_context(char_input.get("class_name", ""))
+    thread_ctx = ""
+    if flag != "off":
+        region_id, start_loc = ot.start_of_region(char_input.get("region", ""))
+        menu = ot.thread_menu(region_id, backstory=raw_backstory, start_location_id=start_loc)
+        if flag == "shadow":
+            _log_event(
+                "prologue", "thread.shadow", doors=len(menu["doors"]), npcs=len(menu["npcs"])
+            )
+        elif menu["doors"]:
+            nonce = uuid.uuid4().hex
+            seed, slot = _roll_pool_seed(nonce, start_loc)
+            ctx.update(menu=menu, seed=seed, slot=slot, nonce=nonce)
+            labels = ""
+            if seed is not None:
+                from services import npc_seed
+
+                labels = "\n".join(
+                    f"- {k}: {v}" for k, v in npc_seed.seed_labels(seed).items() if v
+                )
+            lore = ot.lore_block(menu, raw_backstory)
+            thread_ctx = (
+                f"{ot.menu_block(menu)}\n<LORE_DA_REGIAO>\n{lore}\n</LORE_DA_REGIAO>\n"
+                f"<SEMENTE_NPC_PESSOAL>\n{labels}\n</SEMENTE_NPC_PESSOAL>\n"
+            )
+    menu = ctx["menu"]
+    use_threads = menu is not None
     system_msg = SystemMessage(
         content=(
             "<PERSONA>\n"
@@ -180,14 +435,12 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
             f"{region_ctx}\n"
             f"{class_ctx}\n"
             f"Raça: {char_input.get('race', '')}.\n"
+            f"{thread_ctx}"
             "<REGRAS>\n"
             "1. IDIOMA (OBRIGATÓRIO): TUDO em português do Brasil (pt-BR) — prólogo, "
             "beats, arc_title, clímax, NPCs. NUNCA em inglês.\n"
             "2. A cena de abertura é CONCRETA e acontece NA região escolhida.\n"
-            "3. Os beats são PESSOAIS: ligados à descrição do jogador, não à trama "
-            "global do mundo.\n"
-            "4. NPCs (0 a 2) são NOVOS, inventados para a história pessoal do "
-            "personagem — não cite personagens nomeados do lore além da própria região.\n"
+            f"{_thread_rules() if use_threads else _legacy_rules()}"
             "5. O prólogo fala com o JOGADOR em 2ª pessoa, 100-180 palavras.\n"
             "6. `opening_scene_brief` é instrução para o narrador: local, situação e "
             "tensão imediata da primeira cena.\n"
@@ -199,7 +452,6 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
         )
     )
     # SPEC-351 R6/P6: nome e descrição livre entram delimitados como DADO.
-    raw_backstory = (char_input.get("backstory") or "").strip()
     backstory = (
         wrap_player_input(raw_backstory)
         if raw_backstory
@@ -221,19 +473,144 @@ def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
     try:
         result = llm.with_structured_output(StartScenario).invoke([system_msg, human_msg])
         if not isinstance(result, StartScenario):
-            return fallback_scenario(char_input), mock
-        return _normalize(result, char_input), mock
+            return _template(char_input, menu, ctx), mock, ctx
+        scenario = _normalize(result, char_input, menu)
     except Exception as exc:  # noqa: BLE001
         _log_event("prologue", "failed", level="error", error=type(exc).__name__)
-        return fallback_scenario(char_input), mock
+        return _template(char_input, menu, ctx), mock, ctx
+    if menu is not None:
+        _log_event(
+            "prologue",
+            "thread.linked",
+            doors=len(scenario.thread_refs),
+            plot_npc=bool(scenario.plot_npc_id),
+            personal=scenario.personal_npc is not None,
+            source=menu["source"],
+        )
+    return scenario, mock, ctx
 
 
-def scenario_to_state_seed(scenario: StartScenario, char_input: dict, start_loc_id: str) -> dict:
+def _template(char_input: dict, menu: dict | None, ctx: dict) -> StartScenario:
+    ctx["template"] = True
+    ctx["seed"] = None  # template não tem NPC pessoal (D4)
+    if menu is not None:
+        _log_event("prologue", "thread.downgraded", reason="template")
+    return fallback_scenario(char_input, menu)
+
+
+def build_start_scenario(char_input: dict) -> tuple[StartScenario, bool]:
+    """Compat (SPEC-045): (scenario, mock). O contexto do token vem de `build_start_scenario_ctx`."""
+    scenario, mock, _ctx = build_start_scenario_ctx(char_input)
+    return scenario, mock
+
+
+# --- Token do cenário (R15): `<nonce>.<slot>.<v1.epoch.hmac>` -------------- #
+def _token_payload(scenario: StartScenario, nonce: str, slot: int) -> dict:
+    return {
+        "personal_npc": scenario.personal_npc.model_dump() if scenario.personal_npc else None,
+        "nonce": nonce,
+        "slot": int(slot),
+        "thread_refs": list(scenario.thread_refs),
+        "plot_npc_id": scenario.plot_npc_id,
+    }
+
+
+def sign_for_client(scenario: StartScenario, ctx: dict, owner: str) -> str:
+    from services import prologue_token
+
+    if not ctx.get("nonce") or scenario.personal_npc is None:
+        return ""
+    sig = prologue_token.sign_scenario(_token_payload(scenario, ctx["nonce"], ctx["slot"]), owner)
+    return f"{ctx['nonce']}.{ctx['slot']}.{sig}" if sig else ""
+
+
+def verified_seed(scenario: StartScenario, token: str | None, owner: str, start_loc_id: str):
+    """Semente do motor se (e só se) o token confere; senão None (NPC pessoal só local)."""
+    from services import npc_seed, prologue_token
+
+    if not token or scenario.personal_npc is None:
+        return None
+    try:
+        nonce, slot_raw, sig = token.split(".", 2)
+        slot = int(slot_raw)
+    except ValueError:
+        return None
+    if not prologue_token.verify_scenario(sig, _token_payload(scenario, nonce, slot), owner):
+        return None
+    return npc_seed.roll_npc_seed(
+        game_id=f"prologue:{nonce}", turn=0, location_id=start_loc_id, slot=slot
+    )
+
+
+def personal_pool_document(npc: PersonalNPC, seed) -> dict:
+    """R16: só a camada pública, pelas chaves da allowlist. Sem bond/attitude/jogador."""
+    doc = {
+        "name": npc.name,
+        "role": npc.role_public,
+        "persona": npc.persona_public,
+        "appearance": npc.appearance,
+        "legend": npc.legend[:160],
+        "attributes": {k: 10 for k in ("str", "dex", "con", "int", "wis", "cha")},
+        "initial_relationship": 5,
+    }
+    if seed is not None:
+        doc.update(
+            race_id=seed.race_id,
+            origin_region_id=seed.origin_region_id,
+            faction_id=seed.faction_id,
+            profession_id=seed.profession_id,
+        )
+    return doc
+
+
+def submit_personal_npc(
+    scenario: StartScenario, seed, *, game_id: str, region_id: str, char_input: dict
+) -> str | None:
+    """R17/R18: submete o NPC pessoal ao pool. Chamado DEPOIS de persistir; nunca levanta.
+
+    Sem semente verificada o NPC fica só local (entrada `local_only`)."""
+    from services import shared_pool
+    from services.shared_pool_models import PoolNamespace
+
+    npc = scenario.personal_npc
+    if npc is None or shared_pool.pool_mode() == "off":
+        return None
+    inputs = [
+        str(char_input.get("name") or ""),
+        str(char_input.get("backstory") or ""),
+        scenario.seeking,
+    ]
+    origin = "player" if shared_pool.name_typed_by_player(npc.name, inputs) else "narrator"
+    try:
+        entry = shared_pool.submit(
+            PoolNamespace.NPC,
+            personal_pool_document(npc, seed),
+            game_id=str(game_id),
+            region_id=region_id,
+            name_origin=origin,
+            seed=seed,
+            player_inputs=inputs,
+        )
+    except Exception as exc:  # noqa: BLE001
+        _log_event("prologue", "pool_submit_failed", level="warning", error=type(exc).__name__)
+        return None
+    _log_event("prologue", "pool_submit", status=entry.status.value)
+    return entry.entry_id
+
+
+def scenario_to_state_seed(
+    scenario: StartScenario,
+    char_input: dict,
+    start_loc_id: str,
+    *,
+    menu: dict | None = None,
+    pool_seed=None,
+) -> dict:
     """Traduz cenário aprovado em seed de estado (função pura — R5).
 
     O `/game/new` só aplica: campaign_plan, npcs, mensagem de abertura,
-    título do capítulo 1 e sufixo do resumo narrativo.
-    """
+    título do capítulo 1 e sufixo do resumo narrativo. Com `menu` (SPEC-351)
+    grava o fio de abertura e as fichas do NPC da trama e do NPC pessoal."""
     from services import npc_layers
 
     region = char_input.get("region", "")
@@ -246,7 +623,9 @@ def scenario_to_state_seed(scenario: StartScenario, char_input: dict, start_loc_
 
     npcs: dict = {}
     game_id = str(char_input.get("game_id", ""))
-    for s in scenario.seed_npcs[:2]:
+    thread_on = menu is not None and bool(scenario.thread_refs)
+    structured = thread_on and (scenario.personal_npc is not None or bool(scenario.plot_npc_id))
+    for s in [] if structured else scenario.seed_npcs[:2]:
         att = s.attitude if s.attitude in ATTITUDES else "neutro"
         npc = {
             "name": s.name,
@@ -265,17 +644,66 @@ def scenario_to_state_seed(scenario: StartScenario, char_input: dict, start_loc_
         npc["known_by_player"] = True
         npcs[s.name] = npc
 
+    plan: dict = {
+        "location": region,
+        "beats": beats,
+        "climax": scenario.climax,
+        "current_step": 0,
+        "last_planned_turn": 0,
+        "arc_title": arc_title,
+    }
+    brief = scenario.opening_scene_brief
+    if thread_on:
+        from services import opening_threads as ot
+
+        plot_key = personal_key = ""
+        row = next((n for n in menu["npcs"] if n["entity_id"] == scenario.plot_npc_id), None)
+        if row:
+            npcs[row["name"]] = ot.plot_npc_sheet(row, game_id, start_loc_id)
+            plot_key = row["name"]
+            home = row.get("home_location_id")
+            if home and home != start_loc_id:
+                brief += f" Quem pode ajudar: {row['name']}, que se encontra em outro lugar da região."
+        p = scenario.personal_npc
+        if p is not None:
+            att = p.attitude if p.attitude in ATTITUDES else "neutro"
+            sheet = {
+                "name": p.name,
+                "role": p.role_public,
+                "persona": p.persona_public,
+                "appearance": p.appearance,
+                "legend": p.legend,
+                "bond": p.bond,
+                "initial_relationship": REL_MAP[att],
+                "relationship": REL_MAP[att],
+                "location": region,
+                "memory": [],
+                "attributes": {k: 10 for k in ("str", "dex", "con", "int", "wis", "cha")},
+                "combat_stats": {"hp": 10, "ac": 10, "attacks": []},
+            }
+            if pool_seed is not None:
+                from agents.npc import seed_motives_of
+
+                sheet["seed_motives"] = seed_motives_of(pool_seed)
+            sheet = npc_layers.ensure_npc_fields(
+                sheet, game_id, home_location_id=start_loc_id, in_scene=True
+            )
+            sheet["known_by_player"] = True
+            npcs[p.name] = sheet
+            personal_key = p.name
+        plan["opening_thread"] = {
+            "thread_refs": list(scenario.thread_refs),
+            "plot_npc_key": plot_key,
+            "personal_npc_key": personal_key,
+            "seeking": scenario.seeking,
+            "region_id": menu["region_id"],
+            "arcs_left": ot.ARCS_LEFT_DEFAULT,
+        }
+
     return {
-        "campaign_plan": {
-            "location": region,
-            "beats": beats,
-            "climax": scenario.climax,
-            "current_step": 0,
-            "last_planned_turn": 0,
-            "arc_title": arc_title,
-        },
+        "campaign_plan": plan,
         "npcs": npcs,
-        "opening_message": f"Comece minha história. Cena de abertura: {scenario.opening_scene_brief}",
+        "opening_message": f"Comece minha história. Cena de abertura: {brief}",
         "chronicle_title": arc_title,
         "summary_extra": f" Prólogo: {scenario.prologue[:300]}",
     }

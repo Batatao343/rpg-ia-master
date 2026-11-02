@@ -176,6 +176,13 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
     from services.lore_query import compose_lore_query
 
     search_query = compose_lore_query(state, str(last_intent))  # SPEC-311 R17-R18
+    # SPEC-351 R13: fio de abertura vivo → nomes públicos das portas entram na consulta de lore.
+    from services import opening_threads
+
+    thread_block = opening_threads.planner_thread_block(state)
+    if thread_block:
+        _names = opening_threads.door_names(opening_threads.active_thread(state) or {})
+        search_query = f"{search_query} {' '.join(_names)}".strip()
     pack = build_context_pack(state, query=search_query, purpose="planning")
     lore_context = pack.lore_block or "No specific lore available for this location."
     world_state_context = pack.world_state_block
@@ -197,6 +204,7 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
             f"Weather/Time: {world.get('weather', 'unknown')} / {world.get('time_of_day', 'unknown')}\n"
             f"{world_state_context}\n"
             f"{mundo_block}"
+            f"{thread_block + chr(10) if thread_block else ''}"
             "(Se o estado atual do mundo contradisser o lore, o estado atual VENCE.)\n"
             "<LORE_CONTEXT>\n"
             f"{lore_context}\n"
@@ -267,7 +275,7 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
         beats: list[CampaignBeat] = [
             {"description": sanitize_beat(beat, state), "status": "pending"} for beat in plan.beats
         ]
-        return {
+        new_plan = {
             # Grounding é mecânico: o modelo propõe conteúdo, não geografia ativa.
             "location": current_loc,
             "beats": beats,
@@ -276,6 +284,8 @@ def _build_plan(state: GameState, _info: dict | None = None) -> CampaignPlan:
             "last_planned_turn": world.get("turn_count", 0),
             "arc_title": sanitize_beat((plan.arc_title or "").strip() or current_arc, state),
         }
+        # SPEC-351 R13/D3: o plano novo herda o fio com um arco a menos (sem LLM nova).
+        return opening_threads.consume_thread(new_plan, state) if thread_block else new_plan
     except Exception as exc:  # noqa: BLE001
         _log_event("campaign", "planner_failed", level="error", error=type(exc).__name__)
         # SPEC-226 R4: com plano válido existente, falha do planejador mantém o

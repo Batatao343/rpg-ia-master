@@ -379,6 +379,17 @@ class CampaignBeat(TypedDict):
     status: Literal["pending", "done"]
 
 
+class OpeningThread(TypedDict, total=False):
+    """SPEC-351 R10: fio da abertura (portas de trama + NPCs) que o planejador continua."""
+
+    thread_refs: list[str]
+    plot_npc_key: str
+    personal_npc_key: str
+    seeking: str
+    region_id: str
+    arcs_left: int
+
+
 class CampaignPlan(TypedDict, total=False):
     location: str
     beats: list[CampaignBeat]
@@ -386,6 +397,7 @@ class CampaignPlan(TypedDict, total=False):
     current_step: int
     last_planned_turn: int
     arc_title: str  # Fase 3.1: título do arco atual — muda → capítulo novo na crônica
+    opening_thread: OpeningThread  # SPEC-351: opcional (save antigo carrega sem ele)
 
 
 # --- Fase 3.3: quest log — side quests persistentes (main quest = view do CampaignPlan) ---

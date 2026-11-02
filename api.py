@@ -81,7 +81,11 @@ from services import state_views as sv
 from services.chronicle import default_chapter_title
 from services.discovery import player_codex
 from services.error_codes import api_error
-from services.prologue import StartScenarioIn, build_start_scenario, scenario_to_state_seed
+from services.prologue import (
+    StartScenarioIn,
+    build_start_scenario_ctx,
+    scenario_to_state_seed,
+)
 from services.prompt_guard import origin_fragment
 from services.usage_metering import normalize_attempts, operation_cost
 from services.visual_catalog import (
@@ -1844,6 +1848,8 @@ class CreateCharacterRequest(BaseModel):
     # StartScenarioIn re-valida na borda (limites de campo, beats ≤ 5, npcs ≤ 2
     # → excedente = 422). None = fluxo clássico, byte a byte o atual (R6).
     scenario: StartScenarioIn | None = None
+    # SPEC-351 R15: selo HMAC do cenário (NPC pessoal só vai ao pool se confere).
+    scenario_token: str | None = Field(default=None, max_length=1024)
     action_id: str | None = Field(default=None, max_length=36)
 
     @field_validator("class_name")
@@ -4731,8 +4737,25 @@ def game_prologue(req: CreateCharacterRequest):
     }
     _enforce_owner_budget("llm_aux")  # SPEC-219 R3 (minuto/owner ja aplicado na fronteira)
     with _meter_auxiliary_operation("prologue"):
-        scenario, mock = build_start_scenario(char_input)
-    return {"scenario": scenario.model_dump(), "mock": mock}
+        scenario, mock, ctx = build_start_scenario_ctx(char_input)
+    from services.prologue import sign_for_client
+
+    body = {"scenario": scenario.model_dump(), "mock": mock}
+    token = sign_for_client(scenario, ctx, _prologue_owner())
+    if token:
+        body["scenario_token"] = token
+    return body
+
+
+def _prologue_owner() -> str:
+    """Dono do selo do prólogo: usuário autenticado, ou "legacy" (perfil sem login)."""
+    try:
+        from infrastructure.request_context import current_principal
+
+        principal = current_principal(required=False)
+    except Exception:  # silent-ok: sem principal = perfil legacy/CLI
+        principal = None
+    return str(getattr(principal, "user_id", None) or "legacy")
 
 
 @contextmanager
@@ -5421,11 +5444,31 @@ def _create_game(req: CreateCharacterRequest, claim):
     # spec inicio-personalizado (R5): cenário aprovado semeia plano pessoal,
     # capítulo 1, NPCs da história e a cena de abertura. Sem scenario, o
     # estado acima fica intocado (R6 — fluxo clássico byte a byte).
+    pool_pending = None  # SPEC-351 R18: (scenario, semente verificada, region_id) p/ depois de persistir
     if req.scenario is not None:
+        from services import opening_threads
+        from services.prologue import revalidate_scenario, verified_seed
+
+        start_loc_id = initial_state["world"].get("current_location_id", "")
+        scenario_in, menu, pool_seed = req.scenario, None, None
+        if opening_threads.mode() == "on" and (
+            scenario_in.thread_refs or scenario_in.plot_npc_id or scenario_in.personal_npc
+        ):
+            region_id = opening_threads.region_of_location(start_loc_id)
+            menu = opening_threads.thread_menu(
+                region_id, backstory=req.backstory or "", start_location_id=start_loc_id
+            )
+            scenario_in = revalidate_scenario(scenario_in, menu)
+            pool_seed = verified_seed(
+                scenario_in, req.scenario_token, _prologue_owner(), start_loc_id
+            )
+            pool_pending = (scenario_in, pool_seed, region_id)
         seed = scenario_to_state_seed(
-            req.scenario,
+            scenario_in,
             {**char_input, "game_id": new_game_id},
-            start_loc_id=initial_state["world"].get("current_location_id", ""),
+            start_loc_id=start_loc_id,
+            menu=menu,
+            pool_seed=pool_seed,
         )
         initial_state["campaign_plan"] = seed["campaign_plan"]
         initial_state["chronicle"][0]["title"] = seed["chronicle_title"]
@@ -5475,6 +5518,16 @@ def _create_game(req: CreateCharacterRequest, claim):
 
                 persistence_mod.delete_save(new_game_id)
                 raise RuntimeError("falha ao persistir checkpoint inicial")
+        if pool_pending is not None:  # SPEC-351 R18: só depois de persistir; nunca quebra a request
+            from services.prologue import submit_personal_npc
+
+            submit_personal_npc(
+                pool_pending[0],
+                pool_pending[1],
+                game_id=new_game_id,
+                region_id=pool_pending[2],
+                char_input=char_input,
+            )
         return response
     except Exception as e:
         # Auditoria A6: detalhe interno só no log do servidor, nunca na resposta.
