@@ -22,7 +22,7 @@ faction: guilda_corvos
 
 # Rute
 
-Papel: coletora de corpos da Guilda dos Corvos, de ronda do Anel de Lama ao crematório do Setor Leste. A Legião marca com tiza vermelha os corpos que não são dela; os demais são de Rute.
+Papel: coletora de corpos da Guilda dos Corvos, de ronda do Anel de Lama ao crematório do Setor Leste. A Legião marca com tiza vermelha os corpos que não quer carregar; esses são de Rute.
 
 Aparência: Mulher de quarenta anos que aparenta mais, mãos grossas e unhas sempre curtas, casaco de couro escuro com a gola gasta de ombro de maca. Conta passos em voz baixa sem notar.
 

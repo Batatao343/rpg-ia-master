@@ -172,6 +172,11 @@ def cast_sheet(npc_id: str) -> CastSheet | None:
     return catalog().cast.get(str(npc_id or ""))
 
 
+def cast_names(npc_id: str) -> list[str]:
+    """Nome + aliases dobrados da entidade (para deduplicar contra NPC materializado)."""
+    return [n for n in (_fold(x) for x in _graph_names(npc_id)) if n]
+
+
 def _graph_names(npc_id: str) -> list[str]:
     try:
         from services import graph_resolver as gr
@@ -196,8 +201,36 @@ def _name_index() -> dict[str, str]:
     return out
 
 
+def _region_matches(row: dict, sheet: CastSheet) -> bool:
+    """P1-1: nome só vale se o NPC está na região da trama da ficha (ou não tem local)."""
+    loc = str(row.get("home_location_id") or "")
+    if not loc:
+        return True
+    from services import world_pressures as wp
+
+    region = wp.region_of(loc)
+    if not region:
+        return False
+    thr = thread(sheet.threads[0].thread_id) if sheet.threads else None
+    return thr is None or thr.region_id == region
+
+
+def _other_canonical_id(rid: str) -> bool:
+    """O `id` da linha é de outra entidade NPC do grafo (não do elenco)?"""
+    if not rid:
+        return False
+    try:
+        from services import graph_resolver as gr
+
+        ent = gr.get_entity(rid)
+    except Exception:
+        return False
+    return isinstance(ent, dict) and ent.get("type") == "npc"
+
+
 def sheet_for_row(state: dict, npc_key: str, row: dict) -> CastSheet | None:
-    """R21: ficha por `row['id']`, depois `npc_ref`, depois nome dobrado (name + aliases)."""
+    """R21: ficha por `row['id']`, depois `npc_ref`, depois nome dobrado (name + aliases),
+    este último só na região da trama e sem id canônico de outro NPC (P1-1)."""
     cast = catalog().cast
     if not cast:
         return None
@@ -208,18 +241,26 @@ def sheet_for_row(state: dict, npc_key: str, row: dict) -> CastSheet | None:
     ref = rid or str(npc_key or "")
     if ref in cast:
         return cast[ref]
+    if _other_canonical_id(rid):
+        return None
     idx = _name_index()
     cands = [_fold(c) for c in (row.get("name"), npc_key) if c]
+    found: str | None = None
     for key in cands:
         if key in idx:
-            return cast[idx[key]]
-    # Nome de uma palavra só ("Bors") que prefixa exatamente um nome do elenco.
-    for key in cands:
-        if key and " " not in key:
-            hits = {cid for name, cid in idx.items() if name.startswith(key + " ")}
-            if len(hits) == 1:
-                return cast[hits.pop()]
-    return None
+            found = idx[key]
+            break
+    if found is None:
+        # Nome de uma palavra só ("Bors") que prefixa exatamente um nome do elenco.
+        for key in cands:
+            if key and " " not in key:
+                hits = {cid for name, cid in idx.items() if name.startswith(key + " ")}
+                if len(hits) == 1:
+                    found = hits.pop()
+                    break
+    if found is None or not _region_matches(row, cast[found]):
+        return None
+    return cast[found]
 
 
 def region_cast(region_id: str) -> list[str]:

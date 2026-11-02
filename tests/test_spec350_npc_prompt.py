@@ -52,9 +52,16 @@ def test_canonical_npc_gets_motives_from_sheet():
     lines = b.motivacoes.splitlines()
     assert lines[1].startswith("Você deseja: que nenhum marcado")
     assert lines[2].startswith("Você teme: o dia em que o Doutor")
-    assert lines[3].startswith("Seu jeito: áspera e prática")
-    assert "«Senta. Não pergunta. Paga depois, se viver.»" in lines[3]
-    assert lines[4].startswith("Há um assunto que você evita: o que ela dá aos marcados")
+    assert lines[3].startswith("Há um assunto que você evita: o que ela dá aos marcados")
+    assert lines[4].startswith("Seu jeito: áspera e prática")
+    assert "«Senta. Não pergunta. Paga depois, se viver.»" in lines[4]
+
+
+def test_avoided_topic_line_present_for_every_sheet():
+    for nid, sheet in pt.catalog().cast.items():
+        blk = _blocks(_row(nid, nid), nid)
+        assert f"Há um assunto que você evita: {sheet.segredo_topico}." in blk.motivacoes, nid
+        assert "Você deseja:" in blk.motivacoes and "Você teme:" in blk.motivacoes, nid
 
 
 def test_seed_motives_win_over_sheet():

@@ -244,6 +244,8 @@ def lint_plot_threads(data: dict, refs: PlotRefs) -> list[str]:
             _too_long(errs, f"{did}.hook_public", str(door.get("hook_public") or ""), LEN_HOOK)
             if not door.get("hook_public"):
                 errs.append(f"{did}: hook_public vazio")
+            if aid not in core and aid not in borda:
+                errs.append(f"{did}: âncora '{aid}' fora de core/borda da trama")
             sheet = cast.get(str(aid))
             if aid in refs.leader_ids or aid in core:
                 errs.append(f"{did}: âncora '{aid}' é núcleo/líder (R5)")

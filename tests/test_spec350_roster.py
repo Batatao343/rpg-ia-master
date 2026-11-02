@@ -59,3 +59,13 @@ def test_roster_flag_off_identical(monkeypatch):
     monkeypatch.setattr(pt, "region_cast", lambda region: [])
     monkeypatch.setenv("RPG_PLOT_THREADS", "on")
     assert npc_world.roster(_state()) == off
+
+
+def test_roster_dedupes_materialized_cast_by_name():
+    st = _state()
+    # "Rute" materializada por nome (id gerado) não deve coexistir com o id canônico
+    st["npcs"] = {**st["npcs"], "Rute": known_npc("npc_rute", "Rute", rel=5, last_seen_turn=3)}
+    r = npc_world.roster(st)
+    assert "npc_rute" in r and "npc_tr_rute_corvo_veterana" not in r
+    st2 = _state()
+    assert "npc_tr_rute_corvo_veterana" in npc_world.roster(st2)

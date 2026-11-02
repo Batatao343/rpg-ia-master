@@ -92,7 +92,7 @@ def test_po_de_sonho_has_an_elf_door_that_needs_no_prior_knowledge(data):
     for term in ("quebrado", "elaryin", "overdose", "licenca"):
         assert term not in hook
     ysolt = data["cast"]["npc_tr_ysolt_fio_de_vidro"]
-    assert "elfico" in _fold(ysolt["desejo"]) or "elfica" in _fold(ysolt["desejo"])
+    assert "quarto" not in _fold(ysolt["desejo"])  # P2-3: nada que insinue a causa oculta
 
 
 def test_fourteen_new_npcs_have_public_secret_extra_edges_agenda_cast(data):
@@ -194,3 +194,33 @@ def test_catalog_loads_in_runtime_and_region_cast_is_complete(monkeypatch):
         assert set(pt.region_cast(NA)) == set(cat.cast)
     finally:
         pt.clear_cache()
+
+
+def test_every_door_anchor_is_a_member_of_its_thread(data):
+    for t in data["threads"]:
+        members = set(t["core"]) | set(t["borda"])
+        for d in t["portas"]:
+            assert d["anchor_npc_id"] in members, d["id"]
+    po = next(t for t in data["threads"] if t["id"] == "tr_na_po_de_sonho")
+    assert "npc_pardal" in po["core"] and "npc_velha_netta" in po["borda"]
+
+
+def test_secret_ids_filled_where_a_hidden_fact_exists(data):
+    by_id = {t["id"]: t for t in data["threads"]}
+    assert by_id["tr_na_aco_que_lembra"]["secret_ids"] == ["aco_lembra"]
+    assert by_id["tr_na_po_de_sonho"]["secret_ids"] == ["elaryin"]
+
+
+def test_rute_doc_matches_lore_on_the_chalk_rule():
+    _fm, body = _docs()["npc_tr_rute_corvo_veterana"]
+    assert "corpos que não quer carregar; esses são de Rute" in body
+    with open("lore_nova/daily_life.txt", encoding="utf-8") as f:
+        assert "esses são os de Rute" in f.read()
+
+
+def test_tobias_and_anselmo_do_not_share_the_artigo_voice(data):
+    falas = [
+        data["cast"][n]["voz"]["fala"].lower()
+        for n in ("npc_tr_tobias_pena_seca", "npc_tr_anselmo_tiza")
+    ]
+    assert sum("artigo" in f for f in falas) == 1

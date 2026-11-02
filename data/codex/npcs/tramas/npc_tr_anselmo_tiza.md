@@ -26,6 +26,6 @@ Papel: cabo da Legião de Ferro, de ronda no Anel de Lama, com a ordem de confis
 
 Aparência: Homem de trinta e tantos anos, armadura bem polida e mal ajustada, bigode que tenta ser de sargento. Anda em passo contado e vive com a mão pousada no cassetete.
 
-Como fala: Regulamento pela metade: "Artigo… o artigo diz que é pra entregar. Entrega."
+Como fala: Repete a ordem do dia pela metade: "Ordem é ordem… a ordem diz que é pra entregar. Entrega."
 
-Onde achar: Nas esquinas do Anel de Lama no fim da tarde, com um saco de lona cheio de papel molhado: recibos, cartas de amor, receitas. Ninguém lhe disse o que procurar, e ele é o último a reclamar disso. Para ele, saber ler é coisa de oficial.
+Onde achar: Nas esquinas do Anel de Lama no fim da tarde, com um saco de lona cheio de papel molhado: recibos, cartas de amor, receitas. Ninguém lhe disse o que procurar, e ele é o último a reclamar disso. Para ele, papel bom é papel com selo.

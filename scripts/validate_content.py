@@ -30,6 +30,7 @@ _ORDEM = (
     "visual_assets",
     "law_codes",
     "faction_membership",
+    "plot_threads",
 )
 
 

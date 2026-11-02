@@ -177,3 +177,29 @@ def test_no_llm_no_io_in_module():
                 modes = [a.value for a in node.args[1:2] if isinstance(a, ast.Constant)]
                 modes += [k.value.value for k in node.keywords if k.arg == "mode"]
                 assert not any(m in ("w", "a", "wb", "x") for m in modes), mod
+
+
+def test_sheet_for_row_name_match_requires_thread_region(tmp_path, monkeypatch):
+    d = good_data()
+    base = d["cast"]["npc_a"]
+    d["cast"] = {
+        "npc_bors_martelo_partido": dict(base),
+        "npc_tr_bento_juros": dict(base),
+    }
+    for _ in _use(tmp_path, monkeypatch, d):
+        # homônimo inventado em outra região não herda a ficha de Nova Arcádia
+        assert (
+            pt.sheet_for_row({}, "Bento", {"name": "Bento", "home_location_id": "sk_porto"}) is None
+        )
+        row = {"name": "Bento", "home_location_id": "sk_salao_do_jarl"}
+        assert pt.sheet_for_row({}, "Bento", row) is None
+        assert (
+            pt.sheet_for_row({}, "Bento", {"name": "Bento", "home_location_id": "na_anel_ferro"})
+            is not None
+        )
+        bors = pt.sheet_for_row({}, "Bors", {"name": "Bors", "home_location_id": "na_anel_ferro"})
+        assert bors and bors.npc_id == "npc_bors_martelo_partido"
+        # sem local: aceita; id canônico de outro NPC do grafo: recusa
+        assert pt.sheet_for_row({}, "Bento", {"name": "Bento"}) is not None
+        other = {"id": "npc_grum", "name": "Bento", "home_location_id": "na_anel_ferro"}
+        assert pt.sheet_for_row({}, "Bento", other) is None

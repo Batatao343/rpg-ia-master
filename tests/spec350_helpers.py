@@ -39,7 +39,7 @@ def good_data() -> dict:
                     "pergunta": "Quem fica com os barris quando a adega fecha?",
                     "resumo_publico": "A adega foi revistada duas vezes e ninguém diz por quê.",
                     "core": ["npc_chefe", "npc_vilao"],
-                    "borda": ["npc_a", "npc_b"],
+                    "borda": ["npc_a", "npc_b", "npc_c"],
                     "portas": [
                         {
                             "id": f"{TID}__p1",

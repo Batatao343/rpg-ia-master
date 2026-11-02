@@ -219,3 +219,14 @@ def test_wave_coverage_and_dangling_thread():
     d = good_data()
     d["cast"]["npc_a"]["threads"][0]["thread_id"] = "tr_inexistente"
     assert _has(_errs(d), "trama inexistente")
+
+
+def test_door_anchor_must_be_thread_member():
+    d = good_data()
+    d["threads"][0]["borda"] = ["npc_a", "npc_b"]
+    d["threads"][0]["portas"][2]["anchor_npc_id"] = "npc_chefe"
+    d["cast"]["npc_chefe"] = d["cast"]["npc_c"]
+    assert _has(_errs(d), "fora de core/borda") or _has(_errs(d), "núcleo/líder")
+    d = good_data()
+    d["threads"][0]["borda"] = ["npc_a", "npc_b"]  # npc_c é âncora mas não é membro
+    assert _has(_errs(d), "npc_c", "fora de core/borda")

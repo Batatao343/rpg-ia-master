@@ -347,13 +347,14 @@ def _table_label(table: str, ident: str) -> str:
 
 
 def _sheet_motive_lines(sheet) -> list[str]:
-    """SPEC-350 R22: motivos do NPC canônico a partir da ficha de trama (sem `seed_motives`)."""
-    out = [f"Você deseja: {sheet.desejo}.", f"Você teme: {sheet.medo}."]
-    out.append(f"Seu jeito: {sheet.voz.registro}. Fala assim: «{sheet.voz.fala}»")
-    out.append(
-        f"Há um assunto que você evita: {sheet.segredo_topico}. Desconverse se tocarem nele."
-    )
-    return out
+    """SPEC-350 R22: motivos do NPC canônico a partir da ficha de trama (sem `seed_motives`).
+    O assunto que evita vem antes da voz: o orçamento corta do fim, e a voz é a menos crítica."""
+    return [
+        f"Você deseja: {sheet.desejo}.",
+        f"Você teme: {sheet.medo}.",
+        f"Há um assunto que você evita: {sheet.segredo_topico}. Desconverse se tocarem nele.",
+        f"Seu jeito: {sheet.voz.registro}. Fala assim: «{sheet.voz.fala}»",
+    ]
 
 
 def motive_lines(row: dict, sheet=None) -> list[str]:

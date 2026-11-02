@@ -322,7 +322,9 @@
       "rumor_ids": [
         "rumor_o_aco_de_sangue_tem_memoria"
       ],
-      "secret_ids": [],
+      "secret_ids": [
+        "aco_lembra"
+      ],
       "lore_refs": [
         "lore_nova/npcs.txt:1451-1459"
       ],
@@ -463,12 +465,13 @@
       "resumo_publico": "No Beco dos Desdentados vendem Pó de Sonho em cartuchos de papel. No Anel de Ferro, o Pó de Fada tem selo e licença. Os dois aliviam, os dois cobram, e nenhum balcão responde pelo cliente depois.",
       "core": [
         "npc_lorde_oswin_conta_de_ouro",
-        "npc_comandante_thrace"
+        "npc_comandante_thrace",
+        "npc_pardal"
       ],
       "borda": [
         "npc_tr_dorotea_selo_verde",
         "npc_tr_ysolt_fio_de_vidro",
-        "npc_pardal"
+        "npc_velha_netta"
       ],
       "portas": [
         {
@@ -505,7 +508,9 @@
       "rumor_ids": [
         "rumor_o_po_de_sonho_mostra_o_futuro"
       ],
-      "secret_ids": [],
+      "secret_ids": [
+        "elaryin"
+      ],
       "lore_refs": [
         "lore_nova/locations.txt:79-79"
       ],
@@ -548,8 +553,8 @@
       "segredo_topico": "como decide quais papéis são perigosos",
       "segredo_doc_id": "npc_tr_anselmo_tiza_segredo",
       "voz": {
-        "registro": "regulamento recitado pela metade",
-        "fala": "Artigo… o artigo diz que é pra entregar. Entrega."
+        "registro": "ordem do dia repetida pela metade",
+        "fala": "Ordem é ordem… a ordem diz que é pra entregar. Entrega."
       },
       "home_location_id": "na_anel_lama",
       "archetype": "patrulheiro",
@@ -783,7 +788,7 @@
           "papel": "lavadeira que leva roupa limpa e bilhetes entre os criados do Anel Dourado"
         }
       ],
-      "desejo": "saber quem estava no quarto alugado onde um general élfico morreu",
+      "desejo": "que o dono não abra os livros da casa antes do inverno",
       "medo": "ser vendida junto com a casa se o dono morrer",
       "segredo_topico": "quem lhe ensinou a ler os bilhetes",
       "segredo_doc_id": "npc_tr_ysolt_fio_de_vidro_segredo",
