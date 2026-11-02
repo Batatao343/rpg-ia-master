@@ -476,3 +476,8 @@ Estilhas)"). `tests/test_spec363_ids.py` ganhou `alcancado` no detector (R29).
 
 **Pendente do coordenador.** Revisão `Sol`; smoke §6 (`docs/spec364/smoke-final.md`); rodar os 2 testes Postgres de R17;
 ajustar o §6.1 da SPEC-363 (D-364-1).
+
+**R17 com Postgres (02/11).** Não há banco local: CLI `supabase` ausente, Docker parado, nada ouvindo em 5432/54322. Os 2
+testes `image_case` seguem pulados; o revisor (ou o coordenador com Supabase de pé) roda
+`RPG_TEST_DATABASE_URL=<dsn local> pytest tests/test_spec364_portrait_debit.py`. Também corrigido `typecheck:e2e`
+(`card-shop-357.spec.ts`, cast via `unknown`), erro preexistente.
