@@ -162,3 +162,97 @@ bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore -n 2 tests/tes
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore tests/test_flag_registry.py tests/test_spec297_flag_off.py → 18 passed (rc=0)
 sonda descartável no scratchpad (fora do repo) sobre validate_injection/validate_pii/validate_schema → 3 bypasses confirmados (P1-1)
 ```
+
+---
+
+## Rodada 2 — HEAD `be32795f` ("substituta enquanto gera", R33 job `creature_gen`)
+
+> **Veredito da rodada 2:** `APPROVED_WITH_FOLLOWUPS` **para pousar com `RPG_CREATURE_GEN=legacy`
+> (off)**. Ligar a flag (`on`) fica **bloqueado** até resolver R2-P1-1, R2-P1-2 e as pendências de
+> eval abaixo. Com `legacy`, o código novo fica dormente:
+> - `drenar_local` não acha job e só faz um lease vazio;
+> - a allowlist `FICHA_PATHS` e o gate do curador só valem para documento com `ficha`.
+>
+> **Revisor:** spec-reviewer Opus + Sol (independente) · **Data:** 2026-11-02 · **Commit:** `be32795f`
+
+### Correções da rodada 1, conferidas
+
+| Item | Status | Evidência |
+|---|---|---|
+| P1-1 | **Fechado** | `FICHA_PATHS` (`services/shared_pool_validators.py:93+`): caminho desconhecido → `schema_unknown_field`; tipo errado → `schema_bad_value`. As **3 sondas viraram teste** (`tests/test_spec361_pool.py`, `test_ficha_caminho_desconhecido_fail_closed`, parametrizado: `ficha.arte.status`, lista de dicts em `ficha.inspiracao` e profundidade em `ficha.anatomia.x`), mais `test_ficha_tipo_errado_em_caminho_conhecido` |
+| P1-2 | **Fechado** | Com a substituta, o teto R4 conta o **agendamento**, dê certo ou não (`gerar(no_turno=True)`; `test_teto_conta_tentativa_que_falhou`) |
+| P2-1 | Fechado | `llm_spend_guard_scope`: a thread que passou do prazo não abre outro provedor |
+| P2-2 | Fechado | `t0` antes da preparação |
+| P2-3 | Fechado | `recarregar_fichas()`, chamado 1 vez por rodada do `promote_due` |
+| P2-4 | Fechado | Nome sanitizado dos dois lados (`test_trava_identidade_nome_sanitizado`) |
+| P2-5 | Fechado | `test_round_trip_creature_gen_preenchido` |
+| P2-6 | Fechado | Modificador detectado só em pedido + última fala do jogador (`texto_do_jogador`; `test_gatilho_so_da_acao_do_jogador`) |
+| P2-7 | Fechado | Notas de `config/flags.yaml` atualizadas |
+| P2-8 | Aberto | É do dono do eval; o avaliador e os limiares não foram tocados (conferido no diff) |
+
+### Corretude do job: o que está certo
+
+- **Dedupe e idempotência.** A chave é `creature:{game_id}:{regiao}:{slug(pedido)}`.
+  - No `InlineJobQueue` (legacy), o dedupe vale para sempre no processo e o lease é feito sob
+    `RLock`. Dois `drenar_local` concorrentes não rodam o mesmo job (não roda duas vezes).
+  - No Postgres, `on conflict (kind,dedupe_key)` evita o segundo enfileiramento.
+  - Dois jogos com o mesmo pedido geram dois jobs e duas criaturas (o id leva o hash do
+    `game_id`). Com o pool desligado, `ja_gerada` reaproveita a do overlay do mesmo dono; com o
+    pool ligado, o dedupe fica no `promote_due`. Aceitável.
+- **Falha.** O handler não grava nada em fallback, e a substituta já jogou. `agendar` e
+  `drenar_local` nunca levantam.
+- **Entrada do job.**
+  - `pedido` chega já sanitizado (`from_spawn` → `sanitize_entity_name`) e volta a ser cortado
+    em `pedido_de`.
+  - No prompt, continua dentro de `wrap_player_input` + `PLAYER_INPUT_RULE`.
+  - `motivo_trama` já saiu de `_sem_segredo`.
+  - O log leva só status e códigos.
+  - O `owner_id` é explícito no `save_enemy`/`submit`, o que dá o escopo certo fora do request.
+- **`run_worker`.** `build_handlers` registra `creature_gen`, e `test_spec196_finops` /
+  `test_art_worker_reconciliation` seguem verdes. Não existe teste que garanta o registro
+  (R2-P2-3).
+
+### Achados da rodada 2
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-P1-1 | P1 (bloqueia `on`) | `agents/bestiary.py:227` × `services/creature_gen.py` (`ja_gerada`) | **Com o pool ligado, a criatura gerada nunca é reaproveitada.** O job submete ao pool (HELD) e não grava no overlay. `_pool_creature_template` monta `geracao = {caminho, spec, estado}` **sem `pedido`**, então `ja_gerada` não acha a criatura. Sonda (fora do repo, `pool_on` + `_gerar_e_drenar` + 2º `generate_new_enemy` com o mesmo pedido no turno 30): saiu `caminho: substituta` de novo, sem `pool_entry_id`. Cada novo encontro reagenda (no-op pelo dedupe) **e gasta o teto R4**, e o jogador nunca vê a criatura que pediu | Não gravar o texto do pedido no documento do pool (o validador de texto literal do jogador barraria). Gravar uma chave opaca, por exemplo `geracao_chave = sha256(fold(pedido)+regiao)[:16]` (ident na `FICHA_PATHS`/allowlist), no documento e no template, e fazer `ja_gerada` comparar pela chave. Alternativa: índice local pedido→id no overlay do dono também com o pool ligado. Teste: o caminho da sonda dá `existente` com `pool_entry_id` |
+| R2-P1-2 | P1 (bloqueia `on` no legacy) | `api.py:6781-6786` (dentro do `with lock:` de `:6728`) | **`drenar_local(1)` roda sob o lock do jogo.** A narração já saiu, mas o job (prazo de 30 s) segura `_game_lock(game_id)`. A **próxima ação do mesmo jogo espera até ~30 s** (`lock_wait_ms`), e a projeção `post_response` (arquivista) só roda depois. Isso desfaz a decisão do dono ("o turno nunca espera a geração") no legacy, que é o perfil local de jogo. O lock também é do jogo A, mas o job drenado pode ser de outro jogo | Tirar do lock. Por exemplo, no `_worker` do SSE, depois de `_execute_action` retornar, ou numa thread daemon com 1 em voo por processo. O job não toca no estado do jogo, então não precisa do lock. Teste com um handler lento falso: a 2ª ação do mesmo jogo não espera o job |
+| R2-P2-1 | P2 | `workers/drain.py:14` × `prazo_s()` = 30 s | `MIN_JOB_WINDOW_S = 15` < prazo do job de 30 s. No cron/serverless, um `creature_gen` iniciado com 15 s de janela pode ser morto pela plataforma. Com `max_attempts=1` vira `dead`, e a chamada paga se perde | Passar a janela restante ao handler (`prazo = min(prazo_s(), restante - margem)`) ou dar janela mínima por kind (≥ 35 s para `creature_gen`) |
+| R2-P2-2 | P2 | `services/creature_gen_jobs.py:86` | O comentário "gerar de novo é decisão do próximo spawn" não vale no Postgres: o dedupe por `(kind, dedupe_key)` é permanente e não há `revive_dead_job` para este kind. Um job que morreu nunca mais é gerado para aquele jogo + pedido. Como comportamento é aceitável (teto R4), mas o texto engana | Corrigir o comentário, ou usar `revive_dead_job` com cooldown se o dono quiser uma nova tentativa |
+| R2-P2-3 | P2 | `workers/run_worker.py:223` | Nenhum teste garante `"creature_gen" in build_handlers()` nem um round-trip `agendar → worker → persistir_nova` com a fila do perfil DB (só o legacy via `drenar_local` tem teste) | Teste do registro + 1 teste com a fila local/DB |
+| R2-P2-4 | P2 | `services/creature_gen_jobs.py:47` | O payload do job guarda as **3 últimas falas cruas** do jogador (`player_inputs`) em `app.jobs.payload`. Isso é texto livre, com risco de PII, retido além do turno, e só é usado em `name_typed_by_player` | Guardar só os shingles `fold` necessários; no mínimo cortar cada fala e documentar a retenção |
+
+### Eval da rodada 2 (`docs/spec361/eval-depois-2026-11-02c.json`)
+
+`lint_primeira` 54,5 % (limiar 70 %) e `latencia_nova_p95` 19,1 s (limiar 15 s).
+
+**Julgamento:** é aceitável **pousar com `legacy`**, com os dois itens como **pré-condição para
+ligar**. Motivos:
+- com a flag desligada, nada disso chega ao jogador;
+- o executor não tocou no avaliador nem nos limiares (conferido no diff).
+
+As duas métricas pedem tratamentos diferentes:
+- **`latencia_nova_p95`** mudou de sentido: o limiar de 15 s foi pensado para o **turno**, e
+  agora a métrica mede o **job** fora do turno, que tem prazo próprio de 30 s. Quem decide se o
+  limiar continua, ou se vira "turno com zero LLM de geração + job p95 ≤ prazo", é o dono ou o
+  autor do eval (junto com P2-8). O otimizador não pode decidir isso.
+- **`lint_primeira`** abaixo do limiar nas 3 rodadas (63,6 / 45,5 / 54,5 %) é o sinal de produto
+  que importa. Com o job fora do turno, a 2ª tentativa sempre cabe (`lint_final` sobe), mas a
+  qualidade de primeira continua sendo trabalho de prompt e eixos livres antes de ligar.
+
+**Pré-condições para `RPG_CREATURE_GEN=on`** (registrar na §8 D11 da spec):
+1. R2-P1-1 e R2-P1-2 corrigidos;
+2. decisão do dono/autor do eval sobre o limiar de latência (turno × job) e a correção de
+   `idioma_pt` (P2-8);
+3. `lint_primeira` ≥ 70 % numa rodada real, ou o dono aceitar explicitamente o desvio;
+4. smoke §6, passos 2–5.
+
+### Comandos rodados (rodada 2)
+
+```text
+git diff b6656d04..be32795f --stat → 14 arquivos, +1273/-120
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore -n 2 tests/test_spec361_{eval,gate,variantes,caminho,prompt,integracao,pool}.py tests/test_spec297_{validators,promotion,generation}.py tests/test_encounter_identity_repro.py tests/test_flag_registry.py → ~156 passed (rc=0)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -W ignore tests/test_art_worker_reconciliation.py tests/test_spec196_finops.py → passed, 1 skipped (rc=0)
+sonda descartável (scratchpad, apagada): pool on → job → 2º encontro com o mesmo pedido = "substituta" de novo (R2-P1-1)
+```
