@@ -1,6 +1,6 @@
 # SPEC-351 — Abertura ligada às tramas do mundo (1º arco, 1 NPC pessoal + 1 NPC da trama)
 
-> **Status:** `in-review`
+> **Status:** `done`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** pedido do dono (27/10): "tô começando com um elfo em Nova Arcádia — ele já tem que
 > ter algo do Pó de Sonho, na descrição dele já tem que falar algo que ele está buscando". Hoje a
@@ -639,3 +639,12 @@ que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve ca
 - **Smoke (`docs/spec351/smoke-2026-11-02c-replan.json`, caso 1 + replan forçado, 350 real):** E1–E7 verdes; o plano
   novo cita o título da trama (E1) sem segredo (E4); a LLM escolheu `tr_na_a_colecao__p2` + `tr_na_po_de_sonho__p1`
   (as duas portas élficas) e o NPC da trama foi Aelis, não Ysolt: o menu oferece as duas, a escolha é da LLM.
+
+### Pouso (coordenador, 02/11)
+
+Revisão independente rodada 2: APPROVED_WITH_FOLLOWUPS (`handoffs/SPEC-351-independent-review.md`). Follow-ups aceitos, não bloqueiam:
+
+- `looks_hostile` é sinal extra, não barreira (falso positivo só deixa o NPC local); normalizar acento e ampliar padrões em spec futura.
+- `sanitize_beat` ainda não cobre o texto do prólogo nem o brief da 1ª cena.
+- Ordenação real do menu: afinidade de raça (+100) > Postura > tokens da descrição. Desvio consciente da R1 (pedido explícito do dono: Elfo em Nova Arcádia → Pó de Sonho).
+- No replan, o E1 depende do "Mantenha em vista: …" colado pelo motor no beat 2; medir à parte a adesão do planejador ao bloco do fio.
