@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "8e25f140862d4ee16acfae7af5093560c47d9953",
+  "commit_sha": "e2395c372856e8c585865c818ea5c3eb2323097f",
   "edge_counts": {
-    "calls": 34198,
-    "contains": 1117,
-    "defines": 16669,
-    "imports": 2756,
-    "likely_test_for": 1967,
+    "calls": 34238,
+    "contains": 1120,
+    "defines": 16690,
+    "imports": 2764,
+    "likely_test_for": 1974,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:bad994219ffbea91b1f18cb6c258f642908fdde9968c25729800909f77fe13aa",
+  "graph_hash": "sha256:cd0db12b14df52deecefcca10a9b8de6984689cb4adc4e67ce8bb65a1c733749",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -108,6 +108,7 @@
     "docs/spec358/arena_v2.py",
     "docs/spec358/equivalencia_v1.py",
     "docs/spec358/gerar_golden_v1.py",
+    "docs/spec362/arena_spec362.py",
     "encounter_budget.py",
     "evals/__init__.py",
     "evals/__main__.py",
@@ -1123,6 +1124,8 @@
     "tests/test_spec355_provocacao_rodada.py",
     "tests/test_spec355_reacao_buff.py",
     "tests/test_spec355_router_fallback.py",
+    "tests/test_spec362_arcanista.py",
+    "tests/test_spec362_run_round.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1383,12 +1386,12 @@
     "artifact": 9,
     "class": 1017,
     "endpoint": 69,
-    "file": 1327,
-    "function": 5165,
+    "file": 1330,
+    "function": 5173,
     "method": 864,
-    "module": 1117,
-    "test": 9622
+    "module": 1120,
+    "test": 9635
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:5dd249ba4c4c2e5a269e2e6fedb836a26ddbc50e1dc53e913717c53c895f85cd"
+  "source_tree_hash": "sha256:f3faf0e542c0cef19fe1b5d87fca6dfa24c1390613158a36230f63f6635c8631"
 }

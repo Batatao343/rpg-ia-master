@@ -1,5 +1,5 @@
 {
-  "commit_sha": "8e25f140862d4ee16acfae7af5093560c47d9953",
+  "commit_sha": "e2395c372856e8c585865c818ea5c3eb2323097f",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -1319,6 +1319,17 @@
       },
       "source": "file:docs/spec358/gerar_golden_v1.py",
       "target": "module:docs.spec358.gerar_golden_v1",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 1
+      },
+      "source": "file:docs/spec362/arena_spec362.py",
+      "target": "module:docs.spec362.arena_spec362",
       "type": "contains"
     },
     {
@@ -32969,6 +32980,105 @@
       "type": "contains"
     },
     {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 9
+      },
+      "source": "file:tests/test_spec362_arcanista.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 10
+      },
+      "source": "file:tests/test_spec362_arcanista.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec362_arcanista.py",
+      "target": "module:tests.test_spec362_arcanista",
+      "type": "contains"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 15
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 16
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 17
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 18
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 19
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "file:services/__init__.py",
+      "type": "likely_test_for"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 1
+      },
+      "source": "file:tests/test_spec362_run_round.py",
+      "target": "module:tests.test_spec362_run_round",
+      "type": "contains"
+    },
+    {
       "confidence": "static_exact",
       "provenance": {
         "extractor": "python_ast",
@@ -44703,6 +44813,83 @@
       },
       "source": "module:docs.spec358.gerar_golden_v1",
       "target": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 21
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 28
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362._arcanista",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 69
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362.atribuicao",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 32
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362.decompor",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 147
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362.main",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 141
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362.passo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 116
+      },
+      "source": "module:docs.spec362.arena_spec362",
+      "target": "symbol:docs.spec362.arena_spec362.uso",
       "type": "defines"
     },
     {
@@ -210854,7 +211041,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 29
+        "line": 31
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -210865,7 +211052,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 66
+        "line": 73
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena.test_emboscada_realista_gravada",
@@ -210876,7 +211063,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 44
+        "line": 46
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena.test_faixas_por_postura",
@@ -210887,7 +211074,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 39
+        "line": 41
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena.test_no_maximo_4_cartas_alteradas",
@@ -210898,7 +211085,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 53
+        "line": 60
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena.test_teto_padrao_por_subclasse",
@@ -210909,7 +211096,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 33
+        "line": 35
       },
       "source": "module:tests.test_spec355_arena",
       "target": "symbol:tests.test_spec355_arena.test_versoes_batem_com_catalogo",
@@ -211980,6 +212167,226 @@
       },
       "source": "module:tests.test_spec355_router_fallback",
       "target": "symbol:tests.test_spec355_router_fallback.test_present_target_opens_combat",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 9
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 10
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 49
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._base",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 45
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 41
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 59
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._main_versao",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 55
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista._on_branch",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 91
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 98
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 118
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 110
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 78
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 72
+      },
+      "source": "module:tests.test_spec362_arcanista",
+      "target": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 15
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 16
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 17
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 18
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 19
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "module:services",
+      "type": "imports"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 25
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "symbol:tests.test_spec362_run_round._round",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 61
+      },
+      "source": "module:tests.test_spec362_run_round",
+      "target": "symbol:tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real",
       "type": "defines"
     },
     {
@@ -239733,6 +240140,127 @@
       },
       "source": "symbol:docs.spec358.gerar_golden_v1.synthetic_batch",
       "target": "symbol:docs.spec358.gerar_golden_v1._card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 71
+      },
+      "source": "symbol:docs.spec362.arena_spec362.atribuicao",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 34
+      },
+      "source": "symbol:docs.spec362.arena_spec362.decompor",
+      "target": "symbol:docs.spec362.arena_spec362._arcanista",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 39
+      },
+      "source": "symbol:docs.spec362.arena_spec362.decompor",
+      "target": "symbol:docs.spec362.arena_spec362._arcanista",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 63
+      },
+      "source": "symbol:docs.spec362.arena_spec362.decompor",
+      "target": "symbol:docs.spec362.arena_spec362._arcanista",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 45
+      },
+      "source": "symbol:docs.spec362.arena_spec362.decompor",
+      "target": "symbol:docs.spec362.arena_spec362.decompor.start_piles_antigo",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 49
+      },
+      "source": "symbol:docs.spec362.arena_spec362.decompor.start_piles_antigo",
+      "target": "symbol:docs.spec362.arena_spec362.decompor.start_piles_antigo.get_card",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 164
+      },
+      "source": "symbol:docs.spec362.arena_spec362.main",
+      "target": "symbol:docs.spec362.arena_spec362.atribuicao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 162
+      },
+      "source": "symbol:docs.spec362.arena_spec362.main",
+      "target": "symbol:docs.spec362.arena_spec362.decompor",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 168
+      },
+      "source": "symbol:docs.spec362.arena_spec362.main",
+      "target": "symbol:docs.spec362.arena_spec362.passo",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 166
+      },
+      "source": "symbol:docs.spec362.arena_spec362.main",
+      "target": "symbol:docs.spec362.arena_spec362.uso",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "docs/spec362/arena_spec362.py",
+        "line": 143
+      },
+      "source": "symbol:docs.spec362.arena_spec362.passo",
+      "target": "symbol:docs.spec362.arena_spec362._arcanista",
       "type": "calls"
     },
     {
@@ -605864,7 +606392,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 67
+        "line": 74
       },
       "source": "symbol:tests.test_spec355_arena.test_emboscada_realista_gravada",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605875,7 +606403,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 68
+        "line": 75
       },
       "source": "symbol:tests.test_spec355_arena.test_emboscada_realista_gravada",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605886,7 +606414,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 46
+        "line": 48
       },
       "source": "symbol:tests.test_spec355_arena.test_faixas_por_postura",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605897,7 +606425,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 41
+        "line": 43
       },
       "source": "symbol:tests.test_spec355_arena.test_no_maximo_4_cartas_alteradas",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605908,7 +606436,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 55
+        "line": 62
       },
       "source": "symbol:tests.test_spec355_arena.test_teto_padrao_por_subclasse",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605919,7 +606447,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 61
+        "line": 68
       },
       "source": "symbol:tests.test_spec355_arena.test_teto_padrao_por_subclasse",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -605930,7 +606458,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 36
+        "line": 38
       },
       "source": "symbol:tests.test_spec355_arena.test_versoes_batem_com_catalogo",
       "target": "symbol:services.cards.get_card",
@@ -605941,7 +606469,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec355_arena.py",
-        "line": 35
+        "line": 37
       },
       "source": "symbol:tests.test_spec355_arena.test_versoes_batem_com_catalogo",
       "target": "symbol:tests.test_spec355_arena._load",
@@ -607980,6 +608508,347 @@
       },
       "source": "symbol:tests.test_spec355_router_fallback.test_present_target_opens_combat",
       "target": "symbol:tests.test_spec355_router_fallback._state",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 51
+      },
+      "source": "symbol:tests.test_spec362_arcanista._base",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec362_arcanista._main_versao",
+      "target": "symbol:tests.test_spec362_arcanista._base",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 62
+      },
+      "source": "symbol:tests.test_spec362_arcanista._main_versao",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec362_arcanista._on_branch",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 92
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 99
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 101
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
+      "target": "symbol:tests.test_spec362_arcanista._base",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 122
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
+      "target": "symbol:tests.test_spec362_arcanista._git",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 119
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
+      "target": "symbol:tests.test_spec362_arcanista._on_branch",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 111
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 112
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 86
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:services.card_effects.budget_error",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 88
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:services.card_lint.errors",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 87
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:services.card_lint.lint_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 81
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:services.cards._load_cards",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 83
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 79
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 85
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "target": "symbol:tests.test_spec362_arcanista._main_versao",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 75
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_arcanista.py",
+        "line": 74
+      },
+      "source": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
+      "target": "symbol:tests.test_spec362_arcanista._load",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 40
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.card_piles.start_piles",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 54
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_orchestrator.run_round",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 39
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_scene.freeze",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 36
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_scene.new_scene",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 38
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_scene.place",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 43
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_turn.TurnDeclaration",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 46
+      },
+      "source": "symbol:tests.test_spec362_run_round._round",
+      "target": "symbol:services.conflict_turn.TurnStep",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real",
+      "target": "symbol:services.card_effects.render_card_text",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 64
+      },
+      "source": "symbol:tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real",
+      "target": "symbol:services.cards.get_card",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec362_run_round.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real",
+      "target": "symbol:tests.test_spec362_run_round._round",
       "type": "calls"
     },
     {
@@ -625534,6 +626403,13 @@
       "qualified_name": null
     },
     {
+      "id": "file:docs/spec362/arena_spec362.py",
+      "kind": "file",
+      "line": 1,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:encounter_budget.py",
       "kind": "file",
       "line": 1,
@@ -632625,6 +633501,20 @@
       "qualified_name": null
     },
     {
+      "id": "file:tests/test_spec362_arcanista.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": null
+    },
+    {
+      "id": "file:tests/test_spec362_run_round.py",
+      "kind": "file",
+      "line": 1,
+      "path": "tests/test_spec362_run_round.py",
+      "qualified_name": null
+    },
+    {
       "id": "file:tests/test_spec_index.py",
       "kind": "file",
       "line": 1,
@@ -634730,6 +635620,13 @@
       "line": 1,
       "path": "docs/spec358/gerar_golden_v1.py",
       "qualified_name": "docs.spec358.gerar_golden_v1"
+    },
+    {
+      "id": "module:docs.spec362.arena_spec362",
+      "kind": "module",
+      "line": 1,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362"
     },
     {
       "id": "module:encounter_budget",
@@ -641823,6 +642720,20 @@
       "qualified_name": "tests.test_spec355_router_fallback"
     },
     {
+      "id": "module:tests.test_spec362_arcanista",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista"
+    },
+    {
+      "id": "module:tests.test_spec362_run_round",
+      "kind": "module",
+      "line": 1,
+      "path": "tests/test_spec362_run_round.py",
+      "qualified_name": "tests.test_spec362_run_round"
+    },
+    {
       "id": "module:tests.test_spec_index",
       "kind": "module",
       "line": 1,
@@ -647687,6 +648598,62 @@
       "line": 56,
       "path": "docs/spec358/gerar_golden_v1.py",
       "qualified_name": "docs.spec358.gerar_golden_v1.synthetic_batch"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362._arcanista",
+      "kind": "function",
+      "line": 28,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362._arcanista"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.atribuicao",
+      "kind": "function",
+      "line": 69,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.atribuicao"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.decompor",
+      "kind": "function",
+      "line": 32,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.decompor"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.decompor.start_piles_antigo",
+      "kind": "function",
+      "line": 45,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.decompor.start_piles_antigo"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.decompor.start_piles_antigo.get_card",
+      "kind": "function",
+      "line": 49,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.decompor.start_piles_antigo.get_card"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.main",
+      "kind": "function",
+      "line": 147,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.main"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.passo",
+      "kind": "function",
+      "line": 141,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.passo"
+    },
+    {
+      "id": "symbol:docs.spec362.arena_spec362.uso",
+      "kind": "function",
+      "line": 116,
+      "path": "docs/spec362/arena_spec362.py",
+      "qualified_name": "docs.spec362.arena_spec362.uso"
     },
     {
       "id": "symbol:encounter_budget.action_economy_multiplier",
@@ -753461,42 +754428,42 @@
     {
       "id": "symbol:tests.test_spec355_arena._load",
       "kind": "test",
-      "line": 29,
+      "line": 31,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena._load"
     },
     {
       "id": "symbol:tests.test_spec355_arena.test_emboscada_realista_gravada",
       "kind": "test",
-      "line": 66,
+      "line": 73,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena.test_emboscada_realista_gravada"
     },
     {
       "id": "symbol:tests.test_spec355_arena.test_faixas_por_postura",
       "kind": "test",
-      "line": 44,
+      "line": 46,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena.test_faixas_por_postura"
     },
     {
       "id": "symbol:tests.test_spec355_arena.test_no_maximo_4_cartas_alteradas",
       "kind": "test",
-      "line": 39,
+      "line": 41,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena.test_no_maximo_4_cartas_alteradas"
     },
     {
       "id": "symbol:tests.test_spec355_arena.test_teto_padrao_por_subclasse",
       "kind": "test",
-      "line": 53,
+      "line": 60,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena.test_teto_padrao_por_subclasse"
     },
     {
       "id": "symbol:tests.test_spec355_arena.test_versoes_batem_com_catalogo",
       "kind": "test",
-      "line": 33,
+      "line": 35,
       "path": "tests/test_spec355_arena.py",
       "qualified_name": "tests.test_spec355_arena.test_versoes_batem_com_catalogo"
     },
@@ -754003,6 +754970,97 @@
       "line": 32,
       "path": "tests/test_spec355_router_fallback.py",
       "qualified_name": "tests.test_spec355_router_fallback.test_present_target_opens_combat"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista._base",
+      "kind": "test",
+      "line": 49,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._base"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista._git",
+      "kind": "test",
+      "line": 45,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._git"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista._load",
+      "kind": "test",
+      "line": 41,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._load"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista._main_versao",
+      "kind": "test",
+      "line": 59,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._main_versao"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista._on_branch",
+      "kind": "test",
+      "line": 55,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista._on_branch"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_alteradas_fora_da_341",
+      "kind": "test",
+      "line": 91,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_alteradas_fora_da_341"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_arcanista_piso_e_teto",
+      "kind": "test",
+      "line": 98,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_arcanista_piso_e_teto"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff",
+      "kind": "test",
+      "line": 118,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_legadas_e_avaliador_sem_diff"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base",
+      "kind": "test",
+      "line": 110,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_outras_posturas_identicas_a_base"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_pacote_dentro_do_limite",
+      "kind": "test",
+      "line": 78,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_pacote_dentro_do_limite"
+    },
+    {
+      "id": "symbol:tests.test_spec362_arcanista.test_versoes_batem_com_catalogo",
+      "kind": "test",
+      "line": 72,
+      "path": "tests/test_spec362_arcanista.py",
+      "qualified_name": "tests.test_spec362_arcanista.test_versoes_batem_com_catalogo"
+    },
+    {
+      "id": "symbol:tests.test_spec362_run_round._round",
+      "kind": "test",
+      "line": 25,
+      "path": "tests/test_spec362_run_round.py",
+      "qualified_name": "tests.test_spec362_run_round._round"
+    },
+    {
+      "id": "symbol:tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real",
+      "kind": "test",
+      "line": 61,
+      "path": "tests/test_spec362_run_round.py",
+      "qualified_name": "tests.test_spec362_run_round.test_carta_alterada_joga_pelo_caminho_real"
     },
     {
       "id": "symbol:tests.test_spec_index._apply",
@@ -758871,5 +759929,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:5dd249ba4c4c2e5a269e2e6fedb836a26ddbc50e1dc53e913717c53c895f85cd"
+  "source_tree_hash": "sha256:f3faf0e542c0cef19fe1b5d87fca6dfa24c1390613158a36230f63f6635c8631"
 }
