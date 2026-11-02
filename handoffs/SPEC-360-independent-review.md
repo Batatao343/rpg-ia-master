@@ -1,6 +1,7 @@
 # SPEC-360 — revisão de fauna (Nova Arcádia)
 
 > **Veredito:** `CHANGES_REQUIRED` (conteúdo: 12 entradas a ajustar, nenhuma a refazer; nenhum achado de código)
+> **Rodada 2 (HEAD `eb5e3778`):** `APPROVED_WITH_FOLLOWUPS`. As 12 entradas ajustadas estão ok, e 1 regressão de uma palavra na Pajem (R2-01). Ver "Fauna — rodada 2".
 > **Revisor:** Opus (`claude-opus-5-5`), papel `spec-reviewer` de fauna, independente do autor · **Data:** 2026-11-02 · **Commit revisado:** `31fdeee1`
 
 ## Escopo
@@ -109,4 +110,65 @@ Nenhuma pelo revisor (o revisor não edita conteúdo). O autor aplica F-01…F-1
 bash scripts/dev/py.sh scripts/check_handoff_names.py → EXIT 1 (este arquivo fora do PATTERN; ver X-01)
 bash scripts/dev/py.sh scripts/fauna/lint.py --regiao nova_arcadia → nova_arcadia: 0 erro(s)
 bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec360_schema_lint.py tests/test_spec360_build.py tests/test_spec360_sinais.py → 43 passed (exit 0)
+```
+
+## Fauna — rodada 2
+
+**Revisado:** `git diff c7c2822e..eb5e3778 -- data/bestiario/fauna/nova_arcadia.yaml` (correções F-01…F-15 em `32dfcc84`, e o yaml sem mudança em `eb5e3778`). Também as mudanças de conteúdo para o eval registradas na §9 da spec (`:484`), que já estavam no commit `31fdeee1` da rodada 1 e agora foram conferidas explicitamente contra a prosa.
+
+**Veredito:** `APPROVED_WITH_FOLLOWUPS`.
+
+### Veredito por entrada (as 12 ajustadas)
+
+| # | Id | Rodada 2 | Nota |
+|---|---|---|---|
+| 4 | `mon_fila_de_grilhoes` | ok | O `resto` (colar de ferro aberto com anel de pele cinza dura como pedra) vem de "pescoços mineralizados… fundiram aos colares". A `marca` (batente gasto na altura dos ombros) agora é legível. Não confunde mais com a Escritura. |
+| 9 | `mon_lencol_de_chamine` | ok | A `marca` (antenas grudadas na fuligem e carapaça solta ainda laranja) vem de "antenas… em pelo", "por dentro a placa é brasa". O cluster de corpo deitado está resolvido, e o `foge_de` foi retirado. |
+| 11 | `mon_gralha_de_crematorio` | ok | Só a Traça é presa. A reação à carcaça cobre a necrofagia. |
+| 13 | `mon_centopeia_da_torre_invertida` | ok | A `marca` (morto com a mão tapando boca e nariz) é ótima e vem de "até ela cansar de prender o fôlego". Fica 1 dos 3 rumores de preso do Oubliette, o que é aceitável. |
+| 18 | `mon_pavio_da_lista` | ok | A `marca` (retângulo vitrificado de azul do tamanho de um berço) é exclusiva dele (gaiola em forma de berço e fogo azul-fosco). |
+| 19 | `mon_enxerto_da_fornalha` | ok | A presa agora é o Soldado (armadura e sangue). Sem ciclo E7: o Soldado só come o Degolador. A cadeia Enxerto → Soldado → Degolador é legível como política da cidade. O gênero foi corrigido. O `cheiro` (carne aberta e capuz de couro com suor) vem da ficha. |
+| 22 | `mon_roda_de_mandibulas` | ok | `presas: []`, e a reação à carcaça mantida. |
+| 23 | `mon_cavadeira_de_unhas` | ok | **Divergência aceita.** O E10 barra "unha" (token do nome), e "Pontas de dedo quebradas, pretas de terra" segue fiel à anatomia ("dedos humanos de falanges nuas… unha rachada e preta de terra") sem nomear. O rumor da estalagem tira a moldura do Oubliette e reforça "porões do Anel de Lama". |
+| 27 | `enemy_golem_lixo` | ok | O `rastro` (trilha esbranquiçada que range como chão salgado) e a `marca` (contorno de sal no lençol de um catre, "velado e levado") vêm de "cobre de sal… até ficar conservado". Os dois clusters estão resolvidos. |
+| 29 | `enemy_degolador_mao_sombria` | ok | A `marca` (telha recolocada ao contrário e fiapo de pano preto) é vestígio de quem anda por telhado e não cria canon de facção. O rumor do telhadeiro é coerente. |
+| 34 | `enemy_garrick,_o_silenciador` | ok | O `rastro` (pegadas paradas na soleira, de quem escuta) e o `som` (couro torcido e fio de aço esticado) vêm de "garrote de aço", "túnica de couro". O silêncio fica só com a Traça. O rumor das mães ("quem grita por lá some") não nomeia ninguém e não revela segredo. |
+| 36 | `mon_cao_rebite` | ok | O `resto` não tem mais "rebitada", e o `cheiro` (couro de coleira e chapa enferrujada) já não repete o Enxerto. O rumor ainda diz "óleo e sangue juntos" (`:801`). Como é outro tipo de sinal, aceito. |
+
+### Mudanças colaterais da rodada
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R2-01 | P2 | `data/bestiario/fauna/nova_arcadia.yaml:155` | Regressão de concordância na Pajem (`enemy_sentinela_ferro`). A testemunha virou "um copeiro", mas a frase manteve "ainda passa **por ela** sem ser visto", que antes se referia à criada. | "…ainda passa **por ele** sem ser visto". |
+| R2-02 | P2 (opcional) | `:731` vs `:734` | Víbora (F-09 aplicado): agora o `resto` (livro do agiota com a faca cravada no balcão) e a `marca` (ordem presa com faca na porta de um agiota) usam a mesma imagem de faca cravada em agiota. É repetição interna (não é reskin entre criaturas), e a "página arrancada" não toca o segredo da página do Código (`lore_nova/secrets.txt:333`). | Opcional: tirar a faca do `resto` (por exemplo, "…uma página arrancada e o tinteiro virado, sem ninguém ferido"). |
+| R2-03 | P2 (para o Sol) | `services/fauna_lint.py` | O lint emite `fauna_lint.leak_phrases_fallback` ("services.leak_phrases ausente; E16 usa secret_signatures + [vazamento]"). O E16 da spec manda usar a mesma fonte de `content_validator._default_leak_phrases()`. A leitura humana desta rodada não achou vazamento, mas a garantia automática roda com a fonte de reserva. | Confirmar na revisão do Sol que a fonte de reserva equivale à canônica, ou apontar o E16 para ela. |
+
+### Mudanças feitas para o eval (§9 da spec, `:484`), conferidas contra a prosa
+
+- **`permanencia` +4 dias nas não-BOSS (~1 semana): ok.** A presença é "a criatura está na área", não um indivíduo parado.
+  - É coerente com "aparece aos pares nas semanas de chuva" (Arame).
+  - Os guardiões que não saem do lugar (Fila, Relicário, Portão, Autômato e Velório) ficam em [9, 12], o que é ainda mais coerente.
+  - Ficaram curtos o chefe Roda, a Locomotiva, os BOSS e o Garrick ([2, 3] ou [2, 4]). Está certo para presença rara.
+  - O Bagre ([6, 7]) é de "noites de chuva", mas o clima já pondera (`chuva: mais`, `limpo: menos`).
+  - Nenhuma ficha diz que a criatura só passa por uma noite.
+- **Nó central `nova_arcadia` (start, tags `cidade`/`seguro`/`comércio`, perigo 1): ok com nota.**
+  - `enemy_rato_peste_anel_lama`: "cadáveres jogados no fosso de Nova Arcádia", o fosso da cidade. Plausível.
+  - `mon_cao_rebite`: vai junto com a patrulha da Legião, e o Soldado já tinha o nó central desde a autoria. Plausível.
+  - `enemy_degolador_mao_sombria`: o nó central já estava na autoria, e o que entrou agora foi o `na_anel_dourado`. Bate com o codex público (a Mão Sombria opera "nas sombras dos três anéis").
+  - **Nota (P2, design):** o Degolador é `imediato` e está no nó inicial `seguro`. Pode haver combate sem sinal prévio no hub de partida. O porte segue o perigo (1) e a taxa de gatilho não muda, então é aceitável na Fase 1. Se o smoke mostrar emboscada no hub cedo demais, a saída é tirar o `nova_arcadia` só do território do Degolador.
+
+### O que pode ser marcado `revisao: aprovada`
+
+A spec não autoriza explicitamente o revisor a editar o yaml: a §3.7, item 3, só manda o revisor registrar o parecer. Por isso este revisor **não** marcou. Coordenador ou autor podem marcar `revisao: aprovada` e `revisor_fauna: opus-spec-reviewer`:
+
+- **agora, em 37 entradas:** todas, exceto `enemy_sentinela_ferro`;
+- **`enemy_sentinela_ferro`:** depois da troca de uma palavra do R2-01 ("por ela" → "por ele"). Não precisa de nova rodada.
+
+O R2-02 e o R2-03 não bloqueiam a aprovação.
+
+### Comandos rodados (rodada 2)
+
+```text
+bash scripts/dev/py.sh scripts/fauna/lint.py --regiao nova_arcadia → nova_arcadia: 0 erro(s) (com aviso leak_phrases_fallback, ver R2-03)
+bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider -n 2 tests/test_spec360_schema_lint.py tests/test_spec360_build.py tests/test_spec360_sinais.py tests/test_handoff_names.py → 52 passed (exit 0)
 ```
