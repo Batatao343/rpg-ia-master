@@ -1536,7 +1536,10 @@ def _killer_identity(
             continue
         kind = blow.get("kind")
         if kind == "dano_continuo":
-            return f"o {blow.get('condition') or 'dano contínuo'}", ""
+            from services import card_effects as _fx
+
+            raw = str(blow.get("condition") or "")
+            return (_fx.condition_label(raw) if raw else "dano contínuo"), ""
         if kind == "auto_dano":
             return "o preço da própria Carta", ""
         by = str(blow.get("by_actor_id") or "")
@@ -1994,6 +1997,9 @@ def _narrate_outcome(
     )
     auth = round_log.authorship(last_out, round_log._fact_names(player, enemies, names), player)
 
+    if source_sink is not None:
+        source_sink.pop("last_outcome_source", None)  # nunca herda o valor de um conflito anterior
+
     def _src(value: str) -> None:  # SPEC-363 R13: por que o texto final é o que é
         if source_sink is not None:
             source_sink["last_outcome_source"] = value
@@ -2043,6 +2049,8 @@ def _narrate_outcome(
         text, removed = prose_guard.strip_mechanic_numbers(text)
         if removed:
             _log_event("combat", "narration_numbers_stripped", level="info", count=removed)
+        if not text:  # o filtro esvaziou a prosa: o fallback é por causa dela
+            _src("fallback_narrative")
         verdict = summ.validate_narrative_text(conflict_sum, text) if text else {"ok": False}
         if text and verdict["ok"]:
             codes = summ.validate_attribution(text, auth)  # SPEC-353 R8
@@ -2059,7 +2067,7 @@ def _narrate_outcome(
                 "combat",
                 "outcome_narrative_rejected",
                 level="info",
-                codes=",".join(str(c) for c in (verdict.get("codes") or verdict.get("violations") or [])),
+                codes=",".join(verdict.get("codes") or ["narrative"]),
             )
     return round_log.deterministic_outcome_text(
         label, conflict_sum, player, last_out=last_out, names=names

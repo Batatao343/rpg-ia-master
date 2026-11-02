@@ -197,7 +197,7 @@ def test_fallback_names_final_blow():
         last_out={"final_blows": [blow]},
         names={"c1": "Criatura"},
     )
-    assert "O Sangramento termina o serviço: Criatura tomba." in text
+    assert "Sangramento termina o serviço: Criatura tomba." in text
 
 
 def test_final_blow_attack_recorded_with_card():

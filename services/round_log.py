@@ -99,6 +99,11 @@ _REGION_PREP = {
 }
 
 
+def _cond_name(raw: Any, default: str) -> str:
+    """SPEC-363 P2-1: nome legível da condição (glossário), nunca o id nem artigo de gênero fixo."""
+    return fx.condition_label(str(raw)) if raw else default
+
+
 def _cat_pt(value: Any) -> str:
     """SPEC-353 R34: categoria de Ferimento em pt-BR (com acento)."""
     return _CAT_PT.get(str(value or "").strip(), str(value or "").strip())
@@ -522,7 +527,7 @@ def authorship(
         if str(blow.get("target_id")) == "player":
             if kind == "dano_continuo":
                 final_lines.append(
-                    f"Quem derrubou o herói: o dano contínuo de {blow.get('condition') or 'uma condição'}."
+                    f"Quem derrubou o herói: o dano contínuo de {_cond_name(blow.get('condition'), 'uma condição')}."
                 )
             elif kind == "auto_dano":
                 final_lines.append("Quem derrubou o herói: o custo em Vitalidade da própria Carta.")
@@ -532,7 +537,7 @@ def authorship(
         final_on_enemy = True
         if kind == "dano_continuo":
             final_lines.append(
-                f"Golpe final: o {blow.get('condition') or 'dano contínuo'} (dano contínuo) em {target}."
+                f"Golpe final: o {_cond_name(blow.get('condition'), 'dano contínuo')} (dano contínuo) em {target}."
             )
         elif by == "player":
             final_by_hero = True
@@ -679,8 +684,8 @@ def final_blow_sentence(last_out: dict | None, names: dict[str, str]) -> str:
         target = names.get(tid, "O inimigo")
         by = str(blow.get("by_actor_id") or "")
         if blow.get("kind") == "dano_continuo":
-            cond = str(blow.get("condition") or "dano contínuo")
-            return f"O {cond} termina o serviço: {target} tomba."
+            cond = _cond_name(blow.get("condition"), "dano contínuo")
+            return f"{cond} termina o serviço: {target} tomba."
         if by == "player" and blow.get("kind") == "reacao":  # SPEC-355 R4
             return f"Sua reação termina o serviço: {target} tomba."
         if by == "player":
@@ -740,7 +745,8 @@ def deterministic_outcome_text(
                 continue
             kind, by = b.get("kind"), str(b.get("by_actor_id") or "")
             if kind == "dano_continuo":
-                lead = f"Você tomba, consumido pelo {b.get('condition') or 'dano contínuo'}."
+                cond = _cond_name(b.get("condition"), "dano contínuo")
+                lead = f"Você tomba, consumido por {cond}."
             elif kind == "auto_dano":
                 lead = "Você tomba, vencido pelo preço da própria Carta."
             elif nm.get(by):

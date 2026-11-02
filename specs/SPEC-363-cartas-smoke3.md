@@ -344,7 +344,7 @@ Arma do herói: Espada Gasta. Herói: ileso.
 Fallback de morte (staging, depois de R6–R9 e R14):
 
 ```
-Você tomba diante do Minotauro Esqueleto. Antes, Goblin já tinha tombado. Você carrega ferimento crítico na perna, ferimento crítico no braço.
+Você tomba diante de Minotauro Esqueleto. Antes, Goblin já tinha tombado. Você carrega ferimento crítico na perna, ferimento crítico no braço.
 ```
 
 `out["fuga"]` e `mech_log` (R22):
@@ -630,3 +630,15 @@ Registrar em `docs/spec363/smoke-final.md` (trechos, sem segredos), com provider
 - **R15:** `mech_log` e `round_board` já emitem a queda depois do evento que a causou (as quedas são anexadas após `chrono_events`);
   só o registro (`round_registry`) tinha a queda antes da Última Ação — corrigido.
 - **Arena:** a base da comparação continua `docs/spec353/arena-depois.json`; regravá-la é assunto de outra spec.
+
+### Correções da revisão Sol (`handoffs/SPEC-363-sol-review.md`)
+
+- **P1-1:** V4 só dispara na oração (entre vírgulas) que junta parte do corpo do herói **e** marca de dano (`_DAMAGE_MARK_RE`);
+  corpus de 12 frases benignas em `test_v4_never_fires_on_benign_prose`; `MIMIC_BAD` segue rejeitado.
+- **P2-1:** condição de dano contínuo sai por `condition_label`, sem artigo (killer, `player_downed`, texto de morte e
+  `final_blow_sentence`; teste com `veneno_fraco`). `tests/test_spec353_registry.py` passou a esperar "Sangramento termina o serviço".
+- **P2-2:** propriedade 2^5 × preço com switch e rate card independentes, afirmada sobre `api._enemy_portrait(...)["gerar"]`.
+- **P3-1:** `last_outcome_source` é limpo no início e gravado também quando o filtro de números esvazia o texto.
+  **P3-2:** R37 com Carta de cena, Reação declarada, fuga e passes (≥ 4 rodadas ativas) + teste da Última Ação, 0 LLM.
+  **P3-3:** o evento grava códigos (`dead_alive`, `captured_free`). **P3-4:** `announceRef` no assinante do 409.
+  **P3-5:** preflight lê só o `--env-file` para as flags e fecha o pool. **P3-6:** §3.3 ajustada para "diante de Minotauro Esqueleto".

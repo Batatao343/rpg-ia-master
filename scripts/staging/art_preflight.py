@@ -72,9 +72,12 @@ def main(argv: Sequence[str] | None = None, *, store=None, price: int | None = N
     from dotenv import dotenv_values
 
     env_file = dict(dotenv_values(args.env_file)) if _P(args.env_file).exists() else {}
-    env = {**env_file, **os.environ}
+    # P3-5: as flags valem o que está no --env-file (a Vercel), nunca o ambiente local do operador;
+    # o os.environ só entra como último recurso para o DSN.
+    env = dict(env_file)
+    pool = None
     if store is None:
-        dsn = env.get(args.dsn_env) or ""
+        dsn = env.get(args.dsn_env) or os.environ.get(args.dsn_env) or ""
         if not dsn:
             print(f"error: {args.dsn_env} is empty", file=sys.stderr)
             return 2
@@ -101,6 +104,8 @@ def main(argv: Sequence[str] | None = None, *, store=None, price: int | None = N
     report = evaluate(
         switches=store.load(), audit=store.audit(20), pricing_fresh=fresh, env=env, price_estilhas=price
     )
+    if pool is not None:
+        pool.close()
     print(json.dumps(report, indent=2))
     return 0 if report["ok"] else 1
 

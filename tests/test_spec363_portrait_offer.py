@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import itertools
-
 import pytest
-from fastapi import HTTPException
 
 import api
 from services import kill_switches
@@ -74,23 +71,38 @@ def test_offer_store_error_is_closed(monkeypatch):
     assert api._image_effect_open() is False
 
 
-@pytest.mark.parametrize("live,db,env,gate", list(itertools.product([False, True], repeat=4)))
-def test_offer_implies_quote_ok(monkeypatch, live, db, env, gate):
-    """Propriedade sobre os 2^4 estados: se a oferta existe, o guard da cotação não levanta."""
-    _wire(monkeypatch, switch=gate, pricing=gate)
+class _Registry:
+    def get(self, key):
+        return None
+
+
+@pytest.mark.parametrize("price", [None, 3])
+@pytest.mark.parametrize("fresh", [False, True])
+@pytest.mark.parametrize("switch", [False, True])
+@pytest.mark.parametrize("env", [False, True])
+@pytest.mark.parametrize("db", [False, True])
+@pytest.mark.parametrize("live", [False, True])
+def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price):
+    """Propriedade (2^5 x preço): switch, rate card e preço variam de forma INDEPENDENTE e a afirmação é
+    sobre a view que monta a oferta (`_enemy_portrait`): `gerar` presente => a cotação não recusa."""
+    _wire(monkeypatch, switch=switch, pricing=fresh)
+    monkeypatch.setattr(api, "_portrait_price_estilhas", lambda: price)
     monkeypatch.setattr(api, "_database_profile", lambda: db)
     monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1" if env else "0")
     from services import creature_art
 
     monkeypatch.setattr(creature_art, "mode", lambda: "on" if live else "off")
-    offered = api._creature_art_live() and api._portrait_offer_price() is not None
-    if offered:
-        api._guard_image_effect()  # não pode levantar
-    else:
-        # quando o portão está fechado a cotação recusaria — a oferta não pode existir
-        if not gate:
-            with pytest.raises(HTTPException):
-                api._guard_image_effect()
+    state = {"game_id": "g363", "combat": {}}
+    enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
+    view = api._enemy_portrait(state, {}, enemy, registry=_Registry() if api._creature_art_live() else None)
+    gerar = (view or {}).get("gerar")
+    if gerar:
+        api._guard_image_effect()  # não pode levantar (switch on + preço fresco)
+        assert db and env and live and switch and fresh and price
+    if not (switch and fresh):
+        assert not gerar, "oferta com o portão da imagem fechado"
+    if price is None:
+        assert not gerar
 
 
 def test_art_preflight_causes():
@@ -105,3 +117,15 @@ def test_art_preflight_causes():
     assert evaluate(switches={}, audit=[], **{**base, "price_estilhas": None})["causa"] == "no_price"
     off_env = {**base["env"], "RPG_KILL_SWITCHES_OFF": "image_generation"}
     assert evaluate(switches={}, audit=[], **{**base, "env": off_env})["causa"] == "env_kill_switches_off"
+
+
+def test_offer_present_when_everything_open(monkeypatch):
+    _wire(monkeypatch, switch=True, pricing=True)
+    monkeypatch.setattr(api, "_database_profile", lambda: True)
+    monkeypatch.setenv("RPG_DYNAMIC_ART_ENABLED", "1")
+    from services import creature_art
+
+    monkeypatch.setattr(creature_art, "mode", lambda: "on")
+    enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
+    view = api._enemy_portrait({"game_id": "g363", "combat": {}}, {}, enemy, registry=_Registry())
+    assert view["gerar"] and view["gerar"]["preco_estilhas"] == 3

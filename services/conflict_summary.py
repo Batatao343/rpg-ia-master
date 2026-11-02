@@ -385,6 +385,7 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
     """
     lowered = str(text or "").casefold()
     violations: list[str] = []
+    codes: list[str] = []  # SPEC-363 P3-3: códigos curtos para o log (sem frase nem nome)
     alive_terms = r"\b(vivo|viva|sobrevive|sobreviveu|ergueu-se|levanta-se|escapa|foge|fugiu)\b"
     free_terms = r"\b(livre|liberto|liberta|libertado|libertada|escapa|foge|fugiu)\b"
 
@@ -399,11 +400,13 @@ def validate_narrative_text(summary: dict, text: str) -> dict:
         key = str(name).strip().casefold()
         if key and _subject_hit(key, alive_terms):
             violations.append(f"{name} foi narrado vivo/fugitivo apesar de morto.")
+            codes.append("dead_alive")
     for name in summary.get("capturados") or []:
         key = str(name).strip().casefold()
         if key and _subject_hit(key, free_terms):
             violations.append(f"{name} foi narrado livre apesar de capturado.")
-    return {"ok": not violations, "violations": violations}
+            codes.append("captured_free")
+    return {"ok": not violations, "violations": violations, "codes": sorted(set(codes))}
 
 
 def narrative_or_fallback(summary: dict, proposed_text: str, *, player_facing: bool = False) -> str:
@@ -457,9 +460,22 @@ _TU_RE = re.compile(
 _VOCE_RE = re.compile(r"\b(?:voce|seu|sua|seus|suas)\b")
 
 
+# SPEC-363 R11 (P1-1 da revisão): V4 só olha a oração que junta parte do corpo do herói E marca de dano.
+_DAMAGE_MARK_RE = re.compile(
+    r"\b(?:sangu|sangr|ferid|ferimento|rasg|perfur|escorr|latej|doem|arde|atinge|acerta|fere|machuc|"
+    r"cortad|corte|talho|lacera|dilacer|queimad|esmag|fratur|trinca)\w*|\bdor\b|\bdoi\b"
+)
+
+
 def _v4(low: str, auth: dict) -> bool:
-    """SPEC-363 R11: marca de dano no corpo do herói sem fato que a sustente."""
+    """SPEC-363 R11: marca de dano no corpo do herói sem fato que a sustente (oração = entre vírgulas)."""
     if "hero_wound_regions" not in auth:
+        return False
+    return any(_v4_clause(part, auth) for part in re.split(r"[,:]", low))
+
+
+def _v4_clause(low: str, auth: dict) -> bool:
+    if not _DAMAGE_MARK_RE.search(low):  # "ergue seu braço", "firma sua perna": sem dano, sem V4
         return False
     wounded = {_fold_text(r).split("_")[0] for r in auth["hero_wound_regions"]}
     for match in _HERO_BODY_RE.finditer(low):

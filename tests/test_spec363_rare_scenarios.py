@@ -15,7 +15,7 @@ from services import card_effects as fx
 from services import cards, round_log
 from services import enemy_decks as edk
 from tests.test_encounter_identity_repro import _install_llm, _scan, _start_state
-from tests.test_spec346_board_no_llm import _after_open, _attack_decl, _no_llm, _open
+from tests.test_spec346_board_no_llm import _after_open, _no_llm, _open
 from tests.test_spec362_run_round import _round
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,8 +29,25 @@ def _board_on(monkeypatch):
 
 # --- R37: nenhuma chamada de LLM nas rodadas de meio de luta --------------------------------------
 def test_mid_fight_rounds_make_zero_llm_calls(monkeypatch):
+    """R37: >= 4 rodadas de meio de luta, com Carta de cena, Reação declarada, fuga e passes, 0 LLM em todas."""
+    from services import conflict_scene as cs
+    from services import scene_cards as sc
+
+    monkeypatch.setenv("RPG_SCENE_CARDS", "on")
     state, res = _open(monkeypatch)
     cur = _after_open(state, res)
+    # herói robusto e inimigo manso: a luta dura o bastante para provar várias rodadas
+    cur["player"]["vitalidade"] = cur["player"]["max_vitalidade"] = 200
+    for e in cur["enemies"]:
+        e["vitalidade"] = e["max_vitalidade"] = 500
+    scene = cur["combat"]["scene"]
+    cs.add_object(
+        scene,
+        {"id": "barril", "name": "Barril", "zone_id": "z0", "uses_remaining": 1,
+         "interactions": [{"label": "derrubar", "effect": {"kind": "damage", "params": {"amount": 1, "target": "e"}}}]},
+        from_trigger=True,
+    )
+    scene_ids = sc.sync_hand(scene, cur["combat"]["pilhas"], "player")
     calls: list[int] = []
 
     def counting(*a, **k):
@@ -39,13 +56,19 @@ def test_mid_fight_rounds_make_zero_llm_calls(monkeypatch):
 
     _no_llm(monkeypatch)
     monkeypatch.setattr(combat, "get_llm", counting)
+    eid = next(e["id"] for e in cur["enemies"] if not e.get("dead"))
+    plan = [
+        {"actor_id": "player", "acao": {"kind": "card", "card_id": scene_ids[0], "target_id": eid}},  # Carta de cena
+        {"actor_id": "player", "acao": {"kind": "pass"}, "reaction_card_id": "dev_encaixe"},  # Reação declarada
+        {"actor_id": "player", "acao": {"kind": "flee"}},  # fuga (tentativa)
+        {"actor_id": "player", "acao": {"kind": "pass"}},
+        {"actor_id": "player", "acao": {"kind": "pass"}},
+    ]
     mid_rounds = 0
-    for step in range(5):
+    for step, decl in enumerate(plan):
         before = len(calls)
         cur["messages"] = [*cur["messages"], HumanMessage(content="Jogo")]
-        cur["combat_declaration"] = (
-            {"actor_id": "player", "acao": {"kind": "flee"}} if step == 3 else _attack_decl(cur)
-        )
+        cur["combat_declaration"] = decl
         out = combat._combat_node(cur)
         still_active = bool(out["combat"].get("active"))
         if still_active:
@@ -55,7 +78,7 @@ def test_mid_fight_rounds_make_zero_llm_calls(monkeypatch):
         cur["messages"] = [*cur["messages"], *out["messages"]]
         if not still_active:
             break
-    assert mid_rounds >= 1
+    assert mid_rounds >= 4, mid_rounds
 
 
 # --- (b) iniciativa contra emboscada ---------------------------------------------------------------
@@ -242,3 +265,42 @@ def test_f_voto_sussurrado_on_ally_targeted_omen(ordem, monkeypatch):
         assert "provocado por" in text and "muda de alvo" in text, text
     else:  # o inimigo já agiu; na rodada seguinte o presságio recalculado mira o herói
         assert "e → player" in text, text
+
+
+def test_mid_fight_last_stand_round_makes_zero_llm_calls(monkeypatch):
+    """R37: a Última Ação (último espaço crítico cheio) também resolve sem LLM na rodada."""
+    import gamedata
+
+    seen_last_stand = False
+    for seed in range(40):
+        random.seed(seed)
+        state, res = _open(monkeypatch)
+        cur = _after_open(state, res)
+        player = cur["player"]
+        corpo = int((player.get("virtudes") or {}).get("corpo", 2) or 2)
+        espacos = gamedata.espacos_ferimento_para_corpo(corpo)
+        player["ferimentos"] = {
+            "leve": [], "grave": [],
+            "critico": [{"categoria": "critico", "regiao": f"r{i}", "suprimida": False}
+                        for i in range(int(espacos["critico"]) - 1)],
+        }
+        player["ferimento_espacos"] = espacos
+        player["vitalidade"] = 0
+        calls: list[int] = []
+
+        def counting(*a, _calls=calls, **k):
+            _calls.append(1)
+            raise RuntimeError("sem LLM")
+
+        _no_llm(monkeypatch)
+        monkeypatch.setattr(combat, "get_llm", counting)
+        cur["messages"] = [*cur["messages"], HumanMessage(content="Jogo")]
+        cur["combat_declaration"] = {"actor_id": "player", "acao": {"kind": "pass"}}
+        out = combat._combat_node(cur)
+        text = out["messages"][0].content
+        if "Última Ação" in text:
+            seen_last_stand = True
+            if out["combat"].get("active"):
+                assert not calls, "a rodada com Última Ação chamou LLM"
+            break
+    assert seen_last_stand, "nenhuma semente produziu a Última Ação"

@@ -175,7 +175,7 @@ def test_good_text_sets_llm_source(monkeypatch):
     "blow,expected",
     [
         ({"target_id": "player", "kind": "ataque", "by_actor_id": "e2"}, "Minotauro"),
-        ({"target_id": "player", "kind": "dano_continuo", "by_actor_id": None, "condition": "Sangramento"}, "o Sangramento"),
+        ({"target_id": "player", "kind": "dano_continuo", "by_actor_id": None, "condition": "Sangramento"}, "Sangramento"),
         ({"target_id": "player", "kind": "auto_dano", "by_actor_id": None}, "o preço da própria Carta"),
     ],
 )
@@ -189,3 +189,69 @@ def test_killer_from_final_blows(blow, expected):
     # sem final_blows (save antigo): regra de antes (primeiro ativo)
     old = combat._killer_identity([e1, e2], {}, [e1, e2])[0]
     assert "Minotauro" not in old
+
+
+# --- revisão Sol: P1-1 (V4 sem falso positivo), P2-1 (condição sem id/artigo), P3-1/P3-3 --------------
+BENIGN = [
+    "Você ergue seu braço e a lâmina desce sobre o Mímico.",
+    "Com o peso do seu ombro, você empurra o Goblin contra a parede.",
+    "Você firma sua perna no chão e respira fundo.",
+    "O coração bate forte no seu peito enquanto o Mímico recua.",
+    "Você cerra o punho, a sua cabeça erguida diante do baú.",
+    "Seu braço firme segura o escudo e o Mímico foge.",
+    "Você gira o seu corpo e golpeia o Goblin, que tomba.",
+    "Sua perna não treme; você avança sobre o Mímico.",
+    "O sangue do Mímico mancha o chão, e você segue ileso.",
+    "Você sente o seu peito encher de ar quando o silêncio volta.",
+    "Seu ombro relaxa: a luta acabou.",
+    "O Mímico fere o ar vazio, e você desvia com a sua perna esquerda firme.",
+]
+
+
+@pytest.mark.parametrize("text", BENIGN)
+def test_v4_never_fires_on_benign_prose(text):
+    auth = round_log.authorship({}, {"player": "Você"}, fx.HERO_UNHURT)
+    assert "V4" not in cs.validate_attribution(text, auth), text
+
+
+def test_v4_still_rejects_mimic_bad_and_wound_without_fact():
+    auth = round_log.authorship({}, {"player": "Você"}, fx.HERO_UNHURT)
+    assert "V4" in cs.validate_attribution(fx.MIMIC_BAD, auth)
+    assert "V4" in cs.validate_attribution("A lâmina rasga o seu braço.", auth)
+
+
+def test_dot_killer_uses_label_without_gender_article():
+    import agents.combat as combat
+
+    for raw in ("veneno_fraco", "queimadura"):
+        blow = {"target_id": "player", "kind": "dano_continuo", "by_actor_id": None, "condition": raw}
+        killer = combat._killer_identity([], {"final_blows": [blow]}, [])[0]
+        assert "_" not in killer and not killer.startswith("o "), killer
+        text = round_log.deterministic_outcome_text(
+            "death", {}, {"name": "H"}, last_out={"final_blows": [blow]}, names={}
+        )
+        assert "_" not in text and "pelo " not in text and "consumido por " in text, text
+        assert "_" not in combat._narrate_fall({"name": "H"}, [], killer)
+
+
+def test_source_always_set_and_fresh(monkeypatch):
+    import agents.combat as combat
+    from tests.test_spec346_outcome import _install
+
+    _install(monkeypatch, text="qualquer prosa")
+    from services import prose_guard
+
+    monkeypatch.setattr(prose_guard, "strip_mechanic_numbers", lambda t: ("", 3))  # o filtro esvazia o texto
+    sink = {"last_outcome_source": "llm"}  # valor velho de conflito anterior
+    combat._narrate_outcome(
+        "victory", {"mortos": ["Mímico"]}, fx.HERO_UNHURT, [], {}, "ataco", "", manifest=None, source_sink=sink
+    )
+    assert sink["last_outcome_source"] == "fallback_narrative"
+
+
+def test_rejection_event_logs_codes_not_sentences(monkeypatch):
+    _out, _sink, events = _run_outcome(
+        monkeypatch, "O Mímico sobrevive e foge pelo corredor escuro, ileso.", fx.HERO_UNHURT
+    )
+    ev = next(k for a, k in events if a[1] == "outcome_narrative_rejected")
+    assert ev["codes"] == "dead_alive" and "Mímico" not in ev["codes"]
