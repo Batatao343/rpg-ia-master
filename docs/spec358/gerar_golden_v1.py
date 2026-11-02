@@ -81,9 +81,42 @@ def pool_congelado() -> list[dict]:
     ]
 
 
+def motor_files() -> list[str]:
+    """Arquivos de que dependem os números da arena (motor, dados e arena da 285), exceto o
+    próprio ``scripts/cards/sim.py``. Inclusão larga de propósito: um falso "mudou" só faz o
+    teste cair no ramo estrutural; um falso "igual" seria um falso vermelho."""
+    import glob
+
+    pats = [
+        "*.py",
+        "services/**/*.py",
+        "docs/spec285/arena_lethality.py",
+        "data/*.json",
+        "data/cards/**/*.json",
+    ]
+    out: set[str] = set()
+    for pat in pats:
+        for p in glob.glob(os.path.join(ROOT, pat), recursive=True):
+            out.add(os.path.relpath(p, ROOT).replace(os.sep, "/"))
+    return sorted(out)
+
+
+def motor_hash() -> str:
+    import hashlib
+
+    h = hashlib.sha256()
+    for rel in motor_files():
+        with open(os.path.join(ROOT, rel), "rb") as f:
+            data = f.read().replace(b"\r\n", b"\n")
+        h.update(rel.encode() + b"\x00" + data + b"\x00")
+    return h.hexdigest()
+
+
 def load_sim(path: str | None = None, name: str = "sim358"):
     path = path or os.path.join(ROOT, "scripts", "cards", "sim.py")
-    spec = importlib.util.spec_from_file_location(name, path)
+    from importlib.machinery import SourceFileLoader
+
+    spec = importlib.util.spec_from_file_location(name, path, loader=SourceFileLoader(name, path))
     mod = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = mod
     spec.loader.exec_module(mod)
@@ -149,6 +182,7 @@ def main() -> None:
             "gerado_de": sha,
             "sim_fonte": args.sim or "scripts/cards/sim.py (worktree)",
             "comando": "bash scripts/dev/py.sh docs/spec358/gerar_golden_v1.py",
+            "motor_hash": motor_hash(),
             "pool_congelado": pool_congelado(),
         },
         **compute(sim),

@@ -30,9 +30,22 @@ def sim():
     return _load_path("cards_sim_358", os.path.join(ROOT, "scripts", "cards", "sim.py"))
 
 
+def test_v1_equivale_a_referencia_no_motor_atual(gold, sim):
+    """Garantia estrutural, imune a drift de motor: o ramo v1 do `sim.py` editado produz o
+    MESMO resultado que a cópia congelada do `sim.py` original, rodando os dois agora."""
+    ref = gold.load_sim(
+        os.path.join(ROOT, "tests", "fixtures", "spec358_sim_v1_ref.py.txt"), "sim_ref"
+    )
+    assert gold.compute(sim) == gold.compute(ref)
+
+
 def test_v1_reproduz_golden(gold, sim):
+    """Números fixos: só valem enquanto o motor é o mesmo do golden (hash dos arquivos de
+    motor). Com o motor alterado por outra spec, o teste acima cobre a garantia."""
     with open(gold.GOLDEN, encoding="utf-8") as f:
         golden = json.load(f)
+    if golden["_meta"].get("motor_hash") != gold.motor_hash():
+        pytest.skip("motor mudou desde o golden: vale o teste estrutural (regenere o golden)")
     atual = gold.compute(sim)
     assert atual["simulate_batch"] == golden["simulate_batch"]
     assert atual["simulate_protocolo_lote"] == golden["simulate_protocolo_lote"]

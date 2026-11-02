@@ -1,8 +1,9 @@
 {
  "_meta": {
   "gerado_de": "b145f4ba8ade4acaf792d798cd60b55e6479eb40",
-  "sim_fonte": "git show main:scripts/cards/sim.py (via --sim)",
+  "sim_fonte": "tests/fixtures/spec358_sim_v1_ref.py.txt (= git show main:scripts/cards/sim.py)",
   "comando": "bash scripts/dev/py.sh docs/spec358/gerar_golden_v1.py",
+  "motor_hash": "1dc1b209445beda36330e8b0fec4e93f6f0dc6160185fc49ea1853c7b00bab2c",
   "pool_congelado": [
    {
     "id": "med_lote_91",
