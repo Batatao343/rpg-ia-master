@@ -8,12 +8,13 @@ from pathlib import Path
 from services import cards
 
 D = Path(__file__).resolve().parents[1] / "docs" / "spec355"
-# SPEC-362: o Arcanista saiu da excecao de piso (0-19 53,5 %; confirmacao 180-259 51,4 %). Os JSON
+# SPEC-362: o Arcanista saiu da excecao de piso (0-19 52,1 %; confirmacao 180-259 49,7 %). Os JSON
 # da 355 ficam congelados com 43,9/44,4 %; o piso do Arcanista e lido dos artefatos da 362.
 EXCECOES_PISO: set[str] = set()
 SUPERADO_POR = {"Arcanista Cinzento": "spec362"}
 # Teto de 75 % por subclasse na leitura padrao. Excecoes = valor medido, registrado em §9 para o dono
 # (341 aceitou avaro 75,2 / silencioso 76,6; o R11/R12 empurrou o silencioso a 78,7 nas 0-19).
+# Aceitas como definitivas pelo dono em 01/11 (SPEC-362 §8 D5); os valores nao mudam.
 EXCECOES_TETO = {
     "arena-final.json": {
         ("Sangromante", "todas"): 0.754,

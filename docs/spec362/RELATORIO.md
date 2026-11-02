@@ -20,5 +20,5 @@ Leitura: queda 0-19 -> held-out de ~3,7 pp (SE ~1,1 pp por 1.920 lutas; 0-19 tem
 ## Rodada 3 (dono 02/11: "melhora para ele ficar nos niveis corretos")
 Uso do bot (`uso-0-19.json`): reacoes e utilitarias nunca jogadas; `bas_arc_golpe/guarda` e 1-2 cartas ativas concentram as jogadas; cartas de onda movem pouco. Alavanca: `vitalidade_bonus` 6->8 (Arcanista; 7 = 49,2 %). Pacote de onda final: truque, pulso_medido; bomba revertida a v1.
 0-19: todas 52,1 (cal 61,7 / des 44,4 / imp 60,2; padrao max 73,8); outras Posturas identicas a base.
-Confirmacao 180-259: todas 51,4 (cal 59,5 / des 45,1 / imp 59,8). Dominante: bomba v2 +16,6 pp uso 73 % (v1 tambem +9,4); truque +4,1; pulso +2,5.
+Confirmacao 180-259 (catalogo final, regravada): todas 49,7 (cal 59,5 / des 45,1 / imp 57,7). Dominante: bomba v2 +16,6 pp uso 73 % (v1 tambem +9,4); truque +4,1; pulso +2,5.
 Informativas (catalogo final): 20-99 50,3 %; 100-179 50,3 %.

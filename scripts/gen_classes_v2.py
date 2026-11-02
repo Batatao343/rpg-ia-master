@@ -1506,7 +1506,7 @@ CLASSES = {
         # mais morria nível 1 no run 20260720-093014).
         "base_stats": {
             "hp": 26,
-            "vitalidade_bonus": 6,
+            "vitalidade_bonus": 8,
             "entropy": 20,
             "mana": 0,
             "stamina": 0,

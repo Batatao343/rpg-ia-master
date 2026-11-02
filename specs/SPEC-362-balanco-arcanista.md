@@ -331,7 +331,7 @@ Se 1–2 falharem: **não** reajustar com essas sementes (R3). Registrar e devol
 
 ### Coordenador, dono 02/11: "melhora para ele ficar nos níveis corretos" (rodada 3, vale sobre as anteriores)
 
-`raio_cinza` revertido ao fora-do-pool (reabria o defeito 2d6 da 355 e não comprou o piso). Diagnóstico de uso do bot (`uso-0-19.json`): as Cartas de onda quase não são jogadas (reações nunca; `bas_arc_golpe`/`bas_arc_guarda` dominam), então a alavanca é a classe: `data/classes.json` Arcanista `vitalidade_bonus` 6 -> 8 (7 deu 49,2 %, abaixo da mira de 50 %). Pacote final de onda: `truque` (proteção 3) e `pulso_medido` (dano 4, Fôlego 0); `bomba_estopim` revertida a v1 (teto de improvisador 75,8 % nas 0-19 e `dominante`). Números: 0-19 `todas` 52,1 %; **confirmação nova 180-259 = 51,4 %** (medida com `bomba` v2; ver `revertidas_depois`); informativas com o catálogo final: 20-99 50,3 %, 100-179 50,3 %. `EXCECOES_PISO` removido (commit separado, `SUPERADO_POR`). Ressalva: `bomba_estopim` v2 acusou `dominante` (+16,6 pp, uso 73 %) na 180-259; a v1 também acusa (+9,4 pp), pré-existente.
+`raio_cinza` revertido ao fora-do-pool (reabria o defeito 2d6 da 355 e não comprou o piso). Diagnóstico de uso do bot (`uso-0-19.json`): as Cartas de onda quase não são jogadas (reações nunca; `bas_arc_golpe`/`bas_arc_guarda` dominam), então a alavanca é a classe: `data/classes.json` Arcanista `vitalidade_bonus` 6 -> 8 (7 deu 49,2 %, abaixo da mira de 50 %). Pacote final de onda: `truque` (proteção 3) e `pulso_medido` (dano 4, Fôlego 0); `bomba_estopim` revertida a v1 (teto de improvisador 75,8 % nas 0-19 e `dominante`). Números: 0-19 `todas` 52,1 %; **confirmação nova 180-259 = 49,7 %** (regravada com o catálogo FINAL, após o achado P2-1 do Sol); informativas com o catálogo final: 20-99 50,3 %, 100-179 50,3 %. `EXCECOES_PISO` removido (commit separado, `SUPERADO_POR`). Ressalva: `bomba_estopim` v2 acusou `dominante` (+16,6 pp, uso 73 %) na 180-259; a v1 também acusa (+9,4 pp), pré-existente.
 
 ### Para o dono confirmar (não bloqueiam a execução)
 
@@ -342,3 +342,11 @@ Se 1–2 falharem: **não** reajustar com essas sementes (R3). Registrar e devol
 ## 9. Registro de implementação
 
 Ver §8 (rodada 3) e `docs/spec362/RELATORIO.md`. Desvios: atribuição só com Cartas de onda; R15 exige lint sem erros; a 180-259 foi medida com `bomba_estopim` v2, revertida depois (catálogo final só medido em 0-19, 20-99, 100-179); `tests/test_letalidade_early.py` atualizado para vitalidade 16 do Arcanista.
+
+### Fecho dos achados da revisão Sol (02/11)
+
+- P2-1: `arena-confirmacao.json` regravada com o catálogo final (180-259): `todas` 49,7 % (cal 59,5 / des 45,1 / imp 57,7); `revertidas_depois` e a tolerância no teste removidos.
+- P2-2/P3-1: comentários de `EXCECOES_TETO` (aceitas como definitivas pelo dono, 01/11) e dos números corrigidos; P3-2: `scripts/gen_classes_v2.py` com `vitalidade_bonus` 8 no Arcanista.
+- P3-3 (decisão do coordenador): saves antigos mantêm a vitalidade gravada; nenhuma migração, o personagem não muda no meio da campanha. Só personagens novos nascem com bônus 8.
+- P3-4 (follow-up): `arc1_imp_bomba_estopim` é `dominante` mesmo na v1 (+9,4 pp, uso 55 %); balanço em spec própria.
+- Smoke §6: item 3 coberto por `tests/test_spec362_run_round.py` (run_round real + texto da Carta); item 4 (tela com flags `on`) fica para o smoke final do coordenador. A suíte completa também é do coordenador, por isso o status segue `in-progress`.

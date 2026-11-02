@@ -4,7 +4,6 @@
   260
  ],
  "versoes": {
-  "arc1_imp_bomba_estopim": 2,
   "arc1_imp_truque": 2,
   "arc1_cal_pulso_medido": 2
  },
@@ -29,17 +28,17 @@
       320
      ],
      "L5 padrao": [
-      173,
+      153,
       320
      ],
      "L5 elite": [
-      63,
+      51,
       320
      ]
     },
-    "total": 0.514,
-    "padrao": 0.674,
-    "elite": 0.353
+    "total": 0.497,
+    "padrao": 0.653,
+    "elite": 0.341
    },
    "calibrado": {
     "celulas": {
@@ -122,36 +121,21 @@
       320
      ],
      "L5 padrao": [
-      169,
+      141,
       320
      ],
      "L5 elite": [
-      63,
+      49,
       320
      ]
     },
-    "total": 0.598,
-    "padrao": 0.715,
-    "elite": 0.482
+    "total": 0.577,
+    "padrao": 0.685,
+    "elite": 0.468
    }
   }
  },
  "cartas": {
-  "arc1_imp_bomba_estopim": {
-   "classe": "Arcanista Cinzento",
-   "vezes_na_mao": 599,
-   "vezes_jogada": 435,
-   "taxa_uso": 0.726,
-   "vitoria_sem": 0.291,
-   "vitoria_com": 0.456,
-   "delta_pp": 16.6,
-   "lutas_por_braco": 320,
-   "dano_por_folego": 8.0,
-   "protecao_por_folego": 0.0,
-   "bandeiras": [
-    "dominante"
-   ]
-  },
   "arc1_imp_truque": {
    "classe": "Arcanista Cinzento",
    "vezes_na_mao": 738,
@@ -178,9 +162,5 @@
    "protecao_por_folego": 0.0,
    "bandeiras": []
   }
- },
- "revertidas_depois": {
-  "arc1_imp_bomba_estopim": 1
- },
- "nota": "180-259 medida com bomba_estopim v2 (dominante +16,6 pp); depois revertida a v1 por teto de improvisador 0-19 (75,8 %). Catalogo final (sem bomba v2) so medido nas 0-19, 20-99 e 100-179."
+ }
 }

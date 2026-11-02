@@ -71,9 +71,7 @@ def _main_versao(cid: str) -> int:
 
 def test_versoes_batem_com_catalogo():
     for name in ("arena-final.json", "arena-confirmacao.json"):
-        revertidas = _load(name).get("revertidas_depois", {})
         for cid, v in _load(name)["versoes"].items():
-            v = revertidas.get(cid, v)
             assert int((cards.get_card(cid) or {}).get("versao", 1) or 1) == v, (name, cid)
 
 
@@ -101,7 +99,7 @@ def test_arcanista_piso_e_teto():
     final = _load("arena-final.json")
     piso = 0.48 if final.get("folga_atingida", True) else 0.45
     conf = _load("arena-confirmacao.json")
-    piso_conf = 0.45  # sem excecao (dono 02/11); confirmacao nas sementes 100-179
+    piso_conf = 0.45  # sem excecao (dono 02/11); confirmacao nas sementes 180-259
     assert final["posturas"][CLS]["todas"]["total"] >= piso
     assert conf["posturas"][CLS]["todas"]["total"] >= piso_conf
     for data in (final, conf):
