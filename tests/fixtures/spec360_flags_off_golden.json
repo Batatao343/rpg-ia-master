@@ -1,0 +1,342 @@
+{
+ "bestiary_knowledge": "9da2923795e75990",
+ "errors": 0,
+ "location": "sk_fortaleza_vorr",
+ "messages": "5474d01f93eeee54",
+ "turns": [
+  [
+   "Viajo para Pradaria das Ruínas.",
+   "storyteller",
+   "pradaria_ruinas",
+   18,
+   50,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Ruínas Assombradas.",
+   "storyteller",
+   "pr_ruinas_assombradas",
+   10,
+   90,
+   1,
+   true,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pr_ruinas_assombradas",
+   10,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pr_ruinas_assombradas",
+   6,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pr_ruinas_assombradas",
+   6,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pr_ruinas_assombradas",
+   2,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pr_ruinas_assombradas",
+   0,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Pradaria das Ruínas.",
+   "combat_agent",
+   "pradaria_ruinas",
+   0,
+   90,
+   1,
+   false,
+   true,
+   0
+  ],
+  [
+   "Descanso para me recuperar.",
+   "storyteller",
+   "pradaria_ruinas",
+   6,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Descanso para me recuperar.",
+   "storyteller",
+   "pradaria_ruinas",
+   12,
+   90,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Solvhen.",
+   "storyteller",
+   "pr_solvhen",
+   12,
+   97,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Pradaria das Ruínas.",
+   "storyteller",
+   "pradaria_ruinas",
+   12,
+   97,
+   1,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Pântano da Melancolia.",
+   "storyteller",
+   "pantano_melancolia",
+   12,
+   121,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Floresta dos Sussurros.",
+   "storyteller",
+   "floresta_sussurros",
+   12,
+   139,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Margem de Aethelgard.",
+   "storyteller",
+   "aethelgard",
+   12,
+   139,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Ruínas Submersas de Aethelgard.",
+   "storyteller",
+   "ae_ruinas_submersas",
+   12,
+   194,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Entro em Câmara Seca de Aethelgard.",
+   "storyteller",
+   "aethelgard",
+   12,
+   194,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Pradaria das Ruínas.",
+   "storyteller",
+   "pradaria_ruinas",
+   12,
+   194,
+   2,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Montanhas Afiadas.",
+   "storyteller",
+   "montanhas_afiadas",
+   12,
+   194,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Skallgard.",
+   "storyteller",
+   "skallgard",
+   12,
+   215,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Entro em Salão do Jarl.",
+   "storyteller",
+   "sk_salao_do_jarl",
+   12,
+   215,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Skallgard.",
+   "storyteller",
+   "skallgard",
+   12,
+   215,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Farol da Chama Negra.",
+   "storyteller",
+   "sk_farol_chama_negra",
+   12,
+   237,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Skallgard.",
+   "storyteller",
+   "skallgard",
+   12,
+   237,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Viajo para Fortaleza de Vorr.",
+   "storyteller",
+   "sk_fortaleza_vorr",
+   6,
+   277,
+   3,
+   true,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Skallgard.",
+   "combat_agent",
+   "sk_fortaleza_vorr",
+   6,
+   277,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Skallgard.",
+   "combat_agent",
+   "sk_fortaleza_vorr",
+   6,
+   277,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Skallgard.",
+   "combat_agent",
+   "sk_fortaleza_vorr",
+   0,
+   277,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Skallgard.",
+   "combat_agent",
+   "sk_fortaleza_vorr",
+   0,
+   277,
+   3,
+   false,
+   false,
+   0
+  ],
+  [
+   "Fujo do combate rumo a Skallgard.",
+   "combat_agent",
+   "sk_fortaleza_vorr",
+   0,
+   277,
+   3,
+   false,
+   false,
+   0
+  ]
+ ],
+ "world_clock": {
+  "day": 6,
+  "period": "Manhã"
+ }
+}
