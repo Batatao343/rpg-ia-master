@@ -1,0 +1,117 @@
+{
+  "_meta": "SPEC-368: baralho da facção mercadores_escravos_pradaria (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_gancho_e_corrente",
+      "name": "Gancho e Corrente",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "Quem se afasta é fisgado; a corrente não pergunta para onde.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_inventario_marcado",
+      "name": "Inventário Marcado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Um nome vira linha no livro de Groth, e a linha tem preço.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_carga_protegida",
+      "name": "Carga Protegida",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Para o mercador, o escudo é do inventário, e inventário não se perde.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_chicote_de_feitor",
+      "name": "Chicote de Feitor",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "O estalo corta antes de a mão do feitor terminar o gesto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_algema_fria",
+      "name": "Algema-Fria",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "O ferro frio da pradaria fecha no tornozelo e não abre sem pagamento.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_escravos_pradaria_desmoralizar_o_lote",
+      "name": "Desmoralizar o Lote",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_escravos_pradaria",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desmoralizado",
+        "duracao": 2
+      },
+      "descricao": "Trata pessoas como carga, e a carga aprende a não resistir.",
+      "oculta": true
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "_meta": "SPEC-368: baralho da facção tribos_devoradores_sol (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_tribos_devoradores_sol_lente_de_obsidiana",
+      "name": "Lente de Obsidiana",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "A palma aponta, e todo o sol do deserto cai sobre a mesma presa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tribos_devoradores_sol_lanca_de_couro_pegado",
+      "name": "Lança de Couro Pegado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "A crista de varano abre caminho, e a lança vem atrás dela.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tribos_devoradores_sol_odre_de_bucho",
+      "name": "Odre de Bucho",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "cura",
+        "valor": 3
+      },
+      "descricao": "Dois buchos inchados pagam aos caídos o que a caçada tirou.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tribos_devoradores_sol_espera_na_miragem",
+      "name": "Espera na Miragem",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 2
+      },
+      "descricao": "Parado entre as miragens, o caçador some e deixa só o calor.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tribos_devoradores_sol_sede_dividida",
+      "name": "Sede Dividida",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "Beber primeiro é lei; quem fica por último seca em pé.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tribos_devoradores_sol_couraca_de_varano",
+      "name": "Couraça de Varano",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tribos_devoradores_sol",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "O couro criou raiz, e as escamas largas como porta fecham o flanco.",
+      "oculta": true
+    }
+  ]
+}

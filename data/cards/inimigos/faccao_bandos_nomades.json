@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-368: baralho da facção bandos_nomades (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_bandos_nomades_leitura_de_cativo",
+      "name": "Leitura de Cativo",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Quem leu cativos demais conhece o seu próximo passo antes de você.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_nomades_cauda_varrida",
+      "name": "Cauda Varrida",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "A cauda de ossos alheios varre o tornozelo e a areia faz o resto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_nomades_disparo_de_tendao",
+      "name": "Disparo de Tendão",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 5,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "A corda de tendão canta, e cada tiro é mais forte que o anterior.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_nomades_rapto_de_fome",
+      "name": "Rapto de Fome",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 7,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "A fome do deserto não pede resgate; leva o que alcança.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_nomades_galope_do_bando",
+      "name": "Galope do Bando",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "O bando se desfaz na poeira e se refaz onde ninguém espera.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_bandos_nomades_poeira_da_tropa",
+      "name": "Poeira da Tropa",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "bandos_nomades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "A tropa passa, a areia sobe, e o mundo some por um instante.",
+      "oculta": true
+    }
+  ]
+}
