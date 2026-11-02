@@ -11,3 +11,8 @@ Final 0-19: todas 46,5 (folga atingida); descoberto 40,6; improvisador 58,3 (pad
 Confirmacao 20-99 (uma vez): todas **44,8 %** (< 45,0): R12 FALHOU. calibrado 57,0 / descoberto 41,8 / improvisador 59,0.
 Sem reajuste (R3). `EXCECOES_PISO` fica (comentario deve citar 362 e 44,8 %). Bandeira por Carta nao medida (confirmacao ja falhou).
 Opcao ao dono (D4): aceitar a excecao, ou spec com carta nova/legada (raio_cinza no pool = +2,3 pp medido).
+
+## Rodada 2 (decisao do dono, 02/11)
+Alavancas: raio_cinza de volta ao pool (R12 da 355 era higiene, nao dominancia) + pulso_medido custo_folego 1->0. 0-19: 48,1 % (todas), descoberto 44,2, improvisador 59,4, calibrado 56,9; outras Posturas identicas a base.
+Confirmacao 100-179 (uma vez): todas **44,4 %** (cal 56,0 / des 40,8 / imp 55,8) - FALHOU. 20-99 informativa: 46,1 %.
+Leitura: queda 0-19 -> held-out de ~3,7 pp (SE ~1,1 pp por 1.920 lutas; 0-19 tem 480 lutas, SE ~2,3). Bandeira dominante nao medida. Parado (regra 4).

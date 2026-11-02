@@ -281,8 +281,8 @@ Custo de máquina: a arena do Arcanista nas 0–19 são 4 braços × 6 células 
 - [ ] R6/R7: decomposição R11 × R12 × utilitárias e atribuição na leitura total gravadas.
 - [ ] R8–R10: ≤ 3 Cartas de onda do Arcanista, ≤ 2 passos cada, só alavancas do R8, `versao` + 1, lint e orçamento limpos.
 - [ ] R11: Arcanista `todas` ≥ 46,5 % nas 0–19 (ou o caso (a) registrado); subclasses ≤ 75 % na padrão; outras Posturas idênticas à base.
-- [x] R12 (reinterpretado pelo coordenador, 02/11): confirmação 20–99 rodada uma vez; `todas` 44,8 % (meta 45,0 não atingida, aceito como melhoria sobre 43,9 %); bandeira `dominante` não medida.
-- [x] R13: `EXCECOES_PISO` mantido, com comentário citando a 362 e 44,8 % (commit separado).
+- [ ] R12 (nova regra do dono, 02/11): confirmação 100–179 rodada uma vez deu `todas` 44,4 % (< 45,0): FALHOU, devolvido ao dono; 20–99 informativa 46,1 %; bandeira `dominante` não medida.
+- [ ] R13: `EXCECOES_PISO` NÃO removido (confirmação 100–179 falhou).
 - [ ] R14: nenhuma Carta do Sangromante alterada; `EXCECOES_TETO` com os mesmos valores e o comentário de aceite definitivo.
 - [ ] R15: `tests/test_spec362_arcanista.py` verde.
 - [ ] Revisão Sol sem P0/P1 aberto (`handoffs/SPEC-362-sol-review.md`).
@@ -329,9 +329,11 @@ Se 1–2 falharem: **não** reajustar com essas sementes (R3). Registrar e devol
 - **D6 — Emboscada realista só informativa.** O Arcanista tem Cartas `buff_iniciativa` (contrapartida do R17 da 355 já vale). O número vai para o relatório sem critério.
 - **D7 — `EXCECOES_PISO` sai em commit separado de outro agente, com `SUPERADO_POR` (R13).** É o mesmo precedente do R44/D17 da 355: quem otimiza não edita o gate.
 
-### Do coordenador (02/11) - R12 reinterpretado
+### Do dono, via coordenador (02/11) - substitui a decisão anterior de manter a exceção
 
-Confirmação 20-99 deu `todas` 44,8 % (< 45,0). Decisão: **pousar o pacote como melhoria** (pedido do dono: "melhora um pouco"; held-out da 355 era 43,9 %, 0-19 foi de 44,4 para 46,5 %). O piso de 45 % passa a **meta**; `EXCECOES_PISO` continua, comentário citando a 362 e os 44,8 %. `raio_cinza` de volta ao pool (+2,3 pp medido) fica como follow-up, sem spec agora. Limiar, teto e avaliador não mudam.
+Objetivo: Arcanista `todas` >= 45 % na confirmação, sem `EXCECOES_PISO`. 20-99 já vista: ajuste só em 0-19 (mira >= 48 %), confirmação nova UMA vez nas sementes 100-179, 20-99 só informativa. Alavancas: (a) `raio_cinza` de volta ao pool (R12 da 355 o tirou por higiene - fixture 2d6 pela via legada -, não por dominância); (b) passos extras em Cartas de onda. Se a 100-179 falhar: parar e devolver, sem 2ª confirmação.
+
+Execução: `raio_cinza` fora de `EXEMPLO_FORA_DO_POOL` (`services/cards.py`; carta legada intacta) + `pulso_medido` custo_folego 1->0: 0-19 = 48,1 %. **100-179 = 44,4 % (FALHOU)**; 20-99 informativa = 46,1 %. Regra 4: parado. `EXCECOES_PISO` permanece (comentário 44,8 % da decisão anterior está desatualizado: números atuais acima).
 
 ### Para o dono confirmar (não bloqueiam a execução)
 

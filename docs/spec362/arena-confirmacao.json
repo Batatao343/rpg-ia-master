@@ -1,0 +1,139 @@
+{
+ "seeds": [
+  100,
+  180
+ ],
+ "versoes": {
+  "arc1_imp_bomba_estopim": 2,
+  "arc1_imp_truque": 2,
+  "arc1_cal_pulso_medido": 2
+ },
+ "posturas": {
+  "Arcanista Cinzento": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      236,
+      320
+     ],
+     "L1 elite": [
+      157,
+      320
+     ],
+     "L3 padrao": [
+      172,
+      320
+     ],
+     "L3 elite": [
+      85,
+      320
+     ],
+     "L5 padrao": [
+      153,
+      320
+     ],
+     "L5 elite": [
+      49,
+      320
+     ]
+    },
+    "total": 0.444,
+    "padrao": 0.584,
+    "elite": 0.303
+   },
+   "calibrado": {
+    "celulas": {
+     "L1 padrao": [
+      261,
+      320
+     ],
+     "L1 elite": [
+      188,
+      320
+     ],
+     "L3 padrao": [
+      283,
+      320
+     ],
+     "L3 elite": [
+      207,
+      320
+     ],
+     "L5 padrao": [
+      101,
+      320
+     ],
+     "L5 elite": [
+      36,
+      320
+     ]
+    },
+    "total": 0.56,
+    "padrao": 0.672,
+    "elite": 0.449
+   },
+   "descoberto": {
+    "celulas": {
+     "L1 padrao": [
+      218,
+      320
+     ],
+     "L1 elite": [
+      133,
+      320
+     ],
+     "L3 padrao": [
+      190,
+      320
+     ],
+     "L3 elite": [
+      109,
+      320
+     ],
+     "L5 padrao": [
+      97,
+      320
+     ],
+     "L5 elite": [
+      36,
+      320
+     ]
+    },
+    "total": 0.408,
+    "padrao": 0.526,
+    "elite": 0.29
+   },
+   "improvisador": {
+    "celulas": {
+     "L1 padrao": [
+      256,
+      320
+     ],
+     "L1 elite": [
+      196,
+      320
+     ],
+     "L3 padrao": [
+      258,
+      320
+     ],
+     "L3 elite": [
+      173,
+      320
+     ],
+     "L5 padrao": [
+      147,
+      320
+     ],
+     "L5 elite": [
+      41,
+      320
+     ]
+    },
+    "total": 0.558,
+    "padrao": 0.689,
+    "elite": 0.427
+   }
+  }
+ }
+}
