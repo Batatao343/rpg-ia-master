@@ -87,7 +87,7 @@ def test_explicit_sell_still_sells(monkeypatch):
 
 @pytest.mark.parametrize(
     "text",
-    ["Posso vender a Tocha?", "Quanto vale a Tocha?", "Me vende a Corda?", "Quanto custa a Corda?"],
+    ["Posso vender a Tocha?", "Quanto vale a Tocha?", "Me vende a Corda?", "Quanto custa a Corda?", "Me vende uma tocha?"],
 )
 def test_question_never_trades_item(text, no_llm):
     st = _st(text)
@@ -182,3 +182,15 @@ def test_buy_narration_names_merchant_item(monkeypatch):
     ctx, fb = seen[-1]
     assert f"Mercador: {snap['merchant_name']}" in ctx
     assert fb == f"{snap['merchant_name']} fecha o negócio sem cerimônia."
+
+
+def test_buy_ask_quotes_buy_price_even_with_item_in_pack():
+    """P3-3: 'Me vende uma corda?' (Corda também na mochila) cota o preço de COMPRA, não o que o mercador paga."""
+    st = _st("Me vende uma corda?", inventory_extra=[{"id": "corda", "qty": 1}])
+    body = loot.loot_node(st)["messages"][0].content
+    assert " custa " in body and "paga" not in body
+
+
+def test_buy_ask_for_unstocked_item_says_not_for_sale():
+    body = loot.loot_node(_st("Me vende uma tocha?"))["messages"][0].content
+    assert "não está à venda" in body and "paga" not in body

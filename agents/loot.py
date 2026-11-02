@@ -174,6 +174,10 @@ def _is_shop_question(folded: str) -> bool:
     return "?" in folded or bool(_QUESTION_RE.search(folded.strip()))
 
 
+_BUY_ASK_RE = re.compile(r"\b(?:me vende|vende|vendem|comprar|compro|custa|custam|quanto custa)\b")
+_SELL_ASK_RE = re.compile(r"\b(?:vender|vendo|vale|paga|pagam)\b")
+
+
 def _shop_question_quote(work_state: dict, text: str) -> str | None:
     """SPEC-364 R6/D-364-3: pergunta no fluxo de itens NUNCA transaciona. Item resolvido ->
     cotacao dele; senao None (o chamador faz a consulta de R7)."""
@@ -186,6 +190,16 @@ def _shop_question_quote(work_state: dict, text: str) -> str | None:
     snap = economy.public_market_snapshot(work_state)
     if not snap:
         return None
+    # SPEC-364 P3-3: marcador de COMPRA ("me vende", "custa") cota o preço de compra do mercador
+    # primeiro, mesmo que o herói também carregue o item; "vender/vale/paga" cota o de venda.
+    if entry is not None and _BUY_ASK_RE.search(folded) and not _SELL_ASK_RE.search(folded):
+        if _resolve_item_ref(work_state, "buy", folded):
+            entry = None
+        else:  # pediu para comprar algo que o mercador não tem: não confunde com cotação de venda
+            return (
+                f"[SISTEMA] {inv.short_display(entry)} não está à venda aqui. "
+                "Para vender o seu, diga claramente que vende; nada mudou."
+            )
     if entry is not None:
         shown = inv.short_display(entry)
         for q in snap.get("quotes") or []:
