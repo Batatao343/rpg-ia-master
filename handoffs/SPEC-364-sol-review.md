@@ -47,7 +47,7 @@ anotada como a prova (P3-5).
 
 ## Correções aplicadas
 
-(nenhuma ainda; o executor preenche por commit)
+Ver §9 da spec ("Correções da revisão Sol") e os commits `fix|test` posteriores a 50fb8f12.
 
 ## Pendências
 

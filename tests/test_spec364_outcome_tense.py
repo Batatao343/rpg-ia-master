@@ -106,8 +106,13 @@ def test_unconscious_earlier_is_past_not_final_round():
         "mortos": ["Minotauro Esqueleto"],
         "inconscientes": ["Goblin"],
     }
-    enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}, {"id": "enemy_goblin", "name": "Goblin"}]
-    facts = round_log.outcome_facts("victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES)
+    enemies = [
+        {"id": "enemy_mino", "name": "Minotauro Esqueleto"},
+        {"id": "enemy_goblin", "name": "Goblin"},
+    ]
+    facts = round_log.outcome_facts(
+        "victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES
+    )
     assert "Antes do fim, Goblin já tinha perdido os sentidos." in facts
     assert "Na rodada final, Goblin perdeu os sentidos." not in facts
     assert "Na rodada final, Minotauro Esqueleto morreu." in facts
@@ -115,9 +120,14 @@ def test_unconscious_earlier_is_past_not_final_round():
 
 def test_prefix_final_round_always_when_last_out_exists():
     """P3-2: com `last_out`, a queda da rodada final leva o prefixo mesmo sem queda anterior."""
-    summary = {"participantes": ["Smoke4A", "Minotauro Esqueleto"], "mortos": ["Minotauro Esqueleto"]}
+    summary = {
+        "participantes": ["Smoke4A", "Minotauro Esqueleto"],
+        "mortos": ["Minotauro Esqueleto"],
+    }
     enemies = [{"id": "enemy_mino", "name": "Minotauro Esqueleto"}]
-    facts = round_log.outcome_facts("victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES)
+    facts = round_log.outcome_facts(
+        "victory", summary, fx.PLAYER, enemies, fx.LAST_OUT, names=fx.NAMES
+    )
     assert "Na rodada final, Minotauro Esqueleto morreu." in facts
 
 

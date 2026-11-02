@@ -153,3 +153,61 @@ def test_no_internal_ids_in_history(monkeypatch):
     blob = "\n".join([*(str(e.get("text") or "") for e in history), *texts])
     assert find_internal_ids(blob) == []
     assert not re.search(r"\b(?:[a-z]+_)+\d+\b", blob), re.findall(r"\b(?:[a-z]+_)+\d+\b", blob)
+
+
+def test_no_internal_ids_or_hero_name_in_history_r29(monkeypatch):
+    """SPEC-364 R29/R16: 2 fugas seguidas, Cartas de Cena de Carga e condição, consulta do mercado com item
+    livre longo — sem ids da trilha e sem linha na voz do nome do herói."""
+    import random
+    from copy import deepcopy
+
+    from tests import spec364_board_helpers as hp
+
+    hero = "Smoke4A"
+    client, saved, gid = hp.api_client(monkeypatch, hero=hero)
+    st = hp.open_combat(client, saved, gid)
+    st["combat"]["scene"]["cartas_de_cena"] = [
+        "nevoa_cinza_do_ermo",
+        "vigilia_dos_druidas_cinzentos",
+    ]
+    st["combat"]["chase"] = {
+        "trilha": "alcancado",
+        "alcancado": True,
+        "escapou": False,
+        "fugitive_id": "player",
+        "perseguidores": [e["id"] for e in st["enemies"]],
+    }
+    for enemy in st["enemies"]:
+        enemy["pursuit_policy"] = "persegue"
+    st["player"]["inventory"].append(
+        {
+            "id": "item_desconhecido",
+            "qty": 1,
+            "display_name": "Faca de esfolar de osso de baleia, cabo envolto em couro cru — a lâmina que Haldor usa",
+        }
+    )
+    saved[gid] = deepcopy(st)
+    texts: list[str] = []
+    for seed in (3, 5):  # duas fugas seguidas
+        random.seed(seed)
+        r = client.post(
+            "/game/action", json={"game_id": gid, "input_text": "Fugir", "action_kind": "flee"}
+        )
+        assert r.status_code == 200, r.text
+        texts.append(str(r.json().get("message") or ""))
+        if not (saved[gid].get("combat") or {}).get("active"):
+            break
+    saved[gid]["combat"] = {**(saved[gid].get("combat") or {}), "active": False}
+    r = client.post("/game/action", json={"game_id": gid, "input_text": "Quero ver o mercado"})
+    texts.append(str(r.json().get("message") or ""))
+    history = client.get("/game/history", params={"game_id": gid}).json()["entries"]
+    lines = [
+        ln
+        for blob in [*texts, *(str(e.get("text") or "") for e in history)]
+        for ln in blob.splitlines()
+    ]
+    blob = "\n".join(lines)
+    assert find_internal_ids(blob) == []
+    assert "quase_livre" not in blob and "alcancado" not in blob
+    for ln in lines:
+        assert not ln.strip().startswith(hero) and f"{hero}:" not in ln, ln

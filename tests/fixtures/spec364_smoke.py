@@ -16,12 +16,18 @@ LAST_OUT = {
     "deaths": ["enemy_mino"],
 }
 
-# Trecho real (staging, A_end): a queda antiga contada no presente.
+# Resumo REAL do staging (smoke 4, conta A, `A_end.message`, trecho de prosa; sem segredos): a queda antiga
+# do Goblin (rodada 3) contada no presente na vitória da rodada 5.
 REAL_BAD = (
-    "Seu golpe termina o serviço: o Minotauro Esqueleto desaba em pedaços. "
-    "O Goblin também tomba sem vida ao seu lado."
+    "A Espada Gasta desce duas vezes contra o Minotauro Esqueleto, abrindo um ferimento crítico na perna "
+    "e outro grave no braço da criatura — e então o Sangramento que já corria por dentro dos ossos termina "
+    "o que a lâmina começou. O colosso desaba e não se levanta mais, enquanto o Goblin também tomba sem "
+    "vida ao seu lado. A Última Ação do inimigo ainda te alcança num acerto crítico, deixando um ferimento "
+    "leve no seu braço, mas é tarde demais para mudar o desfecho. Você permanece de pé, à beira do "
+    "colapso, respirando o ar frio do amanhecer sobre as Montanhas Afiadas — e o campo é seu."
 )
-GOOD = (
-    "Seu golpe termina o serviço: o Minotauro Esqueleto desaba em pedaços. "
-    "O Goblin, que já tinha tombado, jaz ao seu lado."
+# Texto correto escrito à mão: mesma prosa, queda antiga no passado.
+GOOD = REAL_BAD.replace(
+    "enquanto o Goblin também tomba sem vida ao seu lado",
+    "enquanto o Goblin, que já tinha tombado, jaz ao seu lado",
 )

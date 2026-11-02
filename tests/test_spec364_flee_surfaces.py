@@ -32,7 +32,10 @@ def _flee(monkeypatch, *, chase=None, distance=None, want_success: bool, escape:
     for enemy in st["enemies"]:
         enemy["pursuit_policy"] = "persegue"
     # Cartas de Cena (R24): condicao e Carga disparam no fim da rodada 1
-    st["combat"]["scene"]["cartas_de_cena"] = ["nevoa_cinza_do_ermo", "vigilia_dos_druidas_cinzentos"]
+    st["combat"]["scene"]["cartas_de_cena"] = [
+        "nevoa_cinza_do_ermo",
+        "vigilia_dos_druidas_cinzentos",
+    ]
     if chase is not None:
         st["combat"]["chase"] = {**chase, "perseguidores": ids}
     if distance:
@@ -42,8 +45,16 @@ def _flee(monkeypatch, *, chase=None, distance=None, want_success: bool, escape:
     import importlib
 
     calls: list[str] = []
-    for name in ("agents.combat", "agents.router", "agents.loot", "agents.npc", "agents.storyteller",
-                 "agents.archivist", "agents.campaign_manager", "services.death_flow"):
+    for name in (
+        "agents.combat",
+        "agents.router",
+        "agents.loot",
+        "agents.npc",
+        "agents.storyteller",
+        "agents.archivist",
+        "agents.campaign_manager",
+        "services.death_flow",
+    ):
         mod = importlib.import_module(name)
         if hasattr(mod, "get_llm"):
             real = mod.get_llm
@@ -57,14 +68,20 @@ def _flee(monkeypatch, *, chase=None, distance=None, want_success: bool, escape:
         snapshot = deepcopy(saved[gid])
         calls.clear()
         random.seed(seed)
-        r = client.post("/game/action", json={"game_id": gid, "input_text": "Fugir", "action_kind": "flee"})
+        r = client.post(
+            "/game/action", json={"game_id": gid, "input_text": "Fugir", "action_kind": "flee"}
+        )
         assert r.status_code == 200, r.text
         fuga = [ln for ln in (r.json()["combat"].get("mech_log") or []) if ln.startswith("Fuga ·")]
         if escape:  # escapar encerra o conflito: o tabuleiro fecha, sem linha de trilha
             ok = not r.json()["combat"].get("active")
             fuga = fuga or ["escapou"]
         else:
-            ok = bool(fuga) and (("avança" in fuga[0] or "escapou" in fuga[0]) if want_success else "perde terreno" in fuga[0])
+            ok = bool(fuga) and (
+                ("avança" in fuga[0] or "escapou" in fuga[0])
+                if want_success
+                else "perde terreno" in fuga[0]
+            )
         if ok:
             if r.json()["combat"].get("active"):
                 assert calls == [], calls  # R24: rodada de meio de luta, zero LLM
@@ -96,12 +113,18 @@ def _surfaces(resp, hist):
 )
 def test_same_trail_on_every_surface(monkeypatch, label, chase, distance, success, de, para):
     resp, hist, line = _flee(
-        monkeypatch, chase=chase, distance=distance, want_success=success, escape=label.startswith("d_")
+        monkeypatch,
+        chase=chase,
+        distance=distance,
+        want_success=success,
+        escape=label.startswith("d_"),
     )
     surf = _surfaces(resp, hist)
     expected = f"{de} → {para}"
     if label.startswith("d_"):
-        assert resp["combat"]["active"] is False  # escapou: sem trilha a mostrar, mas sem ids em nenhuma superficie
+        assert (
+            resp["combat"]["active"] is False
+        )  # escapou: sem trilha a mostrar, mas sem ids em nenhuma superficie
         for name, text in surf.items():
             assert not ID_RE.search(text), (label, name)
         return
@@ -131,12 +154,19 @@ def test_force_escape_has_no_stale_roll():
         "fugitive_id": "player",
         "alcancado": False,
         "escapou": False,
-        "_last": {"total": 9, "difficulty": 12, "sucesso": False, "de": "pressionado"},  # dado velho
+        "_last": {
+            "total": 9,
+            "difficulty": 12,
+            "sucesso": False,
+            "de": "pressionado",
+        },  # dado velho
     }
     scene = {"positions": {"player": {"distance_state": "proximo"}}}
     player = {"name": "V", "conscious": True, "virtudes": {"agilidade": 1}}
     enemy = {"id": "lobo", "name": "Lobo", "pursuit_policy": "persegue"}
-    fled, logs, st = _attempt_flee(scene, player, [enemy], {}, random, existing_chase=start, force_escape=True)
+    fled, logs, st = _attempt_flee(
+        scene, player, [enemy], {}, random, existing_chase=start, force_escape=True
+    )
     assert fled is True and "FOGE" in " ".join(logs)
     payload = _flee_roll_payload(st, "afastado", True)
     line = cp._flee_line({"fuga": payload})

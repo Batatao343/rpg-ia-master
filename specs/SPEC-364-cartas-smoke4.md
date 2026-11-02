@@ -330,7 +330,7 @@ pelo coordenador. Toda etapa que toca `round_log`/`agents/combat.py` roda també
 ### Etapa 4 — Retrato pago (R17–R20)
 
 1. **Testes:** `tests/test_spec364_portrait_debit.py` — `test_settle_below_ceiling_releases_remainder`,
-   `test_settle_above_ceiling_rejected`, `test_offer_has_preco_milli`; front
+   `test_settle_above_ceiling_capped`, `test_offer_has_preco_milli`; front
    `web/tests/spec364-estilhas.test.mjs` — `estilhasLabel` (1000 → "1 Estilha"; 15 → "0,015 Estilhas"; 2000 →
    "2 Estilhas"), chip com "até", confirmação direta por milli e fallback por `preco_estilhas`.
 2. **Implementação:** `services/creature_art.py`/`api.py`, `TargetChip.tsx`, `ImageQuoteDialog.tsx`,
@@ -456,7 +456,7 @@ registro). (3) `gerar` é montado em `api._enemy_portrait` → `creature_art.por
 5 cenários (R21-R23) · 6 guardas (R24, R26-R29).
 
 **Desvios e decisões de execução.**
-- R17: os testes de liquidação (`test_settle_below_ceiling_releases_remainder`, `test_settle_above_ceiling_rejected`) usam o
+- R17: os testes de liquidação (`test_settle_below_ceiling_releases_remainder`, `test_settle_above_ceiling_capped`) usam o
   fixture Postgres `image_case` e **pulam sem `RPG_TEST_DATABASE_URL`**; não rodaram localmente. O "U > T" é, no motor
   real, **limitado ao teto com anomalia financeira** (`financial_anomaly_milli`), não "recusado": o teste afirma o limite.
 - R21: a queda do herói é aleatória no motor real; o teste cobre o desfecho nos dois caminhos (`_narrate_outcome` com resumo
@@ -481,3 +481,24 @@ ajustar o §6.1 da SPEC-363 (D-364-1).
 testes `image_case` seguem pulados; o revisor (ou o coordenador com Supabase de pé) roda
 `RPG_TEST_DATABASE_URL=<dsn local> pytest tests/test_spec364_portrait_debit.py`. Também corrigido `typecheck:e2e`
 (`card-shop-357.spec.ts`, cast via `unknown`), erro preexistente.
+
+**Correções da revisão Sol (02/11, `handoffs/SPEC-364-sol-review.md`).**
+- P1-1/P2-1: `tests/test_spec364_flee_surfaces.py` monta a perseguição à mão (alcançado; `distante`; afastado; quase livre) e
+  prova pela API a mesma trilha em `mech_log`, mensagem e Livro, o regex de R3, a voz de R16 e a Carta de Cena (condição +
+  Carga) disparando; o contador de `get_llm` delega ao Mock e exige `== 0` nas rodadas que não encerram o conflito. O teste
+  vácuo de `test_spec346_board_no_llm.py` foi removido. `round_board` não é checado em texto (é lista estruturada, sem trilha).
+  O caso (e) sacrifício é de unidade (`_attempt_flee(force_escape)`; o fluxo completo exige party com oferta).
+- P2-2: sacrifício aceito grava `_last = {de, sacrificio}` (sem dado velho); linha "Fuga · sacrifício aceito · escapou (de → livre)".
+- P2-3/P3-2: `fall_partition` inclui `inconscientes`; "Na rodada final" sempre que há `last_out`.
+- P2-4: `tests/test_spec364_death_api.py` (TestClient; seam = `death_flow.attempt_stabilization`) afirma mensagem, Livro,
+  `death_context.killer`, crônica ("Smoke4A tombou em combate" íntegro, nunca "SmokeA") e `mech_log`, nos caminhos LLM
+  aceito e fallback (`fallback_attribution` por V5). **Limite honesto:** o inimigo morto em rodada anterior sai de
+  `state["enemies"]` antes do resumo seguinte, então a queda antiga **não chega ao `conflict_summary`** neste cenário de API;
+  V6/R10 ficam provados em unidade (`test_spec364_outcome_tense.py`). O coordenador deve confirmar no §6 se o smoke 4 listou o
+  Goblin em `mortos` por outro caminho.
+- P2-5: `test_no_internal_ids_or_hero_name_in_history_r29` (2 fugas, Cartas de Cena, item livre longo, voz).
+- P3-1: V6 com plural e "cai morto" e verbo sem sujeito herdando o nome. P3-3: pergunta de compra cota o preço de compra
+  (item que o mercador não tem → "não está à venda aqui"). P3-4: saldo da conta no singular. P3-5: teste renomeado
+  `test_settle_above_ceiling_capped`; os 2 testes Postgres não rodam no CI. **R17 será provado pela evidência do §6.3 no
+  smoke de staging** (débito liquidado ≤ cotação e reserva 0), anotada pelo coordenador. P3-6: asserção tautológica trocada.
+  P3-7: fixture R13 agora usa o `A_end.message` bruto do staging.

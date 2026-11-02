@@ -87,7 +87,13 @@ def test_explicit_sell_still_sells(monkeypatch):
 
 @pytest.mark.parametrize(
     "text",
-    ["Posso vender a Tocha?", "Quanto vale a Tocha?", "Me vende a Corda?", "Quanto custa a Corda?", "Me vende uma tocha?"],
+    [
+        "Posso vender a Tocha?",
+        "Quanto vale a Tocha?",
+        "Me vende a Corda?",
+        "Quanto custa a Corda?",
+        "Me vende uma tocha?",
+    ],
 )
 def test_question_never_trades_item(text, no_llm):
     st = _st(text)

@@ -29,7 +29,7 @@ def test_settle_below_ceiling_releases_remainder(image_case, tmp_path):  # noqa:
     assert balance.reserved_milli == 0  # o resto da reserva voltou
 
 
-def test_settle_above_ceiling_rejected(image_case, tmp_path):  # noqa: F811
+def test_settle_above_ceiling_capped(image_case, tmp_path):  # noqa: F811
     c = image_case
     quote = issue(c)
     ceiling = int(quote["credits_milli"])

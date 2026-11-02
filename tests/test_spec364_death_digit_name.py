@@ -113,7 +113,7 @@ def test_killer_is_author_of_final_blow():
     # sem final_blows o primeiro ativo responde; com final_blows vale o autor do golpe
     first = combat._killer_identity(only_goblin, None, ENEMIES)[0]
     blow = combat._killer_identity(active, LAST_OUT, ENEMIES)[0]
-    assert blow != first or blow  # o autor do golpe final e o Minotauro, nao o 1o da lista
+    assert first != blow  # o autor do golpe final (Minotauro), não o 1º ativo (Goblin)
     from services import encounter_manifest as em
 
     assert blow == em.species_label_for(ENEMIES[0])

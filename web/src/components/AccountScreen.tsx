@@ -359,7 +359,7 @@ export function AccountScreen({ onBack, onBalanceChange, lifecycleAvailable, cap
     {!loading && balance && <>
       <section className="account-card" aria-label="Saldo de Estilhas">
         <p className="account-kicker">Saldo disponível</p>
-        <p className="account-balance">{shards(balance.available_milli)} <span>Estilhas</span></p>
+        <p className="account-balance">{shards(balance.available_milli)} <span>{BigInt(balance.available_milli) === 1000n ? "Estilha" : "Estilhas"}</span></p>
         {BigInt(balance.reserved_milli) > 0n && <p>{estilhasLabel(balance.reserved_milli)} reservadas</p>}
         {checkoutLoading ? <p className="muted" role="status">Consultando pacotes de Estilhas…</p>
           : !checkoutAvailable && !isAndroidClient() && <p className="muted">A compra de Estilhas ainda não está disponível.</p>}
