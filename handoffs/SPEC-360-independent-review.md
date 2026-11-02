@@ -92,7 +92,9 @@ Verificado sem achado: nenhum sinal ou rumor cita segredo `hidden`/`secret` (Val
 
 ## Correções aplicadas
 
-Nenhuma (o revisor não edita conteúdo). O autor aplica F-01…F-15 e roda o lint, o `build.py` e o teste de frescor. Depois, o coordenador ou o autor marca `revisao: aprovada` e `revisor_fauna: opus-spec-reviewer` nas 38 entradas. Se o autor divergir de algum P1, rebater neste arquivo.
+Nenhuma pelo revisor (o revisor não edita conteúdo). O autor aplica F-01…F-15 e roda o lint, o `build.py` e o teste de frescor.
+
+**Autor (02/11, rodada de correções):** F-01…F-15 aplicados como pedido, inclusive o F-09 opcional (Víbora: livro do agiota). Uma divergência pontual: no F-12 da Cavadeira, "unha" é token do nome (`Cavadeira de Unhas`, o E10 singulariza), então o `resto` virou "Pontas de dedo quebradas, pretas de terra…". Arquivo renomeado de `SPEC-360-fauna-review-nova_arcadia.md` para este nome (X-01). As 38 entradas seguem `revisao: pendente` até a releitura (o autor não se autoaprova). Detalhe na §9 da spec. Depois, o coordenador ou o autor marca `revisao: aprovada` e `revisor_fauna: opus-spec-reviewer` nas 38 entradas. Se o autor divergir de algum P1, rebater neste arquivo.
 
 ## Pendências
 
