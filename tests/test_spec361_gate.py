@@ -90,9 +90,18 @@ def test_ficha_para_template_sem_numero_do_llm():
     assert t["appearance"] == "Besouro fosco de seis patas finas."
 
 
-def test_schema_rejeita_numero_extra():
+def test_schema_descarta_numero_extra():
+    # chave fora da ficha é descartada antes da validação: o número do LLM nunca entra
+    f = cg.FichaCriaturaGerada(**_ficha_ok(hp=10, aparencia_extra="x"))
+    assert "hp" not in f.model_dump() and "aparencia_extra" not in f.model_dump()
+    assert cg.FichaCriaturaGerada.model_config["extra"] == "forbid"  # schema enviado ao LLM
     with pytest.raises(ValueError):
-        cg.FichaCriaturaGerada(**_ficha_ok(hp=10))
+        cg.FichaCriaturaGerada(**_ficha_ok(material="aco_inox"))  # enum continua fechado
+
+
+def test_schema_enum_quase_certo():
+    f = cg.FichaCriaturaGerada(**_ficha_ok(padrao=["ataque", "move", "voar"], escala="Pequena"))
+    assert f.padrao == ["ataque", "mover"] and f.escala == "pequena"
 
 
 def test_assinatura_da_familia():
@@ -233,12 +242,12 @@ def test_colisao_dupla_fallback_mais_proxima(monkeypatch):
 
 
 def test_prazo_estourado_fallback(monkeypatch):
-    relogio = iter([0.0, 0.0, 7.0, 7.0, 7.0, 7.0])
+    relogio = iter([0.0, 0.0, 9.0, 9.0, 9.0, 9.0])
     monkeypatch.setattr(cg, "_relogio", lambda: next(relogio, 20.0))
     llm = _ScriptLLM([_colidente(), cg.FichaCriaturaGerada(**_ficha_ok())])
     _usar_llm(monkeypatch, llm)
     res = cg.gerar(_p(), lore="")
-    assert len(llm.prompts) == 1  # 7 s > 12 s × 0,5: a 2ª tentativa não começa
+    assert len(llm.prompts) == 1  # faltam 3 s < folga de 3,5 s: a correção não começa
     assert res.caminho == "fallback" and "PRAZO" in res.codigos
 
 
@@ -286,3 +295,41 @@ def test_mock_builder_passa_no_gate():
     a = cg.gerar(_p(), lore="").ficha
     b = cg.gerar(_p(), lore="").ficha
     assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
+
+
+def test_retry_e_correcao_curta(monkeypatch):
+    """R16: a 2ª tentativa pede SÓ os campos que mudam e mescla sobre a ficha anterior."""
+    pedidos = []
+
+    class _LLM:
+        def with_structured_output(self, schema, **_k):
+            pedidos.append(schema.__name__)
+
+            class _B:
+                def invoke(self, messages):
+                    if schema is cg.FichaCriaturaGerada:
+                        return _colidente()
+                    return cg.CorrecaoFicha(
+                        plano_corporal="radial", material="cera_sebo", papel_tatico="suporte"
+                    )
+
+            return _B()
+
+    _usar_llm(monkeypatch, _LLM())
+    res = cg.gerar(_p(), lore="")
+    assert pedidos == ["FichaCriaturaGerada", "CorrecaoFicha"]
+    assert res.caminho == "nova" and res.tentativas == 2
+    anat = res.ficha["anatomia"]
+    assert (anat["plano_corporal"], anat["material"]) == ("radial", "cera_sebo")
+    assert res.ficha["nome"] == "Coro de Quitina"  # o resto da ficha anterior fica
+
+
+def test_reparar_padrao():
+    from services.card_lint import Issue
+
+    ficha = {"id": "x", "padrao": ["ataque", "mover"]}
+    u13 = [Issue("error", "U13", "a/x: padrão + cadência + assinatura iguais")]
+    ok = cg.reparar_padrao(ficha, u13, lambda f: [] if f["padrao"] == ["mover", "ataque"] else u13)
+    assert ok["padrao"] == ["mover", "ataque"]
+    outro = [Issue("error", "U3", "a/x: 4 de 6 eixos iguais")]
+    assert cg.reparar_padrao(ficha, outro, lambda f: []) is None

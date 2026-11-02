@@ -1,7 +1,7 @@
 # SPEC-361 — Criatura gerada em jogo com ficha de Valoria: few-shot, trama, gate U1–U13, variante antes de nova e revisão Opus antes do pool
 
-> **Status:** `approved`
-> **Criada:** 2026-11-01 · **Atualizada:** 2026-11-01
+> **Status:** `in-review`
+> **Criada:** 2026-11-01 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-349 (`approved`, em execução: `services/bestiary_lint.py`, `data/bestiario/fichas/*.yaml`, léxico e enums precisam estar na `main`, condição dura); SPEC-297 (`done`: pool compartilhado); SPEC-332 (baralho de inimigo, padrão e assinatura). SPEC-350 é **opcional**: sem `services/plot_threads.py` ou com `RPG_PLOT_THREADS=off`, o contexto de trama usa só o `campaign_plan` (R9).
 > **Desbloqueia:** SPEC-360 (criaturas vivas no mundo) quando ela quiser criar espécie nova; ondas 2–12 da 349 ganham um consumidor runtime das fichas; retrato de criatura (SPEC-352) passa a receber `appearance` de criatura gerada.
 > **EXECUTOR_MODEL:** `Terra` (Sonnet) no motor, no gate e nos testes. **Opus** escreve o catálogo de modificadores (Etapa 2) e o texto do prompt (Etapa 4). Nunca Fable. **REVIEW_MODEL:** `spec-reviewer` Opus (independente) + `Sol` técnico. **REVIEW_REQUIRED:** `true`.
@@ -93,8 +93,8 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
 - **R11 — Projeção compacta do exemplo.** Cada exemplo entra só com: `nome, familia, origem_lore.fonte/detalhe, anatomia (5 eixos + texto), silhueta, comportamento, papel_tatico, arquetipo, categoria, mecanica_assinatura.frase, contra_jogo, gancho, padrao, telegrafo, aparencia, arte.visual, arte.evitar`. Fica de fora: `lore`, `como_se_luta`, `arte.composicao`, `refs`, `inspiracao`, autoria. Teto de 1 400 chars por exemplo; corte em fim de frase.
 - **R12 — Orçamento do prompt.** System + human ≤ 14 000 chars (~3,5 K tokens pela regra chars/4):
   - regras ≤ 2 500;
-  - lore RAG ≤ 2 500 (`query_rag(..., max_visibility="public", prefer_region=regiao)`);
-  - eixos ocupados da região ≤ 1 500 (R13);
+  - lore RAG ≤ 1 800 (`query_rag(..., max_visibility="public", prefer_region=regiao)`; desvio §9: era 2 500);
+  - eixos ocupados da região ≤ 4 400 (R13, seis eixos por criatura; desvio §9: era 1 500) + `<eixos_livres>`;
   - motivo de trama ≤ 600;
   - exemplos ≤ 2 × 1 400 (o 3º só entra se tudo couber).
 
@@ -116,7 +116,7 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
   - zero dígitos (R20).
 
   Com erro, há **1** nova tentativa: o prompt recebe a ficha anterior compacta + os issues (código, mensagem e nome do vizinho) + "corrija só isto". Errou de novo → **fallback** = `mais_proxima(pedido, regiao, categoria)`: score de R6 sem o modificador, entre as criaturas da região que existem no bestiário. Se a região estiver vazia, vale o fallback atual (`agents/bestiary.py:500-511`), com o nome do núcleo do pedido.
-- **R17 — Prazo do turno.** O caminho `nova` tem prazo total de `RPG_CREATURE_GEN_DEADLINE_S` (default 12 s), contado do início da 1ª chamada. A 2ª tentativa só começa se `elapsed < prazo × 0,5`. Prazo estourado → fallback (R16). Timeout ou `FallbackLLM` → fallback, sem exceção (guard `isinstance(res, FichaCriaturaGerada)`).
+- **R17 — Prazo do turno.** O caminho `nova` tem prazo total de `RPG_CREATURE_GEN_DEADLINE_S` (default 12 s), contado do início da 1ª chamada. A 2ª tentativa é uma correção curta (`CorrecaoFicha`) e só começa se faltar ≥ `RPG_CREATURE_GEN_RETRY_MIN_S` (default 3,5 s) do prazo (desvio §9: era `elapsed < prazo × 0,5`). Prazo estourado → fallback (R16). Timeout ou `FallbackLLM` → fallback, sem exceção (guard `isinstance(res, FichaCriaturaGerada)`).
 - **R18 — Trava de identidade aceita a geração.** Em `agents/combat.py:_grounded_template`, o template com `geracao.pedido == name` (o nome pedido, já sanitizado) é aceito mesmo sem token em comum (fecha P7). Para variante e fallback de R16, vale o mesmo: o template marca `geracao.pedido`.
 - **R19 — Telemetria só com códigos.** `log_event("bestiary", "creature_gen", caminho=..., tentativas=n, codigos=[U2,...], latencia_ms=..., prompt_chars=..., provider=...)`. Nada de pedido, nome nem texto.
 - **R20 — Zero número nos textos gerados.** Nenhum campo de texto da ficha gerada nem da variante resolvida contém dígito (`\d`), nem `+N`/`dN`, nem os termos de `[proibidos]` do léxico de Cartas (que já cobre o jargão mecânico). Números por extenso de anatomia ("duas pernas") são permitidos [D?D6].
@@ -565,21 +565,21 @@ Pré-condição: a 349 na `main` (`services/bestiary_lint.py` e pelo menos `data
 
 ## 5. Critérios de aceite
 
-- [ ] Decisão de caminho determinística, na ordem de R1, com o caso âncora "lacaio mente-colmeia em Zhur" → variante sobre `mon_saltador_de_palafita` (R1–R7)
+- [x] Decisão de caminho determinística, na ordem de R1, com o caso âncora "lacaio mente-colmeia em Zhur" → variante sobre `mon_saltador_de_palafita` (R1–R7)
 - [ ] Catálogo com 12–16 modificadores, lint verde e revisão independente registrada (R5, §3.4)
-- [ ] Variante sem LLM, ≤ 50 ms p95, nunca acima de `elite`, `normalize_bestiary_id` → base (R7, R8)
-- [ ] Prompt em português, ≤ 14 000 chars, com motivo de trama, eixos ocupados e 2–3 exemplos aprovados escolhidos de forma determinística (R9–R13)
-- [ ] `FichaCriaturaGerada` sem campo numérico, com os Literals iguais aos enums da 349 (R14)
-- [ ] Gate U1–U13 (sem U11/U12) com 1 nova tentativa com feedback e fallback para a criatura mais próxima; prazo respeitado (R16, R17)
-- [ ] A trava de identidade aceita a geração (R18)
-- [ ] Zero dígito e zero termo proibido nos textos gerados (R20)
-- [ ] Pool: allowlist, varredura recursiva, `name_origin` honesto, gate do curador, `apply_curator_verdicts`, estados públicos e arte exportada (R21–R28)
-- [ ] `legacy` byte-idêntico; os testes existentes de bestiário, spawn e pool verdes (R29, R30)
+- [x] Variante sem LLM, ≤ 50 ms p95, nunca acima de `elite`, `normalize_bestiary_id` → base (R7, R8)
+- [x] Prompt em português, ≤ 14 000 chars, com motivo de trama, eixos ocupados e 2–3 exemplos aprovados escolhidos de forma determinística (R9–R13)
+- [x] `FichaCriaturaGerada` sem campo numérico, com os Literals iguais aos enums da 349 (R14)
+- [x] Gate U1–U13 (sem U11/U12) com 1 nova tentativa com feedback e fallback para a criatura mais próxima; prazo respeitado (R16, R17)
+- [x] A trava de identidade aceita a geração (R18)
+- [x] Zero dígito e zero termo proibido nos textos gerados (R20)
+- [x] Pool: allowlist, varredura recursiva, `name_origin` honesto, gate do curador, `apply_curator_verdicts`, estados públicos e arte exportada (R21–R28)
+- [x] `legacy` byte-idêntico; os testes existentes de bestiário, spawn e pool verdes (R29, R30)
 - [ ] Eval `depois --real` dentro dos limiares de §3.9 e tabela antes × depois publicada em `docs/spec361/` (R32)
 - [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
-- [ ] Guard de FallbackLLM em todo `with_structured_output` novo (`isinstance` + `try`)
-- [ ] Saves antigos continuam carregando (teste de Etapa 5)
-- [ ] Flags registradas em `config/flags.yaml` (gate da SPEC-340 verde)
+- [x] Guard de FallbackLLM em todo `with_structured_output` novo (`isinstance` + `try`)
+- [x] Saves antigos continuam carregando (teste de Etapa 5)
+- [x] Flags registradas em `config/flags.yaml` (gate da SPEC-340 verde)
 - [ ] Smoke real §6 executado e registrado em §9
 
 ## 6. Smoke test com LLM real
@@ -640,7 +640,47 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo. São ~40 requests
 
 ## 9. Registro de execução
 
-_(vazio — preencher por etapa: sha256 de `spec361_pedidos.yaml`, resultados do eval antes/depois, revisões, smoke)_
+### Execução (executor, 02/11; branch `spec-361` sobre a 349)
+
+**Etapa 0.** `tests/fixtures/spec361_pedidos.yaml` congelado, **sha256 `baf3831005468ebae5d1e8e0237077fad6199aeee90907b8dfcc988d52db6dbc`** (LF; conferido em `tests/test_spec361_eval.py`). Métricas puras em `services/creature_gen_eval.py`. "Antes" real (DeepSeek, `mock=False`): `docs/spec361/eval-antes-2026-11-02.json`. No antes, os itens `forcar: nova` pulam o librarian (senão o gerador antigo nem roda: o librarian casa "fera torta" com uma criatura curada); é o mesmo pedido chegando ao gerador nos dois modos.
+
+**Etapas 1–6.** Entregues como no plano; testes `tests/test_spec361_{eval,gate,variantes,caminho,prompt,integracao,pool}.py`. Catálogo `data/bestiario/modificadores_trama.yaml`: 14 modificadores, autor Opus (este executor). **Revisão independente do catálogo e do prompt: pendente** (spec-reviewer).
+
+**Eval "depois" real** (DeepSeek `deepseek-v4-flash`, `mock=False`), duas rodadas com o mesmo código (`eval-depois-2026-11-02.json` e `…b.json`; tabela em `docs/spec361/eval-antes-x-depois.md`):
+
+| métrica | antes | depois (1ª) | depois (2ª) | limiar |
+|---|---|---|---|---|
+| lint_primeira | — | 63,6 % | 45,5 % | ≥ 70 % |
+| lint_final | — | 100 % | 81,8 % | ≥ 90 % |
+| fallback | — | 0 % | 18,2 % | ≤ 10 % |
+| caminho_ok | — | 100 % | 100 % | 100 % |
+| proibidos / dígitos | 0 / 0 | 0 / 0 | 0 / 0 | 0 |
+| idioma_pt | 100 % | 99,3 % | 100 % | 100 % |
+| físico | 91,7 % | 100 % | 100 % | ≥ 95 % |
+| campos_349 | 0 % | 100 % | 100 % | 100 % |
+| vizinho_max | 0,08 | 0,13 | 0,13 | < 0,45 |
+| latência nova p50 / p95 | 5,7 / 7,7 s | 7,7 / 11,9 s | 7,6 / 12,6 s | p95 ≤ 15 s |
+| latência variante p95 | — | 6 ms | 11 ms | ≤ 50 ms |
+| prompt_chars máx. | — | 13 401 | 13 401 | ≤ 14 000 |
+
+**Limiares não batidos: causa e decisão pedida ao coordenador.** O gargalo é a latência do DeepSeek flash: a ficha tem ~1,1 K tokens de saída em português e cada chamada leva 7–13 s (numa terceira sondagem, fora do eval, 24–32 s). Com o prazo de 12 s (R17), parte das primeiras chamadas estoura (`PRAZO`) e a 2ª tentativa nem sempre cabe. O `idioma_pt` < 1 da 1ª rodada vem de um `nome_ataque` curto ("Abrir a Maré"): "a" está nas duas listas de stopwords do avaliador e o empate conta como não-pt. O avaliador não foi tocado depois das rodadas reais. Opções (não decididas aqui): (a) `RPG_CREATURE_GEN_DEADLINE_S=15` (o limiar de p95 já é 15 s); (b) D1 alternativo (placeholder = mais próxima, ficha nova vale do próximo encontro, fora do Vercel); (c) rota própria para esta chamada (o Groq `gpt-oss-120b` respondeu em 4,3 s, mas o free tier estoura o TPM de 8 000 na 2ª chamada). A última mudança de produto (lista explícita de palavras proibidas no prompt) não foi medida: o DeepSeek estava em 24–32 s por chamada.
+
+**Smoke §6.** Passo 1 = eval acima. Passo 2 coberto offline (`test_spawn_colmeia_zhur_variante`, `test_variante_telegrafa_antes_da_assinatura`: três instâncias da variante e telegrafo uma rodada antes da assinatura com `RPG_ENEMY_DECKS=on`). Passos 2–5 com `uvicorn`, fallback de provedor e pool + revisão Opus: **pendentes** (coordenador).
+
+**Desvios da spec (com motivo):**
+- **R12/R13, repartição do orçamento.** Total de 14 000 mantido; lore 2 500 → 1 800 e eixos ocupados 1 500 → 4 400, porque a lista traz os **seis** eixos (U3 compara seis; com só a tripla, U3 era o erro mais comum no real) e a maior região tem 38 criaturas. A lore é a primeira a encolher quando falta espaço; o 3º exemplo só entra se couber (na maior região, não cabe).
+- **R13, `<eixos_livres>`.** O prompt também traz até 8 combinações dos seis eixos já conferidas contra a região (com folga de 1 eixo), uma por plano corporal, em ordem fixa pela semente do pedido: o tabuleiro antes da prosa do R8 da 349, aplicado em runtime. O lint continua sendo o juiz.
+- **R14, `extra="forbid"` com forma tolerante.** O schema enviado ao LLM é fechado; na resposta, chave desconhecida é **descartada** (não reprova a ficha nem chega ao template) e enum quase certo ("move") vira o do enum ("mover"). Texto acima do teto é cortado em fim de frase. Motivo: no real, 6 de 11 primeiras respostas caíam por `parsing_error`, e o RoutedLLM ainda refazia a chamada, dobrando a latência.
+- **R16/R17, 2ª tentativa curta.** A nova tentativa usa `CorrecaoFicha` (todos os campos opcionais: o LLM devolve só o que muda, mesclado sobre a ficha anterior), com a ficha anterior e os issues no prompt. A regra "só começa se `elapsed < prazo × 0,5`" virou "só começa se faltar ≥ `RPG_CREATURE_GEN_RETRY_MIN_S` (3,5 s)", porque a correção curta cabe nisso e a primeira chamada já passa de 6 s. O prazo é real (a chamada roda numa thread com `timeout`); resposta que chega depois do prazo vira fallback.
+- **R16, reparo determinístico de padrão.** Se o único erro é U13 "padrão + cadência + assinatura iguais", o Python tenta outra ordem dos mesmos slots (e depois um slot a mais) antes de gastar a 2ª tentativa: padrão é mecânica. `lint_primeira` registra o resultado cru, antes do reparo.
+- **R16, fallback `mais_proxima`.** O score de R6 sem o modificador é a chave principal; o desempate é a similaridade com o pedido inteiro (o núcleo de "algo que vive…" é "algo") e a ficha da 349 antes do legado.
+- **R20.** O gate barra também os termos de `[proibidos_nome]` do léxico do bestiário em **todos** os textos (o aceite pede "zero termo proibido"); o prompt lista as palavras. A regra das famílias deixou de citar "sangue de dragão" por extenso (a palavra reprova; a origem fica no enum `dragao`).
+- **R7.** A variante mantém os números curados da base; só rematerializa quando a categoria sobe (`categoria_delta = 1`).
+- **R7, `contagem_min`.** O piso vale no spawn (e a variante entra em `protected`), mas o orçamento do encontro (SPEC-203/287) continua com a última palavra: em perigo 1 o grupo pode cair para dois.
+- **R23, validadores.** Nos documentos de criatura, `categoria`/`arquetipo`/`estilo_ataque`/`region_tags` e os enums da ficha saem da varredura de texto e são validados por forma (`_ID_RE` e enums). Achado: o validador de injeção marca qualquer `snake_case` como injeção, então **todo** documento de criatura antigo (`estilo_ataque: corpo_a_corpo`, `region_tags`) era rejeitado como `injection` no `promote_due`; mais um motivo do P11.
+- **R25.** A entrada que passa no gate fica `HELD` com `aguarda_curador` e `promote_after` empurrado 10 anos (`CURATOR_PARK`), para o job não reavaliá-la a cada rodada; `counts["awaiting_curator"]` só aparece quando há alguma (o dict antigo fica idêntico).
+- **R32, escopo de três métricas.** `fisico`, `campos_349` e `vizinho_max` medem só as criaturas escritas pelo gerador (`nova`; `legacy` no antes): a variante reaproveita o corpo da base por construção. Ajuste feito depois da 1ª rodada **mock** e antes de qualquer rodada real; pedidos e limiares intocados. Revisor: confirmar.
+- **Carga.** As fichas da 349 e o Codex de monstros são lidos com libyaml (`CSafeLoader`) e ficam em cache de processo (o loader puro levava ~5 s a frio). Nomes do bestiário resolvidos por índice de tokens (mesmo resultado de `resolve_bestiary_name`, com teste).
 
 ### Aprovação do dono (02/11)
 

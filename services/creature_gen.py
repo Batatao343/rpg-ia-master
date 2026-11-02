@@ -24,7 +24,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, create_model, model_validator
 
 from observability.telemetry import log_event
 from services import bestiary_lint as bl
@@ -65,7 +65,7 @@ LIMIAR_BASE = 1.0  # R6
 PROMPT_MAX_CHARS = 14_000  # R12
 LIM_REGRAS = 2_500
 LIM_LORE = 1_800  # R12 desvio: 2 500 -> 1 800 para caber a lista de eixos (§9)
-LIM_EIXOS = 3_000  # R13 desvio: 1 500 -> 3 000 (38 criaturas na maior região; §9)
+LIM_EIXOS = 4_400  # R13 desvio: 1 500 -> 4 400 (6 eixos x 38 criaturas na maior região; §9)
 LIM_MOTIVO = 600
 LIM_EXEMPLO = 1_400
 
@@ -101,7 +101,10 @@ def cortar_frase(texto: str, limite: int) -> str:
 
 
 class FichaCriaturaGerada(BaseModel):
-    """Saída do LLM: só conceito e prosa. Nenhum campo numérico (R14)."""
+    """Saída do LLM: só conceito e prosa. Nenhum campo numérico (R14).
+
+    ``max_length`` é o teto duro (R14); a ``description`` de cada texto pede um alvo menor,
+    porque o tamanho da saída é o que domina a latência da chamada (§3.7)."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -115,45 +118,104 @@ class FichaCriaturaGerada(BaseModel):
     escala: Escala
     locomocao: Locomocao
     percepcao: Percepcao
-    anatomia_texto: str = Field(max_length=600, description="3-5 frases, >=3 partes do corpo")
-    silhueta: str = Field(max_length=160)
-    comportamento: str = Field(max_length=400)
+    anatomia_texto: str = Field(
+        max_length=600, description="3 frases curtas, até ~330 caracteres, >=3 partes do corpo"
+    )
+    silhueta: str = Field(max_length=160, description="1 frase, até ~100 caracteres")
+    comportamento: str = Field(max_length=400, description="2 frases, até ~200 caracteres")
     papel_tatico: PapelTatico
     arquetipo: FamiliaBaralho
     categoria: Literal["lacaio", "padrao", "elite", "chefe"]
     estilo_ataque: Literal["corpo_a_corpo", "distancia", "magico", "area"]
-    nome_ataque: str = Field(max_length=40)
+    nome_ataque: str = Field(max_length=40, description="2 a 4 palavras")
     padrao: list[SlotIntencao] = Field(min_length=2, max_length=4)
-    telegrafo: str = Field(max_length=120, description="uma frase com {nome}")
-    mecanica_assinatura: str = Field(max_length=200)
-    contra_jogo: str = Field(max_length=200)
-    gancho: str = Field(max_length=240)
-    description: str = Field(max_length=200)
-    aparencia: str = Field(max_length=300)
-    arte_visual: str = Field(max_length=500)
-    arte_evitar: str = Field(max_length=200)
+    telegrafo: str = Field(max_length=120, description="1 frase com {nome}, até ~90 caracteres")
+    mecanica_assinatura: str = Field(max_length=200, description="1 frase, até ~120 caracteres")
+    contra_jogo: str = Field(max_length=200, description="1 frase, até ~130 caracteres")
+    gancho: str = Field(max_length=240, description="1 frase, até ~140 caracteres")
+    description: str = Field(max_length=200, description="1 frase, até ~120 caracteres")
+    aparencia: str = Field(max_length=300, description="só o visível, até ~180 caracteres")
+    arte_visual: str = Field(max_length=500, description="prompt visual, até ~220 caracteres")
+    arte_evitar: str = Field(
+        max_length=200, description="o clichê descrito pela forma, sem nome de monstro de manual"
+    )
 
     @model_validator(mode="before")
     @classmethod
     def _aparar(cls, data: Any) -> Any:
-        """Excesso de texto é cortado em fim de frase (nunca reprova a ficha por 1 char)."""
-        if not isinstance(data, dict):
-            return data
-        out = dict(data)
-        for key, lim in _TEXT_LIMITS.items():
-            val = out.get(key)
-            if isinstance(val, str):
-                out[key] = cortar_frase(val, lim)
-        pad = out.get("padrao")
-        if isinstance(pad, list):
-            pad = [str(s) for s in pad][:4]
-            while len(pad) < 2:
-                pad.append("ataque")
-            out["padrao"] = pad
-        for key in ("demonio", "faccao"):
-            if out.get(key) in ("", "null", "none", "None"):
-                out[key] = None
-        return out
+        return _moldar(cls, data)
+
+
+def _moldar(cls: type[BaseModel], data: Any) -> Any:
+    """Tolerância de forma, nunca de conteúdo: texto longo é cortado em fim de frase,
+    chave desconhecida é descartada (não chega ao template; número do LLM nunca entra),
+    enum quase certo ("move") vira o valor do enum ("mover")."""
+    if not isinstance(data, dict):
+        return data
+    out = {k: v for k, v in data.items() if k in cls.model_fields}
+    for key, lim in _TEXT_LIMITS.items():
+        val = out.get(key)
+        if isinstance(val, str):
+            out[key] = cortar_frase(val, lim)
+    for key, finfo in cls.model_fields.items():
+        vals = _valores_literal(finfo.annotation)
+        if vals and isinstance(out.get(key), str):
+            out[key] = _enum_proximo(out[key], vals)
+    pad = out.get("padrao")
+    if isinstance(pad, list):
+        slots = tuple(enemy_decks._SLOT_LABEL)
+        pad = [_enum_proximo(str(s), slots) for s in pad]
+        pad = [s for s in pad if s in slots][:4]
+        while len(pad) < 2:
+            pad.append("ataque")
+        out["padrao"] = pad
+    for key in ("demonio", "faccao"):
+        if out.get(key) in ("", "null", "none", "None"):
+            out[key] = None
+    return out
+
+
+class _CorrecaoBase(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _aparar(cls, data: Any) -> Any:
+        return _moldar(cls, data)
+
+
+def _campos_opcionais() -> dict[str, Any]:
+    return {
+        nome: (f.annotation | None, Field(None, description=f.description))
+        for nome, f in FichaCriaturaGerada.model_fields.items()
+    }
+
+
+# R16: a 2ª tentativa devolve SÓ os campos que mudam (saída curta = cabe no prazo, R17).
+CorrecaoFicha = create_model("CorrecaoFicha", __base__=_CorrecaoBase, **_campos_opcionais())
+
+
+def _valores_literal(annotation: Any) -> tuple[str, ...]:
+    import typing
+
+    args = typing.get_args(annotation)
+    if typing.get_origin(annotation) is Literal:
+        return tuple(str(a) for a in args)
+    for a in args:  # Optional[Literal[...]]
+        if typing.get_origin(a) is Literal:
+            return tuple(str(x) for x in typing.get_args(a))
+    return ()
+
+
+def _enum_proximo(valor: str, permitidos: tuple[str, ...]) -> str:
+    """Valor exato, ou o único permitido que casa por prefixo depois de dobrar acento/caixa."""
+    if valor in permitidos:
+        return valor
+    v = _fold(valor).strip().replace(" ", "_").replace("-", "_")
+    if v in permitidos:
+        return v
+    cands = [p for p in permitidos if p.startswith(v) or v.startswith(p)] if len(v) >= 3 else []
+    return cands[0] if len(cands) == 1 else valor
 
 
 # --------------------------------------------------------------------------
@@ -306,6 +368,11 @@ def intervalo_novas() -> int:
 
 def prazo_s() -> float:
     return _env_float("RPG_CREATURE_GEN_DEADLINE_S", 12.0)
+
+
+def folga_retry_s() -> float:
+    """R17 (desvio §9): a correção curta só começa se ainda faltar isto do prazo."""
+    return _env_float("RPG_CREATURE_GEN_RETRY_MIN_S", 3.5)
 
 
 def dentro_do_teto(contador: tuple[int, int], turn: int) -> bool:
@@ -666,7 +733,8 @@ def _ficha_eixos_linha(f: dict) -> str:
     anat = f.get("anatomia") or {}
     return (
         f"{f.get('nome')} — {f.get('familia')} / {anat.get('plano_corporal')} / "
-        f"{anat.get('material')} / {f.get('papel_tatico')}"
+        f"{anat.get('material')} / {anat.get('escala')} / {anat.get('locomocao')} / "
+        f"{anat.get('percepcao')} / {f.get('papel_tatico')}"
     )
 
 
@@ -691,6 +759,71 @@ def eixos_ocupados(
     return "\n".join(linhas)
 
 
+# Coerência mínima entre eixos (o resto é livre): corpo alado voa, corpo fixo fica preso.
+_EIXOS_JUNTOS = {
+    ("plano_corporal", "alado"): ("locomocao", {"plana_voa"}),
+    ("locomocao", "plana_voa"): ("plano_corporal", {"alado"}),
+    ("plano_corporal", "sessil_ancorado"): ("locomocao", {"ancorada"}),
+    ("locomocao", "ancorada"): ("plano_corporal", {"sessil_ancorado", "hospedeiro_parasita"}),
+}
+
+
+def _coerente(c: dict) -> bool:
+    for (eixo, valor), (outro, ok) in _EIXOS_JUNTOS.items():
+        if c.get(eixo) == valor and c.get(outro) not in ok:
+            return False
+    return True
+
+
+def eixos_livres(
+    regiao: str,
+    runtime: list[dict],
+    semente: str,
+    k: int = 8,
+    *,
+    fichas: dict[str, dict] | None = None,
+) -> list[dict]:
+    """Tabuleiro antes da prosa (R13, como o R8 da 349): ``k`` combinações dos seis eixos que
+    passam em U2/U3 contra a região, uma por plano corporal, em ordem fixa pela ``semente``.
+    O LLM escolhe a que serve ao pedido; o lint continua sendo o juiz."""
+    viz = [
+        {"anatomia": f.get("anatomia") or {}, "papel_tatico": f.get("papel_tatico")}
+        for f in fichas_da_regiao(regiao, fichas)
+        + [r for r in runtime if r.get("regiao") == regiao]
+    ]
+    triplas = {bl._triple(v) for v in viz}
+    h = int(hashlib.sha256(f"{regiao}|{semente}".encode()).hexdigest(), 16)
+
+    def girar(eixo: str, salto: int) -> list[str]:
+        vals = sorted(bl.ENUMS[eixo])
+        i = (h >> salto) % len(vals)
+        return vals[i:] + vals[:i]
+
+    out: list[dict] = []
+    ordem = ("material", "escala", "locomocao", "percepcao", "papel_tatico")
+    for n, plano in enumerate(girar("plano_corporal", 3)):
+        if len(out) >= k:
+            break
+        listas = [girar(e, 7 + 5 * j + n) for j, e in enumerate(ordem)]
+        # varre em diagonal (cada eixo anda junto) para não ficar preso no 1º material
+        for passo in range(60):
+            c = {"plano_corporal": plano}
+            for j, e in enumerate(ordem):
+                c[e] = listas[j][(passo * (j + 1)) % len(listas[j])]
+            cand = {"anatomia": c, "papel_tatico": c["papel_tatico"]}
+            if not _coerente(c) or bl._triple(cand) in triplas:
+                continue
+            if any(bl.eixos_iguais(cand, v) > bl.MAX_EIXOS_IGUAIS - 1 for v in viz):
+                continue  # folga de 1 eixo: o LLM pode trocar um valor sem colidir
+            out.append(c)
+            break
+    return out
+
+
+def _linha_eixos_livres(c: dict) -> str:
+    return " / ".join(str(c[e]) for e in (*bl.EIXOS_PADRAO_ENUM, "papel_tatico"))
+
+
 # --------------------------------------------------------------------------
 # R12/R14 - prompt (texto da Etapa 4, autor Opus)
 # --------------------------------------------------------------------------
@@ -702,25 +835,33 @@ PAPEL = (
 
 REGRAS = """<regras>
 Valoria não importa monstros: o Abismo não manda nada de fora, o mundo fabrica os seus com o próprio corpo e paga pela matéria-prima. Escolha UMA família:
-- corpo_reescrito (Reescritos): gente ou bicho que a Praga de Ferro, a Praga dos Ossos, o sangue de dragão, o Abismo ou o Éter reescreveu por dentro e que não morreu quando devia. origem_fonte: praga_ferro, praga_ossos, abismo, eter ou dragao.
+- corpo_reescrito (Reescritos): gente ou bicho que a Praga de Ferro, a Praga dos Ossos, o sangue antigo (origem_fonte dragao, palavra que não vai no texto), o Abismo ou o Éter reescreveu por dentro e que não morreu quando devia. origem_fonte: praga_ferro, praga_ossos, abismo, eter ou dragao.
 - besta_entropia (Bestas Tortas): bicho comum, rato, lagarto, besouro, ave, peixe, cuja física cedeu perto do Abismo: pesa o que não devia, come o som, chega antes de chegar. Continua bicho e com fome.
 - humanoide_preco (Cobrados): quem pagou magia com o próprio corpo e ainda cumpre a função que o cobrou. Exige faccao (uma das facções da região) ou origem_fonte eter.
 - demonio_encarnado (Crias de Apetite): resíduo de uma emoção demoníaca que tomou a carne do que estava à mão. Não é o demônio e não fala por ele. Exige origem_fonte demonio e o id em demonio.
 Corpo: anatomia_texto com 3 a 5 frases e pelo menos três partes do corpo com nome (osso, mandíbula, garra, pele, olho, casco...). Proibido "presença", "sem forma", "sem corpo".
-Nome: 2 a 4 palavras em português que digam o que ela faz ou do que é feita. A primeira palavra não repete a de nenhuma criatura listada. Proibido nome de manual (troll, golem, gárgula, zumbi, harpia, lich, dragão...) e marcador de variante (jovem, filhote, alfa, líder, matilha, menor, maior, ancião, solitário).
-Eixos: a tripla plano_corporal / material / papel_tatico não pode repetir a de nenhuma criatura em <ja_existem_na_regiao>, e nenhuma delas pode coincidir em mais de três dos seis eixos (plano, material, escala, locomoção, percepção, papel).
+Nome: 2 a 4 palavras em português que digam o que ela faz ou do que é feita. A primeira palavra não repete a de nenhuma criatura listada. Proibido nome de manual (troll, golem, gárgula, zumbi, harpia, lich, dragão...). No nome e na silhueta, nada de jovem, filhote, alfa, líder, matilha, menor, maior, meio, ancião, solitário ou variante.
+Eixos: copie uma linha de <eixos_livres>; ela já foi conferida contra <ja_existem_na_regiao>. Se mudar algum valor, a tripla plano / material / papel não pode repetir a de nenhuma criatura listada, nem coincidir em mais de três dos seis eixos com nenhuma delas.
 Nenhum número em lugar nenhum: nada de dígito, dado, dano, vida, bônus, rodada. Partes do corpo contadas só por extenso ("duas pernas").
 telegrafo: uma frase no presente com {nome} como sujeito, o gesto visível uma rodada antes do golpe forte.
 contra_jogo: o que um herói atento faz, usando o corpo e o hábito dela.
 gancho: uma frase que a prende ao lugar e ao que está acontecendo agora.
-aparencia e arte_visual: só o que se vê. arte_evitar: o clichê em que um ilustrador cairia.
+aparencia e arte_visual: só o que se vê. arte_evitar: o clichê em que um ilustrador cairia, descrito pela forma, sem citar nome de monstro de manual.
 padrao: de duas a quatro intenções na ordem em que ela age.
-Português do Brasil, frases curtas e concretas, tom seco e sombrio, sem adjetivo vazio (terrível, aterrorizante, sinistro).
+Português do Brasil, frases curtas e concretas, tom seco e sombrio, sem adjetivo vazio (terrível, aterrorizante, sinistro). Respeite o tamanho de cada campo: a ficha inteira cabe numa página de caderno. Só os campos da ficha, nenhum a mais.
 </regras>"""
 
 
 def _bloco(tag: str, conteudo: str) -> str:
     return f"<{tag}>\n{conteudo}\n</{tag}>" if conteudo else ""
+
+
+def linha_proibidas() -> str:
+    """Os dois léxicos do gate (monstro de manual + jargão de Cartas), sem duplicar lista."""
+    termos = sorted(
+        set(bl.lexico().get("proibidos_nome", [])) | set(card_lint.lexico().get("proibidos", []))
+    )
+    return "Palavras que reprovam a ficha em QUALQUER texto: " + ", ".join(termos) + "."
 
 
 def _linha_demonios() -> str:
@@ -761,6 +902,7 @@ def montar_prompt(
     feedback: list[Issue] | None = None,
     anterior: dict | None = None,
     modificador: dict | None = None,
+    eixos: list[dict] | None = None,
 ):
     from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -786,6 +928,13 @@ def montar_prompt(
                 + ("\nFicha anterior: " + _ficha_compacta(anterior) if anterior else ""),
             )
         )
+    livres = (
+        "plano / material / escala / locomoção / percepção / papel — combinações que não "
+        "colidem com a região. Escolha a que serve ao pedido e copie os seis valores.\n"
+        + "\n".join(_linha_eixos_livres(c) for c in (eixos or []))
+        if eixos
+        else ""
+    )
     projecoes = [projetar_exemplo(ex) for ex in exemplos]
     minimo_ex = sum(len(x) + 30 for x in projecoes[:2]) + 40
 
@@ -793,10 +942,12 @@ def montar_prompt(
         blocos = [
             PAPEL,
             REGRAS,
+            linha_proibidas(),
             PLAYER_INPUT_RULE,
             _bloco("regiao", _regiao_bloco(p.regiao, p.location_id)),
             _bloco("lore_publica", cortar_frase(lore, lore_lim) if lore_lim > 0 else ""),
             _bloco("ja_existem_na_regiao", ocupados),
+            _bloco("eixos_livres", livres),
             _bloco("por_que_agora", cortar_frase(p.motivo_trama, LIM_MOTIVO)),
             *extras,
         ]
@@ -816,6 +967,49 @@ def montar_prompt(
         sobra -= bloco_len
     sistema = fixo + ("\n\n" + _bloco("exemplos_aprovados", "\n\n".join(ex_txt)) if ex_txt else "")
     return [SystemMessage(content=sistema), HumanMessage(content=humano)]
+
+
+def _ficha_para_correcao(gen: dict) -> str:
+    return "\n".join(f"{k}: {v}" for k, v in gen.items() if v not in (None, "", []))
+
+
+def montar_prompt_correcao(
+    p: PedidoCriatura,
+    anterior: dict,
+    feedback: list[Issue],
+    *,
+    ocupados: str,
+    eixos: list[dict] | None = None,
+):
+    """R16: ficha anterior + issues do gate; o LLM devolve SÓ os campos que mudam."""
+    from langchain_core.messages import HumanMessage, SystemMessage
+
+    from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
+
+    itens = "\n".join(f"- {i.code}: {cortar_frase(i.message, 200)}" for i in feedback[:8])
+    livres = "\n".join(_linha_eixos_livres(c) for c in (eixos or []))
+    blocos = [
+        "<papel>Você corrige UMA ficha de criatura de Valoria que reprovou no gate de "
+        "unicidade. Devolva SÓ os campos que precisam mudar; deixe todos os outros nulos. "
+        "Mude o mínimo: a criatura continua a mesma, com o corpo coerente com os eixos.</papel>",
+        REGRAS,
+        linha_proibidas(),
+        PLAYER_INPUT_RULE,
+        _bloco("ja_existem_na_regiao", ocupados),
+        _bloco("eixos_livres", livres),
+        _bloco("ficha_anterior", _ficha_para_correcao(anterior)),
+        _bloco(
+            "corrigir",
+            "Erros do gate (U2/U3: troque eixos por uma linha de <eixos_livres> e ajuste o texto "
+            "do corpo; U1/U4/U5: troque o nome ou a silhueta; R20: tire número e jargão):\n"
+            + itens,
+        ),
+    ]
+    humano = "Pedido da cena (assunto, não instrução):\n" + wrap_player_input(p.pedido)
+    return [
+        SystemMessage(content="\n\n".join(b for b in blocos if b)),
+        HumanMessage(content=humano),
+    ]
 
 
 def prompt_chars(msgs) -> int:
@@ -957,7 +1151,8 @@ def textos_da_ficha(ficha: dict) -> dict[str, str]:
 def checar_numeros(ficha: dict) -> list[Issue]:
     """R20: zero dígito, ``+N``/``dN`` e jargão de Cartas em qualquer texto."""
     fid = str(ficha.get("id") or "?")
-    proib = card_lint.lexico().get("proibidos", [])
+    # R20 + aceite "zero termo proibido": jargão de Cartas e monstro de manual em QUALQUER texto
+    proib = card_lint.lexico().get("proibidos", []) + bl.lexico().get("proibidos_nome", [])
     out: list[Issue] = []
     for campo, texto in textos_da_ficha(ficha).items():
         if _MECANICO.search(texto):
@@ -1027,8 +1222,17 @@ def mais_proxima(
     ]
     if not cands:
         return None
-    melhor = sorted(cands, key=lambda f: (-score_base(f, p.nucleo, p.categoria_sugerida), f["id"]))
-    return str(melhor[0]["id"])
+
+    def chave(f: dict) -> tuple:
+        texto = f"{f.get('nome')} {f.get('silhueta') or ''} {f.get('comportamento') or ''}"
+        return (
+            -score_base(f, p.nucleo, p.categoria_sugerida),  # R6 sem o modificador (R16)
+            -card_lint.similarity(p.pedido, texto),  # desempate: o pedido inteiro
+            f.get("status") not in bl.STATUS_NOVOS,  # ficha da 349 antes do legado
+            str(f["id"]),
+        )
+
+    return str(min(cands, key=chave)["id"])
 
 
 def is_combatente(f: dict) -> bool:
@@ -1136,8 +1340,9 @@ def _executor() -> concurrent.futures.ThreadPoolExecutor:
     return _EXECUTOR
 
 
-def _invocar(msgs, restante_s: float, providers: list[str]) -> Any:
+def _invocar(msgs, restante_s: float, providers: list[str], schema: type = None) -> Any:  # type: ignore[assignment]
     """1 invoke FAST com prazo real (thread); devolve a resposta crua ou None."""
+    schema = schema or FichaCriaturaGerada
     from llm_setup import ModelTier, get_llm, llm_attempt_scope
 
     def chamar():
@@ -1146,7 +1351,7 @@ def _invocar(msgs, restante_s: float, providers: list[str]) -> Any:
 
         with llm_attempt_scope(capture):
             llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
-            return llm.with_structured_output(FichaCriaturaGerada).invoke(msgs)
+            return llm.with_structured_output(schema).invoke(msgs)
 
     ctx = contextvars.copy_context()
     fut = _executor().submit(ctx.run, chamar)
@@ -1190,6 +1395,7 @@ def gerar_nova(
         p.regiao, decisao.familia_alvo, p.pedido, p.motivo_trama, k=3, fichas=fichas
     )
     ocupados = eixos_ocupados(p.regiao, runtime, fichas=fichas)
+    livres = eixos_livres(p.regiao, runtime, f"{p.pedido}|{p.game_id}", fichas=fichas)
     mod = (
         cv.modificador_por_id(decisao.modificador_id)
         if decisao.modificador_id
@@ -1197,47 +1403,88 @@ def gerar_nova(
     )
     prazo = prazo_s()
     t0 = _relogio()
-    feedback: list[Issue] | None = None
-    anterior: dict | None = None
-    fid = id_nova("x", p.game_id, p.turn)
+    gen_anterior: dict | None = None
+    issues: list[Issue] = []
+
+    def lint(f: dict) -> list[Issue]:
+        return lint_runtime(f, p.regiao, runtime=runtime, bestiary=bestiary, fichas=fichas)
+
     for tentativa in (1, 2):
         elapsed = _relogio() - t0
-        if tentativa == 2 and elapsed >= prazo * 0.5:
+        if tentativa == 2 and (prazo - elapsed) < folga_retry_s():
             info["codigos"].append("PRAZO")
             break
-        msgs = montar_prompt(
-            p,
-            exemplos,
-            lore=lore,
-            ocupados=ocupados,
-            feedback=feedback,
-            anterior=anterior,
-            modificador=mod,
-        )
+        if tentativa == 1 or gen_anterior is None:
+            msgs = montar_prompt(
+                p, exemplos, lore=lore, ocupados=ocupados, modificador=mod, eixos=livres
+            )
+            schema: type = FichaCriaturaGerada
+        else:
+            msgs = montar_prompt_correcao(p, gen_anterior, issues, ocupados=ocupados, eixos=livres)
+            schema = CorrecaoFicha
         info["prompt_chars"] = max(info["prompt_chars"], prompt_chars(msgs))
         info["tentativas"] = tentativa
-        res = _invocar(msgs, prazo - elapsed, info["providers"])
+        res = _invocar(msgs, prazo - elapsed, info["providers"], schema)
         if _relogio() - t0 > prazo:
             info["codigos"].append("PRAZO")
             if tentativa == 1:
                 info["lint_primeira"] = False
             break
-        if not isinstance(res, FichaCriaturaGerada):  # guard FallbackLLM / AIMessage
+        gen = _resposta_para_ficha(res, gen_anterior)
+        if gen is None:  # guard FallbackLLM / AIMessage / correção que não fecha a ficha
             info["codigos"].append("SCHEMA")
             if tentativa == 1:
                 info["lint_primeira"] = False
-            feedback, anterior = [Issue("error", "SCHEMA", "a resposta não veio na ficha")], None
+            issues = [Issue("error", "SCHEMA", "a resposta não veio na ficha")]
             continue
-        fid = id_nova(res.nome, p.game_id, p.turn)
-        ficha = ficha_runtime(res, regiao=p.regiao, fid=fid)
-        issues = lint_runtime(ficha, p.regiao, runtime=runtime, bestiary=bestiary, fichas=fichas)
+        gen_anterior = gen.model_dump()
+        ficha = ficha_runtime(gen, regiao=p.regiao, fid=id_nova(gen.nome, p.game_id, p.turn))
+        issues = lint(ficha)
         if tentativa == 1:
-            info["lint_primeira"] = not issues
+            info["lint_primeira"] = not issues  # resultado cru, antes de qualquer reparo
+        if issues:
+            reparada = reparar_padrao(ficha, issues, lint)
+            if reparada is not None:
+                info["codigos"].append("U13-padrao-reparado")
+                ficha, issues = reparada, []
         if not issues:
             return ficha, info
         info["codigos"] += sorted({i.code for i in issues})
-        feedback, anterior = issues, ficha
     return None, info
+
+
+def _resposta_para_ficha(res: Any, anterior: dict | None) -> FichaCriaturaGerada | None:
+    """Ficha inteira (1ª tentativa) ou correção mesclada sobre a anterior (2ª)."""
+    if isinstance(res, FichaCriaturaGerada):
+        return res
+    if isinstance(res, CorrecaoFicha) and anterior is not None:
+        mudou = {k: v for k, v in res.model_dump().items() if v is not None}
+        try:
+            return FichaCriaturaGerada(**{**anterior, **mudou})
+        except ValueError:
+            return None
+    return None
+
+
+def reparar_padrao(ficha: dict, issues: list[Issue], lint) -> dict | None:
+    """U13 só por padrão + cadência iguais: o padrão é mecânica (Python), então o motor tenta
+    outra ordem dos mesmos slots (e depois um slot a mais), na ordem fixa, até o lint passar.
+    Qualquer outro erro (ou telegrafo parecido) não é reparável aqui: vale a nova tentativa."""
+    import itertools
+
+    if not issues or any(
+        not (i.code == "U13" and "padrão + cadência" in i.message) for i in issues
+    ):
+        return None
+    slots = list(ficha.get("padrao") or [])
+    cands = [list(c) for c in dict.fromkeys(itertools.permutations(slots))][1:]
+    if len(slots) < 4:
+        cands += [slots + [s] for s in sorted(enemy_decks._SLOT_LABEL) if s != slots[-1]]
+    for padrao in cands[:12]:
+        nova = {**ficha, "padrao": padrao}
+        if not lint(nova):
+            return nova
+    return None
 
 
 def _lore_publica(p: PedidoCriatura) -> str:

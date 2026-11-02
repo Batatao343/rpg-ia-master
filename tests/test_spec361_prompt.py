@@ -32,17 +32,23 @@ def _prompt(p, k=3, lore="Lore pública da região. " * 300, **kw):
 
 
 def test_prompt_orcamento():
+    # maior região, k=3: o teto vale e o 3º exemplo cai quando não cabe (R12)
     msgs, ex = _prompt(_p())
     assert len(ex) == 3
     assert cg.prompt_chars(msgs) <= cg.PROMPT_MAX_CHARS
-    assert len(cg.REGRAS) + len(cg.PAPEL) <= cg.LIM_REGRAS + 400
-    # com o feedback grande, o 3º exemplo cai, e o total continua no teto
+    assert msgs[0].content.count("[exemplo ") == 2
+    assert len(cg.REGRAS) + len(cg.PAPEL) <= cg.LIM_REGRAS + 600
+    # região pequena e sem lore: os três cabem
+    pequeno, _ = _prompt(_p(regiao="aethelgard", motivo_trama="Arco curto."), lore="")
+    assert pequeno[0].content.count("[exemplo ") == 3
+    assert cg.prompt_chars(pequeno) <= cg.PROMPT_MAX_CHARS
+    # feedback grande: a lore encolhe primeiro, o total continua no teto e os dois exemplos ficam
     from services.card_lint import Issue
 
     issues = [Issue("error", "U2", "x" * 900) for _ in range(8)]
     msgs2, _ = _prompt(_p(), feedback=issues)
     assert cg.prompt_chars(msgs2) <= cg.PROMPT_MAX_CHARS
-    assert msgs2[0].content.count("[exemplo ") < msgs[0].content.count("[exemplo ")
+    assert msgs2[0].content.count("[exemplo ") == 2
 
 
 def test_prompt_pt_sem_ingles():
@@ -75,8 +81,8 @@ def test_prompt_lista_eixos_ocupados():
     s = msgs[0].content
     assert "<ja_existem_na_regiao>" in s
     assert (
-        "Saltador de Palafita — besta_entropia / bipede_curvado / vidro_cristal / batedor_rapido"
-        in s
+        "Saltador de Palafita — besta_entropia / bipede_curvado / vidro_cristal / pequena / "
+        "salta / som / batedor_rapido" in s
     )
     runtime = [
         {

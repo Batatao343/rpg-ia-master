@@ -1,0 +1,288 @@
+{
+ "spec": "SPEC-361",
+ "modo": "antes",
+ "real": true,
+ "mock": false,
+ "data": "2026-11-02",
+ "arquivo": "docs/spec361/eval-antes-2026-11-02.json",
+ "pedidos_sha256": "baf3831005468ebae5d1e8e0237077fad6199aeee90907b8dfcc988d52db6dbc",
+ "providers": [
+  "deepseek/deepseek-v4-flash"
+ ],
+ "metricas": {
+  "n": 14,
+  "n_nova": 11,
+  "n_auto": 3,
+  "proibidos": 0,
+  "digitos": 0,
+  "idioma_pt": 1.0,
+  "fisico": 0.9167,
+  "campos_349": 0.0,
+  "vizinho_max": 0.0833,
+  "latencia_nova_p50_ms": 5658,
+  "latencia_nova_p95_ms": 7680,
+  "latencia_variante_p95_ms": 0.0,
+  "prompt_chars": 0
+ },
+ "limiares_ok": null,
+ "registros": [
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Enxame de Mentes-Colmeia",
+    "Não é um bicho, é um acordo. Pequenos artrópodes de carapaça translúcida, do tamanho de uma falange, que os Devoradores de Sol chamam de \"areia que pensa\". Isolados, são inofensivos e quase indistinguíveis dos detritos do deserto — mas quando um deles encontra outro, algo se acende entre eles: uma única vontade distribuída por centenas de corpos, sem rainha, sem centro, sem ponto de corte. É por isso que os sobreviventes das caravanas descrevem o ataque como \"todos ao mesmo tempo\": não há frente, não há flanco, não há líder a abater. Cada indivíduo sabe exatamente onde os outros estão, e nenhum deles teme a morte, porque a morte de um é apenas a perda de uma célula.\n\nOs Devoradores de Sol, que leem abutres como mapa, leem este enxame como uma lição que não pediram: uma inteligência que não constrói sistemas, apenas resolve o problema mais simples possível — cobrir o alvo, todo de uma vez, e esperar. Não perseguem por rancor nem por fome. Perseguem porque a presa está lá e o cálculo é trivial. O que os deixa genuinamente inquietos é que o enxame parece aprender: cada caravana perdida ensinou algo ao próximo ataque, e ninguém sabe onde essa memória fica guardada.\n\nFlavor: quando o enxame se move, o som é de chuva fina sobre pedra — e os viajantes experientes do deserto sabem que não chove em Valoria.",
+    "Mordida Coletiva"
+   ],
+   "anatomia": "Não é um bicho, é um acordo. Pequenos artrópodes de carapaça translúcida, do tamanho de uma falange, que os Devoradores de Sol chamam de \"areia que pensa\". Isolados, são inofensivos e quase indistinguíveis dos detritos do deserto — mas quando um deles encontra outro, algo se acende entre eles: uma única vontade distribuída por centenas de corpos, sem rainha, sem centro, sem ponto de corte. É por isso que os sobreviventes das caravanas descrevem o ataque como \"todos ao mesmo tempo\": não há frente, não há flanco, não há líder a abater. Cada indivíduo sabe exatamente onde os outros estão, e nenhum deles teme a morte, porque a morte de um é apenas a perda de uma célula.\n\nOs Devoradores de Sol, que leem abutres como mapa, leem este enxame como uma lição que não pediram: uma inteligência que não constrói sistemas, apenas resolve o problema mais simples possível — cobrir o alvo, todo de uma vez, e esperar. Não perseguem por rancor nem por fome. Perseguem porque a presa está lá e o cálculo é trivial. O que os deixa genuinamente inquietos é que o enxame parece aprender: cada caravana perdida ensinou algo ao próximo ataque, e ninguém sabe onde essa memória fica guardada.\n\nFlavor: quando o enxame se move, o som é de chuva fina sobre pedra — e os viajantes experientes do deserto sabem que não chove em Valoria.",
+   "ficha": null,
+   "latencia_ms": 22386,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Enxame de Mentes-Colmeia",
+   "id": "zhur_colmeia_auto",
+   "forcar": "auto",
+   "caminho_esperado": "variante",
+   "regiao": "deserto_zhur"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Enxame de Vidraças",
+    "Não é um animal: é uma decisão coletiva. Centenas de pequenos corpos translúcidos, do tamanho de uma falange, que se movem como se um único pensamento os atravessasse — porque atravessa. Não há rainha, não há ninho visível, não há líder a quem cortar a cabeça. Há apenas o enxame, e o enxame já decidiu antes de qualquer Devorador de Sol conseguir ler o vento.\n\nO que os sobreviventes das três caravanas descrevem não é ferocidade, é sincronia. Ninguém é atacado primeiro. Todos são atacados no mesmo instante, cada pessoa coberta por exatamente tantos bichos quantos bastam para derrubá-la, e nem um a mais. Os Devoradores de Sol, que entendem o sofrimento alheio como informação, reconhecem no enxame algo perturbadoramente familiar: ele testa, mede, distribui esforço com frieza cirúrgica. É a mesma eficiência deles, sem nenhum deles dentro.\n\nQuando um corpo cai, o enxame não se dispersa — recua em ondas, reorganiza-se, e passa a observar os que restam. Há quem jure que os vidraços ficam pairando na altura dos olhos de quem ainda respira, à espera de saber se vale a pena. É essa pausa que assusta mais do que a mordida.",
+    "Mordida Uníssona"
+   ],
+   "anatomia": "Não é um animal: é uma decisão coletiva. Centenas de pequenos corpos translúcidos, do tamanho de uma falange, que se movem como se um único pensamento os atravessasse — porque atravessa. Não há rainha, não há ninho visível, não há líder a quem cortar a cabeça. Há apenas o enxame, e o enxame já decidiu antes de qualquer Devorador de Sol conseguir ler o vento.\n\nO que os sobreviventes das três caravanas descrevem não é ferocidade, é sincronia. Ninguém é atacado primeiro. Todos são atacados no mesmo instante, cada pessoa coberta por exatamente tantos bichos quantos bastam para derrubá-la, e nem um a mais. Os Devoradores de Sol, que entendem o sofrimento alheio como informação, reconhecem no enxame algo perturbadoramente familiar: ele testa, mede, distribui esforço com frieza cirúrgica. É a mesma eficiência deles, sem nenhum deles dentro.\n\nQuando um corpo cai, o enxame não se dispersa — recua em ondas, reorganiza-se, e passa a observar os que restam. Há quem jure que os vidraços ficam pairando na altura dos olhos de quem ainda respira, à espera de saber se vale a pena. É essa pausa que assusta mais do que a mordida.",
+   "ficha": null,
+   "latencia_ms": 6812,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Enxame de Vidraças",
+   "id": "zhur_colmeia_nova",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "deserto_zhur"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Verme-de-Odre",
+    "Uma criatura pálida e translúcida que habita o interior de odres de água estragada, alimentando-se da matéria em decomposição e do Éter que se acumula no líquido parado. Não tem olhos nem boca visíveis — apenas uma massa segmentada que se contorce lentamente, quase invisível contra a água turva. Quando o odre é aberto, o verme se derrama junto com o líquido, e quem bebe sem perceber engole-o vivo. Dentro de um corpo, ele se enrosca e cresce, e a vítima passa a sentir sede constante, como se nada jamais a saciasse. Viajantes experientes sempre cheiram e examinam a água antes de beber; os que não o fazem costumam descobrir o verme tarde demais, quando ele já se acomodou.",
+    "Engolir Vivo"
+   ],
+   "anatomia": "Uma criatura pálida e translúcida que habita o interior de odres de água estragada, alimentando-se da matéria em decomposição e do Éter que se acumula no líquido parado. Não tem olhos nem boca visíveis — apenas uma massa segmentada que se contorce lentamente, quase invisível contra a água turva. Quando o odre é aberto, o verme se derrama junto com o líquido, e quem bebe sem perceber engole-o vivo. Dentro de um corpo, ele se enrosca e cresce, e a vítima passa a sentir sede constante, como se nada jamais a saciasse. Viajantes experientes sempre cheiram e examinam a água antes de beber; os que não o fazem costumam descobrir o verme tarde demais, quando ele já se acomodou.",
+   "ficha": null,
+   "latencia_ms": 4305,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Verme-de-Odre",
+   "id": "zhur_odres",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "deserto_zhur"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "O Escoriado",
+    "Algo que caminha para fora da fundição quando os fornos ardem sem mãos que os alimentem. Tem forma quase humana, mas a forma é o que menos importa: o corpo está coberto por uma crosta de fer escuro e escória solidificada, camada sobre camada, como se cada vez que caiu na fornalha tivesse voltado com uma pele nova por cima da antiga. Onde deveria haver rosto há uma máscara de metal fundido resfriado, e sob ela alguma coisa se move devagar, tentando lembrar como era ter expressão. Não anda rápido. Não precisa. Cada passo seu deixa uma marca mole e brilhante no chão, e o ar ao redor cheira a ferro quente e a cabelo queimado. Raramente ataca primeiro — fica parado junto aos fornos, como um operário esperando instrução. Mas quando alguém se aproxima do que ele considera seu posto, a coisa se lembra de que já foi gente, e a lembrança dói, e a dor tem mãos.",
+    "Abraço da Fornalha"
+   ],
+   "anatomia": "Algo que caminha para fora da fundição quando os fornos ardem sem mãos que os alimentem. Tem forma quase humana, mas a forma é o que menos importa: o corpo está coberto por uma crosta de fer escuro e escória solidificada, camada sobre camada, como se cada vez que caiu na fornalha tivesse voltado com uma pele nova por cima da antiga. Onde deveria haver rosto há uma máscara de metal fundido resfriado, e sob ela alguma coisa se move devagar, tentando lembrar como era ter expressão. Não anda rápido. Não precisa. Cada passo seu deixa uma marca mole e brilhante no chão, e o ar ao redor cheira a ferro quente e a cabelo queimado. Raramente ataca primeiro — fica parado junto aos fornos, como um operário esperando instrução. Mas quando alguém se aproxima do que ele considera seu posto, a coisa se lembra de que já foi gente, e a lembrança dói, e a dor tem mãos.",
+   "ficha": null,
+   "latencia_ms": 6130,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "O Escoriado",
+   "id": "arcadia_fundicao",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "nova_arcadia"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Cria de Apetite",
+    "Não é um filhote no sentido carinhoso da palavra: é um pedaço arrancado da fome primordial que dorme sob o pântano, e que se desprendeu quando a tristeza do lugar ficou densa o bastante para ganhar corpo. Tem o tamanho de uma criança, mas a silhueta é errada — membros finos demais, tronco fundo demais, como um saco de couro molhado esticado sobre uma fome que não cabe nele. Não tem olhos; tem duas covas úmidas que se aprofundam quando sente luto por perto. A boca é larga, vertical, e nunca fecha por completo.\n\nMove-se na altura da água, rastejando entre juncos e raízes, e sempre na direção de quem chora. Alimenta-se da melancolia antes da carne: aproxima-se de barqueiros de luto, de enlutados que velam às margens, e os acompanha por horas, sugando a tristeza até que a pessoa fique oca e mansa — e só então come. Por isso segue o rastro do afogador: onde há alguém afogando barqueiros de luto, há uma esteira de desespero que a Cria fareja como sangue na água. Ela não serve ao afogador, nem o obedece; apenas colhe o que ele deixa cair. Mas onde a Cria passa, o luto fica mais fundo, e o afogador ganha presas mais fáceis — uma simbiose suja que o pântano cultiva sozinho.\n\nQuem a vê de longe confunde com um afogado pequeno, ou com um Cipó-Pescador caído. É quando ela abre a boca que a confusão acaba. Não emite som próprio: o que se ouve perto dela é o próprio choro da vítima, devolvido um tom mais grave, como se o pântano chorasse com a pessoa antes de engoli-la.",
+    "Devorar Luto"
+   ],
+   "anatomia": "Não é um filhote no sentido carinhoso da palavra: é um pedaço arrancado da fome primordial que dorme sob o pântano, e que se desprendeu quando a tristeza do lugar ficou densa o bastante para ganhar corpo. Tem o tamanho de uma criança, mas a silhueta é errada — membros finos demais, tronco fundo demais, como um saco de couro molhado esticado sobre uma fome que não cabe nele. Não tem olhos; tem duas covas úmidas que se aprofundam quando sente luto por perto. A boca é larga, vertical, e nunca fecha por completo.\n\nMove-se na altura da água, rastejando entre juncos e raízes, e sempre na direção de quem chora. Alimenta-se da melancolia antes da carne: aproxima-se de barqueiros de luto, de enlutados que velam às margens, e os acompanha por horas, sugando a tristeza até que a pessoa fique oca e mansa — e só então come. Por isso segue o rastro do afogador: onde há alguém afogando barqueiros de luto, há uma esteira de desespero que a Cria fareja como sangue na água. Ela não serve ao afogador, nem o obedece; apenas colhe o que ele deixa cair. Mas onde a Cria passa, o luto fica mais fundo, e o afogador ganha presas mais fáceis — uma simbiose suja que o pântano cultiva sozinho.\n\nQuem a vê de longe confunde com um afogado pequeno, ou com um Cipó-Pescador caído. É quando ela abre a boca que a confusão acaba. Não emite som próprio: o que se ouve perto dela é o próprio choro da vítima, devolvido um tom mais grave, como se o pântano chorasse com a pessoa antes de engoli-la.",
+   "ficha": null,
+   "latencia_ms": 8548,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Cria de Apetite",
+   "id": "pantano_cria",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "pantano_melancolia"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "O Cobrado",
+    "Um mago que tomou o éter como empréstimo e o pagou com o próprio corpo — e o corpo continua pagando. O que sobe as escadas do Farol não é mais um homem inteiro: é um credor ambulante de si mesmo, pele retesada sobre veios de éter queimado, dedos que se desfazem em cinza negra a cada gesto e se refazem tortos, um pouco menores. Fala em números baixos, saldos, prazos — e trata quem encontra como fiador. Não ataca por ódio: cobra. Cada feitiço que lança sai do seu próprio sangue, e ele o entrega com a serenidade de quem já assinou o pior contrato e não tem mais nada a perder além do que resta de carne. Sobe o Farol não para guardá-lo, mas porque a Chama Negra é o único credor que ainda aceita o seu pagamento.",
+    "Dívida Vencida"
+   ],
+   "anatomia": "Um mago que tomou o éter como empréstimo e o pagou com o próprio corpo — e o corpo continua pagando. O que sobe as escadas do Farol não é mais um homem inteiro: é um credor ambulante de si mesmo, pele retesada sobre veios de éter queimado, dedos que se desfazem em cinza negra a cada gesto e se refazem tortos, um pouco menores. Fala em números baixos, saldos, prazos — e trata quem encontra como fiador. Não ataca por ódio: cobra. Cada feitiço que lança sai do seu próprio sangue, e ele o entrega com a serenidade de quem já assinou o pior contrato e não tem mais nada a perder além do que resta de carne. Sobe o Farol não para guardá-lo, mas porque a Chama Negra é o único credor que ainda aceita o seu pagamento.",
+   "ficha": null,
+   "latencia_ms": 5507,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "O Cobrado",
+   "id": "skallgard_cobrado",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "skallgard"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Fera Torta",
+    "Uma criatura de silhueta errada — o corpo parece ter sido montado por alguém que só ouviu falar de animais. As patas dianteiras são longas demais, a coluna se dobra para o lado num ângulo que deveria ser dor, e a cabeça pende baixa, quase arrastando, como se farejasse o chão o tempo todo. Caça nas franjas das cidades das copas, onde a colmeia ainda não decidiu se aquele espaço é dela. Os Hospedeiros a toleram: não é deles, mas também não é ameaça — ela come o que sobra, o que cai, o que se perde. E às vezes come viajantes que se perdem. Move-se em arrancadas desengonçadas e imprevisíveis, e o corpo torto faz com que golpes que deveriam acertar passem de raspão. Não ruge; chia, como madeira verde na fogueira.",
+    "Arrancada Desengonçada"
+   ],
+   "anatomia": "Uma criatura de silhueta errada — o corpo parece ter sido montado por alguém que só ouviu falar de animais. As patas dianteiras são longas demais, a coluna se dobra para o lado num ângulo que deveria ser dor, e a cabeça pende baixa, quase arrastando, como se farejasse o chão o tempo todo. Caça nas franjas das cidades das copas, onde a colmeia ainda não decidiu se aquele espaço é dela. Os Hospedeiros a toleram: não é deles, mas também não é ameaça — ela come o que sobra, o que cai, o que se perde. E às vezes come viajantes que se perdem. Move-se em arrancadas desengonçadas e imprevisíveis, e o corpo torto faz com que golpes que deveriam acertar passem de raspão. Não ruge; chia, como madeira verde na fogueira.",
+   "ficha": null,
+   "latencia_ms": 5496,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Fera Torta",
+   "id": "xylos_fera",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "selva_xylos"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "O Que a Maré Devolveu",
+    "Um afogado-do-porto antigo, inchado de água salgada e de tempo. Rasteja para fora da arrebentação na praia dos naufrágios, deixando um rastro de limo e cordas de navio entranhadas na carne. Não corre — escorre. Cada vez que a maré o cobre, ele se ergue um pouco mais alto, como se a água o estivesse ensinando a ficar de pé outra vez. Tem nas mãos um chicote de amarração que ainda cheira a breu, e nos olhos aquele olhar de quem foi cobrado até o último centavo e agora veio cobrar também. Não é rápido, não é esperto, mas é teimoso como só uma dívida é teimosa: recua quando a água baixa, avança quando ela sobe, e nunca, jamais, para de vir.",
+    "Chicote de Amarração"
+   ],
+   "anatomia": "Um afogado-do-porto antigo, inchado de água salgada e de tempo. Rasteja para fora da arrebentação na praia dos naufrágios, deixando um rastro de limo e cordas de navio entranhadas na carne. Não corre — escorre. Cada vez que a maré o cobre, ele se ergue um pouco mais alto, como se a água o estivesse ensinando a ficar de pé outra vez. Tem nas mãos um chicote de amarração que ainda cheira a breu, e nos olhos aquele olhar de quem foi cobrado até o último centavo e agora veio cobrar também. Não é rápido, não é esperto, mas é teimoso como só uma dívida é teimosa: recua quando a água baixa, avança quando ela sobe, e nunca, jamais, para de vir.",
+   "ficha": null,
+   "latencia_ms": 5649,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "O Que a Maré Devolveu",
+   "id": "costa_ingles",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "costa_negra"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Amálgama-de-Minério",
+    "Nas galerias profundas da mina abandonada, onde o calor das forjas eternas ainda respira sob a rocha, o metal e a carne dos mineiros mortos se fundiram numa só coisa. O Amálgama-de-Minério é uma massa arrastada de veios brilhantes, ossos entrelaçados e ferramentas incrustadas — picaretas que emergem como costelas, rodas de carrinho girando devagar dentro do torso, lanternas apagadas balançando em ombros que já não são ombros. Move-se pelo teto e pelas paredes como se os veios fossem veias, e cada passo deixa um rastro de poeira metálica que brilha no escuro. Não caça por fome, mas por acúmulo: absorve o minério que toca, e absorve mineiros quando os encontra, crescendo a cada presa. Quem desce atrás dos desaparecidos encontra primeiro as ferramentas deles — e depois o que as carrega.",
+    "Golpe de Picareta Fundida"
+   ],
+   "anatomia": "Nas galerias profundas da mina abandonada, onde o calor das forjas eternas ainda respira sob a rocha, o metal e a carne dos mineiros mortos se fundiram numa só coisa. O Amálgama-de-Minério é uma massa arrastada de veios brilhantes, ossos entrelaçados e ferramentas incrustadas — picaretas que emergem como costelas, rodas de carrinho girando devagar dentro do torso, lanternas apagadas balançando em ombros que já não são ombros. Move-se pelo teto e pelas paredes como se os veios fossem veias, e cada passo deixa um rastro de poeira metálica que brilha no escuro. Não caça por fome, mas por acúmulo: absorve o minério que toca, e absorve mineiros quando os encontra, crescendo a cada presa. Quem desce atrás dos desaparecidos encontra primeiro as ferramentas deles — e depois o que as carrega.",
+   "ficha": null,
+   "latencia_ms": 5230,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Amálgama-de-Minério",
+   "id": "montanhas_injecao",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "montanhas_afiadas"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Rói-Casco",
+    "Algo que vive sob as tábuas podres das docas velhas de Brekmar e se alimenta de madeira encharcada de sal — mas prefere casco de navio. Não é um rato, embora haja quem jure ter visto dentes de rato. É uma massa baixa e alongada de quitina escura e limo, do tamanho de um cão grande, que se move colada às superfícies molhadas e deixa atrás de si uma trilha de serragem úmida e pregos corroídos. Nas noites de maré baixa, sobe pelos cabos de amarração e pelas correntes e começa a roer em silêncio, sempre por baixo da linha d'água, onde ninguém vê. Os estivadores das docas velhas conhecem o som: um raspar lento e paciente, como uma lixa contra a madeira, que só para quando alguém se aproxima com luz. Dizem que os Navios de Durrak atraem o fundo — e o Rói-Casco é o que o fundo manda primeiro.",
+    "Mordida Serrada"
+   ],
+   "anatomia": "Algo que vive sob as tábuas podres das docas velhas de Brekmar e se alimenta de madeira encharcada de sal — mas prefere casco de navio. Não é um rato, embora haja quem jure ter visto dentes de rato. É uma massa baixa e alongada de quitina escura e limo, do tamanho de um cão grande, que se move colada às superfícies molhadas e deixa atrás de si uma trilha de serragem úmida e pregos corroídos. Nas noites de maré baixa, sobe pelos cabos de amarração e pelas correntes e começa a roer em silêncio, sempre por baixo da linha d'água, onde ninguém vê. Os estivadores das docas velhas conhecem o som: um raspar lento e paciente, como uma lixa contra a madeira, que só para quando alguém se aproxima com luz. Dizem que os Navios de Durrak atraem o fundo — e o Rói-Casco é o que o fundo manda primeiro.",
+   "ficha": null,
+   "latencia_ms": 5658,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Rói-Casco",
+   "id": "brekmar_docas",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "brekmar"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "Guardião Cinzento",
+    "Uma besta alta e esguia, de pelagem cinzenta como a pedra das fundações partidas, que se move sem pressa entre as paredes com ranhuras e os fragmentos esculpidos pelos Elfos. Seus olhos têm o brilho baço das frases Cinzéus ainda legíveis sob a vegetação, e o corpo carrega marcas de séculos de vigília — cicatrizes que parecem inscrições, chifres que imitam os arcos quebrados das ruínas. Não é um espectro, mas algo que aprendeu a habitar o silêncio dos mortos: caminha sem som, observa sem piscar e só ataca quando o intruso profana o que guarda. Dizem que o Guardião Cinzento não persegue quem recua — apenas quem insiste em levar embora o que a pradaria decidiu cobrir.",
+    "Investida das Fundações"
+   ],
+   "anatomia": "Uma besta alta e esguia, de pelagem cinzenta como a pedra das fundações partidas, que se move sem pressa entre as paredes com ranhuras e os fragmentos esculpidos pelos Elfos. Seus olhos têm o brilho baço das frases Cinzéus ainda legíveis sob a vegetação, e o corpo carrega marcas de séculos de vigília — cicatrizes que parecem inscrições, chifres que imitam os arcos quebrados das ruínas. Não é um espectro, mas algo que aprendeu a habitar o silêncio dos mortos: caminha sem som, observa sem piscar e só ataca quando o intruso profana o que guarda. Dizem que o Guardião Cinzento não persegue quem recua — apenas quem insiste em levar embora o que a pradaria decidiu cobrir.",
+   "ficha": null,
+   "latencia_ms": 5777,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Guardião Cinzento",
+   "id": "pradaria_guardia",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "pradaria_ruinas"
+  },
+  {
+   "caminho": "legacy",
+   "textos": [
+    "O Sopro-do-Sino",
+    "Não tem corpo próprio — é uma presença que se condensa no ar de uma câmara seca quando alguém mergulha até ela. Aparece primeiro como névoa fina sobre a água parada, depois como uma forma vagamente humanoide feita de gotas suspensas que nunca caem. O Sopro-do-Sino se alimenta do medo de quem desce: cada batida acelerada de coração o torna mais nítido, mais alto, mais próximo do sino. Ele respira o pavor do mergulhador e devolve esse pavor como voz — sussurra nomes de pessoas que ficaram lá embaixo, imita a respiração de quem já se afogou, e às vezes fala com a própria voz do mergulhador, dizendo coisas que ele ainda não pensou. Quanto mais perto do sino, mais ele parece querer que a pessoa fique. Não ataca para matar; ataca para fazer desistir, para fazer os pulmões cederem antes da hora, para transformar a câmara seca em mais uma ruína habitada.",
+    "Inalação do Pavor"
+   ],
+   "anatomia": "Não tem corpo próprio — é uma presença que se condensa no ar de uma câmara seca quando alguém mergulha até ela. Aparece primeiro como névoa fina sobre a água parada, depois como uma forma vagamente humanoide feita de gotas suspensas que nunca caem. O Sopro-do-Sino se alimenta do medo de quem desce: cada batida acelerada de coração o torna mais nítido, mais alto, mais próximo do sino. Ele respira o pavor do mergulhador e devolve esse pavor como voz — sussurra nomes de pessoas que ficaram lá embaixo, imita a respiração de quem já se afogou, e às vezes fala com a própria voz do mergulhador, dizendo coisas que ele ainda não pensou. Quanto mais perto do sino, mais ele parece querer que a pessoa fique. Não ataca para matar; ataca para fazer desistir, para fazer os pulmões cederem antes da hora, para transformar a câmara seca em mais uma ruína habitada.",
+   "ficha": null,
+   "latencia_ms": 5977,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "O Sopro-do-Sino",
+   "id": "aethelgard_medo",
+   "forcar": "nova",
+   "caminho_esperado": "nova",
+   "regiao": "aethelgard"
+  },
+  {
+   "caminho": "existente",
+   "textos": [],
+   "anatomia": "Um roedor do tamanho de uma lebre que salta sobre duas canelas que viraram varetas de vidro, e caça em bando chamado no grito.",
+   "ficha": null,
+   "latencia_ms": 1193,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Saltador de Palafita",
+   "id": "zhur_existente",
+   "forcar": "auto",
+   "caminho_esperado": "existente",
+   "regiao": "deserto_zhur"
+  },
+  {
+   "caminho": "existente",
+   "textos": [],
+   "anatomia": "Um doente terminal da Ferrugem do Sangue que ainda anda, com as veias viradas em arame para fora da pele.",
+   "ficha": null,
+   "latencia_ms": 847,
+   "prompt_chars": 0,
+   "lint_primeira": null,
+   "lint_final": null,
+   "nome": "Arame Vivo",
+   "id": "arcadia_existente",
+   "forcar": "auto",
+   "caminho_esperado": "existente",
+   "regiao": "nova_arcadia"
+  }
+ ]
+}

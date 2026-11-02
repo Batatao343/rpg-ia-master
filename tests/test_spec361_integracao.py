@@ -152,3 +152,23 @@ def test_save_antigo_carrega(gen_on):
     # o overlay antigo (sem ficha) é achado de novo e não volta a gerar
     t = bst.generate_new_enemy("Verme das Cinzas", "", state=loaded)
     assert t["name"] == "Verme das Cinzas" and "ficha" not in t
+
+
+def test_variante_telegrafa_antes_da_assinatura(gen_on, monkeypatch):
+    """§6 passo 2 (offline): com baralhos e intenção ligados, o telegrafo da variante sai uma
+    rodada antes da assinatura."""
+    from services import enemy_decks
+
+    monkeypatch.setenv("RPG_ENEMY_DECKS", "on")
+    monkeypatch.setenv("RPG_ENEMY_INTENT", "on")
+    var = combat._grounded_template(
+        "lacaio mente-colmeia", "lacaio mente-colmeia", 1, {"world": dict(ZHUR)}
+    )
+    inst = combat._instances(var, 3, {}, 7)[0]
+    sig = enemy_decks.assinatura_of(inst)
+    assert sig and "congela no meio do passo" in sig["telegrafo"]
+    rodadas = [r for r in range(1, 8) if enemy_decks.prenuncio(inst, r)]
+    assert rodadas, "o telegrafo nunca apareceu"
+    texto = enemy_decks.prenuncio(inst, rodadas[0])
+    assert texto.startswith(inst["name"]) and "congela" in texto
+    assert enemy_decks.plan(inst, rodadas[0] + 1)["assinatura"] == sig["carta"]

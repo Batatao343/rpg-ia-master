@@ -919,6 +919,11 @@ RPG_CREATURE_GEN_DEADLINE_S:
   default: "12"
   spec: SPEC-361
   note: "prazo total (s) do caminho nova; a 2ª tentativa só começa antes da metade"
+RPG_CREATURE_GEN_RETRY_MIN_S:
+  kind: ops
+  default: "3.5"
+  spec: SPEC-361
+  note: "folga mínima (s) do prazo para começar a correção curta (2ª tentativa)"
 RPG_CREATURE_NEW_PER_GAME:
   kind: ops
   default: "6"

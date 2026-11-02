@@ -609,12 +609,13 @@ def _ficha_criatura_gerada(model, messages):
     bloco = re.search(r"<ja_existem_na_regiao>\n(.*?)\n</ja_existem_na_regiao>", system, re.S)
     for linha in bloco.group(1).splitlines() if bloco else []:
         parts = [p.strip() for p in re.split(r" — | / ", linha)]
-        if len(parts) == 5:
+        if len(parts) == 8:
+            eixos = ("plano_corporal", "material", "escala", "locomocao", "percepcao")
             vizinhos.append(
                 {
                     "nome": parts[0],
-                    "anatomia": {"plano_corporal": parts[2], "material": parts[3]},
-                    "papel_tatico": parts[4],
+                    "anatomia": dict(zip(eixos, parts[2:7], strict=True)),
+                    "papel_tatico": parts[7],
                 }
             )
     nucleos = {bl.nucleo_nome(v.get("nome") or "") for v in vizinhos}
@@ -990,6 +991,7 @@ _DISPATCH = {
     "NPCResponse": _npc_response,
     "EnemySchema": _enemy_schema,
     "FichaCriaturaGerada": _ficha_criatura_gerada,  # SPEC-361 R31
+    "CorrecaoFicha": lambda model, messages: model(),  # SPEC-361 R16: correção vazia
     "EncounterScanner": _encounter_scanner,
     "LootSchema": _loot_schema,
     "ItemGeneration": _item_generation,
