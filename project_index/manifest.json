@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "b8ebf355b59943cd8bd24a05dd5668293c782e27",
+  "commit_sha": "468d2af8716415c20434ce8bd30e43bc95381076",
   "edge_counts": {
-    "calls": 34845,
-    "contains": 1144,
-    "defines": 16969,
-    "imports": 2816,
-    "likely_test_for": 2026,
+    "calls": 35300,
+    "contains": 1155,
+    "defines": 17168,
+    "imports": 2844,
+    "likely_test_for": 2051,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:70458172ec28618cd79b749962d928961c820367507eca8d780683de50216c71",
+  "graph_hash": "sha256:d845fa2a3d93cbe9fd2d8603b67f927504f5c337b3c409b71e68415afba62358",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -198,6 +198,7 @@
     "playtest/matrix.py",
     "playtest/matrix_lock.py",
     "playtest/metrics.py",
+    "playtest/opening_checks.py",
     "playtest/pricing.py",
     "playtest/profiles.py",
     "playtest/provider_profiles.py",
@@ -282,6 +283,7 @@
     "scripts/retire_creature_portrait.py",
     "scripts/run_llm_contract_gate.py",
     "scripts/seed_google_play_skus.py",
+    "scripts/smoke/spec351_opening.py",
     "scripts/smoke_local_profile.py",
     "scripts/spec_index.py",
     "scripts/staging/__init__.py",
@@ -447,6 +449,7 @@
     "services/npc_self.py",
     "services/npc_world.py",
     "services/objectives.py",
+    "services/opening_threads.py",
     "services/operation_recovery.py",
     "services/partial_narrative.py",
     "services/perceived_world.py",
@@ -457,6 +460,7 @@
     "services/presentation_history.py",
     "services/projections.py",
     "services/prologue.py",
+    "services/prologue_token.py",
     "services/prompt_guard.py",
     "services/prompt_layout.py",
     "services/prose_guard.py",
@@ -1113,6 +1117,13 @@
     "tests/test_spec350_lint.py",
     "tests/test_spec350_npc_prompt.py",
     "tests/test_spec350_roster.py",
+    "tests/test_spec351_api.py",
+    "tests/test_spec351_checks.py",
+    "tests/test_spec351_menu.py",
+    "tests/test_spec351_pool.py",
+    "tests/test_spec351_prologue.py",
+    "tests/test_spec351_security.py",
+    "tests/test_spec351_state.py",
     "tests/test_spec352_creature_portraits.py",
     "tests/test_spec352_creature_portraits_db.py",
     "tests/test_spec352_creature_quote_api.py",
@@ -1411,14 +1422,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1030,
+    "class": 1045,
     "endpoint": 69,
-    "file": 1357,
-    "function": 5253,
-    "method": 864,
-    "module": 1144,
-    "test": 9821
+    "file": 1368,
+    "function": 5327,
+    "method": 865,
+    "module": 1155,
+    "test": 9930
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:ac89c9ccbc20a5e82e3e34ece67cc7e2e53f7787a3fa72cf5be01823ee442564"
+  "source_tree_hash": "sha256:ce13cd27b89886d16c65e708eb057f60ff08dd66c2a8285768ab80150066137e"
 }
