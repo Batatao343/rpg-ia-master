@@ -141,12 +141,13 @@ def main() -> None:
     ap.add_argument("--sim", default=None)
     args = ap.parse_args()
     sha = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
+        ["git", "rev-parse", "main"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
     sim = load_sim(args.sim)
     golden = {
         "_meta": {
             "gerado_de": sha,
+            "sim_fonte": args.sim or "scripts/cards/sim.py (worktree)",
             "comando": "bash scripts/dev/py.sh docs/spec358/gerar_golden_v1.py",
             "pool_congelado": pool_congelado(),
         },

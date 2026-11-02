@@ -81,7 +81,8 @@ def test_referencia_familia_segue_o_bot(sim, mk):
         r = sim.referencia(mk(8, efeitos=[{"kind": k, "valor": 2}]))
         assert r["efeito"]["kind"] == "protecao"
     dot = sim.referencia(mk(9, efeitos=[{"kind": "dot", "valor": 2, "duracao": 2}]))
-    assert dot is None or dot["efeito"]["kind"] == "dano"
+    assert dot is not None
+    assert dot["efeito"]["kind"] == "dano"
 
 
 def test_referencia_none_para_reacao_passiva_e_isentas(sim, mk):
@@ -191,3 +192,40 @@ def test_protocolo_invalido_levanta(sim, gold):
         sim.simulate_batch(gold.synthetic_batch()[:1], [1], ["padrao"], 1, [0], protocolo="v3")
     with pytest.raises(ValueError):
         sim.simulate_protocolo_lote(gold.synthetic_batch()[:1], protocolo="x")
+
+
+def test_promote_main_escolhe_o_protocolo(gold, tmp_path, monkeypatch):
+    """R17: sem `--protocolo` roda o v1; com `--protocolo lote-v2`, o v2."""
+    import types
+
+    promote = _load_path("cards_promote_358b", os.path.join(ROOT, "scripts", "cards", "promote.py"))
+    chamadas = []
+
+    def fake(batch, **kw):
+        chamadas.append(kw.get("protocolo", "v1"))
+        return {c["id"]: {"bandeiras": [], "avisos": []} for c in batch}
+
+    monkeypatch.setitem(sys.modules, "sim", types.SimpleNamespace(simulate_protocolo_lote=fake))
+    lote = _write_lote(tmp_path, [gold._card(31)])
+    promote.main([lote, "--onda", "99", "--dry-run"])
+    promote.main([lote, "--onda", "99", "--dry-run", "--protocolo", "lote-v2"])
+    assert chamadas == ["v1", "v2"]
+
+
+def test_referencia_fora_de_posicao_vira_aviso(sim, mk, monkeypatch):
+    """R9: um id do baralho entre `cid` e `cid~ref` descarta a referência."""
+    card = _ataque(mk, 41)
+    entre = dict(mk(42, efeitos=[{"kind": "protecao", "valor": 2}]), id=f"{card['id']}_x")
+    orig = sim.build_arms
+
+    def com_intruso(c, level, subclass):
+        base, com = orig(c, level, subclass)
+        return base + [entre["id"]], com + [entre["id"]]
+
+    monkeypatch.setattr(sim, "build_arms", com_intruso)
+    with sim.injected([card, entre]):
+        base, com, ref_deck, ref = sim.build_arms_v2(card, 1, "boticario")
+        assert ref_deck is None and ref is None
+        rep = sim.simulate_batch([card], [1], ["padrao"], 1, [0], protocolo="v2")[card["id"]]
+    assert rep["referencia"] is None and rep["delta_base"] == "remocao"
+    assert {"sem_referencia", "referencia_fora_de_posicao"} <= set(rep["avisos"])

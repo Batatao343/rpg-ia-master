@@ -1,6 +1,7 @@
 {
  "_meta": {
-  "gerado_de": "efde0e2b2c04c71866b585a6c2e7e61d16098ffb",
+  "gerado_de": "b145f4ba8ade4acaf792d798cd60b55e6479eb40",
+  "sim_fonte": "git show main:scripts/cards/sim.py (via --sim)",
   "comando": "bash scripts/dev/py.sh docs/spec358/gerar_golden_v1.py",
   "pool_congelado": [
    {

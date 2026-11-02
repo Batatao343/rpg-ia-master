@@ -468,21 +468,26 @@ def referencia(card: dict) -> dict | None:
     return fx.materialize(dict(ref, efeitos=[efeito(best[1])]))
 
 
+def _arms_v2(card: dict, level: int, subclass: str):
+    """``(base, com, ref_deck, ref_card, fora_de_posicao)``."""
+    base, com = build_arms(card, level, subclass)
+    ref = referencia(card)
+    if ref is None:
+        return base, com, None, None, False
+    copies = len(com) - len(base)
+    ref_deck = base + [ref["id"]] * copies
+    if sorted(com).index(card["id"]) != sorted(ref_deck).index(ref["id"]):
+        return base, com, None, None, True
+    return base, com, ref_deck, ref, False
+
+
 def build_arms_v2(
     card: dict, level: int, subclass: str
 ) -> tuple[list[str], list[str], list[str] | None, dict | None]:
     """``(base, com, ref_deck|None, ref_card|None)``; ``base``/``com`` como ``build_arms``.
     Referência que não ocupa a mesma posição no baralho ordenado (R9) é descartada
-    (``ref_card == {"fora_de_posicao": True}``)."""
-    base, com = build_arms(card, level, subclass)
-    ref = referencia(card)
-    if ref is None:
-        return base, com, None, None
-    copies = len(com) - len(base)
-    ref_deck = base + [ref["id"]] * copies
-    if sorted(com).index(card["id"]) != sorted(ref_deck).index(ref["id"]):
-        return base, com, None, {"fora_de_posicao": True}
-    return base, com, ref_deck, ref
+    (``None``/``None``); ``_arms_v2`` também diz se foi esse o motivo."""
+    return _arms_v2(card, level, subclass)[:4]
 
 
 def _simulate_batch_v2(batch, levels, categories, per_cat, seeds) -> dict:
@@ -496,8 +501,7 @@ def _simulate_batch_v2(batch, levels, categories, per_cat, seeds) -> dict:
             subclass = str(card.get("subclasse") or "")
             my_levels = [lv for lv in levels if lv >= level] or [max(levels)]
             my_encs = [e for e in encs if e[2] in my_levels]
-            base, com, ref_deck, ref = build_arms_v2(card, max(my_levels), subclass)
-            fora = bool(ref and ref.get("fora_de_posicao"))
+            base, com, ref_deck, ref, fora = _arms_v2(card, max(my_levels), subclass)
             seen: dict = {}
             # Três braços PAREADOS: mesma tag, mesmos encontros e sementes.
             w0, f0 = batch_fights(cls, base, "par", my_encs, seeds)

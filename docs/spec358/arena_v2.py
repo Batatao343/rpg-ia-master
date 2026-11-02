@@ -20,6 +20,7 @@ import glob
 import importlib.util
 import json
 import os
+import re
 import sys
 
 os.environ.setdefault("RPG_FORCE_MOCK", "1")
@@ -77,6 +78,15 @@ def v1_bandeiras(r: dict) -> list[str]:
 
 def veredito(bandeiras: list[str]) -> str:
     return "recusa" if set(bandeiras) - sim.SEM_BANDEIRA else "passa"
+
+
+def motor_sha() -> str:
+    """SHA da main em que o motor (services/) vale: merge-base da branch com a main."""
+    import subprocess
+
+    return subprocess.run(
+        ["git", "merge-base", "HEAD", "main"], capture_output=True, text=True
+    ).stdout.strip()
 
 
 def _save(path: str, obj) -> None:
@@ -142,7 +152,10 @@ def chave(g: str, cid: str, var: str) -> str:
 
 # ------------------------------------------------------------------------------------------
 def fase1() -> None:
-    res = _load(F1) or {"_meta": {"sementes": "0-19", "protocolo": "lote-v2"}, "itens": {}}
+    res = _load(F1) or {
+        "_meta": {"sementes": "0-19", "protocolo": "lote-v2", "motor_sha": motor_sha()},
+        "itens": {},
+    }
     todos = unidades()
     feitos = 0
     for g, cid, var, card, outros in todos:
@@ -187,7 +200,10 @@ def selecionar(res: dict) -> list[str]:
 
 def fase2() -> None:
     res = _load(F1)
-    conf = _load(F2) or {"_meta": {"sementes": "20-99"}, "itens": {}}
+    conf = _load(F2) or {
+        "_meta": {"sementes": "20-99", "motor_sha": motor_sha()},
+        "itens": {},
+    }
     por_chave = {chave(g, cid, var): (card, outros) for g, cid, var, card, outros in unidades()}
     sel = selecionar(res)
     print(f"{len(sel)} itens a confirmar", flush=True)
@@ -214,7 +230,9 @@ def fase3() -> None:
         ]
     finally:
         base.update(saved)
-    _save(F3, {"ctl_ferro_dano4_marcial": r})
+    _save(
+        F3, {"_meta": {"sementes": "20-99", "motor_sha": motor_sha()}, "ctl_ferro_dano4_marcial": r}
+    )
     print(json.dumps(r, ensure_ascii=False)[:400], flush=True)
 
 
@@ -242,6 +260,11 @@ CAB = (
 
 def relatorio() -> None:
     res = _load(F1)
+    leitura = ""
+    if os.path.exists(REL):  # preserva a secao 0 (escrita a mao) ao regerar
+        with open(REL, encoding="utf-8") as f:
+            m = re.search(r"## 0\. .*?(?=## 1\. )", f.read(), re.S)
+        leitura = m.group(0) if m else ""
     conf = _load(F2) or {"itens": {}}
     ctl = _load(F3)
     it = res["itens"]
@@ -256,15 +279,6 @@ def relatorio() -> None:
         f"Bandeiras v1 derivadas do mesmo relatorio v2 (mesmas regras do `sim.py`). Conferencia "
         f"contra o v1 de verdade: {ver}.\n"
     )
-
-    # contagens
-    def cont(fn):
-        n = {"uso": 0, "delta": 0}
-        for r in it.values():
-            for b in fn(r):
-                if b in ("em_branco",) or (b == "dominante" and False):
-                    n["uso"] += 1
-        return n
 
     tot1 = tot2 = rec1 = rec2 = 0
     motivos1 = {"em_branco": 0, "dominante_uso": 0, "dominante_delta": 0}
@@ -283,16 +297,18 @@ def relatorio() -> None:
             and r["delta_pp_remocao"] > sim.LIMIAR_DOMINANTE_DELTA_PP
         ):
             motivos1["dominante_delta"] += 1
+    if leitura:
+        L.append(leitura)
     L.append("## 1. Contagem de bandeiras\n")
     L.append(f"Itens (Carta x variante): {len(it)}.\n")
     L.append("| | v1 | v2 |\n|---|---|---|")
     L.append(f"| bandeiras (total) | {tot1} | {tot2} |")
     L.append(f"| itens recusados | {rec1} | {rec2} |")
     L.append(
-        f"| por uso (em_branco / dominante por uso) | {motivos1['em_branco']} / {motivos1['dominante_uso']} | 0 (viram aviso) |"
+        f"| por uso (em_branco / dominante por uso; motivos se sobrepoem) | {motivos1['em_branco']} / {motivos1['dominante_uso']} | 0 (viram aviso) |"
     )
     L.append(
-        f"| por delta (dominante) | {motivos1['dominante_delta']} | {sum('dominante' in r['bandeiras'] for r in it.values())} |"
+        f"| por delta (dominante; motivos se sobrepoem) | {motivos1['dominante_delta']} | {sum('dominante' in r['bandeiras'] for r in it.values())} |"
     )
     sem_ref = sum(r["referencia"] is None for r in it.values())
     L.append(f"\nItens sem referencia (reacao/passiva/etc.): {sem_ref}.\n")
