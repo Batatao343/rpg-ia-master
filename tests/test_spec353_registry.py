@@ -352,7 +352,7 @@ def test_custo_board_entry_uses_ptbr_wound():
         ],
     }
     board = preview.round_board(out, [{"id": "player", "name": "H", "is_player": True}], set())
-    assert board[0]["efeito"] == "−3 Vitalidade, ferimento crítico no torso"
+    assert board[0]["efeito"] == "−3 Vitalidade, ferimento crítico no seu torso"
 
 
 def test_record_flags_never_land_on_actors():

@@ -1491,11 +1491,28 @@ def _is_valid_flee_destination(state: dict, destination_id: str | None) -> bool:
 # ==========================================================================
 # Narração (depois da resolução — LLM FAST, guard)
 # ==========================================================================
-def _killer_identity(active: list) -> tuple[str, str]:
-    """SPEC-288: (espécie canônica, id do bestiário) do inimigo que deu o golpe final."""
+def _killer_identity(
+    active: list, out: dict | None = None, pool: list | None = None
+) -> tuple[str, str]:
+    """SPEC-288: (espécie canônica, id do bestiário) do inimigo que deu o golpe final.
+
+    SPEC-363 R14: com `out["final_blows"]`, vale o autor do golpe que derrubou o herói."""
     from services import encounter_manifest as em
 
-    enemy = next((e for e in active or [] if e), None)
+    enemy = None
+    for blow in reversed((out or {}).get("final_blows") or []):
+        if str(blow.get("target_id")) != "player":
+            continue
+        kind = blow.get("kind")
+        if kind == "dano_continuo":
+            return f"o {blow.get('condition') or 'dano contínuo'}", ""
+        if kind == "auto_dano":
+            return "o preço da própria Carta", ""
+        by = str(blow.get("by_actor_id") or "")
+        enemy = next((e for e in [*(active or []), *(pool or [])] if e and str(e.get("id")) == by), None)
+        break
+    if enemy is None:
+        enemy = next((e for e in active or [] if e), None)
     if not enemy:
         return "", ""
     base = em._base_id(enemy.get("id", ""))
@@ -1503,11 +1520,15 @@ def _killer_identity(active: list) -> tuple[str, str]:
     return em.species_label_for(enemy), (base if known else str(enemy.get("bestiary_id") or ""))
 
 
+def _diante_de(killer: str) -> str:
+    return "diante d" + killer if killer.startswith("o ") else f"diante de {killer}"
+
+
 def _narrate_fall(player: dict, logs: list[str], killer: str = "") -> str:
     """SPEC-346 R16: texto determinístico da queda (sem bullets de log cru) + a Roda do Abismo."""
     from services import round_log
 
-    quem = f" diante de {killer}" if killer else ""
+    quem = f" {_diante_de(killer)}" if killer else ""
     return f"Você tomba{quem}. {round_log.WHEEL_TEXT}"
 
 
@@ -1911,6 +1932,7 @@ def _narrate_outcome(
     manifest: dict | None,
     withhold: str = "",
     names: dict[str, str] | None = None,
+    source_sink: dict | None = None,
 ) -> str:
     """R11-R15: a ÚNICA chamada de IA do combate `on`. Fatos em linguagem, sem números;
     pós-filtro de números; não contradiz o motor; fallback determinístico legível."""
@@ -1926,12 +1948,17 @@ def _narrate_outcome(
         decisive_cards=round_log.decisive_cards(last_out),
         names=names,
     )
-    auth = round_log.authorship(last_out, round_log._fact_names(player, enemies, names))
+    auth = round_log.authorship(last_out, round_log._fact_names(player, enemies, names), player)
+
+    def _src(value: str) -> None:  # SPEC-363 R13: por que o texto final é o que é
+        if source_sink is not None:
+            source_sink["last_outcome_source"] = value
+
     system = SystemMessage(
         content=f"""
     <role>Narrador de Combate — Dark Fantasy</role>
     Narre o FIM deste conflito em 1 parágrafo curto (3 a 5 frases), em segunda pessoa, usando
-    APENAS os fatos abaixo. NÃO escreva números, dados, pontos de vida nem aritmética. Não invente
+    APENAS os fatos abaixo. Trate o jogador por "você" (nunca tu/teu/tua). NÃO escreva números, dados, pontos de vida nem aritmética. Não invente
     mortes, golpes nem resultados fora dos fatos. Cada ação tem um autor: nunca atribua a Carta
     ou o golpe de um combatente a outro, nem diga que um golpe acertou (ou errou) contra os fatos.
     Glossário: Vitalidade = vigor e resistência do corpo; Fôlego = energia para jogar Cartas
@@ -1951,25 +1978,44 @@ def _narrate_outcome(
         wrap_player_input(intent or "O conflito termina."),
         manifest=manifest,
         where="combate",
-        on_fail=lambda err: _log_event(
-            "combat", "outcome_narration_failed", level="warning", error=err, outcome=label
+        on_fail=lambda err: (
+            _src("fallback_llm_error"),
+            _log_event(
+                "combat", "outcome_narration_failed", level="warning", error=err, outcome=label
+            ),
         ),
         stream=False,  # o texto final = registro + resumo: o ao vivo não seria prefixo
         budget_s=_OUTCOME_BUDGET_S,  # SPEC-353 R39c: estourou → fallback determinístico
-        on_budget=lambda ms: _log_event(
-            "combat", "outcome_narration_budget_exceeded", level="warning", elapsed_ms=ms
+        on_budget=lambda ms: (
+            _src("fallback_budget"),
+            _log_event(
+                "combat", "outcome_narration_budget_exceeded", level="warning", elapsed_ms=ms
+            ),
         ),
     )
+    if source_sink is not None and not text and "last_outcome_source" not in source_sink:
+        _src("fallback_llm_error")
     if text:
         text, removed = prose_guard.strip_mechanic_numbers(text)
         if removed:
             _log_event("combat", "narration_numbers_stripped", level="info", count=removed)
-        if text and summ.validate_narrative_text(conflict_sum, text)["ok"]:
+        verdict = summ.validate_narrative_text(conflict_sum, text) if text else {"ok": False}
+        if text and verdict["ok"]:
             codes = summ.validate_attribution(text, auth)  # SPEC-353 R8
             if not codes:
+                _src("llm")
                 return text
+            _src("fallback_attribution")
             _log_event(
                 "combat", "outcome_attribution_rejected", level="info", codes=",".join(codes)
+            )
+        elif text:  # SPEC-363 R13: a rejeição da prosa também deixa rastro
+            _src("fallback_narrative")
+            _log_event(
+                "combat",
+                "outcome_narrative_rejected",
+                level="info",
+                codes=",".join(str(c) for c in (verdict.get("codes") or verdict.get("violations") or [])),
             )
     return round_log.deterministic_outcome_text(
         label, conflict_sum, player, last_out=last_out, names=names
@@ -2676,7 +2722,7 @@ def _combat_node(state: GameState):
         # SPEC-346 R16: a queda é narrada pelo `_narrate` (fecho de queda) e fecha com a Roda.
         from services import round_log
 
-        killer = _killer_identity(active)[0]
+        killer = _killer_identity(active, out, enemies)[0]
         world_pack = build_context_pack(
             state,
             query=f"{loc} {intent}",
@@ -2706,7 +2752,7 @@ def _combat_node(state: GameState):
         if round_log.WHEEL_TEXT not in narrative:
             narrative = narrative.rstrip() + "\n\n" + round_log.WHEEL_TEXT
     elif player_dead:
-        narrative = _narrate_fall(player, logs, _killer_identity(active)[0])
+        narrative = _narrate_fall(player, logs, _killer_identity(active, out, enemies)[0])
     elif is_simulation:
         suffix = "\n\nVitória no laboratório." if victory else "\n\nEscolha a próxima ação."
         narrative = "⚔️ " + "\n".join(f"• {line}" for line in logs if line) + suffix
@@ -2847,6 +2893,7 @@ def _combat_node(state: GameState):
             player_dead=player_dead,
             intent=intent,
             manifest=combat_meta.get("encounter"),
+            source_sink=combat_meta,
         )
     combat_meta["last_tactics"] = list(out.get("tactics") or [])
     if combat_over:
@@ -3007,7 +3054,7 @@ def _combat_node(state: GameState):
             "stabilization_attempts": int(
                 stabilization.get("attempts", player.get("stabilization_attempts", 0)) or 0
             ),
-            "killer": _killer_identity(active)[0],
+            "killer": _killer_identity(active, out, enemies)[0],
         }
         result["death_pending"] = True
         result["combat"] = {**combat_meta, "active": False, "scene": None}
@@ -3015,14 +3062,14 @@ def _combat_node(state: GameState):
         result["combat_target"] = None
         result["next"] = None
         result["archive_due"] = not is_simulation
-        killer, killer_id = _killer_identity(active)
+        killer, killer_id = _killer_identity(active, out, enemies)
         death_events.append(
             {
                 "type": "player_downed",
                 "actor_id": "player",
                 "target_id": "player",
                 "detail": f"{player.get('name', 'O herói')} tombou em combate"
-                + (f" diante de {killer}" if killer else ""),
+                + (f" {_diante_de(killer)}" if killer else ""),
                 "payload": {
                     "killer": killer,
                     "killer_id": killer_id,
@@ -3067,6 +3114,7 @@ def _compose_board_narrative(
     player_dead: bool,
     intent: str,
     manifest: dict | None,
+    source_sink: dict | None = None,
 ) -> str:
     """SPEC-346 R4/R11: mensagem do turno `on` = registro da rodada; no fim do conflito,
     registro + (linha em branco) + o ÚNICO resumo da IA (+ a Roda do Abismo na queda)."""
@@ -3106,6 +3154,7 @@ def _compose_board_narrative(
             for k, a in actors_by_id.items()
             if isinstance(a, dict) and a.get("name") and not a.get("is_player")
         },
+        source_sink=source_sink,
     )
     summary = prose_guard.sanitize_meta_preamble(summary)
     if player_dead:

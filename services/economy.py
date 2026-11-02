@@ -1057,4 +1057,9 @@ def _roll_loot_impl(
                 break
     item_id = rng.choice(pool) if pool else None
     gold = rng.randint(3, 12) * max(1, int(danger or 1))
+    meta = ARTIFACTS_DB.get(item_id) if item_id else None
+    if meta and str(meta.get("type", "")).lower() == "currency":
+        # SPEC-363 R18: moeda é ouro (value_gold), não um item ao lado do ouro.
+        gold += max(1, int(meta.get("value_gold", 1) or 1))
+        item_id = None
     return {"item_id": item_id, "rarity": pick, "gold": gold}

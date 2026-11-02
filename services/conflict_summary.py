@@ -13,6 +13,7 @@ ADITIVO: módulo novo + testes. O consumo em `agents/loot.py`/`agents/archivist.
 import hashlib
 import json
 import re
+from collections.abc import Iterable
 from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, model_validator
@@ -299,8 +300,9 @@ def canonical_summary_text(summary: dict) -> str:
         ("fugitivos", "Fugitivos"),
         ("inconscientes", "Inconscientes"),
     )
+    grouped = _names_by_strongest(summary)
     for field, label in mapping:
-        values = [str(value) for value in summary.get(field) or [] if str(value).strip()]
+        values = grouped.get(field) or []
         if values:
             clauses.append(f"{label}: {', '.join(values)}.")
     loot = summary.get("loot_obtido") or []
@@ -332,13 +334,41 @@ def _join_names(names: list[str]) -> str:
     return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} e {names[-1]}"
 
 
-def player_summary_text(summary: dict) -> str:
-    """SPEC-345 R4: resumo em voz de jogador (sem rótulos, ids nem espólio)."""
+# SPEC-363 R8: cada nome entra numa só categoria — a mais forte.
+_STRENGTH = ("mortos", "capturados", "rendidos", "fugitivos", "caidos", "inconscientes")
+
+
+def _names_by_strongest(summary: dict, exclude: Iterable[str] = ()) -> dict[str, list[str]]:
+    skip = {str(x).strip() for x in exclude if str(x).strip()}
+    owner: dict[str, str] = {}
+    for field in _STRENGTH:
+        for value in summary.get(field) or []:
+            name = str(value).strip()
+            if name and name not in skip:
+                owner.setdefault(name, field)
+    grouped: dict[str, list[str]] = {f: [] for f in _STRENGTH}
+    for field in _STRENGTH:
+        for value in summary.get(field) or []:
+            name = str(value).strip()
+            if owner.get(name) == field and name not in grouped[field]:
+                grouped[field].append(name)
+    return grouped
+
+
+def player_clauses(summary: dict, exclude: Iterable[str] = ()) -> list[str]:
+    """Orações em voz de jogador, uma categoria por nome; `exclude` tira nomes (ex.: o herói)."""
+    grouped = _names_by_strongest(summary, exclude)
     clauses: list[str] = []
     for field, singular, plural in _PLAYER_CLAUSES:
-        names = [str(v) for v in summary.get(field) or [] if str(v).strip()]
+        names = grouped.get(field) or []
         if names:
             clauses.append(f"{_join_names(names)} {singular if len(names) == 1 else plural}.")
+    return clauses
+
+
+def player_summary_text(summary: dict, exclude: Iterable[str] = ()) -> str:
+    """SPEC-345 R4: resumo em voz de jogador (sem rótulos, ids nem espólio)."""
+    clauses = player_clauses(summary, exclude)
     if clauses:
         return " ".join(clauses)
     from services.turn_outcome import EMPTY_NARRATION_TEXT
@@ -413,6 +443,34 @@ _HERO_WEAPON_RE = re.compile(
 )
 
 
+_BODY_ALIAS = {
+    "peito": "torso", "costelas": "torso", "flanco": "torso", "ventre": "torso",
+    "ombro": "braco", "coxa": "perna", "pescoco": "cabeca",
+}
+_HERO_BODY_RE = re.compile(r"\b(?:teu|tua|seu|sua|seus|suas)\s+(" + _BODY + r")\b")
+_HERO_BLOOD_RE = re.compile(
+    r"\b(?:teu|seu)\s+sangue\b|\bte\s+(?:atinge|acerta|rasga|fere|alcanca)\b"
+)
+_TU_RE = re.compile(
+    r"\b(?:teu|tua|teus|tuas|ti|contigo|ficas|estas|tens|es|ves|sentes|podes|queres)\b"
+)
+_VOCE_RE = re.compile(r"\b(?:voce|seu|sua|seus|suas)\b")
+
+
+def _v4(low: str, auth: dict) -> bool:
+    """SPEC-363 R11: marca de dano no corpo do herói sem fato que a sustente."""
+    if "hero_wound_regions" not in auth:
+        return False
+    wounded = {_fold_text(r).split("_")[0] for r in auth["hero_wound_regions"]}
+    for match in _HERO_BODY_RE.finditer(low):
+        region = _BODY_ALIAS.get(match.group(1), match.group(1))
+        if region not in wounded:
+            return True
+    if _HERO_BLOOD_RE.search(low) and auth.get("hero_state") == "ileso":
+        return True
+    return False
+
+
 def validate_attribution(text: str, auth: dict) -> list[str]:
     """Códigos V1/V2/V3 de autoria trocada (vazio = ok). ``auth`` vem de
     ``round_log.authorship``: ``hero_cards`` (nome → hit|miss) e ``final_by_hero``/``final_on_enemy``."""
@@ -438,4 +496,9 @@ def validate_attribution(text: str, auth: dict) -> list[str]:
             and _FALL_RE.search(low)
         ):
             codes.append("V3")
+        if _v4(low, auth):
+            codes.append("V4")
+    whole = _fold_text(text)
+    if _TU_RE.search(whole) and _VOCE_RE.search(whole):  # SPEC-363 R12 (V5): tratamento misto
+        codes.append("V5")
     return sorted(set(codes))

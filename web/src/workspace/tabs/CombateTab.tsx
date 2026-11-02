@@ -22,6 +22,7 @@ import { useTargeting } from "../../combat/useTargeting";
 import { useDeckArm } from "../../combat/useDeckArm";
 import { cardTargets } from "../../combat/deck";
 import { objectChips, orderChips, reinforcementNote } from "../../combat/conflictChips";
+import { boardClosed } from "../../combat/boardState";
 
 const DETAIL_ID = "combat-card-detail";
 
@@ -91,7 +92,7 @@ export function CombateTab({ data, busy, blocked, hitKey, ended, touch = false, 
   const dismissResult = (id: string) => (controlled ? onDismissResult!(id) : setLocalDismissed(id));
   const combatResult = resultFrom(data?.combat_result);
   const fighting = !!combat?.active;
-  const live = fighting && !!combat && !blocked;
+  const live = fighting && !!combat && !boardClosed(data, blocked);
 
   const resetKey = `${combat?.round ?? ""}|${combat?.active}|${blocked}|${data?.game_id ?? ""}`;
   const targeting = useTargeting(busy, resetKey);

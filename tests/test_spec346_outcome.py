@@ -142,7 +142,9 @@ def test_outcome_facts_have_no_digits():
     for outcome in ("victory", "death", "fled", "surrendered_enemy", "expired", "defeat"):
         facts = round_log.outcome_facts(outcome, summary, player, enemies, {})
         text = "\n".join(facts)
-        assert not re.search(r"\d", text), (outcome, text)
+        # SPEC-363 R6: nome de participante com dígito ("Goblin 2") sobrevive; o resto não tem número
+        bare = text.replace("Goblin 2", "Goblin").replace("Lobo 1", "Lobo").replace("Orc 3", "Orc")
+        assert not re.search(r"\d", bare), (outcome, text)
         assert "Espada Gasta" in text
     glossary = combat._narrate_outcome  # o glossário vive no prompt do resumo
     assert glossary is not None
@@ -227,7 +229,8 @@ def test_fallback_is_readable(monkeypatch, outcome):
     out = combat._narrate_outcome(outcome, summary, player, [], {}, "ataco", "", manifest=None)
     assert out.strip()
     assert "•" not in out and "⚔️" not in out and "☠️" not in out
-    assert not re.search(r"\d", out), out
+    bare = out.replace(FAINT + " 2", FAINT).replace("Orc 1", "Orc")  # SPEC-363 R6: nomes com dígito
+    assert not re.search(r"\d", bare), out
     assert not re.search(r"\b[a-z]+_[a-z0-9_]+\b", out)  # ids
 
 

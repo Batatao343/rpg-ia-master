@@ -576,7 +576,7 @@ def round_board(
 
             efeito += (
                 f", ferimento {_rl._cat_pt(note['categoria'])} "
-                f"{_rl._region_phrase(note.get('regiao'))}"
+                f"{_rl._owned_region(note.get('regiao'), actor_id, names.get(actor_id))}"
             )
         return {
             "tipo": "custo",

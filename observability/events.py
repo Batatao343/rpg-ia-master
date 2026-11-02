@@ -123,6 +123,7 @@ EVENTS: dict[str, tuple[str, ...]] = {
     "combat.object_used": (),
     "combat.objects_shadow": ("action",),
     "combat.outcome_attribution_rejected": ("codes",),
+    "combat.outcome_narrative_rejected": ("codes",),
     "combat.outcome_narration_budget_exceeded": ("elapsed_ms",),
     "combat.outcome_narration_failed": ("error", "outcome"),
     "combat.parse_failed": ("error",),
