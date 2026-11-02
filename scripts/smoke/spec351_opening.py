@@ -61,7 +61,9 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--real", action="store_true")
     ap.add_argument("--out", default="")
+    ap.add_argument("--only", type=int, nargs="*", default=[], help="índices (1-based) dos casos")
     args = ap.parse_args()
+    cases = [c for i, c in enumerate(CASES, 1) if not args.only or i in args.only]
     tmp = tempfile.mkdtemp(prefix="spec351_")
     if args.real:
         os.environ.pop("RPG_FORCE_MOCK", None)
@@ -95,7 +97,7 @@ def main() -> int:
     client = TestClient(api.app)
 
     rows, lat_on, lat_off = [], [], []
-    for name, race, cls, region, desc in CASES:
+    for name, race, cls, region, desc in cases:
         desc = _hostile() if desc == "__HOSTIL__" else desc
         char = {
             "name": name,
@@ -189,6 +191,7 @@ def main() -> int:
                 backstory=CASES[0][4],
                 start_location_id="nova_arcadia",
                 postura=CASES[0][2],
+                race=CASES[0][1],
             )
             replan = {
                 "E1": oc.check_thread_linked(

@@ -1,0 +1,100 @@
+{
+  "summary": {
+    "real": true,
+    "cases": 1,
+    "tally": {
+      "E1": 1,
+      "E2": 1,
+      "E3": 1,
+      "E4": 1,
+      "E5": 1,
+      "E6": 1,
+      "E7": 1
+    },
+    "pool": {
+      "promoted": 0,
+      "rejected": 1,
+      "held": 0,
+      "failed": 0
+    },
+    "promoted_names": [],
+    "p50_prologue_off_s": 16.52,
+    "p50_prologue_on_s": 9.38,
+    "replan": {
+      "E1": true,
+      "E4": true,
+      "arcs_left": 0,
+      "beats": [
+        "Descreva o cais ao crepúsculo: cordas de roupa encharcada estalando ao vento, vapor saindo dos canos da casa de banhos, e o som distante de passos metálicos na madeira. Deixe Aranel esperar sozinho por alguns instantes, com a caixa de latão pesando nos braços.",
+        "Aelis chega tarde, sem se desculpar, e fala de si na terceira pessoa: 'Aelis serve. Aelis não ouve.' Ela toca o lugar vazio no pescoço antes de contar que o prazo mudou — o penhor foi vendido a um intermediário do Anel Dourado. Mostre o recibo saindo da manga, mas não o entregue ainda. Mantenha em vista: A Coleção.",
+        "A ronda do fiscal de licenças mágicas se aproxima pelo fim do cais, conferindo selos. Aelis reage antes de Aranel: oferece esconder a caixa de latão entre os lençóis pendurados, mas exige algo em troca — que Aranel escute o que ela tem a pedir antes de decidir.",
+        "Revele o pedido de Aelis: ela precisa de alguém que compre a ampulheta de volta, e não pode ser ela, porque uma criada do Dourado comprando o próprio penhor chama atenção. Deixe claro que o intermediário tem nome conhecido no cais e que alguém ali já ouviu falar dele.",
+        "Se Aranel hesitar ou pressionar, Aelis deixa escapar um detalhe sobre o quarto alugado onde Elaryin morreu — e cala-se de imediato, como quem disse demais. Não explique o que ela sabe; apenas mostre o medo."
+      ]
+    }
+  },
+  "rows": [
+    {
+      "name": "Aranel",
+      "region": "Nova Arcádia",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "tr_na_po_de_sonho__p1",
+        "tr_na_a_colecao__p2",
+        "tr_na_lista_de_fornalha__p1",
+        "tr_na_aco_que_lembra__p1",
+        "tr_na_corpos_marcados__p1",
+        "tr_na_documento_da_legiao__p1"
+      ],
+      "thread_refs": [
+        "tr_na_a_colecao__p2",
+        "tr_na_po_de_sonho__p1"
+      ],
+      "plot_npc_id": "npc_tr_aelis_sem_ampulheta",
+      "personal_npc": "Orsino Vaz",
+      "seeking": "Recuperar a ampulheta penhorada antes que o prazo vença e ela vá a leilão.",
+      "lore_chars": 1129,
+      "menu_source": "350",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você desceu do Anel Dourado com uma caixa de latão e um caderno de calibrações, e ninguém no portão do anel de Ferro perguntou por quê. Aranel, elfo, arcanista cinzento — o que ali significa: um homem que mede antes de tocar. Sua irmã ainda respira na casa alta, mas o nome dela para você já não é o mesmo que ela ouve, e há três dias você não sobe aquelas escadas. O que você quer é pequeno e teimoso: pagar uma ampulheta de vidro que penhorou para custear os remédios dela, antes que o prazo vença e o penhor vire leilão. Trinta moedas com o rosto de Valerius pesam no bolso — entrada cobrada, não presente. Em Nova Arcádia, todo mundo paga para entrar; só muda a moeda. A sua foi uma irmã que esqueceu seu rosto. Agora você procura a criada élfica que guarda o recibo, e o cais de Lama cheira a ferrugem, piche e gente contando mentiras em voz baixa.",
+      "beats": [
+        "Aelis Sem-Ampulheta entrega o recibo com o nome de quem comprou o penhor — e pede que você compre de volta uma ampulheta que não é só vidro.",
+        "Uma lavadeira de olhos cor de vidro deixa um bilhete dobrado dentro da sua roupa lavada; o bilhete fala de um pó que alivia a Tosse de Ferro.",
+        "O intermediário do Dourado só devolve o penhor se você provar que a peça é sua — e o único que pode atestar isso é um escrivão que cobra caro e escreve mais do que devia.",
+        "Um boato sobe o cais: A Coleção anda comprando ampulhetas e nomes, e quem vende some do Anel de Lama sem deixar endereço."
+      ],
+      "game_id": "eb775fb1-ac43-4d1d-b8e6-998fbf783a61"
+    }
+  ]
+}

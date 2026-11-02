@@ -426,6 +426,7 @@ def build_start_scenario_ctx(char_input: dict) -> tuple[StartScenario, bool, dic
             backstory=raw_backstory,
             start_location_id=start_loc,
             postura=str(char_input.get("class_name") or ""),
+            race=str(char_input.get("race") or ""),
         )
         if flag == "shadow":
             _log_event(

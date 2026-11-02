@@ -5460,6 +5460,7 @@ def _create_game(req: CreateCharacterRequest, claim):
                 backstory=req.backstory or "",
                 start_location_id=start_loc_id,
                 postura=req.class_name,
+                race=req.race,
             )
             scenario_in = revalidate_scenario(scenario_in, menu)
             pool_seed = verified_seed(

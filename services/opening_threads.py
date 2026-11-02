@@ -35,6 +35,7 @@ class ThreadDoor(TypedDict):
     entity_ids: list[str]
     location_id: str
     playable: bool  # semente com gancho de quest (preferida no desempate)
+    race_hit: int  # 2 = âncora da raça do herói; 1 = idem mas Postura contrária; 0 = sem afinidade
 
 
 class ThreadMenu(TypedDict):
@@ -174,6 +175,7 @@ def _fallback_doors(region_id: str) -> list[ThreadDoor]:
                 entity_ids=[str(e) for e in (seed.get("entities") or [])][:4],
                 location_id=str(seed.get("location_id") or ""),
                 playable=bool(seed.get("quest_eligible")),
+                race_hit=0,
             )
         )
     for eid, ent in sorted(gr.load_entities().items()):
@@ -192,6 +194,7 @@ def _fallback_doors(region_id: str) -> list[ThreadDoor]:
                 entity_ids=[eid],
                 location_id="",
                 playable=False,
+                race_hit=0,
             )
         )
     return doors
@@ -201,8 +204,23 @@ def _get(obj: Any, key: str, default: Any = None) -> Any:
     return obj.get(key, default) if isinstance(obj, dict) else getattr(obj, key, default)
 
 
+def _race_keys(race: str) -> set[str]:
+    folded = _fold(race)
+    keys = {folded.replace(" ", "_")} if folded else set()
+    keys |= {w for w in folded.split() if len(w) >= 4}
+    return keys
+
+
+def _anchor_has_race(anchor_id: str, keys: set[str]) -> bool:
+    """Afinidade de raça lida do grafo público (tags da âncora); a 350 não expõe raça na API."""
+    if not keys or not anchor_id:
+        return False
+    ent = _public_entity(anchor_id) or {}
+    return bool(keys & {_fold(t) for t in ent.get("tags") or [] if isinstance(t, str)})
+
+
 def _doors_350(
-    api: Any, region_id: str, backstory: str, postura: str, state: dict | None
+    api: Any, region_id: str, backstory: str, postura: str, state: dict | None, race: str = ""
 ) -> list[ThreadDoor]:
     """`PlotDoor` (SPEC-350) → `ThreadDoor`: uma porta por trama, nome = título da trama."""
     try:
@@ -214,12 +232,15 @@ def _doors_350(
         _log_event("prologue", "thread.api_350_failed", level="warning", error=type(exc).__name__)
         return []
     want = _tokens(backstory)
+    rkeys = _race_keys(race)
     best: dict[str, tuple[int, int, Any]] = {}
     for idx, row in enumerate(rows):
         thr = owners.get(str(_get(row, "id") or ""))
         if thr is None or not _get(thr, "title"):
             continue
         hits = len(want & _tokens(str(_get(row, "hook_public") or ""))) if want else 0
+        if _anchor_has_race(str(_get(row, "anchor_npc_id") or ""), rkeys):
+            hits += 100  # afinidade de raça escolhe a porta dentro da trama
         cur = best.get(thr.id)
         if cur is None or hits > cur[0]:
             best[thr.id] = (hits, idx, row)
@@ -234,8 +255,13 @@ def _doors_350(
             entity_ids=[str(r) for r in (_get(row, "rumor_ids") or ())][:4],
             location_id=str(_get(row, "location_id") or ""),
             playable=True,
+            race_hit=0,
         )
-        door["_anchors"] = [str(_get(row, "anchor_npc_id") or "")]  # type: ignore[typeddict-unknown-key]
+        anchor = str(_get(row, "anchor_npc_id") or "")
+        door["_anchors"] = [anchor]  # type: ignore[typeddict-unknown-key]
+        if _anchor_has_race(anchor, rkeys):
+            contrary = bool(thr.postura_afinidade) and postura not in thr.postura_afinidade
+            door["race_hit"] = 1 if contrary else 2
         out.append(door)
     if rows and not out:
         _log_event("prologue", "thread.downgraded", level="warning", reason="350_unmapped")
@@ -248,7 +274,7 @@ def _rank(items: list, text_of, backstory: str) -> list:
 
     def key(item):
         hits = len(want & _tokens(text_of(item))) if want else 0
-        return (-hits, not item.get("playable", True))
+        return (-item.get("race_hit", 0), -hits, not item.get("playable", True))
 
     return sorted(items, key=key)
 
@@ -259,6 +285,7 @@ def thread_menu(
     backstory: str = "",
     start_location_id: str = "",
     postura: str = "",
+    race: str = "",
     state: dict | None = None,
 ) -> ThreadMenu:
     """Menu determinístico de portas e NPCs da borda (R1/R2); sem LLM, sem rede."""
@@ -269,7 +296,7 @@ def thread_menu(
     api = _population_api()
     doors: list[ThreadDoor] = []
     if api is not None:
-        doors = _doors_350(api, region_id, backstory, postura, state)
+        doors = _doors_350(api, region_id, backstory, postura, state, race)
         if doors:
             source = "350"
     if not doors:

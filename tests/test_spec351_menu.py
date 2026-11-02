@@ -291,3 +291,21 @@ def test_hidden_faction_from_350_rows_never_reaches_menu_or_sheet(monkeypatch):
     assert "encapuzados_fornalha" not in repr(menu) + ot.menu_block(menu)
     sheet = ot.plot_npc_sheet(menu["npcs"][0], "g", "nova_arcadia", hook="gancho")
     assert "encapuzados_fornalha" not in repr(sheet) and sheet["opening_hook"] == "gancho"
+
+
+def test_real_350_elfo_arcanista_nova_arcadia_po_de_sonho_first(monkeypatch):
+    """Afinidade de raça (tag da âncora no grafo) pesa antes da Postura: Elfo → Pó de Sonho."""
+    pt = pytest.importorskip("services.plot_threads")
+    monkeypatch.setenv("RPG_PLOT_THREADS", "on")
+    if hasattr(pt, "clear_cache"):
+        pt.clear_cache()
+    if not any(t.id == "tr_na_po_de_sonho" for t in pt.threads_for_region("nova_arcadia")):
+        pytest.skip("catálogo da 350 sem tr_na_po_de_sonho")
+    menu = ot.thread_menu(
+        "nova_arcadia", postura="Arcanista Cinzento", race="Elfo", backstory="saí do Anel Dourado"
+    )
+    assert menu["source"] == "350"
+    assert menu["doors"][0]["door_id"].startswith("tr_na_po_de_sonho")
+    assert menu["npcs"][0]["entity_id"] == "npc_tr_ysolt_fio_de_vidro"
+    humano = ot.thread_menu("nova_arcadia", postura="Arcanista Cinzento", race="Humano")
+    assert not humano["doors"][0]["door_id"].startswith("tr_na_po_de_sonho")

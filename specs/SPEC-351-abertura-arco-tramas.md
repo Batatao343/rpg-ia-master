@@ -628,3 +628,14 @@ que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve ca
   em Nova Arcádia):** E1 7/8, E2/E3/E4/E5/E6/E7 8/8; 1 NPC pessoal promovido (caso 1), nenhum com nome do
   personagem nem o caso 8; p50 8,3 s → 9,4 s. O replan do caso 1 deu E1 falso antes de `consume_thread`
   forçar o título; essa última correção foi validada só por teste unitário (não repeti o smoke inteiro).
+
+### 02/11 (noite) — raça no menu e smoke do replan
+
+- **Raça pesa no menu:** a 350 não expõe raça na API; o adaptador lê a afinidade das tags da âncora no grafo
+  público (`elfo` em `npc_tr_ysolt_fio_de_vidro`/`npc_tr_aelis_sem_ampulheta`). Porta com âncora da raça do herói
+  vai à frente de tudo (Postura e tokens da descrição); entre duas de raça, a de trama com Postura contrária
+  (ex. `tr_na_a_colecao` para Arcanista) fica atrás. Teste real: Elfo Arcanista Cinzento em Nova Arcádia →
+  `tr_na_po_de_sonho` primeiro, âncora Ysolt; Humano não.
+- **Smoke (`docs/spec351/smoke-2026-11-02c-replan.json`, caso 1 + replan forçado, 350 real):** E1–E7 verdes; o plano
+  novo cita o título da trama (E1) sem segredo (E4); a LLM escolheu `tr_na_a_colecao__p2` + `tr_na_po_de_sonho__p1`
+  (as duas portas élficas) e o NPC da trama foi Aelis, não Ysolt: o menu oferece as duas, a escolha é da LLM.
