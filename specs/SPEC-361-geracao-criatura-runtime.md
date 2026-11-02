@@ -158,7 +158,7 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
 - **R31 — MockLLM.** `mock_llm` ganha o builder `FichaCriaturaGerada`, que gera uma ficha **válida no gate** e determinística por hash do pedido: nome de 2–3 palavras sem colisão e eixos livres escolhidos a partir dos eixos ocupados que vêm no prompt. O comportamento padrão é passar no lint; um monkeypatch de teste força colisão.
 - **R32 — Eval determinístico (antes × depois).** `scripts/bestiario/eval_geracao.py --pedidos tests/fixtures/spec361_pedidos.yaml --modo antes|depois [--real] --out docs/spec361/eval-<modo>-<data>.json` + um `.md` lado a lado. As métricas são calculadas por funções puras de `services/creature_gen_eval.py` (§3.9). O conjunto de pedidos e os limiares ficam congelados na Etapa 0; quem implementa o produto não os altera (`08_CONTRATO_CODING_AGENT.md`).
 
-- **R33 — Substituta enquanto gera (decisão do dono, 02/11).** No spawn de criatura desconhecida, o turno **nunca** espera o LLM de geração: usa na hora a variante (se houver) ou a existente mais próxima (`mais_proxima`, caminho `substituta`), marca `geracao.agendada` e enfileira o job tipado `creature_gen` (`services/creature_gen_jobs.py`, idempotente por jogo + região + pedido, `max_attempts=1`). O job gera com prazo próprio (R17), passa no gate U1–U13 e grava `local` (overlay do dono) ou `pool_pendente` (fila da revisão Opus em lote). O próximo encontro com o mesmo pedido usa a ficha gerada (`ja_gerada`). Execução: perfil DB pelo worker/cron de drenagem (`workers/run_worker.build_handlers`, sem thread solta no request); perfil legacy (fila em memória) por `drenar_local` depois de a narração SSE sair (mesmo ponto da projeção `post_response`) ou por script.
+- **R33 — Substituta enquanto gera (decisão do dono, 02/11).** No spawn de criatura desconhecida, o turno **nunca** espera o LLM de geração: usa na hora a variante (se houver) ou a existente mais próxima (`mais_proxima`, caminho `substituta`), marca `geracao.agendada` e enfileira o job tipado `creature_gen` (`services/creature_gen_jobs.py`, uma geração por jogo + região + pedido para sempre, `max_attempts=2` para sobreviver a uma interrupção da plataforma). O job gera com prazo próprio (R17), passa no gate U1–U13 e grava `local` (overlay do dono) ou `pool_pendente` (fila da revisão Opus em lote). O próximo encontro com o mesmo pedido usa a ficha gerada (`ja_gerada`, pela chave opaca `geracao_chave = sha256(fold(pedido)|região)[:16]`, gravada no template e no documento do pool, sem o texto do pedido). Execução: perfil DB pelo worker/cron de drenagem (`workers/run_worker.build_handlers`, sem thread solta no request); perfil legacy (processo local, fila em memória) por `drenar_em_segundo_plano`: uma thread daemon com um job por vez, fora do lock do jogo, disparada no `_worker` do SSE depois de `_execute_action` retornar. O payload do job guarda só hashes das falas do jogador (tokens e shingles), nunca o texto.
 
 ### Fora de escopo
 
@@ -637,7 +637,11 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo. São ~40 requests
 - **D8 — `A_CADA_N` por categoria.** Default: 3/3/2/2 (lacaio/padrão/elite/chefe), alinhado ao intervalo 2–4 do R15 da 349. Calibrar com a arena da 349 só se o playtest acusar.
 - **D9 — Temperatura.** Default: 0,7 (hoje 0,5). O lint segura a repetição; a temperatura busca variedade.
 - **D10 — Limiares do eval.** Default: os de §3.9 (lint de primeira ≥ 70 %, final ≥ 90 %, fallback ≤ 10 %, p95 ≤ 15 s). Congelados na Etapa 0.
-- **D11 — Quando virar `on`.** Default: depois do smoke §6 verde e da revisão independente; staging junto.
+- **D11 — Quando virar `on`.** Default: depois do smoke §6 verde e da revisão independente; staging junto. **Pré-condições (revisão rodada 2, `handoffs/SPEC-361-independent-review.md`):**
+  1. R2-P1-1 e R2-P1-2 corrigidos (**feito**, ciclo 3, ver §9);
+  2. decisão do dono/autor do eval sobre o limiar de latência (turno × job) e a correção de `idioma_pt` (P2-8);
+  3. `lint_primeira` ≥ 70 % numa rodada real, ou o dono aceitar explicitamente o desvio;
+  4. smoke §6, passos 2–5 (no perfil DB, com o worker/cron processando `creature_gen`).
 - **D12 — k do few-shot.** Default: 2, e 3 só quando cabe no orçamento (R12).
 
 ## 9. Registro de execução
@@ -710,6 +714,16 @@ Revisão em `handoffs/SPEC-361-independent-review.md` (`CHANGES_REQUIRED`; conte
 - **abaixo do limiar:** `lint_primeira` 54,5 % (limiar 70 %). Os erros de 1ª tentativa são U3/U2 e R20, corrigidos pela correção curta;
 - `idioma_pt` 99,3 %: bug do avaliador, "a"/"as" nas duas listas (P2-8);
 - **métrica invalidada pela decisão:** `latencia_nova_p95_ms ≤ 15 000` foi pensada para o turno. Agora mede o job (p50 8,6 s, p95 19,1 s, prazo 30 s) e não entra no turno. O avaliador e os limiares não foram alterados; fica para o coordenador decidir.
+
+### Ciclo 3: revisão rodada 2 (02/11)
+
+Parecer: pousar com a flag em `legacy` e corrigir os P1 antes de ligar.
+- **R2-P1-1:** chave opaca `geracao_chave` no documento do pool (allowlist da CREATURE e campo de id no validador, `_ID_RE`) e em `template.geracao.chave` (overlay e `_pool_creature_template`). `ja_gerada` compara pela chave. Teste: com o pool ligado, o 2º encontro com o mesmo pedido sai `existente` com `pool_entry_id`, sem reagendar e sem gastar o teto.
+- **R2-P1-2:** `_execute_action` não drena mais nada. `api._drain_creature_gen()` roda no `_worker` do SSE depois de `_execute_action` retornar, fora do lock do jogo, e só dispara uma thread daemon com um job por vez no processo (perfil legacy). Teste: com handler lento, a chamada volta na hora e o lock do jogo é pego sem espera. Não filtra por jogo: a fila em memória não tem lease por chave, e o job não toca no estado de jogo nenhum.
+- **R2-P2-1:** `max_attempts=2`. Um job morto pela plataforma no meio (lease expirada) roda mais uma vez e confere `ja_gerada` antes de gastar LLM. Fallback do gate termina o job normalmente, sem virar `dead`.
+- **R2-P2-2:** decisão registrada. O dedupe é permanente: cada pedido gera no máximo uma vez por jogo; se cair em fallback, fica a substituta. O comentário foi corrigido.
+- **R2-P2-3:** teste de que `build_handlers()` registra `creature_gen`.
+- **R2-P2-4:** o payload guarda `player_token_hashes` (hash de tokens com ≥ 4 letras, para o `name_origin`) e `player_shingles` (os hashes que o validador de texto literal já usa, repassados a `shared_pool.submit(shingles=…)`). As falas não ficam em `app.jobs.payload`.
 
 ### Aprovação do dono (02/11)
 

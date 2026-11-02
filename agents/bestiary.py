@@ -225,6 +225,8 @@ def _pool_creature_template(entry) -> dict:
         from services.shared_pool import estado_publico
 
         out["geracao"] = {"caminho": "nova", "spec": 361, "estado": estado_publico(entry)}
+        if doc.get("geracao_chave"):
+            out["geracao"]["chave"] = str(doc["geracao_chave"])  # R2-P1-1 (`ja_gerada`)
         return out
     concept = {
         "id": str(doc.get("id") or entry.entry_id),
@@ -441,7 +443,15 @@ def _submit_generated_enemy(res, data: dict, game_id: str, location_id: str, nam
 
 
 def _submit_generated_ficha(
-    ficha: dict, data: dict, game_id: str, location_id: str, player_inputs, owner_id=None
+    ficha: dict,
+    data: dict,
+    game_id: str,
+    location_id: str,
+    player_inputs,
+    owner_id=None,
+    *,
+    nome_digitado: bool | None = None,
+    shingles=None,
 ) -> str:
     """SPEC-361 R22/R23: a ficha inteira vai ao pool (hold). Devolve o estado público.
 
@@ -450,11 +460,11 @@ def _submit_generated_ficha(
     from services import shared_pool
     from services.shared_pool_models import PoolNamespace
 
-    origin = (
-        "player"
-        if shared_pool.name_typed_by_player(str(ficha.get("nome") or ""), player_inputs)
-        else "engine"
-    )
+    if nome_digitado is None:
+        nome_digitado = shared_pool.name_typed_by_player(
+            str(ficha.get("nome") or ""), player_inputs
+        )
+    origin = "player" if nome_digitado else "engine"
     doc = {
         "id": str(data.get("id")),
         "name": str(ficha.get("nome") or data.get("name")),
@@ -467,6 +477,9 @@ def _submit_generated_ficha(
         "appearance": str(data.get("appearance") or "")[:300],
         "ficha": dict(ficha),
     }
+    chave = (data.get("geracao") or {}).get("chave")
+    if chave:
+        doc["geracao_chave"] = str(chave)  # R2-P1-1: chave opaca, nunca o texto do pedido
     region = shared_pool._region_of(location_id) or str(ficha.get("regiao") or "")
     try:
         entry = shared_pool.submit(
@@ -477,6 +490,7 @@ def _submit_generated_ficha(
             name_origin=origin,
             player_inputs=list(player_inputs or ()),
             owner_id=owner_id,
+            shingles=shingles,
         )
         data["pool_entry_id"] = entry.entry_id
         return shared_pool.estado_publico(entry)
@@ -494,6 +508,8 @@ def persistir_nova(
     location_id: str,
     player_inputs,
     owner_id=None,
+    nome_digitado: bool | None = None,
+    shingles=None,
 ) -> str:
     """SPEC-361: grava a criatura nova gerada FORA do turno (job). Devolve o estado público.
 
@@ -501,7 +517,14 @@ def persistir_nova(
     desligado, chefe ou pool fora: overlay do dono (``local``)."""
     if bool(game_id) and _pool_enabled() and ficha.get("categoria") != "chefe":
         estado = _submit_generated_ficha(
-            ficha, data, game_id, location_id, player_inputs, owner_id=owner_id
+            ficha,
+            data,
+            game_id,
+            location_id,
+            player_inputs,
+            owner_id=owner_id,
+            nome_digitado=nome_digitado,
+            shingles=shingles,
         )
     else:
         save_enemy(data, owner_id=owner_id)

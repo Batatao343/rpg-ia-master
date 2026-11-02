@@ -65,6 +65,7 @@ DOCUMENT_ALLOWLIST: dict[PoolNamespace, frozenset[str]] = {
             "region_tags",
             "ficha",  # SPEC-361 R23: ficha da 349 (dict); textos varridos recursivamente
             "appearance",
+            "geracao_chave",  # SPEC-361 R2-P1-1: hash de pedido + região (ident)
         }
     ),
     PoolNamespace.ARTIFACT: frozenset(

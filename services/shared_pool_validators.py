@@ -77,6 +77,7 @@ _ID_FIELDS = frozenset(
         "profession_id",
         "parent_location_id",
         "region",
+        "geracao_chave",
     }
 )
 _ID_RE = re.compile(r"^[a-z0-9_]{1,80}$")

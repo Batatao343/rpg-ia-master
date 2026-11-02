@@ -1288,17 +1288,21 @@ def _forcar_efetivo(p: PedidoCriatura) -> str:
     return p.forcar if p.forcar != "auto" and eval_mode() else "auto"
 
 
+def chave_geracao(pedido: str, regiao: str) -> str:
+    """Chave opaca do pedido (R2-P1-1): ``sha256(fold(pedido)|região)[:16]``. Vai no documento do
+    pool e no template no lugar do texto do pedido (texto do jogador não entra no pool)."""
+    alvo = " ".join(_fold(pedido).split())
+    return hashlib.sha256(f"{alvo}|{regiao}".encode()).hexdigest()[:16]
+
+
 def ja_gerada(p: PedidoCriatura, bestiary: dict) -> str | None:
-    """Criatura que um job já gerou para o MESMO pedido nesta região (o próximo encontro com
-    o mesmo pedido usa a ficha nova em vez de agendar outra)."""
-    alvo = _fold(p.pedido).strip()
+    """Criatura que um job já gerou para o MESMO pedido nesta região (overlay do dono ou pool do
+    jogo): o próximo encontro usa a ficha nova em vez de agendar outra."""
+    chave = chave_geracao(p.pedido, p.regiao)
     hits = [
         str(bid)
         for bid, tpl in bestiary.items()
-        if isinstance(tpl, dict)
-        and (tpl.get("geracao") or {}).get("caminho") == "nova"
-        and _fold((tpl.get("geracao") or {}).get("pedido")).strip() == alvo
-        and (tpl.get("ficha") or {}).get("regiao") == p.regiao
+        if isinstance(tpl, dict) and (tpl.get("geracao") or {}).get("chave") == chave
     ]
     return min(hits) if hits else None
 

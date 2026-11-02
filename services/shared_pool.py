@@ -164,8 +164,12 @@ def submit(
     store=None,
     now: datetime | None = None,
     owner_id: UUID | None = None,
+    shingles: Sequence[str] | None = None,
 ) -> SharedPoolEntry:
-    """Grava a entidade em hold (ou `local_only`) — R9/R10/R11/R12."""
+    """Grava a entidade em hold (ou `local_only`) — R9/R10/R11/R12.
+
+    ``shingles`` (SPEC-361 R2-P2-4): hashes já calculados quando quem submete (job) não guarda
+    mais as falas do jogador."""
     if not game_id:
         raise ValueError("game_id obrigatório para submeter ao pool")
     store = store or get_store()
@@ -197,7 +201,9 @@ def submit(
         seed_signature=signature,
         origin_owner_id=owner,
         origin_game_id=game_id,
-        input_shingles=input_shingles(player_inputs),
+        input_shingles=list(shingles)[:200]
+        if shingles is not None
+        else input_shingles(player_inputs),
         created_at=now,
         promote_after=now + timedelta(hours=hold_hours()),
     )

@@ -292,3 +292,80 @@ def test_gatilho_so_da_acao_do_jogador(gen_on):
     )
     assert cg.texto_do_jogador(falado).endswith("cicatrizes")
     assert "veterano" not in cg.texto_do_jogador(narrado)
+
+
+def test_drenagem_fora_do_lock_do_jogo(gen_on, monkeypatch):
+    """R2-P1-2: a geração (lenta) roda numa thread daemon fora do lock; a próxima ação do mesmo
+    jogo pega o lock na hora. `_execute_action` não drena mais nada sob o lock."""
+    import inspect
+    import time
+
+    import api
+    from services import creature_gen_jobs as cgj
+
+    rodou = []
+
+    def lento(payload):
+        time.sleep(0.5)
+        rodou.append(payload["pedido"])
+        return {"status": "fallback"}
+
+    monkeypatch.setattr(cgj, "handler", lento)
+    state = {"game_id": "g-lock", "world": dict(ZHUR)}
+    bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
+    t0 = time.perf_counter()
+    api._drain_creature_gen()
+    assert time.perf_counter() - t0 < 0.2  # devolve na hora
+    lock = api._game_lock("g-lock")
+    assert lock.acquire(timeout=0.1)  # a próxima ação do jogo não espera o job
+    lock.release()
+    cgj.aguardar_drenagem(5)
+    assert rodou == [ODRES]
+    assert "creature_gen" not in inspect.getsource(api._execute_action)
+
+
+def test_payload_sem_fala_crua_do_jogador():
+    """R2-P2-4: o payload do job guarda hashes, nunca as falas do jogador."""
+    import json
+
+    from services import creature_gen_jobs as cgj
+
+    p = cg.PedidoCriatura(
+        pedido="bicho do poço",
+        regiao="deserto_zhur",
+        location_id="deserto_zhur",
+        categoria_sugerida=None,
+        motivo_trama="",
+        encounter_level=1,
+        game_id="g",
+        turn=1,
+        player_inputs=("meu email é fulano@exemplo.com e ataco o Rastejador Pardo",),
+    )
+    payload = cgj.payload_de(p)
+    texto = json.dumps(payload, ensure_ascii=False)
+    assert "fulano" not in texto and "exemplo" not in texto and "Rastejador" not in texto
+    assert cgj.nome_digitado("Rastejador de Cinza", payload["player_token_hashes"])
+    assert not cgj.nome_digitado("Coro de Quitina", payload["player_token_hashes"])
+    assert cgj.pedido_de(payload).player_inputs == ()
+
+
+def test_build_handlers_registra_creature_gen(monkeypatch):
+    """R2-P2-3: o worker durável (perfil DB) conhece o kind `creature_gen`."""
+    import types
+
+    from infrastructure.pgvector_memory import PgVectorMemoryStore
+    from services import creature_gen_jobs as cgj
+    from workers import run_worker
+
+    fake = types.SimpleNamespace(
+        resources=[object()],
+        memory_store=object.__new__(PgVectorMemoryStore),
+        blob_store=None,
+        shared_blob_store=None,
+    )
+    monkeypatch.setattr(run_worker, "get_runtime", lambda: fake)
+    handlers = run_worker.build_handlers()
+    assert "creature_gen" in handlers
+    chamado = []
+    monkeypatch.setattr(cgj, "handler", lambda payload: chamado.append(payload) or {"ok": 1})
+    assert handlers["creature_gen"]({"pedido": "x"}) == {"ok": 1} and chamado

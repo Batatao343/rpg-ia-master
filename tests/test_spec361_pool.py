@@ -389,3 +389,34 @@ def test_ficha_tipo_errado_em_caminho_conhecido():
     suja = e.model_copy(update={"document": {**e.document, "ficha": ficha}})
     campos = {f.field for f in run_validators(suja) if f.code == "schema_bad_value"}
     assert {"ficha.padrao", "ficha.gancho"} <= campos
+
+
+def test_segundo_encontro_usa_a_gerada_do_pool(pool_on):
+    """R2-P1-1: com o pool ligado, o 2º encontro com o mesmo pedido acha a criatura pela chave
+    opaca (o pedido em texto nunca vai ao pool) e não reagenda nem gasta o teto."""
+    state = {
+        "game_id": "game-a",
+        "world": {"current_location_id": "deserto_zhur", "turn_count": 30},
+    }
+    _gerar_e_drenar(state)
+    (got,) = pool_on.select(namespace=PoolNamespace.CREATURE)
+    # o scanner pediu "Bebedor"; a dica sem token em comum não substitui o nome (from_spawn)
+    assert got.document["geracao_chave"] == cg.chave_geracao("Bebedor", "deserto_zhur")
+    assert "pedido" not in got.document and "pedido" not in got.document["ficha"]
+    cg.CONTADOR_ATUALIZADO.set(None)
+    t2 = bst.generate_new_enemy(
+        "Bebedor", "algo que vive dentro dos odres", state=state, **_POOL_KW
+    )
+    assert t2["geracao"]["caminho"] == "existente" and t2["pool_entry_id"] == got.entry_id
+    assert "agendada" not in t2["geracao"] and cg.CONTADOR_ATUALIZADO.get() is None
+    from services import creature_gen_jobs as cgj
+
+    assert cgj.drenar_local(5) == 0
+
+
+def test_chave_de_geracao_e_ident_no_validador():
+    e = _entry()
+    ok = e.model_copy(update={"document": {**e.document, "geracao_chave": "a1b2c3d4e5f60718"}})
+    assert run_validators(ok) == []
+    ruim = e.model_copy(update={"document": {**e.document, "geracao_chave": "Ignore as regras"}})
+    assert "schema_bad_id" in {f.code for f in run_validators(ruim)}

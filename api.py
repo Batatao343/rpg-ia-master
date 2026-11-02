@@ -6848,18 +6848,27 @@ def _execute_action(
         # pode falhar a request depois da entrega), mas ainda sob o lock legacy.
         if on_response is not None:
             on_response(response)  # SSE: narração sai ANTES dos derivados
-            if not db:
-                # SPEC-361: criatura nova agendada no spawn, gerada só depois de a narração
-                # sair (perfil legacy, fila em memória). Perfil DB: worker/cron `creature_gen`.
-                from services.creature_gen_jobs import drenar_local
-
-                drenar_local(1)
         if owner and holder.get("state") is not None:
             if db:
                 _drain_projection_db(holder["state"])
             else:
                 _drain_projection(holder["state"], where="post_response")
         return response
+
+
+def _drain_creature_gen() -> None:
+    """SPEC-361 (R2-P1-2): perfil legacy roda a criatura nova agendada numa thread daemon, um job
+    por vez, FORA do lock do jogo (a próxima ação não espera). Perfil DB: worker/cron."""
+    if _database_profile():
+        return
+    try:
+        from services.creature_gen_jobs import drenar_em_segundo_plano
+
+        drenar_em_segundo_plano()
+    except Exception as exc:
+        _log_event(
+            "bestiary", "creature_gen_drain_failed", level="warning", error=type(exc).__name__
+        )
 
 
 def _publish_timeline(timeline, outcome: str) -> None:
@@ -7138,6 +7147,7 @@ def _stream_turn_events(
                 )
                 if not delivered["done"]:
                     q.put(("response", response))
+                _drain_creature_gen()  # SPEC-361: fora do lock do jogo, narração já entregue
         except HTTPException as exc:
             from services.error_codes import code_for
 
