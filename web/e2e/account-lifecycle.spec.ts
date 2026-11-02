@@ -19,6 +19,7 @@ test("SPEC-190 signup awaits verification and email requests disclose no account
   await page.getByLabel("Declaro ter 18 anos ou mais.").check(); // SPEC-222 R9
   await page.getByRole("button", { name: "Criar conta", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("Se o endereço puder receber mensagens");
+  await expect(page.getByRole("status")).toContainText("clique no link para ativar a conta");
   expect(backend.protectedBeforeAuth).toBe(0);
   expect(backend.requests.some(request => request.path === "/game/saves")).toBe(false);
 

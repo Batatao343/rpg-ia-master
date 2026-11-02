@@ -43,6 +43,8 @@ function clearOwner(owner: string) {
 }
 
 const LS_KEY = "cronicas_game_id";
+const SIGNUP_NOTICE = "Se o endereço puder receber mensagens, enviamos um link de confirmação. "
+  + "Abra o e-mail (confira também spam e a aba Atualizações) e clique no link para ativar a conta.";
 
 
 export function App() {
@@ -230,7 +232,9 @@ export function App() {
     try {
       const result = await (create ? api.signup(email, password, captchaToken) : api.login(email, password, captchaToken));
       if (!result.authenticated) {
-        setAuthNotice(result.message || "Se o endereço puder receber mensagens, enviaremos as instruções.");
+        // Mesmo texto para conta nova ou existente (não enumera), mas diz o próximo passo.
+        setAuthNotice(create ? SIGNUP_NOTICE
+          : result.message || "Se o endereço puder receber mensagens, enviaremos as instruções.");
         return;
       }
       await completeAuthenticatedSession();
