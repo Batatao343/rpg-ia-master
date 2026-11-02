@@ -242,6 +242,7 @@ def test_colisao_dupla_fallback_mais_proxima(monkeypatch):
 
 
 def test_prazo_estourado_fallback(monkeypatch):
+    monkeypatch.setenv("RPG_CREATURE_GEN_DEADLINE_S", "12")
     relogio = iter([0.0, 0.0, 9.0, 9.0, 9.0, 9.0])
     monkeypatch.setattr(cg, "_relogio", lambda: next(relogio, 20.0))
     llm = _ScriptLLM([_colidente(), cg.FichaCriaturaGerada(**_ficha_ok())])
@@ -333,3 +334,31 @@ def test_reparar_padrao():
     assert ok["padrao"] == ["mover", "ataque"]
     outro = [Issue("error", "U3", "a/x: 4 de 6 eixos iguais")]
     assert cg.reparar_padrao(ficha, outro, lambda f: []) is None
+
+
+def test_cadeia_de_fallback_para_depois_do_prazo(monkeypatch):
+    """P2-1: a thread que passou do prazo não abre outro provedor."""
+    import time as _t
+
+    import llm_setup
+
+    aberto: list[str] = []
+
+    class _Cadeia:
+        def with_structured_output(self, schema, **_k):
+            class _B:
+                def invoke(self, messages):
+                    _t.sleep(0.3)  # o 1º provedor estoura o prazo
+                    try:
+                        llm_setup._authorize_provider_attempt("groq", "x")  # o RoutedLLM faria isto
+                        aberto.append("groq")
+                    except TimeoutError:
+                        aberto.append("barrado")
+                    return None
+
+            return _B()
+
+    _usar_llm(monkeypatch, _Cadeia())
+    assert cg._invocar([], 0.1, []) is None
+    _t.sleep(0.4)
+    assert aberto == ["barrado"]

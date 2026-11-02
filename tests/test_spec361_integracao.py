@@ -84,16 +84,83 @@ def test_spawn_colmeia_zhur_variante(gen_on, monkeypatch):
     assert "mon_saltador_de_palafita__v_mente_unica" in _overlay()
 
 
-def test_spawn_nova_salva_overlay(gen_on):
-    t = bst.generate_new_enemy(
-        "Bebedor de Odres",
-        "algo que vive dentro dos odres de água estragada",
-        state={"game_id": "g-int", "world": dict(ZHUR)},
-    )
-    assert t["geracao"]["caminho"] == "nova" and t["geracao"]["estado"] == "local"
-    saved = _overlay()[t["id"]]
+ODRES = "algo que vive dentro dos odres de água estragada"
+
+
+def test_spawn_substituta_agenda_e_job_salva_overlay(gen_on):
+    from services import creature_gen_jobs as cgj
+
+    state = {"game_id": "g-int", "world": dict(ZHUR)}
+    t = bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
+    # decisão do dono: na hora, a existente mais próxima; a nova fica agendada
+    assert t["geracao"]["caminho"] == "substituta" and t["geracao"]["agendada"] is True
+    assert "ficha" not in t and t["id"] in __import__("gamedata").BESTIARY
+    assert cg.CONTADOR_ATUALIZADO.get() == (1, 40)  # P1-2: o teto conta a tentativa
+    assert cgj.drenar_local(5) == 1
+    geradas = [v for v in _overlay().values() if (v.get("geracao") or {}).get("caminho") == "nova"]
+    assert len(geradas) == 1
+    saved = geradas[0]
     assert saved["ficha"]["revisao"] == "pendente" and saved["appearance"]
+    assert saved["geracao"]["estado"] == "local" and saved["geracao"]["pedido"] == ODRES
+    # o próximo encontro com o mesmo pedido usa a ficha nova (sem agendar outra)
+    t2 = bst.generate_new_enemy("Bebedor de Odres", ODRES, state={**state, "world": dict(ZHUR)})
+    assert t2["id"] == saved["id"] and "agendada" not in t2["geracao"]
+    assert cgj.drenar_local(5) == 0
+
+
+def test_turno_nao_chama_llm_de_geracao(gen_on, monkeypatch):
+    """O turno com spawn desconhecido não espera o LLM de geração: zero chamada de ficha."""
+    import time
+
+    import llm_setup
+
+    chamadas: list[str] = []
+
+    class _Lento:
+        def with_structured_output(self, schema, **_k):
+            class _B:
+                def invoke(self, messages):
+                    chamadas.append(schema.__name__)
+                    if schema.__name__ in ("FichaCriaturaGerada", "EnemySchema"):
+                        time.sleep(0.4)  # o LLM de geração é lento
+                    from mock_llm import MockLLM
+
+                    return MockLLM().with_structured_output(schema).invoke(messages)
+
+            return _B()
+
+    monkeypatch.setattr(llm_setup, "get_llm", lambda *a, **k: _Lento())
+    monkeypatch.setattr(bst, "get_llm", lambda *a, **k: _Lento())
+    state = {"game_id": "g-lat", "world": dict(ZHUR)}
+    t0 = time.perf_counter()
+    bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
+    on_s = time.perf_counter() - t0
+    assert "FichaCriaturaGerada" not in chamadas
+    monkeypatch.setenv("RPG_CREATURE_GEN", "legacy")
+    t0 = time.perf_counter()
+    bst.generate_new_enemy("Bebedor de Odres Outro", ODRES)
+    legacy_s = time.perf_counter() - t0
+    assert "EnemySchema" in chamadas
+    assert on_s < legacy_s  # o caminho novo não é mais lento que o legado
+
+
+def test_teto_conta_tentativa_que_falhou(gen_on, monkeypatch):
+    """P1-2: geração que caiu em fallback no job ainda consome o intervalo do teto."""
+    from services import creature_gen_jobs as cgj
+
+    monkeypatch.setattr(cg, "gerar_nova", lambda *a, **k: (None, {"codigos": ["PRAZO"]}))
+    state = {"game_id": "g-teto", "world": dict(ZHUR)}
+    bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
     assert cg.CONTADOR_ATUALIZADO.get() == (1, 40)
+    assert cgj.drenar_local(5) == 1  # o job roda e falha: fica a substituta
+    world = {**ZHUR, "turn_count": 45, "creature_gen": {"novas": 1, "ultimo_turno": 40}}
+    cg.CONTADOR_ATUALIZADO.set(None)
+    t = bst.generate_new_enemy(
+        "Roedor de Cântaro", "um roedor de cântaro", state={"game_id": "g-teto", "world": world}
+    )
+    assert t["geracao"]["caminho"] == "fallback" and "agendada" not in t["geracao"]
+    assert cg.CONTADOR_ATUALIZADO.get() is None
+    assert cgj.drenar_local(5) == 0
 
 
 def test_contador_vai_ao_estado(gen_on, monkeypatch):
@@ -109,13 +176,14 @@ def test_contador_vai_ao_estado(gen_on, monkeypatch):
 
 
 def test_art_brief_criatura_gerada(gen_on):
+    from services import creature_gen_jobs as cgj
     from services.art_brief import build_creature_art_brief
 
-    t = bst.generate_new_enemy(
-        "Bebedor de Odres",
-        "algo que vive dentro dos odres de água estragada",
-        state={"game_id": "g-art", "world": dict(ZHUR)},
-    )
+    state = {"game_id": "g-art", "world": dict(ZHUR)}
+    bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
+    cgj.drenar_local(1)
+    t = bst.generate_new_enemy("Bebedor de Odres", ODRES, state=state)
+    assert t["geracao"]["caminho"] == "existente" and "ficha" in t  # a ficha gerada pelo job
     inst = combat._instances(t, 1, {}, None)[0]
     brief = build_creature_art_brief(inst, important=False)
     assert brief["player_description"] and brief["player_description"] in t["appearance"]
@@ -172,3 +240,55 @@ def test_variante_telegrafa_antes_da_assinatura(gen_on, monkeypatch):
     texto = enemy_decks.prenuncio(inst, rodadas[0])
     assert texto.startswith(inst["name"]) and "congela" in texto
     assert enemy_decks.plan(inst, rodadas[0] + 1)["assinatura"] == sig["carta"]
+
+
+def test_trava_identidade_nome_sanitizado(gen_on, monkeypatch):
+    """P2-4: nome que o sanitizador altera não derruba a trava de identidade."""
+    from services import creature_gen_jobs as cgj
+
+    monkeypatch.setattr(cgj, "agendar", lambda *a, **k: True)
+    nome = "Coisa <dos> Odres!!"
+    t = combat._grounded_template(nome, ODRES, 1, {"game_id": "g-san", "world": dict(ZHUR)})
+    assert t["geracao"]["caminho"] == "substituta"  # não virou o genérico da trava
+
+
+def test_round_trip_creature_gen_preenchido(gen_on):
+    """P2-5: o writer novo (`world.creature_gen`) sobrevive a save/load."""
+    import persistence
+
+    gid = "36136136-1361-4361-8361-361361361362"
+    state = _start_state(hint="x", world={**ZHUR, "creature_gen": {"novas": 2, "ultimo_turno": 41}})
+    state["game_id"] = gid
+    assert persistence.save_game_state(state)
+    loaded = persistence.load_game_state(persistence.save_path(gid))
+    assert loaded["world"]["creature_gen"] == {"novas": 2, "ultimo_turno": 41}
+    p = cg.PedidoCriatura.from_spawn("x", "", state=loaded, encounter_level=1, location_id="")
+    assert p.contador == (2, 41)
+
+
+def test_gatilho_so_da_acao_do_jogador(gen_on):
+    """P2-6: "veterano" na narração (motivo de trama) não vira variante; na fala do jogador vira."""
+    from agents.bestiary import load_bestiary
+
+    base = dict(
+        regiao="deserto_zhur",
+        location_id="deserto_zhur",
+        categoria_sugerida=None,
+        encounter_level=1,
+        game_id="g-gat",
+        turn=40,
+    )
+    narrado = cg.PedidoCriatura(
+        pedido="bicho da duna",
+        motivo_trama="Última cena: …o veterano da caravana conta do covil e do ninho.",
+        **base,
+    )
+    assert cg.decidir_caminho(narrado, bestiary=load_bestiary()).caminho != "variante"
+    falado = cg.PedidoCriatura(
+        pedido="bicho da duna",
+        motivo_trama="",
+        player_inputs=("ataco o bicho veterano cheio de cicatrizes",),
+        **base,
+    )
+    assert cg.texto_do_jogador(falado).endswith("cicatrizes")
+    assert "veterano" not in cg.texto_do_jogador(narrado)

@@ -55,11 +55,11 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
 - **R1 — Ordem fixa e determinística.** `creature_gen.decidir_caminho(pedido)` devolve `existente | variante | nova | fallback` sem LLM, nesta ordem:
   1. **existente**: `resolve_bestiary_name(pedido.nucleo)` acha um id, ou o `find_existing_entity` atual casa (o comportamento de hoje, `agents/bestiary.py:440-460`, fica igual);
   2. **variante**: um modificador do catálogo é detectado no pedido ou no motivo de trama (R5) **e** existe base compatível na região com `score ≥ LIMIAR_BASE` (R6);
-  3. **nova**: o teto de criaturas novas não foi atingido (R4) e há pelo menos 1 ficha aprovada para few-shot (em qualquer região);
+  3. **nova**: o teto de criaturas novas não foi atingido (R4) e há pelo menos 1 ficha aprovada para few-shot (em qualquer região). **No turno (R33), `nova` vira `substituta` + geração agendada fora do turno;**
   4. **fallback**: criatura existente mais próxima (R16).
 - **R2 — Testável sem LLM.** Para os mesmos `(pedido, regiao, estado)`, `decidir_caminho` devolve sempre o mesmo resultado, inclusive a base e o modificador. Teste com 3 chamadas iguais.
 - **R3 — `forcar` só para eval/teste.** `PedidoCriatura.forcar ∈ {auto, nova, variante}`. O jogo usa sempre `auto`; `nova`/`variante` só são aceitos com `RPG_CREATURE_GEN_EVAL=1`.
-- **R4 — Teto de criaturas novas por jogo.** No máximo `RPG_CREATURE_NEW_PER_GAME` (default 6) criaturas novas por `game_id` e 1 a cada `RPG_CREATURE_NEW_EVERY_TURNS` (default 15) turnos. Acima do teto: variante, se houver; senão fallback. A contagem fica no próprio estado (`world.creature_gen = {novas: int, ultimo_turno: int}`), e saves antigos sem o campo contam como 0 [D?D3].
+- **R4 — Teto de criaturas novas por jogo.** No máximo `RPG_CREATURE_NEW_PER_GAME` (default 6) criaturas novas por `game_id` e 1 a cada `RPG_CREATURE_NEW_EVERY_TURNS` (default 15) turnos. Acima do teto: variante, se houver; senão fallback. A contagem fica no próprio estado (`world.creature_gen = {novas: int, ultimo_turno: int}`), e saves antigos sem o campo contam como 0 [D?D3]. **Conta a tentativa (P1-2 da revisão):** cada geração agendada consome o teto e o intervalo, dê certo ou caia em fallback no job.
 
 ### B. Variante por modificador de trama
 
@@ -116,7 +116,7 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
   - zero dígitos (R20).
 
   Com erro, há **1** nova tentativa: o prompt recebe a ficha anterior compacta + os issues (código, mensagem e nome do vizinho) + "corrija só isto". Errou de novo → **fallback** = `mais_proxima(pedido, regiao, categoria)`: score de R6 sem o modificador, entre as criaturas da região que existem no bestiário. Se a região estiver vazia, vale o fallback atual (`agents/bestiary.py:500-511`), com o nome do núcleo do pedido.
-- **R17 — Prazo do turno.** O caminho `nova` tem prazo total de `RPG_CREATURE_GEN_DEADLINE_S` (default 12 s), contado do início da 1ª chamada. A 2ª tentativa é uma correção curta (`CorrecaoFicha`) e só começa se faltar ≥ `RPG_CREATURE_GEN_RETRY_MIN_S` (default 3,5 s) do prazo (desvio §9: era `elapsed < prazo × 0,5`). Prazo estourado → fallback (R16). Timeout ou `FallbackLLM` → fallback, sem exceção (guard `isinstance(res, FichaCriaturaGerada)`).
+- **R17 — Prazo da geração (fora do turno, R33).** O caminho `nova` tem prazo total de `RPG_CREATURE_GEN_DEADLINE_S` (default **30 s**, era 12 s no turno), contado **antes** da preparação (lore, exemplos, eixos). Depois do prazo, a thread da chamada não abre outro provedor (guarda `llm_spend_guard_scope`). A 2ª tentativa é uma correção curta (`CorrecaoFicha`) e só começa se faltar ≥ `RPG_CREATURE_GEN_RETRY_MIN_S` (default 3,5 s) do prazo (desvio §9: era `elapsed < prazo × 0,5`). Prazo estourado → fallback (R16). Timeout ou `FallbackLLM` → fallback, sem exceção (guard `isinstance(res, FichaCriaturaGerada)`).
 - **R18 — Trava de identidade aceita a geração.** Em `agents/combat.py:_grounded_template`, o template com `geracao.pedido == name` (o nome pedido, já sanitizado) é aceito mesmo sem token em comum (fecha P7). Para variante e fallback de R16, vale o mesmo: o template marca `geracao.pedido`.
 - **R19 — Telemetria só com códigos.** `log_event("bestiary", "creature_gen", caminho=..., tentativas=n, codigos=[U2,...], latencia_ms=..., prompt_chars=..., provider=...)`. Nada de pedido, nome nem texto.
 - **R20 — Zero número nos textos gerados.** Nenhum campo de texto da ficha gerada nem da variante resolvida contém dígito (`\d`), nem `+N`/`dN`, nem os termos de `[proibidos]` do léxico de Cartas (que já cobre o jargão mecânico). Números por extenso de anatomia ("duas pernas") são permitidos [D?D6].
@@ -157,6 +157,8 @@ Princípios: **mecânica é Python** (`AGENTS.md` § Convenções); **guard de F
 - **R30 — Assinatura compatível.** `generate_new_enemy(name, context="", *, encounter_level=1, game_id="", location_id="", name_origin="player", state=None)`: só ganha `state` (opcional). Com `on` e `state=None`, o motivo de trama fica vazio e o resto funciona.
 - **R31 — MockLLM.** `mock_llm` ganha o builder `FichaCriaturaGerada`, que gera uma ficha **válida no gate** e determinística por hash do pedido: nome de 2–3 palavras sem colisão e eixos livres escolhidos a partir dos eixos ocupados que vêm no prompt. O comportamento padrão é passar no lint; um monkeypatch de teste força colisão.
 - **R32 — Eval determinístico (antes × depois).** `scripts/bestiario/eval_geracao.py --pedidos tests/fixtures/spec361_pedidos.yaml --modo antes|depois [--real] --out docs/spec361/eval-<modo>-<data>.json` + um `.md` lado a lado. As métricas são calculadas por funções puras de `services/creature_gen_eval.py` (§3.9). O conjunto de pedidos e os limiares ficam congelados na Etapa 0; quem implementa o produto não os altera (`08_CONTRATO_CODING_AGENT.md`).
+
+- **R33 — Substituta enquanto gera (decisão do dono, 02/11).** No spawn de criatura desconhecida, o turno **nunca** espera o LLM de geração: usa na hora a variante (se houver) ou a existente mais próxima (`mais_proxima`, caminho `substituta`), marca `geracao.agendada` e enfileira o job tipado `creature_gen` (`services/creature_gen_jobs.py`, idempotente por jogo + região + pedido, `max_attempts=1`). O job gera com prazo próprio (R17), passa no gate U1–U13 e grava `local` (overlay do dono) ou `pool_pendente` (fila da revisão Opus em lote). O próximo encontro com o mesmo pedido usa a ficha gerada (`ja_gerada`). Execução: perfil DB pelo worker/cron de drenagem (`workers/run_worker.build_handlers`, sem thread solta no request); perfil legacy (fila em memória) por `drenar_local` depois de a narração SSE sair (mesmo ponto da projeção `post_response`) ou por script.
 
 ### Fora de escopo
 
@@ -566,7 +568,7 @@ Pré-condição: a 349 na `main` (`services/bestiary_lint.py` e pelo menos `data
 ## 5. Critérios de aceite
 
 - [x] Decisão de caminho determinística, na ordem de R1, com o caso âncora "lacaio mente-colmeia em Zhur" → variante sobre `mon_saltador_de_palafita` (R1–R7)
-- [ ] Catálogo com 12–16 modificadores, lint verde e revisão independente registrada (R5, §3.4)
+- [x] Catálogo com 12–16 modificadores, lint verde e revisão independente registrada (R5, §3.4)
 - [x] Variante sem LLM, ≤ 50 ms p95, nunca acima de `elite`, `normalize_bestiary_id` → base (R7, R8)
 - [x] Prompt em português, ≤ 14 000 chars, com motivo de trama, eixos ocupados e 2–3 exemplos aprovados escolhidos de forma determinística (R9–R13)
 - [x] `FichaCriaturaGerada` sem campo numérico, com os Literals iguais aos enums da 349 (R14)
@@ -625,7 +627,7 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo. São ~40 requests
 
 ## 8. Decisões abertas (default; o coordenador decide)
 
-- **D1 — Geração em background com placeholder?** Default: **não**. Síncrona com prazo de 12 s, porque variante e existente não usam LLM (§3.7). Alternativa: `RPG_CREATURE_GEN_ASYNC=1`, com o placeholder sendo a criatura mais próxima e a ficha nova valendo do próximo encontro em diante (só fora do Vercel).
+- **D1 — Geração em background com placeholder?** **Decidido pelo dono em 02/11: sim** (R33, substituta enquanto gera, via job da fila). O texto abaixo é o default original. Síncrona com prazo de 12 s, porque variante e existente não usam LLM (§3.7). Alternativa: `RPG_CREATURE_GEN_ASYNC=1`, com o placeholder sendo a criatura mais próxima e a ficha nova valendo do próximo encontro em diante (só fora do Vercel).
 - **D2 — `name_origin="engine"` quando o nome não foi digitado (R22)?** Default: **sim**. Sem isso, nenhuma criatura gerada jamais chega ao pool (P11), o que contraria a decisão 6 do dono.
 - **D3 — Teto de criaturas novas.** Default: 6 por jogo e 1 a cada 15 turnos.
 - **D4 — Variante vai ao pool?** Default: **não** (local ao jogo). A variante é texto-modelo curado sobre base já compartilhada; nada novo para revisar.
@@ -681,6 +683,33 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo. São ~40 requests
 - **R25.** A entrada que passa no gate fica `HELD` com `aguarda_curador` e `promote_after` empurrado 10 anos (`CURATOR_PARK`), para o job não reavaliá-la a cada rodada; `counts["awaiting_curator"]` só aparece quando há alguma (o dict antigo fica idêntico).
 - **R32, escopo de três métricas.** `fisico`, `campos_349` e `vizinho_max` medem só as criaturas escritas pelo gerador (`nova`; `legacy` no antes): a variante reaproveita o corpo da base por construção. Ajuste feito depois da 1ª rodada **mock** e antes de qualquer rodada real; pedidos e limiares intocados. Revisor: confirmar.
 - **Carga.** As fichas da 349 e o Codex de monstros são lidos com libyaml (`CSafeLoader`) e ficam em cache de processo (o loader puro levava ~5 s a frio). Nomes do bestiário resolvidos por índice de tokens (mesmo resultado de `resolve_bestiary_name`, com teste).
+
+### Revisão independente e decisão do dono (02/11, ciclo 2)
+
+Revisão em `handoffs/SPEC-361-independent-review.md` (`CHANGES_REQUIRED`; conteúdo, isto é catálogo e prompt, **aprovado**). Decisão do dono sobre a latência: **substituta enquanto gera** (R33).
+
+**Como ficou.**
+- **Turno.** `generate_new_enemy` (flag `on`) chama `creature_gen.gerar(..., no_turno=True)`: existente → variante → `substituta` (mais próxima) + `creature_gen_jobs.agendar` → fallback. Nenhuma chamada de LLM de geração no turno (`test_turno_nao_chama_llm_de_geracao`, com LLM falso lento: o caminho `on` não chama `FichaCriaturaGerada` e é mais rápido que o legado). Medida real (DeepSeek, 3 spawns desconhecidos em Zhur, legado × on): 17,1 × 1,3 s, 1,0 × 0,2 s e 1,2 × 0,05 s (o restante do `on` é o librarian, igual ao legado).
+- **Serverless.** Não há thread solta no request: a geração é o job tipado `creature_gen` da fila do projeto (`JobQueue`, lease/fence do `JobWorker`). No perfil DB, quem roda é o worker e o cron de drenagem (`build_handlers`). No perfil legacy (fila em memória), quem roda é `drenar_local(1)`, depois de a narração SSE sair (o mesmo ponto da projeção `post_response`) ou num script. O POST legacy não drena, para não atrasar a resposta. O prazo do job (30 s) cabe na janela do cron (`MIN_JOB_WINDOW_S` 15 s + lease com heartbeat). Se a função morrer no meio, a lease expira e o job não é refeito (`max_attempts=1`); a substituta continua valendo.
+- **Pool e revisão.** O job grava `pool_pendente` (pool `on`/`shadow`, menos chefe) e segue `promote_due` → `aguarda_curador` → `pool_revisao.py` (Opus) → `PROMOTED`. Com o pool `off`, grava no overlay do dono (`owner_id` explícito no payload, já que não há principal no worker).
+
+**Achados da revisão.**
+- **P1-1:** `FICHA_PATHS` é uma allowlist de caminhos com a forma de `ficha_runtime`. Caminho desconhecido (`schema_unknown_field`), tipo errado, lista de dicts e profundidade além do esperado viram Finding. Só os caminhos `text` vão para PII/injeção/segredo. Testado com as três sondas da revisão.
+- **P1-2:** o teto conta a tentativa (o contador sobe no agendamento). Teste: fallback no job → o próximo spawn dentro de 15 turnos vai direto ao fallback, sem agendar.
+- **P2-1:** depois do prazo, a thread não abre outro provedor (`llm_spend_guard_scope`). O executor de 2 threads fica, agora só dentro do job.
+- **P2-2:** o `t0` vem antes da lore, dos exemplos e dos eixos.
+- **P2-3:** `recarregar_fichas()` limpa os três caches, uma vez por rodada do `promote_due`.
+- **P2-4:** `geracao.nome` grava o nome sanitizado.
+- **P2-5:** round-trip de save/load com `creature_gen` preenchido.
+- **P2-6:** o modificador é detectado só em pedido + última fala do jogador (`texto_do_jogador`), nunca na narração.
+- **P2-7:** as notas das flags foram atualizadas. `RPG_CREATURE_GEN_DEADLINE_S` virou default 30.
+- **P2-8:** fica para a autoria de eval (não tocado aqui).
+
+**Eval "depois" real, rodada c (geração fora do turno, prazo 30 s; `eval-depois-2026-11-02c.json`):**
+- passam: `lint_final` 100 %, `fallback` 0 %, `caminho_ok` 100 %, proibidos/dígitos 0, `fisico` 100 %, `campos_349` 100 %, `vizinho_max` 0,14, variante p95 20 ms, prompt 13 923 chars;
+- **abaixo do limiar:** `lint_primeira` 54,5 % (limiar 70 %). Os erros de 1ª tentativa são U3/U2 e R20, corrigidos pela correção curta;
+- `idioma_pt` 99,3 %: bug do avaliador, "a"/"as" nas duas listas (P2-8);
+- **métrica invalidada pela decisão:** `latencia_nova_p95_ms ≤ 15 000` foi pensada para o turno. Agora mede o job (p50 8,6 s, p95 19,1 s, prazo 30 s) e não entra no turno. O avaliador e os limiares não foram alterados; fica para o coordenador decidir.
 
 ### Aprovação do dono (02/11)
 

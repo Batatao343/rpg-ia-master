@@ -220,7 +220,15 @@ def build_handlers():
         "embed_memory": embed,
         "compress_chronicle": compress,
         "project_archive": project,
+        # SPEC-361: criatura nova gerada fora do turno (a substituta já jogou)
+        "creature_gen": _creature_gen,
     }
+
+
+def _creature_gen(payload: dict) -> dict:
+    from services.creature_gen_jobs import handler
+
+    return handler(payload)
 
 
 def main() -> int:

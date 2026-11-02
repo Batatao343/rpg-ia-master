@@ -6848,6 +6848,12 @@ def _execute_action(
         # pode falhar a request depois da entrega), mas ainda sob o lock legacy.
         if on_response is not None:
             on_response(response)  # SSE: narração sai ANTES dos derivados
+            if not db:
+                # SPEC-361: criatura nova agendada no spawn, gerada só depois de a narração
+                # sair (perfil legacy, fila em memória). Perfil DB: worker/cron `creature_gen`.
+                from services.creature_gen_jobs import drenar_local
+
+                drenar_local(1)
         if owner and holder.get("state") is not None:
             if db:
                 _drain_projection_db(holder["state"])

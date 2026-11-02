@@ -523,7 +523,7 @@ def _awaiting_curator(entry: SharedPoolEntry) -> bool:
     return bool((entry.evaluation or {}).get("aguarda_curador"))
 
 
-def relint_creature(entry: SharedPoolEntry, *, store=None) -> list:
+def relint_creature(entry: SharedPoolEntry, *, store=None, recarregar: bool = False) -> list:
     """SPEC-361 R25: U1-U13 de novo contra as fichas ATUAIS da região (+ promovidas do pool)."""
     from services import creature_gen as cg
 
@@ -537,7 +537,8 @@ def relint_creature(entry: SharedPoolEntry, *, store=None) -> list:
             f = other.document.get("ficha")
             if isinstance(f, dict) and other.entry_id != entry.entry_id:
                 runtime.append({**f, "id": str(other.document.get("id") or other.entry_id)})
-    cg._todas_fichas.cache_clear()  # ficha curada que pousou depois vence (R25)
+    if recarregar:  # P2-3: relê os YAMLs (ficha curada que pousou depois vence, R25)
+        cg.recarregar_fichas()
     return cg.lint_runtime(ficha, regiao, runtime=runtime)
 
 
@@ -566,6 +567,7 @@ def promote_due(
         embedder, embedding_profile = default_embedder()
     day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     mock = is_mock_llm(llm)
+    recarregado = False  # fichas da 349 relidas do disco 1x por rodada do job
     for entry in store.due(now, eval_per_run()):
         try:
             if _awaiting_curator(entry):
@@ -603,7 +605,8 @@ def promote_due(
                 counts["rejected"] += 1
                 continue
             if _has_ficha(entry):
-                lint_issues = relint_creature(entry, store=store)
+                lint_issues = relint_creature(entry, store=store, recarregar=not recarregado)
+                recarregado = True
                 if lint_issues:
                     codes = sorted({i.code for i in lint_issues})
                     _reject(store, entry, "bestiary_lint", {"lint": codes[:12]})

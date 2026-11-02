@@ -54,7 +54,8 @@ SlotIntencao = Literal[tuple(enemy_decks._SLOT_LABEL)]  # type: ignore[valid-typ
 OrigemFonte = Literal[
     "praga_ferro", "praga_ossos", "abismo", "eter", "demonio", "faccao", "dragao", "outro"
 ]
-Caminho = Literal["existente", "variante", "nova", "fallback"]
+# "substituta": criatura existente usada na hora enquanto a nova é gerada fora do turno
+Caminho = Literal["existente", "variante", "nova", "fallback", "substituta"]
 
 CATEGORIAS = ("lacaio", "padrao", "elite", "chefe")
 # R15: família de baralho -> template de Virtudes (Python, nunca LLM). Fonte única no bestiário.
@@ -287,6 +288,13 @@ class PedidoCriatura:
         )
 
 
+def texto_do_jogador(p: PedidoCriatura) -> str:
+    """Pedido + última fala do jogador: onde o modificador de trama é detectado (a narração
+    do motivo de trama fica de fora, para "veterano" numa cena não virar variante)."""
+    ultima = p.player_inputs[0] if p.player_inputs else ""
+    return f"{p.pedido} {ultima}".strip()
+
+
 def categoria_sugerida(pedido: str) -> str | None:
     words = set(re.findall(r"[a-z]+", _fold(pedido)))
     return "lacaio" if words & set(_LACAIO_HINTS) else None
@@ -367,7 +375,8 @@ def intervalo_novas() -> int:
 
 
 def prazo_s() -> float:
-    return _env_float("RPG_CREATURE_GEN_DEADLINE_S", 12.0)
+    """Prazo total da geração nova, que roda FORA do turno (job): preparação + chamadas."""
+    return _env_float("RPG_CREATURE_GEN_DEADLINE_S", 30.0)
 
 
 def folga_retry_s() -> float:
@@ -397,6 +406,13 @@ def _docs_regioes() -> tuple[dict, ...]:
         yaml.load(p.read_text(encoding="utf-8"), Loader=loader) or {}  # noqa: S506 - Safe loader
         for p in sorted(bl.FICHAS_DIR.glob("*.yaml"))
     )
+
+
+def recarregar_fichas() -> None:
+    """Relê as fichas da 349 do disco na próxima consulta (job de promoção, P2-3)."""
+    _docs_regioes.cache_clear()
+    _todas_fichas.cache_clear()
+    _regiao_doc.cache_clear()
 
 
 @lru_cache(maxsize=1)
@@ -1272,6 +1288,21 @@ def _forcar_efetivo(p: PedidoCriatura) -> str:
     return p.forcar if p.forcar != "auto" and eval_mode() else "auto"
 
 
+def ja_gerada(p: PedidoCriatura, bestiary: dict) -> str | None:
+    """Criatura que um job já gerou para o MESMO pedido nesta região (o próximo encontro com
+    o mesmo pedido usa a ficha nova em vez de agendar outra)."""
+    alvo = _fold(p.pedido).strip()
+    hits = [
+        str(bid)
+        for bid, tpl in bestiary.items()
+        if isinstance(tpl, dict)
+        and (tpl.get("geracao") or {}).get("caminho") == "nova"
+        and _fold((tpl.get("geracao") or {}).get("pedido")).strip() == alvo
+        and (tpl.get("ficha") or {}).get("regiao") == p.regiao
+    ]
+    return min(hits) if hits else None
+
+
 def decidir_caminho(
     p: PedidoCriatura,
     *,
@@ -1285,11 +1316,15 @@ def decidir_caminho(
     forcar = _forcar_efetivo(p)
     fam = familia_alvo(f"{p.pedido} {p.motivo_trama}")
     if forcar == "auto":
-        bid = resolver_nome(p.nucleo, bestiary) or resolver_nome(p.pedido, bestiary)
+        bid = (
+            resolver_nome(p.nucleo, bestiary)
+            or resolver_nome(p.pedido, bestiary)
+            or ja_gerada(p, bestiary)
+        )
         if bid:
             return Decisao("existente", base_id=bid, familia_alvo=fam, motivo="resolve")
     if forcar in ("auto", "variante"):
-        mod = cv.detectar_modificador(f"{p.pedido} {p.motivo_trama}")
+        mod = cv.detectar_modificador(texto_do_jogador(p))
         if mod:
             base = cv.escolher_base(
                 mod,
@@ -1345,11 +1380,20 @@ def _invocar(msgs, restante_s: float, providers: list[str], schema: type = None)
     schema = schema or FichaCriaturaGerada
     from llm_setup import ModelTier, get_llm, llm_attempt_scope
 
+    limite = time.monotonic() + max(0.05, restante_s)
+
     def chamar():
+        from llm_setup import llm_spend_guard_scope
+
         def capture(ev) -> None:
             providers.append(str(getattr(ev, "provider", "") or ""))
 
-        with llm_attempt_scope(capture):
+        def guarda(provider: str, model: str) -> None:
+            # a thread que passou do prazo não abre outro provedor (o resultado já não serve)
+            if time.monotonic() > limite:
+                raise TimeoutError("creature_gen: prazo esgotado antes do próximo provedor")
+
+        with llm_attempt_scope(capture), llm_spend_guard_scope(guarda):
             llm = get_llm(temperature=0.7, tier=ModelTier.FAST)
             return llm.with_structured_output(schema).invoke(msgs)
 
@@ -1389,6 +1433,8 @@ def gerar_nova(
         "lint_primeira": None,
         "providers": [],
     }
+    prazo = prazo_s()
+    t0 = _relogio()  # P2-2: a preparação (lore, exemplos, eixos) conta no prazo
     if lore is None:
         lore = _lore_publica(p)
     exemplos = escolher_exemplos(
@@ -1399,10 +1445,8 @@ def gerar_nova(
     mod = (
         cv.modificador_por_id(decisao.modificador_id)
         if decisao.modificador_id
-        else cv.detectar_modificador(f"{p.pedido} {p.motivo_trama}")
+        else cv.detectar_modificador(texto_do_jogador(p))
     )
-    prazo = prazo_s()
-    t0 = _relogio()
     gen_anterior: dict | None = None
     issues: list[Issue] = []
 
@@ -1519,8 +1563,13 @@ def gerar(
     bestiary: dict | None = None,
     fichas: dict[str, dict] | None = None,
     lore: str | None = None,
+    no_turno: bool = False,
 ) -> ResultadoGeracao:
-    """Decide o caminho e devolve o template pronto (sem persistir; quem persiste é o bestiário)."""
+    """Decide o caminho e devolve o template pronto (sem persistir; quem persiste é o bestiário).
+
+    ``no_turno=True`` (decisão do dono, 02/11): o caminho ``nova`` NUNCA chama o LLM aqui. O
+    turno recebe a substituta (a mais próxima), ``extras["agendar"]`` pede a geração fora do
+    turno e o teto R4 já conta a tentativa (P1-2)."""
     from agents.bestiary import (
         load_bestiary,
         materialize_enemy_concept,
@@ -1556,6 +1605,10 @@ def gerar(
             template = cv.aplicar_variante(base, mod, encounter_level=p.encounter_level)
             if cv.lint_variante(template, mod):
                 template = None  # texto resolvido reprovou: segue para o fallback
+    elif dec.caminho == "nova" and no_turno:
+        caminho = "substituta"
+        template = _tpl(mais_proxima(p, bestiary=bestiary, fichas=fichas))
+        contador = (p.contador[0] + 1, p.turn)  # P1-2: conta a tentativa, dê certo ou não
     elif dec.caminho == "nova":
         ficha, info = gerar_nova(
             p, dec, bestiary=bestiary, runtime=runtime, fichas=fichas, lore=lore
@@ -1564,7 +1617,7 @@ def gerar(
             template = ficha_para_template(ficha, encounter_level=p.encounter_level)
             contador = (p.contador[0] + 1, p.turn)
     if template is None:
-        caminho = "fallback"
+        caminho = "substituta" if caminho == "substituta" else "fallback"
         bid = mais_proxima(p, bestiary=bestiary, fichas=fichas)
         template = _tpl(bid)
         if template is None:
@@ -1623,7 +1676,7 @@ def gerar(
         lint_primeira=info.get("lint_primeira"),
         contador=contador,
         provider=providers[-1] if providers else "",
-        extras={"decisao": dec},
+        extras={"decisao": dec, "agendar": caminho == "substituta"},
     )
 
 

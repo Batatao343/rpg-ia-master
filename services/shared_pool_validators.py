@@ -85,48 +85,94 @@ _ID_RE = re.compile(r"^[a-z0-9_]{1,80}$")
 # SPEC-361 R23: campos de criatura que são enum/id (checados em `_validate_creature_enums`),
 # não texto livre; sem isso `corpo_a_corpo`/`deserto_zhur` contavam como "injeção" (snake_case).
 _CREATURE_ENUM_FIELDS = frozenset({"categoria", "arquetipo", "estilo_ataque", "region_tags"})
-_FICHA_ENUM_FIELDS = frozenset(
-    {
-        "status",
-        "familia",
-        "fonte",
-        "detalhe",
-        "refs",
-        "plano_corporal",
-        "material",
-        "escala",
-        "locomocao",
-        "percepcao",
-        "papel_tatico",
-        "arquetipo",
-        "categoria",
-        "faccao",
-        "estilo_ataque",
-        "habitat",
-        "padrao",
-        "autor",
-        "revisao",
-        "regiao",
-    }
-)
+# SPEC-361 R23 (P1-1): allowlist de CAMINHOS da ficha (exatamente a forma de
+# `creature_gen.ficha_runtime`). Fail-closed: caminho desconhecido, tipo errado, lista de não-str
+# ou profundidade além do esperado viram Finding. Só os caminhos "text" vão para a varredura de
+# PII/injeção/segredo; os "ident" são validados por forma (`_ID_RE`).
+#   tipo: "text" | "ident" (str id ou None) | "idents" (lista de ids) | "int" | "dict"
+FICHA_PATHS: dict[str, str] = {
+    "id": "ident",
+    "nome": "text",
+    "status": "ident",
+    "familia": "ident",
+    "origem_lore": "dict",
+    "origem_lore.fonte": "ident",
+    "origem_lore.detalhe": "ident",
+    "origem_lore.refs": "idents",
+    "anatomia": "dict",
+    "anatomia.plano_corporal": "ident",
+    "anatomia.material": "ident",
+    "anatomia.escala": "ident",
+    "anatomia.locomocao": "ident",
+    "anatomia.percepcao": "ident",
+    "anatomia.texto": "text",
+    "silhueta": "text",
+    "comportamento": "text",
+    "papel_tatico": "ident",
+    "arquetipo": "ident",
+    "categoria": "ident",
+    "faccao": "ident",
+    "estilo_ataque": "ident",
+    "nome_ataque": "text",
+    "mecanica_assinatura": "dict",
+    "mecanica_assinatura.frase": "text",
+    "contra_jogo": "text",
+    "gancho": "text",
+    "habitat": "idents",
+    "padrao": "idents",
+    "a_cada_n": "int",
+    "telegrafo": "text",
+    "description": "text",
+    "aparencia": "text",
+    "arte": "dict",
+    "arte.visual": "text",
+    "arte.evitar": "text",
+    "autor": "ident",
+    "revisao": "ident",
+    "regiao": "ident",
+}
+
+
+def _ficha_walk(ficha: dict) -> tuple[dict[str, str], list[tuple[str, str]]]:
+    """(textos por caminho, problemas [(código, caminho)]) segundo ``FICHA_PATHS``."""
+    textos: dict[str, str] = {}
+    problemas: list[tuple[str, str]] = []
+
+    def walk(prefix: str, node: dict) -> None:
+        for key, value in node.items():
+            path = f"{prefix}.{key}" if prefix else str(key)
+            kind = FICHA_PATHS.get(path)
+            if kind is None:
+                problemas.append(("schema_unknown_field", path))
+            elif kind == "dict":
+                if isinstance(value, dict):
+                    walk(path, value)
+                else:
+                    problemas.append(("schema_bad_value", path))
+            elif kind == "text":
+                if value is None:
+                    continue
+                if not isinstance(value, str):
+                    problemas.append(("schema_bad_value", path))
+                else:
+                    # `{nome}` do telegrafo é o único marcador permitido (sai antes do markup)
+                    textos[path] = value.replace("{nome}", "")
+            elif kind == "int":
+                if not (isinstance(value, int) and not isinstance(value, bool) and 0 <= value <= 9):
+                    problemas.append(("schema_bad_value", path))
+            elif not _is_ident_value(value) or (kind == "ident" and isinstance(value, list)):
+                problemas.append(("schema_bad_value", path))
+
+    walk("", ficha)
+    return textos, problemas
 
 
 def _walk_text(prefix: str, value: object, out: dict[str, str], depth: int = 0) -> None:
-    """SPEC-361 R23: desce em dicts (``ficha``) e junta ``str`` / lista de ``str``.
-
-    Enums/ids da ficha ficam fora (validados por forma); ``{nome}`` do telegrafo é o único
-    marcador permitido e sai antes da varredura de markup."""
-    if depth > 4:
-        return
-    if isinstance(value, str):
-        out[prefix] = value.replace("{nome}", "")
-    elif isinstance(value, list) and all(isinstance(v, str) for v in value):
-        out[prefix] = " ".join(value)
-    elif isinstance(value, dict):
-        for key, sub in value.items():
-            if str(key) in _ID_FIELDS or str(key) in _FICHA_ENUM_FIELDS:
-                continue
-            _walk_text(f"{prefix}.{key}", sub, out, depth + 1)
+    """SPEC-361 R23: textos livres da ficha (só os caminhos ``text`` da allowlist)."""
+    del depth
+    if isinstance(value, dict):
+        textos, _ = _ficha_walk(value)
+        out.update({f"{prefix}.{k}": v for k, v in textos.items()})
 
 
 def _text_fields(entry: SharedPoolEntry) -> dict[str, str]:
@@ -162,7 +208,7 @@ FICHA_TEXT_LIMITS: dict[str, int] = {
     "ficha.arte.visual": 500,
     "ficha.arte.evitar": 200,
 }
-_FICHA_TEXT_DEFAULT = 120  # enums, ids e demais campos curtos
+_FICHA_TEXT_DEFAULT = 120
 
 
 def _validate_ficha(entry: SharedPoolEntry) -> list[Finding]:
@@ -171,20 +217,13 @@ def _validate_ficha(entry: SharedPoolEntry) -> list[Finding]:
         return []
     if not isinstance(ficha, dict):
         return [Finding("schema_bad_value", "ficha")]
-    texts: dict[str, str] = {}
-    _walk_text("ficha", ficha, texts)
-    findings = [
-        Finding("schema_too_long", field[:40])
-        for field, text in texts.items()
-        if len(text) > FICHA_TEXT_LIMITS.get(field, _FICHA_TEXT_DEFAULT)
+    textos, problemas = _ficha_walk(ficha)
+    findings = [Finding(code, f"ficha.{path}"[:40]) for code, path in problemas]
+    findings += [
+        Finding("schema_too_long", f"ficha.{path}"[:40])
+        for path, text in textos.items()
+        if len(text) > FICHA_TEXT_LIMITS.get(f"ficha.{path}", _FICHA_TEXT_DEFAULT)
     ]
-    # enums/ids da ficha (fora da varredura de texto): só forma de identificador
-    for sub in (ficha, ficha.get("anatomia"), ficha.get("origem_lore")):
-        if not isinstance(sub, dict):
-            continue
-        for key in _FICHA_ENUM_FIELDS & set(sub):
-            if not _is_ident_value(sub[key]):
-                findings.append(Finding("schema_bad_value", f"ficha.{key}"[:40]))
     return findings
 
 

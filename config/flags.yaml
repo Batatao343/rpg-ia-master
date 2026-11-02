@@ -916,9 +916,9 @@ RPG_CREATURE_GEN_EVAL:
   note: "só eval/teste: aceita PedidoCriatura.forcar = nova|variante"
 RPG_CREATURE_GEN_DEADLINE_S:
   kind: ops
-  default: "12"
+  default: "30"
   spec: SPEC-361
-  note: "prazo total (s) do caminho nova; a 2ª tentativa só começa antes da metade"
+  note: "prazo total (s) da geração nova, que roda fora do turno (job creature_gen): preparação + 1ª chamada + correção curta"
 RPG_CREATURE_GEN_RETRY_MIN_S:
   kind: ops
   default: "3.5"
@@ -928,12 +928,12 @@ RPG_CREATURE_NEW_PER_GAME:
   kind: ops
   default: "6"
   spec: SPEC-361
-  note: "teto de criaturas novas geradas por jogo"
+  note: "teto de gerações novas agendadas por jogo (conta a tentativa, dê certo ou não)"
 RPG_CREATURE_NEW_EVERY_TURNS:
   kind: ops
   default: "15"
   spec: SPEC-361
-  note: "intervalo mínimo de turnos entre duas criaturas novas no mesmo jogo"
+  note: "intervalo mínimo de turnos entre dois agendamentos de criatura nova no mesmo jogo"
 RPG_SHARED_POOL:
   kind: release
   default: "off"

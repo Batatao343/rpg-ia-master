@@ -288,8 +288,13 @@ def _pool_enabled() -> bool:
     return enabled()
 
 
-def save_enemy(data: dict):
-    """Grava SÓ no overlay runtime — nunca em data/bestiary.json."""
+_DONO_DA_REQUEST = object()
+
+
+def save_enemy(data: dict, *, owner_id=_DONO_DA_REQUEST):
+    """Grava SÓ no overlay runtime — nunca em data/bestiary.json.
+
+    ``owner_id`` explícito serve ao job fora de request (SPEC-361), sem principal no contexto."""
     from infrastructure.runtime import get_runtime
 
     # Usa ID se existir, senão gera slug
@@ -299,7 +304,8 @@ def save_enemy(data: dict):
 
     from agents.npc import catalog_owner_id
 
-    owner = catalog_owner_id()  # SPEC-223 R7: escopo do dono em perfis com principal
+    # SPEC-223 R7: escopo do dono em perfis com principal
+    owner = catalog_owner_id() if owner_id is _DONO_DA_REQUEST else owner_id
     get_runtime().runtime_catalog.put(
         "bestiary_template",
         key,
@@ -435,7 +441,7 @@ def _submit_generated_enemy(res, data: dict, game_id: str, location_id: str, nam
 
 
 def _submit_generated_ficha(
-    ficha: dict, data: dict, game_id: str, location_id: str, player_inputs
+    ficha: dict, data: dict, game_id: str, location_id: str, player_inputs, owner_id=None
 ) -> str:
     """SPEC-361 R22/R23: a ficha inteira vai ao pool (hold). Devolve o estado público.
 
@@ -470,13 +476,38 @@ def _submit_generated_ficha(
             region_id=region,
             name_origin=origin,
             player_inputs=list(player_inputs or ()),
+            owner_id=owner_id,
         )
         data["pool_entry_id"] = entry.entry_id
         return shared_pool.estado_publico(entry)
     except Exception as exc:
         _log_event("bestiary", "pool_submit_failed", level="warning", error=type(exc).__name__)
-        save_enemy(dict(data))  # pool indisponível: a criatura fica local ao dono
+        save_enemy(dict(data), owner_id=owner_id)  # pool indisponível: fica local ao dono
         return "local"
+
+
+def persistir_nova(
+    ficha: dict,
+    data: dict,
+    *,
+    game_id: str,
+    location_id: str,
+    player_inputs,
+    owner_id=None,
+) -> str:
+    """SPEC-361: grava a criatura nova gerada FORA do turno (job). Devolve o estado público.
+
+    Pool ligado (e não chefe): ``pool_pendente`` (hold → gate → revisão Opus em lote). Pool
+    desligado, chefe ou pool fora: overlay do dono (``local``)."""
+    if bool(game_id) and _pool_enabled() and ficha.get("categoria") != "chefe":
+        estado = _submit_generated_ficha(
+            ficha, data, game_id, location_id, player_inputs, owner_id=owner_id
+        )
+    else:
+        save_enemy(data, owner_id=owner_id)
+        estado = "local"
+    data.setdefault("geracao", {})["estado"] = estado
+    return estado
 
 
 def _generate_v361(
@@ -490,8 +521,14 @@ def _generate_v361(
     state: dict | None,
     pool_on: bool,
 ) -> dict:
-    """SPEC-361: existente -> variante -> nova -> fallback (``RPG_CREATURE_GEN=on``)."""
+    """SPEC-361: existente -> variante -> substituta (+ geração agendada) -> fallback.
+
+    Decisão do dono (02/11): o turno nunca espera o LLM de geração. Desconhecida = a criatura
+    existente mais próxima entra na hora; a ficha nova é gerada por job fora do turno."""
+    from agents.npc import catalog_owner_id
     from services import creature_gen as cg
+    from services import creature_gen_jobs as cgj
+    from services.prompt_guard import sanitize_entity_name
 
     pedido = cg.PedidoCriatura.from_spawn(
         name,
@@ -501,19 +538,14 @@ def _generate_v361(
         location_id=location_id,
         game_id=game_id,
     )
-    res = cg.gerar(pedido, bestiary=db)
+    res = cg.gerar(pedido, bestiary=db, no_turno=True)
     data = res.template
-    data.setdefault("geracao", {})["nome"] = name  # R18: trava de identidade aceita a geração
-    if res.caminho == "nova" and res.ficha is not None:
-        if pool_on and res.ficha.get("categoria") != "chefe":
-            estado = _submit_generated_ficha(
-                res.ficha, data, game_id, location_id, pedido.player_inputs
-            )
-        else:
-            save_enemy(data)  # pool off (ou chefe, barrado no pool): local ao dono
-            estado = "local"
-        data["geracao"]["estado"] = estado
-        return _scaled_copy(data, encounter_level)
+    # R18 (P2-4): a trava de identidade compara o nome sanitizado dos dois lados
+    data.setdefault("geracao", {})["nome"] = sanitize_entity_name(name) or "Criatura"
+    if res.extras.get("agendar"):
+        agendado = cgj.agendar(pedido, owner_id=catalog_owner_id())
+        data["geracao"]["agendada"] = agendado
+        return data
     if res.caminho == "variante":
         save_enemy(dict(data))  # R8: variante é local ao jogo/dono, nunca vai ao pool
         return _scaled_copy(data, encounter_level)
