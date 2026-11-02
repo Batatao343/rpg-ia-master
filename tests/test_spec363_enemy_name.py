@@ -15,7 +15,10 @@ from tests.test_encounter_identity_repro import _install_llm, _scan, _start_stat
 
 def test_family_from_bestiary_record():
     assert creature_art.family_of({"id": "enemy_goblin_1", "name": "Goblin"}) == "bruto"
-    assert creature_art.family_of({"id": "enemy_goblin", "name": "Goblin", "arquetipo": "bruto"}) == "bruto"
+    assert (
+        creature_art.family_of({"id": "enemy_goblin", "name": "Goblin", "arquetipo": "bruto"})
+        == "bruto"
+    )
     assert creature_art.family_of({"id": "nao_existe_9", "name": "Nada"}) == "desconhecida"
 
 

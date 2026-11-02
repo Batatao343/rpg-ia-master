@@ -94,7 +94,9 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
     monkeypatch.setattr(creature_art, "mode", lambda: "on" if live else "off")
     state = {"game_id": "g363", "combat": {}}
     enemy = {"id": "enemy_goblin_1", "name": "Goblin", "categoria": "padrao"}
-    view = api._enemy_portrait(state, {}, enemy, registry=_Registry() if api._creature_art_live() else None)
+    view = api._enemy_portrait(
+        state, {}, enemy, registry=_Registry() if api._creature_art_live() else None
+    )
     gerar = (view or {}).get("gerar")
     if gerar:
         api._guard_image_effect()  # não pode levantar (switch on + preço fresco)
@@ -108,15 +110,27 @@ def test_offer_implies_quote_ok(monkeypatch, live, db, env, switch, fresh, price
 def test_art_preflight_causes():
     from scripts.staging.art_preflight import evaluate
 
-    base = dict(pricing_fresh=True, env={"RPG_DYNAMIC_ART_ENABLED": "1", "RPG_CREATURE_ART": "on"}, price_estilhas=2)
+    base = dict(
+        pricing_fresh=True,
+        env={"RPG_DYNAMIC_ART_ENABLED": "1", "RPG_CREATURE_ART": "on"},
+        price_estilhas=2,
+    )
     cap = [{"key": "image_generation", "enabled": False, "actor_id": "system:finops"}]
     r = evaluate(switches={"image_generation": False}, audit=cap, **base)
     assert r["ok"] is False and r["causa"] == "daily_cap" and r["switch_actor"] == "system:finops"
     assert evaluate(switches={}, audit=[], **base)["ok"] is True
-    assert evaluate(switches={}, audit=[], **{**base, "pricing_fresh": False})["causa"] == "pricing_stale"
-    assert evaluate(switches={}, audit=[], **{**base, "price_estilhas": None})["causa"] == "no_price"
+    assert (
+        evaluate(switches={}, audit=[], **{**base, "pricing_fresh": False})["causa"]
+        == "pricing_stale"
+    )
+    assert (
+        evaluate(switches={}, audit=[], **{**base, "price_estilhas": None})["causa"] == "no_price"
+    )
     off_env = {**base["env"], "RPG_KILL_SWITCHES_OFF": "image_generation"}
-    assert evaluate(switches={}, audit=[], **{**base, "env": off_env})["causa"] == "env_kill_switches_off"
+    assert (
+        evaluate(switches={}, audit=[], **{**base, "env": off_env})["causa"]
+        == "env_kill_switches_off"
+    )
 
 
 def test_offer_present_when_everything_open(monkeypatch):

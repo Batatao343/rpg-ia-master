@@ -35,7 +35,11 @@ def _full_deck_player(n):
 
 def test_shop_destination_reason_deck_full_vs_room():
     full = _full_deck_player(cards.DECK_MAX)
-    extra = next(c for c, v in cards.all_cards().items() if c not in full["deck"] and v.get("tipo") == "ativa")
+    extra = next(
+        c
+        for c, v in cards.all_cards().items()
+        if c not in full["deck"] and v.get("tipo") == "ativa"
+    )
     assert cr.acervo_reason(dict(full), extra) == "baralho_cheio"
     room = _full_deck_player(cards.DECK_MIN)
     assert cr.acervo_reason(dict(room), extra) is None  # há vaga: nunca "Baralho cheio"
@@ -44,7 +48,8 @@ def test_shop_destination_reason_deck_full_vs_room():
 def test_shop_destination_reason_copy_limit():
     player = _full_deck_player(cards.DECK_MIN)
     common = next(
-        c for c, v in cards.all_cards().items()
+        c
+        for c, v in cards.all_cards().items()
         if v.get("tipo") == "ativa" and v.get("patamar") not in cards._COMMON_PATAMARES
     )
     player["deck"] = [*player["deck"][:-1], common]

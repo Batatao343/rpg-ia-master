@@ -394,7 +394,9 @@ def _falls_after_cause(lines: list[str]) -> list[str]:
         causes = [
             j
             for j, other in enumerate(result)
-            if j > idx and not _FALL_LINE_RE.match(other) and (f" em {who}:" in other or f"corrói {who}" in other)
+            if j > idx
+            and not _FALL_LINE_RE.match(other)
+            and (f" em {who}:" in other or f"corrói {who}" in other)
         ]
         if causes:
             result.insert(max(causes) + 1, result.pop(idx))
@@ -472,9 +474,7 @@ def _event_result(atk: dict, target_name: str | None = None) -> str:
     return head
 
 
-def authorship(
-    last_out: dict | None, names: dict[str, str], player: dict | None = None
-) -> dict:
+def authorship(last_out: dict | None, names: dict[str, str], player: dict | None = None) -> dict:
     """SPEC-353 R5-R8: quem fez o quê na rodada final, estruturado.
 
     ``hero_cards``: nome da Carta/arma do herói → "hit"|"miss"; ``final_by_hero``: o golpe final
@@ -636,7 +636,15 @@ def _protected_names(
     found: list[str] = [str((player or {}).get("name") or "")]
     found += [str(e.get("name") or "") for e in enemies or []]
     found += [str(v) for v in (names or {}).values()]
-    for key in ("participantes", "mortos", "caidos", "inconscientes", "rendidos", "fugitivos", "capturados"):
+    for key in (
+        "participantes",
+        "mortos",
+        "caidos",
+        "inconscientes",
+        "rendidos",
+        "fugitivos",
+        "capturados",
+    ):
         found += [str(v) for v in (summary or {}).get(key) or []]
     return sorted({n.strip() for n in found if re.search(r"\d", n)}, key=len, reverse=True)
 
@@ -712,7 +720,9 @@ def deterministic_outcome_text(
     last = last_out or {}
     # R9: quedas da rodada final (de last_out) vs. quedas anteriores do conflito.
     now_ids = {str(b.get("target_id")) for b in last.get("final_blows") or []}
-    now_ids |= {str(i) for i in last.get("deaths") or []} | {str(i) for i in last.get("terminal") or []}
+    now_ids |= {str(i) for i in last.get("deaths") or []} | {
+        str(i) for i in last.get("terminal") or []
+    }
     now_names = {nm.get(i, i) for i in now_ids if i != "player"}
     blow = final_blow_sentence(last, nm)
     blow_targets = {

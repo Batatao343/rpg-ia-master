@@ -9,7 +9,9 @@ from services import combat_targeting as ct
 from tests.test_combat_targeting import _enemy_ids, _state
 
 BASIC_ACTIVE = sorted(
-    cid for cid, c in cards.all_cards().items() if cid.startswith("bas_") and c.get("tipo") == "ativa"
+    cid
+    for cid, c in cards.all_cards().items()
+    if cid.startswith("bas_") and c.get("tipo") == "ativa"
 )
 
 
@@ -42,10 +44,17 @@ def test_view_target_implies_engine_accepts(card_id):
     state["combat"]["pilhas"] = {"mao": [card_id]}
     res = ct.hand_card_targeting(state, card_id)
     for tid in res["valid_targets"]:
-        assert ct.check_declared_target(state, card_id=card_id, action_kind=None, maneuver=None, target_id=tid) is None
+        assert (
+            ct.check_declared_target(
+                state, card_id=card_id, action_kind=None, maneuver=None, target_id=tid
+            )
+            is None
+        )
     kind = str((cards.get_card(card_id).get("efeito") or {}).get("kind") or "")
     if kind not in ct._SUPPORT_EFFECTS:
-        bad = ct.check_declared_target(state, card_id=card_id, action_kind=None, maneuver=None, target_id=ids[0])
+        bad = ct.check_declared_target(
+            state, card_id=card_id, action_kind=None, maneuver=None, target_id=ids[0]
+        )
         assert bad == "target_hidden" or bad is not None
 
 

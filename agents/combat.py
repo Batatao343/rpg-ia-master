@@ -1543,7 +1543,9 @@ def _killer_identity(
         if kind == "auto_dano":
             return "o preço da própria Carta", ""
         by = str(blow.get("by_actor_id") or "")
-        enemy = next((e for e in [*(active or []), *(pool or [])] if e and str(e.get("id")) == by), None)
+        enemy = next(
+            (e for e in [*(active or []), *(pool or [])] if e and str(e.get("id")) == by), None
+        )
         break
     if enemy is None:
         enemy = next((e for e in active or [] if e), None)
@@ -3179,9 +3181,12 @@ def _compose_board_narrative(
     from services import prose_guard, round_log
 
     if out.get("action_refused"):  # recusa explicada (Carta fora da mão, Fôlego...): nada gasto
-        return round_log.humanize_ids(
-            "\n".join(str(x) for x in out.get("logs") or [] if x), actors_by_id
-        ) or BOARD_FREETEXT_REFUSAL
+        return (
+            round_log.humanize_ids(
+                "\n".join(str(x) for x in out.get("logs") or [] if x), actors_by_id
+            )
+            or BOARD_FREETEXT_REFUSAL
+        )
     registry = round_log.round_registry(out, actors_by_id, status_logs, extra_lines=extra_lines)
     body = "\n".join(registry) or "O combate segue."
     if not combat_over:
@@ -3414,9 +3419,7 @@ def _attempt_flee(
         chase_state["last_luck"] = {str(aid): roll for aid, roll in ally_rolls}
     chase_state["eligible"] = True
     if chase_state.get("escapou"):
-        return FleeDecision(
-            True, ["Você rompe o cerco e FOGE do combate."], chase_state
-        )
+        return FleeDecision(True, ["Você rompe o cerco e FOGE do combate."], chase_state)
     if chase_state.get("alcancado"):
         log = "Você tenta fugir, mas os inimigos te alcançam."
     elif (chase_state.get("_last") or {}).get("sucesso"):

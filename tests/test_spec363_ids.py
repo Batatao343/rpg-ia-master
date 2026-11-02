@@ -14,7 +14,11 @@ _SNAKE = re.compile(r"\b[a-z]+(?:_[a-z0-9]+)+\b")
 
 def find_internal_ids(text: str) -> list[str]:
     """Ids do catálogo, estados da trilha e `item_desconhecido` (R27)."""
-    found = [m for m in _SNAKE.findall(text) if m in ARTIFACTS_DB or m in STATE_IDS or m == "item_desconhecido"]
+    found = [
+        m
+        for m in _SNAKE.findall(text)
+        if m in ARTIFACTS_DB or m in STATE_IDS or m == "item_desconhecido"
+    ]
     return found
 
 
@@ -34,25 +38,46 @@ def test_market_consult_never_prints_ids():
     import agents.loot as loot
 
     rows = [
-        {"item_name": "", "item_id": "item_desconhecido", "buy_price": 3, "sell_price": 1, "stock": 0},
+        {
+            "item_name": "",
+            "item_id": "item_desconhecido",
+            "buy_price": 3,
+            "sell_price": 1,
+            "stock": 0,
+        },
     ]
     printed = [f"- {q['item_name']}: x" for q in rows if str(q.get("item_name") or "").strip()]
     assert printed == [] and loot  # sem nome, sem linha
 
 
 def test_weapon_name_from_catalog():
-    weapon_id = next(i for i, v in ARTIFACTS_DB.items() if v.get("type") == "weapon" and v.get("name"))
-    assert round_log._weapon_name({"equipment": {"weapon": weapon_id}}) == ARTIFACTS_DB[weapon_id]["name"]
+    weapon_id = next(
+        i for i, v in ARTIFACTS_DB.items() if v.get("type") == "weapon" and v.get("name")
+    )
+    assert (
+        round_log._weapon_name({"equipment": {"weapon": weapon_id}})
+        == ARTIFACTS_DB[weapon_id]["name"]
+    )
 
 
 def test_no_internal_ids_in_round_surfaces():
-    weapon_id = next(i for i, v in ARTIFACTS_DB.items() if v.get("type") == "weapon" and v.get("name"))
+    weapon_id = next(
+        i for i, v in ARTIFACTS_DB.items() if v.get("type") == "weapon" and v.get("name")
+    )
     actors = {
         "player": {"is_player": True, "name": "Haldor", "equipment": {"weapon": weapon_id}},
         "g1": {"name": "Goblin"},
     }
     out = {
-        "attacks": [{"actor_id": "player", "target_id": "g1", "acerto": True, "resultado": "acerto", "dano_final": 3}],
+        "attacks": [
+            {
+                "actor_id": "player",
+                "target_id": "g1",
+                "acerto": True,
+                "resultado": "acerto",
+                "dano_final": 3,
+            }
+        ],
         "logs": ["Haldor: ganha condição cego"],
         "deaths": [],
     }
@@ -69,7 +94,11 @@ def test_no_internal_ids_in_history(monkeypatch):
     import api
 
     for key in (
-        "RPG_CARD_DECK", "RPG_CARD_REWARDS", "RPG_ENEMY_INTENT", "RPG_SCENE_CARDS", "RPG_ENEMY_DECKS",
+        "RPG_CARD_DECK",
+        "RPG_CARD_REWARDS",
+        "RPG_ENEMY_INTENT",
+        "RPG_SCENE_CARDS",
+        "RPG_ENEMY_DECKS",
         "RPG_COMBAT_NONLETHAL",
     ):
         monkeypatch.setenv(key, "on")
@@ -78,8 +107,14 @@ def test_no_internal_ids_in_history(monkeypatch):
     client = TestClient(api.app)
     new = client.post(
         "/game/new",
-        json={"name": "Camp", "race": "Humano", "class_name": "Sangromante", "region": "Nova Arcádia",
-              "level": 1, "backstory": ""},
+        json={
+            "name": "Camp",
+            "race": "Humano",
+            "class_name": "Sangromante",
+            "region": "Nova Arcádia",
+            "level": 1,
+            "backstory": "",
+        },
     )
     assert new.status_code == 200, new.text
     gid = new.json()["game_id"]
@@ -99,7 +134,9 @@ def test_no_internal_ids_in_history(monkeypatch):
             break
         hand = (cb.get("pilhas") or {}).get("mao") or []
         target = next((e["id"] for e in cb.get("enemies") or [] if not e.get("dead")), None)
-        card = next((m["id"] for m in hand if m.get("jogavel") and m.get("alvo") == "inimigo"), None)
+        card = next(
+            (m["id"] for m in hand if m.get("jogavel") and m.get("alvo") == "inimigo"), None
+        )
         if step % 3 == 2:
             act({"input_text": "Fugir", "action_kind": "flee"})
         elif card and target:

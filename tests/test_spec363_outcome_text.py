@@ -22,9 +22,9 @@ NAMES = {"enemy_mino": "Minotauro Esqueleto", "enemy_goblin": "Goblin"}
 
 
 def test_no_digits_keeps_names():
-    assert round_log._no_digits("Smoke3A cai. Bandido 2 foge com 3 de dano.", ["Smoke3A", "Bandido 2"]) == (
-        "Smoke3A cai. Bandido 2 foge com de dano."
-    )
+    assert round_log._no_digits(
+        "Smoke3A cai. Bandido 2 foge com 3 de dano.", ["Smoke3A", "Bandido 2"]
+    ) == ("Smoke3A cai. Bandido 2 foge com de dano.")
     assert round_log._no_digits("Smoke3A tem 3 pontos", None) == "SmokeA tem pontos"
 
 
@@ -47,7 +47,9 @@ def test_old_falls_in_past_tense():
 
 
 def test_player_summary_one_category_per_name():
-    body = cs.player_summary_text({"mortos": ["A"], "caidos": ["A", "B"], "inconscientes": ["A", "B", "C"]})
+    body = cs.player_summary_text(
+        {"mortos": ["A"], "caidos": ["A", "B"], "inconscientes": ["A", "B", "C"]}
+    )
     assert body.count("A ") + body.count("A.") >= 1
     assert body == "A tomba. B cai. C perde os sentidos."
     canon = cs.canonical_summary_text({"caidos": ["B"], "inconscientes": ["B"]})
@@ -61,7 +63,12 @@ def test_summary_data_untouched():
 
 
 def test_wound_has_bearer_in_facts():
-    atk = {"acerto": True, "resultado": "acerto", "target_id": "enemy_mimic", "ferimento": {"categoria": "leve", "regiao": "braco"}}
+    atk = {
+        "acerto": True,
+        "resultado": "acerto",
+        "target_id": "enemy_mimic",
+        "ferimento": {"categoria": "leve", "regiao": "braco"},
+    }
     assert round_log._event_result(atk, "Mímico") == "acertou, ferimento leve no braço do Mímico"
     hero = {**atk, "target_id": "player"}
     assert round_log._event_result(hero, "Você") == "acertou, ferimento leve no seu braço"
@@ -77,7 +84,11 @@ def test_v4_rejects_mimic_text_and_accepts_correct():
     assert "V4" in cs.validate_attribution(fx.MIMIC_BAD, auth)
     assert "V4" not in cs.validate_attribution(fx.MIMIC_GOOD, auth)
     # com ferimento real no braço do herói, a mesma frase passa
-    hurt = {**fx.HERO_UNHURT, "vitalidade": 10, "ferimentos": {"leve": [{"regiao": "braco_esquerdo"}]}}
+    hurt = {
+        **fx.HERO_UNHURT,
+        "vitalidade": 10,
+        "ferimentos": {"leve": [{"regiao": "braco_esquerdo"}]},
+    }
     assert "V4" not in cs.validate_attribution("O sangue escorre pelo seu braço.", _auth(hurt))
 
 
@@ -93,7 +104,9 @@ def test_v4_v5_ignore_when_no_hero_info():
 def test_death_fixture_bad_and_good():
     # o texto ruim do staging tem o nome do herói mutilado e Goblin no mesmo instante
     assert "SmokeA" in fx.DEATH_BAD and "Goblin tomba" in fx.DEATH_BAD
-    produced = round_log.deterministic_outcome_text("death", SUMMARY, fx.PLAYER, last_out=LAST_OUT, names=NAMES)
+    produced = round_log.deterministic_outcome_text(
+        "death", SUMMARY, fx.PLAYER, last_out=LAST_OUT, names=NAMES
+    )
     assert produced == fx.DEATH_GOOD
 
 
@@ -101,7 +114,9 @@ def test_weapon_name_from_catalog():
     from gamedata import ARTIFACTS_DB
 
     some = next(iter(ARTIFACTS_DB))
-    assert round_log._weapon_name({"equipment": {"weapon": some}}) == ARTIFACTS_DB[some].get("name", some)
+    assert round_log._weapon_name({"equipment": {"weapon": some}}) == ARTIFACTS_DB[some].get(
+        "name", some
+    )
     assert round_log._weapon_name({"equipment": {"weapon": "arma_que_nao_existe"}}) == "a arma"
     assert round_log._weapon_name({"equipment": {"weapon": "Espada Velha"}}) == "Espada Velha"
 
@@ -110,10 +125,18 @@ def test_fall_after_cause_last_stand():
     out = {
         "deaths": ["g1"],
         "attacks": [
-            {"actor_id": "player", "target_id": "g1", "label": "Última Ação", "acerto": True, "resultado": "acerto"}
+            {
+                "actor_id": "player",
+                "target_id": "g1",
+                "label": "Última Ação",
+                "acerto": True,
+                "resultado": "acerto",
+            }
         ],
     }
-    lines = round_log.round_registry(out, {"player": {"is_player": True, "name": "H"}, "g1": {"name": "Goblin"}}, [])
+    lines = round_log.round_registry(
+        out, {"player": {"is_player": True, "name": "H"}, "g1": {"name": "Goblin"}}, []
+    )
     joined = "\n".join(lines)
     assert joined.index("Última Ação") < joined.index("Goblin morre.")
 
@@ -141,8 +164,15 @@ def _run_outcome(monkeypatch, text, player, summary=None, last_out=None):
     monkeypatch.setattr(combat, "_log_event", lambda *a, **k: events.append((a, k)))
     sink: dict = {}
     out = combat._narrate_outcome(
-        "victory", summary or {"mortos": ["Mímico"]}, player, [], last_out or {}, "ataco", "",
-        manifest=None, source_sink=sink,
+        "victory",
+        summary or {"mortos": ["Mímico"]},
+        player,
+        [],
+        last_out or {},
+        "ataco",
+        "",
+        manifest=None,
+        source_sink=sink,
     )
     return out, sink, events
 
@@ -175,8 +205,19 @@ def test_good_text_sets_llm_source(monkeypatch):
     "blow,expected",
     [
         ({"target_id": "player", "kind": "ataque", "by_actor_id": "e2"}, "Minotauro"),
-        ({"target_id": "player", "kind": "dano_continuo", "by_actor_id": None, "condition": "Sangramento"}, "Sangramento"),
-        ({"target_id": "player", "kind": "auto_dano", "by_actor_id": None}, "o preço da própria Carta"),
+        (
+            {
+                "target_id": "player",
+                "kind": "dano_continuo",
+                "by_actor_id": None,
+                "condition": "Sangramento",
+            },
+            "Sangramento",
+        ),
+        (
+            {"target_id": "player", "kind": "auto_dano", "by_actor_id": None},
+            "o preço da própria Carta",
+        ),
     ],
 )
 def test_killer_from_final_blows(blow, expected):
@@ -227,7 +268,12 @@ def test_dot_killer_uses_label_without_gender_article():
     import agents.combat as combat
 
     for raw in ("veneno_fraco", "queimadura"):
-        blow = {"target_id": "player", "kind": "dano_continuo", "by_actor_id": None, "condition": raw}
+        blow = {
+            "target_id": "player",
+            "kind": "dano_continuo",
+            "by_actor_id": None,
+            "condition": raw,
+        }
         killer = combat._killer_identity([], {"final_blows": [blow]}, [])[0]
         assert "_" not in killer and not killer.startswith("o "), killer
         text = round_log.deterministic_outcome_text(
@@ -244,10 +290,20 @@ def test_source_always_set_and_fresh(monkeypatch):
     _install(monkeypatch, text="qualquer prosa")
     from services import prose_guard
 
-    monkeypatch.setattr(prose_guard, "strip_mechanic_numbers", lambda t: ("", 3))  # o filtro esvazia o texto
+    monkeypatch.setattr(
+        prose_guard, "strip_mechanic_numbers", lambda t: ("", 3)
+    )  # o filtro esvazia o texto
     sink = {"last_outcome_source": "llm"}  # valor velho de conflito anterior
     combat._narrate_outcome(
-        "victory", {"mortos": ["Mímico"]}, fx.HERO_UNHURT, [], {}, "ataco", "", manifest=None, source_sink=sink
+        "victory",
+        {"mortos": ["Mímico"]},
+        fx.HERO_UNHURT,
+        [],
+        {},
+        "ataco",
+        "",
+        manifest=None,
+        source_sink=sink,
     )
     assert sink["last_outcome_source"] == "fallback_narrative"
 
@@ -261,9 +317,15 @@ def test_rejection_event_logs_codes_not_sentences(monkeypatch):
 
 
 def test_dot_sentence_capitalized_without_condition():
-    last = {"final_blows": [{"target_id": "e1", "kind": "dano_continuo", "by_actor_id": None, "condition": None}]}
+    last = {
+        "final_blows": [
+            {"target_id": "e1", "kind": "dano_continuo", "by_actor_id": None, "condition": None}
+        ]
+    }
     sentence = round_log.final_blow_sentence(last, {"player": "Você", "e1": "Goblin"})
-    assert sentence[0].isupper() and sentence.startswith("Dano contínuo termina o serviço"), sentence
+    assert sentence[0].isupper() and sentence.startswith("Dano contínuo termina o serviço"), (
+        sentence
+    )
     with_cond = round_log.final_blow_sentence(
         {"final_blows": [{**last["final_blows"][0], "condition": "sangramento"}]}, {"e1": "Goblin"}
     )

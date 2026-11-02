@@ -447,16 +447,19 @@ _HERO_WEAPON_RE = re.compile(
 
 
 _BODY_ALIAS = {
-    "peito": "torso", "costelas": "torso", "flanco": "torso", "ventre": "torso",
-    "ombro": "braco", "coxa": "perna", "pescoco": "cabeca",
+    "peito": "torso",
+    "costelas": "torso",
+    "flanco": "torso",
+    "ventre": "torso",
+    "ombro": "braco",
+    "coxa": "perna",
+    "pescoco": "cabeca",
 }
 _HERO_BODY_RE = re.compile(r"\b(?:teu|tua|seu|sua|seus|suas)\s+(" + _BODY + r")\b")
 _HERO_BLOOD_RE = re.compile(
     r"\b(?:teu|seu)\s+sangue\b|\bte\s+(?:atinge|acerta|rasga|fere|alcanca)\b"
 )
-_TU_RE = re.compile(
-    r"\b(?:teu|tua|teus|tuas|ti|contigo|ficas|tens|es|ves|sentes|podes|queres)\b"
-)
+_TU_RE = re.compile(r"\b(?:teu|tua|teus|tuas|ti|contigo|ficas|tens|es|ves|sentes|podes|queres)\b")
 _VOCE_RE = re.compile(r"\b(?:voce|seu|sua|seus|suas)\b")
 
 
@@ -481,7 +484,8 @@ _OWNER_OTHER_RE = re.compile(
 )
 _BODY_POSS = r"(?:seu|sua|teu|tua|seus|suas)\s+(" + _BODY + r")\b"
 _DAMAGE_VERB_ON_BODY_RE = re.compile(
-    r"\b(?:atinge|acerta|fere|rasg|perfur|cort|esmag|machuc|lacera|dilacer|queima|fratur)\w*(?:\s+\w+){0,2}\s+" + _BODY_POSS
+    r"\b(?:atinge|acerta|fere|rasg|perfur|cort|esmag|machuc|lacera|dilacer|queima|fratur)\w*(?:\s+\w+){0,2}\s+"
+    + _BODY_POSS
 )
 _DAMAGE_NOUN_RE = re.compile(
     r"\b(?:sangu|sangr|ferid|ferimento|escorr|latej|doem|arde|trinca|fratur)\w*|\bdor\b|\bdoi\b"

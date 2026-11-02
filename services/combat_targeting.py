@@ -208,7 +208,9 @@ def check_declared_target(
     if card_id:
         result = valid_targets_for_card(state, card_id)
         in_hand = card_id in ((state.get("combat") or {}).get("pilhas") or {}).get("mao", [])
-        if result.invalid_reason == "not_prepared" and in_hand:  # SPEC-363 R19: Carta da mão (básica/de cena)
+        if (
+            result.invalid_reason == "not_prepared" and in_hand
+        ):  # SPEC-363 R19: Carta da mão (básica/de cena)
             hand = hand_card_targeting(state, card_id)
             result = TargetingResult(hand["valid_targets"], hand["invalid_reason"])
     elif action_kind == "attack" or (action_kind == "maneuver" and maneuver in _TARGETED_MANEUVERS):

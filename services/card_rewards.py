@@ -137,6 +137,7 @@ def _pools(player: dict, defeated: list[dict], *, boss: bool, region_ids: set[st
         for cid in saque_ids
         if cid not in known and _eligible(cards.get_card(cid), player, boss=boss)
     )
+
     # SPEC-363 R31: utilitária não age no conflito — não é oferta de espólio de conflito
     # (loja, missão e Acervo continuam podendo).
     def not_utility(ids: list[str]) -> list[str]:

@@ -43,8 +43,18 @@ def test_mid_fight_rounds_make_zero_llm_calls(monkeypatch):
     scene = cur["combat"]["scene"]
     cs.add_object(
         scene,
-        {"id": "barril", "name": "Barril", "zone_id": "z0", "uses_remaining": 1,
-         "interactions": [{"label": "derrubar", "effect": {"kind": "damage", "params": {"amount": 1, "target": "e"}}}]},
+        {
+            "id": "barril",
+            "name": "Barril",
+            "zone_id": "z0",
+            "uses_remaining": 1,
+            "interactions": [
+                {
+                    "label": "derrubar",
+                    "effect": {"kind": "damage", "params": {"amount": 1, "target": "e"}},
+                }
+            ],
+        },
         from_trigger=True,
     )
     scene_ids = sc.sync_hand(scene, cur["combat"]["pilhas"], "player")
@@ -58,8 +68,15 @@ def test_mid_fight_rounds_make_zero_llm_calls(monkeypatch):
     monkeypatch.setattr(combat, "get_llm", counting)
     eid = next(e["id"] for e in cur["enemies"] if not e.get("dead"))
     plan = [
-        {"actor_id": "player", "acao": {"kind": "card", "card_id": scene_ids[0], "target_id": eid}},  # Carta de cena
-        {"actor_id": "player", "acao": {"kind": "pass"}, "reaction_card_id": "dev_encaixe"},  # Reação declarada
+        {
+            "actor_id": "player",
+            "acao": {"kind": "card", "card_id": scene_ids[0], "target_id": eid},
+        },  # Carta de cena
+        {
+            "actor_id": "player",
+            "acao": {"kind": "pass"},
+            "reaction_card_id": "dev_encaixe",
+        },  # Reação declarada
         {"actor_id": "player", "acao": {"kind": "flee"}},  # fuga (tentativa)
         {"actor_id": "player", "acao": {"kind": "pass"}},
         {"actor_id": "player", "acao": {"kind": "pass"}},
@@ -111,7 +128,9 @@ def test_c_flee_completed_ends_with_fled_and_keeps_last_round(monkeypatch):
             cur = {**cur, **{k: v for k, v in out.items() if k != "messages"}}
         if out["combat"].get("outcome") == "fled":
             meta = out["combat"]
-            assert any("escapou" in line for line in meta.get("last_mech_log") or []), meta.get("last_mech_log")
+            assert any("escapou" in line for line in meta.get("last_mech_log") or []), meta.get(
+                "last_mech_log"
+            )
             assert meta.get("last_round_board") is not None  # registro da rodada final preservado
             assert out["messages"][0].content.strip()
             return
@@ -119,14 +138,18 @@ def test_c_flee_completed_ends_with_fled_and_keeps_last_round(monkeypatch):
 
 
 # --- (d)(e)(g) cartas alteradas / Leitura de Pressão / Armadura Comprometida -----------------------
-@pytest.mark.parametrize(("cid", "numero"), [("arc1_imp_truque", "3"), ("arc1_cal_pulso_medido", "4")])
+@pytest.mark.parametrize(
+    ("cid", "numero"), [("arc1_imp_truque", "3"), ("arc1_cal_pulso_medido", "4")]
+)
 def test_d_altered_arcanist_text_has_new_numbers(cid, numero):
     assert numero in fx.render_card_text(cards.get_card(cid))
 
 
 def test_e_leitura_de_pressao_reveals_intent_in_registry():
     out, _piles = _round("arc1_cal_leitura", 3, "enemy")
-    assert any("intencao à mostra" in str(line) or "intenção à mostra" in str(line) for line in out["logs"]), out["logs"]
+    assert any(
+        "intencao à mostra" in str(line) or "intenção à mostra" in str(line) for line in out["logs"]
+    ), out["logs"]
     assert out.get("revelacoes")
 
 
@@ -148,12 +171,20 @@ def test_h_renegado_never_gets_descarga_arcana():
 def test_i_victory_by_reaction_facts():
     last = {"final_blows": [{"target_id": "e1", "kind": "reacao", "by_actor_id": "player"}]}
     names = {"player": "Você", "e1": "Goblin"}
-    assert round_log.final_blow_sentence(last, names) == "Sua reação termina o serviço: Goblin tomba."
-    facts = round_log.outcome_facts(
-        "victory", {"mortos": ["Goblin"]}, {"name": "H", "vitalidade": 5, "max_vitalidade": 5},
-        [{"id": "e1", "name": "Goblin"}], last, names={"e1": "Goblin"},
+    assert (
+        round_log.final_blow_sentence(last, names) == "Sua reação termina o serviço: Goblin tomba."
     )
-    assert any("Sua reação termina o serviço" in f for f in facts) or any("reação" in f for f in facts)
+    facts = round_log.outcome_facts(
+        "victory",
+        {"mortos": ["Goblin"]},
+        {"name": "H", "vitalidade": 5, "max_vitalidade": 5},
+        [{"id": "e1", "name": "Goblin"}],
+        last,
+        names={"e1": "Goblin"},
+    )
+    assert any("Sua reação termina o serviço" in f for f in facts) or any(
+        "reação" in f for f in facts
+    )
 
 
 # --- (k) modo off ------------------------------------------------------------------------------------
@@ -167,7 +198,9 @@ def test_k_deck_off_keeps_the_legacy_flow(monkeypatch):
 # --- (l) router esgotado -----------------------------------------------------------------------------
 def test_l_exhausted_llm_still_opens_the_board(monkeypatch):
     state = _start_state(hint="Goblin")
-    monkeypatch.setattr(combat, "get_llm", lambda *a, **k: FallbackLLM("todos os candidatos falharam"))
+    monkeypatch.setattr(
+        combat, "get_llm", lambda *a, **k: FallbackLLM("todos os candidatos falharam")
+    )
     res = combat._combat_node(state)
     assert res["messages"][0].content.strip()
     assert (res["combat"] or {}).get("active")
@@ -217,7 +250,10 @@ def test_a_scene_object_card_is_played_and_resolves(monkeypatch):
             "zone_id": "z0",
             "uses_remaining": 1,
             "interactions": [
-                {"label": "derrubar", "effect": {"kind": "damage", "params": {"amount": 3, "target": "e"}}}
+                {
+                    "label": "derrubar",
+                    "effect": {"kind": "damage", "params": {"amount": 3, "target": "e"}},
+                }
             ],
         },
         from_trigger=True,
@@ -253,15 +289,24 @@ def test_f_voto_sussurrado_on_ally_targeted_omen(ordem, monkeypatch):
     for rnd in (1, 2):
         decl = t339._voto() if rnd == 1 else t339.ct.TurnDeclaration(actor_id="player")
         out = orch.run_round(
-            scene, actors, sides, {"player": actors["player"]},
-            declarations={"player": decl}, initiator=t339.ORDENS[ordem],
-            rng=t339._Rng0(rnd), pressagios=frozen,
+            scene,
+            actors,
+            sides,
+            {"player": actors["player"]},
+            declarations={"player": decl},
+            initiator=t339.ORDENS[ordem],
+            rng=t339._Rng0(rnd),
+            pressagios=frozen,
         )
         logs += out["logs"]
-        frozen = ei.forecast_round(scene, actors, sides, t339._Rng0(rnd))  # presságio da rodada seguinte
+        frozen = ei.forecast_round(
+            scene, actors, sides, t339._Rng0(rnd)
+        )  # presságio da rodada seguinte
     text = "\n".join(logs)
     # 355 §6.1: a Provocação diz o que fez — muda de alvo ou é resistida; nunca silêncio
-    if ordem == "hero_first":  # o Voto cai antes do ataque congelado: a linha diz que ele muda de alvo
+    if (
+        ordem == "hero_first"
+    ):  # o Voto cai antes do ataque congelado: a linha diz que ele muda de alvo
         assert "provocado por" in text and "muda de alvo" in text, text
     else:  # o inimigo já agiu; na rodada seguinte o presságio recalculado mira o herói
         assert "e → player" in text, text
@@ -280,9 +325,12 @@ def test_mid_fight_last_stand_round_makes_zero_llm_calls(monkeypatch):
         corpo = int((player.get("virtudes") or {}).get("corpo", 2) or 2)
         espacos = gamedata.espacos_ferimento_para_corpo(corpo)
         player["ferimentos"] = {
-            "leve": [], "grave": [],
-            "critico": [{"categoria": "critico", "regiao": f"r{i}", "suprimida": False}
-                        for i in range(int(espacos["critico"]) - 1)],
+            "leve": [],
+            "grave": [],
+            "critico": [
+                {"categoria": "critico", "regiao": f"r{i}", "suprimida": False}
+                for i in range(int(espacos["critico"]) - 1)
+            ],
         }
         player["ferimento_espacos"] = espacos
         player["vitalidade"] = 0

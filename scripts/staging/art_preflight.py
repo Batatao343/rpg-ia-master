@@ -36,11 +36,15 @@ def evaluate(
     dynamic = str(env.get("RPG_DYNAMIC_ART_ENABLED", "")).strip().lower() in _TRUE
     creature = str(env.get("RPG_CREATURE_ART", "")).strip().lower() in {"on", *(_TRUE - {"on"})}
     causa: str | None = None
-    if "image_generation" in {k.strip() for k in str(env.get("RPG_KILL_SWITCHES_OFF", "")).split(",")}:
+    if "image_generation" in {
+        k.strip() for k in str(env.get("RPG_KILL_SWITCHES_OFF", "")).split(",")
+    }:
         causa = "env_kill_switches_off"
     elif not switch_image:
-        causa = "daily_cap" if str(actor or "").startswith("system:finops") else (
-            "drill" if str(actor or "").startswith("drill") else "manual_off"
+        causa = (
+            "daily_cap"
+            if str(actor or "").startswith("system:finops")
+            else ("drill" if str(actor or "").startswith("drill") else "manual_off")
         )
     elif not pricing_fresh:
         causa = "pricing_stale"
@@ -102,7 +106,11 @@ def main(argv: Sequence[str] | None = None, *, store=None, price: int | None = N
     except PricingUnavailable:
         fresh = False
     report = evaluate(
-        switches=store.load(), audit=store.audit(20), pricing_fresh=fresh, env=env, price_estilhas=price
+        switches=store.load(),
+        audit=store.audit(20),
+        pricing_fresh=fresh,
+        env=env,
+        price_estilhas=price,
     )
     if pool is not None:
         pool.close()

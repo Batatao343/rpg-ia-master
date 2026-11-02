@@ -486,7 +486,11 @@ def _build_openai(
     global_timeout = os.getenv("LLM_TIMEOUT_SECONDS")
     if global_timeout is not None:
         timeout_seconds = float(global_timeout)
-    elif provider == "deepseek" and timeout is not None and "DEEPSEEK_TIMEOUT_SECONDS" not in os.environ:
+    elif (
+        provider == "deepseek"
+        and timeout is not None
+        and "DEEPSEEK_TIMEOUT_SECONDS" not in os.environ
+    ):
         timeout_seconds = float(timeout)  # SPEC-363 R34: constante por tier
     else:
         timeout_seconds = float(
@@ -576,7 +580,9 @@ def _open_circuit_if_permanent(provider: str, model: str, exc: BaseException) ->
 
 # SPEC-363 R34: o CLASSIFY desiste cedo do DeepSeek (parse curto; a cauda longa só atrasa o turno).
 # Parâmetro de engenharia (sem flag/env nova). `LLM_TIMEOUT_SECONDS`/`DEEPSEEK_TIMEOUT_SECONDS` vencem.
-DEEPSEEK_CLASSIFY_TIMEOUT_S = 6.5  # p99 medido 6,0 s (n=22, smokes 2+3; docs/spec363/classify_latency.json), piso 4 s
+DEEPSEEK_CLASSIFY_TIMEOUT_S = (
+    6.5  # p99 medido 6,0 s (n=22, smokes 2+3; docs/spec363/classify_latency.json), piso 4 s
+)
 
 
 def _tier_timeout(provider: str, tier: "ModelTier | None") -> float | None:
@@ -589,7 +595,11 @@ def _get_cached_client(
     provider: str, model: str, temperature: float, tier: "ModelTier | None" = None
 ) -> "BaseLanguageModel":
     timeout = _tier_timeout(provider, tier)
-    key = (provider, model, temperature) if timeout is None else (provider, model, temperature, timeout)
+    key = (
+        (provider, model, temperature)
+        if timeout is None
+        else (provider, model, temperature, timeout)
+    )
     client = _CLIENT_CACHE.get(key)
     if client is None:
         if timeout is None:  # pode levantar (não cacheia falha)
