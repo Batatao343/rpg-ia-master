@@ -16,6 +16,7 @@ def test_view_marks_hidden_enemy_and_filters_hand_targets(monkeypatch):
     visible = [e["id"] for e in st["enemies"] if not e.get("dead")][0]
     hidden = hp.add_second_enemy(st)
     hp.hide_enemy(st, hidden)
+    st["combat"]["pilhas"]["mao"] = ["bas_san_golpe", "bas_dev_golpe"]  # P3-13: mão fixa
     saved[gid] = deepcopy(st)
     view = client.get("/game/state", params={"game_id": gid}).json()["combat"]
     positions = {p["participant_id"]: p for p in view["scene"]["positions"]}
@@ -23,7 +24,7 @@ def test_view_marks_hidden_enemy_and_filters_hand_targets(monkeypatch):
     assert positions[visible]["concealment"] == "visivel"
     hand = view["pilhas"]["mao"]
     attacks = [m for m in hand if m.get("alvo") == "inimigo"]
-    assert attacks, "mao sem Carta de inimigo"
+    assert len(attacks) == 2, "mao fixa: 2 Cartas de inimigo"
     for card in attacks:
         assert card["valid_targets"] == [visible]  # o escondido nao entra
         assert card["invalid_reason"] is None

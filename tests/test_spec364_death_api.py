@@ -14,64 +14,50 @@ import agents.combat as combat
 from tests import spec364_board_helpers as hp
 
 HERO = "Smoke4A"
-GOOD_LLM = "Você tomba diante do Goblin. O Goblin B, que já tinha tombado, jaz ao seu lado."
+GOOD_LLM = "Você tomba diante do Goblin. O Corvo Rubro, que já tinha tombado, jaz ao seu lado."
 BAD_LLM = (
-    "Smoke4A cai. O Goblin B também tomba sem vida ao seu lado."  # V6: queda antiga no presente
+    "Smoke4A cai. O Corvo Rubro também tomba sem vida ao seu lado."  # V6: queda antiga no presente
 )
 
 
 def _die(monkeypatch, llm_text: str):
-    """Rodada 1: o herói derruba o Goblin B (semente buscada); rodada 2: o herói morre (seam de estabilização)."""
-    from services import death_flow
+    """Corvo Rubro já caído numa rodada anterior (semeado no estado e no manifesto, sem busca de semente);
+    o herói morre agora (seam = estabilização)."""
+    from services import death_flow, round_log
 
     client, saved, gid = hp.api_client(monkeypatch, hero=HERO)
     st = hp.open_combat(client, saved, gid)
     other = hp.add_second_enemy(st)
     for e in st["enemies"]:
         if e["id"] == other:
-            e.update(vitalidade=1, hp=1)
-    st["player"]["vitalidade"] = max(int(st["player"].get("vitalidade", 18) or 18), 12)
+            e.update(dead=True, status="morto", vitalidade=0, hp=0)
+    for part in st["combat"]["encounter"]["participants"]:
+        if part["participant_id"] == other:
+            part["status"] = "morto"
+    st["player"]["vitalidade"] = 0
+    st["player"]["estado_terminal"] = True
     saved[gid] = deepcopy(st)
-    fell = False
-    for seed in range(60):
-        snapshot = deepcopy(saved[gid])
-        random.seed(seed)
-        r = client.post(
-            "/game/action",
-            json={
-                "game_id": gid,
-                "input_text": "Ataco",
-                "action_kind": "attack",
-                "target_id": other,
-            },
-        )
-        assert r.status_code == 200, r.text
-        now = saved[gid]
-        goblin_b = next((e for e in now["enemies"] if e["id"] == other), None)
-        if (
-            (goblin_b is None or goblin_b.get("dead"))
-            and (now.get("combat") or {}).get("active")
-            and not now.get("death_pending")
-        ):
-            fell = True
-            break
-        saved[gid] = snapshot
-    assert fell, "nenhuma semente derrubou o Goblin B na rodada 1"
-    st2 = deepcopy(saved[gid])
-    st2["player"]["vitalidade"] = 0
-    st2["player"]["estado_terminal"] = True
-    saved[gid] = st2
     monkeypatch.setattr(
         death_flow,
         "attempt_stabilization",
         lambda *a, **k: {"dead": True, "log": "Você não resiste.", "revived": False},
     )
     monkeypatch.setattr(combat, "_fast_text", lambda *a, **k: llm_text)
+    seen: list[list[str]] = []
+    real = round_log.authorship
+
+    def spy(*a, **k):
+        out = real(*a, **k)
+        seen.append(list(out.get("earlier_fallen") or []))
+        return out
+
+    monkeypatch.setattr(round_log, "authorship", spy)
     random.seed(1)
     r = client.post(
         "/game/action", json={"game_id": gid, "input_text": "Passo", "action_kind": "pass"}
     )
     assert r.status_code == 200, r.text
+    assert any("Corvo Rubro" in fallen for fallen in seen), seen  # a queda antiga chegou ao resumo
     hist = client.get("/game/history", params={"game_id": gid}).json()["entries"]
     return r.json(), saved[gid], hist
 
@@ -103,7 +89,7 @@ def test_death_end_to_end(monkeypatch, llm_text):
 def test_forced_fallback_source_and_past_tense(monkeypatch):
     resp, saved, _hist = _die(monkeypatch, BAD_LLM)
     assert saved["combat"]["last_outcome_source"] == "fallback_attribution"
-    assert "Goblin B" in resp["message"] and "já tinha tombado" in resp["message"]
+    assert "Corvo Rubro" in resp["message"] and "já tinha tombado" in resp["message"]
     assert "Smoke4A cai" not in resp["message"] and "também tomba" not in resp["message"]
 
 

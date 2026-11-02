@@ -87,7 +87,7 @@ def add_second_enemy(state: dict) -> str:
     clone = deepcopy(base)
     new_id = f"{base['id']}_b"
     clone["id"] = new_id
-    clone["name"] = f"{base.get('name', 'Inimigo')} B"
+    clone["name"] = "Corvo Rubro"  # nome distinto: sem renomear homônimos ("Goblin 1 B")
     state["enemies"].append(clone)
     positions = state["combat"]["scene"]["positions"]
     positions[new_id] = deepcopy(positions[base["id"]])

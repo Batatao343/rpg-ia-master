@@ -542,7 +542,17 @@ def _v6(low: str, auth: dict) -> bool:
             if verb and not past:
                 v = re.escape(verb.group(0))
                 bare = re.match(r"\s*(?:e\s+)?" + v + r"\b", clause)
-                post_subject = re.search(v + r"\s+(?:o|a|os|as|um|uma)\s+\w+", clause)
+                # P3-12: só um NOME de participante (fora de `earlier_fallen`) depois do verbo é sujeito;
+                # "tomba a seus pés" / "desaba uma última vez" são complementos.
+                others = [
+                    _fold_text(p)
+                    for p in auth.get("participant_names") or []
+                    if _fold_text(p) not in names
+                ]
+                post_subject = any(
+                    re.search(v + r"\s+(?:(?:o|a|os|as)\s+)?" + re.escape(o) + r"s?\b", clause)
+                    for o in others
+                )
                 if named(clause) or (carried and bare and not post_subject):
                     return True
             if verb:

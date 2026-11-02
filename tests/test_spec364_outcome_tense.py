@@ -149,7 +149,7 @@ def test_v6_rejects_more_present_tense_forms(text):
     [
         "Ao lado do Goblin, tomba o Minotauro Esqueleto.",
         "Ao lado do Goblin tomba o Minotauro Esqueleto.",
-        "Junto ao Goblin, desaba o colosso.",
+        "Junto ao Goblin, desaba o Minotauro Esqueleto.",
     ],
 )
 def test_v6_accepts_post_verb_subject(text):
@@ -163,6 +163,9 @@ def test_v6_accepts_post_verb_subject(text):
         "O Goblin tomba ao lado do Minotauro Esqueleto.",
         "Ao lado do Minotauro Esqueleto, tomba o Goblin.",
         "O Goblin, ferido, tomba ao seu lado.",
+        "O Goblin, ferido, tomba a seus pés.",
+        "O Goblin, ferido, desaba uma última vez.",
+        "O Goblin, ferido, cai a poucos passos de você.",
     ],
 )
 def test_v6_still_rejects_earlier_fallen_as_subject(text):

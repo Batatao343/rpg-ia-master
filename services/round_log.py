@@ -576,6 +576,9 @@ def authorship(
     return {
         **hero_info,
         "earlier_fallen": earlier,  # SPEC-364 R12 (V6)
+        "participant_names": sorted(
+            {str(v) for v in names.values() if str(v) and str(v) != "Você"}
+        ),
         "lines": lines,
         "final_lines": final_lines,
         "hero_cards": hero_cards,
