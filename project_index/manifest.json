@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "cefbccadd70d490dd9c36b6bcbc18272be06dc7c",
+  "commit_sha": "b51132a22b322795a719d90fbef1e0ca1319f6fb",
   "edge_counts": {
-    "calls": 35899,
-    "contains": 1181,
-    "defines": 17438,
-    "imports": 2890,
-    "likely_test_for": 2085,
+    "calls": 36438,
+    "contains": 1197,
+    "defines": 17675,
+    "imports": 2908,
+    "likely_test_for": 2102,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:4615aceeb06ffb6b74618c65edc71e1a621c1b25298428883782839044cacf63",
+  "graph_hash": "sha256:87610e400386760c02364bd5b76d386967fddfdd784c11b86f61d4a43c5d4a13",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -253,6 +253,10 @@
     "scripts/dev_stack.py",
     "scripts/export_game_audit.py",
     "scripts/export_game_data.py",
+    "scripts/fauna/build.py",
+    "scripts/fauna/eval.py",
+    "scripts/fauna/lint.py",
+    "scripts/fauna/rascunho.py",
     "scripts/finops_margin_sim.py",
     "scripts/flag_registry.py",
     "scripts/frontend_eval_report.py",
@@ -414,6 +418,8 @@
     "services/faction_membership_lint.py",
     "services/faction_missions.py",
     "services/faction_relations.py",
+    "services/fauna.py",
+    "services/fauna_lint.py",
     "services/file_cache.py",
     "services/finops.py",
     "services/finops_alerts.py",
@@ -1162,6 +1168,16 @@
     "tests/test_spec355_provocacao_rodada.py",
     "tests/test_spec355_reacao_buff.py",
     "tests/test_spec355_router_fallback.py",
+    "tests/test_spec360_build.py",
+    "tests/test_spec360_caca.py",
+    "tests/test_spec360_eco.py",
+    "tests/test_spec360_eval.py",
+    "tests/test_spec360_flags_off.py",
+    "tests/test_spec360_presenca.py",
+    "tests/test_spec360_rumor.py",
+    "tests/test_spec360_saves.py",
+    "tests/test_spec360_schema_lint.py",
+    "tests/test_spec360_sinais.py",
     "tests/test_spec362_arcanista.py",
     "tests/test_spec362_run_round.py",
     "tests/test_spec363_enemy_name.py",
@@ -1451,14 +1467,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1048,
+    "class": 1054,
     "endpoint": 69,
-    "file": 1397,
-    "function": 5426,
+    "file": 1413,
+    "function": 5534,
     "method": 865,
-    "module": 1181,
-    "test": 10098
+    "module": 1197,
+    "test": 10221
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:fdd5fa7f97a274e1eb7c1695d424e987cc5fd4d9b465f672d0a53870ea5221e9"
+  "source_tree_hash": "sha256:2ae32c64553d1d0d6dd816c797e23bab92cafd5d09e191f99bb8064041b70e96"
 }
