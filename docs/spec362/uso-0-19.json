@@ -1,0 +1,191 @@
+{
+ "L1": {
+  "vitorias": [
+   88,
+   160
+  ],
+  "cartas": {
+   "arc1_cal_pulso_medido": {
+    "copias": 2,
+    "na_mao": 225,
+    "jogada": 144
+   },
+   "arc1_imp_olho_latao": {
+    "copias": 2,
+    "na_mao": 208,
+    "jogada": 49
+   },
+   "arc1_tro_centelha_ressoante": {
+    "copias": 1,
+    "na_mao": 83,
+    "jogada": 14
+   },
+   "arc_cal_valvula": {
+    "copias": 2,
+    "na_mao": 195,
+    "jogada": 0
+   },
+   "arc_des_mao_nua": {
+    "copias": 2,
+    "na_mao": 211,
+    "jogada": 204
+   },
+   "arc_descarga": {
+    "copias": 2,
+    "na_mao": 211,
+    "jogada": 181
+   },
+   "arc_faisca": {
+    "copias": 2,
+    "na_mao": 184,
+    "jogada": 105
+   },
+   "arc_imp_geringonca": {
+    "copias": 2,
+    "na_mao": 0,
+    "jogada": 0
+   },
+   "bas_arc_golpe": {
+    "copias": 4,
+    "na_mao": 338,
+    "jogada": 119
+   },
+   "bas_arc_guarda": {
+    "copias": 4,
+    "na_mao": 376,
+    "jogada": 169
+   },
+   "bas_arc_vazao": {
+    "copias": 1,
+    "na_mao": 92,
+    "jogada": 8
+   }
+  }
+ },
+ "L3": {
+  "vitorias": [
+   70,
+   160
+  ],
+  "cartas": {
+   "arc1_des_brasa": {
+    "copias": 2,
+    "na_mao": 235,
+    "jogada": 0
+   },
+   "arc1_des_garganta": {
+    "copias": 1,
+    "na_mao": 131,
+    "jogada": 77
+   },
+   "arc1_imp_carretel": {
+    "copias": 2,
+    "na_mao": 205,
+    "jogada": 78
+   },
+   "arc1_imp_mola": {
+    "copias": 2,
+    "na_mao": 232,
+    "jogada": 0
+   },
+   "arc_cal_valvula": {
+    "copias": 2,
+    "na_mao": 244,
+    "jogada": 0
+   },
+   "arc_des_mao_nua": {
+    "copias": 2,
+    "na_mao": 262,
+    "jogada": 241
+   },
+   "arc_imp_geringonca": {
+    "copias": 2,
+    "na_mao": 0,
+    "jogada": 0
+   },
+   "bas_arc_golpe": {
+    "copias": 4,
+    "na_mao": 459,
+    "jogada": 343
+   },
+   "bas_arc_guarda": {
+    "copias": 4,
+    "na_mao": 438,
+    "jogada": 177
+   },
+   "bas_arc_vazao": {
+    "copias": 1,
+    "na_mao": 135,
+    "jogada": 0
+   },
+   "faisca_cinza": {
+    "copias": 2,
+    "na_mao": 214,
+    "jogada": 102
+   }
+  }
+ },
+ "L5": {
+  "vitorias": [
+   59,
+   160
+  ],
+  "cartas": {
+   "arc1_des_sobrecarga": {
+    "copias": 2,
+    "na_mao": 246,
+    "jogada": 71
+   },
+   "arc1_imp_bomba_estopim": {
+    "copias": 2,
+    "na_mao": 269,
+    "jogada": 137
+   },
+   "arc1_imp_truque": {
+    "copias": 2,
+    "na_mao": 268,
+    "jogada": 88
+   },
+   "arc_cal_malha": {
+    "copias": 2,
+    "na_mao": 277,
+    "jogada": 0
+   },
+   "arc_des_sobrecarga": {
+    "copias": 2,
+    "na_mao": 236,
+    "jogada": 117
+   },
+   "arc_empuxo": {
+    "copias": 1,
+    "na_mao": 135,
+    "jogada": 0
+   },
+   "arc_imp_bomba": {
+    "copias": 2,
+    "na_mao": 227,
+    "jogada": 61
+   },
+   "arc_ponte_curta": {
+    "copias": 2,
+    "na_mao": 0,
+    "jogada": 0
+   },
+   "bas_arc_golpe": {
+    "copias": 4,
+    "na_mao": 487,
+    "jogada": 187
+   },
+   "bas_arc_guarda": {
+    "copias": 4,
+    "na_mao": 514,
+    "jogada": 204
+   },
+   "bas_arc_vazao": {
+    "copias": 1,
+    "na_mao": 136,
+    "jogada": 15
+   }
+  }
+ }
+}

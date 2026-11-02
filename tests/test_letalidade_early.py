@@ -96,12 +96,12 @@ def test_pisos_de_hp_e_pocoes_iniciais():
         "Devoto do Abismo": (18, 2),
         "Sangromante": (18, 2),
         "Corruptor": (18, 2),
-        "Arcanista Cinzento": (14, 2),
+        "Arcanista Cinzento": (16, 2),  # SPEC-362: vitalidade_bonus 8 (balanco do Arcanista)
         "Médico de Campo": (16, 3),
     }
     for name, (vitality, potions) in expected.items():
         data = CLASSES[name]
-        assert data["base_stats"]["vitalidade_bonus"] == 6
+        assert data["base_stats"]["vitalidade_bonus"] == (8 if name == "Arcanista Cinzento" else 6)
         assert data["starting_equipment"].count("pocao_cura") >= potions
         actor = {"class_name": name, "virtudes": data["base_stats"]["virtudes"]}
         wu.gamedata.sync_vitality(actor, heal_to_full=True)

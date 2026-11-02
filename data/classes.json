@@ -364,7 +364,7 @@
     "passive": "Caldeira: canalizar gera Entropia para a próxima descarga.",
     "base_stats": {
       "hp": 26,
-      "vitalidade_bonus": 6,
+      "vitalidade_bonus": 8,
       "entropy": 20,
       "mana": 0,
       "stamina": 0,

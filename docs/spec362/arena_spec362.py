@@ -112,6 +112,29 @@ def atribuicao(seeds: range, legadas: bool = False) -> dict:
     return out
 
 
+def uso(seeds: range) -> dict:
+    """Uso real do bot no baralho `todas`: copias no baralho, vezes na mao e jogadas, por nivel."""
+    pool = B.AP.A.creatures_by_category()
+    out: dict = {}
+    for level in LEVELS:
+        deck = B.sim.full_deck(CLS, level, "")
+        seen: dict = {}
+        wins = n_f = 0
+        for cat in ("padrao", "elite"):
+            size = B.AP.A.group_size(cat, level)
+            for bid in B.sim.pick(pool[cat], 4):
+                for seed in seeds:
+                    o, _ = B.sim.fight(bid, size, CLS, level, seed, B.sim.full_deck(CLS, level, ""), "full", seen)
+                    wins += o == "win"
+                    n_f += 1
+        rows = {}
+        for cid in sorted(set(deck)):
+            h, j = seen.get(cid, [0, 0])
+            rows[cid] = {"copias": deck.count(cid), "na_mao": h, "jogada": j}
+        out[f"L{level}"] = {"vitorias": [wins, n_f], "cartas": rows}
+    return out
+
+
 def passo(seeds: range, ids: list[str]) -> dict:
     res: dict = {"seeds": [seeds.start, seeds.stop], "versoes": B.versoes(ids)}
     res["arcanista"] = _arcanista(seeds)
@@ -124,9 +147,10 @@ def main(argv: list[str] | None = None) -> int:
     d = sp.add_parser("decompor")
     a = sp.add_parser("atribuicao")
     a.add_argument("--legadas", action="store_true")
+    sp.add_parser("uso")
     p = sp.add_parser("passo")
     p.add_argument("--ids", nargs="*", default=[])
-    for s in (d, a, p):
+    for s in (d, a, p, sp.choices["uso"]):
         s.add_argument("--seeds", default="0:20")
         s.add_argument("--out")
     args = ap.parse_args(argv)
@@ -135,6 +159,8 @@ def main(argv: list[str] | None = None) -> int:
         res: dict = decompor(rng)
     elif args.cmd == "atribuicao":
         res = atribuicao(rng, args.legadas)
+    elif args.cmd == "uso":
+        res = uso(rng)
     else:
         res = passo(rng, args.ids)
     B._write(args.out, res)
