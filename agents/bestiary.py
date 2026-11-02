@@ -524,7 +524,11 @@ def _generate_v361(
 def template_by_id(enemy_id: str, *, encounter_level: int = 1) -> dict | None:
     """SPEC-203 R3: ficha de um id canônico do bestiário, SEM LLM (nem librarian).
     Mesmo contrato do cache-hit de `generate_new_enemy`."""
-    db = load_bestiary()
+    return template_from_db(load_bestiary(), enemy_id, encounter_level=encounter_level)
+
+
+def template_from_db(db: dict, enemy_id: str, *, encounter_level: int = 1) -> dict | None:
+    """``template_by_id`` sobre um bestiário já carregado (SPEC-361: sem reler o JSON)."""
     if enemy_id not in db:
         return None
     data = dict(db[enemy_id])

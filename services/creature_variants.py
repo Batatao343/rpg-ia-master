@@ -179,9 +179,14 @@ def _compativel(f: dict, mod: dict) -> bool:
     return True
 
 
+@lru_cache(maxsize=1024)
+def _dobrado(texto: str) -> str:
+    return bl._fold(texto)
+
+
 def score_base(f: dict, mod: dict, nucleo: str, categoria: str | None) -> float:
     s = 2.0 if categoria and f.get("categoria") == categoria else 0.0
-    corpo = bl._fold(
+    corpo = _dobrado(
         f"{f.get('comportamento') or ''} {(f.get('anatomia') or {}).get('texto') or ''}"
     )
     s += sum(1 for a in (mod.get("afinidades") or []) if bl._has_term(corpo, bl._fold(a)))

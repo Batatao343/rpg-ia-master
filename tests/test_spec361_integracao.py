@@ -140,7 +140,9 @@ def test_save_antigo_carrega(gen_on):
     state = _start_state(hint="Verme das Cinzas", enemies=[inst], world=dict(ZHUR))
     state["game_id"] = "36136136-1361-4361-8361-361361361361"
     assert persistence.save_game_state(state)
-    loaded = persistence.load_game_state(persistence.save_path("36136136-1361-4361-8361-361361361361"))
+    loaded = persistence.load_game_state(
+        persistence.save_path("36136136-1361-4361-8361-361361361361")
+    )
     assert loaded["enemies"][0]["name"] == "Verme das Cinzas"
     assert "creature_gen" not in (loaded.get("world") or {})
     p = cg.PedidoCriatura.from_spawn(

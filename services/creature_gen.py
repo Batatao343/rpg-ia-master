@@ -30,7 +30,7 @@ from observability.telemetry import log_event
 from services import bestiary_lint as bl
 from services import card_lint, enemy_decks
 from services.card_lint import Issue
-from services.encounter_manifest import hint_core, name_tokens, resolve_bestiary_name
+from services.encounter_manifest import hint_core, name_tokens
 
 # --------------------------------------------------------------------------
 # Tipos (Literals construídos dos enums da 349 num só lugar; nada duplicado)
@@ -1038,6 +1038,32 @@ def is_combatente(f: dict) -> bool:
 # --------------------------------------------------------------------------
 # R1 - decisão
 # --------------------------------------------------------------------------
+_INDICE_NOMES: dict = {"chave": None, "indice": {}}
+
+
+def _chave_nome(texto: str) -> tuple:
+    return tuple(sorted(set(name_tokens(texto))))
+
+
+def resolver_nome(texto: str, bestiary: dict) -> str | None:
+    """``resolve_bestiary_name`` com índice de tokens (mesmo resultado, sem varrer 370 nomes
+    por chamada). O índice é refeito quando o conjunto de ids do bestiário muda."""
+    chave = (len(bestiary), hash(tuple(bestiary)))
+    if _INDICE_NOMES["chave"] != chave:
+        indice: dict[tuple, set[str]] = {}
+        for bid, entry in bestiary.items():
+            for label in ((entry or {}).get("name", "") if isinstance(entry, dict) else "", bid):
+                indice.setdefault(_chave_nome(str(label)), set()).add(str(bid))
+        _INDICE_NOMES.update(chave=chave, indice=indice)
+    wanted = _chave_nome(texto)
+    if not wanted:
+        return None
+    hits = _INDICE_NOMES["indice"].get(wanted)
+    return min(hits) if hits else None
+
+
+# --------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 def _forcar_efetivo(p: PedidoCriatura) -> str:
     return p.forcar if p.forcar != "auto" and eval_mode() else "auto"
 
@@ -1055,7 +1081,7 @@ def decidir_caminho(
     forcar = _forcar_efetivo(p)
     fam = familia_alvo(f"{p.pedido} {p.motivo_trama}")
     if forcar == "auto":
-        bid = resolve_bestiary_name(p.nucleo, bestiary) or resolve_bestiary_name(p.pedido, bestiary)
+        bid = resolver_nome(p.nucleo, bestiary) or resolver_nome(p.pedido, bestiary)
         if bid:
             return Decisao("existente", base_id=bid, familia_alvo=fam, motivo="resolve")
     if forcar in ("auto", "variante"):
@@ -1248,7 +1274,12 @@ def gerar(
     lore: str | None = None,
 ) -> ResultadoGeracao:
     """Decide o caminho e devolve o template pronto (sem persistir; quem persiste é o bestiário)."""
-    from agents.bestiary import load_bestiary, materialize_enemy_concept, template_by_id
+    from agents.bestiary import (
+        load_bestiary,
+        materialize_enemy_concept,
+        template_by_id,
+        template_from_db,
+    )
     from services import creature_variants as cv
 
     t0 = time.perf_counter()
@@ -1265,11 +1296,9 @@ def gerar(
     def _tpl(bid: str | None) -> dict | None:
         if not bid:
             return None
-        tpl = template_by_id(bid, encounter_level=p.encounter_level)
-        if tpl is None and isinstance(bestiary.get(bid), dict):  # pool/overlay do jogo
-            tpl = materialize_enemy_concept(bestiary[bid], encounter_level=p.encounter_level)
-            tpl["id"] = bid
-        return tpl
+        # o bestiário já carregado (curadoria ∪ overlay ∪ pool do jogo): sem reler o JSON
+        tpl = template_from_db(bestiary, bid, encounter_level=p.encounter_level)
+        return tpl or template_by_id(bid, encounter_level=p.encounter_level)
 
     if dec.caminho == "existente" and dec.base_id:
         template = _tpl(dec.base_id)

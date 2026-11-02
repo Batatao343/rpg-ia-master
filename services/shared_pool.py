@@ -485,6 +485,62 @@ def evaluate(
 # --------------------------------------------------------------------------- #
 # Job de promoção (R18)
 # --------------------------------------------------------------------------- #
+EstadoPublico = Literal["local", "pool_pendente", "pool_aprovado", "rejeitada"]
+_ESTADO_PUBLICO: dict[PoolStatus, str] = {
+    PoolStatus.LOCAL_ONLY: "local",
+    PoolStatus.HELD: "pool_pendente",
+    PoolStatus.PROMOTED: "pool_aprovado",
+    PoolStatus.REJECTED: "rejeitada",
+    PoolStatus.VETOED: "rejeitada",
+    PoolStatus.RETIRED: "rejeitada",
+}
+# SPEC-361 R25: entrada à espera do curador sai da fila do job (não gasta CLASSIFY de novo).
+CURATOR_PARK = timedelta(days=3650)
+
+
+def estado_publico(entry_or_template: Any) -> EstadoPublico:
+    """SPEC-361 R21: ``local | pool_pendente | pool_aprovado | rejeitada`` (o enum não muda)."""
+    status = getattr(entry_or_template, "status", None)
+    if status is None and isinstance(entry_or_template, dict):
+        if entry_or_template.get("pool_entry_id") is None:
+            return "local"  # overlay `runtime_catalog` (pool off)
+        status = entry_or_template.get("pool_status")
+        if status is None:
+            return str((entry_or_template.get("geracao") or {}).get("estado") or "local")  # type: ignore[return-value]
+    try:
+        return _ESTADO_PUBLICO[PoolStatus(status)]  # type: ignore[return-value]
+    except ValueError:
+        return "local"
+
+
+def _has_ficha(entry: SharedPoolEntry) -> bool:
+    return entry.namespace == PoolNamespace.CREATURE and isinstance(
+        entry.document.get("ficha"), dict
+    )
+
+
+def _awaiting_curator(entry: SharedPoolEntry) -> bool:
+    return bool((entry.evaluation or {}).get("aguarda_curador"))
+
+
+def relint_creature(entry: SharedPoolEntry, *, store=None) -> list:
+    """SPEC-361 R25: U1-U13 de novo contra as fichas ATUAIS da região (+ promovidas do pool)."""
+    from services import creature_gen as cg
+
+    ficha = {**entry.document["ficha"], "id": str(entry.document.get("id") or entry.entry_id)}
+    regiao = str(ficha.get("regiao") or entry.region_id)
+    runtime: list[dict] = []
+    if store is not None:
+        for other in store.select(
+            namespace=PoolNamespace.CREATURE, statuses=[PoolStatus.PROMOTED], region_id=regiao
+        ):
+            f = other.document.get("ficha")
+            if isinstance(f, dict) and other.entry_id != entry.entry_id:
+                runtime.append({**f, "id": str(other.document.get("id") or other.entry_id)})
+    cg._todas_fichas.cache_clear()  # ficha curada que pousou depois vence (R25)
+    return cg.lint_runtime(ficha, regiao, runtime=runtime)
+
+
 def _reject(store, entry: SharedPoolEntry, code: str, evaluation: dict, **extra: Any) -> None:
     store.update(
         entry.entry_id,
@@ -505,13 +561,18 @@ def promote_due(
 ) -> dict[str, int]:
     """Valida, deduplica, avalia (1 LLM) e promove/rejeita entradas vencidas."""
     now = now or _utcnow()
-    counts = {"promoted": 0, "rejected": 0, "held": 0, "failed": 0}
+    counts = {"promoted": 0, "rejected": 0, "held": 0, "failed": 0}  # + awaiting_curator (361)
     if embedder is None and embedding_profile is None:
         embedder, embedding_profile = default_embedder()
     day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     mock = is_mock_llm(llm)
     for entry in store.due(now, eval_per_run()):
         try:
+            if _awaiting_curator(entry):
+                counts["awaiting_curator"] = (
+                    counts.get("awaiting_curator", 0) + 1
+                )  # já passou no gate; só o curador decide
+                continue
             promoted = store.select(namespace=entry.namespace, statuses=[PoolStatus.PROMOTED])
             findings = run_validators(
                 entry,
@@ -541,6 +602,13 @@ def promote_due(
                 )
                 counts["rejected"] += 1
                 continue
+            if _has_ficha(entry):
+                lint_issues = relint_creature(entry, store=store)
+                if lint_issues:
+                    codes = sorted({i.code for i in lint_issues})
+                    _reject(store, entry, "bestiary_lint", {"lint": codes[:12]})
+                    counts["rejected"] += 1
+                    continue
             if mock and not allow_mock_eval():
                 counts["held"] += 1  # R17: o mock nunca promove (nem gasta tentativa)
                 continue
@@ -581,6 +649,19 @@ def promote_due(
                 ]
                 _reject(store, entry, f"eval_{failed[0]}", evaluation)
                 counts["rejected"] += 1
+                continue
+            if _has_ficha(entry):
+                # SPEC-361 R25: criatura com ficha passou em tudo, mas só o curador (revisão
+                # Opus em lote, R26) a leva a PROMOTED. Fica HELD, fora da fila do job.
+                store.update(
+                    entry.entry_id,
+                    {
+                        "evaluation": {**evaluation, "gate": "ok", "aguarda_curador": True},
+                        "promote_after": (now + CURATOR_PARK).isoformat(),
+                    },
+                )
+                log_event("pool", "awaiting_curator", entry_id=entry.entry_id)
+                counts["awaiting_curator"] = counts.get("awaiting_curator", 0) + 1
                 continue
             store.update(
                 entry.entry_id,
@@ -638,6 +719,69 @@ def admin_retire(store, entry_id: str) -> SharedPoolEntry:
     entry = store.update(entry_id, {"status": PoolStatus.RETIRED.value})
     log_event("pool", "admin_action", action="retire", entry_id=entry_id)
     return entry
+
+
+def apply_curator_verdicts(
+    store,
+    vereditos: Sequence[dict],
+    *,
+    revisor: str,
+    now: datetime | None = None,
+    embedder: Callable[[str], Sequence[float]] | None = None,
+    embedding_profile: str | None = None,
+) -> dict[str, int]:
+    """SPEC-361 R26: único escritor de PROMOTED para criatura com ficha (revisão Opus em lote).
+
+    ``vereditos`` = ``[{entry_id, veredito: aprovada|rejeitada, motivo}]``. Entrada que não está
+    HELD com ``aguarda_curador`` é ignorada (e contada); reimportar o mesmo arquivo não muda nada.
+    """
+    from services.card_lint import revisor_valido
+
+    if not revisor_valido(revisor) or str(revisor).strip().lower() == "runtime":
+        raise ValueError(f"revisor inválido para o curador do pool: {revisor!r}")
+    now = now or _utcnow()
+    counts = {"promoted": 0, "rejected": 0, "ignored": 0}
+    if embedder is None and embedding_profile is None:
+        embedder, embedding_profile = default_embedder()
+    for item in vereditos:
+        entry_id = str((item or {}).get("entry_id") or "")
+        veredito = str((item or {}).get("veredito") or "").strip().lower()
+        motivo = str((item or {}).get("motivo") or "")[:200]
+        entry = store.get(entry_id) if entry_id else None
+        if (
+            entry is None
+            or entry.status != PoolStatus.HELD
+            or not _awaiting_curator(entry)
+            or veredito not in ("aprovada", "rejeitada")
+        ):
+            counts["ignored"] += 1
+            log_event("pool", "curator_ignored", entry_id=entry_id[:40])
+            continue
+        curador = {"revisor": str(revisor), "data": now.date().isoformat(), "motivo": motivo}
+        evaluation = {**(entry.evaluation or {}), "aguarda_curador": False, "curador": curador}
+        if veredito == "rejeitada":
+            _reject(store, entry, "curator_rejected", evaluation)
+            counts["rejected"] += 1
+            continue
+        vector: list[float] | None = None
+        if embedder is not None:
+            try:
+                vector = [float(x) for x in embedder(signature_text(entry))]
+            except Exception as exc:  # silent-ok: sem embedding o dedupe futuro é lexical
+                log_event("pool", "embed_failed", level="warning", error=type(exc).__name__)
+        store.update(
+            entry.entry_id,
+            {
+                "status": PoolStatus.PROMOTED.value,
+                "evaluation": evaluation,
+                "embedding": vector,
+                "embedding_profile": embedding_profile if vector is not None else None,
+                "input_shingles": [],
+            },
+        )
+        log_event("pool", "promoted", entry_id=entry.entry_id, namespace=entry.namespace.value)
+        counts["promoted"] += 1
+    return counts
 
 
 # --------------------------------------------------------------------------- #

@@ -187,3 +187,12 @@ def test_mais_proxima(best):
     bid = cg.mais_proxima(p, bestiary=best)
     assert bid and cg._todas_fichas()[bid]["categoria"] == "lacaio"
     assert cg.mais_proxima(_p(regiao="nenhuma"), bestiary=best) is None
+
+
+def test_resolver_nome_igual_resolve_bestiary_name(best):
+    from services.encounter_manifest import resolve_bestiary_name
+
+    textos = ["Saltador de Palafita", "saltadores de palafita", "Arame Vivo", "lacaio", "", "x"]
+    textos += [str(e.get("name")) for e in list(best.values())[:40]]
+    for t in textos:
+        assert cg.resolver_nome(t, best) == resolve_bestiary_name(t, best), t

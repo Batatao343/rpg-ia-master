@@ -82,16 +82,138 @@ _ID_FIELDS = frozenset(
 _ID_RE = re.compile(r"^[a-z0-9_]{1,80}$")
 
 
+# SPEC-361 R23: campos de criatura que são enum/id (checados em `_validate_creature_enums`),
+# não texto livre; sem isso `corpo_a_corpo`/`deserto_zhur` contavam como "injeção" (snake_case).
+_CREATURE_ENUM_FIELDS = frozenset({"categoria", "arquetipo", "estilo_ataque", "region_tags"})
+_FICHA_ENUM_FIELDS = frozenset(
+    {
+        "status",
+        "familia",
+        "fonte",
+        "detalhe",
+        "refs",
+        "plano_corporal",
+        "material",
+        "escala",
+        "locomocao",
+        "percepcao",
+        "papel_tatico",
+        "arquetipo",
+        "categoria",
+        "faccao",
+        "estilo_ataque",
+        "habitat",
+        "padrao",
+        "autor",
+        "revisao",
+        "regiao",
+    }
+)
+
+
+def _walk_text(prefix: str, value: object, out: dict[str, str], depth: int = 0) -> None:
+    """SPEC-361 R23: desce em dicts (``ficha``) e junta ``str`` / lista de ``str``.
+
+    Enums/ids da ficha ficam fora (validados por forma); ``{nome}`` do telegrafo é o único
+    marcador permitido e sai antes da varredura de markup."""
+    if depth > 4:
+        return
+    if isinstance(value, str):
+        out[prefix] = value.replace("{nome}", "")
+    elif isinstance(value, list) and all(isinstance(v, str) for v in value):
+        out[prefix] = " ".join(value)
+    elif isinstance(value, dict):
+        for key, sub in value.items():
+            if str(key) in _ID_FIELDS or str(key) in _FICHA_ENUM_FIELDS:
+                continue
+            _walk_text(f"{prefix}.{key}", sub, out, depth + 1)
+
+
 def _text_fields(entry: SharedPoolEntry) -> dict[str, str]:
     fields: dict[str, str] = {"name": entry.name, "legend": entry.legend}
+    creature = entry.namespace == PoolNamespace.CREATURE
     for key, value in entry.document.items():
         if key in _ID_FIELDS:
             continue  # identificadores são checados em validate_schema
+        if creature and key in _CREATURE_ENUM_FIELDS:
+            continue  # enums de criatura: `_validate_creature_enums`
         if isinstance(value, str):
             fields[key] = value
         elif isinstance(value, list) and all(isinstance(v, str) for v in value):
             fields[key] = " ".join(value)
+        elif key == "ficha" and isinstance(value, dict):
+            _walk_text("ficha", value, fields)
     return {k: v for k, v in fields.items() if v}
+
+
+# SPEC-361 R23: tetos dos textos da ficha (os do schema FichaCriaturaGerada, R14).
+FICHA_TEXT_LIMITS: dict[str, int] = {
+    "ficha.nome": 40,
+    "ficha.anatomia.texto": 600,
+    "ficha.silhueta": 160,
+    "ficha.comportamento": 400,
+    "ficha.nome_ataque": 40,
+    "ficha.telegrafo": 120,
+    "ficha.mecanica_assinatura.frase": 200,
+    "ficha.contra_jogo": 200,
+    "ficha.gancho": 240,
+    "ficha.description": 200,
+    "ficha.aparencia": 300,
+    "ficha.arte.visual": 500,
+    "ficha.arte.evitar": 200,
+}
+_FICHA_TEXT_DEFAULT = 120  # enums, ids e demais campos curtos
+
+
+def _validate_ficha(entry: SharedPoolEntry) -> list[Finding]:
+    ficha = entry.document.get("ficha")
+    if ficha is None:
+        return []
+    if not isinstance(ficha, dict):
+        return [Finding("schema_bad_value", "ficha")]
+    texts: dict[str, str] = {}
+    _walk_text("ficha", ficha, texts)
+    findings = [
+        Finding("schema_too_long", field[:40])
+        for field, text in texts.items()
+        if len(text) > FICHA_TEXT_LIMITS.get(field, _FICHA_TEXT_DEFAULT)
+    ]
+    # enums/ids da ficha (fora da varredura de texto): só forma de identificador
+    for sub in (ficha, ficha.get("anatomia"), ficha.get("origem_lore")):
+        if not isinstance(sub, dict):
+            continue
+        for key in _FICHA_ENUM_FIELDS & set(sub):
+            if not _is_ident_value(sub[key]):
+                findings.append(Finding("schema_bad_value", f"ficha.{key}"[:40]))
+    return findings
+
+
+def _is_ident_value(value: object) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return bool(_ID_RE.match(value))
+    if isinstance(value, list):
+        return len(value) <= 20 and all(isinstance(v, str) and _ID_RE.match(v) for v in value)
+    return False
+
+
+def _validate_creature_enums(entry: SharedPoolEntry) -> list[Finding]:
+    if entry.namespace != PoolNamespace.CREATURE:
+        return []
+    from agents.bestiary import _ATTACK_TYPE, _VIRTUDE_TEMPLATES, ARQUETIPO_VIRTUDE
+
+    doc = entry.document
+    findings = []
+    arq = doc.get("arquetipo")
+    if arq is not None and arq not in {*_VIRTUDE_TEMPLATES, *ARQUETIPO_VIRTUDE}:
+        findings.append(Finding("schema_bad_value", "arquetipo"))
+    estilo = doc.get("estilo_ataque")
+    if estilo is not None and estilo not in _ATTACK_TYPE:
+        findings.append(Finding("schema_bad_value", "estilo_ataque"))
+    if not _is_ident_value(doc.get("region_tags")):
+        findings.append(Finding("schema_bad_value", "region_tags"))
+    return findings
 
 
 # --------------------------------------------------------------------------- #
@@ -143,6 +265,8 @@ def validate_schema(entry: SharedPoolEntry) -> list[Finding]:
     }:
         findings.append(Finding("creature_category", "categoria"))
     findings += _validate_typed_fields(entry)
+    findings += _validate_ficha(entry)
+    findings += _validate_creature_enums(entry)
     for key in _ID_FIELDS:
         value = entry.document.get(key)
         if value is not None and not (isinstance(value, str) and _ID_RE.match(value)):

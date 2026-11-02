@@ -103,7 +103,9 @@ def avaliar(registros: Sequence[dict[str, Any]], *, modo: str = "depois") -> dic
     novas = [r for r in registros if r.get("forcar") == "nova"]
     autos = [r for r in registros if r.get("forcar") == "auto"]
     textos = [t for r in registros for t in (r.get("textos") or [])]
-    gerados = [r for r in registros if r.get("caminho") in ("nova", "variante", "legacy")]
+    # fichas escritas pelo gerador (a variante reaproveita o corpo da base: fica fora de
+    # físico/campos/vizinho, que medem a criatura escrita do zero)
+    gerados = [r for r in registros if r.get("caminho") in ("nova", "legacy")]
     out: dict[str, Any] = {"n": len(registros), "n_nova": len(novas), "n_auto": len(autos)}
     if modo != "antes":
         out["lint_primeira"] = _frac(sum(1 for r in novas if r.get("lint_primeira")), len(novas))
