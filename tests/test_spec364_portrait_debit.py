@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 import api
 from services import creature_art
 from tests.test_image_quotes_local import (  # noqa: F401
