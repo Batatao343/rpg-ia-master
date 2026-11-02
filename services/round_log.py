@@ -369,8 +369,11 @@ def round_registry(
         if actor and not actor.get("dead") and aid not in (out.get("deaths") or []):
             fall_lines.append(_sem_vitalidade_line(actor, names.get(aid, "Alguém")))
 
-    scene_lines = [str(x) for x in out.get("scene_logs") or [] if x and not _is_arith(str(x))]
-    status = [str(x) for x in (status_logs or []) if x and not _is_arith(str(x))]
+    # SPEC-364 R14/R15: Cartas de Cena e status passam pela mesma voz do jogador antes do dedupe
+    scene_lines = [
+        _voce(str(x), hero_name) for x in out.get("scene_logs") or [] if x and not _is_arith(str(x))
+    ]
+    status = [_voce(str(x), hero_name) for x in (status_logs or []) if x and not _is_arith(str(x))]
 
     seen: set[str] = set()
     result: list[str] = []
@@ -474,7 +477,12 @@ def _event_result(atk: dict, target_name: str | None = None) -> str:
     return head
 
 
-def authorship(last_out: dict | None, names: dict[str, str], player: dict | None = None) -> dict:
+def authorship(
+    last_out: dict | None,
+    names: dict[str, str],
+    player: dict | None = None,
+    conflict_summary: dict | None = None,
+) -> dict:
     """SPEC-353 R5-R8: quem fez o quê na rodada final, estruturado.
 
     ``hero_cards``: nome da Carta/arma do herói → "hit"|"miss"; ``final_by_hero``: o golpe final
@@ -560,8 +568,14 @@ def authorship(last_out: dict | None, names: dict[str, str], player: dict | None
             for w in (player.get("ferimentos") or {}).get(cat, []) or []
         ]
         hero_info = {"hero_state": qualitative_state(player), "hero_wound_regions": regions}
+    earlier = (
+        fall_partition(conflict_summary, last_out, names, str((player or {}).get("name") or ""))[1]
+        if conflict_summary
+        else []
+    )
     return {
         **hero_info,
+        "earlier_fallen": earlier,  # SPEC-364 R12 (V6)
         "lines": lines,
         "final_lines": final_lines,
         "hero_cards": hero_cards,
@@ -569,6 +583,26 @@ def authorship(last_out: dict | None, names: dict[str, str], player: dict | None
         "final_on_enemy": final_on_enemy,
         "hero_last_missed": last_hero_hit is False,
     }
+
+
+def fall_partition(
+    summary: dict | None, last: dict | None, nm: dict[str, str], hero: str = ""
+) -> tuple[set[str], list[str]]:
+    """SPEC-364 R10: (nomes que caíram na rodada final, nomes de quedas anteriores).
+    Sem dado da rodada final (save antigo) tudo é "agora", como antes."""
+    last = last or {}
+    now_ids = {str(b.get("target_id")) for b in last.get("final_blows") or []}
+    now_ids |= {str(i) for i in last.get("deaths") or []} | {str(i) for i in last.get("terminal") or []}
+    now_ids |= {str(x.get("actor_id")) for x in last.get("sem_vitalidade") or []}
+    now_names = {nm.get(i, i) for i in now_ids if i != "player"}
+    fallen = [
+        n
+        for key in ("mortos", "caidos")
+        for n in ((summary or {}).get(key) or [])
+        if str(n).strip() and str(n).strip() != hero
+    ]
+    earlier = [n for n in dict.fromkeys(fallen) if n not in now_names] if now_ids else []
+    return now_names, earlier
 
 
 def outcome_facts(
@@ -586,16 +620,28 @@ def outcome_facts(
     last_out = last_out or {}
     facts = [f"Desfecho: {_OUTCOME_PT.get(outcome, outcome)}."]
     summ = conflict_summary or {}
-    for key, verb in (
-        ("mortos", "morreu"),
-        ("caidos", "caiu"),
-        ("inconscientes", "perdeu os sentidos"),
-        ("rendidos", "se rendeu"),
-        ("fugitivos", "fugiu"),
-        ("capturados", "foi capturado"),
+    nm_all = _fact_names(player, enemies, names)
+    now_names, earlier_all = fall_partition(summ, last_out, nm_all, str(player.get("name") or ""))
+    for key, verb, past in (
+        ("mortos", "morreu", "morrido"),
+        ("caidos", "caiu", "caído"),
+        ("inconscientes", "perdeu os sentidos", "perdido os sentidos"),
+        ("rendidos", "se rendeu", ""),
+        ("fugitivos", "fugiu", ""),
+        ("capturados", "foi capturado", ""),
     ):
         pnames = [str(n) for n in summ.get(key) or [] if str(n) and str(n) != player.get("name")]
-        if pnames:
+        if not pnames:
+            continue
+        if past and earlier_all:  # SPEC-364 R10: a queda anterior fica no passado
+            old = [n for n in pnames if n in earlier_all]
+            pnames = [n for n in pnames if n not in old]
+            if old:
+                aux = "já tinha" if len(old) == 1 else "já tinham"
+                facts.append(f"Antes do fim, {', '.join(old)} {aux} {past}.")
+            if pnames:
+                facts.append(f"Na rodada final, {', '.join(pnames)} {verb}.")
+        elif pnames:
             facts.append(f"{', '.join(pnames)} {verb}.")
     auth = authorship(last_out, _fact_names(player, enemies, names))
     facts += auth["lines"]
@@ -719,25 +765,13 @@ def deterministic_outcome_text(
     summary = conflict_summary or {}
     last = last_out or {}
     # R9: quedas da rodada final (de last_out) vs. quedas anteriores do conflito.
-    now_ids = {str(b.get("target_id")) for b in last.get("final_blows") or []}
-    now_ids |= {str(i) for i in last.get("deaths") or []} | {
-        str(i) for i in last.get("terminal") or []
-    }
-    now_names = {nm.get(i, i) for i in now_ids if i != "player"}
     blow = final_blow_sentence(last, nm)
     blow_targets = {
         nm.get(str(b.get("target_id")), "")
         for b in last.get("final_blows") or []
         if str(b.get("target_id")) != "player"
     }
-    fallen = [
-        n
-        for key in ("mortos", "caidos")
-        for n in (summary.get(key) or [])
-        if str(n).strip() and str(n).strip() != hero
-    ]
-    # sem dado da rodada final (save antigo) tudo é "agora", como antes
-    earlier = [n for n in dict.fromkeys(fallen) if n not in now_names] if now_ids else []
+    _now, earlier = fall_partition(summary, last, nm, hero)
     skip = {hero, *earlier, *(blow_targets if blow else set())}
 
     lead = {

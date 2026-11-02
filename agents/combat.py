@@ -2015,7 +2015,9 @@ def _narrate_outcome(
         decisive_cards=round_log.decisive_cards(last_out),
         names=names,
     )
-    auth = round_log.authorship(last_out, round_log._fact_names(player, enemies, names), player)
+    auth = round_log.authorship(
+        last_out, round_log._fact_names(player, enemies, names), player, conflict_sum
+    )
 
     if source_sink is not None:
         source_sink.pop("last_outcome_source", None)  # nunca herda o valor de um conflito anterior
@@ -2031,6 +2033,7 @@ def _narrate_outcome(
     APENAS os fatos abaixo. Trate o jogador por "você" (nunca tu/teu/tua). NÃO escreva números, dados, pontos de vida nem aritmética. Não invente
     mortes, golpes nem resultados fora dos fatos. Cada ação tem um autor: nunca atribua a Carta
     ou o golpe de um combatente a outro, nem diga que um golpe acertou (ou errou) contra os fatos.
+    Quem caiu antes do fim já estava caído: conte no passado (já tinha tombado), nunca como se tombasse agora.
     Glossário: Vitalidade = vigor e resistência do corpo; Fôlego = energia para jogar Cartas
     (nunca é dano). Ferimentos são localizados e permanentes.
     <fatos>

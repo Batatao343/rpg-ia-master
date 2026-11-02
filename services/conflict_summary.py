@@ -507,6 +507,24 @@ def _v4_clause(low: str, auth: dict) -> bool:
     return False
 
 
+_PAST_MARK_RE = re.compile(
+    r"\b(?:ja|antes|tinha|tinham|havia|haviam|caira|tombara|caido|tombado|morto|jaz|jazia)\b"
+)
+
+
+def _v6(low: str, auth: dict) -> bool:
+    """SPEC-364 R12: queda de rodada ANTERIOR contada no presente (oração = entre .;!? e vírgulas)."""
+    names = [_fold_text(n) for n in auth.get("earlier_fallen") or [] if str(n).strip()]
+    if not names:
+        return False
+    for part in re.split(r"[,.;!?:]", low):
+        if not _FALL_RE.search(part) or _PAST_MARK_RE.search(part):
+            continue
+        if any(re.search(rf"\b{re.escape(n)}\b", part) for n in names):
+            return True
+    return False
+
+
 def validate_attribution(text: str, auth: dict) -> list[str]:
     """Códigos V1/V2/V3 de autoria trocada (vazio = ok). ``auth`` vem de
     ``round_log.authorship``: ``hero_cards`` (nome → hit|miss) e ``final_by_hero``/``final_on_enemy``."""
@@ -534,6 +552,8 @@ def validate_attribution(text: str, auth: dict) -> list[str]:
             codes.append("V3")
         if _v4(low, auth):
             codes.append("V4")
+        if _v6(low, auth):
+            codes.append("V6")
     whole = _fold_text(text)
     if _TU_RE.search(whole) and _VOCE_RE.search(whole):  # SPEC-363 R12 (V5): tratamento misto
         codes.append("V5")
