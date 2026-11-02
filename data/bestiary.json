@@ -13047,7 +13047,7 @@
     "attacks": [
       {
         "name": "Raspa de Penacho",
-        "type": "melee",
+        "type": "ranged",
         "damage": "1d6"
       }
     ],
@@ -25038,7 +25038,7 @@
     "attacks": [
       {
         "name": "Artigo Cravado",
-        "type": "melee",
+        "type": "ranged",
         "damage": "1d8"
       }
     ],
@@ -29226,7 +29226,7 @@
     "attacks": [
       {
         "name": "Joelhada de Mula",
-        "type": "melee",
+        "type": "ranged",
         "damage": "1d6"
       }
     ],
@@ -34236,7 +34236,7 @@
     "attacks": [
       {
         "name": "Soco de Breu",
-        "type": "melee",
+        "type": "ranged",
         "damage": "2d6"
       }
     ],

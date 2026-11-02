@@ -56,7 +56,7 @@
   }
  },
  "enemy_arpoador_osshari": {
-  "arquetipo": "conjurador",
+  "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
    "bst_descarga_arcana"
@@ -411,7 +411,7 @@
   }
  },
  "enemy_devorador_sol_zhur": {
-  "arquetipo": "conjurador",
+  "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
    "bst_descarga_arcana"
@@ -1205,7 +1205,7 @@
   }
  },
  "enemy_orc_saidas_baixas": {
-  "arquetipo": "conjurador",
+  "arquetipo": "emboscador",
   "behavior_profile": "tatico",
   "cartas": [
    "bst_descarga_arcana"
@@ -1232,7 +1232,7 @@
   }
  },
  "enemy_pirata_brekmar": {
-  "arquetipo": "conjurador",
+  "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
    "bst_descarga_arcana"
@@ -1316,7 +1316,7 @@
   }
  },
  "enemy_renegado_ermo": {
-  "arquetipo": "conjurador",
+  "arquetipo": "tatico",
   "behavior_profile": "tatico",
   "cartas": [
    "bst_descarga_arcana"

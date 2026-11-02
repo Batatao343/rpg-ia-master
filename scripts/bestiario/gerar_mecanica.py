@@ -370,7 +370,12 @@ def entrada_nova(f: dict, mec: dict, cartas: list[dict], aj: dict) -> dict:
     app = str(f["aparencia"]).strip()
     assert len(app) <= 300, f["id"]
     atk = cartas[0]
-    ataque_tipo = "ranged" if f["papel_tatico"] == "artilharia" else "melee"
+    conjura = any(
+        (e.get("dano_tipo") in {"arcano", "abissal", "elemental"})
+        for c in cartas
+        for e in (c.get("efeitos") or [c["efeito"]])
+    )  # content_validator: dano de conjurador exige ataque à distância
+    ataque_tipo = "ranged" if f["papel_tatico"] == "artilharia" or conjura else "melee"
     chefe = (
         {"vitalidade_por_nivel_encontro": SOBREVIVENCIA_CHEFE, "acoes_por_rodada": ACOES_CHEFE}
         if f["categoria"] == "chefe"
