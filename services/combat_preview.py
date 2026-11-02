@@ -328,11 +328,8 @@ def _flee_line(out: dict) -> str | None:
     veredito = roll.get("veredito")
     if veredito is None:  # save antigo: só o dado
         veredito = "avancou" if roll.get("sucesso") else "falhou"
-    trail = (
-        f" ({track_label(roll['de'])} → {track_label(roll['para'])})"
-        if roll.get("de") and roll.get("para")
-        else ""
-    )
+    de, para = track_label(roll.get("de")), track_label(roll.get("para"))
+    trail = f" ({de} → {para})" if de and para else ""
     text = {
         "escapou": "escapou",
         "avancou": f"avança{trail}",

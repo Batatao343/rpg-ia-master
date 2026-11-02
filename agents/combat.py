@@ -1489,6 +1489,24 @@ def _flee_verdict(chase_state: dict | None, previous: str, hero_fled: bool) -> s
     return "perdeu_terreno" if (state.get("_last") or {}).get("total") is not None else "falhou"
 
 
+def _flee_roll_payload(chase_state: dict | None, prev_track: str, hero_fled: bool) -> dict | None:
+    """SPEC-353 R39b / SPEC-364 R1: payload `out["fuga"]`. O "de" vem de dentro da
+    perseguição (`_last.de`, depois de retomar/reiniciar); `prev_track` só p/ save antigo."""
+    last = (chase_state or {}).get("_last") or {}
+    if last.get("total") is None:
+        return None
+    de = str(last.get("de") or prev_track)
+    return {
+        "total": last.get("total"),
+        "dificuldade": last.get("difficulty"),
+        "sucesso": bool(last.get("sucesso")),
+        # SPEC-363 R22: o veredito vem da perseguição, não do "sucesso" do dado
+        "veredito": _flee_verdict(chase_state, de, hero_fled),
+        "de": de,
+        "para": (chase_state or {}).get("trilha"),
+    }
+
+
 def _enforce_flee_attempt_limit(chase_state: dict, *, attempts: int) -> tuple[bool, dict]:
     """Fecha perseguições que oscilaram demais sem retirar letalidade do combate.
 
@@ -2517,17 +2535,7 @@ def _combat_node(state: GameState):
                 flee_logs.append("Após uma perseguição prolongada, os inimigos perdem o rastro.")
         _publish_sacrifice_offer(state, party, chase_state, hero_fled=hero_fled, logs=flee_logs)
         combat_meta["chase"] = chase_state
-        _last_roll = (chase_state or {}).get("_last") or {}
-        if _last_roll.get("total") is not None:  # SPEC-353 R39b
-            flee_roll = {
-                "total": _last_roll.get("total"),
-                "dificuldade": _last_roll.get("difficulty"),
-                "sucesso": bool(_last_roll.get("sucesso")),
-                # SPEC-363 R22: o veredito vem da perseguição, não do "sucesso" do dado
-                "veredito": _flee_verdict(chase_state, _prev_track, hero_fled),
-                "de": _prev_track,
-                "para": (chase_state or {}).get("trilha"),
-            }
+        flee_roll = _flee_roll_payload(chase_state, _prev_track, hero_fled) or flee_roll
         logs += weather_logs + logs_pre_flee + flee_logs
         flee_lines = list(logs_pre_flee) + list(flee_logs)
     elif flee_requested:
@@ -3388,6 +3396,7 @@ def _attempt_flee(
     previous_track = chase_state.get("trilha")
     if force_escape:
         chase_state.update(trilha="escapou", escapou=True, alcancado=False, eligible=True)
+        chase_state["_last"] = {**(chase_state.get("_last") or {}), "de": previous_track}  # SPEC-364 R1
         return FleeDecision(
             True,
             ["Você aproveita a brecha e FOGE do combate."],
@@ -3414,6 +3423,7 @@ def _attempt_flee(
         companion_luck=[roll for _aid, roll in ally_rolls],
         rng=rng,
     )
+    chase_state["_last"] = {**(chase_state.get("_last") or {}), "de": previous_track}  # SPEC-364 R1
     if combat_flags.abandon_mode() == "on":
         # R12: Sorte por aliado da rodada, base do "deixar <nome>" da rodada seguinte.
         chase_state["last_luck"] = {str(aid): roll for aid, roll in ally_rolls}

@@ -32,12 +32,13 @@ TRACK_LABEL = {
     "afastado": "afastado",
     "quase_livre": "quase livre",
     "escapou": "livre",
+    "alcancado": "alcançado",
 }
 
 
 def track_label(value: object) -> str:
-    """SPEC-363 R24: rótulo legível do estado da trilha (nunca o id cru)."""
-    return TRACK_LABEL.get(str(value or ""), str(value or "").replace("_", " "))
+    """SPEC-363 R24 / SPEC-364 R3: rótulo legível da trilha; valor desconhecido → "" (nunca o id)."""
+    return TRACK_LABEL.get(str(value or ""), "")
 
 
 _DISTANCE_TO_TRACK = {"proximo": "pressionado", "distante": "afastado", "separado": "quase_livre"}
