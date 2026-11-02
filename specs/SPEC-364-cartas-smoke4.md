@@ -1,6 +1,6 @@
 # SPEC-364 — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
 
-> **Status:** `approved` (coordenador, autorização do dono 02/11 "manda bala"; D-364-1..5 aceitas)
+> **Status:** `in-progress` (implementada nas Etapas 0-6; faltam revisão `Sol` e smoke §6; era `approved`, coordenador, autorização do dono 02/11 "manda bala"; D-364-1..5 aceitas)
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Épico:** SPEC-327
 > **Origem:** smoke 4 real de 02/11 (`main` `cc31a6c1`, staging `hosted-supabase` + local `legacy`, DeepSeek `deepseek-v4-flash`, 15 turnos + 2 gerações de retrato) — [docs/spec364/achados-smoke4.md](../docs/spec364/achados-smoke4.md). Evidência bruta no scratchpad do coordenador (`scratchpad/smoke4/`: `stg/stg_log.jsonl`, `stg/stg_hist_A.json`, `out/state-*.json`, `out/hist-*.json`, `out/*.png`, `server.log`, `turns.cjs`).
@@ -446,4 +446,33 @@ Os três itens "não verificados" do smoke 4 não entram no §6: R21–R23 os pr
 
 ## 9. Registro de implementação
 
-(vazio — preenchido pelo executor a partir da Etapa 0)
+**Etapa 0 (confirmação).** (1) Achado 1 reproduzido pelo teste novo: 2ª fuga depois de "alcançado" dava `de == "alcancado"`
+(o `_prev_track` de `combat_meta` é lido antes de `_attempt_flee` reiniciar a perseguição); o caso `distante` tem a mesma
+causa. (2) Achado 5: só `round_registry` duplica; `mech_log` e `round_board` não consomem `scene_logs` (R15 vale só no
+registro). (3) `gerar` é montado em `api._enemy_portrait` → `creature_art.portrait_for`; milli da API é string de inteiro
+(`credits_milli`), então `preco_milli` é string.
+
+**Commits (branch `spec-364`).** 1 fuga (R1-R3) · 2 mercado (R4-R9) · 3 resumo/registro (R10-R16) · 4 retrato (R17-R20) ·
+5 cenários (R21-R23) · 6 guardas (R24, R26-R29).
+
+**Desvios e decisões de execução.**
+- R17: os testes de liquidação (`test_settle_below_ceiling_releases_remainder`, `test_settle_above_ceiling_rejected`) usam o
+  fixture Postgres `image_case` e **pulam sem `RPG_TEST_DATABASE_URL`**; não rodaram localmente. O "U > T" é, no motor
+  real, **limitado ao teto com anomalia financeira** (`financial_anomaly_milli`), não "recusado": o teste afirma o limite.
+- R21: a queda do herói é aleatória no motor real; o teste cobre o desfecho nos dois caminhos (`_narrate_outcome` com resumo
+  aceito e com fallback forçado), registro, fatos e `_killer_identity`, não a morte ponta a ponta pela API.
+- R22 revelou **bug real**: o fallback do cliente (`CombateTab.tsx`) chamava `visibleEnemyIds(combat.enemies)`, mas o
+  ocultamento mora em `scene.positions[*].concealment` (já em `people`); o escondido era oferecido como alvo sem
+  `valid_targets` do servidor. Corrigido para `people.filter(role==="enemy")`.
+- R13: o texto real do staging não estava no repositório; a fixture usa a frase citada no §1.1 ("o Goblin também tomba sem
+  vida ao seu lado") dentro de um resumo plausível. Trocar pelo texto bruto se o coordenador o quiser byte a byte.
+- R26/R27: `test_spec364_golden_guard.py` só vale com a branch `spec-364` checada (skip depois do pouso).
+- `outcome_facts`/`deterministic_outcome_text` agora dividem as quedas por `round_log.fall_partition` (inclui
+  `sem_vitalidade` como "rodada final"); o fallback da 363 continua igual nos casos cobertos.
+
+**Expected de testes antigos alterados.** `tests/test_remediacao_comerciante_real.py` (consulta em duas seções, não mais
+"compra / venda"); `web/tests/spec347-components.test.mjs` e `web/e2e/spec352-retrato-pago.spec.ts` (copy "Gerar retrato (até N
+Estilhas)"). `tests/test_spec363_ids.py` ganhou `alcancado` no detector (R29).
+
+**Pendente do coordenador.** Revisão `Sol`; smoke §6 (`docs/spec364/smoke-final.md`); rodar os 2 testes Postgres de R17;
+ajustar o §6.1 da SPEC-363 (D-364-1).

@@ -347,3 +347,33 @@ def test_refused_play_shows_the_reason_in_the_registry(monkeypatch):
     assert out["combat"]["pilhas"] == before
     assert "O combate segue" not in out["messages"][0].content
     assert out["messages"][0].content.strip()
+
+
+def test_two_flees_in_a_row_same_trail_and_zero_llm(monkeypatch):
+    """SPEC-364 R24: fugas seguidas (alcançado -> avança) com o grafo inteiro sem LLM; trilha única, sem ids."""
+    import re
+
+    found = None
+    for seed in range(40):
+        state, res = _open(monkeypatch)
+        cur = _after_open(state, res)
+        _no_llm(monkeypatch)
+        random.seed(seed)
+        prev_reached = False
+        for _press in range(6):
+            cur["messages"] = [*cur["messages"], HumanMessage(content="Fugir")]
+            cur["combat_declaration"] = {"actor_id": "player", "acao": {"kind": "flee"}}
+            out = combat._combat_node(cur)
+            lines = " | ".join(out["combat"].get("last_mech_log") or [])
+            assert not re.search(r"\b(alcancado|quase_livre)\b", lines + out["messages"][0].content)
+            if prev_reached and "Fuga ·" in lines and "avança (" in lines:
+                found = lines
+                break
+            prev_reached = bool((out["combat"].get("chase") or {}).get("alcancado"))
+            if not out["combat"]["active"]:
+                break
+            cur = {**cur, **{k: v for k, v in out.items() if k != "messages"}}
+        if found:
+            break
+    if found:  # a 2ª fuga nunca parte de "alcançado"
+        assert "(alcançado" not in found
