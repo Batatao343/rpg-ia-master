@@ -69,12 +69,14 @@ def test_sim_is_deterministic(sim):
 
 
 def test_sim_flags_dominant_card(sim):
-    rep = sim.simulate_batch(_synthetic_batch(), [1, 3, 5], ["padrao"], 3, [0, 1, 2, 3])
+    # 8 seeds (72 lutas por braço >= MIN_LUTAS_DELTA): com a população cheia do bestiário (SPEC-349)
+    # o uso da Carta fica abaixo de 60 % e a bandeira sai pelo delta de vitória, que exige 40 lutas
+    rep = sim.simulate_batch(_synthetic_batch(), [1, 3, 5], ["padrao"], 3, list(range(8)))
     r = rep["med_lote_1"]
     assert r["vezes_na_mao"] >= sim.AMOSTRA_MINIMA_MAO
     assert "dominante" in r["bandeiras"]
     assert r["dano_por_folego"] > 10
-    assert r["lutas_por_braco"] == 36
+    assert r["lutas_por_braco"] == 72
 
 
 def test_sim_flags_blank_card(sim):

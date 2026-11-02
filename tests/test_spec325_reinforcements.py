@@ -253,8 +253,10 @@ def test_old_save_without_triggers_continues(monkeypatch):
 def test_template_prefers_same_faction_lacaio():
     trig = {"base_id": "enemy_bandido_capitao", "faction": "bandos_nomades", "encounter_level": 1}
     tpl = rf._template_for(trig)
-    # o unico Lacaio dessa faccao e ele mesmo `lider_matilha`: nunca serve de reforco
-    assert tpl["id"] == rf.GENERIC_ID and tpl["categoria"] == "lacaio"
+    # o lider (`lider_matilha`) nunca serve de reforco; SPEC-349 trouxe um Lacaio proprio da faccao
+    # (Arqueiro de Tendao), que passa a ser o reforco da mesma faccao
+    assert tpl["id"] == "mon_arqueiro_de_tendao" and tpl["categoria"] == "lacaio"
+    assert tpl["arquetipo"] != "lider_matilha"
     trig = {"base_id": "x", "faction": "clas_combate", "encounter_level": 1}
     tpl = rf._template_for(trig)
     assert tpl["categoria"] == "lacaio" and tpl["arquetipo"] != "lider_matilha"

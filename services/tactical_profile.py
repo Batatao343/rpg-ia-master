@@ -244,6 +244,8 @@ _ENEMY_ARCHETYPE_ACTIONS: dict[str, dict[str, str]] = {
         "alvo_vulneravel": "attack",
         "sempre": "attack",
     },
+    # SPEC-349: família `abissal` (baralho 332) usada como arquétipo por 5 criaturas da esteira
+    "abissal": {"muito_ferido": "flee", "sempre": "attack"},
     "tatico": {
         "cercado": "flee",
         "muito_ferido": "flee",

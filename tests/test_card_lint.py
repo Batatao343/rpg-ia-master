@@ -337,7 +337,15 @@ def test_loader_traversal_matches_lint_and_keeps_legacy_cards():
     assert set(cards.all_cards()) == ids
     pool = card_lint.load_pool()
     # ondas (SPEC-335+) e baralhos de família (`inf_`, SPEC-332) crescem; o legado fica fixo
-    legado = {c["id"] for c in pool if c.get("onda") is None and not c["id"].startswith("inf_")}
+    # SPEC-349: as Cartas próprias de criatura (`data/cards/criaturas/`, origem bestiario-349) também
+    # são carregadas pelo catálogo (o inimigo resolve a Carta por id), mas não são do legado
+    legado = {
+        c["id"]
+        for c in pool
+        if c.get("onda") is None
+        and not c["id"].startswith("inf_")
+        and c.get("origem") != "bestiario-349"
+    }
     assert len(legado) == 332  # 323 + 9 da SPEC-333
     assert {c["id"] for c in pool if c.get("onda") is not None} <= ids
 

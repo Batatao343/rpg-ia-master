@@ -1206,7 +1206,7 @@ def validate_bestiary_identity(
     try:
         with open(bestiary_path, encoding="utf-8") as f:
             best = json.load(f)
-    except Exception as exc:
+    except Exception as exc:  # silent-ok: vira Finding de erro no lint
         return [Finding("bestiary_identity", "error", bestiary_path, "", str(exc))]
     docs = [
         {
