@@ -1,5 +1,5 @@
 {
-  "commit_sha": "c44bb23fa324a70ba9f3663ccadf138aa5a87b50",
+  "commit_sha": "e8fd4e10664eb56f921d94bc4fc791998ec11d8d",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -96421,7 +96421,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 313
+        "line": 314
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._apply_menu",
@@ -96454,7 +96454,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 629
+        "line": 630
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._fold_hostile",
@@ -96476,7 +96476,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 367
+        "line": 368
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._legacy_rules",
@@ -96509,7 +96509,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 400
+        "line": 401
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._roll_pool_seed",
@@ -96520,7 +96520,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 536
+        "line": 537
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._template",
@@ -96542,7 +96542,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 376
+        "line": 377
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._thread_rules",
@@ -96553,7 +96553,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 551
+        "line": 552
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue._token_payload",
@@ -96575,7 +96575,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 544
+        "line": 545
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.build_start_scenario",
@@ -96586,7 +96586,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 423
+        "line": 424
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.build_start_scenario_ctx",
@@ -96608,7 +96608,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 638
+        "line": 639
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.looks_hostile",
@@ -96619,7 +96619,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 588
+        "line": 589
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.personal_pool_document",
@@ -96630,7 +96630,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 353
+        "line": 354
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.revalidate_scenario",
@@ -96641,7 +96641,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 693
+        "line": 694
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.scenario_to_state_seed",
@@ -96652,7 +96652,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 561
+        "line": 562
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.sign_for_client",
@@ -96663,7 +96663,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 646
+        "line": 647
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.submit_personal_npc",
@@ -96674,7 +96674,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 570
+        "line": 571
       },
       "source": "module:services.prologue",
       "target": "symbol:services.prologue.verified_seed",
@@ -221007,7 +221007,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 59
+        "line": 63
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups._raw",
@@ -221018,7 +221018,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 42
+        "line": 46
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_benign_text_is_not_hostile",
@@ -221029,7 +221029,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 47
+        "line": 51
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_hostile_text_is_flagged",
@@ -221040,7 +221040,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 130
+        "line": 134
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak",
@@ -221051,7 +221051,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 79
+        "line": 83
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief",
@@ -221062,7 +221062,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 71
+        "line": 75
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template",
@@ -221073,7 +221073,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 87
+        "line": 149
+      },
+      "source": "module:tests.test_spec366_followups",
+      "target": "symbol:tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 91
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_planner_cited_ignores_engine_glue",
@@ -221084,7 +221095,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 102
+        "line": 106
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_rank_order_race_over_description",
@@ -221095,7 +221106,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 138
+        "line": 142
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_template_fallback_also_replaces_seeking",
@@ -221106,7 +221117,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 111
+        "line": 159
+      },
+      "source": "module:tests.test_spec366_followups",
+      "target": "symbol:tests.test_spec366_followups.test_template_without_doors_keeps_llm_seeking",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 115
       },
       "source": "module:tests.test_spec366_followups",
       "target": "symbol:tests.test_spec366_followups.test_vibora_not_exposed_in_public_mao_sombria_doc",
@@ -359013,7 +359035,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 319
+        "line": 320
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:observability.telemetry.log_event",
@@ -359024,7 +359046,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 324
+        "line": 325
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:observability.telemetry.log_event",
@@ -359035,32 +359057,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 326
+        "line": 327
       },
       "source": "symbol:services.prologue._apply_menu",
       "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 330
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue.PersonalNPC",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 350
-      },
-      "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._derive_seed_npcs",
       "type": "calls"
     },
     {
@@ -359071,7 +359071,18 @@
         "line": 331
       },
       "source": "symbol:services.prologue._apply_menu",
-      "target": "symbol:services.prologue._trim",
+      "target": "symbol:services.prologue.PersonalNPC",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 351
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._derive_seed_npcs",
       "type": "calls"
     },
     {
@@ -359134,6 +359145,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
+        "line": 337
+      },
+      "source": "symbol:services.prologue._apply_menu",
+      "target": "symbol:services.prologue._trim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
         "line": 240
       },
       "source": "symbol:services.prologue._derive_seed_npcs",
@@ -359145,7 +359167,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 287
+        "line": 288
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:observability.telemetry.log_event",
@@ -359167,17 +359189,6 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 309
-      },
-      "source": "symbol:services.prologue._normalize",
-      "target": "symbol:services.prologue.StartScenario",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
         "line": 310
       },
       "source": "symbol:services.prologue._normalize",
@@ -359189,7 +359200,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 310
+        "line": 311
+      },
+      "source": "symbol:services.prologue._normalize",
+      "target": "symbol:services.prologue.StartScenario",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 311
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._apply_menu",
@@ -359211,7 +359233,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 298
+        "line": 299
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._trim",
@@ -359222,7 +359244,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 299
+        "line": 300
       },
       "source": "symbol:services.prologue._normalize",
       "target": "symbol:services.prologue._trim",
@@ -359277,7 +359299,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 540
+        "line": 541
       },
       "source": "symbol:services.prologue._template",
       "target": "symbol:observability.telemetry.log_event",
@@ -359288,7 +359310,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 541
+        "line": 542
       },
       "source": "symbol:services.prologue._template",
       "target": "symbol:services.prologue.fallback_scenario",
@@ -359299,7 +359321,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 546
+        "line": 547
       },
       "source": "symbol:services.prologue.build_start_scenario",
       "target": "symbol:services.prologue.build_start_scenario_ctx",
@@ -359310,7 +359332,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 431
+        "line": 432
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:llm_setup.get_llm",
@@ -359321,98 +359343,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 450
+        "line": 451
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 522
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 525
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:observability.telemetry.log_event",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 438
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._class_context",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 486
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._legacy_rules",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 520
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._normalize",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 437
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._region_context",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 455
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._roll_pool_seed",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "services/prologue.py",
-        "line": 519
-      },
-      "source": "symbol:services.prologue.build_start_scenario_ctx",
-      "target": "symbol:services.prologue._template",
       "type": "calls"
     },
     {
@@ -359423,6 +359357,83 @@
         "line": 523
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:observability.telemetry.log_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 526
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:observability.telemetry.log_event",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 439
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._class_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 487
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._legacy_rules",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 521
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 438
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._region_context",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 456
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._roll_pool_seed",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 520
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._template",
       "type": "calls"
     },
@@ -359431,7 +359442,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 486
+        "line": 524
+      },
+      "source": "symbol:services.prologue.build_start_scenario_ctx",
+      "target": "symbol:services.prologue._template",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "services/prologue.py",
+        "line": 487
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prologue._thread_rules",
@@ -359442,7 +359464,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 499
+        "line": 500
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -359453,7 +359475,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 505
+        "line": 506
       },
       "source": "symbol:services.prologue.build_start_scenario_ctx",
       "target": "symbol:services.prompt_guard.wrap_player_input",
@@ -359497,7 +359519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 643
+        "line": 644
       },
       "source": "symbol:services.prologue.looks_hostile",
       "target": "symbol:services.prologue._fold_hostile",
@@ -359508,7 +359530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 357
+        "line": 358
       },
       "source": "symbol:services.prologue.revalidate_scenario",
       "target": "symbol:services.prologue._apply_menu",
@@ -359519,7 +359541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 355
+        "line": 356
       },
       "source": "symbol:services.prologue.revalidate_scenario",
       "target": "symbol:services.prologue._thread_on",
@@ -359530,7 +359552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 714
+        "line": 715
       },
       "source": "symbol:services.prologue.scenario_to_state_seed",
       "target": "symbol:services.chronicle.default_chapter_title",
@@ -359541,7 +359563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 566
+        "line": 567
       },
       "source": "symbol:services.prologue.sign_for_client",
       "target": "symbol:services.prologue._token_payload",
@@ -359552,7 +359574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 666
+        "line": 667
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -359563,7 +359585,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 673
+        "line": 674
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -359574,7 +359596,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 687
+        "line": 688
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -359585,7 +359607,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 689
+        "line": 690
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:observability.telemetry.log_event",
@@ -359596,7 +359618,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 664
+        "line": 665
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:services.prologue.looks_hostile",
@@ -359607,7 +359629,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 679
+        "line": 680
       },
       "source": "symbol:services.prologue.submit_personal_npc",
       "target": "symbol:services.prologue.personal_pool_document",
@@ -359618,7 +359640,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "services/prologue.py",
-        "line": 581
+        "line": 582
       },
       "source": "symbol:services.prologue.verified_seed",
       "target": "symbol:services.prologue._token_payload",
@@ -632198,7 +632220,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 68
+        "line": 72
       },
       "source": "symbol:tests.test_spec366_followups._raw",
       "target": "symbol:services.prologue.StartScenario",
@@ -632209,7 +632231,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 43
+        "line": 47
       },
       "source": "symbol:tests.test_spec366_followups.test_benign_text_is_not_hostile",
       "target": "symbol:services.prologue.looks_hostile",
@@ -632220,7 +632242,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 48
+        "line": 52
       },
       "source": "symbol:tests.test_spec366_followups.test_hostile_text_is_flagged",
       "target": "symbol:services.prologue.looks_hostile",
@@ -632231,7 +632253,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 132
+        "line": 136
       },
       "source": "symbol:tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak",
       "target": "symbol:services.opening_threads.thread_menu",
@@ -632242,7 +632264,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 134
+        "line": 138
       },
       "source": "symbol:tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak",
       "target": "symbol:services.prologue._normalize",
@@ -632253,7 +632275,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 134
+        "line": 138
       },
       "source": "symbol:tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak",
       "target": "symbol:tests.test_spec366_followups._raw",
@@ -632264,7 +632286,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 80
+        "line": 84
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief",
       "target": "symbol:services.opening_threads.thread_menu",
@@ -632275,7 +632297,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 81
+        "line": 85
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief",
       "target": "symbol:services.prologue._normalize",
@@ -632286,7 +632308,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 81
+        "line": 85
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief",
       "target": "symbol:tests.test_spec366_followups._raw",
@@ -632297,7 +632319,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 72
+        "line": 76
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template",
       "target": "symbol:services.opening_threads.thread_menu",
@@ -632308,7 +632330,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 74
+        "line": 78
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template",
       "target": "symbol:services.prologue._normalize",
@@ -632319,7 +632341,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 74
+        "line": 78
       },
       "source": "symbol:tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template",
       "target": "symbol:tests.test_spec366_followups._raw",
@@ -632330,7 +632352,40 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 96
+        "line": 150
+      },
+      "source": "symbol:tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking",
+      "target": "symbol:services.opening_threads.thread_menu",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 152
+      },
+      "source": "symbol:tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking",
+      "target": "symbol:services.prologue._normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 153
+      },
+      "source": "symbol:tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking",
+      "target": "symbol:tests.test_spec366_followups._raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 100
       },
       "source": "symbol:tests.test_spec366_followups.test_planner_cited_ignores_engine_glue",
       "target": "symbol:services.opening_threads.planner_cited",
@@ -632341,7 +632396,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 97
+        "line": 101
       },
       "source": "symbol:tests.test_spec366_followups.test_planner_cited_ignores_engine_glue",
       "target": "symbol:services.opening_threads.planner_cited",
@@ -632352,7 +632407,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 107
+        "line": 111
       },
       "source": "symbol:tests.test_spec366_followups.test_rank_order_race_over_description",
       "target": "symbol:services.opening_threads._rank",
@@ -632363,7 +632418,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 139
+        "line": 143
       },
       "source": "symbol:tests.test_spec366_followups.test_template_fallback_also_replaces_seeking",
       "target": "symbol:services.opening_threads.thread_menu",
@@ -632374,7 +632429,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 141
+        "line": 145
       },
       "source": "symbol:tests.test_spec366_followups.test_template_fallback_also_replaces_seeking",
       "target": "symbol:services.prologue._normalize",
@@ -632385,9 +632440,31 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec366_followups.py",
-        "line": 141
+        "line": 145
       },
       "source": "symbol:tests.test_spec366_followups.test_template_fallback_also_replaces_seeking",
+      "target": "symbol:tests.test_spec366_followups._raw",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 162
+      },
+      "source": "symbol:tests.test_spec366_followups.test_template_without_doors_keeps_llm_seeking",
+      "target": "symbol:services.prologue._normalize",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec366_followups.py",
+        "line": 162
+      },
+      "source": "symbol:tests.test_spec366_followups.test_template_without_doors_keeps_llm_seeking",
       "target": "symbol:tests.test_spec366_followups._raw",
       "type": "calls"
     },
@@ -707695,7 +707772,7 @@
     {
       "id": "symbol:services.prologue._apply_menu",
       "kind": "function",
-      "line": 313,
+      "line": 314,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._apply_menu"
     },
@@ -707716,7 +707793,7 @@
     {
       "id": "symbol:services.prologue._fold_hostile",
       "kind": "function",
-      "line": 629,
+      "line": 630,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._fold_hostile"
     },
@@ -707730,7 +707807,7 @@
     {
       "id": "symbol:services.prologue._legacy_rules",
       "kind": "function",
-      "line": 367,
+      "line": 368,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._legacy_rules"
     },
@@ -707751,14 +707828,14 @@
     {
       "id": "symbol:services.prologue._roll_pool_seed",
       "kind": "function",
-      "line": 400,
+      "line": 401,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._roll_pool_seed"
     },
     {
       "id": "symbol:services.prologue._template",
       "kind": "function",
-      "line": 536,
+      "line": 537,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._template"
     },
@@ -707772,14 +707849,14 @@
     {
       "id": "symbol:services.prologue._thread_rules",
       "kind": "function",
-      "line": 376,
+      "line": 377,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._thread_rules"
     },
     {
       "id": "symbol:services.prologue._token_payload",
       "kind": "function",
-      "line": 551,
+      "line": 552,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue._token_payload"
     },
@@ -707793,14 +707870,14 @@
     {
       "id": "symbol:services.prologue.build_start_scenario",
       "kind": "function",
-      "line": 544,
+      "line": 545,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.build_start_scenario"
     },
     {
       "id": "symbol:services.prologue.build_start_scenario_ctx",
       "kind": "function",
-      "line": 423,
+      "line": 424,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.build_start_scenario_ctx"
     },
@@ -707814,49 +707891,49 @@
     {
       "id": "symbol:services.prologue.looks_hostile",
       "kind": "function",
-      "line": 638,
+      "line": 639,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.looks_hostile"
     },
     {
       "id": "symbol:services.prologue.personal_pool_document",
       "kind": "function",
-      "line": 588,
+      "line": 589,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.personal_pool_document"
     },
     {
       "id": "symbol:services.prologue.revalidate_scenario",
       "kind": "function",
-      "line": 353,
+      "line": 354,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.revalidate_scenario"
     },
     {
       "id": "symbol:services.prologue.scenario_to_state_seed",
       "kind": "function",
-      "line": 693,
+      "line": 694,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.scenario_to_state_seed"
     },
     {
       "id": "symbol:services.prologue.sign_for_client",
       "kind": "function",
-      "line": 561,
+      "line": 562,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.sign_for_client"
     },
     {
       "id": "symbol:services.prologue.submit_personal_npc",
       "kind": "function",
-      "line": 646,
+      "line": 647,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.submit_personal_npc"
     },
     {
       "id": "symbol:services.prologue.verified_seed",
       "kind": "function",
-      "line": 570,
+      "line": 571,
       "path": "services/prologue.py",
       "qualified_name": "services.prologue.verified_seed"
     },
@@ -783491,70 +783568,84 @@
     {
       "id": "symbol:tests.test_spec366_followups._raw",
       "kind": "test",
-      "line": 59,
+      "line": 63,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups._raw"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_benign_text_is_not_hostile",
       "kind": "test",
-      "line": 42,
+      "line": 46,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_benign_text_is_not_hostile"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_hostile_text_is_flagged",
       "kind": "test",
-      "line": 47,
+      "line": 51,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_hostile_text_is_flagged"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak",
       "kind": "test",
-      "line": 130,
+      "line": 134,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_long_prose_with_scattered_words_is_not_a_leak"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief",
       "kind": "test",
-      "line": 79,
+      "line": 83,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_normalize_keeps_clean_prologue_and_brief"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template",
       "kind": "test",
-      "line": 71,
+      "line": 75,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_normalize_replaces_leaky_prologue_and_brief_with_template"
     },
     {
+      "id": "symbol:tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking",
+      "kind": "test",
+      "line": 149,
+      "path": "tests/test_spec366_followups.py",
+      "qualified_name": "tests.test_spec366_followups.test_only_brief_leaks_keeps_prologue_and_seeking"
+    },
+    {
       "id": "symbol:tests.test_spec366_followups.test_planner_cited_ignores_engine_glue",
       "kind": "test",
-      "line": 87,
+      "line": 91,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_planner_cited_ignores_engine_glue"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_rank_order_race_over_description",
       "kind": "test",
-      "line": 102,
+      "line": 106,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_rank_order_race_over_description"
     },
     {
       "id": "symbol:tests.test_spec366_followups.test_template_fallback_also_replaces_seeking",
       "kind": "test",
-      "line": 138,
+      "line": 142,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_template_fallback_also_replaces_seeking"
     },
     {
+      "id": "symbol:tests.test_spec366_followups.test_template_without_doors_keeps_llm_seeking",
+      "kind": "test",
+      "line": 159,
+      "path": "tests/test_spec366_followups.py",
+      "qualified_name": "tests.test_spec366_followups.test_template_without_doors_keeps_llm_seeking"
+    },
+    {
       "id": "symbol:tests.test_spec366_followups.test_vibora_not_exposed_in_public_mao_sombria_doc",
       "kind": "test",
-      "line": 111,
+      "line": 115,
       "path": "tests/test_spec366_followups.py",
       "qualified_name": "tests.test_spec366_followups.test_vibora_not_exposed_in_public_mao_sombria_doc"
     },
@@ -788425,5 +788516,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:3b9206181b8965a183353a6717cea7aea32ef6076a191cb26c2147eef91e29df"
+  "source_tree_hash": "sha256:3a819fe37431388a2d0754779e1a7b1e8c8ae62a56a8c0b243689b46b0141ec6"
 }
