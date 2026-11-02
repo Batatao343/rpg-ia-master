@@ -328,3 +328,24 @@ def test_dynamic_art_envia_price_profiles_da_326():
     off, _ = ve.build_env(FILES)
     assert "RPG_IMAGE_PRICE_PROFILE_SCENE" not in off
     assert "RPG_IMAGE_PRICE_PROFILE_SCENE" in ve.stale_names(off)
+
+
+CARD_FLAGS = (
+    "RPG_CARD_DECK",
+    "RPG_ENEMY_INTENT",
+    "RPG_SCENE_CARDS",
+    "RPG_ENEMY_DECKS",
+    "RPG_CARD_REWARDS",
+    "RPG_CREATURE_ART",
+)
+
+
+def test_card_flags_are_allowlisted_off_on_only():
+    env, _ = ve.build_env(FILES, world_flags={n: "on" for n in CARD_FLAGS})
+    for name in CARD_FLAGS:
+        assert env[name] == "on"
+        assert name in ve.OPTIONAL_FLAGS and name in ve.WORLD_FLAGS
+        with pytest.raises(ValueError):
+            ve.build_env(FILES, world_flags={name: "shadow"})
+    plain, _ = ve.build_env(FILES)
+    assert set(CARD_FLAGS) <= set(ve.stale_names(plain))  # ausente => o script apaga a antiga

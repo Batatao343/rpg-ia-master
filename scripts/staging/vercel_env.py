@@ -101,6 +101,13 @@ OPTIONAL_FLAGS = (
     "RPG_COMBAT_OBJECTS",
     "RPG_COMPANION_ORDERS",
     "RPG_COMBAT_REINFORCEMENTS",
+    # SPEC-328..352: Cartas, off|on (ausente = off no codigo).
+    "RPG_CARD_DECK",
+    "RPG_ENEMY_INTENT",
+    "RPG_SCENE_CARDS",
+    "RPG_ENEMY_DECKS",
+    "RPG_CARD_REWARDS",
+    "RPG_CREATURE_ART",
 )
 # SPEC-326 R17: price profiles de imagem (linhas imutáveis em app.image_price_profiles).
 DYNAMIC_ART_PRICE_PROFILES = {
@@ -158,6 +165,13 @@ WORLD_FLAGS = (
     "RPG_COMBAT_OBJECTS",
     "RPG_COMPANION_ORDERS",
     "RPG_COMBAT_REINFORCEMENTS",
+    # SPEC-328..352: Cartas, off|on (ausente = off no codigo).
+    "RPG_CARD_DECK",
+    "RPG_ENEMY_INTENT",
+    "RPG_SCENE_CARDS",
+    "RPG_ENEMY_DECKS",
+    "RPG_CARD_REWARDS",
+    "RPG_CREATURE_ART",
 )
 # Valores aceitos por flag que fogem de off|shadow|on.
 WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
@@ -167,6 +181,12 @@ WORLD_FLAG_VALUES: dict[str, tuple[str, ...]] = {
     "RPG_DAY_DIGEST": ("llm", "inline"),
     "RPG_ARCHIVE_POLICY": ("legacy", "lean"),
     "RPG_ARCHIVE_POLICY_SHADOW": ("0", "1"),
+    "RPG_CARD_DECK": ("off", "on"),
+    "RPG_ENEMY_INTENT": ("off", "on"),
+    "RPG_SCENE_CARDS": ("off", "on"),
+    "RPG_ENEMY_DECKS": ("off", "on"),
+    "RPG_CARD_REWARDS": ("off", "on"),
+    "RPG_CREATURE_ART": ("off", "on"),
 }
 # SPEC-317 R1: A/B do tier CLASSIFY. ``groq_first`` poe o Groq gpt-oss-20b na frente (DeepSeek
 # em 2o) via RPG_ROUTES inline; ``default`` apaga a variavel (volta ao ROUTES do codigo). Sem a flag
