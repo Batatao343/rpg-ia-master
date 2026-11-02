@@ -16,7 +16,7 @@ import copy
 import logging
 import math
 import random
-from typing import Any, Dict, List, Literal, Optional, Tuple, TypedDict
+from typing import Any, Dict, List, Literal, Optional, Tuple, NotRequired, TypedDict
 from collections.abc import Mapping
 
 from gamedata import ARTIFACTS_DB, get_location, load_json_data
@@ -45,6 +45,7 @@ class MarketQuote(TypedDict):
     stock: int
     buy_price: int
     sell_price: int
+    source: NotRequired[str]  # SPEC-364 R7: "merchant" | "player"
 
 
 class PublicMarketSnapshot(TypedDict):
@@ -630,6 +631,7 @@ def public_market_snapshot(
                 "stock": int(qty or 0),
                 "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
                 "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+                "source": "merchant",
             }
         )
     quoted_ids = {quote["item_id"] for quote in quotes}
@@ -656,6 +658,7 @@ def public_market_snapshot(
                 "stock": 0,
                 "buy_price": price(item_id, mode="buy", state=work, merchant=merchant),
                 "sell_price": price(item_id, mode="sell", state=work, merchant=merchant),
+                "source": "player",
             }
         )
     location = get_location(location_id) or {}

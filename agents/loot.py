@@ -16,6 +16,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
 from gamedata import get_location
+from inventory import short_name
 from llm_setup import ModelTier, get_llm
 from observability.telemetry import log_event as _log_event
 from services import card_shop, cards, economy, latency_flags, prose_guard
@@ -139,6 +140,103 @@ def _resolve_item_ref(state: GameState, mode: str | None, folded: str) -> str | 
     return hits[0] if len(hits) == 1 else None
 
 
+_CATALOG_RE = re.compile(
+    r"\b(?:a venda|(?:pra|para) vender|(?<!me )vendem?|(?:esta|estao) vendendo|mercadorias?|"
+    r"o que (?:voce|voces|ele|ela|a [a-z ]{1,30}?|o [a-z ]{1,30}?) tem)\b"
+)
+_QUESTION_RE = re.compile(
+    r"^(?:o que|quanto|qual|quais|posso|tem|voces? tem|me vende)\b"
+)
+
+
+def _cites_inventory(state: GameState, folded: str) -> dict | None:
+    """SPEC-364 R4: o texto cita (por nome inteiro) um item do inventario do heroi?"""
+    import inventory as inv
+
+    for entry in (state.get("player") or {}).get("inventory") or []:
+        if not isinstance(entry, dict):
+            continue
+        for name in {inv.item_display(entry), inv.short_display(entry)}:
+            n = economy._fold_key(name)
+            if len(n) >= 3 and re.search(rf"\b{re.escape(n)}\b", folded):
+                return entry
+    return None
+
+
+def _is_catalog_question(state: GameState, folded: str) -> bool:
+    """SPEC-364 R4: pergunta de catalogo = marcador de catalogo e nenhum item citado
+    (nem do inventario do heroi, nem da prateleira do mercador)."""
+    if not _CATALOG_RE.search(folded) or _cites_inventory(state, folded):
+        return False
+    return _resolve_item_ref(state, "buy", folded) is None
+
+
+def _is_shop_question(folded: str) -> bool:
+    """SPEC-364 R6: '?' ou aberto por interrogativo."""
+    return "?" in folded or bool(_QUESTION_RE.search(folded.strip()))
+
+
+def _shop_question_quote(work_state: dict, text: str) -> str | None:
+    """SPEC-364 R6/D-364-3: pergunta no fluxo de itens NUNCA transaciona. Item resolvido ->
+    cotacao dele; senao None (o chamador faz a consulta de R7)."""
+    import inventory as inv
+
+    folded = economy._fold_key(text)
+    if not _is_shop_question(folded):
+        return None
+    entry = _cites_inventory(work_state, folded)
+    snap = economy.public_market_snapshot(work_state)
+    if not snap:
+        return None
+    if entry is not None:
+        shown = inv.short_display(entry)
+        for q in snap.get("quotes") or []:
+            if q.get("item_id") == entry.get("id") and q.get("item_name") == inv.item_display(entry):
+                return (
+                    f"[SISTEMA] {shown}: o mercador paga {int(q.get('sell_price', 0) or 0)} moedas. "
+                    "Diga claramente que vende para confirmar; nada mudou."
+                )
+        return None
+    iid = _resolve_item_ref(work_state, "buy", folded)
+    if iid:
+        for q in snap.get("quotes") or []:
+            if q.get("item_id") == iid and q.get("source") != "player":
+                return (
+                    f"[SISTEMA] {inv.short_name(q['item_name'])} custa "
+                    f"{int(q.get('buy_price', 0) or 0)} moedas. "
+                    "Diga claramente que compra para confirmar; nada mudou."
+                )
+    return None
+
+
+def _observe_text(market: dict, work_state: dict, loot_source: str) -> str:
+    """SPEC-364 R7/R8: 'À venda' (so estoque > 0) e 'Pelo que você carrega' (preco de venda)."""
+    import inventory as inv
+
+    quotes = [q for q in (market.get("quotes") or [])[:24] if str(q.get("item_name") or "").strip()]
+    sale = [
+        f"- {inv.short_name(q['item_name'])}: {int(q.get('buy_price', 0) or 0)} moedas "
+        f"(estoque {int(q.get('stock', 0) or 0)})"
+        for q in quotes
+        if q.get("source") != "player" and int(q.get("stock", 0) or 0) > 0
+    ][:12]
+    if loot_source == "SHOP":  # SPEC-357 R10(b): técnicas à venda (flag on)
+        sale += [f"- {ln}" for ln in card_shop.observe_lines(work_state)]
+    carried = [
+        f"- {inv.short_name(q['item_name'])}: paga {int(q.get('sell_price', 0) or 0)} moedas"
+        for q in quotes
+        if q.get("source") == "player"
+    ][:12]
+    nl = "\n"
+    text = (
+        f"[SISTEMA] Mercado de {market.get('merchant_name', 'mercador')} (consulta sem transação):{nl}"
+        f"À venda:{nl}" + (nl.join(sale) or "- Sem ofertas.")
+    )
+    if carried:
+        text += f"{nl}Pelo que você carrega:{nl}" + nl.join(carried)
+    return text
+
+
 def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeIntent:
     """FAST + guard de FallbackLLM (isinstance). Fallback: heurística por fonte."""
     folded = "".join(
@@ -146,6 +244,9 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
         for ch in unicodedata.normalize("NFD", str(text or "").lower())
         if not unicodedata.combining(ch)
     )
+    # SPEC-364 R4: pergunta de catálogo vira consulta, antes de qualquer regex de modo.
+    if loot_source == "SHOP" and _is_catalog_question(state, folded):
+        return TradeIntent(mode="observe", item_ref="mercado", qty=1)
     # Uma intenção transacional explícita vence palavras como "preço"/"estoque".
     explicit_mode = next(
         (
@@ -196,6 +297,20 @@ def _parse_trade_intent(state: GameState, loot_source: str, text: str) -> TradeI
     except Exception as e:
         _log_event("loot", "trade_parse_failed", level="warning", error=type(e).__name__)
     return fallback
+
+
+def _merchant_context(merchant_name: object, location: object) -> str:
+    """SPEC-364 R9: o narrador chama o mercador pelo nome (nunca inventa outro)."""
+    name = str(merchant_name or "").strip()
+    if not name:
+        return ""
+    where = f" ({location})" if location else ""
+    return f"\nMercador: {name}{where}. Chame o mercador por esse nome; não invente outro."
+
+
+def _deal_fallback(merchant_name: object) -> str:
+    name = str(merchant_name or "").strip()
+    return f"{name} fecha o negócio sem cerimônia." if name else "O negócio se fecha sem cerimônia."
 
 
 def _narrate(context: str, fallback_text: str, canonical_summary: dict | None = None) -> str:
@@ -451,9 +566,11 @@ def _card_shop_turn(work_state: dict, state: GameState, player: dict, world: dic
     name = (cards.get_card(card_id) or {}).get("name", card_id)
     total = int(player.get("gold", 0) or 0)
     sistema = f"[SISTEMA] +1 Carta: {name} | Ouro −{res['gold']} (total {total})"
+    shop_name = (economy.MERCHANTS.get(card_shop.shelf(work_state)[0] or "") or {}).get("name")
     msg = _narrate(
-        f"BUY: Carta {name}, ouro −{res['gold']}, ouro final {total}",
-        "O negócio se fecha sem cerimônia.",
+        f"BUY: Carta {name}, ouro −{res['gold']}, ouro final {total}"
+        + _merchant_context(shop_name, world.get("current_location")),
+        _deal_fallback(shop_name),
     )
     result = {
         "player": player,
@@ -490,29 +607,27 @@ def loot_node(state: GameState):
             card_turn = _card_shop_turn(work_state, state, player, world, text)
             if card_turn is not None:
                 return card_turn
-        intent = _parse_trade_intent(state, loot_source, text)
+        if loot_source == "SHOP":  # SPEC-364 R6: pergunta nunca transaciona item
+            quote_text = _shop_question_quote(work_state, text)
+            if quote_text:
+                return {
+                    "messages": [AIMessage(content=quote_text)],
+                    "world": world,
+                    "loot_source": None,
+                    "archive_due": False,
+                }
+            if _is_shop_question(economy._fold_key(text)):
+                intent = TradeIntent(mode="observe", item_ref="mercado", qty=1)
+            else:
+                intent = _parse_trade_intent(state, loot_source, text)
+        else:
+            intent = _parse_trade_intent(state, loot_source, text)
         market_before = economy.public_market_snapshot(work_state)
         if intent.mode == "observe":
             if not market_before:
                 system = "[SISTEMA] Não há mercado disponível neste local."
             else:
-                quotes = market_before.get("quotes") or []
-                rows = [
-                    f"- {q['item_name']}: "
-                    f"compra {int(q.get('buy_price', 0) or 0)} / "
-                    f"venda {int(q.get('sell_price', 0) or 0)} moedas "
-                    f"(estoque {int(q.get('stock', 0) or 0)})"
-                    for q in quotes[:12]
-                    if str(
-                        q.get("item_name") or ""
-                    ).strip()  # SPEC-363 R25: sem nome, sem linha (nunca o id)
-                ]
-                if loot_source == "SHOP":  # SPEC-357 R10(b): técnicas à venda (flag on)
-                    rows += [f"- {ln}" for ln in card_shop.observe_lines(work_state)]
-                system = (
-                    f"[SISTEMA] Mercado de {market_before.get('merchant_name', 'mercador')} "
-                    "(consulta sem transação):\n" + ("\n".join(rows) or "- Sem ofertas.")
-                )
+                system = _observe_text(market_before, work_state, loot_source)
             return {
                 "messages": [AIMessage(content=system)],
                 "world": world,
@@ -574,7 +689,7 @@ def loot_node(state: GameState):
         delta = int(outcome.get("gold_delta", 0))
         item_delta = -int(outcome["qty"]) if outcome["mode"] == "sell" else int(outcome["qty"])
         sistema = (
-            f"[SISTEMA] {item_delta:+d}x {outcome['item_name']}"
+            f"[SISTEMA] {item_delta:+d}x {short_name(outcome['item_name'])}"
             f" | Ouro {'+' if delta >= 0 else ''}{delta}"
             f" (total {outcome['player'].get('gold', 0)})"
         )
@@ -583,9 +698,12 @@ def loot_node(state: GameState):
             f"ouro {delta:+d}, ouro final {outcome['player'].get('gold', 0)}"
         )
         reasons_ctx = _price_reasons_context(work_state, intent.mode, outcome.get("item_id"))
+        merchant_ctx = _merchant_context(
+            (market_before or {}).get("merchant_name"), world.get("current_location")
+        )
         msg = _narrate(
-            f"{resumo}\n{reasons_ctx}" if reasons_ctx else resumo,
-            "O negócio se fecha sem cerimônia.",
+            (f"{resumo}\n{reasons_ctx}" if reasons_ctx else resumo) + merchant_ctx,
+            _deal_fallback((market_before or {}).get("merchant_name")),
         )
         result = {
             "player": outcome["player"],

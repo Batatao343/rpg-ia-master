@@ -70,6 +70,28 @@ def item_display(entry: dict) -> str:
     return item.get("name", iid) if item else (entry.get("display_name") or iid)
 
 
+_SHORT_CUT_RE = re.compile(r" [—–] |,|;| \(")
+
+
+def short_name(text: str, limit: int = 40) -> str:
+    """SPEC-364 R8: nome curto SÓ para exibição (o display_name salvo não muda).
+    Corta no primeiro separador; acima de `limit`, corta na fronteira de palavra e põe "…"."""
+    s = str(text or "").strip()
+    m = _SHORT_CUT_RE.search(s)
+    if m and m.start() > 0:
+        s = s[: m.start()].rstrip()
+    if len(s) > limit:
+        head = s[:limit]
+        if s[limit] != " " and " " in head:
+            head = head.rsplit(" ", 1)[0]
+        return head.rstrip() + "…"
+    return s
+
+
+def short_display(entry: dict, limit: int = 40) -> str:
+    return short_name(item_display(entry), limit)
+
+
 def make_entry(id_or_name: str, qty: int = 1) -> dict:
     iid = resolve_item_name(id_or_name)
     if iid:
