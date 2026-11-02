@@ -1,6 +1,6 @@
 # SPEC-360 — Criaturas vivas no mundo: sinal antes da luta, ecologia determinística, tramas e telegrafo visível (guarda-chuva; Fase 1 executável)
 
-> **Status:** `draft`
+> **Status:** `approved`
 > **Criada:** 2026-11-01 · **Atualizada:** 2026-11-01
 > **Depende de:** SPEC-349 onda 1 (Nova Arcádia) na `main`: fichas `data/bestiario/fichas/nova_arcadia.yaml`, entradas `mon_*` no `data/bestiary.json` e `curadoria_legado.yaml`. Também SPEC-312 (sementes de rumor, `done`), SPEC-303 (calendário, `done`), SPEC-302/304 (motor de mundo e hooks diários, `done`) e Fase 6.3/6.4 (`services/ecology.py`, `resolve_track`). As filhas têm dependências próprias (§3.10).
 > **Desbloqueia:** filhas 360-B (backfill das 11 regiões + legado), 360-C (saber do jogador: telegrafo e contra-jogo) e 360-D (criaturas de trama). Também a SPEC-361 (criatura gerada em runtime), que deve emitir o mesmo bloco de fauna.
@@ -450,3 +450,9 @@ Feito pelo coordenador, com chave (rotas `ROUTES` de hoje), `RPG_FAUNA=on` e `RP
 ## 9. Registro de execução
 
 (vazio, preenchido pelo executor: sondas da Etapa 0, ajustes de constantes, contagens do eval, resultado do smoke)
+
+### Aprovação do dono (02/11)
+
+Aprovada com todos os defaults da §8. Na SPEC-360 também ficou aprovado pôr o avaliador em
+`evals/protected-paths.txt` (D6). Ordem de execução: primeiro a integração do bestiário (349 e as ondas),
+depois 350 e 351, por último 360 e 361.
