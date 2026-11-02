@@ -391,11 +391,11 @@
    "todas": {
     "celulas": {
      "L1 padrao": [
-      60,
+      61,
       80
      ],
      "L1 elite": [
-      34,
+      41,
       80
      ],
      "L3 padrao": [
@@ -415,9 +415,9 @@
       80
      ]
     },
-    "total": 0.465,
-    "padrao": 0.613,
-    "elite": 0.317
+    "total": 0.481,
+    "padrao": 0.617,
+    "elite": 0.346
    },
    "calibrado": {
     "celulas": {
@@ -430,11 +430,11 @@
       80
      ],
      "L3 padrao": [
-      66,
+      70,
       80
      ],
      "L3 elite": [
-      49,
+      51,
       80
      ],
      "L5 padrao": [
@@ -446,26 +446,26 @@
       80
      ]
     },
-    "total": 0.556,
-    "padrao": 0.679,
-    "elite": 0.433
+    "total": 0.569,
+    "padrao": 0.696,
+    "elite": 0.442
    },
    "descoberto": {
     "celulas": {
      "L1 padrao": [
-      56,
+      58,
       80
      ],
      "L1 elite": [
-      37,
+      38,
       80
      ],
      "L3 padrao": [
-      44,
+      53,
       80
      ],
      "L3 elite": [
-      22,
+      27,
       80
      ],
      "L5 padrao": [
@@ -477,18 +477,18 @@
       80
      ]
     },
-    "total": 0.406,
-    "padrao": 0.542,
-    "elite": 0.271
+    "total": 0.442,
+    "padrao": 0.588,
+    "elite": 0.296
    },
    "improvisador": {
     "celulas": {
      "L1 padrao": [
-      66,
+      69,
       80
      ],
      "L1 elite": [
-      53,
+      55,
       80
      ],
      "L3 padrao": [
@@ -508,9 +508,9 @@
       80
      ]
     },
-    "total": 0.583,
-    "padrao": 0.725,
-    "elite": 0.442
+    "total": 0.594,
+    "padrao": 0.738,
+    "elite": 0.45
    }
   },
   "Médico de Campo": {
@@ -641,5 +641,6 @@
   }
  },
  "folga_atingida": true,
- "base": "docs/spec362/arena-base-0-19.json"
+ "base": "docs/spec362/arena-base-0-19.json",
+ "nota": "pacote + raio_cinza de volta ao pool (decisao do dono 02/11)"
 }

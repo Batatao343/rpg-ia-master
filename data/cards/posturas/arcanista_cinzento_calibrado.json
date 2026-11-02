@@ -40,7 +40,7 @@
       "patamar": "inicial",
       "raridade": "comum",
       "custo_entropia": 1,
-      "custo_folego": 1,
+      "custo_folego": 0,
       "frequencia": "cena",
       "virtude_permitida": [
         "mente"
