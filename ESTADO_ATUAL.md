@@ -1,4 +1,4 @@
-# ESTADO_ATUAL — 2026-10-28
+# ESTADO_ATUAL — 2026-11-02
 
 > **Regra deste arquivo: substituir, nunca anexar.** Teto de 8 KB
 > (`uv run python scripts/spec_index.py estado-size` falha acima disso).
@@ -9,15 +9,16 @@
 ## Estado em 10 linhas
 
 - staging = `fae9a4e` (cartas `off`; 3 smokes verdes 28/10). 296–326 `done` exceto épico de cartas.
-- Épico cartas 327–352 (`-69`), flags `off`; combate por cartas sem LLM nas rodadas (346).
+- Épico cartas 327–362 na `main` (`b186db3a`), flags `off`; combate sem LLM nas rodadas (346). 342–357/362 só esperam o smoke real §6 em staging com cartas `on`.
+- Balanço: Arcanista 49,7 % (362, vitalidade 8); Sangromante acima do teto aceito pelo dono; `bomba_estopim` dominante (follow-up).
 - **Latência** (316–319 `done`): 1ª narração p50 2,6 s; turno inteiro ~10 s.
 - Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree.
 
 ## Próximos 3 passos
 
-1. Turno inteiro ~10 s: investigar arquivista/commit após a narração.
-2. 319 P2-1: medir `replace` no combate.
+1. Deploy staging com cartas `on` + smoke LLM real (fecha §6 de 342–357/362; 1–3 retratos pagos; `/game/history` do Livro).
+2. Follow-ups: `bomba_estopim` dominante; Corruptor sem carta anti-emboscada; recalibrar ref. v2 (358); turno ~10 s; 319 P2-1.
 3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 57 oklch (322).
 
 ## Bloqueios no dono
@@ -43,37 +44,13 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
-- 2026-10-28 · SPEC-354 `draft` — cartas-smoke2-tela
-- 2026-10-28 · SPEC-353 `in-progress` — Cartas: correções de motor/backend do 2º smoke real do combate por cartas
-- 2026-10-28 · SPEC-352 `draft` — retrato-inimigo-pago
-- 2026-10-28 · SPEC-347 `in-progress` — Cartas: o tabuleiro do combate depois do smoke real (layout, retrato do inimigo e registro da rodada)
-- 2026-10-28 · SPEC-346 `in-progress` — Combate de cartas sem LLM por rodada, desfecho narrado pela IA e correções do smoke real (spawn, router, loot)
-- 2026-10-27 · SPEC-351 `draft` — abertura-arco-tramas
-- 2026-10-27 · SPEC-350 `draft` — mundo-povoado-tramas
-- 2026-10-27 · SPEC-349 `draft` — bestiario-valoria-esteira
-- 2026-10-27 · SPEC-348 `draft` — lore-coerencia-valoria
-- 2026-10-27 · SPEC-345 `in-progress` — Bugs do teste no navegador (cartas off e on): roster, texto interno, mech log e layout mobile
-- 2026-10-27 · SPEC-344 `done` — Segurança: delimitação da entrada do jogador no loot e no combate + prova de XSS do `mdLite`
-- 2026-10-27 · SPEC-343 `done` — Segurança: trava de falhas no reauth, balde por e-mail no login, `aud` estrito no OIDC e RLS em `embedding_profiles`
-- 2026-10-27 · SPEC-342 `in-progress` — Cartas: acabamento do front do combate por cartas (destrava as flags)
-- 2026-10-27 · SPEC-341 `done` — Balanço de poder das Cartas pós-SPEC-339 (Sangromante avaro/silencioso, dominantes novas, controles de duração)
-- 2026-10-27 · SPEC-340 `done` — Registro de feature flags com validade
-- 2026-10-27 · SPEC-339 `done` — Controle aplicado por oponente expira antes de valer (tick de duração)
-- 2026-10-27 · SPEC-338 `done` — Fuzz da API com Schemathesis in-process (legacy + perfil DB offline), job `api-fuzz` bloqueante
-- 2026-10-27 · SPEC-337 `done` — Testes HTTP dinâmicos de segurança (headers, cookies, CORS, vazamento, IDOR) + correções L1/L2/L4
-- 2026-10-27 · SPEC-336 `in-progress` — Cartas #09: Esteira contínua de autoria de cartas (sempre crescer, nunca repetir)
-- 2026-10-27 · SPEC-335 `in-progress` — Cartas #08: Expansão do Acervo, onda 1 (identidade por Postura, +220 cartas)
-- 2026-10-27 · SPEC-334 `in-progress` — Cartas #07: Clareza do combate no front (mão, Fôlego, presságio, preview e log)
-- 2026-10-27 · SPEC-333 `in-progress` — Cartas #06: Espólio de cartas, Forja do baralho, Ferimentos e Cicatrizes como cartas
-- 2026-10-27 · SPEC-332 `in-progress` — Cartas #05: Baralhos de inimigo por família e facção (com padrão de intenção)
-- 2026-10-27 · SPEC-331 `in-progress` — Cartas #04: A LLM monta a cena, a cena vira tabuleiro (Cartas de Cena, Objetivo e Relógio)
-- 2026-10-27 · SPEC-330 `in-progress` — Cartas #03: Gramática de efeitos e palavras-chave de Valoria
-- 2026-10-27 · SPEC-329 `in-progress` — Cartas #02: Presságio (intenção do inimigo visível antes da jogada)
-- 2026-10-27 · SPEC-328 `in-progress` — Cartas #01: Baralho, Mão e Fôlego (o conflito vira jogo de cartas)
-- 2026-10-27 · SPEC-327 `approved` — Cartas #00: Visão — o conflito de Valoria como jogo de cartas estratégico
-- 2026-10-27 · SPEC-319 `done` — Latência: streaming de tokens do `narrative` e hedge na cauda do narrador
-- 2026-10-27 · SPEC-318 `done` — Latência: trabalho pós-narração fora do nó narrador e gate do arquivista
-- 2026-10-27 · SPEC-317 `done` — Latência: CLASSIFY mais rápido, contexto em paralelo, caches e ordem do prompt
+- 2026-11-02 · SPEC-362 `in-progress` — Balanço do Arcanista Cinzento pós-SPEC-355 (piso de 45 % com folga; exceções do Sangromante definitivas)
+- 2026-11-01 · SPEC-361 `draft` — geracao-criatura-runtime
+- 2026-11-01 · SPEC-360 `draft` — criaturas-vivas-no-mundo
+- 2026-11-01 · SPEC-358 `done` — Arena de Cartas por substituição (`lote-v2`) e uso do bot como aviso
+- 2026-11-01 · SPEC-357 `in-progress` — Cartas neutras na loja do mercador e como recompensa de missão
+- 2026-11-01 · SPEC-355 `in-progress` — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
+- 2026-11-01 · SPEC-354 `in-progress` — Cartas: a tela do combate depois do 2º smoke real (Livro reaberto, barra fixa, dobra, registro, retrato, toasts e nomes)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
@@ -83,7 +60,7 @@ Só o coordenador escreve aqui (≤ 6 linhas por frente); nova onda → mover pa
 <!-- onda:inserir-aqui -->
 - 27/10: 337/338/340 `done`; 38 flags `release` vencem 25/01/2027 (renovar antes).
 - 27/10 segurança: inspeção geral sem crítico/alto. 343 (reauth trava na 6ª falha, login 50/h por e-mail, OIDC `aud`, RLS `embedding_profiles`) e 344 (entrada do jogador delimitada em loot/combate, teste XSS `mdLite`) `done`.
-- 28/10 cartas: 339/341 `done`; 342/345/346/347/353 pousadas; 352 (retrato pago) e 354 (tela) em curso; smoke LLM real ao fim.
+- 28/10–02/11 cartas: 342–357 e 362 pousadas (352 migration aplicada no staging); 358 `done` (protocolo `lote-v2` opt-in); smoke LLM real ao fim.
 
 
 ## Como rodar
