@@ -14,12 +14,14 @@
 - **Latência** (316–319 `done`): 1ª narração p50 2,6 s; turno inteiro ~10 s.
 - Flags: `config/flags.yaml` (340); staging `scripts/staging/staging_flags.json`.
 - Máquina: e2e `--workers=1`; sem `uv run` em worktree.
+- 02/11 (main `5528fc69`, suíte completa verde por pouso): 349 bestiário 12 regiões (689 Cartas, arena 253/281), 350 tramas NA, 351 abertura, 360 fauna NA, 361 criatura runtime, 366 follow-ups. Flags novas off/legacy: `RPG_PLOT_THREADS`, `RPG_FAUNA`/`_SINAIS`, `RPG_CREATURE_GEN`; `RPG_OPENING_THREAD` on.
 
 ## Próximos 3 passos
 
 1. Deploy staging com cartas `on` + smoke LLM real (fecha §6 de 342–357/362; 1–3 retratos pagos; `/game/history` do Livro).
 2. Follow-ups: `bomba_estopim` dominante; Corruptor sem carta anti-emboscada; recalibrar ref. v2 (358); turno ~10 s; 319 P2-1.
 3. Revisar 10 artes do staging (326 D2); `summary.lifecycle` (seeds 25/32); 57 oklch (322).
+4. Bestiário/tramas: smoke real §6 de 349/359/360/361; reindex de `faiss_rules_index` (Jina 429); ligar flags novas (dono); 361 D11 (lint_primeira ≥ 70 %, limiar de latência do job); filhas 360-B/C/D; 336 (teto de usos de família); 9 chefes `on` < 45 %.
 
 ## Bloqueios no dono
 
@@ -36,6 +38,8 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 | SPEC-104 (cloud Railway) | conta Railway + orçamento | "libera a 104" → certificação cloud |
 | Auth staging/prod (343) | confirmar `RPG_AUTH_EMAIL_CONFIRMATION_REQUIRED=1` e captcha `gotrue` na Vercel | "confirmei" → fechar achado de enumeração; Stripe live → virar gate `livemode` |
 | Plugins não usados | desligar em claude.ai → Settings → Plugins | — |
+| Worktree `rpg-spec-350` contaminado (stash pop acidental; nada a perder, 350 pousou via `spec-350-fix`) | autorizar remoção forçada | "pode apagar" → `git worktree remove --force` + apagar branch `spec-350` |
+| Flags novas (350/360/361) | decidir quando ligar `RPG_PLOT_THREADS` / `RPG_FAUNA` / `RPG_CREATURE_GEN` | "liga X" → staging_flags + smoke real |
 | PR #42 (TypeScript 7) | nada: aguarda typescript-eslint suportar TS 7 | — |
 | Rumores da lore (312 D1) e rotas de entrega (313 D8) | ler `data/world/rumor_seed_overrides.json` e `data/world/lore_quests.json` | ajustes → editar e reindexar |
 
@@ -44,13 +48,22 @@ Só ação externa do dono; "quando ele disser" = o que o coordenador executa na
 Gerado por `spec_index.py recent` (`/spec-land`, `/estado`); não edite entre os marcadores.
 
 <!-- recent:start -->
+- 2026-11-02 · SPEC-368 `draft` — cartas-fechamento-epico
+- 2026-11-02 · SPEC-367 `draft` — cartas-smoke5-acabamento
+- 2026-11-02 · SPEC-366 `done` — abertura-followups
+- 2026-11-02 · SPEC-365 `done` — deps-eslint-minimatch
+- 2026-11-02 · SPEC-364 `in-progress` — Cartas: correções do 4º smoke real (trilha da fuga, consulta do mercado, débito do retrato, tempo do resumo, voz do registro e cenários não verificados)
+- 2026-11-02 · SPEC-363 `in-progress` — Cartas: correções do 3º smoke real (retrato pago coerente, texto de morte, autoria do resumo, mira, fuga, ids e cenários raros)
 - 2026-11-02 · SPEC-362 `in-progress` — Balanço do Arcanista Cinzento pós-SPEC-355 (piso de 45 % com folga; exceções do Sangromante definitivas)
-- 2026-11-01 · SPEC-361 `draft` — geracao-criatura-runtime
-- 2026-11-01 · SPEC-360 `draft` — criaturas-vivas-no-mundo
+- 2026-11-02 · SPEC-361 `done` — Criatura gerada em jogo com ficha de Valoria: few-shot, trama, gate U1–U13, variante antes de nova e revisão Opus antes do pool
+- 2026-11-02 · SPEC-360 `done` — Criaturas vivas no mundo: sinal antes da luta, ecologia determinística, tramas e telegrafo visível (guarda-chuva; Fase 1 executável)
+- 2026-11-02 · SPEC-359 `approved` — Bestiário de Valoria, onda 2: Pântano da Melancolia
+- 2026-11-02 · SPEC-351 `done` — Abertura ligada às tramas do mundo (1º arco, 1 NPC pessoal + 1 NPC da trama)
+- 2026-11-02 · SPEC-350 `done` — Mundo povoado por tramas: NPCs nomeados com papel concreto, por região, em ondas
+- 2026-11-02 · SPEC-349 `done` — Bestiário de Valoria: esteira por região de ameaças físicas, com gate de unicidade (onda 1: Nova Arcádia)
 - 2026-11-01 · SPEC-358 `done` — Arena de Cartas por substituição (`lote-v2`) e uso do bot como aviso
 - 2026-11-01 · SPEC-357 `in-progress` — Cartas neutras na loja do mercador e como recompensa de missão
 - 2026-11-01 · SPEC-355 `in-progress` — Cartas: pendências abertas do épico (regras do motor, conteúdo e balanço final)
-- 2026-11-01 · SPEC-354 `in-progress` — Cartas: a tela do combate depois do 2º smoke real (Livro reaberto, barra fixa, dobra, registro, retrato, toasts e nomes)
 <!-- recent:end -->
 
 ## Notas da onda em curso (coordenador)
