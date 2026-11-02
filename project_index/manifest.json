@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "171f48b1fff796eaf5e4061b3c2e63d55bf87030",
+  "commit_sha": "b8ebf355b59943cd8bd24a05dd5668293c782e27",
   "edge_counts": {
-    "calls": 34492,
-    "contains": 1134,
-    "defines": 16831,
-    "imports": 2797,
-    "likely_test_for": 2007,
+    "calls": 34845,
+    "contains": 1144,
+    "defines": 16969,
+    "imports": 2816,
+    "likely_test_for": 2026,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:f97698677b787ddfc8dc61a40c78473651fcf8392acdf0b23836458d74503f73",
+  "graph_hash": "sha256:70458172ec28618cd79b749962d928961c820367507eca8d780683de50216c71",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -426,6 +426,7 @@
     "services/latency_flags.py",
     "services/law.py",
     "services/law_codes.py",
+    "services/leak_phrases.py",
     "services/lease_heartbeat.py",
     "services/local_backup.py",
     "services/location_states.py",
@@ -451,6 +452,8 @@
     "services/perceived_world.py",
     "services/planner_context.py",
     "services/player_knowledge.py",
+    "services/plot_threads.py",
+    "services/plot_threads_lint.py",
     "services/presentation_history.py",
     "services/projections.py",
     "services/prologue.py",
@@ -531,6 +534,7 @@
     "tests/spec325_helpers.py",
     "tests/spec330_equivalence.py",
     "tests/spec348_helpers.py",
+    "tests/spec350_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_abyss_clock.py",
@@ -1103,6 +1107,12 @@
     "tests/test_spec348_anchors.py",
     "tests/test_spec348_canon.py",
     "tests/test_spec348_leaks.py",
+    "tests/test_spec350_api.py",
+    "tests/test_spec350_catalog.py",
+    "tests/test_spec350_leak_snapshot.py",
+    "tests/test_spec350_lint.py",
+    "tests/test_spec350_npc_prompt.py",
+    "tests/test_spec350_roster.py",
     "tests/test_spec352_creature_portraits.py",
     "tests/test_spec352_creature_portraits_db.py",
     "tests/test_spec352_creature_quote_api.py",
@@ -1401,14 +1411,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1020,
+    "class": 1030,
     "endpoint": 69,
-    "file": 1347,
-    "function": 5205,
+    "file": 1357,
+    "function": 5253,
     "method": 864,
-    "module": 1134,
-    "test": 9741
+    "module": 1144,
+    "test": 9821
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:046d53783e406dc43568ec607f1fcd93b6cacc9b2bde9b3e77e073fed698a28d"
+  "source_tree_hash": "sha256:ac89c9ccbc20a5e82e3e34ece67cc7e2e53f7787a3fa72cf5be01823ee442564"
 }
