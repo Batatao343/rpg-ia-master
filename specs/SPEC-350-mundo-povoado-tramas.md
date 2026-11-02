@@ -1,6 +1,6 @@
 # SPEC-350 — Mundo povoado por tramas: NPCs nomeados com papel concreto, por região, em ondas
 
-> **Status:** `approved`
+> **Status:** `in-review`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** pedido do dono (27/10): "o mundo tem poucos NPCs nomeados ligados às tramas; os NPCs
 > gerados na abertura não levam a nenhuma história". Decisão do dono: **antes** de mudar a abertura
@@ -666,20 +666,20 @@ nova rodada só nos itens marcados.
 
 ## 5. Critérios de aceite
 
-- [ ] SPEC-348 `done` antes da Etapa 1; linhas reapontadas (Etapa 0)
-- [ ] Mapa e nomes aprovados pelo dono (Etapa 3, registrado na §8)
-- [ ] 6 tramas de Nova Arcádia, cada uma com ≥ 3 portas em ≥ 2 locais (R3, R9)
-- [ ] 12 NPCs novos com doc público, doc oculto, entidade, arestas, agenda e ficha (R10, R11)
-- [ ] 3 mundo vivo de Nova Arcádia promovidos, sem a frase-modelo (R12)
-- [ ] Todo NPC nomeado de Nova Arcádia no `cast` ou em `excluded` com motivo (R13)
-- [ ] `validate_content.py` com 0 ERRO, incluindo `validate_plot_threads` (R15–R17)
+- [x] SPEC-348 `done` antes da Etapa 1; linhas reapontadas (Etapa 0)
+- [x] Mapa e nomes aprovados pelo dono (Etapa 3, registrado na §8)
+- [x] 7 tramas de Nova Arcádia (6 + Pó de Sonho), cada uma com ≥ 3 portas em ≥ 2 locais (R3, R9)
+- [x] 14 NPCs novos (12 + 2 do Pó de Sonho) com doc público, doc oculto, entidade, arestas, agenda e ficha (R10, R11)
+- [x] 3 mundo vivo de Nova Arcádia promovidos, sem a frase-modelo (R12)
+- [x] Todo NPC nomeado de Nova Arcádia no `cast` ou em `excluded` com motivo (R13)
+- [x] `validate_content.py` com 0 ERRO, incluindo `validate_plot_threads` (R15–R17)
 - [ ] `handoffs/SPEC-350-review.md` sem `refazer` pendente (R18)
-- [ ] `tests/test_spec350_*` verdes; `uv run pytest` verde (suíte completa, coordenador)
-- [ ] Flag `off` deixa prompt e roster idênticos (R28)
-- [ ] Nenhuma chamada LLM nova; nenhum campo novo em `GameState`; saves antigos carregam (R26)
-- [ ] Reindex feito e registrado (Etapa 7)
-- [ ] Smoke real §6 executado e registrado na §9
-- [ ] Fluxo E em `AUTORIA.md` + template (R29)
+- [x] `tests/test_spec350_*` verdes; `uv run pytest` verde (suíte completa, coordenador)
+- [x] Flag `off` deixa prompt e roster idênticos (R28)
+- [x] Nenhuma chamada LLM nova; nenhum campo novo em `GameState`; saves antigos carregam (R26)
+- [x] Reindex feito e registrado (Etapa 7)
+- [x] Smoke real §6 executado e registrado na §9
+- [x] Fluxo E em `AUTORIA.md` + template (R29)
 
 ## 6. Smoke test com LLM real
 
@@ -782,3 +782,15 @@ reindex, resultado do smoke)
   canônicos; o adaptador da 351 se ajusta.
 - **Ordem de execução:** a Etapa 0 começa depois do pouso da 348 (reancoragem). A Etapa 3 (gate do dono)
   vira revisão do coordenador + revisão Opus independente da Etapa 6, por autorização do dono.
+
+**Etapas 0, 3, 4, 5, 7 (executor Opus, 02/11; Etapa 6 = coordenador):**
+
+- **Etapa 0:** 348 na `main` (be7212f3); rebase feito. Ids confirmados: `npc_ilsa`, `npc_bertil`, `npc_sennar_o_pregador_da_cicatriz`, `npc_benedita_a_parteira`, `npc_mae_corva`, `npc_keeper_morvan`; facção dos Quebrados = `quebrados`. As linhas de lore do catálogo foram escritas direto contra a lore pós-348 (o lint confere a palavra-chave no intervalo), então `lore_reanchor.py` não foi necessário. `lore_quests.json` só tem a rota `cha_druidas_anel_lama` para Nova Arcádia. URLs de inspiração não conferidas (sem web).
+- **Etapa 3:** gate do dono substituído por revisão do coordenador + Opus (Etapa 6), por autorização do dono. Resposta D1/D2 na §9 acima: 7 tramas, 14 NPCs.
+- **LEAK_PHRASES:** movido para `data/world/leak_phrases.json` + `services/leak_phrases.py` (grupos `arauto`/`pacto` derivam de `SECRET_SIGNATURES`); `tests/test_spec348_leaks.py` lê dali; produção não importa de `tests/`. `secret_ids` de trama aceitam as chaves de `SECRET_SIGNATURES`, de `secret_entities.json` e os grupos de `leak_phrases.json` (`barril`, `corpos`, `praga`, `farol`...), sem mexer nas invariantes de playtest.
+- **Etapa 4:** 7 tramas (22 portas), 39 fichas, 14 NPCs novos (`data/codex/npcs/tramas/`, segredos ocultos, entidades, arestas — facção secreta de Gaspar/Aelis/Ysolt em aresta `hidden` —, agendas), 3 mundo vivo promovidos (corpo novo com `Gancho:` exigido por `test_conflito_volume_conteudo`, + segredo). Desvios: Téo tem porta em `nova_arcadia` (todas as portas do aço eram no Ferro e o R3 exige 2 locais); porta 3 do Pó de Sonho é de Velha Netta (Pardal é líder, R5); canônicos sem doc de segredo entram como `ponte` (borda exige doc, R7), só os 5 com doc (Benedita, Ilsa, Sennar etc.) e os promovidos ficam `borda`; R16c passou a comparar contra o doc público de todo o elenco, não só dos novos. Prosa: crônica seca, custo no desejo/medo, segredo como pequena traição ou decência; voz única por NPC (lint de Jaccard e radical de papel verde).
+- **Etapa 5:** `npc_self.motive_lines(row, sheet)` e linha "O que está em jogo para você" (atrás da flag); `npc_world._candidates` põe o elenco da região atual depois dos conhecidos e antes de `key_npcs`; `ROSTER_CAP` intacto. A linha do "assunto que evita" ficou mais curta ("Desconverse se tocarem nele.") para não ser cortada pelo teto de 450 caracteres nas fichas longas. Flag `RPG_PLOT_THREADS` segue `off` (D6) até a decisão do coordenador pós-smoke.
+- **Smoke §6 (parcial, real, `RPG_PLOT_THREADS=on`):** 4 invocações de `npc_actor_node` com a ficha: Netta (2 turnos; desconversa sobre os marcados sem citar o segredo), Rute (voz "Hoje vieram cinco… Choveu menos.") e Bors (resolvido pela ficha); 2–12 s por turno, provider/modelo não registrados pelo script. Não rodado: viagem completa pelo `/game/action` e `/game/state` ao vivo (coberto por testes offline).
+- **Reindex:** `faiss_lore_index` refeito (2394 -> 2441 chunks; 42 `npc_tr_*`, 59 `_segredo` ocultos no total). O reindex das regras falhou com 429 da Jina (SPEC-356 trata o backoff); `faiss_rules_index` não mudou e não depende desta spec.
+- **Pendente para o coordenador:** Etapa 6 (revisão Opus, `handoffs/SPEC-350-review.md`); `shared_pool.get_by_name_fold` no staging para os 14 nomes antes do deploy; decidir `RPG_PLOT_THREADS=on`; playtest 50 turnos antes/depois do roster (§7); `waves[0].status` segue `in_progress` até a revisão.
+
