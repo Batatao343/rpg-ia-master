@@ -62,7 +62,9 @@ def _run(text: str, monkeypatch) -> tuple[str, str]:
     llm = _StreamTextLLM(text)
     monkeypatch.setattr(combat, "get_llm", lambda *a, **k: llm)
     deltas: list[str] = []
-    token = sink.bind(lambda kind, piece: deltas.append(piece) if kind == "delta" else deltas.clear())
+    token = sink.bind(
+        lambda kind, piece: deltas.append(piece) if kind == "delta" else deltas.clear()
+    )
     try:
         final = combat._narrate(
             {"name": "T", "vitalidade": 10, "max_vitalidade": 10},
