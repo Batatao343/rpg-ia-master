@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "3679b291c624f3674b24f9fd336ae386e5ed755c",
+  "commit_sha": "6299316a816bfbe8b831c4641a71648035c3751c",
   "edge_counts": {
-    "calls": 35532,
-    "contains": 1169,
-    "defines": 17296,
-    "imports": 2865,
-    "likely_test_for": 2071,
+    "calls": 35899,
+    "contains": 1181,
+    "defines": 17438,
+    "imports": 2890,
+    "likely_test_for": 2085,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:77b00a64b6c008c5e7717d6dc6175f44779db4922aae29bc7890a68fe86a87fe",
+  "graph_hash": "sha256:50dac94d37cb7871bcb3b0675761e7940eacf54452af9bd8556b66e6fb7aabd0",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -224,6 +224,13 @@
     "scripts/backup_local.py",
     "scripts/benchmark_turn_pipeline.py",
     "scripts/benchmark_turn_pipeline_real.py",
+    "scripts/bestiario/arena.py",
+    "scripts/bestiario/calibrar.py",
+    "scripts/bestiario/curadoria.py",
+    "scripts/bestiario/gerar_docs.py",
+    "scripts/bestiario/gerar_mecanica.py",
+    "scripts/bestiario/lint.py",
+    "scripts/bestiario/painel.py",
     "scripts/beta_gameplay_gate.py",
     "scripts/browser_local.py",
     "scripts/build_rumor_seeds.py",
@@ -341,6 +348,7 @@
     "services/audit_trace.py",
     "services/auth_sessions.py",
     "services/bestiary_knowledge.py",
+    "services/bestiary_lint.py",
     "services/body_limit.py",
     "services/card_deck_round.py",
     "services/card_effects.py",
@@ -1113,6 +1121,10 @@
     "tests/test_spec348_anchors.py",
     "tests/test_spec348_canon.py",
     "tests/test_spec348_leaks.py",
+    "tests/test_spec349_bestiary_lint.py",
+    "tests/test_spec349_curadoria_legado.py",
+    "tests/test_spec349_mecanica.py",
+    "tests/test_spec349_onda_nova_arcadia.py",
     "tests/test_spec350_api.py",
     "tests/test_spec350_catalog.py",
     "tests/test_spec350_leak_snapshot.py",
@@ -1441,12 +1453,12 @@
     "artifact": 9,
     "class": 1048,
     "endpoint": 69,
-    "file": 1385,
-    "function": 5346,
+    "file": 1397,
+    "function": 5426,
     "method": 865,
-    "module": 1169,
-    "test": 10036
+    "module": 1181,
+    "test": 10098
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:d235a93975c71941df841ddc6e1013aac07f73ff6d01361c03661813bcd98657"
+  "source_tree_hash": "sha256:fdd5fa7f97a274e1eb7c1695d424e987cc5fd4d9b465f672d0a53870ea5221e9"
 }
