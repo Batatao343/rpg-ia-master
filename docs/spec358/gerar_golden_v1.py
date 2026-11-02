@@ -146,9 +146,23 @@ def pool_frozen(sim):
         base.update(saved)
 
 
+@contextlib.contextmanager
+def logs_silenciados():
+    """Outros testes (mesmo worker do xdist) deixam handlers/níveis de log ligados e o log
+    estruturado dos eventos de Carta cairia no stdout capturado do `main`."""
+    import logging
+
+    prev = logging.root.manager.disable
+    logging.disable(logging.CRITICAL)
+    try:
+        yield
+    finally:
+        logging.disable(prev)
+
+
 def compute(sim) -> dict:
     out: dict = {}
-    with pool_frozen(sim):
+    with logs_silenciados(), pool_frozen(sim):
         out["simulate_batch"] = sim.simulate_batch(
             copy.deepcopy(synthetic_batch()), [1, 3], ["padrao"], 2, [0, 1]
         )

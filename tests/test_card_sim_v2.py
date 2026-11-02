@@ -242,3 +242,29 @@ def test_referencia_fora_de_posicao_vira_aviso(sim, mk, monkeypatch):
         rep = sim.simulate_batch([card], [1], ["padrao"], 1, [0], protocolo="v2")[card["id"]]
     assert rep["referencia"] is None and rep["delta_base"] == "remocao"
     assert {"sem_referencia", "referencia_fora_de_posicao"} <= set(rep["avisos"])
+
+
+def test_v1_imune_a_log_ligado_por_outros_testes(gold, sim):
+    """Regressão (suíte `-n 2`): handler de log no stdout de outro teste sujava o stdout do
+    `main` e quebrava a comparação com a referência/golden."""
+    import logging
+
+    ref = gold.load_sim(
+        os.path.join(ROOT, "tests", "fixtures", "spec358_sim_v1_ref.py.txt"), "sim_ref_log"
+    )
+    limpo = gold.compute(ref)
+
+    class _AoStdout(logging.Handler):  # resolve `sys.stdout` na hora, como o redirect do `main`
+        def emit(self, record):
+            sys.stdout.write(record.getMessage())
+
+    handler = _AoStdout()
+    log = logging.getLogger("rpg")
+    prev = log.level
+    log.setLevel(logging.INFO)
+    log.addHandler(handler)
+    try:
+        assert gold.compute(sim) == limpo
+    finally:
+        log.removeHandler(handler)
+        log.setLevel(prev)
