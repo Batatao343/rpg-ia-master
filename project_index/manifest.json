@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "21e63246122c1cd326132fbd4d31962b220925e1",
+  "commit_sha": "bc5bfe105de559102717fb72e8ed35f3741cbeb6",
   "edge_counts": {
-    "calls": 35317,
-    "contains": 1155,
-    "defines": 17172,
-    "imports": 2844,
-    "likely_test_for": 2051,
+    "calls": 35502,
+    "contains": 1168,
+    "defines": 17281,
+    "imports": 2862,
+    "likely_test_for": 2068,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:e79e6b654e6d729739acfdf8586ec8bc87a912998e3bef7d873dd7a89a48a0d0",
+  "graph_hash": "sha256:3947a1b1920a65ae6cca51ad8b215139ef090846f8e9b6a95aded8ba84ec1ba5",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -517,6 +517,7 @@
     "tests/fixtures/spec346_smoke.py",
     "tests/fixtures/spec353_smoke.py",
     "tests/fixtures/spec363_smoke.py",
+    "tests/fixtures/spec364_smoke.py",
     "tests/prompt_capture.py",
     "tests/silent_except_scan.py",
     "tests/spec215_helpers.py",
@@ -539,6 +540,7 @@
     "tests/spec330_equivalence.py",
     "tests/spec348_helpers.py",
     "tests/spec350_helpers.py",
+    "tests/spec364_board_helpers.py",
     "tests/test_abuse_logging.py",
     "tests/test_abuse_policy.py",
     "tests/test_abyss_clock.py",
@@ -1161,6 +1163,17 @@
     "tests/test_spec363_rare_scenarios.py",
     "tests/test_spec363_rewards_shop.py",
     "tests/test_spec363_shop_grammar.py",
+    "tests/test_spec364_409_play_index.py",
+    "tests/test_spec364_death_api.py",
+    "tests/test_spec364_death_digit_name.py",
+    "tests/test_spec364_flee_surfaces.py",
+    "tests/test_spec364_flee_trail.py",
+    "tests/test_spec364_golden_guard.py",
+    "tests/test_spec364_hidden_view_contract.py",
+    "tests/test_spec364_market.py",
+    "tests/test_spec364_outcome_tense.py",
+    "tests/test_spec364_portrait_debit.py",
+    "tests/test_spec364_registry_voice.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1249,6 +1262,8 @@
     "web/e2e/spec354-pos-combate.spec.ts",
     "web/e2e/spec354-prints.spec.ts",
     "web/e2e/spec363-board.spec.ts",
+    "web/e2e/spec364-409.spec.ts",
+    "web/e2e/spec364-hidden-target.spec.ts",
     "web/e2e/support-code.spec.ts",
     "web/e2e/touch-targets.spec.ts",
     "web/e2e/turn-wait.spec.ts",
@@ -1358,6 +1373,7 @@
     "web/src/lib/authErrors.ts",
     "web/src/lib/clientErrors.ts",
     "web/src/lib/errorMessages.ts",
+    "web/src/lib/estilhas.ts",
     "web/src/lib/portraitOrder.ts",
     "web/src/lib/rejectedPlay.ts",
     "web/src/lib/turnLatency.ts",
@@ -1422,14 +1438,14 @@
   },
   "node_counts": {
     "artifact": 9,
-    "class": 1045,
+    "class": 1048,
     "endpoint": 69,
-    "file": 1368,
-    "function": 5329,
+    "file": 1384,
+    "function": 5343,
     "method": 865,
-    "module": 1155,
-    "test": 9932
+    "module": 1168,
+    "test": 10024
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:52f7279e796423ac4d6ec55912ea22d258652c49ec84c35a84bb787cb20f95cb"
+  "source_tree_hash": "sha256:188541373a239a4eb40531e6f18b0dc72c49e0263b7618ef9cbb5c5ff71d78d2"
 }
