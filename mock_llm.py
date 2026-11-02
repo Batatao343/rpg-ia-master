@@ -719,6 +719,7 @@ def _start_scenario(model, messages):
             ],
             "climax": "O confronto com o credor do passado — em aço ou em palavras.",
             "seed_npcs": npcs,
+            "personal_npc": None,
         },
     )
 

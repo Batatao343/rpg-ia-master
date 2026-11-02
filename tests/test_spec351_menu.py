@@ -188,3 +188,32 @@ def test_fallback_when_350_absent_or_empty(monkeypatch):
 )
 def test_every_start_region_has_plot_npc(region):
     assert ot.thread_menu(region)["npcs"], region
+
+
+def test_hidden_faction_from_350_rows_never_reaches_menu_or_sheet(monkeypatch):
+    """P2-5 da 350: `cast_npc_row`/linhas de porta podem trazer facção oculta; a 351 só lê
+    nome/papel públicos do grafo/Codex e nunca repassa facção."""
+    base = ot.thread_menu("nova_arcadia")
+    anchor = base["npcs"][0]["entity_id"]
+    mod = types.ModuleType("services.plot_threads")
+    mod.plot_doors = lambda region_id, state=None, postura=None: [
+        {
+            "door_id": "door_x",
+            "name": "Porta X",
+            "hook": "algo corre",
+            "visibility": "public",
+            "anchor_npc_ids": [anchor],
+            "faction": "encapuzados_fornalha",
+            "anchor_rows": [{"entity_id": anchor, "faction_id": "encapuzados_fornalha"}],
+        }
+    ]
+    mod.cast_npc_row = lambda *a, **k: {"entity_id": anchor, "faction_id": "encapuzados_fornalha"}
+    monkeypatch.setitem(sys.modules, "services.plot_threads", mod)
+    import services
+
+    monkeypatch.setattr(services, "plot_threads", mod, raising=False)
+    menu = ot.thread_menu("nova_arcadia")
+    assert menu["source"] == "350"
+    assert "encapuzados_fornalha" not in repr(menu) + ot.menu_block(menu)
+    sheet = ot.plot_npc_sheet(menu["npcs"][0], "g", "nova_arcadia")
+    assert "encapuzados_fornalha" not in repr(sheet)

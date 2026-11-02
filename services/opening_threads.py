@@ -430,7 +430,8 @@ def planner_thread_block(state: dict) -> str:
         lines.append(f"O herói busca: {_clip(thread['seeking'], 200)}")
     lines.append(
         "Continue esta trama pelos beats, revelando-a aos poucos e ainda na borda; "
-        "sem profecia, sem escolhido."
+        "sem profecia, sem escolhido. Copie o título de uma trama, palavra por palavra e "
+        "entre aspas, em um dos beats."
     )
     lines.append("</FIO_DE_ABERTURA>")
     return "\n".join(lines)

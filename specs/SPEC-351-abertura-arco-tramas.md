@@ -1,6 +1,6 @@
 # SPEC-351 — Abertura ligada às tramas do mundo (1º arco, 1 NPC pessoal + 1 NPC da trama)
 
-> **Status:** `approved`
+> **Status:** `in-review`
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-10-27
 > **Origem:** pedido do dono (27/10): "tô começando com um elfo em Nova Arcádia — ele já tem que
 > ter algo do Pó de Sonho, na descrição dele já tem que falar algo que ele está buscando". Hoje a
@@ -452,18 +452,18 @@ Script e execução da §6; JSON em `docs/spec351/`; hand-back com a tabela E1�
 
 ## 5. Critérios de aceite
 
-- [ ] E1–E7 verdes no caminho MockLLM e no template (com as exceções de E7 previstas)
-- [ ] Prompt sem as regras 3/4 antigas; descrição livre delimitada (R5/R6)
-- [ ] Menu determinístico, na borda, sem `truth`, dentro do orçamento de tokens; 1 RAG `public`
-- [ ] `opening_thread` gravado e consumido pelo planejador por 2 arcos; save antigo carrega
-- [ ] NPC da trama com id do grafo; NPC pessoal com semente e camada pública separada
-- [ ] Token inválido/ausente → NPC pessoal só local; documento do pool sem dado do jogador
-- [ ] Submissão ao pool só após persistir e só com pool != `off`
-- [ ] `RPG_OPENING_THREAD` em `config/flags.yaml`; `off` = comportamento atual
-- [ ] Smoke real §6 executado e registrado (evidência em `docs/spec351/`)
+- [x] E1–E7 verdes no caminho MockLLM e no template (com as exceções de E7 previstas)
+- [x] Prompt sem as regras 3/4 antigas; descrição livre delimitada (R5/R6)
+- [x] Menu determinístico, na borda, sem `truth`, dentro do orçamento de tokens; 1 RAG `public`
+- [x] `opening_thread` gravado e consumido pelo planejador por 2 arcos; save antigo carrega
+- [x] NPC da trama com id do grafo; NPC pessoal com semente e camada pública separada
+- [x] Token inválido/ausente → NPC pessoal só local; documento do pool sem dado do jogador
+- [x] Submissão ao pool só após persistir e só com pool != `off`
+- [x] `RPG_OPENING_THREAD` em `config/flags.yaml`; `off` = comportamento atual
+- [x] Smoke real §6 executado e registrado (evidência em `docs/spec351/`)
 - [ ] `uv run pytest` verde (suíte completa offline, pelo coordenador)
-- [ ] Guard de FallbackLLM no `with_structured_output` do prólogo (mantido: `isinstance` + `try`)
-- [ ] Saves antigos continuam carregando
+- [x] Guard de FallbackLLM no `with_structured_output` do prólogo (mantido: `isinstance` + `try`)
+- [x] Saves antigos continuam carregando
 - [ ] Revisão independente (Opus) sem P1 aberto
 
 ## 6. Smoke test com LLM real
@@ -582,3 +582,26 @@ que tem uma porta para personagem Elfo. O smoke do elfo em Nova Arcádia deve ca
   floresta_sussurros 3, montanhas_afiadas 3, nova_arcadia 3, ophidia 3, pantano_melancolia 3,
   pradaria_ruinas 3, selva_xylos 3, skallgard 3 (todas as 12 regiões têm ≥ 3; falta filtrar
   `secret_entities` no menu, que só afeta NPCs sem casa). 125 NPCs seguem sem casa (P11).
+
+### 02/11 — Etapas 2–7 (executor)
+
+- **Entregue:** `services/opening_threads.py` (menu, blocos, ficha da trama, bloco do planejador; adaptador
+  `_population_api()` sobre `services.plot_threads.plot_doors`, import opcional, sem a 350 vale o fallback),
+  `services/prologue.py` (schema/prompt/`_normalize`/template/token/documento do pool/`submit_personal_npc`),
+  `api.py`, `agents/campaign_manager.py` (`<FIO_DE_ABERTURA>`), `state.py`, `mock_llm.py`, front (R19), flag
+  `RPG_OPENING_THREAD`, eventos, testes `tests/test_spec351_{menu,prologue,state,pool,api}.py`.
+- **Desvios:** (1) `build_start_scenario` continua devolvendo 2-tupla (compat com testes/clientes);
+  `build_start_scenario_ctx` devolve a 3-tupla da spec. (2) `seed_npcs` derivado traz só o NPC pessoal (o da
+  trama vive em `plot_npc_id`), preservando o contrato do template (`seed_npcs == []`). (3) O token que viaja ao
+  cliente é `<nonce>.<slot>.<v1.epoch.hmac>`: nonce e slot permitem ao servidor re-sortear a semente de forma
+  determinística no `/game/new` sem campo extra. (4) Fallback do menu só usa sementes de rumor `family=lore`
+  (as `avist_enemy_*` são ruído) e desempata por `quest_eligible`; sem backstory que case, Nova Arcádia não
+  oferece o Pó de Sonho nas 6 portas (a 350 resolve; fallback só com texto casando). (5) Prompt exige copiar o
+  título da porta entre aspas (sem isso E1 caiu a 1/8 no smoke). (6) Restrição da revisão da 350 (P2-5): a 351
+  nunca lê facção de linha da 350; nome/papel vêm do grafo/Codex público (teste com facção oculta simulada).
+- **Smoke real 02/11 (`docs/spec351/smoke-2026-11-02.json`, DeepSeek):** E1–E7 = 8/8 em todos; replan forçado do
+  caso 1 mantém a trama (E1) sem segredo (E4); 2 NPCs pessoais promovidos pelo juiz real, nenhum com nome do
+  personagem; p50 do prólogo 8,7 s (off) → 9,95 s (on), +1,3 s. Ressalvas: RAG de lore estava indisponível no
+  worktree (índice FAISS gitignored; `lore_block` vazio), E4 é provisório até a 348; leitura humana dos 3 prólogos
+  e 3 turnos do caso 1 ficam com o coordenador.
+- **Cobertura do fallback por região:** todas as 12 regiões têm ≥ 3 NPCs na borda (sem a 350).

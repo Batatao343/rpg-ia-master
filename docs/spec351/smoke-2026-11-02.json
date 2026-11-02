@@ -1,0 +1,503 @@
+{
+  "summary": {
+    "real": true,
+    "cases": 8,
+    "tally": {
+      "E1": 8,
+      "E2": 8,
+      "E3": 8,
+      "E4": 8,
+      "E5": 8,
+      "E6": 8,
+      "E7": 8
+    },
+    "pool": {
+      "promoted": 2,
+      "rejected": 10,
+      "held": 0,
+      "failed": 0
+    },
+    "promoted_names": [
+      "Corvo de Cinza",
+      "Karrun Osshari"
+    ],
+    "p50_prologue_off_s": 8.69,
+    "p50_prologue_on_s": 9.95,
+    "replan": {
+      "E1": true,
+      "E4": true,
+      "arcs_left": 1,
+      "beats": [
+        "Abra na atmosfera: o quarto ainda escuro, o cheiro de ferrugem e pão velho subindo do andar de baixo, o frio da madrugada entrando pela fresta. Descreva a terceira badalada ecoando e a sombra de duas botas paradas do lado de fora — quem bate não bate de novo, apenas espera.",
+        "Irena Prego-Frio entra sem ser convidada quando a porta cede. Descreva-a com precisão de ofício: casaco escuro, luvas, um tubo de contratos debaixo do braço. Ela põe o papel sobre a mesa e diz o nome 'Aranel' em voz alta, sem ameaça — como quem já leu aquilo muitas vezes.",
+        "Deixe o herói examinar o contrato: a assinatura imita a letra dele, mas o traço é firme demais, sem hesitação. Irena não impede o exame; ela observa, e comenta que 'a casa não fabrica assinaturas' — e que, se ele quiser, pode pedir os termos em voz alta. Mencione de passagem os boatos que correm no Anel de Ferro sobre dívidas que aparecem prontas, e sobre 'As Leis de Valerius Foram Escritas em Uma Noite'.",
+        "Se ele pedir os termos em voz alta, Irena lê o contrato em voz de tabelião: o valor, a origem do crédito, o nome do credor. A leitura expõe que a dívida foi comprada no Anel Dourado — e Irena deixa claro que ela é só a mão que cobra, não a mão que fabrica. Se ele negar ou tentar pagar, ela responde com a mesma calma: negar exige uma contra-assinatura de um Corvo; pagar exige moeda que ele provavelmente não tem.",
+        "Feche na borda: passos no corredor e um Corvo de Cinza encostado no batente, ouvindo. Irena não se vira, mas o tom dela muda — ela guarda o contrato de volta no tubo e diz que 'essa dívida tem dono, e o dono não gosta de esperar'. Deixe o herói com a escolha: seguir o Corvo, seguir Irena, ou ficar com a cópia dos termos."
+      ]
+    }
+  },
+  "rows": [
+    {
+      "name": "Aranel",
+      "region": "Nova Arcádia",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_a_catedral_afundada_nao_esta_vazia_a_noite",
+        "rumor_a_legiao_esta_fabricando_soldados_a_partir_de_mortos",
+        "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer",
+        "rumor_algumas_dividas_sao_fabricadas",
+        "rumor_as_leis_de_valerius_foram_escritas_em_uma_noite",
+        "rumor_as_paredes_do_palacio_sangram_de_verdade"
+      ],
+      "thread_refs": [
+        "rumor_algumas_dividas_sao_fabricadas",
+        "rumor_as_leis_de_valerius_foram_escritas_em_uma_noite"
+      ],
+      "plot_npc_id": "npc_mv_irena_prego_frio",
+      "personal_npc": "Corvo de Cinza",
+      "seeking": "Descobrir quem pagou para apagar a memória da irmã e quanto isso custou.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você desceu do Anel Dourado com um tubo de cobre na mochila e uma frase que não sai da cabeça: sua irmã olhou para você e perguntou o seu nome. Não foi feitiço de rua nem praga de lama — foi mais limpo que isso, mais educado, como quem apaga uma dívida de um livro. Agora você está no Anel de Ferro, entre chaminés e fundições que nunca dormem, e a única coisa que você tem é um instrumento, um método e trinta moedas com o rosto de Valerius estampado. Você quer saber quem pagou para que a memória dela fosse apagada — e quanto custou. O problema de Nova Arcádia é que toda pergunta tem preço, e o seu bolso só cobre a primeira. A fumaça da fundição mais próxima cheira a ferro e a cabelo queimado. Alguém está batendo à porta do seu quarto de aluguel, e não é o dono.",
+      "beats": [
+        "Irena Prego-Frio apresenta um contrato de dívida no nome de Aranel, com prazo de três dias e uma cláusula de prestação de serviços à Legião.",
+        "A pista leva ao Sétimo Sino: o rumor de que \"Algumas Dívidas São Fabricadas\" circula entre trabalhadores da fundição que sumiram depois de assinar papéis parecidos.",
+        "Mara do Sétimo Sino confirma o padrão — e revela que a irmã de Aranel assinou algo antes de esquecer, num cartório do Anel Dourado.",
+        "Com a ferramenta calibrada e a entropia a favor, Aranel precisa copiar ou adulterar o registro antes que a Legião o faça desaparecer da mesma forma."
+      ],
+      "game_id": "b7d97e65-4f9e-4cad-8a6a-813eed5883a9"
+    },
+    {
+      "name": "Brogan",
+      "region": "Nova Arcádia",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_a_catedral_afundada_nao_esta_vazia_a_noite",
+        "rumor_a_legiao_esta_fabricando_soldados_a_partir_de_mortos",
+        "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer",
+        "rumor_algumas_dividas_sao_fabricadas",
+        "rumor_as_leis_de_valerius_foram_escritas_em_uma_noite",
+        "rumor_as_paredes_do_palacio_sangram_de_verdade"
+      ],
+      "thread_refs": [
+        "rumor_a_parteira_do_anel_de_lama_ensina_a_costurar_quem_a_praga_quer",
+        "rumor_algumas_dividas_sao_fabricadas"
+      ],
+      "plot_npc_id": "npc_mv_mara_do_setimo_sino",
+      "personal_npc": "Irena Prego-Frio",
+      "seeking": "Juntar ouro suficiente para comprar uma casa de pedra que ninguém possa tomar dele.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Brogan, você chegou a Nova Arcádia pelo portão do Anel de Ferro com uma bolsa de cordas, uma agulha de osso e trinta moedas que não eram suas até ontem. Conserta tenda, remenda lona de carroça, cose saco de grão — trabalho honesto, pago em cobre, e o cobre não compra pedra. Você conta nos dedos, sempre, antes de responder a qualquer um: quanto entra, quanto sai, quanto falta para uma casa que ninguém possa tomar de você.\n\nMas há o outro pagamento. Aquele que você faz na própria pele, na viela atrás do albergue, quando a noite pede mais do que o corpo tem. Sangue é a única moeda que você carrega sem precisar de bolsa, e você aprendeu a gastá-lo com a mesma frieza com que cobra um remendo: preço fechado, cicatriz no lugar do recibo. Ninguém precisa saber. Em Nova Arcádia, quem sangra por poder sem licença vira lenha com plateia.\n\nHoje um serviço de cordame te levou ao Anel de Lama, e alguém pagou adiantado demais por uma costura simples.",
+      "beats": [
+        "Brogan recebe de Irena Prego-Frio o pagamento adiantado por um cordame comum e a proposta de um trabalho extra: costurar um saco lacrado, sem perguntas, por ouro que compraria três meses de aluguel.",
+        "Entre os presentes surge o comentário de que \"A Parteira do Anel de Lama Ensina a Costurar Quem a Praga Quer\" — e que a parteira paga em ouro limpo por mãos que não tremem.",
+        "A ronda da Legião aperta o portão; Brogan precisa decidir se esconde o saco, o entrega, ou cobra de Irena um preço em sangue para resolver o problema na hora.",
+        "Mara do Sétimo Sino o procura: ela sabe o que há no saco e quer comprar o silêncio de Brogan — ou o conteúdo, o que vier mais barato."
+      ],
+      "game_id": "9e90942a-4f8d-4027-ab9e-27a26767179d"
+    },
+    {
+      "name": "Dagna",
+      "region": "Skallgard",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_as_estatuas_de_vorr_mudam_de_posicao",
+        "rumor_os_numeros_nao_batem",
+        "rumor_os_que_velam_no_gelo_pedem_para_ser_escolhidos",
+        "clas_combate",
+        "clas_tecnologicos",
+        "renegados_ermo"
+      ],
+      "thread_refs": [
+        "rumor_os_numeros_nao_batem",
+        "rumor_as_estatuas_de_vorr_mudam_de_posicao"
+      ],
+      "plot_npc_id": "npc_mv_solvi_cabo_cobre",
+      "personal_npc": "Halka Torr-Queimada",
+      "seeking": "Quer pagar a dívida com o clã que a salvou, mantendo vivos os que o gelo insiste em cobrar.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "O vento de Skallgard não uiva: ele raspa. Raspa a neve até virar pó e o pó até virar vidro fino que corta a pele por dentro do capuz. Você conhece esse frio de outro lugar — do fundo do pulmão de quem perdeu sangue demais. Dagna, anã da fuligem, médica de campo, você carrega a serra, a agulha e a bolsa de alquimia como outros carregam machado.\n\nFoi um clã que não era o seu que te tirou do gelo, anos atrás. Você não esqueceu. Por isso está aqui, na borda da fortaleza de Vorr, ao pé de uma torre de sinal onde os vigias contam tochas e escrevem números num quadro de osso. Um deles está tossindo sangue escuro há três noites, e o posto não tem quem o estabilize. Você veio fazer o que sabe: manter alguém respirando.\n\nSó que os números no quadro não fecham. E as estátuas de gelo no pátio, você juraria, não estavam viradas para cá quando você entrou.",
+      "beats": [
+        "No posto de sinal, você estabiliza o vigia Eirik Sem-Pegadas com agulha e compressa quente, e ele sussurra que 'a contagem está errada há semanas'.",
+        "Ao conferir o quadro de osso, você nota que os números de tochas e rações não batem — e que \"Os Números Não Batem\" é justamente o que os tecnológicos querem abafado.",
+        "No pátio, as estátuas de gelo mudaram de posição outra vez; um dos que velam ao pé da torre pede, baixinho, para ser o próximo a ser levado.",
+        "Solvi Cabo-Cobre aparece para 'revisar o posto' e oferece a você um lugar nos túneis aquecidos — em troca do seu silêncio sobre o quadro."
+      ],
+      "game_id": "6f916cb0-0a59-423c-af8c-78c4dab34061"
+    },
+    {
+      "name": "Mirel",
+      "region": "Pântano da Melancolia",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_o_pantano_esta_crescendo",
+        "rumor_os_druidas_cinzentos_guardam_o_que_sobrou_de_aethelgard"
+      ],
+      "thread_refs": [
+        "rumor_o_pantano_esta_crescendo",
+        "rumor_os_druidas_cinzentos_guardam_o_que_sobrou_de_aethelgard"
+      ],
+      "plot_npc_id": "npc_mv_ume_lodo_claro",
+      "personal_npc": "Dorn Velo",
+      "seeking": "Encontrar o pai, Toren, que entrou no Pântano da Melancolia há três estações e não voltou.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você é Mirel, e o Pântano da Melancolia já molhou suas botas até o joelho antes de você decidir se aquilo era mesmo o caminho. A névoa aqui não é alta: fica na altura do peito, como água que esqueceu de correr. Dizem que a terra cedeu no dia em que Malagor caiu, e que os mortos ficaram sem lugar para deitar.\n\nVocê não veio atrás de riqueza enterrada. Veio atrás de Toren — seu pai, que entrou por esta borda há três estações com uma corda, um caderno e a teimosia de quem acha que pode medir tristeza. O Acampamento dos Juncos ainda tem gente que lembra do rosto dele. E tem gente que prefere não lembrar.\n\nVocê carrega duas doses de Chá dos Druidas, um bastão que já foi de outra pessoa e uma serenidade que incomoda. O Abismo não pede que você tenha medo do fim. Pede que você fique de pé na frente dele, e que os outros fiquem atrás. Se algo aqui embaixo vai escolher alguém primeiro, que escolha você.\n\nO primeiro junco seco aparece. Alguém está cantando baixinho, mais adiante.",
+      "beats": [
+        "No Acampamento dos Juncos, Mirel encontra o caderno de Toren pela metade — as últimas páginas arrancadas, e a marca de um selo druídico no verso da capa.",
+        "O rumor de que \"O Pântano Está Crescendo\" ganha corpo: alguém mostra a Mirel uma estaca de medição que os druidas fincaram e que já está submersa além da marca antiga.",
+        "Ume Lodo-Claro admite que entregou Toren a um guia que não era do Ciclo Cinzento, e que o guia voltou sozinho, calado, com a corda de Toren.",
+        "Seguindo a estaca submersa, Mirel encontra o poço seco do druida velho — e as peças que ele guarda incluem um objeto de vidro que zumbe quando alguém mente."
+      ],
+      "game_id": "5b3f2781-0978-4b89-9aa1-f6a58337ec4f"
+    },
+    {
+      "name": "Zuri",
+      "region": "Deserto de Zhur",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_as_miragens_de_zhur_aprendem",
+        "rumor_o_som_no_fim_do_mundo_tem_gosto"
+      ],
+      "thread_refs": [
+        "rumor_as_miragens_de_zhur_aprendem"
+      ],
+      "plot_npc_id": "npc_mv_kessa_tres_sombras",
+      "personal_npc": "Vurro Sal-Fino",
+      "seeking": "Encontrar o mestre que o traiu e cobrar o que ele escondeu nas mãos.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você veio de fornos de cal e de dívidas herdadas como cicatrizes — aprendeu cedo que todo favor tem juros, e que mãos mentem melhor que bocas. Seu mestre lia o que os outros escondiam; o que ele escondeu nas próprias mãos custou-lhe dois anos de estrada e um nome que ninguém pronuncia sem cuspir. Agora você está na borda do Mar de Vidro, em Zhur, onde a areia virou espelho quebrado e o calor cozinha o couro das botas. Você carrega dois odres, lentes de obsidiana e um caderno de dívidas que não é seu. Não busca glória nem cristais: busca o homem que te ensinou a ver — e o que ele fez com o que viu. O deserto, paciente como você, apodrece tudo no seu tempo. Ele só chegou mais cedo. As miragens daqui já te observam com rostos conhecidos. Elas estão aprendendo.",
+      "beats": [
+        "No acampamento de sal, Zuri troca uma dívida antiga por informação: o mestre passou por ali rumo ao sul, pagando em água e mentindo sobre o próprio nome.",
+        "Vurro, o mercador osshari, oferece-se como guia — mas pesa cada moeda e esconde documentos falsos que podem incriminar Zuri junto a Kessa.",
+        "As miragens de Zhur começam a imitar o rosto do mestre de Zuri, e o que elas dizem revela detalhes que só ele saberia — algo no vidro está aprendendo com quem o segue.",
+        "Kessa Três-Sombras propõe um acordo: Zuri apodrece a água de um rival em troca da rota segura até a borda sul, onde o mestre foi visto por último."
+      ],
+      "game_id": "43f0cb39-2e0e-448d-916e-eb43b3a0818c"
+    },
+    {
+      "name": "Kessa",
+      "region": "Brekmar",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_a_dona_da_casa_nao_tem_rosto_de_verdade",
+        "rumor_em_brekmar_se_paga_o_eter_em_sangue_e_a_legiao_queima_quem_aprende",
+        "rumor_os_navios_de_durrak_atraem_o_fundo",
+        "grupos_piratas_rivais",
+        "poder_kahen",
+        "tres_sindicatos_comercio"
+      ],
+      "thread_refs": [
+        "rumor_a_dona_da_casa_nao_tem_rosto_de_verdade",
+        "tres_sindicatos_comercio"
+      ],
+      "plot_npc_id": "npc_mv_mina_sete_taxas",
+      "personal_npc": "Tolve",
+      "seeking": "Um jeito de riscar seu nome de um contrato quebrado antes que o cobrador chegue a Brekmar.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você chegou a Brekmar com um contrato rasgado no bolso e o pulso ainda latejando do selo que ele exigia. Não foi a primeira vez que você pagou com a própria pele — mas foi a primeira vez que o pagamento não bastou, e você correu antes que alguém viesse cobrar o resto.\n\nAgora são três dias de cais, salitre e gente que não pergunta de onde você veio. Você precisa de duas coisas pequenas: um lugar onde dormir sem que a porta seja arrombada, e alguém disposto a riscar seu nome de uma lista antes que a lista chegue a Brekmar. Nada de heroísmo. Nada de grandes causas.\n\nNa Boca do Fundo, o cheiro é de peixe velho e tinta fresca. Um carrinho de duas rodas range ao seu lado, carregado de raízes escuras, e o vendedor te olha de esguelha como se já tivesse visto sua cara num cartaz. Ele gira um anel de cobre no dedo. Em Brekmar, dizem, qualquer passado se apaga — o difícil é sobreviver às cláusulas.",
+      "beats": [
+        "O vendedor de raízes, Tolve, oferece um nome e um horário em troca de moeda — e de uma gota sua, porque em Brekmar até o troco se paga em carne.",
+        "O nome leva à 'A Dona da Casa Não Tem Rosto de Verdade': uma casa de marés onde se compram silêncios, e onde a dona recebe atrás de um véu que ninguém viu cair.",
+        "Mina Sete-Taxas aparece para comprar o mesmo silêncio que você — e para lembrar que contratos quebrados em Brekmar viram dívida de sindicato, não assunto de forasteiro.",
+        "Tolve some do carrinho por dois dias; quando volta, tem um anel de cobre a menos e uma marca de queimadura no pulso que ele não explica."
+      ],
+      "game_id": "610bfab1-dd1c-48a6-aa76-ebd10854bde3"
+    },
+    {
+      "name": "Lys",
+      "region": "Floresta dos Sussurros",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_a_floresta_sussurra_nomes"
+      ],
+      "thread_refs": [
+        "rumor_a_floresta_sussurra_nomes"
+      ],
+      "plot_npc_id": "npc_mv_tomir_musgo",
+      "personal_npc": "Sena Cascalvo",
+      "seeking": "Coletar Pó de Sonho na borda da floresta e ver o que ele revela — sem se perder no preço.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "Você é Lys, criado de casa abastada em uma floresta que nunca foi sua. Aprendeu a servir à mesa de gente que não olha para você, e aprendeu sozinho a ler o mundo em leis, condutores e vazão — a ferramenta segura o que a mão não deveria tocar. Hoje você carrega um frasco de vidro, uma lente lascada e dois antídotos no cinto, e caminha até a borda da Floresta dos Sussurros atrás de uma coisa pequena e concreta: o Pó de Sonho. Dizem que o fungo cresce no escuro e revela o que está escondido. Você quer ver o que ele mostra — e, se possível, levar um pouco de volta para a casa que o despreza, e ser recebido à mesa. As árvores fecham a luz com precisão demais para ser acaso. O silêncio aqui não é ausência de som: é presença. E em algum ponto, antes de você dar o primeiro passo, alguém chama seu nome com a voz de uma pessoa morta que você conheceu bem. Você para. Pesa a lente na palma. Segue.",
+      "beats": [
+        "Lys raspa o fungo pálido da casca com a lente e anota o que vê: o Pó revela marcas antigas na madeira, riscos que parecem nomes.",
+        "A floresta começa a sussurrar o nome de Lys na voz de um morto conhecido — e a porta \"A Floresta Sussurra Nomes\" se abre quando a voz o chama para dentro do mato.",
+        "Tomir Musgo o encontra agachado entre as raízes e o adverte: quem segue a voz não volta, e o fungo cobra juros de quem o colhe.",
+        "Lys percebe que o Pó não revela o escondido — ele revela quem está ouvindo, e o que ele mesmo escondeu."
+      ],
+      "game_id": "ad774d1b-2424-4b15-91b9-375f2162f08a"
+    },
+    {
+      "name": "Vex",
+      "region": "Aethelgard",
+      "template": false,
+      "mock": false,
+      "doors": [
+        "rumor_a_cidade_sonha_que_ainda_esta_viva",
+        "rumor_ha_quem_cure_apodrecendo_mais_depressa",
+        "rumor_os_afogados_de_aethelgard_ainda_seguem_ordens"
+      ],
+      "thread_refs": [
+        "rumor_os_afogados_de_aethelgard_ainda_seguem_ordens",
+        "rumor_ha_quem_cure_apodrecendo_mais_depressa"
+      ],
+      "plot_npc_id": "npc_mv_tessa_ampola",
+      "personal_npc": "Karrun Osshari",
+      "seeking": "Comprar óleo de lamparina que arde debaixo d'água e descobrir se a mulher do porão cura mesmo, ou só apressa o fim.",
+      "checks": {
+        "E1": {
+          "ok": true,
+          "detail": ""
+        },
+        "E2": {
+          "ok": true,
+          "detail": ""
+        },
+        "E3": {
+          "ok": true,
+          "detail": ""
+        },
+        "E4": {
+          "ok": true,
+          "detail": ""
+        },
+        "E5": {
+          "ok": true,
+          "detail": ""
+        },
+        "E6": {
+          "ok": true,
+          "detail": ""
+        },
+        "E7": {
+          "ok": true,
+          "detail": ""
+        }
+      },
+      "new_status": 200,
+      "prologue": "A água do lago de Aethelgard é mansa hoje, e isso te incomoda. Você está na margem de pedra quebrada, onde os pescadores de destroços amarram botes e não olham para baixo. Vex — é assim que te chamam, e basta. Você veio buscar uma coisa pequena: um frasco de óleo de lamparina que não se apaga debaixo d'água, vendido por uma mulher que dizem guardar a cura num porão. O Abismo te escuta respirar. Ele sempre escuta. Enquanto você espera, um guia de trilhas chamado Karrun Osshari conta, sem olhar teus olhos, que os afogados lá embaixo mudaram de rota nesta semana — como se alguém tivesse dado ordem nova. Ele ri ao dizer isso. Depois chora quando um barco volta vazio. A água brilha, e nas paredes rasas da cratera alguém escreveu com Éter uma memória que não é tua. Você não recua. Nunca recuou. O Abismo escolhe os que ficam de pé, e você pretende ficar de pé por muito tempo.",
+      "beats": [
+        "Na margem, Karrun Osshari te vende a rota até o barco de Tessa por um preço alto e um segredo barato: os afogados andam em fila agora, e fila quer dizer comando.",
+        "Tessa Ampola chega com o frasco de óleo e as mãos manchadas de podridão doce; ela cobra a cura de um vizinho que já não responde, e diz que a febre sai mais rápido quando a carne cede primeiro.",
+        "Um afogado sobe à tona na parte rasa e não ataca: ergue a mão num gesto de saudação militar, espera resposta, e mergulha de volta — \"Os Afogados de Aethelgard Ainda Seguem Ordens\".",
+        "Karrun te oferece a chave do porão dele em troca de silêncio sobre a comida que esconde, e chora de alegria quando você aceita."
+      ],
+      "game_id": "70250fb2-b477-4742-b0f5-10062e6f086e"
+    }
+  ]
+}
