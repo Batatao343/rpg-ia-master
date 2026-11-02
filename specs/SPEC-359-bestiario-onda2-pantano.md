@@ -66,7 +66,7 @@ com fallback para a onda 1); `data/bestiary.json` e `data/graph/entities_extra.j
 
 - [x] Tabuleiro e fichas sem erro no gate (`lint.py --regiao pantano_melancolia`)
 - [x] Todas as fichas novas `revisao: aprovada` por revisor ≠ autor (2 rodadas, APPROVED_WITH_FOLLOWUPS)
-- [ ] Etapas 5–9 (mecânica, arena, `validate_content` 0 ERRO, rumores, smoke, `uv run pytest` no pouso)
+- [ ] Etapas 5–9: mecânica, arena (20/22 do Pântano nos dois modos), `validate_content` 0 ERRO e rumores cobertos pela SPEC-349 §9; faltam o smoke real e o `uv run pytest` no pouso
 
 ## 6. Smoke test com LLM real
 

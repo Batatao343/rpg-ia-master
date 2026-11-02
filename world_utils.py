@@ -816,6 +816,9 @@ def _bestiary_by_faction(faction_id: str):
     return None
 
 
+_THEME_STEM_OVERRIDE = {"camarao": "camarao"}
+
+
 def _theme_stems(text: str) -> set:
     """SPEC-289 R3b: radicais de palavras (sem acento/caixa, >=5 letras, sem `s`
     final, 6 primeiras letras). Determinístico — base do casamento ameaça↔criatura."""
@@ -831,7 +834,8 @@ def _theme_stems(text: str) -> set:
     for w in re.findall(r"[a-z]+", norm):
         w = w[:-1] if w.endswith("s") else w
         if len(w) >= 5:
-            out.add(w[:6])
+            # homônimos de radical (Camarão ≠ Câmara) ganham radical próprio (SPEC-349)
+            out.add(_THEME_STEM_OVERRIDE.get(w[:7], w[:6]))
     return out
 
 

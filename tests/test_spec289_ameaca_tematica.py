@@ -309,3 +309,17 @@ def test_populacao_cheia_escolhe_sempre_criatura_tematica(monkeypatch):
                 wu.threat_faction({"looming_threat": CORVANE}, []), CORVANE
             )
             assert theme(entry) > 0 and "aethelgard" in entry["regions"], entry["name"]
+
+
+def test_camarao_nao_e_tematico_da_camara():
+    """Radical `camara` não casa `camarao` (Camarão Faxineiro não é da Destilação)."""
+    theme = wu.threat_theme_match(wu.threat_faction({"looming_threat": CORVANE}, []), CORVANE)
+    import json
+    from pathlib import Path
+
+    best = json.loads(
+        (Path(__file__).resolve().parents[1] / "data" / "bestiary.json").read_text(encoding="utf-8")
+    )
+    assert theme({"name": "Camarão Faxineiro"}) == 0
+    assert theme(best["mon_camarao_faxineiro"]) == 0
+    assert theme({"name": "Câmara Profunda"}) == 1

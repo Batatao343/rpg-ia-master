@@ -1,6 +1,6 @@
 # SPEC-349 — Bestiário de Valoria: esteira por região de ameaças físicas, com gate de unicidade (onda 1: Nova Arcádia)
 
-> **Status:** `in-review` (Etapas 0–7 prontas: 12 regiões com mecânica, baralho, arena e rumores; falta a revisão técnica Sol da Etapa 8, o smoke real §6 e a decisão do coordenador sobre as pendências da §9)
+> **Status:** `done` (Etapas 0–8: 12 regiões com mecânica, baralho, arena e rumores; revisões de unicidade e Sol APPROVED_WITH_FOLLOWUPS na rodada 2. Pendem fora da 349: smoke real §6, teto de usos das famílias (SPEC-336) e `on` dos chefes)
 > **Criada:** 2026-10-27 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-348 (`approved`, em execução): o cânone da Praga em cadeia única (R19), magia = dor e Lista de Fornalha (R26), Posturas (R47) e o teste de vazamento `LEAK_PHRASES`, que também varre o bestiário (R53). As Etapas 0–2 daqui rodam em paralelo; a Etapa 3 (prosa) só começa com a 348 na `main`. Também depende de SPEC-332 (motor de baralhos de inimigo: Entregas 1 e 2 já na `main`, flag `off`), SPEC-336 (`services/card_lint.py`) e SPEC-330 (gramática e orçamento de Carta).
 > **Desbloqueia:** ondas 2–12 (specs-filhas, uma por região, §3.10); curadoria G-14 completa; specs futuras de encontro/mundo povoado que queiram sortear criaturas por região.
@@ -480,12 +480,12 @@ Smoke da §6 → `/spec-land`. A suíte completa é do coordenador.
 - [ ] Ficha ↔ bestiário ↔ Codex (`curated: true`) ↔ `entities_extra` ↔ Cartas ↔ doc de arte, consistentes por teste (R13–R19)
 - [x] Padrão, assinatura e telegrafo próprios, e fases nos chefes, funcionando com `RPG_ENEMY_DECKS=on` (R15, R16); `off` sem regressão nos testes existentes
 - [x] `resolve_bestiary_name(nome) == id` para toda nova ou reinventada (R34)
-- [ ] Arena: 45–85 % por criatura nova nos dois modos; reinventados com |Δ| ≤ 8 pp (R26) — 259/281 na faixa nos dois modos e 255/281 pelo veredito completo; exceções nominais na §9
+- [ ] Arena: 45–85 % por criatura nova nos dois modos; reinventados com |Δ| ≤ 8 pp (R26) — 253/281 na faixa nos dois modos e 247/281 pelo veredito completo (HEAD pós-sync); exceções nominais na §9
 - [x] `validate_content.py` com 0 ERRO; rumores regenerados; teste `LEAK_PHRASES` da 348 verde (R20, R36)
 - [x] `docs/guias/BESTIARIO.md`, template de spec-filha, `_esteira.yaml` e `PAINEL.md` publicados (R27–R31)
 - [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
 - [x] Nenhum `with_structured_output` novo (o conteúdo é autoral, sem LLM em runtime); se surgir um, guard de FallbackLLM
-- [ ] Saves antigos continuam carregando (id estável; teste de round-trip com save que tem `enemy_gargula_ferro` em `bestiary_knowledge`)
+- [x] Saves antigos continuam carregando (id estável; teste de round-trip com save que tem `enemy_gargula_ferro` em `bestiary_knowledge`)
 - [ ] Smoke real da §6 executado e registrado na §9
 
 ## 6. Smoke test com LLM real
@@ -666,7 +666,7 @@ Ondas autoradas em branches separadas e integradas por merge `--no-ff` (spec-359
 - ophidia: mon_vigia_de_cor_errada: 46%/91%
 
 - Leitura: 9 chefes (todos com `on` < 45 % exceto o General Escorpião, `off` 90 %): os dials chegaram ao mínimo e o baralho de família (332) mais as 2 ações por rodada dominam; Corpo não desce de 2 (invariante de Vitalidade). Os demais 19 têm `off` e `on` divergentes ou 1 a 4 pp fora. Parte da diferença vem do rebase sobre a `main` (SPEC-362 baixou a Vitalidade do Arcanista; SPEC-355/358 mexeram no motor) e das Cartas restauradas do R3 (abaixo). Não recalibrei: o critério é medir no código que pousa e registrar.
-- Delta de 8 pp dos slots que estavam na faixa antes (comparação com `round(…, 1)`, então −8,0 pp passa): 6 estouram (Quimera de Cristal `on` −9,0; Verme de Vidro `off` −8,5; Ent Dormindo `on` +18,5; Basilisco `off` −18,0/`on` −11,5; Coisa do Esgoto `on` −9,5; Jötunn `on` −10,0). Pelo veredito completo do `arena.py` (faixa e delta): **247 de 281**.
+- Delta de 8 pp dos slots que estavam na faixa antes (comparação com `round(…, 1)`, então −8,0 pp passa): 6 estouram (Quimera de Cristal `on` −9,0; Verme de Vidro `off` +8,5; Ent Dormindo `on` +18,5; Basilisco `off` −18,0/`on` +11,5; Coisa do Esgoto `on` −9,5; Jötunn `on` −10,0). Pelo veredito completo do `arena.py` (faixa e delta): **247 de 281**.
 
 **Efeitos que o motor atual NÃO suporta (efeito ideal × aproximação).** 145 das 281 criaturas têm a linha `aprox:` no yaml (`grep -n "aprox:" data/bestiario/mecanica/*.yaml`). Os pedidos pelo coordenador e as demais classes:
 
@@ -697,4 +697,4 @@ Ondas autoradas em branches separadas e integradas por merge `--no-ff` (spec-359
 7. **Arena do slot fora da faixa antes** (ex.: Aranha de Cristal 5 %, General Escorpião 9 %): a faixa 45–85 % manda; o delta de 8 pp só vale quando o slot estava na faixa.
 8. **Follow-ups (coordenador, 02/11).** (a) O teto de 15 usos por Carta de família (332) só volta a valer para a esteira com mais Cartas de família na SPEC-336. (b) Os chefes ficam abaixo de 45 % no `on` (9 chefes), por causa do baralho de família e das 2 ações por rodada.
 9. **Revisão Sol (Etapa 8) e correções, 02/11.** (P2-1) O delta da arena compara com `round(…, 1)`. (P1-1) Baseline dos 32 slots remedido com o `bestiary.json` da `main` atual no mesmo motor e arena completa no HEAD pós-sync (números acima). (P1-2) `test_save_load_com_criatura_nova_e_slot_em_bestiary_knowledge` cobre `off` e `on`. (P2-3) Os 16 slots que perdiam um `kind` de efeito do R3 (`dot`, `marca`, `esconder`, `aplicar_condicao`, `empurrao`, `protecao`) recuperaram o `kind` como efeito secundário da assinatura (`dot` 1 × 2 rodadas, `marca` 1, `esconder` 1, `desmoralizado` 1, `empurrao` 1, `protecao` 2); nenhum ficou como desvio, e o orçamento das Cartas segue verde. (P2-4) `validate_bestiary_identity` passa `_esteira.yaml` ao `lint_global`, então o R27 roda no `validate_content`. (P2-5/6) Docstring do teste de `appearance` e `cartas` das 5 entradas SPEC-355 do snapshot atualizados.
-10. **`test_spec289_ameaca_tematica` (regressão apontada pelo executor da 360).** Os 4 testes fixavam "a única temática" da esfera. A esteira acrescentou temáticas legítimas em Aethelgard (Alambique de Carne, combatente da Destilação; Camarão Faxineiro, por coincidência de radical com "Câmara") e, nos slots reinventados, o Pajem de Obsidiana (ex-Sentinela de Ferro, radical `obsidi` da Chama Azul) entrou e a Quimera de Cristal virou Ariranha de Arcada, saindo do tema. A lógica da 289 está correta; o teste passou a medir sobre a população anterior à esteira (fixture) mais um teste novo que exige que, com a população cheia, o sorteio fique sempre dentro das temáticas da esfera. O fallback de porte estrito retira o Pajem da população do teste.
+10. **`test_spec289_ameaca_tematica` (regressão apontada pelo executor da 360).** Os 4 testes fixavam "a única temática" da esfera. A esteira acrescentou temáticas legítimas em Aethelgard (Alambique de Carne, combatente da Destilação; Camarão Faxineiro entrava por coincidência de radical com "Câmara"; o radical `camarao` agora é próprio em `world_utils._theme_stems` e ele não é mais temático) e, nos slots reinventados, o Pajem de Obsidiana (ex-Sentinela de Ferro, radical `obsidi` da Chama Azul) entrou e a Quimera de Cristal virou Ariranha de Arcada, saindo do tema. A lógica da 289 está correta; o teste passou a medir sobre a população anterior à esteira (fixture) mais um teste novo que exige que, com a população cheia, o sorteio fique sempre dentro das temáticas da esfera. O fallback de porte estrito retira o Pajem da população do teste.
