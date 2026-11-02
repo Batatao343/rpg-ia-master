@@ -1,6 +1,6 @@
 # SPEC-368 — Cartas: fechamento do épico (bug do rollback, conteúdo faltante, métricas nunca medidas e smoke dos §6 não verificados)
 
-> **Status:** `approved` (coordenador, autorização do dono 02/11 "manda bala" e "corrija tudo e garanta que está tudo correto")
+> **Status:** `in-progress` (Etapas 0–4 implementadas em 02/11; faltam revisão Sol, suíte completa e o smoke §6 do coordenador) — aprovada pelo coordenador, autorização do dono 02/11 "manda bala" e "corrija tudo e garanta que está tudo correto"
 > **Criada:** 2026-11-02 · **Atualizada:** 2026-11-02
 > **Depende de:** SPEC-364 `done`; SPEC-367 (achados do smoke final) pode correr em paralelo — arquivos disjuntos exceto `agents/combat.py` (rebase)
 > **Desbloqueia:** fechar como `done` as specs 327–333, 335, 336, 345–347, 352, 355 e 357 do épico de cartas
@@ -118,14 +118,14 @@ Uma fixture por item do §6; teste offline de cada uma (estado chega à situaç�
 
 ## 5. Critérios de aceite
 
-- [ ] Etapa 0 anotada em §9
-- [ ] R1–R3 com testes verdes, incluindo save/load
-- [ ] R4–R8 com testes verdes; lint e orçamento limpos; voz conferida pelo revisor
-- [ ] R9–R12: JSON gerado e números registrados nas specs 327/329/331/355
-- [ ] R13: fixtures testadas offline
-- [ ] 0 LLM por rodada; golden da 330 sem diff; `web/e2e/contracts` sem diff; sem flag nova; saves antigos carregam
-- [ ] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo
-- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso); `npm run typecheck`, `typecheck:e2e`, `lint`, `test` verdes; `ruff format --check .` limpo
+- [x] Etapa 0 anotada em §9
+- [x] R1–R3 com testes verdes, incluindo save/load
+- [x] R4–R8 com testes verdes; lint e orçamento limpos; voz conferida pelo revisor
+- [x] R9–R12: JSON gerado e números registrados nas specs 327/329/331/355
+- [x] R13: fixtures testadas offline
+- [x] 0 LLM por rodada; golden da 330 sem diff; `web/e2e/contracts` sem diff; sem flag nova; saves antigos carregam
+- [x] Guard de FallbackLLM mantido; nenhum `with_structured_output` novo
+- [ ] `uv run pytest` verde (suíte completa, coordenador, no pouso) — escopo verde no executor; [x] `npm run typecheck`, `typecheck:e2e`, `lint`, `test` verdes; [x] `ruff format --check .` e `ruff check .` limpos
 - [ ] Revisão independente `Sol` sem achado aberto
 - [ ] **Smoke real §6 (coordenador)** registrado em `docs/spec368/smoke-final.md`
 
@@ -167,3 +167,30 @@ Local `legacy` com o preset do staging (cartas `on`) salvo onde indicado. Regist
 - **D-368-2 (coordenador):** o item 9 do §6 pode rodar local com preset `off` em vez de um deploy `off` no staging.
 
 ## 9. Registro de implementação
+
+### Etapa 0 — Confirmação no source (02/11)
+
+- **Leitura de Preparadas fora de combate:** `api._cards_block` (`api.py:2540`, usa `prepared_cards`/`deck`), `cards.set_prepared` (`services/cards.py:412`) e o load do save (`persistence.load_game_state`, fim da função). Antes só o nó de combate rodava `deactivate_deck` (`agents/combat.py:2181`).
+- **Baralhos de facção:** `data/cards/inimigos/faccao_<id>.json` lidos por `enemy_decks._pools()` (stem `faccao_`); 10 existiam, faltavam as 4 do R4. O catálogo de "facções" do R5 = os 14 arquivos (a ligação ao bestiário é por `faction` → `_fold`).
+- **`_bump` (330 D-13b):** `services/card_effects.py:943`; segue mexendo na 1ª chave de `valor/dano_base/n`. Nenhuma Carta do catálogo tem 2 chaves (checado em 02/11, 6 Cartas com Ressoar), então não havia bug vivo; **fixado na autoria** com `validate_card` (erro "Ressoar exige uma só chave de valor") + teste do catálogo.
+- **Fardo por evento do Abismo (330 D-13c):** **decisão: não fazer.** O Abismo já planta Fardo pela 333 R9 (Sussurro do Abismo que apodrece em Estilhaço de Cinza, `card_status._rot_sussurro`) e a 330 só cita "efeito de inimigo/Abismo" no glossário (não é R). Um gatilho novo por evento mudaria o dano medido pela arena da 362 sem decisão do dono; fica como follow-up de balanço se o dono quiser.
+- **Harness do R11:** não há harness de latência para o `replace` (o `latency_journeys.py` mede turnos, não stream); a medição offline é `tests/test_spec368_replace.py` (ver SPEC-355 §10).
+
+### Entregue
+
+- **R1–R3** (commit `c9a4aa78`): `card_piles.sync_deck_mode` (idempotente) chamado no load do save, em `_cards_block` (sobre cópia, sem mutar o chamador) e em `set_prepared`. Testes: `tests/test_spec368_rollback.py` (off fora de combate, round-trip off→on→off com save/load, caminho `on` intacto).
+- **R4/R5**: 4 baralhos (`tribos_devoradores_sol`, `bandos_nomades`, `colmeia_hospedeiros`, `mercadores_escravos_pradaria`), 6 Cartas cada, voz de Valoria, temas tirados das criaturas do bestiário; `tests/test_spec368_content.py` (11 famílias + 14 facções, cada uma com ≥ 1 Carta exclusiva, sem exceção; lint + orçamento limpos).
+- **R6/R8a**: jogada `discard` (`PlayStepRequest.action_kind="discard"`), campo autoral `descartar_folego` (Dor Surda = 1) paga só Fôlego próprio (sem Pacto), tira a Carta do ciclo (exaurida); recusa explicada sem gasto; a mão ganha `descartar_folego`/`descarta_escolha` (aditivos). `descartar` com `escolha` aceita as Cartas marcadas na UI (`PlayStepRequest.descartar`, ≤ 4) e completa pela política antiga. UI: botão "Descartar (N Fôlego)" e chips "Descartar até N" na mira. Testes: `tests/test_spec368_discard.py`, `web/tests/deck-368-discard.test.mjs`.
+- **R7**: `essencia_de_cinza` entra no pool `raro` da tabela `default` de `data/loot_tables.json`; teste de que é obtível por `roll_loot`.
+- **R9–R12**: `docs/spec368/metricas_epico.py` + `metricas-0-19.json`; números em 327 §7, 329 §8, 331 §10 e 355 §10 (resumo abaixo). Teste: `tests/test_spec368_metricas.py`.
+- **R13**: `tests/fixtures/spec368_scenarios.py` (14 itens do §6) + `tests/test_spec368_scenarios.py`.
+
+### Números (1800 conflitos, sementes 0–19, cartas `on`)
+
+Cartas/rodada 1,92 (meta ≥ 2: **não**, −0,08) · rodadas com ≥ 3 escolhas 87,7 % (meta ≥ 60 %: **sim**) · Cartas com uso > 60 %: 14 (meta 0: **não**; uso geral 38,4 %) · p95 do conflito 12 (meta ≤ 10: **não**, Médico de Campo 19) · R10 dano recebido `on` +10,1 % (meta "cai": **não**).
+
+### Desvios / follow-ups
+
+- Metas 327/329/331 **não atingidas**, registradas sem mudar o critério (D-368-1). Follow-ups: bot que lê a faixa do Presságio; Médico de Campo (p95 19, 4,4 % de timeouts); Cartas de uso > 60 % são aviso desde a 358.
+- Smoke real §6 é do coordenador (`docs/spec368/smoke-final.md`); as fixtures do R13 levam a cada cena.
+- Revisão independente `Sol` pendente (não autoaprovada); suíte completa é do coordenador.

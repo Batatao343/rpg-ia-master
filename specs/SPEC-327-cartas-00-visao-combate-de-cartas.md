@@ -89,3 +89,14 @@ números podem mudar sem nova spec (dados, não código).
 - Uso de cartas defensivas/controle sobe após o Presságio (log de `card_played` por `kind`).
 - Nenhuma carta com uso > 60 % quando na mão; < 10 % de cartas "em branco" por onda.
 - Duração p95 do conflito ≤ 10 rodadas; 1 request e 1 narração por rodada (latência não piora).
+
+## 7. Evidência das métricas (SPEC-368 R9, 02/11)
+
+Medido offline (sem LLM) por `docs/spec368/metricas_epico.py` — 5 Posturas × níveis 1/3/5 × padrão+elite × 3 criaturas × sementes 0–19 = 1800 conflitos, cartas `on`, bot de baralho completo de `scripts/cards/sim.py` (JSON: `docs/spec368/metricas-0-19.json`). Meta não atingida = número + follow-up; o critério não mudou (D-368-1).
+
+| Critério (§6) | Medido | Veredito |
+|---|---|---|
+| ≥ 2 Cartas jogadas por rodada em média | média 1,92 (p50 2,0); Devoto 1,80 · Sangromante 1,79 · Corruptor 1,86 · Arcanista 1,91 · Médico 2,10 | **abaixo por 0,08** (bot não joga utilitárias/reações); follow-up |
+| ≥ 60 % das rodadas com ≥ 3 escolhas válidas | 87,7 % (81–94 % por Postura); 98,7 % contando o ataque básico | **atingido** |
+| Nenhuma Carta com uso > 60 % na mão | 14 Cartas acima (n ≥ 5), p. ex. `arc_des_mao_nua` 94 %, `arc_descarga` 90 %, `bas_san_corte_raso` 87 %; uso geral 38,4 % | **não atingido** (o uso agora é aviso, SPEC-358; a bandeira que vale é o delta) |
+| p95 do conflito ≤ 10 rodadas | total 12; Devoto 11 · Sangromante 8 · Corruptor 9 · Arcanista 9 · **Médico 19** (4,4 % de timeouts) | **não atingido** (Médico); follow-up |

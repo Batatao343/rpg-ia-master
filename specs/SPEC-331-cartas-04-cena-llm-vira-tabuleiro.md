@@ -85,3 +85,7 @@ Cartas de Cena criadas pela LLM (proibido — só catálogo). Mapa visual de zon
 - P1-3: a view de combate da API expõe `pressagios_cena` e `objetivo` (`tipo`, `alvo_nome`, `n`, `rodada`, `resultado`) com a flag `on`.
 - P2-1: objetivo falho = `victory=False` (sem espólio) e `defeat`. P2-2: dano/efeito de ambiente sem fonte (sem retaliação/Marca/crédito de queda). P2-3: `shadow` não grava `cena_estado` nem `pressagios_cena`. P2-6: o prompt lista alvos válidos. P2-7: `forecast` prevê o redisparo do Relógio.
 - **Follow-ups da re-revisão:** F-1 teste de objetivo falho com inimigo derrubado; F-2 registro temporário em LRU (sem limpeza total); F-3 validador só aceita os `kind` que `_apply_ambient` aplica. **F-4 (calibração):** a Carga do Relógio é do jogador e sobrevive ao fim do conflito, como a dos gatilhos de classe; confirmar na calibração da arena (R0 e p95 ≤ 10 rodadas).
+
+## 10. Evidência: duração do conflito (SPEC-368 R9, 02/11)
+
+`docs/spec368/metricas_epico.py`, 1800 conflitos (sementes 0–19, cartas `on`; arena sem as Cartas de cena): **p95 = 12 rodadas no total** (Devoto 11 · Sangromante 8 · Corruptor 9 · Arcanista 9 · **Médico de Campo 19**, 4,4 % de timeouts em 20 rodadas). O critério "p95 ≤ 10 rodadas" **não** foi atingido, só por causa do Médico (bot de cura longa); as demais Posturas ficam ≤ 11. Registrado sem mudar o critério (D-368-1); follow-up: relógio do Abismo/clock da 331 na arena e recalibrar o Médico.

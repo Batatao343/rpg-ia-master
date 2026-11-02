@@ -573,3 +573,7 @@ guarda `git diff main` só na branch `spec-355`; `EXCECOES_PISO` sai com a spec 
 **Testes novos:** `tests/test_spec355_{conteudo,reacao_buff,golpe_reacao,provocacao_rodada,promessa_chefe,
 router_fallback,compra_utilitaria,exemplos_fora,emboscada,arena,guardas}.py`. R2 ficou fora de
 `ct.resolve_turn`; R3/R4 gravam só em `out`/cena. Fora do escopo desta spec e não feito: `web` só ganhou `label`.
+
+## 10. Evidência do item 19 (SPEC-368 R11, 02/11)
+
+SPEC-319 P2-1 (`replace` do stream na rota de combate), medido offline em `tests/test_spec368_replace.py`: com o Baralho `on` a rodada **não streama tokens** (346) e a narração de desfecho usa `stream=False` (nada ao vivo para reescrever); no caminho que ainda streama (`_narrate`, Baralho `off`/shadow) o replay canned deu **0/30 narrações limpas reescritas** e **3/3 com deriva de espécie reescritas por desenho** (cai no texto determinístico). A taxa com LLM real é a do `would_replace` do shadow no staging (SPEC-319 D1: 1/25 = 4 %); sem LLM real não há número melhor que este.

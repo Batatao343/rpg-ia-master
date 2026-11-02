@@ -64,3 +64,14 @@ Em Valoria isso se chama **Presságio**: o que o inimigo vai fazer aparece como 
 ## 7. Riscos
 - Informação demais deixa o jogo "resolvido": gradação R3 mantém mistério para o desconhecido.
 - Perfis com gatilho reativo (ex.: "se o jogador fugir") passam a decidir antes: R4 cobre só impossibilidade, não "mudança de ideia" — aceitável e mais legível [R].
+
+## 8. Evidência: arena `on` (SPEC-368 R10, 02/11)
+
+`docs/spec368/metricas_epico.py` (mesmas 1800 lutas por braço; JSON em `docs/spec368/metricas-0-19.json`): `RPG_ENEMY_INTENT` `off` × `on`, baralhos de inimigo `off`. No braço `on` o bot lê o Presságio público e, havendo ataque previsto contra o herói, abre a rodada com uma Carta de defesa.
+
+| Braço | Dano médio recebido por conflito | Vitória |
+|---|---|---|
+| `off` | 11,96 | 64,6 % |
+| `on` (Presságio visível) | 13,17 (**+1,21 / +10,1 %**) | 57,6 % |
+
+Por Postura o dano `on` também sobe (Arcanista 12,4→14,2; Sangromante 11,7→13,2; Corruptor 12,9→14,0; Devoto 10,2→11,3; Médico 12,6→13,2). **O critério "dano recebido cai" NÃO foi atingido** na arena com este bot (a vitória fica dentro de 40–80 %). Leitura: o braço `on` troca ataque por defesa na abertura e o motor `on` executa as intenções congeladas; o ganho de informação não chega ao bot. Registrado sem ajuste de balanço (D-368-1); follow-up: bot que escolhe a defesa pelo tipo/valor previsto (faixa), não só pela presença de ataque.
