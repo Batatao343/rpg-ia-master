@@ -1,12 +1,12 @@
 {
   "commit_policy": "warn_on_commit_drift_when_source_tree_hash_matches",
-  "commit_sha": "50d4ce6bf40e7fb05cc7a47f50b7948a59f4984e",
+  "commit_sha": "c44bb23fa324a70ba9f3663ccadf138aa5a87b50",
   "edge_counts": {
-    "calls": 35502,
-    "contains": 1168,
-    "defines": 17281,
-    "imports": 2862,
-    "likely_test_for": 2068,
+    "calls": 35527,
+    "contains": 1169,
+    "defines": 17294,
+    "imports": 2865,
+    "likely_test_for": 2071,
     "route_to": 69
   },
   "excluded_prefixes": [
@@ -35,7 +35,7 @@
     "web/public/art"
   ],
   "generator_version": "1.0.0",
-  "graph_hash": "sha256:6673069810f34c30399cbceaa7b487a0c0a6a7564688156c587676c9423226cf",
+  "graph_hash": "sha256:555708142546e8b6e3a1acdd4933801cb396ad6bb8148bf2521511fc4f2a7338",
   "graph_schema_hash": "sha256:fdc2e76d1e902179cd00c4c7784ba28448fc120557814d46a09d4bf813f799a9",
   "included_files": [
     ".github/workflows/audit-local.yml",
@@ -1174,6 +1174,7 @@
     "tests/test_spec364_outcome_tense.py",
     "tests/test_spec364_portrait_debit.py",
     "tests/test_spec364_registry_voice.py",
+    "tests/test_spec366_followups.py",
     "tests/test_spec_index.py",
     "tests/test_spec_index_tool.py",
     "tests/test_spec_migration_safety.py",
@@ -1440,12 +1441,12 @@
     "artifact": 9,
     "class": 1048,
     "endpoint": 69,
-    "file": 1384,
-    "function": 5343,
+    "file": 1385,
+    "function": 5346,
     "method": 865,
-    "module": 1168,
-    "test": 10024
+    "module": 1169,
+    "test": 10034
   },
   "schema_version": 1,
-  "source_tree_hash": "sha256:266c806fcd5874af63c6e103dd70d8995a7273d4f93f223e1a45b9ea504052b6"
+  "source_tree_hash": "sha256:3b9206181b8965a183353a6717cea7aea32ef6076a191cb26c2147eef91e29df"
 }
