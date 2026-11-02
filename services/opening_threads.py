@@ -16,12 +16,13 @@ from functools import lru_cache
 from typing import Any, TypedDict
 
 from observability.telemetry import log_event as _log_event
+from services.prompt_guard import wrap_player_input
 
 MENU_MAX_DOORS = 6
 MENU_MAX_NPCS = 4
 LORE_TOKENS_MAX = 900
 MENU_TOKENS_MAX = 350
-ARCS_LEFT_DEFAULT = 2
+ARCS_LEFT_DEFAULT = 1
 _BACKSTORY_QUERY_WORDS = 12
 _MODES = ("off", "shadow", "on")
 
@@ -114,12 +115,15 @@ def _public_entity(ref: str) -> dict | None:
     return ent
 
 
-def _eligible_npc(ref: str, region_id: str) -> dict | None:
-    """NPC na borda (R2): público, com casa na região, não líder, não secreto."""
+def _eligible_npc(ref: str, region_id: str, projection: dict | None = None) -> dict | None:
+    """NPC na borda (R2): público, vivo, com casa na região, não líder, não secreto."""
+    from services import graph_resolver as gr
     from services import npc_world
 
     ent = _public_entity(ref)
     if not ent or ent.get("type") != "npc" or npc_world.is_leader(ref):
+        return None
+    if not gr.is_alive(ref, projection):
         return None
     home = npc_world.home_of({}, ref)
     if not home or region_of_location(home) != region_id:
@@ -193,53 +197,70 @@ def _fallback_doors(region_id: str) -> list[ThreadDoor]:
     return doors
 
 
-def _doors_350(api: Any, region_id: str) -> list[ThreadDoor]:
+def _get(obj: Any, key: str, default: Any = None) -> Any:
+    return obj.get(key, default) if isinstance(obj, dict) else getattr(obj, key, default)
+
+
+def _doors_350(
+    api: Any, region_id: str, backstory: str, postura: str, state: dict | None
+) -> list[ThreadDoor]:
+    """`PlotDoor` (SPEC-350) → `ThreadDoor`: uma porta por trama, nome = título da trama."""
     try:
-        try:
-            rows = api.plot_doors(region_id, state={}, postura=None)
-        except TypeError:
-            rows = api.plot_doors(region_id)
+        rows = list(api.plot_doors(region_id, state=state, postura=postura or None) or [])
+        owners = {
+            str(_get(d, "id")): t for t in api.threads_for_region(region_id) for d in t.portas
+        }
     except Exception as exc:  # noqa: BLE001 — a 350 nunca derruba o prólogo
         _log_event("prologue", "thread.api_350_failed", level="warning", error=type(exc).__name__)
         return []
+    want = _tokens(backstory)
+    best: dict[str, tuple[int, int, Any]] = {}
+    for idx, row in enumerate(rows):
+        thr = owners.get(str(_get(row, "id") or ""))
+        if thr is None or not _get(thr, "title"):
+            continue
+        hits = len(want & _tokens(str(_get(row, "hook_public") or ""))) if want else 0
+        cur = best.get(thr.id)
+        if cur is None or hits > cur[0]:
+            best[thr.id] = (hits, idx, row)
     out: list[ThreadDoor] = []
-    for row in rows or []:
-        if not isinstance(row, dict) or str(row.get("visibility", "public")) != "public":
-            continue
-        door_id = str(row.get("door_id") or row.get("thread_id") or "")
-        if not door_id or not row.get("name"):
-            continue
-        out.append(
-            ThreadDoor(
-                door_id=door_id,
-                kind="door",
-                name=_clip(row.get("name"), 80),
-                hook=_clip(row.get("hook"), 200),
-                entity_ids=[str(e) for e in (row.get("entity_ids") or [])][:4],
-                location_id=str(row.get("location_id") or ""),
-                playable=True,
-            )
+    for _hits, _idx, row in sorted(best.values(), key=lambda t: t[1]):
+        thr = owners[str(_get(row, "id"))]
+        door = ThreadDoor(
+            door_id=str(_get(row, "id")),
+            kind="door",
+            name=_clip(thr.title, 80),
+            hook=_clip(_get(row, "hook_public"), 200),
+            entity_ids=[str(r) for r in (_get(row, "rumor_ids") or ())][:4],
+            location_id=str(_get(row, "location_id") or ""),
+            playable=True,
         )
-        out[-1]["_anchors"] = [str(a) for a in (row.get("anchor_npc_ids") or [])]  # type: ignore[typeddict-unknown-key]
+        door["_anchors"] = [str(_get(row, "anchor_npc_id") or "")]  # type: ignore[typeddict-unknown-key]
+        out.append(door)
+    if rows and not out:
+        _log_event("prologue", "thread.downgraded", level="warning", reason="350_unmapped")
     return out
 
 
 def _rank(items: list, text_of, backstory: str) -> list:
-    """Ordem determinística: casa tokens da descrição (≥ 5 letras) primeiro, depois id."""
+    """Casa tokens da descrição (≥ 5 letras) primeiro; empate mantém a ordem de entrada."""
     want = _tokens(backstory)
 
     def key(item):
         hits = len(want & _tokens(text_of(item))) if want else 0
-        return (
-            -hits,
-            not item.get("playable", True),
-            str(item.get("door_id") or item.get("entity_id") or ""),
-        )
+        return (-hits, not item.get("playable", True))
 
     return sorted(items, key=key)
 
 
-def thread_menu(region_id: str, *, backstory: str = "", start_location_id: str = "") -> ThreadMenu:
+def thread_menu(
+    region_id: str,
+    *,
+    backstory: str = "",
+    start_location_id: str = "",
+    postura: str = "",
+    state: dict | None = None,
+) -> ThreadMenu:
     """Menu determinístico de portas e NPCs da borda (R1/R2); sem LLM, sem rede."""
     from services import graph_resolver as gr
     from services import npc_world
@@ -247,33 +268,31 @@ def thread_menu(region_id: str, *, backstory: str = "", start_location_id: str =
     source = "fallback"
     api = _population_api()
     doors: list[ThreadDoor] = []
-    anchors: list[str] = []
     if api is not None:
-        doors = _doors_350(api, region_id)
+        doors = _doors_350(api, region_id, backstory, postura, state)
         if doors:
             source = "350"
-            for door in doors:
-                anchors += door.pop("_anchors", [])  # type: ignore[misc]
     if not doors:
         doors = _fallback_doors(region_id)
     doors = _rank(doors, lambda d: f"{d['name']} {d['hook']}", backstory)[:MENU_MAX_DOORS]
+    anchors: list[str] = []
+    for door in doors:
+        anchors += [a for a in door.pop("_anchors", []) if a]  # type: ignore[misc]
 
+    projection = (state or {}).get("world_projection")
     npcs: list[dict] = []
-    seen: set[str] = set()
     pool = list(dict.fromkeys(anchors))
     if not pool:
         pool = sorted(eid for eid, ent in gr.load_entities().items() if ent.get("type") == "npc")
     for ref in pool:
-        if ref in seen:
-            continue
-        seen.add(ref)
-        row = _eligible_npc(ref, region_id)
+        row = _eligible_npc(ref, region_id, projection)
         if row:
             npcs.append(row)
     if not npcs and source == "350":  # âncoras da 350 sem casa válida → leitura do grafo
+        _log_event("prologue", "thread.downgraded", reason="350_anchors_unusable")
         for eid, ent in sorted(gr.load_entities().items()):
             if ent.get("type") == "npc" and not npc_world.is_leader(eid):
-                row = _eligible_npc(eid, region_id)
+                row = _eligible_npc(eid, region_id, projection)
                 if row:
                     npcs.append(row)
     npcs = _rank(npcs, lambda n: f"{n['name']} {n['role']}", backstory)[:MENU_MAX_NPCS]
@@ -348,7 +367,7 @@ def lore_block(menu: ThreadMenu, backstory: str) -> str:
 # --------------------------------------------------------------------------- #
 # Ficha do NPC da trama (R11)
 # --------------------------------------------------------------------------- #
-def plot_npc_sheet(npc: dict, game_id: str, start_location_id: str) -> dict:
+def plot_npc_sheet(npc: dict, game_id: str, start_location_id: str, hook: str = "") -> dict:
     """Ficha local de um NPC do menu: id do grafo, stub, `in_scene` só na casa (D2)."""
     from services import npc_layers
 
@@ -370,6 +389,8 @@ def plot_npc_sheet(npc: dict, game_id: str, start_location_id: str) -> dict:
         sheet, game_id, home_location_id=home, in_scene=bool(home and home == start_location_id)
     )
     sheet["known_by_player"] = True
+    if hook:  # como ele cruza o caminho do herói (P2-5): o narrador lê isto
+        sheet["opening_hook"] = _clip(hook, 300)
     return sheet
 
 
@@ -387,13 +408,13 @@ def _door_name(ref: str) -> str:
     if isinstance(ent, dict) and str(ent.get("visibility", "public")) == "public":
         return _clip(ent.get("name"), 80)
     api = _population_api()
-    brief = getattr(api, "public_thread_brief", None) if api else None
-    if callable(brief):
+    if api is not None:  # id de porta (ou de trama) da 350 → só o título da trama dona
         try:
-            info = brief(ref)
-            return _clip(info.get("name") if isinstance(info, dict) else info, 80)
-        except Exception:  # noqa: BLE001
-            return ""
+            for thr in api.catalog().threads:
+                if ref == thr.id or any(d.id == ref for d in thr.portas):
+                    return _clip(thr.title, 80)
+        except Exception as exc:  # noqa: BLE001
+            _log_event("prologue", "thread.api_350_failed", level="warning", error=type(exc).__name__)
     return ""
 
 
@@ -420,18 +441,19 @@ def planner_thread_block(state: dict) -> str:
     names = door_names(thread)
     npcs = (state or {}).get("npcs") or {}
     keys = [k for k in (thread.get("plot_npc_key"), thread.get("personal_npc_key")) if k]
-    who = [str((npcs.get(k) or {}).get("name") or k) for k in keys]
+    who = [wrap_player_input(str((npcs.get(k) or {}).get("name") or k)) for k in keys]
     lines = ["<FIO_DE_ABERTURA>"]
     if names:
         lines.append(f"Tramas do mundo em que o herói tocou: {', '.join(names)}.")
     if who:
         lines.append(f"Personagens do fio: {', '.join(who)}.")
     if thread.get("seeking"):
-        lines.append(f"O herói busca: {_clip(thread['seeking'], 200)}")
+        lines.append(f"O herói busca: {wrap_player_input(_clip(thread['seeking'], 200))}")
     lines.append(
         "Continue esta trama pelos beats, revelando-a aos poucos e ainda na borda; "
-        "sem profecia, sem escolhido. Copie o título de uma trama, palavra por palavra e "
-        "entre aspas, em um dos beats."
+        "sem profecia, sem escolhido. Cite as palavras do título de uma trama de forma "
+        "natural na frase de um beat (sem aspas); nunca use os termos porta, trama ou menu "
+        "na ficção."
     )
     lines.append("</FIO_DE_ABERTURA>")
     return "\n".join(lines)

@@ -926,6 +926,7 @@ export interface StartScenario {
   thread_refs?: string[];
   plot_npc_id?: string;
   plot_npc_hook?: string;
+  plot_npc_name?: string;
   personal_npc?: PersonalNPC | null;
 }
 

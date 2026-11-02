@@ -11,6 +11,7 @@ confirm (API continua stateless por save).
 
 from __future__ import annotations
 
+import re
 from typing import Literal
 
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -73,6 +74,7 @@ class StartScenario(BaseModel):
     )
     plot_npc_id: str = Field(default="", description="entity_id EXATO do <NPCS_DA_TRAMA>")
     plot_npc_hook: str = Field(default="", description="Como ele cruza o caminho do herói, 1 frase")
+    plot_npc_name: str = Field(default="", description="DERIVADO pelo servidor; a LLM não preenche")
     personal_npc: PersonalNPC | None = None
     seed_npcs: list[SeedNPC] = Field(
         default_factory=list,
@@ -110,6 +112,7 @@ class StartScenarioIn(StartScenario):
     thread_refs: list[str] = Field(default_factory=list, max_length=2)
     plot_npc_id: str = Field(default="", max_length=80)
     plot_npc_hook: str = Field(default="", max_length=300)
+    plot_npc_name: str = Field(default="", max_length=60)
     personal_npc: PersonalNPCIn | None = None
     seed_npcs: list[SeedNPCIn] = Field(default_factory=list, max_length=2)
 
@@ -270,7 +273,14 @@ def _normalize(
     data["seeking"] = _trim(data.get("seeking"), 200)
     data["plot_npc_hook"] = _trim(data.get("plot_npc_hook"), 300)
     if menu is None:  # flag off / cenário legado: campos novos ficam vazios
-        data.update(thread_refs=[], plot_npc_id="", plot_npc_hook="", seeking="", personal_npc=None)
+        data.update(
+            thread_refs=[],
+            plot_npc_id="",
+            plot_npc_hook="",
+            plot_npc_name="",
+            seeking="",
+            personal_npc=None,
+        )
         return StartScenario(**data)
     return _apply_menu(StartScenario(**data), menu)
 
@@ -308,6 +318,7 @@ def _apply_menu(scenario: StartScenario, menu: dict) -> StartScenario:
             "thread_refs": refs,
             "plot_npc_id": plot_id,
             "plot_npc_hook": scenario.plot_npc_hook if plot_id else "",
+            "plot_npc_name": npcs[plot_id]["name"] if plot_id else "",
             "personal_npc": personal,
         }
     )
@@ -345,10 +356,11 @@ def _thread_rules() -> str:
         "da crise.\n"
         "4. `seeking`: o que ele busca, 1 frase, em palavras do mundo, e o prólogo diz isso. "
         "Os beats revelam a trama aos poucos: o 1º beat é pessoal e concreto, a trama "
-        "aparece pelo 2º ou 3º; o clímax do 1º arco ainda é na borda. OBRIGATÓRIO: copie o "
-        "TÍTULO da porta escolhida (a parte antes do travessão), palavra por palavra, entre "
-        "aspas, no `opening_scene_brief` e no 2º beat. Evite as palavras escolhido, "
-        "profecia, destino e herdeiro.\n"
+        "aparece pelo 2º ou 3º; o clímax do 1º arco ainda é na borda. OBRIGATÓRIO: use as "
+        "palavras do TÍTULO da porta escolhida (a parte antes do travessão) de forma natural "
+        "numa frase do `opening_scene_brief` OU do 2º beat, sem aspas e sem copiar a caixa de "
+        "título. NUNCA escreva os termos de bastidor porta, trama ou menu na ficção. Evite as "
+        "palavras escolhido, profecia, destino e herdeiro.\n"
         "4b. NPCs: exatamente 1 `personal_npc` (NOVO, criado para a história, costurado em "
         "volta da <SEMENTE_NPC_PESSOAL>) e 1 NPC da trama: `plot_npc_id` = entity_id EXATO do "
         "<NPCS_DA_TRAMA> (nome e papel vêm do mundo) e `plot_npc_hook` = como ele cruza o "
@@ -402,7 +414,12 @@ def build_start_scenario_ctx(char_input: dict) -> tuple[StartScenario, bool, dic
     thread_ctx = ""
     if flag != "off":
         region_id, start_loc = ot.start_of_region(char_input.get("region", ""))
-        menu = ot.thread_menu(region_id, backstory=raw_backstory, start_location_id=start_loc)
+        menu = ot.thread_menu(
+            region_id,
+            backstory=raw_backstory,
+            start_location_id=start_loc,
+            postura=str(char_input.get("class_name") or ""),
+        )
         if flag == "shadow":
             _log_event(
                 "prologue", "thread.shadow", doors=len(menu["doors"]), npcs=len(menu["npcs"])
@@ -563,6 +580,19 @@ def personal_pool_document(npc: PersonalNPC, seed) -> dict:
     return doc
 
 
+_HOSTILE = re.compile(
+    r"ignor[ea]\b.{0,30}\b(regras|instru|anterior|prompt)|system prompt|prompt do sistema|"
+    r"\b(revele|registre|marque)\b.{0,40}\b(miss[ãa]o|segredo|quest|evento|json|sistema)|"
+    r"</?\w+>|\bquest_\w+|\bproposed_events\b|disregard|jailbreak",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def looks_hostile(*texts: str) -> bool:
+    """Heurística barata de injeção na descrição/nome: tal prólogo nunca promove NPC ao pool."""
+    return any(_HOSTILE.search(str(t or "")) for t in texts)
+
+
 def submit_personal_npc(
     scenario: StartScenario, seed, *, game_id: str, region_id: str, char_input: dict
 ) -> str | None:
@@ -581,6 +611,18 @@ def submit_personal_npc(
         scenario.seeking,
     ]
     origin = "player" if shared_pool.name_typed_by_player(npc.name, inputs) else "narrator"
+    if looks_hostile(*inputs):  # §6 caso 8: entrada hostil → só local, nunca promovida
+        origin = "player"
+        _log_event("prologue", "thread.downgraded", reason="hostile_input")
+    if seed is not None:  # P2-6: token reaproveitado → mesma semente já submetida → só local
+        try:
+            from services import npc_seed
+
+            if shared_pool.signature_taken(PoolNamespace.NPC, npc_seed.seed_signature(seed)):
+                seed = None
+                _log_event("prologue", "thread.downgraded", reason="seed_reused")
+        except Exception:  # noqa: BLE001 — sem checagem, o validador de duplicata ainda barra
+            pass
     try:
         entry = shared_pool.submit(
             PoolNamespace.NPC,
@@ -659,8 +701,12 @@ def scenario_to_state_seed(
         plot_key = personal_key = ""
         row = next((n for n in menu["npcs"] if n["entity_id"] == scenario.plot_npc_id), None)
         if row:
-            npcs[row["name"]] = ot.plot_npc_sheet(row, game_id, start_loc_id)
+            npcs[row["name"]] = ot.plot_npc_sheet(
+                row, game_id, start_loc_id, hook=scenario.plot_npc_hook
+            )
             plot_key = row["name"]
+            if scenario.plot_npc_hook:
+                brief += f" {scenario.plot_npc_hook}"
             home = row.get("home_location_id")
             if home and home != start_loc_id:
                 brief += (

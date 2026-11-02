@@ -208,3 +208,34 @@ def test_promoted_personal_npc_castable_in_other_game(store, monkeypatch):
     cast = sp.cast_entries(state, store=store)
     assert [e.entry_id for e in cast] == [entry_id]
     assert "bond" not in cast[0].document
+
+
+def test_hostile_backstory_never_promotes(store):
+    import json
+    from pathlib import Path
+
+    corpus = json.loads(Path("tests/fixtures/prompt_injection/corpus.json").read_text("utf-8"))
+    hostile = next(c["player_input"] for c in corpus["cases"] if c.get("player_input"))
+    scenario, ctx = _built()
+    entry_id = prologue.submit_personal_npc(
+        scenario,
+        ctx["seed"],
+        game_id="g8",
+        region_id="nova_arcadia",
+        char_input={**CHAR, "backstory": hostile},
+    )
+    entry = store.get(entry_id)
+    assert entry.status == PoolStatus.LOCAL_ONLY and entry.name_origin == "player"
+    assert not prologue.looks_hostile(CHAR["backstory"], "procuro meu pai, Toren")
+
+
+def test_reused_seed_goes_local_only(store):
+    scenario, ctx = _built()
+    first = prologue.submit_personal_npc(
+        scenario, ctx["seed"], game_id="g1", region_id="nova_arcadia", char_input=CHAR
+    )
+    second = prologue.submit_personal_npc(
+        scenario, ctx["seed"], game_id="g2", region_id="nova_arcadia", char_input=CHAR
+    )
+    assert store.get(first).status == PoolStatus.HELD
+    assert store.get(second).status == PoolStatus.LOCAL_ONLY

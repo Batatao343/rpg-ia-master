@@ -480,7 +480,7 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                     <strong>O que você busca:</strong> {scenario.seeking}
                   </p>
                 )}
-                {scenario.seed_npcs.length > 0 && (
+                {(scenario.seed_npcs.length > 0 || scenario.plot_npc_id) && (
                   <div className="prologue__npcs">
                     {scenario.seed_npcs.map((n) => (
                       <span key={n.name} className="chip" title={n.persona}>
@@ -490,8 +490,11 @@ export function CreateScreen({ busy, continueData, onCreate, onContinue, onSimul
                           : ""}
                       </span>
                     ))}
-                    {scenario.plot_npc_id && scenario.plot_npc_hook && (
-                      <span className="chip">do mundo — {scenario.plot_npc_hook}</span>
+                    {scenario.plot_npc_id && scenario.plot_npc_name && (
+                      <span className="chip" title={scenario.plot_npc_hook}>
+                        {scenario.plot_npc_name}
+                        {scenario.plot_npc_hook ? ` — ${scenario.plot_npc_hook}` : ""} (do mundo)
+                      </span>
                     )}
                   </div>
                 )}

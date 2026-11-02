@@ -5456,7 +5456,10 @@ def _create_game(req: CreateCharacterRequest, claim):
         ):
             region_id = opening_threads.region_of_location(start_loc_id)
             menu = opening_threads.thread_menu(
-                region_id, backstory=req.backstory or "", start_location_id=start_loc_id
+                region_id,
+                backstory=req.backstory or "",
+                start_location_id=start_loc_id,
+                postura=req.class_name,
             )
             scenario_in = revalidate_scenario(scenario_in, menu)
             pool_seed = verified_seed(
