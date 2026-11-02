@@ -1,6 +1,6 @@
 # SPEC-361 — Criatura gerada em jogo com ficha de Valoria: few-shot, trama, gate U1–U13, variante antes de nova e revisão Opus antes do pool
 
-> **Status:** `draft`
+> **Status:** `approved`
 > **Criada:** 2026-11-01 · **Atualizada:** 2026-11-01
 > **Depende de:** SPEC-349 (`approved`, em execução: `services/bestiary_lint.py`, `data/bestiario/fichas/*.yaml`, léxico e enums precisam estar na `main`, condição dura); SPEC-297 (`done`: pool compartilhado); SPEC-332 (baralho de inimigo, padrão e assinatura). SPEC-350 é **opcional**: sem `services/plot_threads.py` ou com `RPG_PLOT_THREADS=off`, o contexto de trama usa só o `campaign_plan` (R9).
 > **Desbloqueia:** SPEC-360 (criaturas vivas no mundo) quando ela quiser criar espécie nova; ondas 2–12 da 349 ganham um consumidor runtime das fichas; retrato de criatura (SPEC-352) passa a receber `appearance` de criatura gerada.
@@ -641,3 +641,9 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo. São ~40 requests
 ## 9. Registro de execução
 
 _(vazio — preencher por etapa: sha256 de `spec361_pedidos.yaml`, resultados do eval antes/depois, revisões, smoke)_
+
+### Aprovação do dono (02/11)
+
+Aprovada com todos os defaults da §8. Na SPEC-360 também ficou aprovado pôr o avaliador em
+`evals/protected-paths.txt` (D6). Ordem de execução: primeiro a integração do bestiário (349 e as ondas),
+depois 350 e 351, por último 360 e 361.
