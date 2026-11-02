@@ -209,9 +209,14 @@ Uma reação no v2 fica com `"referencia": null`, `"delta_base": "remocao"` e `"
 ```python
 PROTOCOLO_LOTE_V2: dict  # {**PROTOCOLO_LOTE, "versao": 2, "delta": "substituicao", "uso": "aviso"}
 
+
 def referencia(card: dict) -> dict | None: ...
-def build_arms_v2(card: dict, level: int, subclass: str) -> tuple[list[str], list[str], list[str] | None, dict | None]:
+def build_arms_v2(
+    card: dict, level: int, subclass: str
+) -> tuple[list[str], list[str], list[str] | None, dict | None]:
     """(base, com, ref_deck|None, ref_card|None)"""
+
+
 def simulate_batch(batch, levels, categories, per_cat, seeds, *, protocolo: str = "v1") -> dict: ...
 def simulate_protocolo_lote(batch: list[dict], *, protocolo: str = "v1") -> dict: ...
 ```
@@ -294,9 +299,9 @@ Em `tests/test_card_sim_v2.py`:
 - [x] `docs/spec358/RELATORIO-arena-v2.md` com tabelas v1 × v2, divergências, casos de controle, R15 e limitações; nenhum relatório antigo reescrito.
 - [x] `docs/guias/CARTAS.md` documenta o v2 (R16).
 - [x] Revisão Sol registrada (`handoffs/SPEC-358-sol-review.md`) sem P1 aberto.
-- [ ] `uv run pytest` verde (suíte completa offline, pelo coordenador no pouso).
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
-- [ ] Saves antigos: não se aplica (nada de estado de jogo muda).
+- [x] `uv run pytest` verde (suíte completa offline, pelo coordenador no pouso).
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo).
+- [x] Saves antigos: não se aplica (nada de estado de jogo muda).
 
 ## 6. Smoke test real
 
