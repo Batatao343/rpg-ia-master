@@ -261,6 +261,8 @@ def public_intent(
     enemy = actors.get(intent["actor_id"]) or {"id": intent["actor_id"]}
     alvo = actors.get(intent.get("alvo_id") or "") or {}
     tipo = intent["tipo"]
+    # SPEC-367 R7: o herói é "você" na frase pública (o nome próprio só na crônica).
+    alvo_nome = "você" if alvo.get("is_player") else str(alvo.get("name") or "")
     view: dict[str, Any] = {
         "actor_id": intent["actor_id"],
         "tipo": tipo,
@@ -268,7 +270,7 @@ def public_intent(
         "valor_estimado": None,
         "faixa": None,
         "carta_nome": None,
-        "sinal": sinal_for(tipo, enemy, str(alvo.get("name") or ""), key=tipo),
+        "sinal": sinal_for(tipo, enemy, alvo_nome, key=tipo),
     }
     if knowledge_level_ == "desconhecida":
         return view

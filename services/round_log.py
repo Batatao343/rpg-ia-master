@@ -221,7 +221,7 @@ def _voce(line: str, hero_name: str) -> str:
         m = re.match(rf"^{re.escape(hero)}: condição (.+?) renovada\.?$", text)
         if m:
             return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} foi renovada."
-        m = re.match(rf"^{re.escape(hero)}: (.+?) terminou\.$", text)
+        m = re.match(rf"^{re.escape(hero)}: (.+?) terminou\.?$", text)
         if m:
             return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} terminou."
         text = "Você" + text[len(hero) :]
@@ -231,6 +231,9 @@ def _voce(line: str, hero_name: str) -> str:
     m = re.match(r"^(.+?): condição (.+?) renovada\.?$", text)
     if m:
         return f"A condição {m.group(2)[:1].upper()}{m.group(2)[1:]} de {m.group(1)} foi renovada."
+    m = re.match(r"^(.+?): (.+?) terminou\.?$", text)  # SPEC-367 R13
+    if m:
+        return f"A condição {m.group(2)[:1].upper()}{m.group(2)[1:]} de {m.group(1)} terminou."
     return text
 
 

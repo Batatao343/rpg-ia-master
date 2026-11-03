@@ -1,5 +1,5 @@
 {
-  "_meta": "SPEC-329: frases de Presságio por tipo x família. {nome} = nome do inimigo; {alvo} = nome do alvo. Rascunho do coordenador na voz de Valoria; revisão do dono pendente.",
+  "_meta": "SPEC-329: frases de Presságio por tipo x família. {nome} = nome do inimigo; {alvo} = nome do alvo, ou \"você\" quando o alvo é o herói (SPEC-367). Rascunho do coordenador na voz de Valoria; revisão do dono pendente.",
   "ataque": {
     "default": [
       "O ar se parte antes do golpe: {nome} arma o braço contra {alvo}.",
@@ -14,7 +14,7 @@
       "{nome} arrasta o corpo sem pressa, e o frio da cova aponta para {alvo}."
     ],
     "legiao": [
-      "O ferro range: {nome} baixa a lâmina na direção de {alvo}.",
+      "O ferro range: {nome} baixa a lâmina rumo a {alvo}.",
       "Disciplina de quartel: {nome} ergue o escudo e escolhe {alvo}."
     ],
     "culto": [
@@ -22,7 +22,7 @@
       "A chama azul tremula no olhar de {nome}; {alvo} é o sacrifício."
     ],
     "ermo": [
-      "Poeira sobe dos pés de {nome}; o golpe já tem o nome de {alvo}.",
+      "Poeira sobe dos pés de {nome}; o golpe já escolheu {alvo}.",
       "{nome} contorna em silêncio, o vento do ermo lhe empurra para {alvo}."
     ],
     "abissal": [
@@ -106,27 +106,27 @@
   },
   "enfraquecer": {
     "default": [
-      "{nome} mira em algo que não é a carne de {alvo}.",
+      "{nome} mira em {alvo}, mas não na carne.",
       "O olhar de {nome} em {alvo} é de quem quer quebrar, não matar."
     ],
     "fera": [
-      "{nome} baixa o focinho e cerca {alvo}, tentando derrubá-lo.",
+      "{nome} baixa o focinho e cerca {alvo}, buscando a queda.",
       "Garras se abrem para prender, não para rasgar: {nome} quer {alvo} no chão."
     ],
     "morto_inquieto": [
-      "O frio da cova vaza das mãos de {nome} na direção de {alvo}.",
-      "{nome} estende dedos secos: um toque que rouba o calor de {alvo}."
+      "O frio da cova vaza das mãos de {nome} e rasteja até {alvo}.",
+      "{nome} estende dedos secos para {alvo}: um toque que rouba o calor."
     ],
     "legiao": [
       "{nome} ergue o escudo para empurrar: prender {alvo} na linha.",
-      "O ferro de {nome} busca o joelho de {alvo}."
+      "{nome} baixa o ferro rente ao chão: quer {alvo} de joelhos."
     ],
     "culto": [
       "{nome} sibila uma maldição, o dedo apontado para {alvo}.",
       "Fumaça azul sobe das mãos de {nome} e busca {alvo}."
     ],
     "ermo": [
-      "{nome} recolhe a terra em punhado, mirando os olhos de {alvo}.",
+      "{nome} recolhe a terra em punhado e espera {alvo} erguer o olhar.",
       "Um laço improvisado gira na mão de {nome}; {alvo} é o alvo."
     ],
     "abissal": [

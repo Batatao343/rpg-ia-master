@@ -222,3 +222,21 @@ def test_no_internal_ids_or_hero_name_in_history_r29(monkeypatch):
     assert "quase_livre" not in blob and "alcancado" not in blob
     for ln in lines:
         assert not ln.strip().startswith(hero) and f"{hero}:" not in ln, ln
+
+
+def test_spec367_voice_omen_and_condition_end():
+    """SPEC-367 R25: presságio sem o nome do herói e condição de inimigo sem formato cru."""
+    from services import enemy_intent as ei
+
+    actors = {
+        "g1": {"id": "g1", "name": "Goblin", "family": "fera"},
+        "h": {"id": "h", "name": "Smoke5A", "is_player": True},
+    }
+    row = ei.public_intent(
+        {"actor_id": "g1", "tipo": "ataque", "alvo_id": "h", "carta_id": None},
+        "desconhecida",
+        actors_by_id=actors,
+    )
+    assert "Smoke5A" not in row["sinal"] and not find_internal_ids(row["sinal"])
+    line = round_log._voce("Goblin-Mineiro: cego terminou.", "Mirela5")
+    assert not re.match(r"^[^:]+: \w+ terminou", line) and ": cego terminou" not in line
