@@ -1,6 +1,6 @@
 """SPEC-223 R6 — corpus de prompt injection com um LLM que OBEDECE a injeção.
 
-`ScriptedLLM` devolve exatamente o structured output malicioso pedido pelo
+`ObedientLLM` (sobre o `ScriptedLLM` compartilhado) devolve exatamente o structured output malicioso pedido pelo
 jogador. O motor (validadores com prova, clamps, gates Python) tem de rejeitar ou
 clampar 100% dos casos: XP/ouro/nível/inventário/quests/segredos/mortes/relação
 inalterados ou dentro do clamp. Determinístico e offline.
@@ -18,6 +18,7 @@ from langchain_core.messages import HumanMessage
 
 from services.event_processor import process_pending_events
 from services.prompt_guard import PLAYER_INPUT_RULE, PLAYER_INPUT_TAG, wrap_player_input
+from tests.fakes.scripted_llm import ScriptedLLM
 
 CORPUS = json.loads(
     (Path(__file__).parent / "fixtures" / "prompt_injection" / "corpus.json").read_text(
@@ -26,16 +27,13 @@ CORPUS = json.loads(
 )["cases"]
 
 
-class ScriptedLLM:
-    """Obedece a injeção: valida o payload malicioso no schema pedido e registra o prompt."""
+class ObedientLLM(ScriptedLLM):
+    """Obedece a injeção: valida o payload malicioso no schema pedido e expõe o prompt (`prompts`)."""
 
     def __init__(self, payload: dict):
         self.payload = payload
-        self.prompts: list = []
 
-    def with_structured_output(self, schema):
-        def invoke(messages):
-            self.prompts.append(list(messages))
+        def respond(_messages, schema):
             data = dict(self.payload)
             if "dialogue" in schema.model_fields:
                 data = {
@@ -46,7 +44,17 @@ class ScriptedLLM:
                 }
             return schema.model_validate(data)
 
-        return SimpleNamespace(invoke=invoke)
+        schemas = (
+            "StoryUpdate",
+            "StoryUpdateWithRumors",
+            "StoryUpdateWithRumorClaims",
+            "NPCResponse",
+        )
+        super().__init__({name: respond for name in schemas}, repeat_last=True)
+
+    @property
+    def prompts(self) -> list:
+        return [list(messages) for _name, messages in self.calls]
 
 
 def test_corpus_has_at_least_twenty_cases():
@@ -125,7 +133,7 @@ def story(monkeypatch):
     monkeypatch.setattr(storyteller, "check_encounter", lambda *a, **k: None)
 
     def run(case):
-        llm = ScriptedLLM(case["update"])
+        llm = ObedientLLM(case["update"])
         monkeypatch.setattr(storyteller, "get_llm", lambda **k: llm)
         state = _story_state(case["player_input"])
         out = storyteller.storyteller_node(deepcopy(state))
@@ -207,7 +215,7 @@ def npc_run(monkeypatch):
     monkeypatch.setattr(npc_mod, "add_npc_memory", lambda *a, **k: True)
 
     def run(state, payload):
-        llm = ScriptedLLM(payload)
+        llm = ObedientLLM(payload)
         monkeypatch.setattr(npc_mod, "get_llm", lambda **k: llm)
         return npc_mod.npc_actor_node(state), llm
 
