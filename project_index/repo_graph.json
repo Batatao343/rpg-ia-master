@@ -1,5 +1,5 @@
 {
-  "commit_sha": "fb5b000380a1a9d35de8b9ddfd8a7d52a457ec6c",
+  "commit_sha": "848a63cbb88b4f4de97663632c87f3837dd0eaa4",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -69834,7 +69834,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 14
+        "line": 17
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "module:infrastructure.db_roles",
@@ -69845,7 +69845,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 15
+        "line": 18
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "module:infrastructure.runtime",
@@ -69856,7 +69856,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 16
+        "line": 19
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "module:services.creature_portraits",
@@ -69867,7 +69867,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 38
+        "line": 41
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "symbol:scripts.retire_creature_portrait._dry_report",
@@ -69878,7 +69878,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 55
+        "line": 58
+      },
+      "source": "module:scripts.retire_creature_portrait",
+      "target": "symbol:scripts.retire_creature_portrait._ops_runtime",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/retire_creature_portrait.py",
+        "line": 75
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "symbol:scripts.retire_creature_portrait.main",
@@ -69889,7 +69900,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 19
+        "line": 22
       },
       "source": "module:scripts.retire_creature_portrait",
       "target": "symbol:scripts.retire_creature_portrait.retire",
@@ -231622,6 +231633,17 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 147
+      },
+      "source": "module:tests.test_spec367_fallback_portrait",
+      "target": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
         "line": 83
       },
       "source": "module:tests.test_spec367_fallback_portrait",
@@ -231633,7 +231655,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec367_fallback_portrait.py",
-        "line": 147
+        "line": 184
       },
       "source": "module:tests.test_spec367_fallback_portrait",
       "target": "symbol:tests.test_spec367_fallback_portrait.test_retire_missing_env_file_is_error",
@@ -309821,7 +309843,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 40
+        "line": 43
       },
       "source": "symbol:scripts.retire_creature_portrait._dry_report",
       "target": "symbol:infrastructure.db_roles.admin_connection",
@@ -309832,7 +309854,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 74
+        "line": 108
       },
       "source": "symbol:scripts.retire_creature_portrait.main",
       "target": "symbol:infrastructure.runtime.build_runtime",
@@ -309843,7 +309865,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 77
+        "line": 111
       },
       "source": "symbol:scripts.retire_creature_portrait.main",
       "target": "symbol:scripts.retire_creature_portrait._dry_report",
@@ -309854,7 +309876,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 80
+        "line": 106
+      },
+      "source": "symbol:scripts.retire_creature_portrait.main",
+      "target": "symbol:scripts.retire_creature_portrait._ops_runtime",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "scripts/retire_creature_portrait.py",
+        "line": 116
       },
       "source": "symbol:scripts.retire_creature_portrait.main",
       "target": "symbol:scripts.retire_creature_portrait.retire",
@@ -309865,7 +309898,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "scripts/retire_creature_portrait.py",
-        "line": 20
+        "line": 23
       },
       "source": "symbol:scripts.retire_creature_portrait.retire",
       "target": "symbol:services.creature_portraits.PostgresPortraitRegistry",
@@ -664395,6 +664428,72 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 178
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "target": "symbol:scripts.retire_creature_portrait.main",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "target": "symbol:tests.test_spec367_fallback_portrait._Reg",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 155
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "target": "symbol:tests.test_spec367_fallback_portrait._Shared",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 159
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "target": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 163
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "target": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it.fake_ops",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_exact",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
+        "line": 160
+      },
+      "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool",
+      "target": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool.close",
+      "type": "defines"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec367_fallback_portrait.py",
         "line": 112
       },
       "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_env_file_and_dry_run",
@@ -664450,7 +664549,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec367_fallback_portrait.py",
-        "line": 155
+        "line": 192
       },
       "source": "symbol:tests.test_spec367_fallback_portrait.test_retire_missing_env_file_is_error",
       "target": "symbol:scripts.retire_creature_portrait.main",
@@ -724916,21 +725015,28 @@
     {
       "id": "symbol:scripts.retire_creature_portrait._dry_report",
       "kind": "function",
-      "line": 38,
+      "line": 41,
       "path": "scripts/retire_creature_portrait.py",
       "qualified_name": "scripts.retire_creature_portrait._dry_report"
     },
     {
+      "id": "symbol:scripts.retire_creature_portrait._ops_runtime",
+      "kind": "function",
+      "line": 58,
+      "path": "scripts/retire_creature_portrait.py",
+      "qualified_name": "scripts.retire_creature_portrait._ops_runtime"
+    },
+    {
       "id": "symbol:scripts.retire_creature_portrait.main",
       "kind": "function",
-      "line": 55,
+      "line": 75,
       "path": "scripts/retire_creature_portrait.py",
       "qualified_name": "scripts.retire_creature_portrait.main"
     },
     {
       "id": "symbol:scripts.retire_creature_portrait.retire",
       "kind": "function",
-      "line": 19,
+      "line": 22,
       "path": "scripts/retire_creature_portrait.py",
       "qualified_name": "scripts.retire_creature_portrait.retire"
     },
@@ -824650,6 +824756,34 @@
       "qualified_name": "tests.test_spec367_fallback_portrait.test_quote_refuses_fallback_409"
     },
     {
+      "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it",
+      "kind": "test",
+      "line": 147,
+      "path": "tests/test_spec367_fallback_portrait.py",
+      "qualified_name": "tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it"
+    },
+    {
+      "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool",
+      "kind": "class",
+      "line": 159,
+      "path": "tests/test_spec367_fallback_portrait.py",
+      "qualified_name": "tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool"
+    },
+    {
+      "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool.close",
+      "kind": "test",
+      "line": 160,
+      "path": "tests/test_spec367_fallback_portrait.py",
+      "qualified_name": "tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it._Pool.close"
+    },
+    {
+      "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it.fake_ops",
+      "kind": "test",
+      "line": 163,
+      "path": "tests/test_spec367_fallback_portrait.py",
+      "qualified_name": "tests.test_spec367_fallback_portrait.test_retire_dsn_env_uses_ops_pool_and_closes_it.fake_ops"
+    },
+    {
       "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_env_file_and_dry_run",
       "kind": "test",
       "line": 83,
@@ -824673,7 +824807,7 @@
     {
       "id": "symbol:tests.test_spec367_fallback_portrait.test_retire_missing_env_file_is_error",
       "kind": "test",
-      "line": 147,
+      "line": 184,
       "path": "tests/test_spec367_fallback_portrait.py",
       "qualified_name": "tests.test_spec367_fallback_portrait.test_retire_missing_env_file_is_error"
     },
@@ -830517,5 +830651,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:19b2b5dfae259f228ef89a1e529344f8d5a25258a4451491f68e59f6d2465510"
+  "source_tree_hash": "sha256:a4f28b4ebab136abbf77c334701fcbdf1d52b8fe98bad2fec165f86a8b881304"
 }
