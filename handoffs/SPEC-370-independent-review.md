@@ -68,5 +68,75 @@ scripts/fauna/eval.py --regiao pantano_melancolia → todos os gates ok (M1 0,83
 scripts/fauna/eval.py --regiao brekmar → todos os gates ok (M1 0,7921 / 0,7938; M8 0,2773; M5 −0,1452)
 scripts/fauna/eval.py --regiao skallgard → todos os gates ok (M1 0,7375 / 0,7726; M8 0,3017; M5 −0,1549)
 pytest test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps → 33 passed
+pytest -m "not slow" test_spec370_eval test_spec360_eval → passed (exit 0; os slow foram pulados)
 pytest -m "not slow" test_spec370_eval test_spec360_eval → passed (os slow foram pulados)
+```
+
+## Lote 2 — Pradaria das Ruínas, Montanhas Afiadas, Aethelgard
+
+> **Veredito:** `APPROVED` (depois das correções de conteúdo abaixo, feitas pelo revisor)
+> **Revisor:** Opus 5.5 (`spec-reviewer`, independente; `revisor_fauna: opus-370-revisor-lote2`; autor `opus-370-lote2`)
+> **Data:** 2026-11-03 · **Commits revisados:** `0488d235`, `b3fbdbf5`, `0350b9df` · **Correção:** `85b9615a`
+
+### Escopo
+
+`data/bestiario/fauna/{pradaria_ruinas,montanhas_afiadas,aethelgard}.yaml`: 33 + 33 + 30 = 96 entradas. Mesmo método do lote 1: checklist da 360 §3.8 e da 370 §3.4, lido contra a ficha e, no legado, contra `tactical_profile.priorities[].action_hint`, `cartas` e `resistances`. A leitura entre regiões usou o Jaccard por tipo de sinal nas 7 regiões com fauna; a adjacência vem de `world_pressures.region_adjacency()`.
+
+### Achados
+
+| ID | Sev. | Arquivo (entrada) | Problema | Correção |
+|---|---|---|---|---|
+| G-01 | P1 | `montanhas_afiadas.yaml` (`enemy_basilisco_caverna`), `aethelgard.yaml` (`mon_camarao_faxineiro`) | Item 1, igual ao F-01: a `marca` mostrava o corpo da criatura (a "pedra cônica a mais" e a nuvem do enxame) | Vestígios: estalagmites raspadas na base numa trilha lisa; feridas de um morto raspadas limpas, com cascas de muda listradas em volta |
+| G-02 | P1 | `aethelgard.yaml` (`mon_pernalta_do_conselho`) × `pradaria_ruinas.yaml` (`mon_pernalta_das_colunas`) | Item 12: regiões vizinhas, duas criaturas de pernas de pau e o mesmo rastro, "dois furos fundos e finos a passos de gigante" | Aethelgard: redemoinhos de lodo espaçados demais, que contornam o mesmo quarteirão afundado |
+| G-03 | P2 | `pradaria_ruinas.yaml` (`enemy_assassino_cinzeu`) × `nova_arcadia.yaml` (`enemy_boss_vibora`) | Item 12: as duas assassinas de regiões vizinhas usavam o mesmo molde de `aproximacao` ("de onde não havia ninguém, uma figura…") | O Cinzéu cego vira o rosto liso para o som da sua respiração (percepção da ficha) |
+| G-04 | P2 | `pradaria_ruinas.yaml` (`mon_egua_de_costas`, `mon_cauda_emendada`), `montanhas_afiadas.yaml` (`mon_cabra_labirinto`) | Ponto 5 do autor: perífrases forçadas pelo E10 soavam artificiais ("animal de montaria", "animal de sela", "apêndice de osso", "bicho barbado") | "montaria", "rabo de osso" e "bode cinzento". Mantive "bicho magro de barbicha" na Cabra-Navalha, porque é natural e diferencia as duas |
+| G-05 | P2 | `pradaria_ruinas.yaml` (`mon_cavaleiro_sem_rosto`) | R5: "lutar fora da linha que ele percorre" prometia efeito de terreno; o baralho tem `carregar_ruina` e `toque_gelido` | "cuidado com a carga dele, que atravessa cobertura e leva junto, e com o toque gelado" |
+
+Conferido e **mantido** (pontos do autor):
+
+1. **`suprime` mais fracos.**
+   - Capturador/Carregador→Leitor: a rede de Groth compra e caça cativos (o Carregador é um Cinzéu comprado), e o Leitor lê cativos; é disputa entre redes de cativeiro.
+   - Cavaleiro sem Rosto→Bandido: o patrulheiro morto da fronteira contra o bando de estrada. O rumor e o resto (bandido trespassado) sustentam.
+   - Orc→Geodo: o bando de Gruumsha manda nas Saídas Baixas, onde vivem os refugiados, e o Geodo já `foge_de` Orc.
+   - Os três são sociais ou de ordem, não tróficos (item 10).
+2. **Presas no limite.** Aceitei todas:
+   - Faísca→Doador: o fragmento procura recipiente e o Doador "ainda está tentando terminar".
+   - Nadador→Biguá: puxa de baixo, na água rasa.
+   - Véu→Mergulhador: vai até "quem tem mais coisa boa".
+   - Novelo→Aspirante: as redes perdidas no raso, onde o Aspirante vive.
+   - Cação→Ouriço: ele engole as pedras do fundo raso onde o ouriço forma tapetes.
+   - Pernalta→Lagarto/Besouro: o resto do lagarto pregado de cima prova a relação.
+   - Fuçador→Lagarto: javali é onívoro.
+   - Lenço/Chicote→Cabra-Navalha: o Lenço derruba no precipício, e o resto mostra a cabra caída com marca de sucção.
+   - Wyvern→cabras: o resto da cabra cortada na altura do peito.
+3. **Estações extras.** Vestido de Gafanhotos e Gafanhoto de Runa no verão, Lobo da Pradaria e Queimado de Frio no inverno: coerentes com a prosa. R4: `enemy_wyvern_jovem` tem verão 1,5 (`calendar.json:46`).
+4. **Territórios e horários alargados na Pradaria.** A prosa aguenta:
+   - Nômade, Bandido e Capturador nos arredores de Solvhen: estrada, acampamento e mercado de cativos.
+   - Necromante em Vaelorn: criptas élficas; o Desfiado o caça ali.
+   - Lobo em Solvhen: o mais fraco, porque Solvhen é uma cidade viva (`lore_nova/locations.txt:393`). Os sinais falam de mato alto e de pastores, então o nó se lê como os arredores. Fica, para não mexer no M4.
+5. **Perífrases**: ver G-04. "Lontra enorme" para a Ariranha é natural e ficou.
+
+`imediato` no hub: Montanhas (Chicote e Mão da Borda) e Aethelgard (Nadador e Novelo) estão no teto de 2 do E18, todos justificados por disfarce ou tocaia. A Pradaria tem 1 (Cobra de Légua).
+
+### Correções aplicadas
+
+`85b9615a`: G-01 a G-05; as 96 entradas com `revisao: aprovada` e `revisor_fauna: opus-370-revisor-lote2`; `fauna.json` (221 criaturas) e `rumor_seeds.json` regenerados.
+
+### Pendências
+
+- Montanhas M5 −24,9 % (alerta informativo em −30 %, R17): acompanhar no M5 global da Etapa 7.
+- O M1 de NA caiu de 0,7508 para 0,7366 com a Pradaria vizinha. Continua acima de 0,70 (R22), mas a folga encolhe a cada vizinho com fauna; vale para o coordenador acompanhar nos lotes 3 e 4.
+- Fora da fauna: as fichas da Pradaria e de Aethelgard têm duas criaturas de pernas de pau chamadas "Pernalta". O sinal já foi diferenciado; o nome repetido é assunto da esteira de bestiário (U4).
+
+### Comandos rodados
+
+```text
+scripts/fauna/lint.py --regiao {pradaria_ruinas,montanhas_afiadas,aethelgard,nova_arcadia} → 0 erro cada
+scripts/fauna/build.py → fauna.json: 221 criaturas · build_rumor_seeds.py → ok · validate_content.py → 0 ERRO(S)
+eval --regiao pradaria_ruinas → gates ok (M1 0,7504 / legado 0,7622; M8 0,3181; M5 −0,177)
+eval --regiao montanhas_afiadas → gates ok (M1 0,7993 / 0,8158; M8 0,304; M5 −0,249)
+eval --regiao aethelgard → gates ok (M1 0,805 / 0,8099; M8 0,2781; M5 −0,163)
+eval --regiao nova_arcadia → gates ok (M1 0,7366 / 0,7433; M8 0,3127)
+pytest test_spec360_build test_spec312_seeds test_spec370_suprime test_spec370_caps → 33 passed
+pytest -m "not slow" test_spec370_eval test_spec360_eval → passed (exit 0; os slow foram pulados)
 ```
