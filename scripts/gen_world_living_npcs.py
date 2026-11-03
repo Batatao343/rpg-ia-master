@@ -324,7 +324,7 @@ def main() -> int:
         for name, role, faction, hook in entries:
             npc_id = f"npc_mv_{_slug(name)}"
             _write_codex(npc_id, name, region, role, faction, hook)
-            entities[npc_id] = {
+            extra[npc_id] = {
                 "id": npc_id,
                 "type": "npc",
                 "name": name,
@@ -338,10 +338,10 @@ def main() -> int:
                     "hook": hook,  # SPEC-300 R20: fonte da missão pessoal do companheiro
                 },
             }
-            # Versões anteriores do gerador colocavam o lote no overlay extra;
-            # o Codex e os contratos legados exigem entidades autorais no grafo
-            # canônico. A migração idempotente remove somente esses mesmos IDs.
-            extra.pop(npc_id, None)
+            # SPEC-374 R16: entidade autoral fora de lore_nova/ vive em entities_extra.json
+            # (o migrate regenera entities.json do zero e apagaria estes ids). Único dono:
+            # nunca no canônico; versões antigas do gerador os gravavam lá, então sai de lá.
+            entities.pop(npc_id, None)
             edge_id = f"e_{npc_id}_em_{region}"
             edge_by_id[edge_id] = {
                 "id": edge_id,

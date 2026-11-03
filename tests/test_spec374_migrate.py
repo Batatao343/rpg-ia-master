@@ -122,3 +122,24 @@ def test_validator_segredo_de_curada_exige_curated(tmp_path):
     (grafo / "entities.json").write_text(json.dumps({"npc_x": ent}), encoding="utf-8")
     assert cv.validate_curated_secrets(str(codex), str(grafo)) == []
     assert os.path.exists(doc)
+
+
+def test_roundtrip_gerador_migrate_um_dono(copia, monkeypatch, capsys):
+    """P1-1: gerador (npc_mv_*) -> migrate na cópia: os 36 ids ficam na união e em UM só arquivo."""
+    mod, raiz = copia
+    monkeypatch.setenv("RPG_ROOT", str(raiz))
+    spec = importlib.util.spec_from_file_location(
+        "gen_world_living_npcs_374", ROOT / "scripts" / "gen_world_living_npcs.py"
+    )
+    gen = importlib.util.module_from_spec(spec)
+    sys.modules["gen_world_living_npcs_374"] = gen
+    spec.loader.exec_module(gen)
+    grafo = raiz / "data" / "graph"
+    assert gen.main() == 0
+    mod.main()
+    base, extra = _ids(grafo / "entities.json"), _ids(grafo / "entities_extra.json")
+    mv = {i for i in base | extra if i.startswith("npc_mv_")}
+    assert len(mv) == 36
+    assert not any(i.startswith("npc_mv_") for i in base)
+    assert not base & extra
+    assert (raiz / "data" / "codex" / "npcs" / "mundo_vivo" / "npc_mv_teo_chamine.md").exists()

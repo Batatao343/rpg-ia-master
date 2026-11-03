@@ -1713,7 +1713,7 @@ def validate_faction_membership(path: str | None = None) -> list[Finding]:
     factions = _read_json_file(os.path.join("data", "factions.json"), {}) or {}
     world_map = _read_json_file(os.path.join("data", "world_map.json"), {}) or {}
     locations = {loc.get("id") for loc in world_map.get("locations", []) if isinstance(loc, dict)}
-    entities = _read_json_file(os.path.join(GRAPH_DIR, "entities.json"), {}) or {}
+    entities = _merged_entities(GRAPH_DIR)
     npc_ids = {k for k, v in entities.items() if isinstance(v, dict) and v.get("type") == "npc"}
     items = set(_read_json_file(os.path.join("data", "artifacts.json"), {}) or {})
     merchants = _read_json_file(os.path.join("data", "merchants.json"), {}) or {}

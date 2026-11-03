@@ -80,7 +80,8 @@ def test_templates_de_missao_pessoal_referenciam_traits_reais():
 
 
 def test_hook_mundo_vivo_em_entities():
-    entities = _load("graph/entities.json")
+    # SPEC-374 R16: os npc_mv_* vivem em entities_extra.json; o invariante é sobre a união
+    entities = {**_load("graph/entities_extra.json"), **_load("graph/entities.json")}
     mv = {k: v for k, v in entities.items() if k.startswith("npc_mv_")}
     assert len(mv) == 36
     for npc_id, ent in mv.items():
