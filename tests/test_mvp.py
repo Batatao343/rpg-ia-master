@@ -19,6 +19,7 @@ from character_creator import create_player_character
 from gamedata import ARTIFACTS_DB, load_json_data
 from llm_setup import FallbackLLM, get_llm
 from persistence import load_game_state, save_game_state
+from tests.fakes.scripted_llm import story_update_llm
 
 
 # --------------------------------------------------------------------------
@@ -213,25 +214,13 @@ def test_character_creation_fallback(monkeypatch):
 # --------------------------------------------------------------------------
 # Avanço de beat da campanha (storyteller sinaliza conclusão do objetivo)
 # --------------------------------------------------------------------------
-class _FakeStoryLLM:
+def _FakeStoryLLM(completed):  # noqa: N802 - mantem o nome usado pelos testes
     """LLM controlado: devolve um StoryUpdate com beat_completed definido."""
-
-    def __init__(self, completed):
-        self.completed = completed
-
-    def with_structured_output(self, model, *_a, **_k):
-        self._model = model
-        return self
-
-    def with_retry(self, *_a, **_k):
-        return self
-
-    def invoke(self, _msgs):
-        return self._model(
-            narrative="Você cumpre o objetivo da cena de forma decisiva.",
-            introduced_npcs=[],
-            beat_completed=self.completed,
-        )
+    return story_update_llm(
+        narrative="Você cumpre o objetivo da cena de forma decisiva.",
+        introduced_npcs=[],
+        beat_completed=completed,
+    )
 
 
 def _plan(step=0, beats=2):
