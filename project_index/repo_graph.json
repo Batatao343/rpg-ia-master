@@ -1,5 +1,5 @@
 {
-  "commit_sha": "834960bca38c66e69a7f2f982b343e958f80a957",
+  "commit_sha": "b64d3ed7a06992e6a00371d4edbcad0107660b0b",
   "edges": [
     {
       "confidence": "static_best_effort",
@@ -194398,7 +194398,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 151
+        "line": 152
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director._open_guerra",
@@ -194409,7 +194409,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 48
+        "line": 49
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.hot",
@@ -194420,7 +194420,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 29
+        "line": 30
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.step",
@@ -194431,7 +194431,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 206
+        "line": 207
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
@@ -194442,7 +194442,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 135
+        "line": 136
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
@@ -194453,7 +194453,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 59
+        "line": 60
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
@@ -194464,7 +194464,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 159
+        "line": 160
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
@@ -194475,7 +194475,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 176
+        "line": 177
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
@@ -194486,7 +194486,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 214
+        "line": 215
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
@@ -194497,7 +194497,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 109
+        "line": 110
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_global_gap",
@@ -194508,7 +194508,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 52
+        "line": 53
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
@@ -194519,7 +194519,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 82
+        "line": 83
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_max_active_crises",
@@ -194530,7 +194530,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 124
+        "line": 125
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
@@ -194541,7 +194541,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 187
+        "line": 188
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_phase_transitions",
@@ -194552,7 +194552,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 99
+        "line": 100
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_region_cooldown",
@@ -194563,7 +194563,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 227
+        "line": 228
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
@@ -194574,7 +194574,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 70
+        "line": 71
       },
       "source": "module:tests.test_spec302_director",
       "target": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
@@ -576274,7 +576274,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 152
+        "line": 153
       },
       "source": "symbol:tests.test_spec302_director._open_guerra",
       "target": "symbol:tests.spec302_helpers.fresh_sim",
@@ -576285,21 +576285,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 153
-      },
-      "source": "symbol:tests.test_spec302_director._open_guerra",
-      "target": "symbol:tests.test_spec302_director.hot",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
         "line": 154
       },
       "source": "symbol:tests.test_spec302_director._open_guerra",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576318,7 +576307,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 49
+        "line": 156
+      },
+      "source": "symbol:tests.test_spec302_director._open_guerra",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 50
       },
       "source": "symbol:tests.test_spec302_director.hot",
       "target": "symbol:tests.spec302_helpers.set_pressure",
@@ -576329,7 +576329,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 34
+        "line": 35
       },
       "source": "symbol:tests.test_spec302_director.step",
       "target": "symbol:services.world_director.step_crises",
@@ -576340,7 +576340,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 38
+        "line": 39
       },
       "source": "symbol:tests.test_spec302_director.step",
       "target": "symbol:services.world_engine.day_rng",
@@ -576351,7 +576351,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 211
+        "line": 212
       },
       "source": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
       "target": "symbol:services.world_director.active_crises",
@@ -576362,7 +576362,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 209
+        "line": 210
       },
       "source": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
       "target": "symbol:services.world_director.announce",
@@ -576373,7 +576373,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 211
+        "line": 212
       },
       "source": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
       "target": "symbol:services.world_director.announced_crises",
@@ -576384,53 +576384,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 207
+        "line": 208
       },
       "source": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 140
-      },
-      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 143
-      },
-      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 145
-      },
-      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 136
-      },
-      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
       "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
@@ -576442,7 +576398,29 @@
         "line": 141
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:tests.spec302_helpers.set_pressure",
+      "target": "symbol:services.world_director.active_crises",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 144
+      },
+      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
+      "target": "symbol:services.world_director.active_crises",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 146
+      },
+      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
+      "target": "symbol:services.world_director.active_crises",
       "type": "calls"
     },
     {
@@ -576453,7 +576431,18 @@
         "line": 137
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 142
+      },
+      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
+      "target": "symbol:tests.spec302_helpers.set_pressure",
       "type": "calls"
     },
     {
@@ -576464,7 +576453,7 @@
         "line": 138
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576483,7 +576472,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 142
+        "line": 140
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
       "target": "symbol:tests.test_spec302_director.step",
@@ -576494,7 +576483,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 144
+        "line": 143
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
       "target": "symbol:tests.test_spec302_director.step",
@@ -576505,10 +576494,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 64
+        "line": 145
       },
-      "source": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
-      "target": "symbol:services.world_director.request_crisis_slot",
+      "source": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
+      "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
     {
@@ -576549,10 +576538,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 60
+        "line": 68
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "target": "symbol:services.world_director.request_crisis_slot",
       "type": "calls"
     },
     {
@@ -576563,7 +576552,7 @@
         "line": 61
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -576574,7 +576563,29 @@
         "line": 62
       },
       "source": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
+      "target": "symbol:tests.test_spec302_director.hot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 63
+      },
+      "source": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
       "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 162
+      },
+      "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
+      "target": "symbol:services.world_director.active_crises",
       "type": "calls"
     },
     {
@@ -576585,29 +576596,7 @@
         "line": 161
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
-      "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 160
-      },
-      "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
       "target": "symbol:tests.test_spec302_director._open_guerra",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 163
-      },
-      "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
-      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576618,7 +576607,7 @@
         "line": 164
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576626,7 +576615,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 169
+        "line": 165
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
       "target": "symbol:tests.test_spec302_director.step",
@@ -576637,7 +576626,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 178
+        "line": 170
+      },
+      "source": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 179
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
       "target": "symbol:services.world_director.active_crises",
@@ -576648,7 +576648,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 177
+        "line": 178
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
       "target": "symbol:tests.test_spec302_director._open_guerra",
@@ -576659,7 +576659,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 180
+        "line": 181
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
       "target": "symbol:tests.test_spec302_director.hot",
@@ -576670,7 +576670,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 181
+        "line": 182
       },
       "source": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
       "target": "symbol:tests.test_spec302_director.step",
@@ -576681,21 +576681,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 221
+        "line": 222
       },
       "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
       "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 216
-      },
-      "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
-      "target": "symbol:services.world_director.announce",
       "type": "calls"
     },
     {
@@ -576714,7 +576703,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 223
+        "line": 218
       },
       "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
       "target": "symbol:services.world_director.announce",
@@ -576736,10 +576725,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 218
+        "line": 225
       },
       "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
-      "target": "symbol:services.world_director.request_crisis_slot",
+      "target": "symbol:services.world_director.announce",
       "type": "calls"
     },
     {
@@ -576769,10 +576758,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 215
+        "line": 221
       },
       "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "target": "symbol:services.world_director.request_crisis_slot",
       "type": "calls"
     },
     {
@@ -576780,9 +576769,9 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 110
+        "line": 216
       },
-      "source": "symbol:tests.test_spec302_director.test_global_gap",
+      "source": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
       "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
@@ -576794,7 +576783,7 @@
         "line": 111
       },
       "source": "symbol:tests.test_spec302_director.test_global_gap",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -576816,7 +576805,7 @@
         "line": 113
       },
       "source": "symbol:tests.test_spec302_director.test_global_gap",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576835,7 +576824,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 117
+        "line": 115
       },
       "source": "symbol:tests.test_spec302_director.test_global_gap",
       "target": "symbol:tests.test_spec302_director.step",
@@ -576868,10 +576857,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 53
+        "line": 120
       },
-      "source": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "source": "symbol:tests.test_spec302_director.test_global_gap",
+      "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
     {
@@ -576882,7 +576871,7 @@
         "line": 54
       },
       "source": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -576893,6 +576882,17 @@
         "line": 55
       },
       "source": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
+      "target": "symbol:tests.test_spec302_director.hot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 56
+      },
+      "source": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
       "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
@@ -576901,7 +576901,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 95
+        "line": 96
       },
       "source": "symbol:tests.test_spec302_director.test_max_active_crises",
       "target": "symbol:services.world_director.active_crises",
@@ -576912,21 +576912,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 83
+        "line": 84
       },
       "source": "symbol:tests.test_spec302_director.test_max_active_crises",
       "target": "symbol:tests.spec302_helpers.fresh_sim",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 93
-      },
-      "source": "symbol:tests.test_spec302_director.test_max_active_crises",
-      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -576937,29 +576926,18 @@
         "line": 94
       },
       "source": "symbol:tests.test_spec302_director.test_max_active_crises",
+      "target": "symbol:tests.test_spec302_director.hot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 95
+      },
+      "source": "symbol:tests.test_spec302_director.test_max_active_crises",
       "target": "symbol:tests.test_spec302_director.step",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 129
-      },
-      "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
-      "target": "symbol:services.world_director.request_crisis_slot",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 132
-      },
-      "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
-      "target": "symbol:services.world_director.request_crisis_slot",
       "type": "calls"
     },
     {
@@ -576970,7 +576948,7 @@
         "line": 130
       },
       "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
-      "target": "symbol:services.world_director.update_phase",
+      "target": "symbol:services.world_director.request_crisis_slot",
       "type": "calls"
     },
     {
@@ -576978,10 +576956,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 125
+        "line": 133
       },
       "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "target": "symbol:services.world_director.request_crisis_slot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 131
+      },
+      "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
+      "target": "symbol:services.world_director.update_phase",
       "type": "calls"
     },
     {
@@ -576992,7 +576981,7 @@
         "line": 126
       },
       "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577003,7 +576992,73 @@
         "line": 127
       },
       "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
+      "target": "symbol:tests.test_spec302_director.hot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 128
+      },
+      "source": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
       "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 190
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:services.world_director.update_phase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 194
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:services.world_director.update_phase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 197
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:services.world_director.update_phase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 201
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:services.world_director.update_phase",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 203
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:services.world_director.update_phase",
       "type": "calls"
     },
     {
@@ -577014,106 +577069,7 @@
         "line": 189
       },
       "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:services.world_director.update_phase",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 193
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:services.world_director.update_phase",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 196
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:services.world_director.update_phase",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 200
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:services.world_director.update_phase",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 202
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:services.world_director.update_phase",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 188
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
       "target": "symbol:tests.spec302_helpers.fresh_sim",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 198
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:tests.spec302_helpers.set_pressure",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 191
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:tests.test_spec302_director.hot",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 192
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:tests.test_spec302_director.step",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 195
-      },
-      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
-      "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
     {
@@ -577124,6 +577080,28 @@
         "line": 199
       },
       "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:tests.spec302_helpers.set_pressure",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 192
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:tests.test_spec302_director.hot",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 193
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
       "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
@@ -577132,10 +577110,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 100
+        "line": 196
       },
-      "source": "symbol:tests.test_spec302_director.test_region_cooldown",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
     {
@@ -577143,10 +577121,21 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 102
+        "line": 200
+      },
+      "source": "symbol:tests.test_spec302_director.test_phase_transitions",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 101
       },
       "source": "symbol:tests.test_spec302_director.test_region_cooldown",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577157,7 +577146,7 @@
         "line": 103
       },
       "source": "symbol:tests.test_spec302_director.test_region_cooldown",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -577165,7 +577154,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 105
+        "line": 104
       },
       "source": "symbol:tests.test_spec302_director.test_region_cooldown",
       "target": "symbol:tests.test_spec302_director.step",
@@ -577176,10 +577165,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 229
+        "line": 106
       },
-      "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
+      "source": "symbol:tests.test_spec302_director.test_region_cooldown",
+      "target": "symbol:tests.test_spec302_director.step",
       "type": "calls"
     },
     {
@@ -577190,7 +577179,7 @@
         "line": 230
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577212,7 +577201,7 @@
         "line": 232
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -577221,6 +577210,17 @@
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
         "line": 233
+      },
+      "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 234
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
       "target": "symbol:tests.test_spec302_director.step",
@@ -577231,7 +577231,7 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 228
+        "line": 229
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
       "target": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
@@ -577242,21 +577242,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 229
-      },
-      "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
         "line": 230
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577278,7 +577267,7 @@
         "line": 232
       },
       "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -577297,7 +577286,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 75
+        "line": 234
+      },
+      "source": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 76
       },
       "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
       "target": "symbol:services.world_director.active_crises",
@@ -577308,21 +577308,10 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 77
+        "line": 78
       },
       "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
       "target": "symbol:services.world_director.active_crises",
-      "type": "calls"
-    },
-    {
-      "confidence": "static_best_effort",
-      "provenance": {
-        "extractor": "python_ast",
-        "file": "tests/test_spec302_director.py",
-        "line": 71
-      },
-      "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
-      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577333,7 +577322,7 @@
         "line": 72
       },
       "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
-      "target": "symbol:tests.test_spec302_director.hot",
+      "target": "symbol:tests.spec302_helpers.fresh_sim",
       "type": "calls"
     },
     {
@@ -577344,7 +577333,7 @@
         "line": 73
       },
       "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
-      "target": "symbol:tests.test_spec302_director.step",
+      "target": "symbol:tests.test_spec302_director.hot",
       "type": "calls"
     },
     {
@@ -577363,7 +577352,18 @@
       "provenance": {
         "extractor": "python_ast",
         "file": "tests/test_spec302_director.py",
-        "line": 76
+        "line": 75
+      },
+      "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
+      "target": "symbol:tests.test_spec302_director.step",
+      "type": "calls"
+    },
+    {
+      "confidence": "static_best_effort",
+      "provenance": {
+        "extractor": "python_ast",
+        "file": "tests/test_spec302_director.py",
+        "line": 77
       },
       "source": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
       "target": "symbol:tests.test_spec302_director.step",
@@ -800578,126 +800578,126 @@
     {
       "id": "symbol:tests.test_spec302_director._open_guerra",
       "kind": "test",
-      "line": 151,
+      "line": 152,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director._open_guerra"
     },
     {
       "id": "symbol:tests.test_spec302_director.hot",
       "kind": "test",
-      "line": 48,
+      "line": 49,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.hot"
     },
     {
       "id": "symbol:tests.test_spec302_director.step",
       "kind": "test",
-      "line": 29,
+      "line": 30,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.step"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_announce_respects_shared_budget",
       "kind": "test",
-      "line": 206,
+      "line": 207,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_announce_respects_shared_budget"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days",
       "kind": "test",
-      "line": 135,
+      "line": 136,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_crisis_ends_below_recupera_after_min_days"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_crisis_requires_prior_warning_min_days",
       "kind": "test",
-      "line": 59,
+      "line": 60,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_crisis_requires_prior_warning_min_days"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_escalation_on_escalation_day",
       "kind": "test",
-      "line": 159,
+      "line": 160,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_escalation_on_escalation_day"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_escalation_without_faction_becomes_ruina",
       "kind": "test",
-      "line": 176,
+      "line": 177,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_escalation_without_faction_becomes_ruina"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_external_slot_consumes_same_budget",
       "kind": "test",
-      "line": 214,
+      "line": 215,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_external_slot_consumes_same_budget"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_global_gap",
       "kind": "test",
-      "line": 109,
+      "line": 110,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_global_gap"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_initial_calm_blocks_announcements",
       "kind": "test",
-      "line": 52,
+      "line": 53,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_initial_calm_blocks_announcements"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_max_active_crises",
       "kind": "test",
-      "line": 82,
+      "line": 83,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_max_active_crises"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_no_crisis_during_recuperacao",
       "kind": "test",
-      "line": 124,
+      "line": 125,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_no_crisis_during_recuperacao"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_phase_transitions",
       "kind": "test",
-      "line": 187,
+      "line": 188,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_phase_transitions"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_region_cooldown",
       "kind": "test",
-      "line": 99,
+      "line": 100,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_region_cooldown"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_tiebreak_deterministic",
       "kind": "test",
-      "line": 227,
+      "line": 228,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_tiebreak_deterministic"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_tiebreak_deterministic.run",
       "kind": "test",
-      "line": 228,
+      "line": 229,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_tiebreak_deterministic.run"
     },
     {
       "id": "symbol:tests.test_spec302_director.test_warning_then_open_after_delay",
       "kind": "test",
-      "line": 70,
+      "line": 71,
       "path": "tests/test_spec302_director.py",
       "qualified_name": "tests.test_spec302_director.test_warning_then_open_after_delay"
     },
@@ -826337,5 +826337,5 @@
     }
   ],
   "schema_version": 1,
-  "source_tree_hash": "sha256:3716cd8948e3f878de1e4a316c5e120692997457b48779357f68890a8ed6037e"
+  "source_tree_hash": "sha256:daa1b6725541d83c0b61ae1dcf412abf002d6d968089c500699c684f8942ae94"
 }
