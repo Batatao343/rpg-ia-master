@@ -1,6 +1,6 @@
 # SPEC-379 — Testes: fábricas de estado, fake único de LLM, cobertura real e testes que leem código-fonte
 
-> **Status:** `approved` (03/11 noite, dono: "vai executando o que puder"; D1–D11 = defaults do §8)
+> **Status:** `in-progress` (03/11 noite, dono: "vai executando o que puder"; D1–D11 = defaults do §8)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Origem:** auditoria de qualidade de 03/11, [docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md](../docs/auditorias/auditoria-qualidade-codigo-2026-11-03.md) §4.6 (itens 1–3 e "Cobertura") e §5 letras **H + I**; regras da onda **W1–W8** (§6.2). Fica de fora o que a §6.4 retirou: **não** renomear os 299 `test_specNNN_*`.
 > **Depende de:** nada para começar (§6.3 da auditoria: "pode começar já"). Cada etapa passa pela trava **W1** antes de começar. **W6**: é a única spec de refatoração da onda em voo enquanto estiver `in-progress`.
@@ -514,3 +514,10 @@ Revisão: [handoffs/SPEC-379-independent-review.md](../handoffs/SPEC-379-indepen
 | Divergência 383 × 379 (`design.test.mjs:108-111`) | **Mantido** o reancoramento em `web/src/**`. A revisão o considera compatível com o fallback da 383 §3.5. | §3.2, §3.6 |
 
 Nenhum achado foi rejeitado.
+
+## 10. Execução (03/11, executor)
+
+- **Feito:** Etapa 1 (`tests/factories.py` + `tests/test_factories.py`, 9 testes), Etapa 2 (`tests/fakes/scripted_llm.py` + 17 testes), Etapa 3 (pytest-cov no `dev`, `[tool.coverage.*]`, `.gitignore`, `coverage_summary.py`, `coverage.yml`, seção "Cobertura"), Etapa 7 (TESTES.md "Onde mora um teste novo", conserto do parágrafo do fuzz, BRIEF), Etapa 0 parcial (inventário gerado em `docs/spec379/fonte_inventario.md`; W1 dos candidatos R4 sem trava), Etapa 6 parcial (6 arquivos migrados: fase26, fase33, fase34, mvp, dossiers, checkpoints, um commit cada, com prova R4.2).
+- **Desvios:** (1) R2.6: `load_game_state` religa `sync_vitality`/defaults, então o `player` carregado ganha `vitalidade_base_bonus` e o `world` ganha `shelter=None`; o teste afirma igualdade das chaves originais e que só essas duas chaves são acrescentadas. (2) `story_update_llm(**campos)` entrou em `tests/fakes/scripted_llm.py` (helper do storyteller: responde a qualquer variante de `StoryUpdate`). (3) `_CountingLLM` com asserção em `.calls` de classe (`test_day_digest_inline`) não migrou: exigiria mudar linha de `assert` (W3).
+- **Pendente:** Etapas 4 e 5 (e2e novos + trocas/remoções R6; coordenar com 383), Etapa 8 (baseline via CI, D3), migração dos demais candidatos R4 (até 20 arquivos).
+
