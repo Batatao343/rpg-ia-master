@@ -559,10 +559,12 @@ def _prep_prompt(ctx: dict) -> str:
     ]
     foes = ", ".join(f"{e.get('name', e.get('id'))} ({e.get('id', '?')})" for e in enemies[:6])
     narrative = " ".join(str(ctx.get("narrative") or "").split())[:400]
+    saber = f"Saber do herói: {ctx['saber_linha']}\n" if ctx.get("saber_linha") else ""
     return (
         "Prepare a cena de conflito JOGÁVEL de Valoria em JSON curto (sem prosa).\n"
         f"Local: {ctx.get('location', 'Campo')}. Inimigos: {foes or 'nenhum'}.\n"
         f"Cena: {narrative or '—'}\n"
+        f"{saber}"
         "Regras: 1-3 zonas (id curto, name, connections por id); 0-2 objetos "
         "interativos coerentes com o local, cada um com base_narrativa curta e 1 "
         "interação; 0-1 evento do Abismo cujo base_na_cena é o id de um objeto.\n"

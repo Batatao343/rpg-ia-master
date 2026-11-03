@@ -345,7 +345,19 @@ def creature_dossier(entry: Mapping, state: Mapping) -> dict:
     if entry.get("rarity_note"):
         out["rarity_note"] = entry["rarity_note"]
     # Campos acima do tier: AUSENTES (chave não enviada), nunca máscara no cliente.
-    for field in ("description", "type", "max_hp", "defense", "attacks", "behavior", "loot"):
+    for field in (
+        "description",
+        "type",
+        "max_hp",
+        "defense",
+        "attacks",
+        "behavior",
+        "loot",
+        "sinais_vistos",  # SPEC-371 R13 (só com RPG_FAUNA_SABER=on)
+        "telegrafos_vistos",
+        "contra_jogo",
+        "contra_jogo_motivo",
+    ):
         if field in entry:
             out[field] = entry[field]
     revealed_cards, revealed_res = _revealed_for(base, tier)

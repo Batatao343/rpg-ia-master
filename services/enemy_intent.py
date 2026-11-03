@@ -213,9 +213,23 @@ def knowledge_level(enemy: dict, carta_id: str | None = None) -> str:
         return "estudada"
     if "intencao" in (enemy.get("_revelado") or []):  # SPEC-355 R9: `revelar intencao` vale
         return "estudada"
+    saber = _saber(enemy)  # SPEC-371 R9: o que o jogador viveu antes (flag on)
+    if saber and carta_id and carta_id in (saber.get("assinaturas") or []):
+        return "estudada"
     if enemy.get("revealed_cards") or enemy.get("revealed_resistances") or enemy.get("known"):
         return "conhecida"
+    if saber and saber.get("contra_jogo"):
+        return "conhecida"
     return "desconhecida"
+
+
+def _saber(enemy: dict) -> dict | None:
+    from services import fauna_saber
+
+    if not fauna_saber.active():
+        return None
+    saber = enemy.get("saber_jogador")
+    return saber if isinstance(saber, dict) else None
 
 
 def _base_damage(intent: dict, actor: dict) -> int | None:
@@ -307,6 +321,9 @@ def public_round(
             )
             if warn and i == 0:
                 row["prenuncio"] = warn
+                saber = _saber(enemy)  # SPEC-371 R10: so na linha do golpe preparado
+                if saber and saber.get("contra_jogo"):
+                    row["contra_jogo"] = str(saber["contra_jogo"])
             rows.append(row)
     return rows
 

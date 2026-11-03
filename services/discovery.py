@@ -165,6 +165,9 @@ def bestiary_view(bk: dict, turn: int = 0) -> list[dict]:
             view["attacks"] = base.get("attacks", [])
             view["behavior"] = base.get("behavior", {})
             view["loot"] = base.get("loot", [])
+        from services import fauna_saber
+
+        view.update(fauna_saber.view_fields(creature_id, entry, tier))  # SPEC-371 R13 (flag on)
         out.append(view)
     out.sort(key=lambda v: v["id"])
     return out

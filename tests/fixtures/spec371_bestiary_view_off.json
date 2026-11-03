@@ -1,0 +1,105 @@
+{
+ "bk": {
+  "mon_arame_vivo": {
+   "assinaturas_sobrevividas": 1,
+   "defeated": 0,
+   "first_seen_turn": 3,
+   "fought": 1,
+   "saber_revelado": {
+    "motivo": "sobreviveu",
+    "turn": 4
+   },
+   "seen": 2,
+   "sinais_vistos": [
+    "rastro",
+    "som"
+   ],
+   "telegrafos_vistos": [
+    "t"
+   ]
+  },
+  "mon_fila_de_grilhoes": {
+   "defeated": 0,
+   "first_seen_turn": 1,
+   "fought": 0,
+   "seen": 1
+  },
+  "mon_fole_de_costela": {
+   "defeated": 3,
+   "first_seen_turn": 1,
+   "fought": 3,
+   "seen": 3
+  },
+  "mon_rosario_de_vertebras": {
+   "defeated": 8,
+   "first_seen_turn": 1,
+   "fought": 9,
+   "seen": 9
+  }
+ },
+ "turn": 10,
+ "view": [
+  {
+   "description": "Um doente terminal da Ferrugem do Sangue que ainda anda, com as veias viradas em arame para fora da pele.",
+   "id": "mon_arame_vivo",
+   "name": "Arame Vivo",
+   "regions": [
+    "nova_arcadia"
+   ],
+   "tier": 2,
+   "tier_name": "Encontrada",
+   "type": "Minion"
+  },
+  {
+   "id": "mon_fila_de_grilhoes",
+   "name": "Fila de Grilhões",
+   "regions": [
+    "nova_arcadia"
+   ],
+   "tier": 1,
+   "tier_name": "Rumores"
+  },
+  {
+   "attacks": [
+    "Sopro Quente"
+   ],
+   "defense": null,
+   "description": "Um operário da Rua das Chaminés cuja caixa torácica virou um fole de escória que sopra fuligem quente.",
+   "id": "mon_fole_de_costela",
+   "max_hp": null,
+   "name": "Fole de Costela",
+   "rarity_note": "cada vez mais rara na região",
+   "regions": [
+    "nova_arcadia"
+   ],
+   "tier": 3,
+   "tier_name": "Estudada",
+   "type": "Standard"
+  },
+  {
+   "attacks": [
+    {
+     "damage": "1d8",
+     "name": "Mordida de Osso",
+     "type": "melee"
+    }
+   ],
+   "behavior": {},
+   "defense": null,
+   "description": "Uma coluna de vértebras de muitos mortos, emendada por medula que cresceu depois da morte, que nada nos rios do Anel de Lama.",
+   "id": "mon_rosario_de_vertebras",
+   "loot": [
+    "Vestígio de Rosário de Vértebras"
+   ],
+   "max_hp": null,
+   "name": "Rosário de Vértebras",
+   "rarity_note": "quase não se vê mais por aqui",
+   "regions": [
+    "nova_arcadia"
+   ],
+   "tier": 4,
+   "tier_name": "Dominada",
+   "type": "Standard"
+  }
+ ]
+}

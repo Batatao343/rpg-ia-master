@@ -34,6 +34,7 @@ from services import conflict_summary as summ
 from services import discovery as disc
 from services import encounter_preparation as prep
 from services import enemy_intent as _enemy_intent
+from services import fauna_saber as _fauna_saber
 from services import graph_resolver as gr
 from services import scene_cards as _scene_cards
 from services.conflict_turn import _SUPPORT_EFFECTS, TurnDeclaration, TurnStep
@@ -1061,6 +1062,9 @@ def _prepare_scene(state: dict, enemies: list[dict], player: dict, allies: list[
                 token_budget=600,
                 include_lore=False,
             ).world_state_block
+            saber_linha = _fauna_saber.prep_line(state, enemies)  # SPEC-371 R11 (flag on)
+            if saber_linha:
+                ctx["saber_linha"] = saber_linha
             llm = get_llm(temperature=0.4, tier=ModelTier.FAST)
             scene = prep.prepare_encounter(ctx, llm)  # guard + fallback internos
         except Exception as e:
@@ -2310,6 +2314,8 @@ def _combat_node(state: GameState):
         _sync_enemy_knowledge(enemies, load_persisted=True)
         bestiary_knowledge = disc.record_encounter(bestiary_knowledge, enemies, turn)
         bk_changed = True
+        for _enemy in enemies:  # SPEC-371 R8: o saber do herói entra no ator (flag on)
+            _fauna_saber.stamp_actor(_enemy, bestiary_knowledge)
         from services.combat_origin import materialize
 
         continuity = state.get("continuity") or {}
@@ -2689,6 +2695,18 @@ def _combat_node(state: GameState):
         _sync_enemy_knowledge(enemies)
         _reveal_resistances(out.get("attacks") or [], enemies, sides)
         logs += weather_logs + order_logs + out["logs"]
+        if not is_simulation and _fauna_saber.active():  # SPEC-371 R3: telegrafo/assinatura -> save
+            _alive_now = not (
+                out.get("player_dead")
+                or player.get("dead")
+                or player.get("estado_terminal")
+                or int(player.get("vitalidade", 0) or 0) <= 0
+            )
+            bestiary_knowledge, _saber_logs = _fauna_saber.absorb(
+                bestiary_knowledge, scene, actors_by_id, _alive_now, turn
+            )
+            logs += _saber_logs
+            bk_changed = True
         # Gasto BRUTO da economia da Carta. O delta líquido antes/depois era
         # incorreto para classes cujo próprio uso repõe Entropia no mesmo turno.
         player_cards = [
@@ -2764,6 +2782,12 @@ def _combat_node(state: GameState):
 
     player_dead = bool(out.get("player_dead")) or bool(player.get("dead"))
     combat_over = bool(out.get("ended")) or hero_fled or player_dead
+    if combat_over and not is_simulation and _fauna_saber.active():  # SPEC-371 R4: fim de combate
+        bestiary_knowledge, _saber_logs = _fauna_saber.finish_combat(
+            bestiary_knowledge, enemies, turn
+        )
+        logs += _saber_logs
+        bk_changed = True
     if combat_over and not player_dead:
         for participant in [player] + allies:
             if (

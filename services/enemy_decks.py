@@ -404,7 +404,8 @@ def prenuncio(actor: dict, rnd_exec: int) -> str | None:
 def record_promise(scene: dict | None, actor: dict, rnd_exec: int) -> bool:
     """SPEC-355 R3: grava na CENA a promessa que ``prenuncio(actor, rnd_exec)`` acabou de tornar
     pública (assinatura na rodada ``rnd_exec + 1``). Nunca vai para o ator."""
-    if not isinstance(scene, dict) or prenuncio(actor, rnd_exec) is None:
+    texto = prenuncio(actor, rnd_exec) if isinstance(scene, dict) else None
+    if texto is None:
         return False
     sig = assinatura_of(actor)
     key = str(actor.get("id") or actor.get("name"))
@@ -413,6 +414,9 @@ def record_promise(scene: dict | None, actor: dict, rnd_exec: int) -> bool:
         "rnd": int(rnd_exec) + 1,
         "fase_idx": int(actor.get("fase_idx", 0) or 0),
     }
+    from services import fauna_saber  # SPEC-371 R2: o jogador viu o telegrafo (flag on)
+
+    fauna_saber.observe_promise(scene, actor, str(sig["carta"]), texto)
     return True
 
 
@@ -483,6 +487,9 @@ def note_declaration(scene: dict | None, actor_id: str, card_id: str | None, rnd
         and card_id == promise.get("carta")
     ):
         del promises[actor_id]
+        from services import fauna_saber  # SPEC-371 R2: assinatura cumprida (flag on)
+
+        fauna_saber.observe_fulfilled(scene, actor_id, str(card_id), rnd)
 
 
 def close_promises(scene: dict | None, actors_by_id: dict[str, dict], rnd: int, out: dict) -> None:

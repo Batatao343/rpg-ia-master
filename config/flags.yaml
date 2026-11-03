@@ -376,6 +376,12 @@ RPG_FAUNA_SINAIS:
   spec: SPEC-360
   expires: 2027-03-01
   note: "fauna viva: presença, sinais antes da luta, aproximação, caça e rumor (exige RPG_FAUNA)"
+RPG_FAUNA_SABER:
+  kind: release
+  default: "off"
+  spec: SPEC-371
+  expires: 2027-03-01
+  note: "fauna viva: saber do jogador (sinais lidos, telegrafos vistos, contra-jogo revelado)"
 RPG_FINOPS_ALERT_HOURS:
   kind: ops
   default: "24"
