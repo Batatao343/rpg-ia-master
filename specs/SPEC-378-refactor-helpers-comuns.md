@@ -214,6 +214,7 @@ espera sem bloquear as outras.
 import unicodedata
 from typing import Literal
 
+
 def fold(
     text: object,
     *,
@@ -267,9 +268,11 @@ são **38 funções de fold** (classes A–G, sendo 32 candidatas A–F) e **16 
 ```python
 import os
 
+
 def env_choice(name: str, choices: tuple[str, ...] | frozenset[str], default: str) -> str:
     raw = os.getenv(name, default).strip().lower()
     return raw if raw in choices else default
+
 
 def is_database_profile() -> bool:
     return os.getenv("RPG_RUNTIME_PROFILE", "legacy").strip().lower() != "legacy"
@@ -304,8 +307,13 @@ de `""` diferente) e dentro do pacote que puxa os adapters (R7): não serve de r
 
 ```python
 def invoke_structured(
-    llm, schema: type[T], messages, *, node: str | None = None,
-    event: str = "failed", level: str = "warning",
+    llm,
+    schema: type[T],
+    messages,
+    *,
+    node: str | None = None,
+    event: str = "failed",
+    level: str = "warning",
 ) -> T | None:
     try:
         result = llm.with_structured_output(schema).invoke(messages)
@@ -339,13 +347,32 @@ honesta é de **5 a 9 sites aptos** [H].
 
 ```python
 def _attempt(
-    provider: str, model: str, tier: ModelTier, attempt_index: int, *,
-    latency_ms: int, fell_back: bool, outcome: LLMAttemptOutcome,
-    error: str | None, structured: bool, **extra,
+    provider: str,
+    model: str,
+    tier: ModelTier,
+    attempt_index: int,
+    *,
+    latency_ms: int,
+    fell_back: bool,
+    outcome: LLMAttemptOutcome,
+    error: str | None,
+    structured: bool,
+    **extra,
 ) -> None:
-    _emit_attempt_telemetry(LLMAttemptEvent(provider=provider, model=model, tier=tier,
-        attempt_index=attempt_index, latency_ms=latency_ms, fell_back=fell_back,
-        outcome=outcome, error=error, structured=structured, **extra))
+    _emit_attempt_telemetry(
+        LLMAttemptEvent(
+            provider=provider,
+            model=model,
+            tier=tier,
+            attempt_index=attempt_index,
+            latency_ms=latency_ms,
+            fell_back=fell_back,
+            outcome=outcome,
+            error=error,
+            structured=structured,
+            **extra,
+        )
+    )
 ```
 
 `RoutedLLM._prepare_candidate(provider, model, attempt_index, fell_back, structured, errors)

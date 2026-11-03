@@ -253,13 +253,17 @@ o bloco estava**. No fim, os `include_router` ficam juntos antes do mount, na or
 ```python
 # routes/play.py
 from fastapi import APIRouter, HTTPException
-import api_core            # nomes patchados: api_core._database_profile(), api_core.load_game_state(...)
-from api_core import _bind_corr, _begin_state_mutation   # não patchados: nome simples
+import api_core  # nomes patchados: api_core._database_profile(), api_core.load_game_state(...)
+from api_core import _bind_corr, _begin_state_mutation  # não patchados: nome simples
 from api_models import EquipRequest
+
 router = APIRouter()
 
+
 @router.post("/game/equip")
-def game_equip(req: EquipRequest): ...   # corpo idêntico, exceto o prefixo `api_core.` nos nomes patchados
+def game_equip(
+    req: EquipRequest,
+): ...  # corpo idêntico, exceto o prefixo `api_core.` nos nomes patchados
 ```
 
 ### 3.4 Inventário de patch (Etapa 0 congela em `docs/spec381/patch_inventory.json`)

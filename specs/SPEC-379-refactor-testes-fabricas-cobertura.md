@@ -184,15 +184,18 @@ O objetivo é dar ao repositório **uma** fábrica de estado e **um** fake de LL
 ### 3.3 `tests/factories.py` (esboço da composição, D1 = A)
 
 ```python
-from playtest.runner import _DEFAULT_CHAR          # defaults do produto (runner.py:332)
+from playtest.runner import _DEFAULT_CHAR  # defaults do produto (runner.py:332)
 from character_creator import create_player_character
 from gamedata import seed_factions, sync_vitality
 from world_utils import starting_world
 import progression
 from services import world_calendar
 
+
 @functools.lru_cache(maxsize=64)
 def _base(class_name, race, region, level) -> dict: ...
+
+
 #  1. char = create_player_character({**_DEFAULT_CHAR (sem backstory de harness), class/race/region/level},
 #                                     use_llm_flavor=False); sync_vitality(char)
 #  2. state = mesmas chaves e mesmos valores derivados do dict de api._create_game (api.py:5350-5456),
@@ -200,10 +203,23 @@ def _base(class_name, race, region, level) -> dict: ...
 #  3. state["player"] = progression.normalize_player_progression(state["player"])
 #  4. world_calendar.init_new_game(state)
 
-def make_state(*, game_id="factory-game", class_name=None, race=None, region=None, level=1,
-               player=None, world=None, **overrides) -> dict:
-    s = copy.deepcopy(_base(...)); s["game_id"] = game_id
-    s["player"].update(player or {}); s["world"].update(world or {}); s.update(overrides)
+
+def make_state(
+    *,
+    game_id="factory-game",
+    class_name=None,
+    race=None,
+    region=None,
+    level=1,
+    player=None,
+    world=None,
+    **overrides,
+) -> dict:
+    s = copy.deepcopy(_base(...))
+    s["game_id"] = game_id
+    s["player"].update(player or {})
+    s["world"].update(world or {})
+    s.update(overrides)
     return s
 ```
 
@@ -216,9 +232,16 @@ class ScriptedLLM:
     is_fallback: bool  # False por default; nunca define is_mock
     calls: list[tuple[str | None, list, dict]]
     get_llm_calls: list[tuple[float | None, object | None]]
-    def __init__(self, responses: Mapping[type | str, object] | None = None, *,
-                 text: str | Sequence[str] = "", repeat_last: bool = False,
-                 streaming: bool = False, is_fallback: bool = False) -> None: ...
+
+    def __init__(
+        self,
+        responses: Mapping[type | str, object] | None = None,
+        *,
+        text: str | Sequence[str] = "",
+        repeat_last: bool = False,
+        streaming: bool = False,
+        is_fallback: bool = False,
+    ) -> None: ...
     @classmethod
     def failing(cls, text: str = "", *, is_fallback: bool = False) -> "ScriptedLLM": ...
     def with_structured_output(self, schema, *a, **k) -> "_Bound": ...
@@ -226,9 +249,11 @@ class ScriptedLLM:
     def bind_tools(self, *a, **k) -> "ScriptedLLM": ...
     def invoke(self, messages, *a, **k) -> AIMessage: ...
     def stream(self, messages, *a, **k) -> Iterator[AIMessageChunk]: ...
+
     # só com streaming=True: stream_structured(messages, schema, *, on_delta=None, on_reset=None, key=None)
     #                        stream_text(messages, *, on_delta=None, on_reset=None)
     #   (mesma assinatura do MockLLM, mock_llm.py:1053,1071)
+
 
 def patch_get_llm(monkeypatch, llm: ScriptedLLM, *modules) -> ScriptedLLM: ...
 ```

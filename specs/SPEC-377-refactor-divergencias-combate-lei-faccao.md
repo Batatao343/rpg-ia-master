@@ -233,6 +233,8 @@ Na conferência, a auditoria errou em três pontos. As correções estão nos it
   # services/law.py
   def day_hook(ctx) -> "DayHookResult":  # SPEC-377 R3/R6
       """Hook `post` do world_engine: devolve state_patch {"law_state": ...} ou vazio."""
+
+
   # services/world_engine.py
   register_day_hook("law", law.day_hook, stage="post", order=30)
   ```
