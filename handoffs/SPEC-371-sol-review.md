@@ -1,7 +1,7 @@
 # SPEC-371 — revisão sol (review)
 
-> **Veredito:** `APPROVED_WITH_FOLLOWUPS`
-> **Revisor:** Sol (Opus 5.5, revisão técnica independente; não escreveu produto nem avaliador) · **Data:** 2026-11-03 · **Commit revisado:** `04f8acb5`
+> **Veredito:** `APPROVED` (rodada 2; rodada 1: `APPROVED_WITH_FOLLOWUPS`)
+> **Revisor:** Sol (Opus 5.5, revisão técnica independente; não escreveu produto nem avaliador) · **Data:** 2026-11-03 · **Commit revisado:** `04f8acb5` (rodada 1), `c8177a02` (rodada 2)
 
 ## Escopo
 
@@ -104,4 +104,38 @@ py.sh -m pytest -q -p no:cacheprovider tests/test_{dossier_leak,dossiers,dossier
 node --test web/tests/fauna-saber-371.test.mjs + deck*.test.mjs → 20/20
 sonda _resolve_starting_cards por Postura (scratchpad) → Acervo/Preparadas acima; Corruptor sem reação preparada no nível 1
 e2e dossiers.spec.ts → não rodado (RAM livre 1,0–1,6 GB)
+```
+
+## Rodada 2 (HEAD `c8177a02`)
+
+Commits `ce338047` e `c8177a02` aplicam os 7 P2. Conferido:
+
+- **P2-5, recarimbo** (`agents/combat.py:2710-2713`): está dentro do bloco
+  `not is_simulation and _fauna_saber.active()` e só roda quando `absorb` devolve linha de
+  revelação. Com a flag `off`, o caminho não é alcançado, e `stamp_actor` também faz no-op com
+  `off`, então não há efeito colateral. O recarimbo é determinístico: `stamp_actor` é uma função
+  pura do `bk` e do ator, sem RNG. `actors_by_id[e["id"]] = e` (`:2454`) é o mesmo objeto de
+  `enemies`, então o presságio congelado no fim deste turno (`:2944+`) já lê o `saber_jogador`
+  novo. Teste: `test_revelacao_no_meio_da_luta_recarimba_os_inimigos`. Resíduo sem impacto: o
+  filtro olha só `dead`, não `status == "morto"`; carimbar um morto é inofensivo.
+- **P2-7:** o ramo `elif is_simulation` faz `pop` de `saber_obs`. Com `off` a chave nunca existe,
+  então é no-op.
+- **P2-2:** `cor_membrana` (`data/cards/corruptor.json:714`) ganhou só `reacao_inicial: true`, sem
+  mudança de número. O Corruptor de nível 1 prepara `cor_membrana` no lugar de `cor_farejar`, e o
+  teste foi trocado de forma explícita. Os golden guards 353/363/364, o lint e `spec341_balanco`
+  estão verdes. O gatilho `ao_ser_alvo_distancia` faz dela a reação mais situacional das cinco; a
+  sonda mostra que armar quase não muda o resultado do Corruptor (48,9 → 48,7 %).
+- **P2-1:** a exceção sem flag foi registrada em R18, §7 e Fora de escopo, incluindo `cor_membrana`.
+- **P2-4:** há round-trip real por `save_game_state`/`load_game_state`, com `combat.scene.saber_obs`.
+- **P2-6:** docstring corrigida.
+- **P2-3:** a sonda informativa (`docs/spec371/arena_posturas_reacao_armada.py`, fora de `evals/` e
+  sem mexer no avaliador) mostra as cinco Posturas entre 45 e 85 % com a reação armada. Fica um
+  resíduo aceito: o Médico com a reação no baralho e nunca armada fica em 44,0 %, 1 pp abaixo do
+  piso. Isso só vale para um jogador que não arma a reação, e armar dá +3,5 pp. Fica como
+  observação para a recalibração de balanço (follow-up da 362/358), não bloqueia.
+
+Resultado: nenhum P0, P1 ou P2 aberto da rodada 1. Veredito: **APPROVED**.
+
+```text
+py.sh -m pytest -q -p no:cacheprovider test_spec371_{fonte,saber,pressagio,view,reacao_inicial,eval,flags_off} + card_lint, spec341_balanco, golden_guard 353/363/364, conflito_cartas, cards_prepare_api, classes_refactor, spec360_flags_off, playtest_start_levels → exit 0 (E4 xfail strict)
 ```
