@@ -15,6 +15,7 @@ from services import graph_resolver as gr
 from services import quest_log as ql
 from services.event_processor import process_pending_events
 from services.world_validators import validate_proposal
+from tests.fakes.scripted_llm import story_update_llm
 
 NOVA_ARCADIA = "nova_arcadia"
 NPC_VALERIUS = "npc_valerius"
@@ -295,29 +296,14 @@ def test_pipeline_npc_killed_falha_quest_orfa():
 # ---------------------------------------------------------------------------
 
 
-class _FakeStoryLLM:
+def _FakeStoryLLM(quests=None, events=None):  # noqa: N802 - mantem o nome usado pelos testes
     """Devolve um StoryUpdate com proposed_quests controlado (offline, determinístico)."""
-
-    def __init__(self, quests=None, events=None):
-        self._quests = quests or []
-        self._events = events or []
-        self.received = None
-
-    def with_structured_output(self, model, *_a, **_k):
-        self._model = model
-        return self
-
-    def with_retry(self, *_a, **_k):
-        return self
-
-    def invoke(self, msgs):
-        self.received = msgs
-        return self._model(
-            narrative="O andarilho pede um favor.",
-            introduced_npcs=[],
-            proposed_events=self._events,
-            proposed_quests=self._quests,
-        )
+    return story_update_llm(
+        narrative="O andarilho pede um favor.",
+        introduced_npcs=[],
+        proposed_events=events or [],
+        proposed_quests=quests or [],
+    )
 
 
 def _story_state(quests=None):
@@ -378,7 +364,7 @@ def test_prompt_lista_quests_ativas(monkeypatch):
     fake = _FakeStoryLLM()
     monkeypatch.setattr(stt, "get_llm", lambda *a, **k: fake)
     stt.storyteller_node(_story_state(quests=existing))
-    sys_content = str(fake.received[0].content)
+    sys_content = str(fake.calls[-1][1][0].content)
     assert "Vingar o irmão" in sys_content
     assert "q1" in sys_content
 
