@@ -139,7 +139,31 @@ def test_backstory_null():
         backstory=None,
     )
     assert (req.backstory or "") == ""
-    import inspect
 
-    src = inspect.getsource(api)
-    assert "{req.backstory}" not in src
+
+def test_backstory_null_does_not_leak_none_into_new_game(monkeypatch):
+    """SPEC-379 R6 (a): POST /game/new com backstory=None nao escreve "None" no estado inicial."""
+    from fastapi.testclient import TestClient
+
+    import api
+
+    seen = {}
+    real_invoke = api.game_graph.invoke
+
+    def spy(initial_state, *a, **kw):
+        seen["summary"] = initial_state["narrative_summary"]
+        seen["messages"] = [str(m.content) for m in initial_state["messages"]]
+        return real_invoke(initial_state, *a, **kw)
+
+    monkeypatch.setattr(api.game_graph, "invoke", spy)
+    body = {
+        "name": "Kaelen",
+        "race": "Humano",
+        "class_name": "Sangromante",
+        "region": "Nova Arcádia",
+        "backstory": None,
+    }
+    assert TestClient(api.app).post("/game/new", json=body).status_code == 200
+    assert "Kaelen" in seen["summary"]
+    assert "None" not in seen["summary"]
+    assert all("None" not in m for m in seen["messages"])
