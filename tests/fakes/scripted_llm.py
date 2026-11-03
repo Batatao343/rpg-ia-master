@@ -95,7 +95,11 @@ class ScriptedLLM:
     # --- streaming opcional (so com streaming=True) ----------------------------
     def _stream_structured(self, messages, schema, *, on_delta=None, on_reset=None, key=None):
         result = self._respond(_schema_name(schema), schema, messages)
-        if on_delta is not None and isinstance(result, BaseModel) and not isinstance(result, AIMessage):
+        if (
+            on_delta is not None
+            and isinstance(result, BaseModel)
+            and not isinstance(result, AIMessage)
+        ):
             on_delta(result.model_dump_json())
         return result
 
@@ -127,7 +131,9 @@ class ScriptedLLM:
     def _materialize(item: object, name: str | None, schema: Any, messages: object):
         if isinstance(item, _Exhausted):
             raise AssertionError(f"ScriptedLLM: roteiro esgotado para {name or 'texto livre'!r}")
-        if isinstance(item, BaseException) or (isinstance(item, type) and issubclass(item, BaseException)):
+        if isinstance(item, BaseException) or (
+            isinstance(item, type) and issubclass(item, BaseException)
+        ):
             raise item  # type: ignore[misc]
         if callable(item) and not isinstance(item, (BaseModel, AIMessage, type)):
             item = item(messages, schema)  # type: ignore[operator]

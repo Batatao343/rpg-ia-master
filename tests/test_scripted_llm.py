@@ -87,7 +87,12 @@ def test_failing_matches_fallback_llm_in_product_guard(monkeypatch):
         monkeypatch.setattr(character_creator, "get_llm", lambda *a, _l=llm, **k: _l)
         sheets.append(
             character_creator.create_player_character(
-                {"name": "T", "class_name": "Devoto do Abismo", "race": "Humano", "region": "Nova Arcádia"}
+                {
+                    "name": "T",
+                    "class_name": "Devoto do Abismo",
+                    "race": "Humano",
+                    "region": "Nova Arcádia",
+                }
             )
         )
     assert sheets[0] == sheets[1]

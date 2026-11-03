@@ -109,7 +109,9 @@ def test_make_state_round_trip_save_load():
     assert {k: v for k, v in loaded["player"].items() if k in state["player"]} == state["player"]
     # load acrescenta defaults de campos novos do mundo (ex.: shelter=None); nada some nem muda
     assert {k: v for k, v in loaded["world"].items() if k in state["world"]} == state["world"]
-    assert {k: v for k, v in loaded["world"].items() if k not in state["world"]} == {"shelter": None}
+    assert {k: v for k, v in loaded["world"].items() if k not in state["world"]} == {
+        "shelter": None
+    }
 
 
 def test_overrides_merge_player_world_replace_top():
