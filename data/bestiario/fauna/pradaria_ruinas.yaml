@@ -25,8 +25,8 @@ criaturas:
     contra_jogo: "Aguentar em vez de trocar golpes; quem se fecha na defesa e o faz correr atrás sobrevive até a areia acabar."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_vidrado_do_morro:
     fonte: ficha
@@ -49,8 +49,8 @@ criaturas:
     contra_jogo: "Chegar com o sol nas costas, ou lutar à noite e em dia nublado; sem o reflexo, é só uma casca pesada e lenta."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_costas_de_alicerce:
     fonte: ficha
@@ -70,8 +70,8 @@ criaturas:
     contra_jogo: "Rachar a laje com pancada ou ir por trás, na costura de carne entre a pedra e a espinha, onde ela não protege."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_vestido_de_gafanhotos:
     fonte: ficha
@@ -94,8 +94,8 @@ criaturas:
     contra_jogo: "Fogo ou fumaça no corpo caído antes que o enxame levante; derrubá-lo longe dos outros também serve."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_fucador_da_semente:
     fonte: ficha
@@ -119,8 +119,8 @@ criaturas:
     contra_jogo: "Limpar a ferida cedo e não deixar que ele acerte duas vezes; fogo no capim seco à volta o faz desviar."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_esqueleto_legiao_antiga:
     fonte: ficha
@@ -142,8 +142,8 @@ criaturas:
     contra_jogo: "Bater entre as rajadas, quando ele está parado, e recuar quando o capim das costas enche; fogo no capim seco o derruba de vez."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   # ============================== BESTAS DA ENTROPIA ==============================
   mon_nadador_de_pedra:
@@ -164,8 +164,8 @@ criaturas:
     contra_jogo: "Ficar fora das lajes e paredes, no capim e na terra solta, onde ele não nada; quieto, ele não sente onde você está."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_cobra_de_legua:
     fonte: ficha
@@ -186,8 +186,8 @@ criaturas:
     contra_jogo: "Cortar a cabeça e não as voltas; sair do aperto cedo, antes da segunda volta, custa muito menos que depois."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_rodante_de_espinhos:
     fonte: ficha
@@ -210,8 +210,8 @@ criaturas:
     contra_jogo: "Ficar quieto e firme uma rodada, defendendo, e deixar que ele role para o barulho de outro; parado, ele é um bicho pequeno de barriga mole."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_pernalta_das_colunas:
     fonte: ficha
@@ -232,8 +232,8 @@ criaturas:
     contra_jogo: "Ir direto às pernas, que quebram fácil, em vez de tentar alcançar o corpo lá em cima."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_lagarto_de_mudas:
     fonte: ficha
@@ -257,8 +257,8 @@ criaturas:
     contra_jogo: "Ignorar as cascas e encurralá-lo contra o chão; sem parede para subir, ele não tem tempo de largar outra."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_besouro_de_alavanca:
     fonte: ficha
@@ -279,8 +279,8 @@ criaturas:
     contra_jogo: "Gastar a vez para encaixar a placa antes que o segundo besouro chegue, ou virá-lo de costas, que a barriga é mole."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
   mon_carregador_de_ganchos:
@@ -302,8 +302,8 @@ criaturas:
     contra_jogo: "Ficar perto dele e longe dos outros, ou de costas para um muro; puxado para o lugar onde já está, o tranco não faz nada."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_leitor_de_cativos:
     fonte: ficha
@@ -324,8 +324,8 @@ criaturas:
     contra_jogo: "Matá-lo primeiro, ou trocar de plano depois do presságio; o que ele leu é a jogada que você ia fazer, não a que você faz."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_profanador_cravejado:
     fonte: ficha
@@ -346,8 +346,8 @@ criaturas:
     contra_jogo: "Arrancar as relíquias em vez de golpear a pele dura; cada peça tirada o deixa mais mole e paga a luta."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_cauda_emendada:
     fonte: ficha
@@ -363,13 +363,13 @@ criaturas:
       som: "Um assobio baixo de coisa comprida varrendo o mato, e um baque seco de alguém caindo."
       cheiro: "Couro cru mal curtido e osso limado, um cheiro de oficina de amuleto."
       marca: "Numa vala da estrada, várias pessoas derrubadas na mesma direção, todas com o tornozelo roxo."
-      aproximacao: "Um Cinzéu pequeno e tatuado salta apoiado num apêndice de osso emendado de três metros, e varre o chão aos seus pés."
+      aproximacao: "Um Cinzéu pequeno e tatuado salta apoiado num rabo de osso emendado de três metros, e varre o chão aos seus pés."
       rumor: "os carroceiros de Solvhen dizem que bando misto se reconhece pelo tombo antes de se ver a cara"
     contra_jogo: "Pular a varrida ficando parado com a guarda baixa, ou pisar na cauda; presa no chão, ela o deixa sem saltar."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_desfiado_de_vaelorn:
     fonte: ficha
@@ -390,8 +390,8 @@ criaturas:
     contra_jogo: "Fazê-lo saltar; fique perto dos muros e recue de altura em altura, e o corpo dele se quebra sozinho."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_arqueiro_de_tendao:
     fonte: ficha
@@ -412,8 +412,8 @@ criaturas:
     contra_jogo: "Aguentar os primeiros tiros abrigado e chegar perto na rodada em que o tendão estala; ou cortar a corda de tendão de perto, com qualquer lâmina."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
   mon_egua_de_costas:
@@ -429,13 +429,13 @@ criaturas:
       som: "Um bufo de cavalo cansado e, de vez em quando, um coice que estala no ar sem acertar nada."
       cheiro: "Crina suada e couro de sela apodrecido, um cheiro de luto que ninguém enterrou."
       marca: "No mato, um monte de terra com uma sela podre em cima, e o mato em volta comido até a raiz num círculo."
-      aproximacao: "Um animal de montaria cinza, de costelas fundas, está parado junto a um monte, a cabeça torcida sobre o lombo, olhando para trás."
-      rumor: "um pastor diz que há um animal de sela vivo na pradaria que não deixa ninguém tirar o dono de onde caiu"
+      aproximacao: "Uma montaria cinza, de costelas fundas, está parada junto a um monte, a cabeça torcida sobre o lombo, olhando para trás."
+      rumor: "um pastor diz que há uma montaria viva na pradaria que não deixa ninguém tirar o dono de onde caiu"
     contra_jogo: "Lutar de frente e não recuar; ela não enxerga para a frente e erra quem não sai do lugar."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_cabeca_acima:
     fonte: ficha
@@ -455,8 +455,8 @@ criaturas:
     contra_jogo: "Guardar força e bater pouco e forte, três vezes, até a cabeça tocar o chão, e então bater no crânio; golpes miúdos se perdem nas vértebras."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_chifres_travados:
     fonte: ficha
@@ -478,8 +478,8 @@ criaturas:
     contra_jogo: "Alternar os golpes entre os dois corpos até ficarem iguais e atacar o nó travado; ferir só um lado dá força ao outro."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_retalho_das_duas_cidades:
     fonte: ficha
@@ -499,8 +499,8 @@ criaturas:
     contra_jogo: "Cada um se proteger sozinho enquanto ele vive, e derrubá-lo primeiro pela costura do meio, onde as duas metades se repelem e a carne rasga."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   # ============================== LEGADO (valoria) ==============================
   enemy_assassino_cinzeu:
@@ -516,13 +516,13 @@ criaturas:
       som: null
       cheiro: "Pedra úmida de túnel profundo e um fundo de cogumelo, frio no meio da cidade."
       marca: "Numa porta, o desenho de um olho riscado com estilete, sem pupila, e a tranca intacta."
-      aproximacao: "De uma sombra onde não havia ninguém sai uma figura cinza sem olhos, o estilete de pedra já na sua direção."
+      aproximacao: "Rente à parede, alguém cinzento e sem olhos vira o rosto liso para o som da sua respiração, e o estilete de pedra sobe."
       rumor: "um vigia de Solvhen diz que os de baixo não precisam ver para achar quem foi encomendado"
     contra_jogo: "Lutar de costas para a parede e com luz: ele ataca da sombra o desprevenido, recua para se esconder quando descoberto e foge ferido."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_bandido_capitao:
     fonte: legado
@@ -545,8 +545,8 @@ criaturas:
     contra_jogo: "Derrubar o capitão primeiro: ele aponta o bando para o mais frágil e chama reforço, e quando o bando quebra, recua ou foge."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_capturador_groth:
     fonte: legado
@@ -567,8 +567,8 @@ criaturas:
     contra_jogo: "Não brigar perto do que ele guarda: ele defende o posto com escudo forte, não persegue além dele; atraí-lo para fora ou ir atrás da carga."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_espectro_lamento:
     fonte: legado
@@ -591,8 +591,8 @@ criaturas:
     contra_jogo: "Não esperar que ela recue, porque não recua: golpear com força em vez de ponta, que atravessa, e aguentar o grito que amedronta."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_necromante_renegado:
     fonte: legado
@@ -613,8 +613,8 @@ criaturas:
     contra_jogo: "Ir atrás dele e não dos mortos: sozinho ele se rende, foge ao primeiro ferimento e só ataca com vantagem ou pelas costas."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   enemy_nomade_canibal:
     fonte: legado
@@ -637,8 +637,8 @@ criaturas:
     contra_jogo: "Derrubar quem comanda o bando: eles cercam o mais frágil e mordem com infecção; quebrada a matilha, recuam ou fogem."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_auroque_ruinas:
     fonte: legado
@@ -659,8 +659,8 @@ criaturas:
     contra_jogo: "Derrubar o líder da manada: ele aponta o bando para o mais frágil e muda de lugar na poeira; quebrado o rebanho, ele recua."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_cavaleiro_sem_rosto:
     fonte: legado
@@ -678,11 +678,11 @@ criaturas:
       marca: "Na linha da fronteira, marcos de pedra com o nome raspado, um a cada légua, e nenhum outro sinal."
       aproximacao: "Pela linha da fronteira vem um homem montado de elmo liso, sem viseira nem feição, a lança sem brasão baixada para você."
       rumor: "os bandidos da estrada não acampam perto dos marcos raspados: dizem que a fronteira ainda é guardada"
-    contra_jogo: "Não esperar que ele recue, porque não recua: cuidado com a carga dele e com o toque gelado, e lutar fora da linha que ele percorre."
+    contra_jogo: "Não esperar que ele recue, porque não recua: cuidado com a carga dele, que atravessa cobertura e leva junto, e com o toque gelado."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_espectro_elfico:
     fonte: legado
@@ -704,8 +704,8 @@ criaturas:
     contra_jogo: "Não esperar que ele recue, porque não recua: golpear com força em vez de ponta, que atravessa, e não ficar parado ouvindo o lamento."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_gafanhoto_runa:
     fonte: legado
@@ -728,8 +728,8 @@ criaturas:
     contra_jogo: "Derrubar primeiro o que marca o alvo e ficar junto: o enxame concentra no mais ferido e se reposiciona na poeira; cercado e ferido, recua."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
 
   mon_lobo_da_pradaria:
     fonte: legado
@@ -751,5 +751,5 @@ criaturas:
     contra_jogo: "Derrubar o que marca o alvo e ficar de costas para algo firme: a matilha concentra no mais ferido e, cercada e ferida, recua."
     tramas: []
     autor: opus-370-lote2
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote2
+    revisao: aprovada
