@@ -291,4 +291,11 @@ DeepSeek real (primário em `ROUTES`); o dono liberou o custo da 361 (~US$ 0,05 
 
 ## 9. Registro de execução
 
-_(vazio; preencher: sha do set do R7, commits da Etapa E e do produto com autor, tabela do R9, rodadas de ajuste, rodadas medidas, dry-run do migrate, reindex, smoke)_
+_(preencher: commits do produto com autor, tabela do R9, rodadas de ajuste, rodadas medidas, dry-run do migrate, reindex, smoke)_
+
+**Etapa E (autor de eval, Opus; não é o executor de produto) — 2026-11-03.** Parecer: `handoffs/SPEC-374-eval-authoring.md`.
+
+- Commit `d3019102` "test(eval): fix idioma_pt ties, job latency threshold, tuning set (SPEC-374)": R4, R5, R6 (`PROTOCOLO`/`checar_protocolo` + docstring do `eval_geracao.py`), R7, R8. D3 confirmada no docstring do avaliador.
+- Set de ajuste (R7) `tests/fixtures/spec374_pedidos_ajuste.yaml`: sha256 `13ec924e27825bd64699fd474ac5661fb959870b41373a53e0162d44c80aa3df` (LF). Set medido da 361 segue `baf38310…db6dbc` (R2).
+- Re-pontuação sem LLM (`docs/spec374/eval-repontuado.md`): `idioma_pt` 0,9932 → 1,0 nas rodadas a e c da 361 (b já era 1,0); `latencia_job_p95_ms` 11 936 / 12 564 / 19 068 (todas ≤ 30 000; a c falhava o antigo ≤ 15 000); `lint_primeira` inalterado 7/11, 5/11, 6/11. Pelo protocolo D6, nenhum par das rodadas antigas passaria (melhor par a+c = 13/22).
+- R8: `evals/protected-paths.txt` recebeu o avaliador, os testes, os 2 sets e o `eval_geracao.py`. Publicação exige aprovação do environment `eval-governance` (EVAL_AUTHORING_REQUIRED; comando no parecer).
