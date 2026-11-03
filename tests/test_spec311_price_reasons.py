@@ -409,7 +409,7 @@ def _capture_narrate(monkeypatch):
 
     calls: list[str] = []
 
-    def fake(context, fallback, canonical_summary=None):
+    def fake(context, fallback, canonical_summary=None, gold_check=None):
         calls.append(context)
         return fallback
 
