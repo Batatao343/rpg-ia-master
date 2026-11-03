@@ -180,11 +180,35 @@ def test_narrator_laundering_player_name_is_local_only(monkeypatch, tmp_path):
     assert captured["name_origin"] == "narrator"
 
 
-def test_player_inputs_are_last_three_human_messages():
-    import inspect
+def test_player_inputs_are_last_three_human_messages(monkeypatch):
+    """SPEC-379 R6 (a): comportamento no lugar de getsource - o nó repassa só as 3 últimas falas."""
+    from langchain_core.messages import AIMessage, HumanMessage
 
-    src = inspect.getsource(st.storyteller_node)
-    assert "[m for m in messages if isinstance(m, HumanMessage)][-3:]" in src
+    from tests.fakes.scripted_llm import story_update_llm
+    from tests.test_grounding_boundaries import _story_state
+
+    captured = {}
+
+    def fake_with_new_npc(npcs, name, *_a, **kw):
+        captured["player_inputs"] = kw["player_inputs"]
+        return npcs
+
+    monkeypatch.setattr(st, "_with_new_npc", fake_with_new_npc)
+    monkeypatch.setattr(
+        st,
+        "get_llm",
+        lambda **_k: story_update_llm(
+            narrative="Carlos Mendes acena para voce.", introduced_npcs=["Carlos Mendes"]
+        ),
+    )
+    state = _story_state("fala 1")
+    state["messages"] = [
+        m
+        for i in range(1, 6)
+        for m in (HumanMessage(content=f"fala {i}"), AIMessage(content=f"resposta {i}"))
+    ]
+    st.storyteller_node(state)
+    assert captured["player_inputs"] == ("fala 3", "fala 4", "fala 5")
 
 
 # ---------------- P2-2 tipos/faixas ----------------
