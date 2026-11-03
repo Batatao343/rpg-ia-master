@@ -5,6 +5,7 @@ from __future__ import annotations
 from langchain_core.messages import HumanMessage
 
 import agents.storyteller as stt
+from tests.factories import make_state
 
 
 class _CaptureLLM:
@@ -70,7 +71,7 @@ def _state(**extra) -> dict:
         "mediated_subject_id": "npc_velha_magda",
     }
     st.update(extra)
-    return st
+    return make_state(**st)
 
 
 def test_mediacao_usa_visible_npc_view(monkeypatch):
