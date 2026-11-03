@@ -19,3 +19,4 @@ tests/test_spec361_eval.py
 tests/fixtures/spec361_pedidos.yaml
 tests/fixtures/spec374_pedidos_ajuste.yaml
 scripts/bestiario/eval_geracao.py
+tests/test_spec370_eval.py

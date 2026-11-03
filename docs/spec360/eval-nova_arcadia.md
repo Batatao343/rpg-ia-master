@@ -31,3 +31,28 @@ Combates por 100 ações: off 15.062 · on 12.521.
 - M3 presa sobe por predador: {"enemy_gargula_ferro": 2.0702, "enemy_horror_esgoto": 1.7459, "enemy_polvo_esgoto": 1.8117, "enemy_soldado_legiao_ferro": 2.0933, "mon_arame_vivo": 1.8123, "mon_cao_rebite": 1.9898, "mon_centopeia_da_torre_invertida": 1.7877, "mon_enxerto_da_fornalha": 1.8758, "mon_gralha_de_crematorio": 1.9246, "mon_lencol_de_chamine": 1.9094, "mon_porca_da_queda": 1.8117, "mon_rosario_de_vertebras": 1.8123, "mon_sangrado_da_clinica": 1.8758, "mon_sorvedouro_do_codigo": 1.921}
 - M3 predador cai: {"enemy_gargula_ferro": 0.4922, "enemy_horror_esgoto": 0.54, "enemy_polvo_esgoto": 0.5545, "enemy_soldado_legiao_ferro": 0.502, "mon_arame_vivo": 0.5462, "mon_cao_rebite": 0.5159, "mon_centopeia_da_torre_invertida": 0.4888, "mon_enxerto_da_fornalha": 0.4699, "mon_gralha_de_crematorio": 0.476, "mon_lencol_de_chamine": 0.4711, "mon_porca_da_queda": 0.5545, "mon_rosario_de_vertebras": 0.5447, "mon_sangrado_da_clinica": 0.4559, "mon_sorvedouro_do_codigo": 0.4755}
 - M4 contextos com candidata territorial: 20
+
+## SPEC-370 — por região, oráculo próprio do M1, M7 e M8
+
+- Nós raiz na região: 4. N/A declarados no avaliador (R16).
+
+| Métrica | Valor | Limiar | Resultado |
+|---|---|---|---|
+| M1 precedidos (oráculo próprio, R18) | 0.7508 | ≥ 0.7 | ok |
+| M1 precedidos (oráculo antigo, `sinais_mostrados`) | 0.7542 | informativo | — |
+| M1 aproximação | 1.0000 | ≥ 1.0 | ok |
+| M2 horário | 0.289 | ≤ 0.35 | ok |
+| M3 cadeia alimentar | sobe 1.7459 · cai 0.5545 | ≥ 1.5 / ≤ 0.6 | ok |
+| M4 território | 0.8544 | ≥ 0.8 | ok |
+| M5 por região (informativo, D5) | -0.1687 | alerta fora de -0.3 a +0.1 | ok |
+| M6 vazamento de nome | 0 | ≤ 0 | ok |
+| M7 determinismo (20 × 60) | `955a19f0c54236a2` × `955a19f0c54236a2` | hashes iguais | ok |
+| M8 densidade de sinal novo | 0.3146 | ≤ 0.4 | ok |
+
+### Oráculo do M1
+
+- Combates de fauna com entrada (on): 598 · precedidos (oráculo próprio): 449 · (antigo): 451.
+- Divergências: só o antigo conta 2 · só o próprio conta 0.
+- Textos de sinal emitidos: 1510 · sem dono no arquivo de dados: 0 · com mais de um dono: 0.
+- Ações com sinal novo (M8): 1510 de 4800.
+- Gatilhos off = on (R9 da 360): ok.
