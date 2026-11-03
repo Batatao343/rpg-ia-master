@@ -14,3 +14,8 @@ web/e2e/contracts
 tests/fixtures/spec330_legacy_golden.json
 scripts/fauna/eval.py
 tests/test_spec360_eval.py
+services/creature_gen_eval.py
+tests/test_spec361_eval.py
+tests/fixtures/spec361_pedidos.yaml
+tests/fixtures/spec374_pedidos_ajuste.yaml
+scripts/bestiario/eval_geracao.py

@@ -10,6 +10,23 @@ Sem ``--real`` roda no MockLLM (offline). Com ``--real`` usa ``ROUTES`` (custo) 
 LLM for simulado. As métricas são de ``services/creature_gen_eval.py`` (funções puras); os
 pedidos e os limiares são congelados (quem otimiza o produto não os altera).
 Grava o JSON e um ``.md`` com as colunas antes/depois (usa o último JSON do outro modo).
+
+SPEC-374 (Etapa E) — protocolo da rodada medida (R6/D6), fixado ANTES de medir:
+
+- set de AJUSTE (o executor itera só com ele, nunca conta como medida):
+  ``--pedidos tests/fixtures/spec374_pedidos_ajuste.yaml``;
+- rodadas MEDIDAS: duas rodadas reais seguidas, no mesmo commit, com o set da 361
+  (``--modo depois --real --rodada 1|2 --out docs/spec374/eval-medido-<n>.json``), DeepSeek
+  primário em ``ROUTES`` e ``mock=False`` conferido no JSON;
+- critério: ``lint_primeira`` agregado >= 0,70 (>= 16 de 22) e nenhuma rodada < 7/11; os
+  demais limiares valem em cada rodada (``creature_gen_eval.checar_protocolo``);
+- veredito: ``eval_geracao.py --protocolo docs/spec374/eval-medido-1.json
+  docs/spec374/eval-medido-2.json [--md-out docs/spec374/eval-medido.md]``;
+- re-pontuação sem LLM de registros gravados (R4):
+  ``eval_geracao.py --repontuar <json>... --md-out docs/spec374/eval-repontuado.md``.
+
+Cada JSON leva ``commit`` (sha do produto), ``pedidos_sha256`` e ``rodada``; cada registro
+leva ``vizinho_max`` (a lista de vizinhos não é gravada), para a re-pontuação ser exata.
 """
 
 from __future__ import annotations
@@ -173,6 +190,98 @@ def _rodar_depois(item: dict) -> dict:
     }
 
 
+_NOTA_DENOMINADOR = (
+    "Denominadores: `lint_primeira`/`lint_final`/`fallback` sobre as `forcar: nova` (`n_nova`); "
+    "`fisico`/`campos_349`/`vizinho_max` só sobre as fichas escritas pelo gerador (`n_gerados`: "
+    "as `nova` que caíram em fallback e as variantes ficam fora); `idioma_pt`/`proibidos`/"
+    "`digitos` sobre todos os textos gravados; `caminho_ok` sobre as `auto` (`n_auto`)."
+)
+
+
+def _CHAVES() -> list[str]:  # noqa: N802 - ordem das linhas das tabelas
+    from services import creature_gen_eval as ev
+
+    extras = ("n_nova", "n_gerados", "lint_primeira_n", "variante_vs_nova", "latencia_nova_p50_ms")
+    return list(ev.LIMIARES) + [k for k in extras if k not in ev.LIMIARES]
+
+
+def _git_commit() -> str | None:
+    import subprocess
+
+    try:
+        sha = subprocess.run(
+            ["git", "rev-parse", "--short=12", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=True,
+        ).stdout.strip()
+        sujo = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=no"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=True,
+        ).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return f"{sha}+sujo" if sujo else sha
+
+
+def repontuar(docs: list[dict]) -> list[dict]:
+    """R4: recalcula as métricas dos registros gravados, sem LLM. Métricas que dependem de
+    dados que o JSON antigo não guardou (``vizinho_max`` sem vizinhos por registro) mantêm o
+    valor original e entram em ``herdadas``."""
+    from services import creature_gen_eval as ev
+
+    out = []
+    for d in docs:
+        regs = d.get("registros") or []
+        m = ev.avaliar(regs, modo=d.get("modo") or "depois")
+        herdadas = []
+        if not any(r.get("vizinhos") or "vizinho_max" in r for r in regs):
+            m["vizinho_max"] = (d.get("metricas") or {}).get("vizinho_max")
+            herdadas.append("vizinho_max")
+        out.append(
+            {**d, "metricas_originais": d.get("metricas"), "metricas": m, "herdadas": herdadas}
+        )
+    return out
+
+
+def _md_tabela(titulo: str, docs: list[dict], nota: str = "") -> str:
+    """Uma coluna por documento (antes/depois/rodadas), com o veredito por limiar."""
+    from services import creature_gen_eval as ev
+
+    nomes = [Path(str(d.get("arquivo") or "?")).name for d in docs]
+    linhas = [f"# {titulo}", "", nota, ""] if nota else [f"# {titulo}", ""]
+    for nome, d in zip(nomes, docs, strict=True):
+        linhas.append(
+            f"- `{nome}`: modo={d.get('modo')} · real={d.get('real')} · mock={d.get('mock')} · "
+            f"rodada={d.get('rodada') or '—'} · commit=`{d.get('commit') or '—'}` · "
+            f"pedidos=`{str(d.get('pedidos_sha256') or '')[:12]}`"
+        )
+    linhas += ["", "| métrica | limiar | " + " | ".join(nomes) + " |"]
+    linhas.append("|---|---|" + "---|" * len(docs))
+    oks = [
+        ev.checar_limiares(d.get("metricas") or {}) if d.get("modo") != "antes" else {}
+        for d in docs
+    ]
+    for k in _CHAVES():
+        lim = ev.LIMIARES.get(k)
+        cel = []
+        for d, ok in zip(docs, oks, strict=True):
+            v = (d.get("metricas") or {}).get(k, "—")
+            marca = " **✗**" if ok.get(k) is False else ""
+            herd = " (herdado)" if k in (d.get("herdadas") or []) else ""
+            cel.append(f"{v}{marca}{herd}")
+        lim_txt = f"{lim[0]} {lim[1]}" if lim else "—"
+        linhas.append(f"| {k} | {lim_txt} | " + " | ".join(cel) + " |")
+    linhas += ["", _NOTA_DENOMINADOR]
+    return "\n".join(linhas) + "\n"
+
+
 def _md(antes: dict | None, depois: dict | None) -> str:
     from services import creature_gen_eval as ev
 
@@ -192,14 +301,18 @@ def _md(antes: dict | None, depois: dict | None) -> str:
     ma = (antes or {}).get("metricas") or {}
     md = (depois or {}).get("metricas") or {}
     ok = ev.checar_limiares(md) if md else {}
-    chaves = list(ev.LIMIARES) + [
-        k for k in ("variante_vs_nova", "latencia_nova_p50_ms") if k not in ev.LIMIARES
-    ]
-    for k in chaves:
+    for k in _CHAVES():
         lim = ev.LIMIARES.get(k)
         lim_txt = f"{lim[0]} {lim[1]}" if lim else "—"
         flag = {True: "sim", False: "**não**", None: "—"}[ok.get(k)]
         linhas.append(f"| {k} | {ma.get(k, '—')} | {md.get(k, '—')} | {lim_txt} | {flag} |")
+    if depois:
+        linhas += [
+            "",
+            f"Rodada: {depois.get('rodada') or '—'} · commit: `{depois.get('commit') or '—'}`",
+            "",
+            _NOTA_DENOMINADOR,
+        ]
     if depois:
         linhas += ["", "## Pedidos (depois)", "", "| id | caminho | tentativas | códigos | nome |"]
         linhas.append("|---|---|---|---|---|")
@@ -218,13 +331,76 @@ def _ultimo(modo: str, pasta: Path = DOCS) -> dict | None:
     return json.loads(arquivos[-1].read_text(encoding="utf-8"))
 
 
+def _ler(caminho: str) -> dict:
+    p = Path(caminho)
+    p = p if p.is_absolute() else ROOT / p
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def _relatorio(args: argparse.Namespace) -> int:
+    from services import creature_gen_eval as ev
+
+    if args.repontuar:
+        docs = repontuar([_ler(c) for c in args.repontuar])
+        nota = (
+            "Re-pontuação sem LLM (SPEC-374 R4/R5) dos registros gravados: `idioma_pt` sem "
+            '"a"/"as" nas stopwords inglesas e latência renomeada para o job '
+            "(`latencia_job_p95_ms <= 30000`). Os JSON originais não foram reescritos."
+        )
+        md = _md_tabela("SPEC-374 — eval da 361 re-pontuado", docs, nota)
+        difs = [
+            "",
+            "## O que mudou na re-pontuação",
+            "",
+            "| arquivo | métrica | original | re-pontuado |",
+            "|---|---|---|---|",
+        ]
+        for d in docs:
+            orig, novo = d.get("metricas_originais") or {}, d.get("metricas") or {}
+            for k in sorted(set(orig) | set(novo)):
+                if orig.get(k) != novo.get(k):
+                    difs.append(
+                        f"| `{Path(str(d.get('arquivo'))).name}` | {k} | {orig.get(k, '—')} | "
+                        f"{novo.get(k, '—')} |"
+                    )
+        md += "\n".join(difs) + "\n"
+        resumo: dict = {
+            "repontuados": [{"arquivo": d.get("arquivo"), **d["metricas"]} for d in docs]
+        }
+    else:
+        docs = [_ler(c) for c in args.protocolo]
+        resumo = ev.checar_protocolo(docs)
+        md = _md_tabela("SPEC-374 — rodadas medidas (protocolo R6)", docs)
+        ok, den = resumo["lint_primeira_agregado"]
+        md += (
+            f"\n## Veredito\n\n- passou: **{resumo['passou']}**\n"
+            f"- lint_primeira agregado: {ok}/{den} (>= 0,70) · piso por rodada (>= 7/11): "
+            f"{resumo['piso_rodada']}\n- validade: {resumo['validade']}\n"
+        )
+    if args.md_out:
+        destino = Path(args.md_out)
+        destino = destino if destino.is_absolute() else ROOT / destino
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(md, encoding="utf-8", newline="\n")
+    print(json.dumps(resumo, ensure_ascii=False, default=str))
+    return 0 if args.repontuar or resumo.get("passou") else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     ap.add_argument("--pedidos", default="tests/fixtures/spec361_pedidos.yaml")
-    ap.add_argument("--modo", choices=("antes", "depois"), required=True)
+    ap.add_argument("--modo", choices=("antes", "depois"))
     ap.add_argument("--real", action="store_true")
     ap.add_argument("--out")
+    ap.add_argument("--rodada", type=int, help="número da rodada medida (R6): 1 ou 2")
+    ap.add_argument("--repontuar", nargs="+", metavar="JSON", help="re-pontua sem LLM (R4)")
+    ap.add_argument("--protocolo", nargs="+", metavar="JSON", help="veredito R6 das rodadas")
+    ap.add_argument("--md-out", help="destino do .md de --repontuar/--protocolo")
     args = ap.parse_args(argv)
+    if args.repontuar or args.protocolo:
+        return _relatorio(args)
+    if not args.modo:
+        ap.error("--modo é obrigatório (ou use --repontuar/--protocolo)")
     _setup(args.modo, args.real)
 
     import llm_setup
@@ -256,6 +432,7 @@ def main(argv: list[str] | None = None) -> int:
             regiao=item["regiao"],
             vizinhos=_vizinhos(item["regiao"]),
         )
+        reg["vizinho_max"] = round(ev.vizinho_max(reg.get("anatomia") or "", reg["vizinhos"]), 4)
         registros.append(reg)
         print(f"{item['id']}: {reg['caminho']} ({reg.get('latencia_ms')} ms)", file=sys.stderr)
     metricas = ev.avaliar(registros, modo=args.modo)
@@ -265,6 +442,8 @@ def main(argv: list[str] | None = None) -> int:
     doc = {
         "spec": "SPEC-361",
         "modo": args.modo,
+        "rodada": args.rodada,
+        "commit": _git_commit(),
         "real": bool(args.real),
         "mock": bool(llm_setup.is_simulated()),
         "data": hoje,
