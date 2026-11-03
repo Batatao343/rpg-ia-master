@@ -9,6 +9,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 from agents import archivist
 from llm_setup import ModelTier
+from tests.factories import make_state
 
 TURN = 4  # fora da janela de retry (4 % 3 != 0) e a 4 turnos do último run
 
@@ -25,7 +26,7 @@ def _state(**kw):
         "pending_world_events": [],
     }
     st.update(kw)
-    return st
+    return make_state(**st)
 
 
 def test_default_policy_is_legacy(monkeypatch):
