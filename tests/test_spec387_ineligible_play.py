@@ -17,7 +17,9 @@ def _known_only():
     extra = next(
         c["id"]
         for c in cards.cards_for_class(p["class_name"])
-        if c["id"] not in p["deck"] and c["id"] not in p["prepared_cards"] and c.get("tipo") == "ativa"
+        if c["id"] not in p["deck"]
+        and c["id"] not in p["prepared_cards"]
+        and c.get("tipo") == "ativa"
     )
     p["known_cards"] = [*p["known_cards"], extra]
     piles = cp.start_piles(p, 1)

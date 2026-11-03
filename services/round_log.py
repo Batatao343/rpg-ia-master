@@ -48,6 +48,7 @@ _HUMAN_LINE_RES = tuple(
         r"já foi usada \(|^Entropia insuficiente|só pode ser jogada 1× por rodada\.$",
         r"é um Fardo e não pode ser jogada\.$|^Falta Fôlego para descartar |não pode ser descartada\.$",
         r"não é uma Carta ativa\.$|está silenciado — sem Cartas\.$",
+        r" resiste à provocação de ",  # SPEC-387: a Provocação que não desvia também se explica
     )
 )
 
@@ -215,6 +216,13 @@ def _weapon_name(actor: dict) -> str:
     return text
 
 
+def _cap_cond(name: str) -> str:
+    """Nome da condição com a inicial maiúscula; id com "_" vira o rótulo do glossário (SPEC-387 §6.8)."""
+    if "_" in name:
+        return fx.condition_label(name)
+    return name[:1].upper() + name[1:]
+
+
 def _voce(line: str, hero_name: str) -> str:
     """SPEC-353 R36: linhas do motor falam de "Você", com condição em maiúscula e concordância."""
     hero = (hero_name or "").strip()
@@ -222,23 +230,23 @@ def _voce(line: str, hero_name: str) -> str:
     if hero and text.startswith(hero):
         m = re.match(rf"^{re.escape(hero)}: ganha condição (.+?)\.?$", text)
         if m:
-            return f"Você ganha a condição {m.group(1)[:1].upper()}{m.group(1)[1:]}."
+            return f"Você ganha a condição {_cap_cond(m.group(1))}."
         m = re.match(rf"^{re.escape(hero)}: condição (.+?) renovada\.?$", text)
         if m:
-            return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} foi renovada."
+            return f"Sua condição {_cap_cond(m.group(1))} foi renovada."
         m = re.match(rf"^{re.escape(hero)}: (.+?) terminou\.?$", text)
         if m:
-            return f"Sua condição {m.group(1)[:1].upper()}{m.group(1)[1:]} terminou."
+            return f"Sua condição {_cap_cond(m.group(1))} terminou."
         text = "Você" + text[len(hero) :]
     m = re.match(r"^(.+?): ganha condição (.+?)\.?$", text)
     if m:
-        return f"{m.group(1)} ganha a condição {m.group(2)[:1].upper()}{m.group(2)[1:]}."
+        return f"{m.group(1)} ganha a condição {_cap_cond(m.group(2))}."
     m = re.match(r"^(.+?): condição (.+?) renovada\.?$", text)
     if m:
-        return f"A condição {m.group(2)[:1].upper()}{m.group(2)[1:]} de {m.group(1)} foi renovada."
+        return f"A condição {_cap_cond(m.group(2))} de {m.group(1)} foi renovada."
     m = re.match(r"^(.+?): (.+?) terminou\.?$", text)  # SPEC-367 R13
     if m:
-        return f"A condição {m.group(2)[:1].upper()}{m.group(2)[1:]} de {m.group(1)} terminou."
+        return f"A condição {_cap_cond(m.group(2))} de {m.group(1)} terminou."
     return text
 
 

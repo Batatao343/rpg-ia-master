@@ -24,15 +24,16 @@ from tests.fixtures.spec368_scenarios import CARDS_ON, env
 # item -> variantes aceitas ("" = padrao)
 ITEMS: dict[int, tuple[str, ...]] = {
     1: ("", "rollback"),
-    2: ("",),
-    3: ("", "rachadura"),
+    2: ("", "frustrar"),
+    3: ("", "rachadura", "eco", "inelegivel"),
     4: ("",),
-    5: ("", "chefe", "nova"),
+    5: ("", "chefe", "nova", "chefe_fase"),
     6: ("", "espolio"),
     7: ("", "medico"),
     12: ("",),
-    13: ("", "leitura", "armadura", "renegado", "reacao"),
-    14: ("",),
+    13: ("", "leitura", "armadura", "renegado", "reacao", "voto", "condicao_carta"),
+    14: ("", "entrega"),
+    15: ("", "vg_ouro"),  # SPEC-387 R23: loja com saldo para o V-G do ouro
 }
 _CLASS = {
     (3, "rachadura"): "Corruptor",
@@ -44,6 +45,10 @@ _CLASS = {
     (13, "armadura"): "Corruptor",
     (5, ""): "Devoto do Abismo",
     (5, "chefe"): "Devoto do Abismo",
+    (2, "frustrar"): "Arcanista Cinzento",
+    (5, "chefe_fase"): "Devoto do Abismo",
+    (13, "voto"): "Devoto do Abismo",
+    (13, "condicao_carta"): "Devoto do Abismo",
 }
 
 
@@ -106,7 +111,19 @@ def _force_hand(piles: dict, hand: list[str]) -> None:
     piles["compra"] = pool
 
 
-def _reseed(state, creature_id, n=1, *, hand=None, folego=None, enemy_vitality=None, seed=7):
+def _reseed(
+    state,
+    creature_id,
+    n=1,
+    *,
+    hand=None,
+    folego=None,
+    enemy_vitality=None,
+    seed=7,
+    allies=None,
+    want_alvo=None,
+    late_vitality=None,
+):
     """Troca o elenco do conflito ABERTO pelo caminho real: instancias do spawn, cena, manifesto, pilhas e Pressagio."""
     import random
 
@@ -157,9 +174,33 @@ def _reseed(state, creature_id, n=1, *, hand=None, folego=None, enemy_vitality=N
     if folego is not None:
         piles["folego"] = folego
     meta["pilhas"] = piles
-    actors = {"player": player, **{e["id"]: e for e in enemies}}
-    sides = {"hero": ["player"], "ally": [], "enemy": [e["id"] for e in enemies]}
+    actors = {
+        "player": player,
+        **{e["id"]: e for e in enemies},
+        **{a["id"]: a for a in allies or []},
+    }
+    sides = {
+        "hero": ["player"],
+        "ally": [a["id"] for a in allies or []],
+        "enemy": [e["id"] for e in enemies],
+    }
     forecast = enemy_intent.forecast_round(scene, actors, sides, random.Random(seed))
+    for s_ in range(seed, seed + 400):  # SPEC-387 R22: busca a semente que mira o alvo pedido
+        if want_alvo is None:
+            break
+        forecast = enemy_intent.forecast_round(scene, actors, sides, random.Random(s_))
+        if any(
+            i.get("tipo") == "ataque" and i.get("alvo_id") == want_alvo
+            for v in forecast.values()
+            for i in v
+        ):
+            break
+    else:
+        if want_alvo is not None:
+            raise AssertionError(f"nenhuma semente mirou {want_alvo}")
+    for e in enemies:
+        if late_vitality is not None:
+            e["vitalidade"] = late_vitality  # DEPOIS do presságio: o inimigo ferido ainda ataca
     meta["pressagios"] = forecast
     meta["pressagios_publicos"] = enemy_intent.public_round(
         forecast, actors, cs.tactical_round(scene) + 1
@@ -173,6 +214,41 @@ def _known(state: dict, *ids: str) -> None:
             p["known_cards"].append(cid)
 
 
+def _learn(state: dict, *ids: str) -> None:
+    """SPEC-387 R21: Carta CONHECIDA, Preparada e no baralho (jogável de verdade). `_known` sozinho
+    deixa a Carta só no Acervo: a jogada seria recusada (variante de teste `3 inelegivel`)."""
+    _known(state, *ids)
+    p = state["player"]
+    for key in ("prepared_cards", "deck"):
+        for cid in ids:
+            if cid not in p.setdefault(key, []):
+                p[key].append(cid)
+
+
+def _escort(state: dict) -> None:
+    """SPEC-387 R19/R21: o protegido é um aliado ATOR do conflito (`party`), não só um NPC da cena."""
+    import party as party_mod
+    from services import conflict_scene as cs
+
+    comp = party_mod.make_companion_from_npc({"id": "escoltado", "name": "Escoltado"}, "Escoltado")
+    comp["active"] = True
+    state["party"] = [comp]
+    scene = state["combat"]["scene"]
+    ref = next(iter((scene.get("positions") or {}).values()), {})
+    cs.place(scene, comp["id"], zone_id=ref.get("zone_id") or "z0", distance_state="proximo")
+    cs.freeze(scene)
+    scene["allies"] = [comp["id"]]
+    scene["objetivo"] = {"tipo": "proteger", "alvo": comp["id"]}
+
+
+def _soft(state: dict, vitality: int | None = None) -> None:
+    """SPEC-387 R22: Esquiva do inimigo negativa (acerto certo em 2d10, sem depender de sorte)."""
+    for e in state["enemies"]:
+        e["esquiva_penalidade"] = 30
+        if vitality is not None:
+            e["vitalidade"] = e["max_vitalidade"] = vitality
+
+
 def _recipe(item: int, variant: str, state: dict) -> None:
     from services import card_piles, card_rewards
     from services import enemy_decks as edk
@@ -183,6 +259,10 @@ def _recipe(item: int, variant: str, state: dict) -> None:
         return
     if item == 1:
         _reseed(state, "enemy_goblin", 1, hand=[g, g, "bas_san_guarda"], folego=1)
+    elif item == 2 and variant == "frustrar":
+        _learn(state, "arc1_des_estouro_contido")
+        _reseed(state, "enemy_goblin", 1, hand=["arc1_des_estouro_contido", "bas_arc_golpe"])
+        _soft(state)
     elif item == 2:
         _reseed(state, "enemy_goblin", 1)
         for e in state["enemies"]:
@@ -190,16 +270,28 @@ def _recipe(item: int, variant: str, state: dict) -> None:
                 c["id"] if isinstance(c, dict) else c for c in e.get("cartas") or []
             ]
     elif item == 3 and variant == "rachadura":
-        _known(state, "cor1_ino_junta_emperrada")
+        _learn(state, "cor1_ino_junta_emperrada")
         _reseed(state, "enemy_goblin", 1, hand=["cor1_ino_junta_emperrada", "bas_cor_golpe"])
-    elif item == 3:
+        _soft(state, 60)
+    elif item == 3 and variant == "eco":
+        _learn(state, "san1_exp_segundo_ato")
+        _reseed(state, "enemy_goblin", 1, hand=[g, "san1_exp_segundo_ato"])
+        _soft(state, 60)
+    elif item == 3 and variant == "inelegivel":  # a receita ANTIGA, de propósito (R17/R18)
         _known(state, "san1_exp_segundo_ato")
+        _reseed(state, "enemy_goblin", 1, hand=["san1_exp_segundo_ato", g])
+    elif item == 3:
+        _learn(state, "san1_exp_segundo_ato")
         _reseed(state, "enemy_goblin", 1, hand=["san1_exp_segundo_ato", g])
     elif item == 4:
         _reseed(state, "enemy_goblin", 2)
-        scene = state["combat"]["scene"]
-        scene["npcs"] = [{"id": "escoltado", "name": "Escoltado"}]
-        scene["objetivo"] = {"tipo": "proteger", "alvo": "escoltado"}
+        _escort(state)
+    elif item == 5 and variant == "chefe_fase":
+        _reseed(state, "enemy_boss_valerius", 1, hand=["bas_dev_golpe", "bas_dev_golpe"])
+        _soft(state)
+        boss = state["enemies"][0]
+        first = edk._sorted_phases(boss)[0]["ate_vitalidade_pct"]  # 1 ponto acima do limiar
+        boss["vitalidade"] = int(int(boss["max_vitalidade"]) * first / 100) + 1
     elif item == 5:
         cid = {
             "": "enemy_soldado_legiao_ferro",
@@ -209,6 +301,7 @@ def _recipe(item: int, variant: str, state: dict) -> None:
         _reseed(state, cid, 2 if variant == "" else 1)
     elif item == 6 and variant == "espolio":
         state["combat"] = {"active": False, "phase": "ended", "round": 0}
+        card_piles.activate_deck(state["player"])  # SPEC-387 R21: Forja e Esquecer exigem o baralho
         _reseed_for_reward(state, edk)
         card_rewards.on_long_rest(state["player"])
     elif item == 6:
@@ -217,6 +310,8 @@ def _recipe(item: int, variant: str, state: dict) -> None:
         _reseed(state, "enemy_goblin", 2)
     elif item == 12:
         _reseed(state, "enemy_goblin", 1, hand=[g, "bas_san_guarda"], enemy_vitality=1)
+    elif item == 13 and variant in {"voto", "condicao_carta"}:
+        _recipe_13_extra(state, variant)
     elif item == 13:
         spec = {
             "": ("enemy_goblin", 2, ["bas_dev_voto", "bas_dev_golpe"], ()),
@@ -227,19 +322,41 @@ def _recipe(item: int, variant: str, state: dict) -> None:
                 ("arc1_cal_leitura",),
             ),
             "armadura": (
-                "enemy_goblin",
+                "enemy_soldado_legiao_ferro",
                 1,
                 ["cor_ino_fadiga", "bas_cor_golpe"],
                 ("cor_ino_fadiga",),
             ),
             "renegado": ("enemy_renegado_ermo", 1, None, ()),
-            "reacao": ("enemy_goblin", 1, ["dev_encaixe", "bas_dev_golpe"], ()),
+            "reacao": ("enemy_goblin", 1, ["dev_encaixe", "bas_dev_golpe"], ("dev_encaixe",)),
         }[variant]
-        _known(state, *spec[3])
+        _learn(state, *spec[3])
         _reseed(
-            state, spec[0], spec[1], hand=spec[2], enemy_vitality=1 if variant == "reacao" else None
+            state,
+            spec[0],
+            spec[1],
+            hand=spec[2],
+            late_vitality=1 if variant == "reacao" else None,
+            folego=4 if variant == "reacao" else None,  # a Reação (custo 2) sobra depois da Guarda
         )
+        if variant in {"reacao", "armadura"}:
+            _soft(state)
+        if variant == "armadura":  # Ruptura do caminho B aplica Armadura Comprometida
+            state["player"].setdefault("evolved_cards", {})["cor_ino_fadiga"] = "B"
+        if variant == "reacao":
+            state["player"]["entropy"] = max(5, int(state["player"].get("entropy", 0) or 0))
+    elif item == 15:
+        _recipe_15(state)
     elif item == 14:
+        if variant == "entrega":
+            _place_hero(state, "brekmar", "Brekmar")
+            state.setdefault("npcs", {})["Contratante"] = {
+                "name": "Contratante",
+                "id": "contratante",
+                "in_scene": True,
+                "relationship": 20,
+                "home_location_id": "brekmar",
+            }
         state.setdefault("quests", []).append(
             {
                 "id": "q368",
@@ -257,6 +374,54 @@ def _recipe(item: int, variant: str, state: dict) -> None:
                 ],
             }
         )
+
+
+def _recipe_13_extra(state: dict, variant: str) -> None:
+    """SPEC-387 R23: `13 voto` (Ketil aliado ator, presságio mirando Ketil) e `13 condicao_carta`."""
+    import party as party_mod
+    from services import conflict_scene as cs
+
+    if variant == "condicao_carta":
+        _learn(state, "neu1_er_lanca_de_gancho")
+        _reseed(state, "enemy_goblin", 1, hand=["neu1_er_lanca_de_gancho", "bas_dev_golpe"])
+        _soft(state, 60)
+        return
+    ketil = party_mod.make_companion_from_npc({"id": "ketil", "name": "Ketil"}, "Ketil")
+    state["party"] = [ketil]
+    _reseed(
+        state,
+        "enemy_goblin",
+        1,
+        hand=["bas_dev_voto", "bas_dev_golpe"],
+        allies=[ketil],
+        want_alvo="ketil",
+    )
+    _soft(state, 60)
+    scene = state["combat"]["scene"]
+    ref = next(iter((scene.get("positions") or {}).values()), {})
+    cs.place(scene, "ketil", zone_id=ref.get("zone_id") or "z0", distance_state="proximo")
+    cs.freeze(scene)
+    scene["allies"] = ["ketil"]
+
+
+def _place_hero(state: dict, location_id: str, name: str) -> None:
+    world = state.setdefault("world", {})
+    world["current_location_id"], world["current_location"] = location_id, name
+    world["visited"] = list(dict.fromkeys([*(world.get("visited") or []), location_id]))
+
+
+def _recipe_15(state: dict) -> None:
+    """SPEC-387 R23 (`15 vg_ouro`): mercador de Skallgard; o ouro deixa SALDO FINAL 30 depois da
+    Carta mais barata da prateleira (a prosa que diga "últimas moedas" é a prova do V-G da 367)."""
+    from services import card_shop
+
+    _place_hero(state, "skallgard", "Skallgard")
+    state["player"]["level"] = max(6, int(state["player"].get("level", 1) or 1))
+    mid, ids = card_shop.shelf(state)
+    assert mid and ids, "Skallgard sem prateleira de Cartas"
+    merchant = card_shop.economy.MERCHANTS[mid]
+    price = min(card_shop.card_price(state, cid, merchant) for cid in ids)
+    state["player"]["gold"] = price + 30
 
 
 def _reseed_for_reward(state: dict, edk) -> None:
@@ -299,7 +464,7 @@ def seed_save(
 
     if item not in ITEMS or variant not in ITEMS[item]:
         raise ValueError(f"item/variante sem seed: {item}/{variant!r} (validos: {ITEMS})")
-    combat_scene = not (item == 14 or (item, variant) in {(1, "rollback"), (6, "espolio")})
+    combat_scene = not (item in (14, 15) or (item, variant) in {(1, "rollback"), (6, "espolio")})
     with _legacy(saves_dir):
         client = TestClient(api.app)
         gid = _new_game(client, _CLASS.get((item, variant), "Sangromante"), hero)

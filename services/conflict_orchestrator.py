@@ -2694,6 +2694,8 @@ def _run_round(
         new = _taunt_target(shim, candidates, actors_by_id, rng, scene)
         taunt_spend.setdefault(actor_id, []).extend(fresh)
         if not new or new == orig:
+            by = actors_by_id.get(sorted(sources)[0]) or {}
+            out["logs"].append(f"{_name(actor)} resiste à provocação de {_name(by)}.")  # SPEC-387
             return decl, None
 
         def swap(node):

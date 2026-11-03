@@ -27,7 +27,7 @@ def _state(tmp_path, gid, **flags) -> dict:
 
 
 def test_every_combat_item_has_a_seed():
-    assert set(sd.ITEMS) == {1, 2, 3, 4, 5, 6, 7, 12, 13, 14}
+    assert set(sd.ITEMS) == {1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15}
 
 
 def test_item1_pacto_hand_and_short_folego(tmp_path):

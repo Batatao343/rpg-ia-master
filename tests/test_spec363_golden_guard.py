@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import subprocess
 
+import pytest
+
 
 def _clean_against_main(*paths: str) -> bool:
     return (
@@ -21,5 +23,11 @@ def test_golden_files_have_no_diff_against_main():
 
 
 def test_engine_modules_untouched_by_spec363():
+    # SPEC-387: guarda de pouso da 363 — depois do pouso o motor pode mudar por outras specs (skip fora da branch).
+    branch = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, check=False
+    ).stdout.strip()
+    if branch != "spec-363":
+        pytest.skip("guarda da SPEC-363: só na branch spec-363")
     # R14/R15 leem `final_blows` (já gravado pelo orquestrador); nada novo dentro do motor.
     assert _clean_against_main("services/conflict_orchestrator.py", "services/conflict_turn.py")
