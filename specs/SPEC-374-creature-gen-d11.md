@@ -307,3 +307,13 @@ _(preencher: commits do produto com autor, tabela do R9, rodadas de ajuste, roda
 - **Migrate (R16):** dry-run em `docs/spec374/migrate-dryrun.md`. Os 17 docs de segredo (14 `npc_tr_` + 3 `npc_mv_`) ganharam `curated: true`; os 36 `npc_mv_*` foram de `entities.json` para `entities_extra.json`; regra nova `validate_curated_secrets` (ERRO). `validate_content.py`: 0 ERRO.
 - **Rodadas de ajuste** (4, teto D5; set R7): lint_primeira 8/11, 10/11, 7/11, 8/11 (agregado 33/44 = 75 %); U2/U3 sumiram. Tabela e leitura em `docs/spec374/RELATORIO.md`.
 - **REVISÃO OPUS PENDENTE (coordenador):** o texto do prompt (`_EIXOS_LINHA`/`_EIXOS_LIVRE`, linha de "inglês de jogo / dragão" em `REGRAS`, textos de `linha_nucleos`/`padroes_livres`) foi escrito pelo executor Sonnet, sem revisão Opus. `handoffs/SPEC-374-prompt-review.md` ainda não existe.
+
+**Rodadas MEDIDAS (R6/D6), 03/11, commit do produto `c5806b48`, árvore limpa, set da 361 (sha `baf38310…db6dbc` conferido), DeepSeek primário, `mock=False`:** `eval_geracao.py --protocolo` -> **`passou: true`**.
+
+| | lint_primeira | fallback | lint_final | job p50 / p95 | falhas de 1ª tentativa |
+|---|---|---|---|---|---|
+| rodada 1 | 9/11 (81,8 %) | 0 | 100 % | 7,3 s / 8,5 s | costa_negra R20; aethelgard U13 (reparado) |
+| rodada 2 | 8/11 (72,7 %) | 0 | 100 % | 6,9 s / 17,1 s | pantano U13 (reparado); costa_negra R20; aethelgard U13 (reparado) |
+| agregado | **17/22 (77,3 %)** (>= 16/22) | | | | piso 7/11 respeitado nas duas |
+
+Todos os demais limiares valem e passam em cada rodada (inclusive `idioma_pt` 1,0 e `latencia_job_p95_ms <= 30 000`). Referência da 361: 63,6 / 45,5 / 54,5 %. Na rodada 2 uma chamada caiu no fallback de provedor (`groq/openai/gpt-oss-120b` aparece em `providers`); o `lint_primeira` conta a ficha produzida mesmo assim. Veredito e tabelas: `docs/spec374/eval-medido.md`, `eval-medido-{1,2}.json`. Não houve reajuste depois (R2). Itens 4-7 do §6 e o reindex real (§6.3), o migrate real em worktree descartável (§6.2) e a revisão Opus/Sol seguem com o coordenador.
