@@ -25,8 +25,8 @@ criaturas:
     contra_jogo: "Arrancar as estacas da fileira, uma por vez, ou derrubá-lo primeiro; sem a fileira, os de trás ficam ao alcance."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_romeiro_de_ambar:
     fonte: ficha
@@ -48,8 +48,8 @@ criaturas:
     contra_jogo: "Pancada quebra o âmbar, nos pés e nele; fogo amolece a resina, e as placas dele escorrem antes das de quem ficou preso."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_banhado_do_centro:
     fonte: ficha
@@ -62,18 +62,18 @@ criaturas:
         - {quando: "pressao:guerra", efeito: mais}
     sinais:
       antecedencia: cedo
-      rastro: "Pegadas enormes de pé descalço na lama, cada uma cercada de uma auréola negra que não se mistura à água."
+      rastro: "Pegadas fundas e largas de pé descalço na lama, cada uma cercada de uma auréola negra que não se mistura à água."
       resto: "Uma espada de saqueador largada no raso, a lâmina comida de ferrugem até o meio, mas o cabo novo."
       som: "Uma respiração lenta e molhada de velho, e um gotejar constante que não vem de cima."
       cheiro: "Sangue velho e ferro molhado, forte como dentro de um açougue fechado."
       marca: "Nos elmos afundados de uma mesma fileira, marcas de dedos pretos, como se alguém os contasse todo dia."
-      aproximacao: "Da lama sobe um velho imenso de veias pretas, suando um caldo escuro que escorre pelo peito e pinga das mãos."
+      aproximacao: "Da lama sobe um velho largo e curvado, de veias pretas, suando um caldo escuro que escorre pelo peito e pinga das mãos."
       rumor: "um saqueador velho diz que há um trecho do fundo onde a lâmina apodrece na mão antes do primeiro golpe"
     contra_jogo: "Feri-lo com o que não enferruja (pedra, osso, pau, fogo) ou trocar de arma a cada golpe; quem insiste na mesma lâmina acaba batendo com ferrugem."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   enemy_zumbi_blindado:
     fonte: ficha
@@ -95,8 +95,8 @@ criaturas:
     contra_jogo: "Pancada, não lâmina; sem ossos que o sustentem, depois de amassado ele não se levanta."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   # ============================== BESTAS DA ENTROPIA ==============================
   mon_castor_de_estacas:
@@ -111,17 +111,17 @@ criaturas:
     sinais:
       antecedencia: cedo
       rastro: "Um caminho alisado na lama entre a água e o capim, largo como uma pá, com raspas de madeira tratada."
-      resto: "Um marco dos druidas roído até virar ponta de lápis, a fita da medição boiando solta ao lado."
+      resto: "Um marco dos druidas roído até a ponta, e em volta lascas boiando com marcas de dente largas como um polegar."
       som: "Um estalo chapado na água, forte como um tapa em mesa, e depois o ranger de madeira sendo puxada."
       cheiro: "Piche e madeira molhada roída de fresco, com um fundo de toca."
       marca: "Uma represa de paus e ossos atravessada no canal, e a água parada acima dela, mais alta que a do Pântano."
       aproximacao: "Na represa, um bicho do tamanho de um bezerro, eriçado de lascas, arreganha duas lâminas laranja na boca."
-      rumor: "um druida reclama que a borda medida na segunda amanheceu dez passos mais perto da estrada"
+      rumor: "um druida reclama que o canal da trilha velha amanheceu fechado de paus e ossos, e a água não baixa mais"
     contra_jogo: "Derrubar uma estaca da represa a desfaz; ele larga tudo para consertar, e é aí que fica de costas."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_patinador_de_oleo:
     fonte: ficha
@@ -145,8 +145,8 @@ criaturas:
     contra_jogo: "Agitar a água; a película quebrada não o segura, e ele cai e se debate como qualquer inseto molhado."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_cagado_de_geada:
     fonte: ficha
@@ -168,8 +168,8 @@ criaturas:
     contra_jogo: "Calor. Fogo perto da cabeça o faz soltar e recolher; e nunca se debruçar no poço que ele guarda pela frente."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_fundeiro_da_poca:
     fonte: ficha
@@ -192,8 +192,8 @@ criaturas:
     contra_jogo: "Sair da linha da poça; ele só cospe para cima e para a frente, e de lado, na margem rasa, não alcança nem enxerga."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_tritao_de_sobra:
     fonte: ficha
@@ -216,8 +216,8 @@ criaturas:
     contra_jogo: "Fogo e pancada, não lâmina; e acabar rápido, porque cada corte sem queimar é mais uma pata."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_musaranho_de_dente_vermelho:
     fonte: ficha
@@ -240,8 +240,8 @@ criaturas:
     contra_jogo: "Mantê-lo longe por uma ou duas rodadas; sem morder, ele se gasta sozinho."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_borda_que_anda:
     fonte: ficha
@@ -263,8 +263,8 @@ criaturas:
     contra_jogo: "Lutar de costas para a terra seca e mirar as estacas da crista; cada estaca arrancada é um ano que ela perde, e ela recua para buscá-lo."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
   mon_podador_do_ciclo:
@@ -288,8 +288,8 @@ criaturas:
     contra_jogo: "Enfrentá-lo sem Ferimento aberto, ou deixar a Carta melhor para depois do corte; contra quem está inteiro, ele não acha o que podar e só corta raso."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_jardineiro_de_tumores:
     fonte: ficha
@@ -313,8 +313,8 @@ criaturas:
     contra_jogo: "Matá-lo de longe, sem lhe dar ferida para semear; e quem sair ferido procura um druida do Ciclo antes de dormir."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_mula_de_lagrimas:
     fonte: ficha
@@ -335,8 +335,8 @@ criaturas:
     contra_jogo: "Matá-lo de longe, ou deixá-lo fugir; ele foge quando pode, e a carga vai embora com ele."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_casaco_de_sanguessugas:
     fonte: ficha
@@ -359,8 +359,8 @@ criaturas:
     contra_jogo: "Arrancar a sanguessuga na hora, mesmo custando a ação; fogo no casaco solta todas de uma vez, e ele passa a sentir o que não sentia."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_turno_vencido:
     fonte: ficha
@@ -381,8 +381,8 @@ criaturas:
     contra_jogo: "Rachar a argila dele com um golpe de pancada; a dos outros cai junto, e quem estava protegido volta a ceder."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
   mon_regaco_da_margem:
@@ -397,7 +397,7 @@ criaturas:
         - {quando: "clima:nublado", efeito: mais}
     sinais:
       antecedencia: cedo
-      rastro: "Pegadas de várias pessoas que saem da trilha na mesma direção, cada vez mais lentas, e nenhuma que volte."
+      rastro: "Pegadas de várias pessoas que saem da trilha para a beira da água, cada vez mais curtas e arrastadas, como de quem cansou de repente."
       resto: "Um par de botas arrumado lado a lado na beira, como as de quem tirou para dormir, cheias de musgo."
       som: "Uma respiração funda e lenta, de quem dorme pesado, e às vezes um cantarolar sem palavra."
       cheiro: "Turfa morna e musgo, cheiro de cama de palha num dia frio."
@@ -407,8 +407,8 @@ criaturas:
     contra_jogo: "Recusar o descanso; quem foi tomado gasta a ação para se debater e sai; os outros cortam os braços nos cotovelos, onde a lama é fina."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_cordao_de_medida:
     fonte: ficha
@@ -430,8 +430,8 @@ criaturas:
     contra_jogo: "Desconfiar da corda; atravessar sem apoio e variar as Cartas; ele só devolve o que aprendeu."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_maos_no_rosto:
     fonte: ficha
@@ -452,8 +452,8 @@ criaturas:
     contra_jogo: "Derrubá-lo primeiro, sem esperar ver o rosto; com ele no chão, a Virtude volta inteira."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_cisne_de_patina:
     fonte: ficha
@@ -474,8 +474,8 @@ criaturas:
     contra_jogo: "Golpear o pescoço, onde não há seda, e afastar-se depois de cada golpe; sem contato, ele não envelhece nada."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_arraia_de_lodo:
     fonte: ficha
@@ -496,8 +496,8 @@ criaturas:
     contra_jogo: "Achá-la primeiro; a nuvem nasce dela, e por baixo ela é fina e mole; morta, as intenções dos outros voltam a se ver."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_fardo_de_espolio:
     fonte: ficha
@@ -520,8 +520,8 @@ criaturas:
     contra_jogo: "Não pagar; deixar que cure e matá-lo depressa, mão por mão; sem Fôlego cobrado, é um caranguejo de braços fracos."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   # ============================== LEGADO (valoria) ==============================
   enemy_boss_arauto_nevoa:
@@ -544,8 +544,8 @@ criaturas:
     contra_jogo: "Cobrir o curador e o conjurador, que ele abate primeiro, e guardar a defesa forte para o golpe pesado que ele segura até o fim."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   enemy_druida_renegado:
     fonte: legado
@@ -568,8 +568,8 @@ criaturas:
     contra_jogo: "Não segui-lo para a água funda e lutar perto dos outros: sozinho e ferido ele se rende ou foge, e só ataca com vantagem."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_afogado_da_batalha:
     fonte: legado
@@ -581,18 +581,18 @@ criaturas:
         - {quando: "pressao:abismo", efeito: mais}
     sinais:
       antecedencia: cedo
-      rastro: "Dezenas de pegadas de bota militar saindo da água em fileira, todas no mesmo passo, e nenhuma voltando."
+      rastro: "Dezenas de pegadas de bota militar na lama da margem, alinhadas em fileira e no mesmo passo, como de tropa em formação."
       resto: "Um peitoral da coalizão vazio na lama, amassado por dentro, com algas presas nas correias."
       som: "Um tinido abafado de metal sob a água, muitos ao mesmo tempo, como de tropa marchando no fundo."
       cheiro: "Couro de correia apodrecido e ferrugem velha, cheiro de arsenal alagado."
       marca: "Na lama da margem, lanças fincadas de pé em linha, como uma barreira que ninguém mais guarda."
       aproximacao: "Da água sobe uma linha de soldados de armadura podre, sem rosto sob os elmos, e avança sem uma ordem."
       rumor: "um velho da coalizão diz que a tropa dele nunca foi dispensada, e que no fundo ainda tem quem marche"
-    contra_jogo: "Não ficar parado no raso: lutar de pé na terra firme e acabar com eles pela força bruta, porque ponta e flecha pouco entram."
+    contra_jogo: "Acabar com eles pela força bruta, com pancada e corte, porque ponta e flecha pouco entram; eles não recuam nem se rendem, então convém escolher a hora de sair."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_cervo_afogado:
     fonte: legado
@@ -614,8 +614,8 @@ criaturas:
     contra_jogo: "Golpear com força e não com ponta, e não perdê-lo de vista: ele se esconde entre os mortos e volta quando você baixa a guarda."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_mosquito_eter:
     fonte: legado
@@ -633,14 +633,14 @@ criaturas:
       resto: "Um rato morto entre as raízes, a pele marcada de mil pontinhos azuis, sem gota de sangue."
       som: "Um zumbido agudo e afinado, de muitas vozes na mesma nota, que muda de tom quando alguém se mexe."
       cheiro: "Um cheiro elétrico de chuva que não veio, fino, que arde no nariz."
-      marca: "Sobre as poças, nuvens de pontinhos brilhantes, azul-pálidos, que se juntam onde a água aflora."
+      marca: "Onde a água aflora entre as raízes, o brilho azul da poça sumiu, e a borda está forrada de asinhas mortas e transparentes."
       aproximacao: "Uma nuvem de insetos translúcidos, de barriga acesa em azul, se fecha em volta de você cantando na mesma nota."
       rumor: "um coletor diz que, onde a nuvem azul canta, a gota boa está embaixo, e o preço é o sangue"
-    contra_jogo: "Não deixar a nuvem crescer: matar os primeiros, que fogem logo, e sair do pântano raso antes que o ferrão translúcido corroa."
+    contra_jogo: "Não deixar a nuvem crescer: matar os primeiros, que fogem ao primeiro ferimento; em bando eles afinam o ferrão juntos, sozinhos hesitam."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_sanguessuga_braco:
     fonte: legado
@@ -660,11 +660,11 @@ criaturas:
       marca: "Na madeira de uma ponte baixa, anéis de ventosa do tamanho de um punho, ainda pegajosos."
       aproximacao: "A lama ao seu pé estufa e uma coisa preta e grossa, do comprimento de um homem até o cotovelo, se cola na sua perna."
       rumor: "um pescador da borda só entra na água de botas de couro grosso, e mesmo assim volta com elas furadas"
-    contra_jogo: "Não deixá-la colar: lutar fora da água rasa e acabar com ela antes da ferida infeccionar; ferida, ela se solta e foge."
+    contra_jogo: "Não deixá-la colar e acabar com ela antes que a mordida infeccione; ela persegue o mais ferido, e ferida, se solta e foge."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_sapo_boi_acido:
     fonte: legado
@@ -688,8 +688,8 @@ criaturas:
     contra_jogo: "Não ficar na linha do cuspe: fechar a distância de lado e golpear firme; muito ferido, ele recua para a água."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada
 
   mon_viuva_lodo:
     fonte: legado
@@ -712,5 +712,5 @@ criaturas:
     contra_jogo: "Não chegar perto dos marcos com a guarda baixa: quando ela aparecer, cercar o esconderijo para que não volte a sumir, e fugir da carga."
     tramas: []
     autor: opus-370-lote1
-    revisor_fauna: pendente
-    revisao: pendente
+    revisor_fauna: opus-370-revisor-lote1
+    revisao: aprovada

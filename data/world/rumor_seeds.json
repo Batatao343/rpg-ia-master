@@ -3452,7 +3452,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "as mulheres do cais mandam os maridos contarem as luzes antes de voltar para o barco"
+      "sinal_rumor": "as mulheres do cais dizem que o bêbado que segue a luz baixa do píer não chega ao barco"
     },
     "rumor_avist_mon_tripeiro_de_fundo": {
       "family": "avistamento",
@@ -5806,7 +5806,7 @@
       "truth_mode": "regional",
       "quest_eligible": true,
       "review": "dono",
-      "sinal_rumor": "um druida reclama que a borda medida na segunda amanheceu dez passos mais perto da estrada"
+      "sinal_rumor": "um druida reclama que o canal da trilha velha amanheceu fechado de paus e ossos, e a água não baixa mais"
     },
     "rumor_avist_mon_patinador_de_oleo": {
       "family": "avistamento",

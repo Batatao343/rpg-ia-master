@@ -28,8 +28,8 @@ Combates por 100 ações: off 15.062 · on 12.729.
 ## Distribuição (contexto neutro, exata)
 
 - M2 por criatura (fora/dentro): {"enemy_guerreiro_bjorn": 0.2047, "enemy_renegado_ermo": 0.1747, "enemy_yeti": 0.2436, "mon_andas_de_caribu": 0.2436, "mon_aperto_da_tregua": 0.2841, "mon_corvo_gelo": 0.1866, "mon_desfiado_da_aurora": 0.2289, "mon_ermitao_de_elmo": 0.2329, "mon_ferreiro_chama_fria": 0.2329, "mon_jotun_cinza": 0.2382, "mon_lagarta_sete_invernos": 0.2108, "mon_lascador_morno": 0.1868, "mon_levantado_de_rubi": 0.1868, "mon_lobo_aurora": 0.258, "mon_lobo_de_vidro": 0.2041, "mon_mandriao_dois_bicos": 0.2531, "mon_montaria_cravada": 0.1747, "mon_queimado_de_breu": 0.2722, "mon_ticao_do_juramento": 0.2841}
-- M3 presa sobe por predador: {"mon_carrapato_de_mamute": 1.822, "mon_enegrecido_que_espera": 1.8067, "mon_ermitao_de_elmo": 1.8063, "mon_lobo_aurora": 2.0372, "mon_lobo_de_vidro": 1.8617, "mon_mandriao_dois_bicos": 1.927, "mon_montaria_cravada": 1.9631, "mon_urso_tita": 1.7299, "mon_verme_do_gelo": 1.9705}
-- M3 predador cai: {"mon_carrapato_de_mamute": 0.4769, "mon_enegrecido_que_espera": 0.4749, "mon_ermitao_de_elmo": 0.4782, "mon_lobo_aurora": 0.4904, "mon_lobo_de_vidro": 0.5152, "mon_mandriao_dois_bicos": 0.5121, "mon_montaria_cravada": 0.491, "mon_verme_do_gelo": 0.4811}
+- M3 presa sobe por predador: {"mon_carrapato_de_mamute": 1.822, "mon_ermitao_de_elmo": 1.8063, "mon_lobo_aurora": 2.0372, "mon_lobo_de_vidro": 1.8617, "mon_mandriao_dois_bicos": 1.927, "mon_montaria_cravada": 1.9631, "mon_urso_tita": 1.7299, "mon_verme_do_gelo": 1.9705}
+- M3 predador cai: {"mon_carrapato_de_mamute": 0.4769, "mon_ermitao_de_elmo": 0.4637, "mon_lobo_aurora": 0.4884, "mon_lobo_de_vidro": 0.5152, "mon_mandriao_dois_bicos": 0.5089, "mon_montaria_cravada": 0.491, "mon_verme_do_gelo": 0.4811}
 - M4 contextos com candidata territorial: 15
 
 ## SPEC-370 — por região, oráculo próprio do M1, M7 e M8
@@ -46,7 +46,7 @@ Combates por 100 ações: off 15.062 · on 12.729.
 | M4 território | 0.8627 | ≥ 0.8 | ok |
 | M5 por região (informativo, D5) | -0.1549 | alerta fora de -0.3 a +0.1 | ok |
 | M6 vazamento de nome | 0 | ≤ 0 | ok |
-| M7 determinismo (20 × 60) | `1d767d297b612068` × `1d767d297b612068` | hashes iguais | ok |
+| M7 determinismo (20 × 60) | `23c5b451caa58add` × `23c5b451caa58add` | hashes iguais | ok |
 | M8 densidade de sinal novo | 0.3017 | ≤ 0.4 | ok |
 
 ### Oráculo do M1
