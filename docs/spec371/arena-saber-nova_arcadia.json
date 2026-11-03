@@ -1,39 +1,39 @@
 {
  "agregado": {
   "e1_frac_reveladas": 0.3442,
-  "e2_ganho_pp": -12.85,
-  "e3_pares": 321,
-  "e3_razao_vit": 0.9278,
-  "e4_pior_pp": -31.0,
-  "e4_vitoria_2": 0.5958,
+  "e2_ganho_pp": 3.69,
+  "e3_pares": 416,
+  "e3_razao_vit": 0.8949,
+  "e4_pior_pp": -19.0,
+  "e4_vitoria_2": 0.6527,
   "pares": 2600,
   "por_criatura_delta_pp": {
-   "enemy_elemental_fogo_poluido": -6.0,
-   "enemy_gargula_ferro": -1.0,
-   "enemy_golem_lixo": -7.0,
-   "enemy_horror_esgoto": 1.0,
-   "enemy_polvo_esgoto": -1.0,
-   "enemy_sentinela_ferro": -6.0,
-   "mon_arame_vivo": -15.0,
-   "mon_cavadeira_de_unhas": -4.0,
-   "mon_centopeia_da_torre_invertida": -4.0,
-   "mon_convidado_de_cera": 1.0,
-   "mon_enxerto_da_fornalha": -2.0,
-   "mon_escritura_rastejante": -1.0,
+   "enemy_elemental_fogo_poluido": -2.0,
+   "enemy_gargula_ferro": 6.0,
+   "enemy_golem_lixo": -2.0,
+   "enemy_horror_esgoto": 4.0,
+   "enemy_polvo_esgoto": 0.0,
+   "enemy_sentinela_ferro": 2.0,
+   "mon_arame_vivo": -2.0,
+   "mon_cavadeira_de_unhas": 2.0,
+   "mon_centopeia_da_torre_invertida": 2.0,
+   "mon_convidado_de_cera": 9.0,
+   "mon_enxerto_da_fornalha": 1.0,
+   "mon_escritura_rastejante": 2.0,
    "mon_fila_de_grilhoes": 1.0,
-   "mon_fole_de_costela": -9.0,
-   "mon_gralha_de_crematorio": -31.0,
-   "mon_lencol_de_chamine": -8.0,
-   "mon_pavio_da_lista": 3.0,
-   "mon_porca_da_queda": -3.0,
-   "mon_portao_que_morde": -2.0,
-   "mon_quebrado_de_vitrine": -1.0,
-   "mon_relicario_de_osso": 0.0,
-   "mon_rosario_de_vertebras": -14.0,
-   "mon_sangrado_da_clinica": -6.0,
-   "mon_sorvedouro_do_codigo": -4.0,
-   "mon_traca_do_sino_mudo": -2.0,
-   "mon_vira_costas_da_praca": 6.0
+   "mon_fole_de_costela": 0.0,
+   "mon_gralha_de_crematorio": -19.0,
+   "mon_lencol_de_chamine": -4.0,
+   "mon_pavio_da_lista": 6.0,
+   "mon_porca_da_queda": -1.0,
+   "mon_portao_que_morde": 4.0,
+   "mon_quebrado_de_vitrine": 0.0,
+   "mon_relicario_de_osso": 1.0,
+   "mon_rosario_de_vertebras": 4.0,
+   "mon_sangrado_da_clinica": 5.0,
+   "mon_sorvedouro_do_codigo": 1.0,
+   "mon_traca_do_sino_mudo": 2.0,
+   "mon_vira_costas_da_praca": 11.0
   },
   "revelados": 895
  },
@@ -849,11 +849,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_elemental_fogo_poluido",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -909,21 +909,21 @@
    "classe": "Médico de Campo",
    "id": "enemy_elemental_fogo_poluido",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 6,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_elemental_fogo_poluido",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 7,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -979,11 +979,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_elemental_fogo_poluido",
    "lost1": 2,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 13,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -1679,21 +1679,21 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 14,
-   "lost2": 18,
+   "lost2": 10,
    "revelado": true,
    "seed": 3,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 14,
-   "lost2": 18,
+   "lost2": 6,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -1719,7 +1719,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 10,
+   "lost2": 14,
    "revelado": true,
    "seed": 7,
    "win1": true,
@@ -1789,19 +1789,9 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 18,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "enemy_gargula_ferro",
-   "lost1": 18,
    "lost2": 18,
    "revelado": true,
-   "seed": 15,
+   "seed": 14,
    "win1": false,
    "win2": false
   },
@@ -1809,7 +1799,17 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 18,
-   "lost2": 8,
+   "lost2": 14,
+   "revelado": true,
+   "seed": 15,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "enemy_gargula_ferro",
+   "lost1": 18,
+   "lost2": 16,
    "revelado": true,
    "seed": 16,
    "win1": false,
@@ -1819,21 +1819,21 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 8,
-   "lost2": 18,
+   "lost2": 2,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 18,
+   "lost2": 14,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -1849,7 +1849,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 13,
+   "lost2": 9,
    "revelado": true,
    "seed": 0,
    "win1": false,
@@ -1869,7 +1869,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 13,
+   "lost2": 16,
    "revelado": true,
    "seed": 2,
    "win1": false,
@@ -1889,17 +1889,17 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 7,
-   "lost2": 13,
+   "lost2": 6,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 10,
-   "lost2": 10,
+   "lost2": 7,
    "revelado": true,
    "seed": 5,
    "win1": false,
@@ -1909,7 +1909,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 8,
+   "lost2": 5,
    "revelado": true,
    "seed": 6,
    "win1": false,
@@ -1919,7 +1919,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 7,
    "win1": false,
@@ -1929,7 +1929,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 10,
-   "lost2": 7,
+   "lost2": 16,
    "revelado": true,
    "seed": 8,
    "win1": false,
@@ -1939,7 +1939,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 9,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 9,
    "win1": false,
@@ -1949,7 +1949,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 10,
    "win1": false,
@@ -1959,11 +1959,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 11,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -1979,17 +1979,17 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 13,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 14,
    "win1": false,
@@ -1999,7 +1999,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 12,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 15,
    "win1": false,
@@ -2009,7 +2009,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 12,
-   "lost2": 10,
+   "lost2": 8,
    "revelado": true,
    "seed": 16,
    "win1": false,
@@ -2019,7 +2019,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 9,
    "revelado": true,
    "seed": 17,
    "win1": false,
@@ -2029,7 +2029,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 18,
    "win1": false,
@@ -2039,7 +2039,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_gargula_ferro",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 19,
    "win1": false,
@@ -2649,7 +2649,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 10,
-   "lost2": 14,
+   "lost2": 11,
    "revelado": true,
    "seed": 0,
    "win1": true,
@@ -2679,7 +2679,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 16,
-   "lost2": 12,
+   "lost2": 10,
    "revelado": true,
    "seed": 3,
    "win1": true,
@@ -2689,7 +2689,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 14,
-   "lost2": 12,
+   "lost2": 11,
    "revelado": true,
    "seed": 4,
    "win1": true,
@@ -2739,7 +2739,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 13,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 9,
    "win1": true,
@@ -2759,7 +2759,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 9,
-   "lost2": 14,
+   "lost2": 7,
    "revelado": true,
    "seed": 11,
    "win1": true,
@@ -2769,11 +2769,11 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 13,
-   "lost2": 14,
+   "lost2": 18,
    "revelado": true,
    "seed": 12,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Arcanista Cinzento",
@@ -2809,7 +2809,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 9,
-   "lost2": 7,
+   "lost2": 9,
    "revelado": true,
    "seed": 16,
    "win1": true,
@@ -2819,7 +2819,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 9,
-   "lost2": 8,
+   "lost2": 9,
    "revelado": true,
    "seed": 17,
    "win1": true,
@@ -2829,7 +2829,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 8,
-   "lost2": 10,
+   "lost2": 8,
    "revelado": true,
    "seed": 18,
    "win1": true,
@@ -2839,7 +2839,7 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_golem_lixo",
    "lost1": 11,
-   "lost2": 11,
+   "lost2": 7,
    "revelado": true,
    "seed": 19,
    "win1": true,
@@ -2849,17 +2849,17 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 2,
-   "lost2": 2,
+   "lost2": 5,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 8,
-   "lost2": 9,
+   "lost2": 13,
    "revelado": true,
    "seed": 1,
    "win1": true,
@@ -2869,7 +2869,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 8,
-   "lost2": 10,
+   "lost2": 8,
    "revelado": true,
    "seed": 2,
    "win1": true,
@@ -2879,21 +2879,21 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 7,
-   "lost2": 4,
+   "lost2": 5,
    "revelado": true,
    "seed": 3,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 8,
-   "lost2": 8,
+   "lost2": 10,
    "revelado": true,
    "seed": 4,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -2929,7 +2929,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 4,
-   "lost2": 7,
+   "lost2": 4,
    "revelado": true,
    "seed": 8,
    "win1": true,
@@ -2939,27 +2939,27 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 8,
-   "lost2": 2,
+   "lost2": 5,
    "revelado": true,
    "seed": 9,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 12,
-   "lost2": 4,
+   "lost2": 13,
    "revelado": true,
    "seed": 10,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 7,
-   "lost2": 3,
+   "lost2": 7,
    "revelado": true,
    "seed": 11,
    "win1": false,
@@ -2969,7 +2969,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 12,
-   "lost2": 4,
+   "lost2": 16,
    "revelado": true,
    "seed": 12,
    "win1": true,
@@ -2979,7 +2979,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 6,
-   "lost2": 9,
+   "lost2": 6,
    "revelado": true,
    "seed": 13,
    "win1": true,
@@ -2989,7 +2989,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 5,
-   "lost2": 6,
+   "lost2": 5,
    "revelado": true,
    "seed": 14,
    "win1": true,
@@ -2999,27 +2999,27 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 7,
-   "lost2": 5,
+   "lost2": 13,
    "revelado": true,
    "seed": 15,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 16,
-   "lost2": 2,
+   "lost2": 5,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 9,
-   "lost2": 12,
+   "lost2": 9,
    "revelado": true,
    "seed": 17,
    "win1": true,
@@ -3039,11 +3039,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_golem_lixo",
    "lost1": 10,
-   "lost2": 9,
+   "lost2": 6,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -3899,11 +3899,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_horror_esgoto",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 5,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -3919,9 +3919,19 @@
    "classe": "Médico de Campo",
    "id": "enemy_horror_esgoto",
    "lost1": 16,
-   "lost2": 7,
+   "lost2": 16,
    "revelado": true,
    "seed": 7,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "enemy_horror_esgoto",
+   "lost1": 16,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 8,
    "win1": false,
    "win2": true
   },
@@ -3929,21 +3939,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_horror_esgoto",
    "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "enemy_horror_esgoto",
-   "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -4019,11 +4019,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_horror_esgoto",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 17,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -4989,11 +4989,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_polvo_esgoto",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 14,
    "revelado": true,
    "seed": 14,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -5679,11 +5679,11 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_sentinela_ferro",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 17,
    "revelado": true,
    "seed": 3,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -5829,11 +5829,11 @@
    "classe": "Arcanista Cinzento",
    "id": "enemy_sentinela_ferro",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 11,
    "revelado": true,
    "seed": 18,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -5849,7 +5849,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 9,
-   "lost2": 10,
+   "lost2": 15,
    "revelado": true,
    "seed": 0,
    "win1": false,
@@ -5859,37 +5859,37 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 6,
-   "lost2": 3,
+   "lost2": 10,
    "revelado": true,
    "seed": 1,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 16,
-   "lost2": 13,
+   "lost2": 9,
    "revelado": true,
    "seed": 2,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 8,
-   "lost2": 13,
+   "lost2": 10,
    "revelado": true,
    "seed": 3,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 15,
-   "lost2": 3,
+   "lost2": 4,
    "revelado": true,
    "seed": 4,
    "win1": false,
@@ -5899,11 +5899,11 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 15,
-   "lost2": 11,
+   "lost2": 8,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -5929,17 +5929,17 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 2,
-   "lost2": 7,
+   "lost2": 14,
    "revelado": true,
    "seed": 8,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 13,
-   "lost2": 8,
+   "lost2": 10,
    "revelado": true,
    "seed": 9,
    "win1": true,
@@ -5959,7 +5959,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 2,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 11,
    "win1": false,
@@ -5969,7 +5969,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 13,
-   "lost2": 15,
+   "lost2": 8,
    "revelado": true,
    "seed": 12,
    "win1": false,
@@ -5979,31 +5979,31 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 10,
-   "lost2": 4,
+   "lost2": 10,
    "revelado": true,
    "seed": 13,
    "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "enemy_sentinela_ferro",
-   "lost1": 16,
-   "lost2": 4,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
    "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
-   "lost1": 9,
+   "lost1": 16,
    "lost2": 16,
+   "revelado": true,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "enemy_sentinela_ferro",
+   "lost1": 9,
+   "lost2": 8,
    "revelado": true,
    "seed": 15,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -6019,7 +6019,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 0,
-   "lost2": 8,
+   "lost2": 10,
    "revelado": true,
    "seed": 17,
    "win1": false,
@@ -6029,7 +6029,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 6,
-   "lost2": 13,
+   "lost2": 11,
    "revelado": true,
    "seed": 18,
    "win1": true,
@@ -6039,7 +6039,7 @@
    "classe": "Médico de Campo",
    "id": "enemy_sentinela_ferro",
    "lost1": 14,
-   "lost2": 8,
+   "lost2": 9,
    "revelado": true,
    "seed": 19,
    "win1": true,
@@ -6649,21 +6649,21 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 7,
-   "lost2": 15,
+   "lost2": 18,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 7,
    "revelado": true,
    "seed": 1,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -6689,21 +6689,21 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 6,
-   "lost2": 18,
+   "lost2": 16,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 13,
-   "lost2": 18,
+   "lost2": 7,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -6719,11 +6719,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 9,
-   "lost2": 18,
+   "lost2": 3,
    "revelado": true,
    "seed": 7,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -6779,11 +6779,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 13,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -6809,7 +6809,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_arame_vivo",
    "lost1": 15,
-   "lost2": 3,
+   "lost2": 6,
    "revelado": true,
    "seed": 16,
    "win1": true,
@@ -6849,11 +6849,11 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 0,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -6889,21 +6889,21 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 5,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -6919,21 +6919,21 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 7,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 8,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -6959,11 +6959,11 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 2,
    "revelado": true,
    "seed": 11,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -6979,7 +6979,7 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 8,
+   "lost2": 4,
    "revelado": true,
    "seed": 13,
    "win1": false,
@@ -6999,21 +6999,21 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 3,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 15,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -7029,11 +7029,11 @@
    "classe": "Médico de Campo",
    "id": "mon_arame_vivo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 9,
    "revelado": true,
    "seed": 18,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -7669,11 +7669,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 16,
-   "lost2": 18,
+   "lost2": 16,
    "revelado": true,
    "seed": 2,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -7769,7 +7769,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 4,
-   "lost2": 8,
+   "lost2": 0,
    "revelado": true,
    "seed": 12,
    "win1": true,
@@ -7789,11 +7789,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 18,
    "revelado": true,
    "seed": 14,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Arcanista Cinzento",
@@ -7819,7 +7819,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 3,
-   "lost2": 10,
+   "lost2": 0,
    "revelado": true,
    "seed": 17,
    "win1": true,
@@ -7849,11 +7849,11 @@
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 2,
-   "lost2": 9,
+   "lost2": 16,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
@@ -7869,21 +7869,21 @@
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 2,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 3,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -7909,11 +7909,11 @@
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 6,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -7939,21 +7939,21 @@
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 10,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -8009,21 +8009,21 @@
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 0,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_cavadeira_de_unhas",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -8899,21 +8899,21 @@
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 5,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 11,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 6,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -8939,11 +8939,11 @@
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -8959,17 +8959,17 @@
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 2,
-   "lost2": 16,
+   "lost2": 1,
    "revelado": true,
    "seed": 11,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 6,
-   "lost2": 7,
+   "lost2": 6,
    "revelado": true,
    "seed": 12,
    "win1": true,
@@ -8989,11 +8989,11 @@
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 14,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -9029,11 +9029,11 @@
    "classe": "Médico de Campo",
    "id": "mon_centopeia_da_torre_invertida",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 18,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -9659,7 +9659,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 18,
-   "lost2": 4,
+   "lost2": 0,
    "revelado": true,
    "seed": 1,
    "win1": false,
@@ -9669,7 +9669,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 2,
    "win1": true,
@@ -9679,7 +9679,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 12,
-   "lost2": 0,
+   "lost2": 4,
    "revelado": true,
    "seed": 3,
    "win1": true,
@@ -9699,11 +9699,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 4,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -9739,11 +9739,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 0,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 9,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -9759,7 +9759,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 16,
-   "lost2": 4,
+   "lost2": 0,
    "revelado": true,
    "seed": 11,
    "win1": true,
@@ -9769,7 +9769,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 18,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 12,
    "win1": false,
@@ -9809,7 +9809,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 0,
-   "lost2": 16,
+   "lost2": 0,
    "revelado": true,
    "seed": 16,
    "win1": true,
@@ -9829,7 +9829,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 18,
-   "lost2": 0,
+   "lost2": 4,
    "revelado": true,
    "seed": 18,
    "win1": false,
@@ -9839,41 +9839,41 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_convidado_de_cera",
    "lost1": 12,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 0,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 1,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 2,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -9899,11 +9899,11 @@
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 5,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -10019,31 +10019,31 @@
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_convidado_de_cera",
-   "lost1": 16,
-   "lost2": 4,
-   "revelado": true,
-   "seed": 18,
-   "win1": false,
    "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_convidado_de_cera",
-   "lost1": 0,
+   "lost1": 16,
    "lost2": 16,
+   "revelado": true,
+   "seed": 18,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_convidado_de_cera",
+   "lost1": 0,
+   "lost2": 0,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -10939,11 +10939,11 @@
    "classe": "Médico de Campo",
    "id": "mon_enxerto_da_fornalha",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -10959,11 +10959,11 @@
    "classe": "Médico de Campo",
    "id": "mon_enxerto_da_fornalha",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 2,
    "revelado": true,
    "seed": 11,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -11009,11 +11009,11 @@
    "classe": "Médico de Campo",
    "id": "mon_enxerto_da_fornalha",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -11809,11 +11809,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_escritura_rastejante",
    "lost1": 15,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 16,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -11839,11 +11839,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_escritura_rastejante",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 6,
    "revelado": true,
    "seed": 19,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -11879,11 +11879,11 @@
    "classe": "Médico de Campo",
    "id": "mon_escritura_rastejante",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 3,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -12869,7 +12869,7 @@
    "classe": "Médico de Campo",
    "id": "mon_fila_de_grilhoes",
    "lost1": 6,
-   "lost2": 11,
+   "lost2": 12,
    "revelado": true,
    "seed": 2,
    "win1": true,
@@ -12939,7 +12939,7 @@
    "classe": "Médico de Campo",
    "id": "mon_fila_de_grilhoes",
    "lost1": 16,
-   "lost2": 10,
+   "lost2": 6,
    "revelado": true,
    "seed": 9,
    "win1": false,
@@ -13019,7 +13019,7 @@
    "classe": "Médico de Campo",
    "id": "mon_fila_de_grilhoes",
    "lost1": 6,
-   "lost2": 8,
+   "lost2": 4,
    "revelado": true,
    "seed": 17,
    "win1": true,
@@ -13649,11 +13649,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_fole_de_costela",
    "lost1": 12,
-   "lost2": 18,
+   "lost2": 12,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -13689,7 +13689,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_fole_de_costela",
    "lost1": 0,
-   "lost2": 0,
+   "lost2": 6,
    "revelado": true,
    "seed": 4,
    "win1": true,
@@ -13799,7 +13799,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_fole_de_costela",
    "lost1": 12,
-   "lost2": 6,
+   "lost2": 12,
    "revelado": true,
    "seed": 15,
    "win1": true,
@@ -13828,2016 +13828,16 @@
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 6,
-   "revelado": false,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_fole_de_costela",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": true,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 3,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 3,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 5,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 8,
-   "revelado": true,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 3,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 9,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 11,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 12,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 4,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 14,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 8,
-   "lost2": 3,
-   "revelado": true,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 6,
-   "lost2": 7,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 7,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 18,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_fole_de_costela",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 2,
-   "revelado": true,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 11,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
    "lost1": 6,
    "lost2": 6,
    "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 2,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 4,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 3,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 5,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 2,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 6,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 2,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 3,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 5,
-   "revelado": true,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 13,
-   "lost2": 15,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 15,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 15,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 3,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 9,
-   "revelado": true,
-   "seed": 19,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 0,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 14,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 15,
-   "revelado": true,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 15,
-   "lost2": 9,
-   "revelado": true,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 5,
-   "revelado": false,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 9,
-   "revelado": true,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 6,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 8,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 9,
-   "lost2": 6,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 0,
-   "lost2": 3,
-   "revelado": true,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 13,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 9,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 15,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 16,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 12,
-   "lost2": 3,
-   "revelado": true,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 6,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 17,
-   "lost2": 17,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 5,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 4,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": true,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 13,
-   "lost2": 13,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 9,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 11,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 12,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 10,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 18,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 13,
-   "lost2": 13,
-   "revelado": true,
-   "seed": 19,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 0,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 3,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 3,
-   "revelado": true,
-   "seed": 4,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 5,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 6,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 14,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 17,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 17,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 11,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 11,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 13,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 13,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 9,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 15,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 16,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 16,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 18,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 0,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 12,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 3,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 3,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 4,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 11,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 0,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 7,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 11,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 8,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 11,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 10,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 12,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 13,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 14,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 5,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 7,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 16,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 2,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 10,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 18,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_gralha_de_crematorio",
-   "lost1": 6,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 19,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 15,
-   "lost2": 15,
-   "revelado": false,
-   "seed": 2,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": false,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": false,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": false,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 12,
-   "lost2": 12,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": false,
-   "seed": 15,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 10,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": false,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 19,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 12,
-   "lost2": 8,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": true,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": false,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": true,
-   "seed": 15,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 10,
-   "lost2": 10,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 17,
-   "lost2": 17,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 4,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 12,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 13,
-   "lost2": 13,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 12,
-   "lost2": 12,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 17,
-   "lost2": 17,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 17,
-   "lost2": 17,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 12,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 10,
-   "lost2": 10,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 14,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 10,
-   "lost2": 10,
-   "revelado": false,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 18,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 1,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 15,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": false,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": true,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": false,
-   "seed": 9,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 15,
-   "lost2": 15,
-   "revelado": true,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 14,
-   "lost2": 14,
-   "revelado": true,
-   "seed": 15,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 7,
-   "lost2": 7,
-   "revelado": false,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 11,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 12,
-   "lost2": 12,
-   "revelado": false,
    "seed": 18,
    "win1": true,
    "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
-   "id": "mon_lencol_de_chamine",
+   "id": "mon_fole_de_costela",
    "lost1": 18,
    "lost2": 18,
    "revelado": false,
@@ -15847,1007 +13847,7 @@
   },
   {
    "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 0,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 1,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 2,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 9,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 3,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 4,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 3,
-   "lost2": 3,
-   "revelado": false,
-   "seed": 5,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 6,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 13,
-   "lost2": 4,
-   "revelado": true,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 8,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 6,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 11,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 8,
-   "revelado": false,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 16,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 8,
-   "lost2": 7,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 2,
-   "lost2": 2,
-   "revelado": false,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_lencol_de_chamine",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": false,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 4,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 10,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 10,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 16,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Devoto do Abismo",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 19,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 10,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 4,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 9,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 16,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 12,
-   "win1": false,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 16,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 10,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 18,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Sangromante",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 19,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 0,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 4,
-   "lost2": 4,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 3,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 4,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 6,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 15,
-   "lost2": 15,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 9,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 10,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 11,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 13,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 16,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 17,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 16,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Corruptor",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 19,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 0,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 1,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 2,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 3,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 4,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 5,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 6,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 7,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 8,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 10,
-   "lost2": 0,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 10,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 11,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 11,
-   "revelado": false,
-   "seed": 12,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 13,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 14,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 15,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 18,
-   "lost2": 18,
-   "revelado": false,
-   "seed": 16,
-   "win1": false,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 11,
-   "lost2": 18,
-   "revelado": true,
-   "seed": 17,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 10,
-   "lost2": 10,
-   "revelado": true,
-   "seed": 18,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Arcanista Cinzento",
-   "id": "mon_pavio_da_lista",
-   "lost1": 0,
-   "lost2": 0,
-   "revelado": false,
-   "seed": 19,
-   "win1": true,
-   "win2": true
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_pavio_da_lista",
+   "id": "mon_fole_de_costela",
    "lost1": 7,
    "lost2": 1,
    "revelado": true,
@@ -16857,6 +13857,3006 @@
   },
   {
    "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 3,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 0,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 6,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 3,
+   "lost2": 5,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 9,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 11,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 12,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 6,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 4,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 15,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 8,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 6,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 7,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_fole_de_costela",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 2,
+   "revelado": true,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 11,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 2,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 4,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 3,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 5,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 2,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 6,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 2,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 3,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 5,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 13,
+   "lost2": 15,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 15,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 15,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 3,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 17,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 19,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 0,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 14,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 15,
+   "revelado": true,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 15,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 5,
+   "revelado": false,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 8,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 9,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 0,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 13,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 9,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 15,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 16,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 17,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 12,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 17,
+   "lost2": 17,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 5,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": true,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 13,
+   "lost2": 13,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 9,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 11,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 12,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 10,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 17,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 18,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 13,
+   "lost2": 13,
+   "revelado": true,
+   "seed": 19,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 3,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 14,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 17,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 17,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 11,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 13,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 9,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 15,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 16,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 16,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 18,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 16,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 0,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 12,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 3,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 3,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 4,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 11,
+   "lost2": 2,
+   "revelado": true,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 0,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 7,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 11,
+   "lost2": 1,
+   "revelado": true,
+   "seed": 8,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 8,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 5,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 10,
+   "lost2": 1,
+   "revelado": true,
+   "seed": 12,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 6,
+   "revelado": true,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 16,
+   "lost2": 9,
+   "revelado": true,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 5,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 7,
+   "lost2": 5,
+   "revelado": true,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 2,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 10,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 18,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_gralha_de_crematorio",
+   "lost1": 6,
+   "lost2": 3,
+   "revelado": true,
+   "seed": 19,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 15,
+   "lost2": 15,
+   "revelado": false,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": false,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 3,
+   "revelado": false,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 3,
+   "revelado": false,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 12,
+   "lost2": 12,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": false,
+   "seed": 15,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 10,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": false,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 19,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 12,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 3,
+   "revelado": false,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": true,
+   "seed": 15,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 10,
+   "lost2": 10,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 17,
+   "lost2": 17,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 12,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 13,
+   "lost2": 13,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 12,
+   "lost2": 12,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 17,
+   "lost2": 17,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 17,
+   "lost2": 17,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 12,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 10,
+   "lost2": 10,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 14,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 10,
+   "lost2": 10,
+   "revelado": false,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 18,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 1,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 15,
+   "lost2": 15,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 3,
+   "revelado": false,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 13,
+   "revelado": true,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": false,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 15,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 14,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 14,
+   "lost2": 14,
+   "revelado": true,
+   "seed": 15,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": false,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 11,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 12,
+   "lost2": 12,
+   "revelado": false,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 0,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 1,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 2,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 9,
+   "lost2": 4,
+   "revelado": true,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 4,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 3,
+   "lost2": 3,
+   "revelado": false,
+   "seed": 5,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 6,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 13,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 8,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 6,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": false,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 16,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 2,
+   "lost2": 2,
+   "revelado": false,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_lencol_de_chamine",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": false,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 8,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 10,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 10,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 16,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Devoto do Abismo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 19,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 10,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 4,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 8,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 9,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 16,
+   "lost2": 10,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 12,
+   "win1": false,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 16,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 10,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 18,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Sangromante",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 19,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 0,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 4,
+   "lost2": 4,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 3,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": true,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 6,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 15,
+   "lost2": 15,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 8,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 9,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 10,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 11,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 13,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 16,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 17,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 16,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Corruptor",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 19,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 1,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 2,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 3,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 4,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 5,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 6,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 7,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 8,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 10,
+   "lost2": 0,
+   "revelado": true,
+   "seed": 9,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": true,
+   "seed": 10,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": false,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 13,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 14,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 15,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 18,
+   "lost2": 18,
+   "revelado": false,
+   "seed": 16,
+   "win1": false,
+   "win2": false
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 11,
+   "lost2": 11,
+   "revelado": true,
+   "seed": 17,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 10,
+   "lost2": 16,
+   "revelado": true,
+   "seed": 18,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Arcanista Cinzento",
+   "id": "mon_pavio_da_lista",
+   "lost1": 0,
+   "lost2": 0,
+   "revelado": false,
+   "seed": 19,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_pavio_da_lista",
+   "lost1": 7,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 0,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
    "lost2": 16,
@@ -16939,11 +16939,11 @@
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -16959,27 +16959,27 @@
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 5,
+   "lost2": 16,
    "revelado": true,
    "seed": 11,
    "win1": false,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 6,
+   "lost2": 16,
    "revelado": true,
    "seed": 12,
    "win1": false,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 0,
-   "lost2": 0,
+   "lost2": 8,
    "revelado": true,
    "seed": 13,
    "win1": true,
@@ -17019,31 +17019,31 @@
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 17,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 18,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_pavio_da_lista",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 19,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -18029,21 +18029,21 @@
    "classe": "Médico de Campo",
    "id": "mon_porca_da_queda",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_porca_da_queda",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -18699,7 +18699,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_portao_que_morde",
    "lost1": 18,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 5,
    "win1": false,
@@ -18739,7 +18739,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_portao_que_morde",
    "lost1": 11,
-   "lost2": 16,
+   "lost2": 14,
    "revelado": true,
    "seed": 9,
    "win1": true,
@@ -18769,11 +18769,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_portao_que_morde",
    "lost1": 13,
-   "lost2": 16,
+   "lost2": 18,
    "revelado": true,
    "seed": 12,
    "win1": true,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Arcanista Cinzento",
@@ -18859,21 +18859,21 @@
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 10,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 1,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 2,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -18889,21 +18889,21 @@
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 0,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 9,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -18939,17 +18939,17 @@
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 7,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 9,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 7,
-   "lost2": 11,
+   "lost2": 12,
    "revelado": true,
    "seed": 10,
    "win1": true,
@@ -19009,7 +19009,7 @@
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 14,
-   "lost2": 3,
+   "lost2": 12,
    "revelado": true,
    "seed": 16,
    "win1": true,
@@ -19019,21 +19019,21 @@
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_portao_que_morde",
    "lost1": 12,
-   "lost2": 16,
+   "lost2": 10,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -19729,11 +19729,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_quebrado_de_vitrine",
    "lost1": 17,
-   "lost2": 18,
+   "lost2": 17,
    "revelado": true,
    "seed": 8,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -20839,11 +20839,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_relicario_de_osso",
    "lost1": 12,
-   "lost2": 18,
+   "lost2": 10,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -20889,11 +20889,11 @@
    "classe": "Médico de Campo",
    "id": "mon_relicario_de_osso",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 4,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -21019,11 +21019,11 @@
    "classe": "Médico de Campo",
    "id": "mon_relicario_de_osso",
    "lost1": 16,
-   "lost2": 7,
+   "lost2": 16,
    "revelado": true,
    "seed": 17,
    "win1": false,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
@@ -21649,7 +21649,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 11,
-   "lost2": 14,
+   "lost2": 11,
    "revelado": true,
    "seed": 0,
    "win1": true,
@@ -21689,21 +21689,21 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 3,
-   "lost2": 18,
+   "lost2": 3,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 9,
-   "lost2": 18,
+   "lost2": 3,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -21739,17 +21739,17 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 11,
-   "lost2": 18,
+   "lost2": 17,
    "revelado": true,
    "seed": 9,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 14,
-   "lost2": 8,
+   "lost2": 11,
    "revelado": true,
    "seed": 10,
    "win1": true,
@@ -21809,7 +21809,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 14,
-   "lost2": 11,
+   "lost2": 8,
    "revelado": true,
    "seed": 16,
    "win1": true,
@@ -21819,21 +21819,21 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 9,
-   "lost2": 18,
+   "lost2": 15,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_rosario_de_vertebras",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 17,
    "revelado": true,
    "seed": 18,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -21849,7 +21849,7 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 2,
-   "lost2": 8,
+   "lost2": 4,
    "revelado": true,
    "seed": 0,
    "win1": true,
@@ -21859,21 +21859,21 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 1,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 2,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -21889,31 +21889,31 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 4,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 5,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 2,
    "revelado": true,
    "seed": 6,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -21929,51 +21929,21 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 4,
    "revelado": true,
    "seed": 8,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_rosario_de_vertebras",
-   "lost1": 6,
-   "lost2": 9,
-   "revelado": true,
-   "seed": 9,
-   "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_rosario_de_vertebras",
-   "lost1": 4,
-   "lost2": 8,
-   "revelado": true,
-   "seed": 10,
    "win1": true,
    "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
-   "lost1": 5,
-   "lost2": 16,
+   "lost1": 6,
+   "lost2": 8,
    "revelado": true,
-   "seed": 11,
+   "seed": 9,
    "win1": true,
-   "win2": false
-  },
-  {
-   "classe": "Médico de Campo",
-   "id": "mon_rosario_de_vertebras",
-   "lost1": 8,
-   "lost2": 16,
-   "revelado": true,
-   "seed": 12,
-   "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -21981,9 +21951,39 @@
    "lost1": 4,
    "lost2": 16,
    "revelado": true,
-   "seed": 13,
+   "seed": 10,
    "win1": true,
    "win2": false
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_rosario_de_vertebras",
+   "lost1": 5,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 11,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_rosario_de_vertebras",
+   "lost1": 8,
+   "lost2": 8,
+   "revelado": true,
+   "seed": 12,
+   "win1": true,
+   "win2": true
+  },
+  {
+   "classe": "Médico de Campo",
+   "id": "mon_rosario_de_vertebras",
+   "lost1": 4,
+   "lost2": 7,
+   "revelado": true,
+   "seed": 13,
+   "win1": true,
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -21999,7 +21999,7 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 2,
-   "lost2": 2,
+   "lost2": 7,
    "revelado": true,
    "seed": 15,
    "win1": true,
@@ -22009,41 +22009,41 @@
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 2,
    "revelado": true,
    "seed": 16,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 5,
-   "lost2": 16,
+   "lost2": 0,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_rosario_de_vertebras",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 19,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -22849,21 +22849,21 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 1,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 0,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 1,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -22899,21 +22899,21 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 6,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -22939,11 +22939,11 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 9,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -22959,21 +22959,21 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 9,
    "revelado": true,
    "seed": 11,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 12,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -22989,11 +22989,11 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 7,
    "revelado": true,
    "seed": 14,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -23009,31 +23009,31 @@
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 2,
    "revelado": true,
    "seed": 17,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_sangrado_da_clinica",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 1,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -23679,31 +23679,31 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_sorvedouro_do_codigo",
    "lost1": 16,
-   "lost2": 18,
+   "lost2": 16,
    "revelado": true,
    "seed": 3,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_sorvedouro_do_codigo",
    "lost1": 16,
-   "lost2": 18,
+   "lost2": 6,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
    "id": "mon_sorvedouro_do_codigo",
    "lost1": 6,
-   "lost2": 18,
+   "lost2": 12,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -23899,11 +23899,11 @@
    "classe": "Médico de Campo",
    "id": "mon_sorvedouro_do_codigo",
    "lost1": 6,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -24039,11 +24039,11 @@
    "classe": "Médico de Campo",
    "id": "mon_sorvedouro_do_codigo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 19,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Devoto do Abismo",
@@ -24739,7 +24739,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 12,
-   "lost2": 16,
+   "lost2": 12,
    "revelado": true,
    "seed": 9,
    "win1": true,
@@ -24749,7 +24749,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 4,
+   "lost2": 8,
    "revelado": true,
    "seed": 10,
    "win1": true,
@@ -24819,7 +24819,7 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 8,
+   "lost2": 4,
    "revelado": true,
    "seed": 17,
    "win1": true,
@@ -24859,7 +24859,7 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 16,
-   "lost2": 4,
+   "lost2": 8,
    "revelado": true,
    "seed": 1,
    "win1": false,
@@ -24869,7 +24869,7 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 8,
+   "lost2": 6,
    "revelado": true,
    "seed": 2,
    "win1": true,
@@ -24879,7 +24879,7 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 8,
+   "lost2": 6,
    "revelado": true,
    "seed": 3,
    "win1": true,
@@ -24899,7 +24899,7 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 4,
+   "lost2": 2,
    "revelado": true,
    "seed": 5,
    "win1": true,
@@ -24919,11 +24919,11 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 3,
    "revelado": true,
    "seed": 7,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -24939,11 +24939,11 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 6,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -25019,21 +25019,21 @@
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 4,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 17,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_traca_do_sino_mudo",
    "lost1": 8,
-   "lost2": 16,
+   "lost2": 8,
    "revelado": true,
    "seed": 18,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -25659,11 +25659,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 18,
-   "lost2": 15,
+   "lost2": 18,
    "revelado": true,
    "seed": 1,
    "win1": false,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Arcanista Cinzento",
@@ -25699,11 +25699,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 15,
-   "lost2": 18,
+   "lost2": 15,
    "revelado": true,
    "seed": 5,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -25729,11 +25729,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 8,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -25749,11 +25749,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 10,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -25809,11 +25809,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 10,
    "revelado": true,
    "seed": 16,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Arcanista Cinzento",
@@ -25839,11 +25839,11 @@
    "classe": "Arcanista Cinzento",
    "id": "mon_vira_costas_da_praca",
    "lost1": 18,
-   "lost2": 18,
+   "lost2": 0,
    "revelado": true,
    "seed": 19,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -25889,11 +25889,11 @@
    "classe": "Médico de Campo",
    "id": "mon_vira_costas_da_praca",
    "lost1": 9,
-   "lost2": 2,
+   "lost2": 15,
    "revelado": true,
    "seed": 4,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -25909,11 +25909,11 @@
    "classe": "Médico de Campo",
    "id": "mon_vira_costas_da_praca",
    "lost1": 16,
-   "lost2": 0,
+   "lost2": 16,
    "revelado": true,
    "seed": 6,
    "win1": false,
-   "win2": true
+   "win2": false
   },
   {
    "classe": "Médico de Campo",
@@ -25929,21 +25929,21 @@
    "classe": "Médico de Campo",
    "id": "mon_vira_costas_da_praca",
    "lost1": 5,
-   "lost2": 8,
+   "lost2": 0,
    "revelado": true,
    "seed": 8,
    "win1": true,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
    "id": "mon_vira_costas_da_praca",
    "lost1": 16,
-   "lost2": 16,
+   "lost2": 5,
    "revelado": true,
    "seed": 9,
    "win1": false,
-   "win2": false
+   "win2": true
   },
   {
    "classe": "Médico de Campo",
@@ -26039,11 +26039,11 @@
    "classe": "Médico de Campo",
    "id": "mon_vira_costas_da_praca",
    "lost1": 16,
-   "lost2": 7,
+   "lost2": 16,
    "revelado": true,
    "seed": 19,
    "win1": false,
-   "win2": true
+   "win2": false
   }
  ],
  "populacao": [
@@ -26078,8 +26078,8 @@
  "seeds": 20,
  "veredito": {
   "E1": true,
-  "E2": false,
-  "E3": false,
+  "E2": true,
+  "E3": true,
   "E4": false
  }
 }

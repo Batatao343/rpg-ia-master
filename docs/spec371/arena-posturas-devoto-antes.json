@@ -1,0 +1,135 @@
+{
+ "seeds": [
+  180,
+  260
+ ],
+ "versoes": {},
+ "posturas": {
+  "Devoto do Abismo": {
+   "todas": {
+    "celulas": {
+     "L1 padrao": [
+      260,
+      320
+     ],
+     "L1 elite": [
+      231,
+      320
+     ],
+     "L3 padrao": [
+      278,
+      320
+     ],
+     "L3 elite": [
+      264,
+      320
+     ],
+     "L5 padrao": [
+      77,
+      320
+     ],
+     "L5 elite": [
+      62,
+      320
+     ]
+    },
+    "total": 0.61,
+    "padrao": 0.641,
+    "elite": 0.58
+   },
+   "consagrado": {
+    "celulas": {
+     "L1 padrao": [
+      258,
+      320
+     ],
+     "L1 elite": [
+      216,
+      320
+     ],
+     "L3 padrao": [
+      294,
+      320
+     ],
+     "L3 elite": [
+      261,
+      320
+     ],
+     "L5 padrao": [
+      83,
+      320
+     ],
+     "L5 elite": [
+      72,
+      320
+     ]
+    },
+    "total": 0.617,
+    "padrao": 0.661,
+    "elite": 0.572
+   },
+   "zeloso": {
+    "celulas": {
+     "L1 padrao": [
+      240,
+      320
+     ],
+     "L1 elite": [
+      206,
+      320
+     ],
+     "L3 padrao": [
+      286,
+      320
+     ],
+     "L3 elite": [
+      254,
+      320
+     ],
+     "L5 padrao": [
+      73,
+      320
+     ],
+     "L5 elite": [
+      70,
+      320
+     ]
+    },
+    "total": 0.588,
+    "padrao": 0.624,
+    "elite": 0.552
+   },
+   "enlutado": {
+    "celulas": {
+     "L1 padrao": [
+      273,
+      320
+     ],
+     "L1 elite": [
+      246,
+      320
+     ],
+     "L3 padrao": [
+      289,
+      320
+     ],
+     "L3 elite": [
+      273,
+      320
+     ],
+     "L5 padrao": [
+      80,
+      320
+     ],
+     "L5 elite": [
+      67,
+      320
+     ]
+    },
+    "total": 0.64,
+    "padrao": 0.669,
+    "elite": 0.61
+   }
+  }
+ }
+}

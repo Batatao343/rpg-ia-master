@@ -345,10 +345,12 @@ ondas:
   autor: claude-opus-5.5
   revisor_voz: dono
   voz_status: aprovada
-  nota_voz: 'SPEC-371: decisão do dono de 03/11 ("Reação p/ toda Postura"); voz coberta pela autorização geral do dono de 27/10, sem leitura das duas Cartas (não atesta leitura). Reação de tronco da preparação inicial do Arcanista e do Médico'
+  nota_voz: 'SPEC-371: decisão do dono de 03/11 ("Reação p/ toda Postura"); voz coberta pela autorização geral do dono de 27/10, sem leitura das duas Cartas (não atesta leitura). Reação de tronco da preparação inicial do Arcanista, do Médico e do Devoto'
   amostra_voz:
   - arc1_ini_cinza_nos_olhos
   - med1_ini_pinca_no_tendao
+  - dev1_ini_dor_devolvida
   cartas:
   - arc1_ini_cinza_nos_olhos
   - med1_ini_pinca_no_tendao
+  - dev1_ini_dor_devolvida

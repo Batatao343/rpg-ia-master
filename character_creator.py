@@ -239,7 +239,9 @@ def keep_starting_reaction(
 ) -> list[str]:
     """SPEC-371: a reação inicial da Postura fica entre as Preparadas automáticas. Ela toma a
     vaga da última Carta que não é `ativa` (passiva ou utilitária), para não tirar golpe nem
-    cura; sem vaga dessas, a da última. Sem reação inicial (ou fora do Acervo), nada muda."""
+    cura; sem vaga dessas, a da última. Sem reação inicial (ou fora do Acervo), nada muda.
+    Com outra reação já preparada (Devoto: `dev_ombro_porta`), a inicial vem antes dela na
+    lista: é a resposta padrão ao golpe; a outra é situacional."""
     from services import cards as cards_svc
 
     rid = starting_reaction_id(class_name)
@@ -247,12 +249,21 @@ def keep_starting_reaction(
     if not rid or rid not in known or rid in out:
         return out
     if len(out) < slots:
-        return out + [rid]
-    for i in range(len(out) - 1, -1, -1):
-        if (cards_svc.get_card(out[i]) or {}).get("tipo") != "ativa":
-            out[i] = rid
-            return out
-    out[-1] = rid
+        out.append(rid)
+    else:
+        for i in range(len(out) - 1, -1, -1):
+            if (cards_svc.get_card(out[i]) or {}).get("tipo") != "ativa":
+                out[i] = rid
+                break
+        else:
+            out[-1] = rid
+    first = next(
+        (i for i, c in enumerate(out) if (cards_svc.get_card(c) or {}).get("tipo") == "reacao"),
+        None,
+    )
+    pos = out.index(rid)
+    if first is not None and first < pos:
+        out[first], out[pos] = out[pos], out[first]
     return out
 
 

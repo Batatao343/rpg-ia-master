@@ -1,0 +1,37 @@
+{
+  "_meta": "SPEC-371 (dono 03/11, \"Reação p/ toda Postura\"): reação de tronco (sem subclasse, nível 1) que nasce preparada no herói de Devoto do Abismo (`reacao_inicial`, lida por character_creator.starting_reaction_id). `dev_ombro_porta` segue igual (só casa com o 1º engajamento). O saber do bestiário continua só informativo (D6).",
+  "cards": [
+    {
+      "id": "dev1_ini_dor_devolvida",
+      "name": "Dor Devolvida",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Devoto do Abismo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 1,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "corpo",
+        "forca"
+      ],
+      "efeitos": [
+        {
+          "kind": "contra_ataque",
+          "valor": 2
+        }
+      ],
+      "descricao": "O Devoto deixa o ferro entrar até onde a fé aguenta e devolve a dor pelo mesmo caminho.",
+      "momento": "Melhor jogada quando o golpe anunciado vai entrar de qualquer jeito e quem o desfere fica ao alcance do troco.",
+      "gatilho": "ao_ser_atacado",
+      "reacao_inicial": true,
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

@@ -17,10 +17,11 @@ from tests.test_round_multi_play import _setup
 NOVAS = {
     "Arcanista Cinzento": ("arc1_ini_cinza_nos_olhos", "cego"),
     "Médico de Campo": ("med1_ini_pinca_no_tendao", "desarmado_risco"),
+    "Devoto do Abismo": ("dev1_ini_dor_devolvida", None),  # None = contra-ataque
 }
+CONDICAO = {c: v for c, v in NOVAS.items() if v[1]}
 # Posturas que já nasciam com reação no Acervo: preparação congelada (nada muda nelas).
 SEM_REACAO_INICIAL = {
-    "Devoto do Abismo": ["dev_golpe_convite", "dev_muralha_viva", "dev_conviccao", "dev_aguentar"],
     "Sangromante": ["san_corte_troca", "san_finta", "san_esquiva", "san_pacto"],
     "Corruptor": ["cor_toque", "cor_esporos", "cor_carne_docil", "cor_farejar"],
 }
@@ -40,7 +41,10 @@ def test_carta_nova_lint_orcamento_e_identidade(cls):
     assert fx.budget_error(card) is None
     efeito = fx.primary_effect(card)
     # não é reskin de `san_esquiva` (Esquiva) nem de `cor_membrana` (Proteção)
-    assert efeito["kind"] == "aplicar_condicao" and efeito["condicao"] == cond
+    if cond:
+        assert efeito["kind"] == "aplicar_condicao" and efeito["condicao"] == cond
+    else:
+        assert efeito["kind"] == "contra_ataque"
 
 
 @pytest.mark.parametrize("cls", sorted(NOVAS))
@@ -91,7 +95,7 @@ def test_heroi_nivel_3_da_arena_tem_a_reacao_preparada(cls):
     assert NOVAS[cls][0] in player["prepared_cards"]
 
 
-@pytest.mark.parametrize("cls", sorted(NOVAS))
+@pytest.mark.parametrize("cls", sorted(CONDICAO))
 def test_reacao_dispara_contra_o_golpe_e_marca_o_atacante(cls):
     cid, cond = NOVAS[cls]
     hits = 0
@@ -117,4 +121,44 @@ def test_reacao_dispara_contra_o_golpe_e_marca_o_atacante(cls):
         if marks:
             hits += 1
             assert marks[0]["name"].lower().startswith(cond.split("_")[0])
+    assert hits == 20
+
+
+def test_devoto_reacao_inicial_vem_antes_do_ombro_na_porta():
+    from playtest.runner import _build_initial_state
+
+    prep = cc._resolve_starting_cards({}, "Devoto do Abismo", {})["prepared_cards"]
+    assert prep == [
+        "dev_golpe_convite",
+        "dev_muralha_viva",
+        "dev_conviccao",
+        "dev1_ini_dor_devolvida",
+    ]
+    p3 = _build_initial_state("arena", 285, class_name="Devoto do Abismo", start_level=3)["player"]
+    reacoes = [c for c in p3["prepared_cards"] if cards.get_card(c)["tipo"] == "reacao"]
+    assert reacoes == ["dev1_ini_dor_devolvida", "dev_ombro_porta"]
+
+
+def test_devoto_contra_ataque_dispara_contra_o_golpe():
+    cid = "dev1_ini_dor_devolvida"
+    hits = 0
+    for seed in range(20):
+        scene, actors, sides, state = _setup(mode="off", class_name="Devoto do Abismo")
+        hero = actors["player"]
+        hero["prepared_cards"] = list(dict.fromkeys([*hero["prepared_cards"], cid]))
+        hero["entropy"] = 10
+        state["_player_reaction_card_id"] = cid
+        decl = ct.TurnDeclaration(
+            actor_id="player", reaction_card_id=cid, acao=ct.TurnStep(kind="pass")
+        )
+        out = orch.run_round(
+            scene,
+            actors,
+            sides,
+            state,
+            declarations={"player": decl},
+            initiator="enemy",
+            rng=random.Random(seed),
+        )
+        hits += any(cid in str(r) for r in out.get("reactions") or [])
     assert hits == 20
