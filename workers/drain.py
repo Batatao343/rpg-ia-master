@@ -6,13 +6,37 @@ keep guarding every job; this only bounds *how long* we keep leasing.
 
 from __future__ import annotations
 
+import contextvars
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from typing import Any
 
 # A job may take up to a lease window; never start one without this much time left.
 MIN_JOB_WINDOW_S = 15.0
 SAFETY_MARGIN_S = 3.0
+
+# SPEC-374 R14: o fim da janela do dreno (stop_at, relógio) para quem precisa limitar o próprio
+# prazo (ex.: ``creature_gen``). Só existe dentro de ``drain_jobs``; worker contínuo e thread
+# do perfil legacy não têm janela.
+_JANELA: contextvars.ContextVar[tuple[float, Callable[[], float]] | None] = contextvars.ContextVar(
+    "job_window", default=None
+)
+
+
+@contextmanager
+def job_window_scope(stop_at: float, clock: Callable[[], float] = time.monotonic) -> Iterator[None]:
+    token = _JANELA.set((stop_at, clock))
+    try:
+        yield
+    finally:
+        _JANELA.reset(token)
+
+
+def job_window_remaining() -> float | None:
+    """Segundos até o fim da janela do dreno em curso; ``None`` fora do dreno."""
+    janela = _JANELA.get()
+    return None if janela is None else janela[0] - janela[1]()
 
 
 def drain_jobs(
@@ -47,7 +71,9 @@ def drain_jobs(
         if stop_at - clock() < min_job_window_s:
             reason = "deadline"
             break
-        if worker.run_once(limit=1) == 0:
+        with job_window_scope(stop_at, clock):
+            ran = worker.run_once(limit=1)
+        if ran == 0:
             reason = "empty"
             break
         processed += 1

@@ -44,21 +44,28 @@ def test_materialize_legado_identico(arq):
     assert desconhecido["arquetipo"] == "equilibrado"
 
 
-def _ficha_ok(**over) -> dict:
-    base = {
-        "nome": "Coro de Quitina",
-        "familia": "besta_entropia",
-        "origem_fonte": "abismo",
+_LIVRES = [  # a linha 1 do que o motor mostraria ao LLM (SPEC-374 R10)
+    {
         "plano_corporal": "radial",
         "material": "cera_sebo",
         "escala": "miuda",
         "locomocao": "escala_paredes",
         "percepcao": "vibracao",
+        "papel_tatico": "suporte",
+    }
+]
+
+
+def _ficha_ok(**over) -> dict:
+    base = {
+        "nome": "Coro de Quitina",
+        "familia": "besta_entropia",
+        "origem_fonte": "abismo",
+        "linha_eixos": 1,  # SPEC-374: os eixos saem da linha (ver _LIVRES)
         "anatomia_texto": "Besouro de casca fosca com seis patas finas e mandíbula curva. "
         "Os olhos ficam no topo da cabeça.",
         "silhueta": "Um besouro achatado de mandíbula aberta.",
         "comportamento": "Vive em bando dentro das rachas e sai quando sente passos.",
-        "papel_tatico": "suporte",
         "arquetipo": "lider_matilha",
         "categoria": "lacaio",
         "estilo_ataque": "corpo_a_corpo",
@@ -79,7 +86,10 @@ def _ficha_ok(**over) -> dict:
 
 def test_ficha_para_template_sem_numero_do_llm():
     ficha = cg.ficha_runtime(
-        cg.FichaCriaturaGerada(**_ficha_ok()), regiao="deserto_zhur", fid="mon_coro_rt_abcdef"
+        cg.FichaCriaturaGerada(**_ficha_ok()),
+        regiao="deserto_zhur",
+        fid="mon_coro_rt_abcdef",
+        livres=_LIVRES,
     )
     ficha_suja = {**ficha, "hp": 999, "virtudes": {"forca": 5}, "max_vitalidade": 999}
     t = cg.ficha_para_template(ficha_suja, encounter_level=1)
@@ -96,12 +106,14 @@ def test_schema_descarta_numero_extra():
     assert "hp" not in f.model_dump() and "aparencia_extra" not in f.model_dump()
     assert cg.FichaCriaturaGerada.model_config["extra"] == "forbid"  # schema enviado ao LLM
     with pytest.raises(ValueError):
-        cg.FichaCriaturaGerada(**_ficha_ok(material="aco_inox"))  # enum continua fechado
+        cg.FichaCriaturaGerada(**_ficha_ok(familia="inexistente"))  # enum continua fechado
 
 
 def test_schema_enum_quase_certo():
-    f = cg.FichaCriaturaGerada(**_ficha_ok(padrao=["ataque", "move", "voar"], escala="Pequena"))
-    assert f.padrao == ["ataque", "mover"] and f.escala == "pequena"
+    f = cg.FichaCriaturaGerada(
+        **_ficha_ok(padrao=["ataque", "move", "voar"], estilo_ataque="Distancia")
+    )
+    assert f.padrao == ["ataque", "mover"] and f.estilo_ataque == "distancia"
 
 
 def test_assinatura_da_familia():
@@ -109,6 +121,7 @@ def test_assinatura_da_familia():
         cg.FichaCriaturaGerada(**_ficha_ok(categoria="elite")),
         regiao="deserto_zhur",
         fid="mon_coro_rt_abcdef",
+        livres=_LIVRES,
     )
     t = cg.ficha_para_template(ficha)
     sig = enemy_decks.family_signature(t)
@@ -120,7 +133,9 @@ def test_assinatura_da_familia():
 
 
 def _lit(field: str) -> set:
-    return set(typing.get_args(cg.FichaCriaturaGerada.model_fields[field].annotation))
+    # os seis eixos só existem no schema alternativo (região saturada, SPEC-374 R10)
+    cls = cg.FichaCriaturaGeradaEixosLivres if field in cg.EIXOS_LLM else cg.FichaCriaturaGerada
+    return set(typing.get_args(cls.model_fields[field].annotation))
 
 
 def test_schema_literals_iguais_enums():
@@ -134,7 +149,7 @@ def test_schema_literals_iguais_enums():
     nums = [
         n for n, f in cg.FichaCriaturaGerada.model_fields.items() if f.annotation in (int, float)
     ]
-    assert nums == []
+    assert nums == ["linha_eixos"]  # índice da lista de eixos, nunca um valor de jogo
 
 
 def test_schema_apara_texto_longo():
@@ -163,7 +178,10 @@ def _p(**over) -> cg.PedidoCriatura:
 
 def test_lint_runtime_sem_u11_u12():
     ficha = cg.ficha_runtime(
-        cg.FichaCriaturaGerada(**_ficha_ok()), regiao="deserto_zhur", fid="mon_coro_rt_abcdef"
+        cg.FichaCriaturaGerada(**_ficha_ok()),
+        regiao="deserto_zhur",
+        fid="mon_coro_rt_abcdef",
+        livres=_LIVRES,
     )
     issues = cg.lint_runtime(ficha, "deserto_zhur", runtime=[])
     codes = {i.code for i in issues}
@@ -176,6 +194,7 @@ def test_digito_reprova():
         cg.FichaCriaturaGerada(**_ficha_ok(contra_jogo="Acertar 3 vezes na casca.")),
         regiao="deserto_zhur",
         fid="mon_coro_rt_abcdef",
+        livres=_LIVRES,
     )
     assert "R20" in {i.code for i in cg.lint_runtime(ficha, "deserto_zhur", runtime=[])}
     ficha2 = {**ficha, "contra_jogo": "Bater de lado.", "gancho": "Ganha +2 quando sangra."}
@@ -208,14 +227,9 @@ def _usar_llm(monkeypatch, llm):
 
 
 def _colidente() -> cg.FichaCriaturaGerada:
-    # mesma tripla do Saltador de Palafita (bipede_curvado / vidro_cristal / batedor_rapido)
-    return cg.FichaCriaturaGerada(
-        **_ficha_ok(
-            plano_corporal="bipede_curvado",
-            material="vidro_cristal",
-            papel_tatico="batedor_rapido",
-        )
-    )
+    # SPEC-374: a linha de eixos nunca colide (o motor a conferiu); a ficha que reprova é a
+    # que vaza número num texto (R20)
+    return cg.FichaCriaturaGerada(**_ficha_ok(contra_jogo="Acertar 3 vezes na casca."))
 
 
 def test_colisao_retry_com_feedback(monkeypatch):
@@ -223,7 +237,7 @@ def test_colisao_retry_com_feedback(monkeypatch):
     _usar_llm(monkeypatch, llm)
     res = cg.gerar(_p(), lore="")
     assert len(llm.prompts) == 2
-    assert "U2" in llm.prompts[1] and "mon_saltador_de_palafita" in llm.prompts[1]
+    assert "R20" in llm.prompts[1]
     assert "<corrigir>" in llm.prompts[1] and "<corrigir>" not in llm.prompts[0]
     assert res.caminho == "nova" and res.tentativas == 2 and res.lint_primeira is False
     assert res.ficha["revisao"] == "pendente" and res.ficha["autor"] == "runtime"
@@ -310,9 +324,7 @@ def test_retry_e_correcao_curta(monkeypatch):
                 def invoke(self, messages):
                     if schema is cg.FichaCriaturaGerada:
                         return _colidente()
-                    return cg.CorrecaoFicha(
-                        plano_corporal="radial", material="cera_sebo", papel_tatico="suporte"
-                    )
+                    return cg.CorrecaoFicha(contra_jogo="Bater de lado.")
 
             return _B()
 
@@ -320,8 +332,7 @@ def test_retry_e_correcao_curta(monkeypatch):
     res = cg.gerar(_p(), lore="")
     assert pedidos == ["FichaCriaturaGerada", "CorrecaoFicha"]
     assert res.caminho == "nova" and res.tentativas == 2
-    anat = res.ficha["anatomia"]
-    assert (anat["plano_corporal"], anat["material"]) == ("radial", "cera_sebo")
+    assert res.ficha["contra_jogo"] == "Bater de lado."
     assert res.ficha["nome"] == "Coro de Quitina"  # o resto da ficha anterior fica
 
 

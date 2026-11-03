@@ -26,6 +26,7 @@ pelo resto do jogo; não há nova tentativa (o teto R4 já contou a tentativa).
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 import threading
 from typing import Any
@@ -131,6 +132,33 @@ def agendar(p, *, owner_id: Any = None) -> bool:
         return False
 
 
+FOLGA_JANELA_S = 3.0  # R14: margem entre o fim da geração e o fim da janela do cron
+
+
+def janela_minima_s() -> float:
+    try:
+        return float(os.getenv("RPG_CREATURE_GEN_MIN_WINDOW_S", "") or 12.0)
+    except ValueError:
+        return 12.0
+
+
+def prazo_na_janela() -> float | None:
+    """R14: ``min(prazo_s(), janela_restante - 3 s)`` dentro do dreno do cron; ``None`` (vale
+    ``prazo_s()``) fora dele. Janela menor que ``janela_minima_s()``: adia o job SEM chamar LLM
+    (``JobDeferred`` não gasta tentativa em nenhuma das filas)."""
+    from infrastructure.contracts import JobDeferred
+    from services import creature_gen as cg
+    from workers.drain import job_window_remaining
+
+    restante = job_window_remaining()
+    if restante is None:
+        return None
+    if restante < janela_minima_s():
+        log_event("bestiary", "creature_gen_job", status="adiado", restante_s=int(restante))
+        raise JobDeferred("janela_curta", 60.0)
+    return max(1.0, min(cg.prazo_s(), restante - FOLGA_JANELA_S))
+
+
 def handler(payload: dict) -> dict:
     """Job ``creature_gen``: gera, passa no gate e persiste. Falha = fica a substituta."""
     from agents.bestiary import load_bestiary, persistir_nova
@@ -138,12 +166,13 @@ def handler(payload: dict) -> dict:
     from services.shared_pool import enabled as pool_enabled
 
     p = pedido_de(payload)
+    prazo = prazo_na_janela()  # R14: pode levantar JobDeferred (janela curta) sem chamar LLM
     db = load_bestiary(p.game_id, p.regiao) if p.game_id and pool_enabled() else load_bestiary()
     if cg.ja_gerada(p, db):  # retry depois de interrupção: já persistida, nada a fazer
         return {"status": "ja_gerada"}
     runtime = cg.runtime_da_regiao(p.regiao, db)
     dec = cg.Decisao("nova", familia_alvo=cg.familia_alvo(f"{p.pedido} {p.motivo_trama}"))
-    ficha, info = cg.gerar_nova(p, dec, bestiary=db, runtime=runtime)
+    ficha, info = cg.gerar_nova(p, dec, bestiary=db, runtime=runtime, prazo=prazo)
     codigos = list(info.get("codigos") or [])[:12]
     if ficha is None:
         log_event("bestiary", "creature_gen_job", status="fallback", codigos=codigos)

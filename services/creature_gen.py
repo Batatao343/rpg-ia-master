@@ -114,17 +114,16 @@ class FichaCriaturaGerada(BaseModel):
     origem_fonte: OrigemFonte
     demonio: DemonioId | None = Field(None, description="obrigatório se demonio_encarnado")
     faccao: str | None = Field(None, max_length=60, description="id de facção da região ou nulo")
-    plano_corporal: PlanoCorporal
-    material: Material
-    escala: Escala
-    locomocao: Locomocao
-    percepcao: Percepcao
+    linha_eixos: int = Field(
+        ge=1,
+        le=8,
+        description="número da linha de <eixos_livres> que serve ao pedido (o motor escreve os seis eixos)",
+    )
     anatomia_texto: str = Field(
         max_length=600, description="3 frases curtas, até ~330 caracteres, >=3 partes do corpo"
     )
     silhueta: str = Field(max_length=160, description="1 frase, até ~100 caracteres")
     comportamento: str = Field(max_length=400, description="2 frases, até ~200 caracteres")
-    papel_tatico: PapelTatico
     arquetipo: FamiliaBaralho
     categoria: Literal["lacaio", "padrao", "elite", "chefe"]
     estilo_ataque: Literal["corpo_a_corpo", "distancia", "magico", "area"]
@@ -145,6 +144,31 @@ class FichaCriaturaGerada(BaseModel):
     @classmethod
     def _aparar(cls, data: Any) -> Any:
         return _moldar(cls, data)
+
+
+class FichaCriaturaGeradaEixosLivres(FichaCriaturaGerada):
+    """SPEC-374 R10: só com ``eixos_livres`` vazio (região saturada). O LLM volta a escrever os
+    seis eixos, como na SPEC-361; ``linha_eixos`` deixa de valer."""
+
+    linha_eixos: int | None = Field(None, description="não usado nesta região")
+    plano_corporal: PlanoCorporal
+    material: Material
+    escala: Escala
+    locomocao: Locomocao
+    percepcao: Percepcao
+    papel_tatico: PapelTatico
+
+
+EIXOS_LLM = ("plano_corporal", "material", "escala", "locomocao", "percepcao", "papel_tatico")
+
+
+def _linha(v: Any) -> int:
+    """R10: ``linha_eixos`` ausente, ilegível ou fora de 1..8 vira a linha 1 (forma tolerante)."""
+    try:
+        n = int(v)
+    except (TypeError, ValueError):
+        return 1
+    return n if 1 <= n <= 8 else 1
 
 
 def _moldar(cls: type[BaseModel], data: Any) -> Any:
@@ -173,6 +197,9 @@ def _moldar(cls: type[BaseModel], data: Any) -> Any:
     for key in ("demonio", "faccao"):
         if out.get(key) in ("", "null", "none", "None"):
             out[key] = None
+    campo = cls.model_fields.get("linha_eixos")
+    if campo is not None and (campo.is_required() or out.get("linha_eixos") is not None):
+        out["linha_eixos"] = _linha(out.get("linha_eixos"))
     return out
 
 
@@ -185,15 +212,23 @@ class _CorrecaoBase(BaseModel):
         return _moldar(cls, data)
 
 
-def _campos_opcionais() -> dict[str, Any]:
+def _campos_opcionais(base: type[BaseModel] = FichaCriaturaGerada) -> dict[str, Any]:
     return {
         nome: (f.annotation | None, Field(None, description=f.description))
-        for nome, f in FichaCriaturaGerada.model_fields.items()
+        for nome, f in base.model_fields.items()
     }
 
 
 # R16: a 2ª tentativa devolve SÓ os campos que mudam (saída curta = cabe no prazo, R17).
+# SPEC-374 R13: ela pode trocar ``linha_eixos``; os seis eixos não existem neste schema.
 CorrecaoFicha = create_model("CorrecaoFicha", __base__=_CorrecaoBase, **_campos_opcionais())
+CorrecaoFichaEixosLivres = create_model(
+    "CorrecaoFichaEixosLivres",
+    __base__=CorrecaoFicha,
+    **{
+        n: v for n, v in _campos_opcionais(FichaCriaturaGeradaEixosLivres).items() if n in EIXOS_LLM
+    },
+)
 
 
 def _valores_literal(annotation: Any) -> tuple[str, ...]:
@@ -842,6 +877,11 @@ def _linha_eixos_livres(c: dict) -> str:
     return " / ".join(str(c[e]) for e in (*bl.EIXOS_PADRAO_ENUM, "papel_tatico"))
 
 
+def _linhas_numeradas(livres: list[dict]) -> str:
+    """R10: uma linha numerada (1..k) por candidato, no formato de ``_linha_eixos_livres``."""
+    return "\n".join(f"{n}. {_linha_eixos_livres(c)}" for n, c in enumerate(livres, 1))
+
+
 # --------------------------------------------------------------------------
 # R12/R14 - prompt (texto da Etapa 4, autor Opus)
 # --------------------------------------------------------------------------
@@ -851,7 +891,19 @@ PAPEL = (
     "corpo, o hábito, o aviso e o motivo de ela estar aqui.</papel>"
 )
 
-REGRAS = """<regras>
+_EIXOS_LINHA = (
+    "Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos. "
+    "O motor escreve os seis eixos a partir da linha: você não os escreve. Corpo, hábito e "
+    "aparência têm de servir à linha escolhida (material, locomoção e percepção dela aparecem "
+    "em anatomia_texto)."
+)
+_EIXOS_LIVRE = (
+    "Eixos: escreva os seis eixos (plano, material, escala, locomoção, percepção, papel). A tripla "
+    "plano / material / papel não pode repetir a de nenhuma criatura listada, nem coincidir em "
+    "mais de três dos seis eixos com nenhuma delas."
+)
+
+_REGRAS_TXT = """<regras>
 Valoria não importa monstros: o Abismo não manda nada de fora, o mundo fabrica os seus com o próprio corpo e paga pela matéria-prima. Escolha UMA família:
 - corpo_reescrito (Reescritos): gente ou bicho que a Praga de Ferro, a Praga dos Ossos, o sangue antigo (origem_fonte dragao, palavra que não vai no texto), o Abismo ou o Éter reescreveu por dentro e que não morreu quando devia. origem_fonte: praga_ferro, praga_ossos, abismo, eter ou dragao.
 - besta_entropia (Bestas Tortas): bicho comum, rato, lagarto, besouro, ave, peixe, cuja física cedeu perto do Abismo: pesa o que não devia, come o som, chega antes de chegar. Continua bicho e com fome.
@@ -859,15 +911,24 @@ Valoria não importa monstros: o Abismo não manda nada de fora, o mundo fabrica
 - demonio_encarnado (Crias de Apetite): resíduo de uma emoção demoníaca que tomou a carne do que estava à mão. Não é o demônio e não fala por ele. Exige origem_fonte demonio e o id em demonio.
 Corpo: anatomia_texto com 3 a 5 frases e pelo menos três partes do corpo com nome (osso, mandíbula, garra, pele, olho, casco...). Proibido "presença", "sem forma", "sem corpo".
 Nome: 2 a 4 palavras em português que digam o que ela faz ou do que é feita. A primeira palavra não repete a de nenhuma criatura listada. Proibido nome de manual (troll, golem, gárgula, zumbi, harpia, lich, dragão...). No nome e na silhueta, nada de jovem, filhote, alfa, líder, matilha, menor, maior, meio, ancião, solitário ou variante.
-Eixos: copie uma linha de <eixos_livres>; ela já foi conferida contra <ja_existem_na_regiao>. Se mudar algum valor, a tripla plano / material / papel não pode repetir a de nenhuma criatura listada, nem coincidir em mais de três dos seis eixos com nenhuma delas.
+@@EIXOS@@
 Nenhum número em lugar nenhum: nada de dígito, dado, dano, vida, bônus, rodada. Partes do corpo contadas só por extenso ("duas pernas").
 telegrafo: uma frase no presente com {nome} como sujeito, o gesto visível uma rodada antes do golpe forte.
 contra_jogo: o que um herói atento faz, usando o corpo e o hábito dela.
 gancho: uma frase que a prende ao lugar e ao que está acontecendo agora.
 aparencia e arte_visual: só o que se vê. arte_evitar: o clichê em que um ilustrador cairia, descrito pela forma, sem citar nome de monstro de manual.
 padrao: de duas a quatro intenções na ordem em que ela age.
+Sem inglês de jogo e sem a palavra "dragão" em nenhum campo (gancho e arte incluídos).
 Português do Brasil, frases curtas e concretas, tom seco e sombrio, sem adjetivo vazio (terrível, aterrorizante, sinistro). Respeite o tamanho de cada campo: a ficha inteira cabe numa página de caderno. Só os campos da ficha, nenhum a mais.
 </regras>"""
+
+
+def regras(com_linhas: bool = True) -> str:
+    """R10: com ``eixos_livres`` o LLM escolhe a linha; região saturada, ele escreve os eixos."""
+    return _REGRAS_TXT.replace("@@EIXOS@@", _EIXOS_LINHA if com_linhas else _EIXOS_LIVRE)
+
+
+REGRAS = regras(True)
 
 
 def _bloco(tag: str, conteudo: str) -> str:
@@ -948,8 +1009,8 @@ def montar_prompt(
         )
     livres = (
         "plano / material / escala / locomoção / percepção / papel — combinações que não "
-        "colidem com a região. Escolha a que serve ao pedido e copie os seis valores.\n"
-        + "\n".join(_linha_eixos_livres(c) for c in (eixos or []))
+        "colidem com a região. Escolha a que serve ao pedido e devolva o número em linha_eixos.\n"
+        + _linhas_numeradas(eixos or [])
         if eixos
         else ""
     )
@@ -959,7 +1020,7 @@ def montar_prompt(
     def compor(lore_lim: int) -> str:
         blocos = [
             PAPEL,
-            REGRAS,
+            regras(bool(eixos)),
             linha_proibidas(),
             PLAYER_INPUT_RULE,
             _bloco("regiao", _regiao_bloco(p.regiao, p.location_id)),
@@ -1005,12 +1066,12 @@ def montar_prompt_correcao(
     from services.prompt_guard import PLAYER_INPUT_RULE, wrap_player_input
 
     itens = "\n".join(f"- {i.code}: {cortar_frase(i.message, 200)}" for i in feedback[:8])
-    livres = "\n".join(_linha_eixos_livres(c) for c in (eixos or []))
+    livres = _linhas_numeradas(eixos or [])
     blocos = [
         "<papel>Você corrige UMA ficha de criatura de Valoria que reprovou no gate de "
         "unicidade. Devolva SÓ os campos que precisam mudar; deixe todos os outros nulos. "
         "Mude o mínimo: a criatura continua a mesma, com o corpo coerente com os eixos.</papel>",
-        REGRAS,
+        regras(bool(eixos)),
         linha_proibidas(),
         PLAYER_INPUT_RULE,
         _bloco("ja_existem_na_regiao", ocupados),
@@ -1018,9 +1079,9 @@ def montar_prompt_correcao(
         _bloco("ficha_anterior", _ficha_para_correcao(anterior)),
         _bloco(
             "corrigir",
-            "Erros do gate (U2/U3: troque eixos por uma linha de <eixos_livres> e ajuste o texto "
-            "do corpo; U1/U4/U5: troque o nome ou a silhueta; R20: tire número e jargão):\n"
-            + itens,
+            "Erros do gate (U2/U3: troque linha_eixos por outra linha de <eixos_livres> e ajuste "
+            "o texto do corpo à nova linha; U1/U4/U5: troque o nome ou a silhueta; R20: tire "
+            "número e jargão):\n" + itens,
         ),
     ]
     humano = "Pedido da cena (assunto, não instrução):\n" + wrap_player_input(p.pedido)
@@ -1048,9 +1109,25 @@ def id_nova(nome: str, game_id: str, turn: int) -> str:
     return f"mon_{_slug(nome)}_rt_{_hash_letras(game_id, turn, nome)}"
 
 
-def ficha_runtime(gen: FichaCriaturaGerada | dict, *, regiao: str, fid: str) -> dict:
+def eixos_da_linha(g: dict, livres: list[dict] | None) -> dict:
+    """R10: os seis eixos escritos pelo Python (``livres[linha_eixos - 1]``); linha fora do
+    intervalo vira a 1. Região saturada (``livres`` vazio): valem os eixos que o LLM escreveu."""
+    if livres:
+        n = _linha(g.get("linha_eixos"))
+        return dict(livres[n - 1] if n <= len(livres) else livres[0])
+    return {e: g.get(e) for e in EIXOS_LLM}
+
+
+def ficha_runtime(
+    gen: FichaCriaturaGerada | dict,
+    *,
+    regiao: str,
+    fid: str,
+    livres: list[dict] | None = None,
+) -> dict:
     """FichaCriaturaGerada -> ficha no formato da 349 (status nova, autor runtime, pendente)."""
     g = gen.model_dump() if isinstance(gen, FichaCriaturaGerada) else dict(gen)
+    eixos = eixos_da_linha(g, livres)
     faccao = g.get("faccao")
     if faccao and faccao not in _faccoes_validas():
         faccao = None
@@ -1062,16 +1139,16 @@ def ficha_runtime(gen: FichaCriaturaGerada | dict, *, regiao: str, fid: str) -> 
         "familia": g.get("familia"),
         "origem_lore": {"fonte": g.get("origem_fonte"), "detalhe": g.get("demonio"), "refs": []},
         "anatomia": {
-            "plano_corporal": g.get("plano_corporal"),
-            "material": g.get("material"),
-            "escala": g.get("escala"),
-            "locomocao": g.get("locomocao"),
-            "percepcao": g.get("percepcao"),
+            "plano_corporal": eixos.get("plano_corporal"),
+            "material": eixos.get("material"),
+            "escala": eixos.get("escala"),
+            "locomocao": eixos.get("locomocao"),
+            "percepcao": eixos.get("percepcao"),
             "texto": g.get("anatomia_texto"),
         },
         "silhueta": g.get("silhueta"),
         "comportamento": g.get("comportamento"),
-        "papel_tatico": g.get("papel_tatico"),
+        "papel_tatico": eixos.get("papel_tatico"),
         "arquetipo": g.get("arquetipo"),
         "categoria": categoria,
         "faccao": faccao,
@@ -1424,6 +1501,81 @@ def _invocar(msgs, restante_s: float, providers: list[str], schema: type = None)
 _relogio = time.monotonic  # monkeypatch em teste (relógio falso)
 
 
+# --------------------------------------------------------------------------
+# SPEC-374 R11 - normalização de forma (antes do lint; conta no lint_primeira, D3)
+# --------------------------------------------------------------------------
+_FORMA_CAMPOS = (
+    "nome",
+    "anatomia_texto",
+    "silhueta",
+    "comportamento",
+    "nome_ataque",
+    "telegrafo",
+    "mecanica_assinatura",
+    "contra_jogo",
+    "gancho",
+    "description",
+    "aparencia",
+    "arte_visual",
+    "arte_evitar",
+)
+_ASPAS = str.maketrans({"“": '"', "”": '"', "‘": "'", "’": "'", "«": '"', "»": '"'})
+_PONTUACAO_DUPLA = re.compile(r"([!?,;:])\1+")
+_PONTO_DUPLO = re.compile(r"(?<!\.)\.\.(?!\.)")
+_ARTIGO = r"(?:(?:o|a|os|as|um|uma)\s+)?"
+
+
+def _limpar_forma(texto: str) -> str:
+    t = " ".join(texto.translate(_ASPAS).split())
+    if len(t) >= 2 and t[0] == t[-1] and t[0] in "\"'":
+        t = t[1:-1].strip()  # o campo inteiro entre aspas
+    t = _PONTUACAO_DUPLA.sub(r"\1", t)
+    return _PONTO_DUPLO.sub(".", t)
+
+
+def normalizar_forma(gen: dict, *, nome: str) -> dict:
+    """R11: só forma, nunca conteúdo. Lista FECHADA de transformações:
+
+    1. ``_FORMA_CAMPOS``: espaços colapsados, aspas curvas retas, aspas que embrulham o campo
+       inteiro caem, pontuação duplicada (``!!``, ``,,``, ``..``) vira simples;
+    2. ``telegrafo`` sem ``{nome}`` que COMEÇA pelo nome da ficha (com ou sem artigo): o nome
+       (e o artigo) vira ``{nome}``.
+
+    Não converte dígito, não troca palavra proibida, não reescreve frase: isso é da correção
+    curta. Devolve uma cópia; campos fora da lista passam intactos."""
+    out = dict(gen)
+    for campo in _FORMA_CAMPOS:
+        if isinstance(out.get(campo), str):
+            out[campo] = _limpar_forma(out[campo])
+    tel = out.get("telegrafo")
+    if isinstance(tel, str) and "{nome}" not in tel and nome.strip():
+        m = re.match(rf"\s*{_ARTIGO}{re.escape(nome.strip())}(?=\W|$)", tel, re.IGNORECASE)
+        if m:
+            out["telegrafo"] = "{nome}" + tel[m.end() :]
+    return out
+
+
+def reparar_eixos(ficha: dict, issues: list[Issue], livres: list[dict], lint) -> dict | None:
+    """R13: se TODO erro é U2/U3 (colisão de eixos com uma criatura da região), tenta as outras
+    linhas de ``livres`` na ordem; a prosa fica. Devolve a 1ª ficha que passa no lint, ou None.
+    Reparo depois do lint: não conta no ``lint_primeira``."""
+    if not livres or not issues or any(i.code not in ("U2", "U3") for i in issues):
+        return None
+    atual = ficha.get("anatomia") or {}
+    for c in livres:
+        mesma = all(c.get(e) == atual.get(e) for e in bl.EIXOS_PADRAO_ENUM)
+        if mesma and c.get("papel_tatico") == ficha.get("papel_tatico"):
+            continue
+        nova = {
+            **ficha,
+            "anatomia": {**atual, **{e: c[e] for e in bl.EIXOS_PADRAO_ENUM}},
+            "papel_tatico": c["papel_tatico"],
+        }
+        if not lint(nova):
+            return nova
+    return None
+
+
 def gerar_nova(
     p: PedidoCriatura,
     decisao: Decisao,
@@ -1432,8 +1584,13 @@ def gerar_nova(
     runtime: list[dict],
     fichas: dict[str, dict] | None = None,
     lore: str | None = None,
+    prazo: float | None = None,
 ) -> tuple[dict | None, dict]:
-    """(ficha aprovada | None, info{tentativas, codigos, prompt_chars, lint_primeira, providers})."""
+    """(ficha aprovada | None, info{tentativas, codigos, prompt_chars, lint_primeira, providers}).
+
+    ``prazo`` (R14): teto menor que ``prazo_s()`` quando a janela do cron é curta.
+    ``info["lint_primeira"]`` é o lint da 1ª ficha DEPOIS de linha->eixos e da forma (D3) e
+    ANTES de qualquer reparo (padrão, eixos, correção curta)."""
     from services import creature_variants as cv
 
     info: dict[str, Any] = {
@@ -1443,7 +1600,7 @@ def gerar_nova(
         "lint_primeira": None,
         "providers": [],
     }
-    prazo = prazo_s()
+    prazo = prazo_s() if prazo is None else min(prazo, prazo_s())
     t0 = _relogio()  # P2-2: a preparação (lore, exemplos, eixos) conta no prazo
     if lore is None:
         lore = _lore_publica(p)
@@ -1472,10 +1629,10 @@ def gerar_nova(
             msgs = montar_prompt(
                 p, exemplos, lore=lore, ocupados=ocupados, modificador=mod, eixos=livres
             )
-            schema: type = FichaCriaturaGerada
+            schema: type = FichaCriaturaGerada if livres else FichaCriaturaGeradaEixosLivres
         else:
             msgs = montar_prompt_correcao(p, gen_anterior, issues, ocupados=ocupados, eixos=livres)
-            schema = CorrecaoFicha
+            schema = CorrecaoFicha if livres else CorrecaoFichaEixosLivres
         info["prompt_chars"] = max(info["prompt_chars"], prompt_chars(msgs))
         info["tentativas"] = tentativa
         res = _invocar(msgs, prazo - elapsed, info["providers"], schema)
@@ -1491,16 +1648,26 @@ def gerar_nova(
                 info["lint_primeira"] = False
             issues = [Issue("error", "SCHEMA", "a resposta não veio na ficha")]
             continue
-        gen_anterior = gen.model_dump()
-        ficha = ficha_runtime(gen, regiao=p.regiao, fid=id_nova(gen.nome, p.game_id, p.turn))
+        gen_anterior = normalizar_forma(gen.model_dump(), nome=gen.nome)
+        ficha = ficha_runtime(
+            gen_anterior,
+            regiao=p.regiao,
+            fid=id_nova(gen.nome, p.game_id, p.turn),
+            livres=livres,
+        )
         issues = lint(ficha)
         if tentativa == 1:
-            info["lint_primeira"] = not issues  # resultado cru, antes de qualquer reparo
+            info["lint_primeira"] = not issues  # cru: antes de qualquer reparo (D3)
         if issues:
             reparada = reparar_padrao(ficha, issues, lint)
             if reparada is not None:
                 info["codigos"].append("U13-padrao-reparado")
                 ficha, issues = reparada, []
+        if issues:
+            trocada = reparar_eixos(ficha, issues, livres, lint)
+            if trocada is not None:
+                info["codigos"].append("U2U3-eixos-reparados")
+                ficha, issues = trocada, []
         if not issues:
             return ficha, info
         info["codigos"] += sorted({i.code for i in issues})
@@ -1513,8 +1680,12 @@ def _resposta_para_ficha(res: Any, anterior: dict | None) -> FichaCriaturaGerada
         return res
     if isinstance(res, CorrecaoFicha) and anterior is not None:
         mudou = {k: v for k, v in res.model_dump().items() if v is not None}
+        # região saturada: a ficha anterior carrega os seis eixos (schema alternativo)
+        cls = (
+            FichaCriaturaGeradaEixosLivres if "plano_corporal" in anterior else FichaCriaturaGerada
+        )
         try:
-            return FichaCriaturaGerada(**{**anterior, **mudou})
+            return cls(**{**anterior, **mudou})
         except ValueError:
             return None
     return None

@@ -627,6 +627,19 @@ def _ficha_criatura_gerada(model, messages):
         return vals[k:] + vals[:k]
 
     escolha = None
+    # SPEC-374 R10: com <eixos_livres> numerado o mock escolhe a linha 1 (o motor escreve os eixos)
+    linha_eixos = 1
+    livres_bloco = re.search(r"<eixos_livres>\n(.*?)\n</eixos_livres>", system, re.S)
+    for linha in livres_bloco.group(1).splitlines() if livres_bloco else []:
+        m_lin = re.match(r"(\d+)\. (.+)$", linha)
+        vals = [v.strip() for v in m_lin.group(2).split(" / ")] if m_lin else []
+        if len(vals) == 6:
+            escolha = {
+                "anatomia": dict(zip(bl.EIXOS_PADRAO_ENUM, vals[:5], strict=True)),
+                "papel_tatico": vals[5],
+            }
+            linha_eixos = int(m_lin.group(1))
+            break
     combos = itertools.product(
         ordenado("plano_corporal", 3),
         ordenado("material", 7),
@@ -635,7 +648,7 @@ def _ficha_criatura_gerada(model, messages):
         ordenado("locomocao", 17),
         ordenado("percepcao", 19),
     )
-    for plano, mat, papel, esc, loc, perc in itertools.islice(combos, 20000):
+    for plano, mat, papel, esc, loc, perc in itertools.islice(combos, 0 if escolha else 20000):
         if plano == "sessil_ancorado" or loc == "ancorada":
             continue
         cand = {
@@ -714,6 +727,7 @@ def _ficha_criatura_gerada(model, messages):
             "demonio": demonio,
             "faccao": None,
             **anat,
+            "linha_eixos": linha_eixos,
             "anatomia_texto": texto,
             "silhueta": f"Vulto {anat['escala']} de {p[0][0]} à mostra, rente ao chão.",
             "comportamento": f"Ronda o lugar de onde veio e só ataca quem chega perto do {p[1][0]}.",
@@ -991,7 +1005,9 @@ _DISPATCH = {
     "NPCResponse": _npc_response,
     "EnemySchema": _enemy_schema,
     "FichaCriaturaGerada": _ficha_criatura_gerada,  # SPEC-361 R31
+    "FichaCriaturaGeradaEixosLivres": _ficha_criatura_gerada,  # SPEC-374 R10 (região saturada)
     "CorrecaoFicha": lambda model, messages: model(),  # SPEC-361 R16: correção vazia
+    "CorrecaoFichaEixosLivres": lambda model, messages: model(),
     "EncounterScanner": _encounter_scanner,
     "LootSchema": _loot_schema,
     "ItemGeneration": _item_generation,

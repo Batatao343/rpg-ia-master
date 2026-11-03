@@ -925,6 +925,11 @@ RPG_CREATURE_GEN_DEADLINE_S:
   default: "30"
   spec: SPEC-361
   note: "prazo total (s) da geração nova, que roda fora do turno (job creature_gen): preparação + 1ª chamada + correção curta"
+RPG_CREATURE_GEN_MIN_WINDOW_S:
+  kind: ops
+  default: "12"
+  spec: SPEC-374
+  note: "janela mínima (s) do dreno do cron para o job creature_gen começar; abaixo disso ele é adiado (JobDeferred) sem chamar LLM. Dentro do dreno o prazo vira min(prazo, janela - 3 s)"
 RPG_CREATURE_GEN_RETRY_MIN_S:
   kind: ops
   default: "3.5"
