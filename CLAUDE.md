@@ -21,7 +21,9 @@ O conteúdo antigo daqui (cópia de `AGENTS.md` + changelog) está preservado em
 escreveu, `spec-author` (Opus) escreve spec, `code-locator`/`ci-watcher` (Haiku)
 localizam código e vigiam CI, `audit-reader` (Sonnet) audita só leitura. O prompt
 leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
-`docs/guias/BRIEF_SUBAGENTE.md`.
+`docs/guias/BRIEF_SUBAGENTE.md`. `general-purpose`/sem tipo só com motivo (até 03/11
+foram 45 % das chamadas); "onde fica X" é `code-locator`. Passe `model` sempre.
+Revisor por risco da spec (`AGENTS.md` § Qualidade, revisão e evidência).
 
 **Memória da máquina (regra do dono, 24/10 — máquina de 16 GB; já travou):**
 - Não há teto fixo de agentes; o problema é **exagerar em rajada**. Dispare aos
@@ -30,7 +32,7 @@ leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
 - Subagente **nunca** roda a suíte completa nem `-n auto`: só os testes do escopo,
   com no máximo `-n 2`. A suíte completa é do coordenador, **uma por vez**, no pouso.
 - Antes de disparar executor/revisor e a cada marco: medir RAM livre
-  (`Get-CimInstance Win32_OperatingSystem` → `FreePhysicalMemory`). Abaixo de
+  (`bash scripts/dev/ram.sh`: RAM + pytest/python órfãos com PID). Abaixo de
   ~3 GB, não dispara nada novo e enfileira.
 - Depois de reinício de sessão ou agente morto: procurar e matar por PID (árvore,
   `taskkill /T /F /PID`) os `pytest`/`supabase status`/`python -` órfãos. Nunca
@@ -47,7 +49,14 @@ leva só `SPEC-NNN · worktree · decisões do dono`; regras comuns em
 - Comando > 2 min: `run_in_background` + timeout explícito; espere com uma
   notificação (nunca `sleep` em loop).
 
-**Ambiente:** `.claude/settings.json` define `PYTHONUTF8=1`, o allowlist de comandos
-de leitura/teste e o hook que lembra de reindexar o RAG ao editar lore.
+**Ambiente:** `.claude/settings.json` define `PYTHONUTF8=1`, o allowlist e os hooks
+(`.claude/hooks/`, SPEC-386): lembrete de reindexar lore; `ruff format`+`check --fix`
+a cada edição de `.py`; guarda que nega `Read`/`cat` de arquivo > 40 KB sem recorte,
+transcritos `.jsonl` e `pytest -n auto` em subagente; aviso de `/compact` acima de
+350 K tokens. Hook negou algo legítimo? Recorte a leitura (`Grep` + `offset/limit`).
+
+**Compact instructions:** ao compactar, preserve: spec ativa e worktree, último sha da
+`main`, testes rodados e resultado, decisões do dono desta sessão, bloqueios e o
+próximo passo. Descarte saídas de ferramenta e trechos de arquivo já lidos.
 
 @ESTADO_ATUAL.md

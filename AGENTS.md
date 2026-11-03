@@ -370,6 +370,21 @@ Estado atual das specs: `uv run python scripts/spec_index.py summary`.
      decisões recentes). **`ROADMAP.md`: só quando o plano muda.** Detalhe de entrega vai
      para `CHANGELOG.md` (`## AAAA-MM-DD`). Em onda paralela, só o coordenador edita os dois.
 
+### Qualidade, revisão e evidência (SPEC-386)
+
+- **Menor mudança correta.** Toque só o contrato afetado; refatoração fora do escopo vira spec
+  própria. Duas tentativas falharam pelo mesmo motivo → pare de editar e investigue a causa.
+- **Tamanho:** função nova ≤ 60 linhas. Arquivo > 1.000 linhas e função > 100 não crescem
+  (gate `tests/test_size_budget.py`): código novo vai em módulo próprio.
+- **Helper:** antes de criar, `Grep "def <nome>"`; na revisão, `scripts/dev/dup_helpers.py --diff main...HEAD`.
+- **Lint:** `ruff format` + `ruff check` rodam a cada edição (hook) e antes do hand-back;
+  `except Exception` só com log ou `# silent-ok: motivo`; `noqa` só de regra ativa no `select`.
+- **Revisão proporcional ao risco** (campo `Risco` da spec): `alto` (combate, persistência,
+  auth/pagamento, API pública, estado, evals) → `spec-reviewer` obrigatório; `médio` → revisor
+  Sonnet; `baixo` (docs, conteúdo com lint, tooling) → testes + lint bastam. Onda 375–385: W7 vale.
+- **Evidência antes de mexer:** a spec declara como provará o comportamento (teste que falha
+  antes; em refatoração pura, oráculo de equivalência — W2 da auditoria 03/11).
+
 ---
 
 ## O que NÃO fazer

@@ -9,11 +9,15 @@ Você revisa, não implementa. Leia `docs/guias/BRIEF_SUBAGENTE.md` e a spec.
 
 1. `git diff main...HEAD --stat` no worktree; leia os trechos alterados (offset/limit).
 2. Confira cada requisito/critério de aceite contra o código e os testes.
-3. Rode só testes focados (`bash scripts/dev/py.sh -m pytest -q -p no:cacheprovider <arquivos>`),
-   em foreground com timeout; **não deixe processo em background** ao devolver.
+3. Rode só testes focados (`bash scripts/dev/pt.sh <arquivos>`), em foreground com
+   timeout; **não deixe processo em background** ao devolver.
 4. Procure: guard de structured output ausente, valor do LLM sem validação, writer
    persistente sem round-trip save/load, segredo em log, mudança em `evals/` protegido.
-5. Escreva `handoffs/SPEC-NNN-<papel>-review.md` pelo template
+5. Qualidade (P2, ou P1 se sistemático): função nova > 60 linhas; helper que já existe
+   (`bash scripts/dev/py.sh scripts/dev/dup_helpers.py --diff main...HEAD`); arquivo grande
+   que cresceu (`size_budget.py`); `except` largo sem log/`silent-ok`; teste que só afirma o
+   mock; mudança fora do escopo da spec; evidência declarada na spec (campo `Evidência`) ausente.
+6. Escreva `handoffs/SPEC-NNN-<papel>-review.md` pelo template
    `docs/templates/handoff-review.md` (papel minúsculo: sol, astra, terra, luna).
 
 Veredito: `APPROVED`, `APPROVED_WITH_FOLLOWUPS` ou `CHANGES_REQUIRED` com achados

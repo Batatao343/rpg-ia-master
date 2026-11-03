@@ -13,21 +13,39 @@ Os tipos em `.claude/agents/` já embutem o papel; este arquivo é a regra comum
 - Node: `web/node_modules` é junção do checkout principal; se faltar, pare e avise.
 - Fim de linha é LF em tudo (`.gitattributes`); não trate `\r\n` à mão.
 
-## Ferramentas
+## Ferramentas (hooks barram o que está em **negrito**)
 
-- `Read` antes de `Edit` (sempre). Arquivo > 400 linhas: `Read` com `offset/limit`
-  depois de um `Grep` que localize o trecho.
+- `Read` antes de `Edit`/`Write`, **inclusive** em arquivo que você criou ou mudou via Bash
+  (295 erros "File has not been read yet" em subagentes até 03/11).
+- **Arquivo > 40 KB: nunca inteiro** (`Read` sem `offset/limit` e `cat`/`Get-Content` são
+  negados). `Grep` acha o trecho; `Read` com `offset/limit` lê. Spec grande:
+  `bash scripts/dev/py.sh scripts/spec_index.py show NNN` (sumário) e `--section <título>`.
 - Busca: ferramentas `Grep`/`Glob`, nunca `grep -r`/`find` via Bash (lento no OneDrive).
-- Saída de comando: sempre com teto (`| tail -20`, `--jq`, `head`). Logs remotos com limite.
-- **Proibido** ler `tool-results/`, transcritos `.jsonl`, `tasks/*.output` de outros
+- Saída de comando: sempre com teto (`| tail -20`, `--jq`, `head`) ou
+  `bash scripts/dev/cap.sh 40 <comando>` (grava o resto em arquivo).
+- Sem `cd` antes de cada comando: o cwd já é o worktree; use `git -C <wt>` se precisar.
+- CI é do `ci-watcher`/coordenador: não faça `gh run watch`/loop de `gh run view`.
+- **Proibido** ler `tool-results/`, **transcritos `.jsonl`, `tasks/*.output`** de outros
   agentes, `.env*` (leia segredos só por nome de variável, dentro de scripts).
 - Falha do Playwright: leia a mensagem de erro do reporter 1×; não abra o `test-failed-*.png` em loop.
 
+## Qualidade do código (AGENTS.md § Qualidade, revisão e evidência)
+
+- Antes de criar helper (fold de texto, leitor de flag, JSON com cache, parse de LLM):
+  `Grep "def <nome>"` e reutilize. Criou helper genérico novo? Liste no hand-back.
+- Função nova ≤ 60 linhas. Arquivo > 1.000 linhas não cresce: extraia para módulo novo
+  (`tests/test_size_budget.py` reprova crescimento).
+- O hook já roda `ruff format` + `ruff check --fix` a cada edição de `.py`; violação que
+  sobrar aparece para você — corrija antes do hand-back.
+- Menor mudança correta: nada de refatorar fora do escopo da spec. Duas tentativas falharam
+  pelo mesmo motivo → pare, investigue a causa e registre a hipótese antes de editar de novo.
+
 ## Testes (camadas — `docs/guias/TESTES.md`)
 
-- Iteração: `-q --lf -x`. Antes do hand-back: só os arquivos de teste do seu escopo.
+- Iteração: `bash scripts/dev/pt.sh <testes> [--lf]` (`-n 2`, `-x`, só falhas + resumo; log
+  completo em arquivo). Antes do hand-back: só os arquivos de teste do seu escopo.
 - **Não** rode a suíte completa: o coordenador roda 1× no `/spec-land`.
-- **Nunca** `-n auto`; no máximo `-n 2`. Vários agentes rodam ao mesmo tempo numa
+- **Nunca** `-n auto`; no máximo `-n 2` (**o hook nega** em subagente). Vários agentes rodam ao mesmo tempo numa
   máquina de 16 GB: em 24/10 cinco suítes `-n auto` paralelas esgotaram a RAM e
   derrubaram a sessão. Não deixe `pytest` em background ao entregar o hand-back.
 - Comando > 2 min: `run_in_background: true` + `timeout` explícito, ou foreground com

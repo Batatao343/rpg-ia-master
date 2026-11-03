@@ -4,6 +4,8 @@
 > **Criada:** YYYY-MM-DD · **Atualizada:** YYYY-MM-DD
 > **Depende de:** <specs anteriores que precisam estar `done`>
 > **Desbloqueia:** <specs/features que dependem desta>
+> **Risco:** `baixo` | `médio` | `alto` (define a revisão — AGENTS.md § Qualidade, revisão e evidência)
+> **Evidência:** <teste que falha antes / oráculo de equivalência / smoke que prova o comportamento>
 
 ---
 

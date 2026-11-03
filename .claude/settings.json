@@ -10,13 +10,21 @@
       "Bash(uv run pytest:*)",
       "Bash(uv run ruff:*)",
       "Bash(bash scripts/dev/py.sh:*)",
+      "Bash(bash scripts/dev/pt.sh:*)",
+      "Bash(bash scripts/dev/cap.sh:*)",
+      "Bash(bash scripts/dev/ram.sh)",
       "Bash(bash scripts/dev/wt.sh path:*)",
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git show:*)",
+      "Bash(git -C * status:*)",
+      "Bash(git -C * diff:*)",
+      "Bash(git -C * log:*)",
+      "Bash(git -C * show:*)",
       "Bash(git worktree list:*)",
       "Bash(git branch --list:*)",
+      "Bash(git rev-parse:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
       "Bash(npm run build)",
@@ -32,6 +40,34 @@
           {
             "type": "command",
             "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/reindex-reminder.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "python -I \"$CLAUDE_PROJECT_DIR/.claude/hooks/ruff_after_edit.py\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -I \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_tools.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -I \"$CLAUDE_PROJECT_DIR/.claude/hooks/context_size.py\"",
             "timeout": 5
           }
         ]

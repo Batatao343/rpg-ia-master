@@ -30,6 +30,7 @@ import datetime as dt
 import re
 import subprocess
 import sys
+import unicodedata
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -300,6 +301,46 @@ def create_spec(root: Path, number: int, slug: str, today: dt.date | None = None
     return path
 
 
+def _plain(text: str) -> str:
+    folded = unicodedata.normalize("NFKD", text)
+    return "".join(c for c in folded if not unicodedata.combining(c)).lower()
+
+
+def show(root: Path, number: int, sections: list[str]) -> str:
+    """Header + table of contents of one spec, or only the requested sections (SPEC-386 R5).
+
+    Agents read a 50 KB spec piecewise instead of `cat`-ing it whole.
+    """
+    matches = sorted((root / "specs").glob(f"SPEC-{number:03d}-*.md"))
+    if not matches:
+        raise SpecIndexError(f"SPEC-{number:03d} not found in specs/")
+    lines = matches[0].read_text(encoding="utf-8").splitlines()
+    headings = [
+        (i, len(ln) - len(ln.lstrip("#")), ln) for i, ln in enumerate(lines) if ln.startswith("#")
+    ]
+    first_section = next((i for i, level, _ in headings if level >= 2), len(lines))
+    out = [matches[0].relative_to(root).as_posix(), *lines[:first_section]]
+    if not sections:
+        out.append("Seções (use --section <trecho do título>):")
+        for n, (i, level, text) in enumerate(headings):
+            if level < 2:
+                continue
+            end = next((j for j, lv, _ in headings[n + 1 :] if lv <= level), len(lines))
+            out.append(f"  {'  ' * (level - 2)}{text.lstrip('#').strip()}  [{end - i} linhas]")
+        return "\n".join(out)
+    wanted = [_plain(s) for s in sections]
+    found = False
+    for n, (i, level, text) in enumerate(headings):
+        if level < 2 or not any(w in _plain(text) for w in wanted):
+            continue
+        end = next((j for j, lv, _ in headings[n + 1 :] if lv <= level), len(lines))
+        out.extend(lines[i:end])
+        found = True
+    if not found:
+        raise SpecIndexError(f"no section matching {sections} in {matches[0].name}")
+    return "\n".join(out)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -317,6 +358,9 @@ def main(argv: list[str] | None = None) -> int:
     next_parser.add_argument("--create", action="store_true")
     size_parser = sub.add_parser("estado-size")
     size_parser.add_argument("--max", type=int, default=8192)
+    show_parser = sub.add_parser("show", help="header + TOC, or only --section(s), of one spec")
+    show_parser.add_argument("number", type=int)
+    show_parser.add_argument("--section", action="append", default=[])
     args = parser.parse_args(argv)
     root = args.root.resolve()
     try:
@@ -348,6 +392,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(create_spec(root, number, args.slug).relative_to(root).as_posix())
             else:
                 print(f"SPEC-{number:03d}")
+        elif args.command == "show":
+            print(show(root, args.number, args.section))
         elif args.command == "estado-size":
             size = (root / "ESTADO_ATUAL.md").stat().st_size
             print(f"ESTADO_ATUAL.md = {size} bytes (max {args.max})")

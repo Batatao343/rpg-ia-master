@@ -135,3 +135,23 @@ def test_real_index_matches_spec_headers() -> None:
 
 def test_estado_stays_within_budget() -> None:
     assert (ROOT / "ESTADO_ATUAL.md").stat().st_size <= 8192
+
+
+def test_show_prints_header_toc_and_single_section(tmp_path: Path) -> None:
+    """SPEC-386 R5: agentes leem a spec por seção, não inteira."""
+    spec = tmp_path / "specs" / "SPEC-042-demo.md"
+    spec.parent.mkdir(parents=True)
+    spec.write_text(
+        "# SPEC-042 — demo\n\n> **Status:** `draft`\n\n## 1. Contexto\n\nlonga\n\n"
+        "## 4. Plano\n\n### Etapa 1\n\npasso\n\n## 5. Critérios de aceite\n\n- [ ] ok\n",
+        encoding="utf-8",
+    )
+    toc = spec_index.show(tmp_path, 42, [])
+    assert "> **Status:** `draft`" in toc and "longa" not in toc
+    assert "4. Plano  [6 linhas]" in toc and "  Etapa 1" in toc
+    part = spec_index.show(tmp_path, 42, ["criterios"])  # sem acento também casa
+    assert "- [ ] ok" in part and "passo" not in part and "longa" not in part
+    with pytest.raises(spec_index.SpecIndexError):
+        spec_index.show(tmp_path, 42, ["inexistente"])
+    with pytest.raises(spec_index.SpecIndexError):
+        spec_index.show(tmp_path, 7, [])
