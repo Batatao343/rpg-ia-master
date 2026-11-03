@@ -77,11 +77,30 @@ def test_winter_crossing_never_refused():
 
 def test_crossing_note_is_deterministic_fact():
     assert "fechado pela neve" in wc.CROSSING_NOTE and "dia inteiro" in wc.CROSSING_NOTE
-    import inspect
 
+
+def _crossing_prompt(monkeypatch, season: str) -> str:
+    """SPEC-379 R6 (a): roda o storyteller numa viagem pelo passo e devolve o prompt enviado ao LLM."""
     from agents import storyteller
+    from tests.fakes.scripted_llm import story_update_llm
+    from tests.test_grounding_boundaries import _story_state
 
-    assert "world_calendar.CROSSING_NOTE" in inspect.getsource(storyteller)
+    llm = story_update_llm(narrative="Voce segue pela trilha.")
+    monkeypatch.setattr(storyteller, "get_llm", lambda **_k: llm)
+    state = _story_state("viajar para Montanhas Afiadas")
+    state["world"] = _world("skallgard", season) | {
+        "current_location": "Skallgard",
+        "turn_count": 4,
+        "danger_level": 1,
+        "visited": ["skallgard", "montanhas_afiadas"],
+    }
+    storyteller.storyteller_node(state)
+    return " ".join(str(inp) for _schema, inp in llm.calls)
+
+
+def test_crossing_note_reaches_storyteller_prompt_only_when_pass_closed(monkeypatch):
+    assert wc.CROSSING_NOTE in _crossing_prompt(monkeypatch, "inverno")
+    assert wc.CROSSING_NOTE not in _crossing_prompt(monkeypatch, "verao")
 
 
 def test_closed_pass_counts_as_blocked_for_trade():
