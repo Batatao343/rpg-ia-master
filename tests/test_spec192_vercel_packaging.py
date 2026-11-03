@@ -75,8 +75,35 @@ def test_serverless_defaults_respect_override_and_non_hosted():
 
 
 def test_hosted_profile_never_writes_saves_or_faiss(tmp_path, monkeypatch):
-    """Perfil não-legacy: save/memória vão ao GameStore/pgvector, sem tocar o cwd."""
-    src = (ROOT / "persistence.py").read_text(encoding="utf-8")
-    rag = (ROOT / "rag.py").read_text(encoding="utf-8")
-    assert src.count('RPG_RUNTIME_PROFILE", "legacy"') >= 3
-    assert rag.count('RPG_RUNTIME_PROFILE", "legacy"') >= 2
+    """Perfil não-legacy: save/memória vão ao GameStore/pgvector, sem tocar o cwd.
+
+    SPEC-379 R6 (a): comportamento no lugar de contar ocorrências do perfil no código-fonte.
+    """
+    import uuid
+    from types import SimpleNamespace
+
+    import persistence
+    from infrastructure import request_context
+    from infrastructure import runtime as runtime_mod
+
+    class FakeStore:
+        def __init__(self):
+            self.created = []
+
+        def get(self, _principal, _game_id):
+            return None
+
+        def create(self, _principal, state):
+            self.created.append(state["game_id"])
+            return SimpleNamespace(version=1)
+
+    store = FakeStore()
+    saves = tmp_path / "saves"
+    monkeypatch.setattr(persistence, "SAVES_DIR", str(saves))
+    monkeypatch.setenv("RPG_RUNTIME_PROFILE", "hosted-supabase")
+    monkeypatch.setattr(request_context, "current_principal", lambda: object())
+    monkeypatch.setattr(runtime_mod, "get_runtime", lambda: SimpleNamespace(game_store=store))
+    gid = str(uuid.uuid4())
+    assert persistence.save_game_state({"game_id": gid, "messages": []}) is True
+    assert store.created == [gid]
+    assert not saves.exists() or list(saves.iterdir()) == []
