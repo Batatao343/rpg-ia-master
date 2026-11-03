@@ -10,6 +10,7 @@ import pytest
 from services import dossiers as dz
 from services import memory_provenance as mp
 from services.dossier_visibility import DossiersResponseModel
+from tests.factories import make_state
 
 RATO = "enemy_rato_peste_anel_lama"
 HIDDEN_LOC = "mon_verme_primordial_das_raizes_do_mundo"
@@ -17,16 +18,8 @@ HIDDEN_LOC = "mon_verme_primordial_das_raizes_do_mundo"
 
 def _state(**extra):
     base = {
-        "game_id": "pytest_spec211",
         "narrative_summary": "",
         "messages": [],
-        "player": {"name": "Tester", "class_name": "Devoto do Abismo", "race": "Humano"},
-        "world": {
-            "current_location": "Nova Arcádia",
-            "current_location_id": "nova_arcadia",
-            "turn_count": 12,
-            "visited": ["nova_arcadia"],
-        },
         "npcs": {},
         "factions": [],
         "faction_intel": {},
@@ -37,7 +30,17 @@ def _state(**extra):
         "chronicle": [],
     }
     base.update(extra)
-    return base
+    return make_state(
+        game_id="pytest_spec211",
+        player={"name": "Tester", "class_name": "Devoto do Abismo", "race": "Humano"},
+        world={
+            "current_location": "Nova Arcádia",
+            "current_location_id": "nova_arcadia",
+            "turn_count": 12,
+            "visited": ["nova_arcadia"],
+        },
+        **base,
+    )
 
 
 def _grum(**over):
