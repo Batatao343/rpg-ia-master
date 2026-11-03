@@ -340,3 +340,15 @@ ondas:
   - san1_tro_corte_de_penitencia
   - san1_tro_veia_aberta
   - san1_tro_eco_de_ferida
+- onda: 1
+  data: '2026-11-03'
+  autor: claude-opus-5.5
+  revisor_voz: dono
+  voz_status: aprovada
+  nota_voz: 'SPEC-371: decisão do dono de 03/11 ("Reação p/ toda Postura"); voz coberta pela autorização geral do dono de 27/10, sem leitura das duas Cartas (não atesta leitura). Reação de tronco da preparação inicial do Arcanista e do Médico'
+  amostra_voz:
+  - arc1_ini_cinza_nos_olhos
+  - med1_ini_pinca_no_tendao
+  cartas:
+  - arc1_ini_cinza_nos_olhos
+  - med1_ini_pinca_no_tendao

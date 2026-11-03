@@ -1,0 +1,38 @@
+{
+  "_meta": "SPEC-371 (dono 03/11, \"Reação p/ toda Postura\"): reação de tronco (sem subclasse, nível 1) que nasce preparada no herói de Médico de Campo (`reacao_inicial`, lida por character_creator.starting_reaction_id). O saber do bestiário continua só informativo (D6).",
+  "cards": [
+    {
+      "id": "med1_ini_pinca_no_tendao",
+      "name": "Pinça no Tendão",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Médico de Campo",
+      "subclasse": "",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 0,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente",
+        "agilidade"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "desarmado_risco",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Dedos de trincheira acham o tendão do pulso que desce; a mão afrouxa e o golpe chega sem peso.",
+      "momento": "Melhor jogada quando o golpe pesado já está no ar e tirar a firmeza da mão vale mais que fugir dele.",
+      "gatilho": "ao_ser_atacado",
+      "reacao_inicial": true,
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

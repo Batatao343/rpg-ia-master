@@ -1,0 +1,37 @@
+{
+  "_meta": "SPEC-371 (dono 03/11, \"Reação p/ toda Postura\"): reação de tronco (sem subclasse, nível 1) que nasce preparada no herói de Arcanista Cinzento (`reacao_inicial`, lida por character_creator.starting_reaction_id). O saber do bestiário continua só informativo (D6).",
+  "cards": [
+    {
+      "id": "arc1_ini_cinza_nos_olhos",
+      "name": "Cinza nos Olhos",
+      "tipo": "reacao",
+      "origem": "onda-1",
+      "classe": "Arcanista Cinzento",
+      "subclasse": "",
+      "patamar": "inicial",
+      "raridade": "comum",
+      "custo_entropia": 2,
+      "custo_folego": 1,
+      "frequencia": "turno",
+      "virtude_permitida": [
+        "mente"
+      ],
+      "efeitos": [
+        {
+          "kind": "aplicar_condicao",
+          "condicao": "cego",
+          "duracao": 1
+        }
+      ],
+      "descricao": "Sopra contra os olhos de quem ergue o golpe a cinza que o éter deixou no cajado.",
+      "momento": "Melhor jogada quando o golpe anunciado já desce e quem o desfere precisa enxergar para acertar.",
+      "gatilho": "ao_ser_atacado",
+      "reacao_inicial": true,
+      "tier": 1,
+      "level_req": 1,
+      "apex": false,
+      "onda": 1,
+      "versao": 1
+    }
+  ]
+}

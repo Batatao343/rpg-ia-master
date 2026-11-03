@@ -377,7 +377,7 @@ def _build_initial_state(
     """Monta o estado inicial da campanha — MESMO shape de api.new_game."""
     from langchain_core.messages import HumanMessage, SystemMessage
 
-    from character_creator import create_player_character
+    from character_creator import create_player_character, keep_starting_reaction
     from gamedata import XP_TABLE, prepared_slots_for_level, seed_factions
     from services.chronicle import default_chapter_title
     from world_utils import starting_world
@@ -502,7 +502,11 @@ def _build_initial_state(
             ),
             reverse=True,
         )
-        player["prepared_cards"] = ranked[: prepared_slots_for_level(start_level)]
+        slots = prepared_slots_for_level(start_level)
+        # SPEC-371: a reação inicial da Postura (se houver) segue preparada, como na criação.
+        player["prepared_cards"] = keep_starting_reaction(
+            ranked[:slots], known, str(player.get("class_name") or ""), slots
+        )
         initial["player"] = player
         initial["world"] = starting_world(region, start_level)
         initial["messages"] = [

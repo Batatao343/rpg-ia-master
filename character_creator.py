@@ -217,6 +217,45 @@ def apply_racial_traits(sheet: dict[str, Any], race: str) -> dict[str, Any]:
     return sheet
 
 
+def starting_reaction_id(class_name: str) -> str | None:
+    """SPEC-371 (dono 03/11, "Reação p/ toda Postura"): a Carta de reação de tronco marcada
+    `reacao_inicial` da Postura. None = a Postura não tem uma (Devoto, Sangromante e
+    Corruptor já nascem com reação no Acervo inicial)."""
+    from services import cards as cards_svc
+
+    for card in cards_svc.cards_for_class(class_name):
+        if (
+            card.get("reacao_inicial")
+            and card.get("tipo") == "reacao"
+            and card.get("classe") == class_name
+            and not card.get("subclasse")
+        ):
+            return str(card["id"])
+    return None
+
+
+def keep_starting_reaction(
+    prepared: list[str], known: list[str], class_name: str, slots: int
+) -> list[str]:
+    """SPEC-371: a reação inicial da Postura fica entre as Preparadas automáticas. Ela toma a
+    vaga da última Carta que não é `ativa` (passiva ou utilitária), para não tirar golpe nem
+    cura; sem vaga dessas, a da última. Sem reação inicial (ou fora do Acervo), nada muda."""
+    from services import cards as cards_svc
+
+    rid = starting_reaction_id(class_name)
+    out = list(prepared)
+    if not rid or rid not in known or rid in out:
+        return out
+    if len(out) < slots:
+        return out + [rid]
+    for i in range(len(out) - 1, -1, -1):
+        if (cards_svc.get_card(out[i]) or {}).get("tipo") != "ativa":
+            out[i] = rid
+            return out
+    out[-1] = rid
+    return out
+
+
 def _resolve_starting_cards(
     user_input: dict[str, Any], class_name: str, virtudes: dict[str, int]
 ) -> dict[str, Any]:
@@ -247,6 +286,9 @@ def _resolve_starting_cards(
     known = list(dict.fromkeys(user_input.get("known_cards") or []))
     if not known:
         known = pool[:6]
+        rid = starting_reaction_id(class_name)  # SPEC-371: a reação inicial entra no Acervo
+        if rid in pool and rid not in known:
+            known = known[:5] + [rid]
     else:
         known = [c for c in known if c in pool][:6]
     if len(known) < 6:  # completa com o pool se o jogador escolheu de menos
@@ -256,7 +298,7 @@ def _resolve_starting_cards(
     prepared = list(dict.fromkeys(user_input.get("prepared_cards") or []))
     prepared = [c for c in prepared if c in known][:slots]
     if not prepared:
-        prepared = known[:slots]
+        prepared = keep_starting_reaction(known[:slots], known, class_name, slots)
 
     # 2 Cartas de Virtude (permanentes, fora dos slots), estágio pela Virtude relacionada
     vpool = cards_svc.virtue_cards_pool()
