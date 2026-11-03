@@ -13,6 +13,7 @@ import pytest
 from services import discovery as disc
 from services import memory_provenance as mp
 from services import player_knowledge as pk
+from tests.factories import make_state
 
 HIDDEN_LOC = "mon_verme_primordial_das_raizes_do_mundo"  # visibility: hidden no grafo
 HIDDEN_NAME = "Verme-Primordial das Raízes do Mundo"
@@ -40,7 +41,7 @@ def _state(**extra):
         "memory_facts": [],
     }
     base.update(extra)
-    return base
+    return make_state(**base)
 
 
 def _reveal(target, event_id="ev_reveal_1", turn=7):
