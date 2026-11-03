@@ -154,13 +154,23 @@ MOTIVO_LABEL = {
 }
 MAX_TELEGRAFOS = 4
 MAX_TEXTO = 160
-SINAL_LABEL = {"rastro": "Rastro", "resto": "Restos", "som": "Som", "cheiro": "Cheiro", "marca": "Marca"}
+SINAL_LABEL = {
+    "rastro": "Rastro",
+    "resto": "Restos",
+    "som": "Som",
+    "cheiro": "Cheiro",
+    "marca": "Marca",
+}
 
 
 def mode() -> str: ...  # env RPG_FAUNA_SABER; inválido -> "off" + log_event 1x
 def contra_jogo_of(creature_id: str) -> str: ...  # R5; "" quando não há
-def reveal_reason(rec: dict, creature_id: str) -> str | None: ...  # R4 (None se já revelado ou sem fonte)
-def observe_promise(scene: dict, actor: dict, carta: str, texto: str) -> None: ...  # R2 (chamado por enemy_decks)
+def reveal_reason(
+    rec: dict, creature_id: str
+) -> str | None: ...  # R4 (None se já revelado ou sem fonte)
+def observe_promise(
+    scene: dict, actor: dict, carta: str, texto: str
+) -> None: ...  # R2 (chamado por enemy_decks)
 def observe_fulfilled(scene: dict, actor_id: str, carta: str, rnd: int) -> None: ...  # R2
 def absorb(
     bk: dict, scene: dict, actors_by_id: dict[str, dict], player_alive: bool, turn: int
