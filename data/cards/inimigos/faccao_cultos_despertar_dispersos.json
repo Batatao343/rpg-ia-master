@@ -1,0 +1,117 @@
+{
+  "_meta": "SPEC-368: baralho da facção cultos_despertar_dispersos (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_costura_da_uniao",
+      "name": "Costura da União",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Agulha e fio de Hospedeiro prendem o viajante no lugar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_placa_de_hospedeiro",
+      "name": "Placa de Hospedeiro",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "Retalhos de colmeia morta fecham o peito da seguidora.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_retalho_que_aperta",
+      "name": "Retalho que Aperta",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 5,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O retalho costurado ao braço aperta antes de soltar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_chamado_da_uniao",
+      "name": "Chamado da União",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "A que Quer a União chama, e cada mão se alinha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_fio_na_pele",
+      "name": "Fio na Pele",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Um ponto só, e o viajante já é parte da obra.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cultos_despertar_dispersos_pavor_de_remendo",
+      "name": "Pavor de Remendo",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cultos_despertar_dispersos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "Ver o próprio corpo emendado ao dos mortos basta para travar.",
+      "oculta": true
+    }
+  ]
+}

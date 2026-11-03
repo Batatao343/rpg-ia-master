@@ -1,0 +1,116 @@
+{
+  "_meta": "SPEC-368: baralho da facção casa_mares_dominio_lyss (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_linha_no_anzol",
+      "name": "Linha no Anzol",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "O anzol já está dentro, e a linha só espera quem puxa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_puxao_de_linha",
+      "name": "Puxão de Linha",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "A linha estica, e o chão deixa de ser seu.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_dor_que_acorda",
+      "name": "Dor que Acorda",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "Sentir alguma coisa já vale o golpe seguinte.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_anzois_na_pele",
+      "name": "Anzóis na Pele",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Cada anzol cravado é um aviso para quem chega perto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_mare_de_casa",
+      "name": "Maré de Casa",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "A Casa das Marés prende com a mesma paciência da água.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_casa_mares_dominio_lyss_quietude_de_corda",
+      "name": "Quietude de Corda",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "casa_mares_dominio_lyss",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "O frequentador gasto não recua; deixa a linha tomar o golpe.",
+      "oculta": true
+    }
+  ]
+}

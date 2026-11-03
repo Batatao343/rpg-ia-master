@@ -1,0 +1,116 @@
+{
+  "_meta": "SPEC-368: baralho da facção clas_tecnologicos (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_clas_tecnologicos_jato_de_caldeira",
+      "name": "Jato de Caldeira",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "O vapor da caldeira do Ventre varre a entrada dos túneis.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_tecnologicos_corneta_de_latao",
+      "name": "Corneta de Latão",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "Uma voz sob a neve chama os outros e acerta a mira de todos.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_tecnologicos_mao_de_chama_fria",
+      "name": "Mão de Chama Fria",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "A chama azul gela o cabo e some com a força de quem segura metal.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_tecnologicos_armacao_a_vapor",
+      "name": "Armação a Vapor",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "A armação de ferro ronca e fecha o peito contra o golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_tecnologicos_sinal_sob_a_neve",
+      "name": "Sinal sob a Neve",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "Deitado no gelo, o leitor aponta onde você pisa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_clas_tecnologicos_pistao_de_vorr",
+      "name": "Pistão de Vorr",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "clas_tecnologicos",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 7,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "O pistão bate uma vez, e a liga dos dedos responde.",
+      "oculta": true
+    }
+  ]
+}

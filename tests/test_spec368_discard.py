@@ -156,3 +156,28 @@ def test_ressoar_needs_a_single_value_key_and_catalog_is_clean():
     assert any("Ressoar" in e for e in fx.validate_card(fx.materialize(ambiguous)))
     for cid, card in cards._load_cards().items():
         assert not any("Ressoar" in e for e in fx.validate_card(card)), cid
+
+
+def test_pre_and_pos_action_stick_to_the_acting_plays(monkeypatch):
+    from services import conflict_orchestrator as orch
+
+    s = _setup([DOR, "bas_san_golpe", DOR])
+    seen = []
+    monkeypatch.setattr(
+        orch,
+        "_resolve_actor_turn",
+        lambda scene, actor, aid, abi, sides, sub, state, out, rng: seen.append(sub),
+    )
+    pre = ct.TurnStep(kind="move", direction="aproximar")
+    pos = ct.TurnStep(kind="move", direction="afastar")
+    decl = ct.TurnDeclaration(
+        actor_id="player",
+        pre_acao=pre,
+        pos_acao=pos,
+        jogadas=[_discard(), _step("bas_san_golpe"), _discard()],
+    )
+    from services import card_deck_round as cdr
+
+    scene, actors, sides, state = s
+    cdr.resolve_player_plays(scene, actors["player"], "player", actors, sides, decl, state, {"logs": []}, None)
+    assert len(seen) == 1 and seen[0].pre_acao == pre and seen[0].pos_acao == pos

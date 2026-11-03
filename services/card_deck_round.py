@@ -90,7 +90,8 @@ def resolve_player_plays(
     if not plays:
         orch._resolve_actor_turn(scene, actor, actor_id, actors_by_id, sides, decl, state, out, rng)
         return
-    last = len(plays) - 1
+    acting = [i for i, p in enumerate(plays) if str(p.kind or "").lower() != "discard"]
+    first, last = (acting[0], acting[-1]) if acting else (0, len(plays) - 1)  # pre/pos nas jogadas que agem
     carry_guard = False
     acted = False
     for i, step in enumerate(plays):
@@ -104,7 +105,7 @@ def resolve_player_plays(
         acted = True
         sub = ct.TurnDeclaration(
             actor_id=decl.actor_id,
-            pre_acao=decl.pre_acao if i == 0 else None,
+            pre_acao=decl.pre_acao if i == first else None,
             acao=step,
             pos_acao=decl.pos_acao if i == last else None,
             reaction_card_id=decl.reaction_card_id,

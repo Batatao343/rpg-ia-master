@@ -96,12 +96,22 @@ export function togglePick(picks: number[], index: number, max: number): number[
 
 export const remove = (queue: QueuedPlay[], uid: string) => queue.filter((p) => p.uid !== uid);
 
-export function move(queue: QueuedPlay[], uid: string, delta: -1 | 1): QueuedPlay[] {
+/** SPEC-368 P3-1: um descarte paga só Fôlego PRÓPRIO — nunca pode vir depois de jogada que já tomou emprestado. */
+export function discardsAffordable(queue: QueuedPlay[], piles: Pick<PilesView, "folego">): boolean {
+  let spent = 0;
+  for (const p of queue) {
+    if (p.discard && spent + p.folego > Math.max(0, piles.folego)) return false;
+    spent += p.folego;
+  }
+  return true;
+}
+
+export function move(queue: QueuedPlay[], uid: string, delta: -1 | 1, piles?: Pick<PilesView, "folego">): QueuedPlay[] {
   const i = queue.findIndex((p) => p.uid === uid), j = i + delta;
   if (i < 0 || j < 0 || j >= queue.length) return queue;
   const next = [...queue];
   [next[i], next[j]] = [next[j], next[i]];
-  return next;
+  return piles && !discardsAffordable(next, piles) ? queue : next;
 }
 
 /** A fila vira a lista `jogadas` do request único ("Encerrar turno"), na ordem escolhida. */

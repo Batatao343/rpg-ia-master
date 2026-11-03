@@ -1,23 +1,23 @@
-"""SPEC-368 R4-R5 - toda familia e toda faccao de combate tem baralho e >= 1 Carta exclusiva."""
+"""SPEC-368 R4-R5 - toda familia e toda faccao do bestiario tem baralho e >= 1 Carta exclusiva."""
 
 from __future__ import annotations
 
+from agents.bestiary import load_bestiary
 from services import card_effects as fx
 from services import card_lint, cards
 from services import enemy_decks as edk
 
-NEW_FACTIONS = (
-    "tribos_devoradores_sol",
-    "bandos_nomades",
-    "colmeia_hospedeiros",
-    "mercadores_escravos_pradaria",
-)
+
+def _bestiary_factions() -> set[str]:
+    return {edk._fold(c.get("faction")) for c in load_bestiary().values() if c.get("faction")}
 
 
 def test_every_family_and_faction_has_exclusive_card():
     pools = edk._pools()
-    assert len(pools["familias"]) == 11 and set(pools["familias"]) == set(edk.FAMILIAS)
-    assert len(pools["faccoes"]) == 14
+    assert set(pools["familias"]) == set(edk.FAMILIAS)
+    # derivado do bestiario: facção nova com criatura e sem baralho reprova aqui (sem lista fixa)
+    missing = _bestiary_factions() - set(pools["faccoes"])
+    assert not missing, f"facções do bestiário sem baralho: {sorted(missing)}"
     groups = [("familia", k, v) for k, v in pools["familias"].items()] + [
         ("faccao", k, v) for k, v in pools["faccoes"].items()
     ]
@@ -27,9 +27,15 @@ def test_every_family_and_faction_has_exclusive_card():
         assert len(ids) == len(set(ids))
 
 
-def test_new_faction_decks_lint_and_budget():
+def test_spec368_faction_decks_lint_and_budget():
     pools = edk._pools()["faccoes"]
-    for fac in NEW_FACTIONS:
+    authored = {
+        fac
+        for fac, ids in pools.items()
+        if any((cards.get_card(i) or {}).get("origem") == "cartas-368" for i in ids)
+    }
+    assert len(authored) == 14
+    for fac in sorted(authored):
         ids = pools[fac]
         assert 6 <= len(ids) <= 8, fac
         for cid in ids:
@@ -43,11 +49,3 @@ def test_new_faction_decks_lint_and_budget():
                 + card_lint.check_voice(card)
             )
             assert not issues, (cid, [str(i) for i in issues])
-
-
-def test_every_bestiary_faction_deck_is_reachable():
-    # as facções do R4 só valem se alguma criatura do bestiário as referencia
-    from agents.bestiary import load_bestiary
-
-    used = {edk._fold(c.get("faction")) for c in load_bestiary().values()}
-    assert set(NEW_FACTIONS) <= used

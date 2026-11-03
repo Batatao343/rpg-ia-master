@@ -1,0 +1,118 @@
+{
+  "_meta": "SPEC-368: baralho da facção mercadores_curiosidades (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_mercadores_curiosidades_flor_olho",
+      "name": "Flor-Olho",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 3
+      },
+      "descricao": "A flor enraizada na órbita enxerga onde os olhos não alcançam.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_curiosidades_dardo_dos_andares_baixos",
+      "name": "Dardo dos Andares",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 5,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "Dos andares de baixo, o dardo vem sem se anunciar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_curiosidades_cor_que_acende",
+      "name": "Cor que Acende",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enfraquecido",
+        "duracao": 2
+      },
+      "descricao": "A pele vira mapa, e a cor acesa diz qual veneno vem.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_curiosidades_cuspe_de_provador",
+      "name": "Cuspe de Provador",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "Aprendeu o veneno lambendo, e devolve na mesma moeda.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_curiosidades_agulha_do_oeste",
+      "name": "Agulha do Oeste",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "A agulha no peito puxa para Ophidia, e o corpo vai junto.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_mercadores_curiosidades_balcao_de_curiosidade",
+      "name": "Balcão de Curiosidade",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "mercadores_curiosidades",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Tudo está à venda, inclusive o espaço entre você e o golpe.",
+      "oculta": true
+    }
+  ]
+}

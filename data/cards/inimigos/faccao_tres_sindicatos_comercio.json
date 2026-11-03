@@ -1,0 +1,120 @@
+{
+  "_meta": "SPEC-368: baralho da facção tres_sindicatos_comercio (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_oleo_fervente",
+      "name": "Óleo Fervente",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "O sebo derrete no fogo e cobre o chão de calor.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_penhor_cobrado",
+      "name": "Penhor Cobrado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "Tudo que você carrega agora tem dono e juros.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_sangue_de_torneira",
+      "name": "Sangue de Torneira",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 4,
+        "dano_tipo": "corrosivo"
+      },
+      "descricao": "O sangue vendido espirra por latão e queima onde cai.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_resgate_do_poco",
+      "name": "Resgate do Poço",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desmoralizado",
+        "duracao": 2
+      },
+      "descricao": "Dívida no Poço não se paga: se renova.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_sebo_cozido",
+      "name": "Sebo Cozido",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Braços crostados de gordura seca aguentam muita coisa.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_tres_sindicatos_comercio_peca_de_navio",
+      "name": "Peça de Navio",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "tres_sindicatos_comercio",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Dentes e dedos penhorados viraram ferro de casco, e o ferro bate.",
+      "oculta": true
+    }
+  ]
+}

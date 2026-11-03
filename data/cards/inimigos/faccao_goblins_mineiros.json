@@ -1,0 +1,116 @@
+{
+  "_meta": "SPEC-368: baralho da facção goblins_mineiros (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_goblins_mineiros_trava_no_caminho",
+      "name": "Trava no Caminho",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "enraizado",
+        "duracao": 2
+      },
+      "descricao": "Uma mola solta no escuro, e o pé de alguém fica para trás.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_goblins_mineiros_gancho_de_toco",
+      "name": "Gancho de Toco",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "leve",
+        "dano_base": 5,
+        "dano_tipo": "perfurante"
+      },
+      "descricao": "O gancho costurado no toco sabe mais que os dedos que faltam.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_goblins_mineiros_fosso_armado",
+      "name": "Fosso Armado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "A boca do fosso foi coberta de palha, e a presa ainda não sabe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_goblins_mineiros_mola_de_ferro",
+      "name": "Mola de Ferro",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "empurrao",
+        "valor": 3
+      },
+      "descricao": "A mola dispara e joga o intruso contra a rocha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_goblins_mineiros_tuneis_dos_dedos_perdidos",
+      "name": "Túneis dos Dedos Perdidos",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 2
+      },
+      "descricao": "Quem perdeu dedos nas armadilhas anãs conhece todos os cantos.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_goblins_mineiros_rede_de_sucata",
+      "name": "Rede de Sucata",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "goblins_mineiros",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Ferro velho pendurado no teto cai, e o goblin some atrás dele.",
+      "oculta": true
+    }
+  ]
+}

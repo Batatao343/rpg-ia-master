@@ -164,7 +164,7 @@
     },
     "on": {
      "conflitos": 360,
-     "dano_medio": 11.26,
+     "dano_medio": 11.24,
      "vitoria_pct": 68.9
     }
    },
@@ -188,8 +188,8 @@
     },
     "on": {
      "conflitos": 360,
-     "dano_medio": 13.18,
-     "vitoria_pct": 63.6
+     "dano_medio": 13.19,
+     "vitoria_pct": 63.3
     }
    }
   }
@@ -204,6 +204,6 @@
   "categories": "padrao,elite",
   "per_cat": 3,
   "bot": "scripts/cards/sim.py full_deck_decl (+ leitura do Pressagio no braco R10 on)",
-  "elapsed_s": 85.0
+  "elapsed_s": 50.7
  }
 }

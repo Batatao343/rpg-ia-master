@@ -253,7 +253,11 @@ export function DeckCombat({ combat, gameId, entropy, busy, touch, nameOf, onEnd
         </div>
       ) : maneuverAim}
       <PlayQueue queue={queue} selected={selected} nameOf={nameOf} busy={busy} touch={touch}
-        onSelect={setSelected} onMove={(uid, d) => setQueue((q) => move(q, uid, d))}
+        onSelect={setSelected} onMove={(uid, d) => {
+          const next = move(queue, uid, d, piles);
+          if (next === queue && queue.length > 1) onAnnounce("Um descarte só paga com Fôlego próprio: ele não pode vir depois de jogada que toma emprestado.");
+          setQueue(next);
+        }}
         onRemove={(uid) => { setQueue((q) => remove(q, uid)); setSelected(null); }}
         onClear={() => { setQueue([]); setSelected(null); }} onEnd={end}
         spareAvailable={spareAvailable} spare={spare} onSpare={onSpare} onFlee={onFlee} fleeReason={fleeReason}

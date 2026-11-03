@@ -8,13 +8,16 @@ Ferramenta NOVA sobre a arena existente: importa `scripts/cards/sim.py` (baralho
 `deck_env`) sem altera-lo; nao toca avaliadores, orcamento, golden nem arenas antigas.
 
 R9 (cartas `on`, mesmo bot e mesmos baralhos do `sim.py`; por Postura e total):
-  - Cartas jogadas por rodada (media e p50) - rodadas em que o jogador agiu;
+  - Cartas jogadas por rodada (media e p50): Cartas DECLARADAS na lista de jogadas (o plano do
+    bot, nao as resolvidas), sobre TODAS as rodadas do conflito;
   - % de rodadas com >= 3 escolhas validas (Cartas distintas na mao jogaveis AGORA, sem Pacto);
     `pct_rodadas_ge3_com_basico` soma o ataque basico (sempre valido) como mais uma escolha;
   - % de Cartas da mao usadas (jogadas / oportunidades) e as Cartas com uso > 60 % (n >= 5);
   - p95 de rodadas por conflito (nearest-rank; timeout conta MAX_ROUNDS).
 R10 (SPEC-329, `RPG_ENEMY_INTENT` off x on, mesmas sementes, baralhos de inimigo off): dano
-  recebido pelo heroi por conflito. No braco `on` o bot le o Pressagio publico e, se algum
+  recebido pelo heroi por conflito. O Pressagio usa um rng PROPRIO (`omen:<semente>`), entao os
+  dois bracos partem do mesmo rng de combate (pareados por semente); o braco `on` ainda muda o
+  comportamento inimigo (intencoes congeladas), nao so a visibilidade. No braco `on` o bot le o Pressagio publico e, se algum
   inimigo vai atacar o heroi, abre a rodada com uma Carta de defesa (quando cabe no Folego).
 """
 
@@ -141,6 +144,7 @@ def fight(bid, n, class_name, level, seed, deck, tag, *, omen: bool, seen: dict)
         cs.place(scene, aid)
     cs.freeze(scene)
     rng = random.Random(seed)
+    omen_rng = random.Random(f"omen:{seed}")  # Pressagio fora do rng do combate (pareamento)
     piles = card_piles.start_piles(player, seed)
     state = {"player": player, "_piles": piles, "_deck_mode": "on"}
     res = {"outcome": "timeout", "rounds": MAX_ROUNDS, "damage": 0, "per_round": []}
@@ -159,7 +163,7 @@ def fight(bid, n, class_name, level, seed, deck, tag, *, omen: bool, seen: dict)
         decl = sim.full_deck_decl(player, piles, target, seen)
         kwargs = {}
         if omen:
-            forecast = enemy_intent.forecast_round(scene, actors, sides, rng)
+            forecast = enemy_intent.forecast_round(scene, actors, sides, omen_rng)
             decl = _heed_omen(player, piles, decl, forecast, seen)
             kwargs["pressagios"] = forecast
         played = sum(1 for s in decl.jogadas if s.kind == "card")

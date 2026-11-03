@@ -1,0 +1,119 @@
+{
+  "_meta": "SPEC-368: baralho da facção ultimos_anoes_reino (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_ultimos_anoes_reino_tenaz_em_brasa",
+      "name": "Tenaz em Brasa",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "pesada",
+        "dano_base": 8,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "A tenaz sai da brasa e agarra o que estiver à frente.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_ultimos_anoes_reino_arma_que_queima",
+      "name": "Arma que Queima",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "desarmado_risco",
+        "duracao": 2
+      },
+      "descricao": "O ferro esquenta na mão alheia até cair sozinho.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_ultimos_anoes_reino_antebraco_vitrificado",
+      "name": "Antebraço Vitrificado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 5
+      },
+      "descricao": "O calor da Forja fez do braço um escudo de vidro escuro.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_ultimos_anoes_reino_marteleiro_do_reino",
+      "name": "Marteleiro do Reino",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "impactante"
+      },
+      "descricao": "Cada marretada lembra um reino que ainda bate na bigorna.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_ultimos_anoes_reino_fagulha_de_forja",
+      "name": "Fagulha de Forja",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "cego",
+        "duracao": 1
+      },
+      "descricao": "Uma chuva de faíscas, e o mundo vira cinza por um instante.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_ultimos_anoes_reino_juramento_do_ferreiro",
+      "name": "Juramento do Ferreiro",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "ultimos_anoes_reino",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_defesa",
+        "valor": 1
+      },
+      "descricao": "Os últimos anões ainda cumprem o que prometeram ao fogo.",
+      "oculta": true
+    }
+  ]
+}

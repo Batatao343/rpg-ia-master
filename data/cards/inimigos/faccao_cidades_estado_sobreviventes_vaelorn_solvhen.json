@@ -1,0 +1,116 @@
+{
+  "_meta": "SPEC-368: baralho da facção cidades_estado_sobreviventes_vaelorn_solvhen (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_osso_partido_nao_dobra",
+      "name": "Osso Partido não Dobra",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "marcial",
+        "dano_base": 6,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "Luta com os ossos quebrados e nem percebe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_nervo_puxado",
+      "name": "Nervo Puxado",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_acerto",
+        "valor": 2
+      },
+      "descricao": "Sem dor para frear, cada golpe vai até o fim.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_salto_do_sentinela",
+      "name": "Salto do Sentinela",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "reposicionar",
+        "valor": 3
+      },
+      "descricao": "Salta com as pernas que já não deveriam saltar.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_preco_de_nao_sentir",
+      "name": "Preço de não Sentir",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "Pagou para esquecer a dor, e o corpo cobra em dano.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_sentinela_sem_pausa",
+      "name": "Sentinela sem Pausa",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "Vaelorn mandou vigiar, e ele vigia mesmo desfiado.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_cidades_estado_sobreviventes_vaelorn_solvhen_olhar_de_vaelorn",
+      "name": "Olhar de Vaelorn",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "cidades_estado_sobreviventes_vaelorn_solvhen",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "aplicar_condicao",
+        "condicao": "amedrontado",
+        "duracao": 2
+      },
+      "descricao": "O élfico sem dor encara, e quem olha de volta recua.",
+      "oculta": true
+    }
+  ]
+}

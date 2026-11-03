@@ -1,0 +1,117 @@
+{
+  "_meta": "SPEC-368: baralho da facção encapuzados_fornalha (cartas de inimigo, voz de Valoria).",
+  "cards": [
+    {
+      "id": "inf_fac_encapuzados_fornalha_lamina_com_vontade",
+      "name": "Lâmina com Vontade",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "turno",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dano",
+        "categoria_arma": "versatil",
+        "dano_base": 7,
+        "dano_tipo": "cortante"
+      },
+      "descricao": "O aço de sangue escolhe o golpe e o encapuzado só caminha.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_encapuzados_fornalha_ombro_aberto",
+      "name": "Ombro Aberto",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "buff_dano",
+        "valor": 2
+      },
+      "descricao": "A ferida onde a lâmina nasceu ainda pulsa pedindo mais.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_encapuzados_fornalha_capuz_de_fumaca",
+      "name": "Capuz de Fumaça",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "esconder",
+        "valor": 2
+      },
+      "descricao": "Entre o capuz e a fornalha, o rosto some.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_encapuzados_fornalha_brasa_da_fornalha",
+      "name": "Brasa da Fornalha",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "dot",
+        "dano_base": 2,
+        "duracao": 3,
+        "dano_tipo": "igneo"
+      },
+      "descricao": "Uma brasa presa no talho continua queimando depois do golpe.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_encapuzados_fornalha_marca_de_aco",
+      "name": "Marca de Aço",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "marca",
+        "valor": 4
+      },
+      "descricao": "A lâmina provou o seu cheiro e não esquece.",
+      "oculta": true
+    },
+    {
+      "id": "inf_fac_encapuzados_fornalha_ferro_que_anda",
+      "name": "Ferro que Anda",
+      "origem": "cartas-368",
+      "classe": "Inimigo",
+      "subclasse": "encapuzados_fornalha",
+      "tipo": "ativa",
+      "patamar": "inicial",
+      "custo_entropia": 0,
+      "frequencia": "cena",
+      "virtude_permitida": [],
+      "efeito": {
+        "kind": "protecao",
+        "valor": 4
+      },
+      "descricao": "A lâmina arrasta o dono e o dono arrasta o ferro entre si e o golpe.",
+      "oculta": true
+    }
+  ]
+}

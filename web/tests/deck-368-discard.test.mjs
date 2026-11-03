@@ -61,3 +61,24 @@ test('mão: botão "Descartar (1 Fôlego)" só nas cartas descartáveis; recusa 
   const plain = html(h(Hand, { piles: p, glossary: {}, reasons: ['fardo', null], armedIndex: null, busy: false, onPlay() {} }));
   assert.doesNotMatch(plain, /data-discard=/);
 });
+
+test('reordenar: descarte não pode passar para depois de jogada que toma emprestado', async () => {
+  const d = await load('../src/combat/deck.ts');
+  const cheap = { id: 'g', name: 'g', custo_folego: 2, custo_entropia: 0, jogavel: true };
+  let q = d.enqueueDiscard([], dor, 'd');
+  q = d.enqueue(q, cheap, 'e1', 'a');
+  q = d.enqueue(q, cheap, 'e1', 'b'); // 1 + 2 + 2 = 5 > 2 de Fôlego próprio: a 3ª toma emprestado
+  const p = { folego: 2 };
+  const moved = d.move(q, 'd', 1, p); // descarte para o meio: 2 gastos antes + 1 > 2
+  assert.equal(moved, q);
+  assert.notEqual(d.move(q, 'b', -1, p), q); // trocar jogadas não-descarte vale
+  assert.equal(d.discardsAffordable(q, p), true);
+});
+
+test('mão: só Dor Surda + bloqueadas e o descarte disponível não mostra "Nenhuma carta responde"', async () => {
+  const { Hand } = await load('../src/components/combat/Hand.tsx');
+  const p = { mao: [dor], compra: 0, descarte: 0, exaurida: 0, folego: 2, folego_max: 3, folego_emprestado: 0, pacto_max: 2 };
+  const out = html(h(Hand, { piles: p, glossary: {}, reasons: ['fardo'], armedIndex: null, busy: false, onPlay() {},
+    discardReasons: [null], onDiscard() {} }));
+  assert.doesNotMatch(out, /Nenhuma carta responde agora/);
+});

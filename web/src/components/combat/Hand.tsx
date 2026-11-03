@@ -4,6 +4,7 @@ import { Icon } from "../../design/icons";
 import { BLOCK_TEXT, keywordRules, type BlockReason } from "../../combat/deck";
 import { RuleText } from "./KeywordTip";
 
+const canDiscard = (card: HandCard, reason: BlockReason | undefined) => !!card.descartar_folego && !reason;
 const PILES = [["compra", "Compra"], ["descarte", "Descarte"], ["exaurida", "Exaurida"]] as const;
 export const EXAURIDA_NOTE = "Exaurida: cartas gastas que só voltam depois do conflito ou de um descanso.";
 export const EMPTY_HAND_NOTE = "Sua mão está vazia nesta rodada. Recorra às manobras abaixo, ou passe a vez.";
@@ -27,7 +28,7 @@ export function Hand({ piles, glossary, reasons, armedIndex, busy, onPlay, head,
 }) {
   const [openPile, setOpenPile] = useState<(typeof PILES)[number][0] | null>(null);
   const empty = piles.mao.length === 0;
-  const allBlocked = !empty && piles.mao.every((_, i) => !!reasons[i]);
+  const allBlocked = !empty && piles.mao.every((_, i) => !!reasons[i] && !(discardReasons && canDiscard(piles.mao[i], discardReasons[i])));
   const stuck = empty || allBlocked;
   useEffect(() => { onStuck?.(stuck); }, [stuck, onStuck]);
   const counts = PILES.map(([k, label]) => `${label} ${piles[k]}`).join(" · ");

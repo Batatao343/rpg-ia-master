@@ -54,7 +54,7 @@
         "dano_base": 5,
         "dano_tipo": "perfurante"
       },
-      "descricao": "A corda de tendão canta, e cada tiro é mais forte que o anterior.",
+      "descricao": "A corda de tendão canta, e o tiro sai seco e rente ao chão.",
       "oculta": true
     },
     {
