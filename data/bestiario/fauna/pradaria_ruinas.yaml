@@ -1,0 +1,755 @@
+# SPEC-370 R1 (lote 2) — bloco de fauna da Pradaria das Ruínas: 22 fichas da SPEC-349 + legado
+# `valoria` da região (inclui enemy_assassino_cinzeu, SPEC-360 §9). Mesmo contrato da SPEC-360
+# §3.2; compilado em data/world/fauna.json por scripts/fauna/build.py. Sinal é vestígio, nunca a
+# criatura: quem nomeia é o encontro. Revisão: handoffs/SPEC-370-independent-review.md (lote 2).
+regiao: pradaria_ruinas
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_vertedor_de_areia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pr_ruinas_assombradas, pr_vaelorn]
+      permanencia: [6, 8]
+      reage:
+        - {quando: "clima:vendaval", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas compridas e apressadas entre as lajes, cada uma mais rasa que a anterior, ladeadas por montinhos de pó cinza."
+      resto: "Um casco de pele violeta murcho e oco largado num degrau, rachado como louça, com quatro dedos longos na mão."
+      som: "Um chiado fino e contínuo, como de ampulheta virada, que corre de uma rua para a outra."
+      cheiro: "Pó seco de tumba e um perfume élfico muito velho, de óleo que virou poeira."
+      marca: "Numa parede das ruínas, trilhas de pó cinza escorridas do alto, como se alguém tivesse encostado ali e se esvaziado um pouco."
+      aproximacao: "Um elfo alto de pele violeta rachada vem correndo de olhos leitosos, e das fendas do peito escorre um fio cinza sem parar."
+      rumor: "os guias de Vaelorn dizem que nas ruínas há quem corra como se o dia fosse acabar, e para eles acaba"
+    contra_jogo: "Aguentar em vez de trocar golpes; quem se fecha na defesa e o faz correr atrás sobrevive até a areia acabar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vidrado_do_morro:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde]
+      territorio: [pradaria_ruinas]
+      permanencia: [9, 12]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+        - {quando: "clima:nublado", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na encosta queimada, um sulco largo e liso de algo pesado que gira no lugar, sem dar passo para longe do topo."
+      resto: "Um viajante caído de bruços na subida, com as mãos sobre os olhos e um golpe só na nuca."
+      som: "Um ranger vítreo e lento, como garrafa sendo torcida, vindo do alto da encosta."
+      cheiro: "Terra cozida e vidro quente ao sol, um cheiro de forno de vidreiro aberto."
+      marca: "Nas pedras da subida, clarões de luz que dançam sem nuvem nem água por perto, sempre virados para quem vem."
+      aproximacao: "No topo, um soldado fechado numa crosta verde de garrafa gira o tronco, e o sol do peito dele cega você."
+      rumor: "os pastores não sobem a encosta queimada ao meio-dia: dizem que lá em cima o sol tem dono"
+    contra_jogo: "Chegar com o sol nas costas, ou lutar à noite e em dia nublado; sem o reflexo, é só uma casca pesada e lenta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_costas_de_alicerce:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pr_ruinas_assombradas]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto largo e chato no pó do porão, entre duas marcas de palma rachada, como de quem carrega uma porta deitada."
+      resto: "Uma laje de fundação faltando no chão de um porão, com a borda partida e manchas roxas nas quinas."
+      som: "Pedra raspando pedra devagar, e uma respiração presa, de quem carrega peso demais e não pode largar."
+      cheiro: "Pó de argamassa e pele inflamada, um cheiro de ferida que não respira."
+      marca: "Nas passagens baixas, os relevos élficos das paredes gastos numa faixa só, na altura de um corpo de quatro."
+      aproximacao: "Rente ao chão vem uma laje esculpida com braços enormes por baixo, e debaixo da borda dois olhos espiam você."
+      rumor: "um saqueador velho nunca dorme encostado em pedra de ruína, e mostra a espinha calejada para explicar"
+    contra_jogo: "Rachar a laje com pancada ou ir por trás, na costura de carne entre a pedra e a espinha, onde ela não protege."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_vestido_de_gafanhotos:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {verao: 1.4, inverno: 0.4}
+      territorio: [pradaria_ruinas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um campo roído até o talo numa faixa que segue devagar, e no meio dela pegadas de bota de lavrador."
+      resto: "Um espantalho derrubado, a palha toda comida, e cascas de bronze vazias presas no pano."
+      som: "Um zumbido grosso e abafado, como de colmeia dentro de um saco, que anda no ritmo de um homem."
+      cheiro: "Capim mastigado e carne crua, verde e vermelho ao mesmo tempo, como de pasto depois de abate."
+      marca: "Numa cerca do campo, um rasto de asas finas grudadas na madeira, todas na altura dos ombros de alguém."
+      aproximacao: "Um lavrador coberto de cascas de bronze em camadas anda até você, e só a boca e os olhos aparecem por baixo do enxame."
+      rumor: "uma viúva da pradaria diz que o marido voltou do campo na praga, e que ela não abriu a porta"
+    contra_jogo: "Fogo ou fumaça no corpo caído antes que o enxame levante; derrubá-lo longe dos outros também serve."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fucador_da_semente:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pradaria_ruinas, pr_ruinas_assombradas]
+      permanencia: [7, 10]
+      presas: [mon_lagarto_de_mudas]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Terra fuçada em sulcos fundos que levam a um círculo de mato morto, e de lá saem tufos de pelo solto."
+      resto: "Um couro de bicho rasgado por presas, e a ferida já preta e mole, apodrecendo mais do que devia em um dia."
+      som: "Um grunhido grave e rouco, e o rasgar de raízes arrancadas do chão a focinhadas."
+      cheiro: "Podre seco, como de carne curada que estragou por dentro, forte perto do chão."
+      marca: "No meio do mato verde, um círculo de capim morto do tamanho de um porco deitado, ainda morno."
+      aproximacao: "Um javali de presas tortas e amarelas vem bufando, e no flanco dele se abre um buraco preto que não sangra."
+      rumor: "um caçador da pradaria diz que um corte de presa pequeno lhe custou a perna, depois que o bicho já tinha ido"
+    contra_jogo: "Limpar a ferida cedo e não deixar que ele acerte duas vezes; fogo no capim seco à volta o faz desviar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_esqueleto_legiao_antiga:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pradaria_ruinas, pr_ruinas_assombradas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Passos curtos e tortos no mato, dados aos trancos na direção do vento, que param de repente e esperam."
+      resto: "Uma lâmina enferrujada largada na trilha, o cabo ainda apertado por dedos de osso amarrados com raízes."
+      som: "Um farfalhar alto de palha que enche com a rajada, e um tilintar de ferro velho que para quando o vento cai."
+      cheiro: "Feno seco e ferrugem, cheiro de celeiro onde se guarda arreio velho."
+      marca: "No mato, um formato de homem deitado onde a erva cresceu mais alta e mais verde que em volta."
+      aproximacao: "Com a rajada, um morto de ferro enferrujado se ergue do mato, erva saindo das órbitas e da boca, e dá o passo."
+      rumor: "os nômades dizem que na pradaria o vento ainda recruta, e que quem dorme no mato acorda em fila"
+    contra_jogo: "Bater entre as rajadas, quando ele está parado, e recuar quando o capim das costas enche; fogo no capim seco o derruba de vez."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_nadador_de_pedra:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pr_ruinas_assombradas]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um saqueador caído de lado num pátio, a perna presa até o joelho numa laje inteira, sem rachadura nenhuma."
+      som: "Um ronco surdo vindo de dentro da parede, que corre por baixo dos pés e some."
+      cheiro: "Poeira úmida de alicerce e pele rosada, um cheiro de leitão recém-nascido."
+      marca: "Num muro das ruínas, a superfície ondulada como água parada, em anéis, onde ontem era lisa."
+      aproximacao: "O chão do pátio ondula como lagoa e de uma parede ao lado sai um bicho rosado e cego de focinho em placa."
+      rumor: "os saqueadores das ruínas pisam no mato, nunca nas lajes, e não explicam por quê"
+    contra_jogo: "Ficar fora das lajes e paredes, no capim e na terra solta, onde ele não nada; quieto, ele não sente onde você está."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cobra_de_legua:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pradaria_ruinas]
+      permanencia: [8, 11]
+      presas: [mon_fucador_da_semente]
+    sinais:
+      antecedencia: imediato
+      rastro: "Um caminho de mato deitado ao longo de uma rua antiga, largo como uma coxa, que não acaba por mais que se siga."
+      resto: "Um javali inteiro achatado no meio do mato, as costelas quebradas em anéis, um ao lado do outro."
+      som: "Um sussurro longo e constante de escamas no mato, que não muda de lugar e não termina."
+      cheiro: null
+      marca: "Na beira de uma rua das cidades mortas, as pedras do calçamento polidas numa faixa só, de tanto algo se arrastar."
+      aproximacao: "Do mato sai uma volta grossa e cinza que se fecha na sua perna, e logo outra volta vem atrás, e mais outra."
+      rumor: "um nômade conta que seguiu um rastro de escama da manhã até a tarde e voltou sem ver o fim"
+    contra_jogo: "Cortar a cabeça e não as voltas; sair do aperto cedo, antes da segunda volta, custa muito menos que depois."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_rodante_de_espinhos:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pradaria_ruinas]
+      permanencia: [6, 9]
+      presas: [mon_gafanhoto_runa]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma trilha de mato amassado em linha reta, morro acima e contra o vento, sem pegada nenhuma."
+      resto: "Um cantil furado em dezenas de buraquinhos, largado onde alguém o deixou cair fazendo barulho."
+      som: "Um rolar seco e ritmado no mato, como de cesto de vime descendo ladeira, só que subindo."
+      cheiro: "Feno pisado e osso velho, cheiro de ninho de bicho pequeno."
+      marca: "No mato, uma bola de palha e lascas brancas presas, que se desfaz ao toque, deixada para trás como casca."
+      aproximacao: "Uma bola de pontas de osso cheia de palha e ossinhos rola direto para quem fez barulho, contra o vento."
+      rumor: "as crianças da pradaria aprendem a ficar caladas quando algo rola no mato, e os adultos também"
+    contra_jogo: "Ficar quieto e firme uma rodada, defendendo, e deixar que ele role para o barulho de outro; parado, ele é um bicho pequeno de barriga mole."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_pernalta_das_colunas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [pr_ruinas_assombradas]
+      permanencia: [8, 11]
+      presas: [mon_lagarto_de_mudas, mon_besouro_de_alavanca]
+    sinais:
+      antecedencia: imediato
+      rastro: "Dois furinhos fundos no chão, a quatro passos um do outro, e nada mais em volta, como marcas de estaca."
+      resto: "Um lagarto pregado no chão por um furo reto e limpo, de cima para baixo, sem marca de dente."
+      som: null
+      cheiro: "Pena seca e lodo de beira de lago, estranho no meio das ruínas sem água."
+      marca: "Entre as ruínas partidas, um monte de cascas de bicho e penas cinzas caídas ao pé de um mesmo ponto, como embaixo de poleiro."
+      aproximacao: "Uma das hastes cinzentas entre as ruínas se mexe, e do alto, a quatro metros, um bico reto como lança desce em você."
+      rumor: "um guia das ruínas conta as hastes de pé entre os escombros toda manhã, e diz que o número muda"
+    contra_jogo: "Ir direto às pernas, que quebram fácil, em vez de tentar alcançar o corpo lá em cima."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lagarto_de_mudas:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde]
+      territorio: [pr_ruinas_assombradas, pradaria_ruinas]
+      permanencia: [6, 9]
+      presas: [mon_gafanhoto_runa]
+      foge_de: [mon_pernalta_das_colunas, mon_fucador_da_semente]
+      reage:
+        - {quando: "clima:limpo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Riscos finos de unha subindo uma parede ao sol, e no pé dela gotas de umidade rosada."
+      resto: "Uma pele inteira e transparente, com olhos, dedos e língua, ainda mexendo a boca devagar no chão."
+      som: "Um estalo úmido de pele descolando, e um raspar rápido de unhas que sobe e some."
+      cheiro: "Carne viva limpa e úmida, como de bicho esfolado agora mesmo."
+      marca: "No alto de um muro quente, várias películas secas presas na pedra, cada uma do tamanho de um homem, com dedos e olhos."
+      aproximacao: "Um bicho rosado e em carne viva, do tamanho de um homem, sobe a parede, e uma pele vazia dele vem andando até você."
+      rumor: "um menino de Vaelorn trouxe para casa uma pele transparente de bicho, e ela mordeu o cachorro"
+    contra_jogo: "Ignorar as cascas e encurralá-lo contra o chão; sem parede para subir, ele não tem tempo de largar outra."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_besouro_de_alavanca:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [pradaria_ruinas, pr_ruinas_assombradas]
+      permanencia: [7, 10]
+      foge_de: [mon_pernalta_das_colunas]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de seis patas com esporão cravadas fundo no chão, sempre ao lado de uma laje virada."
+      resto: "Uma tampa de túmulo erguida e escorada de lado, o que morava embaixo comido, e o túmulo vazio."
+      som: "Um estalo de pedra sendo forçada, um rangido de casca dura e o baque de uma laje caindo de lado."
+      cheiro: "Terra de baixo de pedra, fria e cheia de bicho, cheiro de minhoca e de mofo."
+      marca: "Numa rua das cidades mortas, as lajes do calçamento viradas uma a uma, como páginas, numa fila."
+      aproximacao: "Um bicho de casca preta do tamanho de um cão enfia um corno chato como pé de cabra na junta da sua armadura."
+      rumor: "um soldado diz que voltou das ruínas com a placa do peito arrancada da junta, e que não foi golpe"
+    contra_jogo: "Gastar a vez para encaixar a placa antes que o segundo besouro chegue, ou virá-lo de costas, que a barriga é mole."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_carregador_de_ganchos:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pradaria_ruinas]
+      permanencia: [7, 10]
+      suprime: [mon_leitor_de_cativos]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto curto e violento no mato, de alguém puxado de lado de uma vez, que termina no meio de muitas botas."
+      resto: "Um elo de corrente partido e um farrapo de camisa preso num ferro curvo de açougue, largado na trilha."
+      som: "Correntes tilintando em muitas alturas ao mesmo tempo, e o zunido curto de uma delas sendo lançada."
+      cheiro: "Ferro e couro velho, com um fundo de carne de açougue e tinta de tatuagem."
+      marca: "Num poste da estrada, a marca de Groth pintada e, embaixo, riscos de ferro como de anzol arrastado."
+      aproximacao: "Um Cinzéu curvado sob dezenas de ferros cravados na pele, cada um com sua corrente, gira um deles acima da cabeça."
+      rumor: "um mercador diz que, quando um viajante se afasta da caravana, os de Groth já sabem antes dele"
+    contra_jogo: "Ficar perto dele e longe dos outros, ou de costas para um muro; puxado para o lugar onde já está, o tranco não faz nada."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_leitor_de_cativos:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pradaria_ruinas]
+      permanencia: [7, 10]
+      foge_de: [enemy_capturador_groth]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de Vrel em bando que se afastam todas ao mesmo tempo para o mesmo lado, e uma fila parada mais atrás."
+      resto: "Um prisioneiro morto sentado contra uma pedra, com marcas finas de pinça dos dois lados da cabeça."
+      som: "Um estalar miúdo de palpos, como unha em casca de noz, e silêncio total do bando em volta."
+      cheiro: "Um azedo de inseto grande e de líquido escuro, como de casca de besouro esmagada."
+      marca: "Num acampamento abandonado, um banco de prisioneiros com os lugares marcados a giz, e uma só delas riscada."
+      aproximacao: "Atrás dos Vrel, um de cabeça rachada e abdômen translúcido abre um par de palpos compridos e vira as antenas para você."
+      rumor: "um soldado diz que os Vrel desviaram do golpe dele antes que ele mesmo soubesse que ia dar"
+    contra_jogo: "Matá-lo primeiro, ou trocar de plano depois do presságio; o que ele leu é a jogada que você ia fazer, não a que você faz."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_profanador_cravejado:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pr_ruinas_assombradas, pr_vaelorn]
+      permanencia: [7, 10]
+      foge_de: [mon_desfiado_de_vaelorn]
+    sinais:
+      antecedencia: cedo
+      rastro: "Terra fresca revolvida de sepultura em sepultura, e entre elas uma trilha de quem anda de peito estufado."
+      resto: "Uma sepultura élfica aberta e limpa de joias, e a pá largada ao lado com o cabo gasto de mão."
+      som: "O raspar de pá na terra dura, e um tilintar fosco de metal batendo em metal a cada movimento."
+      cheiro: "Terra de túmulo e metal azinhavrado, como de moeda tirada de um morto."
+      marca: "Num túmulo saqueado, um anel élfico caído com um pedaço de pele escura e dura ainda grudado por dentro."
+      aproximacao: "Da terra sai um homem de peito tomado de broches e pedras, a pele em volta delas dura e escura, e ergue a pá."
+      rumor: "um joalheiro de Vaelorn recusa peça de sepultura: diz que já viu o dono vir buscá-la grudada no corpo"
+    contra_jogo: "Arrancar as relíquias em vez de golpear a pele dura; cada peça tirada o deixa mais mole e paga a luta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cauda_emendada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [pr_solvhen, pradaria_ruinas]
+      permanencia: [6, 9]
+      foge_de: [mon_arqueiro_de_tendao]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um varrido raso e largo no mato baixo, na altura dos tornozelos, e um furo fundo a cada três metros, de salto."
+      resto: "Um pino de osso caído na estrada, com um anel de couro cru ainda preso, como de emenda que soltou."
+      som: "Um assobio baixo de coisa comprida varrendo o mato, e um baque seco de alguém caindo."
+      cheiro: "Couro cru mal curtido e osso limado, um cheiro de oficina de amuleto."
+      marca: "Numa vala da estrada, várias pessoas derrubadas na mesma direção, todas com o tornozelo roxo."
+      aproximacao: "Um Cinzéu pequeno e tatuado salta apoiado num apêndice de osso emendado de três metros, e varre o chão aos seus pés."
+      rumor: "os carroceiros de Solvhen dizem que bando misto se reconhece pelo tombo antes de se ver a cara"
+    contra_jogo: "Pular a varrida ficando parado com a guarda baixa, ou pisar na cauda; presa no chão, ela o deixa sem saltar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_desfiado_de_vaelorn:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pr_vaelorn, pr_ruinas_assombradas]
+      permanencia: [9, 12]
+      suprime: [mon_profanador_cravejado, enemy_necromante_renegado]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas fundas de queda ao pé de um muro alto, uma depois da outra, sem nenhum sinal de quem rolou para amortecer."
+      resto: "Um desenterrado morto ao lado de uma cova aberta, esmagado de cima, a pá partida sob ele."
+      som: "Um estalo de osso partindo ao pé do muro, e logo passos tortos que seguem como se nada fosse."
+      cheiro: "Pele élfica velha e unguento de mago, amargo, como de enfermaria de feitiçaria."
+      marca: "No alto dos muros das ruínas, lascas de cal arrancadas onde algo pulou sem cuidado, em vários pontos seguidos."
+      aproximacao: "De cima de um muro salta um sentinela de pele violeta, joelho dobrado para o lado, e se ergue sem sentir nada."
+      rumor: "um mago élfico cobrou caro para tirar a dor de um guarda, e o guarda ainda está de serviço, quebrado"
+    contra_jogo: "Fazê-lo saltar; fique perto dos muros e recue de altura em altura, e o corpo dele se quebra sozinho."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_arqueiro_de_tendao:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pr_vaelorn, pradaria_ruinas]
+      permanencia: [7, 10]
+      suprime: [enemy_bandido_capitao, mon_cauda_emendada]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas firmes a pé no mato alto, paradas em ponto de tiro, com vários passos de recuo depois de cada parada."
+      resto: "Flechas de haste comum cravadas em fila num tronco, e numa delas um fio de nervo seco grudado na pena."
+      som: "Um zunido grave de corda viva, e um estalo úmido e um gemido, como de nervo que arrebenta."
+      cheiro: "Cristal moído e ferida aberta, com um fundo de cera de corda."
+      marca: "Na entrada da estrada, um posto de pedágio dos Cavaleiros-Cinza, e um bando de estrada caído em volta, de flechas nas costas."
+      aproximacao: "No mato alto, um homem de antebraço aberto em arco de cristal puxa a corda de carne até a orelha e mira em você."
+      rumor: "um bandido aposentado diz que pagar pedágio aos de cinza é mais barato que fugir deles"
+    contra_jogo: "Aguentar os primeiros tiros abrigado e chegar perto na rodada em que o tendão estala; ou cortar a corda de tendão de perto, com qualquer lâmina."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_egua_de_costas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pradaria_ruinas]
+      permanencia: [10, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos que rodeiam sempre o mesmo monte de mato, e um chão pisoteado em leque só do lado de trás."
+      resto: "Um viajante caído de barriga para cima com a marca de um casco rachado no peito, longe do monte, como quem ia embora."
+      som: "Um bufo de cavalo cansado e, de vez em quando, um coice que estala no ar sem acertar nada."
+      cheiro: "Pelo de montaria velha e carne seca ao sol, cheiro de luto que ninguém enterrou."
+      marca: "No mato, um monte de terra com uma sela podre em cima, e o mato em volta comido até a raiz num círculo."
+      aproximacao: "Um animal de montaria cinza, de costelas fundas, está parado junto a um monte, a cabeça torcida sobre o lombo, olhando para trás."
+      rumor: "um pastor diz que há um animal de sela vivo na pradaria que não deixa ninguém tirar o dono de onde caiu"
+    contra_jogo: "Lutar de frente e não recuar; ela não enxerga para a frente e erra quem não sai do lugar."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cabeca_acima:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pr_ruinas_assombradas]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Duas fileiras de furos curvos no chão da arena, e entre elas um arrasto baixo que nunca sobe."
+      resto: "Um duelista com a espada quebrada ao pé dos degraus, deitado de bruços, como quem foi obrigado a se curvar."
+      som: "Um estalar de vértebras em cadeia, alto no ar, como de corrente sendo erguida aos poucos."
+      cheiro: "Osso polido e tendão seco, um cheiro de relicário élfico aberto."
+      marca: "No alto de uma arena, um diadema riscou o reboco da parede numa linha só, mais alta que qualquer homem."
+      aproximacao: "Na praça da arena ergue-se uma cadeia de vértebras sobre pernas de costela, e lá em cima um crânio de diadema olha você de cima."
+      rumor: "os guias de Vaelorn dizem que na arena velha ainda se duela, e que quem perde tem de se curvar"
+    contra_jogo: "Guardar força e bater pouco e forte, três vezes, até a cabeça tocar o chão, e então bater no crânio; golpes miúdos se perdem nas vértebras."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_chifres_travados:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pradaria_ruinas]
+      permanencia: [3, 4]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Duas fileiras de cascos que cavam o chão em sentidos contrários, lado a lado, como uma carroça puxada pelos dois lados."
+      resto: "Dois bandos de pastores mortos um sobre o outro no mesmo pasto, de facões cruzados."
+      som: "Um mugido duplo, grave e desencontrado, e o estalo surdo de osso forçando osso."
+      cheiro: "Suor de touro e sangue quente, forte, de arena depois de briga."
+      marca: "No pasto, a terra arada em sulcos que se cruzam em X, fundos como valas, e o mato arrancado em volta."
+      aproximacao: "Dois touros de cabeças fundidas num nó de osso se empurram sem parar, e o nó vem para o lado de quem está inteiro."
+      rumor: "os pastores dizem que há manada na pradaria que ninguém disputa, porque quem disputou se matou antes"
+    contra_jogo: "Alternar os golpes entre os dois corpos até ficarem iguais e atacar o nó travado; ferir só um lado dá força ao outro."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_retalho_das_duas_cidades:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [pr_vaelorn, pradaria_ruinas]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas desiguais na estrada, um pé longo de quatro dedos e outro curto de três, e meia marca de cauda."
+      resto: "Uma ferida enfaixada pela metade e o resto da faixa largado, como se a mão que ajudava tivesse desistido."
+      som: "Um par de vozes que discute baixo na mesma garganta, cada uma numa língua diferente."
+      cheiro: "Perfume élfico de um lado e tinta de tatuagem do outro, que não se misturam."
+      marca: "Na estrada, uma carroça com o eixo serrado ao meio, e a carga partida em metades separadas por raça."
+      aproximacao: "Na estrada vem uma figura costurada ao comprido, meio elfo violeta e meio Cinzéu tatuado, com dois olhos que não se olham."
+      rumor: "um carroceiro da estrada jura que dois sócios de raças diferentes se separaram depois de passar por alguém"
+    contra_jogo: "Cada um se proteger sozinho enquanto ele vive, e derrubá-lo primeiro pela costura do meio, onde as duas metades se repelem e a carne rasga."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_assassino_cinzeu:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite, Amanhecer]
+      territorio: [pr_solvhen]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um homem morto num beco com um furo fino e fundo atrás da orelha, e a ferida com pó de pedra de túnel."
+      som: null
+      cheiro: "Pedra úmida de túnel profundo e um fundo de cogumelo, frio no meio da cidade."
+      marca: "Numa porta, o desenho de um olho riscado com estilete, sem pupila, e a tranca intacta."
+      aproximacao: "De uma sombra onde não havia ninguém sai uma figura cinza sem olhos, o estilete de pedra já na sua direção."
+      rumor: "um vigia de Solvhen diz que os de baixo não precisam ver para achar quem foi encomendado"
+    contra_jogo: "Lutar de costas para a parede e com luz: ele ataca da sombra o desprevenido, recua para se esconder quando descoberto e foge ferido."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_bandido_capitao:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [pradaria_ruinas, pr_solvhen]
+      permanencia: [6, 9]
+      foge_de: [mon_arqueiro_de_tendao, mon_cavaleiro_sem_rosto]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Rastro de bando de estrada que se divide em leque na beira da via e se junta de novo mais à frente."
+      resto: "Uma carroça de mercador revirada na via, a carga boa levada e um bilhete educado deixado no banco."
+      som: "Um assobio de comando e respostas curtas vindas do mato dos dois lados da estrada."
+      cheiro: "Fumaça de fogueira apagada às pressas e vinho caro derramado."
+      marca: "Num marco da estrada, uma faixa de pano vermelho amarrada e um corte em forma de coroa na madeira."
+      aproximacao: "Um homem bem vestido de rapieira na mão sorri na beira da estrada, e o mato em volta se enche de gente armada."
+      rumor: "um mercador diz que o chefe do bando lhe pediu desculpas pela demora antes de levar tudo"
+    contra_jogo: "Derrubar o capitão primeiro: ele aponta o bando para o mais frágil e chama reforço, e quando o bando quebra, recua ou foge."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_capturador_groth:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [pr_solvhen, pradaria_ruinas]
+      permanencia: [7, 10]
+      suprime: [mon_leitor_de_cativos, enemy_nomade_canibal]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma fila de pés descalços amarrados, os passos curtos e iguais, guardada por botas pesadas dos dois lados."
+      resto: "Uma rede com pesos de chumbo rasgada na beira da estrada, e uma sandália de criança presa nela."
+      som: "Um tilintar de algemas em compasso e uma voz contando cabeças em voz alta."
+      cheiro: "Corda grossa, suor de medo e ferro de algema, cheiro de carroça de feira de gente."
+      marca: "Num poste de estrada, um aro de ferro chumbado na pedra, gasto por dentro de tanto prender pulsos."
+      aproximacao: "Um homem largo de maça de ferro e rede no ombro se planta na frente da fila de cativos e não dá um passo atrás."
+      rumor: "um nômade diz que os mercadores de gente chegam ao acampamento como quem vem contar estoque"
+    contra_jogo: "Não brigar perto do que ele guarda: ele defende o posto com escudo forte, não persegue além dele; atraí-lo para fora ou ir atrás da carga."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_espectro_lamento:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [pr_ruinas_assombradas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um viajante deitado numa casa das ruínas, pálido e frio, sem ferida, como se tivesse esquecido de respirar."
+      som: "Um choro baixo de mulher, que vem da casa vazia mais próxima e se cala quando alguém chega à porta."
+      cheiro: "Cal de vala comum e vinagre de peste, cheiro de quarentena antiga."
+      marca: "Na porta de uma casa das ruínas, a cruz de peste pintada há séculos ainda úmida, como se tivesse sido pintada hoje."
+      aproximacao: "De dentro da casa sai uma mulher translúcida de pele marcada de peste, e o frio do toque dela chega antes dela."
+      rumor: "os guias não deixam ninguém dormir nas casas marcadas com cruz, por mais que a chuva aperte"
+    contra_jogo: "Não esperar que ela recue, porque não recua: golpear com força em vez de ponta, que atravessa, e aguentar o grito que amedronta."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_necromante_renegado:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [pr_ruinas_assombradas, pr_vaelorn]
+      permanencia: [6, 9]
+      foge_de: [mon_desfiado_de_vaelorn]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de sandália de estudante que vão de cripta em cripta, e atrás delas passos que arrastam osso."
+      resto: "Uma cripta aberta com o sarcófago vazio e o chão riscado em círculo de giz, as velas pela metade."
+      som: "Uma voz jovem lendo alto em língua antiga, que gagueja e recomeça, e ossos estalando junto."
+      cheiro: "Cera de vela barata, tinta de pergaminho e pó de tumba, cheiro de aula proibida."
+      marca: "Na entrada de uma cripta, o selo da Torre arrancado da túnica e pregado de cabeça para baixo."
+      aproximacao: "Um mago magro de túnica sem selo recua um passo, ergue a mão gelada, e atrás dele um morto se levanta."
+      rumor: "um saqueador diz que nas criptas tem um estudante que manda os mortos fazerem o trabalho dele"
+    contra_jogo: "Ir atrás dele e não dos mortos: sozinho ele se rende, foge ao primeiro ferimento e só ataca com vantagem ou pelas costas."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_nomade_canibal:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite, Amanhecer]
+      territorio: [pradaria_ruinas, pr_solvhen]
+      permanencia: [6, 9]
+      foge_de: [enemy_capturador_groth]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pés enrolados em trapo que cercam um acampamento em roda, de fora para dentro."
+      resto: "Uma fogueira apagada com ossos roídos demais em volta, finos e compridos, que não são de bicho."
+      som: "Um canto rouco de fome, em coro curto, e o bater de machadinhas de pedra umas nas outras."
+      cheiro: "Fumaça de gordura e carne queimada, doce de um jeito que dá enjoo."
+      marca: "Num marco da pradaria, ossos de mão amarrados em feixe e pendurados como aviso de território."
+      aproximacao: "Um homem magro do deserto, de olhos fundos e boca rachada, ergue uma machadinha de pedra, e o bando dele ri atrás."
+      rumor: "um pastor conta que perdeu dois homens e que achou só as botas, e as botas estavam limpas"
+    contra_jogo: "Derrubar quem comanda o bando: eles cercam o mais frágil e mordem com infecção; quebrada a matilha, recuam ou fogem."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_auroque_ruinas:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [pradaria_ruinas, pr_ruinas_assombradas]
+      permanencia: [8, 11]
+      foge_de: [mon_chifres_travados, mon_lobo_da_pradaria]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um caminho de manada larga que atravessa a cidade morta, com pedaços de reboco esmagados sob os cascos."
+      resto: "Uma base antiga derrubada de lado, e as fundações por baixo lambidas até a pedra ficar lisa e branca de sal."
+      som: "Um mugido grave e o estrondo de pedra grande caindo, e depois um lamber longo e áspero."
+      cheiro: "Sal de pedra e esterco de manada, um cheiro de curral salgado."
+      marca: "Nas fundações das cidades mortas, crostas brancas de sal raspadas a língua em faixas largas."
+      aproximacao: "Um touro enorme de chifres largos baixa a cabeça diante da manada, e as pedras velhas em volta tremem."
+      rumor: "os pedreiros de Vaelorn dizem que a manada derruba mais muro velho que qualquer guerra"
+    contra_jogo: "Derrubar o líder da manada: ele aponta o bando para o mais frágil e muda de lugar na poeira; quebrado o rebanho, ele recua."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cavaleiro_sem_rosto:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pradaria_ruinas, pr_vaelorn]
+      permanencia: [8, 11]
+      suprime: [enemy_bandido_capitao]
+    sinais:
+      antecedencia: cedo
+      rastro: "Cascos ferrados que percorrem sempre a mesma linha reta na pradaria, sem desvio, como uma fronteira traçada."
+      resto: "Um bandido caído atravessado por uma lança de ponta lisa, sem brasão, cravada até a terra."
+      som: "Um trote compassado e lento de cavalo pesado, e o ranger de armadura que ninguém lubrifica."
+      cheiro: "Ferrugem de armadura e couro de sela velho, frios, sem cheiro de cavalo vivo."
+      marca: "Na linha da fronteira, marcos de pedra com o nome raspado, um a cada légua, e nenhum outro sinal."
+      aproximacao: "Pela linha da fronteira vem um homem montado de elmo liso, sem viseira nem feição, a lança sem brasão baixada para você."
+      rumor: "os bandidos da estrada não acampam perto dos marcos raspados: dizem que a fronteira ainda é guardada"
+    contra_jogo: "Não esperar que ele recue, porque não recua: cuidado com a carga dele e com o toque gelado, e lutar fora da linha que ele percorre."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_espectro_elfico:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pr_vaelorn, pr_ruinas_assombradas]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um caçador sentado contra uma parede, sorrindo, os cabelos brancos de repente, como se tivesse envelhecido numa noite."
+      som: "Uma canção élfica bonita demais, cantada baixo, que faz esquecer por um instante para onde se ia."
+      cheiro: "Flor de cerejeira e pó de ampulheta, doce e seco, fora de qualquer estação."
+      marca: "Num jardim das ruínas, flores de pedra abertas como se fossem de verdade, e um banco onde ninguém se senta."
+      aproximacao: "Entre as ruínas surge um elfo translúcido de beleza que dói de olhar, e a mão dele vem sem pressa até o seu rosto."
+      rumor: "um guia de Vaelorn diz que quem ouviu a canção das ruínas não envelhece direito depois"
+    contra_jogo: "Não esperar que ele recue, porque não recua: golpear com força em vez de ponta, que atravessa, e não ficar parado ouvindo o lamento."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_gafanhoto_runa:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      estacoes: {verao: 1.3, inverno: 0.5}
+      territorio: [pr_ruinas_assombradas, pr_vaelorn]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Uma inscrição élfica comida até virar pedra lisa, com farelo de letra e pontinhos de luz no chão."
+      som: "Um mastigar miúdo e coletivo na pedra, e um zumbido que muda de nota toda vez que um grupo levanta."
+      cheiro: "Pó de pedra mastigada e um cheiro elétrico fraco, de raio que caiu longe."
+      marca: "Numa parede das ruínas, as palavras gravadas sumidas no meio da frase, como se alguém as tivesse apagado com a boca."
+      aproximacao: "Da parede levanta uma nuvem de bichos de casco riscado de símbolos que brilham, e todos vêm para o mesmo ponto: você."
+      rumor: "um estudioso de Vaelorn diz que copia as inscrições depressa, porque no verão elas somem"
+    contra_jogo: "Derrubar primeiro o que marca o alvo e ficar junto: o enxame concentra no mais ferido e se reposiciona na poeira; cercado e ferido, recua."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_lobo_da_pradaria:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      estacoes: {inverno: 1.2}
+      territorio: [pradaria_ruinas, pr_solvhen]
+      permanencia: [6, 9]
+      presas: [mon_auroque_ruinas, mon_fucador_da_semente]
+    sinais:
+      antecedencia: cedo
+      rastro: "Várias trilhas finas no mato alto que convergem num ponto, se abrem de novo e voltam a fechar mais adiante."
+      resto: "Um bezerro de manada caído cansado longe do resto, com mordidas pequenas em todo o flanco, nenhuma funda."
+      som: "Ganidos curtos de um lado e do outro do mato, que se respondem e cercam."
+      cheiro: "Pelo molhado de orvalho e mijo de marcação, forte nas pedras altas."
+      marca: "Nas pedras altas do mato, arranhões e manchas de urina em roda, marcando um círculo grande."
+      aproximacao: "Do mato alto saem bichos pardos de focinho longo por três lados, mordem e recuam, e já estão de volta antes de você se virar."
+      rumor: "os pastores dizem que a matilha não ataca a manada, cansa a manada"
+    contra_jogo: "Derrubar o que marca o alvo e ficar de costas para algo firme: a matilha concentra no mais ferido e, cercada e ferida, recua."
+    tramas: []
+    autor: opus-370-lote2
+    revisor_fauna: pendente
+    revisao: pendente
