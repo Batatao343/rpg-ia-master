@@ -29,18 +29,21 @@ def _state(**extra):
         "memory_facts": [],
         "chronicle": [],
     }
-    base.update(extra)
-    return make_state(
-        game_id="pytest_spec211",
-        player={"name": "Tester", "class_name": "Devoto do Abismo", "race": "Humano"},
-        world={
+    game_id = extra.pop("game_id", "pytest_spec211")
+    player = extra.pop(
+        "player", {"name": "Tester", "class_name": "Devoto do Abismo", "race": "Humano"}
+    )
+    world = extra.pop(
+        "world",
+        {
             "current_location": "Nova Arcádia",
             "current_location_id": "nova_arcadia",
             "turn_count": 12,
             "visited": ["nova_arcadia"],
         },
-        **base,
     )
+    base.update(extra)
+    return make_state(game_id=game_id, player=player, world=world, **base)
 
 
 def _grum(**over):

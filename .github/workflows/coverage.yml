@@ -31,10 +31,15 @@ jobs:
             uv run python scripts/dev/coverage_summary.py coverage.json --top 20
             if [ "${{ steps.pytest.outcome }}" != "success" ]; then
               echo
-              echo "::warning::pytest falhou sob cobertura; veja pytest-cov.log no artefato"
-              echo "**Atencao:** a suite teve falhas sob o tracer (D4); ver artefato."
+              echo "**Atencao:** a suite teve falhas sob o tracer (D4):"
+              echo '```'
+              grep -E "^(FAILED|ERROR) " pytest-cov.log | head -50 || true
+              echo '```'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.pytest.outcome }}" != "success" ]; then
+            echo "::warning::pytest falhou sob cobertura; lista no resumo do job e pytest-cov.log no artefato"
+          fi
         shell: bash
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
