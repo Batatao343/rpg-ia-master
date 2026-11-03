@@ -931,15 +931,18 @@ PAPEL = (
 )
 
 _EIXOS_LINHA = (
-    "Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos. "
-    "O motor escreve os seis eixos a partir da linha: você não os escreve. Corpo, hábito e "
-    "aparência têm de servir à linha escolhida (material, locomoção e percepção dela aparecem "
-    "em anatomia_texto)."
+    "Eixos: escolha UMA linha de <eixos_livres> e escreva só o número dela em linha_eixos; "
+    "o motor grava os seis eixos. O corpo tem de caber na linha, mas em matéria que se toca e "
+    "não em rótulo: o material vira o que a mão sente (cera_sebo é banha que escorre e "
+    "endurece; escoria_fuligem é casca de forno que esfarela), a locomoção vira o jeito de "
+    "andar e a percepção vira o órgão que sente. Nunca copie as palavras da linha no nome "
+    "nem no texto."
 )
 _EIXOS_LIVRE = (
     "Eixos: escreva os seis eixos (plano, material, escala, locomoção, percepção, papel). A tripla "
     "plano / material / papel não pode repetir a de nenhuma criatura listada, nem coincidir em "
-    "mais de três dos seis eixos com nenhuma delas."
+    "mais de três dos seis eixos com nenhuma delas. Descreva o corpo pela matéria e pelo "
+    "gesto, sem repetir os nomes dos eixos no texto."
 )
 
 _REGRAS_TXT = """<regras>
@@ -949,15 +952,15 @@ Valoria não importa monstros: o Abismo não manda nada de fora, o mundo fabrica
 - humanoide_preco (Cobrados): quem pagou magia com o próprio corpo e ainda cumpre a função que o cobrou. Exige faccao (uma das facções da região) ou origem_fonte eter.
 - demonio_encarnado (Crias de Apetite): resíduo de uma emoção demoníaca que tomou a carne do que estava à mão. Não é o demônio e não fala por ele. Exige origem_fonte demonio e o id em demonio.
 Corpo: anatomia_texto com 3 a 5 frases e pelo menos três partes do corpo com nome (osso, mandíbula, garra, pele, olho, casco...). Proibido "presença", "sem forma", "sem corpo".
-Nome: 2 a 4 palavras em português que digam o que ela faz ou do que é feita. A primeira palavra não repete a de nenhuma criatura listada. Proibido nome de manual (troll, golem, gárgula, zumbi, harpia, lich, dragão...). No nome e na silhueta, nada de jovem, filhote, alfa, líder, matilha, menor, maior, meio, ancião, solitário ou variante.
+Nome: 2 a 4 palavras em português que digam o que ela faz ou do que é feita. A primeira palavra não repete a de nenhuma criatura listada. Proibido nome de manual (troll, golem, gárgula, zumbi, harpia, lich...). No nome e na silhueta, nada de jovem, filhote, alfa, líder, matilha, menor, maior, meio, ancião, solitário ou variante.
 @@EIXOS@@
 Nenhum número em lugar nenhum: nada de dígito, dado, dano, vida, bônus, rodada. Partes do corpo contadas só por extenso ("duas pernas").
 telegrafo: uma frase no presente com {nome} como sujeito, o gesto visível uma rodada antes do golpe forte.
 contra_jogo: o que um herói atento faz, usando o corpo e o hábito dela.
 gancho: uma frase que a prende ao lugar e ao que está acontecendo agora.
 aparencia e arte_visual: só o que se vê. arte_evitar: o clichê em que um ilustrador cairia, descrito pela forma, sem citar nome de monstro de manual.
-padrao: de duas a quatro intenções na ordem em que ela age; prefira um de <padroes_livres>.
-Sem inglês de jogo e sem a palavra "dragão" em nenhum campo (gancho e arte incluídos).
+padrao: de duas a quatro intenções na ordem em que ela age, coerentes com comportamento e telegrafo; se uma de <padroes_livres> servir, use-a.
+A lista de palavras que reprovam vale com ou sem acento e em qualquer campo, gancho e arte incluídos: «crítico», «gênio», «observador», «elemental» e «múmia» também reprovam. Também não escreva «dragão»: o sangue antigo se descreve pelo que fez no corpo.
 Português do Brasil, frases curtas e concretas, tom seco e sombrio, sem adjetivo vazio (terrível, aterrorizante, sinistro). Respeite o tamanho de cada campo: a ficha inteira cabe numa página de caderno. Só os campos da ficha, nenhum a mais.
 </regras>"""
 
@@ -985,18 +988,22 @@ def linha_proibidas() -> str:
 def linha_nucleos(ocupados: str) -> str:
     """SPEC-374 R12: a 1ª palavra do nome (U1/U4) das criaturas listadas, para o LLM não repetir.
     Sai das linhas de ``<ja_existem_na_regiao>`` (``nome — família / ...``); sem lista, vazio."""
-    nucleos: list[str] = []
+    marcadores = set(bl.lexico().get("marcadores_variante", []))  # já proibidos no nome
+    vistos: dict[str, str] = {}  # núcleo (como o gate compara) -> palavra como está no nome
     for linha in ocupados.splitlines():
         if " — " not in linha:
             continue
-        n = bl.nucleo_nome(linha.split(" — ", 1)[0])
-        if n and n not in nucleos:
-            nucleos.append(n)
-    if not nucleos:
+        nome = linha.split(" — ", 1)[0]
+        n = bl.nucleo_nome(nome)
+        if not n or len(n) < 4 or n in marcadores or n in vistos:
+            continue
+        palavra = next((w for w in nome.split() if bl.nucleo_nome(w) == n), n)
+        vistos[n] = palavra.strip(".,;:\"'")
+    if not vistos:
         return ""
     return (
-        "Primeira palavra do nome JÁ USADA na região (não repita, nem com outro artigo): "
-        + ", ".join(sorted(nucleos))
+        "Já começam nome na região (escolha outra primeira palavra): "
+        + ", ".join(sorted(vistos.values(), key=_fold))
         + "."
     )
 

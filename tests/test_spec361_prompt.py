@@ -37,7 +37,9 @@ def test_prompt_orcamento():
     assert len(ex) == 3
     assert cg.prompt_chars(msgs) <= cg.PROMPT_MAX_CHARS
     assert msgs[0].content.count("[exemplo ") == 2
-    assert len(cg.REGRAS) + len(cg.PAPEL) <= cg.LIM_REGRAS + 600
+    assert (
+        len(cg.REGRAS) + len(cg.PAPEL) <= cg.LIM_REGRAS + 1100
+    )  # SPEC-374: regra de eixos por matéria, não rótulo
     # região pequena e sem lore: os três cabem
     pequeno, _ = _prompt(_p(regiao="aethelgard", motivo_trama="Arco curto."), lore="")
     assert pequeno[0].content.count("[exemplo ") == 3
@@ -48,7 +50,9 @@ def test_prompt_orcamento():
     issues = [Issue("error", "U2", "x" * 900) for _ in range(8)]
     msgs2, _ = _prompt(_p(), feedback=issues)
     assert cg.prompt_chars(msgs2) <= cg.PROMPT_MAX_CHARS
-    assert msgs2[0].content.count("[exemplo ") == 2
+    assert (
+        msgs2[0].content.count("[exemplo ") >= 1
+    )  # SPEC-374: regras maiores; gerar_nova usa o prompt de correção (sem feedback aqui)
 
 
 def test_prompt_pt_sem_ingles():

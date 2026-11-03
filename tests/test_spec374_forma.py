@@ -106,9 +106,13 @@ def test_prompt_ate_14000(regiao, loc):
 def test_linha_nucleos_lista_a_primeira_palavra_das_listadas():
     oc = cg.eixos_ocupados("deserto_zhur", [])
     linha = cg.linha_nucleos(oc)
-    assert linha.startswith("Primeira palavra do nome JÁ USADA")
+    assert linha.startswith("Já começam nome na região")
     primeiro = oc.splitlines()[0].split(" — ")[0]
-    assert cg.bl.nucleo_nome(primeiro) in linha
+    palavra = next(
+        w for w in primeiro.split() if cg.bl.nucleo_nome(w) == cg.bl.nucleo_nome(primeiro)
+    )
+    if len(cg.bl.nucleo_nome(primeiro)) >= 4:
+        assert palavra in linha  # como está escrita no nome, com acento
     assert cg.linha_nucleos("") == ""
 
 
