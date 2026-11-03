@@ -84,3 +84,26 @@ git diff main...spec-367 -- evals/ web/e2e/contracts golden-330 flags orquestrad
 [rodada 2] py.sh -m pytest (em série) test_spec367_guards test_spec367_omen_voice test_spec367_condition_node → 12 passed (guarda executado, sem skip)
 [rodada 2] node --test web/tests/spec367-portrait-pending.test.mjs → 4/4 pass
 ```
+
+## Rodada 3: `848a63cb` (`--dsn-env` no `retire_creature_portrait.py`, na `main`)
+
+**Veredito da rodada 3:** `CHANGES_REQUIRED`
+
+Segurança, conferida no código e sem achado:
+- Nada de DSN ou chave é impresso. O `parser.error` mostra só o **nome** da variável. A saída JSON tem `portrait_key`, status e object keys.
+- `--dry-run` continua só leitura: o mesmo `_dry_report`, um `select` via `admin_connection` no pool de operação. Não exige o bucket.
+- Sem shared store, a retirada pelo `--dsn-env` dá `parser.error` (`:114-115`) **antes** de `retire()`, ou seja, antes de `registry.retire` e de qualquer `update`. O `finally` fecha o pool também nesse caminho (o `SystemExit` passa pelo `finally`).
+- O bucket `rpg-shared-art` com `shared=True` é o mesmo de `infrastructure/runtime.py:782-783`.
+- O pool vem de `open_ops_pool`, com o mesmo timeout tolerante da R18.
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| R3-P2-1 | P2 | `tests/test_spec367_fallback_portrait.py:147-181` | O teste vaza variáveis de ambiente para o resto do processo de teste. O `monkeypatch.delenv(k, raising=False)` de uma variável **ausente** não registra nada para restaurar, e depois o `load_dotenv` grava `SPEC367_DSN`, `SUPABASE_URL=https://s` e `SUPABASE_SERVICE_ROLE_KEY=k` em `os.environ`. Uma sonda rodada em seguida no mesmo processo leu `SUPABASE_URL=https://s`, chave presente e `SPEC367_DSN` presente. Como `infrastructure/runtime.py` valida essas variáveis (`:158-178`, `:94-104`, `:279-281`), os testes seguintes do mesmo worker xdist ficam sujeitos a flake por ordem | Registrar a restauração antes do `load_dotenv`: `monkeypatch.setenv(k, "")` seguido de `monkeypatch.delenv(k)`, ou `monkeypatch.setattr(os, "environ", os.environ.copy())`. Aplicar o mesmo em `test_retire_env_file_and_dry_run` (`:83`), que só limpa `SPEC367_ONLY_HERE` quando o teste passa |
+| R3-P3-1 | P3 | `scripts/retire_creature_portrait.py:114-115` (sem teste) | O ramo que falha fechado (`--dsn-env` sem `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`) está correto, mas nenhum teste o cobre. É exatamente a garantia de "retire sem shared store falha antes de mexer" | Acrescentar um teste com `_ops_runtime` falso devolvendo `shared_blob_store=None`: afirmar `SystemExit != 0`, `reg.calls == []` e `pool.close()` chamado 1 vez. E um caso `--dry-run` sem bucket, que deve concluir com 0 |
+
+Comandos (rodada 3):
+
+```text
+git show 848a63cb → 3 arquivos (+94/−9): script, teste, §9 da spec
+py.sh -m pytest -s tests/test_spec367_fallback_portrait.py tests/test_no_silent_except.py + sonda de ambiente (scratchpad) → todos verdes; sonda: "LEAK https://s True True" (R3-P2-1)
+```
