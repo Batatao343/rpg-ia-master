@@ -13,6 +13,7 @@ from services import economy as eco
 from services import graph_resolver as gr
 from services.event_processor import apply_event, process_pending_events
 from services.world_validators import validate_proposal
+from tests.factories import make_state
 
 ADAGA = "art_adaga_vidro_dragao"
 COROA = "art_coroa_pressao_rei_anao"
@@ -49,7 +50,7 @@ def _state(**over):
         },
     }
     base.update(over)
-    return base
+    return make_state(**base)
 
 
 def _claimed(item_id, holder="player"):
