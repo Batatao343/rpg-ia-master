@@ -48,6 +48,7 @@ observability = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
+    "pytest-cov>=7.0",
     "pytest-timeout>=2.4.0",
     "pytest-xdist>=3.8.0",
     "ruff>=0.9",
@@ -108,3 +109,19 @@ markers = [
 [tool.vercel]
 # SPEC-192: `main.py` exporta um objeto LangGraph chamado `app` — entrypoint explícito.
 entrypoint = "vercel_app:app"
+
+# SPEC-379 R1: cobertura real, semanal e sem gate (workflow coverage.yml). `source`
+# explicito: "." listaria .tmp/, playtest_runs/, saves*/, project_index/ etc.
+[tool.coverage.run]
+branch = true
+relative_files = true
+source = [
+    "agents", "services", "infrastructure", "workers", "playtest", "evals",
+    "api", "character_creator", "combat_mechanics", "encounter_budget", "game_engine",
+    "gamedata", "inventory", "llm_setup", "main", "mock_llm", "party", "persistence",
+    "progression", "rag", "state", "vercel_app", "world_utils",
+]
+
+[tool.coverage.report]
+skip_empty = true
+precision = 1

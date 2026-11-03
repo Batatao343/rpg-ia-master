@@ -1,0 +1,48 @@
+name: coverage
+# SPEC-379 R1: cobertura real da suite, semanal e SEM gate de porcentagem (e medida, nao trava).
+on:
+  schedule:
+    - cron: "17 4 * * 0" # domingo 04:17 UTC, longe do secret scan de segunda (validate.yml)
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  coverage:
+    runs-on: ubuntu-24.04 # pin: ubuntu-latest migra de imagem sem aviso
+    timeout-minutes: 60 # o tracer custa de 1,5 a 3x o tempo do job test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      # Mesmo extra do validate.yml: a suite cobre o builder Anthropic.
+      - run: uv sync --extra anthropic
+      - name: pytest com cobertura (D4, falha sob o tracer nao derruba o job)
+        id: pytest
+        continue-on-error: true
+        run: uv run pytest -q -n auto -p no:cacheprovider --cov --cov-branch --cov-report=xml --cov-report=json 2>&1 | tee pytest-cov.log; exit "${PIPESTATUS[0]}"
+        shell: bash
+      - name: coverage.json precisa existir
+        run: test -f coverage.json
+      - name: resumo
+        run: |
+          {
+            echo "## Cobertura (20 modulos menos cobertos)"
+            uv run python scripts/dev/coverage_summary.py coverage.json --top 20
+            if [ "${{ steps.pytest.outcome }}" != "success" ]; then
+              echo
+              echo "::warning::pytest falhou sob cobertura; veja pytest-cov.log no artefato"
+              echo "**Atencao:** a suite teve falhas sob o tracer (D4); ver artefato."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+        shell: bash
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: coverage-${{ github.run_id }}
+          path: |
+            coverage.xml
+            coverage.json
+            pytest-cov.log
+          if-no-files-found: warn
+          retention-days: 30
