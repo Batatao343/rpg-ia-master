@@ -1,0 +1,648 @@
+# SPEC-370 R1 (lote 4) — bloco de fauna da Costa Negra: 21 fichas da SPEC-349 + legado `valoria` da
+# região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 4; revisor ≠ autor).
+regiao: costa_negra
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_escama_revirada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "No raso entre ossadas, um chão de lascas grossas como unha de cavalo, todas soltas pela raiz."
+      resto: "Uma lâmina de coletor lascada no gume, cheia de cortes miúdos, largada no canal raso."
+      som: "Um ranger de telhas soltas umas contra as outras, que vem de dentro da água rasa."
+      cheiro: "Pele roxa inchada e sal de maré, um cheiro de hematoma molhado."
+      marca: "Nas bordas dos canais rasos, montinhos de placas grossas e soltas, como telhas, empilhadas pela maré."
+      aproximacao: "Do raso sobe devagar um Osshari de placas eriçadas como telhas soltas, e espera o primeiro golpe."
+      rumor: "os coletores dizem que há quem saia do raso pelado e volte uma semana depois coberto de novo"
+    contra_jogo: "Tirá-lo do raso para a areia seca, onde as lascas não se escondem, ou ficar parado na rodada em que elas caem."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_ferida_de_coral:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas tortas pela linha da maré baixa, de quem anda pendido para um lado, que voltam sempre ao mesmo ferido."
+      resto: "Um coletor ferido de raspão nas juntas, com galhinhos brancos e rosados brotando dos cortes."
+      som: "Um estalido de ramos duros batendo em osso velho e uma respiração de febre."
+      cheiro: "Carne quente aberta e maresia de recife seco, um cheiro de corte que cresce."
+      marca: "Nas costelas submersas, ramos brancos quebrados com sangue na ponta, de quem se cortou e seguiu."
+      aproximacao: "Pendido para o lado de um braço sem mão, coberto de ramos brancos e rosados, um coletor fareja o seu sangue."
+      rumor: "os coletores lavam cada corte com água doce na hora, mesmo que seja a última do cantil"
+    contra_jogo: "Arrancar a muda logo, gastando a ação, ou quebrar o braço de coral pela junta do cotovelo, onde a carne é mole."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_compassado_do_trono:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [cn_o_trono]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas paradas por muito tempo no mesmo lugar e, de repente, um salto comprido até a parede."
+      resto: "Um escudo de explorador atravessado de um lado ao outro por um golpe só, largado num corredor."
+      som: "Uma batida surda e muito lenta, como de tambor enorme, e entre uma e outra silêncio total."
+      cheiro: "Sangue roxo parado e osso molhado, um cheiro de corredor de matadouro."
+      marca: "No corredor, a pedra rachada em estrela na altura do peito, onde algo bateu com força de aríete."
+      aproximacao: "Parado no corredor, um explorador de peito aberto como portas espera; o coração roxo bate e ele dispara."
+      rumor: "um explorador que voltou de dentro diz que lá se conta as batidas, e que entre elas se passa"
+    contra_jogo: "Contar o compasso; gastar a força nas rodadas paradas e estar fora do alcance na batida."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_forrado_de_leviata:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [cn_o_trono, costa_negra]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas fundas de quem carrega peso nas costas, que entram numa carcaça grande e não se afastam dela."
+      resto: "Uma placa branca e porosa de osso, cortada à faca e costurada a couro, caída com pontos rompidos."
+      som: "Um baque de golpe batendo em osso largo, e o golpe não chega ao corpo de trás."
+      cheiro: "Osso poroso morno e podridão doce de carcaça, um calor de estufa."
+      marca: "Dentro de uma carcaça, um ninho de panos e couro gasto onde algo grande dorme no calor da podridão."
+      aproximacao: "De dentro da carcaça sai um coletor de costas cobertas de placas brancas, o braço sumido numa placa larga como porta."
+      rumor: "um coletor diz que costurou osso no couro para entrar nas carcaças e que o osso não quer mais sair"
+    contra_jogo: "Atacar pela borda das placas, onde o músculo está exposto, ou derrubá-lo primeiro para chegar aos que ele cobre."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_hospede_do_estomago:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [cn_o_trono]
+      permanencia: [3, 4]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto largo e úmido de pregas que sobe do fundo pelos corredores, deixando muco que corrói a pedra."
+      resto: "Uma bota meio dissolvida num muco ácido, o couro mole e os pregos soltos, sem o pé."
+      som: "Um gorgolejo de digestão enorme ecoando nos corredores, e uma respiração que vem de dentro de algo."
+      cheiro: "Ácido de digestão e carne derretida, um azedo que fecha a garganta."
+      marca: "No fundo, poças de muco que esverdeiam a pedra, e nelas fivelas e anéis limpos, sem dono."
+      aproximacao: "Pelo corredor se arrasta uma bolsa rosada da altura de dois homens, e dois braços escamados saem dela para você."
+      rumor: "os arpoadores Osshari não descem mais ao fundo: dizem que um dos deles ficou lá e ainda come"
+    contra_jogo: "Cortar os braços para que não agarrem; se alguém for engolido, rasgar a parede de fora, onde ela é fina entre as pregas."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_barata_das_costelas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra, cn_o_trono]
+      permanencia: [7, 10]
+      foge_de: [mon_estrela_de_alavanca]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de quique pela encosta de vértebras, cada uma mais funda, até um baque no pé dela."
+      resto: "Um coletor derrubado no pé da encosta, de couraça amassada por algo duro e redondo."
+      som: "Um rolar de barril de pedra quicando em osso, e depois um raspar de catorze patinhas."
+      cheiro: "Casca de bicho do fundo e calcário molhado, um cheiro de concha que secou na encosta."
+      marca: "No alto da encosta de vértebras, placas cinza-pérola de muda caídas, com bordas afiadas."
+      aproximacao: "Do alto da encosta cai rolando uma bola de placas cinza-pérola, quicando nas ossadas, direto em você."
+      rumor: "os coletores não andam pesado perto das encostas de vértebras, nem quando carregam muito"
+    contra_jogo: "Lutar em areia aberta, longe das costelas, onde ela não tem em que quicar; e bater na rodada em que ela para virada."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_estrela_de_alavanca:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [8, 11]
+      presas: [mon_caranguejo_mare, mon_barata_das_costelas]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um rastro de centenas de ventosinhas subindo uma ossada, em cinco linhas que se abrem do centro."
+      resto: "Um marisco do tamanho de um baú aberto à força, as conchas empenadas e vazias por dentro."
+      som: "Um estalo lento de concha cedendo, e um sugar úmido de muitos pés soltando a pedra."
+      cheiro: "Estômago de bicho do mar posto para fora e maresia densa, um cheiro de lodo vivo."
+      marca: "Num escudo largado, marcas de ventosa dos dois lados e a correia rompida de tanto puxar."
+      aproximacao: "De uma ossada cai sobre a sua sombra um bicho de cinco braços nodosos, e os braços já agarram o seu escudo."
+      rumor: "um coletor diz que perdeu o escudo para um bicho que só queria abrir o que tinha dentro"
+    contra_jogo: "Arrancá-la com fogo ou água doce nos pés-ventosa, ou largar o escudo antes de ela abrir; sem concha, ela não tem o que puxar."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_andarilho_de_cracas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto de nadadeiras gastas pela linha da arrebentação, que vira sempre para o que treme."
+      resto: "Um coletor de pé na praia, a pele e o couro cobertos de cones brancos endurecidos, andando sem querer."
+      som: "Um bater de pernas de pena no ar, miúdo e seco, e um bufo cansado de bicho cego."
+      cheiro: "Sal duro e lobo-marinho velho, um cheiro de rochedo onde os bichos deitam."
+      marca: "Na arrebentação, rochas cobertas de cones novos onde não havia, numa linha que segue a praia."
+      aproximacao: "Pela arrebentação vem um bicho de nadadeiras cinzentas coberto por uma crosta de cones, e as pernas de pena se abrem."
+      rumor: "os coletores dizem que na arrebentação há um bicho que outros bichos levam, e que ele não vê há anos"
+    contra_jogo: "Raspar as cracas jovens antes da terceira camada, ou ficar fora do alcance da nuvem e bater de longe na nadadeira, que é a única carne exposta."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_touro_de_banha:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [8, 11]
+      foge_de: [mon_tubarao_de_casco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco enorme na areia preta, largo como carroça, que vai da água até o pé de uma ossada."
+      resto: "Um bote esmagado na praia por algo pesado que se jogou em cima, a quilha partida em dois."
+      som: "Um rugido nasal grave, que treme o peito de quem ouve, e o estalo de gordura batendo."
+      cheiro: "Gordura amarela de carniça e bicho de praia, um cheiro de caldeirão de sebo."
+      marca: "Ao pé de uma carcaça, a areia toda alisada e cheia de cicatrizes de briga, como arena."
+      aproximacao: "Um elefante-marinho do tamanho de uma carroça ergue o peito cheio de cicatrizes e ruge pelo nariz duro de osso."
+      rumor: "os coletores rodeiam o trecho de praia do macho grande, mesmo que seja o caminho mais curto"
+    contra_jogo: "Sair da frente na rodada do rugido e atacar pelos flancos rachados, onde a banha está exposta; ele custa a virar."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_saltador_de_poca:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [6, 9]
+      foge_de: [mon_gaivota_ladra]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de muletas de barbatana entre as águas paradas da maré, em bando, e saltos curtos para a água."
+      resto: "Uma bota de coletor com dezenas de furinhos finos no tornozelo, como de agulhas de costura."
+      som: "Um chapinhar de saltos pequenos, e um estalo de boca de peixe fechando no ar."
+      cheiro: "Peixe de maré baixa e couro rachado ao sol, um cheiro de maré baixa."
+      marca: "Na borda das águas paradas entre ossos, couro pardo seco e descascado, largado em lascas."
+      aproximacao: "De uma água parada salta um peixe pardo do tamanho de um gato, de olhos em haste, e morde o seu tornozelo."
+      rumor: "as crianças dos coletores pulam a água parada da maré em vez de passar pela beira, e riem disso"
+    contra_jogo: "Entrar na poça com ele, ou secar a poça a pancadas; fora da água ele racha e fica lento."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_bruxa_de_carcaca:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra, cn_o_trono]
+      permanencia: [7, 10]
+      foge_de: [mon_tubarao_de_casco]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um coletor sufocado, a boca e o nariz entupidos de um muco que não sai com a mão."
+      som: null
+      cheiro: "Carne podre fresca e muco espesso, adocicado e enjoativo."
+      marca: "Na carne de uma ossada recente, túneis redondos do tamanho de um braço, lisos por dentro."
+      aproximacao: "Do buraco mais perto da carne sai um peixe rosado e cego, de boca redonda, e se prende em você raspando."
+      rumor: "os coletores não cortam ossada fresca sem bater nela antes com o cabo da faca"
+    contra_jogo: "Não ficar ferido perto da carne aberta; quem é coberto deve gastar a ação limpando o rosto antes que o muco engrosse."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_petrel_de_papo_cheio:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      foge_de: [mon_gaivota_ladra]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um coletor encharcado de óleo amarelo da cabeça aos pés, escorregando nas próprias botas."
+      som: "Um grasnar engasgado no alto das ossadas, e o barulho grosso de líquido derramado de cima."
+      cheiro: "Óleo de estômago de ave, rançoso e forte, que gruda na roupa por dias."
+      marca: "Nas frestas altas das ossadas, ninhos de penas cinza coladas e manchas amareladas escorrendo."
+      aproximacao: "Agarrada no alto de uma ossada, uma ave cinza de pescoço inchado num saco amarelo se vira para você e se esvazia."
+      rumor: "os coletores usam chapéu de couro largo no Cemitério, e não é por causa do sol"
+    contra_jogo: "Esfregar as mãos com areia seca logo depois do jato; o papo vazio leva duas rodadas para encher, e uma ave de papo vazio cai do osso com qualquer pancada."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_esfolado_de_sal:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      suprime: [mon_saqueador_marfim]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas na arrebentação de quem anda devagar pela água que arde, e grãos de sal grosso caídos."
+      resto: "Um saqueador com uma ferida esfregada de sal, a crosta branca por cima do vermelho."
+      som: "Um esfregar de sal em carne viva e um suspiro longo de quem sente o que o outro sente."
+      cheiro: "Sal grosso e carne viva, um cheiro de salmoura de açougue."
+      marca: "Na pedra da arrebentação, escamas arrancadas enfiadas num cordão e deixadas como oferenda."
+      aproximacao: "Na arrebentação, um Osshari em carne viva sob uma crosta de sal se aproxima, as escamas penduradas no pescoço."
+      rumor: "um Osshari velho diz que um dos seus arrancou as escamas para sentir o mar, e que agora sente tudo"
+    contra_jogo: "Lavar a ferida com água doce para apagar o sal, e não deixar que ele chegue ao corpo a corpo depois do primeiro corte."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_contrabandista_vitreo:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      foge_de: [mon_acendedor_de_naufragios]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota entre a carga de Brekmar e os coletores, e gotas escuras brilhantes na areia."
+      resto: "Um ferido cujo curativo não pegou, a pele em volta da ferida manchada de um sangue que brilha."
+      som: "Um sacudir úmido de mãos e o estalo de gotas grossas caindo em pedra."
+      cheiro: "Piche com areia e veneno doce de Ophidia, um cheiro de botica clandestina."
+      marca: "Numa caixa de carga vinda de Brekmar, o selo da Mão Sombria e marcas de mãos de sangue escuro."
+      aproximacao: "Entre a carga, um provador de rosto de placas lisas e palmas abertas em talhos sacode as mãos para você."
+      rumor: "um curandeiro do porto diz que tem ferida da costa que nenhum remédio dele consegue fechar"
+    contra_jogo: "Curar antes de ele sacudir as palmas, ou limpar o sangue com água e areia, gastando a ação; de perto ele não tem tempo de abrir as mãos e luta só com a faca."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_caldeireiro_de_oleo:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [8, 11]
+      suprime: [mon_saqueador_marfim]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas arrastadas e curvadas em volta de uma fogueira de sebo, de quem trabalha dobrado."
+      resto: "Um ladrão de barril caído com as pernas cozidas, num chão escorregadio e ainda quente."
+      som: "Um borbulhar de caldeirão grande e um chiado de gordura caindo no fogo."
+      cheiro: "Sebo cozido e pele queimada, um cheiro de fábrica de vela."
+      marca: "Ao lado dos caldeirões, o chão coberto de uma crosta amarela e brilhante que escorrega."
+      aproximacao: "Dobrado sobre o fogo, um derretedor de antebraços cobertos de crosta amarela os enfia na brasa e sacode para você."
+      rumor: "os compradores de sebo da costa dizem que quem tenta levar barril sem pagar sai sem as pernas"
+    contra_jogo: "Lutar fora da poça ou apagar a fogueira dele; longe do fogo o sebo endurece e ele só tem os punhos."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_acendedor_de_naufragios:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      suprime: [mon_contrabandista_vitreo]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que sobem as encostas de ossos à noite com uma lanterna, e voltam por outro caminho."
+      resto: "Um barco encalhado nas ossadas, a tripulação puxada para terra por ganchos de croque."
+      som: "Um assobio baixo de pirata no escuro, e o raspar de um croque arrastado na pedra."
+      cheiro: "Óleo de lanterna queimado e alcatrão, um cheiro de convés de saque."
+      marca: "Nas encostas de ossos, nichos com restos de pavio e fuligem, virados para o mar, longe de qualquer porto."
+      aproximacao: "Na névoa, um homem de olho tomado por agulhas que brilham azul-esverdeado mostra uma luz e vem por outro lado."
+      rumor: "os barqueiros de Brekmar dizem que na costa negra luz na névoa não é porto"
+    contra_jogo: "Mirar no olho de cristal, que brilha mais e não engana, ou apagar a lanterna; no escuro, o cristal o denuncia."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_remo_acorrentado:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [9, 12]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de joelhos sempre dobrados e de corrente arrastada, que vão de um casco de galé até a praia."
+      resto: "Um casco de galé pirata encalhado, com um banco de remador arrancado e as argolas vazias."
+      som: "Uma batida ritmada de madeira em pedra, no compasso de um tambor de bordo que ninguém toca."
+      cheiro: "Ferrugem velha e suor de galé, um cheiro de porão de escravos."
+      marca: "Nas pedras da praia, riscos fundos em arco, como de pá batida sempre no mesmo ritmo."
+      aproximacao: "Curvado, de ombros enormes e joelhos que não desdobram, um remador puxa uma corrente que sai de dentro dos braços."
+      rumor: "os coletores dizem que na praia da galé ainda se ouve o tambor, e que ele acelera"
+    contra_jogo: "Quebrar o compasso com barulho fora do ritmo, que zera o tambor, ou fazê-lo perder uma rodada de golpe."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_ventre_partilhado:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [cn_o_trono, costa_negra]
+      permanencia: [7, 10]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de um homem só, fundas demais, com marcas de mãos arrastadas na areia à frente dele."
+      resto: "Dois náufragos achados abraçados na praia, a pele das barrigas colada numa costura lisa."
+      som: "Duas respirações no mesmo peito, desencontradas, e um murmúrio de quem pede alguma coisa."
+      cheiro: "Pele inchada de afogado e um perfume doce, como de casa de prazeres molhada."
+      marca: "Na areia, o desenho de dois corpos deitados como um só, e um pedaço de pele costurada esquecido."
+      aproximacao: "Da barriga aberta de um homem alto sai o tronco de outro, braços estendidos, e quatro mãos procuram você."
+      rumor: "uma viúva de Brekmar diz que a maré trouxe o marido abraçado a outro, e que os dois andam"
+    contra_jogo: "Cortar a costura cedo e aceitar a ferida, antes de a mão esvaziar; ou não deixar que encoste, porque ela é lenta e só costura quem toca."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_balsa_de_ultimo_dia:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "clima:vendaval", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Duas linhas de furos de mastro quebrado saindo da arrebentação, e tábuas soltas caídas pelo caminho."
+      resto: "Tábuas de casco amarradas com cabelo e tendão, desfeitas na areia, com dedos fechados nas cordas."
+      som: "Um ranger de jangada amarrada às pressas, e tábuas arrancadas com um estalo seco."
+      cheiro: "Madeira encharcada e tendão seco, um cheiro de quem se agarrou ao que boiava."
+      marca: "Na praia, um amontoado de barris, costelas humanas e cordas que a maré deixou e que não estava ali ontem."
+      aproximacao: "Da arrebentação se ergue uma jangada de tábuas, barris e ossos sobre dois mastros, e arranca uma tábua para bater."
+      rumor: "os coletores dizem que onde alguém se desespera na costa a maré traz uma jangada que não flutua"
+    contra_jogo: "Aguentar e se defender; ela se desmonta sozinha. Quem a ataca apressa o fim, mas leva as tábuas de volta."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_gancho_de_esfola:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra, cn_o_trono]
+      permanencia: [8, 11]
+    sinais:
+      antecedencia: cedo
+      rastro: "Riscos de ferro curvo no alto das ossadas, de seis em seis, que seguem quem trabalha embaixo."
+      resto: "Um coletor com um ferro curvo enferrujado cravado no ombro, a corda de tendão pendendo cortada."
+      som: "Um tinido de ferro em osso lá em cima e, às vezes, uma corda que desce zunindo."
+      cheiro: "Gordura de leviatã rançosa e couro em tiras, um cheiro de rampa de corte de baleia ao vento."
+      marca: "No alto de uma ossada, fitas de pele balançando presas num nó de couro, frescas demais."
+      aproximacao: "No alto, seis ferros curvos de esfolar andam sobre as ossadas, e um deles desce numa corda de tendão para você."
+      rumor: "os esfoladores velhos da costa dizem que os ferros deles sumiram de noite e que hoje andam sozinhos"
+    contra_jogo: "Cortar a corda de tendão, que é fina e está ao alcance, antes de escolher entre se rasgar e ficar parado."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_raspadeira_de_barbatana:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de quatro pontas raspando pedra, que seguem a trilha de um coletor carregado."
+      resto: "Uma lâmina boa riscada de cima a baixo até perder o fio, e franjas córneas presas no gume."
+      som: "Um raspar de pente grosso em metal, insistente, e um correr leve para longe."
+      cheiro: "Corno velho e maresia, um cheiro de baú de pescador de baleia."
+      marca: "No acampamento dos coletores, as melhores peças achadas riscadas e foscas, as ruins intactas."
+      aproximacao: "Um bicho do tamanho de um cão, feito de placas franjadas, anda na ponta delas até o que você tem de mais bonito."
+      rumor: "um coletor diz que o melhor achado da vida dele virou sucata na mesma noite"
+    contra_jogo: "Gastar a ação afiando cedo, ou pisá-la antes que chegue à arma; é frágil e foge na primeira pancada."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_rancor_de_pincas:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [10, 12]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pernas de tamanhos diferentes em volta de uma ossada, que andam em todas as direções."
+      resto: "Um coletor preso por garras fechadas só do lado em que bateu, como se a pancada tivesse virado contra ele."
+      som: "Um estalar de garras fechando em sequência, só de um lado, e depois silêncio."
+      cheiro: "Casca velha de bicho do mar e lodo de guerra antiga, um cheiro de campo de batalha seco."
+      marca: "Sobre uma ossada disputada, carapaças vazias empilhadas e seladas por uma crosta escura."
+      aproximacao: "Sobre a ossada, um monte de carapaças de garras abertas para todos os lados não se mexe, até alguém bater."
+      rumor: "os Caranguejeiros não se aproximam de uma das ossadas da costa, e nem os coletores"
+    contra_jogo: "Dividir os golpes entre vários atacantes, para que nenhum acumule o rancor, ou não atacá-lo: ele não persegue."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  mon_baleia_ossario:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      foge_de: [mon_o_que_come_nas_praias]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco largo sob a areia e os ossos, que sobe à superfície quando a água recua de repente."
+      resto: "Ossos de leviatã antigo revirados e quebrados, como se algo jovem tivesse nadado através deles."
+      som: "Um canto grave e curto debaixo da areia, como de bicho grande chamando a mãe."
+      cheiro: "Areia molhada e gordura nova de bicho grande do mar, um cheiro de praia depois de encalhe."
+      marca: "Na praia, um recuo súbito da água deixando a areia lisa e funda em linha, sem onda nenhuma."
+      aproximacao: "A areia entre as ossadas estufa e sobe um bicho jovem de costelas à mostra, batendo uma cauda de ossos."
+      rumor: "os Osshari dizem que quando a água recua sem motivo algo novo está nadando nos ossos velhos"
+    contra_jogo: "Não esperar que recue: ele avança no mais próximo, se protege com o rosário de ossos e empurra a linha; bater forte e não ficar onde ele joga."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_caranguejo_mare:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra, cn_o_trono]
+      permanencia: [6, 9]
+      presas: [mon_saltador_de_poca]
+      foge_de: [mon_rancor_de_pincas, mon_estrela_de_alavanca]
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de muitas patas de lado entrando e saindo das órbitas de um crânio enorme."
+      resto: "Um osso grosso cortado limpo por uma garra, e pedaços de carapaça de briga espalhados."
+      som: "Um clicar de garras batendo umas nas outras, em desafio, que fica mais alto quando alguém se aproxima."
+      cheiro: "Lodo de crânio velho e restos de peixe guardados, um cheiro de despensa úmida."
+      marca: "Nas órbitas dos crânios grandes, montes de restos de peixe e ossinhos, guardados como despensa."
+      aproximacao: "De dentro de um crânio enorme sai um bicho de casca do tamanho de um cão, e ergue garras que cortam osso."
+      rumor: "os coletores dizem que cada crânio da costa tem dono, e que o dono tem garras"
+    contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais fraco com fúria e corta fundo; recua quando a briga vira risco."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_carrapato_osso:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [cn_o_trono, costa_negra]
+      permanencia: [6, 9]
+    sinais:
+      antecedencia: cedo
+      rastro: "Furos redondos de broca nas ossadas, em fila, e pó de calcário escorrendo de cada um."
+      resto: "Uma carapaça pequena coberta de lascas brancas e antigas, largada vazia ao lado de um furo."
+      som: "Um zumbido de broca em pedra, fino e agudo, que faz doer os dentes."
+      cheiro: "Pó calcário moído e cal, um cheiro de serraria de pedra."
+      marca: "Numa ossada titânica, a superfície toda cheia de furos de broca, como queijo duro."
+      aproximacao: "De um furo na ossada sai um bicho vestido de lascas brancas de leviatã antigo, e a broca da boca gira para você."
+      rumor: "um coletor diz que as ossadas da costa estão ocas por dentro, e que algo mora no oco"
+    contra_jogo: "Não ficar ferido nem isolado à vista: ele persegue o mais fraco e o zumbido dele fere de perto; recua quando a caçada vira risco."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_gaivota_ladra:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer]
+      territorio: [costa_negra]
+      permanencia: [6, 9]
+      presas: [mon_saltador_de_poca, mon_petrel_de_papo_cheio, mon_carrapato_osso]
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um peixe de maré baixa largado pela metade numa pedra alta, o bico de osso marcado na cabeça."
+      som: "Um grito agudo de ave grande e um mergulho que assobia no ar, desistindo no meio."
+      cheiro: "Pena salgada e excremento de ave, forte e ácido, que o vento leva pelas ossadas."
+      marca: "No alto das ossadas, manchas brancas de excremento e restos de comida roubada espalhados."
+      aproximacao: "De asas abertas largas demais, uma ave de bico de osso mergulha sobre o que você carrega."
+      rumor: "os coletores dizem que basta bater o pé com força para a ave grande da costa ir embora"
+    contra_jogo: "Não persegui-la: ela só ataca com vantagem ou pelas costas e foge ao primeiro ferimento; um golpe firme encerra a briga."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_o_que_come_nas_praias:
+    fonte: legado
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [costa_negra]
+      permanencia: [2, 3]
+      presas: [mon_baleia_ossario]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um arrasto enorme de algo sem forma, da água até os ossos e de volta, que apaga as pegadas de tudo."
+      resto: "Corpos deixados pela maré comidos de baixo para cima numa noite, sobrando só os pés na areia."
+      som: "Um sugar de maré que puxa areia, longo e grave, debaixo das docas, sem onda nenhuma."
+      cheiro: "Mar profundo e carne inteira apodrecendo, forte, que o vento noturno traz das docas."
+      marca: "Sob as docas, as estacas comidas até a metade e cobertas de um muco que brilha no escuro."
+      aproximacao: "Debaixo das docas, a água se ergue numa bocarra do tamanho de um barco, e um tentáculo de ressaca vem em você."
+      rumor: "os Osshari sabem o que vive sob as docas da costa, e quando alguém pergunta, só mudam de assunto"
+    contra_jogo: "Proteger o curador e o conjurador, que ela busca primeiro, e guardar a melhor defesa para o golpe de mestre; à beira da morte, ela recua."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_saqueador_marfim:
+    fonte: legado
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [cn_o_trono, costa_negra]
+      permanencia: [6, 9]
+      foge_de: [mon_esfolado_de_sal, mon_caldeireiro_de_oleo]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de bota que seguem um caminho gravado numa presa, contando passos entre as ossadas."
+      resto: "Uma presa de leviatã com um mapa entalhado, largada quebrada ao lado de um buraco cavado."
+      som: "Um murmúrio de quem conta passos baixinho, e o raspar de um arpão serrilhado na pedra."
+      cheiro: "Presa raspada e suor de cobiça, um cheiro de oficina de entalhador."
+      marca: "Num crânio enorme, marcas de arpão serrilhado e números riscados, como de quem conferiu um mapa."
+      aproximacao: "Com uma presa entalhada numa mão e um arpão serrilhado na outra, um caçador de tesouro ergue os olhos do mapa para você."
+      rumor: "um Osshari jura que nunca vendeu mapa nenhum, e que mesmo assim tem gente seguindo os da família dele"
+    contra_jogo: "Derrubar quem marca o alvo e ficar junto: ele concentra no mais ferido, rouba calor para se defender e, cercado e ferido, recua."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tubarao_de_casco:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [costa_negra]
+      permanencia: [7, 10]
+      presas: [mon_touro_de_banha, mon_andarilho_de_cracas, mon_bruxa_de_carcaca]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na água rasa entre as ossadas, uma barbatana que corta a superfície em linha reta, e some."
+      resto: "Um elefante-marinho jovem na praia, arrancado pela metade por uma mordida de bordas lisas."
+      som: "Um bater de cauda forte na água rasa e o estalo de madeira grossa raspando osso."
+      cheiro: "Sangue na água e couro grosso de bicho do mar, um cheiro que chega antes da onda."
+      marca: "Nos ossos submersos, raspões largos e lisos, como de quilha de barco passando sempre no mesmo lugar."
+      aproximacao: "Na água rasa entre as ossadas surge uma barbatana, e um peixe enorme de couro duro como quilha vem no que sangra."
+      rumor: "os coletores saem da água assim que alguém se corta, sem esperar para saber se foi fundo"
+    contra_jogo: "Não sangrar à vista: ele persegue o mais ferido e corte entra pouco no couro; pancada, e ele recua quando a caçada vira risco."
+    tramas: []
+    autor: opus-370-lote4
+    revisor_fauna: pendente
+    revisao: pendente
