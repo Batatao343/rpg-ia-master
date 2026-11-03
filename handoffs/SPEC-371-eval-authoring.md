@@ -61,3 +61,40 @@ não têm reação preparada contra a assinatura. Continua a decisão do dono da
 uma resposta barata ao golpe conhecido, ou (b) uma nova spec de avaliador com outra política
 defensiva (por exemplo, não Guardar sem reação). Nenhuma das duas cabe a este autor sem nova
 aprovação, porque mudam a política do bot.
+
+---
+
+## 2ª correção (03/11, commit `6c32b683`): uso `turno` lido antes do reset da rodada
+
+Bug: o `leitor` decide ANTES de `run_round`, e `run_round` zera o uso `turno` no início da
+rodada (`services/conflict_orchestrator.py:2804`, `cards.reset_card_usage(state, "turno")`) antes
+da janela de reação (`:1064-1101`). `reacao_disponivel` lia o `used_this_turn` da rodada
+anterior, então uma reação `turno` usada (ex.: `san_esquiva`) parecia gasta, e o bot caía no
+Guardar uma rodada sim, outra não. A Entropia não é tocada nesse reset (`cm.reset_entropy_turn`
+só zera `_entropy_trigger_turn`).
+
+Mudou: `reacao_disponivel` ignora os contadores do cascade `turno` (`cards._RESET_CASCADE`);
+`cena`/descanso e Entropia seguem valendo. Teste novo
+`test_reacao_por_turno_volta_na_rodada_seguinte` (`turno` volta; `dev_ombro_porta`, `cena`, não).
+Não mudou: limiares, população, seeds, denominadores, métricas, veredito e a política `_triggers`.
+
+Observação de política (decisão do dono, não alterada): `_triggers` defende sempre que a linha
+pública tem `contra_jogo` (ou o golpe estimado ≥ 30 % da Vitalidade), sem checar se o gatilho da
+reação preparada casa com o golpe (ex.: `cor_membrana` só reage a ataque à distância). Sem reação
+disponível, isso troca o ataque por Guardar.
+
+### Arena (mesma configuração, 2600 pares, 739 s; com as reações iniciais de `87ec4837`/`8d11c4a9`)
+
+| Métrica | `8d11c4a9` (antes desta correção) | `6c32b683` | Limiar |
+|---|---|---|---|
+| E1 | 34,4 % OK | 34,4 % OK | ≥ 30 % |
+| E2 | +3,69 pp OK | +10,06 pp OK | ≥ +3 pp |
+| E3 | 0,895× (416) OK | 0,842× (438) OK | ≤ 0,92× |
+| E4 | 65,3 % / −19,0 pp FALHA | 67,5 % / −3,0 pp FALHA | ≤ 92 % e ≥ −2 pp |
+| E5 | verde | verde | byte-idêntico |
+
+E2 por Postura: Devoto +18,0; Médico +12,1; Arcanista +10,3; Sangromante +10,2; Corruptor +1,6.
+Piores criaturas (−3,0 pp cada; 100 pares, ou seja 3 lutas):
+`enemy_elemental_fogo_poluido` (Devoto −5, Médico −10, demais 0) e `mon_lencol_de_chamine`
+(Arcanista −5, Médico −10, demais 0). E4 reprova só pela parte "pior criatura": −3 pp contra o
+teto de −2 pp, dentro do ruído de 20 seeds por célula; a vitória agregada (67,5 %) passa.
