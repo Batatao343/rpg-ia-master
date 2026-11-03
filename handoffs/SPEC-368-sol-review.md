@@ -81,3 +81,54 @@ py.sh docs/spec368/metricas_epico.py --seeds 0-1 (2×) → JSON idêntico; 180 c
 py.sh docs/spec368/metricas_epico.py (0-19) → idêntico a docs/spec368/metricas-0-19.json (exceto elapsed_s)
 git diff main...HEAD --name-only | grep golden|evals/|e2e/contracts|sim.py|arena_|flags → vazio
 ```
+
+---
+
+## Rodada 2 (2026-11-03)
+
+> **Veredito:** `CHANGES_REQUIRED` (só P3; política do dono: zero pendência)
+> **Revisor:** Opus / papel Sol · **Commits revisados:** `d4624860`, `cc0dcaa1` (`git diff 8b97d463..spec-368`, 27 arquivos)
+
+Integridade de eval: `git diff 8b97d463..spec-368 --name-only | grep -E "golden|evals/|e2e/contracts|sim\.py|arena_|flags"` → vazio.
+`metricas_epico.py` continua só importando `sim.py`. Nenhuma flag nova, nenhum `with_structured_output` novo, 0 LLM por rodada.
+
+### Achados da rodada 1
+
+| ID | Status | Evidência |
+|---|---|---|
+| P1-1 | **resolvido** | `tests/fixtures/spec368_seed.py::seed_save` cria o jogo e abre o conflito pela API real (`legacy`, MockLLM, cartas `on`), aplica a receita e grava com `persistence.save_game_state`; `view()` lê `/game/state`. `tests/test_spec368_seed.py` faz o round-trip save → load → `/game/state` para 1–7, 12–14 (22 testes), inclusive uma rodada jogada pela API a partir do save do item 12. `persistence.SAVES_DIR` é lido na hora da chamada (`persistence.py:112`), então o patch de `saves_dir` vale. R13/§6/§9 reescritos; itens 8–11 têm roteiro executável no §9. |
+| P2-1 | **resolvido** | Teste deriva as facções do bestiário (`tests/test_spec368_content.py:12`), sem lista fixa; 10 baralhos novos de 6 Cartas. Lint, orçamento, gramática e `check_voice` limpos (teste `test_spec368_faction_decks_lint_and_budget`, 14 facções `cartas-368`). Voz conferida carta a carta (tabela nome × efeito × descrição): frases curtas, concretas, temas das criaturas da 349. Arenas rodam com `RPG_ENEMY_DECKS=off` (`metricas_epico.py:275`, `sim.py`), então os baralhos novos não mexem no balanço medido da 362. |
+| P2-2 | **resolvido** | SPEC-330 cabeçalho e §9 registram (a)/(b)/(c) do D-13 com arquivo e ponteiro para a 368 §9. |
+| P3-1 | **resolvido** | `discardsAffordable` + `move(…, piles)` (`web/src/combat/deck.ts:100`); mesma regra do servidor (descarte só com Fôlego próprio). Aviso em `DeckCombat.tsx:256` só dispara no bloqueio (botões das pontas já ficam `disabled`, `PlayQueue.tsx:65-66`). Teste node. |
+| P3-2 | **resolvido** | `Hand.tsx:31` considera `discardReasons`; teste node. |
+| P3-3 | **resolvido** | Descrição de "Disparo de Tendão" sem escalada. |
+| P3-4 | **resolvido** | `services/card_deck_round.py:93` prende pré/pós à 1ª/última jogada não-descarte; teste `test_pre_and_pos_action_stick_to_the_acting_plays`. |
+| P3-5 | **resolvido** | Docstring corrigida; Presságio com rng próprio (`omen:<semente>`, `metricas_epico.py:147`), braços pareados; 329 §8 atualizada. Regerei 0–19: **idêntico** ao `metricas-0-19.json` commitado (exceto `elapsed_s`). |
+| P3-6 | **resolvido** | 355 §10 marca o R11 como sintético e manda anotar a taxa real no smoke §6. |
+
+Observação sem achado: "Corneta de Latão" ("acerta a mira de todos") e "Chamado da União" usam texto de grupo num `buff_acerto` de alvo único; o catálogo já aprovado tem o mesmo padrão (`faccao_grupos_piratas_rivais.json:114`, SPEC-332), então não é regressão desta spec.
+
+### Achados novos
+
+| ID | Sev. | Arquivo:linha | Problema | Correção |
+|---|---|---|---|---|
+| P3-7 | P3 | `tests/fixtures/spec368_seed.py:166-169` (`_reseed`, ramo `hand`) | A mão forçada **some com o baralho**: as 5 Cartas da mão original são descartadas (não voltam para a compra) e `compra` perde *todas* as cópias de cada id da mão. Medido: item 1 fica com 3 na mão + 3 na compra contra 5 + 7 do baralho real; item 12 fica 2 + 3; item 6 fica 2 + 6. O smoke vê "Compra 3" e um reembaralho precoce que o jogo real não teria; isso pode ser lido como bug do motor (ou esconder um). | Preservar a composição: tirar **uma** cópia de cada Carta forçada do multiconjunto `mao + compra` (Cartas fora do Acervo, como `sts_dor_surda`, entram de fora), devolver o resto da mão original à `compra` e reembaralhar com a semente. Teste: `len(mao) + len(compra)` igual ao de `start_piles` (+ Cartas de fora) para 1, 3, 6, 12, 13. |
+| P3-8 | P3 | `tests/fixtures/spec368_seed.py:99-101` | `_level_up` não é chamado em lugar nenhum e a docstring promete o que o código não faz ("preserva Acervo/Preparadas legais"; só grava `level`). Quem usar a fixture no smoke pode confiar nele. | Remover a função (ou implementar e testar, se algum item precisar de nível). |
+
+### Comandos rodados
+
+```text
+pytest -n 2 tests/test_spec368_*.py + test_card_effects_{grammar,piles,review_spec330}, test_card_lint, test_card_piles,
+  test_enemy_decks, test_spec35{3},36{3,4}_golden_guard, test_spec362_{arcanista,run_round}, test_spec355_arena,
+  test_spec363_{rewards_shop,rare_scenarios} → 316 passed, 1 skipped
+node --test web/tests/deck-368-discard.test.mjs → 5 pass
+npx tsc -p tsconfig.json --noEmit → ok · eslint (4 arquivos web alterados) → ok
+ruff check (arquivos Python alterados) → só I001 em docs/spec368/metricas_epico.py, pré-existente e fora do gate (docs/ excluído)
+scripts/validate_content.py → 0 erros
+py.sh docs/spec368/metricas_epico.py (0–19) → idêntico ao JSON commitado (exceto elapsed_s)
+seed_save(1|6|12) em pasta temporária → tamanhos de pilha acima (P3-7)
+```
+
+### Para fechar
+
+P3-7 e P3-8 são locais à fixture (sem efeito no produto). Corrigidos com o teste de composição, a rodada 3 é só conferência.
