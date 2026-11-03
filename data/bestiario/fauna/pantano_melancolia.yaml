@@ -1,0 +1,716 @@
+# SPEC-370 R1 (lote 1) — bloco de fauna do Pântano da Melancolia: 22 fichas da SPEC-359 + legado
+# `valoria` da região. Mesmo contrato da SPEC-360 §3.2; compilado em data/world/fauna.json por
+# scripts/fauna/build.py. Sinal é vestígio, nunca a criatura: quem nomeia é o encontro.
+# Revisão de fauna: handoffs/SPEC-370-independent-review.md (lote 1; revisor ≠ autor).
+regiao: pantano_melancolia
+criaturas:
+  # ============================== CORPOS REESCRITOS ==============================
+  mon_estaqueiro_afogado:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_cripta_afogada]
+      permanencia: [9, 12]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na lama da descida, furos redondos e fundos, todos do mesmo tamanho, em linha reta até a porta."
+      resto: "Lascas de madeira escura boiando na entrada, gastas numa ponta só, como de pau fincado muitas vezes."
+      som: "Lá dentro, uma batida surda e paciente na lama, depois silêncio, depois outra, um palmo adiante."
+      cheiro: "Sebo de vela frio misturado a água parada, gorduroso no fundo da garganta."
+      marca: "Uma tira de couro arrebentada no degrau, ainda com o formato de um pulso e pedaços de pele branca e granulosa."
+      aproximacao: "Atrás de uma fileira de paus fincados até o peito, um vulto de rosto branco como cera ergue mais um e o enterra."
+      rumor: "um saqueador jura que lá embaixo os mortos ficam em fila, virados para a porta, como quem espera visita"
+    contra_jogo: "Arrancar as estacas da fileira, uma por vez, ou derrubá-lo primeiro; sem a fileira, os de trás ficam ao alcance."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_romeiro_de_ambar:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pingos grossos e endurecidos na trilha, cor de chá forte, em fila até a lona das tendas."
+      resto: "Uma bota presa ao chão numa poça de resina dura, com o pé de alguém ainda dentro, mosquitos presos em volta."
+      som: "Um estalido seco de crosta rachando a cada passo, e logo um chiado baixo de coisa se fechando."
+      cheiro: "Chá de ervas fervido demais e, por baixo, ferro, como de ferida que verte em vez de sangrar."
+      marca: null
+      aproximacao: "Entre as tendas, um homem coberto de placas translúcidas cor de mel vem escorrendo, e a carne viva brilha por baixo."
+      rumor: "uma vendedora de chá diz que tem freguês de vinte anos que já não paga, só aparece"
+    contra_jogo: "Pancada quebra o âmbar, nos pés e nele; fogo amolece a resina, e as placas dele escorrem antes das de quem ficou preso."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_banhado_do_centro:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_profundezas]
+      permanencia: [8, 11]
+      suprime: [mon_casaco_de_sanguessugas]
+      reage:
+        - {quando: "pressao:guerra", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas enormes de pé descalço na lama, cada uma cercada de uma auréola negra que não se mistura à água."
+      resto: "Uma espada de saqueador largada no raso, a lâmina comida de ferrugem até o meio, mas o cabo novo."
+      som: "Uma respiração lenta e molhada de velho, e um gotejar constante que não vem de cima."
+      cheiro: "Sangue velho e ferro molhado, forte como dentro de um açougue fechado."
+      marca: "Nos elmos afundados de uma mesma fileira, marcas de dedos pretos, como se alguém os contasse todo dia."
+      aproximacao: "Da lama sobe um velho imenso de veias pretas, suando um caldo escuro que escorre pelo peito e pinga das mãos."
+      rumor: "um saqueador velho diz que há um trecho do fundo onde a lâmina apodrece na mão antes do primeiro golpe"
+    contra_jogo: "Feri-lo com o que não enferruja (pedra, osso, pau, fogo) ou trocar de arma a cada golpe; quem insiste na mesma lâmina acaba batendo com ferrugem."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_zumbi_blindado:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um sulco largo e raso na turfa, sem marca de pé nem de mão, que dobra e volta como um saco arrastado."
+      resto: "Um cordão de amuleto partido na beira da trilha, com um tufo de cabelo ruivo e duro ainda enrolado nele."
+      som: "Um rangido de couro velho dobrando, como sela pisada, vindo de perto do chão."
+      cheiro: "Cheiro azedo de curtume e de terra encharcada, que gruda na roupa."
+      marca: "Na turfa, o molde achatado de um corpo deitado de costas, com o fundo ainda morno."
+      aproximacao: "Rente ao chão, uma figura de couro escuro e brilhante se desdobra de uma vez, sem um osso que a segure."
+      rumor: "um coveiro dos Corvos conta que a turfa devolveu um corpo que eles já tinham enterrado duas vezes"
+    contra_jogo: "Pancada, não lâmina; sem ossos que o sustentem, depois de amassado ele não se levanta."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== BESTAS DA ENTROPIA ==============================
+  mon_castor_de_estacas:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pantano_melancolia]
+      permanencia: [8, 11]
+      foge_de: [mon_borda_que_anda]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Um caminho alisado na lama entre a água e o capim, largo como uma pá, com raspas de madeira tratada."
+      resto: "Um marco dos druidas roído até virar ponta de lápis, a fita da medição boiando solta ao lado."
+      som: "Um estalo chapado na água, forte como um tapa em mesa, e depois o ranger de madeira sendo puxada."
+      cheiro: "Piche e madeira molhada roída de fresco, com um fundo de toca."
+      marca: "Uma represa de paus e ossos atravessada no canal, e a água parada acima dela, mais alta que a do Pântano."
+      aproximacao: "Na represa, um bicho do tamanho de um bezerro, eriçado de lascas, arreganha duas lâminas laranja na boca."
+      rumor: "um druida reclama que a borda medida na segunda amanheceu dez passos mais perto da estrada"
+    contra_jogo: "Derrubar uma estaca da represa a desfaz; ele larga tudo para consertar, e é aí que fica de costas."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_patinador_de_oleo:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pantano_melancolia, pm_profundezas]
+      permanencia: [6, 9]
+      presas: [mon_mosquito_eter]
+      reage:
+        - {quando: "clima:vendaval", efeito: menos}
+        - {quando: "clima:chuva", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na superfície parada da água, seis covinhas em leque que somem e reaparecem mais longe, sem onda nenhuma."
+      resto: "Uma rã boiando de barriga para cima, murcha como odre vazio, com um furo fino no lombo."
+      som: "Um tique-tique leve e rápido sobre a água, como de varetas tocando um tambor esticado."
+      cheiro: null
+      marca: "Na beira da água, cascas finas de pernas compridas como junco, largadas numa muda."
+      aproximacao: "Sobre a água lisa vem um inseto do tamanho de um antebraço, apoiado em pernas tão abertas que cobrem uma carroça."
+      rumor: "um coletor diz que nas águas paradas é melhor bater na superfície antes de encher o cantil"
+    contra_jogo: "Agitar a água; a película quebrada não o segura, e ele cai e se debate como qualquer inseto molhado."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cagado_de_geada:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      estacoes: {inverno: 1.2, verao: 0.8}
+      territorio: [pm_profundezas]
+      permanencia: [9, 12]
+      presas: [mon_sanguessuga_braco]
+    sinais:
+      antecedencia: cedo
+      rastro: "Riscos largos de garra na lama da beira, de pá em pá, que terminam numa pedra que não estava ali."
+      resto: "Uma luva de couro presa num gelo salobro na beira da água, com os dedos ainda dentro."
+      som: "Um estalo curto como de armadilha fechando, e depois o tilintar de agulhas de gelo caindo na água."
+      cheiro: "Um cheiro limpo e salgado de frio, estranho no meio do lodo quente."
+      marca: "Uma crosta branca que não derrete nos degraus da beira, mesmo ao sol do meio-dia."
+      aproximacao: "A pedra da beira levanta uma cabeça grande demais, de bico em gancho, e o hálito dela embranquece a água."
+      rumor: "os do fundo dizem que no verão há um buraco d'água onde a beira amanhece com gelo"
+    contra_jogo: "Calor. Fogo perto da cabeça o faz soltar e recolher; e nunca se debruçar no poço que ele guarda pela frente."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fundeiro_da_poca:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pm_profundezas, pm_cripta_afogada]
+      permanencia: [7, 10]
+      presas: [mon_patinador_de_oleo]
+      reage:
+        - {quando: "clima:neblina", efeito: menos}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um saqueador caído de costas na margem rasa, o peito afundado por um golpe redondo, a roupa encharcada."
+      som: "Um gorgolejo cheio, de garganta enchendo, e logo um estalo de chicote contra a água."
+      cheiro: "Escama velha e lodo revolvido, como se o fundo tivesse subido à tona."
+      marca: "Na pedra da margem, círculos de água seca, um por cima do outro, na altura do peito de um homem."
+      aproximacao: "A água da beira estufa, um tubo de lábios de chifre aponta para fora, e o jato sai duro como pedra."
+      rumor: "um coletor perdeu o irmão na beira da água funda: diz que a água mesmo o derrubou"
+    contra_jogo: "Sair da linha da poça; ele só cospe para cima e para a frente, e de lado, na margem rasa, não alcança nem enxerga."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_tritao_de_sobra:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pm_profundezas]
+      permanencia: [9, 12]
+      presas: [mon_arraia_de_lodo]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na lama do raso, marcas de pata em número que não fecha: cinco, sete, uma comprida entre duas curtas."
+      resto: "Um toco rosado e mole, do tamanho de um dedo, largado na beira como coisa que brotou e caiu."
+      som: "Um esmagar úmido debaixo da água e, de vez em quando, bolhas que sobem em fila desencontrada."
+      cheiro: "Muco de bicho d'água, adocicado e grosso, como de rã guardada num balde."
+      marca: "Uma franja de guelra vermelha presa num galho afundado, ainda pulsando de leve."
+      aproximacao: "Do fundo sobe um bicho liso do tamanho de um boi, de franjas vermelhas na nuca e patas demais, todas desencontradas."
+      rumor: "um saqueador diz que cortou a perna de um bicho do fundo e, dois dias depois, o bicho tinha três"
+    contra_jogo: "Fogo e pancada, não lâmina; e acabar rápido, porque cada corte sem queimar é mais uma pata."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_musaranho_de_dente_vermelho:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pantano_melancolia]
+      permanencia: [6, 8]
+      presas: [mon_sanguessuga_braco, mon_mosquito_eter]
+      reage:
+        - {quando: "pressao:fome", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma trilha miúda e frenética no capim, que vai e volta sem rumo, cheia de pelo cinza solto."
+      resto: "Um rabo comprido e pelado, roído até a metade, e o resto do bicho nenhum."
+      som: "Um mastigar sem pausa, rápido como o tique de um relógio, vindo do capim alto."
+      cheiro: null
+      marca: "Rãs mordidas uma vez cada, em fila na margem, nenhuma comida inteira, a ferida enferrujada."
+      aproximacao: "Do capim salta um bicho magro do tamanho de um cão, focinho tremendo, a boca rubra de ferro mastigando o ar."
+      rumor: "uma menina da borda diz que um bicho comeu as sanguessugas do balde do pai, e o balde também"
+    contra_jogo: "Mantê-lo longe por uma ou duas rodadas; sem morder, ele se gasta sozinho."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_borda_que_anda:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite]
+      territorio: [pantano_melancolia]
+      permanencia: [3, 4]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "O chão firme da trilha cedeu numa faixa larga, de um dia para o outro, e a água já brota dele."
+      resto: "Uma fita de medição dos druidas presa num tijolo de turfa, longe de qualquer marco."
+      som: "Um gemido grave e longo do chão, como de barranco cedendo, e o ranger de madeira contra madeira."
+      cheiro: "Ferro e fungo, forte e quente, como de terra revirada sobre carne."
+      marca: "O barranco da beira tem uma fileira de paus enterrados na crista, um por ano, e ontem não tinha."
+      aproximacao: "O barranco se levanta sobre colunas de lodo, a crista eriçada de paus fitados, e o chão firme afunda sob ele."
+      rumor: "o irmão Ceslo jura que mediu o barranco na segunda e na terça ele estava mais perto da estrada"
+    contra_jogo: "Lutar de costas para a terra seca e mirar as estacas da crista; cada estaca arrancada é um ano que ela perde, e ela recua para buscá-lo."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ======================== HUMANOS QUE PAGARAM O PREÇO ========================
+  mon_podador_do_ciclo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      suprime: [mon_jardineiro_de_tumores]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Galhos e raízes cortados rente na trilha, em bisel limpo, todos no ponto exato onde começavam a apodrecer."
+      resto: "Um crescimento de carne e musgo partido ao meio na lama, a raiz ainda se mexendo, e nenhuma pegada de luta."
+      som: "Um assobio curto de lâmina no ar, e depois um baque macio, como de fruta podre caindo."
+      cheiro: "Seiva verde cortada de fresco e, por cima, o cheiro limpo de osso serrado."
+      marca: "Num tronco, os sinais de proteção dos druidas riscados com uma ponta curva que não é faca nem foice."
+      aproximacao: "Um velho cinzento de antebraços curvos como podões de osso olha para você e procura, com calma, onde está a parte podre."
+      rumor: "um ferido que fugiu da beira diz que o velho que o achou só queria lhe cortar a perna, e era educado"
+    contra_jogo: "Enfrentá-lo sem Ferimento aberto, ou deixar a Carta melhor para depois do corte; contra quem está inteiro, ele não acha o que podar e só corta raso."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_jardineiro_de_tumores:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pantano_melancolia, pm_profundezas]
+      permanencia: [7, 10]
+      foge_de: [mon_podador_do_ciclo]
+      reage:
+        - {quando: "pressao:praga", efeito: mais}
+        - {quando: "clima:miasma", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas fundas e curvas para a frente, de quem anda carregando peso nas costas, e terra revolvida a cada dez passos."
+      resto: "Um canteiro aberto na lama em sulcos regulares, com caroços de carne pulsando, plantados em fileira."
+      som: "Uma respiração em coro, de várias coisas inspirando junto, vinda de trás das moitas."
+      cheiro: "Terra adubada e carne quente, como esterco misturado a sangue."
+      marca: "Uma pá de cabo curto fincada na trilha, o cabo manchado de verde e o ferro de vermelho."
+      aproximacao: "Curvado sob um canteiro de caroços que incham no ritmo da respiração dele, um homem de braços magros se ergue da lama."
+      rumor: "um caçador da borda achou um pé de couve brotando de um corte que ele mesmo levou na perna"
+    contra_jogo: "Matá-lo de longe, sem lhe dar ferida para semear; e quem sair ferido procura um druida do Ciclo antes de dormir."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mula_de_lagrimas:
+    fonte: ficha
+    ecologia:
+      horario: [Noite, Amanhecer]
+      territorio: [pantano_melancolia]
+      permanencia: [6, 8]
+      foge_de: [mon_casaco_de_sanguessugas, mon_regaco_da_margem]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de pernas abertas, viradas para fora, e entre elas gotas de água que brilham azul por um instante."
+      resto: "Um saco de couro vazio, rasgado com os dentes, e cascas de pão duro mastigadas e cuspidas."
+      som: "Um choro baixo e regular, sem soluço, de quem já cansou de chorar e continua."
+      cheiro: "Ferro molhado e suor de febre, ácido como de quem não bebe há dias."
+      marca: "Uma luz azul-pálida, fraca, que passa entre as moitas na direção dos portões e some de repente."
+      aproximacao: "Um homem magro de barriga inchada e translúcida, cheia de gotas azuis que brilham, para de chorar e olha para você."
+      rumor: "um guarda do portão diz que tem contrabandista que passa de mãos vazias e barriga acesa"
+    contra_jogo: "Matá-lo de longe, ou deixá-lo fugir; ele foge quando pode, e a carga vai embora com ele."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_casaco_de_sanguessugas:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_profundezas]
+      permanencia: [7, 10]
+      suprime: [mon_mula_de_lagrimas]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma trilha de quem andou na água funda até o peito e voltou sem pressa, com gotas escuras pingando do raso."
+      resto: "Um saqueador rival estirado na beira, branco de não ter mais sangue, coberto de marcas redondas de ventosa."
+      som: "Um estalo molhado, como de boca soltando uma garrafa, e um suspiro de alívio que não é de gente."
+      cheiro: "Lodo quente e couro de bicho vivo, como de dentro de uma barrica de iscas."
+      marca: "Um trecho de espólio cercado por armaduras empilhadas, com um aviso riscado: aqui é meu."
+      aproximacao: "Da água funda sai um homem de pele branca, o peito e os ombros cobertos de bichos negros que incham e murcham."
+      rumor: "os do fundo dizem que há um saqueador que não sai da água fria, e não fica triste, nem com frio, nem com nada"
+    contra_jogo: "Arrancar a sanguessuga na hora, mesmo custando a ação; fogo no casaco solta todas de uma vez, e ele passa a sentir o que não sentia."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_turno_vencido:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pantano_melancolia]
+      permanencia: [9, 12]
+      suprime: [enemy_druida_renegado]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pés descalços que pisam a lama com força, parados de tempos em tempos, como de quem escuta pela sola."
+      resto: "Uma tigela de argila cinza, molhada e recém-mexida, deixada no pilar de um posto vazio."
+      som: "Um raspar seco, de unha em casca de barro, e uma reza murmurada que pula as mesmas palavras."
+      cheiro: "Argila úmida e cal, como de oficina de oleiro deixada de portas abertas."
+      marca: "Na porta do posto, uma lista de rendições de duas semanas, e o último nome riscado e reescrito muitas vezes."
+      aproximacao: "Um druida de cabeça fechada numa casca de barro rachado, só com duas fendas, vem até você com as mãos sujas de argila."
+      rumor: "um druida jovem diz que o posto do sul ainda está guardado, mas ninguém lembra quem ficou lá"
+    contra_jogo: "Rachar a argila dele com um golpe de pancada; a dos outros cai junto, e quem estava protegido volta a ceder."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ===================== CRIAS DE APETITE (DEMÔNIOS ENCARNADOS) =====================
+  mon_regaco_da_margem:
+    fonte: ficha
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      territorio: [pantano_melancolia]
+      permanencia: [10, 12]
+      presas: [mon_mula_de_lagrimas]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+        - {quando: "clima:nublado", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de várias pessoas que saem da trilha na mesma direção, cada vez mais lentas, e nenhuma que volte."
+      resto: "Um par de botas arrumado lado a lado na beira, como as de quem tirou para dormir, cheias de musgo."
+      som: "Uma respiração funda e lenta, de quem dorme pesado, e às vezes um cantarolar sem palavra."
+      cheiro: "Turfa morna e musgo, cheiro de cama de palha num dia frio."
+      marca: "Uma depressão macia na beira da água, coberta de musgo verde demais, com o calor de um corpo."
+      aproximacao: "Uma massa sentada, larga como uma carroça, abre quatro braços compridos de juntas demais, e o colo de turfa fumega."
+      rumor: "uma viúva da borda diz que o marido escreveu que ia só sentar um pouco, e o bilhete ainda está seco"
+    contra_jogo: "Recusar o descanso; quem foi tomado gasta a ação para se debater e sai; os outros cortam os braços nos cotovelos, onde a lama é fina."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cordao_de_medida:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Anoitecer, Noite]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: "Duas pegadas que seguem lado a lado pela trilha e, no meio da travessia, uma delas vira para o fundo e some."
+      resto: "Um nó de corda-guia desfeito numa ponta, e na outra uma mancha de gordura clara, como de tendão."
+      som: null
+      cheiro: "Gordura rançosa e suor de mão, como de corda de poço que muita gente segurou."
+      marca: "Entre dois marcos, a corda-guia dos druidas cortada e jogada no capim, e no lugar dela, outra mais grossa e clara."
+      aproximacao: "A corda que você segura se fecha na sua mão: é feita de tendões trançados, e cada nó é um punho que aperta."
+      rumor: "os druidas mandam contar os nós da corda antes de atravessar; se tiver um a mais, voltar"
+    contra_jogo: "Desconfiar da corda; atravessar sem apoio e variar as Cartas; ele só devolve o que aprendeu."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_maos_no_rosto:
+    fonte: ficha
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      foge_de: [mon_turno_vencido]
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas que andam de lado e de costas, sempre de viés, nunca de frente para a trilha."
+      resto: "Uma armadura da coalizão aberta no chão, vazia, e debaixo dela o desenho de um corpo encolhido na lama seca."
+      som: "Uma água que escorre devagar, pingo a pingo, de algum lugar à altura de uma cabeça, sem chuva."
+      cheiro: "Lama seca de batalha velha e um suor frio, de quem se escondeu muito tempo."
+      marca: "Nos troncos, manchas de lama com o formato de palmas abertas, oito ou nove juntas, na altura de uma cara."
+      aproximacao: "Um vulto alto e magro vira de lado para você, o peito e os ombros brotando braços que tapam a cara; dois deles descem."
+      rumor: "um velho da coalizão não olha para o Pântano quando passa: diz que lá tem quem não quer ser visto, e com razão"
+    contra_jogo: "Derrubá-lo primeiro, sem esperar ver o rosto; com ele no chão, a Virtude volta inteira."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cisne_de_patina:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer]
+      territorio: [pm_profundezas]
+      permanencia: [7, 10]
+      presas: [mon_fardo_de_espolio]
+    sinais:
+      antecedencia: cedo
+      rastro: "Uma trilha de gordura colorida na água, larga como um corpo, que brilha em verde, violeta e dourado."
+      resto: "Uma fivela de cinto arrancada e bicada até ficar verde, deixada em cima de um elmo afundado."
+      som: "Um sibilo longo, e o roçar macio de pano molhado se abrindo de uma vez."
+      cheiro: "Seda velha mofada e cobre úmido, como de baú de igreja aberto depois de anos."
+      marca: "Num estandarte afundado, tiras inteiras arrancadas com cuidado, e só as de cor."
+      aproximacao: "Entre as armaduras afundadas desliza uma ave do tamanho de um cavalo, coberta de tiras de seda podre que se abrem em leque."
+      rumor: "um saqueador conta que viu a coisa mais bonita da vida dele no fundo, e o companheiro ficou olhando demais"
+    contra_jogo: "Golpear o pescoço, onde não há seda, e afastar-se depois de cada golpe; sem contato, ele não envelhece nada."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_arraia_de_lodo:
+    fonte: ficha
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_cripta_afogada, pm_profundezas]
+      permanencia: [8, 11]
+      foge_de: [mon_tritao_de_sobra]
+    sinais:
+      antecedencia: cedo
+      rastro: "Um círculo liso no fundo raso, da largura de uma porta, onde a lama está assentada demais."
+      resto: "Um espólio enterrado pela metade e coberto de novo com cuidado, como se alguém o tivesse escondido de volta."
+      som: "Um sopro abafado embaixo d'água, e a superfície que turva de repente, sem vento."
+      cheiro: "Fundo revolvido, frio e mineral, de pedra de rio molhada."
+      marca: "Num trecho do fundo, a água fica parda e não assenta, por mais que se espere."
+      aproximacao: "O fundo inteiro se descola diante de você: um disco pardo e fino, com um olho que não para de girar."
+      rumor: "os que descem à Cripta dizem que lá a água turva sozinha, e é quando turva que convém sair"
+    contra_jogo: "Achá-la primeiro; a nuvem nasce dela, e por baixo ela é fina e mole; morta, as intenções dos outros voltam a se ver."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_fardo_de_espolio:
+    fonte: ficha
+    ecologia:
+      horario: [Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_profundezas]
+      permanencia: [7, 10]
+      foge_de: [mon_cisne_de_patina]
+      reage:
+        - {quando: "carcaca_recente", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Marcas de muitos dedos na lama, de lado, como de caranguejo grande, que vão de um escudo a outro."
+      resto: "Um cálice amassado largado no raso, ainda com uma unha humana presa na borda."
+      som: "Cotovelos estalando em série, e moedas batendo umas nas outras debaixo de alguma coisa pesada."
+      cheiro: "Pele de afogado, enrugada e branca, cheiro de mão que ficou tempo demais na água."
+      marca: "Uma moeda posta de pé numa pedra no meio da trilha, como quem cobra pedágio."
+      aproximacao: "Um escudo de torre rachado anda de lado sobre oito braços brancos de dedos fechados, e uma das mãos se abre para você."
+      rumor: "um saqueador diz que no fundo se paga em moeda ou em dedo, e que ele preferiu a moeda"
+    contra_jogo: "Não pagar; deixar que cure e matá-lo depressa, mão por mão; sem Fôlego cobrado, é um caranguejo de braços fracos."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  # ============================== LEGADO (valoria) ==============================
+  enemy_boss_arauto_nevoa:
+    fonte: legado
+    ecologia:
+      horario: [Noite]
+      territorio: [pm_cripta_afogada]
+      permanencia: [2, 3]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Velas apagadas de uma vez na escada da Cripta, todas ainda quentes, a cera escorrida para o mesmo lado."
+      som: "Um lamento longo de muitas vozes, que sobe da Cripta e para no meio, como se alguém tapasse a boca de todas."
+      cheiro: "Fumaça fria, sem fogo nenhum por perto, com gosto de pedra molhada."
+      marca: "Na entrada, a água parada está coberta de uma película branca, e os mortos de pé viraram o rosto para dentro."
+      aproximacao: "A fumaça da Cripta se junta num vulto alto, que grita sem boca, e a pele de quem ouve gela onde ele toca."
+      rumor: "os saqueadores da Cripta só descem de dia: dizem que de noite o choro lá dentro tem quem o comande"
+    contra_jogo: "Cobrir o curador e o conjurador, que ele abate primeiro, e guardar a defesa forte para o golpe pesado que ele segura até o fim."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  enemy_druida_renegado:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pantano_melancolia, pm_profundezas]
+      permanencia: [6, 9]
+      foge_de: [mon_podador_do_ciclo]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas de sandália que levam outra pessoa pela mão para a água funda, e só as de sandália voltam."
+      resto: "Uma fita de pano cinzento, rasgada de um manto do Ciclo, amarrada num galho na direção errada da trilha."
+      som: "Uma voz mansa, longe, falando de descanso e de perdão, que para quando alguém responde alto."
+      cheiro: "Incenso de raiz queimada, doce demais, que fica no ar depois que a voz some."
+      marca: null
+      aproximacao: "Na névoa aparece um homem de manto cinzento rasgado, de mão estendida e voz mansa, sempre um passo mais longe que o seu."
+      rumor: "uma mãe da borda diz que um homem de manto prometeu levar o filho a quem cura, e o levou para o fundo"
+    contra_jogo: "Não segui-lo para a água funda e lutar perto dos outros: sozinho e ferido ele se rende ou foge, e só ataca com vantagem."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_afogado_da_batalha:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pm_profundezas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "pressao:abismo", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Dezenas de pegadas de bota militar saindo da água em fileira, todas no mesmo passo, e nenhuma voltando."
+      resto: "Um peitoral da coalizão vazio na lama, amassado por dentro, com algas presas nas correias."
+      som: "Um tinido abafado de metal sob a água, muitos ao mesmo tempo, como de tropa marchando no fundo."
+      cheiro: "Couro de correia apodrecido e ferrugem velha, cheiro de arsenal alagado."
+      marca: "Na lama da margem, lanças fincadas de pé em linha, como uma barreira que ninguém mais guarda."
+      aproximacao: "Da água sobe uma linha de soldados de armadura podre, sem rosto sob os elmos, e avança sem uma ordem."
+      rumor: "um velho da coalizão diz que a tropa dele nunca foi dispensada, e que no fundo ainda tem quem marche"
+    contra_jogo: "Não ficar parado no raso: lutar de pé na terra firme e acabar com eles pela força bruta, porque ponta e flecha pouco entram."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_cervo_afogado:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Anoitecer, Noite]
+      territorio: [pm_profundezas]
+      permanencia: [8, 11]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Pegadas fendidas e fundas que saem da água escura e entram de novo, sem nunca deixar a beira."
+      resto: "Um terço de contas de peregrino preso num galho, molhado, com um fio de cabelo branco enrolado."
+      som: "Um tilintar de sininhos e berloques que vem de dentro da água, como de oferenda balançando."
+      cheiro: "Pelo molhado podre e flor de velório, de coroa deixada na chuva."
+      marca: "Fitas e medalhas de romaria penduradas alto num tronco, numa altura que mão nenhuma alcança."
+      aproximacao: "Da água negra emerge um animal de galhada imensa, coberta de oferendas, com os olhos brancos de quem está no fundo."
+      rumor: "uma romeira diz que viu as fitas da irmã, que nunca voltou da água, passarem penduradas na cabeça de um bicho"
+    contra_jogo: "Golpear com força e não com ponta, e não perdê-lo de vista: ele se esconde entre os mortos e volta quando você baixa a guarda."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_mosquito_eter:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      estacoes: {verao: 1.4, inverno: 0.4}
+      territorio: [pantano_melancolia, pm_profundezas]
+      permanencia: [6, 9]
+      reage:
+        - {quando: "clima:miasma", efeito: mais}
+        - {quando: "clima:vendaval", efeito: menos}
+    sinais:
+      antecedencia: cedo
+      rastro: null
+      resto: "Um rato morto entre as raízes, a pele marcada de mil pontinhos azuis, sem gota de sangue."
+      som: "Um zumbido agudo e afinado, de muitas vozes na mesma nota, que muda de tom quando alguém se mexe."
+      cheiro: "Um cheiro elétrico de chuva que não veio, fino, que arde no nariz."
+      marca: "Sobre as poças, nuvens de pontinhos brilhantes, azul-pálidos, que se juntam onde a água aflora."
+      aproximacao: "Uma nuvem de insetos translúcidos, de barriga acesa em azul, se fecha em volta de você cantando na mesma nota."
+      rumor: "um coletor diz que, onde a nuvem azul canta, a gota boa está embaixo, e o preço é o sangue"
+    contra_jogo: "Não deixar a nuvem crescer: matar os primeiros, que fogem logo, e sair do pântano raso antes que o ferrão translúcido corroa."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_sanguessuga_braco:
+    fonte: legado
+    ecologia:
+      horario: [Amanhecer, Manhã, Tarde, Anoitecer, Noite]
+      territorio: [pantano_melancolia, pm_profundezas]
+      permanencia: [6, 9]
+      presas: [mon_castor_de_estacas]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Na lama morna, um sulco que segue em zigue-zague a linha de calor de quem passou antes, até a água."
+      resto: "Um bicho de pelo grosso morto na margem, murcho como um saco, com três chagas redondas no pescoço."
+      som: "Um chupar lento e úmido no capim da água, e depois um estalo, como de rolha."
+      cheiro: "Sangue doce e lodo morno, cheiro de curativo trocado tarde."
+      marca: "Na madeira de uma ponte baixa, anéis de ventosa do tamanho de um punho, ainda pegajosos."
+      aproximacao: "A lama ao seu pé estufa e uma coisa preta e grossa, do comprimento de um homem até o cotovelo, se cola na sua perna."
+      rumor: "um pescador da borda só entra na água de botas de couro grosso, e mesmo assim volta com elas furadas"
+    contra_jogo: "Não deixá-la colar: lutar fora da água rasa e acabar com ela antes da ferida infeccionar; ferida, ela se solta e foge."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_sapo_boi_acido:
+    fonte: legado
+    ecologia:
+      horario: [Tarde, Anoitecer, Noite]
+      estacoes: {verao: 1.3, primavera: 1.2, inverno: 0.5}
+      territorio: [pantano_melancolia]
+      permanencia: [6, 9]
+      presas: [mon_mosquito_eter, mon_patinador_de_oleo]
+      reage:
+        - {quando: "clima:chuva", efeito: mais}
+    sinais:
+      antecedencia: cedo
+      rastro: "Saltos largos na lama, de dois em dois metros, e em cada pouso uma poça rasa que ainda fumega."
+      resto: "Uma bota de couro com o bico corroído até a sola, como se tivesse fervido num caldeirão."
+      som: "Um mugido grave e úmido vindo da água, tão fundo que treme a superfície."
+      cheiro: "Um azedo cortante, de vinagre e pedra queimada, que faz os olhos lacrimejarem."
+      marca: "Nas pedras da margem, manchas brancas e esburacadas, onde algo espirrou e a pedra cedeu."
+      aproximacao: "Da água sai um bicho verde e verruguento do tamanho de um cão, a papada inchada, e a boca já pinga fumaça."
+      rumor: "um coletor perdeu o cantil e meia mão para um mugido que veio da água"
+    contra_jogo: "Não ficar na linha do cuspe: fechar a distância de lado e golpear firme; muito ferido, ele recua para a água."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
+
+  mon_viuva_lodo:
+    fonte: legado
+    ecologia:
+      horario: [Anoitecer, Noite, Amanhecer]
+      territorio: [pantano_melancolia]
+      permanencia: [7, 10]
+      presas: [mon_mosquito_eter, mon_musaranho_de_dente_vermelho]
+      reage:
+        - {quando: "clima:neblina", efeito: mais}
+    sinais:
+      antecedencia: imediato
+      rastro: null
+      resto: "Um bicho pequeno embrulhado em fios pardos de turfa, pendurado de cabeça para baixo num marco afundado."
+      som: "Um raspar de muitas pernas finas na madeira, rápido, e depois nada por muito tempo."
+      cheiro: null
+      marca: "Os marcos afundados dos druidas estão enrolados em teias grossas, sujas de terra, que vibram sem vento."
+      aproximacao: "Do alto do marco cai uma aranha do tamanho de um escudo, de pernas cobertas de turfa, e as quelíceras já descem."
+      rumor: "os druidas não tocam nos marcos velhos sem bater três vezes com o cajado antes"
+    contra_jogo: "Não chegar perto dos marcos com a guarda baixa: quando ela aparecer, cercar o esconderijo para que não volte a sumir, e fugir da carga."
+    tramas: []
+    autor: opus-370-lote1
+    revisor_fauna: pendente
+    revisao: pendente
