@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_rute_corvo_veterana
+curated: true
 ---
 
 # RUTE — O QUE NÃO É DITO

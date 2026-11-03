@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_ludovina_agulha
+curated: true
 ---
 
 # LUDOVINA AGULHA — O QUE NÃO É DITO

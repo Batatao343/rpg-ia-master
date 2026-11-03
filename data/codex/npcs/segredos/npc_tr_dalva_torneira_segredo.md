@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_dalva_torneira
+curated: true
 ---
 
 # DALVA TORNEIRA — O QUE NÃO É DITO

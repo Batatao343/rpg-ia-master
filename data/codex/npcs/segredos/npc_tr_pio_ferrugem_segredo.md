@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_pio_ferrugem
+curated: true
 ---
 
 # PIO FERRUGEM — O QUE NÃO É DITO

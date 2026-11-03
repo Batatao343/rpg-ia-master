@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_caio_pavio
+curated: true
 ---
 
 # CAIO PAVIO — O QUE NÃO É DITO

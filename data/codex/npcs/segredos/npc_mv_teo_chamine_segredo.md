@@ -10,6 +10,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_mv_teo_chamine
+curated: true
 ---
 
 # TÉO CHAMINÉ — O QUE NÃO É DITO

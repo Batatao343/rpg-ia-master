@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_gaspar_fole
+curated: true
 ---
 
 # GASPAR FOLE — O QUE NÃO É DITO

@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_aelis_sem_ampulheta
+curated: true
 ---
 
 # AELIS SEM-AMPULHETA — O QUE NÃO É DITO

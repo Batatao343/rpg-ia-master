@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_lalo_das_fichas
+curated: true
 ---
 
 # LALO DAS FICHAS — O QUE NÃO É DITO

@@ -10,6 +10,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_mv_irena_prego_frio
+curated: true
 ---
 
 # IRENA PREGO-FRIO — O QUE NÃO É DITO

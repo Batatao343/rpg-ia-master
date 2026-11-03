@@ -12,6 +12,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_dorotea_selo_verde
+curated: true
 ---
 
 # DOROTEA SELO-VERDE — O QUE NÃO É DITO

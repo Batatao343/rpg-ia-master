@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_anselmo_tiza
+curated: true
 ---
 
 # CABO ANSELMO TIZA — O QUE NÃO É DITO

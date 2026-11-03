@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_matias_selo
+curated: true
 ---
 
 # MATIAS SELO — O QUE NÃO É DITO

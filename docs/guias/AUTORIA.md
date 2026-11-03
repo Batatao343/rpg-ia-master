@@ -27,7 +27,9 @@ Python valida manifesto, visibilidade e SHA antes de gerar WebP versionado.
    - **`curated: true` é OBRIGATÓRIO** — sem ele o próximo migrate APAGA o arquivo.
    - Segredos NÃO vão no doc público: crie doc paralelo em
      `data/codex/npcs/segredos/{id}_segredo.md` com `type: npc_secret` e
-     `visibility: hidden` (padrão da Fase 7.3).
+     `visibility: hidden` (padrão da Fase 7.3). **O doc de segredo de entidade curada
+     também leva `curated: true`** (SPEC-374): ele não sai de `lore_nova/` e o migrate
+     apaga todo `.md` sem a marca. O lint dá ERRO se faltar.
 2. Registre a entidade em `data/graph/entities_extra.json` (o migrate não toca
    nesse arquivo): `id`, `type`, `name`, `aliases`, `tags`, `visibility`,
    `components` — mesmo shape das entradas existentes. Sem isso o lint dá AVISO

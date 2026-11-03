@@ -1397,6 +1397,37 @@ def validate_visual_assets(
     return findings
 
 
+def validate_curated_secrets(
+    codex_dir: str = CODEX_DIR, graph_dir: str = GRAPH_DIR
+) -> list[Finding]:
+    """SPEC-374 R16 - doc ``npc_secret`` de entidade CURADA (só em ``entities_extra.json``)
+    precisa de ``curated: true``: o migrate apaga todo ``.md`` sem a marca, e o doc de segredo
+    escrito à mão não sai de ``lore_nova/``. ERRO."""
+    base = _read_graph_json(graph_dir, "entities.json", {})
+    extra = _read_graph_json(graph_dir, "entities_extra.json", {})
+    findings: list[Finding] = []
+    for path, frontmatter, _body in _parse_codex(codex_dir):
+        if frontmatter.get("type") != "npc_secret" or frontmatter.get("curated"):
+            continue
+        alvos = [
+            str(r)
+            for r in frontmatter.get("related_entities") or []
+            if str(r) in extra and str(r) not in base
+        ]
+        if alvos:
+            findings.append(
+                Finding(
+                    "curated_secrets",
+                    "error",
+                    path,
+                    str(frontmatter.get("id", "")),
+                    f"doc de segredo de entidade curada ({alvos[0]}, em entities_extra.json) "
+                    "sem `curated: true`: o próximo migrate o apaga",
+                )
+            )
+    return findings
+
+
 def validate_secret_entity_ids(graph_dir: str = GRAPH_DIR) -> list[Finding]:
     """SPEC-234 R3 - todo ID de `SECRET_ENTITY_IDS` precisa existir no grafo."""
     from services.secret_signatures import SECRET_ENTITY_IDS, SECRET_SIGNATURES
@@ -1869,6 +1900,7 @@ def validate_all(
     findings.extend(validate_aliases(graph_dir))
     findings.extend(validate_visibility(codex_dir, graph_dir))
     findings.extend(validate_overrides(codex_dir, overrides_path, graph_dir))
+    findings.extend(validate_curated_secrets(codex_dir, graph_dir))
     if graph_dir == GRAPH_DIR:
         findings.extend(validate_secret_entity_ids(graph_dir))
     if codex_dir == CODEX_DIR and graph_dir == GRAPH_DIR:

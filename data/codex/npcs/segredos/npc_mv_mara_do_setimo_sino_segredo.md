@@ -10,6 +10,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_mv_mara_do_setimo_sino
+curated: true
 ---
 
 # MARA DO SÉTIMO SINO — O QUE NÃO É DITO

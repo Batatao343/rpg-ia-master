@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_bento_juros
+curated: true
 ---
 
 # BENTO JUROS — O QUE NÃO É DITO

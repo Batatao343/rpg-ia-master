@@ -12,6 +12,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_ysolt_fio_de_vidro
+curated: true
 ---
 
 # YSOLT FIO-DE-VIDRO — O QUE NÃO É DITO

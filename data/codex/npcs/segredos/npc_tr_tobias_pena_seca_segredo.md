@@ -11,6 +11,7 @@ tags:
 visibility: hidden
 related_entities:
 - npc_tr_tobias_pena_seca
+curated: true
 ---
 
 # TOBIAS PENA-SECA — O QUE NÃO É DITO
