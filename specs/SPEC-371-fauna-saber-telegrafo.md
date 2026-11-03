@@ -1,6 +1,6 @@
 # SPEC-371 — Fauna, saber do jogador: sinais lidos, telegrafos vistos e contra-jogo revelado (filha 360-C)
 
-> **Status:** `approved` (aprovada pelo dono em 03/11 via pedido de execução imediata: "transforme em spec e execute agora")
+> **Status:** `in-review` (aprovada pelo dono em 03/11; Etapas 0–6 executadas, faltam revisões e smoke; arena E2–E4 reprovadas, ver §9)
 > **Criada:** 2026-11-03 · **Atualizada:** 2026-11-03
 > **Depende de:** SPEC-360 (`done`: `sinais_vistos` gravado no save, `fauna.json` de Nova Arcádia, `aproximacao` no `combat_encounter_hint`); SPEC-329 (`done`: Presságio, `pressagios_publicos`); SPEC-332 (`done`: baralho de inimigo, padrão, assinatura e `prenuncio`); SPEC-355 R3 (promessa do presságio na cena, `record_promise`/`note_declaration`); SPEC-349 (`done`: 281 fichas com `telegrafo` e `contra_jogo`, Cartas autorais das 12 regiões). SPEC-361 é opcional (criatura gerada em jogo traz `contra_jogo` na `ficha` do template).
 > **Desbloqueia:** 360-D (`fauna-tramas`) pode usar o saber como estágio "investigada"; o guarda-chuva SPEC-360 fecha quando 360-B/C/D estiverem `done`.
@@ -295,18 +295,18 @@ Testes do escopo com `bash scripts/dev/py.sh -m pytest <arquivos> -q -n 2` no m�
 
 ## 5. Critérios de aceite
 
-- [ ] `bestiario_saber.json` gerado, fresco, 281 fichas, sem legado; `bestiary.json` e `fauna.json` byte-idênticos (R5–R7)
-- [ ] Telegrafo visto e assinatura sobrevivida registrados pela cena e absorvidos por rodada; simulação/prévia não gravam (R1–R3)
-- [ ] Regra de revelação com as 5 linhas da §3.5 em teste; revelação pegajosa; linha de log 1× (R4, R14)
-- [ ] `knowledge_level` com saber; `contra_jogo` só na linha do `prenuncio`; ator carimbado fora do painel público (R8–R10)
-- [ ] Linha de saber na preparação da cena, ≤ 200 chars, sem nome; contagem de `invoke` igual `on`×`off` (R11, R12)
-- [ ] `bestiary_view`/dossiê com sinais lidos, telegrafos e contra-jogo; golden `off` byte-idêntico (R13, R18)
-- [ ] Frontend mostra os três blocos e o `prenuncio` + "Você sabe:" no chip; `npm run build` e lint verdes; e2e `--workers=1` verde (R15, R16)
-- [ ] Flag `RPG_FAUNA_SABER` registrada `off`; golden de 30 turnos da 360 inalterado (R17, R18)
+- [x] `bestiario_saber.json` gerado, fresco, 281 fichas, sem legado; `bestiary.json` e `fauna.json` byte-idênticos (R5–R7)
+- [x] Telegrafo visto e assinatura sobrevivida registrados pela cena e absorvidos por rodada; simulação/prévia não gravam (R1–R3)
+- [x] Regra de revelação com as 5 linhas da §3.5 em teste; revelação pegajosa; linha de log 1× (R4, R14)
+- [x] `knowledge_level` com saber; `contra_jogo` só na linha do `prenuncio`; ator carimbado fora do painel público (R8–R10)
+- [x] Linha de saber na preparação da cena, ≤ 200 chars, sem nome; contagem de `invoke` igual `on`×`off` (R11, R12)
+- [x] `bestiary_view`/dossiê com sinais lidos, telegrafos e contra-jogo; golden `off` byte-idêntico (R13, R18)
+- [x] Frontend mostra os três blocos e o `prenuncio` + "Você sabe:" no chip; `npm run build` e lint verdes; e2e `--workers=1` verde (R15, R16)
+- [x] Flag `RPG_FAUNA_SABER` registrada `off`; golden de 30 turnos da 360 inalterado (R17, R18)
 - [ ] Arena "a luta ensina" E1–E5 verdes com o avaliador do commit da Etapa 1 intocado; relatório publicado (R19)
-- [ ] Playtest `combate` 30 turnos com a flag `on`: 0 violação `error`; invariante `saber_valido` (R21)
-- [ ] Saves antigos carregam; round-trip dos campos novos (R20)
-- [ ] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo); se surgir, com guard
+- [x] Playtest `combate` 30 turnos com a flag `on`: 0 violação `error`; invariante `saber_valido` (R21)
+- [x] Saves antigos carregam; round-trip dos campos novos (R20)
+- [x] Guard de FallbackLLM: não se aplica (nenhum `with_structured_output` novo); se surgir, com guard
 - [ ] Revisões independente e Sol aprovadas
 - [ ] `uv run pytest` verde (suíte completa, no pouso, pelo coordenador)
 - [ ] Smoke real da §6 executado e registrado na §9
@@ -348,4 +348,18 @@ Coordenador, com chave (`ROUTES` de hoje), API local, `RPG_FAUNA_SABER=on`, `RPG
 
 ## 9. Registro de execução
 
-(vazio; o executor registra aqui as sondas da Etapa 0, desvios, resultados da arena e o smoke.)
+**Etapa 0 (sondas).**
+- População da arena: 26 criaturas de Nova Arcádia (não-chefe, ficha não-`retro`, assinatura e `contra_jogo`): as 17 `mon_*` nova/reinventada mais 9 `enemy_*` reinventadas/adotadas (a spec estimava ~22). `mon_arame_vivo`: assinatura `cri_arame_vivo_enroscar`, `a_cada_n` 3, telegrafo "{nome} recolhe o arame das costas e abre os ganchos das mãos.".
+- Fichas: 368 no total (249 nova, 29 reinventada, 3 adotada, 87 `retro`); as 281 não-`retro` têm `contra_jogo` (= `bestiario_saber.json`, 281 ids, zero legado).
+- Opções defensivas do herói (nível 3): Devoto/Sangromante/Corruptor têm 1 Carta de reação preparada (`dev_ombro_porta`, `san_esquiva`, `cor_membrana`), mas `cards.can_use_card` devolve `False` no setup da arena; Arcanista e Médico não têm. Ordem do `leitor` (congelada): reação usável > Guardar. Na prática só Guardar existe.
+- P4 confirmado no código (Grep `prenuncio` em `web/src` = 0 antes); no e2e o chip passou a mostrar o `prenuncio` mesmo sem `contra_jogo` (D5).
+- `combat_meta["scene"]` persiste entre turnos (o `saber_obs` sobrevive ao save; R20 testado); o ponto pós-`run_round` é logo depois de `logs += …` em `agents/combat.py`, onde `out`, `scene`, `actors_by_id` e `bestiary_knowledge` coexistem.
+
+**Desvios / decisões de implementação.**
+- Arena: o avaliador reproduz o fluxo de `agents/combat.py` (previsão congelada entre rodadas, `record_promise`, `absorb` por rodada, `record_kills` + `finish_combat` no fim, vitória/morte/timeout) sobre `run_round`; sem `services.fauna_saber` ele degrada para "nada se revela" (E1–E3 vermelhos).
+- `view_fields` só inclui as chaves com conteúdo (listas/strings vazias não saem); `omenView` só inclui `prenuncio`/`saber` quando presentes (compatível com o teste existente de `deepEqual`).
+- `absorb` também avalia a regra de revelação para todo inimigo presente na cena (não só os tocados nesta rodada), para a regra `rastreada` disparar na 1ª rodada.
+
+**Resultados (Etapa 6).**
+- Testes: `test_spec371_{eval,fonte,saber,pressagio,view,flags_off}` + 10 arquivos de regressão (enemy_decks/intent, dossiês, fase32, flags, 355, 360, perfil normal): verdes; `web` lint + `tsc -b` + `node --test` (deck-342 + fauna-saber-371) verdes; e2e `dossiers.spec.ts --workers=1`: 9/9. Golden de 30 turnos da 360 com a flag `off`: inalterado. Playtest `combate` 30 turnos com a flag `on`: 0 erro, 0 violação `error`. Contagem de `invoke` `on` = `off`.
+- Arena `docs/spec371/arena-saber-nova_arcadia.{md,json}` (2600 pares, 682 s): **E1 34,4 % OK; E2 −25,59 pp FALHA; E3 0,999× FALHA; E4 vitória 55,2 % mas pior criatura −47 pp FALHA; E5 verde.** O avaliador não foi tocado. Causa: as Cartas de reação do herói nunca são usáveis na arena e a única defesa do `leitor` é Guardar, que gasta a Ação e dá Desvantagem aos próprios ataques; a luta 2 só difere da 1 por essa decisão. Diagnóstico não versionado (6 criaturas × 5 Posturas × 10 seeds): com o `leitor` impedido de defender (ou limitado à reação), E2 = 0,0 pp e E3 = 1,0 (a luta 2 fica idêntica à 1), ou seja, o produto é neutro e a regressão vem só do Guardar. **Decisão para o dono** (não resolvida aqui): (a) conteúdo/mecânica que dê ao herói uma resposta barata ao golpe preparado (Carta de reação usável, ou bônus de Esquiva contra a assinatura conhecida, D6), ou (b) nova spec de avaliador com outro bot defensivo.
